@@ -1,5 +1,0 @@
-command view_DeleteMetaData vName
-   put view_GetFileMetaArray() into metaDataArray
-   delete variable metaDataArray [vName]
-   view_SetFileMetaArray metaDataArray
-end view_DeleteMetaData

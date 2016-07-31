@@ -1,5 +1,0 @@
-function hkey_GetGeometryArray hKey, pOverlayName
-   put hkey_GetOverlayArray (hKey, pOverlayName) into overlayArray
-   put hFileArray ["data"]["geometry"] into geometryArray
-   return geometryArray
-end hkey_GetGeometryArray

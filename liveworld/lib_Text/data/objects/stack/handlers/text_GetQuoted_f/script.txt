@@ -1,7 +1,0 @@
-function text_GetQuoted someText
-   local quotedText
-   put "['" & quote & "]" into someQuote
-   put "(?m)" & someQuote & "(.*)" & someQuote into someReg
-   put matchtext (someText, someReg, quotedText) into someBoolean
-   return quotedText
-end text_GetQuoted

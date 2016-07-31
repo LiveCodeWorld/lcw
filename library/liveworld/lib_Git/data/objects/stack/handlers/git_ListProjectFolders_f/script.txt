@@ -1,5 +1,0 @@
-function git_ListProjectFolders
-   put git_GetProjectArray() into gitProjectArray
-   put keys(gitProjectArray) into folderIndex
-   return folderIndex
-end git_ListProjectFolders

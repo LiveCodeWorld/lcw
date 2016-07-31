@@ -699,7 +699,7 @@ command menu_AddBooleanLine @mText, mLine, paramProp, topMenuTarget, mController
       else
          put "true" & CR & "false" into subMenu
       end if
-      put outline_IncreaseIndent(subMenu) into subMenu
+      put outline_IncreaseIndent (subMenu) into subMenu
       put subMenu & CR after mText
       return empty
    catch tError

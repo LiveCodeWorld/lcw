@@ -1,5 +1,0 @@
-command line_StripDoubleEmpty @someText
-    repeat while someText contains (CR & CR & CR)
-        replace (CR & CR & CR) with (CR & CR ) in someText
-    end repeat
-end line_StripDoubleEmpty

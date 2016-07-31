@@ -1,4 +1,0 @@
-function shell_GetBashHistory
-    put $HOME & "/.bash_history" into someFile
-    return url ("file:" & someFile)
-end shell_GetBashHistory

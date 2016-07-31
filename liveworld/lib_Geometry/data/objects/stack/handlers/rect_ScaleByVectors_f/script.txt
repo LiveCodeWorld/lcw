@@ -1,5 +1,0 @@
-function rect_ScaleByVectors someRect, scaleX, scaleY
-    -- was "scaleRect"
-    put scaleX,scaleY into scaleVector
-    return rect_ScaleByVector(someRect, scaleVector)
-end rect_ScaleByVectors

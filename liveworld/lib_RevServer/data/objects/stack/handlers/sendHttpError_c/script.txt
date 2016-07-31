@@ -1,4 +1,0 @@
-command sendHttpError pSocketID
-   write CustomHeaders ("Error: 404", 404, "file not found") & CRLF & CRLF & it to socket pSocketID
-   close socket pSocketID
-end sendHttpError

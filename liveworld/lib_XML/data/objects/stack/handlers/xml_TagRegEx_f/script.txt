@@ -1,5 +1,0 @@
-function xml_TagRegEx tagName
-    -- not complete
-    return merge("(?Usmi)<[[tagName]].*</[[tagName]]>")
-    return merge("(?Usi)<[[tagName]].*</[[tagName]]>")
-end xml_TagRegEx

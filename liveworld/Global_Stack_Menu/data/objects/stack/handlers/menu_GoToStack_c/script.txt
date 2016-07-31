@@ -1,5 +1,0 @@
-on menu_GoToStack scriptObject
-   put the stack_Object of scriptObject into stackObject
-   go to stackObject
-   if the result is not empty then beep
-end menu_GoToStack

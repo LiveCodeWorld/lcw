@@ -1,4 +1,0 @@
-function digitalocean_FetchArecordNames oceanDomainName
-   put digitalocean_FetchArecordArray (oceanDomainName) into aRecordArray
-   return keys (aRecordArray)
-end digitalocean_FetchArecordNames

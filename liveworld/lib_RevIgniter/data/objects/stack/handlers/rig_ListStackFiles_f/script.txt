@@ -1,5 +1,0 @@
-function rig_ListStackFiles
-   put rig_GetFolder ("stacks") into someFolder
-   put rig_ListFiles (someFolder) into shortFiles
-   return shortFiles
-end rig_ListStackFiles

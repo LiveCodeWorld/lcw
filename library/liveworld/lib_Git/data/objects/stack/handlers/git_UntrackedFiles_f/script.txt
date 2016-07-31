@@ -1,5 +1,0 @@
-function git_UntrackedFiles
-   put git_StatusArray() into someArray
-   put someArray ["Untracked files:"] into untrackedFiles
-   return untrackedFiles
-end git_UntrackedFiles

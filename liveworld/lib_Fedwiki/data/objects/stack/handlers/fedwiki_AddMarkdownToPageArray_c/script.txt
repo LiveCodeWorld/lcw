@@ -1,4 +1,0 @@
-command fedwiki_AddMarkdownToPageArray @pageArray, someMarkdown, pID
-   put fedwiki_ConstructStoryMarkdownArray (someMarkdown, pID) into itemArray
-   fedwiki_PageArrayAddToEnd itemArray, pageArray
-end fedwiki_AddMarkdownToPageArray

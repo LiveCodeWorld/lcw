@@ -1,5 +1,0 @@
-function rig_StackPath shortPath
-   put rig_GetApplicationFolder() into someFolder
-   put someFolder & shortPath into serverStackPath
-   return serverStackPath
-end rig_StackPath

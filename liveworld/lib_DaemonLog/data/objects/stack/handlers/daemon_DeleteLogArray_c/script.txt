@@ -1,5 +1,0 @@
-command daemon_DeleteLogArray
-   put server_LogArrayFile() into someFile
-   delete file someFile
-   return someFile
-end daemon_DeleteLogArray

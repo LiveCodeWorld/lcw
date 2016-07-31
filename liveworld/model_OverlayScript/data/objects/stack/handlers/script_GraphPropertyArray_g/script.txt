@@ -1,5 +1,0 @@
-getprop script_GraphPropertyArray [pOverlayName]
-   put the long id of the target into scriptObject
-   put the script_MetadataArray [pOverlayName] of scriptObject into metadataArray
-   return metadataArray ["graph_PropertyArray"]
-end script_GraphPropertyArray

@@ -1,5 +1,0 @@
-function script_SlowExtractSetPropHandlers someScript, scriptObject
-   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
-   put handlerArray ["setprop"] into handlerNames
-   return handlerNames
-end script_SlowExtractSetPropHandlers

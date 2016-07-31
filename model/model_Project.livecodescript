@@ -879,7 +879,7 @@ function library_PluginFolder pSubFolder, pDontCreate
    put opnRootFolder & "opn_Plugins/" into someFolder
    
    if pSubFolder is not empty then
-      folder_Format pSubFolder   
+      text_AddTrailing pSubFolder, slash
       put pSubFolder after someFolder
    end if
    
@@ -1117,14 +1117,14 @@ function objectFolder_ScriptFile objectFolder, pDontCreate
    if pDontCreate is false then
       folder_CreateNested handlerFolder
    else
-      folder_Format objectFolder
+      text_AddTrailing objectFolder, slash
    end if
    put objectFolder & "script.txt" into someFile
    return someFile
 end objectFolder_ScriptFile
 
 function objectFolder_HandlerFolder shortHkey, objectFolder, pDontCreate
-   folder_Format objectFolder
+   text_AddTrailing objectFolder, slash
    put item 1 shortHkey & "_" & item 2 of shortHkey into folderName
    put objectFolder & "handlers/" & folderName & "/" into handlerFolder
    if pDontCreate is false then folder_CreateNested handlerFolder

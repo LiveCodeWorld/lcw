@@ -1,4 +1,0 @@
-setprop horizontal_Spacing [dontLayout] someSpacing
-   put someSpacing into LocalArray ["horizontal_Spacing"]
-   if dontLayout is not true then dispatch "LayoutControl" to me
-end horizontal_Spacing

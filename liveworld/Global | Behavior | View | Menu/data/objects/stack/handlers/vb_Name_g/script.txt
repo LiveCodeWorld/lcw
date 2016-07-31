@@ -1,5 +1,0 @@
-getprop vb_Name [scriptObject]
-   put the view_Behavior of scriptObject into vbName
-   if vbName is empty then return "Clear"
-   return vbName
-end vb_Name

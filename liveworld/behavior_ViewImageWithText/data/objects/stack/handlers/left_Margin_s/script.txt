@@ -1,6 +1,0 @@
-setprop left_Margin lMargin
-   put the margins of me into someMargin
-   margin_Normalize someMargin, oldLeftMargin, tMargin, rMargin, bMargin
-   put lMargin,tMargin,rMargin,bMargin into newMargins
-   set the margins of me to newMargins
-end left_Margin

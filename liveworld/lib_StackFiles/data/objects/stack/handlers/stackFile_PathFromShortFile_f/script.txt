@@ -1,4 +1,0 @@
-function stackFile_PathFromShortFile shortFile, pSetName
-   put stackFile_ConstructShortFileArray (pSetName) into shortStackArray
-   return shortStackArray [shortFile]["relativePath"]
-end stackFile_PathFromShortFile

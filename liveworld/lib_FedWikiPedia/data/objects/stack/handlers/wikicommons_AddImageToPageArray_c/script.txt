@@ -1,4 +1,0 @@
-command wikicommons_AddImageToPageArray @fedwikiPageArray, pageArray
-   put wikicommons_ConstructImageHtml (pageArray) into imageHTML
-   fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
-end wikicommons_AddImageToPageArray

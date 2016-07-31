@@ -1,5 +1,0 @@
-function fedwiki_LocalSiteJsonFile fedwikiDomain
-   put fedwiki_GetLocalSiteJsonFolder() into localSiteJsonFolder
-   put localSiteJsonFolder & fedwikiDomain & ".json" into someFile
-   return someFile
-end fedwiki_LocalSiteJsonFile

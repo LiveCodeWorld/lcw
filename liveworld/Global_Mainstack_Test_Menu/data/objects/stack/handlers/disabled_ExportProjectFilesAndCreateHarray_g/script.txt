@@ -1,8 +1,0 @@
-getprop disabled_ExportProjectFilesAndCreateHarray
-   put LocalArray ["walkArrayFile"] into walkArrayFile
-   if there is a file walkArrayFile then
-      return false
-   else
-      return true
-   end if
-end disabled_ExportProjectFilesAndCreateHarray

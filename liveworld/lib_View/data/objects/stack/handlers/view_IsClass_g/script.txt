@@ -1,5 +1,0 @@
-getprop view_IsClass [classPath]
-   put the view_Name of the target into viewName
-   put view_IsMemberOfClass (viewName, classPath) into someBoolean
-   return someBoolean
-end view_IsClass

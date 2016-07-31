@@ -1,4 +1,0 @@
-function stackFile_NameFromShortFile shortFile, pSetName
-   put stackFile_ConstructShortFileArray (pSetName) into shortStackArray
-   return shortStackArray [shortFile]["stackName"]
-end stackFile_NameFromShortFile

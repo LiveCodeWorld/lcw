@@ -1,5 +1,0 @@
-on opn_DeleteGlobalArray opnGlobalName
-    put "global" && opnGlobalName into doScript
-    put CR & "delete global" && opnGlobalName after doScript
-    do doScript
-end opn_DeleteGlobalArray

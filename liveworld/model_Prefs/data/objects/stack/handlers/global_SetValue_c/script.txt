@@ -1,4 +1,0 @@
-command global_SetValue gName, gValue
-   put "global" && gName & CR & "put" && gValue && "into gName" into doScript
-   do doScript
-end global_SetValue

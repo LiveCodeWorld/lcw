@@ -1,5 +1,0 @@
-function hkey_GetDefaultGraphName
-   put overlay_GetDefaultArray() into overlayDefaultArray
-   put overlayArray_GetGraphProperty (overlayDefaultArray, "overlay_Name") into graphName
-   return graphName
-end hkey_GetDefaultGraphName

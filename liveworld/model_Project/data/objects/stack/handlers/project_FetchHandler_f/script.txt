@@ -1,6 +1,0 @@
-function project_FetchHandler hKey  
-   put project_HandlerFile (hKey) into someFile
-   if someFile is empty then return empty
-   put url ("binfile:" & someFile) into someHandler
-   return someHandler
-end project_FetchHandler

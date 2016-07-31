@@ -1,5 +1,0 @@
-getprop script_MetaHtml
-   put the script_MetaTable of the target into ripTable
-   put script_MetaTableToXhtml(ripTable) into bodyText
-   return html_AddHeaders(bodyText, "RIP")
-end script_MetaHtml

@@ -1,4 +1,0 @@
-command overlayData_SetHeaderArray @overlayData, dotHeaderArray, pOverlayName
-   overlayData_NormalizeName pOverlayName, overlayData
-   put dotHeaderArray into overlayData [pOverlayName]["metadata"]["dot_HeaderArray"]
-end overlayData_SetHeaderArray

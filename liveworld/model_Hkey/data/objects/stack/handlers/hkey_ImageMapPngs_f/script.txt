@@ -1,5 +1,0 @@
-function hkey_ImageMapPngs hKey, pVersionName
-   put hkey_Files (hKey, pVersionName) into somePngs
-   filter somePngs with "*.png"
-   return somePngs
-end hkey_ImageMapPngs

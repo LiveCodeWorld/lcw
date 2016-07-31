@@ -1,6 +1,0 @@
-setprop displayed_NegativeLabel negativeText
-   put _negativeView() into negativeView
-   set the trait_Text of negativeView to negativeText
-   put the result into fieldControl
-   return fieldControl
-end displayed_NegativeLabel

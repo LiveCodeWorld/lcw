@@ -1,5 +1,0 @@
-function rect_ScaleToFitInside originalRect, targetRect
-    rect_ExtractDimensions originalRect, originalW, originalH
-    put rect_FitInside (originalW, originalH, targetRect) into newRect
-    return newRect
-end rect_ScaleToFitInside

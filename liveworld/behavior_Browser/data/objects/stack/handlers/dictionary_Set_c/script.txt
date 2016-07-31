@@ -1,5 +1,0 @@
-command dictionary_Set @dataArray, someKey, someValue
-   -- was "array_TwoWaySet"
-   put someValue into dataArray ["value"][someKey]
-   put someKey into dataArray ["key"][someValue]
-end dictionary_Set

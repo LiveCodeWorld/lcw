@@ -1,5 +1,0 @@
-getprop daemon_Port
-   put the daemon_Port of me into portToListenOn
-   if portToListenOn is empty then put 8082 into portToListenOn
-   return portToListenOn
-end daemon_Port

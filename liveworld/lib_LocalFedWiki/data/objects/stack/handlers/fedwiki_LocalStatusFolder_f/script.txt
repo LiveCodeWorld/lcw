@@ -1,5 +1,0 @@
-function fedwiki_LocalStatusFolder fedwikiDomain
-   put fedwiki_GetLocalWikiFolder (fedwikiDomain) & "status/" into localStatusFolder
-   folder_Format localStatusFolder
-   return localStatusFolder
-end fedwiki_LocalStatusFolder

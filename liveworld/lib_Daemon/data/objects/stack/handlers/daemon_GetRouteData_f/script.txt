@@ -1,5 +1,0 @@
-function daemon_GetRouteData someRoute
-   put "/data" after someRoute
-   put daemon_GetRouteValue (someRoute) into routeData
-   return routeData
-end daemon_GetRouteData

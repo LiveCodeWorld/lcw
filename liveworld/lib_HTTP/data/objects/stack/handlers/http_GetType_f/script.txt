@@ -1,3 +1,0 @@
-function http_GetType pServer, pResource
-    return http_GetHeader(pServer, pResource, "Content-type")
-end http_GetType

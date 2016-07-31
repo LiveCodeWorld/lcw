@@ -59,12 +59,12 @@ end line_AddIndex
 
 function line_LineNumberStartingWithWord someWord, someText
     -- gets the first line number
-    
+
     put word 1 to -1 of someWord into someWord
     put someText into someLine
     filter someLine with (someWord && "*")
     if someLine is empty then return 0
-    
+
     put line 1 of someLine into someLine
     set the wholematches to true
     return lineoffset(someLine, someText)
@@ -78,15 +78,15 @@ end line_StripDoubleEmpty
 
 function line_ConstructDupicateArray someIndex
     local badLineArray
-    
+
     set the wholematches to true
     repeat while someIndex is not empty
         put line 1 of someIndex into testLine
         delete line 1 of someIndex
-        
+
         put badLineArray [testLine] into howManyBadLines
         if howManyBadLines is empty then
-            -- not already a duplicate 
+            -- not already a duplicate
             -- see if it is the rest of the container
             put lineoffset(testLine, someIndex) into lineNum
             if lineNum > 0 then
@@ -170,22 +170,22 @@ function line_ConstructCompareArray leftLines, rightLines
       put lineoffset (someLine, rightLines) into rightLineLineNum
       if rightLineLineNum is not 0 then
          put someLine & CR after commonIndex
-         
+
          delete line leftLineLineNum of onlyLeft
          delete line rightLineLineNum of onlyRight
       end if
-      
+
    end repeat
    delete last char of commonIndex
-   
+
    sort commonIndex
    sort onlyLeft
    sort onlyRight
-   
+
    put commonIndex into compareArray ["common"]
    put onlyLeft into compareArray ["onlyLeft"]
    put onlyRight into compareArray ["onlyRight"]
-   return compareArray   
+   return compareArray
 end line_ConstructCompareArray
 
 function line_GetCommon index1, index2
@@ -218,7 +218,7 @@ command line_DeleteEmpty @someLines
     put replacetext(someLines, emptyLineReg, return) into someLines
     delete char 1 of someLines
 end line_DeleteEmpty
-    
+
 function line_DeleteFromIndex someLines, indexOrOutline, partLine, lineAfter
     line_Delete someLines, indexOrOutline, partLine, lineAfter
     return indexOrOutline
@@ -226,7 +226,7 @@ end line_DeleteFromIndex
 
 function line_FindInIndex someLine, container, partLine, lineAfter
     -- was "whichLine"
-     
+
     if someLine is empty then return 0
     if lineAfter is empty then put 0 into lineAfter
     delete line 1 to lineAfter of container
@@ -240,7 +240,7 @@ function line_FindInIndex someLine, container, partLine, lineAfter
         put return & container & return into testContainer
         put return & someLine & return into testLine
     end if
-     
+
     put offset(testLine, testContainer) into start
     if start is 0 then
         return 0
@@ -288,7 +288,7 @@ command list_Delete someItems, @someList, pPartLine, pSkipLines
       if it is not 0 then
          add pSkipLines to itemNum
          delete item itemNum of someList
-      end if 
+      end if
    end repeat
    return the number of items of someList
 end list_Delete
@@ -358,7 +358,7 @@ end text_OffsetBefore
 
 command text_SetOffsets startText, endText, someText, @startChar, @endChar, startAfterCharNum
    -- version whereIsText 8.9,30/4/02
-   
+
    delete char 1 to startAfterCharNum of someText
    put offset (startText, someText) into startChar
    if startChar is 0 then
@@ -378,7 +378,7 @@ command text_SetOffsets startText, endText, someText, @startChar, @endChar, star
       end if
       add the length of endText - 1 to endChar
    end if
-   
+
    add startAfterCharNum to startChar
    add startAfterCharNum to endChar
    return char startChar to endChar of someText
@@ -525,7 +525,7 @@ function text_GetPlural someText
 end text_GetPlural
 
 function text_GetSingular someText
-    switch char -1 of someText 
+    switch char -1 of someText
         case "ies"
             put "y" into char -1 to -3 of someText
             break
@@ -547,13 +547,13 @@ command text_InsertParagraph newText, @someText, pCrNum
    put word 1 to -1 of newText into newText
    put word 1 to -1 of someText into someText
    if pCrNum is empty then
-      put CR & CR into crBit 
+      put CR & CR into crBit
    else if pCrNum is a number then
       put text_RepeatString (CR, pCrNum) into crBit
    else
       put crNum & CR & CR into crBit
    end if
-   
+
    if newText is not empty then
       if someText is empty then
          put newText into someText
@@ -570,6 +570,13 @@ function text_Hash someData, pWhichDigest
       return md5_Hash (someData)
    end if
 end text_Hash
+
+function sha1_Hash someData
+   local hexDigest
+   put sha1digest (someData) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end sha1_Hash
 
 function md5_Hash someText
    local hexDigest
@@ -590,7 +597,7 @@ end text_GetBetween
 command text_SetBetween startText, endText, @someText, newSection, startAfterCharNum
     text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
     if startChar = 0 or endChar = 0 then return empty
-     
+
     put newSection into char startChar to endChar of someText
 end text_SetBetween
 
@@ -650,10 +657,10 @@ function text_GetQuoted someText
    put matchtext (someText, someReg, quotedText) into someBoolean
    return quotedText
 end text_GetQuoted
-   
+
 function withinQuotes textOrOffset, someContainer
     -- version latest, 2/2/00
-     
+
     put item 1 of textOrOffset into startCharNum
     put item 2 of textOrOffset into endCharNum
     if endCharNum is empty then put startCharNum into endCharNum
@@ -662,7 +669,7 @@ function withinQuotes textOrOffset, someContainer
         put offset(textOrOffset, someContainer) into startCharNum
         put startCharNum + the length of textOrOffset - 1 into endCharNum
     end if
-     
+
     if startCharNum is 0 then
         return "Not Found"
     else
@@ -681,7 +688,7 @@ end withinQuotes
 
 command text_StarQuoted @someText
    local replacedArray
-   
+
    put someText into replacedArray ["original text"]
    put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
    put 1 into indexNum
@@ -710,7 +717,7 @@ end text_StripQuoted
 function text_TempReplaceQuoted someText, @offsetArray
     -- was "temptext_StripQuoted"
     -- version original,18/9/01
-    
+
     put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
     put 1 into dummyNum
     repeat
@@ -729,7 +736,7 @@ end text_TempReplaceQuoted
 function text_ReReplaceQuoted someStrippedText, offsetArray
     -- was "untext_StripQuoted"
     -- version original,18/9/01
-    
+
     put keys(offsetArray) into dummyTags
     repeat for each line dummyTag in dummyTags
         put offsetArray[dummyTag] into quotedText
@@ -761,7 +768,7 @@ command text_StripSurroundingQuotes @someText
    -- think this should work
    put token 1 of someText into someText
    return empty
-   
+
    get word 1 to -1 of someText
    put quote & "'" into quoteChars
    if char 1 of it is among the chars of quoteChars and char -1 of it is among the chars of quoteChars then
@@ -821,7 +828,7 @@ end text_StemCaps
 function text_IsCaps someText
    -- use casesensitive
    return matchtext (word 1 to -1 of someText, "\b[A-Z]+\b", anyThing)
-   
+
    repeat for each char testChar in someText
       put chartonum (testChar) into someCharNum
       if someCharNum >= 65 and someCharNum <= 90 then

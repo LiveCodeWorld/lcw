@@ -1,4 +1,0 @@
-private command _addKeepAliveHeader @someHeader
-   put "Connection:keep-alive" into headlerLine  
-   put CRLF & headlerLine after someHeader 
-end _addKeepAliveHeader

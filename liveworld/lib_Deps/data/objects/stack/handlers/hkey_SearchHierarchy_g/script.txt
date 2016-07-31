@@ -1,9 +1,0 @@
-getprop hkey_SearchHierarchy [pProjectName]
-   -- see also "getprop script_Hierarchy"
-   local standAloneHierachy
-   put the long id of the target into targetObject
-   
-   put the object_Hierarchy of targetObject into scriptHierarchy
-   hkey_AddDevelopmentHierarchy scriptHierarchy, pProjectName
-   return scriptHierarchy
-end hkey_SearchHierarchy

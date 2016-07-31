@@ -1,6 +1,0 @@
-function outline_SetIndent someOsSection, toIndentLevel
-    put outline_TabLevel(line 1 of someOsSection) + 1 into osStartLevel
-    put toIndentLevel - osStartLevel into byIndentLevel
-    put outline_IncreaseIndent (someOsSection, byIndentLevel) into someOsSection
-    return someOsSection
-end outline_SetIndent

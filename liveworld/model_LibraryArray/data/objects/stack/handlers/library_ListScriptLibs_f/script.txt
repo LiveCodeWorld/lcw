@@ -1,5 +1,0 @@
-function library_ListScriptLibs
-   put library_GetScriptLibArray() into typeArray
-   put keys (typeArray) into scriptLibs
-   return scriptLibs
-end library_ListScriptLibs

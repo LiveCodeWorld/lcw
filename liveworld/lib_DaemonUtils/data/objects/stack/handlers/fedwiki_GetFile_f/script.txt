@@ -1,5 +1,0 @@
-function fedwiki_GetFile shortFile
-   put fedwiki_GetWelcomeFolder() into indexFileFolder
-   put indexFileFolder & shortFile into someFile
-   return someFile
-end fedwiki_GetFile

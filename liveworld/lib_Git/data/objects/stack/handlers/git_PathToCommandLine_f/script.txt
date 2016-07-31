@@ -1,9 +1,0 @@
-function git_PathToCommandLine
-   return empty
-   
-   put pref_GetValue ("gitPath") into gitPath
-   return gitPath
-   
-   -- put "/opt/local/bin/" into gitPath
-   return gitPath
-end git_PathToCommandLine

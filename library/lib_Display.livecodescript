@@ -10,7 +10,7 @@ version: 0.3
 Here we gather handlers that display things.
 
 Displaying stuff, that is taking data from a model, processing it (with a controller),
-and then laying it out in a display (view) is not the job of a library, 
+and then laying it out in a display (view) is not the job of a library,
 but while creating libraries we often find the need to do some generic display code,
 either for testing, or because it is useful.
 
@@ -23,50 +23,108 @@ You can "view" this library as contaminated :)
 
 --> Working On
 -
+command opn_Notify someMessage, isSticky, paramArray
+   -- see "http://osx.c0de.academy/view/notifications-in-osx"
+   replace quote with ("\" & quote) in someMessage
+   replace "'" with "\'" in someMessage
+   replace "'" with quote in someMessage
+   if paramArray is an array then put text_Merge (someMessage, paramArray) into someMessage
+   switch the platform
+      case "MacOS"
+         osx_Notify someMessage, isSticky
+         break
+      default
+         put someMessage
+   end switch
+end opn_Notify
+
+command osx_Notify someMessage, pTitle
+   switch
+      case version_IsEarlier (the systemversion, "10.9")
+         put someMessage
+         return "Old OSX system with growl not installed."
+      default
+         -- it's Mavericks or above
+         -- osascript -e 'display notification "Lorem ipsum dolor sit amet" with title "Title"'
+         if pTitle is empty then put "LiveWorld Notification" into pTitle
+         put "osascript -e" && "'" & "display notification" && kwote (someMessage) into someShell
+         put "with title" && kwote (pTitle) after someShell
+         put "'" after someShell
+         put shell (someShell) into shellResult
+         return shellResult
+   end switch
+end osx_Notify
+
+function text_Merge mergeText, paramArray
+   -- was "text_Merge"
+   repeat for each key someKey in paramArray
+      put paramArray [someKey] into someValue
+      put "put someValue into" && someKey into doScript
+      do doScript
+   end repeat
+   put merge (mergeText) into translatedText
+   return translatedText
+end text_Merge
+
+function version_IsEarlier testVersion, refVersion
+   get _convertVersionToNumber (refVersion)
+   put it  > _convertVersionToNumber (testVersion) into isEarlier
+   return isEarlier
+end version_IsEarlier
+
+function _convertVersionToNumber someVersion
+   -- assumes a version of the format ###.###.###
+   -- to be safe each number can be up to 3 digits (they are usually 2)
+   set the itemdelimiter to "."
+   set the numberformat to "000"
+   put (item 1 of someVersion + 0) & (item 2 of someVersion + 0) & (item 3 of someVersion + 0) into someNum
+   return someNum
+end _convertVersionToNumber
+
 command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pCommandObject
    put "View|Tree|Widget with Title" into viewName
-   
+
    -- new feature for specifying widget and stack label titles using a comma
    if pDisplayTitle is empty then put "Array" into pDisplayTitle
    put word 1 to -1 of item 1 of pDisplayTitle into widgetDisplayTitle
    put word 1 to -1 of item 2 of pDisplayTitle into displayStackLabel
-   
+
    -- clone invisible
    stack_CloneInvisible viewName, "Display Array"
    put the result into cloneStackName
-   
+
    -- set basic data
    put pTreeMenuTitle into menuArray ["title"]
    put pLineMenuTitle into menuArray ["line"]
-   
+
    if pCommandObject is empty then
       put script_CallingObject() into pCommandObject
    end if
    put pMouseUpCommand into eventArray ["mouseUp"]
    put pMouseDoubleUpCommand into eventArray ["mouseDoubleUp"]
    put pCommandObject into eventArray ["eventTarget"]
-   
+
    view_SetCloneData cloneStackName, someArray, menuArray, eventArray
    put the result into displayView
-   
+
    -- custom stuff
    set the title_Colour of displayView to "random"
    set the style of stack cloneStackName to "palette"
-   
+
    if line 1 of keys (someArray) is a number then
       set the tree_SortType of displayView to "numeric"
    end if
-   
+
    -- show and go
    view_CloneShow cloneStackName, widgetDisplayTitle, displayStackLabel
-   
+
    return displayView
 end display_Array
 
 command display_ProjectStacks
    put project_FetchValue ("openStacks") into stackNames
    sort stackNames
-   
+
    put project_GetCurrentName() into projectName
    put projectName & ",Project" into displayTitle
    display_Index stackNames, displayTitle, "Global | Project | Menu", "Global | Project | Line | Menu", empty, "project_GoToStack"
@@ -80,7 +138,7 @@ command display_LoadedStacks
    sort stackNames
    display_Index stackNames, "Project", "Global | Project | Menu", "Global | Project | Line | Menu", empty, "project_GoToStack"
    put the result into displayView
-   
+
    put project_FetchValue ("openStacks") into stackNames
    set the multiple_Hilites of displayView to true
    set the selected_Index of displayView to stackNames
@@ -90,14 +148,14 @@ command display_Menus
    put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Menus.rev" into longStackFile
    put the cardnames of stack longStackFile into globalMenuCardNames
    sort globalMenuCardNames
-   
+
    put "" into titleMenu
    put "" into lineMenu
-   
+
    put "opnMenus_EditScript" into upCommand
    put "" into doubleCommand
    put "" into dragCommand
-   
+
    put "Old Global Menus,libOPN_Menus" into displayTitle
    display_Index globalMenuCardNames, displayTitle, titleMenu, lineMenu, upCommand, doubleCommand, dragCommand
    put the result into displayView
@@ -108,14 +166,14 @@ command display_Behaviors
    put behavior_ListNames() into bNames
    put hArray_ListViewBehaviorNames() into vbNames
    put vbNames & CR & "-" & CR & bNames into bIndex
-   
+
    put "doDrag" into dragCommand
    put empty into upCommand
    put empty into doubleUpCommand
-   
+
    put "Global | Behavior | Display | Menu" into titleMenu
    put "Global | Behavior | Display | Line | Menu" into lineMenu
-   
+
    display_Index bIndex, "Behaviors", titleMenu, lineMenu, upCommand, doubleUpCommand, dragCommand
    put the result into displayView
    set the multiple_Hilites of displayView to false
@@ -125,7 +183,7 @@ end display_Behaviors
 --> Display | Lines
 -
 command display_ScriptTemplate templateName
-   put library_ScriptTemplateFolder (templateName) into someFile   
+   put library_ScriptTemplateFolder (templateName) into someFile
    display_TextFile someFile, templateName, "Global | Script | Template | Menu", "Script Template"
    put the result into textDisplayView
    return textDisplayView
@@ -133,15 +191,15 @@ end display_ScriptTemplate
 
 command display_TextFile someFile, pDisplayTitle, pMenuTitle, pStackName
    local pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
-   
+
    if pMenuTitle is empty then put "Global | Display | File | Menu" into pMenuTitle
    put "file:" & someFile into someUrl
    put url someUrl into someText
-   
+
    put pDisplayTitle,pStackName into displayTitle
    display_Index someText, displayTitle, pMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
    put the result into displayView
-   
+
    set the field_Style of displayView to "text"
    set the menu_Title of displayView to pMenuTitle
    set the displayed_File of displayView to someFile
@@ -152,7 +210,7 @@ command display_Lines someIndex, pDisplayTitle, pMenuTitle, pStackName
    -- just here for compatability
    -- may want to switch to display_Text
    local pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
-   
+
    put pDisplayTitle,pStackName into displayTitle
    display_Index someIndex, displayTitle, pMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
 end display_Lines
@@ -160,34 +218,34 @@ end display_Lines
 command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
    put "View|Index|Simple" into viewName
    -- replace comma with CR in someIndex
-   
+
    -- new feature for specifying widget and stack label titles using a comma
    _setTitles widgetDisplayTitle, displayStackLabel, pDisplayTitle, "Index"
-   
+
    -- clone invisible
    stack_CloneInvisible viewName, "Display Index"
    put the result into cloneStackName
-   
-   -- set basic data  
+
+   -- set basic data
    put script_CallingObject() into eventArray ["eventTarget"]
    put pMouseUpCommand into eventArray ["mouseUp"]
    put pMouseDoubleUpCommand into eventArray ["mouseDoubleUp"]
    put pDragCommand into eventArray ["dragCommand"]
-   
+
    put pTreeMenuTitle into menuArray ["title"]
    put pLineMenuTitle into menuArray ["line"]
-   
+
    view_SetCloneData cloneStackName, someIndex, menuArray, eventArray
    put the result into displayView
-   
+
    -- custom stuff
    set the card_Margin of displayView to 0
    set the title_Colour of displayView to "random"
    set the style of stack cloneStackName to "palette"
-   
+
    -- show and go
    view_CloneShow cloneStackName, widgetDisplayTitle, displayStackLabel
-   
+
    return displayView
 end display_Index
 
@@ -203,7 +261,7 @@ command display_Text someText, pDisplayTitle, pMenuTitle, pStackName, pMinWidth,
    view_CloneStack "View|Display|Text|Basic", pCardMargin, pStackRect, pStackStyle, true
    put the result into displayView
    put the stack_Name of displayView into stackName
-   
+
    display_SetText someText, pDisplayTitle, pTextType, displayView
    set the label of stack stackName to pDisplayTitle
    setDisplayStackRect displayView, stackName
@@ -221,7 +279,7 @@ command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMe
       answer "I cannot find this handler anywhere!"
       exit to top
    end if
-   
+
    put script_CallingObject() into pCommandObject
    display_Array pathArray, pTitle, pTitleMenu, empty, pMouseDoubleUpHandler, pMouseDoubleUpHandler, pCommandObject
    put the result into treeWidget
@@ -232,24 +290,24 @@ end display_Files
 command display_HTML someHTML, pDisplayTitle, pMenuTitle
    put "View|Display|Text|Basic" into viewName
    _setTitles widgetDisplayTitle, displayStackLabel, pDisplayTitle, "HTML"
-   
+
    -- clone invisible
    stack_CloneInvisible viewName, "Display HTML"
    put the result into cloneStackName
    set the destroyStack of stack cloneStackName to true
    set the destroyWindow of stack cloneStackName to true
-   
-   -- set basic data  
+
+   -- set basic data
    put _displayView (cloneStackName) into displayView
    -- set the view_HtmlText of displayView to someHTML
    set the view_Utf8 of displayView to someHTML
    set the menu_Title of displayView to pMenuTitle
-   
+
    -- custom stuff
    -- setDisplayStackRect displayView, cloneStackName
    set the view_TextWrap of displayView to true
    set the style of stack cloneStackName to "palette"
-   
+
    -- show and go
    view_CloneShow cloneStackName, widgetDisplayTitle, displayStackLabel
    return displayView
@@ -261,7 +319,7 @@ end display_HTML
 command stack_CloneInvisible stackNameToClone, pCloneName
    if exists (stack stackNameToClone) is false then return empty
    if pCloneName is empty then put stackNameToClone into pCloneName
-   
+
    put stack_ConstructNewCloneName (pCloneName) into newStackName
    clone invisible stack stackNameToClone as newStackName
    put it into clonedStack
@@ -271,7 +329,7 @@ end stack_CloneInvisible
 command stack_Clone stackNameToClone, pDestroyBoolean, pCloneName
    if exists (stack stackNameToClone) is false then return empty
    if pCloneName is empty then put stackNameToClone into pCloneName
-   
+
    put stack_ConstructNewCloneName (pCloneName) into newStackName
    clone stack stackNameToClone as newStackName
    put it into clonedStack
@@ -288,13 +346,13 @@ command view_SetCloneData cloneStackName, pArray, pMenuArray, pEventArray
    set the displayed_Data of displayView to pArray
    set the view_MenuArray of displayView to pMenuArray
    set the view_EventArray of displayView to pEventArray
-   
+
    return displayView
 end view_SetCloneData
 
 command view_CloneShow cloneStackName, pDisplayTitle, pStackLabel, pDisplayView
    set the label of stack cloneStackName to pStackLabel
-   
+
    -- set the display
    if pDisplayTitle is not empty then
       if pDisplayView is empty then
@@ -302,7 +360,7 @@ command view_CloneShow cloneStackName, pDisplayTitle, pStackLabel, pDisplayView
       end if
       set the title_Text of pDisplayView to pDisplayTitle
    end if
-   
+
    -- show and go
    show stack cloneStackName
    go to stack cloneStackName
@@ -335,7 +393,7 @@ command project_GoToStack targetObject, stackName
       answer warning merge ("Cannot locate stack '[[stackName]]'")
       exit to top
    end if
-   
+
    if the scriptonly of stack stackName is true then
       edit the script of stack stackName
    else
@@ -346,13 +404,13 @@ end project_GoToStack
 command display_ObjectHkeyArrayHandler treeWidget, someValue, pathItems
    put 1 into hNum
    put item 1 of pathItems into hObject
-   get item 2 of pathItems 
+   get item 2 of pathItems
    set the itemdelimiter to "_"
    put item 1 to -2 of it into hName
    put item -1 of it into hType
    put hName,hType,hObject,hNum into hKey
    put hKey
-   
+
    hkey_Edit hKey
 end display_ObjectHkeyArrayHandler
 
@@ -401,7 +459,7 @@ end _setTitles
 -
 function view_GetTemplateControl viewName
    -- see older "view_GetTemplateObject"
-   
+
    if exists (stack viewName) is false then return empty
    if exists (control 1 of card 1 of stack viewName) is false then return empty
    put the long id of control 1 of card 1 of stack viewName into templateControl

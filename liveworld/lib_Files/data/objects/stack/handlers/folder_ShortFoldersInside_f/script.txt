@@ -1,8 +1,0 @@
-function folder_ShortFoldersInside someFolder
-   put the directory into originalDirectory
-   set the directory to someFolder
-   put the folders into shortFolders
-   set the directory to originalDirectory
-   filter shortFolders without ".*"
-   return shortFolders
-end folder_ShortFoldersInside

@@ -1,4 +1,0 @@
-function text_StripAllTags someXml
-   put  "(<(.|\n)+?>)" into someReg	# 
-   return word 1 to -1 of replacetext(someXml, someReg, empty)
-end text_StripAllTags

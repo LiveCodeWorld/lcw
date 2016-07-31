@@ -1,5 +1,0 @@
-function menu_GetTable mTitle, mController
-   put menu_GetDataArray (mController) into dataArray
-   put dataArray [mTitle] into mTable
-   return mTable
-end menu_GetTable

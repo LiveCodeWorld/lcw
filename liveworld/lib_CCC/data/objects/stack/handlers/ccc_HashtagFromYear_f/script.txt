@@ -1,5 +1,0 @@
-function ccc_HashtagFromYear dateDisplay
-   put ccc_NumFromYear (dateDisplay) into cccNum
-   put "#" & cccNum & "c3" into hashTag
-   return hashTag
-end ccc_HashtagFromYear

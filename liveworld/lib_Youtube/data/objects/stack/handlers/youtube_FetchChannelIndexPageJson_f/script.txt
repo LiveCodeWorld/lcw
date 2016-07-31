@@ -1,5 +1,0 @@
-function youtube_FetchChannelIndexPageJson channelID
-   put youtube_FetchChannelIndexPageArray (channelID) into pageArray
-   put json_FromArray (pageArray) into pageJSON
-   return pageJSON
-end youtube_FetchChannelIndexPageJson

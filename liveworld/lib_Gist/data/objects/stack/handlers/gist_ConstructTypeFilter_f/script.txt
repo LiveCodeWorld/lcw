@@ -1,5 +1,0 @@
-function gist_ConstructTypeFilter gistType, pShortServer
-   if pShortServer is empty then put server_GetURL() into pShortServer
-   put pShortServer && gistType & ":  " into serverBit
-   return serverBit
-end gist_ConstructTypeFilter

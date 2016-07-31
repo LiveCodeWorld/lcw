@@ -1,5 +1,0 @@
-function object_FetchMetaImage objectFolder, pExtension
-   put meta_ImageFile (objectFolder, pExtension) into someFile
-   put url ( "binfile:" & someFile) into someImage
-   return someImage
-end object_FetchMetaImage

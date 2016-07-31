@@ -1,5 +1,0 @@
-command shell_RemoteExecute sshUser, remoteDomain, remoteCommand
-   put "ssh" && sshUser & "@" & remoteDomain && remoteCommand into someShell
-   put shell (someShell) into someData
-   return someData
-end shell_RemoteExecute

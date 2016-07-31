@@ -1,5 +1,0 @@
-function library_FetchHandlerMetadata hKey
-   put library_HkeyToPublicShortHkey (hKey) into shortHkey
-   put library_FetchHandlerDatabaseArray() into hKeyData
-   return hKeyData [shortHkey]
-end library_FetchHandlerMetadata

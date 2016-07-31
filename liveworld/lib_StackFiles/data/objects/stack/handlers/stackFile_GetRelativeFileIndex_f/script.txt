@@ -1,4 +1,0 @@
-function stackFile_GetRelativeFileIndex stackName
-   put stackFile_GetRelativeArray (stackName) into relativeFileDictionary
-   return keys (relativeFileDictionary)
-end stackFile_GetRelativeFileIndex

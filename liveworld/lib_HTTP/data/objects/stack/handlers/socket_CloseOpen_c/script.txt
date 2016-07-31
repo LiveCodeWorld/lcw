@@ -1,5 +1,0 @@
-on socket_CloseOpen
-    repeat for each line someSocket in the opensockets
-        close socket someSocket
-    end repeat
-end socket_CloseOpen

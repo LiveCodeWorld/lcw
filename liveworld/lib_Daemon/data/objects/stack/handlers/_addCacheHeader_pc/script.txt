@@ -1,3 +1,0 @@
-private command _addCacheHeader @someHeader
-   put CRLF & "Cache-Control:public, max-age=0" after someHeader
-end _addCacheHeader

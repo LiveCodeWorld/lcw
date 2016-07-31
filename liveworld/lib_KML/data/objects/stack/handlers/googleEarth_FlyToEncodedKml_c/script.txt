@@ -1,5 +1,0 @@
-on googleEarth_FlyToEncodedKml urlEncodedXML, flyToWhat, extra
-    put urlDecode(urlEncodedXML) into nodeXML
-    opn_Notify flyToWhat & CR & extra
-    put nodeXML
-end googleEarth_FlyToEncodedKml

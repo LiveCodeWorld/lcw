@@ -1,4 +1,0 @@
-function hkey_GetCalls hKey, pSetName, pAllCalls
-   put project_GetHkeyDeps (hKey, false, pSetName, pAllCalls) into hkeyCalls
-   return hkeyCalls
-end hkey_GetCalls

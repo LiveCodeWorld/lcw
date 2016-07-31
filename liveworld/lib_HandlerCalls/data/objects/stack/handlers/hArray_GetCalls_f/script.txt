@@ -1,5 +1,0 @@
-function hArray_GetCalls hKey, hArray
-   put hArray_GetHandlerHash (hKey, hArray) into handlerHash
-   put hArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"] into shortCalls
-   return shortCalls
-end hArray_GetCalls

@@ -1,5 +1,0 @@
-command log_SetTemporaryLogFile pLogName
-   put log_ConstructTemporaryFileName (pLogName) into logFile
-   log_SetFile logFile, pLogName
-   return logFile
-end log_SetTemporaryLogFile

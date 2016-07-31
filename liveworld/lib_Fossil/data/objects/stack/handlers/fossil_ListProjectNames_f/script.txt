@@ -1,4 +1,0 @@
-function fossil_ListProjectNames
-   put fossil_ConstructProjectPathArray() into pathArray
-   return keys(pathArray)
-end fossil_ListProjectNames

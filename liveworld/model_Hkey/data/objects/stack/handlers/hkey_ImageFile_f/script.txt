@@ -1,5 +1,0 @@
-function hkey_ImageFile hKey, pOverlayName, pDontCreate
-   hkey_NormalizeGraphName pOverlayName
-   put pOverlayName & "." & "png" into shortFile
-   return hkey_Folder (hKey, pDontCreate) & shortFile
-end hkey_ImageFile

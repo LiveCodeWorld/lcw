@@ -1,5 +1,0 @@
-function digitalOcean_FindServerFarms pDomainInfoArray
-   local allDomainNames, serverFarms, notServerFarms
-   digitalocean_SplitIntoFarms allDomainNames, serverFarms, notServerFarms, pDomainInfoArray
-   return serverFarms
-end digitalOcean_FindServerFarms

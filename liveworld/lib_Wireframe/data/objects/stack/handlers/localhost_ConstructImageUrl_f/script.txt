@@ -1,5 +1,0 @@
-function localhost_ConstructImageUrl shortFile
-   put "images/" into imageFolderPathbit
-   put "http://localhost/" & imageFolderPathbit & shortFile into imageURL 
-   return imageURL
-end localhost_ConstructImageUrl

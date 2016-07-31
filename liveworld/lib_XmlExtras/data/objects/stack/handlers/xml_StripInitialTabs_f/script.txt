@@ -1,6 +1,0 @@
-function xml_StripInitialTabs someXML
-    put text_SwapEOL(someXML, "remove") into someXML 
-    put replacetext(someXML, "Â[\t ]+","Â") into someXML
-    put replacetext(someXML, "^Â","") into someXML
-    return (text_SwapEOL(someXML, "restore") )
-end xml_StripInitialTabs

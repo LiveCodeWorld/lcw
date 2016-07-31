@@ -1,5 +1,0 @@
-on menu_SaveStack scriptObject
-   put the stack_Object of scriptObject into stackObject
-   save stackObject
-   opn_Notify "Saved" && stackObject
-end menu_SaveStack

@@ -1,4 +1,0 @@
-private command _addConnectionHeader @someHeader
-   -- always defaults to close for now
-   put CRLF & "Connection: Close " after someHeader
-end _addConnectionHeader

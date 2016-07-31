@@ -1,4 +1,0 @@
-command overlayData_SetGraphPropertyArray @overlayData, graphPropertyArray, pOverlayName
-   overlayData_NormalizeName pOverlayName, overlayData
-   put graphPropertyArray into overlayData [pOverlayName]["metadata"]["graph_PropertyArray"]
-end overlayData_SetGraphPropertyArray

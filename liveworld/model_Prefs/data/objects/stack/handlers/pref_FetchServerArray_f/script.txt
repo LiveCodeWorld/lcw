@@ -1,5 +1,0 @@
-function pref_FetchServerArray pName
-   if pName is empty then put project_GetCurrentName() into pName
-   put pref_FetchValue ("server_Array", pName) into serverArray
-   return serverArray
-end pref_FetchServerArray
