@@ -1,0 +1,9 @@
+on mouseUp
+   put the trait_View of me into traitView
+   put the long id of me into labelField
+   
+   put the width of the trait_View of me into tWidth
+   put the textsize of labelField into tSize
+   
+   put tWidth / tSize
+end mouseUp

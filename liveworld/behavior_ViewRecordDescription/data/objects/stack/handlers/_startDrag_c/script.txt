@@ -1,0 +1,9 @@
+command _startDrag pImageID
+   -- drag_View viewName
+   if pImageID is not empty then
+      set the dragImage to pImageID
+   end if
+   put the record_Name of me into viewName
+   set the dragdata ["private"] to viewName
+   drag_SetGlobalStatus true
+end _startDrag

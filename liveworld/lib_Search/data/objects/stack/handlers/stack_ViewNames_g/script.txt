@@ -1,0 +1,5 @@
+getprop stack_ViewNames
+   -- stack_Views in libOPN_ObjectText
+   put the stack_ViewArray of the target into objectArray
+   return keys (objectArray)
+end stack_ViewNames

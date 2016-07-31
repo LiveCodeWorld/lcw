@@ -1,0 +1,13 @@
+getprop menu_BarItems [btnName]
+   put the long id of the target into menuBarGroup
+   if the object_IsMenuBar of menuBarGroup is false then return empty
+   
+   if btnName is empty then
+      -- could fetch all items?
+      return empty
+   else if exists(btn btnName of menuBarGroup) then
+      return the text of btn btnName of menuBarGroup
+   else
+      return empty
+   end if
+end menu_BarItems

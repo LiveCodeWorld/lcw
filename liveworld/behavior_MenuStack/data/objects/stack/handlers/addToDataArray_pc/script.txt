@@ -1,0 +1,16 @@
+private command addToDataArray mPaths, @dgArray, mTitle
+   put menu_GetGlobalController (mTitle) into mController
+   
+   put keys (dgArray) into indexNums
+   put the number of lines of indexNums + 1 into nextNum
+   
+   set the itemDelimiter to "/"
+   repeat for each line mPath in mPaths
+      put mPath into dgArray [nextNum]["mPath"]
+      
+      put menu_GetItemHelp (mTitle, mPath, mController) into someHtml
+      put someHtml into dgArray [nextNum]["description"]
+      put false into dgArray [nextNum]["isExpanded"]
+      add 1 to nextNum
+   end repeat
+end addToDataArray

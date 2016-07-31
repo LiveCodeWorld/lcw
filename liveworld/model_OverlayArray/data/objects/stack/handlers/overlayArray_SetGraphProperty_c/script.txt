@@ -1,0 +1,7 @@
+command overlayArray_SetGraphProperty @overlayArray, propName, propValue
+   if propValue is empty then
+      delete local overlayArray ["metadata"]["graph_PropertyArray"][propName]
+   else
+      put propValue into overlayArray ["metadata"]["graph_PropertyArray"][propName]
+   end if
+end overlayArray_SetGraphProperty

@@ -1,0 +1,27 @@
+command url_Deconstruct someURL, @someProtocol, @urlDomain, @urlPath, @shortName, @fileExtension --, @userName, @pissWord
+   -- https://www.youtube.com/watch?v=jNQXAC9IVRw
+   set the itemdelimiter to ":"
+   put item 1 of someURL into someProtocol
+   if someProtocol is not among the items of "http:https:ftp:mailto" then return false
+   get item 2 to -1 of someURL
+   repeat 2
+      if char 1 of it = "/" then
+         delete char 1 of it
+      else
+         exit repeat
+      end if
+   end repeat
+   
+   set the itemdelimiter to "/"
+   put item 1 of it into urlDomain
+   
+   get item 2 to -1 of it
+   set the itemdelimiter to "?"
+   put item 1 of it into urlPath
+   
+   put item 2 to -1 of it into fileExtension
+   set the itemdelimiter to "."
+   put item 1 of fileExtension into shortName
+   delete item 1 of fileExtension
+   return true
+end url_Deconstruct

@@ -1,0 +1,237 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Pref_Menu
+type: controller
+version: 0.6
+
+/*
+This is the first ever script-only menu!
+
+This menu manipulates Livecode World preferences.
+It is designed to be a general cross platform library for safely storing user preferences.
+
+It is designed to work on "scriptObjects", that is references to Livecode controls that contain scripts.
+The long id of the control is passed as the first param to the controller (menu),
+and any handler that dispatches one of the commands below will work as long as you pass a reference to the scriptObject.
+*/
+
+
+--> Global | Pref | Menu
+-
+[[ _FetchHandler (menu_RevealLibraryArrayFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchPrefArray,c) ]]
+
+[[ _FetchHandler (menu_LoadPrefArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayPrefData,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayCurrentPrefs,c) ]]
+
+[[ _FetchHandler (menu_DisplayProjectPrefs,c) ]]
+
+[[ _FetchHandler (menu_SavePrefsToProject,c) ]]
+
+[[ _FetchHandler (menu_RestorePrefs,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SaveGprefsArray,c) ]]
+
+[[ _FetchHandler (menu_ClearGprefsArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchStoredGlobalHarray,c) ]]
+
+[[ _FetchHandler (menu_DisplayGlobalHarray,c) ]]
+
+[[ _FetchHandler (menu_LoadGlobalHarray,c) ]]
+
+[[ _FetchHandler (menu_SaveGlobalHarray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayTempGlobal,c) ]]
+
+[[ _FetchHandler (menu_DeleteTempGlobal,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CurrentGpref,c) ]]
+
+[[ _FetchHandler (menu_CurrentGprefsArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayCheckoutGlobal,c) ]]
+
+[[ _FetchHandler (menu_DeleteCheckoutGlobal,c) ]]
+
+[[ _FetchHandler (menu_LoadCheckoutGlobal,c) ]]
+
+[[ _FetchHandler (menu_StoreCheckoutGlobalWith,c) ]]
+
+[[ _FetchHandler (menu_StoreCurrentCheckoutGlobals,c) ]]
+
+[[ _FetchHandler (menu_ReloadCurrentCheckoutGlobals,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Pref | Menu | Disabled
+-
+[[ _FetchHandler (disabled_CurrentPreference,g) ]]
+
+[[ _FetchHandler (disabled_SaveGlobalPreferences,g) ]]
+
+[[ _FetchHandler (disabled_ClearGlobalPrefs,g) ]]
+
+
+--> Global | Pref | Menu | Props
+-
+[[ _FetchHandler (project_Name,g) ]]
+
+[[ _FetchHandler (project_Names,g) ]]
+
+[[ _FetchHandler (pref_Names,g) ]]
+
+-- getprop pref_GlobalNames
+return library_ListPrefGlobals()
+end pref_GlobalNames
+
+-- getprop pref_ModelName
+put the uOPN ["pref_ModelName"] of me into pModelName
+return pModelName
+end pref_ModelName
+
+-- setprop pref_ModelName prefName
+set the uOPN ["pref_ModelName"] of me to prefName
+end pref_ModelName
+
+[[ _FetchHandler (full_SetName,g) ]]
+
+[[ _FetchHandler (full_SetNames,g) ]]
+
+[[ _FetchHandler (set_Name,g) ]]
+
+[[ _FetchHandler (set_Names,g) ]]
+
+/*
+
+
+-- getprop pref_ModelNames
+get pref_ListSetNames()
+if it is empty then
+   return "Default"
+else
+   return it & CR & "-,Default"
+end if
+end pref_ModelNames
+
+function opn_PrefNameOutline
+   global gPrefs_Array
+   -- put pref_FetchGlobal() into prefArray
+   put array_ToOutline (gPrefs_Array) into prefOutline
+   return prefOutline
+end opn_PrefNameOutline
+
+function opn_GetGlobalArray opnGlobalName
+   put "global" && opnGlobalName into doScript
+   put CR & "get" && opnGlobalName after doScript
+   do doScript
+   return it
+end opn_GetGlobalArray
+
+on opn_DeleteGlobalArray opnGlobalName
+    put "global" && opnGlobalName into doScript
+    put CR & "delete global" && opnGlobalName after doScript
+    do doScript
+end opn_DeleteGlobalArray
+
+getprop opn_Globals
+    return library_ListCheckoutGlobals()
+end opn_Globals
+
+getprop temp_Globals
+   return library_ListTempGlobals()
+ end temp_Globals
+
+getprop opn_External
+   repeat for each item someExternal in external_ListAllComponents()
+      if external_GetInstalled (someExternal) then
+         put someExternal & CR after someExternals
+      end if
+   end repeat
+   delete char -1 of someExternals
+   return someExternals
+end opn_External
+
+getprop opn_Externals
+    return external_ListAllComponents()
+end opn_Externals
+*/
+
+
+--> Library | Globals
+-
+/*
+These handlers are required for the menu, and came from lib_Manager library.
+They may be best here is a tool menu, or if found to be of more general use, moved to a library
+*/
+
+[[ _FetchHandler (library_ListTempGlobals,f) ]]
+
+[[ _FetchHandler (library_ListPrefGlobals,f) ]]
+
+[[ _FetchHandler (library_ListCheckoutGlobals,f) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_InstalledExternals,c) ]]
+
+[[ _FetchHandler (menu_AutoSetExternals,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StoreGlobalHarray,c) ]]
+
+on menu_LoadGlobalHarray
+   hArray_LoadGlobal
+   
+   put merge ("Reloaded the stored global hArray database from disk!") into someComment
+   opn_Notify someComment
+end menu_LoadGlobalHarray
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayGhkeyArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddPreferenceToStackfiles,c) ]]
+
+[[ _FetchHandler (menu_EditCustomProperties,c) ]]
+
+
+--> Dev | Menu | Props
+-

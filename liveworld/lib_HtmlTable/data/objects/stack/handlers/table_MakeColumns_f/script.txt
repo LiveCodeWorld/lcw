@@ -1,0 +1,53 @@
+function table_MakeColumns pArray, pColLimit
+   -- Set columns.  Takes a one-dimensional array as input and creates
+   -- a multi-dimensional array with a depth equal to the number of
+   -- columns.  This allows a single array with many elements to  be
+   -- displayed in a table that has a fixed column count.
+   
+   -- deps "rigArraySplice from rigLoadHelper "array"
+   
+   if pArray is not an array then
+      return FALSE
+   else
+      put pArray into tArray
+   end if
+   
+   if (pColLimit is empty) or (pColLimit is not an integer) then
+      put 0 into tColLimit
+   else
+      put pColLimit into tColLimit
+   end if
+   
+   # TURN OFF THE AUTO-HEADING FEATURE SINCE IT'S DOUBTFUL WE 
+   # WILL WANT HEADINGS FROM A ONE-DIMENSIONAL ARRAY
+   put FALSE into sAutoHeading
+   
+   if tColLimit = 0 then
+      return tArray
+   end if
+   
+   put the number of lines in the keys of tArray into tKeysNum
+   put 0 into tCounter  
+   put 0 into tOffset
+    
+   repeat while tKeysNum > tOffset
+      add 1 to tCounter
+      
+      put rigArraySplice (tArray, tOffset, tColLimit) into tTempArray
+      
+      put the number of lines in the keys of tTempArray into tTempKeysNum
+      
+      # ADD NONE BREAKING SPACES 
+      if tTempKeysNum < tColLimit then
+         put tTempKeysNum + 1 into tKeyNum
+         repeat with i = tTempKeysNum to (tColLimit -1)
+            put "&nbsp;" into tTempArray [tKeyNum]
+            add 1 to tKeyNum
+         end repeat
+      end if
+      
+      put tTempArray into tNewArray [tCounter]
+      add tColLimit to tOffset
+   end repeat
+   return tNewArray
+end table_MakeColumns

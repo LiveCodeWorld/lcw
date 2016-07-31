@@ -1,0 +1,13 @@
+command digitalocean_DeleteFolder fedwikiDomain, pDropletName, pSshUserName
+   put digitalOcean_GetDropletIP (pDropletName) into dropletIP
+   if http_CheckIP (dropletIP) is false then return "error, fetching ip address for droplet" && dropletName
+   
+   put fedwikiDomain into mergeArray ["fedwikiDomain"]
+   get "Are you sure you want to permanently delete the domain '[[fedwikiDomain]]'? This action cannot be undone!"
+   opn_Answer it, mergeArray
+   
+   put fedwiki_ConstructPath (fedwikiDomain) into fedWikiPath
+   shell_DeleteFolder pSshUserName, dropletIP, fedWikiPath
+   put the result into shellResult
+   return shellResult
+end digitalocean_DeleteFolder

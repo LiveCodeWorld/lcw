@@ -1,0 +1,10 @@
+on menu_IsTemplateView mTarget, someBoolean
+   put LocalArray ["selectedStackObject"] into selectedViewStackObject
+   put the template_View of cd 1 of selectedViewStackObject into templateView
+   if someBoolean is true then
+      set the urip_Type of templateView to "view template"
+   else
+      set the urip_Type of templateView to "view"
+   end if
+   edit the script of templateView
+end menu_IsTemplateView

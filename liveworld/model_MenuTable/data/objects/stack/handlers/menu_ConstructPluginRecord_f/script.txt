@@ -1,0 +1,11 @@
+function menu_ConstructPluginRecord menuController, menuTitle, beforeLineNum, passMouseDown
+   -- was "menu_ConstructNamedRecord"
+   -- used by menu front script
+   
+   set the itemdelimiter to tab
+   put menuTitle into item 1 of menuRecord
+   put menuController into item 2 of menuRecord
+   put beforeLineNum into item 3 of menuRecord
+   put passMouseDown into item 4 of menuRecord
+   return menuRecord
+end menu_ConstructPluginRecord

@@ -1,0 +1,32 @@
+function curl_GetUrl someUrl, followRedirects, showHeaders
+    /*
+    All HTTP replies contain a set of headers that are normally hidden,
+    use curl's -i option to display them as well as the rest of the document. 
+    You can also ask the remote server for ONLY the ,
+    by using the -I option (which will make curl issue a HEAD request).
+    
+    Curl does not follow Location: headers by default,
+    but will simply display such pages in the same manner it display all HTTP replies.
+    It does however feature an option that will make it attempt to follow the Location: pointers.
+    To tell curl to follow a Location:
+    curl -L www.sitethatredirects.com
+    if you use curl to post to a site that immediately redirects you to another page,
+    you can safely use -L and -d/-F together.
+    Curl will only use post in the first request, and then revert to get in the following operations.
+    */
+    
+    put "curl" into someShell
+    if followRedirects is not false then put space & "-L" after someShell
+    if showHeaders is true then put space & "-i" after someShell
+    put space & "-b cookies.txt -c newcookies.txt" after someShell
+     
+    put space & someUrl after someShell
+    
+    put someShell
+    
+    put opn_TempFolder() into someRoot
+    put shell_ExecuteAtRoot(someShell, someRoot) into curlResponse
+    -- put line 1 to 3 of  into curlHeader
+    delete line 1 to 3 of curlResponse
+    return curlResponse
+end curl_GetUrl

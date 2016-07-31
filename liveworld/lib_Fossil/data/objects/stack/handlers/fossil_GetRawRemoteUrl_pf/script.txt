@@ -1,0 +1,22 @@
+private function fossil_GetRawRemoteUrl fossilFileOrCheckoutFolder
+   -- allows seeing if schema needs updating
+   if there is a folder fossilFileOrCheckoutFolder then
+      put fossilFileOrCheckoutFolder into checkoutFolder -- or any folder within
+      put "fossil remote-url" into someShell
+      fossil_ExecuteShell someShell, checkoutFolder
+      put the result into shellResult
+   else
+      put fossilFileOrCheckoutFolder into fossilFile
+      put "fossil remote-url --repository" into someShell
+      
+      shell_BashParamEscape fossilFile
+      put space & fossilFile after someShell
+      
+      put fossil_FolderWithExecutable() into fossilPath
+      shell_BashParamEscape fossilPath
+      put fossilPath before someShell
+      
+      put shell (someShell) into shellResult
+   end if
+   return shellResult
+end fossil_GetRawRemoteUrl

@@ -1,0 +1,7 @@
+command shell_AddBashParam @someShell, paramContents, paramFlag
+    if paramFlag is not empty then put space & paramFlag after someShell
+    if paramContents is not empty then
+        shell_BashParamEscape paramContents
+        put space & paramContents after someShell
+    end if
+end shell_AddBashParam

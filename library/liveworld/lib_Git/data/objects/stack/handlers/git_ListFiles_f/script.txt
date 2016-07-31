@@ -1,0 +1,5 @@
+function git_ListFiles
+   put "git ls-files --stage" into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_ListFiles

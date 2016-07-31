@@ -1,0 +1,10 @@
+private function _innerRectangle innerWidth, centreX, innerSquareTop, innerSquareBottom
+   -- not limited to return a square
+   put round (innerWidth / 2) into halfWidth
+   
+   put centreX - halfWidth into item 1 of innerSquareRect
+   put centreX + halfWidth into item 3 of innerSquareRect
+   put innerSquareTop into item 2 of innerSquareRect
+   put innerSquareBottom into item 4 of innerSquareRect
+   return innerSquareRect
+end _innerRectangle

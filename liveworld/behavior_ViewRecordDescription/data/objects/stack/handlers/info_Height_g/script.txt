@@ -1,0 +1,9 @@
+getprop info_Height
+   put the info_Group of me into infoGroup
+   put the formatted_Height of infoGroup into infoHeight
+   if infoHeight is empty then
+      return 80
+   else
+      return infoHeight
+   end if
+end info_Height

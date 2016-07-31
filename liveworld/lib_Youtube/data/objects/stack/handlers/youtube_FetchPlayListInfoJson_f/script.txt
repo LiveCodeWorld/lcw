@@ -1,0 +1,6 @@
+function youtube_FetchPlayListInfoJson playlistID
+   -- GET https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=UUR9gdpWisRwnk_k23GsHfcA&key={YOUR_API_KEY}
+   put "playlists?part=snippet&id=" & playlistID into channelBit
+   put fetch_YoutubeJSON (channelBit) into someJSON
+   return someJSON
+end youtube_FetchPlayListInfoJson

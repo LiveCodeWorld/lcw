@@ -1,0 +1,4 @@
+on menu_RevealTextStackOverlayFolder scriptObject
+   put the textStackOverlay_Folder [false] of scriptObject into overlayFolder
+   finder_Reveal overlayFolder
+end menu_RevealTextStackOverlayFolder

@@ -1,0 +1,16 @@
+command dot_ExtractGraphSize dotText, @graphWidth, @graphHeight
+   -- was "xdot_ExtractGraphSize"
+   repeat 5
+      put dot_GetGraphHeader (dotText) into dotHeader
+      if dotHeader is empty then exit repeat
+      get dot_GraphSectionToArray (dotHeader)
+      if keys(headerArray) is empty then
+         put it into headerArray
+      else
+         union it with headerArray
+         put it into headerArray
+      end if
+      dot_SetHeader dotText
+   end repeat
+   _ExtractHeaderArrayDimensions headerArray, graphWidth, graphHeight 
+end dot_ExtractGraphSize

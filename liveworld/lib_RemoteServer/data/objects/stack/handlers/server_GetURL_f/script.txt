@@ -1,0 +1,7 @@
+function server_GetURL
+   if Server_URL is not empty then
+      return Server_URL
+   else
+      return Server_Address
+   end if
+end server_GetURL

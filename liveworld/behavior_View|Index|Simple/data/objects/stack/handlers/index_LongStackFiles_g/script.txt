@@ -1,0 +1,5 @@
+getprop index_LongStackFiles
+   put the index_ShortFiles of me into shortStackFiles  
+   put _getLongStackFiles (shortStackFiles) into longStackFiles
+   return longStackFiles
+end index_LongStackFiles

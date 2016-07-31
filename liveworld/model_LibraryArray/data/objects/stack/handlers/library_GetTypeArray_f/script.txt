@@ -1,0 +1,5 @@
+function library_GetTypeArray libType
+   global gLibrarySet_Array
+   put gLibrarySet_Array ["data"][libType] into ruggedArray
+   return ruggedArray
+end library_GetTypeArray

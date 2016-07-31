@@ -1,0 +1,19 @@
+function fedwiki_ConstructImageHtml imageURL, pCaption, pImageSource, pSourceTag, pWidth
+   if pCaption is empty then put "Transported Image - " into pCaption
+   if pImageSource is empty then put imageURL into pImageSource
+   if pWidth is empty then put "100%" into pWidth
+   
+   put "<div style='padding: 12px; background:#eee; width:96%; align=centered;'>" into someHTML
+   put CR & "<a href='" & pImageSource & "' target='_blank'>" after someHTML
+   put CR & "<img style='display:block; margin:auto; width:" & pWidth & ";'" after someHTML
+   put CR & "src='" & imageURL & "'>" after someHTML
+   put CR & "</a>" after someHTML
+   put CR after someHTML
+   put CR & "<p class=caption>" after someHTML
+   put CR & pCaption after someHTML
+   if pSourceTag is not empty then
+      put CR & "[" & pImageSource && pSourceTag & "]" after someHTML
+   end if
+   put CR & "</p></div>" after someHTML
+   return someHTML
+end fedwiki_ConstructImageHtml

@@ -1,0 +1,34 @@
+function pref_Folder
+   -- "preference" folders are not standard on all operating systems.
+   if the platform is "MacOS" then
+      return specialfolderpath ("preferences") & "/"
+   else if the platform is "Win32" then
+      /*
+      CSIDL_APPDATA (FOLDERID_RoamingAppData)
+      version 4.71. The file system directory that serves as a common repository for application-specific data. 
+      A typical path is C:\Documents and Settings\username\Application Data. 
+      This CSIDL is supported by the redistributable Shfolder.dll for systems 
+      that do not have the Microsoft internet Explorer 4.0 integrated shell installed.
+      
+      CSIDL_LOCAL_APPDATA (FOLDERID_LocalAppData)
+      version 5.0. The file system directory that serves as a data repository for local (nonroaming) applications. 
+      A typical path is C:\Documents and Settings\username\Local Settings\Application Data.
+      
+      CSIDL_APPDATA (0x001a)
+      version 4.71. The file system directory that serves as a common repository for application-specific data. 
+      A typical path is C:\Documents and Settings\username\Application Data. 
+      This CSIDL is supported by the redistributable Shfolder.dll for systems that do not have the Microsoft internet Explorer 4.0 integrated shell installed.
+      */
+      put specialfolderpath(baseconvert("0x001a",16,10)) into preferenceFolder
+      return preferenceFolder & "/"
+      
+      put specialfolderpath("0x001a") & "/MyProgram/" into myPreferences
+      -- not tested
+      breakpoint
+      get specialfolderpath("Documents") & merge("/[[username]]/Application Data/")
+      return it
+   else
+      return $HOME & "/Documents/"	# somewhere better?
+      put specialfolderpath("Home") & "/.MyProgram/" into myPreferences
+   end if
+end pref_Folder

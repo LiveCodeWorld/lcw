@@ -1,0 +1,18 @@
+function dot_ConstructPolyDefs someNodes, polyStyle, polySkew, polyDistortion, nodeColour, nodeFillColour, nodeUrl, nodeToolTip, regular, peripheries, polyOrientation
+    return "Not done yet!"
+    
+    local nodeDefs
+    put "polygon" into nodeShape
+    put empty into polyParams
+    put empty into nodeShapeFile
+    repeat for each line someNode in someNodes
+        set the cursor to busy
+        dot_NormalizeNode someNode
+         
+        get dot_ConstructDefLine(someNode, nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile)
+        put someNode && "[" & it & "];" into nodeDef
+        put nodeDef & CR after nodeDefs
+    end repeat
+    delete last char of nodeDefs
+    return nodeDefs
+end dot_ConstructPolyDefs

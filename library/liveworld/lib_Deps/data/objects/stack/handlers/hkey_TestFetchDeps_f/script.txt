@@ -1,0 +1,23 @@
+function hkey_TestFetchDeps hKey, someHandler, pSkipHkeyComponents, pSkipHkeyProps
+   put hkey_TestShortDeps (hKey, someHandler, pSkipHkeyComponents, pSkipHkeyProps) into shortBoolean
+   if shortBoolean = false then return false
+   
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   if exists (hObject) is false then return shortBoolean  
+   
+   if pSkipHkeyComponents is empty then put pref_GetValue ("skip_HkeyComponents") is not false into pSkipHkeyComponents
+   if pSkipHkeyProps is empty then put pref_GetValue ("skip_HkeyProps") is not false into pSkipHkeyProps
+   
+   put the uRIP ["Type"] of hObject into objectType
+   put the object_MetaData ["component"] of hObject into scriptIsComponent
+   switch
+      case hkey_IsDataGridCall (hKey, hName, hType, hObject) is true
+         return false
+      case scriptIsComponent is true and pSkipHkeyComponents is true
+         return false
+      case objectType is not "library" and hType is among the items of "g,s" and pSkipHkeyProps is true
+         return false
+      default
+         return true
+   end switch
+end hkey_TestFetchDeps

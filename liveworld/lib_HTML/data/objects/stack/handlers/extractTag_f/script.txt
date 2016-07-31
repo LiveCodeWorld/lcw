@@ -1,0 +1,12 @@
+function extractTag someTagName, someHTML, startCharNum, wholeTag
+    -- version 9.2
+     
+    get whereIsTag (someTagName, someHTML, startCharNum, wholeTag)
+    if it is "Not Found" then
+        return empty
+    else
+        put item 1 of it into startTagCharNum
+        put item 2 of it into endTagCharNum
+        return char startTagCharNum to endTagCharNum of someHTML
+    end if
+end extractTag

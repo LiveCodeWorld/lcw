@@ -1,0 +1,11 @@
+on menu_LoadProjectStackfiles mTarget, projectName
+   put the project_HomeStack of mTarget into projectHomeStack
+   put project_FetchStackFiles (projectName) into stackFileTable
+   
+   put merge ("Are you sure you want to set the stackfiles of [[projectHomeStack]] to the stored project '[[projectName]]'?") into someQuestion
+   put stackFileTable
+   answer warning someQuestion with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   set the stackfiles of projectHomeStack to stackFileTable
+end menu_LoadProjectStackfiles

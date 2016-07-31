@@ -1,0 +1,4 @@
+function folder_NestedFilesInside someFolder
+    put folder_ConstructFileOutline(someFolder, outlineArray) into fileOutline
+    return outlineArray ["FileIndex"]
+end folder_NestedFilesInside

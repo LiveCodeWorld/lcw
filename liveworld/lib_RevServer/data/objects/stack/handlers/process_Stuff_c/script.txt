@@ -1,0 +1,15 @@
+command process_Stuff
+   --- by this stage, form data is parsed and inside gRequestA. Now we'll look for a stack or a file.
+   set the itemdel to "?"
+   put item 1 of gRequestA ["Requested URL"] into gRequestA ["Requested URL"]
+   if gRequestA ["Requested URL"] contains "launcher.cgi" then 
+      put "/" & gRequestA["stack"] & ".rev" into gRequestA["Requested URL"]
+   end if
+   set the itemdel to "."
+   get item -1 of gRequestA["Requested URL"]
+   if it is "rev" then
+      process_LivecodeStack
+   else
+      process_File
+   end if
+end process_Stuff

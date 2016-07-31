@@ -1,0 +1,14 @@
+getprop indexView_Stacks
+   put the index_View of the target into indexView
+   if exists (indexView) is false then return empty
+   
+   put the index_Folder of indexView into indexFolder
+   put the view_Index of indexView into shortStackFiles
+   repeat for each line shortStackFile in shortStackFiles
+      put indexFolder & shortStackFile into longStackFile
+      if exists (stack longStackFile) is false then next repeat
+      put the name of stack longStackFile & CR after indexStackObjects
+   end repeat
+   delete char -1 of indexStackObjects
+   return word 1 to -1 of indexStackObjects
+end indexView_Stacks 

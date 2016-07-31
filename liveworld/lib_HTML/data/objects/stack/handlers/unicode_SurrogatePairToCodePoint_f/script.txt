@@ -1,0 +1,8 @@
+function unicode_SurrogatePairToCodePoint highNums, lowNums
+   local unicodeChar
+   if highNums is not "00" then
+      put numToByte (baseConvert (highNums,16,10)) into unicodeChar
+   end if
+   put numToByte (baseConvert (lowNums,16,10)) after unicodeChar
+   return unicodeChar
+end unicode_SurrogatePairToCodePoint

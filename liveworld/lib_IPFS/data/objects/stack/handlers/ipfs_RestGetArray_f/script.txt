@@ -1,0 +1,5 @@
+function ipfs_RestGetArray ipfsPath
+   put ipfs_RestGet (ipfsPath) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end ipfs_RestGetArray

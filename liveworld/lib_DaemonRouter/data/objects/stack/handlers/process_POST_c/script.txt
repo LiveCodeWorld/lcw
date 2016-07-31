@@ -1,0 +1,10 @@
+command process_POST someRoute, socketID, requestArray
+   switch someRoute
+      case "/persona_login"
+         persona_CheckAssertion requestArray, socketID
+         break
+      default
+         put daemon_GetPostData (requestArray) into assertionJSON
+         -- put "POST" & CR & someRoute & CR & CR & assertionJSON
+   end switch
+end process_POST

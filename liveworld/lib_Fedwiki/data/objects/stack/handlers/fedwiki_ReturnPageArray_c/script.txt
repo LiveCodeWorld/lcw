@@ -1,0 +1,4 @@
+command fedwiki_ReturnPageArray fedwikiPageArray
+   put json_FromArray (pageArray) into pageJSON
+   fedwiki_ReturnJSON someJSON
+end fedwiki_ReturnPageArray

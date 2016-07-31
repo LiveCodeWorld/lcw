@@ -1,0 +1,11 @@
+setprop model_ViewLinks [modelName] someViews
+   -- put the linked_Views of model modelName into linkedViews	# would be nice syntax!
+   local mobileViews
+   put the long id of me into modelObject
+   repeat for each line someView in someViews
+      put the mobile_Name of someView into mobileView
+      put mobileView & CR after mobileViews
+   end repeat
+   delete last char of mobileViews
+   model_SetValue modelName, modelObject, mobileViews, "uOPN_LinkedViewsOfModel", "array"
+end model_ViewLinks

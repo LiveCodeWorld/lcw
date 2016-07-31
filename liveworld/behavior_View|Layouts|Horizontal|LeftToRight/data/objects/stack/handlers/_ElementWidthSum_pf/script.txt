@@ -1,0 +1,8 @@
+private function _ElementWidthSum
+   put the layout_Elements of me into layoutElements
+   put 0 into layoutElementWidth
+   repeat for each line layoutElement in layoutElements
+      add the layout_ElementWidth of layoutElement to layoutElementWidth
+   end repeat
+   return layoutElementWidth
+end _ElementWidthSum

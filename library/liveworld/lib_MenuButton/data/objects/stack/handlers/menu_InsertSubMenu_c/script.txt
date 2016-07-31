@@ -1,0 +1,24 @@
+command menu_InsertSubMenu @mText, mLine, subMenuTitle, mView, subMenuController, pTitlePath, pTextPath, pMenuTarget, pSubMenuIsDisabled
+   global gTemp_ActiveMenuArray
+   -- put gTemp_ActiveMenuArray ["mTitlePath"][pTitlePath] into testArray
+   put gTemp_ActiveMenuArray ["mTitle"][pTextPath] into testArray
+   if testArray is an array then
+      breakpoint
+      return empty -- recursion check
+   end if
+   
+   put menu_GetTable (subMenuTitle, subMenuController) into mTable
+   
+   -- hack
+   set the itemdelimiter to "/" 
+   delete item -1 of pTitlePath
+   put menu_ConvertTable (mTable, mView, pTitlePath, pTextPath, pMenuTarget, pSubMenuIsDisabled) into subMenu
+   
+   if subMenu is empty then
+      -- don't do anything (ie also remove the submenu_Title "mLine"
+   else
+      put mLine & CR after mText
+      put outline_IncreaseIndent (subMenu, 1) into subMenu
+      put subMenu & CR after mText
+   end if
+end menu_InsertSubMenu

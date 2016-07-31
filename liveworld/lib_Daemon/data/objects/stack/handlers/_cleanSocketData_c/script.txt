@@ -1,0 +1,17 @@
+command _cleanSocketData pSocketId
+   /*
+   Clean out SocketData of any partial connection data that is older than the 'on newConnection' dropDelay number of seconds.
+   If the connection to RevHTTPd does not complete but there has been some data stored in this array, this routine finds it and deletes it when it is too old.
+   Otherwise SocketData could fill up and use up all available memory until Revolution dies.
+   */
+   -- and remove this connection data from local variable SocketData (otherwise it will look like a memory leak)
+   delete variable SocketData [pSocketId]
+   
+   repeat for each key someSocketID in SocketData
+      put SocketData [someSocketID]["theSeconds"] into timeToKill
+      put the seconds into theSeconds
+      if timeToKill < theSeconds then
+         delete variable SocketData [someSocketID]
+      end if
+   end repeat
+end _cleanSocketData

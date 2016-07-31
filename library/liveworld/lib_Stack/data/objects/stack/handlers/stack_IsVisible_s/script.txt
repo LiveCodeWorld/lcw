@@ -1,0 +1,5 @@
+setprop stack_IsVisible someBoolean
+    put the stack_Object of the target into stackObject
+    set the visible of stackObject to someBoolean
+    if someBoolean is true then set the blendlevel of stackObject to 0
+end stack_IsVisible

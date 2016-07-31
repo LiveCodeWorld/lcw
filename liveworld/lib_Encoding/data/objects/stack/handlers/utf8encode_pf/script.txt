@@ -1,0 +1,7 @@
+private function utf8encode pString, pIsUnicode
+   if pIsUnicode then
+      return unidecode(pString, "UTF8")
+   else
+      return unidecode(uniencode(pString),"UTF8")
+   end if
+end utf8encode

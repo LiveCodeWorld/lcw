@@ -1,0 +1,14 @@
+on menu_CopyMergeScriptToClipboard mTarget, templateName
+   put script_GetTemplate (templateName) into templateScript
+   
+   -- could get all the script metadata
+   put user_GetName() into ObjectAuthor
+   put rev_ScriptObject() into scriptObject
+   put the view_Name of scriptObject into viewName
+   
+   put merge (templateScript) into someScript
+   set the clipboarddata ["text"] to merge (someScript)
+   
+   put someScript
+   opn_Notify "Script copied to clipboard!"
+end menu_CopyMergeScriptToClipboard

@@ -1,0 +1,17 @@
+function text_OffsetBefore someString, someText, beforeHere
+  -- was "offsetBefore"
+  if beforeHere is not empty then
+    delete char beforeHere to -1 of someText
+  end if
+  put 1 into offsetNum
+  put 0 into lastOffset
+  repeat
+    get text_OffsetAfter(someString, someText, lastOffset)
+    if it is 0 then
+      return lastOffset
+    else
+      put it into lastOffset
+      add 1 to offsetNum
+    end if
+  end repeat
+end text_OffsetBefore

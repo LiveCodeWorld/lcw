@@ -1,0 +1,16 @@
+command server_StoreFile localFile, pathToStore, serverAddress, sshUser, pSshKeyPath
+   -- uses "scp" and private keys for security
+   if serverAddress is empty or sshUser is empty then
+      breakpoint
+      return empty
+   end if
+   
+   if char 1 of pathToStore is "/" then
+      put pathToStore into fullPath
+   else
+      put "~/" & pathToStore into fullPath
+   end if
+   shell_StoreFile sshUser, serverAddress, fullPath, localFile, pSshKeyPath
+   put the result into shellResult
+   return shellResult
+end server_StoreFile

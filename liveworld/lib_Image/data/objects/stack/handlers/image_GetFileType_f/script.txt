@@ -1,0 +1,13 @@
+function image_GetFileType imageType
+    switch imageType
+        case "JPG"
+            return "prvwJPEG"
+        case "JPEG"
+            return "prvwJPEG"
+        case "GIF"
+            return "prvwGIFf"
+            break
+        case "PNG"
+            return "prvwPNGf"
+    end switch
+end image_GetFileType

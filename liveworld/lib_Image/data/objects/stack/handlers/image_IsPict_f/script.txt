@@ -1,0 +1,32 @@
+function image_IsPict someImage
+   -- based on function "revIsPICT" of the revbackScript
+   --takes a valid file path and returns if PICT or not
+   local tPICT
+   
+   put char 1 to 600 of someImage into someImage
+   repeat with i = 1 to 7
+      if charToNum(char i of someImage) is 0 then
+         put true into tPICT
+      else
+         put false into tPict
+         exit repeat
+      end if
+   end repeat
+   if tPict then
+      if charToNum(char 523 of someImage) is 0 and charToNum(char 524 of someImage) is 17 and charToNum(char 525 of someImage) is 2 and charToNum(char 526 of someImage) is 255 then
+         put true into tPict
+      else
+         put false into tPict
+      end if
+      
+      local tFinal
+      if tPict then
+         put true into tFinal
+      else
+         put false into tFinal
+      end if
+   else
+      put false into tFinal
+   end if
+   return tFinal
+end image_IsPict

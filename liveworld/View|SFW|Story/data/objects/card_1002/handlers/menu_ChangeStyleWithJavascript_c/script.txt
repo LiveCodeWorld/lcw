@@ -1,0 +1,6 @@
+on menu_ChangeStyleWithJavascript dgView
+   put the browser_ID of dgView into browserID
+   -- put "alert('This is a debugging message');" into someJavascript
+   put "document.getElementById('site-owner').style.visibility = 'hidden'" into someJavascript
+   put revBrowserExecuteScript (browserID, someJavascript)
+end menu_ChangeStyleWithJavascript

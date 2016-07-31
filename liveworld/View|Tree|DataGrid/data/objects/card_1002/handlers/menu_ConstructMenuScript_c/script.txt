@@ -1,0 +1,5 @@
+on menu_ConstructMenuScript mTarget
+   put the menu_Title of mTarget into mTitle
+   put menu_ConstructTemplateScript (mTitle) into someScript
+   display_Lines someScript
+end menu_ConstructMenuScript

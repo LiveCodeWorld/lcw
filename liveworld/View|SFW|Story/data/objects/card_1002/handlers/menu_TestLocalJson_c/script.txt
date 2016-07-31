@@ -1,0 +1,10 @@
+on menu_TestLocalJson dgView
+   answer file "Select a local Fedwiki JSON file..."
+   put it into someFile
+   if someFile is empty then exit to top
+   
+   put url ("file://" & someFile) into someJSON
+   put json_ToArray (someJSON) into someArray
+   if the shiftKey is "Down" then display_Array someArray
+   set the dgData of dgView to someArray ["Story"]
+end menu_TestLocalJson

@@ -1,0 +1,6 @@
+command wrangler_Open
+   -- tell application "Finder" to open file "Macintosh HD:Users:david:Documents:My Revolution Enterprise:Plugins:opn_Plugins:opn_Text:rev:handlers:card_Object_g:hierarchical_dot.xdot" using "Macintosh HD:Applications:TextEdit.app:"
+   -- finder_Open someFile, "Macintosh HD:Applications:TextEdit.app:"
+   finder_Open someFile, "Macintosh HD:Applications:TextWrangler.app:"
+   return the result
+end wrangler_Open

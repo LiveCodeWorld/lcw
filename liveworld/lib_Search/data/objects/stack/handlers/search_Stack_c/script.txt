@@ -1,0 +1,12 @@
+command search_Stack stackName, someProperty, @objectArray, pControllerObject
+   put the name of stack stackName into stackObject
+   opn_Notify ("Searching" && stackObject)
+   
+   search_SubStackForResult objectArray, stackObject, someProperty, pControllerObject
+   put the substacks of stackObject into subStackNames
+   repeat for each line subStackName in subStackNames
+      set the cursor to busy
+      put the long id of stack subStackName of stackObject into stackObject
+      search_SubStackForResult objectArray, stackObject, someProperty, pControllerObject
+   end repeat
+end search_Stack

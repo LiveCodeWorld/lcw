@@ -1,0 +1,8 @@
+function hkey_FetchDeps hKey, pFetchHow  
+   local hKeyArray
+   hkey_RecurseCallArray hKey, hkeyArray, pFetchHow
+   put array_AllNodes (hKeyArray) into allShortDeps
+   put item 1 to 2 of hKey into shortKey
+   line_Delete shortKey, allShortDeps
+   return allShortDeps
+end hkey_FetchDeps

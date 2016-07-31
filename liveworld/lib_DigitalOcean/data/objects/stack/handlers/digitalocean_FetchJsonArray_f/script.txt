@@ -1,0 +1,13 @@
+function digitalocean_FetchJsonArray someCommand, pRecordsPerPage
+   -- v2
+   put OceanApiRoot & someCommand into someUrl
+   if pRecordsPerPage is not empty then
+      put "?per_page=" & pRecordsPerPage after someUrl
+   end if
+   
+   digitalocean_SetAuthHeaders
+   put url someUrl into someJSON
+   if json_Exists (someJSON) is false then retun empty
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end digitalocean_FetchJsonArray

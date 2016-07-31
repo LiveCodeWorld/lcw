@@ -1,0 +1,5 @@
+getprop overlay_Names [hKey]
+   put library_HandlerFile (hKey) into overlayFolder
+   put overlay_ListNames (overlayFolder) into overlayNames
+   return overlayNames
+end overlay_Names

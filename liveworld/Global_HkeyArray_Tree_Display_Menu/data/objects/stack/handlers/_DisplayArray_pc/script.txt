@@ -1,0 +1,7 @@
+private command _DisplayArray treeView, someArray, displayHow, pExpandNum
+   set the cursor to watch
+   lock screen
+   set the tree_Array [pExpandNum] of treeView to someArray
+   set the title_Text of treeView to displayHow
+   unlock screen
+end _DisplayArray

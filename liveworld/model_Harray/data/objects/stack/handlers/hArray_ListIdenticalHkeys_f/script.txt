@@ -1,0 +1,5 @@
+function hArray_ListIdenticalHkeys hKey
+   local identicalHkeys, anotherHashArray
+   hArray_SetHkeyDifferences hKey, identicalHkeys, anotherHashArray
+   return identicalHkeys
+end hArray_ListIdenticalHkeys

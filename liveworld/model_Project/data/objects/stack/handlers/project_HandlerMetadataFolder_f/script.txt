@@ -1,0 +1,13 @@
+function project_HandlerMetadataFolder hKey, pDontCreate
+   -- for the handler/hkey library metadata is in the same folder as the scripts
+   -- in the project handler export - handlers and metadata are in separate roots.
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then return empty
+   
+   put the object_MetaDataFolder [pDontCreate] of hObject into metadataFolder
+   
+   put item 1 of hKey & "_" & item 2 of hKey into folderName
+   put metadataFolder & "handlers/" & folderName & "/" into handlerFolder
+   if pDontCreate is false then folder_CreateNested handlerFolder
+   return handlerFolder
+end project_HandlerMetadataFolder

@@ -1,0 +1,8 @@
+function sitemap_FileIDsFromMediaType mTypeList
+   rigDB_ItemByMediaType mTypeList
+   rigDbSelect "file_id"
+   put rigDbGet() into tQuery
+   
+   put rigDB_ExtractFirstThing (tQuery) into fileIDs
+   return fileIDs
+end sitemap_FileIDsFromMediaType

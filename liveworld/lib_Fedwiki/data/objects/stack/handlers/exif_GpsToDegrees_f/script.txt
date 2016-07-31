@@ -1,0 +1,50 @@
+function exif_GpsToDegrees gpsInfo
+   /*
+   According to the exif standard, there are three "rational" fields for each, containing degrees, minutes, and seconds. 
+   exiftool normalizes imporoper decimal degrees into D,M,S while assigning these values, 
+   (exiftool -GPSLongitude="0.5 90 63.12345" junk.jpg" -> GPS Longitude: 2 deg 1' 3.12" W") 
+   So if you need decimal degrees, you do dd=x0+x1/60.+x2/3600. and could ignore the non-normalization.
+   
+   $d = $deg + ((($min/60) + ($sec/3600))/100);
+   $d = $deg + (($min/60) + ($sec/3600));
+   
+   GPSLatitude = 57 38 56.83 (57/1 38/1 5683/100)
+   GPSLongitude = 10 24 26.79 (10/1 24/1 2679/100)
+   
+   GPS Latitude                    : 57 deg 38' 56.83" N
+   GPS Longitude                   : 10 deg 24' 26.79" E
+   
+   GPS Longitude                   : 10.40744
+   GPS Position                    : 57.64911 10.40744
+   
+   */
+   
+   switch
+      case word 1 of gpsInfo ends with "deg"
+         -- 2deg 55' 54.240
+         -- 2deg 55' 17.040"
+         replace "deg" with empty in gpsInfo
+         put word 1 of gpsInfo into someDegrees
+         put word 2 of gpsInfo into someMinutes
+         if char -1 of someMinutes = "'" then delete char -1 of someMinutes
+         put word 3 of gpsInfo into someSeconds
+         if char -2 to -1 of someSeconds = "''" then delete char -2 to -1 of someSeconds
+         break
+      default
+         -- imageMagick exif results 
+         -- 2/1, 55/1, 5424/100
+         -- 10/1 24/1 2679/100 => 10 deg 24' 26.79" E => 10.40744
+         
+         put item 1 of gpsInfo into degreeInfo
+         put item 2 of gpsInfo into minuteInfo
+         put item 3 of gpsInfo into secondInfo
+         
+         set the itemdelimiter to slash
+         put item 1 of degreeInfo / item 2 of degreeInfo into someDegrees
+         put item 1 of minuteInfo / item 2 of minuteInfo into someMinutes
+         put item 1 of secondInfo / item 2 of secondInfo into someSeconds
+   end switch
+   
+   put someDegrees + someMinutes / 60 + someSeconds / 3600 into decValue
+   return decValue
+end exif_GpsToDegrees

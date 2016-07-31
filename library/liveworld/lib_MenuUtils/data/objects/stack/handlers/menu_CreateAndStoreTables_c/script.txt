@@ -1,0 +1,8 @@
+command menu_CreateAndStoreTables mController
+   -- this should be updated to take advantage of the new script_Array metadata
+   menu_ClearTargetGlobals
+   menu_DeleteTables mController
+   put the menu_TableDataArray of mController into dataArray
+   menu_SetDataArray mController, dataArray
+   return dataArray
+end menu_CreateAndStoreTables

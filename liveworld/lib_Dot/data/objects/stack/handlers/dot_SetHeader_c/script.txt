@@ -1,0 +1,17 @@
+command dot_SetHeader @dotText, dotHeader
+   if the number of lines of dotHeader > 1 then
+      put outline_IncreaseIndent (dotHeader) into dotHeader
+   end if
+   
+   dot_SetGraphSectionOffsets dotText, startChar, endChar
+   if the result is true then
+      if char startChar-1 of dotText = tab then
+         put dotHeader into char (startChar - 1) to endChar of dotText
+      else
+         put dotHeader into char startChar to endChar of dotText
+      end if
+   else
+      put offset ("{", dotText) into bCharNum
+      put CR & dotHeader after char bCharNum dotText
+   end if
+end dot_SetHeader

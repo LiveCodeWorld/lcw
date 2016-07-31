@@ -1,0 +1,5 @@
+function library_ArrayFile shortName, pDontCreate
+   put shortName & ".array" into shortFile
+   put library_ArrayFolder (shortFile, pDontCreate) into someFile
+   return someFile
+end library_ArrayFile

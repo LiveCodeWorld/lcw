@@ -1,0 +1,59 @@
+--> MetaData
+-
+license: GPLv3
+name: View|Layout|Group
+type: view behavior
+version: 0.2
+
+/*
+*/
+
+
+--> Variables
+-
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (preOpenControl,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (refresh,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Child 
+-
+
+
+--> Controls
+-
+[[ _FetchHandler (group_Layout,g) ]]
+
+[[ _FetchHandler (layout_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> Group | Props
+-
+[[ _FetchHandler (visible_Object,g) ]]
+
+[[ _FetchHandler (visible_Name,g) ]]
+
+[[ _FetchHandler (visible_Name,s) ]]
+
+[[ _FetchHandler (visible_Names,g) ]]
+
+
+
+--> Layout | Children
+-
+[[ _FetchHandler (layout_Children,g) ]]
+
+[[ _FetchHandler (top_ControlNames,g) ]]
+
+[[ _FetchHandler (top_Controls,g) ]]

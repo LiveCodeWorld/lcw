@@ -1,0 +1,12 @@
+function finder_Disks
+    put "tell application" && kwote("Finder") into someAppleScript
+    put return & "disks" after someAppleScript
+    put return & "end tell" after someAppleScript
+    -- return someAppleScript
+    
+    do someAppleScript as AppleScript
+    put the result into diskRecord
+    delete char 1 of diskRecord
+    delete char -1 of diskRecord
+    return diskRecord
+end finder_Disks

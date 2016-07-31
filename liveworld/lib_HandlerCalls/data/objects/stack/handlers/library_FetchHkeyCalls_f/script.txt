@@ -1,0 +1,8 @@
+function library_FetchHkeyCalls shortHkey
+   -- could also get from "library_FetchHandlerMetadata"
+   put library_CallsFile (shortHkey) into someFile
+   if there is not a file someFile then return empty
+   put url ("binfile:" & someFile) into hKeyCalls
+   hack_UpdateBinFile hKeyCalls, someFile
+   return hKeyCalls
+end library_FetchHkeyCalls

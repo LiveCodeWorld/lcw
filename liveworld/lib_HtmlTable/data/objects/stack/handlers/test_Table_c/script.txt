@@ -1,0 +1,25 @@
+command test_Table
+   put "Name" into tData[1][1]
+   put "Color" into tData[1][2]
+   put "Size" into tData[1][3]
+   
+   put "Fred" into tData[2][1]
+   put "Blue" into tData[2][2]
+   put "Small" into tData[2][3]
+   
+   put "Mary" into tData[3][1]
+   put "Red" into tData[3][2]
+   put "Large" into tData[3][3]
+   
+   put "John" into tData[4][1]
+   put "Green" into tData[4][2]
+   put "Medium" into tData[4][3]
+   
+   put table_ConstructOpenTag (1, 2, 1, "mytable") into openTag
+   table_SetTemplateOpeningTag openTag
+   
+   put table_Construct (tData) into tableHTML
+   
+   html_Tidy tableHTML
+   put tableHTML
+end test_Table

@@ -1,0 +1,6 @@
+setprop dot_GeometryArray [pOverlayName] geometryArray
+   put the dot_DataArray [pOverlayName] of the target into dataArray
+   put geometryArray into dataArray ["geometry"]
+   set the dot_DataArray [pOverlayName] of the target to dataArray
+   return dataArray
+end dot_GeometryArray

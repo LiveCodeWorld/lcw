@@ -1,0 +1,22 @@
+command rect_CreateTestButton someRect, someName, someScript, insideID, someColour, createInvisible   
+   if exists (btn someName) then
+      put the long id of btn someName into placeholderButton
+      
+      if someRect is a rect then
+         set the rect of placeholderButton to someRect
+      end if
+      
+      switch someColour
+         case empty
+         case "random"
+            put colour_GetRandom() into someColour
+         default
+            set the backgroundcolor of placeholderButton to someColour
+      end switch
+      return placeholderButton
+   end if
+   
+   create_Placeholder someName, pRect, pGroupID, someColour
+   put the result into placeholderButton
+   return placeholderButton
+end rect_CreateTestButton

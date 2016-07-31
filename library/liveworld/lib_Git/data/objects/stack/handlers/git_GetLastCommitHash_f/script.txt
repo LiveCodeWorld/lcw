@@ -1,0 +1,7 @@
+function git_GetLastCommitHash relativePath
+   -- seems slow
+   shell_BashParamEscape relativePath
+   put merge("git rev-list -1 HEAD -- [[relativePath]]") into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_GetLastCommitHash

@@ -1,0 +1,5 @@
+command menu_DeleteTables mController
+   put the custompropertysets of mController into setNames
+   line_Delete "uOPN_MenuTable", setNames
+   set the custompropertysets of mController to setNames
+end menu_DeleteTables

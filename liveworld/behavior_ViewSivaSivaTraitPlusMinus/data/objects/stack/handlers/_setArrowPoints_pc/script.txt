@@ -1,0 +1,12 @@
+ private command _setArrowPoints positiveTraitBottom, negativeTraitTop, centreX, arrowGap, @arrowTop, @arrowBottom, @arrowPoints
+   put centreX into item 1 of arrowTopLoc
+   put positiveTraitBottom + arrowGap into arrowTop
+   put arrowTop into item 2 of arrowTopLoc
+   
+   put centreX into item 1 of arrowBottomLoc
+   put negativeTraitTop - arrowGap into arrowBottom
+   put arrowBottom into item 2 of arrowBottomLoc
+   
+   put arrowTopLoc & CR & arrowBottomLoc into arrowPoints
+   return arrowPoints
+end _setArrowPoints

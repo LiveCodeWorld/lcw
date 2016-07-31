@@ -1,0 +1,10 @@
+function behavior_ListLibraryCardButtons
+   put the behaviorButton_Card of me into behaviorButtonCard
+   repeat with btnNum = 1 to the number of buttons on behaviorButtonCard
+      put the long id of btn btnNum of behaviorButtonCard into bButton
+      -- put revRuggedID (bButton) & CR after bButtons
+      put the name of bButton & CR after bButtons
+   end repeat
+   delete char -1 of bButtons
+   return bButtons
+end behavior_ListLibraryCardButtons

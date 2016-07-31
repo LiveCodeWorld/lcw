@@ -1,0 +1,12 @@
+on menu_StackData treeField
+   put the tree_SelectedLink of treeField into commitHash
+   put the displayed_Object of treeField into stackObject
+   
+   put the git_StackTreeish [commitHash] of stackObject into treeish
+   put "git show" && kwote (treeish) into someShell
+    
+   put git_ExecuteShellCommand(someShell) into shellResult
+   put shellResult into stackData
+   
+   display_Text stackData
+end menu_StackData

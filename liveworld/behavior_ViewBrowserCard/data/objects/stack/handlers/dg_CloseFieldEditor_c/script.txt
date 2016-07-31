@@ -1,0 +1,7 @@
+on dg_CloseFieldEditor pFieldEditor, recordView
+   if recordView is empty then put the long id of the target into recordView
+   put the htmltext of pFieldEditor into someHtml
+   put the record_Name of recordView into vName
+   view_AutoLinkHelpText someHtml
+   view_SetHelpHtml vName, someHtml
+end dg_CloseFieldEditor

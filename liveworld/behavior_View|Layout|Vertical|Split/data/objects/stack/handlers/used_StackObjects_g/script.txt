@@ -1,0 +1,5 @@
+getprop used_StackObjects
+   put the displayed_Project of the target into projectName
+   put project_FetchObjects ("used", projectName) into stackObjects
+   return stackObjects
+end used_StackObjects

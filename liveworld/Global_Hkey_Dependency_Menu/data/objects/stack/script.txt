@@ -1,0 +1,94 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Hkey_Dependency_Menu
+type: controller
+version: 0.1
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | Hkey | Dependency | Menu
+-
+[[ _FetchHandler (menu_CreateDependencyGraphFromExported,c) ]]
+
+[[ _FetchHandler (menu_CreateWithoutObjectClusters,c) ]]
+
+[[ _FetchHandler (menu_RecursivelyCreateLibrayDepGraphsFromObjects,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchHkeyDependencies,c) ]]
+
+[[ _FetchHandler (menu_DepsFromExportedLinks,c) ]]
+
+[[ _FetchHandler (menu_TestSame,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchDependencyScript,c) ]]
+
+[[ _FetchHandler (menu_DependencyScriptFromArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StripHkeyProps,c) ]]
+
+[[ _FetchHandler (menu_StripHkeyComponents,c) ]]
+
+[[ _FetchHandler (menu_IncludeHandlersFrom,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_FetchHkeyLinkArray,c) ]]
+
+[[ _FetchHandler (menu_DepsFromStoredHkeyLinkArray,c) ]]
+
+[[ _FetchHandler (menu_DepsFromObjectsScriptLinkArray,c) ]]
+
+[[ _FetchHandler (menu_AllDepsFromObjects,c) ]]
+
+
+
+--> Global | Hkey | Dependency | Menu | Props
+-
+[[ _FetchHandler (fetch_How,g) ]]
+
+[[ _FetchHandler (fetch_Hows,g) ]]
+
+[[ _FetchHandler (old_FetchHow,g) ]]
+
+[[ _FetchHandler (old_FetchHows,g) ]]
+
+[[ _FetchHandler (overlay_Names,g) ]]
+
+[[ _FetchHandler (include_HandlersFrom,g) ]]
+
+[[ _FetchHandler (include_HandlersFrom,s) ]]
+
+[[ _FetchHandler (include_HandlersFroms,g) ]]
+
+
+--> Global | Hkey | Dependency | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DepsFromStoredHkeyLinkArray,g) ]]
+
+[[ _FetchHandler (disabled_DepsFromScriptLinkArray,g) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]

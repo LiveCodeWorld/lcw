@@ -1,0 +1,6 @@
+getprop script_GeometryArray [pGraphStyle]
+   -- see also "script_GeometryArrayFromCmap"
+   put the long id of the target into scriptObject
+   put the script_DataArray [pOverlayName] of scriptObject into dataArray
+   return dataArray ["geometry"]
+end script_GeometryArray

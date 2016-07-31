@@ -1,0 +1,8 @@
+command github_RestPost restPath, postJSON
+   _setAuthHeaders
+   put _constructApiUrl (restPath) into someUrl
+ 
+   post postJSON to url someUrl
+   put it into postResult
+   return postResult
+end github_RestPost

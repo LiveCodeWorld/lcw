@@ -1,0 +1,9 @@
+command project_StartFront pProjectName
+   put project_FetchObjects ("front", pProjectName) into frontObjects
+   repeat for each line someObject in frontObjects
+      if exists(someObject) then
+         insert the script of someObject into front
+      end if
+   end repeat
+   return frontObjects
+end project_StartFront

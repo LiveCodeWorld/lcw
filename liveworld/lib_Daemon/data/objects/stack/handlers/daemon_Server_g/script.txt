@@ -1,0 +1,14 @@
+getprop daemon_Server
+   /*
+   This is the control (often a stack) that is an instance of a particular server.
+   Attached to this object is a chain of behaviors that implement the generic daemon server functionality.
+   
+   You customise the server by:
+   
+   1) Adding scripts to the daemon_Server
+   2) Dropping in on wrting your own custom daemon_RouterLibrary
+   3) Messing with the behavior_Hierarchy of the daemon_Server
+   */
+   
+   return DaemonServer
+end daemon_Server

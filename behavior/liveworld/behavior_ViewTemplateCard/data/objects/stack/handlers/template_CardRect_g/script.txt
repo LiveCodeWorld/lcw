@@ -1,0 +1,18 @@
+getprop template_CardRect [pMargin]
+   put the long id of me into cardObject
+   
+   if pMargin is empty then
+      put the card_Margin of cardObject into pMargin
+      if pMargin is empty then
+         put 24 into pMargin
+      end if
+   else
+      set the card_Margin of cardObject to pMargin
+   end if
+   
+   put the rect of cardObject into someRect
+   if pMargin is not 0 then
+      put rect_SubtractMargin (pMargin, someRect) into someRect
+   end if
+   return someRect
+end template_CardRect

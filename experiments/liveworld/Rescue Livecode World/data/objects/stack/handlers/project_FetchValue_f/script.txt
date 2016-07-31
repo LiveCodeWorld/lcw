@@ -1,0 +1,5 @@
+function project_FetchValue someKey, pProjectName
+   put project_FetchArray (pProjectName) into projectArray
+   put projectArray [someKey] into someValue
+   return someValue
+end project_FetchValue

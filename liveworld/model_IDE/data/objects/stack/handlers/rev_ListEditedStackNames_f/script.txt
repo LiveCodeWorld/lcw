@@ -1,0 +1,19 @@
+function rev_ListEditedStackNames pType
+   global gREVStackStatus
+   
+   repeat for each key stackName in gREVStackStatus
+      if exists (stack stackName) is false then next repeat
+      switch pType
+         case "saved"
+            if gREVStackStatus [stackName] = empty then
+               put "saved" into stackArray [stackName]
+            end if
+            break
+         default
+            if gREVStackStatus [stackName] = "edited" then
+               put "edited" into stackArray [stackName]
+            end if
+      end switch
+   end repeat
+   return keys (stackArray)
+end rev_ListEditedStackNames

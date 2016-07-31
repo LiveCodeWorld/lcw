@@ -1,0 +1,23 @@
+command file_Deconstruct someFile, @someRoot, @shortName, @fileExtension
+    -- was "deconstruct_File"
+    -- should turn someRoot into someFolder and add "/" to end
+    
+    if someFile is empty then
+        put the effective filename of this stack into someFile
+    end if
+    put someFile into someRoot
+    put the itemdelimiter into originalDelim
+     
+    set the itemdelimiter to "/"
+    put last item of someFile into shortName
+    delete last item of someRoot
+     
+    if shortName contains "." then
+        set the itemdelimiter to "."
+        put last item of shortName into fileExtension
+        delete last item of shortName
+    else
+        put empty into fileExtension
+    end if
+    set the itemdelimiter to originalDelim
+end file_Deconstruct

@@ -1,0 +1,4 @@
+command display_BehaviorHacks
+   put project_GetRevHackStatus() into someBoolean
+   set the displayed_BehaviorHacks of me to someBoolean
+end display_BehaviorHacks

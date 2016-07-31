@@ -1,0 +1,19 @@
+function behaviorModel_GetArray pWhichArray
+   -- put hArray_GetObjectTypeArray ("behavior") into objectArray -- new hArray model
+   -- return objectArray
+   
+   -- old move to hArray
+   breakpoint
+   
+   -- this is the old file based array model
+   put library_FetchArray ("OPN_Behavior") into behaviorArray
+   switch
+      case char 1 of pWhichArray is empty or char 1 of pWhichArray is "n" -- default for nameArray
+         return behaviorArray ["nameArray"]
+      case char 1 of pWhichArray is "o" -- for objectArray
+         return behaviorArray ["objectArray"]
+      default -- "full"
+         return behaviorArray
+   end switch
+   return behaviorArray
+end behaviorModel_GetArray

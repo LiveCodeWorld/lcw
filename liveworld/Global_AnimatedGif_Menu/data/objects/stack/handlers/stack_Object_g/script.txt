@@ -1,0 +1,5 @@
+getprop stack_Object
+   put the long ID of the target into targetObject
+   get object_ExtractStack (targetObject)
+   return it
+end stack_Object

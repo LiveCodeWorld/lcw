@@ -1,0 +1,5 @@
+function view_IsDefault viewName
+   view_NormalizeName viewName
+   put view_GetDefault(viewName) into defaultViewName
+   return viewName = defaultViewName
+end view_IsDefault

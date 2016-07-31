@@ -1,0 +1,4 @@
+on menu_RemoveSelectedFromProject indexView
+   put the index_View of indexView into indexView
+   display_RemoveSelectedShortFilesFromUsed indexView
+end menu_RemoveSelectedFromProject

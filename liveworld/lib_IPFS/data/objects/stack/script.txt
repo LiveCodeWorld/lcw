@@ -1,0 +1,79 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_IPFS
+type: library
+version: 0.1
+
+
+/* Notes
+This is a library for interfacing with the IPFS.
+
+added QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH 
+added QmYuAjq9hB5uezxeNanc8tmfxR8qepgcQ7ebX4AhoRydvF /Users/BabyBlue/Desktop/Wikipedia Images/CCCamp11_Night.jpg
+*/
+
+
+--> Test
+-
+[[ _FetchHandler (test_Go,c) ]]
+
+[[ _FetchHandler (loadData,c) ]]
+
+
+--> IPFS | Model
+-
+[[ _FetchHandler (ipfs_GetMultiHash,f) ]]
+
+[[ _FetchHandler (ipfs_SetMultiHash,c) ]]
+
+[[ _FetchHandler (ipfs_FetchArray,f) ]]
+
+[[ _FetchHandler (ipfs_SaveArray,c) ]]
+
+
+--> IPFS | Stacks
+-
+[[ _FetchHandler (ipfs_SaveStack,c) ]]
+ 
+[[ _FetchHandler (ipfs_Go,c) ]]
+
+
+--> IPFS | REST
+-
+[[ _FetchHandler (testPost,c) ]]
+
+[[ _FetchHandler (ipfs_AddFolder,c) ]]
+
+[[ _FetchHandler (ipfs_ParseAddFolderResult,f) ]]
+
+[[ _FetchHandler (ipfs_AddFile,c) ]]
+
+[[ _FetchHandler (ipfs_ShellAddFile,c) ]]
+
+[[ _FetchHandler (ipfs_RestGetArray,f) ]]
+
+[[ _FetchHandler (ipfs_RestGet,f) ]]
+
+[[ _FetchHandler (ipfs_LaunchBrowserUrl,c) ]]
+
+[[ _FetchHandler (ipfs_ConstructBrowserUrl,f) ]]
+
+[[ _FetchHandler (ipfs_ConstructUrl,f) ]]
+
+
+--> IPFS
+-
+[[ _FetchHandler (ipfs_GetObject,f) ]]
+
+[[ _FetchHandler (ipfs_GetSwarmPeers,f) ]]
+
+[[ _FetchHandler (ipfs_GetVersion,f) ]]
+
+[[ _FetchHandler (ipfs_Cat,f) ]]
+
+function ipfs_Cat someHash
+    return someJSON
+end ipfs_Cat
+
+[[ _FetchHandler (ipfs_AddToPATH,c) ]]

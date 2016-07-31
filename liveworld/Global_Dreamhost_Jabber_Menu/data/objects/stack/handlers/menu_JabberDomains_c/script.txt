@@ -1,0 +1,6 @@
+on menu_JabberDomains
+   put dreamhost_ApiKey() into apiKey
+   put merge("https://api.dreamhost.com/?key=[[apiKey]]&cmd=jabber-list_valid_domains") into someUrl
+   put url someUrl into domainIndex
+   display_Lines domainIndex
+end menu_JabberDomains

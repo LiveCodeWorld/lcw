@@ -1,0 +1,4 @@
+on resizeControl pFirstparam
+   put the rect of me into pRect
+   LayoutControl pRect
+end resizeControl

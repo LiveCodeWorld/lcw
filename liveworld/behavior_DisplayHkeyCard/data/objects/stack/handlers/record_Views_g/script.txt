@@ -1,0 +1,11 @@
+getprop record_Views [hKeys]
+   put the dataGrid_View of me into dgView
+   repeat for each line hKey in hKeys
+      dispatch "FindLine" to dgView with "hKey", hKey
+      put the result into lineNum
+      put the dgDataControlOfLine [lineNum] of dgView
+      put dgView & CR after dgViews
+   end repeat
+   delete char -1 of dgViews
+   return dgViews
+end record_Views

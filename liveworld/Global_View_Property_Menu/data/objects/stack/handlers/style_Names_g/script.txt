@@ -1,0 +1,9 @@
+getprop style_Names [mTarget]
+   put the template_StyleNames of mTarget into viewStyleNames
+   if viewStyleNames is empty then
+      put "Create new style" into viewStyleNames
+   else
+      put CR & "-" & CR & "Create new style" after viewStyleNames
+   end if
+   return viewStyleNames
+end style_Names

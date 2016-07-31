@@ -1,0 +1,151 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_ViewImageSVG
+type: view behavior
+version: 0.3
+
+
+/*
+The idea here is to experiment with layered behaviors.
+That is instead of using if-then logic to switch the behavior of a layout,
+we simply add or remove a behavior.
+
+The scripts below are just work in progress for now.
+*/
+
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (browserNavigateBegin,c) ]]
+
+-- on browserFrameDocumentLoadBegin
+   put the params
+end browserFrameDocumentLoadBegin
+
+
+--> Work in Progress
+-
+[[ _FetchHandler (displayed_Object,g) ]]
+
+[[ _FetchHandler (displayed_Object,s) ]]
+
+-- getprop displayed_Hkey
+   put LocalArray ["hKey"] into hKey
+   return hKey
+end displayed_Hkey
+
+[[ _FetchHandler (displayed_Hkey,s) ]]
+
+[[ _FetchHandler (svg_Scale,g) ]]
+
+[[ _FetchHandler (svg_Scale,s) ]]
+
+setprop svg_Scale svgScale
+   put the htmltext of me into someHTML
+   
+   set the wholematches to false
+   put "<g transform=" into tagBit
+   put lineOffset (tagBit, someHTML) into lineNum
+   
+   switch
+      case lineNum is 0 and svgScale is empty
+         -- it's not there and we are trying to delete it
+         -- do nothing
+         break
+      case lineNum is 0 and svgScale is not empty
+         -- it's no there and we are trying to add a scale
+         
+         break
+      case svgScale is empty
+         delete line lineNum of someHTML
+         
+         -- now delete the end tag
+         
+         break
+      default
+         -- scale is already present and we have a new value to set
+         put merge ("<g transform='scale(svgScale)'>") into startTag
+         put startTag into line lineNum of someHTML
+   end switch
+   
+   set the htmltext of me to someHTML
+end svg_Scale
+
+
+
+
+--> SVG | Props
+-
+[[ _FetchHandler (svg_File,g) ]]
+
+[[ _FetchHandler (svg_File,s) ]]
+
+[[ _FetchHandler (svg_URL,g) ]]
+
+[[ _FetchHandler (svg_URL,s) ]]
+
+[[ _FetchHandler (svg_IsFluid,g) ]]
+
+[[ _FetchHandler (svg_IsFluid,s) ]]
+
+[[ _FetchHandler (svg_Width,g) ]]
+
+[[ _FetchHandler (svg_Width,s) ]]
+
+[[ _FetchHandler (svg_Height,g) ]]
+
+[[ _FetchHandler (svg_Height,s) ]]
+
+[[ _FetchHandler (svg_Header,g) ]]
+
+[[ _FetchHandler (svg_Header,s) ]]
+
+[[ _FetchHandler (svg_HeaderTable,g) ]]
+
+[[ _FetchHandler (svg_ViewBoxDimensions,g) ]]
+
+[[ _FetchHandler (svg_ViewBox,g) ]]
+
+[[ _FetchHandler (svg_HeaderArray,g) ]]
+
+[[ _FetchHandler (svg_HeaderArray,s) ]]
+
+[[ _FetchHandler (svg_HeaderAttributes,g) ]]
+
+[[ _FetchHandler (svg_Dimensions,g) ]]
+
+[[ _FetchHandler (svg_Dimensions,s) ]]
+
+[[ _FetchHandler (svg_XML,g) ]]
+
+[[ _FetchHandler (svg_XML,s) ]]
+
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> SVG
+-
+[[ _FetchHandler (svg_Get,f) ]]
+
+[[ _FetchHandler (svg_Set,c) ]]
+
+[[ _FetchHandler (svg_SetDimensions,c) ]]
+
+[[ _FetchHandler (svg_CreateXmlTree,pf) ]]
+
+[[ _FetchHandler (svg_DeleteXmlTree,pc) ]]
+
+[[ _FetchHandler (text_SetOffsets,c) ]]
+
+[[ _FetchHandler (old_ExtractDimensions,c) ]]
+
+[[ _FetchHandler (old_SetDimensions,c) ]]
+
+
+--> SVG | Templates
+-
+[[ _FetchHandler (svg_GetHTMLTemplate,f) ]]

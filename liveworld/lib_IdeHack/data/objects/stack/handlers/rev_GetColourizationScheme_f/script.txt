@@ -1,0 +1,5 @@
+function rev_GetColourizationScheme
+   put rev_GetPref ("colorization", "scheme") into schemeName
+   if schemeName is empty then return "default"
+   return schemeName
+end rev_GetColourizationScheme

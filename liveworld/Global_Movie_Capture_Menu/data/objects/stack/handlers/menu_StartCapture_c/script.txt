@@ -1,0 +1,6 @@
+on menu_StartCapture
+   revCaptureBeginSession
+   put it into someIt
+   put the result into someResult
+   put true into LocalArray ["revCaptureBeginSession"]
+end menu_StartCapture

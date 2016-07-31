@@ -1,0 +1,22 @@
+function mediawiki_FetchPage pageTitle, pProps, pReturnChunks, pOtherBits, pApiStem, pFormat
+   /*
+   api.php ? action=query & prop=revisions & rvprop=content & titles=ArticleA|ArticleB
+   
+   api.php ? action=query & prop=revisions & revids=12345 
+   & rvprop=timestamp & rvlimit=10 & rvdir=older
+   -- &prop=revisions&titles=Agents&rvstartid=1689&rvprop=timestamp|user|comment|content&format=xml"
+   
+   https://en.wikipedia.org/w/api.php?action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json
+   */
+   if pProps is empty then put "revisions" into pProps
+   if pReturnChunks is empty then put "content" into pReturnChunks
+   if pFormat is empty then put "json" into pFormat
+   if pApiStem is empty then put wikipedia_GetApiRoot() into pApiStem -- wikpedia
+   
+   put urlencode(pageTitle) into pageTitle
+   put merge("[[pApiStem]]?action=query&prop=[[pProps]]&titles=[[pageTitle]]&rvprop=[[pReturnChunks]]&format=[[pFormat]]") into someURL
+   -- put merge("[[pApiStem]]?action=query&prop=[[pProps]]&titles=[[pageTitle]]&format=[[pFormat]]") into someURL
+   if pOtherBits is not empty then put "&" &  pOtherBits after someURL
+   put url someUrl into someResult
+   return someResult
+end mediawiki_FetchPage

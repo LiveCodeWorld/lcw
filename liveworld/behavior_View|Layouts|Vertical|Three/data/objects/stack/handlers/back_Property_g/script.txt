@@ -1,0 +1,11 @@
+getprop back_Property [propName]
+   put the long id of the target into tObject
+   
+   put the customproperties of tObject into propArray
+   put propArray [propName] into titlePosistion
+   if titlePosistion is empty then
+      put object_GetOwner (tObject) into tOwner
+      put the propName of tOwner into propValue
+   end if
+   return propValue
+end back_Property

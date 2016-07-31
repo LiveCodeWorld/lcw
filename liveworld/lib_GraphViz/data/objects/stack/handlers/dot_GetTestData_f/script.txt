@@ -1,0 +1,5 @@
+function dot_GetTestData shortFile  
+   put dot_TestDataFolder (shortFile) into someFile
+   put url ("file:" & someFile) into dotText
+   return dotText
+end dot_GetTestData

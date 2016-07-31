@@ -1,0 +1,16 @@
+command image_RevExport imageObject, pSaveToFile, fileExtension
+   -- exports the image at the size it is shown
+   
+   put image_GetFileType(fileExtension) into imageFileType
+   put the filetype into oFileType
+   set the filetype to imageFileType
+   put merge("export [[imageObject]] to file '[[pSaveToFile]]' as [[fileExtension]]") into doScript
+   replace "'" with quote in doScript
+   try
+      do doScript
+      return empty
+   catch errorNum
+      log_Error doScript, errorNum, true, true
+      return errorNum
+   end try
+end image_RevExport

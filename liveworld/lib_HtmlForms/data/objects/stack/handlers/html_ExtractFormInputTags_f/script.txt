@@ -1,0 +1,18 @@
+function html_ExtractFormInputTags someHtml
+    put "input" into tagName
+    
+    local tagContents -- not sure if it is still required
+    replace lineFeed with empty in someHtml -- seems neessary
+    
+    put "(<\s*" & tagName & "\s[^>]*>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, startCharNum, endCharNum) is false then
+            delete last char of inputIndex
+            return inputIndex
+        else
+            put char startCharNum to endCharNum of someHtml into inputTag
+            put inputTag & CR after inputIndex
+            delete char 1 to endCharNum + 1 of someHtml
+        end if
+    end repeat
+end html_ExtractFormInputTags

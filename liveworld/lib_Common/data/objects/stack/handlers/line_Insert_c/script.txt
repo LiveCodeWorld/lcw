@@ -1,0 +1,11 @@
+command line_Insert someLine, @someIndex, beforeLineNum
+   if someIndex is empty then
+      put someLine into someIndex
+   else if someLine is not empty then
+      if beforeLineNum is a number then
+         put someLine & CR before line beforeLineNum of someIndex
+      else
+         put CR & someLine after someIndex
+      end if
+   end if
+end line_Insert

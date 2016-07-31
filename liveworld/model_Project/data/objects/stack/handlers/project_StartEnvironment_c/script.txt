@@ -1,0 +1,17 @@
+command project_StartEnvironment projectName
+   set the cursor to watch
+   if projectName = "none" then return empty
+   
+   project_LoadGlobals projectName
+   
+   project_SetCurrentName projectName -- just in case it has been messed up
+   project_StartBack projectName
+   project_StartUsed projectName
+   project_StartFront projectName
+   
+   put project_GetRevHackStatus (projectName) into someBoolean
+   ide_AddBehaviorHacks someBoolean, true
+   
+   put "Added the Livecode hacks to the environment!" into someComment
+   opn_Notify someComment
+end project_StartEnvironment

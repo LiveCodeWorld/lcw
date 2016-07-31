@@ -1,0 +1,9 @@
+getprop disabled_DepsFromScriptLinkArray [hKey]
+   put item 3 of hKey into scriptObject
+   put the script_OverlayFile of scriptObject into someFile
+   if there is a file someFile then
+      return false
+   else
+      return true
+   end if
+end disabled_DepsFromScriptLinkArray

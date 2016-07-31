@@ -1,0 +1,12 @@
+function library_FetchObjectTypeArray libType, setName
+   switch setName
+      case "none"
+         return empty
+      case "all"
+         return library_ConstructAllObjectTypeArray (libType)
+      default
+         put library_FetchSetData() into setData
+         put setData [setName]["data"][libType] into libTypeArray
+         return libTypeArray
+   end switch
+end library_FetchObjectTypeArray

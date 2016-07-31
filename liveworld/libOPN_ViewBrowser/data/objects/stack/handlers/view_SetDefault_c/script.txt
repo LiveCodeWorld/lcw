@@ -1,0 +1,10 @@
+on view_SetDefault viewName
+   put the mvc_Library of me into modelObject
+   
+   view_NormalizeName viewName
+   put viewName into someValue
+   set the itemdelimiter to "|"
+   delete item -1 of viewName
+   
+   model_SetValue viewName, modelObject, someValue, "DefaultView", "array"
+end view_SetDefault

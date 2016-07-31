@@ -1,0 +1,24 @@
+function rev_GetAppBrowserSelectedControls
+   -- reverse engineered fro the LiveCode IDE
+   global gREVStackName, gREVControls
+   if gREVControls is empty then return empty
+   
+   put the long id of cd "Cards and Controls" of stack "revApplicationOverview" into controlCard
+   -- put value ("revSelControls()", controlCard) into tObjects
+   if exists (field "Controls" of controlCard) is false then
+      breakpoint
+      return empty
+   end if
+   
+   put the cCardID of stack "revApplicationOverview" into cardID
+   put the long id of field "Controls" of controlCard into controlField
+   put the hilitedLines of controlField into tLines
+   
+   put empty into someObjects
+   repeat for each item i in tLines
+      put item 4 of line i of gREVControls into cNum
+      put the long id of control cNum of card id cardID of stack gREVStackName & CR after someObjects
+   end repeat
+   delete last char of someObjects
+   return someObjects
+end rev_GetAppBrowserSelectedControls

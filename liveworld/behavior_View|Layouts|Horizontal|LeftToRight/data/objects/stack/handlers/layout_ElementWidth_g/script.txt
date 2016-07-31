@@ -1,0 +1,30 @@
+getprop layout_ElementWidth [layoutStyle]
+   -- can be overridden by a prop in the target 
+   put the long id of the target into layoutElement
+   if layoutStyle is empty then put the layout_Style of me into layoutStyle
+   if the long id of the target = the long id of me then pass layout_ElementWidth
+   
+   put the uOPN ["layout_ElementWidth"] of me into someWidth
+   if someWidth is a number then return someWidth
+   
+   switch layoutStyle
+      case "centred"
+      case "left to right"
+      case "right to left"
+      case "edge to edge"
+      case "distributed"
+      default
+         if the view_Name of layoutElement contains "|Divider|" then
+            put the width of layoutElement into someWidth
+         else
+            if the use_FormattedWidth of me is true then
+               put the formatted_Width of layoutElement into someWidth
+               if someWidth is not empty then return someWidth
+               put the formattedwidth of layoutElement into someWidth
+               if someWidth is not empty then return someWidth
+            end if
+            put the width of layoutElement into someWidth
+         end if
+         return someWidth
+   end switch
+end layout_ElementWidth

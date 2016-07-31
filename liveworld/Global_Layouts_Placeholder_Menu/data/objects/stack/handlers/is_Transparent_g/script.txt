@@ -1,0 +1,4 @@
+getprop is_Transparent [mTarget]
+   put the view_IsOpaque of mTarget into isOpaque
+   return not isOpaque
+end is_Transparent

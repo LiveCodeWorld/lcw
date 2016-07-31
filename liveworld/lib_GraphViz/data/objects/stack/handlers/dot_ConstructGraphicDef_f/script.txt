@@ -1,0 +1,25 @@
+function dot_ConstructGraphicDef nodeLabel, someWidth, someHeight, fixedSize, nodeUrl, nodeToolTip
+   -- shapefile is deprecated
+   put "shapeFile" into nodeShape
+   put empty into polyParams
+   put empty into nodeStyle
+   put empty into nodeColour
+   put empty into nodeFillColour
+   
+   get dot_ConstructDefLine(nodeName, nodeLabel, nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip)
+   
+   if someWidth is not empty then
+      dot_ConvertToInches someWidth
+      put ", width=" & someWidth after it
+   end if
+   if someHeight is not empty then
+      dot_ConvertToInches someHeight
+      put ", height=" & someHeight after it
+   end if
+   if fixedsize is not empty then put ", fixedsize=" & fixedsize after it
+   
+   dot_NormalizeNode nodeName
+   put nodeName && "[" & it & "];" into nodeDef
+   
+   return nodeDef
+end dot_ConstructGraphicDef

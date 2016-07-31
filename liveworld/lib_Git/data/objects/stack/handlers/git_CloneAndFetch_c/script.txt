@@ -1,0 +1,66 @@
+command git_CloneAndFetch gitURL, pNewRepoFolder
+   /*
+   Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository (visible
+   using git branch -r), and creates and checks out an initial branch that is forked from the cloned repository's currently active branch.
+   
+   After the clone, a plain git fetch without arguments will update all the remote-tracking branches, and a git pull without arguments will
+      in addition merge the remote master branch into the current master branch, if any (this is untrue when "--single-branch" is given; see
+      below).
+      
+      This default configuration is achieved by creating references to the remote branch heads under refs/remotes/origin and by initializing
+      remote.origin.url and remote.origin.fetch configuration variables.
+      */
+      
+      if pNewRepoFolder is empty then
+         answer folder "Choose Git Folder" with git_GetRootFolder()
+         if the result is "Cancel" then exit to top
+         put it into pNewRepoFolder
+      else
+         folder_Create pNewRepoFolder
+      end if
+      set the defaultfolder to pNewRepoFolder
+      
+      put the folders into oFolders
+      
+      put "git clone" && gitURL into someShell
+      put git_ExecuteShellCommand (someShell, pNewRepoFolder) into shellResult
+      if shellResult is not empty then
+         opn_Notify shellResult, true
+         -- display_Lines shellResult, "GIT clone result"
+         -- exit to top
+      end if
+      
+      put the folders into nFolders
+      put empty into clonedFolder
+      repeat for each line testFolder in nFolders
+         if testFolder is not among the lines of oFolders then
+            # Changes the active directory in the prompt to the newly cloned "Spoon-Knife" directory
+            -- cd Spoon-Knife
+            put the defaultfolder & slash & testFolder & slash into clonedFolder
+            set the defaultfolder to clonedFolder
+            exit repeat
+         end if
+      end repeat
+      if clonedFolder is empty then
+         answer warning "Failed to find new cloned repository folder!"
+         breakpoint
+         -- exit to top
+      end if
+      
+      # Assigns the original repository to a remote called "upstream"
+      put "git remote add upstream" && gitURL into someShell
+      put git_ExecuteShellCommand (someShell, clonedFolder) into shellResult
+      if shellResult is not empty then
+         display_Lines shellResult, "GIT error adding upstream remote"
+         breakpoint
+         -- exit to top
+      end if
+      
+      # Pulls in changes not present in your local repository, without modifying your files
+      put "git fetch upstream" into someShell
+      put git_ExecuteShellCommand (someShell, clonedFolder) into shellResult
+      if shellResult is not empty then
+         display_Lines shellResult, "GIT fetching upstream remote"
+         -- exit to top
+      end if
+end git_CloneAndFetch

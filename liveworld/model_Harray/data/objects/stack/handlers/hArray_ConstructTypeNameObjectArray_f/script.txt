@@ -1,0 +1,13 @@
+function hArray_ConstructTypeNameObjectArray
+   local typeNameObjectArray
+   put hArray_GetObjectTypeData() into objectTypeData
+   
+   repeat for each key objectType in objectTypeData
+      put objectTypeData [objectType] into objectTypeArray
+      repeat for each key rObject in objectTypeArray
+         put hArray_GetUripArray (rObject, "name") into uripName
+         put empty into typeNameObjectArray [objectType][uripName][rObject]
+      end repeat
+   end repeat
+   return typeNameObjectArray
+end hArray_ConstructTypeNameObjectArray

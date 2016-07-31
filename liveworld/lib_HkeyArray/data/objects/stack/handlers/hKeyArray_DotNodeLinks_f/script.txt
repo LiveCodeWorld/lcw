@@ -1,0 +1,23 @@
+function hKeyArray_DotNodeLinks linkArray, pNodeIDs, pTargetObject
+   -- this seems specific to scripts?
+   -- put the graph_Model of the target  into graphModel
+   
+   if pNodeIDs is empty then put keys(linkArray) into pNodeIDs
+   repeat for each line someKey in pNodeIDs
+      put linkArray [someKey] into someLinks
+      
+      if exists (pTargetObject) then
+         get the dot_NodeID [someKey] of pTargetObject
+         if it is not empty then put it into someKey
+      end if
+      repeat for each line someLink in someLinks
+         if exists (pTargetObject) then
+            get the dot_NodeID [someLink] of pTargetObject
+            if it is not empty then put it into someLink
+         end if
+         put someKey && "->" && someLink & ";" & CR after linkSection
+      end repeat
+   end repeat
+   delete char -1 of linkSection
+   return linkSection
+end hKeyArray_DotNodeLinks

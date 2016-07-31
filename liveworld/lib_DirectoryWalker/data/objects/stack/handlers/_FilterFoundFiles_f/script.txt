@@ -1,0 +1,63 @@
+function _FilterFoundFiles fileIndex, pTopFolder, pWithExtension
+   /*
+   # skip all these folders:
+   /html/img
+   /html/captcha_check.php
+   /html/manager # do not add anything here to the site map
+   /html/admin Ê# skip this folder also
+   /html/donations # do not add anything here in fact this folder will be deleted eventually.
+   /html/home Ê# I skipped this folder also as it has nothing but images in it (looks like an app)
+   */
+   if line 1 of fileIndex = "." then delete line 1 of fileIndex
+   if pWithExtension is empty then
+      put ".html" into pEnding
+   else if char 1 of pWithExtension = "." then
+      put pWithExtension into pEnding
+   else
+      put "." & pWithExtension into pEnding
+   end if
+   
+   set the itemdelimiter to "/"
+   set the wholematches to true
+   repeat for each line someFile in fileIndex
+      if item 2 of someFile is among the items of "captcha/img/donations/manager/admin/home/info" then next repeat
+      
+      -- let's skip folders (don't seem to be able to exclude them from tree cli
+      if not (someFile ends with ".xml" or someFile ends with ".html") then next repeat
+      
+      -- a couple of hacky tests for copies and backups
+      -- these files should really be moved into a folder called "backup"
+      if someFile ends with "-backup.html" then next repeat
+      if someFile = "./looklisten/deprecated-music-songs.html" then next repeat
+      if someFile = "./monastery/newsletter/newsletter-html-snippets-lib/trilogyAd.html" then
+         next repeat
+      end if
+      if someFile = "./readlearn/panchangam/zTrashNotInUse/book_promo_testing.html" then next repeat
+      if someFile = "./looklisten/podcasts/index.html" then next repeat
+      if someFile = "./looklisten/powtoons/index.html" then next repeat
+      if someFile begins with "./monastery/newsletter/email/" then next repeat
+      if someFile begins with "./readlearn/books/test-book-page" then next repeat
+      if someFile begins with "./looklisten/apps/" then next repeat
+      
+      put item -1 of someFile into shortFile
+      if shortFile contains "-bak_" then next repeat
+      if shortFile contains "\ copy" then next repeat
+      
+      -- for .xml files only (remove for speed)
+      if someFile begins with "./livespiritually/become-student/mc-daily_lesson_html/" then next repeat
+      if someFile contains "/zTrashLater/" or someFile contains "/ztrash/" then next repeat
+      if shortFile begins with "index" then
+         get char 6 to -1 of shortFile
+         if it is not pEnding then next repeat
+      end if
+      -- if shortFile begins with "index\" then next repeat
+      if shortFile contains "-rss" then next repeat
+      if shortFile = "sandbox.xml" then next repeat
+      
+      -- here we can add topFolder, or we can work out the url's
+      put pTopFolder into item 1 of someFile
+      put someFile & CR after goodFiles
+   end repeat
+   delete char -1 of goodFiles
+   return goodFiles
+end _FilterFoundFiles

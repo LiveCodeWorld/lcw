@@ -1,0 +1,8 @@
+function target_IsReference someObject, objectReference
+   -- ignoreCall:  objectReference,g
+   if exists (someObject) is false then return false
+   put the objectReference of someObject into someView
+   if exists (someView) is false then return false
+   put the long id of someView = the long id of someObject into someBoolean
+   return someBoolean
+end target_IsReference

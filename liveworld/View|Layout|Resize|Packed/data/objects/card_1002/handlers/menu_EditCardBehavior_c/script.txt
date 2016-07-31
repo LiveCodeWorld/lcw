@@ -1,0 +1,5 @@
+on menu_EditCardBehavior mTarget
+   put the card_Object of mTarget into cardObject
+   put the behavior of cardObject into someBeahviour
+   edit the script of someBeahviour
+end menu_EditCardBehavior

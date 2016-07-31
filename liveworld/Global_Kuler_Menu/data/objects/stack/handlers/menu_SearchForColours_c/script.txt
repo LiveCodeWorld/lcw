@@ -1,0 +1,20 @@
+on menu_SearchForColours menuChoice, mTarget
+   put the uOPN ["search_Term"] of me into searchTerm
+   switch menuChoice
+      case "Search for keywords"
+         put opn_Ask("What keyword would you like to search for?", searchTerm) into searchTerm
+         kuler_SearchForKeyWord searchTerm, mTarget
+         break
+      case "Free text search"
+         put opn_Ask("What string would you like to search for?", searchTerm) into searchTerm
+         put kuler_SearchRss(searchTerm) into someRSS
+         kuler_DiplayRss someRSS, mTarget
+         break
+      case "Search for user colours"
+         put opn_Ask("What user email would you like to search for?", userEmail) into userEmail
+         put kuler_SearchUserRss(userEmail) into someRSS
+         kuler_DiplayRss someRSS, mTarget
+         break
+   end switch
+   set the uOPN ["search_Term"] of me to searchTerm
+end menu_SearchForColours

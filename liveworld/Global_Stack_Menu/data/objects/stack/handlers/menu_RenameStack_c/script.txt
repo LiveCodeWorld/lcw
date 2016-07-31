@@ -1,0 +1,8 @@
+on menu_RenameStack mTarget
+   put the stack_Object of mTarget into stackObject
+   put the short name of stackObject into oldName
+   
+   stack_Rename oldName
+   -- save stackObject
+   -- opn_Notify "Saved" && stackObject
+end menu_RenameStack

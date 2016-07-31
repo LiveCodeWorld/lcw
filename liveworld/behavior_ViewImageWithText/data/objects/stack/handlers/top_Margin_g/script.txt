@@ -1,0 +1,5 @@
+getprop top_Margin
+   put the margins of me into someMargin
+   margin_Normalize someMargin, lMargin, tMargin, rMargin, bMargin
+   return tMargin
+end top_Margin

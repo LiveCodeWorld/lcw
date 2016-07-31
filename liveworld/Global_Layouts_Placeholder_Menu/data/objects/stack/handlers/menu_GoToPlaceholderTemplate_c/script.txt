@@ -1,0 +1,4 @@
+on menu_GoToPlaceholderTemplate
+   put view_GetTemplateObject ("Layouts|Placeholder") into templateObject
+   object_GoTo templateObject
+end menu_GoToPlaceholderTemplate

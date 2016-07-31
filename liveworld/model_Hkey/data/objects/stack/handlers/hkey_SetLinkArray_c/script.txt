@@ -1,0 +1,7 @@
+command hkey_SetLinkArray hKey, hkeyArray, pOverlayName, pGraphStyle
+   -- makes no sense to set hkeyArray without setting the rest of the derived arrays
+   put library_HandlerFile (hKey, empty, false) into overlayFolder
+   overlay_SetLinkArray overlayFolder, hkeyArray, pOverlayName, pGraphStyle
+   put the result into overlayArray
+   return overlayArray
+end hkey_SetLinkArray

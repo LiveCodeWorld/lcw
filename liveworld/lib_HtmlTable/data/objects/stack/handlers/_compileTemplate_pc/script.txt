@@ -1,0 +1,27 @@
+private command _compileTemplate pTemplateArray
+   -- combine the values you may have added to sTemplate with the default table
+   
+   if pTemplateArray is an array then
+      put pTemplateArray into sTemplate
+   else if sTemplate is not an array then
+      -- first time, or if the user has not otherwise set custom option by adding something to sTemplate
+      -- let's just use the default template
+      put table_DefaultTemplate() into sTemplate
+      return "initialised with default"
+   end if
+   
+   put table_DefaultTemplate() into tableTemplateArray
+   union sTemplate with tableTemplateArray
+   return "combined custom sTemplate with default template"
+   
+   /*
+   -- old revIgnitor code (better to use union DTB)
+   
+   put "tableOpen,headingRowStart,headingRowEnd,headingCellStart,headingCellEnd,rowStart,rowEnd,cellStart,cellEnd,rowAltStart,rowAltEnd,cellAltStart,cellAltEnd,tableClose" into tKeys
+   repeat for each item tKey in tKeys
+      if sTemplate [tKey] is empty then
+         put tableTemplateArray [tKey] into sTemplate [tKey]
+      end if
+   end repeat
+   */
+end _compileTemplate

@@ -1,0 +1,8 @@
+function library_StandardViewFolder pShortFileBit
+   put library_PluginFolder ("opn_Components/views/", true) into standardFolder
+   if there is a folder standardFolder then
+      return standardFolder & pShortFileBit
+   else
+      return empty
+   end if
+end library_StandardViewFolder

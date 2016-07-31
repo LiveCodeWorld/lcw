@@ -1,0 +1,7 @@
+getprop menu_Title [pMenuButton]
+   if the optionKey is "Down" then
+      return "Global | Script Editor | Extras | Menu"
+   else
+      return "Global | Script | Editor | Menu"
+   end if
+end menu_Title

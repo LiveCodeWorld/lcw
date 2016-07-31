@@ -1,0 +1,16 @@
+command hArray_CreateDependencyGraph hKey, pGraphStyle, pOverlayName
+   if pGraphStyle is empty then put "hierarchical" into pGraphStyle  
+   
+   put item 3 of hKey into hObject
+   put the textStack_Folder of hObject into mainStackFolder
+   put mainstack_FetchHarray (mainStackFolder) into hArray
+   if hArray is an array then put hArray into hKeyWalkArray ["hArray"]
+   
+   put hkey_ConstructHarrayWalkArray (hKey, hArray, pDepObject) into hKeyWalkArray
+   
+   put hKeyWalkArray ["hKeyArray"] into hKeyArray
+   library_CreateHkeyGraph hKey, hKeyArray, pGraphStyle, pOverlayName
+   
+   put the result into overlayArray
+   return overlayArray
+end hArray_CreateDependencyGraph

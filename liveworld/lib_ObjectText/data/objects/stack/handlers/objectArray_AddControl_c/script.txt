@@ -1,0 +1,46 @@
+command objectArray_AddControl someObject, @manifestArray, @objectsArray, @hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   local objectPropArray
+   put the abbreviated id of someObject into abbreviatedID
+   put abbreviatedID into manifestArray ["object"]
+   
+   -- just for readability
+   put the short name of someObject into someName
+   put someName into manifestArray ["name"]
+   
+   object_GetPropertyArrays someObject, objectPropArray, hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   
+   put object_ConvertAbbreviated (abbreviatedID) into aFolderName
+   put objectPropArray into objectsArray [aFolderName]
+   
+   put the number of controls in someObject into maxNum
+   put 1 into controlNum
+   repeat maxNum
+      set the cursor to busy
+      put "control[" & controlNum & "]" into cKey
+      put the long id of control controlNum of someObject into nestedObject
+      put the abbreviated id of nestedObject into abbreviatedID
+      put abbreviatedID into manifestArray ["controls"][cKey]["object"]
+      
+      -- just for readability
+      put the short name of nestedObject into objectName
+      put objectName into manifestArray ["controls"][cKey]["name"]
+      
+      put object_ConvertAbbreviated (abbreviatedID) into nestedFolderName
+      put objectsArray [nestedFolderName] into indexedObjectPropArray
+      if indexedObjectPropArray is an array then
+         -- it is a background that has already been indexed (even if the backgroundbehavior is false!)
+         put the number of controls of nestedObject into skipNum
+         add skipNum to controlNum
+      else
+         object_GetPropertyArrays nestedObject, objectPropArray, hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+         
+         put objectPropArray into objectsArray [nestedFolderName]
+         
+         put the abbreviated id of the owner of nestedObject into abbreviatedOwner
+         put abbreviatedOwner into manifestArray ["controls"][cKey]["owner"]
+         -- put abbreviatedOwner into objectsArray [nestedFolderName]
+      end if
+      add 1 to controlNum
+      if controlNum > maxNum then exit repeat
+   end repeat
+end objectArray_AddControl

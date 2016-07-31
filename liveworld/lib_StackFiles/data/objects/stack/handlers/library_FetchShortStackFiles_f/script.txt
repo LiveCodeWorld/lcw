@@ -1,0 +1,11 @@
+function library_FetchShortStackFiles pSetName
+   put library_FetchStackFiles (pSetName) into stackFileTable
+   set the itemdelimiter to "/"
+   repeat for each line someLine in stackFileTable
+      put item -1 of someLine into shortFile
+      put shortFile & CR after shortFiles
+   end repeat
+   delete char -1 of shortFiles
+   sort shortFiles
+   return shortFiles
+end library_FetchShortStackFiles

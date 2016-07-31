@@ -1,0 +1,6 @@
+getprop meta_CustomArray
+   put the object_Folder of the target into objectFolder
+   put the meta_CustomArrayFile of the target is empty into pUseCustomFolders
+   put object_FetchCustomArray (objectFolder, pUseCustomFolders) into customArray
+   return customArray
+end meta_CustomArray

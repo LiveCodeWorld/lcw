@@ -1,0 +1,8 @@
+command overlayArray_AddToGroupStyleArray nodeIds, nodeStyleArrayOrName, @dotGroupStyleArray, pStyleName
+   if pStyleName is empty then
+      put the number of lines of keys(dotGroupStyleArray) + 1 into pStyleName
+   end if
+   put nodeIds into dotGroupStyleArray [pStyleName]["nodeIds"]
+   put nodeStyleArrayOrName into dotGroupStyleArray [pStyleName]["node_StyleArray"]
+   return pStyleName
+end overlayArray_AddToGroupStyleArray

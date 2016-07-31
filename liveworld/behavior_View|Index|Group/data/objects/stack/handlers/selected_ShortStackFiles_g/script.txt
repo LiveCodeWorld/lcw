@@ -1,0 +1,6 @@
+getprop selected_ShortStackFiles
+   put the index_View of the target into indexView
+   if exists (indexView) is false then return empty
+   put the selected_Index of indexView into shortStackFiles 
+   return shortStackFiles
+end selected_ShortStackFiles

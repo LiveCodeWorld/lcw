@@ -1,0 +1,12 @@
+function view_GetStackBackgroundID vName, stackName
+   put the backgroundids of stack stackName into bgIDs
+   repeat for each line bgID in bgIDs
+      put the view_Name of bg id bgID of stack stackName into testViewName
+      if testViewName is empty then next repeat
+      
+      if testViewName = vName then
+         return bgID
+      end if
+   end repeat
+   return empty
+end view_GetStackBackgroundID

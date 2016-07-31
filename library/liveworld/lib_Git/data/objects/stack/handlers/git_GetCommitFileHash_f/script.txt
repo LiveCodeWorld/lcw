@@ -1,0 +1,5 @@
+function git_GetCommitFileHash relativePath, pBackNum
+   if pBackNum is empty then put "1" into pBackNum
+   put git_ReverseFileHashes(relativePath, pBackNum) into shellResult
+   return line - 1 of shellResult
+end git_GetCommitFileHash

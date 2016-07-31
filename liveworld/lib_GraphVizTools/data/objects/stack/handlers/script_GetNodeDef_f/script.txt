@@ -1,0 +1,40 @@
+function script_GetNodeDef someNode, handlerName, handlerType, scriptObject
+    local nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile
+    
+    put "filled" into nodeStyle
+    switch handlerType
+        case "m"
+            if scriptObject is "Missing" then
+                put "white" into nodeColour
+                put "white" into nodeFillColour
+            else
+                put "red" into nodeColour
+                put "red" into nodeFillColour
+            end if
+            break
+        case "c"
+            put "green" into nodeColour
+            put "green" into nodeFillColour
+            break
+        case "f"
+            put "blue" into nodeColour
+            put "blue3" into nodeFillColour
+            break
+        case "g"
+            put "white" into nodeColour
+            put "grey" into nodeFillColour
+            break
+        case "s"
+            put "white" into nodeColour
+            put "grey50" into nodeFillColour
+            break
+        default
+            -- put "yellow" into nodeColour
+            -- put "yellow" into nodeFillColour
+            break
+    end switch
+     
+    get dot_ConstructDefLine(handlerName, nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile)
+    put someNode && "[" & it & "];" into nodeDef
+    return nodeDef
+end script_GetNodeDef

@@ -1,0 +1,11 @@
+command dot_StripSubGraphs @dotText
+   -- also cluster - "none"
+   put CR & tab & "subgraph" into startText
+   put tab & "}" & CR & tab & CR into endText
+   
+   local startChar, endChar
+   text_SetOffsets startText, endText, dotText, startChar, endChar
+   if endChar is not 0 then
+      delete char startChar to (endChar - 1) of dotText
+   end if
+end dot_StripSubGraphs

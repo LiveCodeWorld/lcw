@@ -1,0 +1,9 @@
+command array_Add someArray, @toArray
+    -- why cant we just test if array is empty?
+    if keys(toArray) is empty then
+        -- why does "union" with an empty base array always result in empty?
+        put someArray into toArray
+    else
+        union toArray with someArray
+    end if
+end array_Add

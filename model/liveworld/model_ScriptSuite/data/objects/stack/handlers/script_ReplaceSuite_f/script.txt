@@ -1,0 +1,10 @@
+function script_ReplaceSuite suiteTitle, someScript, newSuite
+    script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
+    if the result is true then
+        put word 1 to -1 of newSuite & CR & CR into line startLineNum to endLineNum of someScript
+        return someScript
+    else
+        text_AddParagraph newSuite, someScript
+        return someScript
+    end if
+end script_ReplaceSuite

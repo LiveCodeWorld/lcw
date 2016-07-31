@@ -1,0 +1,7 @@
+on mouseDown pMenuButton
+   if the shiftKey is "Down" then pass mouseDown
+   -- put "Global | Git | Watch | Menu" into mTitle
+   -- put "Blah | Menu" into mTitle -- bug: no idea why this does not work
+   put "Global | ScriptEditor | Watch | Menu" into mTitle
+   menu_PullDown mTitle
+end mouseDown

@@ -1,0 +1,8 @@
+function library_GetTextStackFolder shortFileBit, pDontCreate
+   put library_PluginFolder ("opn_Text/rev/object/", pDontCreate) & shortFileBit into standardFolder
+   if there is a folder standardFolder then
+      return standardFolder
+   else
+      return empty
+   end if
+end library_GetTextStackFolder

@@ -1,0 +1,68 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Rig_Files_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Rig | Files | Menu
+-
+[[ _FetchHandler (menu_SwitchServer,c) ]]
+
+[[ _FetchHandler (menu_FetchRigScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayRigScript,c) ]]
+
+[[ _FetchHandler (menu_CheckRigScript,c) ]]
+
+[[ _FetchHandler (menu_UploadRigScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetRigScriptFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_UploadLocalStack,c) ]]
+
+[[ _FetchHandler (menu_CheckRemoteStack,c) ]]
+
+[[ _FetchHandler (disabled_CheckRemoteStack,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchServerStack,c) ]]
+
+[[ _FetchHandler (menu_DeleteServerStack,c) ]]
+
+
+--> Global | Rig | Files | Menu | Props
+-
+[[ _FetchHandler (server_URL,g) ]]
+
+[[ _FetchHandler (server_URLs,g) ]]
+
+[[ _FetchHandler (rig_Controllers,g) ]]
+
+
+--> Global | Rig | Files | Menu | Disabled
+-
+[[ _FetchHandler (disabled_UploadLocalStack,g) ]]
+
+getprop disabled_CheckRemoteStack
+   return LocalArray ["stackExists"] is false
+end disabled_CheckRemoteStack
+
+
+--> Deps
+-
+[[ _FetchHandler (rig_AskSetLocalControllerFolder,c) ]]
+
+[[ _FetchHandler (_getRemoteStackData,pf) ]]

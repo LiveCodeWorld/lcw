@@ -1,0 +1,241 @@
+﻿script "lib_Audioboom"
+--> MetaData
+-
+name: lib_Audioboom
+type: script library
+version: 0.6
+copyright: David Bovill
+licence:  GPLv3
+deps: lib_Fedwiki
+
+/*
+A library for interfacing with https://github.com/audioBoom/api/blob/master/sections/authentication.md
+*/
+
+-- constant AudioboomApiStem = "https://api.audioboom.com/" --certificates problem???
+constant AudioboomApiStem = "http://api.audioboom.com/"
+constant AudioboomConsumerkey = "66a37abac6e7e57078934f6f"
+constant AudioboomConsumerSecret = "41a3ca57c14e8d813f13137798dfc4abbe8428f03f71f2aa69801ce99b7216c3"
+
+local AudioboomUserName = "fortyfoxes"
+local AudioboomUserID = 40897
+local AudioboomUserArray
+
+
+--> AudioBoom | Drag and Drop URL
+-
+function audioboom_GuessClipJSON someURL
+   put audioboom_IDExtractFromURL (someURL) into audioClipID
+   if audioClipID is empty then return empty
+   put audioboom_FetchClipJSON (audioClipID) into someJSON
+   put json_ToArray (someJSON) into responseArray
+   put responseArray ["body"]["audio_clip"] into audioClipArray
+   put fedwiki_ConstructAudioBoomPageArray (audioClipArray) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end audioboom_GuessClipJSON
+
+function audioboom_IDExtractFromURL someUrl
+   -- was "audioboom_ParseUrl"
+   -- https://audioboom.com/boos/3256201-antibodies-part-1-crispr
+   url_Deconstruct someUrl, someProtocol, urlDomain, urlPath, shortName, fileExtension, uName, pWord
+   if urlDomain = audioboom.com and someProtocol = "https" and item 1 of urlPath = "boos" then
+      set the itemdelimiter to "-"
+      put item 1 of shortName into someID
+      return someID
+   else
+      return empty
+   end if
+end audioboom_IDExtractFromURL
+
+
+--> AudioBoom | Array
+-
+function fedwiki_ConstructAudioBoomPageArray audioClipArray
+   put audioClipArray ["title"] into clipTitle
+   put audioClipArray ["description"] into clipDescription
+   put audioClipArray ["location"] into locationArray
+   put audioClipArray ["recorded_at_ts"] into clipDate
+   put audioClipArray ["tags"] into clipTags
+   
+   put audioClipArray ["urls"]["detail"] into booURL
+   put audioClipArray ["urls"]["high_mp3"] into audioURL
+   put audioClipArray ["urls"]["image"] into imageURL
+   put audioClipArray ["urls"]["wave_img"] into waveyImageURL
+   
+   put audioClipArray ["user"] into userArray
+   put userArray ["username"] into booName
+   put userArray ["urls"]["image"] into userImageUrl
+   put userArray ["urls"]["profile"] into profileUrl
+   
+   put fedwiki_ConstructNewPageArray (clipTitle) into pageArray 
+   fedwiki_AddParagraphToPageArray pageArray, clipDescription
+   put fedwiki_ConstructImageDiv (imageURL) into imageHTML
+   fedwiki_AddHtmlToPageArray pageArray, imageHTML
+   fedwiki_AddAudioToPageArray pageArray, audioURL, "."
+   
+   put locationArray ["description"] into locationDescription
+   put locationArray ["accuracy"] into locationAccuracy
+   put locationArray ["latitude"] into mapLat
+   put locationArray ["longitude"] into mapLong
+   put 17 into mapZoom
+   put fedwiki_ConstructOpenStreetMapDescription (locationDescription, mapZoom, mapLat, mapLong) into mapText
+   
+   fedwiki_AddMapToPageArray pageArray, mapLat, mapLong, mapText, mapZoom
+   
+   put audioboom_ConstructUserParagraph (locationDescription, userArray, clipDate, booURL) into wikiText
+   fedwiki_AddParagraphToPageArray pageArray, wikiText
+   return pageArray
+end fedwiki_ConstructAudioBoomPageArray
+
+function audioboom_ConstructUserParagraph locationDescription, userArray, clipMilliseconds, booURL
+   -- Mouans Sartoux
+   put item 1 of locationDescription into funkyPlace
+   put userArray ["userName"] into funkyUser
+   put "This recording was made near [[" && funkyPlace & "]],  by [[" & funkyUser & "]]" into wikiText
+   
+   -- Jun 23, 2015 at 2:19 PM
+   -- https://audioboom.com/boos/3275407-wiki-game audioboom.com
+   set the itemdelimiter to "/"
+   put item 3 of booURL into booDomain
+   set the itemdelimiter to "."
+   -- put item -2 to -1 of booDomain into booUrlName
+   put booURL && "audioboom" into funkUrl
+   set the itemdelimiter to comma
+   
+   put clipMilliseconds into clipDate
+   convert clipDate to abbreviated date
+   put clipMilliseconds into clipTime
+   convert clipTime to time
+   
+   put item 2 to 3 of clipDate && "at" && clipTime into funkyDate
+   put  ", on" &&  funkyDate && "- [" & funkUrl & "]" after wikiText
+   return wikiText
+end audioboom_ConstructUserParagraph
+
+function audioboom_GetAudioClipArray audioboomUserClipArray
+   put audioboomUserClipArray ["body"]["audio_Clips"] into audioClipArray
+   return audioClipArray
+end audioboom_GetAudioClipArray
+
+
+--> Audioboom | Clips
+-
+/*
+GET /audio_clips/*audio_clip_id*.mp3 this will respond with a browser re-direct to the mp3 audio data for the audio clip specified by audio_clip_id
+*/
+
+function audioboom_FetchTaggedClipArray someTag
+   -- This call will return a paginated response.
+   -- GET /tag/*tag*/audio_clips returns all the audio clips tagged with the specified tag.
+   
+   put urlencode(someTag) into someTag
+   put merge ("tag/[[someTag]]/audio_clips") into apiPath
+   put audioboom_RestGET (apiPath) into someJson
+   put json_ToArray (someJson) into someArray
+   return someArray
+end audioboom_FetchTaggedClipArray
+
+function audioboom_FetchClipJSON audioClipID
+   -- GET /audio_clips/*audio_clip_id* returns the details of the audio clip specified by audio_clip_id.
+   if audioClipID is not a number then return "Error, param audioClipID is not a number"
+   
+   put "audio_clips/" & audioClipID into apiPath
+   put ".mp3" after apiPath -- this fiexes no "high_mp3" url being returned bug
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FetchClipJSON
+
+function audioboom_FetchClipArray audioClipID
+   put audioboom_FetchClipJSON (audioClipID) into someJson
+   put json_ToArray (someJson) into someArray
+   return someArray
+end audioboom_FetchClipArray
+
+
+--> Audioboom
+-
+/*
+When fetching lists of entities from the api, the response is broken up into pages. 
+You can control the pagination with the following parameters :
+•	page[number] - the page of results you'd like to return, starting at 1.
+•	page[items] - the number of results you'd like on each page. This value is capped at 150.
+•	max_time - an optional unix timestamp of the most recent time you'd like pagination to start from. 
+This is used to stabilize pagination - if you're paging through sequential pages, 
+you can record a start time and send that with each request, 
+to ensure that audio clips created since you started paging don't shuffle your results around. 
+(Even so, this isn't a guarantee, and you should check for duplicate entity ids when fetching multiple pages).
+-- https://github.com/audioboom/api/blob/master/sections/pagination.md
+*/
+
+function audioboom_FindUser userName
+   put "users/?find[username]=" & userName into apiPath
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FindUser
+
+function audioboom_FetchUserClips pUserID, pPageNum, pMaxNum
+   if pUserID is empty then put AudioboomUserID into pUserID 
+   put "users/" & pUserID & "/audio_clips" into apiPath
+   
+   if pMaxNum is empty then 
+      put "page[items]=150&" into extraBit
+   else
+      put "page[items]=" & pMaxNum & "&" into extraBit
+   end if
+   if pPageNum is not empty then put "page[number]=" & pPageNum & "&" after extraBit
+   delete char -1 of extraBit
+   put "?" & extraBit after apiPath
+   
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FetchUserClips
+
+function audioboom_FetchFeatured
+   put "audio_clips/featured" into apiPath
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FetchFeatured
+
+
+--> Audioboom | Arrays
+-
+function audioboom_ConstructUserClipTitleArray audioboomUserClipArray
+   put audioboom_GetAudioClipArray (audioboomUserClipArray) into audioClipArray
+   repeat for each key indexNum in audioClipArray
+      put audioClipArray [indexNum]["title"] into booTitle
+      put indexNum into titleArray [booTitle]
+   end repeat
+   return titleArray
+end audioboom_ConstructUserClipTitleArray
+
+function audioboom_ConstructUserClipDateArray audioboomUserClipArray
+   put audioboom_GetAudioClipArray (audioboomUserClipArray) into audioClipArray
+   repeat for each key indexNum in audioClipArray
+      put audioClipArray [indexNum]["title"] into booTitle
+      put audioClipArray [indexNum]["recorded_at_ts"] into booDate
+      
+      put indexNum into dateArray [booDate]["indexnum"]
+      put booTitle into dateArray [booDate]["booTitle"]
+      -- put indexNum into dateArray [booDate]["indexnum"]
+   end repeat
+   return dateArray
+end audioboom_ConstructUserClipDateArray
+
+
+--> Audioboom | REST
+-
+function audioboom_RestGET apiPath, pAudioboomApiStem
+   if pAudioboomApiStem is empty then put "http://api.audioboom.com/" into  pAudioboomApiStem
+   put pAudioboomApiStem & apiPath into someUrl
+   put url someUrl into someJson
+   return someJson
+end audioboom_RestGET
+
+
+--> Audioboom | Authentication
+-
+-- function audioboom_RequestToken
+   put url "https://api.audioboom.com/oauth/request_token" into someJson
+   return someJson
+end audioboom_RequestToken

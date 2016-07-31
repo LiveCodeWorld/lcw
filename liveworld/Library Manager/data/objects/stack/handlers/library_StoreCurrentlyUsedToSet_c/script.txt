@@ -1,0 +1,6 @@
+command library_StoreCurrentlyUsedToSet setName
+   put library_ListUsedStacks() into setArray ["data"]["used"]
+   put library_ListNonRevBackscripts() into setArray ["data"]["back"]
+   put library_ListNonRevFrontscripts() into setArray ["data"]["front"]
+   library_StoreSetArray setArray, setName
+end library_StoreCurrentlyUsedToSet

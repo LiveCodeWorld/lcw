@@ -1,0 +1,9 @@
+on menu_EditMenuCard scriptObject, mCard
+   put the menu_SubStack of scriptObject into subStackObject
+   put "card" && kwote(mCard) && "of" && subStackObject into cardObject
+   set the visible of subStackObject to true
+   if exists(cardObject) then
+      if the shiftkey is "Down" then go to cardObject
+      edit the script of cardObject
+   end if
+end menu_EditMenuCard

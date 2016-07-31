@@ -1,0 +1,4 @@
+command hkeyArray_SetFiltered hkeyArray
+    put the linkArray_Model of me into modelObject
+    model_SetArray "Filtered_hkeyArray", modelObject, hkeyArray, "array"
+end hkeyArray_SetFiltered

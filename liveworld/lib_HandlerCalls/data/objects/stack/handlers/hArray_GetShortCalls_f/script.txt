@@ -1,0 +1,14 @@
+function hArray_GetShortCalls hKey, pHArray
+   /* or another ways
+   put hArray_GetHandler (hKey, hArray) into callHandler
+   put sha1_Hash (callHandler) into handlerHash
+   */
+   put hArray_GetHandlerHash (hKey, pHArray) into handlerHash
+   if pHArray is empty then
+      -- not sure this option should be in this handler
+      return hkey_FetchShortCalls (hKey)
+   else
+      put pHArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"] into shortCalls
+   end if
+   return shortCalls
+end hArray_GetShortCalls

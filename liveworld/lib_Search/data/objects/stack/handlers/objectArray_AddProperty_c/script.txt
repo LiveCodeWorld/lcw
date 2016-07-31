@@ -1,0 +1,12 @@
+command objectArray_AddProperty @objectArray, @propertyArray, containerObject, someProperty, pObjectKeyProperty, pControllerObject, pSplitArrays
+   -- add the values of the top object
+   put the object_Name [pObjectKeyProperty] of containerObject into containerKey
+   put object_GetCustomProperty (containerObject, someProperty, pControllerObject) into objectResult
+   if pSplitArrays is not false then
+      put objectResult into propertyArray [containerKey][someProperty]
+      put empty into objectArray [containerKey]
+   else
+      put objectResult into objectArray [containerKey]["@prop"][someProperty]
+   end if
+   return containerKey
+end objectArray_AddProperty

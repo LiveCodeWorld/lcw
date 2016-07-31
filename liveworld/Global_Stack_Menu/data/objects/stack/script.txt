@@ -1,0 +1,124 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Stack_Menu
+type: controller
+version: 0.3
+
+local LocalArray
+
+/*
+Some basic tools for manipulating stacks, and windows. 
+*/
+
+
+--> Currently working On
+-
+
+
+--> Global | Stack | Menu
+-
+[[ _FetchHandler (menu_SnapCard,c) ]]
+
+[[ _FetchHandler (menu_SnapStack,c) ]]
+
+[[ _FetchHandler (menu_SnapImage,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SaveStack,c) ]]
+
+[[ _FetchHandler (menu_RevertStack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_PlaceOnMainScreen,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RevealStack,c) ]]
+
+[[ _FetchHandler (menu_RenameStack,c) ]]
+
+[[ _FetchHandler (menu_FixStackBehaviors,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StackStyle,c) ]]
+
+[[ _FetchHandler (menu_StackResizable,c) ]]
+
+[[ _FetchHandler (menu_StackTitleStyle,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_GoToStack,c) ]]
+
+[[ _FetchHandler (menu_AlreadyKnown,c) ]]
+
+on _
+end _
+
+on menu_RevealStack scriptObject
+   put the stack_Object of scriptObject into stackObject
+   put the filename of stackObject into someFile
+   if there is a file someFile then
+      finder_Reveal someFile
+   else
+      beep
+   end if
+end menu_RevealStack
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Stack | Menu | Props
+-
+[[ _FetchHandler (record_Card,g) ]]
+
+[[ _FetchHandler (stack_Resizable,g) ]]
+
+[[ _FetchHandler (some_Name,g) ]]
+
+[[ _FetchHandler (some_Names,g) ]]
+
+[[ _FetchHandler (stack_Style,g) ]]
+
+[[ _FetchHandler (stack_Styles,g) ]]
+
+[[ _FetchHandler (already_Known,g) ]]
+
+
+--> Global | Stack | Menu | Disabled
+-
+[[ _FetchHandler (disabled_SpotlightFileInfo,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_RecordCard,c) ]]
+
+[[ _FetchHandler (menu_SpotlightFileInfo,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_GitRename,c) ]]
+
+[[ _FetchHandler (menu_DeleteFile,c) ]]
+
+
+--> Menu | Props
+-
+
+--> Deps
+-
+[[ _FetchHandler (export_SnapShot,c) ]]

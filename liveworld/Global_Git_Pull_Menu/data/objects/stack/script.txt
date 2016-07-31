@@ -1,0 +1,35 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Git_Pull_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Git | Pull | Menu
+-
+[[ _FetchHandler (menu_CloseAndReloadPulledStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Development,c) ]]
+
+
+--> Git | Pull | Deps | Menu
+-
+[[ _FetchHandler (menu_SetTreeFieldTitle,c) ]]
+
+[[ _FetchHandler (menu_DisplayTitles,c) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Git | Pull | Menu | Deps
+-
+[[ _FetchHandler (git_ParsePullResult,f) ]]

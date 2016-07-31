@@ -1,0 +1,7 @@
+function menu_CleanMarks mText  
+   menu_CleanCheckMarks mText
+   -- replace "(" with empty in mText	# only at start!
+   put replacetext (mText, "(?m)^\(", empty) into mText
+   put replacetext (mText, "/.*", empty) into mText
+   return mText
+end menu_CleanMarks

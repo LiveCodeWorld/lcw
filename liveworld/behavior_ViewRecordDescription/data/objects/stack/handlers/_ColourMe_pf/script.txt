@@ -1,0 +1,25 @@
+private function _ColourMe someBoolean
+   put the linked_Template of me into viewTemplate
+   if exists(viewTemplate) is false then
+      return "red"
+   else  
+      put the behavior of viewTemplate into templateBehavior
+      if exists(templateBehavior) is true then
+         if the stack_Object of viewTemplate is the stack_Object of templateBehavior then
+            if someBoolean then
+               put the dgProps ["hilite color"] of the dgControl of me into onColour
+               if onColour is empty then put the hilitecolor into onColour
+               return onColour
+            else
+               put the dgProps ["row color"] of the dgControl of me into offColour
+               if offColour is empty then put the effective backgroundcolor of me into offColour
+               return offColour
+            end if
+         else
+            return "light blue"
+         end if
+      else
+         return "light green"
+      end if
+   end if
+end _ColourMe

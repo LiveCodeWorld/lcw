@@ -1,0 +1,28 @@
+command viewGoAndEditBehavior pLineNum
+   put index_GetClickedFile (pLineNum) into longStackFile
+   if exists (stack longStackFile) is false then
+      put longStackFile
+      answer warning merge ("Cannot find stack!")
+      exit to top
+   end if
+   
+   go to stack longStackFile
+   
+   put the view_Template of cd 1 of stack longStackFile into viewTemplate
+   if exists (viewTemplate) is false then
+      answer warning merge ("Cannot find view template!")
+      exit to top
+   end if
+   
+   put the behavior of viewTemplate into bObject
+   switch
+      case bObject is empty
+         edit the script of viewTemplate
+         break
+      case exists (bObject)
+         edit the script of bObject
+         break
+      default
+         put merge ("Cannot find [[bObject]]")
+   end switch
+end viewGoAndEditBehavior

@@ -1,0 +1,6 @@
+function xml_NodeOutline someXml, startNode, includeChildCount
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    put xml_TreeNodeOutline(treeID, startNode, includeChildCount) into nodeOutline
+    revDeleteXMLTree treeID
+    return nodeOutline
+end xml_NodeOutline

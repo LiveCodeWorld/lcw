@@ -1,0 +1,115 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Spotlight
+type: script library
+version: 0.1
+
+/*
+This stack contains the wrappers for OSX file metadata system - Spotlight.
+
+See also and write for Livecode - https://github.com/mattheworiordan/Mac-OS-X-Useful-Scripts/blob/master/spotfind.sh
+and this:
+-  find $HOME -type d -name ".git"
+which is painfully slow.
+*/
+
+--> Working On
+-
+-- function spotlight_ChangedPluginFiles pSeconds
+   set the cursor to watch
+   put library_PluginFolder ("opn_Text/rev/object/", true) into someFolder
+   shell_BashParamEscape someFolder
+   
+   if pSeconds is empty then put 600000 into pSeconds
+   -- "mdfind -onlyin /Users/berkowit/1140216408 'kMDItemFSCreationDate >= $time.now(-3600)'"
+   -- put merge ("mdfind -onlyin [[someFolder]] 'kMDItemFSContentChangeDate >= $time.now(-[[pSeconds]])'") into someShell
+   put merge ("mdfind -onlyin [[someFolder]] 'kMDItemFSContentChangeDate >= $time.now(-[[pSeconds]])'") into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end spotlight_ChangedPluginFiles
+
+[[ _FetchHandler (spotlight_ListRecentlyExportedObjectScripts,f) ]]
+
+[[ _FetchHandler (script_FileToObject,f) ]]
+
+
+--> Spotlight
+-
+[[ _FetchHandler (spotlight_FindExecutable,f) ]]
+
+[[ _FetchHandler (spotlight_FindApplications,f) ]]
+
+[[ _FetchHandler (spotlight_FindInStack,f) ]]
+
+[[ _FetchHandler (spotlight_FindStack,f) ]]
+
+[[ _FetchHandler (spotlight_ListStacks,f) ]]
+
+[[ _FetchHandler (spotlight_Find,f) ]]
+
+[[ _FetchHandler (spotlight_ListExportedScriptFiles,f) ]]
+
+[[ _FetchHandler (spotlight_ListRecentlyExportedScriptFiles,f) ]]
+
+-- function spotlight_GetRecentQuery pWhich
+   switch pWhich
+      default -- case "this week"
+         return "'(kMDItemFSContentChangeDate == $time.this_week(-1))'" into thisWeekQuery
+   end switch
+   -- mdfind '(kMDItemFSContentChangeDate >= $time.today(-1)) && (kMDItemFSContentChangeDate < $time.now) && (kMDItemContentTypeTree = "public.content")'
+   -- put "'(kMDItemFSContentChangeDate >= $time.today(-1)) && (kMDItemFSContentChangeDate < $time.now)'" into todayQuery
+   -- put space & "&& (kMDItemContentTypeTree = "public.content")" after todayQuery
+   return todayQuery
+end spotlight_GetRecentQuery
+
+[[ _FetchHandler (spotlight_FindFile,f) ]]
+
+[[ _FetchHandler (spotlight_DateRanges,g) ]]
+
+[[ _FetchHandler (spotlight_TranslateDateRange,f) ]]
+
+[[ _FetchHandler (spotlight_GetFileComment,f) ]]
+
+[[ _FetchHandler (spotlight_SetFileComment,c) ]]
+
+[[ _FetchHandler (spotlight_Import,c) ]]
+
+[[ _FetchHandler (spotlight_GetFileKind,f) ]]
+
+[[ _FetchHandler (spotlight_Kind,f) ]]
+
+[[ _FetchHandler (spotlight_Kinds,g) ]]
+
+[[ _FetchHandler (spotlight_ListFileKinds,f) ]]
+
+[[ _FetchHandler (spotlight_TranslateKind,f) ]]
+
+[[ _FetchHandler (spotlight_kMDItemID,f) ]]
+
+-- command spotlight_ExtractFixedDetails someFile, @kMDItemID
+    put spotlight_GetFileInfo (someFile) into spotlightFileInfo
+    put spotlight_ExtractAttribute(spotlightFileInfo, "ID") into kMDItemID
+end spotlight_ExtractFixedDetails
+
+[[ _FetchHandler (spotlight_DisplayDates,c) ]]
+
+[[ _FetchHandler (spotlight_MetaMovieHash,f) ]]
+
+[[ _FetchHandler (spotlight_ExtractFixedMovieInfo,f) ]]
+
+[[ _FetchHandler (spotlight_GetFileSize,f) ]]
+
+[[ _FetchHandler (spotlight_GetPixelWidth,f) ]]
+
+[[ _FetchHandler (spotlight_GetPixelHeight,f) ]]
+
+[[ _FetchHandler (spotlight_GetAttribute,f) ]]
+
+[[ _FetchHandler (spotlight_GetFileInfo,f) ]]
+
+[[ _FetchHandler (spotlight_ExtractAttribute,f) ]]
+
+[[ _FetchHandler (spotlight_Attributes,g) ]]
+
+[[ _FetchHandler (spotlight_FileDuplicates,f) ]]

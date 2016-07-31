@@ -1,0 +1,279 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Dot
+type: model
+version: 0.1
+
+/* 
+This model contains handlers that store the arrays (models) required to draw dot graphs.
+
+Arrays can be stored to file, 
+but also loaded into global variables where they can be accessed by getprop and setprop handlers.
+This allows local getprops to override the behavior of the gloabl model.
+*/
+
+
+--> Dot | Node
+-
+/*
+dot_Nodexxx props allow setting the styles of default nodes for groups of the whole graph.
+*/
+
+[[ _FetchHandler (node_Shape,g) ]]
+
+[[ _FetchHandler (node_Shape,s) ]]
+
+[[ _FetchHandler (dot_AllShapes,f) ]]
+
+[[ _FetchHandler (node_FillColour,g) ]]
+
+[[ _FetchHandler (node_FillColour,s) ]]
+
+[[ _FetchHandler (node_BorderColour,g) ]]
+
+[[ _FetchHandler (node_BorderColour,s) ]]
+
+
+--> Overaly | Props | Plurals
+-
+[[ _FetchHandler (overlay_Styles,g) ]]
+
+[[ _FetchHandler (overlay_Sizes,g) ]]
+
+[[ _FetchHandler (overlay_FlattenNums,g) ]]
+
+[[ _FetchHandler (overlay_DefaultMaximumDepths,g) ]]
+
+
+--> Dot | Node Style
+-
+[[ _FetchHandler (dot_NodeStyle,g) ]]
+
+[[ _FetchHandler (dot_NodeStyle,s) ]]
+
+[[ _FetchHandler (dot_NodeAddStyle,s) ]]
+
+[[ _FetchHandler (dot_NodeStyleNames,g) ]]
+
+
+--> Dot | Model | Props
+-
+/*
+Wrappers around overlay_Array
+
+*/
+
+[[ _FetchHandler (dot_DefaultShape,g) ]]
+
+[[ _FetchHandler (dot_DefaultShape,s) ]]
+
+[[ _FetchHandler (dot_Splines,g) ]]
+
+[[ _FetchHandler (dot_Splines,s) ]]
+
+[[ _FetchHandler (dot_Concentrate,g) ]]
+
+[[ _FetchHandler (dot_Concentrate,s) ]]
+
+[[ _FetchHandler (dot_Overlap,g) ]]
+
+[[ _FetchHandler (dot_Overlap,s) ]]
+
+[[ _FetchHandler (dot_Order,g) ]]
+
+[[ _FetchHandler (dot_Order,s) ]]
+
+[[ _FetchHandler (dot_ClusterRank,g) ]]
+
+[[ _FetchHandler (dot_ClusterRank,s) ]]
+
+
+--> Dot | Property | Plurals
+-
+[[ _FetchHandler (dot_Orders,g) ]]
+
+[[ _FetchHandler (dot_Shapes,g) ]]
+
+[[ _FetchHandler (dot_ClusterRanks,g) ]]
+
+[[ _FetchHandler (dot_Overlaps,g) ]]
+
+getprop dot_Orders
+   return dot_OrderOptions()
+end dot_Orders
+
+[[ _FetchHandler (dot_Clusters,g) ]]
+
+[[ _FetchHandler (dot_DefaultShapes,g) ]]
+
+[[ _FetchHandler (dot_NodeColours,g) ]]
+
+[[ _FetchHandler (dot_NodeStyles,g) ]]
+
+[[ _FetchHandler (dot_ClusterTypes,g) ]]
+
+
+--> Dot | Model | Props | Functions
+-
+[[ _FetchHandler (_GetHeaderProperty,pf) ]]
+
+[[ _FetchHandler (_SetHeaderProperty,pc) ]]
+
+[[ _FetchHandler (dot_NodeStyleOptions,f) ]]
+
+[[ _FetchHandler (dot_ClusterTypeOptions,f) ]]
+
+[[ _FetchHandler (dot_OverlapOptions,f) ]]
+
+[[ _FetchHandler (dot_OrderOptions,f) ]]
+
+[[ _FetchHandler (dot_AllClusters,f) ]]
+
+[[ _FetchHandler (dot_NodeColourOptions,f) ]]
+
+[[ _FetchHandler (dot_GetGraphMaximumDepths,f) ]]
+
+[[ _FetchHandler (dot_GetGraphSizes,f) ]]
+
+
+--> overlayArray | Node Style
+-
+/*
+An array that speicifes the definition section of a dot file.
+Allows groups of nodes to be share a common style.
+
+Structure:
+metadata
+- default (ie overlay_Name)
+-   dot_NodeStyleArray
+-     styleName -> ie 2 or "yellow"
+-       nodeIds -> n1....
+-       node_StyleArray- > a node_StyleArray or a snode_StyleName ie b"lue box"
+
+Where the syle name refers to an array stored in the display/node_StyleArray/name section of overlay_Array
+*/
+
+[[ _FetchHandler (dot_GroupStyleArray,g) ]]
+
+[[ _FetchHandler (dot_GroupStyleArray,s) ]]
+
+[[ _FetchHandler (dot_ParamsToStyleArray,f) ]]
+
+[[ _FetchHandler (dot_StyleArrayToParams,f) ]]
+
+
+--> Dot | Plurals
+-
+[[ _FetchHandler (dot_AllGraphStyles,f) ]]
+
+[[ _FetchHandler (dot_AllGraphFlattenNums,f) ]]
+
+
+--> Dot | MetaData | Array
+-
+/*
+The overlay_Array of an (image) view contains both the dot and the graph values in a flat property array.
+To extract the overlay_PropertyArray, or the dot_HeaderArray
+*/
+
+-- getprop overlay_Array [pOverlayName]
+   -- a default (for a single graph)
+   -- will often be customised locally and stored in a file
+   if pOverlayName is empty then put "hierarchical" into pOverlayName
+   
+   put the uOPN_OverlayData of the target into overlayData
+   put overlayData [pOverlayName] into overlayArray
+   dot_NormalizeArray overlayArray
+   return overlayArray
+end overlay_Array
+
+-- setprop overlay_Array [pOverlayName] overlayArray
+   if pOverlayName is empty then put "hierarchical" into pOverlayName
+   
+   put the uOPN_OverlayData of the target into overlayData
+   put overlayArray into overlayData [pOverlayName]
+   set the uOPN_OverlayData of the target to overlayArray
+end overlay_Array
+
+[[ _FetchHandler (dot_DataArray,g) ]]
+
+[[ _FetchHandler (dot_DataArray,s) ]]
+
+[[ _FetchHandler (dot_MetadataArray,g) ]]
+
+[[ _FetchHandler (dot_MetadataArray,s) ]]
+
+[[ _FetchHandler (dot_HeaderArray,g) ]]
+
+[[ _FetchHandler (dot_HeaderArray,s) ]]
+
+[[ _FetchHandler (dot_HeaderValue,g) ]]
+
+[[ _FetchHandler (dot_HeaderValue,s) ]]
+
+[[ _FetchHandler (dot_GetHeaderValue,f) ]]
+
+[[ _FetchHandler (dot_SetHeaderValue,c) ]]
+
+[[ _FetchHandler (dot_DefaultHeaderValue,g) ]]
+
+[[ _FetchHandler (dot_DefaultHeaderValue,s) ]]
+
+[[ _FetchHandler (dot_GetDefaultHeaderValue,f) ]]
+
+[[ _FetchHandler (dot_SetDefaultHeaderValue,c) ]]
+
+
+--> Dot | Data | Array
+-
+[[ _FetchHandler (dot_GeometryArray,g) ]]
+
+[[ _FetchHandler (dot_GeometryArray,s) ]]
+
+[[ _FetchHandler (dot_LinkArray,g) ]]
+
+[[ _FetchHandler (dot_LinkArray,s) ]]
+
+[[ _FetchHandler (dot_IdLinkArray,g) ]]
+
+[[ _FetchHandler (dot_IdLinkArray,s) ]]
+
+[[ _FetchHandler (dot_IdArray,g) ]]
+
+[[ _FetchHandler (dot_IdArray,s) ]]
+
+[[ _FetchHandler (dot_ReverseIdArray,g) ]]
+
+[[ _FetchHandler (dot_ReverseIdArray,s) ]]
+
+
+--> Dot | Data | Array | dot_ClusterArray
+-
+[[ _FetchHandler (dot_ClusterArray,g) ]]
+
+[[ _FetchHandler (dot_ClusterArray,s) ]]
+
+
+[[ _FetchHandler (dot_ConstructPropertyArray,c) ]]
+
+[[ _FetchHandler (dot_DeconstructPropertyArray,c) ]]
+
+
+--> Dot | Model | Files
+-
+/*
+Conventions for naming and organising files realted to scripts and their graphs.
+*/
+
+[[ _FetchHandler (dot_FilesFromHkey,c) ]]
+
+[[ _FetchHandler (dot_SaveTemporaryFile,c) ]]
+
+[[ _FetchHandler (dot_LabelFileWithGraphStyle,f) ]]
+
+[[ _FetchHandler (dot_NameFromImageFile,f) ]]
+
+[[ _FetchHandler (dot_FilesFromScriptObject,c) ]]
+
+[[ _FetchHandler (dot_NewTemporaryFilePath,f) ]]

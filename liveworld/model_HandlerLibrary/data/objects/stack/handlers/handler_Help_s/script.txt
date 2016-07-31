@@ -1,0 +1,15 @@
+setprop handler_Help [shortHkey] helpHtml
+   put the rugged_ID of the target into rObject
+   
+   put item 1 to 2 of shortHkey into hKey
+   put rObject into item 3 of hKey
+   put 1 into item 4 of hKey
+   
+   put the script_Hkeys of rObject into availableHkeys
+   set the wholematches to true
+   if hKey is not among the lines of availableHkeys then return empty
+   
+   project_StoreHandlerHelp hKey, helpHtml
+   put the result into helpFile
+   return helpFile
+end handler_Help

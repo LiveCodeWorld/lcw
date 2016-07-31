@@ -1,0 +1,7 @@
+getprop disabled_DisplayLocalChanges [mTarget]
+   if the script_IsDifferent of mTarget is true then
+      return false
+   else
+      return true
+   end if
+end disabled_DisplayLocalChanges

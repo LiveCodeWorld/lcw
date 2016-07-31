@@ -1,0 +1,7 @@
+command fedwiki_AddToEndOfIndexArray dataOrArray, @someArray
+   put item 2 of the extents of someArray into indexNum
+   put someArray [indexNum]["id"] into afterID
+   add 1 to indexNum
+   put dataOrArray into someArray [indexNum]
+   return afterID -- figure out what we just added it after
+end fedwiki_AddToEndOfIndexArray

@@ -1,0 +1,8 @@
+command LayoutControl pRect
+   -- this default does not require an image or a menu button
+   -- it should be over-ridden by handler that also resizes those objects in a view if needed
+   if pRect is empty then put the rect of me into pRect
+   lock screen  
+   set the browser_Rect of me to pRect
+   unlock screen   
+end LayoutControl

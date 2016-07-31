@@ -1,0 +1,21 @@
+function stack_GetShortName someFile
+    set lockmessages to true
+    put the mainstacks into oMainStacks
+    if exists(stack someFile) is false then
+        -- can't have been loaded
+        return empty
+    end if
+    
+    -- this will also load the stack into memory
+    put the short name of stack someFile into shortName
+     
+    -- the problem here is what to do if we had a stack with the same name loaded a stack into memory. 
+    
+    set the wholematches to true
+    -- lets check
+    if not(shortName is among the lines of oMainStacks) then
+        delete stack someFile
+    end if
+    set lockmessages to false
+    return shortName
+end stack_GetShortName

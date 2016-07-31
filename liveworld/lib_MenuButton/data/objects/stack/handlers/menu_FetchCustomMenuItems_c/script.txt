@@ -1,0 +1,19 @@
+command menu_FetchCustomMenuItems @mText, mLine, submenuProp, mController, paramProp, mTarget, mItemType
+   -- ignoreCall:  submenuProperty,g
+   try
+      put mLine & CR after mText
+      
+      put submenuProp & "[" & mTarget & "]" into submenuProperty
+      put the submenuProperty of mController into subMenu
+      
+      if subMenu is not empty then
+         -- check submenu
+         replace comma with CR in subMenu
+         menu_CheckSub subMenu, paramProp, mController, mTarget, mItemType
+         put outline_IncreaseIndent (subMenu, 1) into subMenu
+         put subMenu & CR after mText
+      end if
+   catch someError
+      -- error_LogCustomMenuItems mController, submenuProperty, someError
+   end try
+end menu_FetchCustomMenuItems

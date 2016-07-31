@@ -1,0 +1,24 @@
+on menu_CreateNewGraphFromTree treeView, graphStyle
+   put opn_Ask ("What name would you like to give this overlay?", graphStyle) into overlayName
+   -- put the displayed_OverlayName of treeView into overlayName
+   
+   put the view_Data of treeView into hkeyArray
+   deconstructLocalArray overlayFolder, hKey, stackLabel, scriptObject
+   
+   -- hkeyArray_ConstructOverlayAndCreateFiles hKeyArray, graphStyle, overlayFolder, overlayName, true
+   put overlayArray_FromLinkArray (hKeyArray) into overlayArray
+   overlayArray_SetGraphProperty overlayArray, "overlay_Folder", overlayFolder
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", graphStyle
+   if exists(scriptObject) then
+      overlayArray_SetGraphProperty overlayArray, "overlay_Of", scriptObject
+   else
+      overlayArray_SetGraphProperty overlayArray, "overlay_Of", hKey
+   end if
+   
+   -- overlayArray_ConstructOverlayAndCreateFiles overlayArray, overlayFolder, overlayName
+   overlay_SetArray overlayFolder, overlayArray, overlayName
+   overlayArray_CreateFilesAndSetGeometry overlayArray
+   
+   local pImageView, pResizeStyle
+   display_Overlay overlayFolder, graphStyle, pImageView, pResizeStyle, stackLabel
+end menu_CreateNewGraphFromTree

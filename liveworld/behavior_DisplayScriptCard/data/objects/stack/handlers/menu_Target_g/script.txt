@@ -1,0 +1,26 @@
+getprop menu_Target [mTitlePath]
+   try
+      switch
+         case mTitlePath contains "Script | Record | Menu"
+            put menu_GetTargetObject() into targetObject
+            put the displayed_Hkey of targetObject into hKey
+            return hKey
+         case mTitlePath contains "Global | Hkey | Calls | Menu"
+            put menu_GetTargetObject() into targetObject
+            put the displayed_Hkey of targetObject into hKey
+            return hKey
+         case mTitlePath contains "Global | Dot | Graph Properties | Menu"
+            return the long id of me
+         case mTitlePath contains "Global | Overlay |" -- Global | Graph | Folder | Array | Menu
+            -- put the tree_SelectedLink of treeField into hKey
+            return the overlay_Folder of me
+         case mTitlePath contains "Global | Graph | Folder |" -- Global | Graph | Folder | Array | Menu
+            -- put the tree_SelectedLink of treeField into hKey
+            return the overlay_Folder of me
+         default
+            pass menu_Target
+      end switch
+   catch e
+      pass menu_Target
+   end try
+end menu_Target

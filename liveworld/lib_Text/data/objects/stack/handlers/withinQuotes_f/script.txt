@@ -1,0 +1,27 @@
+function withinQuotes textOrOffset, someContainer
+    -- version latest, 2/2/00
+     
+    put item 1 of textOrOffset into startCharNum
+    put item 2 of textOrOffset into endCharNum
+    if endCharNum is empty then put startCharNum into endCharNum
+    if startCharNum is a number and endCharNum is a number then
+    else
+        put offset(textOrOffset, someContainer) into startCharNum
+        put startCharNum + the length of textOrOffset - 1 into endCharNum
+    end if
+     
+    if startCharNum is 0 then
+        return "Not Found"
+    else
+        put char 1 to (startCharNum - 1) of someContainer into textBefore
+        put text_StringCount(quote, textBefore) into quotesBefore
+        put the number of chars of someContainer into lastCharNum
+        put char (endCharNum + 1) to lastCharNum of someContainer into textAfter
+        put text_StringCount(quote, textAfter) into quotesAfter
+        if math_IsOdd(quotesBefore) and quotesAfter >= 1 then
+            return true
+        else
+            return false
+        end if
+    end if
+end withinQuotes

@@ -1,0 +1,20 @@
+getprop model_Folder [pDontCreate]
+   -- return model_NamedFolder (modelName, pDontCreate) -- use this for a custom model
+   breakpoint
+   
+   -- this is a default
+   put the long id of the target into longIDObject
+   put library_PluginFolder ("opn_Model") into pObjectFolderRoot
+   
+   if pObjectFolderRoot is empty then
+      put the checkout_Folder of longIDObject into textStackRoot
+   else
+      folder_Format pObjectFolderRoot
+      put pObjectFolderRoot into textStackRoot
+      put stack_ConstructFolderBit (longIDObject) after textStackRoot
+   end if
+   put "objects/" after objectFolder
+   folder_AddObjectBit objectFolder, longIDObject
+   if pDontCreate is not true then folder_CreateNested objectFolder
+   return objectFolder
+end model_Folder

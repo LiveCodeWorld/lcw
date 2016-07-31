@@ -1,0 +1,57 @@
+private command _addMenuToHarray @hArray, suiteTitle, ruggedObject, ruggedMainStack, isOnMessage, lineType, handlerHash, scriptHash, @shortkeySuiteArray, @thisScriptsMenuArray
+   -- here we want to look at automatically indexing and creating global menu_Table / array
+   -- and then
+   -- menu_SetTitleTableArrayGlobal stackObject, mTitleTableArray
+   
+   switch
+      case word 1 of suiteTitle = "Global" and word 2 of suiteTitle = "|"
+         if suiteTitle is not among the keys of thisScriptsMenuArray then
+            -- a new global menu for this script
+            -- delete and old ones in global
+            delete variable hArray ["Global Menus"][suiteTitle]
+            put empty into thisScriptsMenuArray [suiteTitle]
+         end if
+         
+         put ruggedObject into hArray ["Global Menus"][suiteTitle]["mController"]
+         -- put indexTime into hArray ["Global Menus"][suiteTitle]["indexTime"]
+         -- put scriptHash into hArray ["Global Menus"][suiteTitle]["scriptHash"]
+         
+         if isOnMessage is true and lineType = "c" then
+            put hArray ["Global Menus"][suiteTitle]["item"] into shortkeySuiteArray
+            if shortkeySuiteArray is not an array then
+               put 1 into itemNum
+            else
+               put (the number of elements of shortkeySuiteArray) + 1 into itemNum
+            end if
+            
+            put shortHkey into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["shortHkey"]
+            put handlerHash into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["sha1"]
+         end if
+         break
+      default
+         -- store local menu with the mainstack section of the array
+         
+         if ruggedMainStack is not among the keys of thisScriptsMenuArray then
+            -- a new global menu for this script
+            -- delete and old ones in global
+            delete variable hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"]
+            put empty into thisScriptsMenuArray [ruggedMainStack]
+         end if
+         
+         put ruggedObject into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["mController"]
+         -- put indexTime into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["indexTime"]
+         put scriptHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["scriptHash"]
+         
+         if isOnMessage is true and lineType = "c" then
+            put hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"] into shortkeySuiteArray
+            if shortkeySuiteArray is not an array then
+               put 1 into itemNum
+            else
+               put (the number of elements of shortkeySuiteArray) + 1 into itemNum
+            end if
+            
+            put shortHkey into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["shortHkey"]
+            put handlerHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["sha1"]
+         end if                     
+   end switch
+end _addMenuToHarray

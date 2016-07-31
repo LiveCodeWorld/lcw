@@ -1,0 +1,5 @@
+function dot_GetGraphHeader dotText
+   dot_SetGraphSectionOffsets dotText, startChar, endChar
+   put char startChar to endChar of dotText into graphHeader
+   return graphHeader
+end dot_GetGraphHeader

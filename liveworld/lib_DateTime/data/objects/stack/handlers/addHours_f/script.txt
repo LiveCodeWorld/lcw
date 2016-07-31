@@ -1,0 +1,5 @@
+function addHours howManyHours, someDate
+  convert someDate to seconds
+  add howManyHours * 60*60 to someDate
+  return someDate
+end addHours

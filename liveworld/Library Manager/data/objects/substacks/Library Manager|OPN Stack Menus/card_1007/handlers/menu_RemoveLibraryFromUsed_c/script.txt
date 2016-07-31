@@ -1,0 +1,4 @@
+on menu_RemoveLibraryFromUsed ideScriptObject, stackSetName
+   put the stack_Object of ideScriptObject into stackObject
+   library_DeleteUsedStack stackObject, stackSetName
+end menu_RemoveLibraryFromUsed

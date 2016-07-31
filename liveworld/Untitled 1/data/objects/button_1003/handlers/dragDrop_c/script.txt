@@ -1,0 +1,7 @@
+on dragDrop
+   put the dragData into someArray
+   put keys (someArray) into fld 1
+   put the dragData ["files"] after fld 1
+   put the dragData ["text"]
+   pass dragDrop
+end dragDrop

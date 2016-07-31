@@ -1,0 +1,10 @@
+on model_AddToArray newArray, modelName, modelType, modelObject
+   if keys(newArray) is empty then return empty
+   
+   put model_GetArray(modelName, modelObject, modelType) into dataArray
+   array_AddNew newArray, dataArray
+   put the result into addedKeys
+   model_SetArray modelName, modelObject, dataArray, modelType
+   
+   return addedKeys
+end model_AddToArray

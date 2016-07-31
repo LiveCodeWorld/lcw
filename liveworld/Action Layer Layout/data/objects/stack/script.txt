@@ -1,0 +1,57 @@
+--> Variables
+-
+local LocalArray
+
+
+--> Chapter | Model
+-
+/*
+Getting and setting the:
+
+-  chapter_Title
+-  chapter_Num
+
+has the effect of setting the model for that view.
+Knowing the chapter_Title or chapter_Num enables us to fetch the chapter_Array,
+and therefore all the info we need.
+*/
+
+[[ _FetchHandler (chapter_Num,g) ]]
+
+[[ _FetchHandler (chapter_Num,s) ]]
+
+
+--> Trait
+-
+[[ _FetchHandler (trait_SetChapter,c) ]]
+
+[[ _FetchHandler (trait_SetText,c) ]]
+
+[[ _FetchHandler (trait_SetDescription,c) ]]
+
+[[ _FetchHandler (trait_SetQuote,c) ]]
+
+[[ _FetchHandler (trait_SetSituation,c) ]]
+
+[[ _FetchHandler (trait_SetPositive,c) ]]
+
+[[ _FetchHandler (trait_SetNegative,c) ]]
+
+[[ _FetchHandler (trait_SetAssignement,c) ]]
+
+[[ _FetchHandler (trait_SetThought,c) ]]
+   
+
+
+--> Events
+-
+[[ _FetchHandler (preOpenCard,c) ]]
+
+[[ _FetchHandler (mouseDown,c) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (title_View,g) ]]
+
+[[ _FetchHandler (plusMinus_View,g) ]]

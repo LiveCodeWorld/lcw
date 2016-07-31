@@ -1,0 +1,5 @@
+function menu_LineNumFromPath mPath, mText
+   menu_CleanCheckMarks mText
+   put outline_PathOffset (mPath, mText, "|") into lineNum
+   return lineNum
+end menu_LineNumFromPath

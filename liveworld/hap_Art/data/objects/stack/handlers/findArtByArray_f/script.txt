@@ -1,0 +1,32 @@
+function findArtByArray pA
+   rigDbWhere pA
+   combine pA by "," and "="
+   rigLogMessage "debug", "looking for Art:" && pA
+   put rigDbGet("item") into tQuery
+   if tQuery["numrows"] > 0 then
+      repeat with x = 1 to tQuery["numrows"]
+         put rigDbRow(x) into tRetA[x]
+         -- get the channels of distribution (mainly print version)
+         rigDbWhere "item_id", tRetA[x]["item_id"]
+         put rigDbGet("channel") into tChannelQuery
+         if tChannelQuery["numrows"] > 0 then
+            repeat with y = 1 to tChannelQuery["numrows"]
+               put rigDbRow(y) into tRetA[x]["channels"][y]
+            end repeat
+         end if
+         -- get the available formats
+         rigDbWhere "item_id", tRetA[x]["item_id"]
+         put rigDbGet("item_format") into tChannelQuery
+         if tChannelQuery["numrows"] > 0 then
+            repeat with y = 1 to tChannelQuery["numrows"]
+               put rigDbRow(y) into tRetA[x]["formats"][y]
+            end repeat
+         end if
+         -- go back to the book query
+         put rigDbGet("item") into tQuery
+      end repeat
+      return tRetA
+   else
+      return false
+   end if
+end findArtByArray

@@ -1,0 +1,9 @@
+function dot_MakeSpringText dotFile
+    -- neato /Users/david/.Trash/dot.dot -Tepdf
+    shell_BashParamEscape dotFile
+    put merge("neato [[dotFile]]") into someShell
+    
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & someShell into someShell
+    return shell(someShell)
+end dot_MakeSpringText

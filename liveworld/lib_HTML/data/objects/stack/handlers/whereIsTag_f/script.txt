@@ -1,0 +1,25 @@
+function whereIsTag someTagName, someHTML, startCharNum, wholeTag
+  -- version original, 23 12 99
+  
+  put "<" & someTagName into starsomeHtml
+  put ">" into endText
+  put whereIsText(starsomeHtml, endtext, someHTML, startCharNum) into tagOfset
+  if tagOfset is "Not Found" then
+    return "Not Found"
+  else
+    put item 1 of tagOfset into startTagChar
+    put item 2 of tagOfset into endTagChar
+    get char (startTagChar + 1) to (endTagChar - 1) of someHTML
+    put word 1 of it into fullTagName
+    
+    if wholeTag is not false then
+      if someTagName is fullTagName then
+        return tagOfset
+      else
+        return whereIsTag(someTagName, someHTML, endTagChar, wholeTag)
+      end if
+    else
+      return tagOfset
+    end if
+  end if
+end whereIsTag

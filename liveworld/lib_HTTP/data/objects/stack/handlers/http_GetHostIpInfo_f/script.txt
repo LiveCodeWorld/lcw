@@ -1,0 +1,8 @@
+function http_GetHostIpInfo ipAddress
+    -- 208.113.152.59
+    -- http://api.hostip.info/?ip=12.215.42.19
+    put "http://api.hostip.info/?" & ipAddress into someUrl
+    put someUrl
+    put url someUrl into someXML
+    return someXML
+end http_GetHostIpInfo

@@ -1,0 +1,6 @@
+getprop spotlight_DateRanges
+    -- mdfind "kind:pdf date:this week"
+    -- The date ranges that can be specified are:
+    
+    return "this month,this week,this year,-,today,yesterday,tomorrow,-,next month,next week,next year"
+end spotlight_DateRanges

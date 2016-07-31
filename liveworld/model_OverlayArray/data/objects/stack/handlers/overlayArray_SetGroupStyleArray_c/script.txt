@@ -1,0 +1,11 @@
+command overlayArray_SetGroupStyleArray @overlayArray, dotHeaderArray
+   if dotHeaderArray is not an array then
+      delete local overlayArray ["metadata"]["dot_GroupStyleArray"]
+      return empty
+   else
+      put overlayArray_GetMetadataArray (overlayArray, pOverlayName) into metadataArray
+      put dotHeaderArray into metadataArray ["dot_GroupStyleArray"]
+      overlayArray_SetMetadataArray overlayArray, metadataArray, pOverlayName
+      return metadataArray
+   end if
+end overlayArray_SetGroupStyleArray

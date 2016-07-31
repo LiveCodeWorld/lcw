@@ -1,0 +1,5 @@
+function rig_FetchControllerPathArray
+   put rig_ControllerFolder () into controllerFolder
+   put rig_FetchPathArray (controllerFolder) into fileArray
+   return fileArray
+end rig_FetchControllerPathArray

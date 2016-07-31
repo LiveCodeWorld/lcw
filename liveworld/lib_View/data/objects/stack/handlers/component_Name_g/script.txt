@@ -1,0 +1,16 @@
+getprop component_Name [pComponentType]
+   put the uRIP ["name"] of the target into vName
+   if the dgProps ["style"] of the target is among the items of "table,form" then -- it is a datagrid
+      if vName is empty then -- in case it is not named (ie a vanilla Rev control)
+         return "View|Rev|Datagrid"
+      else
+         return vName
+      end if
+   else if pComponentType is empty then
+      return vName
+   else if the uRIP ["type"] of the target is not pComponentType then
+      return empty
+   else
+      return vName
+   end if
+end component_Name

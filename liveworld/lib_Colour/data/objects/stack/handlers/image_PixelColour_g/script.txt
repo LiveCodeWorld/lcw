@@ -1,0 +1,5 @@
+getprop image_PixelColour [someLoc]
+    breakpoint
+    put the image_PixelArray of the target into imagePixelArray
+    return imagePixelArray [someLoc]
+end image_PixelColour

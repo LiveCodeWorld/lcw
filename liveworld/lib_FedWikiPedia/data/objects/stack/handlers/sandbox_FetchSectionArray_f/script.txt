@@ -1,0 +1,6 @@
+function sandbox_FetchSectionArray pageTitle, sectionNum, pApiStem
+   -- was "sandbox_FetchSectionArray"
+   put sandbox_ConstructSectionFragment (pageTitle, sectionNum) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   return sandboxArray
+end sandbox_FetchSectionArray

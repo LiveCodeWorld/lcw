@@ -1,0 +1,41 @@
+command hkey_FindScriptLine hKey, someScript, @scriptLine, @lineNum
+   put word 1 to -1 of someScript into someScript
+   script_ExtractAndStripMultiLineComments someScript, mulitLineComment
+   put script_StripComments (someScript) into someScript
+   
+   put someScript into testScript
+   put text_StripQuoted (testScript, "еее") into testScript
+   
+   hkey_Deconstruct hKey, hName, hType, scriptObject, hNum
+   put empty into scriptLine
+   put 0 into lineNum
+   put 0 into lastWordNum
+   repeat
+      put wordoffset (hName, testScript, lastWordNum) into wordNum
+      if wordNum = 0 then return false
+      
+      get testScript
+      delete word (wordNum + lastWordNum + 1) to -1 of it
+      put the number of lines of it into lineNum
+      put word 1 to -1 of line lineNum of someScript into scriptLine
+      
+      switch hType
+         case "g"
+            if word (wordNum - 1) of someScript = "the" then return true
+         case "s"
+            if word (wordNum - 1) of someScript = "the" then return true
+         case "c"
+            if hName = token 1 of scriptLine then return true
+         case "f"
+            put someScript into testFunctionScript
+            delete word 1 to (wordNum + lastWordNum) of testFunctionScript
+            if token 1 of testFunctionScript = "(" then return true
+         case "m"
+            if hName = token 1 of scriptLine then return true
+      end switch
+      put empty into scriptLine
+      put 0 into lineNum
+      put wordNum into lastWordNum
+   end repeat
+   return false
+end hkey_FindScriptLine

@@ -1,0 +1,20 @@
+on menu_AddHexagon sHexagon, gNum
+   if menu_SentIsChecked() is true then
+      if gNum = "all" then
+         set the hexagon_NeighbourNums of sHexagon to empty
+         return the result
+      end if
+      
+      put the hexagon_Neighbour [gNum] of sHexagon into someControl
+      if exists (someControl) then
+         delete someControl
+      end if
+   else
+      if gNum = "all" then
+         set the hexagon_NeighbourNums of sHexagon to "all"
+         return the result
+      end if
+      
+      dispatch "hexagon_CreateNeighbour" to sHexagon with gNum
+   end if
+end menu_AddHexagon

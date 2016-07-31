@@ -1,0 +1,6 @@
+function hArray_GetBehavior bName
+   put hArray_GetNamedObjectType (bName, "behavior") into bObject
+   if exists(bObject) then return bObject
+   put hArray_GetNamedObjectType (bName, "view behavior") into bObject
+   return bObject
+end hArray_GetBehavior

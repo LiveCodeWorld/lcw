@@ -1,0 +1,17 @@
+getprop menu_FoundTitle [searchAbove]
+   put the view_Hierarchy of the target into viewObjects
+   if searchAbove is true then delete line 1 of viewObjects
+   -- repeat for each line viewObject in viewObjects -- from the top view down
+   repeat with lineNum = the number of lines of viewObjects down to 1 -- from the bottom up
+      put line lineNum of viewObjects into viewObject
+      
+      put the view_Value ["menu_Title"] of viewObject into mTitle
+      -- put the uOPN ["menu_Title"] of viewObject into mTitle
+      if mTitle is not empty then
+         if the menu_ControllerExists [mTitle] of viewObject is true then return mTitle
+         set the menu_HierarchyTitle of targetObject to mTitle -- search for mTitle in the basic stack hiererchy
+         if the result is true then return mTitle
+      end if
+   end repeat
+   return empty
+end menu_FoundTitle

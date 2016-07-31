@@ -1,0 +1,4 @@
+command library_SetStackFileArray stackFileArray
+   put library_StackFileStack() into stackFileStack
+   set the stackfile_Array of stackFileStack to stackFileArray
+end library_SetStackFileArray

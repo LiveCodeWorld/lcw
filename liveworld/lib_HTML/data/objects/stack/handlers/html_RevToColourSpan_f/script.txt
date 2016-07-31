@@ -1,0 +1,13 @@
+function html_RevToColourSpan someHtml
+    replace quote with "'" in someHtml
+    put "(?miU)(<font color=').*(</font>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, oTagStart, oTagEnd, cTagStart, cTagEnd) is true then
+            put "</span>" into char cTagStart to cTagEnd of someHtml
+            put "<span style='color:" into char oTagStart to oTagEnd of someHtml
+        else
+            replace quote with "'" in someHtml
+            return someHtml
+        end if
+    end repeat
+end html_RevToColourSpan

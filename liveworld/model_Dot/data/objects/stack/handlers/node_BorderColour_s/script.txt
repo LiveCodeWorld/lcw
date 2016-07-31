@@ -1,0 +1,8 @@
+setprop node_BorderColour [groupNameOrNum] someColour
+   put the dot_GroupStyleArray of the target into dotGroupStyleArray
+   put someColour into dotGroupStyleArray [groupNameOrNum]["node_StyleArray"]["color"]
+   set the dot_GroupStyleArray of the target to dotGroupStyleArray
+   
+   dispatch "dot_Reconstruct" to the target
+   return dotGroupStyleArray
+end node_BorderColour

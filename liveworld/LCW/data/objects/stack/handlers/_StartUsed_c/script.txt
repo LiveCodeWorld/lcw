@@ -1,0 +1,7 @@
+command _StartUsed
+   -- only good references to stacks are returned from this handler
+   put the standard_StackObjects ["library"] of me into stackPaths
+   repeat for each line stackPath in stackPaths
+      start using stack stackPath
+   end repeat
+end _StartUsed

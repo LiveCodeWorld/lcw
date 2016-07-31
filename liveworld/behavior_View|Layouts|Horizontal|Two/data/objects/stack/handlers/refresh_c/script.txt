@@ -1,0 +1,14 @@
+on refresh pHow
+   lock screen
+   view_IndexChildren
+   switch pHow
+      case "placeholders"
+         set the control_Type ["left_View"] of the left_View of me to "placeholder"
+         set the control_Type ["right_View"] of the right_View of me to "placeholder"
+         break
+      default
+   end switch
+   LayoutControl
+   unlock screen
+   return the result
+end refresh

@@ -1,0 +1,10 @@
+function target_IsView someObject, vName
+   view_NormalizeName vName
+   if exists (someObject) is false then return false
+   put the view_Name of someObject into targetViewName
+   if vName ends with "|" then
+      return targetViewName begins with vName
+   else
+      return targetViewName = vName
+   end if
+end target_IsView

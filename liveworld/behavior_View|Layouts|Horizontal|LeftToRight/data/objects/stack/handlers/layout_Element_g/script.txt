@@ -1,0 +1,5 @@
+getprop layout_Element [elementNum]
+   if elementNum is empty then put 1 into elementNum
+   put the layout_Elements of me into layoutElements
+   return line elementNum of layoutElements
+end layout_Element

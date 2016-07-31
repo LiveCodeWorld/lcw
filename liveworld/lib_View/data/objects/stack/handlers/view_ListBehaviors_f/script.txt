@@ -1,0 +1,6 @@
+function view_ListBehaviors vName
+   -- first line will be the top view behavior if it has one
+   put view_GetTemplateObject (vName) into templateObject
+   put the object_Behaviors of templateObject into vBehaviors
+   return vBehaviors
+end view_ListBehaviors

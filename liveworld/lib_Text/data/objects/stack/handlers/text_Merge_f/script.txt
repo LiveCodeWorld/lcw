@@ -1,0 +1,9 @@
+function text_Merge mergeText, paramArray
+   repeat for each key someKey in paramArray
+      put paramArray [someKey] into someValue
+      put "put someValue into" && someKey into doScript
+      do doScript
+   end repeat
+   put merge (mergeText) into translatedText
+   return translatedText
+end text_Merge

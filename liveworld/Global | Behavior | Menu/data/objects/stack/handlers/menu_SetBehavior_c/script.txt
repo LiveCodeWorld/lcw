@@ -1,0 +1,7 @@
+on menu_SetBehavior scriptObject, standardBehaviorStackName
+   if standardBehaviorStackName = "None" then
+      set the behavior of scriptObject to empty
+   else
+      set the behavior of scriptObject to the long id of stack standardBehaviorStackName
+   end if
+end menu_SetBehavior

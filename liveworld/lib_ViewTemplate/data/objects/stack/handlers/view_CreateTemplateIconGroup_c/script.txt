@@ -1,0 +1,22 @@
+command view_CreateTemplateIconGroup viewTemplate
+   if exists (viewTemplate) is false then return empty
+   put the stack_Object of viewTemplate into viewTemplateStack
+   put the defaultstack into oDefaultStack
+   set the defaultstack to viewTemplateStack
+   
+   if exists (card "View Behavior") then
+      go to card "View Behavior"
+   else
+      create card "View Behavior"
+   end if
+   
+   put the card_View ["View|Image|Icons"] of card "View Behavior" into iconView
+   if exists (iconView) then return iconView
+   
+   put the rect of this card into someRect
+   put rect_SubtractMargin ("12,80,12,12", someRect) into someRect
+   
+   set the view_Insert [someRect] of card "View Behavior" to "View|Image|Icons" 
+   put the result into createdView
+   return createdView
+end view_CreateTemplateIconGroup

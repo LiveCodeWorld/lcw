@@ -1,0 +1,21 @@
+function fossil_CheckoutFileInfo someFile, pNotBrief
+   -- think we need ARTIFACT-ID here
+   switch
+      case there is a file someFile
+         put fossil_FindCheckoutFolder (someFile) into fossilCheckoutFolder
+         if fossilCheckoutFolder is empty then return empty
+         put someFile into relativeFile
+         file_SetRelativePath relativeFile, fossilCheckoutFolder
+         
+         put fossil_FileHistory (relativeFile, false, fossilCheckoutFolder) into fileHistory
+         put word 1 of fileHistory into artifactID
+         
+         put "fossil info" into someShell
+         put space && artifactID after someShell
+         fossil_ExecuteShell someShell, fossilCheckoutFolder
+         put the result into shellResult
+         return shellResult
+      default
+         return empty
+   end switch
+end fossil_CheckoutFileInfo

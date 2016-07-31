@@ -1,0 +1,5 @@
+getprop dot_TargetSizeLine
+   put the rect of the target into graphRect
+   put dot_ConvertGraphRect (graphRect, false, false) into targetSize
+   return targetSize
+end dot_TargetSizeLine

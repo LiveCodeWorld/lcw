@@ -1,0 +1,4 @@
+function stackFile_ToArray stackFileTable
+   split stackFileTable by CR and comma
+   return stackFileTable
+end stackFile_ToArray

@@ -1,0 +1,5 @@
+function global_GetValue gName
+   put "global" && gName & CR & "put" && gName && "into gValue" into doScript
+   do doScript
+   return gValue
+end global_GetValue

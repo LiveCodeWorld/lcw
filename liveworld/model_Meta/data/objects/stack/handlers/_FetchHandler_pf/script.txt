@@ -1,0 +1,12 @@
+private function _FetchHandler hName, hType, pObject
+   put LocalArray ["ObjectFolder"] into objectFolder
+   
+   put hName,hType into shortHkey
+   put objectFolder_HandlerFolder (shortHkey, objectFolder) & "script.txt" into someFile
+   
+   if someFile is empty then return empty
+   put url ("binfile:" & someFile) into someHandler
+   hack_UpdateBinFile someHandler, someFile
+   
+   return someHandler
+end _FetchHandler

@@ -1,0 +1,5 @@
+function behavior_GetName behaviorObject
+   -- hack for updating to new hArray technique
+   put hArray_GetBehaviorName (behaviorObject) into bName
+   return bName
+end behavior_GetName

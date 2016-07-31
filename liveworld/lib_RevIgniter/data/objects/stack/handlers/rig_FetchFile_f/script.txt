@@ -1,0 +1,14 @@
+function rig_FetchFile somePath, pServerURL  
+   if pServerURL is not empty then
+      put server_GetURL() into oServerURL
+      server_LoadDetails pServerURL
+   end if
+   
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   put server_FetchFile (somePath, serverAddress, sshUser) into stackOrScript
+   if pServerURL is not empty then
+      server_LoadDetails oServerURL
+   end if
+   return stackOrScript
+end rig_FetchFile

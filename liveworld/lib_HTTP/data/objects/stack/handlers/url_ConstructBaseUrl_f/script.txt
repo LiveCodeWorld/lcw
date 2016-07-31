@@ -1,0 +1,24 @@
+function url_ConstructBaseUrl baseUrl
+    -- was "object_BaseUrlGuess"
+    -- create a folder if it does not exist!
+    switch baseUrl
+    case "local"
+        put folder_Above(the filename of this stack) into baseFolder
+        put "wiki/" after baseFolder
+        if there is not a folder baseFolder then
+            folder_CreateNested baseFolder
+        end if
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    case empty
+        put the short name of this card into wikiTitle
+        if word 1 to 2 of wikiTitle is "card id" then
+            put the short name of this stack into wikiTitle
+        end if
+        put wiki_GetFolder(wikiTitle) into baseFolder
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    default -- leave as is
+        return baseUrl
+    end switch
+end url_ConstructBaseUrl

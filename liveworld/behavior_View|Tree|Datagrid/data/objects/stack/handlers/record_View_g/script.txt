@@ -1,0 +1,6 @@
+getprop record_View
+   put the dg_View of me into revDataGrid
+   if exists(revDataGrid) is false then return empty
+   put the dgProps ["row template"] of revDataGrid into someObject
+   return someObject
+end record_View

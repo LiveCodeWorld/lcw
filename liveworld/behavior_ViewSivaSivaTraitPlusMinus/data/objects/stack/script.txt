@@ -1,0 +1,159 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_ViewSivaSivaTraitPlusMinus
+type: behavior
+version: 0.1
+
+
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (mouseUp,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (preOpenControl,c) ]]
+
+
+--> Working On
+-
+[[ _FetchHandler (trait_Hilite,g) ]]
+
+[[ _FetchHandler (trait_Hilite,s) ]]
+
+[[ _FetchHandler (trait_Hilites,g) ]]
+
+[[ _FetchHandler (show_TraitLabels,g) ]]
+
+[[ _FetchHandler (show_TraitLabels,s) ]]
+
+[[ _FetchHandler (displayed_ChapterTitle,g) ]]
+
+[[ _FetchHandler (displayed_ChapterTitle,s) ]]
+
+[[ _FetchHandler (situation_Num,g) ]]
+
+[[ _FetchHandler (situation_Num,s) ]]
+
+
+--> Display
+-
+[[ _FetchHandler (display_NextChapter,c) ]]
+
+[[ _FetchHandler (display_PreviousChapter,c) ]]
+
+
+--> Display | Props
+-
+[[ _FetchHandler (displayed_PositiveLabel,g) ]]
+
+[[ _FetchHandler (displayed_PositiveLabel,s) ]]
+
+[[ _FetchHandler (displayed_NegativeLabel,g) ]]
+
+[[ _FetchHandler (displayed_NegativeLabel,s) ]]
+
+[[ _FetchHandler (displayed_SquareText,g) ]]
+
+[[ _FetchHandler (displayed_SquareText,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (arrow_Factor,g) ]]
+
+[[ _FetchHandler (arrow_Length,g) ]]
+
+[[ _FetchHandler (arrow_LineWidth,g) ]]
+
+[[ _FetchHandler (arrow_Gap,g) ]]
+
+[[ _FetchHandler (trait_Margin,g) ]]
+
+[[ _FetchHandler (trait_Height,g) ]]
+
+[[ _FetchHandler (keep_Square,g) ]]
+
+[[ _FetchHandler (keep_Square,s) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (siva_TraitView,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (sivaSquareText_View,g) ]]
+
+
+--> Children
+-
+[[ _FetchHandler (positive_View,g) ]]
+
+[[ _FetchHandler (negative_View,g) ]]
+
+[[ _FetchHandler (square_View,g) ]]
+
+[[ _FetchHandler (arrow_View,g) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_traitWidth,pf) ]]
+
+[[ _FetchHandler (_innerSquareRect,pf) ]]
+
+[[ _FetchHandler (_arrowPoints,pf) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_createNestedViews,pc) ]]
+
+
+--> Private | Geometry
+-
+[[ _FetchHandler (_innerRectangle,pf) ]]
+
+-- private function _innerSquareRect  innerWidth, innerHeight, centreX, innerSquareTop, innerSquareBottom
+-- return the smallest square
+-- put _innerSquareRect (innerWidth, innerHeight, centreX, innerSquareTop, innerSquareBottom) into innerSquareRect
+put  innerSquareBottom - innerSquareTop into innerSquareHeight
+put round (innerSquareHeight / 2) into halfWidth
+-- put min (innerWidth, innerHeight, innerSquareHeight) into squareWidth
+-- put round (squareWidth / 2) into halfWidth
+
+put centreX - halfWidth into item 1 of innerSquareRect
+put centreX + halfWidth into item 3 of innerSquareRect
+put innerSquareTop into item 2 of innerSquareRect
+put innerSquareBottom into item 4 of innerSquareRect
+return innerSquareRect
+end _innerSquareRect
+
+
+--> Events
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+
+--> Children | Private
+-
+/*
+To be super safe we should only accept top level controls
+*/
+
+[[ _FetchHandler (_squareView,pf) ]]
+
+[[ _FetchHandler (_verticalArrow,pf) ]]
+
+[[ _FetchHandler (_positiveView,pf) ]]
+
+[[ _FetchHandler (_negativeView,pf) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (group_InnerRect,g) ]]

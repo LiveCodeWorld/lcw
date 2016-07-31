@@ -1,0 +1,31 @@
+on outline_AddToLinkArray startPath, tabbedOutline, @linkArray, pathDelim, noPath, alreadyDone
+   -- recursive
+   -- if startPath is empty then return false
+    put outline_PathChildren(startPath, tabbedOutline, pathDelim, false) into pathChildren
+    if pathChildren is empty then return false
+    
+    if noPath is not false then
+        set the columndelimiter to pathDelim
+        put pathChildren into childTable
+        split childTable by column
+        set the itemdelimiter to pathDelim
+        put the number of items of startPath + 1 into columnNum
+        get childTable [columnNum]
+        
+        put item -1 of startPath into someKey
+        put it into linkArray [someKey]
+    else
+        put pathChildren into linkArray [startPath]
+    end if
+    
+    set the wholematches to true
+    put startPath & CR after alreadyDone
+    repeat for each line pathChild in pathChildren
+        if pathChild is not among the lines of alreadyDone then
+            outline_AddToLinkArray pathChild, tabbedOutline, linkArray, pathDelim, noPath, alreadyDone
+        else
+            -- beep
+        end if
+    end repeat
+    return true
+end outline_AddToLinkArray

@@ -1,0 +1,13 @@
+function menu_ConstructSubmenuTableLine mLine, subMenuTitle, mTitle, targetObject, mController
+   breakpoint
+   put menu_GetDefaultController (subMenuTitle, targetObject, true) into subMenuController
+   put revRuggedID (subMenuController) into subMenuController
+   
+   put mLine into mSuffix
+   replace space with empty in mSuffix
+   put "disabled_" & mSuffix into disabledProp
+   if script_GetGetProp (disabledProp, someScript) is empty then put empty into disabledProp
+   
+   put menu_ConstructTableLine (mController, empty, mTitle, mLine, disabledProp, "submenu", subMenuTitle, subMenuController) into mTableLine
+   return mTableLine
+end menu_ConstructSubmenuTableLine

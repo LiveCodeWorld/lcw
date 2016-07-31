@@ -1,0 +1,5 @@
+getprop checkout_DefaultFolder
+   put the mainstack_File of the target into objectFile
+   put checkout_ConstructDefaultFolder (objectFile) into checkoutFolder
+   return checkoutFolder
+end checkout_DefaultFolder

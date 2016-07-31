@@ -1,0 +1,8 @@
+on preOpenCard
+   put the plusMinus_View of me into plusMinusView
+   
+   put the trait_Description of plusMinusView into traitQuote
+   set the displayed_SquareText of plusMinusView to traitQuote
+   set the show_TraitLabels of plusMinusView to false
+   pass preOpenCard
+end preOpenCard

@@ -1,0 +1,39 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Wiki_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Wiki | Menu
+-
+[[ _FetchHandler (menu_StartWiki,c) ]]
+
+[[ _FetchHandler (menu_StopWiki,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_UpdateWiki,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RevealWikiSiteFolder,c) ]]
+
+[[ _FetchHandler (menu_ShowHiddenFiles,c) ]]
+
+[[ _FetchHandler (menu_RevealWikiModulesFolder,c) ]]
+
+
+--> Global | Wiki | Menu | Props
+-
+[[ _FetchHandler (show_HiddenFiles,g) ]]
+
+
+--> Global | Wiki | Menu | Disabled
+-
+[[ _FetchHandler (disabled_StartWiki,g) ]]
+ 
+[[ _FetchHandler (disabled_StopWiki,g) ]]

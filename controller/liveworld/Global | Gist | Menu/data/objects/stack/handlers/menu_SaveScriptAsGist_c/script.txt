@@ -1,0 +1,13 @@
+on menu_SaveScriptAsGist scriptObject, someBoolean
+   local shortGistFile
+   put hkey_FetchHelp (hKey) into helpText
+   put html_StripAllTags (helpText) into helpText
+   put opn_Ask ("Give a description for [[scriptObject]]...", helpText) into pDescription
+   
+   gist_SaveHkey hKey, shortGistFile, pDescription, isPrivate
+   put the result into gistReplyArray
+   display_Array gistReplyArray, shortGistFile
+   
+   put gistReplyArray ["html_url"] into htmlURL
+   launch url htmlURL
+end menu_SaveScriptAsGist

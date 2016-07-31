@@ -1,0 +1,9 @@
+getprop owner_MenuItems [mTarget]
+   put the view_Object of the owner of mTarget into viewOwner
+   if exists (viewOwner) is false then return empty
+   
+   put menu_GetToolTitle (viewOwner) into ownerMenuTitle
+   menu_SetTitleTargetOveride ownerMenuTitle, viewOwner
+   put the view_ToolMenu of viewOwner into mText
+   return mText
+end owner_MenuItems

@@ -1,0 +1,7 @@
+on mouseDown pMouseBtnNum
+    if pMouseBtnNum = 3 then
+        menu_PopUp "Card | Menu"
+    else
+        pass mouseDown
+    end if
+end mouseDown

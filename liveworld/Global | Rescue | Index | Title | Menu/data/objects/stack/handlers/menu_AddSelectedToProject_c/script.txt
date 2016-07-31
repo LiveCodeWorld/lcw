@@ -1,0 +1,4 @@
+on menu_AddSelectedToProject indexView
+   put the index_View of indexView into indexView
+   display_AddSelectedShortFilesToUsed indexView
+end menu_AddSelectedToProject

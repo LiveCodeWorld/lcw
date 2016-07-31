@@ -1,0 +1,29 @@
+function rev_PropertyArrayToText revPropertyArray
+   -- delete local revPropertyArray ["text"]
+   delete local revPropertyArray ["htmlText"]
+   
+   put revPropertyArray ["colors"] into propColours
+   delete local revPropertyArray ["colors"]
+   put revPropertyArray ["patterns"] into propPatterns
+   delete local revPropertyArray ["patterns"]
+   put revPropertyArray ["points"] into graphicPoints
+   delete local revPropertyArray ["points"]
+   
+   put revPropertyArray into propText
+   combine propText with CR and tab
+   
+   if graphicPoints is not empty then
+      replace CR with "/" in graphicPoints
+      put CR & "points" & tab & graphicPoints after propText
+   end if
+   if propColours is not empty then
+      replace CR with "/" in propColours
+      put CR & "colors" & tab & propColours after propText
+   end if
+   if propPatterns is not empty then
+      replace CR with "/" in propPatterns
+      put CR & "patterns" & tab & propPatterns after propText
+   end if
+   
+   return propText
+end rev_PropertyArrayToText

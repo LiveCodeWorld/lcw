@@ -1,0 +1,5 @@
+on menu_DisplaySvg treeView
+   put the displayed_Object of treeView into scriptObject
+   put LocalArray ["svgFile"] into svgFile
+   display_SVG svgFile
+end menu_DisplaySvg

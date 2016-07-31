@@ -1,0 +1,81 @@
+--> MetaData
+-
+name: lib_DaemonLog
+version: 0.3
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+This stack contains handlers to log LiveDaemon server events.
+
+We can neatly add or remove logging these events by adding or removing this script from the behavior chain.
+This keeps the lib_Daemon serve scripts clean and minimal.
+You can also speeds up the server by removing all the logging with one command and no ifs.
+*/
+
+local LiveLogging
+local LogView
+
+
+--> Daemon | Log | Objects
+-
+/*
+This default allows you to specify which view you would like to use for logging.
+It is often over-ridden by using a fixed "getprop log_View" in the server stack instance.
+*/
+
+[[ _FetchHandler (log_View,g) ]]
+
+[[ _FetchHandler (log_View,s) ]]
+
+
+--> Daemon | Log | lib_DaemonRouter
+-
+/*
+These handlers wrap similar handlers in lib_Daemon to add logging to them.
+It requires this stack to be set as a behavior of lib_Daemon.
+*/
+
+
+--> Daemon | Log | lib_DaemonRouter
+-
+/*
+These handlers wrap similar handlers in lib_Daemon to add logging to them.
+It requires this stack to be set as a behavior of lib_Daemon.
+*/
+
+
+--> Daemon | Logging | lib_Daemon
+-
+/*
+These handlers wrap similar handlers in lib_Daemon to add logging to them.
+It requires this stack to be set as a behavior of lib_Daemon.
+*/
+
+--> Damon | Log
+-
+[[ _FetchHandler (daemon_Log,c) ]]
+
+[[ _FetchHandler (daemon_LogUnRouted,c) ]]
+
+
+--> Daemon | Log | Props
+-
+[[ _FetchHandler (live_Logging,g) ]]
+
+[[ _FetchHandler (live_Logging,s) ]]
+
+
+--> Daemon | Log | Display
+-
+[[ _FetchHandler (daemon_DisplayLogArray,c) ]]
+
+[[ _FetchHandler (daemon_AddRequestToLogArray,c) ]]
+
+[[ _FetchHandler (daemon_FetchLogArray,f) ]]
+
+[[ _FetchHandler (daemon_StoreLogArray,c) ]]
+
+[[ _FetchHandler (daemon_DeleteLogArray,c) ]]
+
+[[ _FetchHandler (server_LogArrayFile,f) ]]

@@ -1,0 +1,6 @@
+function overlayData_GetLinkArray overlayData, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   put overlayData_GetDataArray (overlayData, pOverlayName) into dataArray
+   put dataArray ["linkArray"] into linkArray
+   return linkArray
+end overlayData_GetLinkArray

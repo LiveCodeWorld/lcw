@@ -1,0 +1,5 @@
+function project_FindUsedViewStacks pProjectName
+   put project_ListViewStackObjects (pProjectName) into viewStacks
+   put stack_CheckStackMetadata (viewStacks) into usedViewStacks
+   return usedViewStacks
+end project_FindUsedViewStacks

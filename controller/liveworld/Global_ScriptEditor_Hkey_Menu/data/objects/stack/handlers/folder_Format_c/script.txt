@@ -1,0 +1,8 @@
+command folder_Format @someFolder
+   -- should be renamed "folder_Normalize"
+   if someFolder is empty then return empty
+   repeat while last char of someFolder is "/"
+      delete last char of someFolder
+   end repeat
+   put "/" after someFolder
+end folder_Format

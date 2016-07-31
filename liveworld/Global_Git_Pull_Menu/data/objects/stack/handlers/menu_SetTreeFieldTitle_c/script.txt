@@ -1,0 +1,5 @@
+on menu_SetTreeFieldTitle treeView
+   put the tree_Field of treeView into treeField
+   set the menu_Title of treeField to "Global | Tree | Menu"
+   put the menu_Title of treeField
+end menu_SetTreeFieldTitle

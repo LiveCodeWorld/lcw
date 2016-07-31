@@ -1,0 +1,6 @@
+getprop title_TextAlign
+   put the title_View of me into titleView
+   if the long id of the target = titleView then pass title_TextAlign
+   get the title_TextAlign of titleView
+   return it
+end title_TextAlign

@@ -1,0 +1,4 @@
+on menu_DisplayCheckoutGlobal scriptObject, opnGlobal
+   put opn_GetGlobalArray (opnGlobal) into opnGlobalArray
+   display_Array opnGlobalArray, ("Global:" && opnGlobal)
+end menu_DisplayCheckoutGlobal

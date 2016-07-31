@@ -1,0 +1,4 @@
+on menu_NewColourPalette
+   put opn_Ask("What do you want to call this swatch") into swatchName
+   colour_SetSwatchArray swatchName, swatchArray
+end menu_NewColourPalette

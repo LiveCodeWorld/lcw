@@ -1,0 +1,7 @@
+function project_GetObjectFolder someObject, stackName, mainStackName, pDontCreate
+   -- put the stackDataObjects_Folder [pDontCreate] of someObject into objectFolder
+   put stackData_GetFolder (someObject, stackName, mainStackName, pDontCreate) into objectFolder
+   folder_AddObjectBit objectFolder, someObject
+   if pDontCreate is false then folder_CreateNested objectFolder
+   return objectFolder
+end project_GetObjectFolder

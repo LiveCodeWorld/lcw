@@ -1,0 +1,14 @@
+getprop displayed_Handler [pIndexNum]
+   if pIndexNum is empty then put 1 into pIndexNum
+   
+   put the dataGrid_View of me into dgView
+   put the dgDataOfIndex [ pIndexNum ] of dgView into recordArray
+   put recordArray ["hKey"] into hKey
+   
+   if isProject is true then
+      put hkey_ExtractHandlerFromObject (hKey) into someHandler
+   else
+      put library_FetchHandler (hKey) into someHandler
+   end if
+   return someHandler
+end displayed_Handler

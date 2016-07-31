@@ -1,0 +1,8 @@
+setprop record_IsExpanded someBoolean
+   lock screen
+   put the rect of me into oRect
+   set the visible of the info_Group of me to someBoolean
+   LayoutControl oRect
+   set the disclosure_Status of the disclosure_Button of me to someBoolean
+   unlock screen
+end record_IsExpanded

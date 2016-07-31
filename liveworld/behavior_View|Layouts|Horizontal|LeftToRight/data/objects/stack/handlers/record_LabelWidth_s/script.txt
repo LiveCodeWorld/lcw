@@ -1,0 +1,4 @@
+setprop record_LabelWidth recordLabelWidth
+   set the view_DisplayProperty ["record_LabelWidth"] of me to recordLabelWidth
+   dispatch "LayoutControl" to me -- changes the target
+end record_LabelWidth

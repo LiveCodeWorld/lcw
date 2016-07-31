@@ -1,0 +1,4 @@
+getprop script_MetaHtmlTable
+   put the script_MetaTable of the target into ripTable
+   return script_MetaTableToXhtml(ripTable)
+end script_MetaHtmlTable

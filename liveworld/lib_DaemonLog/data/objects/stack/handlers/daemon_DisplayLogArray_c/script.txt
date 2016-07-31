@@ -1,0 +1,4 @@
+command daemon_DisplayLogArray
+   put daemon_FetchLogArray() into logArray
+   display_Array logArray, "daemon_DisplayLogArray", "Global | Daemon | Log | Menu", "Global | Daemon | Log | Line | Menu"
+end daemon_DisplayLogArray

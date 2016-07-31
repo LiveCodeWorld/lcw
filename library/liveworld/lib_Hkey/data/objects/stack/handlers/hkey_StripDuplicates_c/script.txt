@@ -1,0 +1,28 @@
+command hkey_StripDuplicates @hKeys
+   repeat for each line longKey in hKeys
+      set the cursor to busy
+      put item 1 to 2 of longKey into shortHkey
+      
+      put shortKeyArray [shortHkey] into testLongKey
+      if testLongKey is empty then
+         put longKey into shortKeyArray [shortHkey]
+         put longKey & CR after uniqueKeys
+      else
+         put duplicateArray [shortHkey] into duplicateKeys
+         if duplicateKeys is empty then
+            put shortKeyArray [shortHkey] & CR & longKey into duplicateKeys
+         else
+            line_AddToIndex longKey, duplicateKeys
+         end if
+         put duplicateKeys into duplicateArray [shortHkey]
+      end if
+   end repeat
+   
+   -- put keys (shortKeyArray) into shortHKeys
+   -- sort shortHKeys
+   
+   delete char -1 of uniqueKeys
+   sort uniqueKeys
+   put uniqueKeys into hKeys
+   return duplicateArray
+end hkey_StripDuplicates

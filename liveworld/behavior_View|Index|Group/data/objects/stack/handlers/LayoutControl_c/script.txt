@@ -1,0 +1,31 @@
+on LayoutControl pRect
+   lock screen
+   if pRect is empty then put the rect of me into pRect
+   put the margins of me into myMargins
+   rect_SubtractMargins pRect, myMargins
+   put item 3 of pRect - item 1 of pRect into innerWidth
+   
+   put the childcontrolids of me into topControlIDs
+   put the number of lines of topControlIDs into numberOfChildren
+   if numberOfChildren = 0 then return 0
+   
+   put numberOfChildren - 1 into gutterNum
+   put the view_Spacing of me into viewSpacing
+   put innerWidth - (gutterNum * viewSpacing) into availableWidth
+   put round (availableWidth / numberOfChildren) into indexWidth
+   
+   put item 1 of pRect into thisLeft
+   repeat with cNum = 1 to numberOfChildren 
+      put pRect into childRect
+      put thisLeft into item 1 of childRect
+      put thisLeft + indexWidth into thisRight
+      put thisRight into item 3 of childRect
+      
+      put line cNum of topControlIDs into topControlID
+      set the rect of control id topControlID to childRect
+      
+      put thisRight + viewSpacing into thisLeft
+   end repeat
+   unlock screen
+   return numberOfChildren
+end LayoutControl

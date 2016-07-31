@@ -1,0 +1,11 @@
+function outline_ExtractLineSection startOsLineNum, tabbedOutline
+    -- (was extractOsSection) -- version original,31/3/01
+     
+    delete line 1 to (startOsLineNum - 1) of tabbedOutline
+    put outline_NextSameLevel(1, tabbedOutline) into outline_NextSameLevelLineNum
+    if outline_NextSameLevelLineNum is 0 then
+        return tabbedOutline
+    else
+        return line 1 to outline_NextSameLevelLineNum of tabbedOutline
+    end if
+end outline_ExtractLineSection

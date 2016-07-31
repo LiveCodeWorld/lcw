@@ -1,0 +1,13 @@
+command script_UpdateAndExport scriptObject, pExportHandlers
+   -- first let's export the script into little pieces
+   set the meta_Script [pExportHandlers] of scriptObject to someScript
+   put the result into someFile
+   
+   -- no let's set the uRipArray
+   -- careful with script only stacks as these changes will not be stored
+   script_UpdateMeta scriptObject, someScript
+   
+   -- finally let's fix and index the menus
+   script_UpdateMenuTables scriptObject
+   return someFile
+end script_UpdateAndExport

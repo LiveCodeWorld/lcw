@@ -1,0 +1,7 @@
+command pref_StoreArray prefArray, pSetName
+   -- contains all the preference globals int the set with the keys as global names
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put pref_FetchData() into dataArray
+   put prefArray into dataArray [pSetName]
+   pref_StoreData dataArray
+end pref_StoreArray

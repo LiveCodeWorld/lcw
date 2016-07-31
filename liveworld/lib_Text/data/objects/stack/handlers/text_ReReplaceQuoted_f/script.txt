@@ -1,0 +1,11 @@
+function text_ReReplaceQuoted someStrippedText, offsetArray
+    -- was "untext_StripQuoted"
+    -- version original,18/9/01
+    
+    put keys(offsetArray) into dummyTags
+    repeat for each line dummyTag in dummyTags
+        put offsetArray[dummyTag] into quotedText
+        replace dummyTag with quotedText in someStrippedText
+    end repeat
+    return someStrippedText
+end text_ReReplaceQuoted

@@ -1,0 +1,12 @@
+getprop object_ScriptHierarchy [nameFormat]
+   put the long ID of the target into targetObject
+   object_ConstructBehaviorHierarchy targetObject, behaviorObjectMenu, longObjects, shortObjects, shortNames
+   switch nameFormat
+      case "short"
+         return shortObjects
+      case "names"
+         return shortNames
+      default -- case "long"
+         return longObjects
+   end switch
+end object_ScriptHierarchy

@@ -1,0 +1,98 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_AnimatedGif_Menu
+type: controller
+version: 0.2
+
+
+--> Global | AnimatedGif | Menu
+-
+[[ _FetchHandler (menu_DownloadYoutubeVideo,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TrimMovieClip,c) ]]
+
+[[ _FetchHandler (menu_CreateAnimatedGif,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ChooseVideo,c) ]]
+
+[[ _FetchHandler (menu_SetDownloadFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TrimAndCropMovie,c) ]]
+
+[[ _FetchHandler (menu_ResizeProportionally,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Help,c) ]]
+
+
+--> Global | AnimatedGif | Menu | Props
+-
+[[ _FetchHandler (gif_Size,g) ]]
+
+[[ _FetchHandler (gif_Sizes,g) ]]
+
+
+--> ffmpeg
+-
+[[ _FetchHandler (ffmpeg_TrimVideo,c) ]]
+
+[[ _FetchHandler (youtube_DownloadVideo,f) ]]
+
+[[ _FetchHandler (youtube_DownloadParseShellResult,c) ]]
+
+[[ _FetchHandler (youtube_ConstructDownloadShell,f) ]]
+
+--> Date and Time
+-
+[[ _FetchHandler (time_HmsfToSeconds,f) ]]
+
+[[ _FetchHandler (time_SecondsToHMSF,f) ]]
+
+[[ _FetchHandler (fedwiki_Slugify,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (url_Deconstruct,c) ]]
+
+[[ _FetchHandler (folder_Format,c) ]]
+
+[[ _FetchHandler (opn_Notify,c) ]]
+
+[[ _FetchHandler (get_VideoFileName,f) ]]
+
+[[ _FetchHandler (opn_Ask,f) ]]
+
+[[ _FetchHandler (shell_BashParamEscape,c) ]]
+
+[[ _FetchHandler (text_IsQuoted,f) ]]
+
+[[ _FetchHandler (file_Deconstruct,c) ]]
+
+[[ _FetchHandler (kwote,f) ]]
+
+[[ _FetchHandler (applescript_ConvertPath,c) ]]
+
+[[ _FetchHandler (finder_Reveal,c) ]]
+
+[[ _FetchHandler (folder_Above,f) ]]
+
+[[ _FetchHandler (object_ExtractStack,f) ]]
+
+[[ _FetchHandler (object_StackNameOffsets,c) ]]
+
+[[ _FetchHandler (stack_Object,g) ]]
+
+[[ _FetchHandler (text_OffsetBefore,f) ]]

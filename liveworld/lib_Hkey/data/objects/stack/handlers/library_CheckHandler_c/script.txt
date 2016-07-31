@@ -1,0 +1,27 @@
+command library_CheckHandler @errorArray, shortHkey, pNotify
+   put library_FetchHandler (shortHkey) into libraryHandler
+   put libraryHandler into errorArray ["library handler"]
+   if libraryHandler is empty then 
+      put shortHkey into errorArray ["library handler empty"]
+      return empty
+   end if
+   
+   put hArray_GetOtherPlaces (shortHkey) into otherObjects
+   repeat for each line otherObject in otherObjects
+      if exists (otherObject) is false then
+         hArray_RemoveObject otherObject
+         next repeat
+      end if
+      
+      put the script_Handler [shortHKey] of otherObject into otherHandler
+      if otherHandler = libraryHandler then
+         put otherHandler into errorArray ["same"][shortHkey][otherObject]
+         if pNotify is false then next repeat
+         
+         put merge ("The handler in [[otherObject]] is the same as the libray handler!") into someComment
+         opn_Notify someComment
+      else
+         put otherHandler into errorArray ["different"][shortHkey][otherObject]
+      end if
+   end repeat
+end library_CheckHandler

@@ -1,0 +1,13 @@
+command error_LogCustomMenuItems mController, submenuProperty, someError
+   put "mTopTitle:" && menu_GetTopTitle() & CR into errorText
+   put "Error: with submenu property handler" && kwote (submenuProperty) & CR after errorText
+   put "of mController:" && the mobile_Name of mController & CR after errorText
+   
+   put CR & CR & someError after errorText
+   
+   display_Lines errorText, "menu_FetchCustomMenuItems error", "Global | Menu | Error | Menu"
+   put the result into displayView
+   put token 1 of submenuProperty & comma & "g" & comma & mController  into hKey
+   set the hkey_Error of displayView to hKey
+   -- log_Error errorText, "menu_FetchCustomMenuItems"
+end error_LogCustomMenuItems

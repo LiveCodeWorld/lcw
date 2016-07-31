@@ -1,0 +1,4 @@
+function gist_ExtractContent gistFileArray, pShortGistFile
+   gist_DeconstructFileArray gistFileArray, pShortGistFile, gistContent, gistDescription, htmlURL, gitPulllURL
+   return gistContent
+end gist_ExtractContent

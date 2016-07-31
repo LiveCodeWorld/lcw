@@ -1,0 +1,30 @@
+on goAndFix
+   -- put the selectedtext of the target into stackName
+   put word 2 of the clickline into lineNum
+   put line lineNum of the target into stackName
+   
+   if stackName is empty then return empty
+   
+   if exists (stack stackName) then
+      put the name of stack stackName into stackObject
+      dispatch "fix_Behaviors" to cd 1 of stackObject
+      go to stack stackName
+   else
+      answer file "Locate the stack..."
+      put it into longStackname
+      if longStackName is empty then exit to top
+      
+      lock messages
+      --
+      go to stack longStackName
+      put the name of stack longStackName into stackObject
+      dispatch "fix_Behaviors" to cd 1 of stackObject
+   end if
+   
+   -- set the stack_IsKnown of stackObject to true
+   library_AddStackToKnown stackObject
+   unlock messages
+   
+   go to stackObject
+   return stackObject
+end goAndFix

@@ -1,0 +1,6 @@
+command line_DeleteEmpty @someLines
+    put cr before someLines
+    put cr & "[" & space & tab & "]*" & cr into emptyLineReg
+    put replacetext(someLines, emptyLineReg, return) into someLines
+    delete char 1 of someLines
+end line_DeleteEmpty

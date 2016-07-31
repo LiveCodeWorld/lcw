@@ -1,0 +1,6 @@
+command logArray_AddRequest requestArray
+   put logArray_Fetch() into dataArray
+   put item 2 of the extents of dataArray + 1 into indexNum
+   put requestArray into dataArray [indexNum]
+   logArray_Store dataArray
+end logArray_AddRequest

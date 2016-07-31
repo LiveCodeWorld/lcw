@@ -1,0 +1,9 @@
+getprop stack_BehaviorButtonNames
+   put the stack_BehaviorCard of the target into stackBehaviorCard
+   if exists (stackBehaviorCard) is false then return empty
+   repeat with btNum = 1 to the number of buttons of stackBehaviorCard
+      put the short name of btn btNum of stackBehaviorCard & CR after stackBehaviorButtonNames
+   end repeat
+   delete char -1 of stackBehaviorButtonNames
+   return stackBehaviorButtonNames
+end stack_BehaviorButtonNames

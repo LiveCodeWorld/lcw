@@ -1,0 +1,5 @@
+function stack_IsClosed stackName
+    set the wholematches to true
+    put stackName is not among the lines of the mainstacks into stackIsClosed
+    return stackIsClosed
+end stack_IsClosed

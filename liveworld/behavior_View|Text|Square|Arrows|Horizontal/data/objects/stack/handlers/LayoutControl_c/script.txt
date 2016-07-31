@@ -1,0 +1,59 @@
+command LayoutControl pRect
+   -- twice as tall as it is wide
+   if pRect is empty then put the rect of me into pRect
+   
+   -- what controls are we talking about
+   put _leftArrow() into leftArrow
+   put _rightArrow() into rightArrow
+   put _squareView() into squareView
+   
+   -- work out geometry
+   put the arrow_heightFactor of me into arrowHeightFactor -- vector icons are proportional
+   put the arrow_Scale of me into arrowScale -- vector icons are proportional
+   
+   calculate_SquareRect pRect, squareRect, squareCentre, squareWidth, halfSquareWidth
+   put item 1 of squareCentre into squareX
+   put item 2 of squareCentre into squareY
+   
+   -- fetch some props
+   put _arrowWidth (squareWidth) into arrowWidth
+   put the arrow_Margin [arrowWidth] of me into arrowMargin
+   -- put the arrow_Scale of me into arrowScale
+   
+   put round (arrowScale * arrowWidth) into arrowWidth
+   put round ( arrowWidth / 2 ) into halfArrowWidth
+   
+   put squareY - arrowHeightFactor * halfArrowWidth into arrowTop
+   put squareY + arrowHeightFactor * halfArrowWidth into arrowBottom
+   
+   -- work out left arrow rect
+   put squareX - halfSquareWidth into leftArrowRight
+   subtract arrowMargin from leftArrowRight -- shift it out or in a variable bit
+   
+   put leftArrowRight - arrowWidth into item 1 of leftArrowRect
+   put leftArrowRight into item 3 of leftArrowRect
+   put arrowTop into item 2 of leftArrowRect
+   put arrowBottom into item 4 of leftArrowRect
+   
+   -- work out right arrow rect
+   put squareX + halfSquareWidth into rightArrowLeft
+   add arrowMargin to rightArrowLeft
+   
+   put rightArrowLeft into item 1 of rightArrowRect
+   put rightArrowLeft + arrowWidth into item 3 of rightArrowRect
+   put arrowTop into item 2 of rightArrowRect
+   put arrowBottom into item 4 of rightArrowRect
+   
+   -- set the rects
+   lock screen
+   --
+   set the rect of leftArrow to leftArrowRect
+   set the rect of rightArrow to rightArrowRect
+   if exists (squareView) is true then
+      set the rect of squareView to squareRect
+   else
+      test_Rect squareRect, "squareRect"
+   end if
+   --
+   unlock screen
+end LayoutControl

@@ -1,0 +1,8 @@
+getprop model_Name
+   put the view_Stem of the target into viewStem
+   if viewStem is empty then return "opn_Model" -- was "OPN Model"
+   
+   put toupper(char 1 of viewStem) into char 1 of viewStem -- can remove to speed up
+   put "uOPN_" & viewStem into modelName
+   return modelName
+end model_Name

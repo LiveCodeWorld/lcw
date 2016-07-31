@@ -1,0 +1,4 @@
+function menu_TitlePathFromPath mPath
+   menu_DeconstructPath mPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType
+   return mTitlePath
+end menu_TitlePathFromPath

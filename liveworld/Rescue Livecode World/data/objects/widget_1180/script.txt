@@ -1,0 +1,151 @@
+--> Metadata
+-
+name: Rescue Cog
+type: script
+copyright: David Bovill
+license: GPLv3
+version: 0.9
+
+
+/*
+This card script contains more advanced or experimental the menus for LiveWorld.
+*/
+
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (mouseUp,c) ]]
+
+
+--> Tools | Menu
+-
+[[ _FetchHandler (submenu_ProjectSet,c) ]]
+
+[[ _FetchHandler (submenu_Project,c) ]]
+
+[[ _FetchHandler (submenu_Prefs,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StoreBehaviorHacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplaySelectedSet,c) ]]
+
+[[ _FetchHandler (menu_DisplayCurrentLoadedSet,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StopProjectEnvironment,c) ]]
+
+[[ _FetchHandler (menu_StartProjectEnvironment,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddDefaultFoldersToSet,c) ]]
+
+[[ _FetchHandler (menu_ConstructDefaultFromCurrent,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Archive,c) ]]
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Tools | Menu | Disabled
+-
+
+
+--> Tools | Menu | Props
+-
+[[ _FetchHandler (ide_BNames,g) ]]
+
+[[ _FetchHandler (project_Name,g) ]]
+
+[[ _FetchHandler (project_Names,g) ]]
+
+
+
+--> Tools | Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayGlobalHarray,c) ]]
+
+[[ _FetchHandler (menu_DisplayHarray,c) ]]
+
+[[ _FetchHandler (menu_SaveGlobalHarrayToProject,c) ]]
+
+[[ _FetchHandler (menu_LoadGlobalHarray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditLivecodeBehaviorButton,c) ]]
+
+[[ _FetchHandler (menu_DisplayStackFiles,c) ]]
+
+[[ _FetchHandler (menu_DisplayProjectArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StoreProjectStackfiles,c) ]]
+
+[[ _FetchHandler (menu_LoadProjectStackfiles,c) ]]
+
+[[ _FetchHandler (menu_SetProjectUsed,c) ]]
+
+[[ _FetchHandler (menu_CheckStackFiles,c) ]]
+
+[[ _FetchHandler (menu_SetAndStoreHomeStackFiles,c) ]]
+
+on menu_LoadProjectStackFiles mTarget, projectName
+   breakpoint
+   project_LoadWorkingStackFiles projectName
+end menu_LoadProjectStackFiles
+
+on _
+end _
+
+[[ _FetchHandler (menu_FixUsed,c) ]]
+
+[[ _FetchHandler (menu_IndexAllObjects,c) ]]
+
+[[ _FetchHandler (menu_StoreUsedToCurrentSet,c) ]]
+
+[[ _FetchHandler (menu_StoreBackToCurrentSet,c) ]]
+
+[[ _FetchHandler (menu_StoreFrontToCurrentSet,c) ]]
+
+on _
+end _
+
+-- on submenu_ManageLibrary
+return "Global | Library | Manage | Menu"
+end submenu_ManageLibrary
+
+[[ _FetchHandler (submenu_ReindexLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditMe,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (project_ConstructMetaData,f) ]]
+
+[[ _FetchHandler (_constructObjectArray,f) ]]
+
+
+--> Menu | Props
+-

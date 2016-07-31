@@ -1,0 +1,21 @@
+function library_ListKnownAndCreateOutline @subStackOutline
+   put library_ListKnownFiles() into fileIndex
+   repeat for each line stackFile in fileIndex
+      if there is a stack stackFile then
+         put the name of stack stackFile into someStack
+         put html_ConstructNameLink (someStack, stackFile) & CR after subStackOutline
+         put the long id of stack stackFile & CR after stackIndex
+         
+         put the substacks of stack stackFile into subStackIndex
+         if subStack_Index is not empty then
+            repeat for each line subStackName in subStackIndex
+               put the name of stack subStackName into someSubStack
+               put tab & html_ConstructNameLink (someSubStack, stackFile) & CR after subStackOutline
+               put the long id of stack subStackName of stack stackFile & CR after stackIndex
+            end repeat
+         end if
+      end if
+   end repeat
+   delete last char of subStackOutline  
+   return stackIndex
+end library_ListKnownAndCreateOutline

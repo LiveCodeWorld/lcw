@@ -1,0 +1,5 @@
+function model_GetValue someKey, modelObject, modelName, modelType
+   put model_GetArray (modelName, modelObject, modelType) into dataArray
+   put dataArray[someKey] into someValue
+   return someValue
+end model_GetValue

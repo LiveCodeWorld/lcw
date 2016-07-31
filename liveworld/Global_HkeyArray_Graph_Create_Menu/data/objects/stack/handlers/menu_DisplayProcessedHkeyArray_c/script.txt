@@ -1,0 +1,5 @@
+on menu_DisplayProcessedHkeyArray scriptObject
+   put the project_ProcessedHkeyArray of scriptObject into processedHkeyArray
+   display_HkeyArray processedHkeyArray, scriptObject
+   display_ObjectHkeyArray processedHkeyArray, scriptObject
+end menu_DisplayProcessedHkeyArray

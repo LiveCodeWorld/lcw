@@ -1,0 +1,4 @@
+function hkey_ScriptLine hKey, someScript
+   hkey_FindScriptLine hKey, someScript, scriptLine, lineNum
+   return scriptLine
+end hkey_ScriptLine

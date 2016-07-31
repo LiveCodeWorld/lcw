@@ -1,0 +1,11 @@
+function mediawiki_FetchPageBits pageTitle, pProps, pOtherBits, pApiStem, pFormat
+   if pProps is empty then put "revisions" into pProps
+   if pFormat is empty then put "json" into pFormat
+   if pApiStem is empty then put wikipedia_GetApiRoot() into pApiStem -- wikpedia
+   
+   put urlencode(pageTitle) into pageTitle
+   put merge("[[pApiStem]]?action=query&prop=[[pProps]]&titles=[[pageTitle]]&format=[[pFormat]]") into someURL
+   if pOtherBits is not empty then put "&" &  pOtherBits after someURL
+   put url someUrl into someResult
+   return someResult
+end mediawiki_FetchPageBits

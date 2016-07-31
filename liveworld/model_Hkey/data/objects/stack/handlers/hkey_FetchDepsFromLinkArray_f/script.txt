@@ -1,0 +1,5 @@
+function hkey_FetchDepsFromLinkArray hKey, pReturnShortHkey
+   put item 1 to 2 of hKey into shortHKey
+   put hkey_GetLinkArray (shortHKey, "hierarchical") into hkeyDepArray
+   return deps_FromHkeyArray (hKey, hkeyDepArray, pReturnShortHkey)
+end hkey_FetchDepsFromLinkArray

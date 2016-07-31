@@ -1,0 +1,5 @@
+function hKeyArray_DotObjectClusters linkArray, idArray, labelNodes, notIfEmpty, graphNodeType, pTargetObject
+    put hKeyArray_ConstructStackIdArray (idArray) into idObjectArray
+    put hKeyArray_ConstructDotClusters (idObjectArray, linkArray, idArray, labelNodes, notIfEmpty, graphNodeType, pTargetObject) into clusterSection
+    return clusterSection
+end hKeyArray_DotObjectClusters

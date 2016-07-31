@@ -1,0 +1,8 @@
+function http_GetReceivedHeader headerKey
+    put http_GetReceivedHeaderArray() into receivedHeaderArray
+    if the keys of receivedHeaderArray is empty then
+        return receivedHeaderArray
+    else
+        return receivedHeaderArray[headerKey]
+    end if
+end http_GetReceivedHeader

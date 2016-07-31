@@ -1,0 +1,7 @@
+command error_CheckSub paramProp, mController, paramProperty, mTarget, tError
+   put "Error: with menu property handler" && kwote(paramProp) & CR after errorInfo
+   put "mController:" && mController & CR after errorInfo
+   put "paramProperty:" && paramProperty & CR after errorInfo
+   put "mTarget:" && mTarget & CR after errorInfo
+   log_Error errorInfo, "menu_CheckSub", true, true
+end error_CheckSub

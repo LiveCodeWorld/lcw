@@ -1,0 +1,18 @@
+function exif_ListTags imageFile
+    shell_BashParamEscape imageFile
+    
+    -- using exiftool (http://sno.phy.queensu.ca/%7Ephil/exiftool/exiftool_pod.html#reading_examples)
+    put "exiftool -list" && imageFile into someShell
+    put shell(someShell) into shellResult
+    put exif_ParseExifToolResult(shellResult, tagArray) into tagNames
+    return tagNames
+    
+    get keys(tagArray)
+    sort it
+    replace "/" with "_" in it
+    return it
+     
+    -- using exif (http://libexif.sourceforge.net/ http://exif.darwinports.com/)
+    put "exif -l" && imageFile into someShell
+    return exif_ParseTagList(shellResult, tagArray)
+end exif_ListTags

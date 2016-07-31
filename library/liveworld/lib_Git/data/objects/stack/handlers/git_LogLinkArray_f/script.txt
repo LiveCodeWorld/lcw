@@ -1,0 +1,8 @@
+function git_LogLinkArray simpleLog
+   repeat for each line someLine in simpleLog
+      put word 1 of someLine into someHash
+      put word 2 to -1 of someLine into firstCommentLine
+      put someHash into logLinkArray [firstCommentLine]
+   end repeat
+   return logLinkArray
+end git_LogLinkArray

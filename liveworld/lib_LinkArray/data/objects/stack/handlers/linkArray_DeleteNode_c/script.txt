@@ -1,0 +1,38 @@
+command linkArray_DeleteNode @someArray, someKey, @alreadyDeleted
+   local childKey,childKeys,otherLinkingNodes,reversedArray
+   local testKey
+   -- was "array_DeleteLinks"
+   -- Treats an array as a place to store graphs.
+   -- a recusive command
+   
+   -- do a recursion safety check to avoid infinite loops
+   if someKey is among the lines of alreadyDeleted then return false
+   put someKey & CR after alreadyDeleted
+   
+   -- delete the node someKey
+   put someArray [someKey] into childKeys
+   delete local someArray [someKey]
+   
+   --  delete any links to the deleted node from other nodes
+   repeat for each key testKey in someArray
+      array_DeleteFromIndex someKey, testKey, someArray
+   end repeat
+   
+   -- delete any child nodes of the deleted node (chop the branch off)
+   -- even if there are links from it
+   -- but not if other nodes link to it
+   put array_Reverse (someArray) into reversedArray
+   
+   repeat for each line childKey in childKeys
+      -- lets work out what other nodes link TO the child
+      put reversedArray [childKey] into otherLinkingNodes
+      -- apart from someKey
+      line_Delete someKey, otherLinkingNodes
+      
+      if otherLinkingNodes is empty then
+         -- recursively delete node
+         linkArray_DeleteNode someArray, childKey, alreadyDeleted
+      end if
+   end repeat
+   return true
+end linkArray_DeleteNode

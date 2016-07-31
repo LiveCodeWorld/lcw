@@ -1,0 +1,6 @@
+command object_WithinStackReference @someObject
+   -- was "object_SetIdReference"
+   put offset(" of stack ", someObject) into lastChar
+   if lastChar = 0 then return someObject
+   put char 1 to lastChar of someObject into someObject
+end object_WithinStackReference

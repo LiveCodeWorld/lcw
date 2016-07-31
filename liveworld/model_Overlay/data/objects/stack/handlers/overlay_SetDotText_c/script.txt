@@ -1,0 +1,5 @@
+command overlay_SetDotText overlayFolder, dotText, pOverlayName
+   put overlay_ConstructFile ("dot", overlayFolder, pOverlayName) into someFile
+   put dotText into url ("file:" & someFile)
+   return someFile
+end overlay_SetDotText

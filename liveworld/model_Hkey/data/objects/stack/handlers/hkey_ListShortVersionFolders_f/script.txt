@@ -1,0 +1,8 @@
+function hkey_ListShortVersionFolders hKey
+   local versionNames
+   put hkey_ListShortFolders() into shortFolders
+   
+   put hkey_FolderName (hKey) into folderName
+   filter shortFolders with (folderName & " *")
+   return shortFolders
+end hkey_ListShortVersionFolders

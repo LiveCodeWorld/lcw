@@ -1,0 +1,68 @@
+function text_SplitIntoWords someWord
+   local uniqueIndex
+   
+   put word 1 to - 1 of someWord into wordIndex
+   put 1 into charNum
+   put 0 into previousInsert
+   repeat the number of chars of wordIndex
+      put char charNum of wordIndex into someChar
+      if someChar is empty then exit repeat
+      if someChar is among the chars of (space & tab) then exit repeat
+      if someChar is among the chars of "_-,.:;/\|" then
+         if charNum = 1 then
+            delete char 1 of wordIndex
+            next repeat
+         else
+            put CR into char charNum of wordIndex
+            put charNum + 1 into previousInsert
+            add 1 to charNum
+            next repeat
+         end if
+      end if
+      
+      if text_StartsWithCaps(someChar) is true then        
+         get char previousInsert to charNum of wordIndex
+         if the number of chars of it > 2 then
+            put CR before char charNum of wordIndex
+            put charNum + 1 into previousInsert
+            add 2 to charNum
+         else
+            add 1 to charNum
+         end if
+         
+         -- but lets string together capital sequences like
+         repeat
+            put char charNum + 1 of wordIndex into nextChar
+            if nextChar is among the chars of "_-,.:;/\|" then
+               put CR into char charNum + 1 of wordIndex
+               put charNum + 2 into previousInsert
+               add 2 to charNum
+               exit repeat
+            else if nextChar is empty then
+               -- it is the last char
+               return word 1 to - 1 of wordIndex
+               exit repeat
+            else
+               if text_StartsWithCaps(nextChar) is true then
+                  add 1 to charNum
+               else
+                  exit repeat
+               end if
+            end if
+         end repeat
+      else
+         add 1 to charNum
+      end if
+   end repeat
+   
+   put word 1 to - 1 of wordIndex into wordIndex
+   repeat for each line testLine in wordIndex
+      if testLine is empty then next repeat
+      if testLine is among the lines of uniqueIndex then next repeat
+      put testLine & CR after uniqueIndex
+   end repeat
+   delete char -1 of uniqueIndex
+   
+   -- opn_Notify (someWord & CR & CR & uniqueIndex)
+   return uniqueIndex
+end text_SplitIntoWords

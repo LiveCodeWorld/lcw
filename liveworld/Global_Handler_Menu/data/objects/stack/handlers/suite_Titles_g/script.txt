@@ -1,0 +1,6 @@
+getprop suite_Titles
+   put rev_ScriptObject() into scriptObject
+   put the script_SuiteTitles of scriptObject into suiteTitles
+   -- display_Text suiteTitles
+   return word 1 to -1 of suiteTitles
+end suite_Titles

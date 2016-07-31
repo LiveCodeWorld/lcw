@@ -1,0 +1,13 @@
+function stack_GetSubStacks someFile
+    set lockmessages to true
+    put the mainstacks into oMainStacks
+    if exists(stack someFile) is false then return empty
+    
+    put the short name of stack someFile into shortName
+    put the substacks of stack someFile into subStackNames
+     
+    set the wholematches to true
+    if not(shortName is among the lines of oMainStacks) then delete stack someFile
+    set lockmessages to false
+    return subStackNames
+end stack_GetSubStacks

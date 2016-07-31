@@ -1,0 +1,44 @@
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Global | Image | With Text | Menu
+-
+[[ _FetchHandler (menu_ImagePosition,c) ]]
+
+[[ _FetchHandler (menu_ImageViewName,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Property,c) ]]
+
+[[ _FetchHandler (submenu_Scripts,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_ThumbNail,c) ]]
+
+
+--> Global | Image | With Text | Props
+-
+[[ _FetchHandler (image_ViewName,g) ]]
+
+[[ _FetchHandler (image_ViewNames,g) ]]
+
+[[ _FetchHandler (image_Positions,g) ]]
+
+[[ _FetchHandler (image_Position,g) ]]
+
+getprop image_Positions [imageView]
+   if the long id of the target is not the long id of me then pass image_Positions
+   put the image_Positions of imageView into imagePositions
+   return imagePositions
+end image_Positions
+

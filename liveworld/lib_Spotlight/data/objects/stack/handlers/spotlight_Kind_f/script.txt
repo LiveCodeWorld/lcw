@@ -1,0 +1,7 @@
+function spotlight_Kind someFile
+   put spotlight_GetAttribute(someFile, "kMDItemKind") into someKind
+   put word 1 to - 1 of someKind into someKind
+   delete char 1 of someKind
+   delete char -1 of someKind
+   return someKind
+end spotlight_Kind

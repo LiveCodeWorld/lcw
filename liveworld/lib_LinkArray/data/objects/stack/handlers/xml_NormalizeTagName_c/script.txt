@@ -1,0 +1,8 @@
+on xml_NormalizeTagName @tagName
+   -- xml tag names should not start with a number
+   if char 1 of tagName is a number then
+      put "node_" & tagName into tagName
+   else
+      put wiki_ConstructID(tagName) into tagName
+   end if
+end xml_NormalizeTagName

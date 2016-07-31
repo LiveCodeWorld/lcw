@@ -1,0 +1,14 @@
+setprop title_Colour someColour
+   put background_Button() into iconBackground
+   put title_Button() into titleButton
+   
+   if someColour is empty or someColour is "none" then
+      -- set the backgroundColor of titleButton to empty
+      set the opaque of titleButton to false
+      set the visible of iconBackground to true
+   else
+      set the backgroundcolor of titleButton to someColour
+      set the opaque of titleButton to true
+      set the visible of iconBackground to false
+   end if
+end title_Colour

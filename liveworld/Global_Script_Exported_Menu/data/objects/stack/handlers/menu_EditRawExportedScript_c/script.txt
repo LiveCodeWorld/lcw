@@ -1,0 +1,4 @@
+on menu_EditRawExportedScript scriptObject
+   put the exported_Script [true] of scriptObject into exportedScript
+   script_CreateAndEditHashCard exportedScript
+end menu_EditRawExportedScript

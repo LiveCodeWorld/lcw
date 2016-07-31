@@ -1,0 +1,17 @@
+on menu_AddJabberUser
+   /*
+   username : the desired jabber username
+   domain : the domain for the new user
+   password : the password for the new user
+   */
+   
+   put dreamhost_ApiKey() into apiKey
+   put opn_Ask ("Jabber user name...", "fortyfoxes") into uName
+   put opn_Ask ("Jabber password...", "xxxx") into pWord
+   put opn_Ask ("Jabber domain...", "architex.tv") into jabberDomain
+   put merge("https://api.dreamhost.com/?key=[[apiKey]]&cmd=jabber-add_user&username=[[uName]]&domain=[[jabberDomain]]&password=[[pWord]]") into someUrl
+   put url someUrl into someResult
+   
+   put dreamHost_ParseResult (someResult) into tableArray
+   display_Array tableArray, "jabber-add_user"
+end menu_AddJabberUser

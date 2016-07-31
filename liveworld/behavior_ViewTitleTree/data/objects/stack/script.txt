@@ -1,0 +1,169 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: behavior_ViewTitleTree
+type: behavior
+version: 0.5
+
+/*
+A basic title for tree views.
+*/
+
+
+--> Controls
+-
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (title_View,g) ]]
+
+[[ _FetchHandler (tree_Title,g) ]]
+
+
+--> Standalone
+-
+[[ _FetchHandler (_IsStandalone,pf) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+
+--> Title
+-
+[[ _FetchHandler (menu_ToolOrTitle,g) ]]
+
+[[ _FetchHandler (menu_ToolTitle,g) ]]
+
+[[ _FetchHandler (menu_GetToolTitle,f) ]]
+
+-- getprop menu_Target [mTitlePath]
+switch
+   case mTitlePath contains "Global | Icon | Menu"
+      put the title_View of me into titleView
+      if exists(titleView) is false then return empty
+      put the icon_View of titleView into iconView
+      return iconView
+   case mTitlePath contains "Global | Title | Icon | Menu"
+      put the title_View of me into titleView
+      if exists(titleView) is false then return empty
+      put the icon_View of titleView into iconView
+      return iconView
+   case mTitlePath contains "Global | Title |" -- Global | Title | Menu
+      put the title_View of me into titleView
+      if exists(titleView) is false then return empty
+      return titleView
+   default
+      -- allow an enclosing group to define the mTarget
+      pass menu_Target
+      
+      -- this is a default target (can be overridden at the mTopcontroller)
+      put the long owner of me into mTarget
+      return mTarget
+end switch
+end menu_Target
+     
+
+--> Icon
+-
+[[ _FetchHandler (icon_IsVisible,g) ]]
+
+[[ _FetchHandler (icon_IsVisible,s) ]]
+
+[[ _FetchHandler (icon_Style,g) ]]
+
+[[ _FetchHandler (icon_Style,s) ]]
+
+
+--> Title
+-
+[[ _FetchHandler (title_Text,g) ]]
+
+[[ _FetchHandler (title_Text,s) ]]
+
+[[ _FetchHandler (title_TextAlign,g) ]]
+
+[[ _FetchHandler (title_TextAlign,s) ]]
+
+[[ _FetchHandler (title_IsStackDragger,g) ]]
+
+[[ _FetchHandler (title_IsStackDragger,s) ]]
+
+
+--> Title | Colours
+-
+[[ _FetchHandler (colour_Palette,g) ]]
+
+[[ _FetchHandler (colour_Palette,s) ]]
+
+[[ _FetchHandler (title_TextColour,g) ]]
+
+[[ _FetchHandler (title_TextColour,s) ]]
+
+[[ _FetchHandler (title_Colour,g) ]]
+
+[[ _FetchHandler (title_Colour,s) ]]
+
+
+--> View
+-
+[[ _FetchHandler (view_Text,g) ]]
+
+[[ _FetchHandler (view_Text,s) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (menu_Button,g) ]]
+    
+[[ _FetchHandler (title_Button,pf) ]]
+
+[[ _FetchHandler (background_Button,pf) ]]
+
+
+--> View Children
+-
+[[ _FetchHandler (icon_View,g) ]]
+
+[[ _FetchHandler (icon_Button,g) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (view_Height,g) ]]
+
+[[ _FetchHandler (view_Height,s) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (loc_SetTranslationVector,c) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]
+
+[[ _FetchHandler (object_ExtractStack,f) ]]
+
+[[ _FetchHandler (rect_AddVector,c) ]]
+
+[[ _FetchHandler (rect_SubtractMargin,f) ]]
+
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (rect_TranslateByVector,f) ]]
+
+[[ _FetchHandler (stack_Drag,c) ]]
+
+[[ _FetchHandler (stack_Object,g) ]]
+
+[[ _FetchHandler (text_OffsetAfter,f) ]]
+
+[[ _FetchHandler (text_OffsetBefore,f) ]]
+
+[[ _FetchHandler (view_Name,g) ]]

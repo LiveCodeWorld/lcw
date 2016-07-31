@@ -1,0 +1,5 @@
+function mainstack_GetWalkArrayFile mainStackFolder
+   -- hack_MoveOldWalkArrayFile mainStackFolder
+   put mainstack_MetadataFolder (mainStackFolder, empty, pDontCreate) & "walk.array" into someFile
+   return someFile
+end mainstack_GetWalkArrayFile

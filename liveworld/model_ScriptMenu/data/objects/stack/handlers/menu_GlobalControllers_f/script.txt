@@ -1,0 +1,5 @@
+function menu_GlobalControllers pFilter
+   put script_GetGlobalSuiteObjects ("Menu") into gMenuControllers
+   if pFilter is not empty then filter gMenuControllers with pFilter
+   return gMenuControllers
+end menu_GlobalControllers

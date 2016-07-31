@@ -1,0 +1,14 @@
+getprop verticalLayout_LongStackFiles
+   put the child_Views ["View|Index|Group"] of me into indexGroups
+   repeat for each line indexGroup in indexGroups
+      put the child_Views ["View|Index|Simple"] of indexGroup into indexViews
+      repeat for each line indexView in indexViews
+         set the cursor to busy
+         put the indexView_LongStackFiles of indexView into indexViewLongStackFiles
+         put indexViewLongStackFiles & CR after longStackFiles
+      end repeat
+   end repeat
+   delete char -1 of longStackFiles
+   sort longStackFiles
+   return word 1 to -1 of longStackFiles
+end verticalLayout_LongStackFiles

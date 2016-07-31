@@ -1,0 +1,19 @@
+function outline_PathOffset somePath, tabbedOutline, pathDelim
+    -- was "outLineOffset"
+    if pathDelim is empty then put "/" into pathDelim
+    set the wholematches to true
+    put 0 into tSkip
+    put empty into tabBit
+    set the itemdelimiter to pathDelim
+    repeat for each item osTitle in somePath
+        put tabBit & osTitle into osLine
+        put lineoffset(osLine, tabbedOutline, tSkip) into foundLineNum
+        if foundLineNum is 0 then
+            return 0
+        else
+            put tab after tabBit
+            add foundLineNum to tSkip
+        end if
+    end repeat
+    return tSkip
+end outline_PathOffset

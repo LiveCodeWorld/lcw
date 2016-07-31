@@ -1,0 +1,11 @@
+function line_GetCommon index1, index2
+    set the wholematches to true
+    put empty into commonIndex
+    repeat for each line someLine in index1
+        if someLine is among the lines of index2 then
+            put someLine & return after commonIndex
+        end if
+    end repeat
+    delete last char of commonIndex
+    return commonIndex
+end line_GetCommon

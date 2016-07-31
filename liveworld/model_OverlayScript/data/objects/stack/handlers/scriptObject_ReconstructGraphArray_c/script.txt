@@ -1,0 +1,8 @@
+command scriptObject_ReconstructGraphArray scriptObject, pOverlayName, pGraphStyle
+   put the script_Hkeys of scriptObject into hKeys
+   put the script_DependencyArray [hKeys] of scriptObject into linkArray
+   put the object_Folder of scriptObject into graphFolder
+   
+   overlay_ReconstructDotArray graphFolder, pGraphStyle, linkArray, pOverlayName
+   overlay_Draw graphFolder, pOverlayName
+end scriptObject_ReconstructGraphArray

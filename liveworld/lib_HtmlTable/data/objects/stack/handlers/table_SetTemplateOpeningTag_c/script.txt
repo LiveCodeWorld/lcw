@@ -1,0 +1,4 @@
+command table_SetTemplateOpeningTag openTag
+   put openTag into tableTemplateArray ["tableOpen"]
+   table_SetTemplate tableTemplateArray
+end table_SetTemplateOpeningTag

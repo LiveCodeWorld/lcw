@@ -1,0 +1,18 @@
+function stripHandlersFromSuite handlersToStrip, suiteScripts
+   -- version original,6/9/01
+   put line 1 of handlersToStrip into oldCommandNames
+   put line 2 of handlersToStrip into oldFunctionNames
+   
+   put andLists(newCommandNames, oldCommandNames) into commandsToRemove
+   repeat with ii = 1 to the number of items of commandsToRemove
+      put item ii of commandsToRemove into someCommandName
+      put replaceCommand(someCommandName, suiteScripts) into suiteScripts
+   end repeat
+   
+   put andLists(newFunctionNames, oldFunctionNames) into functionsToRemove
+   repeat with ii = 1 to the number of items of functionsToRemove
+      put item ii of functionsToRemove into functionName
+      put replaceFunction(functionName, suiteScripts) into suiteScripts
+   end repeat
+   return suiteScripts
+end stripHandlersFromSuite

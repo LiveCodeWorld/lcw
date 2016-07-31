@@ -1,0 +1,7 @@
+command pref_StoreGlobal gValue, pGlobalName, pSetName
+   if pGlobalName is empty then put "gPrefs_Array" into gName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put pref_FetchData() into dataArray
+   put gValue into dataArray [pSetName][pGlobalName]
+   pref_StoreData dataArray
+end pref_StoreGlobal

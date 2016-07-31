@@ -1,0 +1,16 @@
+on menu_CheckRigScript stackObject
+   set the cursor to watch
+   
+   put the filename of stackObject into stackPath
+   set the itemdelimiter to slash
+   put item -1 of stackPath into shortControllerFile
+   put rig_FetchController (shortControllerFile) into remoteRigScript
+   put url ("file:" & stackPath) into localRigScript
+   
+   put remoteRigScript = localRigScript into areTheSame
+   if areTheSame is true then
+      answer "The scripts are the same!"
+   else
+      answer "The script on the server and the local script differ!"
+   end if
+end menu_CheckRigScript

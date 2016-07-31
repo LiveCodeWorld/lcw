@@ -1,0 +1,19 @@
+function fossil_GetSetting someSetting, pCheckoutFolder, pGetGlobal
+   put "fossil setting" && someSetting into someShell
+   
+   put pCheckoutFolder is empty or pGetGlobal is true into pGetGlobal
+   if pGetGlobal then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   put the result into someLine
+   fossil_DeconstructSettingLine someLine, someKey, someValue, isGlobal
+   if pGetGlobal is false and isGlobal is true then
+      -- the result is for a global value because the local value is empty
+      -- let's return the actual empty local value
+      return empty
+   end if
+   return someValue
+end fossil_GetSetting

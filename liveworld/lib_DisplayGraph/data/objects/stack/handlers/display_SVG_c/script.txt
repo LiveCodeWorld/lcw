@@ -1,0 +1,20 @@
+command display_SVG svgFile, pStackLabel
+   put the "View|Image|SVG" into viewName
+   
+   stack_CloneInvisible viewName, "Display SVG"
+   put the result into cloneStackName
+   put the long id of widget 1 of cd 1 of stack cloneStackName into displayView
+   
+   -- put "file:" & svgFile into someUrl
+   -- set the svg_URL [true] of displayView to someUrl
+   set the svg_File [true] of displayView to svgFile
+   -- put the result into someHtml
+   
+   -- show and go
+   if pStackLabel is empty then
+      set the itemdelimiter to slash
+      put item -1 of svgFile into pStackLabel
+   end if
+   view_CloneShow cloneStackName, empty, pStackLabel
+   return displayView
+end display_SVG

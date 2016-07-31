@@ -1,0 +1,16 @@
+on menu_AddRing sHexagon
+   lock screen
+   put the rect of sHexagon into oRect
+   -- set the inner_Margin of sHexagon to 14
+   set the inner_Factor of sHexagon to 0.08
+   set the show_Label of sHexagon to false
+   set the inner_View of sHexagon to "Shape|Ring"
+   put the result into ringView
+   set the showborder of ringView to false
+   set the ring_NodeNumber [30] of ringView to 6
+   set the ring_Visible of ringView to false
+   
+   set the rect of sHexagon to oRect
+   set the rect of sHexagon to oRect
+   unlock screen
+end menu_AddRing

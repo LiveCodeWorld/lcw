@@ -1,0 +1,6 @@
+function stack_NameToShortFile stackName
+   put word 1 to -1 of stackName into someFile
+   replace space with "_" in someFile
+   put ".rev" after someFile
+   return someFile
+end stack_NameToShortFile

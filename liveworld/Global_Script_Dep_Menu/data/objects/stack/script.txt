@@ -1,0 +1,53 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Script_Dep_Menu
+type: controller
+version: 0.1
+
+/*
+This menu is for processing whole scripts to extract their dependencies.
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | Script | Dep | Menu
+-
+[[ _FetchHandler (menu_CreateAndDisplaySvg,c) ]]
+
+[[ _FetchHandler (menu_DisplayProcessedHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_DisplaySvg,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (insert_UploadScriptOnlyLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayDependencyObjectArray,c) ]]
+
+[[ _FetchHandler (menu_DependencyObjects,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+
+--> Dev | Menu
+-
+
+
+
+--> Global | Script | Dep | Menu | Props
+-
+[[ _FetchHandler (project_Name,g) ]]
+
+[[ _FetchHandler (project_Names,g) ]]

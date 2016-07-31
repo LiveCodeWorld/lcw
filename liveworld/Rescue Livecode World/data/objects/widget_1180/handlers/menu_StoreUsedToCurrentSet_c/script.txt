@@ -1,0 +1,8 @@
+on menu_StoreUsedToCurrentSet
+   -- put "Default" into setName
+   put project_GetCurrentName() into setName
+   
+   put the stacksinuse into shortStackNames
+   library_SetUsed shortStackNames, setName
+   menu_DisplaySelectedSet setName
+end menu_StoreUsedToCurrentSet

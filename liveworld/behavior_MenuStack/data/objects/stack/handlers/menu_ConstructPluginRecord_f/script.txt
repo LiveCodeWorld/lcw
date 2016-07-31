@@ -1,0 +1,10 @@
+function menu_ConstructPluginRecord gMenuTitle, pPassMouseDown, pBeforeLineNum
+   put gMenuTitle into mRecordArray ["mTitle"]
+   put menu_GetGlobalController (gMenuTitle) into mController
+   put the rugged_ID of mController into mRecordArray ["mController"]
+   if pBeforeLineNum is empty then put 0 into pBeforeLineNum
+   if pPassMouseDown is empty then put false into pPassMouseDown
+   put pBeforeLineNum into mRecordArray ["mBeforeLineNum"]
+   put pPassMouseDown into mRecordArray ["mPassMouseDown"]
+   return mRecordArray   
+end menu_ConstructPluginRecord

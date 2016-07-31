@@ -1,0 +1,5 @@
+command mainstack_StoreHarray hArray, mainStackFolder
+   mainstack_StoreSomeArray mainStackFolder, hArray, "hArray"
+   put the result into someFile
+   return someFile
+end mainstack_StoreHarray

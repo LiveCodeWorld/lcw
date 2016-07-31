@@ -1,0 +1,11 @@
+function outline_TabLevel someLine
+    -- was "titleToTabLevel"
+    put 0 into tabLevel
+    repeat
+        if char (tabLevel+1) of someLine is tab then
+            add 1 to tabLevel
+        else
+            return tabLevel
+        end if
+    end repeat
+end outline_TabLevel

@@ -1,0 +1,6 @@
+getprop object_PropertyArray [pDontDiff]
+   local objectPropArray, hArray, pExportHandlers, pForceIndexHandlerCalls
+   put the long id of the target into targetObject
+   object_GetPropertyArrays targetObject, objectPropArray, hArray, pExportHandlers, pDontDiff, true, pForceIndexHandlerCalls
+   return objectPropArray
+end object_PropertyArray

@@ -1,0 +1,17 @@
+on resizeStack
+   lock screen
+   -- put newWidth,newHeight into bRight
+   put 320 into igLeft
+   put igLeft -5 into treeRight
+   
+   put the bottomright of this card into bRight
+   put item 2 of bRight into newHeight
+   
+   put igLeft & comma & "96," & bRight into newRect
+   set the rect of group "Stacks and Libraries" to newRect
+   
+   put "16,51" & comma & treeRight & comma & (newHeight - 14) into newRect
+   set the rect of widget "Tree View" to newRect
+   set the right of btn "Start Project" to treeRight
+   unlock screen
+end resizeStack

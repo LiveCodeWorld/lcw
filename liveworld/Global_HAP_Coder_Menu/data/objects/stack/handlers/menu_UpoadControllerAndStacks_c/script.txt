@@ -1,0 +1,7 @@
+on menu_UpoadControllerAndStacks scriptObject
+   -- menu_SaveTransporterScript scriptObject
+   put LocalArray ["editedScriptOnlyLibraryNames"] into editedScriptOnlyLibraryNames
+   put LocalArray ["server_StackFiles"] into serverStackFiles
+   
+   server_UploadStacks editedScriptOnlyLibraryNames
+end menu_UpoadControllerAndStacks

@@ -1,0 +1,4 @@
+function firefox_GetUrl
+    -- see "http://www.macosxhints.com/article.php?story=20060325015454467"
+    return appleScript_DoLine("firefox-bin", "set myURL to «class curl» of window 1")	
+end firefox_GetUrl

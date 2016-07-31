@@ -1,0 +1,7 @@
+private function _notFoundHeaders
+   put "HTTP/1.1 404 Error: 404" into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   _addCorsHeader someHeader
+   _addKeepAliveHeader someHeader
+   return someHeader
+end _notFoundHeaders

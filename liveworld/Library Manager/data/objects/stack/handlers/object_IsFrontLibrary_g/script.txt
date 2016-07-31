@@ -1,0 +1,5 @@
+getprop object_IsFrontLibrary
+   put the rugged_ID of the target into targetObject
+   put library_ListFrontObjects() into frontLibraries
+   return targetObject is among the lines of frontLibraries
+end object_IsFrontLibrary

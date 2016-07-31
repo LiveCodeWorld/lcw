@@ -1,0 +1,5 @@
+function rev_ScriptEditorDocFieldRect pEditorNum
+   put rev_ScriptEditorDocField (pEditorNum) into scriptEditorDocField
+   if exists(scriptEditorDocField) is false then return empty
+   return the rect of scriptEditorDocField
+end rev_ScriptEditorDocFieldRect

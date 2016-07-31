@@ -1,0 +1,5 @@
+private command thumbnail_SetStandard snippetArray, @thumbNailURL, @thumbNailWidth
+   put snippetArray ["thumbnails"]["standard"] into thumbNailArray
+   put thumbNailArray ["url"] into thumbNailURL
+   put thumbNailArray ["width"] into thumbNailWidth
+end thumbnail_SetStandard

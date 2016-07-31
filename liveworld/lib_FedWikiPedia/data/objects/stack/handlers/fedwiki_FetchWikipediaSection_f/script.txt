@@ -1,0 +1,6 @@
+function fedwiki_FetchWikipediaSection pageTitle, sectionNum
+   put sandbox_FetchSectionArray (pageTitle, sectionNum) into sandboxArray
+   put sandboxArray ["parse"] into parseArray
+   put parseArray ["wikitext"]["*"] into sectionWikiText
+   return sectionWikiText
+end fedwiki_FetchWikipediaSection

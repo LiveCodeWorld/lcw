@@ -1,0 +1,19 @@
+getprop stack_Objects [scriptObject]
+   if exists (scriptObject) is false then return empty
+   put the main_Stack of scriptObject into mainStackObject
+   
+   put revRuggedID (mainStackObject) into stackObjectMenu
+   
+   put the short name of mainStackObject into mainStackName
+   put the substacks of mainStackObject into subStackNames
+   if subStackNames is empty then return stackObjectMenu
+   
+   put CR & "-" & CR after stackObjectMenu
+   repeat for each line subStackName in subStackNames
+      put the long name of stack subStackName of stack mainStackName into subStack
+      put revRuggedID (subStack) into subStack
+      put subStack & CR after stackObjectMenu
+   end repeat
+   delete char -1 of stackObjectMenu
+   return stackObjectMenu
+end stack_Objects

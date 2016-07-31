@@ -1,0 +1,17 @@
+command menu_CreateAndStoreTables mController
+   -- this should be updated to take advantage of the new script_Array metadata
+   menu_ClearTargetGlobals
+   
+   menu_DeleteTables mController
+   put empty into dataArray
+   
+   put the script of mController into someScript
+   put script_OrderedMenuTitles(someScript) into mTitles
+   repeat for each line mTitle in mTitles
+      -- put the menu_TableFromScript [mTitle] of mController into mTable
+      put menu_ExtractTableFromScript (mTitle, someScript, mController) into mTable
+      put mTable into dataArray [mTitle]
+   end repeat
+   menu_SetDataArray mController, dataArray
+   return dataArray
+end menu_CreateAndStoreTables

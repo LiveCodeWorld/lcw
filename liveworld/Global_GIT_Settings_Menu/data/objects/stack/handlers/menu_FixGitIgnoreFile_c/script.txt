@@ -1,0 +1,8 @@
+on menu_FixGitIgnoreFile
+   put git_GlobalIgnoreFile() into ignoreFile
+   
+   put "binfile:" & ignoreFile into someUrl
+   put url someUrl into ignoreText
+   replace CR with empty in ignoreText
+   put ignoreText into url someUrl
+end menu_FixGitIgnoreFile

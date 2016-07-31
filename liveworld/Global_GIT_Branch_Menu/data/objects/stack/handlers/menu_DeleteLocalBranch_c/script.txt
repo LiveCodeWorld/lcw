@@ -1,0 +1,5 @@
+on menu_DeleteLocalBranch localBranchName
+   put "git branch -d" && kwote(localBranchName) into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   opn_notify shellResult, true
+end menu_DeleteLocalBranch

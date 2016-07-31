@@ -1,0 +1,15 @@
+on revEditScript scriptObject
+   put the exported_Script of scriptObject into exportedScript
+   put the script of scriptObject into scriptObjectScript
+   switch
+      case scriptObjectScript = exportedScript and exportedScript is not empty
+         send "object_AddToGlobalArray" to scriptObject in 2 ticks
+         break
+      case scriptObjectScript = empty and exportedScript = empty
+         break
+      default
+         put the mobile_Name of scriptObject into mObject
+         put "Exported script for" && mObject && "differs from the actual script!" into someComment
+         opn_Notify someComment
+   end switch
+end revEditScript

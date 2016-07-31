@@ -1,0 +1,6 @@
+getprop viewBrowser_Recordbehavior
+   put the viewBrowser_DataGrid of me into dgView
+   put the dgDataControl of dgView into recordView
+   put the behavior of recordView into recordBehavior
+   return recordBehavior
+end viewBrowser_Recordbehavior

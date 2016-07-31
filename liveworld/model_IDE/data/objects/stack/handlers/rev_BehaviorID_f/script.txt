@@ -1,0 +1,6 @@
+function rev_BehaviorID someObject
+   put the long id of someObject into longIDObject
+   put revRuggedID (longIDObject) into behaviorObject
+   put word 1 of longIDObject into word 1 of behaviorObject
+   return behaviorObject
+end rev_BehaviorID

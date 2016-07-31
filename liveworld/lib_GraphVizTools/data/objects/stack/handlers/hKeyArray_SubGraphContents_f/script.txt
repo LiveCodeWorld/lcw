@@ -1,0 +1,32 @@
+function hKeyArray_SubGraphContents linkONodeID, indentLevel, linkObject, hIdArray, graphNodeType
+   -- but this is hKeys and not nodeIDs ??? 
+   -- put linkArray_HkeysInObject(linkObject, hIdArray) into nodeSection
+   
+   -- should depend on the dot_NodeType
+   put hKeyArray_NodeIdsInObject (linkObject, hIdArray) into nodeSection
+   replace CR with "; " in nodeSection
+   
+   if exists(linkObject) then
+      put the name of linkObject into subGraphLabel
+   else
+      put linkObject into subGraphLabel
+   end if
+   
+   if subGraphLabel = "Missing" then
+      put "orange" into fillColour
+      put "red" into someColour
+   else
+      put "grey60" into someColour
+      if math_IsOdd (indentLevel) is true then
+         put "grey60" into fillColour
+      else
+         put "grey90" into fillColour
+      end if
+   end if
+   
+   put empty into someRank
+   get dot_SubGraphContents (subGraphLabel, nodeSection, someRank, "filled", someColour, fillColour)
+   
+   put outline_IncreaseIndent (it, indentLevel) into subGraphContents
+   return subGraphContents
+end hKeyArray_SubGraphContents

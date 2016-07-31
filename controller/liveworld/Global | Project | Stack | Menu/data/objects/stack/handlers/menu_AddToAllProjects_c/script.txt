@@ -1,0 +1,12 @@
+on menu_AddToAllProjects stackObject
+   put _indexView() into indexView
+   
+   start using stackObject
+   put lcw_ListProjects() into projectNames
+   repeat for each line projectName in projectNames   
+      library_AddUsedStack stackObject, projectName
+   end repeat
+   
+   dispatch "refresh" to indexView
+   set the hilite_Used of indexView to true
+end menu_AddToAllProjects

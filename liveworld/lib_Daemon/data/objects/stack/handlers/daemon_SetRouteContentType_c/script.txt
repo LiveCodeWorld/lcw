@@ -1,0 +1,6 @@
+command daemon_SetRouteContentType someRoute, contentType
+   put daemon_GetRouteHeaderArray (someRoute) into headerArray
+   put contentType into headerArray ["Content-Type"] 
+   daemon_SetRouteHeaderArray someRoute, headerArray
+   return the result
+end daemon_SetRouteContentType

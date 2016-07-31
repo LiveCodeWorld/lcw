@@ -1,0 +1,20 @@
+private function _arrowPoints aTop, aBottom, centreX, innerSquareRect
+   put centreX into item 1 of arrowTopLoc
+   put aTop into item 2 of arrowTopLoc
+   
+   put centreX into item 1 of arrowBottomLoc
+   put aBottom into item 2 of arrowBottomLoc
+   
+   put item 2 of innerSquareRect into squareTop
+   add 1 to squareTop -- tweak
+   put centreX,squareTop into squareTopLoc
+   
+   put item 4 of innerSquareRect into squareBottom
+   subtract 1 from squareBottom -- tweak
+   put centreX,squareBottom into squareBottomLoc
+   
+   -- put arrowTopLoc & CR & arrowBottomLoc into arrowPoints
+   put arrowTopLoc & CR & squareTopLoc & CR & CR & squareBottomLoc & CR & arrowBottomLoc into arrowPoints
+   
+   return arrowPoints
+end _arrowPoints

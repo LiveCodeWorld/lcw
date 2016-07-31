@@ -1,0 +1,48 @@
+command menu_DefaultTableLine mVersion, comLine, mCommand, mSuffix, customParam, someScript, mController, mTitle, @mFormatProp, @mLine, @mTableLine, @mItemType, @submenuProp, @paramProp, @fixedSubMenu
+   -- ignoreCall: menu_Version
+   -- only add disabled_Prop if it exists in the menu_Controller (optional)
+   put "disabled_" & mSuffix into mFormatProp
+   if script_GetGetProp (mFormatProp, someScript) is empty then put empty into mFormatProp
+   
+   put text_SplitCaps (mSuffix) into mLine
+   
+   /*
+   -- old way which switches depending on mVersion (too complicated)
+   if the menu_Version of mController is not empty then
+      if the number of items of comLine > 1 then
+         -- there is more than one param
+         menu_ConstructParamProp someScript, mCommand, customParam, mController, paramProp, submenuProp, fixedSubMenu
+         put the result into mItemType
+         put mCommand && "subMenuPath," && mTarget into pigeon
+         put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp) into mTableLine
+      else
+         put mCommand && "mTarget" into pigeon
+         put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType) into mTableLine
+      end if
+   else
+      if customParam is empty or param_IsObject (customParam) then
+         put mCommand && "mTarget" into pigeon
+         put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType) into mTableLine
+      else
+         menu_ConstructParamProp someScript, mCommand, customParam, mController, paramProp, submenuProp, fixedSubMenu
+         put the result into mItemType
+         put mCommand && "subMenuPath," && mTarget into pigeon
+         put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp) into mTableLine
+      end if
+   end if
+   */
+   
+   -- new way (assumes mTarget is always passed as the ifirst param
+   if the number of items of comLine > 1 then
+      -- there is more than one param
+      menu_ConstructParamProp someScript, mCommand, customParam, mController, paramProp, submenuProp, fixedSubMenu
+      put the result into mItemType
+      put mCommand && "subMenuPath," && mTarget into pigeon
+      put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp) into mTableLine
+   else
+      put mCommand && "mTarget" into pigeon
+      put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType) into mTableLine
+   end if
+   
+   return mTableLine
+end menu_DefaultTableLine

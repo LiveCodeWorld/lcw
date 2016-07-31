@@ -1,0 +1,13 @@
+getprop template_PropertyMenu [pFetchLive]
+   if pFetchLive is true then
+      local liveMenu, publicProps
+      put the view_Template of the target into templateObject
+      extractViewPropertyMenu templateObject, liveMenu, publicProps
+      return liveMenu
+   else
+      put the template_Array of the target into templateArray
+      put the uOPN_ViewArray of templatePropertyModel into templateArray
+      put templateArray ["metadata"]["view_PropertyMenu"] into cachedMenu
+      return cachedMenu
+   end if
+end template_PropertyMenu

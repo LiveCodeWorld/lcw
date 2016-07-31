@@ -1,0 +1,8 @@
+function getArtFormat pA, pFormat
+   repeat for each key tK in pA["formats"]
+      if  pA["formats"][tK]["format_name"] is pFormat then
+         return pA["formats"][tK]
+      end if
+   end repeat
+   return empty
+end getArtFormat

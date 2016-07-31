@@ -1,0 +1,26 @@
+command hArray_ConstructDuplicateHkeyArray @duplicateShortKeyArray, @duplicateHkeys
+   local duplicateHKeyArray
+   timer_Start "hArray_ConstructDuplicateHkeyArray"
+   --
+   put hArray_ConstructHkeyHashArray() into hkeyHashArray
+   repeat for each key handlerHash in hkeyHashArray
+      put hkeyHashArray [handlerHash] into hkeyArray
+      if the number of elements of hkeyArray > 1 then
+         union duplicateHKeyArray with hkeyArray
+         
+         repeat for each key hKey in hkeyArray
+            put item 1 to 2 of hKey into shortHkey
+            -- put handlerHash into duplicateShortKeyArray [shortHkey][hKey]
+            put hkeyArray [hKey] into duplicateShortKeyArray [shortHkey][hKey]
+            put empty into duplicateShortKeyArray [shortHkey][hKey]
+         end repeat
+      end if
+   end repeat
+   
+   put keys (duplicateHKeyArray) into duplicateHkeys
+   sort duplicateHkeys by item 1 of each
+   --
+   timer_Stop "hArray_ConstructDuplicateHkeyArray"
+   
+   return duplicateHkeys
+end hArray_ConstructDuplicateHkeyArray

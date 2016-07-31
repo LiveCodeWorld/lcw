@@ -1,0 +1,4 @@
+on menu_RefreshLayout imageObject
+   -- put menu_GetTargetObject() into imageObject
+   dispatch "LayoutControl" to imageObject
+end menu_RefreshLayout

@@ -1,0 +1,5 @@
+command menu_SetMouseDownBlocks someObjects
+   global gOPN_MenuArray
+   
+   put someObjects into gOPN_MenuArray ["mouseDownBlocks"]
+end menu_SetMouseDownBlocks

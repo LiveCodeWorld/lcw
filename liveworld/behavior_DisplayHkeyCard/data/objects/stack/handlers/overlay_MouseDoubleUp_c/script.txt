@@ -1,0 +1,4 @@
+on overlay_MouseDoubleUp tObject
+   put the node_Url of tObject into hKey
+   display_Hkey hKey
+end overlay_MouseDoubleUp

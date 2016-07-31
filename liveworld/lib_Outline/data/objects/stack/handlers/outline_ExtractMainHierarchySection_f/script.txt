@@ -1,0 +1,6 @@
+function outline_ExtractMainHierarchySection osLineNum, tabbedOutline, pathDelim
+    put outline_LinePath(osLineNum, tabbedOutline, osLineNumList, pathDelim) into outlineHierarchy
+    put item 1 of osLineNumList into startOsLineNum
+    put outline_EndOfSection(osLineNum, tabbedOutline) into endOsLineNum
+    return line startOsLineNum to endOsLineNum of tabbedOutline
+end outline_ExtractMainHierarchySection

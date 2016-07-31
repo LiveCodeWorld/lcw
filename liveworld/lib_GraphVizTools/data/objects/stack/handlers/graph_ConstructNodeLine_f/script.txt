@@ -1,0 +1,5 @@
+function graph_ConstructNodeLine someNodeID, nodeView, nodeParams
+    -- put the node_DotParams [someNodeID] of nodeView into nodeParams
+    put dot_QuoteNode(someNodeID) into safeNodeID
+    return safeNodeID && "[" &  nodeParams & "];"
+end graph_ConstructNodeLine

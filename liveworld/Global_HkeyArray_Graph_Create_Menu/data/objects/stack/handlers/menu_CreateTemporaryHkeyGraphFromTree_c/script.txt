@@ -1,0 +1,24 @@
+on menu_CreateTemporaryHkeyGraphFromTree treeView, graphStyle
+   set the cursor to watch
+   put the displayed_Array of treeView into hKeyArray
+   put the displayed_Object of treeView into scriptObject
+   
+   put the displayed_OverlayFolder of treeView into overlayFolder
+   put the displayed_OverlayName of treeView into overlayName
+   
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_GetGraphPropertyArray (overlayData, overlayName) into graphPropertyArray
+   put overlayData_GetHeaderArray (overlayData, overlayName) into dotHeaderArray
+   
+   put overlayArray_FromLinkArray (hKeyArray, dotHeaderArray, graphPropertyArray) into overlayArray
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", graphStyle
+   
+   local imageView, resizeStyle
+   if exists (scriptObject) then
+      put the mobile_Name of scriptObject into stackLabel
+   else
+      put the title_Text of treeView into stackLabel
+   end if
+   overlayArray_CreateAndDisplayGraph overlayArray, graphStyle, overlayFolder, imageView, resizeStyle, stackLabel
+   put the result into displayView
+end menu_CreateTemporaryHkeyGraphFromTree

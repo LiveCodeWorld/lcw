@@ -1,0 +1,7 @@
+setprop stackfile_Array stackFileArray
+   put the stack_Object of the target into someStack
+   put stackFile_FromArray (stackFileArray) into stackFileTable
+   sort stackFileTable by item 1 of each
+   set the stackfiles of someStack to stackFileTable
+   return stackFileTable
+end stackfile_Array

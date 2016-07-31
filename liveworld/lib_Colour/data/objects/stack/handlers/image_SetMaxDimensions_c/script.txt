@@ -1,0 +1,37 @@
+on image_SetMaxDimensions @maxW, @maxH, imageObject
+  put the formattedwidth of imageObject into originalWidth
+  if originalWidth is 0 then
+    put the width of imageObject into maxW
+    put the height of imageObject into maxH
+  else
+    put the formattedheight of imageObject into originalHeight
+    
+    put maxW / originalWidth into x_ScaleFactor
+    if maxH is empty then
+      put round(x_ScaleFactor * originalHeight) into newHeight
+      put round(x_ScaleFactor * originalWidth) into newWidth
+    else
+      put maxH / originalHeight into y_ScaleFactor
+      -- choose the biggest
+      if y_ScaleFactor > x_ScaleFactor then
+        put y_ScaleFactor into sFactor
+      else
+        put x_ScaleFactor into sFactor
+      end if
+      
+      put round(sFactor * originalHeight) into newHeight
+      put round(sFactor * originalWidth) into newWidth
+      
+      if newHeight > maxH then
+        put round(y_ScaleFactor * originalHeight) into newHeight
+        put round(y_ScaleFactor * originalWidth) into newWidth
+      else if newWidth > maxW then
+        put round(x_ScaleFactor * originalHeight) into newHeight
+        put round(x_ScaleFactor * originalWidth) into newWidth
+      end if
+    end if
+    -- put maxW && maxH & return & newWidth && newHeight
+    put newWidth into maxW
+    put newHeight into maxH
+  end if
+end image_SetMaxDimensions

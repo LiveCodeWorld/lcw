@@ -1,0 +1,34 @@
+on menu_CreateLib
+   put "Choose a name for your script-only library stack...." into someQuestion
+   put the script_MetaData ["name"] of scriptObject into scriptName
+   if scriptName is empty then put "Example" into scriptName
+   put "behavior_" & scriptName into suggestedAnswer
+   
+   lcw_CreateLibrary "behavior", someQuestion, suggestedAnswer
+   
+   /*
+   put opn_Ask ("Give your library a name", "lib_Example") into libName
+   if there is a stack libName then
+      go to stack libName
+      answer warning "Already a stack with that name!"
+      exit to top
+   end if
+   
+   put libName & ".livecode" into shortFile
+   put library_ScriptOnlyFolder (shortFile) into someFile
+   
+   -- revIDENewScriptOnlyStackWithScript pName, pScript -- does not do anything fancy
+   create script only stack libName
+   set the filename of stack libName to someFile
+   
+   put metadata_ConstructUripArray (libName, "script library") into uRipArray
+   set the script_MetaData of stack libName to uRipArray
+   
+   save stack libName
+   set the stack_IsKnown of stack libName to true
+   set the stack_IsLibrary of stack libName to true
+   
+   edit the script of stack libName
+   opn_Notify ("Stack" && kwote(libName) && "is now known and used!")
+   */
+end menu_CreateLib

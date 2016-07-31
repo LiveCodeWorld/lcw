@@ -1,0 +1,20 @@
+getprop image_PixelTable
+    put the long id of the target into imageObject
+    if word 1 of imageObject is not "image" then return empty
+    
+    put the imagedata of imageObject into binaryData
+    put the width of imageObject into maxX
+    put the height of imageObject into maxY
+    
+    set the itemdelimiter to tab
+    repeat with someY = 1 to maxY
+        repeat with someX = 1 to maxX
+            -- put (someY - 1) * maxX + someX into 
+            put char 1 to 4 of binaryData into binaryPixel
+            put image_PixelToRGB(binaryPixel) into rgbPixel
+            put rgbPixel into item someX of line someY of imageTable
+            delete char 1 to 4 of binaryData
+        end repeat
+    end repeat
+    return imageTable
+end image_PixelTable

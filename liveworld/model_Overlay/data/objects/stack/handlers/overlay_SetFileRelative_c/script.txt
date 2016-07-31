@@ -1,0 +1,7 @@
+command overlay_SetFileRelative @someFile, overlayFolder
+   set the itemdelimiter to "/"
+   put the number of items of overlayFolder into itemNum 
+   if item 1 to itemNum of someFile = item 1 to itemNum overlayFolder then
+      delete item 1 to itemNum of someFile
+   end if
+end overlay_SetFileRelative

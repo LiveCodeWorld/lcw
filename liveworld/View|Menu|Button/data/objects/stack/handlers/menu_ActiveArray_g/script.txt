@@ -1,0 +1,16 @@
+getprop menu_ActiveArray
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   -- in case on non dynamic menu is cached
+   put the uOPN_MenuActiveArray of someView into menuActiveArray
+   if keys (menuActiveArray) is not empty then return menuActiveArray
+   
+   -- work it out live for a dynamic menu
+   global gTemp_ActiveMenuArray
+   -- put the menu_ToolOrTitle of targetObject into pMenuTitle
+   put the menu_Title of targetObject into pMenuTitle -- keep it simple
+   set the menu_TextFromTitle [pMenuTarget] of targetObject to pMenuTitle
+   return gTemp_ActiveMenuArray
+end menu_ActiveArray

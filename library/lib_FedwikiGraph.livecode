@@ -1,0 +1,248 @@
+﻿script "lib_FedwikiGraph"
+--> MetaData
+-
+name: lib_FedwikiGraph
+type: library
+version: 0.9
+copyright: David Bovill
+
+/*
+A library for interfacing with Federated Wiki.
+*/
+
+--> Fedwiki | Graph
+-
+function graph_ConstructDotHeaderArray overlap, splines, defaultShape, defaultUrl
+   local dotHeaderArray, cluster, direction, dotOrder
+   put true into concentrate
+   put false into overlap
+   put true into splines
+   put "rectangle" into defaultShape
+   
+   dot_ConstructPropertyArray dotHeaderArray, overlap, concentrate, splines, cluster, direction, dotOrder, defaultShape, defaultUrl
+   return dotHeaderArray
+end graph_ConstructDotHeaderArray
+
+command graph_LinkArray linkArray, pOverlayStyle, pOverlayFolder, pDotHeaderArray, pGraphPropertyArray
+   -- this draws a graph and then creates a Livecode view using overlays
+   put graph_ConstructDotHeaderArray() into pDotHeaderArray
+   -- standard overlay based routing. Allows interactive image views
+   if linkArray is not an array then return empty
+   linkArray_RemoveSelfLinks linkArray
+   if pOverlayFolder is empty then put fedwiki_GetBigDataFolder() into pOverlayFolder
+   put overlayArray_FromLinkArray (linkArray, pDotHeaderArray, pGraphPropertyArray) into overlayArray
+   overlayArray_CreateAndDisplayGraph overlayArray, pOverlayStyle, pOverlayFolder
+end graph_LinkArray
+
+command linkArray_RemoveSelfLinks @linkArray, pIsNested
+   if pIsNested is empty then
+      put linkArray_IsNested (linkArray) into pIsNested
+   end if
+   
+   if pIsNested is not true then
+      repeat for each key someKey in linkArray
+         put linkArray [someKey] into someLinks
+         line_Delete someKey, someLinks
+         put someLinks into linkArray [someKey]
+      end repeat
+   else
+      repeat for each key someKey in linkArray
+         delete variable linkArray [someKey][someKey]
+      end repeat
+   end if
+end linkArray_RemoveSelfLinks
+
+command graph_CreateDotFiles linkArray, pGraphStyle, pDotFile
+   -- simplified version of "overlayArray_CreateAndDisplayGraph"
+   -- creates all the dot and PNG and SVG files
+   if linkArray is not an array then return empty
+   linkArray_RemoveSelfLinks linkArray
+   if pGraphStyle is empty then put "hierarchical" into pGraphStyle
+   if pDotFile is empty then
+      put opn_Ask ("Choose a short file name for your dot file...", "bigdata.dot") into shortFile
+      put fedwiki_GetBigDataFolder() & shortFile into pDotFile
+   end if
+   set the cursor to watch
+   
+   local nodeLinkArray, nodeIdArray
+   linkArray_IdConstruct linkArray, nodeLinkArray, nodeIdArray
+   put linkArray_DotNodeLinks (nodeLinkArray) into linkSection
+   
+   put graph_ConstructHeader (pGraphStyle) into dotHeader
+   put graph_ConstructDefSection (nodeIdArray) into defSection
+   put graph_ConstructCluster (nodeIdArray, linkArray) into clusterSection
+   
+   put dot_TextFromSections (dotHeader, defSection, clusterSection, linkSection, graphTitle) into dotText
+   
+   dot_SaveTemporaryFile dotText, pDotFile
+   if pGraphStyle = "hierarchical" then dot_Flatten pDotFile, 9
+   
+   set the itemdelimiter to "."
+   --
+   put pDotFile into imageFile
+   put "png" into item -1 of imageFile
+   put pDotFile into svgFile
+   put "svg" into item -1 of svgFile
+   
+   shell_BashParamEscape pDotFile
+   put pGraphStyle into dotCommand
+   dot_NormalizeDotCommand dotCommand -- converts a graphStyle to a dotCommand
+   put dotCommand & space & pDotFile into someShell
+   
+   put space & "-Tsvg" after someShell
+   shell_BashParamEscape svgFile
+   put space & "-o" && svgFile after someShell
+   
+   put space & "-Tpng" after someShell
+   get imageFile
+   shell_BashParamEscape it
+   put space & "-o" && it after someShell
+   --
+   set the itemdelimiter to "."
+   
+   put shell (someShell) into gvResult
+   put the result into gvResult
+   if gvResult is empty then
+      return imageFile
+   else
+      return "error," && gvResult
+   end if
+end graph_CreateDotFiles
+
+
+--> Graph | Head
+-
+function graph_ConstructHeader pGraphStyle, graphSize
+   put empty into graphSize
+   put "dot_FromArray" into graphTitle
+   put graph_ConstructDotHeaderArray() into pDotHeaderArray
+   put false into pUseInches
+   put dot_ConstructHeader (graphSize, pDotHeaderArray, pGraphStyle, pUseInches) into dotHeader
+   return dotHeader
+end graph_ConstructHeader
+
+
+--> Graph | Def
+-
+function graph_ConstructDefSection nodeIdArray
+   put graph_ConstructGroupStyleArray (nodeIdArray) into dotGroupStyleArray
+   put dot_ConstructDefSection (dotGroupStyleArray, nodeIdArray) into defSection
+   return defSection
+end graph_ConstructDefSection
+
+function dot_RandomColour
+   put colour_GetRandom() into rColour
+   put colour_RgbToHex (rColour) into hColour
+   return hColour
+end dot_RandomColour
+
+function graph_ConstructGroupStyleArray nodeIdArray
+   local dotGroupStyleArray
+   
+   linkarray_ExtractRandomNodes nodeIdArray, 9
+   put the result into nodeIDs
+   if nodeIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Friends", nodeIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://google.com"
+   end if
+   
+   linkarray_ExtractRandomNodes nodeIdArray, 21
+   put the result into nodeIDs
+   if nodeIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Enemies", nodeIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://example.com"
+   end if
+   
+   linkarray_ExtractRandomNodes nodeIdArray, 12
+   put the result into nodeIDs
+   if nodeIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Bots", nodeIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://google.com"
+   end if
+   
+   put keys (nodeIdArray) into remainingIDs
+   if remainingIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Aliens", remainingIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://google.com"
+   end if
+   
+   return dotGroupStyleArray
+end graph_ConstructGroupStyleArray
+
+command linkarray_ExtractRandomNodes @nodeIdArray, someNumber
+   repeat someNumber
+      if nodeIdArray is not an array then exit repeat
+      put keys (nodeIdArray) into nodeKeys
+      put the number of lines of nodeKeys into maxNum
+      put random (maxNum) into lineNum
+      put line lineNum of nodeKeys into nodeID
+      put nodeID & comma after nodeIDs
+      delete variable nodeIdArray [nodeID]
+   end repeat
+   delete char -1 of nodeIDs
+   return nodeIDs
+end linkarray_ExtractRandomNodes
+
+command graph_AddToGroupStyleArray @dotGroupStyleArray, nodeType, nodeIDs, someColour, someFillcolor, nodeUrl, nodeIdArray
+   put nodeIDs into dotGroupStyleArray [nodeType]["nodeIDs"]
+   graph_SetNodeTypeStyle dotGroupStyleArray, nodeType, someColour, someFillcolor, nodeUrl
+end graph_AddToGroupStyleArray
+
+command graph_SetNodeLabel @dotGroupStyleArray, nodeLabel, nodeUrl
+   if nodeLabel is not empty then put nodeLabel into dotGroupStyleArray [nodeType]["node_StyleArray"]["label"]
+   if nodeUrl is not empty then put nodeUrl into dotGroupStyleArray [nodeType]["node_StyleArray"]["URL"]
+end graph_SetNodeLabel
+
+command graph_SetNodeTypeStyle @dotGroupStyleArray, nodeType, someColour, someFillcolor
+   put someColour into dotGroupStyleArray [nodeType]["node_StyleArray"]["color"]
+   if someFillcolor is not empty then
+      put "filled" into dotGroupStyleArray [nodeType]["node_StyleArray"]["style"]
+      put someFillcolor into dotGroupStyleArray [nodeType]["node_StyleArray"]["fillcolor"]
+   end if
+end graph_SetNodeTypeStyle
+
+on graph_SetGroupStyleArray @overlayArray, dotGroupStyleArray
+   put dotGroupStyleArray into overlayArray ["metadata"]["dot_GroupStyleArray"]
+end graph_SetGroupStyleArray
+
+function graph_GetGroupStyleArray overlayArray
+   -- put overlayArray ["data"]["idArray"] into idArray
+   put overlayArray ["metadata"]["dot_GroupStyleArray"] into dotGroupStyleArray
+   return dotGroupStyleArray
+end graph_GetGroupStyleArray
+
+
+--> Graph | Cluster
+-
+function graph_ConstructCluster idArray, linkArray
+   -- seem to be the hack for nested
+   put empty into pGraphNodeType
+   put overlayArray_DotNestedObjectClusters (idArray, linkArray, pGraphNodeType) into clusterSection
+   return clusterSection
+end graph_ConstructCluster
+
+-- function graph_ConstructDotClusters idArray, linkArray, pGraphNodeType
+-- overlayArray_ConstructDotClusters
+-- put overlayData_ConstructDotClusters (objectIDArray, idArray, pNotIfEmpty) -- seems to be a section
+
+
+-- put outline_ToXmlStructure (objectOutline) into structureXml
+-- put hKeyArray_XmlToClusters (structureXml, objectOutline, hIdArray, graphNodeType) into clusterDefs
+
+-- not nested
+-- put overlayArray_ConstructFlatSubCluster dotClusterArray, someObject, idArray
+end graph_ConstructDotClusters
+
+command dot_Flatten dotFile, overlayFlattenNum
+   put dot_UnFlatten (dotFile, overlayFlattenNum) into unFlatDotText
+   if word 1 of unFlatDotText is among the items of "digraph,graph" then
+      file_CreateText unFlatDotText, dotFile
+      return unFlatDotText
+   else
+      return empty
+   end if
+end dot_Flatten

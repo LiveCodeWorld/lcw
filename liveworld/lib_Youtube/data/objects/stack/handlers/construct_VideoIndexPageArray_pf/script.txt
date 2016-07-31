@@ -1,0 +1,29 @@
+private function construct_VideoIndexPageArray orderedSnippetArray, pageTitle, pDirection, pNumbered, pDroppedURL
+   put pageTitle into pageArray ["title"]
+   --
+   put "To import the videos interact with out little sacraficial lambs!" into someHelp
+   put space & "Create your video archive page (you can edit the links for tidier titles if you want)." after someHelp
+   put space & "And then drag the sacrifical lamb to your new page." after someHelp
+   put CR & CR after someHelp
+   put "Once you have created you page, drag and drop the stand-alone link at the bottom of the page onto the transporter." after someHelp
+   fedwiki_AddParagraphToPageArray pageArray, someHelp
+   --
+   put "Here is and index of videos from the playlist" && quote & pageTitle & quote & ":" into firstParagraph
+   fedwiki_AddParagraphToPageArray pageArray, firstParagraph
+   --
+   construct_HtmlIndexArrays orderedSnippetArray, htmlIndex, lookupArray, pDirection, pNumbered
+   fedwiki_AddHtmlToPageArray pageArray, htmlIndex
+   
+   -- construct_MarkdownArrays orderedSnippetArray, markdownLinkIndex, lookupArray, pDirection
+   -- fedwiki_AddMarkdownToPageArray pageArray, markdownLinkIndex
+   
+   -- construct sourceArray
+   put "https://livecode.world/youtube/transportAgain" into transportURL
+   put the milliseconds into dateTransported
+   put "https://github.com/LiveCodeWorld/youtube.lc" into repoURL
+   put fedwiki_ConstructCreateSourceArray (transportURL, pDroppedURL, dateTransported, repoURL) into sourceArray
+   put lookUpArray into sourceArray ["link_dictionary"]
+   
+   put fedwiki_ConstructJournalArray (pageTitle, sourceArray) into pageArray ["journal"]  -- strip journal to minimum
+   return pageArray
+end construct_VideoIndexPageArray

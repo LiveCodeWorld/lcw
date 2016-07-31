@@ -1,0 +1,5 @@
+function fossil_GetWikiText pageTitle, pFolder
+   put "fossil wiki export" && kwote(pageTitle) into someShell
+   fossil_ExecuteShell someShell, pFolder
+   return the result
+end fossil_GetWikiText

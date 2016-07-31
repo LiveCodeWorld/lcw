@@ -1,0 +1,14 @@
+command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMenu, pTitle
+   put empty into pPathFilter
+   put file_ConstructFolderArray (filePaths, pPathFilter, pFolderToStrip) into pathArray
+   if pathArray is not an array then
+      answer "I cannot find this handler anywhere!"
+      exit to top
+   end if
+   
+   put script_CallingObject() into pCommandObject
+   display_Array pathArray, pTitle, pTitleMenu, empty, pMouseDoubleUpHandler, pMouseDoubleUpHandler, pCommandObject
+   put the result into treeWidget
+   set the search_Folder of treeWidget to pFolderToStrip
+   return treeWidget
+end display_Files

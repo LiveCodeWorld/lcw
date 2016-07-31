@@ -1,0 +1,6 @@
+getprop trait_Margin [innerWidth]
+   put 0 into extraInnerMargin
+   -- put item 1 of the margins of me into someMargin
+   -- put _arrowTopFactor() * someMargin into extraInnerMargin
+   return extraInnerMargin
+end trait_Margin

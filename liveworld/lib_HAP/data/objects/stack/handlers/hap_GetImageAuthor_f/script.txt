@@ -1,0 +1,10 @@
+function hap_GetImageAuthor recordArray
+   switch 
+      case recordArray ["artists"]  is not empty
+         return recordArray ["artists"] into tBuf						
+      case recordArray ["photographer"] is not empty
+         return recordArray ["photographer"]
+      default
+         return empty
+   end switch					
+end hap_GetImageAuthor

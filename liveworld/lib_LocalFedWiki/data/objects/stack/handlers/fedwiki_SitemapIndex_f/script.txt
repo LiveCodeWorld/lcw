@@ -1,0 +1,10 @@
+function fedwiki_SitemapIndex sitemapJSON
+   put json_ToArray (sitemapJSON) into sitemapArray
+   repeat for each key indexNum in sitemapArray
+      put sitemapArray [indexNum]["title"] into someTitle
+      put someTitle & CR after someIndex
+   end repeat
+   delete char -1 of someIndex
+   sort someIndex
+   return someIndex
+end fedwiki_SitemapIndex

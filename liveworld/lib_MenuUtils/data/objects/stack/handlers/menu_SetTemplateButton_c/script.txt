@@ -1,0 +1,21 @@
+on menu_SetTemplateButton newMenuName, newMenuItems
+    if newMenuItems is empty then put "Item 1" into newMenuItems
+    
+    -- basic properties    
+    set the name of the templatebutton to newMenuName
+    set the label of the templatebutton to newMenuName
+    set the text of the templatebutton to newMenuItems
+     
+    set the lockloc of the templatebutton to true
+    set the showborder of the templatebutton to false
+    
+    -- set some properties to make the button behave as a menu
+    set the style of the templatebutton to "menu"
+    set the menumode of the templatebutton to "pulldown"
+    set the opaque of the templatebutton to true
+    set the autohilite of the templatebutton to true
+    set the hiliteborder of the templatebutton to true
+    set the armborder of the templatebutton to true
+    set the traversalon of the templatebutton to false
+    set the showborder of the templatebutton to false
+end menu_SetTemplateButton

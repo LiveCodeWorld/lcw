@@ -1,0 +1,16 @@
+getprop dg_TopDataControl
+   -- allows nesting of dgDataControls
+   -- the dgControl can then refer only to the dg_TopDataControl's to do it's thing
+   put the long id of me into topRecordView
+   repeat
+      put topRecordView into nextRecordView
+      delete word 1 to 4 of nextRecordView
+      put the dgDataControl of nextRecordView into nextRecordView
+      if nextRecordView is empty then
+         -- put the mobile_Name of topRecordView into topRecordView
+         return topRecordView
+      end if
+      put nextRecordView into topRecordView
+   end repeat
+   return empty
+end dg_TopDataControl

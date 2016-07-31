@@ -1,0 +1,10 @@
+command overlayArray_ConstructDataArray @dataArray, linkArray
+   linkArray_IdConstruct linkArray, idLinkArray, idArray
+   
+   put linkArray into dataArray ["linkArray"]
+   put idLinkArray into dataArray ["idLinkArray"]
+   put idArray into dataArray ["idArray"]
+   
+   put array_ConstructReverseDictionary (idArray) into reversedIdArray
+   put reversedIdArray into dataArray ["reverseIdArray"]
+end overlayArray_ConstructDataArray

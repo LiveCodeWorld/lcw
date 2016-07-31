@@ -1,0 +1,18 @@
+command hArray_SetHkeyDifferences hKey, @identicalHkeys, @anotherHashArray
+   global gHkey_Array
+   
+   put item 1 to 2 of hKey into shortHkey 
+   put gHkey_Array ["handlerArray"][shortHkey] into hKeyArray
+   put hKeyArray [hKey]["handlerHash"] into handlerHash
+   
+   repeat for each key anotherHkey in hKeyArray
+      put hKeyArray [anotherHkey]["handlerHash"] into anotherHash
+      if anotherHash = handlerHash then
+         put anotherHkey & CR after identicalHkeys
+      else
+         put anotherHkey & CR after differentHkeys
+         put hKey into anotherHashArray [anotherHash][anotherHkey]
+      end if
+   end repeat
+   delete char -1 of identicalHkeys
+end hArray_SetHkeyDifferences

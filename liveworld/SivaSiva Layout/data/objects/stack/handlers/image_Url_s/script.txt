@@ -1,0 +1,17 @@
+setprop image_Url  imageURL
+   put the card_Object of  the target into cardObject
+   put the short id of cardObject into cardID
+   
+   put the image_View of the target into imageView
+   set the filename of imageView to imageURL
+   
+   put the short name of cardObject into cardName
+   put the short name of imageView into imageName
+   
+   put the data_Array of me into dataArray
+   put imageURL into dataArray [cardID]["imageURL"]
+   put cardName into dataArray [cardID]["cardName"]
+   put imageName into dataArray [cardID]["imageName"]
+   set the data_Array of me to dataArray
+   return dataArray
+end image_Url

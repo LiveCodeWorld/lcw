@@ -1,0 +1,7 @@
+function digitalOcean_ListAllDomainNames pDomainInfoArray
+   put digitalOcean_GetDnsDictionary (pDomainInfoArray) into dnsDictionary
+   put keys (dnsDictionary) into allDomainNames
+   set the itemdelimiter to "."
+   sort allDomainNames by item -2 of each & item -3  of each & item -1 of each
+   return allDomainNames
+end digitalOcean_ListAllDomainNames

@@ -1,0 +1,9 @@
+command object_BringToFront someObject, containerGroup
+   lock screen
+   put the short ID of someObject into someID
+   
+   start editing containerGroup
+   set the layer of control ID someID to top
+   stop editing
+   unlock screen
+end object_BringToFront

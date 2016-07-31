@@ -1,0 +1,40 @@
+function project_ConstructHkeyArray hArray, pDepObject, pSetName
+   -- non-recursive version
+   local hkeyArray
+   
+   if exists (pDepObject) then
+      put revRuggedID (pDepObject) into pDepObject
+      hArray_RemoveObjectFromArray pDepObject, hArray 
+   end if
+   put hArray ["scriptArray"] into objectArray
+   
+   repeat for each key rObject in objectArray
+      put objectArray [rObject] into scriptObjectArray
+      put scriptObjectArray ["data"]["firstHkeyArray"] into firstHkeyArray
+      
+      repeat for each key firstShortHkey in firstHkeyArray
+         set the cursor to busy
+         if firstShortHkey = "_,c" then next repeat -- could check handler is empty
+         
+         put firstShortHkey,rObject,1 into hKey
+         put empty into hkeyArray [hKey]
+         
+         put hArray_GetShortCalls (hKey, hArray) into shortCalls
+         repeat for each line shortHkey in shortCalls
+            set the cursor to busy
+            put hArray_FindHkeyInHierarchy (shortHkey, rObject, hArray, pSetName) into hkeyCall
+            if hkeyCall is empty then
+               -- put hArray_FindHkeyInHierarchy (shortHkey, rObject, empty, pSetName) into hkeyCall
+               put hkey_FindInHierarchy (shortHKey, rObject, pSetName) into hkeyCall
+               if hkeyCall is empty then
+                  put shortHkey,"missing",1 into hkeyCall
+               end if
+            end if
+            put empty into hkeyArray [hKey][hkeyCall]
+         end repeat
+      end repeat
+   end repeat
+   
+   array_StripDeeperLevels hkeyArray
+   return hkeyArray
+end project_ConstructHkeyArray

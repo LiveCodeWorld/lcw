@@ -1,0 +1,5 @@
+getprop body_MinimumHeight
+   put the back_Property ["body_MinimumHeight"] of me into someHeight
+   if someHeight is empty then return 40
+   return someHeight
+end body_MinimumHeight

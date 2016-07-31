@@ -1,0 +1,14 @@
+function folder_ListShortLivecodeFiles someFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      if item -1 of shortFile is among the items of "lc.livecode.livecodescript.rev.mc" then
+         put shortFile & CR after shortStackFiles
+      end if
+   end repeat
+   delete char -1 of shortStackFiles
+   set the defaultfolder to oFolder
+   return shortStackFiles
+end folder_ListShortLivecodeFiles

@@ -1,0 +1,5 @@
+function gist_FetchArray gistID
+   put gist_FetchJson (gistID) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end gist_FetchArray

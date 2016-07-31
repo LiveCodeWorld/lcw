@@ -1,0 +1,6 @@
+function request_ConstructHeaderArray requestArray
+   -- If-None-Match: "686897696a7c876b7e"
+   put requestArray ["receivedheaders"] into receivedHeaders
+   put daemon_ConstructHeaderArray (receivedHeaders) into headerArray
+   return headerArray 
+end request_ConstructHeaderArray

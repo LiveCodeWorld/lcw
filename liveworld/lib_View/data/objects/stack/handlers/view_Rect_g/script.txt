@@ -1,0 +1,8 @@
+getprop view_Rect
+   -- a simple default (override locally)
+   if word 1 of the target is among the items of "field,button,image,player,graphic,scrollbar" then
+      return the rect of the target
+   else
+      return empty
+   end if
+end view_Rect

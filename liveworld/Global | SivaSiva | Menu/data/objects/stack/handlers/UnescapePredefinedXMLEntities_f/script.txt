@@ -1,0 +1,9 @@
+function UnescapePredefinedXMLEntities pStr
+    replace "&amp;" with "&" in pStr
+    replace "&lt;" with "<" in pStr
+    replace "&gt;" with ">" in pStr
+    replace "&apos;" with "'" in pStr
+    replace "&quot;" with quote in pStr
+    
+    return pStr
+end UnescapePredefinedXMLEntities

@@ -1,0 +1,25 @@
+function script_ExtractCaseConditions someHandler, pSwitchParams
+   -- should be renamed "handler_ExtractCaseConditions"
+   put script_ExtractSwitchSection (someHandler, pSwitchParams) into caseSection
+   if caseSection is empty then return empty
+   
+   filter caseSection with ("*case *")
+   -- filter caseSection with ("*case" && quote & "*")
+   put empty into caseConditions
+   repeat for each line caseLine in caseSection
+      if word 1 of caseLine is not among the items of "case,default" then next repeat
+      get text_ExtractQuoted(caseLine)
+      if it is not empty then put it & CR after caseConditions
+   end repeat
+   replace comma with CR in caseConditions
+   
+   /*
+   -- optional second filter
+   filter someHandler with ("*default *--")
+   put text_ExtractQuoted(line -1 of someHandler) into defaultText
+   if defaultText is not empty then put defaultText & CR after caseConditions
+   */
+   
+   put word 1 to -1 of caseConditions into caseConditions
+   return caseConditions
+end script_ExtractCaseConditions

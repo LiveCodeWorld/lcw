@@ -1,0 +1,10 @@
+getprop stack_Faded
+    put the stack_Object of the target into stackObject
+    if the blendlevel of stackObject > 95 then
+        return true
+    else if the blendlevel of stackObject < 5 then
+        return false
+    else
+        return empty
+    end if
+end stack_Faded

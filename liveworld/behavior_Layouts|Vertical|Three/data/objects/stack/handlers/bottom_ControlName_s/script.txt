@@ -1,0 +1,11 @@
+setprop bottom_ControlName bottomName
+   put the long id of me into layoutView
+   
+   put the top_Control [bottomName] of layoutView into someControl
+   if exists (someControl) is false then return empty
+   
+   relayer someControl to front of layoutView
+   dispatch "LayoutControl" to layoutView
+   
+   return someControl
+end bottom_ControlName

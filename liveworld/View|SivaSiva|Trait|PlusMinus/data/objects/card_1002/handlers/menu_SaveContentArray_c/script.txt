@@ -1,0 +1,9 @@
+on menu_SaveContentArray
+   put sivasiva_GetXML() into someXml
+   put sivasiva_ExtractDivs (someXml) into bookArray
+   
+   sivasiva_SaveBookArray bookArray
+   
+   put sivasiva_FetchBookArray() into bookArray
+   display_Array bookArray, "SivaSiva"
+end menu_SaveContentArray

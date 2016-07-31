@@ -1,0 +1,21 @@
+on menu_FindLibraryHandler mTarget, findWhat
+   put _getSelectedText (findWhat) into textToFind
+   
+   -- let's look in handler library folder
+   put library_HandlerFolder() into findInsideFolder
+   put spotlight_Find (textToFind, findInsideFolder) into filePaths
+   
+   -- sort filePaths
+   put file_ConstructFolderArray (filePaths, "*/script.txt", findInsideFolder) into pathArray
+   if pathArray is not an array then
+      answer "I cannot find this handler anywhere!"
+      exit to top
+   end if
+   
+   put merge ("Files with hKey '[[textToFind]]") into someTitle
+   display_Array pathArray, someTitle, titleMenu, lineMenu, "launchFile", "launchFile"
+   put the result into treeWidget
+   
+   set the search_Folder of treeWidget to findInsideFolder
+   set the search_Text of treeWidget to textToFind
+end menu_FindLibraryHandler

@@ -1,0 +1,10 @@
+function dot_ConvertToXml dotFile, pOutputFile
+   put "gv2gxl" into someShell
+   shell_BashParamEscape dotFile
+   put space && dotFile after someShell
+   if pOutputFile is not empty then
+      put "-o" & pOutputFile after someShell -- single space I think
+   end if
+   put git_ExecuteShellCommand (someShell) into shellResult
+   return shellResult
+end dot_ConvertToXml

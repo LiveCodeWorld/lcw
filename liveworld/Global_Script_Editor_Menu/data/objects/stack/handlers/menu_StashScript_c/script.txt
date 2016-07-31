@@ -1,0 +1,10 @@
+on menu_StashScript scriptObject
+   global gTemp_Stash
+   
+   put the script of scriptObject into someScript
+   put the tempname & ".txt" into stashFile
+   put someScript into url ("binfile:" & stashFile)
+   
+   put revRuggedID (scriptObject) into scriptObject
+   put stashFile into gTemp_Stash ["scripts"][scriptObject]["stashFile"]
+end menu_StashScript

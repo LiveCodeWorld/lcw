@@ -1,0 +1,25 @@
+function hkey_ConstructPropertyCall linkCall, linkName, linkType, linkObject, linkNum, someHandler
+   -- total hack !!!
+   put script_GetPropertyTarget (linkName, someHandler, someObject) into propertyTarget
+   if exists (propertyTarget) is false then
+      put "script_GetPropertyTarget" && linkName & "," && someObject into someError
+      opn_Notify someError, true
+      put someObject into propertyTarget -- total hack !!!
+   end if
+   
+   -- now find property linkName in the hkey_SearchHierarchy of propertyTarget
+   put hkey_Construct (linkName, linkType, propertyTarget, linkNum) into testKey
+   put the hkey_InHierarchy [testKey] of propertyTarget into propertyHandlerObject
+   
+   if exists (propertyHandlerObject) is false then
+      -- it is a plain custom property
+      put propertyTarget into propertyHandlerObject 
+      put "Custom property of" && propertyHandlerObject into missingPropertyCall
+      put hkey_Construct (linkName, linkType, missingPropertyCall, linkNum) into linkCall
+   else
+      -- we have found a custom property handler in the hierarchy
+      -- not sure how but should mark property as plain custom property (not handled by a custom handler)
+      put hkey_Construct (linkName, linkType, propertyHandlerObject, linkNum) into linkCall
+   end if
+   return linkCall
+end hkey_ConstructPropertyCall

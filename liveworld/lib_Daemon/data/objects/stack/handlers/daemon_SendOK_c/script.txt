@@ -1,0 +1,10 @@
+command daemon_SendOK socketOrRequestArray, contentToSend, pContentType, pCookieName, pCookieValue
+   -- sends output back to the browser
+   if socketorRequestArray is an array then
+      put socketorRequestArray ["socketID"] into socketID
+   else
+      put socketorRequestArray into socketID
+   end if
+   put _okHeaders (pContentType, pCookieName, pCookieValue) into someHeader
+   daemon_SendAndCloseSocket someHeader, contentToSend, socketID
+end daemon_SendOK

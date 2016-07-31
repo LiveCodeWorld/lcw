@@ -1,0 +1,15 @@
+command linkArray_ConstructIdArray linkArray, @allKeys, @idArray, @backIdArray, @nodeIDs
+   repeat for each key someKey in linkArray
+      line_Add someKey, allKeys
+      linkArray_ConstructSimpleKey someKey, idArray, backIdArray, true
+      put linkArray [someKey] into someLinks
+      line_Add someLinks, allKeys
+      repeat for each line someLink in someLinks
+         linkArray_ConstructSimpleKey someLink, idArray, backIdArray, true
+      end repeat
+   end repeat
+   put keys(idArray) into nodeIDs
+   sort numeric nodeIDs
+   sort allKeys
+   return nodeIDs
+end linkArray_ConstructIdArray

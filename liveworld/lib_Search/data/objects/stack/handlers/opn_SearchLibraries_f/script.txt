@@ -1,0 +1,6 @@
+function opn_SearchLibraries
+   local objectIndex
+   put "All" into pSetName
+   put library_ListUsedStacks (pSetName) after objectIndex
+   return objectIndex
+end opn_SearchLibraries

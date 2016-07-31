@@ -1,0 +1,8 @@
+function menu_ConstructPluginArray targetObject, modifierKey, gMenuTitle, pObjectTestProp, pPassMouseDown, pBeforeLineNum
+   put menu_ConstructPluginRecord (targetObject, modifierKey, gMenuTitle, pObjectTestProp, pPassMouseDown, pBeforeLineNum) into mPluginArray [1]  -- now set plugin (not add)
+   
+   if pObjectTestProp is empty then put "main_Name" into pObjectTestProp -- use main_Name as default as this is what is needed by revScriptEditor and faster to have only one prop to search
+   put the pObjectTestProp of targetObject into objectRefValue
+   put mPluginArray into theMenuArray [modifierKey][pObjectTestProp][objectRefValue]      
+   return theMenuArray
+end menu_ConstructPluginArray

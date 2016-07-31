@@ -1,0 +1,12 @@
+function stackData_GetFolder someObject, stackName, mainStackName, pDontCreate
+   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
+   put folder_AddStackBit ("data", textStackFolder, someObject) into stackDataFolder
+   
+   if stackName = mainStackName then
+      put textStackFolder & "data/" into stackDataFolder
+   else
+      put textStackFolder & "data/objects/substacks/" & stackName & "/" into stackDataFolder
+   end if
+   if pDontCreate is false then folder_CreateNested stackDataFolder
+   return stackDataFolder
+end stackData_GetFolder

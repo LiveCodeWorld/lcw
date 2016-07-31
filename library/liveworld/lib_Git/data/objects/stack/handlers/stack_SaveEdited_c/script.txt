@@ -1,0 +1,11 @@
+command stack_SaveEdited pType, pDisplayObject
+   put rev_ListEditedStackNames() into stackNames
+   repeat for each line stackName in stackNames
+      set the cursor to busy
+      _DisplayStackSave stackName, pDisplayObject
+      put the result into stackObject
+      if stackObject is empty then next repeat
+      
+      stack_Save stackObject
+   end repeat
+end stack_SaveEdited

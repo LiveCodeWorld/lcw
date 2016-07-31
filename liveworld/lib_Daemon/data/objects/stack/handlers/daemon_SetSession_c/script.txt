@@ -1,0 +1,10 @@
+command daemon_SetSession socketID, someReply, pContentType
+   -- Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GM
+   -- put true into SessionArray
+   
+   get "IHqOSrK5HDQ7rFiarE1KcQ.EqHAy6x1nZ4z80ClyyMVivHNqfs4zhkNRoFqMbe6DlBkBAI3aRAtseJGHO7qcaqE.1438105299038.86400000.UzvAUVkRttrGikzPDllFJG4iNgURB4cVMqkr_rBR4EU"
+   put it into theSessionID
+   put _okHeaders (pContentType, "session", theSessionID) into someHeader
+   daemon_Send someHeader, someReply, socketID
+   return the result
+end daemon_SetSession

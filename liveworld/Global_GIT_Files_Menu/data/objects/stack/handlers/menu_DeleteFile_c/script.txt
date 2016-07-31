@@ -1,0 +1,9 @@
+on menu_DeleteFile
+   answer file "Choose a file to delete..."
+   put it into someFile
+   if someFile is empty then return false 
+   
+   put false into pForce
+   git_DeleteFile someFile, pForce
+   git_RefreshDisplay
+end menu_DeleteFile

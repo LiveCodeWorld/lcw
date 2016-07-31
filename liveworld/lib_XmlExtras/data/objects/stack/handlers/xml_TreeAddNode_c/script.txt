@@ -1,0 +1,23 @@
+on xml_TreeAddNode someNode, nodeContents, treeID
+    revPutIntoXMLNode treeID, someNode, nodeContents
+    put the result into theResult
+    if char 1 to 6 of theResult is "xmlerr" then
+        set the itemdelimiter to "/"
+        repeat with itemNum = 2 to (the number of items of someNode - 1)
+            put item 1 to itemNum of someNode into parentPath
+            
+            -- if there is a node parentPath
+            put revXMLNodeContents(treeID, parentPath) into testError
+            if char 1 to 6 of testError is "xmlerr" then
+                -- lets add an empty node
+                put item -1 of parentPath into nodeName
+                put item 1 to -2 of parentPath into baseNode
+                revAddXMLNode treeID, baseNode, nodeName, empty
+            end if
+        end repeat
+        put item -1 of someNode into nodeName
+        put item 1 to -2 of someNode into parentPath
+        revAddXMLNode treeID, parentPath, nodeName, nodeContents
+    end if
+    return the result
+end xml_TreeAddNode

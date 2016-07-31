@@ -1,0 +1,19 @@
+command text_PListEscape @someText
+    /*
+    \ a backslash character
+    " a quote character
+    b a backspace character
+    n a newline character
+    r a carriage return character
+    t a tab character
+    OOO (three octal digits) an arbitrary ascii character
+    UXXXX (where X is a hexadecimal digit) a an arbitrary unicode character
+    */
+    
+    replace "\" with "\\" in someText
+    replace quote with ("\" & quote) in someText
+    replace numtochar(8) with ("\b") in someText
+    replace numtochar(10) with ("\n") in someText
+    replace numtochar(13) with ("\r") in someText
+    replace tab with ("\t") in someText
+end text_PListEscape

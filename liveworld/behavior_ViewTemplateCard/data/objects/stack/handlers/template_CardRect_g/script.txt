@@ -1,0 +1,10 @@
+getprop template_CardRect [pMargin]
+   if pMargin is empty then
+      put the card_Margin of me into pMargin
+   end if
+   put the rect of me into someRect
+   if pMargin is not 0 then
+      rect_SubtractMargins someRect, pMargin
+   end if
+   return someRect
+end template_CardRect

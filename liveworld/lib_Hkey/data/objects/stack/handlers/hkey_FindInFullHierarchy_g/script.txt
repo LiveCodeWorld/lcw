@@ -1,0 +1,19 @@
+getprop hkey_FindInFullHierarchy [shortHkey]
+   -- was "script_FindInFullHierarchy"
+   /*
+   It includes front scripts and the object itself should it contain the call.
+   Currently it ignores Rev development environment.
+   */
+   if the number of items of shortHkey = 2 then
+      put item 1 of shortHkey into handlerName
+      put item 2 of shortHkey into handlerType
+      put the long id of the target into scriptObject
+      put hkey_Construct (handlerName, handlerType, scriptObject) into hKey
+   else
+      put shortHkey into hKey
+   end if
+   
+   put the hkey_SearchHierarchy of the target into scriptHierarchy
+   put hkey_SearchObjectHierarchy (hKey, scriptHierarchy) into foundHkey
+   return foundHkey
+end hkey_FindInFullHierarchy

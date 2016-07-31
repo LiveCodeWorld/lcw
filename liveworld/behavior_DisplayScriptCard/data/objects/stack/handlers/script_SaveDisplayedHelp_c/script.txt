@@ -1,0 +1,12 @@
+command script_SaveDisplayedHelp
+   put the scriptLibrary_Card of me into scriptLibraryCard
+   put the displayed_Object of scriptLibraryCard into displayedObject
+   if exists (displayedObject) is false then
+      opn_Notify "Error with script_SaveDisplayedHelp!", true
+      return empty
+   end if
+   
+   put the displayed_Description of scriptLibraryCard into displayedHelp
+   set the script_Help of displayedObject to displayedHelp
+   return displayedHelp
+end script_SaveDisplayedHelp

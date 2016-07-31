@@ -1,0 +1,15 @@
+on menu_FindProjectHandler mTarget, findWhat
+   put _getSelectedText (findWhat) into textToFind
+   
+   local findInsideFolder -- let's look everywhere
+   -- put project_HandlerFolder() into findInsideFolder -- let's look in handler any project folder
+   put spotlight_Find (textToFind, findInsideFolder) into filePaths
+   
+   put "Global | Hkey | Send | Menu" into titleMenu
+   put merge ("Files with hKey '[[item 1 of textToFind]]'") into someTitle
+   display_Files filePaths, findInsideFolder, "launchFile", titleMenu, someTitle
+   -- filePaths,"*/script.txt", fads 
+   
+   -- set the search_Folder of treeWidget to findInsideFolder
+   set the search_Text of treeWidget to textToFind
+end menu_FindProjectHandler

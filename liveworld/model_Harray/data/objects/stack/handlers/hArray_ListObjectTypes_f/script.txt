@@ -1,0 +1,4 @@
+function hArray_ListObjectTypes
+   put hArray_GetObjectTypeData() into objectTypeArray
+   return keys (objectTypeArray)
+end hArray_ListObjectTypes

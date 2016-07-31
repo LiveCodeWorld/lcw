@@ -1,0 +1,5 @@
+command localhost_SavePng somePNG, shortFile
+    put localhost_ConstructImagePath (shortFile) into imageFile
+   put somePNG into url ("binfile:" & imageFile)
+   return imageFile
+end localhost_SavePng

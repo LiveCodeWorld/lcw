@@ -1,0 +1,12 @@
+function lcw_MapDictionary
+   local mapDictionary
+   
+   dictionary_Map mapDictionary, "Model Stacks", "Model"
+   dictionary_Map mapDictionary, "Views", "View"
+   dictionary_Map mapDictionary, "Menus", "Controller"
+   dictionary_Map mapDictionary, "Named Behaviors", "Behavior"
+   dictionary_Map mapDictionary, "Script Only Libs", "Library"
+   dictionary_Map mapDictionary, "Library Stacks", "Livecode Library Stacks"
+   
+   return mapDictionary
+end lcw_MapDictionary

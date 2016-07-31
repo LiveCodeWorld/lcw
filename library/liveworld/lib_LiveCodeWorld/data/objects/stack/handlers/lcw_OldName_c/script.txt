@@ -1,0 +1,9 @@
+command lcw_OldName @folderName
+   /*
+   This hack translate old ugly foler names to the new ones.
+   We should look to rename the oln data structures, but for now this hack gives us an api
+   */
+   put lcw_ReverseDictionary() into mapDictionary
+   get mapDictionary [folderName]
+   if it is not empty then put it into folderName
+end lcw_OldName

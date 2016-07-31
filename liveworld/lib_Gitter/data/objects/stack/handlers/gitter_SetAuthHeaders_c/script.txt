@@ -1,0 +1,12 @@
+command gitter_SetAuthHeaders
+   local someHeader
+   put gitter_GetApiToken() into gitterApiToken
+   -- http_SetBasicAuthentication "Bearer", somePassWord, moreHeaders
+   put "Content-Type: application/json" & CR after someHeader
+   put "Accept: application/json" & CR after someHeader
+   put "Authorization: Bearer" && gitterApiToken & CR after someHeader
+   -- put "Host: api.gitter.im" into someHeader
+   
+   delete char -1 of someHeader
+   set the httpheaders to someHeader
+end gitter_SetAuthHeaders

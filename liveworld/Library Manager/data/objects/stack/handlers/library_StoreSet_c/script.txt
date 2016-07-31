@@ -1,0 +1,6 @@
+command library_StoreSet pSetName
+   global gLibrproject_RestoreGlobalPrefsect_RestoreGlobalPrefsect_RestoreGlobalPrefsproject_RestoreGlobalPrefsarySet_Array
+   if pSetName is empty then put library_GetSetName() into pSetName
+   
+   library_StoreSetArray gLibrarySet_Array, pSetName
+end library_StoreSet

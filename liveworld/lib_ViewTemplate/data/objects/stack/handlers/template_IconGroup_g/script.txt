@@ -1,0 +1,13 @@
+getprop template_IconGroup
+   if word 1 of the target = "stack" then
+      put the short name of the target into vName
+      set the wholematches to true
+      if vName is not among the lines of view_TemplateNames() then
+         return empty
+      end if
+   else
+      put the view_Name of the target into vName
+   end if
+   put view_FindTemplateIconGroup (vName) into templateIconGroup
+   return templateIconGroup
+end template_IconGroup

@@ -1,0 +1,18 @@
+function hkey_ConstructIntersectArray kWords
+   -- was "script_SearchDatabase"
+   local allLinkedKeys
+   
+   put library_FetchHandlerDatabaseArray() into dbArray
+   put dbArray ["keywordIndex"] into keywordArray
+   put dbArray ["handlerNameIndex"] into handlerIndexArray
+   
+   put kWords into intersectArray ["ordered keywords"]
+   put 1 into interSectNum
+   repeat for each line kWord in kWords
+      put keywordArray [kWord] into linkedHkeys 
+      put linkedHkeys into intersectArray ["handler keyword"][kWord]
+      line_Add linkedHkeys, allLinkedKeys
+   end repeat
+   put allLinkedKeys into intersectArray ["all keyword links"]
+   return intersectArray
+end hkey_ConstructIntersectArray

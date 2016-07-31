@@ -1,0 +1,9 @@
+function array_GetSortByNumber someArray
+    combine someArray by CR and comma
+    sort someArray descending numeric by item 2 of each
+     
+    set the columndelimiter to comma
+    split someArray by column
+    put someArray [1] into sortedKeys
+    return sortedKeys
+end array_GetSortByNumber

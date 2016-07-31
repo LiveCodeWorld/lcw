@@ -1,0 +1,5 @@
+function node_GetModulesFolder
+   put line 1 of shell ("npm root -g") & "/" into nodeModulesFolder
+   if there is not a folder nodeModulesFolder then return empty
+   return nodeModulesFolder
+end node_GetModulesFolder

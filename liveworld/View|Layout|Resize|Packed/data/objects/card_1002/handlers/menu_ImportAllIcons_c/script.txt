@@ -1,0 +1,7 @@
+on menu_ImportAllIcons mTarget
+   put the icon_Images of mTarget into imageObjects
+   repeat for each line imageObject in imageObjects
+      set the cursor to busy
+      image_ImportFileData imageObject
+   end repeat
+end menu_ImportAllIcons

@@ -1,0 +1,5 @@
+on html_Deconstruct someHTML, @someHeader, @someBody, @someTitle
+    put html_ExtractHeader(someHTML) into someHeader
+    put xml_GetTagContents("title", someHeader) into someTitle
+    put html_ExtractBody(someHTML) into someBody
+end html_Deconstruct

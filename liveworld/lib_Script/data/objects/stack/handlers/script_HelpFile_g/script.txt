@@ -1,0 +1,6 @@
+getprop script_HelpFile [pDontCreate]
+   put the long id of the target into scriptObject
+   put the object_MetaDataFolder [pDontCreate] of scriptObject into metadataFolder
+   put metadataFolder & "help.html" into someFile
+   return someFile
+end script_HelpFile

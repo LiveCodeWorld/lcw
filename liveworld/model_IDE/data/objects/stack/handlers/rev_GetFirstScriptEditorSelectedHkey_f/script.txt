@@ -1,0 +1,11 @@
+function rev_GetFirstScriptEditorSelectedHkey
+   put rev_GetHandlerTreeSelectedInfo() into hInfo
+   put word 2 of hInfo into hName
+   put word 1 of hInfo into hType
+   if hType = "M" then put "c" into hType
+   put toLower(hType) into hType
+   put rev_ScriptObject() into hObject
+   
+   put hName,hType,hObject,1 into hKey
+   return hKey
+end rev_GetFirstScriptEditorSelectedHkey

@@ -1,0 +1,8 @@
+getprop stack_Resizable
+    put the stack_Object of the target into stackObject
+    if exists(stackObject) then
+        return the resizable of stackObject
+    else
+        return false
+    end if
+end stack_Resizable

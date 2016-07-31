@@ -1,0 +1,16 @@
+function rev_TopScriptEditor
+   put the stack_Name of the target into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else 
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      -- opn_Notify stackNames, true
+      if stackNames is empty then return empty
+      put line 1 of stackNames into stackName
+      if exists(stack stackName) is false then
+         put the stack_Name of the target into stackName
+      end if
+      return the long id of stack stackName
+   end if
+end rev_TopScriptEditor

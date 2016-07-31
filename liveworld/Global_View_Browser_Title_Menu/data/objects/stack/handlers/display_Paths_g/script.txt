@@ -1,0 +1,5 @@
+getprop display_Paths
+   put view_PathIndex() into pathIndex
+   put outline_FirstColumnFromPathIndex (pathIndex, "|") into rootIndex
+   return "All,-," & rootIndex
+end display_Paths

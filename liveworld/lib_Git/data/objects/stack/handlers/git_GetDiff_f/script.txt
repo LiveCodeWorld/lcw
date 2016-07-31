@@ -1,0 +1,24 @@
+function git_GetDiff someFile, pStripGitHeaders
+   /*
+   I use to git diff to generate patches that can be applied to remote server to update a project.
+   Locally, I run:
+   *    git diff --no-prefix HEAD~1 HEAD > example.patch
+   Upload example.patch to remote server and run:
+   *    patch --dry-run -p0 < example.patch
+   If dry-run is successful, I run:
+   *    patch -p0 < example.patch
+   */
+   
+   put "git diff" into someShell
+   put space & "-u" after someShell
+   if pStripGitHeaders is true then put space & "--no-prefix" after someShell
+   -- put space & "--text" after someShell  -- Treat all files as text.
+   -- put space & "--ignore-space-at-eol" after someShell
+   
+   git_SetRelativePath someFile
+   put space & someFile after someShell
+   
+   put git_ExecuteShellCommand (someShell) into shellResult
+   -- text_UnixToMac shellResult
+   return shellResult
+end git_GetDiff

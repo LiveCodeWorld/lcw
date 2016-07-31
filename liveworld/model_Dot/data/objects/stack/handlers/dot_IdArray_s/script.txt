@@ -1,0 +1,7 @@
+setprop dot_IdArray [pOverlayName] idArray
+   put the dot_DataArray [pOverlayName] of the target into dataArray
+   put idArray into dataArray ["idArray"]
+   put array_ConstructReverseDictionary (idArray) into dataArray ["reverseIdArray"]  -- lets also set the reverse lookup
+   set the dot_DataArray [pOverlayName] of the target to dataArray
+   return dataArray
+end dot_IdArray

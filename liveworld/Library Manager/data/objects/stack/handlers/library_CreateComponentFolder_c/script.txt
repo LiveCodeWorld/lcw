@@ -1,0 +1,6 @@
+command library_CreateComponentFolder vName
+   put revEnvironmentUserPluginsPath() & "/Livecode Components/" & vName & "/" into componentFolder
+   put rev_FixPath (componentFolder) into componentFolder
+   folder_CreateNested componentFolder
+   return componentFolder
+end library_CreateComponentFolder

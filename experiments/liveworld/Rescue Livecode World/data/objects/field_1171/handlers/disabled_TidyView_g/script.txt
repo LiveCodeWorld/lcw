@@ -1,0 +1,9 @@
+getprop disabled_TidyView [selectedViewStackObject]
+   put the template_View of cd 1 of selectedViewStackObject into templateView   
+   if exists (templateView) is false then return true
+   
+   put the urip_Type of selectedViewStackObject into uripType
+   put uripType = "view template" into isTemplate
+   put the disabled_SetBehavior [selectedViewStackObject] of me into behaviorSet
+   return behaviorSet and isTemplate
+end disabled_TidyView

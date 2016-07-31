@@ -1,0 +1,30 @@
+function script_GetReverseLinkKeys handlerKey, someScript
+    -- just inside the script
+    -- could also look at objects below in hierarchy later
+    -- so use a general technique
+    
+    local reverseKeys, graphData, uArray, dArray
+    
+    script_ConstructHandlerArrays someScript, graphData, uArray, dArray
+    put keys(uArray) into allKeys
+    put allKeys into otherKeys
+    line_Delete handlerKey, otherKeys
+     
+    set the wholematches to true
+    repeat for each line otherKey in otherKeys
+        set the cursor to busy
+        put item 1 of otherkey into otherName
+        put item 2 of otherkey into otherType
+        if otherName is "_" then next repeat
+        put kwote(otherKey) into someNode
+        
+        put script_ExtractHandlerType(otherName, someScript, otherType) into otherHandler
+        put script_ExtractCalls(otherHandler) into otherCalls
+        
+        if otherKey is among the lines of otherCalls then
+            put otherKey & CR after reverseKeys
+        end if
+    end repeat
+    delete last char of reverseKeys
+    return reverseKeys
+end script_GetReverseLinkKeys

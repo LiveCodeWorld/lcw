@@ -1,0 +1,7 @@
+setprop view_Data [someKey] someData
+   if someKey is empty then
+      put someData into LocalArray ["view_Data"]
+   else   
+      put someData into LocalArray ["view_Data"][someKey]
+   end if
+end view_Data

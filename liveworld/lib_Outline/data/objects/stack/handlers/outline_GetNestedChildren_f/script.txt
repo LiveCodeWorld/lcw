@@ -1,0 +1,10 @@
+function outline_GetNestedChildren thisNode, tabbedOutline
+    -- version original,3/3/03
+    -- a domain_OutlineSection is children and all their nested children of a node
+    -- could be called get_NestedChildren
+     
+    outline_SetChildrenOffsets thisNode, first_OsLine, last_OsLine, tabbedOutline
+    put outline_TabLevel(line thisNode of tabbedOutline) + 1 into domainTabLevel
+    put line first_OsLine to last_OsLine of tabbedOutline into osSection
+    return osSection
+end outline_GetNestedChildren

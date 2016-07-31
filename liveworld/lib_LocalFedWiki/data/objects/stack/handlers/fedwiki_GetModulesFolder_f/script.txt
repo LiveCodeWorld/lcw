@@ -1,0 +1,10 @@
+function fedwiki_GetModulesFolder
+   -- it's inside the node modules /wiki/node-modules" folder
+   put node_GetModulesFolder() into nodeModulesFolder
+   if there is not a folder nodeModulesFolder then  return empty
+   
+   put nodeModulesFolder & "wiki/node_modules/" into fedwikiModulesFolder
+   if there is not a folder fedwikiModulesFolder then  return empty
+   
+   return fedwikiModulesFolder
+end fedwiki_GetModulesFolder

@@ -1,0 +1,4 @@
+function wikipedia_FetchPageExtract pageTitle, pApiStem
+   put mediawiki_FetchPageBits (pageTitle, "extracts", "exintro=true", pApiStem) into someJSON
+   return someJSON
+end wikipedia_FetchPageExtract

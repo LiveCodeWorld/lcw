@@ -1,0 +1,4 @@
+command fedwiki_AddParagraphToPageArray @pageArray, someText, pID
+   put fedwiki_ConstructStoryParagraphArray (someText, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddParagraphToPageArray

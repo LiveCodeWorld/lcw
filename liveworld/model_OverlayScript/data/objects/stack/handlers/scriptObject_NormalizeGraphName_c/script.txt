@@ -1,0 +1,8 @@
+command scriptObject_NormalizeGraphName @pOverlayName, overlayFolder
+   if pOverlayName is empty then
+      put overlay_GetData (overlayFolder) into overlayData
+      put overlayData_GetDefaultGraphName (overlayData) into pOverlayName
+      if pOverlayName is empty then put "undirected spring" into pOverlayName
+   end if
+   return pOverlayName
+end scriptObject_NormalizeGraphName

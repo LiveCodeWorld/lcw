@@ -1,0 +1,20 @@
+setprop image_PixelTable pixelTable
+    put the long id of the target into imageObject
+    if word 1 of imageObject is not "image" then return empty
+    
+    put the width of imageObject into maxX
+    put the height of imageObject into maxY
+    
+    set the itemdelimiter to tab
+    put empty into binaryData
+    repeat with someY = 1 to maxY
+        repeat with someX = 1 to maxX
+            put item someX of line someY of pixelTable into someColour
+             
+            put image_RGBToPixel(someColour) after binaryData
+        end repeat
+    end repeat
+    
+    set the imagedata of imageObject to binaryData
+    return binaryData
+end image_PixelTable

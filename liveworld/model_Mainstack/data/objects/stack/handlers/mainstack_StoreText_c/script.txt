@@ -1,0 +1,10 @@
+command mainstack_StoreText mainStackFolder, shortFile, someData
+   put mainstack_MetadataFolder (mainStackFolder, empty, pDontCreate) & shortFile into someFile
+   if someData is empty then
+      delete file someFile
+      return empty
+   else
+      put someData into url ("binfile:" & someFile)
+      return someFile
+   end if
+end mainstack_StoreText

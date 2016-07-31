@@ -1,0 +1,12 @@
+setprop top_ControlNames topNames
+   replace comma with CR in topNames
+   put the long id of me into layoutView
+   repeat for each line topName in topNames
+      put the top_Control [topName] of me into topControl
+      if exists (topControl) is false then next repeat
+      
+      relayer topControl to front of me
+   end repeat
+   LayoutControl
+   return the top_ControlNames of me
+end top_ControlNames

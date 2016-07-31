@@ -1,0 +1,14 @@
+on resizeStack
+   put the card_Margin of me into cardMargin
+   if cardMargin is empty then put 24 into cardMargin
+   
+   -- view_ResizeToCard cardMargin
+   put templateView() into templateView
+   if exists (templateView) is false then pass resizeStack
+   if word 1 of templateView = "card" then pass resizeStack
+   
+   put the template_CardRect [cardMargin] of templateView into templateRect
+   set the rect of templateView to templateRect
+   
+   pass resizeStack
+end resizeStack

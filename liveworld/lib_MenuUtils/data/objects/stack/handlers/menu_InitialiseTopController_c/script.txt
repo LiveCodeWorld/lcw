@@ -1,0 +1,7 @@
+command menu_InitialiseTopController @mTopController, mTopTitle, targetObject
+   -- used by front scripts
+   -- put the menu_LocalController [mTopTitle] of targetObject into mTopController
+   put the menu_Controller [mTopTitle] of targetObject into mTopController
+   -- error_InitialseTopController mTopController, targetObject
+   menu_SetTopController mTopController
+end menu_InitialiseTopController

@@ -1,0 +1,14 @@
+command project_SaveGlobalPrefs pProjectName
+   /*
+   -- was "library_StoreGlobalPrefs"
+   Save the current globals beginning with "gPRefs_" to the project section of the library set array.
+   
+   Any global beginning with gPrefs_* is automatically stored in the project section of the library set array
+   It is no longer stored in the users preference folder (these are project preferences)
+   Do not store passwords or other sensitive information, as these may be checked out publicall on GitHub.
+   */
+   
+   put project_GatherGlobalPrefs () into projectPrefsArray
+   project_SavePrefs projectPrefsArray, pProjectName
+   return prefsArray
+end project_SaveGlobalPrefs

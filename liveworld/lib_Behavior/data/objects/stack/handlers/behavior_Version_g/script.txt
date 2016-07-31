@@ -1,0 +1,10 @@
+getprop behavior_Version
+   put the long id of the target into targetObject
+   if the object_Type of targetObject is "behavior" then
+      return the object_Version of targetObject
+   else if exists(the behavior of targetObject) then
+      return the object_Version of the behavior of targetObject
+   else
+      return empty
+   end if
+end behavior_Version

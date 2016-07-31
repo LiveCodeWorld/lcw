@@ -1,0 +1,8 @@
+function fedwiki_LocalPagesFolder pFedwikiDomain, pLocalWikiFolder  
+   if pLocalWikiFolder is empty then
+      put fedwiki_GetLocalWikiFolder (pFedwikiDomain) into pLocalWikiFolder
+   end if
+   folder_Format pLocalWikiFolder
+   put pLocalWikiFolder & "pages/" into localPagesFolder
+   return localPagesFolder
+end fedwiki_LocalPagesFolder

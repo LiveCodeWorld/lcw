@@ -1,0 +1,17 @@
+command digitalocean_ConstructNameArrays domainInfoArray, @domainNameArray, @dnsDictionary
+   local zoneFileArray
+   
+   put domainInfoArray ["domains"] into domainArray
+   repeat for each key domainNum in domainArray
+      put domainArray [domainNum]["name"] into domainName
+      put domainName into domainNameArray [domainName]["name"]
+      put domainArray [domainNum]["ttl"] into domainNameArray [domainName]["ttl"]
+      put word 1 to -1 of domainArray [domainNum]["zone_file"] into zoneText
+      put zoneText into domainNameArray [domainName]["zone_file"]
+      
+      -- put dns_ConstructZoneFileArray (zoneText) into zoneFileArray
+      dns_ConstructZoneInfoArray zoneText, zoneFileArray, dnsDictionary
+      put zoneFileArray into domainNameArray [domainName]["domain_records"]
+      put empty into zoneFileArray
+   end repeat
+end digitalocean_ConstructNameArrays

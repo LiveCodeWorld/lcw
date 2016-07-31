@@ -1,0 +1,5 @@
+function object_FromShortName someName, objectArray
+   put wiki_ConstructID(someName) into safeName
+   put objectArray[safeName] into someObject
+   return someObject
+end object_FromShortName

@@ -1,0 +1,120 @@
+--> MetaData
+-
+license: GPLv3
+name: model_OverlayScript
+type: model
+version: 1.5
+copyright: David Bovill
+
+/* 
+This model contains handlers that store the arrays (models) required to draw dot graphs from scripts.
+
+It provides a series of additional properties for revolution controls, 
+specifically related to graph data associated with thier scripts.
+This allow easy access to the graph metadata associated with a script.
+*/
+
+
+--> Script | Help | Props
+-
+/*
+At the moment storing and help about an objects properties etc along with the description of the script.
+*/
+
+[[ _FetchHandler (object_Help,g) ]]
+
+[[ _FetchHandler (object_Help,s) ]]
+
+[[ _FetchHandler (script_Markdown,g) ]]
+
+[[ _FetchHandler (script_Help,g) ]]
+
+[[ _FetchHandler (script_Help,s) ]]
+
+
+--> Script | Graph | Misc
+-
+[[ _FetchHandler (script_GeometryArrayFromCmap,g) ]]
+
+[[ _FetchHandler (script_CmapText,g) ]]
+
+[[ _FetchHandler (script_GetLinkArrayDotText,f) ]]
+
+[[ _FetchHandler (script_SetLinkArrayDotText,c) ]]
+
+
+--> Script | Graph | MetadataArray
+-
+[[ _FetchHandler (script_OverlayStyle,g) ]]
+
+[[ _FetchHandler (script_OverlayStyle,s) ]]
+
+[[ _FetchHandler (script_OverlayStyles,g) ]]
+
+[[ _FetchHandler (script_GraphPropertyArray,g) ]]
+
+[[ _FetchHandler (script_GraphPropertyArray,s) ]]
+
+
+--> Script | Graph | DataArray
+-
+/*
+Stores the full link array of a script as an encoded array along side the script in the repository.
+*/
+
+[[ _FetchHandler (script_GeometryArray,g) ]]
+
+[[ _FetchHandler (script_GeometryArray,s) ]]
+
+[[ _FetchHandler (script_LinkArray,g) ]]
+
+[[ _FetchHandler (script_LinkArray,s) ]]
+
+[[ _FetchHandler (script_IDLinkArray,g) ]]
+
+[[ _FetchHandler (script_IDLinkArray,s) ]]
+
+[[ _FetchHandler (script_IDArray,g) ]]
+
+[[ _FetchHandler (script_IDArray,s) ]]
+
+
+--> Script | Graph | Arrays
+-
+/*
+Top level arrays
+*/
+
+[[ _FetchHandler (script_MetadataArray,g) ]]
+
+[[ _FetchHandler (script_MetadataArray,s) ]]
+
+[[ _FetchHandler (script_DataArray,g) ]]
+
+[[ _FetchHandler (script_DataArray,s) ]]
+
+[[ _FetchHandler (script_OverlayArray,g) ]]
+
+[[ _FetchHandler (script_OverlayArray,s) ]]
+
+[[ _FetchHandler (script_OverlayData,g) ]]
+
+[[ _FetchHandler (script_OverlayData,s) ]]
+
+
+--> Script | Object | Graph | Construct
+-
+[[ _FetchHandler (scriptObject_ReconstructGraphArray,c) ]]
+
+[[ _FetchHandler (scriptObject_NormalizeGraphName,c) ]]
+
+
+--> Global | Script | Export | Line | Menu | Utilities
+-
+[[ _FetchHandler (scriptObject_ConstructBadExportArray,f) ]]
+
+[[ _FetchHandler (scriptObject_ExportScript,c) ]]
+
+[[ _FetchHandler (scriptObject_RevertToExportedFile,c) ]]
+
+[[ _FetchHandler (scriptObject_FileExportDiff,c) ]]

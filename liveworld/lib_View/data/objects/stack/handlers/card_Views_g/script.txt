@@ -1,0 +1,12 @@
+getprop card_Views
+   -- in any order
+   put the card_Object of the target into cardObject
+   repeat with controlNum = 1 to the number of controls in cardObject
+      put the long id of control controlNum of cardObject into someControl
+      put the view_Name of someControl into vName
+      if vName is empty then next repeat
+      put someControl & CR after cardViews
+   end repeat
+   delete char -1 of cardViews
+   return cardViews
+end card_Views

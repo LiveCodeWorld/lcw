@@ -1,0 +1,5 @@
+private function _IsStandalone
+   set the wholematches to true
+   put "libOPN_Menus" is not among the lines of the stacksInUse into someBoolean
+   return someBoolean
+end _IsStandalone

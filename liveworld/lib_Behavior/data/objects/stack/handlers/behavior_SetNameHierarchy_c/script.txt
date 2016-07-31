@@ -1,0 +1,6 @@
+command behavior_SetNameHierarchy targetObject, bNames
+   put list_ToIndex (bNames) into bNames  -- can use a list as well as an index
+   put behavior_GetObjects (bNames) into bObjects
+   behavior_SetHierarchy targetObject,  bObjects
+   return the result
+end behavior_SetNameHierarchy

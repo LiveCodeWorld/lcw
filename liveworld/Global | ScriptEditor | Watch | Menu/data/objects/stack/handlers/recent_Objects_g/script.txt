@@ -1,0 +1,6 @@
+getprop recent_Objects
+   put rev_GetScriptEditorHistoryObjects() into historyObjects
+   objects_MakeFriendly historyObjects, orderedFriendlyObjects, friendlyArray
+   put friendlyArray into LocalArray ["friendlyArray"]
+   return orderedFriendlyObjects
+end recent_Objects

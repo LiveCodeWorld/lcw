@@ -1,0 +1,15 @@
+command hkeyArray_ConstructSubArray hKey, hkeyArray, @subArray
+   -- see also "linkArray_WalkKeys"
+   put hkeyArray [hKey] into childKeys
+   if childKeys is empty then return hkeyArray
+   
+   put childKeys into subArray [hKey]
+   
+   repeat for each line childKey in childKeys
+      put keys(subArray) into indexedSoFar
+      if childKey is among the lines of indexedSoFar then
+         next repeat -- a recursive hKey that is already added to subArray
+      end if
+      hkeyArray_ConstructSubArray childKey, hkeyArray, subArray
+   end repeat
+end hkeyArray_ConstructSubArray

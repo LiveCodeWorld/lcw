@@ -1,0 +1,11 @@
+on menu_TestFirstText mTarget
+   /*
+   Gentleness means being kindly, tender and mild tempered. I practice it by speaking and behaving in a pleasant, soothing. even tempered manner.
+   
+   The opposite is harsheness.
+   */
+   put script_GetCommentAboveMe() into someText
+   
+   put the sivaSquareText_View of mTarget into sivaTraitView
+   set the view_Text of sivaTraitView to someText
+end menu_TestFirstText

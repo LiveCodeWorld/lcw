@@ -1,0 +1,23 @@
+function git_StashArray
+   /*
+   List the stashes that you currently have. 
+   Each stash is listed with its name (e.g. stash@{0} is the latest stash, stash@{1}  is the one before, etc.), 
+   the name of the branch that was current when the stash was made, 
+   and a short description of the commit the stash was based on.
+   
+   stash@{0}: WIP on submit: 6ebd0e2... Update git-stash documentation
+   stash@{1}: On master: 9cc0589... Add git-stash
+   
+   The command takes options applicable to the git log command to control what is shown and how. See git-log(1).
+   */
+   
+   git_ExecuteShell "git stash list"
+   put the result into gitResult
+   repeat for each line stashLine in gitResult
+      set the itemdelimiter to ":"
+      put item 1 of stashLine into stashName
+      put word 1 to -1 of item 2 of stashLine into stashArray [stashName]["stashBranch"]
+      put word 1 to -1 of item 2 of stashLine into stashArray [stashName]["stashComment"]
+   end repeat
+   return stashArray
+end git_StashArray

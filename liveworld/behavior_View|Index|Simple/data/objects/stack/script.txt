@@ -1,0 +1,274 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: behavior_ViewIndexSimple
+type: view behavior
+version: 0.5
+
+/*
+Was "View|Index|Simple" - now moverd to this script-ony behavior.
+This view presents an index in a scrolling field, with full support for dynamic events.
+*/
+
+
+--> Variables
+-
+local LocalArray
+
+
+--> Field | Props
+-
+[[ _FetchHandler (lock_Text,g) ]]
+
+[[ _FetchHandler (lock_Text,s) ]]
+
+[[ _FetchHandler (view_Text,g) ]]
+
+[[ _FetchHandler (view_Text,s) ]]
+
+[[ _FetchHandler (field_Style,g) ]]
+
+[[ _FetchHandler (field_Style,s) ]]
+
+[[ _FetchHandler (field_Styles,g) ]]
+
+[[ _FetchHandler (multiple_Hilites,g) ]]
+
+[[ _FetchHandler (multiple_Hilites,s) ]]
+
+
+--> Events | Handlers
+-
+[[ _FetchHandler (_doFieldClick,pc) ]]
+
+[[ _FetchHandler (_doFieldDoubleClick,pc) ]]
+
+[[ _FetchHandler (_doButtonMenu,pc) ]]
+
+[[ _FetchHandler (_doFieldDown,pc) ]]
+
+
+--> Events
+-
+-- on dragEnd
+   drag_SetGlobalStatus false
+   
+   -- put the dragdata ["private"] into viewName
+   put the dragdata ["text"] into viewName
+   
+   put the dragDestination into targetObject
+   if exists (targetObject) is false then return false
+   
+   put viewName & CR & targetObject
+end dragEnd
+
+[[ _FetchHandler (nameChanged,c) ]]
+
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (mouseUp,c) ]]
+
+[[ _FetchHandler (mouseDoubleUp,c) ]]
+
+[[ _FetchHandler (preOpenControl,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+
+--> Events | Custom
+-
+[[ _FetchHandler (refreshDisplay,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Display | Props
+-
+-- getprop displayed_Url
+   put LocalArray ["displayed_Url"] into displayedUrl
+   return displayedUrl
+end displayed_Url
+ 
+-- setprop displayed_Url someURL
+   put someURL into LocalArray ["displayed_Url"]
+end displayed_Url
+
+[[ _FetchHandler (displayed_Data,g) ]]
+
+[[ _FetchHandler (displayed_Data,s) ]]
+
+
+--> Index | Stack | Selected
+-
+[[ _FetchHandler (selected_ShortStackFiles,g) ]]
+
+[[ _FetchHandler (selected_StackObjects,g) ]]
+
+[[ _FetchHandler (selected_StackNames,g) ]]
+
+[[ _FetchHandler (selected_LongStackFiles,g) ]]
+
+
+--> Index | Stack
+-
+[[ _FetchHandler (index_StackObjects,g) ]]
+
+[[ _FetchHandler (index_StackNames,g) ]]
+
+[[ _FetchHandler (index_LongStackFiles,g) ]]
+
+[[ _FetchHandler (index_ShortStackFiles,g) ]]
+
+[[ _FetchHandler (index_ShortFiles,g) ]]
+
+[[ _FetchHandler (index_Files,g) ]]
+
+
+--> Folder
+-
+[[ _FetchHandler (index_Folder,g) ]]
+
+[[ _FetchHandler (index_Folder,s) ]]
+
+-
+-> Index
+-
+[[ _FetchHandler (selected_Index,g) ]]
+
+[[ _FetchHandler (selected_Index,s) ]]
+
+[[ _FetchHandler (view_Index,g) ]]
+
+[[ _FetchHandler (view_Index,s) ]]
+
+
+--> Menus
+-
+-- getprop menu_Controller [mTitle]
+   put menu_GetTargetObject() into mController
+   return mController
+end menu_Controller
+
+[[ _FetchHandler (view_MenuArray,g) ]]
+
+[[ _FetchHandler (view_MenuArray,s) ]]
+
+[[ _FetchHandler (title_Menu,g) ]]
+
+[[ _FetchHandler (title_Menu,s) ]]
+
+[[ _FetchHandler (line_Menu,g) ]]
+
+[[ _FetchHandler (line_Menu,s) ]]
+
+
+--> EventArray
+-
+[[ _FetchHandler (view_EventArray,g) ]]
+
+[[ _FetchHandler (view_EventArray,s) ]]
+
+[[ _FetchHandler (event_Target,g) ]]
+ 
+[[ _FetchHandler (event_Target,s) ]]
+
+[[ _FetchHandler (drag_Command,g) ]]
+ 
+[[ _FetchHandler (drag_Command,s) ]]
+
+[[ _FetchHandler (mouse_UpEvent,g) ]]
+    
+[[ _FetchHandler (mouse_UpEvent,s) ]]
+
+[[ _FetchHandler (mouse_DoubleUpEvent,g) ]]
+    
+[[ _FetchHandler (mouse_DoubleUpEvent,s) ]]
+    
+
+--> Names and Titles
+-
+/*
+Rationalise these naames and check other external handlers do not reference old ones.
+*/
+
+[[ _FetchHandler (group_Name,g) ]]
+
+[[ _FetchHandler (group_Name,s) ]]
+
+
+--> Title | Props
+-
+[[ _FetchHandler (view_Title,g) ]]
+
+[[ _FetchHandler (view_Title,s) ]]
+
+[[ _FetchHandler (view_Label,g) ]]
+
+[[ _FetchHandler (view_Label,s) ]]
+
+[[ _FetchHandler (title_Text,g) ]]
+
+[[ _FetchHandler (title_Text,s) ]]
+
+[[ _FetchHandler (title_Colour,g) ]]
+
+[[ _FetchHandler (title_Colour,s) ]]
+
+[[ _FetchHandler (title_TextColour,g) ]]
+
+[[ _FetchHandler (title_TextColour,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (header_Height,g) ]]
+
+[[ _FetchHandler (header_Height,s) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (index_View,g) ]]
+
+[[ _FetchHandler (index_Field,g) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_titleView,pf) ]]
+
+[[ _FetchHandler (_fieldView,pf) ]]
+
+[[ _FetchHandler (_headerRect,pf) ]]
+
+[[ _FetchHandler (_fieldRect,pf) ]]
+
+[[ _FetchHandler (_headerHeight,pf) ]]
+
+[[ _FetchHandler (_setDefaultHeight,pc) ]]
+
+[[ _FetchHandler (_getLongFiles,pf) ]]
+
+[[ _FetchHandler (known_StackNames,pf) ]]
+
+[[ _FetchHandler (known_StackObjects,pf) ]]
+
+[[ _FetchHandler (_getStackObjects,pf) ]]
+
+[[ _FetchHandler (_getStackNames,pf) ]]
+
+[[ _FetchHandler (_getLongStackFiles,pf) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (text_AddTrailing,c) ]]
+
+[[ _FetchHandler (colour_GetRandom,f) ]]
+
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]

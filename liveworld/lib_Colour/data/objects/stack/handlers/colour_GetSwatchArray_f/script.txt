@@ -1,0 +1,6 @@
+function colour_GetSwatchArray swatchName
+   put opn_SwatchFolder(swatchName) into swatchFile
+   put url ("binfile:" & swatchFile) into encodedArray
+   put arraydecode (encodedArray) into swatchArray
+   return swatchArray
+end colour_GetSwatchArray

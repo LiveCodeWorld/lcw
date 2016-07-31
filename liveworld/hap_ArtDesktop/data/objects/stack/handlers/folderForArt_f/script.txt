@@ -1,0 +1,7 @@
+function folderForArt pA
+   -- art.lc
+   set the itemdel to slash
+   put item 2 of pA["media_type"] into tType
+   put hap_GetDocumentRoot() into docRoot
+   return (docRoot & "/media/art/" & tType &"/"& pA["file_id"]) 
+end folderForArt

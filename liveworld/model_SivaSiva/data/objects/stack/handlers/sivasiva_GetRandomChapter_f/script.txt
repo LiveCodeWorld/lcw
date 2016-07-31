@@ -1,0 +1,5 @@
+function sivasiva_GetRandomChapter pBookArray
+   put random (64) into chapterNum
+   put sivasiva_GetChapterArray (chapterNum, pBookArray) into chapterArray
+   return chapterArray
+end sivasiva_GetRandomChapter

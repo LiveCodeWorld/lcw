@@ -1,0 +1,12 @@
+command behavior_Fix pCardObject, pDisplayArray
+   if pCardObject is empty then put the long id of this card into pCardObject 
+   
+   put the behavior_TestArray of pCardObject into testArray
+   
+   if pDisplayArray is true then
+      display_Array testArray, "Views with behaviors", "Global | Display | Behaviors | Menu", "Global | Display | Behaviors | Line | Menu"
+      put the result into displayView
+      set the view_Data ["behavior_Target"] of displayView to pCardObject
+   end if
+   return testArray
+end behavior_Fix

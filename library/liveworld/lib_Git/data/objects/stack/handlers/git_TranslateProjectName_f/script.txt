@@ -1,0 +1,9 @@
+function git_TranslateProjectName projectName
+   put git_GetProjectArray() into gitProjectArray
+   repeat for each key gitFolder in gitProjectArray
+      if projectName = gitProjectArray [gitFolder]["project name"] then
+         return gitFolder
+      end if
+   end repeat
+   return empty
+end git_TranslateProjectName

@@ -1,0 +1,16 @@
+function dot_ConstructSingleNodeGraph nodeDotParams, graphName, someNodeID, graphSize
+   local dotNodeDefs, dotNodeLinks
+   
+   if someNodeID is empty then put the text of the nodeID_Field of me into someNodeID
+   dot_ConstructPropertyArray dotPropertyArray
+   put dot_ConstructHeader (graphSize) into graphHeader
+   
+   put dot_QuoteNode (someNodeID) into someNodeID
+   put someNodeID && "[" &  nodeDotParams & "];" into nodeSection
+   
+   put graphHeader into dotText
+   line_Insert nodeSection, dotText
+   
+   put "digraph" && graphName && "{" & return & outline_IncreaseIndent(dotText, 1) & CR & "}" into dotGraph
+   return dotGraph
+end dot_ConstructSingleNodeGraph

@@ -1,0 +1,165 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_DisplayArray
+type: behavior
+version: 0.5
+
+/*
+This behavior_DisplayArray script only stack behavior controls the properties of the stack "Display Array".
+
+To do: Should consider moving it to the behavior of the view rather than the stack -,
+so that if the view is cloned and not the whole stack the view keeps working.
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Working On
+-
+[[ _FetchHandler (_displaySelectedValue,pc) ]]
+
+[[ _FetchHandler (selected_Value,g) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseUp,c) ]]
+
+[[ _FetchHandler (hiliteChanged,c) ]]
+
+[[ _FetchHandler (actionInspect,c) ]]
+
+[[ _FetchHandler (actionDoubleClick,c) ]]
+
+[[ _FetchHandler (_getValue,pf) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (refreshDisplay,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Title | Props
+-
+[[ _FetchHandler (tree_SortType,g) ]]
+
+[[ _FetchHandler (tree_SortType,s) ]]
+
+[[ _FetchHandler (tree_SortTypes,g) ]]
+
+[[ _FetchHandler (title_Text,g) ]]
+
+[[ _FetchHandler (title_Text,s) ]]
+
+[[ _FetchHandler (title_Colour,g) ]]
+
+[[ _FetchHandler (title_Colour,s) ]]
+
+
+--> Data
+-
+[[ _FetchHandler (displayed_Array,g) ]]
+
+[[ _FetchHandler (displayed_Array,s) ]]
+
+[[ _FetchHandler (displayed_Data,g) ]]
+
+[[ _FetchHandler (displayed_Data,s) ]]
+
+[[ _FetchHandler (view_Data,g) ]]
+
+[[ _FetchHandler (view_Data,s) ]]
+
+
+--> Menus
+-
+[[ _FetchHandler (doCogMenu,c) ]]
+
+[[ _FetchHandler (view_MenuArray,g) ]]
+
+[[ _FetchHandler (view_MenuArray,s) ]]
+
+[[ _FetchHandler (title_Menu,g) ]]
+
+[[ _FetchHandler (title_Menu,s) ]]
+
+[[ _FetchHandler (line_Menu,g) ]]
+
+[[ _FetchHandler (line_Menu,s) ]]
+
+
+--> EventArray
+-
+[[ _FetchHandler (view_EventArray,g) ]]
+
+[[ _FetchHandler (view_EventArray,s) ]]
+
+[[ _FetchHandler (display_MouseTarget,g) ]]
+    
+[[ _FetchHandler (display_MouseTarget,s) ]]
+
+[[ _FetchHandler (action_InspectCommand,g) ]]
+
+[[ _FetchHandler (action_InspectCommand,s) ]]
+
+[[ _FetchHandler (action_DoubleClickCommand,g) ]]
+
+[[ _FetchHandler (action_DoubleClickCommand,s) ]]
+
+
+--> Display | Props
+-
+[[ _FetchHandler (footer_IsVisible,g) ]]
+
+[[ _FetchHandler (footer_IsVisible,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (_headerRect,pf) ]]
+
+[[ _FetchHandler (_fieldRect,pf) ]]
+
+[[ _FetchHandler (_footerRect,pf) ]]
+
+[[ _FetchHandler (_headerHeight,pf) ]]
+
+[[ _FetchHandler (_footerHeight,pf) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (display_View,g) ]]
+
+[[ _FetchHandler (tree_Widget,g) ]]
+
+[[ _FetchHandler (title_View,g) ]]
+
+[[ _FetchHandler (header_Widget,g) ]]
+
+
+--> Objects | Compatibility
+-
+[[ _FetchHandler (tree_Field,g) ]]
+
+[[ _FetchHandler (tree_View,g) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_headerWidget,pf) ]]
+
+[[ _FetchHandler (_treeWidget,pf) ]]
+
+[[ _FetchHandler (_footerWidget,pf) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (colour_GetRandom,f) ]]
+
+

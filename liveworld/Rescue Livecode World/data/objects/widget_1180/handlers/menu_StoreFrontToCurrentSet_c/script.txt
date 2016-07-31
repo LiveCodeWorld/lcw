@@ -1,0 +1,9 @@
+on menu_StoreFrontToCurrentSet
+   -- put "Default" into setName
+   put project_GetCurrentName() into setName
+   
+   put project_CurrentFrontScripts() into currentFrontScripts
+   put _constructObjectArray (currentFrontScripts) into objectArray
+   project_SetObjectTypeArray objectArray, "front", setName
+   menu_DisplaySelectedSet setName
+end menu_StoreFrontToCurrentSet

@@ -1,0 +1,11 @@
+function fossil_ListSettings checkoutFolder, pListGlobal
+   put "fossil settings"  into someShell
+   if pCheckoutFolder is empty then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   else if pListGlobal is true then
+      put space & "-global" after someShell
+   end if
+   fossil_ExecuteShell someShell, checkoutFolder
+   return word 1 to -1 of the result
+end fossil_ListSettings

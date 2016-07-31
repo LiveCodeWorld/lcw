@@ -1,0 +1,5 @@
+function appleScript_DoShell someShell, pStripQuotes
+   put "do shell script" && kwote (someShell) into appleScriptLine
+   put appleScript_DoLine (appleScriptLine, "Terminal", pStripQuotes) into appleScriptResult
+   return appleScriptResult
+end appleScript_DoShell

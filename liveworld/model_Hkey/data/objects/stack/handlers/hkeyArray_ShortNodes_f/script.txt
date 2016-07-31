@@ -1,0 +1,13 @@
+function hkeyArray_ShortNodes hkeyArray
+   local indexArray
+   repeat for each key hKey in hkeyArray
+      put item 1 to 2 of hKey into shortHkey
+      put empty into indexArray [shortHkey]
+      put hkeyArray [hKey] into childHkeys
+      repeat for each line childHkey in childHkeys
+         put item 1 to 2 of childHkey into shortHkey
+         put empty into indexArray [shortHkey]
+      end repeat
+   end repeat
+   return keys (indexArray)
+end hkeyArray_ShortNodes

@@ -1,0 +1,5 @@
+getprop displayed_Project
+   put _setMenuButton() into setMenuButton
+   put the selectedtext of setMenuButton into setName
+   return setName
+end displayed_Project

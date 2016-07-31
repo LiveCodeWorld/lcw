@@ -1,0 +1,6 @@
+command rev_CreateNewTab someObject
+   breakpoint
+   send "revSEAddTargetObject someObject" to revScriptEditorGroup
+   put the result someError
+   return someError
+end rev_CreateNewTab

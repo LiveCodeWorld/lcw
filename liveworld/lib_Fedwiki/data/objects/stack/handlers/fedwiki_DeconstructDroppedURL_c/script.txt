@@ -1,0 +1,5 @@
+command fedwiki_DeconstructDroppedURL dropJSON, @droppedText, @droppedHtml
+   put json_ToArray (dropJSON) into dropArray
+   put dropArray ["text"] into droppedText
+   put dropArray ["html"] into droppedHtml
+end fedwiki_DeconstructDroppedURL

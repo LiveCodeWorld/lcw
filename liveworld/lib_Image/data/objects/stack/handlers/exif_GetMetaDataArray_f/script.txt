@@ -1,0 +1,6 @@
+function exif_GetMetaDataArray imageFile
+    put exif_GetMetaData(imageFile) into metaDataArray
+    replace ": " with tab in metaDataArray
+    split metaDataArray with CR and tab
+    return metaDataArray
+end exif_GetMetaDataArray

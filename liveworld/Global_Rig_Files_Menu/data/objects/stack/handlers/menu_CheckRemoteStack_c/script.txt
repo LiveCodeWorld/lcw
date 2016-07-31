@@ -1,0 +1,16 @@
+on menu_CheckRemoteStack stackObject
+   set the cursor to watch
+   
+   put _getRemoteStackData (stackObject) into serverStackData
+   put the filename of stackObject into localStackFile
+   put url ("file:" & localStackFile) into localStackData
+   
+   put localStackData = serverStackData into stacksAreTheSame
+   if stacksAreTheSame is true then
+      answer "The stacks are the same!"
+   else
+      -- display_Lines localStackData, "Local stack"
+      -- display_Lines serverStackData, "Remote server stack"
+      answer "The stack on the server and the local stack differ!"
+   end if
+end menu_CheckRemoteStack

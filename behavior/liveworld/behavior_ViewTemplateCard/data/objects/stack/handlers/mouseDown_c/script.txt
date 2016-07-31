@@ -1,0 +1,13 @@
+on mouseDown pMenuButton
+   if the long id of the target is not the long id of me then pass mouseDown
+   if pMenuButton is not 3 then pass mouseDown
+   
+   put the stack_Name of me into viewName
+   put the card_View [viewName] of me into mView
+   if exists (mView) is false then pass mouseDown
+   
+   put "Global |" && menu_TitleFromViewName (viewName) into mTitle
+   menu_PopUp mTitle, empty, mView
+   
+   pass mouseDown
+end mouseDown

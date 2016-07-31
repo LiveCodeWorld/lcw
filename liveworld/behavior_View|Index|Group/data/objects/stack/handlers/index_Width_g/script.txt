@@ -1,0 +1,6 @@
+getprop index_Width
+   put line 1 of LocalArray ["topControls"] into leftControl
+   put the width of leftControl into indexWidth
+   put indexWidth into LocalArray ["indexWidth"]
+   return indexWidth
+end index_Width

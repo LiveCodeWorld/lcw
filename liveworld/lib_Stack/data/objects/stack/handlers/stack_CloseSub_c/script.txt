@@ -1,0 +1,6 @@
+command stack_CloseSub stackName
+    put the substacks of stack stackName into theSubStacks
+    repeat for each line theSubStack in theSubStacks
+        send "stack_RemoveFromMemory stackName" to me in 10 millisecs
+    end repeat
+end stack_CloseSub

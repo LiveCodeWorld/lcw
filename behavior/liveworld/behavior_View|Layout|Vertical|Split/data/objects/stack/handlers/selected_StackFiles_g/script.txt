@@ -1,0 +1,15 @@
+getprop selected_StackFiles
+   put the child_Names of group "Stacks and Libraries" into indexGroupNames
+   repeat for each line indexGroupName in indexGroupNames
+      put the child_Controls of group indexGroupName of group "Stacks and Libraries" into indexViews
+      repeat for each line indexView in indexViews
+         get the short name of indexView
+         put the selected_LongStackFiles of indexView into selectedLongStackFiles
+         if selectedLongStackFiles is not empty then
+            put selectedLongStackFiles & CR after selectedStackFiles
+         end if
+      end repeat
+   end repeat
+   delete char -1 of selectedStackFiles
+   return selectedStackFiles
+end selected_StackFiles

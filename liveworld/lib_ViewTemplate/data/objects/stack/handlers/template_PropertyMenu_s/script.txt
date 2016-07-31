@@ -1,0 +1,7 @@
+setprop template_PropertyMenu cachedMenu
+   put the template_Array of the target into templateArray
+   put the uOPN_ViewArray of templatePropertyModel into templateArray
+   put cachedMenu into templateArray ["metadata"]["view_PropertyMenu"]
+   set the uOPN_ViewArray of templatePropertyModel to templateArray
+   return templateArray
+end template_PropertyMenu

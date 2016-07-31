@@ -1,0 +1,74 @@
+on transportAgain
+   /*
+   {"title":"Joseph Stalin","create":{"type":"create","item":{"story":"","title":"Assassination"},"date":1459264331300,"source":{"url":"https://en.wikipedia.org/wiki/Leon_trotsky#Assassination","repo":"https://github.com/LiveCodeWorld/lib_MediaWiki","transport":"https://livecode.world/mediawiki/transportAgain","rev":712216007,"date":1459264331300,"link_dictionary":{"wiki_links":{"Legacy":{"section_number":31,"section_level":3,"dot_number":1}},"default":{"transport":"https://livecode.world/mediawiki/importSection"}}}}}
+   */
+   -- put script_GetCommentAboveMe() into someJSON
+   put $_POST_RAW into someJSON
+   
+   /*
+   -- put json_Lint (someJSON) into someJSON
+   put fedwiki_ConstructErrorJSON (someJSON, "JSON") into errorJSON
+   fedwiki_ReturnJSON errorJSON
+   return false
+   */
+   
+   put json_ToArray (someJSON) into createArray
+   put createArray ["title"] into sectionTitle
+   put createArray ["create"]["source"] into sourceArray
+   if sourceArray is not an array then
+   put fedwiki_ConstructErrorJSON ("This is not create JSON", "Error") into errorJSON
+   fedwiki_ReturnJSON errorJSON
+   return false
+end if
+   
+   put sourceArray ["transport"] into againTransportURL
+   put sourceArray ["url"] into wikipediaURL
+   
+   put createArray ["create"]["item"]["title"] into parentTitle
+   -- if we are 2 or more generations down this is not the pageTitle
+   put sourceArray ["pageSlug"] into pageSlug
+   put sourceArray ["pageTitle"] into pageTitle
+   
+   put sourceArray ["link_Dictionary"] into linkDictionary
+   put linkDictionary ["wiki_links"][sectionTitle]["section_number"] into sectionNum
+   if sectionNum is not a number then
+   /*
+   put "Can't find section number for" && sectionTitle & CR & CR & sectionNum into errorJSON
+   put fedwiki_ConstructErrorJSON (errorJSON, "Not a defined section link") into errorJSON
+   fedwiki_ReturnJSON errorJSON
+   return false
+   */
+   
+   put fedwiki_FetchWikipediaSummaryPageJson (sectionTitle) into pageJSON
+   fedwiki_ReturnJSON pageJSON
+   return false
+end if
+   
+   put linkDictionary ["default"]["transport"] into linkDefaultTransport
+   put linkDictionary ["wiki_links"][sectionTitle]["transport"] into linkSpecificTransport
+   
+   switch linkDefaultTransport
+   case "https://livecode.world/mediawiki/importSection"
+   /*
+   put linkDictionary ["wiki_links"][sectionTitle] into errorArray
+   put json_FromArray (errorArray) into dictJSON
+   put "Found section number" && sectionNum && "for page" && kwote (pageSlug) & CR & CR & dictJSON into errorJSON
+   
+   put fedwiki_ConstructErrorJSON (errorJSON, "A defined section link") into errorJSON
+   fedwiki_ReturnJSON errorJSON
+   return false
+   */
+   
+   put fedwikipedia_FetchSectionSummaryPageJson (pageSlug, sectionNum) into pageJSON
+   fedwiki_ReturnJSON pageJSON
+   return true
+   default
+   put linkDictionary ["wiki_links"][sectionTitle] into errorArray
+   put json_FromArray (errorArray) into dictJSON
+   put "Not a defined section link for" && pageSlug && sectionNum & CR & CR & dictJSON into errorJSON
+   put fedwiki_ConstructErrorJSON (errorJSON, "Not a defined section link") into errorJSON
+   
+   fedwiki_ReturnJSON errorJSON
+   return false
+end switch
+end transportAgain

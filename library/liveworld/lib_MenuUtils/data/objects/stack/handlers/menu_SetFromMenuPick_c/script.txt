@@ -1,0 +1,12 @@
+command menu_SetFromMenuPick deleteName, pButton
+   if exists(pButton) is false then put the long id of the target into pButton
+   put the menu_PickConditions of pButton into mItems
+   if the optionkey is down then line_Delete deleteName, mItems
+   
+   put lineOffset (deleteName, mItems) into lineNum
+   if lineNum is not 0 then
+      put CR & "-" after line lineNum of mItems
+   end if
+   set the text of pButton to mItems
+   return mItems
+end menu_SetFromMenuPick

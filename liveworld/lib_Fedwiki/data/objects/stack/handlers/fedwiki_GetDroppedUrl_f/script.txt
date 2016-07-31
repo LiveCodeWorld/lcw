@@ -1,0 +1,22 @@
+function fedwiki_GetDroppedUrl dropJSON
+   -- {"text":"http://plugin.fedwiki.org/changes-to-this-site.html","html":"<meta http-equiv=\"Content-Type\" content=\"text/html;charset=UTF-8\"><a href=\"http://plugin.fedwiki.org/changes-to-this-site.html\">plugin.fedwiki.org</a>"}
+   
+   put json_ToArray (dropJSON) into dropArray
+   put dropArray ["html"] into droppedHTML
+   put dropArray ["text"] into droppedText
+   
+   set the itemdelimiter to "."
+   switch
+      case droppedHTML is empty
+         -- does it begin with "<meta http-equiv=\'Content-Type\' content=\'text/html;charset=UTF-8\'><a href=\"
+         return droppedText
+      case item -1 of droppedText = "html"
+         -- "http://plugin.fedwiki.org/changes-to-this-site.html"
+         delete item -1 of droppedText
+         set the itemdelimiter to "/"
+         put "/view" after item 3 of droppedText
+         return droppedText
+      default
+         fedwiki_ReturnError dropJSON, "No URL dropped on the page!"
+   end switch
+end fedwiki_GetDroppedUrl

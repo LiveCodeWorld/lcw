@@ -1,0 +1,4 @@
+function library_TextFolder folderName, folderOwnerName, pDontCreate
+   put merge ("opn_Text/rev/[[folderOwnerName]]/[[folderName]]/") into somePath
+   return library_PluginFolder (somePath, pDontCreate)
+end library_TextFolder

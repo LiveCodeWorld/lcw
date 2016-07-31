@@ -1,0 +1,13 @@
+function object_TopLevelGroup someCard, testGroupName
+   object_SetToplevelGroupArrays topLevel_NameDictionary, topLevel_IdDictionary, someCard
+   put keys(topLevel_NameDictionary) into possibleGroupNames
+   put keys(topLevel_IdDictionary) into possibleGroupIds
+   
+   -- guess from the name
+   repeat for each line possibleGroup in possibleGroupIds
+      if the short name of possibleGroup is testGroupName then
+         return possibleGroup
+      end if
+   end repeat
+   return empty
+end object_TopLevelGroup

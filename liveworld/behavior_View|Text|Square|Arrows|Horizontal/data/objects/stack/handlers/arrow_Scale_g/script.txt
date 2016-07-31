@@ -1,0 +1,5 @@
+getprop arrow_Scale
+   put LocalArray ["arrow_Scale"] into arrowScale
+   if arrowScale is empty then return 0.5
+   return arrowScale
+end arrow_Scale

@@ -1,0 +1,5 @@
+getprop textStack_Root [repoType]
+   put the mainstack_File of the target into objectFile
+   put textStack_FindRoot (objectFile, repoType) into textStackRoot
+   return textStackRoot
+end textStack_Root

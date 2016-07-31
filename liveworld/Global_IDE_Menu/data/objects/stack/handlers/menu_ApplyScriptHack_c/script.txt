@@ -1,0 +1,7 @@
+on menu_ApplyScriptHack
+   put scriptEditor_CompileButtonBehavior() into compileButtonBehavior
+   put rev_CompileButton (0) into scriptEditorCompileButton
+   
+   edit the script of compileButtonBehavior
+   edit the script of scriptEditorCompileButton
+end menu_ApplyScriptHack

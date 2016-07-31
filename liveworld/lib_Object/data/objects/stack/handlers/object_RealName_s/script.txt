@@ -1,0 +1,7 @@
+setprop object_RealName [fixedName] realName
+   put the long ID of the target into someView
+   
+   set the name of someView to realName
+   set the uOPN_ObjectNameArray [fixedName] of someView to realName
+   set the name of someView to realName
+end object_RealName

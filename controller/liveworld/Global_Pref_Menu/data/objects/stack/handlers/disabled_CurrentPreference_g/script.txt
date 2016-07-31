@@ -1,0 +1,4 @@
+getprop disabled_CurrentPreference
+   global gPrefs_Array
+   return keys (gPrefs_Array) is empty
+end disabled_CurrentPreference

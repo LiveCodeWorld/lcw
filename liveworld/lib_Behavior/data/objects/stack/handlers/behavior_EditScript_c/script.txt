@@ -1,0 +1,6 @@
+command behavior_EditScript bName
+   put behavior_GetObject (bName) into behaviorObject
+   if exists(behaviorObject) then
+      edit the script of behaviorObject
+   end if
+end behavior_EditScript

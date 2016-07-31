@@ -1,0 +1,18 @@
+on model_SetArray modelName, modelObject, dataArray, modelType
+   switch pModelType
+      case "database"
+         set the object_DataBaseArray [modelName] of modelObject to dataArray
+         break
+      case "file"
+         model_GetFileArray
+         break
+      case "object file" -- an array stored as an arrayEncoded binary file
+         set the object_FileArray [modelName] of modelObject to dataArray
+         break
+      default -- case "array" 
+         -- It is an array stored in a control
+         set the customproperties [modelName] of modelObject to dataArray
+   end switch
+   put the model_RefreshDisplays [modelName] of modelObject into updatedViews
+   return updatedViews
+end model_SetArray

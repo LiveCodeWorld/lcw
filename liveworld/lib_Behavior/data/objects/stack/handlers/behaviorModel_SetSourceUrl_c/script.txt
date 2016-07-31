@@ -1,0 +1,4 @@
+on behaviorModel_SetSourceUrl bName, sourceURL
+   behaviorModel_SetRecordValue "sourceURL", bName, sourceURL
+   return the result
+end behaviorModel_SetSourceUrl

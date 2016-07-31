@@ -1,0 +1,268 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Array
+type: model
+version: 0.1
+copyright: David Bovill
+
+
+/*
+This stack contins a start at creating a standard way to make array based models.
+The original idea was that you can specify a control to hold the array.
+The better idea is to abstract away where you get the arrya from, so we can switch simple models easily.
+
+-- old notes
+This stack contains the model, view, controller (MVC) library functions and interfaces.
+This is the data model. Could be called the view_DataModel.
+We also have view_DisplayModel's and event_Model's
+*/
+
+--> Model
+-
+[[ _FetchHandler (model_Object,s) ]]
+
+[[ _FetchHandler (model_Object,g) ]]
+
+[[ _FetchHandler (model_Name,g) ]]
+
+
+--> Model | Type | Switch
+-
+/*
+model_Type is a property of the model_Object. 
+It is used by generic model handlers to access standard array compatable data formats, such as
+array, text, html, xml, and database
+
+The default model type is "array". 
+
+It cannot be set by a script and must be overridden
+by manually adding a "getprop model_Type" hander to the models script.
+You can distinguish multiple models in the same object with the modelName param.
+
+One of the points of using models is to allow the evolution of your data model
+from simple arrays to external sources and databases. To achieve this we use a default
+mapping of arrays to tex files and database structures, together with a cutom property "switch"
+which allows us to move between compatable data sources.
+
+More elaborate customisation requires coding of the custom roperties and funcitons that constitute the data model.
+*/
+
+[[ _FetchHandler (model_Type,g) ]]
+
+
+--> Model | Value
+-
+/*
+This function allows switching between forms of storage for the model.
+Returns an array for use in a controller.
+"modelType" is often got by reading a custom property of the modelObject
+
+Arrays are always combined with an "global" arrays, 
+which is combined with any "local" arrays
+Any entries (keys) in the "local" array taking prominence
+
+"Local" arrays default to using a local custom property of an object, but can come from a database.
+They are therefore usually specific to the modelObject and are as such local to that specific store.
+There can be many models with the same name in different modelObjects,
+but only one "global" array for each modelname.
+*/
+
+[[ _FetchHandler (model_GetValue,f) ]]
+
+[[ _FetchHandler (model_SetValue,c) ]]
+
+
+--> Model | Names
+-
+[[ _FetchHandler (model_Names,g) ]]
+
+[[ _FetchHandler (model_GetNames,f) ]]
+
+
+--> Model | Array
+-
+[[ _FetchHandler (model_Array,g) ]]
+
+[[ _FetchHandler (model_Array,s) ]]
+
+[[ _FetchHandler (model_GetArray,f) ]]
+
+[[ _FetchHandler (model_SetArray,c) ]]
+
+[[ _FetchHandler (model_GetFileArray,f) ]]
+
+[[ _FetchHandler (model_SetFileArray,c) ]]
+
+[[ _FetchHandler (model_DeleteArray,c) ]]
+
+
+--> Object | File | Array
+-
+[[ _FetchHandler (object_FileArray,g) ]]
+
+[[ _FetchHandler (object_FileArray,s) ]]
+
+[[ _FetchHandler (model_File,g) ]]
+
+
+--> Model | Folder
+-
+/*
+The model_Folder is the place where the model data is stored. 
+The folder can be moved and reconnected using the model_Folder property of the model_Object, and everything will keep working as normal.
+This allows casual scripting with default values and moving the model_Folder into the app when finished.
+
+The default model_Folder is a folder within the opn_Model folder named after the model_Object,
+in a similar way to scripts stored externally - that is "stack name / sub stack name / object_ID
+
+The default model_Name is "array".
+*/
+
+[[ _FetchHandler (model_Folder,g) ]]
+
+[[ _FetchHandler (stack_ConstructFolderBit,f) ]]
+
+[[ _FetchHandler (model_NamedFolder,f) ]]
+
+[[ _FetchHandler (opn_ModelFolder,f) ]]
+
+
+--> Object | Database
+-
+/*
+Not done yet!
+*/
+
+[[ _FetchHandler (object_DataBaseArray,g) ]]
+
+[[ _FetchHandler (object_DataBaseArray,s) ]]
+
+[[ _FetchHandler (object_DataBaseFile,g) ]]
+
+
+--> Model | View Links
+-
+/*
+A model can be linked to any number of views for display purposes.
+
+The model "knows" about these views through its "model_ViewLinks".
+In turn the view knows about which models it is linked to.
+Views are usually linked to only one model,
+if a view needs to refer to data from more than one model it does this via a controller
+one controller per view-model link.
+
+At the present these are global and not local links.
+It should be made easy to move the links to local objects for distribution.
+At the moment this can be done by intercepting the library getprop / setprop handlers locally.
+Simply copy them locally if you want to do somethng special.
+
+As these links do not require non-standard messages (as with controllers),
+we do not need to store complex tables.
+Views refer to models through the standard "array-based" interface,
+and models just send "view_Refresh" getprop messages to views when they are updated.
+*/
+
+[[ _FetchHandler (model_RefreshDisplays,g) ]]
+
+[[ _FetchHandler (model_ViewLinks,g) ]]
+
+[[ _FetchHandler (model_ViewLinks,s) ]]
+
+
+--> Model | View Links | Utilities
+-
+[[ _FetchHandler (model_AddLink,s) ]]
+
+[[ _FetchHandler (model_RegisterView,c) ]]
+
+[[ _FetchHandler (model_DeleteLink,s) ]]
+
+[[ _FetchHandler (model_UnregisterView,c) ]]
+
+
+--> Model | Two Way
+-
+[[ _FetchHandler (model_TwoWayKeyIndex,f) ]]
+
+[[ _FetchHandler (model_TwoWayValueIndex,f) ]]
+
+[[ _FetchHandler (model_TwoWayAdd,c) ]]
+
+
+--> Model | Utilities
+-
+[[ _FetchHandler (model_AddToArray,c) ]]
+
+[[ _FetchHandler (model_AddToIndex,c) ]]
+
+[[ _FetchHandler (model_DeleteFromIndex,c) ]]
+
+[[ _FetchHandler (model_ArrayKeys,g) ]]
+
+[[ _FetchHandler (model_GetArrayKeys,f) ]]
+
+[[ _FetchHandler (model_GetArrayElements,f) ]]
+
+
+--> Model | Simple Properties
+-
+[[ _FetchHandler (model_Index,g) ]]
+
+[[ _FetchHandler (model_Index,s) ]]
+
+[[ _FetchHandler (model_NewLine,s) ]]
+
+[[ _FetchHandler (model_DeleteLine,s) ]]
+
+
+--> Model | Value
+-
+/*
+Models are objects which have access to and methods (command and functions) to access this data in a controlled way.
+
+The default technique is to store and retrieve the data as arrays.
+
+A model object can store several arrays (known as dictionaries).
+For this reason and as there are already a number of libraries out there (libDatabase for instance)...
+Complex models are implemented as libraries - follwing the ECMI specification.
+
+The arrays are often stored as named custom property sets. 
+These custom property sets are named according to the ECMI specification - ie "uOPNTree_Table".
+
+Arrays can also be stored as text files, or XML, or in a database.
+and to allow porting of this data, the default methods: model_GetArray and model_SetArray
+Allow switching between these forms of storage.
+
+Models (as any other object) can also have property handlers to allow getting ans setting of simple properties.
+*/
+
+[[ _FetchHandler (model_AddValue,s) ]]
+
+[[ _FetchHandler (model_DeleteValue,s) ]]
+
+getprop model_Array [modelName]
+   put the long id of the target into modelObject
+   if modelName is empty then put cModelDefaultArrayName into modelName
+   return model_GetArray(modelName, modelObject, "array")
+end model_Array
+
+
+--> Model | Command and Functions
+-
+[[ _FetchHandler (model_MoveArray,c) ]]
+
+[[ _FetchHandler (model_DeleteArrayKey,c) ]]
+
+[[ _FetchHandler (model_MoveArrays,c) ]]
+
+
+--> Model | XML
+-
+[[ _FetchHandler (model_Table,g) ]]
+
+[[ _FetchHandler (model_XML,g) ]]
+
+[[ _FetchHandler (model_PList,g) ]]
+
+[[ _FetchHandler (model_XmlToTable,f) ]]

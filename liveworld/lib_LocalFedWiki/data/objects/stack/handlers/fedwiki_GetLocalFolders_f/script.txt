@@ -1,0 +1,11 @@
+function fedwiki_GetLocalFolders
+   put fedwiki_GetLocalWikiRoot() into localWikiFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to localWikiFolder
+   put the folders into fedwikiFolders
+   set the defaultfolder to oFolder
+   filter fedwikiFolders without ".*"
+   line_Delete "pages", fedwikiFolders
+   line_Delete "status", fedwikiFolders
+   return fedwikiFolders
+end fedwiki_GetLocalFolders

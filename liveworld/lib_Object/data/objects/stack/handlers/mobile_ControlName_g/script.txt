@@ -1,0 +1,5 @@
+getprop mobile_ControlName
+   put the name of the target into nameObject
+   put the stack_Name of the target into stackName
+   return nameObject && "of stack" && kwote(stackName)
+end mobile_ControlName

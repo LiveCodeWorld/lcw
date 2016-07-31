@@ -1,0 +1,24 @@
+setprop browser_URL [someRect] someUrl
+   -- open the browser if it does not already exist!
+   put the browser_ID of me into browserID
+   if browserID is empty then
+      if someRect is empty then put the browser_Rect of me into someRect
+      
+      put object_ExtractStack (the long id of me) into stackObject
+      if the browser_Type of me is "chrome" then
+         put revBrowserOpenCef (the windowid of stackObject, someUrl) into browserID
+      else
+         put revBrowserOpen (the windowid of stackObject, someUrl) into browserID
+      end if
+      revBrowserSet browserID, "rect", someRect
+      set the browser_ID of me to browserID
+      return browserID
+   else if someUrl is empty then
+      set the browser_ID of me to empty
+   else
+      revBrowserSet browserID, "url", someUrl
+      if someRect is empty then put the browser_Rect of me into someRect
+      revBrowserSet browserID, "rect", someRect
+      return browserID
+   end if
+end browser_URL

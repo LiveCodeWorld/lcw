@@ -1,0 +1,53 @@
+command template_ConstructStackFromObject someObject, pCreateBehavior
+   put the name of someObject into helpfulForDebugging
+   put the view_Name of someObject into viewName
+   
+   if viewName is empty then
+      put opn_Ask ("Give this new control a view_Name...", "View|Something|Or Other") into viewName
+      template_StackAlreadyExists viewName
+   else
+      template_StackAlreadyExists viewName
+   end if
+   
+   -- create invisible stack viewName
+   create stack viewName
+   put it into templateStackObject
+   set the destroystack of stack viewName to true
+   set the destroywindow of stack viewName to true
+   
+   copy someObject to card 1 of stack viewName
+   put it into viewTemplate
+   -- set the view_Name of viewTemplate to viewName
+   
+   if pCreateBehavior is not false then
+      -- we can create a behavior stack later easily
+      -- view_TemplateAddBehavior viewTemplate, viewName
+   end if
+   
+   set the view_Name ["view template"] of viewTemplate to viewName
+   set the visible of stack viewName to true
+   
+   put view_NameToFile (viewName) into someFile
+   set the fileName of stack viewName to someFile
+   set the behavior_Name of card 1 of stack viewName to "behavior_ViewTemplateCard"
+   
+   put viewName into shortViewName
+   set the itemdelimiter to "|"
+   delete item 1 of shortViewName
+   set the itemdelimiter to comma
+   set the name of card 1 of stack viewName to shortViewName
+   
+   put template_DefaultCardScript (viewName) into cardScript
+   set the script of card 1 of stack viewName to cardScript
+   
+   put the width of viewTemplate into sWidth
+   put the height of viewTemplate into sHeight
+   stack_SetDimensions templateStackObject, sWidth, sHeight
+   
+   set lockmessages to true
+   save stack viewName
+   set lockmessages to false
+   set the stack_IsKnown of stack viewName to true
+   
+   return viewTemplate
+end template_ConstructStackFromObject

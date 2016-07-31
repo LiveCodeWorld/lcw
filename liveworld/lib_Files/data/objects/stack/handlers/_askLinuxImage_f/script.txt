@@ -1,0 +1,10 @@
+function _askLinuxImage someType, preferredFolder, comment
+    if someType is empty then put _getLinuxImageTypes() into someType
+    if preferredFolder is empty then
+        put library_PluginFolder ("Shared Image Folder") & "opnLogo.jpg" into preferredFolder
+    end if
+    
+    answer file comment with preferredFolder with filter someType
+    if the result is "Cancel" then exit to top
+    return it
+end _askLinuxImage

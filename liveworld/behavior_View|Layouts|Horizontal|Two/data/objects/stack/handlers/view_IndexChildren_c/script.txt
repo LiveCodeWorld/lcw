@@ -1,0 +1,12 @@
+command view_IndexChildren
+   put word 3 of the vertical_Divider of me into verticalDividerID
+   
+   put the childcontrolids of me into childIDs
+   set the wholematches to true
+   put lineOffset (verticalDividerID, childIDs) into lineNum
+   delete line lineNum of childIDs
+   
+   put the long id of control id (line 1 of childIDs) into LeftView
+   put the long id of control id (line 2 of childIDs) into RightView
+   return LeftView & CR & RightView
+end view_IndexChildren

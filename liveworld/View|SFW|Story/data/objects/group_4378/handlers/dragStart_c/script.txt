@@ -1,0 +1,17 @@
+on dragStart
+   local tTheIndex, tTheDragData, tTheDataControl
+   
+   put the dgDataControl of the target into tTheDataControl
+   
+   if (tTheDataControl is empty) then pass dragStart -- Prevent the move if no data control exists
+   
+   if (the dgHeader of the target is empty) then
+      put the dgIndex of tTheDataControl into tTheIndex
+      set the dgDragImageIndex of me to tTheIndex
+      put "DGH_ReorderLines" & cr & "Data" into tTheDragData --> Replace "Data" with your real data here. Don't remove the DGH_ReorderLines special line
+      set the dragData["private"] to tTheDragData
+      
+      set the dgDragReorderData of me to tTheDragData
+      set the dgTrackDragReorder[tTheIndex] of me to true
+   end if
+end dragStart

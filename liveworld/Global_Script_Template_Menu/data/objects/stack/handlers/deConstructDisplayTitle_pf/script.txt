@@ -1,0 +1,5 @@
+private function deConstructDisplayTitle displayTitle
+    set the itemdelimiter to ":"
+    put word 1 to -1 of item 2 of displayTitle into templateName
+    return templateName
+end deConstructDisplayTitle

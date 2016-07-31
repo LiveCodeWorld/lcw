@@ -1,0 +1,13 @@
+on mouseUp
+   put the short name of the target into tName
+   switch tName
+      case "Right"
+         display_NextChapter
+         break
+      case "Left"
+         display_PreviousChapter
+         break
+      default
+         -- put tName
+   end switch
+end mouseUp

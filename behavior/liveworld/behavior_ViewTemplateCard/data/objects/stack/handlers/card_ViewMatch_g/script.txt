@@ -1,0 +1,6 @@
+getprop card_ViewMatch [vNames]
+   -- maybe change for "view_Match"
+   put the card_Object of the target into cardObject
+   put the view_Match [vNames] of cardObject into cardViewMatch
+   return cardViewMatch
+end card_ViewMatch

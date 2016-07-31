@@ -1,0 +1,12 @@
+function array_PruneLeaves someArray
+   repeat for each key someKey in someArray
+      put someArray [someKey] into testLeaf
+      if testLeaf is an array then
+         put array_PruneLeaves (testLeaf) into prunedArray
+         put prunedArray into someArray [someKey]
+      else
+         delete variable someArray [someKey]
+      end if
+   end repeat
+   return someArray
+end array_PruneLeaves

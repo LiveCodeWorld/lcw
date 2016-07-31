@@ -1,0 +1,8 @@
+function http_GetHeader pServer, pResource, pHeader
+    put http_GetHeaders(pServer, pResource) into tTempA
+    if the keys of tTempA is empty then
+        return tTempA
+    else
+        return tTempA[pHeader]
+    end if
+end http_GetHeader

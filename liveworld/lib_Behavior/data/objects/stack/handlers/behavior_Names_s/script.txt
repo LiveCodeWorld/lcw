@@ -1,0 +1,6 @@
+setprop behavior_Names bNames
+   -- can use a list as well as an index
+   put the long id of the target into targetObject
+   behavior_SetNameHierarchy targetObject, bNames
+   return the result
+end behavior_Names

@@ -1,0 +1,7 @@
+on menu_SetAndStoreHomeStackFiles mTarget
+   put project_GetCurrentName() into projectName
+   put the project_StackFiles of mTarget into projectStackFiles
+   set the project_StackFiles of mTarget to projectStackFiles
+   project_StoreStackFiles projectStackFiles, projectName
+   display_ProjectArray projectName
+end menu_SetAndStoreHomeStackFiles

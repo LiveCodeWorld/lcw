@@ -1,0 +1,6 @@
+on menu_AddHandlerToLibrary hKey
+   library_AddHkey hKey
+   display_Hkey hKey, "project"
+   put merge ("Added handler '[[item 1 to 2 of hKey]]' to the handler library!") into someComment
+   opn_Notify someComment
+end menu_AddHandlerToLibrary

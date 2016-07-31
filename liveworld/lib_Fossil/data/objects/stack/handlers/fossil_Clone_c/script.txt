@@ -1,0 +1,23 @@
+command fossil_Clone someUrl, fossilFile, pAdminUser
+   if there is a file projectFile then
+      delete file projectFile
+   end if
+   put "fossil clone" into someShell
+   if pAdminUser is not empty then put space & "--admin-user" && pAdminUser after someShell
+   put space & someUrl after someShell
+   shell_BashParamEscape projectFile
+   put space & fossilFile after someShell
+   fossil_ExecuteShell someShell
+   put the result into projectInfo 
+   
+   -- put fossil_ParseProjectInfo (projectInfo) into projectArray
+   put fossil_ParseInfo (projectInfo) into projectArray
+   
+   -- add built in project info?
+   put fossil_InfoArray (fossilFile) into infoArray
+   put rev_PluginRelativePath (fossilFile) into infoArray ["repository"]
+   union infoArray with projectArray
+   
+   fossil_SaveProjectArray fossilFile, projectArray
+   return projectArray
+end fossil_Clone

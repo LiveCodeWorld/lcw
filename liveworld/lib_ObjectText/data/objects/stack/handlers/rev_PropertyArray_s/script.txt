@@ -1,0 +1,31 @@
+setprop rev_PropertyArray [stripID] revPropertyArray
+   put the long id of the target into targetObject
+   
+   -- put the object_DefaultPropArray of targetObject into defaultPropArray
+   -- union revPropertyArray with defaultPropArray -- no need just set up template to default before creating.
+   
+   put revPropertyArray ["id"] into newID
+   if stripID is true then delete local revPropertyArray ["id"]
+   
+   set the properties of targetObject to revPropertyArray
+   
+   if stripID is not true and word 1 of targetObject is not "stack" then -- id may have changed so reset targetObject
+      if newID is a number then
+         put newID into word 3 of targetObject
+         if exists(targetObject) is false then breakPoint -- should exists!
+      end if
+   end if
+   
+   switch word 1 of targetObject
+      case "field"
+         set the htmltext of targetObject to revPropertyArray ["htmlText"] -- a stupid RunRev bug!!!
+         break
+      case "button"
+         set the hilite of targetObject to revPropertyArray ["hilited"] -- a stupid RunRev bug!!!
+         break
+   end switch
+   
+   rev_SetMissing revPropertyArray, targetObject -- should not be needed RunRev bug !!!
+   
+   return targetObject
+end rev_PropertyArray

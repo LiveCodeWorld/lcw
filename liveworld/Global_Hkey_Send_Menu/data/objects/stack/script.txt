@@ -1,0 +1,27 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Hkey_Send_Menu
+type: controller
+version: 0.3
+
+local LocalArray
+
+
+--> Global | Hkey | Send | Menu
+-
+[[ _FetchHandler (menu_SendCommand,c) ]]
+
+[[ _FetchHandler (menu_EvaluateFunction,c) ]]
+
+
+--> Global | Hkey | Send | Menu | Props
+-
+[[ _FetchHandler (disabled_SendCommand,g) ]]
+
+[[ _FetchHandler (disabled_EvaluateFunction,g) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]

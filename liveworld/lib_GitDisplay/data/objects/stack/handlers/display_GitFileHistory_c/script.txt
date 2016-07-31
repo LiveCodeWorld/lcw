@@ -1,0 +1,5 @@
+command display_GitFileHistory someFile, pTitle, pDoubleUpThing, pStackLabel
+   put git_FileLogOutline (someFile) into someOutline
+   display_LogOutline someOutline, someFile, pTitle, pDoubleUpThing, pStackLabel
+   return the result
+end display_GitFileHistory

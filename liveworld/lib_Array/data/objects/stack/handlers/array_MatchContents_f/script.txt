@@ -1,0 +1,9 @@
+function array_MatchContents searchValue, someArray
+    repeat for each key foundKey in someArray
+        put someArray [foundKey] into foundValue
+        if foundValue is searchValue then
+            return foundKey
+        end if
+    end repeat
+    return empty
+end array_MatchContents

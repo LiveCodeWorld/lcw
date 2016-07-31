@@ -1,0 +1,10 @@
+function fossil_GetAutoCaptcha pCheckoutFolder, pGetGlobal
+   put fossil_GetSetting ("auto-captcha", pCheckoutFolder, pGetGlobal) into someValue
+   if someValue is "off" then
+      return false
+   else if someValue is "on" then
+      return true
+   else
+      return empty
+   end if
+end fossil_GetAutoCaptcha

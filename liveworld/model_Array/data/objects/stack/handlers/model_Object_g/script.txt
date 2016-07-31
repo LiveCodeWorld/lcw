@@ -1,0 +1,29 @@
+getprop model_Object [modelName]
+   put the long id of the target into targetObject
+   
+   /*
+   -- skipping this to speed things up (can override this default getprop locally in any case)
+   if modelName is empty then
+      put "OPN Model" into modelName
+      -- put the model_Name of targetObject into modelName
+   end if
+   put the uOPN [modelName] of targetObject into modelObject
+   -- put object_ReferenceToControl(modelObject, targetObject) into modelObject
+   
+   if exists(modelObject) is truethen return modelObject
+   */
+   
+   -- return a sensible default
+   switch word 1 of targetObject
+      case "stack"
+         return targetObject
+      case "group"
+         if the backgroundbehavior of targetObject is true then
+            return the stack_Object of targetObject
+         else
+            return the card_Object of targetObject
+         end if
+      default
+         return the card_Object of targetObject
+   end switch
+end model_Object

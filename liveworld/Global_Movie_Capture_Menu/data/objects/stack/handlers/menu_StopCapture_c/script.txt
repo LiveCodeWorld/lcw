@@ -1,0 +1,4 @@
+on menu_StopCapture
+   put false into LocalArray ["revCaptureBeginSession"]
+   revCaptureEndSession
+end menu_StopCapture

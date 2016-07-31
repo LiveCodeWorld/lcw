@@ -1,0 +1,9 @@
+function youtube_FetchVideoJson videoID, pNextPageToken
+   -- https://www.googleapis.com/youtube/v3/videos?part=snippet&id=fDS--tLrAR0&key={YOUR_API_KEY}
+   put "videos?part=snippet&id=" & videoID into channelBit
+   if pNextPageToken is not empty then
+      put "&pageToken=" & pNextPageToken after channelBit
+   end if
+   put fetch_YoutubeJSON (channelBit) into someJSON
+   return someJSON
+end youtube_FetchVideoJson

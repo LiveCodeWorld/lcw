@@ -1,0 +1,6 @@
+function xml_ExtractTable xHtml, tableID, pStartNode
+    put revCreateXMLTree (xHtml, true, true, false) into xmlID
+    put xml_ExtractTableFromID (xmlID, tableID, pStartNode) into someXML
+    revDeleteXmlTree xmlID
+    return someXML
+end xml_ExtractTable

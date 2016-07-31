@@ -1,0 +1,10 @@
+function text_GetSingular someText
+    switch char -1 of someText 
+        case "ies"
+            put "y" into char -1 to -3 of someText
+            break
+        case "s"
+            delete char -1 of someText
+    end switch
+    return someText
+end text_GetSingular

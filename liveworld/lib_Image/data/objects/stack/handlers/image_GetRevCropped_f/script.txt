@@ -1,0 +1,43 @@
+function image_GetRevCropped cropRect, imageView
+    put the image_Object of imageView into imageObject
+     
+    lock screen
+    put the rect of imageView into oRect
+    image_ImportFileData imageObject
+    put the result into someImage
+    if someImage is empty then put the image_Contents of imageView into someImage
+     
+    if cropRect is empty then
+        put the image_CropArea of imageView into cropRect
+        if cropRect is empty then
+            return empty
+        else
+            set the image_CropArea of imageView to empty
+        end if
+    end if
+    put image_RectToAbsolute(cropRect, imageView) into relativeCropRect
+     
+    put the resize_Style of imageView into oStyle
+    put the image_Magnification of imageView into oMagnification
+    put the image_Scroll of imageView into oScroll
+    
+    set the image_Magnification of imageView to 1
+    -- set the resize_Style of imageView to "centre"
+     
+    put image_AbsoluteToRect(relativeCropRect, imageView) into originalCropRect
+     
+    put the short id of imageObject into imageID
+    crop image id imageID to originalCropRect
+    put the image_Contents of imageView into croppedImage
+    set the image_Contents of imageView to someImage
+    
+    set the image_Magnification of imageView to oMagnification
+    set the resize_Style of imageView to oStyle
+    set the image_Scroll of imageView to oScroll
+    -- set the view_Rect of imageView to oRect
+    -- set the image_CropArea of imageView to cropRect
+    unlock screen
+     
+    -- rect_CreateMask originalCropRect, "Test", imageView
+    return croppedImage
+end image_GetRevCropped

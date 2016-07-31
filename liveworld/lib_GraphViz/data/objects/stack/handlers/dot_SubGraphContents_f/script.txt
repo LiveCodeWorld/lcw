@@ -1,0 +1,20 @@
+function dot_SubGraphContents someLabel, nodeSection, someRank, someStyle, someColour, fillColour
+   dot_EscapeQuotes someLabel
+   
+   -- if someRank is empty then put "same" into someRank
+   if someStyle is empty then put "filled" into someStyle
+   if someColour is empty then put "grey60" into someColour
+   if fillColour is empty then put "grey90" into fillColour
+   
+   if someLabel is not empty then put tab & "label=" & kwote(someLabel) & ";" after subGraph
+   if someRank is not empty then put CR & tab & "rank = [[someRank]];" after subGraph
+   put CR & tab & "style=[[someStyle]];" after subGraph
+   put CR & tab & "color=[[someColour]];" after subGraph
+   put CR & tab & "fillcolor=[[fillColour]];" after subGraph
+   
+   put CR after subGraph
+   if nodeSection is not empty then
+      put CR & outline_IncreaseIndent(nodeSection) after subGraph
+   end if
+   return merge(subGraph)
+end dot_SubGraphContents

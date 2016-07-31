@@ -1,0 +1,9 @@
+function image_PixelNum pixelLoc, imageObject
+  put the width of imageObject into someWidth
+  put the height of imageObject into someHeight 
+  
+  put item 1 of pixelLoc into lastPixels
+  put item 2 of pixelLoc into lineNum
+  put lastPixels + (someWidth * (lineNum - 1)) into pixelNum
+  return pixelNum
+end image_PixelNum

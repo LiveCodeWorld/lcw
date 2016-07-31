@@ -1,0 +1,10 @@
+function rig_ControllerFolder
+   if the environment = "server" then
+      return gAPPPATH & "controllers/"
+   else
+      put server_RigApplicationFolder() into rigApplicationFolder
+      text_AddTrailing rigApplicationFolder, "/"
+      put "controllers/" after rigApplicationFolder
+      return rigApplicationFolder
+   end if
+end rig_ControllerFolder

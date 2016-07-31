@@ -1,0 +1,5 @@
+command terminal_DoShell someShell   
+   put "do script" && kwote(someShell) into appleScriptLine  -- this opens a terminal window using ApplesCript and then executes a shell command in the window.
+   put appleScript_DoLine (appleScriptLine, "Terminal", false) into appleScriptResult
+   return appleScriptResult
+end terminal_DoShell

@@ -1,0 +1,8 @@
+function array_TranslateIndex someArray, keyIndex, preFix, postFix
+    put empty into translatedIndex
+    repeat for each line someKey in keyIndex
+        put preFix & someArray[someKey] & postFix & return after translatedIndex
+    end repeat
+    delete last char of translatedIndex
+    return translatedIndex
+end array_TranslateIndex

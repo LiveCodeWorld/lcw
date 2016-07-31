@@ -1,0 +1,4 @@
+on menu_DisplayLibraryHkey treeView
+   put the displayed_Hkey of treeView into hKey
+   display_Hkey hKey, "library"
+end menu_DisplayLibraryHkey

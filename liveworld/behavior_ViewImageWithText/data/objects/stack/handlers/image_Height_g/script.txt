@@ -1,0 +1,8 @@
+getprop image_Height
+   put the uOPN ["image_Height"] of me into imageHeight
+   if imageHeight is empty then
+      return 30
+   else
+      return imageHeight
+   end if
+end image_Height

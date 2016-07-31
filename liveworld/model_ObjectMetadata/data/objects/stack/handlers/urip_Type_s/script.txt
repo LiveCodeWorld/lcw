@@ -1,0 +1,6 @@
+setprop urip_Type objectType
+   -- this also indexes using "object_AddToGlobalArray"
+   set the object_MetaData ["type"] of the target to objectType
+   put the result into uRipArray
+   return uRipArray
+end urip_Type

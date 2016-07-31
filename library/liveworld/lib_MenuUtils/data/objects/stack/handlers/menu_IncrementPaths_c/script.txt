@@ -1,0 +1,46 @@
+command menu_IncrementPaths recordArray, @mPath, @mTitlePath, pTextPath, pTitlePath
+   put recordArray ["mType"] into mType
+   put recordArray ["mTitle"] into mTitle
+   put recordArray ["mLine"] into mLine
+   put menu_CleanLine (mLine) into mSendLine
+   
+   switch
+      case mType = "insert"
+         put pTextPath into mPath
+         
+         if pTitlePath is empty then
+            put mTitle into mTitlePath
+         else
+            put pTitlePath & "/" & mTitle into mTitlePath     
+         end if
+         break
+      case mType = "submenu"
+         put recordArray ["submenu_Title"] into subMenuTitle
+         
+         if pTextPath is empty then
+            put mSendLine into mPath
+         else
+            put pTextPath & "|" & mSendLine into mPath
+         end if
+         
+         if pTitlePath is empty then
+            put mTitle into mTitlePath
+         else
+            put pTitlePath & "/" & mTitle into mTitlePath     
+         end if
+         -- put "/" & subMenuTitle after mTitlePath
+         break
+      default
+         if pTextPath is empty then
+            put mSendLine into mPath
+         else
+            put pTextPath & "|" & mSendLine into mPath
+         end if
+         
+         if pTitlePath is empty then
+            put mTitle into mTitlePath
+         else
+            put pTitlePath & "/" & mTitle into mTitlePath
+         end if
+   end switch
+end menu_IncrementPaths

@@ -1,0 +1,11 @@
+command fedwiki_StoryDeleteItem @storyArray, ItemNumToDelete
+   put storyArray [ItemNumToDelete] into deletedItemArray
+   
+   put item 2 of the extents of storyArray into maxItem
+   repeat with itemNumToMove = (ItemNumToDelete + 1) to maxItem
+      put itemNumToMove - 1 into itemNumDestination
+      put storyArray [itemNumToMove] into storyArray [itemNumDestination]
+   end repeat
+   delete variable storyArray [maxItem]
+   return deletedItemArray
+end fedwiki_StoryDeleteItem

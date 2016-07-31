@@ -1,0 +1,151 @@
+--> Events | Copy and Paste
+-
+-- on pasteKey
+if the clipboardData["text"] is empty then pass pasteKey
+
+put the clipboardData["text"]
+end pasteKey
+
+
+--> Events | Drag
+-
+[[ _FetchHandler (dragEnter,c) ]]
+
+[[ _FetchHandler (dragDrop,c) ]]
+
+[[ _FetchHandler (html_ExtractHREF,f) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (linkClicked,c) ]]
+
+[[ _FetchHandler (browserOver,c) ]]
+
+-- on browserDocumentComplete pInstanceId, pUrl
+   put the params
+end browserDocumentComplete
+
+[[ _FetchHandler (browserNewUrlWindow,c) ]]
+
+-- on browserBeforeNavigate pInstanceId, pUrl
+   put the params
+end browserBeforeNavigate
+
+[[ _FetchHandler (browserBeforeNavigateFrame,c) ]]
+
+[[ _FetchHandler (browserDownloadRequest,c) ]]
+
+
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> SFW | Story | Menu
+-
+
+--> Global | SFW | Story | Menu
+-
+[[ _FetchHandler (submenu_Browser,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchLastPage,c) ]]
+
+[[ _FetchHandler (menu_WikiSiteMap,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TestData,c) ]]
+
+[[ _FetchHandler (menu_DisplayBrowser,c) ]]
+
+[[ _FetchHandler (menu_FindSites,c) ]]
+
+[[ _FetchHandler (menu_ChangeStyleWithJavascript,c) ]]
+
+[[ _FetchHandler (menu_HideFooter,c) ]]
+
+[[ _FetchHandler (menu_BrowserType,c) ]]
+
+[[ _FetchHandler (b_Type,g) ]]
+
+[[ _FetchHandler (b_Types,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_MakeTextBigger,c) ]]
+
+[[ _FetchHandler (menu_MakeTextSmaller,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetDatagridRecord,c) ]]
+
+[[ _FetchHandler (menu_EditRecordBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TestJson,c) ]]
+
+[[ _FetchHandler (menu_TestLocalJson,c) ]]
+
+
+-->
+
+[[ _FetchHandler (menu_CreatePage,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplaySites,c) ]]
+
+-- on menu_SiteMap
+   put url "http://david.viral.academy/system/export.json" into someJSON
+   put json_ToArray (someJSON) into someArray
+   display_Array someArray
+end menu_SiteMap
+
+[[ _FetchHandler (menu_DoubleJson,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | SFW | Story | Menu | Props
+-
+[[ _FetchHandler (rev_DataGrid,g) ]]
+
+[[ _FetchHandler (record_ViewName,g) ]]
+
+[[ _FetchHandler (record_ViewName,s) ]]
+
+[[ _FetchHandler (rview_Name,g) ]]
+
+[[ _FetchHandler (rview_GetName,f) ]]
+
+[[ _FetchHandler (rview_Names,g) ]]
+
+
+--> Global | SFW | Story | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Test,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_Dev,c) ]]

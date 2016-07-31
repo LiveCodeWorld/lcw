@@ -1,0 +1,6 @@
+function hkey_GetOverlayArray hKey, pOverlayName
+   put hkey_GetOverlayData (hKey) into overlayData
+   overlayData_NormalizeName pOverlayName, overlayData
+   put overlayData [pOverlayName] into overlayArray
+   return overlayArray
+end hkey_GetOverlayArray

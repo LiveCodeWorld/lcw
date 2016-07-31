@@ -1,0 +1,8 @@
+command hArray_SetHandlerHashArray @hArray, handlerHashArray
+   if handlerHashArray is an array then
+      put handlerHashArray into hArray ["handlerHashArray"]
+   else
+      delete variable hArray ["handlerHashArray"]
+   end if
+   return hArray
+end hArray_SetHandlerHashArray

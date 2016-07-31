@@ -1,0 +1,24 @@
+command library_HandlerWalk shortCall, shortParentHkey, @hKeyLinkArray, pAllcalls
+   set the cursor to busy
+   put item 1 to 2 of shortCall into shortCall
+   put item 1 to 2 of shortParentHkey into shortParentHkey
+   
+   put the keys of hKeyLinkArray [shortParentHkey] into alreadyCalled
+   if shortCall is among the lines of alreadyCalled then return empty  -- already indexed, and we don't want to get stuck in a recursion loop
+   
+   if shortParentHkey is not empty then
+      put empty into hKeyLinkArray [shortParentHkey][shortCall]
+   end if
+   
+   if pAllcalls is true then
+      put library_GetCalls (shortCall) into childCalls
+   else
+      -- put library_FetchHkeyCalls (hKey) into childCalls -- from text file
+      put library_GetFilteredCalls (shortCall) into childCalls
+   end if
+   
+   repeat for each line childCall in childCalls
+      library_HandlerWalk childCall, shortCall, hKeyLinkArray, pAllcalls
+   end repeat
+   return empty
+end library_HandlerWalk

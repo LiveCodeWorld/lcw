@@ -1,0 +1,4 @@
+getprop tag_Names
+   put git_ExecuteShellCommand("git tag -l") into tagNames
+   return tagNames
+end tag_Names

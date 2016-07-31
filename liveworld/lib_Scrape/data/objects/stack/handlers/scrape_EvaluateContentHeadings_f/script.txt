@@ -1,0 +1,7 @@
+function scrape_EvaluateContentHeadings someHTML, pHeaderLevel
+   if pHeaderLevel is empty then put 3 into pHeaderLevel
+   put format ("//*[@id='content']/h%d", pHeaderLevel) into someXPath
+
+   put scrape_EvaluateXPath (someHtml, someXPath) into contentSection
+   return contentSection
+end scrape_EvaluateContentHeadings

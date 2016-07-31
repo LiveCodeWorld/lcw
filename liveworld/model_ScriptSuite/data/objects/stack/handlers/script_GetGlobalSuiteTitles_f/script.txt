@@ -1,0 +1,6 @@
+function script_GetGlobalSuiteTitles suiteType
+   get script_ExtractGlobalSuiteArray (suiteType)
+   put keys(it) into suiteTitles
+   sort suiteTitles
+   return word 1 to -1 of suiteTitles
+end script_GetGlobalSuiteTitles

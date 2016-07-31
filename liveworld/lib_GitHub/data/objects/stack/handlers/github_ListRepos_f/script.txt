@@ -1,0 +1,4 @@
+function github_ListRepos
+   put github_RestGet ("/orgs/opn/repos") into someData
+   return someData
+end github_ListRepos

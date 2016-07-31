@@ -1,0 +1,10 @@
+setprop view_Value [propName] propValue
+   put the view_DataArray of the target into viewDataArray
+   if propValue is empty then
+      delete local viewDataArray [propName]
+   else
+      put propValue into viewDataArray [propName]
+   end if
+   set the view_DataArray of the target to viewDataArray
+   return viewDataArray
+end view_Value

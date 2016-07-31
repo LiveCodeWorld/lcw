@@ -1,0 +1,6 @@
+function rev_FormatXMLFontStyle pTag
+  local tStyle
+  put item 4 to -1 of the cStyles[pTag] of revDocumentationStack() into tStyle
+  if tStyle is default then return empty
+  return tStyle
+end rev_FormatXMLFontStyle

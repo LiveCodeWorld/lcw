@@ -1,0 +1,38 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Files_Menu
+type: controller
+version: 0.1
+
+
+--> Global | GIT | Files | Menu
+-
+[[ _FetchHandler (menu_FilesInRepository,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RenameFolder,c) ]]
+
+[[ _FetchHandler (menu_DeleteFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DeleteFile,c) ]]
+
+[[ _FetchHandler (menu_MoveFile,c) ]]
+
+[[ _FetchHandler (menu_RenameFile,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayOpnUntracked,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (git_RefreshDisplay,c) ]]
+

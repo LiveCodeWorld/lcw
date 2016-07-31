@@ -1,0 +1,16 @@
+function log_ConstructEntry someValue, pTitle, pTabBoolean
+   put word 1 to -1 of someValue into someValue
+   if pTabBoolean is true then
+      put tab into titleDelim
+   else
+      put CR into titleDelim
+   end if
+
+   if pTitle is empty then
+      put the internet date & titleDelim into logEntry
+   else
+      put pTitle & ":" && the internet date & titleDelim into logEntry
+   end if
+   put someValue after logEntry
+   return logEntry
+end log_ConstructEntry

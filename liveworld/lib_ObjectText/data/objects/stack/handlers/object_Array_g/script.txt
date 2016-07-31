@@ -1,0 +1,15 @@
+getprop object_Array [pVersionNum]
+   local manifestArray, objectsArray, pExportHandlers, pDontDiff, pForceIndexHandlerCalls
+   put the long id of the target into targetObject
+   if pVersionNum is empty then put 0.5 into pVersionNum
+   
+   objectArray_AddControl targetObject, manifestArray, objectsArray, hArray, pExportHandlers, pDontDiff, true, pForceIndexHandlerCalls
+   
+   put manifestArray into objectArray ["manifest"]
+   put objectsArray into objectArray ["objects"]
+   put pVersionNum into objectArray ["manifest"]["version"]
+   -- put the short name of targetObject into objectArray ["manifest"]["name"]
+   -- put the mobile_Name of targetObject into objectArray ["manifest"]["object"]
+   
+   return objectArray
+end object_Array

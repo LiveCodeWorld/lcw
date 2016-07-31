@@ -1,0 +1,24 @@
+getprop header_Height
+   if the visible of the header_View of me = false then return 0
+   switch the fluid_View of me
+      case "header_View" -- calculate from other views
+         put the inner_Height of me into headerHeight
+         subtract the body_Height of me from headerHeight
+         subtract the footer_Height of me from headerHeight
+         subtract 2 * the vertical_Spacing of me from headerHeight
+         break
+      default
+         put LocalArray ["header_Height"] into someHeight
+   end switch
+   
+   if someHeight is a number then
+      return someHeight
+   else
+      put the header_Height of the owner of me into someHeight
+      if someHeight is a number then
+         return someHeight
+      else
+         return the header_DefaultHeight of me
+      end if
+   end if
+end header_Height

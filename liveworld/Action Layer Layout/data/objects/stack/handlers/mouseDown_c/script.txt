@@ -1,0 +1,9 @@
+on mouseDown pWhich
+   if pWhich is not 3 then pass mouseDown
+   
+   if word 1 of the target = "card" then
+      menu_PopUp "Global | SivaSiva | Tool | Menu"
+   else
+      pass mouseDown
+   end if
+end mouseDown

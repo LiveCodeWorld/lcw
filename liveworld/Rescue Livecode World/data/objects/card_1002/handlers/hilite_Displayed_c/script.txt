@@ -1,0 +1,9 @@
+command hilite_Displayed
+   put the displayed_ProjectSetArray of me into dataArray
+   put the keys of dataArray ["data"]["used"] into usedStacks
+   
+   lock screen
+   hilite_LibDisplayField usedStacks
+   hilite_ImportantStacks usedStacks
+   unlock screen
+end hilite_Displayed

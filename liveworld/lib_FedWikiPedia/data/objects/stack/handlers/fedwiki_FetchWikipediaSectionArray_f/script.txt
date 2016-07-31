@@ -1,0 +1,21 @@
+function fedwiki_FetchWikipediaSectionArray sectionTitle, sectionNum, wikipediaUrl
+   put sandbox_FetchSectionArray (sectionTitle, sectionNum) into sandboxArray
+   
+   put sandboxArray ["parse"] into parseArray
+   put parseArray ["title"] into pageTitle
+   put parseArray ["text"]["*"] into sectionHTML
+   put parseArray ["wikitext"]["*"] into sectionWikiText
+   
+   put parseArray ["links"] into sectionLinks
+   put parseArray ["categories"] into sectionCategories
+   put parseArray ["externallinks"] into sectionExternalLinks
+   put parseArray ["images"] into sectionImageArray
+   
+   put parseArray ["sections"][1] into sectionInfoArray
+   put sectionInfoArray ["line"] into sectionTitle
+   put sectionInfoArray ["toclevel"] into toclevel
+   
+   put fedwiki_ConstructSectionWikipediaPageArray (sectionTitle, sectionWikiText, sectionImageArray, wikipediaUrl) into fedwikiPageArray
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwiki_FetchWikipediaSectionArray

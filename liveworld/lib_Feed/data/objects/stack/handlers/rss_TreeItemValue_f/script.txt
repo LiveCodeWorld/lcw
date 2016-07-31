@@ -1,0 +1,6 @@
+function rss_TreeItemValue tagName, itemNum, treeID
+    -- was "xml_ExtractNodeItem"
+    put "rss/channel/item[" & itemNum & "]/" & tagName into someNode
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    return nodeContents
+end rss_TreeItemValue

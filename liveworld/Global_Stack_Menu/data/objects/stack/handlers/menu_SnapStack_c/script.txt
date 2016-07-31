@@ -1,0 +1,15 @@
+on menu_SnapStack scriptObject
+   put the stack_Object of scriptObject into stackObject
+   put the wireframe_StackSnap of stackObject into somePNG
+   
+   put somePNG into image 1 of cd 1 of stack "Test Wireframe Image"
+   
+   put the short name of stackObject into stackName
+   replace quote with empty in stackName
+   replace space with "-" in stackName
+   put "stack_" & stackName & ".png" into shortFile
+   
+   localhost_SavePng somePNG, shortFile
+   put the result into imageFile
+   finder_Reveal imageFile
+end menu_SnapStack

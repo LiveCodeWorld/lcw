@@ -1,0 +1,16 @@
+command reIndexContentViews
+   put word 3 of the header_Divider of me into headerDividerID
+   put word 3 of the footer_Divider of me into footerDividerID
+   put word 3 of the menu_Button of me into mButtonID
+   put headerDividerID,footerDividerID,mButtonID into notIDs
+   
+   repeat for each line shortID in the childcontrolids of me
+      if shortID is among the items of notIDs then next repeat
+      put shortID & CR after goodIDs
+   end repeat
+   
+   put the long id of control id (line 1 of goodIDs) into HeaderView
+   put the long id of control id (line 2 of goodIDs) into BodyView
+   put the long id of control id (line 3 of goodIDs) into FooterView
+   return HeaderView & CR & BodyView & CR & FooterView
+end reIndexContentViews

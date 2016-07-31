@@ -1,0 +1,7 @@
+private function sandbox_GetExtract sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID -- assume only one
+   put pagesArray [pageID] into pageArray
+   put pageArray ["extract"] into someExtract
+   return someExtract
+end sandbox_GetExtract

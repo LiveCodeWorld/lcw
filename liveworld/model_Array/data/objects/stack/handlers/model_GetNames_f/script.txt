@@ -1,0 +1,5 @@
+function model_GetNames modelObject
+   put the custompropertysets of modelObject into setNames
+   filter setNames without "cGLX2*"
+   return setNames
+end model_GetNames

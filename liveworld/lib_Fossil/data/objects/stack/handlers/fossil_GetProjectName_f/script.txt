@@ -1,0 +1,4 @@
+function fossil_GetProjectName fossilFile
+   put fossil_InfoArray (fossilFile) into infoArray
+   return infoArray ["project-name"]
+end fossil_GetProjectName

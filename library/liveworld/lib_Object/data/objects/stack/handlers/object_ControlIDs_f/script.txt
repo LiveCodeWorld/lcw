@@ -1,0 +1,11 @@
+function object_ControlIDs someGroup, visibleOnly
+   local idIndex
+   put visibleOnly is true into visibleOnly
+   repeat with controlNum = 1 to the number of controls in someGroup
+      if the visible of control controlNum of someGroup is false and visibleOnly is true then next repeat
+      put the short ID of control controlNum of someGroup into someID
+      put someID & CR after idIndex
+   end repeat
+   delete last char of idIndex
+   return idIndex
+end object_ControlIDs

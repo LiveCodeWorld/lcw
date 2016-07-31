@@ -1,0 +1,6 @@
+function youtube_FetchPlayListIndexPageArray playlistID, pPageTitle, pDirection, pNumbered, pDroppedURL
+   set_PlayListPageTitle pPageTitle, playlistID
+   put youtube_FetchAllPlayListArray (playlistID) into orderedSnippetArray
+   put construct_VideoIndexPageArray (orderedSnippetArray, pPageTitle, pDirection, pNumbered, pDroppedURL) into pageArray
+   return pageArray
+end youtube_FetchPlayListIndexPageArray

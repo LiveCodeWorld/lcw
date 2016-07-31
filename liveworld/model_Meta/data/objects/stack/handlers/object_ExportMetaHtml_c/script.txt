@@ -1,0 +1,5 @@
+command object_ExportMetaHtml objectFolder, objectHtml
+   put meta_HtmlFile (objectFolder, false) into someFile
+   put objectHtml into url ( "binfile:" & someFile)
+   return someFile
+end object_ExportMetaHtml

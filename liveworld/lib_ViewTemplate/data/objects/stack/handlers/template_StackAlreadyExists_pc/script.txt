@@ -1,0 +1,9 @@
+private command template_StackAlreadyExists viewName
+   if there is a stack viewName then
+      put "There is already a view template stack" && kwote (viewName) & "!" into someComment
+      answer warning someComment
+      show stack viewName
+      go to stack viewName
+      exit to top
+   end if
+end template_StackAlreadyExists

@@ -1,0 +1,4 @@
+getprop footer_Divider
+   if exists (control "_Footer Divider" of me) is false then return empty
+   return the long id of control "_Footer Divider" of me
+end footer_Divider

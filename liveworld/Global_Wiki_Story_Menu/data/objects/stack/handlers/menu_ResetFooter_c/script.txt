@@ -1,0 +1,5 @@
+on menu_ResetFooter mTarget
+   put the wiki_View of mTarget into wikiView
+   put the footer_View of mTarget into footerView
+   set the control_Type of footerView to "placeholder"  
+end menu_ResetFooter

@@ -1,0 +1,4 @@
+function file_FixNasPath filePath
+    put file_SafeNameReg() into someReg
+    return replacetext(filePath, someReg,"_")
+end file_FixNasPath

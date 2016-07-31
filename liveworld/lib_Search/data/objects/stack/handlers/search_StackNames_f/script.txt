@@ -1,0 +1,10 @@
+function search_StackNames stackNames, someProperty, pControllerObject
+   local objectArray
+   repeat for each line stackName in stackNames
+      if exists(stack stackName) is false then next repeat
+      
+      put the name of stack stackName into stackObject
+      search_StackAndSubstacks objectArray, stackObject, someProperty, pControllerObject
+   end repeat
+   return objectArray
+end search_StackNames

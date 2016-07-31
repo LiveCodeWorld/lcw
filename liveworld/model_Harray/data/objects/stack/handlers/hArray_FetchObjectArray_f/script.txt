@@ -1,0 +1,6 @@
+function hArray_FetchObjectArray scriptObject
+   put revRuggedID (scriptObject) into rObject
+   put the textStack_Folder of rObject into mainStackFolder
+   put mainstack_FetchHarray (mainStackFolder) into hArray
+   return hArray_GetObjectArray (rObject, hArray)
+end hArray_FetchObjectArray

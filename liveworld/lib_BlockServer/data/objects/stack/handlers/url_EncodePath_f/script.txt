@@ -1,0 +1,11 @@
+function url_EncodePath somePath
+   replace space with "%20" in somePath
+   return somePath
+   
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of somePath
+      put  item itemNum of somePath into pathItem
+      put urlencode (pathItem) into item itemNum of somePath
+   end repeat
+   return somePath
+end url_EncodePath

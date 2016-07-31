@@ -1,0 +1,9 @@
+function fedwiki_ConstructLink someText, pExternalURL
+   put word 1 to -1 of line 1 of someText into someText
+   if pExternalURL is empty then
+      return "[[" & someText & "]]"
+   else
+      put word 1 to -1 of pExternalURL into pExternalURL
+      return "[" & pExternalURL && someText & "]"
+   end if
+end fedwiki_ConstructLink

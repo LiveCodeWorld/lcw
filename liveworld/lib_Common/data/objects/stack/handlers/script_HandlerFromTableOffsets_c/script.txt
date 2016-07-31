@@ -1,0 +1,36 @@
+command script_HandlerFromTableOffsets shortHkey, handlerTable, @startLineNum, @endLineNum
+   if handlerTable is empty then
+      put 0 into startLineNum
+      put 0 into endLineNum
+      return false
+   end if
+   
+   put item 1 of shortHkey into hName
+   put item 2 of shortHkey into hType
+   switch char -1 of hType
+      case "c"
+         put "M" into char -1 of hType
+         break
+      case "o"
+         put "M" into char -1 of hType
+         break
+   end switch
+   
+   repeat for each line someLine in handlerTable      
+      put word 2 of someLine into hTableName
+      if hTableName is not hName then next repeat
+      
+      put word 1 of someLine into hTableType
+      switch
+         case hTableType = hType
+            put word 3 of someLine into startLineNum
+            put word 4 of someLine into endLineNum
+            return true
+      end switch
+      
+      add 1 to handlerLineNum
+   end repeat
+   put 0 into startLineNum
+   put 0 into endLineNum
+   return false
+end script_HandlerFromTableOffsets

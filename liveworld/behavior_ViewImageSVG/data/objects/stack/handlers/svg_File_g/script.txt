@@ -1,0 +1,7 @@
+getprop svg_File
+   put LocalArray ["svg_URL"] into svgURL
+   if char 1 to 5 of svgURL is not "file:" then return empty
+   
+   delete char 1 to 5 of svgURL
+   return svgURL
+end svg_File

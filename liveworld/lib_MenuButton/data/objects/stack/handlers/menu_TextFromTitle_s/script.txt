@@ -1,0 +1,26 @@
+setprop menu_TextFromTitle [pMenuTarget] mTitleTable
+   -- don't like the syntax of this
+   put the long id of the target into tObject
+   
+   set the itemdelimiter to tab
+   put item 1 of line 1 of mTitleTable into mTopTitle
+   
+   if mTopTitle is empty then
+      if the controlkey is "Down" then
+         -- put the menu_ToolTitle of tObject into mTopTitle
+         put the menu_Title of tObject into mTopTitle
+      else
+         put the menu_Title of tObject into mTopTitle
+      end if
+   end if
+   put the menu_Controller [mTopTitle] of tObject into mTopController
+   
+   menu_ClearTargetGlobals
+   menu_SetTargetObject tObject
+   menu_SetTopController mTopController
+   
+   put menu_GetTextFromTitleTable (mTitleTable, tObject, pMenuTarget) into mText
+   menu_SetActiveText mText 
+   if mText is not empty then set the menu_Text of tObject to mText
+   return mText
+end menu_TextFromTitle

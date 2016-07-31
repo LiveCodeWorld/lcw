@@ -1,0 +1,20 @@
+on menu_PlaceOnMainScreen mTarget, someName
+   switch someName
+      case "LiveCode Dictionary"
+         stack_SetToMainScreen "revDictionary"
+         go to stack "revDictionary"
+         break
+      case "Script Editors"
+         put the openstacks into stackNames
+         filter stackNames with "revNewScriptEditor *"
+         repeat for each line stackName in stackNames
+            stack_SetToMainScreen stackName
+         end repeat
+         break
+      case "All open stacks"
+         stack_SetToMainScreen
+         break
+      default
+         stack_SetToMainScreen someName
+   end switch
+end menu_PlaceOnMainScreen

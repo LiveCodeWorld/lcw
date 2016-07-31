@@ -1,0 +1,20 @@
+function array_AllNodes someArray
+   -- unique index of all elements and keys in an array (not for nested arrays)
+   local indexArray
+   repeat for each key someKey in someArray
+      put empty into indexArray [someKey]
+      put someArray [someKey] into keyElements
+      if keyElements is an array then
+         repeat for each key keyElement in keyElements
+            if word 1 to -1 of keyElement is empty then next repeat
+            put empty into indexArray [keyElement]
+         end repeat
+      else if keyElements is not empty then
+         repeat for each line keyElement in keyElements
+            if word 1 to -1 of keyElement is empty then next repeat
+            put empty into indexArray [keyElement]
+         end repeat
+      end if
+   end repeat
+   return keys (indexArray)
+end array_AllNodes

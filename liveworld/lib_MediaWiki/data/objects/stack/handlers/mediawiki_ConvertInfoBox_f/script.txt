@@ -1,0 +1,26 @@
+function mediawiki_ConvertInfoBox infobox
+   delete char 1 to 2 of infoBox
+   delete char -2 to -1 of infoBox
+   put word 1 to -1 of infoBox into infoBox
+   if word 1 of infoBox is not "InfoBox" then return empty
+   
+   put word 2 to -1 of line 1 of infoBox into infoBoxName
+   delete line 1 of infoBox
+   
+   set the itemdelimiter to "="
+   repeat for each line someLine in infoBox
+      if char 1 of word 1 of someLine is not "|" then
+         next repeat
+      end if
+      
+      put item 1 of someLine into someKey
+      delete char 1 of someKey
+      put word 1 of someKey into someKey
+      
+      put item 2 to -1 of of someLine into someValue
+      put word 1 to -1 of someValue into someValue
+      
+      put someValue into infoBoxArray [someKey]
+   end repeat
+   return infoBoxArray
+end mediawiki_ConvertInfoBox

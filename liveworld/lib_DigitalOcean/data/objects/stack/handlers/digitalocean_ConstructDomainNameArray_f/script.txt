@@ -1,0 +1,5 @@
+function digitalocean_ConstructDomainNameArray domainInfoArray
+   local domainNameArray, dnsDictionary
+   digitalocean_ConstructNameArrays domainInfoArray, domainNameArray, dnsDictionary
+   return domainNameArray
+end digitalocean_ConstructDomainNameArray

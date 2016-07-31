@@ -1,0 +1,10 @@
+getprop resize_Style
+   put LocalArray ["resize_Style"] into resizeStyle
+   if resizeStyle is empty then
+      put _defaultResizeStyle() into defaultResizeStyle
+      put defaultResizeStyle into LocalArray ["resize_Style"]
+      return defaultResizeStyle
+   end if
+   
+   return resizeStyle
+end resize_Style

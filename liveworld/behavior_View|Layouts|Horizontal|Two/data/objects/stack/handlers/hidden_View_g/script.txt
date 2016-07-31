@@ -1,0 +1,10 @@
+getprop hidden_View
+   switch
+      case the visible of the left_View of me = false
+         return "left"
+      case the visible of the right_View of me = false
+         return "right"
+      default
+         return empty
+   end switch      
+end hidden_View

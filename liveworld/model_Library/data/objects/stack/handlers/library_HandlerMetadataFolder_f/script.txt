@@ -1,0 +1,6 @@
+function library_HandlerMetadataFolder hKey, pDontCreate
+   -- for the handler/hkey library metadata is in the same folder as the scripts
+   -- in the project handler export - handlers and metadata are in separate roots.
+   put library_HkeyFolder (hKey, pDontCreate) into hkeyFolder
+   return hkeyFolder
+end library_HandlerMetadataFolder

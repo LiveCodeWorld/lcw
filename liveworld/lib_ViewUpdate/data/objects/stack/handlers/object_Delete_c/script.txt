@@ -1,0 +1,14 @@
+command object_Delete deadObjects
+   lock screen
+   repeat for each line someObject in deadObjects
+      if exists(someObject) then
+         try
+            delete someObject
+         catch e
+            -- in case the script is executing in the context of the object itself
+            send "delete someObject" to someObject in 2 ticks
+         end try
+      end if
+   end repeat
+   unlock screen
+end object_Delete

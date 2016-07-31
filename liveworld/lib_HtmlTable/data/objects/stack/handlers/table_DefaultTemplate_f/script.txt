@@ -1,0 +1,25 @@
+function table_DefaultTemplate
+   -- this handler generates a default table template
+   -- examine this handler to see how to construct or modify your own templates
+   
+   put "<table border=" & quote & "0" & quote && "cellpadding=" & quote & "4" & quote && "cellspacing=" & quote & "0" & quote && ">" into tableTemplateArray ["tableOpen"]
+   
+   put "<tr>" into tableTemplateArray ["headingRowStart"]
+   put "</tr>" into tableTemplateArray ["headingRowEnd"]
+   put "<th>" into tableTemplateArray ["headingCellStart"]
+   put "</th>" into tableTemplateArray ["headingCellEnd"]
+   
+   put "<tr>" into tableTemplateArray ["rowStart"]
+   put "</tr>" into tableTemplateArray ["rowEnd"]
+   put "<td>" into tableTemplateArray ["cellStart"]
+   put "</td>" into tableTemplateArray ["cellEnd"]
+   
+   put "<tr>" into tableTemplateArray ["rowAltStart"]
+   put "</tr>" into tableTemplateArray ["rowAltEnd"]
+   put "<td>" into tableTemplateArray ["cellAltStart"]
+   put "</td>" into tableTemplateArray ["cellAltEnd"]
+   	
+   put "</table>" into tableTemplateArray ["tableClose"]
+   
+   return tableTemplateArray
+end table_DefaultTemplate

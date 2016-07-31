@@ -1,0 +1,10 @@
+function menu_GetToolTitle viewObject
+   lock messages
+   put the menu_ToolTitle of viewObject into mToolTitle
+   unlock messages
+   if mToolTitle is not empty then return mToolTitle
+   
+   put the view_Name of viewObject into viewName
+   put "Global |" && menu_TitleFromViewName (viewName) into mToolTitle
+   return mToolTitle
+end menu_GetToolTitle

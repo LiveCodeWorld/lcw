@@ -1,0 +1,6 @@
+function project_ConstructMenuSetArray
+   -- was "library_ConstructMenuSetArray"
+   put library_FetchSetArray ("Default") into projectArray
+   put empty into projectArray ["data"]["used"]
+   return projectArray
+end project_ConstructMenuSetArray

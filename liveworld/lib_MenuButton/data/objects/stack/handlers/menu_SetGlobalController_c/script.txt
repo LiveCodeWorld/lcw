@@ -1,0 +1,5 @@
+command menu_SetGlobalController globalMenuTitle, scriptObject
+   -- we need a robust, clear model for global menus
+   global gHkey_Array
+   put the rugged_ID of scriptObject into  gHkey_Array ["Global Menus"][globalMenuTitle]["mController"]
+end menu_SetGlobalController

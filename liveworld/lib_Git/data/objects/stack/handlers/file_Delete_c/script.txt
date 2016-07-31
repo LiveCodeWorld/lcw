@@ -1,0 +1,5 @@
+command file_Delete someFile
+   -- could check if versioned and use built in repository commands to delete file
+   delete file someFile
+   return the result
+end file_Delete

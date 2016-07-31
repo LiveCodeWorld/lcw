@@ -1,0 +1,53 @@
+command rev_AddBehaviorHacks someBoolean, pNotify
+   put scriptEditor_MenuFrontScript() into menuFrontScript
+   
+   put scriptEditor_HandlerListBehavior() into handlerBehavior
+   put scriptEditor_ScriptFieldBehavior() into scriptFieldBehavior
+   put scriptEditor_HistoryButtonBehavior() into historyBehavior
+   put scriptEditor_FindFieldBehavior() into simpleFindBehavior
+   put scriptEditor_CompileButtonBehavior() into compileButtonBehavior
+   put scriptEditor_DocumentationFieldBehavior() into documentationFieldBehavior
+   put scriptEditor_LaunchDocsBehavior() into launchDocsBehavior
+   
+   put rev_OpenScriptEditorNames() into editorNames
+   repeat with someNum = 0 to the number of lines of editorNames
+      put rev_ScriptEditorField (someNum) into scriptField
+      if exists(scriptField) is false then next repeat
+      
+      put rev_HistoryButton (someNum) into historyButton
+      put rev_HandlerTreeField (someNum) into handlerTreeField
+      get the behavior of handlerTreeField
+      put rev_SimpleFindField (someNum) into simpleFindField
+      put rev_CompileButton (someNum) into compileButton
+      put rev_ScriptEditorDocField (someNum) into scriptEditorDocField
+      put scriptEditor_LaunchDocsButton (someNum) into launchDocsButton
+      
+      if someBoolean is true then
+         set the behavior of scriptField to scriptFieldBehavior
+         set the behavior of historyButton to historyBehavior
+         set the behavior of handlerTreeField to handlerBehavior
+         set the behavior of simpleFindField to simpleFindBehavior
+         set the behavior of compileButton to compileButtonBehavior
+         set the behavior of scriptEditorDocField to documentationFieldBehavior
+         set the behavior of launchDocsButton to launchDocsBehavior
+      else
+         set the behavior of scriptField to empty
+         set the behavior of historyButton to empty
+         set the behavior of handlerTreeField to empty
+         set the behavior of simpleFindField to empty
+         set the behavior of compileButton to empty
+         set the behavior of scriptEditorDocField to empty
+         set the behavior of launchDocsButton to empty
+      end if
+   end repeat
+   
+   library_SetRevHackStatus someBoolean
+   if pNotify is true then
+      if someBoolean is true then
+         put "Added the Livecode hacks to the environment!" into someComment
+      else
+         put "Removed the Livecode hacks from the environment!" into someComment
+      end if
+      opn_Notify someComment
+   end if
+end rev_AddBehaviorHacks

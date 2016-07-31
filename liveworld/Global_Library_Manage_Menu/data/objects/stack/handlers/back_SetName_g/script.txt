@@ -1,0 +1,4 @@
+getprop back_SetName [scriptObject]
+   put the library_Sets ["back"] of scriptObject into setNames
+   return setNames
+end back_SetName

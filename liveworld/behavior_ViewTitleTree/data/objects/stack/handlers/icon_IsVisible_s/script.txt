@@ -1,0 +1,10 @@
+setprop icon_IsVisible someBoolean
+   lock screen
+   set the visible of the icon_Button of me to someBoolean
+   if someBoolean is true then
+      set the title_TextAlign of me to "left"
+   else
+      set the title_TextAlign of me to "centre"
+   end if
+   unlock screen
+end icon_IsVisible

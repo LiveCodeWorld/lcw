@@ -1,0 +1,19 @@
+command stack_SetDimensions stackObject, someWidth, someHeight, pMargin, pDontCentre, pDontLimit
+   put max (someWidth, 100) into someWidth
+   put max (someHeight, 100) into someHeight
+   
+   put the rect of stackObject into someRect
+   if pMargin is not empty then rect_SubtractMargins someRect, pMargin
+   rect_SetWidth someRect, someWidth, pDontCentre
+   rect_SetHeight someRect, someHeight, pDontCentre
+   
+   if pDontLimit is not true then
+      put rect_GetCentre (someRect) into gLoc
+      put loc_WithinWhichScreenRect (gLoc) into sRect
+      put rect_SubtractMargin (50, sRect) into outsideRect
+      rect_Normalize someRect, outsideRect
+   end if
+   
+   set the rect of stackObject to someRect
+   return someRect
+end stack_SetDimensions

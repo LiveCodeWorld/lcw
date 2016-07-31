@@ -1,0 +1,6 @@
+function xml_FromArray pArray, pArrayEncoding, pStoreEncodedAs, pStartNode, pIsFormatted
+   put xml_TreeFromArray (pArray, pArrayEncoding, pStoreEncodedAs) into treeID
+   put revXMLText (treeID, pStartNode, pIsFormatted) into someXml
+   revDeleteXMLTree treeID
+   return someXml
+end xml_FromArray

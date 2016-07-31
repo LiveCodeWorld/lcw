@@ -1,0 +1,6 @@
+setprop back_Property [propName] someValue
+   -- place in behavior (references "me")
+   set the view_DisplayProperty [propName] of me to someValue
+   -- dispatch "LayoutControl" to me -- changes the target (allowing lower level control use)
+   return the result
+end back_Property

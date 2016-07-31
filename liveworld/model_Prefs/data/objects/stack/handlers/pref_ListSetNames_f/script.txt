@@ -1,0 +1,4 @@
+function pref_ListSetNames
+   put pref_FetchData() into dataArray
+   return keys (dataArray)
+end pref_ListSetNames

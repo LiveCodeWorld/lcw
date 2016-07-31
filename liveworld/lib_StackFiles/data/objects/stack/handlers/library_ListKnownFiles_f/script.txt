@@ -1,0 +1,8 @@
+function library_ListKnownFiles
+   -- was "opn_GetFileIndex"
+   put library_StackFileStack() into libraryStackFileStack
+   put the filename of libraryStackFileStack into stackFileRoot
+   put the stackfiles of libraryStackFileStack into stackFileTable
+   put stackFile_ConstructFileIndex (stackFileTable, stackFileRoot) into someFiles
+   return someFiles
+end library_ListKnownFiles

@@ -1,0 +1,9 @@
+function script_SuiteNameToPath suiteName, someDelim
+   if someDelim is emty then put "/" into someDelim
+   set the itemdelimiter to "|"
+   repeat for each item pathBit in suiteName
+      put word 1 to -1 of pathBit & someDelim after suitePath
+   end repeat
+   delete char -1 of suitePath
+   return suitePath
+end script_SuiteNameToPath

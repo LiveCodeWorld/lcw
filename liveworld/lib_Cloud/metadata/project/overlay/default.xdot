@@ -1,0 +1,73 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 162 402 162 402 0 ",
+		bb="0,0,402,162",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n1		 [URL="cloud_ConstructURL%2Cf%2Cstack+%22lib_Cloud%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 102 34 86.01 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 102 29.8 0 120.54 18 -cloud_ConstructURL ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_ConstructURL,
+			pos="102,34",
+			style=filled,
+			width=2.3959];
+		n3		 [URL="cloud_RestGet%2Cf%2Cstack+%22lib_Cloud%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 199 106 62.83 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 199 101.8 0 83.21 13 -cloud_RestGet ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_RestGet,
+			pos="199,106",
+			style=filled,
+			width=1.7407];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n2		 [URL="cloud_SetRestHeaders%2Cc%2Cstack+%22lib_Cloud%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 296 34 90.34 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 296 29.8 0 126.75 20 -cloud_SetRestHeaders ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=cloud_SetRestHeaders,
+			pos="296,34",
+			style=filled,
+			width=2.5047];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 8 8 154 394 154 394 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 201 138.8 0 99.7 17 -stack \"lib_Cloud\" ",
+			bb="8,8,394,154",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Cloud\"",
+			lheight=0.19,
+			lp="201,143",
+			lwidth=1.38,
+			style=filled
+		];
+		n1;
+		n3;
+		n3 -> n1		 [_draw_="c 7 -#000000 B 4 176.99 89.12 164.12 79.83 147.66 67.95 133.45 57.69 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 135.09 54.57 124.94 51.55 131 60.24 ",
+			pos="e,124.94,51.552 176.99,89.116 164.12,79.829 147.66,67.953 133.45,57.693"];
+		n2;
+		n3 -> n2		 [_draw_="c 7 -#000000 B 4 221.01 89.12 233.88 79.83 250.34 67.95 264.55 57.69 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 267 60.24 273.06 51.55 262.91 54.57 ",
+			pos="e,273.06,51.552 221.01,89.116 233.88,79.829 250.34,67.953 264.55,57.693"];
+	}
+}

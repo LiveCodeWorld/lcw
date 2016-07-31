@@ -1,0 +1,15 @@
+function folder_ExtensionFiles someFolder, pExtension
+   folder_Format someFolder
+   put the directory into oDirectory
+   set the directory to someFolder
+   put the files into shortFiles
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      if item -1 of shortFile = pExtension then
+         put someFolder & shortFile & CR after extensionFiles
+      end if
+   end repeat
+   delete char -1 of extensionFiles
+   set the directory to oDirectory
+   return extensionFiles
+end folder_ExtensionFiles

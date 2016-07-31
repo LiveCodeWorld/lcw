@@ -1,0 +1,7 @@
+getprop selected_Hkey
+   put the dataGrid_View of me into dgView
+   put the dgHilitedindex of dgView into pHilitedIndex
+   put the dgDataOfIndex [pHilitedIndex] of dgView into recordArray
+   put recordArray ["hkey"] into hKey
+   return pHilitedIndex
+end selected_Hkey

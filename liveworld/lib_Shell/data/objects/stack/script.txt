@@ -1,0 +1,115 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Shell
+type: library
+version: 0.1
+
+
+--> Working On
+-
+[[ _FetchHandler (shell_ExecuteAtRoot,f) ]]
+
+
+--> Shell | Network
+-
+[[ _FetchHandler (terminal_Diff,c) ]]
+
+[[ _FetchHandler (diff_CreateTempFile,c) ]]
+
+[[ _FetchHandler (diff_Files,c) ]]
+
+[[ _FetchHandler (bonjour_RegisterPortMapper,c) ]]
+
+[[ _FetchHandler (socket_ListUsedPorts,f) ]]
+
+[[ _FetchHandler (osx_DaemonArray,f) ]]
+
+
+--> Shell
+-
+[[ _FetchHandler (shell_ConvertHtmlToXML,f) ]]
+
+[[ _FetchHandler (shell_ConvertHtmlToXHTML,f) ]]
+
+[[ _FetchHandler (shell_Tidy,f) ]]
+
+[[ _FetchHandler (shell_DeleteFolder,c) ]]
+
+[[ _FetchHandler (shell_DeleteFile,c) ]]
+
+[[ _FetchHandler (shell_FetchFile,f) ]]
+
+[[ _FetchHandler (shell_StoreFile,c) ]]
+
+[[ _FetchHandler (shell_RemoteExecute,c) ]]
+
+[[ _FetchHandler (shell_ConstructLSArray,f) ]]
+
+[[ _FetchHandler (shell_ExecuteInBackground,c) ]]
+
+[[ _FetchHandler (shell_MakeExecutable,c) ]]
+
+[[ _FetchHandler (shell_Chmod,c) ]]
+
+[[ _FetchHandler (shell_ListProcesses,f) ]]
+
+[[ _FetchHandler (shell_ManPage,f) ]]
+
+[[ _FetchHandler (shell_Md5Hash,f) ]]
+
+[[ _FetchHandler (shell_BashParamEscape,c) ]]
+
+[[ _FetchHandler (shell_AddBashParam,c) ]]
+
+[[ _FetchHandler (shell_EscapeFile,f) ]]
+
+command shell_BashParamEscape @someParam
+    replace space with ("\" & space) in someParam
+    replace "|" with ("\" & "|") in someParam
+end shell_BashParamEscape
+
+[[ _FetchHandler (sudo_Kill,c) ]]
+
+
+--> Linux
+-
+[[ _FetchHandler (linux_Sudo,c) ]]
+
+[[ _FetchHandler (linux_Mount,c) ]]
+
+[[ _FetchHandler (linux_CheckMounted,f) ]]
+
+
+--> Shell | Path
+-
+[[ _FetchHandler (shell_AddBashProfileToPath,c) ]]
+
+[[ _FetchHandler (shell_GetBashPathExtraItems,f) ]]
+
+[[ _FetchHandler (shell_GetBashProfile,f) ]]
+ 
+[[ _FetchHandler (shell_GetBashProfileUrl,f) ]]
+
+[[ _FetchHandler (shell_GetBashHistory,f) ]]
+
+
+--> Shell | To Sort
+-
+[[ _FetchHandler (sha1_HashFile,f) ]]
+
+[[ _FetchHandler (sha1_HashString,f) ]]
+
+[[ _FetchHandler (shell_DeconstructLS,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (ijwAPLIB_MakeOSXShellPath,f) ]]
+
+[[ _FetchHandler (date_MonthToMonthNumber,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (text_IsQuoted,f) ]]

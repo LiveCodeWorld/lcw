@@ -1,0 +1,16 @@
+command hkey_CheckLibraryAndObject hKey, @objectHandler, @libraryHandler
+   put library_HandlerFile (hKey, "script.txt", true) into someFile
+   put there is a file someFile into fileExists
+   switch
+      case fileExists is false
+         return false
+      default
+         if objectHandler is empty then
+            put hkey_ExtractHandlerFromObject (hKey) into objectHandler
+         end if
+         if word 1 of objectHandler = "private" then delete word 1 of objectHandler
+         put library_FetchHandler (hKey) into libraryHandler
+         put libraryHandler = objectHandler into isExported
+         return isExported
+   end switch
+end hkey_CheckLibraryAndObject

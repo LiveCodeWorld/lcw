@@ -1,0 +1,170 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Behavior | Menu
+type: controller
+version: 0.1
+
+
+--> Menu | Props
+-
+
+
+--> Global | Behavior | Menu
+-
+[[ _FetchHandler (menu_EditBehavior,c) ]]
+
+[[ _FetchHandler (submenu_ViewBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetStandardBehavior,c) ]]
+
+[[ _FetchHandler (menu_EditStandardBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditNamedBehavior,c) ]]
+
+[[ _FetchHandler (menu_SetNamedBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditLivecodeBehaviorButton,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CheckStandardBehaviors,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Behavior | Menu | Props
+-
+[[ _FetchHandler (standard_BehaviorStackName,g) ]]
+
+[[ _FetchHandler (standard_BehaviorStackNames,g) ]]
+
+
+/*
+getprop ide_BNames
+   put hArray_ListBehaviorNames() into bNames
+   filter bNames with "LiveCode *"
+   return bNames
+end ide_BNames
+
+getprop b_Name [scriptObject]
+   put the behavior_Name of scriptObject into bName
+   if bName is empty then return "Clear"
+   return bName
+end b_Name
+
+getprop b_Names [scriptObject]
+   put hArray_ListBehaviorNames() into allBNames
+   put the stack_BehaviorButtonNames of scriptObject into stackBNames
+   line_Delete stackBNames, allBNames
+   
+   if stackBNames is not empty then put stackBNames & CR & "-" & CR after bNames
+   if allBNames is not empty then put allBNames & CR & "-" & CR after bNames
+   delete char -3 to -1 of bNames
+   if bNames is empty then
+      return "Clear"
+   else
+      put CR & "-" & CR & "Clear" after bNames
+      return bNames
+   end if
+end b_Names
+
+
+--> Global | Script | Behavior | Menu | Disabled
+-
+getprop disabled_EditBehavior [scriptObject]
+   put the behavior of scriptObject into bObject
+   return bObject is empty
+end disabled_EditBehavior
+
+
+--> Menu | Props
+-
+--> Deps
+-
+function menu_TableFromHkeys hKeys
+   repeat for each line hKey in hKeys
+      put menu_DefaultTableLine (hKey) into mTableLine
+      put mTableLine & CR after mTable
+   end repeat
+   delete char -1 of mTable
+   return mTable
+end menu_TableFromHkeys
+
+function menu_TextFromHkeys hKeys, mView
+   put menu_TableFromHkeys (hKeys) into mTable
+   put menu_ConvertTable(mTable, mView) into mText
+   return mText
+end menu_TextFromHkeys
+
+function menu_TableLineFromHkey hKey
+   put "hKey" into mItemType
+   put empty into mTitle
+   
+   hkey_Deconstruct hKey, handlerName, handlerType, mController, handlerNum
+   set the itemdelimiter to "_"
+   put item 1 of handlerName into handlerPrefix
+   put item 2 of handlerName into handlerSuffix
+   
+   put hkey_ExtractHandlerFromObject (hKey) into someHandler
+   put line 1 of someHandler into mLine
+   put token 2 of mLine into firstParam
+   
+   -- only add disabled_Prop if it exists in the menu_Controller (optional)
+   put "disabled_" & handlerSuffix into mFormatProp
+   if the script_GetProp [mFormatProp] of mController is empty then put empty into mFormatProp
+   
+   put text_SplitCaps (handlerSuffix) into mLine
+   if firstParam is empty or param_IsObject (firstParam) then
+      put handlerName && "mTarget" into pigeon
+      put menu_ConstructTableLine(mController, pigeon, mTitle, mLine, mFormatProp, mItemType) into mTableLine
+   else
+      put mCommand && "subMenuPath," && mTarget into pigeon
+      put menu_ConstructTableLine(mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp) into mTableLine
+   end if
+   return mTableLine
+end menu_TableLineFromHkey
+
+
+--> Dev | Menu
+-
+on menu_DisplayBehaviorHierarchy scriptObject, bhName
+   put behavior_GetObject (bhName) into bObject
+   edit the script of bObject
+end menu_DisplayBehaviorHierarchy
+
+on menu_AddBehaviorToEnd scriptObject, bName
+   put the last line of the behavior_Objects of scriptObject into lastBehaviorObject
+   
+   set the behavior_Name of lastBehaviorObject to bName
+   put the result into bObject
+   
+   put "Set the behavior of" && the mobile_Name of scriptObject && "to" && kwote (bName) into someMessage
+   opn_Notify someMessage
+end menu_AddBehaviorToEnd
+
+on _
+end _
+
+on menu_LivecodeBehaviorHacks mTarget, someBoolean
+   rev_AddBehaviorHacks someBoolean, true
+end menu_LivecodeBehaviorHacks
+
+on menu_EditLivecodeBehaviorButton mTarget, ideBname
+   put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
+   edit the script of ideBehavior
+end menu_EditLivecodeBehaviorButton
+*/

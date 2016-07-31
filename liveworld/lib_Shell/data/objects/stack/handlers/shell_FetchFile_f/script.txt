@@ -1,0 +1,6 @@
+function shell_FetchFile sshUser, remoteDomain, somePath
+   put "cat" && somePath into remoteCommand
+   shell_RemoteExecute sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end shell_FetchFile

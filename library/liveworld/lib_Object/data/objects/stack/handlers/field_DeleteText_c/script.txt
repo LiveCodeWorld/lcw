@@ -1,0 +1,5 @@
+command field_DeleteText startChar, endChar, someField
+   put merge("delete char [[startChar]] to [[endChar]] of [[someField]]") into doScript
+   do doScript
+   return the result
+end field_DeleteText

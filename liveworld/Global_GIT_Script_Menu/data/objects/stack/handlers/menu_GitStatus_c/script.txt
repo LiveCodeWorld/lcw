@@ -1,0 +1,13 @@
+on menu_GitStatus scriptObject
+   put the git_CheckoutFolder of scriptObject into checkoutFolder-- LocalArray ["checkoutFolder"]
+   put git_FetchStatusTable (checkoutFolder) into gitTable
+   put git_ConstructStatusOutline(gitTable, pTreeTitle, gitHelp) into someOutline
+   
+   put someOutline
+   
+   /*
+   display_Outline someOutline, "Git Status", "Global | GIT | Status | Menu"
+   put the result into treeView
+   set the displayed_CheckoutFolder of treeView to checkoutFolder
+   */
+end menu_GitStatus

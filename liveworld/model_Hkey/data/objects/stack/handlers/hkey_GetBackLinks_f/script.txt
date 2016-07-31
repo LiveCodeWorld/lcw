@@ -1,0 +1,5 @@
+function hkey_GetBackLinks hKey, pOverlayName
+   put hkey_GetOverlayArray (hKey, pOverlayName) into overlayArray
+   put overlayArray ["data"]["backLinks"] into backLinks
+   return backLinks
+end hkey_GetBackLinks

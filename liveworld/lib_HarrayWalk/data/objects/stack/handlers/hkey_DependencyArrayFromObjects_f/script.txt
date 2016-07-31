@@ -1,0 +1,21 @@
+function hkey_DependencyArrayFromObjects hKeys, pSetName, pAllCalls
+   local hKeyLinkArray
+   try  
+      repeat for each line hKey in hkeys
+         -- should this be hkey_GetHandler - anywhere from hierarchy ????
+         put hkey_ExtractHandlerFromObject (hKey) into someHandler
+         if pAllCalls is true then
+            put handler_ExtractCalls (someHandler) into shortCalls
+         else
+            put handler_ExtractFilteredCalls (someHandler) into shortCalls
+         end if
+         
+         repeat for each line shortCall in shortCalls
+            hkey_ObjectWalk shortCall, hKey, hKeyLinkArray, pSetName, pAllCalls
+         end repeat
+      end repeat
+      return hKeyLinkArray
+   catch e -- script is locked
+      return empty
+   end try
+end hkey_DependencyArrayFromObjects

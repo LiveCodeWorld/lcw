@@ -1,0 +1,17 @@
+private command _doFieldDown
+   put word 2 of the clickline into cNum
+   if the controlkey is "Down" then
+      set the hilitedlines of the target to cNum
+      put the line_Menu of me into mTitle
+      if mTitle is empty then put "List | Menu" into mTitle
+      menu_PopUp mTitle
+   else
+      drag_SetGlobalStatus true
+      
+      put the selectedtext of the target into someText
+      -- set the dragImage to 3137
+      set the dragAction to "copy"
+      set the dragData ["text"] to someText
+      set the dragData ["private"] to someText
+   end if
+end _doFieldDown

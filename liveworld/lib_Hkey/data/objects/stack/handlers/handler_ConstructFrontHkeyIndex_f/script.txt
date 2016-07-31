@@ -1,0 +1,21 @@
+function handler_ConstructFrontHkeyIndex
+   local allKeys
+   put the opn_FrontLibraries of the opn_Library of me into frontLibraries
+   repeat for each line someObject in frontLibraries
+      set the cursor to busy
+      if exists(someObject) is false then
+         put "The backscript in" && someObject && "does not exist!" into someError
+         set the log_AddEntry of me to someError
+         opn_Notify someError, true
+         
+         -- opn_DeleteFromObjectIndex "frontscript", "Library", someObject
+         next repeat
+      end if
+      
+      put the script_Hkeys of someObject into hKeys
+      put hKeys & CR after allKeys
+   end repeat
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructFrontHkeyIndex

@@ -1,0 +1,22 @@
+function menu_GetToolTitle targetObject
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into viewObject
+   if exists(viewObject) is false then put targetObject into viewObject
+   
+   -- put the menu_BurntToolTitle of someView into mTitle
+   lock messages
+   put the menu_ToolTitle of viewObject into mTitle
+   unlock messages
+   if mTitle is not empty then return mTitle
+   
+   put the view_Name of viewObject into viewName
+   if viewName is empty then return empty
+   put "Global |" && menu_TitleFromViewName (viewName) into globalMenuTitle
+   return globalMenuTitle
+   
+   -- not sure if we should also search?
+   local testController
+   put the menu_DefaultToolTitle of targetObject into globalMenuTitle
+   menu_SearchGlobalObjectHierarchy globalMenuTitle, testController
+   return globalMenuTitle
+end menu_GetToolTitle

@@ -1,0 +1,8 @@
+command project_DeleteArray projectName
+   -- was "library_DeleteStoredSet"
+   -- maybe good idea to tidy globals here ???
+   put library_FetchSetData() into modelArray
+   delete variable modelArray [projectName]
+   library_StoreSetData modelArray
+   return modelArray
+end project_DeleteArray

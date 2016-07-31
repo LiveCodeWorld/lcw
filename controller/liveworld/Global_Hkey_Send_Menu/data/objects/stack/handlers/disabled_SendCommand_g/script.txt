@@ -1,0 +1,14 @@
+getprop disabled_SendCommand [mTarget]
+   put LocalArray ["someHandler"] into someHandler
+   put line 1 of someHandler into handlerLine
+   switch
+      case word 1 of handlerLine = "function"
+         return "delete"
+      case word 1 of handlerLine = "private"
+         return "delete"
+      case the number of words of handlerLine > 2
+         return true
+      default
+         return false
+   end switch
+end disabled_SendCommand

@@ -1,0 +1,7 @@
+function hkey_GetOverlayData hKey
+   put hkey_ArrayFile (hKey) into someFile
+   put url ("binfile:" & someFile) into encodedArray
+   if encodedArray is empty then return empty
+   put arraydecode (encodedArray) into overlayData
+   return overlayData
+end hkey_GetOverlayData 

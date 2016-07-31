@@ -1,0 +1,11 @@
+on menu_Filter treeView, viewFilter
+   lock screen
+   set the view_Filter of me to viewFilter
+   if the shiftkey is "Down" then
+      set the top_LevelPath of me to "all"
+   end if
+   
+   display_Views
+   viewBrowser_ResetTitle
+   unlock screen
+end menu_Filter

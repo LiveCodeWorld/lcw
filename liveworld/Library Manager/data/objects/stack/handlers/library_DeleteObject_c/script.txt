@@ -1,0 +1,10 @@
+command library_DeleteObject ruggedObject, libType, pSetName
+   put library_GetSetName() into currentSetName
+   if pSetName is empty then put currentSetName into pSetName
+   if pSetName = currentSetName then
+      global gLibrarySet_Array
+      delete variable gLibrarySet_Array ["data"][libType][ruggedObject]
+   end if
+   library_RemoveSetNamesFromStore ruggedObject, libType, pSetName
+   return pSetName
+end library_DeleteObject

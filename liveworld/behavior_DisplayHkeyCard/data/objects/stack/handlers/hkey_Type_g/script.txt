@@ -1,0 +1,9 @@
+getprop hkey_Type
+   put the header_Colour of me into headerColour
+   switch headerColour
+      case "51,51,51"
+         return "long"
+      default -- case "83,85,133"
+         return "short"
+   end switch
+end hkey_Type

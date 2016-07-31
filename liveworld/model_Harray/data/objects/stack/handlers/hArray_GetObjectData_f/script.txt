@@ -1,0 +1,8 @@
+function hArray_GetObjectData rObject, pKey, pHarray
+   put hArray_GetObjectArray (rObject, pHarray) into objectArray  
+   if pKey is empty then
+      return objectArray ["data"]
+   else
+      return objectArray ["data"][pKey]
+   end if
+end hArray_GetObjectData

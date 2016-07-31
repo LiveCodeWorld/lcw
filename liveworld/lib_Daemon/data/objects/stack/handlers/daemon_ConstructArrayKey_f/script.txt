@@ -1,0 +1,6 @@
+function daemon_ConstructArrayKey someRoute
+   put someRoute into routeArrayKey
+   if char 1 of someRoute = "/" then delete char 1 of routeArrayKey
+   split routeArrayKey with "/"
+   return routeArrayKey
+end daemon_ConstructArrayKey

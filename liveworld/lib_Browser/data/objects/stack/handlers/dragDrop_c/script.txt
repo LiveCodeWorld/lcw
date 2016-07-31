@@ -1,0 +1,9 @@
+on dragDrop
+   get the dragsource
+   put the dragData into someUrl
+   set the itemdelimiter to ":"
+   if item 1 of someUrl is among the items of "http:https" then
+      set the browser_Url of me to someUrl
+   end if
+   pass dragDrop
+end dragDrop

@@ -1,0 +1,12 @@
+private command clearLocals
+    -- occassional bug where local seems to get wrong initial settin
+    -- this hack is supposed to clear them all before moving.
+    
+    put empty into localStartH
+    put empty into localStartV
+    put empty into localOriginalRect
+    put empty into localMouseIsDown
+    put empty into localLeftView
+    put empty into localRightView
+    put empty into localOwnerRect
+end clearLocals

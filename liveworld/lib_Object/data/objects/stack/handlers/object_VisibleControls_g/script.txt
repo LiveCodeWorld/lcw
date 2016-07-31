@@ -1,0 +1,4 @@
+getprop object_VisibleControls [setShort]
+   put the long ID of the target into targetObject
+   return object_ControlsInside(targetObject, setShort, true)
+end object_VisibleControls

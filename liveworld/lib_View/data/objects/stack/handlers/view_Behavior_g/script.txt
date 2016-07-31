@@ -1,0 +1,8 @@
+getprop view_Behavior
+   put the view_Object of the target into someView
+   if exists(someView) then 
+      return the behavior of someView
+   else
+      return empty
+   end if
+end view_Behavior

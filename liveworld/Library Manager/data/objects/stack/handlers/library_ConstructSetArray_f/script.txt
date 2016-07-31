@@ -1,0 +1,17 @@
+function library_ConstructSetArray setArray
+   put 1 into indexNum
+   repeat for each item libType in "front,used,back"
+      put setArray [libType]["key"] into someArray
+      put keys(someArray) into sortedKeys
+      sort sortedKeys
+      repeat for each line libName in sortedKeys
+         put someArray [libName] into someObject
+         
+         put libName into dataArray [indexNum]["title"]
+         put someObject into dataArray [indexNum]["object"]
+         put libType into dataArray [indexNum]["type"]
+         add 1 to indexNum
+      end repeat
+   end repeat
+   return dataArray
+end library_ConstructSetArray

@@ -1,0 +1,9 @@
+command lcw_CheckStacks newFolderName
+   local pProjectName
+   lcw_OldName newFolderName
+   put project_GetFolder (newFolderName, pProjectName) into someFolder 
+   
+   folder_CheckStacks someFolder
+   put the result into shortStackNames
+   return shortStackNames
+end lcw_CheckStacks

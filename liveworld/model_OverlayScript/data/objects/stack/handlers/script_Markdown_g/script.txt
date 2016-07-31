@@ -1,0 +1,7 @@
+getprop script_Markdown
+   -- should use pandoc
+   -- just a stub for now
+   put the script_Help of the target into someHTML
+   put html_StripAllTags (someHTML) into someMarkDown
+   return someMarkDown
+end script_Markdown

@@ -1,0 +1,31 @@
+function ccc_ConvertArray cccArray, pSourceArray
+   put cccArray ["pageTitle"] into pageTitle
+   put cccArray ["pageSubTitle"] into pageSubTitle
+   put cccArray ["description"] into pageDescription
+   
+   put fedwiki_ConstructSimplePageArray (pageTitle, pageSubTitle) into pageArray
+   
+   put ccc_ConstructVideoHtml (cccArray) into videoHTML
+   fedwiki_AddHtmlToPageArray pageArray, videoHTML
+   
+   fedwiki_AddMarkdownToPageArray pageArray, "# About"
+   put text_StripAllTags (pageDescription) into pageDescription
+   fedwiki_AddParagraphToPageArray pageArray, pageDescription
+   
+   fedwiki_AddMarkdownToPageArray pageArray, "# Date"
+   put cccArray ["date"] into someDate
+   put ccc_ConstructDateHtml (someDate, someDate) into dateDisplay
+   fedwiki_AddHtmlToPageArray pageArray, dateDisplay
+   
+   fedwiki_AddMarkdownToPageArray pageArray, "# People"
+   put ccc_ConstructAuthorHTML (cccArray) into pageAuthorLinks
+   fedwiki_AddHtmlToPageArray pageArray, pageAuthorLinks
+   
+   fedwiki_AddMarkdownToPageArray pageArray, "# Tags"
+   put ccc_ConstructTagHTML (cccArray) into pageTagLinks
+   fedwiki_AddHtmlToPageArray pageArray, pageTagLinks
+   
+   put "CCC Transporter" into pageArray ["metadata"]["author"] -- add some metadata so transported pages can be found
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into pageArray ["journal"]  -- strip journal to minimum
+   return pageArray
+end ccc_ConvertArray

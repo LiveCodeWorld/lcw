@@ -1,0 +1,5 @@
+function overlay_GetNodeLinks overlayFolder
+   put overlay_LinkFile (overlayFolder) into someFile
+   put url ("file:" & someFile) into nodeLinks
+   return nodeLinks
+end overlay_GetNodeLinks

@@ -1,0 +1,14 @@
+command opn_Notify someMessage, isSticky, paramArray
+   -- see "http://osx.c0de.academy/view/notifications-in-osx"
+   replace quote with ("\" & quote) in someMessage
+   replace "'" with "\'" in someMessage
+   replace "'" with quote in someMessage
+   if paramArray is an array then put text_Merge (someMessage, paramArray) into someMessage
+   switch the platform
+      case "MacOS"
+         osx_Notify someMessage, isSticky
+         break
+      default
+         put someMessage
+   end switch
+end opn_Notify

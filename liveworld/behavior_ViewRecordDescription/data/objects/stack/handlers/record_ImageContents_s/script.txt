@@ -1,0 +1,4 @@
+setprop record_ImageContents someImage
+   put the info_Group of me into infoGroup
+   set the image_Contents of infoGroup to someImage
+end record_ImageContents

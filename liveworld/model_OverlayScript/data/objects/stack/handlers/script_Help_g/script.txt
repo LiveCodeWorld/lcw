@@ -1,0 +1,7 @@
+getprop script_Help
+   put the script_HelpFile of the target into someFile
+   if there is not a file someFile then return empty
+   put url ("binfile:" & someFile) into someHelp
+   hack_UpdateBinFile someHelp, someFile
+   return someHelp
+end script_Help

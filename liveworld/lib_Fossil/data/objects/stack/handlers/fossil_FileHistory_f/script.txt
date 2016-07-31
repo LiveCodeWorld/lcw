@@ -1,0 +1,35 @@
+function fossil_FileHistory fileOrRelativeFile, pNotBrief, pFossilCheckoutFolder
+   /*
+   fossil finfo {?-l|--log? / -s|--status / --p|--print} FILENAME
+   
+   Print the complete change history for a single file going backwards
+   in time.  The default is -l.
+   
+   For the -l|--log option: If "-b|--brief" is specified one line per revision
+   is printed, otherwise the full comment is printed.  The "--limit N"
+   and "--offset P" options limits the output to the first N changes
+   after skipping P changes.
+   
+   In the -s form prints the status as <status> <revision>.  This is
+   a quick status and does not check for up-to-date-ness of the file.
+   
+   The -p form, there's an optional flag "-r|--revision REVISION".  The
+   specified version (or the latest checked out version) is printed to
+   stdout.
+   */
+   
+   put "fossil finfo" into someshell
+   put " --log" after someshell
+   if pNotBrief is not true then put " --brief" after someshell
+   -- put " --status" after someshell
+   
+   local relativeFile
+   fossil_SetFileParams fileOrRelativeFile, pFossilCheckoutFolder, relativeFile
+   shell_BashParamEscape relativeFile
+   put space & relativeFile after someShell
+   
+   fossil_ExecuteShell someShell, pFossilCheckoutFolder
+   put the result into historyTable
+   if pNotBrief is true then replace (CR & "           ") with space in historyTable
+   return historyTable
+end fossil_FileHistory

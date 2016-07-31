@@ -1,0 +1,14 @@
+function fossil_FileDiff fileOrRelativeFile, pSideBySide, pToCurrent
+   -- by default this compares the exported file with the previous commit.
+   put "fossil diff" into someShell
+   if pSideBySide is not false then put space & "--side-by-side" after someShell
+   if pToCurrent is true then put space & "--from previous --to current" after someShell
+   
+   local relativeFile, fossilCheckoutFolder
+   fossil_SetFileParams fileOrRelativeFile, fossilCheckoutFolder, relativeFile
+   shell_BashParamEscape relativeFile
+   put space & relativeFile after someShell
+   
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   return the result
+end fossil_FileDiff

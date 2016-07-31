@@ -1,0 +1,26 @@
+function linkArray_ConstructSkipArray linkArray
+   -- array_ConstructSkipArray, array_KeytokeyArray
+   -- links keys to other keys via their links
+   -- skipping a generation  fo links
+   -- to create a key-to-key array
+   put array_Reverse (linkArray) into backArray
+   repeat for each key someKeyWord in linkArray
+      put linkArray [someKeyWord] into idLinks
+      repeat for each line idLink in idLinks
+         put backArray [idLink] into nextKeyWords
+         
+         put keyToKeyArray [someKeyWord] into keyKeyLinks
+         line_Add nextKeyWords, keyKeyLinks
+         line_Delete someKeyWord, keyKeyLinks
+         put keyKeyLinks into keyToKeyArray [someKeyWord]
+         
+         /*
+         put keyToKeyArray [someKeyWord]["keyword links"] into keyKeyLinks
+         line_Add nextKeyWords, keyKeyLinks
+         line_Delete someKeyWord, keyKeyLinks
+         put keyKeyLinks into keyToKeyArray [someKeyWord]["keyword links"]
+         */
+      end repeat
+   end repeat
+   return keyToKeyArray
+end linkArray_ConstructSkipArray

@@ -1,0 +1,6 @@
+function digitalocean_GetDomainNames
+   put digitalocean_GetDomainNameArray() into oceanDomainNameArray
+   put keys (oceanDomainnameArray) into oceanDomainNames
+   sort oceanDomainNames
+   return oceanDomainNames
+end digitalocean_GetDomainNames

@@ -1,0 +1,8 @@
+on menu_TopLevel mTarget, someBoolean
+   put the stack_Name of mTarget into stackName
+   if someBoolean is true then
+      toplevel stack stackName
+   else
+      palette stack stackName
+   end if
+end menu_TopLevel

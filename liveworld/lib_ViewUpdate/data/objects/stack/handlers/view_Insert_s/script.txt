@@ -1,0 +1,6 @@
+setprop view_Insert [someRect] viewPath
+   put the long id of the target into groupOrCard
+   view_InsertFromPath viewPath, groupOrCard, someRect
+   put the result into createdView
+   return createdView
+end view_Insert

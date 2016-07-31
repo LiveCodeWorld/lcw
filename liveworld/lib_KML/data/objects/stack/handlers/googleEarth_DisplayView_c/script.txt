@@ -1,0 +1,7 @@
+on googleEarth_DisplayView latitude, longitude, someHeight, someTilt, someRotation
+    if latitude is empty then
+        put googleEarth_GetView() into googleView
+        googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    end if
+    opn_Notify latitude & CR & longitude & CR & someHeight & CR & someTilt & CR & someRotation & CR & "OK", true
+end googleEarth_DisplayView

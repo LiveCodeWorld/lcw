@@ -1,0 +1,12 @@
+function library_DeconstructSetArray dataArray
+   -- put item 2 of the extents of dataArray into maxNum
+   repeat for each element someArray in dataArray
+      put someArray ["title"] into libName
+      put someArray ["object"] into someObject
+      put someArray ["type"] into libType
+      
+      put someObject into setArray [libType]["key"][libName]
+      put libName into setArray [libType]["value"][someObject]
+   end repeat
+   return setArray
+end library_DeconstructSetArray

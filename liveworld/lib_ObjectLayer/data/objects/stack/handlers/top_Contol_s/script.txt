@@ -1,0 +1,9 @@
+setprop top_Contol targetObject
+   put the childcontrolids of the target into topControlIDs
+   put line 1 of topControlIDs into cID
+   if cID is empty then return empty
+   
+   put the long id of control id cID of targetOwner into topControl
+   relayer targetObject before topControl
+   return topControlIDs -- old order
+end top_Contol

@@ -1,0 +1,14 @@
+command mediawiki_ConvertSectionTitle @sectionTitle
+   put word 1 to -1 of sectionTitle into sectionTitle
+   repeat while char -1 of sectionTitle = "="
+      add 1 to headerLevel
+      delete char -1 of sectionTitle
+   end repeat
+   
+   delete char 1 to headerLevel of sectionTitle
+   put word 1 to -1 of sectionTitle into sectionTitle
+   put space before sectionTitle -- optional
+   repeat (headerLevel-1)
+      put "#" before sectionTitle
+   end repeat
+end mediawiki_ConvertSectionTitle

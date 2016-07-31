@@ -1,0 +1,18 @@
+function rev_ApplicationFolder
+   switch
+      case the version < 2.7
+         -- return folder_AboveFile(homeStack)
+         put the filename of stack "Home" into homeStack
+         set the itemdelimiter to "/"
+         delete item -1 of homeStack
+         return homeStack & "/"
+         break
+      case the version > 5.5
+         return revEnvironmentToolsPath()
+      default
+         put the filename of stack "Home" into homeStack
+         set the itemdelimiter to "/"
+         delete item -2 to -1 of homeStack
+         return homeStack & "/"
+   end switch
+end rev_ApplicationFolder

@@ -1,0 +1,14 @@
+getprop standard_BehaviorStackName [scriptObject]
+   put the behavior of scriptObject into bObject
+   switch
+      case bObject is empty
+         return "None"
+      case exists (bObject) is false
+         return empty
+      case word 1 of bObject is not "stack"
+         return empty
+      default
+         put the short name of bObject into stackName
+         return stackName
+   end switch
+end standard_BehaviorStackName

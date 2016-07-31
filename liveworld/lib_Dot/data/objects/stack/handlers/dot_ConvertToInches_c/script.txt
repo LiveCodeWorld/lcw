@@ -1,0 +1,9 @@
+on dot_ConvertToInches @pixelSize, screenRez
+    -- was "dot_ConvertSizeToInches"
+    if screenRez is empty then put 96 into screenRez
+    set the numberformat to "0.0000"
+    repeat with itemNum = 1 to the number of items of pixelSize
+        put item itemNum of pixelSize into someNumber
+        put someNumber / screenRez  into item itemNum of pixelSize
+    end repeat
+end dot_ConvertToInches

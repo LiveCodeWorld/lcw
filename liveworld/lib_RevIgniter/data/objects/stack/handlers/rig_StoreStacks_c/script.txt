@@ -1,0 +1,6 @@
+command rig_StoreStacks stackNames
+   repeat for each line stackName in stackNames
+      set the cursor to busy
+      rig_StoreStack stackName
+   end repeat
+end rig_StoreStacks

@@ -1,0 +1,14 @@
+getprop script_IsDifferent
+   -- even if the only difference is whitespace
+   -- which means a diff program may show no diference when this returns true
+   put the long id of the target into targetObject
+   try
+      put the script of targetObject into someScript
+      put the exported_Script of targetObject into exportedScript
+      if exportedScript is empty then return false -- added as if there is no exported script to compare it is no different
+      put exportedScript is not someScript into someBoolean
+      return someBoolean
+   catch someError
+      return empty  -- script may be protected
+   end try
+end script_IsDifferent

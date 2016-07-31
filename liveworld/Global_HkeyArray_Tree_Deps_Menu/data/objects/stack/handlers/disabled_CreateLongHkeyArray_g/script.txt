@@ -1,0 +1,4 @@
+getprop disabled_CreateLongHkeyArray [treeView]
+   put the displayed_Hkey of treeView into hKey
+   return hKey is empty
+end disabled_CreateLongHkeyArray

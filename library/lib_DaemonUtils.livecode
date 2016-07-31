@@ -1,0 +1,380 @@
+﻿script "lib_DaemonUtils"
+--> MetaData
+-
+name: lib_DaemonUtils
+type: behavior
+version: 0.3
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+Put scripts here that aid the speed of scripting a server,
+but that eventually shoud be factored out (for speed reasons) of the final server,
+or at least bundled in with the server script.
+
+It is placed at the very back of the behavior chain (behind lib_Log),
+or it could go before non-daemon libs like lib_Log
+*/
+
+
+--> Folders | Old
+-
+command fedwiki_SetLocalFolders pBigDataFolder
+   /*
+   A utility to set all three folders 
+   by simply chosing or setting one overarching "bigData folder" and creating sesnible defaults
+   */
+   fedwiki_SetBigDataFolder pBigDataFolder
+   put the result into pBigDataFolder
+   
+   -- now we have the top level pBigDataFolder
+   -- lets set standard inner folders for the .wiki folder and dowloaded jaon files
+   put pBigDataFolder & "/wiki/" into localWikiFolder
+   fedwiki_SetLocalWikiFolder localWikiFolder
+   put pBigDataFolder & "/site_json/" into localSiteJsonFolder
+   fedwiki_SetLocalSiteJsonFolder localSiteJsonFolder
+end fedwiki_SetLocalFolders
+
+function fedwiki_GetBinaryFile shortFile
+   put fedwiki_GetFile (shortFile) into someFile
+   if there is not a file someFile then
+      fedwiki_Log ("File does not exist:" && shortFile)
+      return empty
+   end if
+   put "binfile:" & someFile into someUrl
+   put url someUrl into someData
+   return someData
+end fedwiki_GetBinaryFile
+
+function fedwiki_GetTextFile shortFile
+   put fedwiki_GetFile (shortFile) into someFile
+   if there is not a file someFile then
+      fedwiki_Log ("File does not exist:" && shortFile)
+      return empty
+   end if
+   put "file:" & someFile into someUrl
+   put url someUrl into someText
+   return someText
+end fedwiki_GetTextFile
+
+function fedwiki_GetFileData shortFile
+   set the itemdelimiter to "."
+   put item - 1 of shortFile into someFileExtension
+   switch someFileExtension
+      case "png"
+         put "binfile:" & fedwiki_GetFile (shortFile) into someUrl
+         break
+      default -- case "js"
+         put "file:" & fedwiki_GetFile (shortFile) into someUrl
+         break
+   end switch
+   put url someUrl into someData
+   return someData
+end fedwiki_GetFileData
+
+function fedwiki_GetFile shortFile
+   put fedwiki_GetWelcomeFolder() into indexFileFolder
+   put indexFileFolder & shortFile into someFile
+   return someFile
+end fedwiki_GetFile
+
+getprop fedwiki_Files
+   -- put myPath & "Welcome Visitors.html" into indexFile
+   put fedwiki_GetWelcomeFolder() into indexFileFolder
+   put folder_ShortFiles (indexFileFolder) into shortFiles
+   return shortFiles
+end fedwiki_Files
+
+function fedwiki_GetWelcomeFolder
+   -- this is for when you use a browser to download standalone web page for w Welcome page.
+   put fedwiki_GetRootFolder() into rootFolder
+   put rootFolder & "Welcome Visitors_files/" into indexFileFolder
+   return indexFileFolder
+end fedwiki_GetWelcomeFolder
+
+-- getprop fedwiki_LocalWikiRoot
+   put pref_GetValue ("fedwiki_LocalWikiFolder") into localWikiFolder
+end fedwiki_LocalWikiRoot
+
+command fedwiki_SetLocalWikiFolder localWikiFolder
+   if localWikiFolder is empty then
+      answer folder "Choose a folder for the local wiki-page json files..."
+      put it into localWikiFolder
+      if localWikiFolder is empty then
+         exit to top
+      end if
+   end if
+   
+   folder_Format localWikiFolder
+   pref_SetValue "fedwiki_LocalWikiFolder", localWikiFolder
+   return localWikiFolder
+end fedwiki_SetLocalWikiFolder
+
+
+--> Fedwiki | Local | Site Json | Files
+-
+/*
+The original site JSON files should be stored as a backup, before they are parsed into arrays, and spat out as original JSON files.
+That way if there is a script error we can always go back to the original JSON files as a backup.
+We also store the arrays created from the Json files in the same folder.
+*/
+
+function fedwiki_LocalSiteJsonFile fedwikiDomain
+   put fedwiki_GetLocalSiteJsonFolder() into localSiteJsonFolder
+   put localSiteJsonFolder & fedwikiDomain & ".json" into someFile
+   return someFile
+end fedwiki_LocalSiteJsonFile
+
+function fedwiki_GetLocalSiteJsonFolder
+   put pref_GetValue ("fedwiki_LocalSiteJsonFolder") into localSiteJsonFolder
+   
+   if there is not a folder localSiteJsonFolder then
+      answer folder "Choose a folder for the local wiki-page json files..."
+      put it into localSiteJsonFolder
+      if localSiteJsonFolder is empty then exit to top
+      fedwiki_SetLocalSiteJsonFolder localSiteJsonFolder
+      put the result into localSiteJsonFolder -- here we make sure it has a trailing "/"
+   end if
+   return localSiteJsonFolder
+end fedwiki_GetLocalSiteJsonFolder
+
+command fedwiki_SetLocalSiteJsonFolder localSiteJsonFolder
+   folder_Format localSiteJsonFolder
+   pref_SetValue "fedwiki_LocalSiteJsonFolder", localSiteJsonFolder
+   return localSiteJsonFolder
+end fedwiki_SetLocalSiteJsonFolder
+
+function fedwiki_GetRootFolder
+   set the itemdelimiter to "/"
+   put the filename of me into rootFolder
+   put empty into item -1 of rootFolder
+   return rootFolder
+end fedwiki_GetRootFolder
+
+-- getprop daemon_RootFolder
+   return fedwiki_GetRootFolder()
+end daemon_RootFolder
+
+function fedwiki_GetWelcomeHtml
+   put "file:" & fedwiki_GetWelcomeFile () into someUrl
+   put url someUrl into welcomeHtml
+   return welcomeHtml
+end fedwiki_GetWelcomeHtml
+
+function fedwiki_GetWelcomeFile
+   put fedwiki_GetRootFolder() into rootFolder
+   put rootFolder & "Welcome Visitors.html" into indexFile
+   return indexFile
+end fedwiki_GetWelcomeFile
+
+
+--> Objects
+-
+getprop daemon_Library
+   return the name of stack "lib_Daemon"
+end daemon_Library
+
+getprop daemon_RouterLibrary
+   return the name of stack "lib_DaemonRouter"
+end daemon_RouterLibrary
+
+getprop daemon_MiddlewareLibrary
+   return the name of stack "lib_DaemonMiddleware"
+end daemon_MiddlewareLibrary
+  
+getprop daemon_LogLibrary
+   return the name of stack "lib_DaemonMiddleware"
+end daemon_LogLibrary
+
+
+--> Utils
+-
+getprop script_MessageHandlers
+   local mHandlerNames
+   put the script of the target into someScript
+   put the revAvailableHandlers of the target into handlerTable
+   repeat for each line tableLine in handlerTable
+      if word 1 of tableLine = "M" then
+         put word 3 of tableLine into startLineNum
+         get line startLineNum of someScript
+         if word 1 of it = "on" then
+            put word 2 of tableLine into mHandlerName
+            put mHandlerName & CR after mHandlerNames
+         end if
+      else
+         delete char -1 of mHandlerNames
+         return mHandlerNames
+      end if
+   end repeat
+   delete char -1 of mHandlerNames
+   return mHandlerNames
+end script_MessageHandlers
+
+getprop daemon_RouteHandlers
+   -- as fast as possible
+   local dHandlerNames
+   put the script of the target into someScript
+   put the revAvailableHandlers of the target into handlerTable
+   repeat for each line tableLine in handlerTable
+      if word 1 of tableLine = "M" then
+         put word 2 of tableLine into hName
+         if hName begins with "daemon_" then next repeat
+         put hName & CR after dHandlerNames
+      else
+         delete char -1 of dHandlerNames
+         return dHandlerNames
+      end if
+   end repeat
+   delete char -1 of dHandlerNames
+   return dHandlerNames
+end daemon_RouteHandlers
+
+function daemon_ConstructDotHandler requestArray
+   -- return a handler made from the reguest url's path and method
+   put requestArray ["SCRIPT_NAME"] into someRoute
+   put requestArray ["Request Method"] into someMethod
+   
+   split someRoute by "/"
+   combine someRoute with "."
+   set the itemdelimiter to "."
+   
+   put someMethod & someRoute into messageName
+   replace "-" with "_" in messageName
+   return messageName
+end daemon_ConstructDotHandler
+
+
+--> Request | Utils
+-
+/*
+These handlers simply make it easier to remember the way to extract the value from the requestArray.
+Better would be to simply name the array keys better?
+*/
+
+function request_SocketID requestArray
+   return requestArray ["SocketID"]
+end request_SocketID
+
+function request_Method requestArray
+   return requestArray ["Request Method"]
+end request_Method
+
+function request_UrlPath requestArray
+   return requestArray ["SCRIPT_NAME"]
+end request_UrlPath
+
+function request_QueryString requestArray
+   return requestArray ["QUERY_STRING"]
+end request_QueryString
+
+
+--> Server | Utils
+-
+command daemon_OpenBehaviorStacks
+   put the behavior_Hierarchy of me into bObjects
+   repeat for each line bObject in bObjects
+      object_GoTo bObject
+   end repeat
+end daemon_OpenBehaviorStacks
+
+
+--> Junk
+-
+-- function fedwiki_RouteToFile someRoute
+   -- this translates stuff to single folder file export form browser
+   set the itemdelimiter to "/"
+   switch
+      case item 1 to 4 of someRoute = "/view/Welcome%20Visitors_files/communication_iframe_data"
+         put item -2 to -1 of someRoute into shortFile
+         return "js/" & shortFile
+      case item 2 of someRoute = "images"
+         return item 2 to 3 of someRoute
+      case item 2 of someRoute = "system"
+         return item 3 of someRoute
+      case someRoute = "/view/Welcome%20Visitors_files/client.js"
+         return "client.js"
+      case item 1 to 3 of someRoute = "/view/Welcome%20Visitors_files"
+         put item 4 of someRoute into shortFile
+         set the itemdelimiter to "."
+         if item -1 of shortFile = "js" then
+            return "js/" & shortFile
+         else
+            return shortFile
+         end if
+      case someRoute = "/view/welcome-visitors" or someRoute is "/"
+         return "Welcome Visitors.html"
+      case someRoute = "system/sitemap.json"
+         return "sitemap.json"
+      case someRoute = "/favicon.png"
+         return "favicon.png"
+      case the number of items of someRoute = 2 and char -5 to -1 of someRoute = ".json"
+         return someRoute
+      default
+         return empty
+   end switch
+end fedwiki_RouteToFile
+
+-- function daemon_RouteToPath someRoute
+   put urldecode (someRoute) into somePath
+   return somePath
+end daemon_RouteToPath
+
+--> Fedwiki | Routes
+-
+/*
+These handlers are now mainly superceded by array based standardised daemon routing?
+*/
+
+command fedwiki_NormlizeRoute @someRoute
+   switch someRoute
+      /*
+      case "/"
+         put "/view/welcome-visitors" into someRoute
+         break
+         */
+      case "/view/welcome-visitors.html"
+         put "/view/welcome-visitors" into someRoute
+         break
+      case "/welcome-visitors"
+         put "/view/welcome-visitors" into someRoute
+         break
+      case "/welcome-visitors.html"
+         put "/view/welcome-visitors" into someRoute
+         break
+      case "/"
+         put "/view/welcome-visitors" into someRoute
+         break
+   end switch
+end fedwiki_NormlizeRoute
+
+function fedwiki_GetRouteData someRoute
+   fedwiki_NormlizeRoute someRoute
+   put daemon_GetRouteData (someRoute) into someData
+   return someData
+end fedwiki_GetRouteData
+
+command fedwiki_SetRouteData someRoute, someData
+   fedwiki_NormlizeRoute someRoute
+   daemon_SetRouteData someRoute, someData
+   return the result
+end fedwiki_SetRouteData
+
+
+--> To Trash
+-
+command test_PersonaServer
+   get"eyJhbGciOiJSUzI1NiJ9.eyJwdWJsaWMta2V5Ijp7ImFsZ29yaXRobSI6IkRTIiwieSI6IjczNWEzYzgyNjk0MDMwZTdjNDk0ZTZkYzBiZmQ4OWUwMTg3NWRmNmRhOWMxMTMwN2I4NDk1MTJhYWNlNGZkNzQ3NjE3ODcxOTYwZGFhN2MxM2Q0YjgwYzIxNzU3MWQyYTY2ZTI4ZGUyYzJjMjM0MWRjOGFmZGZiZWU2NWViMmI5ZjA1YjQ3OGMxNDU0ODYxYWY2MjY4M2Y4OTkzN2U1NjEzNzdmNmNiZTI5ZmZhMDA2ODc1N2JhMjA5MjhhNTY5YzE0MTBkYTJlZDg2YWVlZmEyZTZjNWUzMzU2NjA2MjhkNGVlOGQxNGFjODVhMTgyYTE1ZGUzOTNmNTk4MzI0NjkiLCJwIjoiZmY2MDA0ODNkYjZhYmZjNWI0NWVhYjc4NTk0YjM1MzNkNTUwZDlmMWJmMmE5OTJhN2E4ZGFhNmRjMzRmODA0NWFkNGU2ZTBjNDI5ZDMzNGVlZWFhZWZkN2UyM2Q0ODEwYmUwMGU0Y2MxNDkyY2JhMzI1YmE4MWZmMmQ1YTViMzA1YThkMTdlYjNiZjRhMDZhMzQ5ZDM5MmUwMGQzMjk3NDRhNTE3OTM4MDM0NGU4MmExOGM0NzkzMzQzOGY4OTFlMjJhZWVmODEyZDY5YzhmNzVlMzI2Y2I3MGVhMDAwYzNmNzc2ZGZkYmQ2MDQ2MzhjMmVmNzE3ZmMyNmQwMmUxNyIsInEiOiJlMjFlMDRmOTExZDFlZDc5OTEwMDhlY2FhYjNiZjc3NTk4NDMwOWMzIiwiZyI6ImM1MmE0YTBmZjNiN2U2MWZkZjE4NjdjZTg0MTM4MzY5YTYxNTRmNGFmYTkyOTY2ZTNjODI3ZTI1Y2ZhNmNmNTA4YjkwZTVkZTQxOWUxMzM3ZTA3YTJlOWUyYTNjZDVkZWE3MDRkMTc1ZjhlYmY2YWYzOTdkNjllMTEwYjk2YWZiMTdjN2EwMzI1OTMyOWU0ODI5YjBkMDNiYmM3ODk2YjE1YjRhZGU1M2UxMzA4NThjYzM0ZDk2MjY5YWE4OTA0MWY0MDkxMzZjNzI0MmEzODg5NWM5ZDViY2NhZDRmMzg5YWYxZDdhNGJkMTM5OGJkMDcyZGZmYTg5NjIzMzM5N2EifSwicHJpbmNpcGFsIjp7ImVtYWlsIjoiZGF2aWQuYm92aWxsQGdtYWlsLmNvbSJ9LCJpYXQiOjE0Mzc5MjE0MTYyOTMsImV4cCI6MTQzNzk0MzAyNjI5MywiaXNzIjoiZ21haWwubG9naW4ucGVyc29uYS5vcmcifQ.EvWVM1tV1G52BLJQGlhf0Fi33AaCBecRRI0bKS9dD_vKBOCumqwuAr8yWqeoA_71WBwuNhqNb1X28jsgTu3cQ4HB-f1aaw6IMa0FVsZPBvgCf45yppV9oJieSYA3Vw0C459RYQ2KZ8wZ6MR_CV0-_GnHZ0YgglwO3ndlYyZFnvLaiWa434i3EK1uGoR1BHS0VQ0bIj_JBgmMoDLXLdleoroOurf4EtVFJ1EnSkdkPM4UVcr9i_Ymxo1ziLxlCZN5sbHEy21KKdRYV0p_lB3tQOtFLa0QNFKB_Ekxqri_q5ztXU3iEw_J52AphIO4s9_Ci8HOY4WjAyb4IcNj3TEuqw~eyJhbGciOiJEUzEyOCJ9.eyJleHAiOjE0Mzc5MzIzNDAzODYsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MiJ9.JLwV-q7A_Kn-KJQB_d8_tWeUEvS56LMe8mTBEicZAfRuOIp9jXniEw"
+   put "http://localhost:8082" into someAudience
+   -- put persona_SendToVerifierService (it, someAudience) into someJSON
+   
+   put libURLFormData ("assertion", it, "audience", someAudience) into someData
+   post someData to url "https://verifier.login.persona.org/verify"
+   put it into someReply
+   put someReply
+end test_PersonaServer
+
+command demo_Reply
+   put "eyJhbGciOiJSUzI1NiJ9.eyJwdWJsaWMta2V5Ijp7ImFsZ29yaXRobSI..." into someAssertion
+   put "http://localhost:8082" into someAudience
+   put persona_ConstructAssertionCheckReply (someAssertion, someAudience)
+end demo_Reply

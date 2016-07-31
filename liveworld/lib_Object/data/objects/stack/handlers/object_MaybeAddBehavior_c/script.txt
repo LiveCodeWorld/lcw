@@ -1,0 +1,15 @@
+command object_MaybeAddBehavior @objectHierarchy, objectBehavior, pWhichBehaviors
+   if exists (objectBehavior) then
+      switch
+         case pWhichBehaviors is "no deps"
+            -- don't add
+            break
+         case pWhichBehaviors is "no library deps" and the uRIP ["type"] of objectBehavior is not "behavior/library"
+            put revRuggedId (objectBehavior) & CR before objectHierarchy
+            break
+         default -- case "all"
+            put revRuggedId (objectBehavior) & CR before objectHierarchy
+            break
+      end switch
+   end if
+end object_MaybeAddBehavior

@@ -1,0 +1,11 @@
+setprop browser_ID browserID
+   put the long id of the target into tObject
+   if browserID is empty then
+      put browser_GetID (tObject) into oldBrowserID
+      if oldBrowserID is a number then
+         browser_Close oldBrowserID
+      end if
+   else
+      browser_AddToRegister browserID, tObject
+   end if
+end browser_ID

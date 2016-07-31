@@ -1,0 +1,26 @@
+on menu_TestSpeeds
+   timer_Start "the object_ScriptArray"
+   repeat 10
+      get the object_ScriptArray of stack "libOPN_ObjectText"
+   end repeat
+   timer_Stop "the object_ScriptArray"
+   
+   timer_Start "the hArray_ScriptData"
+   repeat 10
+      get the hArray_ScriptData of stack "libOPN_ObjectText"
+   end repeat
+   timer_Stop "the hArray_ScriptData"
+   
+   timer_Start "the revAvailableHandlers"
+   repeat 10
+      get the revAvailableHandlers of stack "libOPN_ObjectText"
+   end repeat
+   timer_Stop "the revAvailableHandlers"
+   
+   put the name of stack "libOPN_ObjectText" into tObject
+   timer_Start "object_ConstructMergeScriptArray (tObject)"
+   repeat 10
+      get object_ConstructMergeScriptArray (tObject)
+   end repeat
+   timer_Stop "object_ConstructMergeScriptArray (tObject)"
+end menu_TestSpeeds

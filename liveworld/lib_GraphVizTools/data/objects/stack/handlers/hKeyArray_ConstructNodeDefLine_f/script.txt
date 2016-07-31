@@ -1,0 +1,20 @@
+function hKeyArray_ConstructNodeDefLine nodeID, idArray, graphPropertyArray
+    put idArray [nodeID] into hKey
+    hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+    hkey_SetHandlerTypeProperties handlerType, nodeColour, nodeFillColour, nodeShape, nodeStyle
+    put dot_ConstructDefaultNodeDefs(nodeShape, nodeStyle, nodeColour, nodeFillColour) into defaultNodeDefs
+    
+    put handlerName into nodeLabel
+    put dot_ConstructDefLine(nodeLabel) into nodeDefs
+    
+    /*
+    put linkArray_GetNodePropertyArray(nodeID, graphPropertyArray) into nodeStyleArray
+    put nodeStyleArray ["polyParams"] into polyParams
+    put nodeStyleArray ["nodeUrl"] into nodeUrl
+    put nodeStyleArray ["nodeToolTip"] into nodeToolTip
+    put nodeStyleArray ["nodeShapeFile"] into nodeShapeFile
+    put dot_ConstructDefLine(nodeLabel, nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile) into nodeDefs
+    */
+     
+    return defaultNodeDefs & CR & nodeID && "[" & nodeDefs & "];"
+end hKeyArray_ConstructNodeDefLine

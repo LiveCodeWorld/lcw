@@ -1,0 +1,5 @@
+command stack_RevealInFinder stackName
+    put the filename of stack stackName into someFile
+    put folder_Above(someFile) into someFolder
+    finder_Reveal someFolder
+end stack_RevealInFinder

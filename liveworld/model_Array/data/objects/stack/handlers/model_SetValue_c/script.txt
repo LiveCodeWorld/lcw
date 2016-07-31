@@ -1,0 +1,15 @@
+on model_SetValue someKey, modelObject, someValue, modelName, modelType
+   put model_GetArray(modelName, modelObject, modelType) into dataArray
+   if someValue is empty then
+      -- setting to empty also deletes key option?
+      delete local dataArray[someKey]
+      if keys(dataArray) is empty then
+         model_DeleteArray modelName, modelObject
+         return empty
+      end if
+   else
+      put someValue into dataArray[someKey]
+   end if
+   model_SetArray modelName, modelObject, dataArray, modelType
+   return dataArray
+end model_SetValue

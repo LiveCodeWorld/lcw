@@ -1,0 +1,25 @@
+command git_RefreshDisplay pTreeTitle
+   put the git_TreeField of me into gitTreeField
+   if pTreeTitle is empty then put the title_Text of gitTreeField into pTreeTitle
+   
+   switch pTreeTitle
+      case "Files in Repository"
+         set the cursor to watch
+         put git_ExecuteShellCommand ("git ls-files") into commitedFiles
+         put file_IndexToOutline (commitedFiles, "outline") into someOutline
+         set the tree_Display [pTreeTitle] of gitTreeField to someOutline
+         break
+      case "Log"
+         put "git log --pretty=oneline" into someShell
+         -- put space & "-n30" after someShell
+         put git_ExecuteShellCommand(someShell) into simpleLog
+         put git_LogLinkOutline(simpleLog) into someOutline
+         set the tree_Display ["Log"] of gitTreeField to someOutline
+         break
+      default
+         put git_FetchStatusTable() into gitTable
+         put git_ConstructStatusOutline(gitTable, pTreeTitle, gitHelp) into someOutline
+         set the tree_Display [pTreeTitle] of gitTreeField to someOutline
+   end switch
+   return someOutline
+end git_RefreshDisplay

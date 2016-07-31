@@ -1,0 +1,8 @@
+command overlayData_SetArray @overlayData, overlayArray, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   if overlayArray is not an array then
+      delete local overlayData [pOverlayName]
+   else
+      put overlayArray into overlayData [pOverlayName]
+   end if
+end overlayData_SetArray

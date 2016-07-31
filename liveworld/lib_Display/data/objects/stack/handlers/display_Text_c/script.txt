@@ -1,0 +1,19 @@
+command display_Text someText, pDisplayTitle, pMenuTitle, pStackName, pMinWidth, pTextType, pStackStyle, pCardMargin, pStackRect
+   -- component:  View|Display|Text|Basic
+   -- ignoreCall:  view_TextWrap,s
+   -- ignoreCall:  menu_Title,s
+   -- ignoreCall:  body_TextFont,s
+   if pStackStyle is empty then put "palette" into pStackStyle
+   view_CloneStack "View|Display|Text|Basic", pCardMargin, pStackRect, pStackStyle, true
+   put the result into displayView
+   put the stack_Name of displayView into stackName
+   
+   display_SetText someText, pDisplayTitle, pTextType, displayView
+   set the label of stack stackName to pDisplayTitle
+   setDisplayStackRect displayView, stackName
+   if pMenuTitle is not empty then set the menu_Title of displayView to pMenuTitle
+   if pTextFont is not empty then set the body_TextFont of displayView to pTextFont
+   set the view_TextWrap of displayView to true
+   show stack stackName
+   return displayView
+end display_Text

@@ -1,0 +1,19 @@
+getprop menu_Target [mName]
+   put menu_GetTargetObject() into imageObject
+   switch
+      case mName contains "Global | View | Script | Menu"
+         put the layout_View of  imageObject into layoutView
+         if exists (layoutView) is false then return imageObject
+         put the inner_Control of layoutView into iconView
+         if exists (iconView) is false then return imageObject
+         return iconView
+      case mName contains "Global | View | Properties | Menu"
+         put the layout_View of  imageObject into layoutView
+         if exists (layoutView) is false then return imageObject
+         put the inner_Control of layoutView into iconView
+         if exists (iconView) is false then return imageObject
+         return iconView
+      default
+         return imageObject
+   end switch
+end menu_Target

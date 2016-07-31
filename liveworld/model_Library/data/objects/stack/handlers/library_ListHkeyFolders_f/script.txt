@@ -1,0 +1,5 @@
+function library_ListHkeyFolders
+   put library_HandlerFolder() into someFolder
+   put folder_FoldersInside (someFolder) into hkeyFolders
+   return hkeyFolders
+end library_ListHkeyFolders

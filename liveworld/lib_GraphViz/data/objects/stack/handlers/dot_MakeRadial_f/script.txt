@@ -1,0 +1,16 @@
+function dot_MakeRadial dotFile
+   /*
+   draws graphs using a radial layout. 
+   Basically, one node is chosen as the center and put at the origin. 
+   The remaining nodes are placed on a sequence of concentric circles centered about the origin, 
+   each a fixed radial distance from the previous circle.
+   */
+   
+   -- twopi /Users/david/.Trash/dot.dot -Tepdf
+   shell_BashParamEscape dotFile
+   put merge("twopi [[dotFile]] -Tepdf") into someShell
+   
+   put graphViz_GetShellPath() into gvPath
+   put gvPath & someShell into someShell
+   return shell(someShell)
+end dot_MakeRadial

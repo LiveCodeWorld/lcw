@@ -1,0 +1,12 @@
+function script_GetGetProp propName, someScript, pNotPrivate
+   local startHandler, endHandler
+   if pNotPrivate is not true then
+      script_SetPrivateHandlerOffsets startHandler, endHandler, propName, "getprop", someScript
+      put the result into someHandler
+      if someHandler is not empty then return someHandler
+   end if
+   
+   script_SetHandlerOffsets startHandler, endHandler, propName, "getprop", someScript
+   put the result into someHandler
+   return someHandler
+end script_GetGetProp

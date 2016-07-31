@@ -1,0 +1,16 @@
+command rig_DeleteGistControllers scriptTag, pServerURL
+   if pServerURL is empty then put server_GetURL() into pServerURL
+   
+   put rig_ListControllerFiles() into shortControllerFiles
+   put gist_FetchListArray() into pGistListArray
+   repeat for each line shortController in shortControllerFiles
+      set the cursor to busy
+      rig_DeleteGistController shortController, pServerURL, pGistListArray
+      put the result into resultJSON
+      if resultJSON = "error 404 Not Found" then
+         opn_Notify merge ("Could not find [[shortController]]. It's probably already deleted?")
+      else
+         opn_Notify merge ("Deleted gist [[shortController]].")
+      end if
+   end repeat
+end rig_DeleteGistControllers

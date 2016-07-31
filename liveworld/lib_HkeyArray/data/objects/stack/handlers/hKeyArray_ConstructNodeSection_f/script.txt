@@ -1,0 +1,20 @@
+function hKeyArray_ConstructNodeSection hIdArray, hLinkArray, pGraphController, nodeTypeArray
+   repeat for each key handlerType in nodeTypeArray
+      put nodeTypeArray [handlerType] into nodeIDs
+      if nodeIDs is not empty then
+         put hKeyArray_ConstructSubGraph (nodeIDs, hIdArray, handlerType, pGraphController) & CR after colourDefs
+      end if
+   end repeat
+   
+   -- node defs
+   put hKeyArray_DotNestedObjectClusters (hIdArray, hLinkArray) into clusterDefs  -- specific (construct object clusters)
+   put colourDefs & CR & CR & clusterDefs into defSection
+   
+   -- node links
+   put linkArray_DotNodeLinks (hLinkArray, empty) into linkSection
+   if defSection is empty then
+      return linkSection
+   else
+      return defSection & CR & CR & linkSection
+   end if
+end hKeyArray_ConstructNodeSection

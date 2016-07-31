@@ -1,0 +1,484 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Project
+type: model
+version: 0.6
+
+/*
+There are currently 5 active globals in use by the LiveCode environment.
+These are:
+
+-  gHkeyArray
+-  gLibrarySetArray
+-  gPrefs_Array
+- gTemp_ActiveMenuArray
+
+gHkeyArray is broken down into:
+
+-  Global Menus = an array of all Global Menus linked to a numerically linked array of menu items, and the ruggedID of the menu_Controller 
+-  behaviorArray = an array of objects with behaviors linked to metadata about that object
+-  handlerArray = also known as hArray - a huge array of all handlers linked to every object they occur in with metadata such as hash and lineNums in script.
+-  keywordArray = keyword automatically extracted from (library handlers) referencing the last object they were exported from
+-  objectType = an automatically cahced index of objects tagged using the uRIP metadata convention on script compile
+-  scriptArray = metadata about an objects script (without information about depndency calls)
+
+gLibrarySetArray is broken down to data and metadata:
+
+-  data         = front, back, used arrays and information like whether to add the ide_AddBehaviorHacks
+- metadata  = the library set name
+
+gOPN at the moment contains just the active library_SetName
+gPrefs_Array contains things like paths to command line tools
+gTemp_ActiveMenuArray is a global that contains infromation useful to the functioning of the last or current menu being used
+
+These should probably be rationalised into one for clarity, and ease of removal.
+Let's call the new array we move over to:  gLiveCodeWorld
+But that is for later...
+
+The handlers have a rough equivalent with regard to "library" handlers.
+
+The aim is to move over from one huge library, to individual projects.
+Each project would have it's own "home" stack, where we store stackfiles to all the stacks it needs to know about.
+Associated with this home stack we can use the standardised technique of logging metadata,
+where we can store arbitrary information.
+
+In this way the metadata of the projects home stack contains all the information we need about the project.
+
+For now let's keep using the old "library" rather than "project" based model for stackFiles.
+By this I mean we continue to store set array in the global library rather than in a folder associated with the project.
+The first stage of teh transition is to see if multiple home stacks with stackfiles works well.
+See also "meta_StackArrayFile" for project level stackfile storage
+*/
+
+
+--> Working on
+-
+[[ _FetchHandler (project_AddStack,c) ]]
+
+
+--> Project | Files | Handler
+-
+[[ _FetchHandler (project_HandlerHelpFile,f) ]]
+
+[[ _FetchHandler (project_HandlerFile,f) ]]
+
+
+--> Project | Files | Metadata
+-
+-- getprop hkey_MetadataFolder [hKey]
+put project_HandlerMetadataFolder (hKey, true) into hkeyMetadataFolder
+return hkeyMetadataFolder
+end hkey_MetadataFolder
+
+[[ _FetchHandler (project_ProcessedHkeyArrayFile,g) ]]
+
+
+--> Project | Folders
+-
+[[ _FetchHandler (project_OverlayFolder,g) ]]
+
+
+--> Project | Array
+-
+[[ _FetchHandler (project_DependencyStacks,g) ]]
+
+[[ _FetchHandler (project_DependencyStackArray,g) ]]
+
+[[ _FetchHandler (project_ProcessedHkeyArray,g) ]]
+
+[[ _FetchHandler (project_ProcessedHkeyArray,s) ]]
+
+
+--> Project | Array | HkeyArray
+-
+[[ _FetchHandler (project_FetchHkeyArray,f) ]]
+
+[[ _FetchHandler (project_StoreHkeyArray,c) ]]
+
+[[ _FetchHandler (project_FetchOverlayArrayAndHash,c) ]]
+
+
+--> Project | Prefs | Model
+-
+/*
+A project array stores everything a project depends on to function, as well as additional authoring metadata.
+It is equivalent to the older "library set", and is currently stored as part of the library array keyd under the project name.
+In the future we will split this out to metadata stored in the projects folder.
+*/
+
+[[ _FetchHandler (project_FetchPrefs,f) ]]
+
+[[ _FetchHandler (project_SavePrefs,c) ]]
+
+
+--> Project | Prefs | Global | Model
+-
+[[ _FetchHandler (project_DeleteGlobalPrefs,c) ]]
+
+[[ _FetchHandler (project_LoadGlobalArray,c) ]]
+
+[[ _FetchHandler (project_SaveGlobalArray,c) ]]
+
+
+--> Project | Array | Model
+-
+[[ _FetchHandler (project_FetchValue,f) ]]
+
+[[ _FetchHandler (project_SaveValue,c) ]]
+
+[[ _FetchHandler (project_FetchArray,f) ]]
+
+[[ _FetchHandler (project_SaveArray,c) ]]
+
+[[ _FetchHandler (project_DeleteArray,c) ]]
+
+
+--> Project | Array | Metadata | Model
+-
+[[ _FetchHandler (project_StoreMetadata,c) ]]
+
+[[ _FetchHandler (project_GetUsedStacks,f) ]]
+
+[[ _FetchHandler (project_SetUsedStacks,c) ]]
+
+
+--> Project | Array | ObjectTypeArray | Model
+-
+[[ _FetchHandler (project_GetObjectTypeArray,f) ]]
+
+[[ _FetchHandler (project_SetObjectTypeArray,c) ]]
+
+
+--> Project | Stackfiles
+-
+[[ _FetchHandler (project_StackFiles,g) ]]
+
+[[ _FetchHandler (project_StackFiles,s) ]]
+
+
+--> Project | Folder
+-
+[[ _FetchHandler (project_GetFolder,f) ]]
+
+[[ _FetchHandler (project_SetFolder,c) ]]
+
+
+--> Project
+-
+[[ _FetchHandler (project_GetCurrentName,f) ]]
+
+[[ _FetchHandler (project_SetCurrentName,c) ]]
+
+
+--> Project | Start and Stop
+-
+[[ _FetchHandler (project_StartEnvironment,c) ]]
+
+[[ _FetchHandler (project_StopEnvironment,c) ]]
+
+
+--> Project | Environment
+-
+[[ _FetchHandler (environment_Start,c) ]]
+
+[[ _FetchHandler (bash_AddSystemPathsToPATH,c) ]]
+
+
+--> Project | Globals | Load and unload
+-
+[[ _FetchHandler (project_LoadGlobals,c) ]]
+
+[[ _FetchHandler (project_StoreGlobals,c) ]]
+
+[[ _FetchHandler (project_ClearGlobals,c) ]]
+
+
+--> Project | List
+-
+[[ _FetchHandler (project_ListStandardScriptOnlyFiles,f) ]]
+
+[[ _FetchHandler (project_ListStandardFiles,f) ]]
+
+[[ _FetchHandler (project_ListViewStackObjects,f) ]]
+
+
+--> Project | Stackfiles
+-
+[[ _FetchHandler (project_FetchStackFiles,f) ]]
+
+[[ _FetchHandler (project_StoreStackFiles,c) ]]
+
+
+--> Project | hArray
+-
+/*
+For now we don't store this data seperately for each project. We may do this in the future.
+For now we just wrap the Library | Model | Array | gHkeyArray handlers
+*/
+
+[[ _FetchHandler (project_LoadGlobalHarray,c) ]]
+
+[[ _FetchHandler (project_SaveGlobalHarray,c) ]]
+
+[[ _FetchHandler (project_FetchHarray,f) ]]
+
+[[ _FetchHandler (project_SaveHarray,c) ]]
+
+
+--> Project | Globals
+-
+[[ _FetchHandler (project_LoadWorkingStackFiles,c) ]]
+
+[[ _FetchHandler (project_RestoreGlobalPrefs,c) ]]
+
+--> Project | Prefs
+-
+[[ _FetchHandler (project_GatherGlobalPrefs,f) ]]
+
+[[ _FetchHandler (project_LoadGlobalPrefs,c) ]]
+
+[[ _FetchHandler (project_SaveGlobalPrefs,c) ]]
+
+[[ _FetchHandler (project_GuessHomeStack,c) ]]
+
+
+--> Project | Start and Stop | Deps
+-
+[[ _FetchHandler (project_StartUsed,c) ]]
+
+[[ _FetchHandler (project_StopUsed,c) ]]
+
+[[ _FetchHandler (project_StartBack,c) ]]
+
+[[ _FetchHandler (project_StopBack,c) ]]
+
+[[ _FetchHandler (project_StartFront,c) ]]
+
+[[ _FetchHandler (project_StopFront,c) ]]
+
+[[ _FetchHandler (project_GetRevHackStatus,f) ]]
+
+[[ _FetchHandler (project_SetRevHackStatus,c) ]]
+
+[[ _FetchHandler (project_FetchObjects,f) ]]
+
+[[ _FetchHandler (project_FetchObjectTypeArray,f) ]]
+
+
+--> Project | Set Array
+-
+[[ _FetchHandler (project_CurrentFrontScripts,f) ]]
+
+[[ _FetchHandler (project_CurrentBackScripts,f) ]]
+
+[[ _FetchHandler (project_FindShortUsedViewFiles,f) ]]
+
+[[ _FetchHandler (project_FindUsedViewStacks,f) ]]
+
+[[ _FetchHandler (project_ConvertStackNamesToShortFiles,f) ]]
+
+[[ _FetchHandler (project_ConvertStackObjectsToShortFiles,f) ]]
+
+[[ _FetchHandler (project_ConvertShortFilesToStackObjects,f) ]]
+
+[[ _FetchHandler (project_ConvertShortFilesToStackObjects,c) ]]
+
+
+--> Project | Start and Stop | Deps
+-
+[[ _FetchHandler (_setRescueStackLabel,c) ]]
+
+[[ _FetchHandler (_constructRescueStackLabel,pf) ]]
+
+[[ _FetchHandler (stack_StartUsed,c) ]]
+
+[[ _FetchHandler (stack_StopUsed,c) ]]
+
+
+--> Library | To Sort
+-
+[[ _FetchHandler (library_ListStackFileNames,f) ]]
+
+[[ _FetchHandler (library_ListShortFiles,f) ]]
+
+[[ _FetchHandler (folder_ListStackFileNames,f) ]]
+
+[[ _FetchHandler (library_SetUsed,c) ]]
+
+[[ _FetchHandler (library_SetFrontArray,c) ]]
+
+[[ _FetchHandler (library_SetBackArray,c) ]]
+
+
+--> Library | Model | Array
+-
+[[ _FetchHandler (library_FetchArray,f) ]]
+
+[[ _FetchHandler (library_StoreArray,c) ]]
+
+[[ _FetchHandler (library_ArrayFile,f) ]]
+
+[[ _FetchHandler (library_ArrayFolder,f) ]]
+
+[[ _FetchHandler (library_PluginFolder,f) ]]
+
+
+--> From older model_Project (all handlers below so some duplication with older versions below)
+-
+function project_GetUsedStacks pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_GetObjectTypeArray ("used", pProjectName) into objectArray
+   put keys(objectArray) into stackObjects
+   return stackObjects
+end project_GetUsedStacks
+
+command project_SetUsedStacks stackObjects, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   repeat for each line stackObject in stackObjects
+      put empty into objectArray [stackObject]
+   end repeat
+   project_SetObjectTypeArray objectArray, "used", pProjectName
+   put the result into librarySetData
+   return librarySetData
+end project_SetUsedStacks
+
+function project_GetObjectTypeArray libType, pProjectName
+   -- was "project_GetLibraryArray"
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchSetData() into librarySetData
+   put librarySetData [pProjectName]["data"][libType] into objectArray
+   return objectArray
+end project_GetObjectTypeArray
+
+command project_SetObjectTypeArray objectArray, libType, pProjectName
+   -- was "project_SetLibraryArray"
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchSetData() into librarySetData
+   if objectArray is an array then
+      put objectArray into librarySetData [pProjectName]["data"][libType]
+   else
+      delete variable librarySetData [pProjectName]["data"][libType]
+   end if
+   library_StoreSetData librarySetData
+   return librarySetData
+end project_SetObjectTypeArray
+
+command project_StoreMetadata projectMetaData, pSetName
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   put library_FetchSetData() into librarySetData
+   put projectMetaData into librarySetData [pSetName]["metadata"]
+   library_StoreSetData librarySetData
+   return librarySetData
+end project_StoreMetadata
+
+--> Project | Objects
+-
+function project_FetchObjects libType, pProjectName
+   -- renamed to project and removed switch complexity from "library_FetchObjectTypeArray"
+   put project_FetchObjectTypeArray (libType, pProjectName) into libTypeArray
+   put keys (libTypeArray) into someObjects
+   sort someObjects
+   return someObjects
+end project_FetchObjects
+
+function project_FetchObjectTypeArray libType, pProjectName
+   -- renamed to project and removed switch complexity from "library_FetchObjectTypeArray"
+   put library_FetchSetData() into setData
+   put setData [pProjectName]["data"][libType] into libTypeArray
+   return libTypeArray
+end project_FetchObjectTypeArray
+
+
+--> Project | Handler
+-
+[[ _FetchHandler (project_FetchHandlerHelp,f) ]]
+
+[[ _FetchHandler (project_StoreHandlerHelp,c) ]]
+
+[[ _FetchHandler (project_FetchHandler,f) ]]
+
+[[ _FetchHandler (project_StoreHandler,c) ]]
+
+
+--> Project | Files | List
+-
+function project_ListViewStackObjects pProjectName
+   if pProjectName is empty then put "Default" into pProjectName
+   put project_GetFolder ("Views", pProjectName) into viewFolder 
+   put folder_ListShortStackFiles (viewFolder) into shortViewFiles
+   put project_ConvertShortFilesToStackObjects (shortViewFiles, viewFolder) into viewStacks
+   return viewStacks
+end project_ListViewStackObjects
+
+function project_ConvertStackNamesToShortFiles stackNames
+   set the itemdelimiter to slash
+   repeat for each line stackName in stackNames
+      put the filename of stack stackName into longFile
+      put item -1 of longFile into shortFile
+      put shortFile & CR after shortFiles
+   end repeat
+   return shortFiles
+end project_ConvertStackNamesToShortFiles
+
+function project_ConvertStackObjectsToShortFiles stackObjects
+   set the itemdelimiter to slash
+   repeat for each line stackObject in stackObjects
+      put the filename of stackObject into longFile
+      put item -1 of longFile into shortFile
+      put shortFile & CR after shortFiles
+   end repeat
+   return shortFiles
+end project_ConvertStackObjectsToShortFiles
+
+function project_ConvertShortFilesToStackObjects shortFiles, someFolder
+   local goodStackObjects, badStackFiles
+   project_ConvertShortFilesToStackObjects shortFiles, someFolder, goodStackObjects, badStackFiles
+   return goodStackObjects
+end project_ConvertShortFilesToStackObjects
+
+command project_ConvertShortFilesToStackObjects shortFiles, someFolder, @goodStackObjects, @badStackFiles
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into longStackFile
+      if there is not a file longStackFile then
+         put longStackFile & CR after badStackFiles
+         next repeat
+      end if
+      put the name of stack longStackFile & CR after goodStackObjects
+   end repeat
+   delete char -1 of badStackFiles
+   delete char -1 of goodStackObjects
+end project_ConvertShortFilesToStackObjects
+
+
+--> Project | Folders | Handlers
+-
+[[ _FetchHandler (project_HandlerMetadataFolder,f) ]]
+
+[[ _FetchHandler (project_GetHandlerFolder,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (global_Load,c) ]]
+
+
+--> Currently Working On | Rename
+-
+[[ _FetchHandler (scriptObject_ImageFile,f) ]]
+
+[[ _FetchHandler (hkey_LibraryImagetFile,f) ]]
+
+[[ _FetchHandler (hkey_ProjectImageFile,f) ]]
+
+[[ _FetchHandler (stackArray_ConstructObjectFolder,f) ]]
+
+[[ _FetchHandler (objectFolder_ScriptFile,f) ]]
+
+[[ _FetchHandler (objectFolder_HandlerFolder,f) ]]
+
+[[ _FetchHandler (object_FromScriptFolder,f) ]]
+
+[[ _FetchHandler (folder_ListShortStackFiles,f) ]]
+
+[[ _FetchHandler (folder_ListShortLivecodeFiles,f) ]]

@@ -1,0 +1,5 @@
+setprop overlay_MaximumDepth [pOverlayName] maxDepth
+   put the overlay_Folder of the target into overlayFolder
+   overlay_SetGraphValue overlayFolder, "overlay_MaximumDepth", maxDepth, pOverlayName
+   return the result
+end overlay_MaximumDepth

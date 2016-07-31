@@ -1,0 +1,11 @@
+function menu_StripDividerLines menuText
+    put menu_CleanMarks(menuText) into cleanMenu
+    put 0 into menuLineNum
+    repeat
+        put lineoffset("-", cleanMenu, menuLineNum) into lineNum
+        if lineNum is 0 then return menuText
+        put lineNum + menuLineNum into menuLineNum
+        delete line menuLineNum of cleanMenu
+        delete line menuLineNum of menuText
+    end repeat
+end menu_StripDividerLines

@@ -1,0 +1,5 @@
+getprop overlay_Names
+   put the overlay_Folder of the target into overlayFolder
+   put overlay_ListNames (overlayFolder) into overlayNames
+   return overlayNames
+end overlay_Names

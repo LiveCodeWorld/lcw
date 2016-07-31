@@ -1,0 +1,5 @@
+getprop displayed_ProjectSetArray
+   put _setTreeWidget() into treeWidget
+   put the arrayData of treeWidget into setArray
+   return setArray
+end displayed_ProjectSetArray

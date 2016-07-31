@@ -1,0 +1,5 @@
+on menu_ChangeWidth mTarget
+   put opn_Ask ("Change the width of placeholder to...", the width of mTarget) into newWidth
+   set the width of mTarget to newWidth
+   dispatch "LayoutControl" to the owner of mTarget
+end menu_ChangeWidth

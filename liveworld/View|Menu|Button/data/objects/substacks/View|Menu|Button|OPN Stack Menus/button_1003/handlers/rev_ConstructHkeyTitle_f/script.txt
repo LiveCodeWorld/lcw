@@ -1,0 +1,10 @@
+function rev_ConstructHkeyTitle someText
+   put line 1 of someText into hkey
+   put line 2 of someText into extraText
+   hkey_Deconstruct hkey, hName, hType, hObject, hNum
+   put rev_GetIcon (hType) into someIcon
+   -- put "<p><sub><img src=" & someIcon & "></img></sub>  " & hName & "</p>" into someHtml -- LiveCode does not use xHtml
+   put "<p><sub><img src=" & kwote (someIcon) & "></sub>  " & hName & extraText & "</p>" into someHtml
+   -- put "<i>" & hName & "</i>" into someHtml
+   return someHtml
+end rev_ConstructHkeyTitle

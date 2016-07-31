@@ -1,0 +1,5 @@
+on menu_ShowIndexTemplate indexView
+   put the view_Name of indexView into viewName
+   put view_GetTemplateObject (viewName) into templateObject
+   object_GoTo templateObject
+end menu_ShowIndexTemplate

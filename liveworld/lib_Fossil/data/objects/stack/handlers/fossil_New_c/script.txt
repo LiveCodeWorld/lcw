@@ -1,0 +1,23 @@
+command fossil_New projectFolder, fossilFile, pProjectName, pProjectDescription
+   put "fossil new" into someShell
+   put fossilFile into bashFile
+   shell_BashParamEscape bashFile
+   put space & bashFile after someShell
+   
+   fossil_ExecuteShell someShell, projectFolder
+   put the result into projectInfo
+   
+   -- put fossil_ParseProjectInfo (projectInfo) into projectArray
+   put fossil_ParseInfo (projectInfo) into projectArray
+   
+   -- is this needed?
+   -- put rev_PluginRelativePath (fossilFile) into projectArray ["repository"]
+   put fossilFile into projectArray ["repository"]
+   if pProjectName is not empty then
+      put pProjectName into projectArray ["project-name"]
+      fossil_SetProjectName fossilFile, pProjectName, pProjectDescription
+   end if
+   
+   fossil_SaveProjectArray fossilFile, projectArray   
+   return projectArray
+end fossil_New

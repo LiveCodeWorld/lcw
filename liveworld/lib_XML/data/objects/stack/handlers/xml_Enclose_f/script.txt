@@ -1,0 +1,25 @@
+function xml_Enclose someString, tagName, pIndent, pAttributeName, pAttributeValue
+    -- same as "xml_Tag" but slower and prettier output
+    put "<" & tagName into taggedText
+    put 2 into attributNum
+    get the paramcount
+    put it/2 - 1 into attributeCount
+    repeat attributeCount
+        put 2 * attributNum into paramNum
+        put param (paramNum) into attributeName
+        put param (paramNum+1) into attributeValue
+        if attributeValue is not empty then
+            put space & attributeName & "=" & kwote (attributeValue) after taggedText
+        end if
+        add 1 to attributNum
+    end repeat
+    
+    if someString is empty then
+        put "/>" after taggedText
+    else if pIndent is true then
+        put ">" & CR & outline_IncreaseIndent(word 1 to -1 of someString) & CR & "</" & word 1 of tagName & ">" after taggedText
+    else
+        put ">" & word 1 to -1 of someString & "</" & word 1 of tagName & ">" after taggedText
+    end if
+    return taggedText
+end xml_Enclose

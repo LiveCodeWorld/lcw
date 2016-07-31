@@ -1,0 +1,7 @@
+setprop view_Rect someRect
+   if the long id of the target is not the long id of me then pass view_Rect
+   lock screen
+   set the rect of me to someRect
+   LayoutControl someRect
+   unlock screen
+end view_Rect

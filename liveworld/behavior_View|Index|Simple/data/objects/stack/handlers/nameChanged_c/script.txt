@@ -1,0 +1,8 @@
+on nameChanged oldName, newName
+   -- here we change field and button names
+   -- this will break any references to them by name
+   -- but you shouldn't do that lightly anyway as this view hides it's inner workings.
+   set the name of _titleView() to newName
+   set the label of _titleView() to empty
+   set the name of _fieldView() to newName
+end nameChanged

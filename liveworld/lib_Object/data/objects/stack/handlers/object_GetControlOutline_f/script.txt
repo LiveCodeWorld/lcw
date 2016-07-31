@@ -1,0 +1,7 @@
+function object_GetControlOutline someObject
+   put the long ID of someObject into someObject
+   put object_ConstructControlOutline (someObject) into someOutline
+   put line 1 of someOutline into stackObject
+   put the name of stackObject into line 1 of someOutline
+   return someOutline
+end object_GetControlOutline

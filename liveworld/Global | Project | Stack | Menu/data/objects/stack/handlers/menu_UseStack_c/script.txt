@@ -1,0 +1,9 @@
+on menu_UseStack stackObject, someBoolean
+   if someBoolean is true then
+      start using stackObject
+      opn_Notify merge ("Started using [[stackObject]]")
+   else
+      stop using stackObject
+      opn_Notify merge ("Stopped using [[stackObject]]")
+   end if
+end menu_UseStack

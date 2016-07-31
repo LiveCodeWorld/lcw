@@ -1,0 +1,38 @@
+function fedwiki_FetchWikipediaSummaryPageArray pageSlug, pApiStem
+   -- see also "fedwikipedia_FetchSectionSummaryPageArray"
+   -- need to make a "parse" call to get TOC
+   local pSectionNum
+   
+   mediawiki_FetchPageParseInfo pageSlug, pageDescription, pageTitle, shortImageFile, infoBoxArray, pSectionNum, pApiStem
+   put the result into sandboxArray
+   put fedwikipedia_ConstructTocArray (sandboxArray) into tocArray
+   fedwikipedia_ExtractTocLookupArray tocArray, lookUpArray, markdownTOC
+   
+   -- need to make a "query" call to get a nice clean text
+   mediawiki_FetchPageQueryInfo pageSlug, simplePageDescription, pageTitleAgain, shortImageFile, wikipediaRevisionID, pApiStem
+   put the result into sandboxPageArray
+      
+   -- put wikipedia_ConstructUrl (pageSlug) into wikipediaUrl
+   put sandboxPageArray ["fullurl"] into wikipediaUrl
+   put sandboxPageArray ["coordinates"] into coordArray
+   
+   put construct_SummarySourceArray (pageTitle, pageSlug, wikipediaUrl, wikipediaRevisionID, lookUpArray) into pSourceArray
+   
+   -- now let's construct the page
+   set the itemdelimiter to "."
+   if item -1 of shortImageFile is "webm" then
+      put wikicommons_ConstructVideoPageArray (pageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   else
+      put wikicommons_ConstructTwoImagePageArray (pageTitle, simplePageDescription, shortImageFile, wikipediaUrl, pSourceArray) into fedwikiPageArray
+   end if
+   
+   if coordArray is an array then
+      -- add a map?
+   end if
+   
+   put "# See also" & CR & markdownTOC into markdownSection
+   fedwiki_AddMarkdownToPageArray fedwikiPageArray, markdownSection
+   
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwiki_FetchWikipediaSummaryPageArray

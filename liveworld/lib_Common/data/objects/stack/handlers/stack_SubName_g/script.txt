@@ -1,0 +1,7 @@
+getprop stack_SubName [subStackStem]
+   if subStackStem is empty then put "OPN SubStack" into subStackStem
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   put mainStackName & "|" & subStackStem into subStackName
+   return subStackName
+end stack_SubName

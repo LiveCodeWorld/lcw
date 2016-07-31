@@ -1,0 +1,5 @@
+command object_ExportMetaImage objectFolder, someImage, pExtension
+   put meta_ImageFile (objectFolder, pExtension, false) into someFile
+   put someImage into url ( "binfile:" & someFile)
+   return someFile
+end object_ExportMetaImage

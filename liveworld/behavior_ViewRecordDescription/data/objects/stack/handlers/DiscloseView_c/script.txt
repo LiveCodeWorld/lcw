@@ -1,0 +1,23 @@
+on DiscloseView someBoolean
+   -- sent on mouseDown by View|Button|Disclose|Down   
+   put the dgLine of me into vLineNum
+   if vLineNum is empty then
+      -- view is not inside a datagrid
+      -- lets do a toggle for show
+      set the record_IsExpanded of me to not the record_IsExpanded of me
+   else
+      put the dgDataOfLine [vLineNum] of me into recordArray
+      if the shiftKey is "Up" then
+         put someBoolean into recordArray ["isExpanded"]
+         set the dgDataOfLine [vLineNum] of me to recordArray
+      else
+         put the dgControl of me into dgView
+         put the dgData of dgView into dataArray
+         repeat for each key indexNum in dataArray
+            put someBoolean into dataArray [indexNum]["isExpanded"]
+         end repeat
+         -- send "set the dgData of dgView to dataArray" to me in 0 ticks
+         send "dg_SetDataArray dataArray" to me in 0 ticks
+      end if
+   end if
+end DiscloseView

@@ -1,0 +1,14 @@
+function hap_GetFileNameArray relFolderPath
+   rigLoadHelper "file"
+   put rigTrim (relFolderPath, "/") into relFolderPath
+   
+   put hap_GetPathTranslated() into tPathTranslated
+   put tPathTranslated & relFolderPath into someFolder
+   
+   if there is a folder (someFolder) then
+      put rigGetFileNames (someFolder, TRUE) into tFileNamesArray
+      return tFileNamesArray
+   else
+      return empty
+   end if
+end hap_GetFileNameArray

@@ -1,0 +1,214 @@
+--> MetaData
+-
+name: lib_XML
+type: script library
+copyright: David Bovill
+license: GPLv3
+author: David Bovill
+
+/*
+A library for XML and XML related data structures.
+It needs a good tidy.
+*/
+
+
+--> Shell | XML
+-
+[[ _FetchHandler (shell_XmlCheck,f) ]]
+
+[[ _FetchHandler (shell_XmlTidy,f) ]]
+
+
+--> XML
+-
+[[ _FetchHandler (xml_AddHeaderLine,c) ]]
+
+[[ _FetchHandler (xml_ExtractEncoding,c) ]]
+
+
+--> XML | Construct
+-
+[[ _FetchHandler (xml_Enclose,f) ]]
+
+[[ _FetchHandler (xml_ConstructOpeningTag,f) ]]
+
+[[ _FetchHandler (xml_ConstructSimpleTag,f) ]]
+
+
+--> XML | Tag | RegExp
+-
+[[ _FetchHandler (xml_GetTag,f) ]]
+
+[[ _FetchHandler (xml_GetTagContents,f) ]]
+
+[[ _FetchHandler (xml_SetTagContents,c) ]]
+
+[[ _FetchHandler (xml_TagOffsets,c) ]]
+
+
+--> XML | Tag | Simple
+-
+[[ _FetchHandler (xml_GetPlainTagContents,f) ]]
+
+[[ _FetchHandler (xml_GetSimpleTagContents,f) ]]
+
+[[ _FetchHandler (xml_GetSimpleTag,f) ]]
+
+
+--> XML | Attributes
+-
+[[ _FetchHandler (xml_TagAttributeArray,f) ]]
+
+[[ _FetchHandler (xml_GetAttribute,f) ]]
+
+
+--> XML | First Tag
+-
+[[ _FetchHandler (xml_FirstTagName,f) ]]
+
+[[ _FetchHandler (xml_FirstTag,f) ]]
+
+[[ _FetchHandler (xml_FirstTagOffsets,c) ]]
+
+on xml_FirstTagOffsets someXML, @tagName, @startCharNum, @endCharNum
+   -- extractFirstXmlTag
+   put xml_FirstTagName(someXML) into tagName
+   if tagName is empty then
+      put empty into startCharNum
+      put empty into endCharNum
+   else
+      put "(?im)(<\s*" & tagName & "\s+[^>]*\s*/\s*>.*<\s*" & tagName & "\s*/\s*>)" into doubleReg
+      
+      put "(?im)(<\s*" & tagName & "\s+[^>]*\s*>)" into singleReg
+      put singleReg & "|" & doubleReg into someReg
+      
+      if matchtext(someXML, someReg, someTag) is false then
+         return empty
+      else
+         return someTag
+      end if
+   end if
+end xml_FirstTagOffsets
+
+
+--> XML | Old
+-
+[[ _FetchHandler (xml_TagRegEx,f) ]]
+
+[[ _FetchHandler (xml_Nodes,f) ]]
+
+[[ _FetchHandler (xml_ReplaceChildCount,f) ]]
+
+[[ _FetchHandler (xml_ConstructTreeArray,f) ]]
+
+
+--> Xml | Tidy
+-
+[[ _FetchHandler (xml_StripInitialTabs,f) ]]
+
+[[ _FetchHandler (xml_MakePretty,f) ]]
+
+[[ _FetchHandler (xml_TidySpace,c) ]]
+
+
+--> XML | Rev External
+-
+[[ _FetchHandler (xml_ExtractTable,f) ]]
+
+[[ _FetchHandler (xml_ExtractTableFromID,f) ]]
+
+[[ _FetchHandler (xml_ExtractDiv,f) ]]
+
+[[ _FetchHandler (xml_ExtractDivFromID,f) ]]
+
+[[ _FetchHandler (xml_CreateTree,c) ]]
+
+[[ _FetchHandler (xml_Tag,f) ]]
+
+function xml_Nodes someXml, startNode, includeChildCount
+    put xml_NodeOutline(someXml, startNode, includeChildCount) into nodeOutline
+    put outline_ToPathIndex(nodeOutline) into nodeIndex
+    return nodeIndex
+end xml_Nodes
+
+[[ _FetchHandler (xml_NodeOutline,f) ]]
+
+[[ _FetchHandler (xml_GetNodeContents,f) ]]
+
+[[ _FetchHandler (xml_SetNodeContents,c) ]]
+
+[[ _FetchHandler (xml_GetNodeArray,f) ]]
+
+[[ _FetchHandler (xml_GetShortNodeArray,f) ]]
+
+[[ _FetchHandler (xml_AddNodeArray,c) ]]
+
+[[ _FetchHandler (xml_ExtractNode,f) ]]
+
+
+--> XML | Tree | Array | Trevor
+-
+/*
+Converts an XML tree into a Revolution multi-dimensional array.
+A nodes attributes will be stored as an array of it's "@attributes" key.
+Node names will retain the sequence information (i.e. node[1], node[2], etc.).
+This information is necessary to determine order that keys should be processed in. Example:
+set the itemDelimiter to "["
+put the keys of theArray into theKeys
+sort theKeys numeric by the last item of each
+
+pUseValueKey: The default value is false. In this case you get an array that has an @attributes
+key for nodes that have attributes and either a) no value or b) only child nodes. Otherwise it contains the node contents.
+Set to true if you want to store a nodes value in the '@value' key. This will allow a key to have
+both attributes (in @attributes key) and a value (in @value key).
+
+"put the array_KeyTranslation [theKey] of the target into theKey" is used to translate keys if pTranslateKeyBoolean = true
+pStoreEncodedAs defaults to "UTF-8"
+*/
+
+[[ _FetchHandler (xml_ToArray,f) ]]
+
+[[ _FetchHandler (xml_ArrayFromID,f) ]]
+
+[[ _FetchHandler (xml_ConvertXMLTreeToArray,f) ]]
+
+[[ _FetchHandler (xml_FromArray,f) ]]
+
+[[ _FetchHandler (xml_TreeFromArray,f) ]]
+
+[[ _FetchHandler (xml_ConvertArrayDimensionToXML,pc) ]]
+
+[[ _FetchHandler (xml_SortArrayKeysWithXMLOrdering,f) ]]
+
+[[ _FetchHandler (xml_ConvertXMLNodeToArray,pf) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (kwote,f) ]]
+
+[[ _FetchHandler (text_OffsetAfter,f) ]]
+
+[[ _FetchHandler (line_Insert,c) ]]
+
+[[ _FetchHandler (text_SetOffsets,c) ]]
+
+[[ _FetchHandler (shell_BashParamEscape,c) ]]
+
+[[ _FetchHandler (shell_AddBashParam,c) ]]
+
+[[ _FetchHandler (text_IsQuoted,f) ]]
+
+[[ _FetchHandler (text_Indent,c) ]]
+
+
+--> Deps | xml_Enclose
+-
+
+[[ _FetchHandler (outline_IncreaseIndent,f) ]]
+
+[[ _FetchHandler (outline_DecreaseIndent,f) ]]
+
+[[ _FetchHandler (text_RepeatString,f) ]]
+
+

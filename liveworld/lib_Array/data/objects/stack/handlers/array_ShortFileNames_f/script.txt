@@ -1,0 +1,9 @@
+function array_ShortFileNames pFolder
+   if pFolder is empty then 
+      put library_ArrayFolder () into pFolder
+   else
+      folder_Format pFolder
+   end if
+   return folder_ShortFiles (pFolder) into shortFiles
+   return shortFiles
+end array_ShortFileNames

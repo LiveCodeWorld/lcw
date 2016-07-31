@@ -1,0 +1,4 @@
+function digitalocean_GetDomainInfoArray
+   put the digitalocean_DomainInfoArray of stack "libOPN_DigitalOcean" into domainInfoArray
+   return domainInfoArray
+end digitalocean_GetDomainInfoArray

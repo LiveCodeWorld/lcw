@@ -1,0 +1,11 @@
+command overlay_Delete overlayFolder, overlayName, pDeleteFiles, pImageFormat
+   overlay_SetArray overlayFolder, empty, overlayName
+   
+   if pDeleteFiles is not false then
+      overlay_Files overlayFolder, dotFile, imageFile, cmapxFile, xdotFile, dotArrayFile, overlayName, pImageFormat
+      if there is a file dotFile then delete file dotFile
+      if there is a file imageFile then delete file imageFile
+      if there is a file cmapxFile then delete file cmapxFile
+      if there is a file xdotFile then delete file xdotFile
+   end if
+end overlay_Delete

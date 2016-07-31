@@ -1,0 +1,6 @@
+function rig_ExtractControllerHandlers handlerTable, someScript
+   put script_HkeysFromAvailable (handlerTable, someScript, "name") into controllerHandlers
+   replace "mouseUp" with "index" in controllerHandlers
+   replace CR with comma in controllerHandlers
+   return controllerHandlers
+end rig_ExtractControllerHandlers

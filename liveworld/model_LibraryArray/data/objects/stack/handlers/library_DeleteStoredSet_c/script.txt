@@ -1,0 +1,6 @@
+command library_DeleteStoredSet setName
+   put library_FetchSetData() into modelArray
+   delete local modelArray [setName]
+   library_StoreSetData modelArray
+   library_SetSetName "Default"
+end library_DeleteStoredSet

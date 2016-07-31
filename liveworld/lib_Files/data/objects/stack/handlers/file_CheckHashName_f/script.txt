@@ -1,0 +1,12 @@
+function file_CheckHashName filePath
+    -- need to check. Not tested
+    deconstruct_File filePath, someFolder, shortName, someExtension
+    put file_SafeHashName(filePath, someExtension) into realHashName
+    put shortName into shortFile
+    if someExtension is not empty then put "." & someExtension after shortFile
+    if realHashName is shortFile then
+        return true
+    else
+        return false
+    end if
+end file_CheckHashName

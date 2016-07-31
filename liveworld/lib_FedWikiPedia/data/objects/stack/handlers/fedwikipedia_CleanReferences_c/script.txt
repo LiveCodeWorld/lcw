@@ -1,0 +1,21 @@
+command fedwikipedia_CleanReferences @wikiText
+   -- '''Leon Trotsky'''(;<ref>[http://dictionary.reference.com/browse/trotsky "Trotsky"]. ''[[Random House Webster's Unabridged Dictionary]]''.</ref> ; ; born '''Lev Davidovich Bronstein'''; – 21 August 1940) was a [[Marxist]] revolutionary and theorist, Soviet politician, and the founding leader of the [[Red Army]].
+   -- put script_GetCommentAboveMe() into wikiText
+   
+   put "[^\<]+" into untilAngleBracket
+   put "(\<ref[^\>]*\>)" into someReg
+   put "(" & untilAngleBracket & ")" after someReg
+   put "\<\/ref\>" after someReg
+   put "(?mi)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiText, someReg, refStart, refEnd, wikiRefStart, wikiRefEnd) is true then
+         put char wikiRefStart to wikiRefEnd of wikiText into wikiRef
+         delete char refStart to (wikiRefEnd + 6) of wikiText
+         if char (refStart-1) of wikiText = ";" then
+            delete char (refStart-1) of wikiText
+         end if
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanReferences

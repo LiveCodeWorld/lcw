@@ -1,0 +1,9 @@
+function array_ToHtmlLinks someArray
+    local htmlLinks
+    repeat for each key someTitle in someArray
+        put someArray [someTitle] into someLink
+        put html_ConstructNameLink(someTitle, someLink) & CR after htmlLinks
+    end repeat
+    delete last char of htmlLinks
+    return htmlLinks
+end array_ToHtmlLinks

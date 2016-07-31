@@ -1,0 +1,8 @@
+getprop disabled_DisplayLibraryHandler [hKey]
+   put hkey_IsExported (hKey) into isInLibrary
+   if isInLibrary is true then
+      return false
+   else
+      return true
+   end if
+end disabled_DisplayLibraryHandler

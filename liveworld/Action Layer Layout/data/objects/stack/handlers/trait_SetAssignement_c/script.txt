@@ -1,0 +1,12 @@
+command trait_SetAssignement
+   put the long id of card "Assignement" into assignmentCard
+   put the plusMinus_View of assignmentCard into plusMinusView
+   
+   lock screen
+   set the displayed_SquareText of plusMinusView to the trait_Assignment of plusMinusView
+   set the displayed_PositiveLabel of plusMinusView to the positive_Label of plusMinusView
+   set the displayed_NegativeLabel of plusMinusView to the negative_Label of plusMinusView
+   set the show_TraitLabels of plusMinusView to false
+   set the trait_Hilite of plusMinusView to "none"
+   unlock screen
+end trait_SetAssignement

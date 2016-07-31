@@ -1,0 +1,4 @@
+on menu_EditViewToolMenu treeView
+   put the menu_ToolTitle of treeView into mTitle
+   menu_EditMenuScript mTitle
+end menu_EditViewToolMenu

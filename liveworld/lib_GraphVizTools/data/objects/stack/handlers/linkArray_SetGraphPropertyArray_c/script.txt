@@ -1,0 +1,7 @@
+on linkArray_SetGraphPropertyArray nodeID, someKey, someValue, @graphPropertyArray
+    put graphPropertyArray [nodeID] into nodeTable
+    split nodeTable with CR and tab
+    put someValue into nodeTable [someKey]
+    combine nodeTable with CR and tab
+    put nodeTable into graphPropertyArray [nodeID]
+end linkArray_SetgraphPropertyArray

@@ -1,0 +1,18 @@
+getprop project_Names
+   put git_GetProjectArray() into gitProjectArray   
+   repeat for each key gitFolder in gitProjectArray
+      put gitProjectArray [gitFolder]["project name"] into projectName
+      if there is a folder gitFolder then
+         put projectName & CR after projectNames
+      else
+         if the optionKey is "Down" then
+            put "Error:" && projectName & CR after projectNames
+         else
+            put "(Error:" && projectName & CR after projectNames
+         end if
+      end if
+   end repeat
+   delete char -1 of projectNames
+   sort projectNames
+   return projectNames
+end project_Names

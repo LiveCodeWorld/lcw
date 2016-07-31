@@ -1,0 +1,19 @@
+function script_MenuTitleArrayFromSuiteTitles suiteTitles
+    local menuTitleArray
+    set the itemdelimiter to "|"
+    put "Menu \((.*)\)" into regularExpression
+    put empty into menuTitles
+    repeat for each line suiteTitle in suiteTitles
+        put word 1 to -1 of last item of suiteTitle into lastMenuItem
+        if lastMenuItem is "Menu" then
+            put suiteTitle & CR after menuTitles
+            put "" into menuTitleArray [suiteTitle]
+        else if matchtext(lastMenuItem, regularExpression, toolMode) is true then
+            put suiteTitle & CR after menuTitles
+            put toolMode into menuTitleArray [suiteTitle]
+        end if
+    end repeat
+    delete last char of menuTitles
+    put menuTitles into menuTitleArray ["OrderedMenuTitles"]
+    return menuTitleArray
+end script_MenuTitleArrayFromSuiteTitles

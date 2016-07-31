@@ -1,0 +1,103 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Script_Menu
+type: controller
+copyright: David Bovill
+license: GPLv3
+version: 0.2
+
+
+--> Menu | Props
+-
+local LocalArray
+
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | GIT | Script | Menu
+-
+[[ _FetchHandler (insert_Gist,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_GitStatus,c) ]]
+
+[[ _FetchHandler (menu_CompareWithLastCommit,c) ]]
+
+[[ _FetchHandler (menu_RevertToLastRevision,c) ]]
+
+[[ _FetchHandler (menu_DisplayScriptLog,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | GIT | Script | Menu | Props
+-
+--> Global | GIT | Script | Menu | Disabled
+-
+[[ _FetchHandler (disabled_CompareWithLastCommit,g) ]]
+
+[[ _FetchHandler (disabled_RevertToLastRevision,g) ]]
+
+[[ _FetchHandler (disabled_DisplayScriptLog,g) ]]
+
+-- getprop disabled_RevertToLastRevision [scriptObject]
+   if there is a file LocalArray ["scriptFile"] then
+      return false
+   else
+      return true
+   end if
+end disabled_RevertToLastRevision
+
+
+--> Dev | Menu
+-
+/*
+was "Global | Git | Line | Log | Menu"
+
+A menu for interacting with lines of a git file display tree_Field.
+
+The tree_View requires the properties: displayed_File
+which are set by the "display_GitFileHistory handlerFile, someTitle, pDoubleUpThing" command.
+
+   lock messages
+   set the displayed_Hkey of treeView to hKey
+   set the displayed_Object of treeView to hObject
+   set the displayed_File of treeView to handlerFile
+   unlock messages
+*/
+
+[[ _FetchHandler (menu_DisplayHead,c) ]]
+
+[[ _FetchHandler (menu_DisplayPreviousHead,c) ]]
+
+[[ _FetchHandler (menu_DisplayRevision,c) ]]
+
+[[ _FetchHandler (menu_DisplayHashHistory,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_UnixDiff,c) ]]
+
+[[ _FetchHandler (menu_ShowPatch,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AmmendCommitMessage,c) ]]
+
+
+--> Global | GIT | Line | Log | Menu | Props
+-
+[[ _FetchHandler (_GetSelectedTreeIsh,pf) ]]
+

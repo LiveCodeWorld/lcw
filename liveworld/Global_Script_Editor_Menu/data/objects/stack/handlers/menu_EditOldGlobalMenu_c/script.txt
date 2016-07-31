@@ -1,0 +1,4 @@
+on menu_EditOldGlobalMenu mTarget, globalMenuCardName
+   put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Menus.rev" into longStackFile
+   edit the script of card globalMenuCardName of stack longStackFile
+end menu_EditOldGlobalMenu

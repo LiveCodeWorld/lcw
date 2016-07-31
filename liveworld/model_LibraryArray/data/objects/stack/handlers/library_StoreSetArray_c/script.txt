@@ -1,0 +1,15 @@
+command library_StoreSetArray setArray, pSetName
+   -- don't store anything for the standard sets "all" and "none" which are calculated from other info.
+   switch pSetName
+      case "all"
+         return empty
+      case "none"
+         return empty
+      default
+         if pSetName is empty then put project_GetCurrentName() into pSetName
+         
+         put library_FetchSetData() into setData
+         put setArray into setData [pSetName]
+         library_StoreSetData setData
+   end switch
+end library_StoreSetArray

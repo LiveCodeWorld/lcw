@@ -1,0 +1,12 @@
+command fedwiki_AddToJournalArray @journalArray, itemArray, journalType, pAfterID, pMilliseconds
+   if pMilliseconds is empty then put the milliseconds into pMilliseconds
+   if pAfterID is not empty then
+      put pAfterID into journalEntryArray ["after"]
+   end if
+   put pMilliseconds into journalEntryArray ["date"]
+   put itemArray ["id"] into journalEntryArray ["id"]
+   put itemArray into journalEntryArray ["item"]
+   put journalType into journalEntryArray ["type"]
+   
+   fedwiki_AddToEndOfIndexArray journalEntryArray, journalArray
+end fedwiki_AddToJournalArray

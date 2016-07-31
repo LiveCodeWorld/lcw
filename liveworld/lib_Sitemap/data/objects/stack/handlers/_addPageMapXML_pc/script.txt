@@ -1,0 +1,6 @@
+private command _addPageMapXML @urlXML, pageMapXML
+   if pageMapXML is not empty then
+      put pageMapXML after urlXML
+      put CR after urlXML
+   end if
+end _addPageMapXML

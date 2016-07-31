@@ -1,0 +1,6 @@
+getprop script_SortedSuite [suiteName]
+   put the script_Suite [suiteName] of the target into someScript
+   put script_SortHandlers(someScript) into sortedHandlers
+   put script_ConstructSuite(suiteName, sortedHandlers) into sortedSuite
+   return sortedSuite
+end script_SortedSuite

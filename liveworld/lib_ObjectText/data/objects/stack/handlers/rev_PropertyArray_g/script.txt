@@ -1,0 +1,26 @@
+getprop rev_PropertyArray [dontDiff]
+   put the long id of the target into targetObject
+   put the properties of targetObject into revPropertyArray
+   
+   if dontDiff is not true then
+      put the object_DefaultPropArray of the target into defaultPropArray
+      repeat for each key propName in defaultPropArray
+         if defaultPropArray [propName] = revPropertyArray [propName] then
+            delete local revPropertyArray [propName]
+         end if
+      end repeat
+   end if
+   
+   switch word 1 of targetObject
+      case "field"
+         put the htmltext of targetObject into revPropertyArray ["htmlText"] -- a stupid RunRev bug!!!
+         break
+      case "button"
+         put the hilite of targetObject into revPropertyArray ["hilited"] -- a stupid RunRev bug!!!
+         break
+   end switch
+   
+   -- delete local revPropertyArray ["defaultButton"] -- should not be in the properties as read only
+   object_AddMissingArrays revPropertyArray, targetObject
+   return revPropertyArray
+end rev_PropertyArray

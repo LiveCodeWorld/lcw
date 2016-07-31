@@ -1,0 +1,7 @@
+function digitalocean_GetDomainNameArray pDomainInfoArray
+   if pDomainInfoArray is not an array then
+      put digitalocean_GetDomainInfoArray() into pDomainInfoArray
+   end if
+   put digitalocean_ConstructDomainNameArray (pDomainInfoArray) into oceanDomainNameArray
+   return oceanDomainNameArray
+end digitalocean_GetDomainNameArray

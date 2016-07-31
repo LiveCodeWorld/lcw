@@ -1,0 +1,5 @@
+function scriptEditor_FindFieldBehavior
+   put scriptEditor_GetBehaviorButton ("Livecode Simple Find Field") into someObject
+   if exists(someObject) is false then return empty
+   return revRuggedID (someObject)
+end scriptEditor_FindFieldBehavior

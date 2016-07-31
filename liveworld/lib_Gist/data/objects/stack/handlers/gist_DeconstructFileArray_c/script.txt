@@ -1,0 +1,14 @@
+command gist_DeconstructFileArray gistFileArray, @pShortGistFile, @gistContent, @gistDescription, @htmlURL, @gitPulllURL
+   if pShortGistFile is empty then
+      put gistFileArray ["files"] into fileSectionArray
+      put line 1 of keys (fileSectionArray) into pShortGistFile
+   end if
+   put gistFileArray ["files"][pShortGistFile]["content"] into gistContent
+   
+   put gistFileArray ["description"] into gistDescription
+   put gistFileArray ["html_url"] into htmlURL
+   put gistFileArray ["git_pull_url"] into gitPulllURL
+   
+   put gistFileArray ["html_url"] into gistHistoryArray
+   return gistHistoryArray
+end gist_DeconstructFileArray

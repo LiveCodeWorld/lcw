@@ -1,0 +1,4 @@
+on resizeControl
+   put the rect of me into groupRect
+   LayoutControl groupRect
+end resizeControl

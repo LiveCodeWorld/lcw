@@ -1,0 +1,11 @@
+setprop stack_TitleStyle titleStyle
+    put the stack_Object of the target into stackObject
+    switch titleStyle
+        case "normal"
+            set the decorations of stackObject to default
+            break
+        case "no title"
+            set the decorations of stackObject to "noShadow"
+            break
+    end switch
+end stack_TitleStyle

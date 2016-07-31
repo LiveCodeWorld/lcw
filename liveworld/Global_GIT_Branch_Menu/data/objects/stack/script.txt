@@ -1,0 +1,64 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Branch_Menu
+type: controller
+version: 0.1
+
+
+--> Global | GIT | Branch | Menu
+-
+[[ _FetchHandler (menu_CreateNewBranch,c) ]]
+
+[[ _FetchHandler (menu_SwitchLocalBranch,c) ]]
+
+-- on menu_DiffLocalBranch localBranchName
+   put "git diff" into someShell
+   put space & "--numstat" after someShell
+   -- put space & "--name-status" after someShell
+   
+   put git_CurrentBranchName() into currentBranchName
+   
+   shell_BashParamEscape currentBranchName
+   shell_BashParamEscape localBranchName
+   put space & currentBranchName & ".." & localBranchName after someShell
+   
+   put git_ExecuteShellCommand(someShell) into someTable
+   put "+" & tab & "-" & tab & "relative file name" & CR before someTable
+   display_Table someTable, someShell, true, true, true
+   put the result into tableView
+   -- set the menu_Title of 
+end menu_DiffLocalBranch
+
+[[ _FetchHandler (menu_DiffLocalBranch,c) ]]
+
+[[ _FetchHandler (menu_MergeLocalBranch,c) ]]
+
+[[ _FetchHandler (menu_DeleteLocalBranch,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RemoteBranch,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ViewBranches,c) ]]
+
+
+--> Global | GIT | Branch | Menu | Props
+-
+[[ _FetchHandler (local_BranchNames,g) ]]
+
+[[ _FetchHandler (remote_BranchNames,g) ]]
+
+[[ _FetchHandler (branch_Names,g) ]]
+
+
+--> Dpes
+-
+[[ _FetchHandler (git_ParseRawDiff,f) ]]
+
+[[ _FetchHandler (git_DeconstructBranchNames,c) ]]
+

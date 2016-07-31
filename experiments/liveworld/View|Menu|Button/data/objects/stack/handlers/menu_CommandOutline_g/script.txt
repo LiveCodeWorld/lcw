@@ -1,0 +1,29 @@
+getprop menu_CommandOutline [mTitle]
+   put the script_Suite [mTitle] of the target into comLines	# "someScript" allows searching for handlers outside of suite (slower)
+   filter comLines with "on *"
+   
+   set the itemdelimiter to "_"
+   repeat for each line comLine in comLines
+      put token 2 of comLine into handlerName
+      if handlerName is "_" then
+         put "_" & CR after someOutline
+         next repeat
+      end if
+      
+      put item 1 of handlerName into mPrefix
+      put item 2 of handlerName into mSuffix
+      put text_SplitCaps(mSuffix) into mLine
+      switch mPrefix 
+         case "insert"
+            put html_ConstructNameLink(mLine, comLine, "red") & CR after someOutline
+            break
+         case "submenu" 
+            put html_ConstructNameLink(mLine, comLine, "green") & CR after someOutline
+            break
+         default
+            put html_ConstructNameLink(mLine, comLine) & CR after someOutline
+      end switch
+   end repeat
+   delete char -1 of someOutline
+   return someOutline
+end menu_CommandOutline

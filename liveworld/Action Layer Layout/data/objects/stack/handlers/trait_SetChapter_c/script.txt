@@ -1,0 +1,19 @@
+command trait_SetChapter chapterNameOrNum, pSituationNum
+   if chapterNameOrNum is a number then
+      put chapterNameOrNum into chapterNum
+   else
+      put sivasiva_GetChapterNum (chapterNameOrNum) into chapterNum
+   end if
+   set the chapter_Num of me to chapterNum
+   
+   lock screen
+   trait_SetText
+   trait_SetDescription
+   trait_SetQuote
+   trait_SetSituation pSituationNum
+   trait_SetPositive pSituationNum
+   trait_SetNegative pSituationNum
+   trait_SetAssignement
+   trait_SetThought
+   unlock screen
+end trait_SetChapter

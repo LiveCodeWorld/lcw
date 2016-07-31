@@ -1,0 +1,15 @@
+getprop behavior_LibraryObjectName
+   put the long id of the target into behaviorObject
+   
+   put behaviorModel_GetArray() into behaviorArray
+   repeat for each key bName in behaviorArray
+      put behaviorArray [bName]["ruggedID"] into ruggedObject
+      if exists(ruggedObject) is false then
+         next repeat
+      end if
+      if the long id of ruggedObject = behaviorObject then
+         return bName
+      end if
+   end repeat
+   return empty
+end behavior_LibraryObjectName

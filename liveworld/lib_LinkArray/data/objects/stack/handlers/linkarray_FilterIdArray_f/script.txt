@@ -1,0 +1,8 @@
+function linkarray_FilterIdArray hIdArray, hLinkArray
+   -- lets only get the bits of hIdArray that are actually in the link array
+   put array_AllNodes (hLinkArray) into linkIds
+   repeat for each line linkID in linkIds
+      put hIdArray [linkID] into filteredArray [linkID]
+   end repeat
+   return filteredArray
+end linkarray_FilterIdArray

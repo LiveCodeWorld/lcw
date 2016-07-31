@@ -1,0 +1,3 @@
+command text_StripTags @someXml
+   put word 1 to -1 of replacetext (someXml, "(<(.|\n)+?>)", empty) into someXml
+end text_StripTags

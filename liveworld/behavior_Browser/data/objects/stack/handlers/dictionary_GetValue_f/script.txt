@@ -1,0 +1,4 @@
+function dictionary_GetValue dataArray, someKey
+   put dataArray ["key"][someKey] into someValue
+   return someValue
+end dictionary_GetValue

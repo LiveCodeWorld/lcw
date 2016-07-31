@@ -1,0 +1,4 @@
+on menu_RevealHandlerHelpFile hKey
+   put hkey_HelpFile (hKey) into someFile
+   finder_Reveal someFile
+end menu_RevealHandlerHelpFile

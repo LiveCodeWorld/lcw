@@ -1,0 +1,16 @@
+function rigArrayValues pAssocArray, pUseApostrophe
+   --| Summary: Returns all the values from the input array and indexes numerically the array.
+   --| Parameters: array <pAssocArray>, bool <pUseApostrophe>
+   
+   put 0 into tCounter
+   repeat for each key tKey in pAssocArray
+      add 1 to tCounter
+      if pUseApostrophe is TRUE then
+         put "'" & pAssocArray[tKey] & "'" into tValuesArray[tCounter]
+      else
+         put pAssocArray[tKey] into tValuesArray[tCounter]
+      end if
+   end repeat
+   
+   return tValuesArray
+end rigArrayValues

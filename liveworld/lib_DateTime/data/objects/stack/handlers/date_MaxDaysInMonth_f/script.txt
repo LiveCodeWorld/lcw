@@ -1,0 +1,45 @@
+function date_MaxDaysInMonth theMonth, theYear
+    put "1,January,3,March,5,May,7,July,8,August,10,October,12,December" into Months31
+    put "4,April,6,June,9,September,11,November" into Months30
+    if theMonth is among the items of Months31 then
+        put 31 into HowManyDays
+    else if theMonth is among the items of Months30 then
+        put 30 into HowManyDays
+    else --February
+        if (theYear mod 400 = 0) or (theYear mod 100 <> 0) and (theYear mod 4 = 0) then
+            put 29 into HowManyDays -- leap year
+        else
+            put 28 into HowManyDays
+        end if
+    end if
+    return HowManyDays
+    
+    /*
+    Base on the rhyme:
+    30 days has September, April, June and Novemeber
+    All the rest have 31
+    Except Februaruy
+    Which has 28 and 29 on a leap year
+    */
+    
+    put 30 into item 9 of maxDaylist
+    put 30 into item 4 of maxDaylist
+    put 30 into item 6 of maxDaylist
+    put 30 into item 11 of maxDaylist
+    
+    put 31 into item 1 of maxDaylist
+    put 31 into item 3 of maxDaylist
+    put 31 into item 5 of maxDaylist
+    put 31 into item 7 of maxDaylist
+    put 31 into item 8 of maxDaylist
+    put 31 into item 10 of maxDaylist
+    put 31 into item 12 of maxDaylist
+     
+    if date_IsLeapYear(someDate) then
+        put 29 into item 2 of maxDaylist
+    else
+        put 28 into item 2 of maxDaylist
+    end if
+    
+    return item theMonth of maxDaylist
+end date_MaxDaysInMonth

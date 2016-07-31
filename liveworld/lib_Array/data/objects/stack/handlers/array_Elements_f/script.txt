@@ -1,0 +1,10 @@
+function array_Elements someArray
+    -- thought there was a function or property for this?
+    local arrayElements
+    repeat for each key someKey in someArray
+        get someArray [someKey]
+        if it is not empty then put it & CR after arrayElements
+    end repeat
+    delete last char of arrayElements
+    return arrayElements
+end array_Elements

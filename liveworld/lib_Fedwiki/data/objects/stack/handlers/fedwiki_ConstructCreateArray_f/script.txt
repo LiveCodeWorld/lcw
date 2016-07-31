@@ -1,0 +1,8 @@
+function fedwiki_ConstructCreateArray pageTitle, pSourceArray
+   put "create" into createArray ["type"]
+   put the milliseconds into createArray ["date"]
+   put pageTitle into createArray ["item"]["title"]
+   put empty into createArray ["item"]["story"]
+   if pSourceArray is an array then put pSourceArray into createArray ["source"]
+   return createArray
+end fedwiki_ConstructCreateArray

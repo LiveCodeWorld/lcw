@@ -1,0 +1,19 @@
+getprop handler_InHierarchy [hKey]
+   put the long id of the target into tObject
+   put item 1 to 2 of hKey into shortHkey
+   
+   put hkey_FoundArray (shortHKey, tObject) into foundArray
+   put foundArray ["foundHkey"] into foundHkey
+   if foundHkey is empty then return empty
+   
+   put item 3 of foundHkey into foundObject
+   put foundArray ["startLineNum"] into startLineNum
+   put foundArray ["endLineNum"] into endLineNum
+   
+   try
+      put line startLineNum to endLineNum of the script of foundObject into foundHandler
+      return foundHandler
+   catch e
+      return empty -- stack locked
+   end try
+end handler_InHierarchy

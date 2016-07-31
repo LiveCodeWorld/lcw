@@ -1,0 +1,910 @@
+﻿script "lib_HTML"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_HTML
+type: script library
+version: 0.1
+
+/*
+This script only stack contains the latest genral utility handlers for dealing with HTML5.
+*/
+
+
+--> HTML | CLI
+-
+function html_FetchTidy someUrl
+   put url someUrl into someHtml
+   html_Tidy someHtml
+   return someHtml
+end html_FetchTidy
+
+command html_Tidy @someHtml
+   put the tempname & ".html" into inputFile 
+   put someHtml into url ("file:" & inputFile)
+   
+   put "tidy --force-output true --char-encoding utf8 --input-encoding utf8 --output-encoding utf8 --output-xml true -asxml -m" && inputFile into someShell
+   put shell (someShell) into shellResult   
+   put url ("file:" & inputFile) into someHtml
+end html_Tidy
+
+
+
+--> Html | List
+-
+function html_ConstructList someLines, pIsOrdered
+   switch pIsOrdered
+      case "ordered"
+         put "<ol>" into someHtml
+         break
+      default
+         put "<ul>" into someHtml
+   end switch
+   repeat for each line someLine in someLines
+      put CR & tab & "<li>" & html_ConstructRefLink (someLine, someLine) & "</li>" after someHtml
+      -- put CR & tab & "<li>" & someLine after someHtml
+   end repeat
+   switch pIsOrdered
+      case "ordered"
+         put CR & "</ol>" after someHtml
+         break
+      default
+         put CR & "</ul>" after someHtml
+   end switch
+   return someHtml
+end html_ConstructList
+
+
+--> Html | Style
+-
+function html_MakeBold someText
+   html_AddTag someText, "b"
+   return someText
+end html_MakeBold
+
+function html_MakeColoured someText, someColour
+   if someColour is empty then return someText
+   colour_HexNormalise someColour
+   return "<font color=" & kwote(someColour) & ">" & someText & "</font>"
+end html_MakeColoured
+
+function html_ConstructColouredText someText, someColour
+   -- creates or changes coloured html
+   if someColour is empty then return someText
+   colour_HexNormalise someColour
+   
+   -- put "<font color=" & quote & "(.+)" & quote & ">"  into someReg
+   put "<font color=" & quote & "([^\>]+)" & quote & ">"  into someReg
+   if matchchunk(someText, someReg, startNum, endNum) is true then
+      put someColour into char startNum to endNum of someText
+      return someText
+   else
+      return "<font color=" & kwote(someColour) & ">" & someText & "</font>"
+   end if
+end html_ConstructColouredText
+
+command html_DeconstructLink someLine, @someText, @someLink
+   -- <a href="/Users/david/Movies/crossingTheBridge.mp4">Crossing The Bridge</a>
+   -- (?Usi)
+   put "<a (href)|(name)=" & quote & "([^>]*)" & quote & ">([^<]*)</a>" into someReg
+   if matchtext(someLine, someReg, dummy1, dummy2, someLink, someText) is false then
+      put someLine into someText
+      put empty into someLink
+   end if
+end html_DeconstructLink
+
+command html_DeconstructNameLink someLine, @someText, @someLink
+    -- <a name="/Users/david/Movies/crossingTheBridge.mp4">Crossing The Bridge</a>
+    
+    put "<a name=" & quote & "([^>]*)" & quote & ">([^<]*)</a>" into someReg
+    if matchtext(someLine, someReg, someLink, someText) is false then
+        put someLine into someText
+        put empty into someLink
+    end if
+end html_DeconstructNameLink
+
+command html_DeconstructRefLink someLine, @someText, @someLink
+    -- <a href="/Users/david/Movies/crossingTheBridge.mp4">Crossing The Bridge</a>
+    
+    put "<a href=" & quote & "([^>]*)" & quote & ">([^<]*)</a>" into someReg
+    if matchtext(someLine, someReg, someLink, someText) is false then
+        put someLine into someText
+        put empty into someLink
+    end if
+end html_DeconstructRefLink
+
+function html_ConstructRefLink someText, someLink, pTarget
+   if someLink is empty then return someText
+   replace quote with "&quot;" in someLink
+   put "<a href=" & quote & someLink & quote  into someLink
+   if pTarget is not empty then
+      -- "_blank" -- for opening in a new window
+      put space & "target=" &quote& pTarget &quote after someLink
+   end if
+   put ">" & someText & "</a>" after someLink
+   return someLink
+end html_ConstructRefLink
+
+function html_ConstructNameLink someText, someLink, pSomeColour
+   if someLink is empty then return someText
+   -- replace quote with "'" in someLink
+   replace quote with "&quot;" in someLink
+   put "<a name=" & kwote(someLink) & ">" & someText & "</a>" into someLink
+   if pSomeColour is not empty then return html_ConstructColouredText (someLink, pSomeColour)
+   return someLink
+end html_ConstructNameLink
+
+
+--> HTML | Tags
+-
+function html_ConstructVideoTag videoURL, pMediaType, pVideoWidth, pShowControls, pPosterImageFile, pFallbackHtml
+   -- this is a single source video tag
+   if pFallbackHtml is empty then put "This is fallback content to display for user agents that do not support the video tag." into pFallbackHtml
+   
+   put "<video" into someHTML
+   
+   put space & "src=" & quote & videoURL & quote after someHTML
+   switch word 1 of pMediaType
+      case "webm"
+         put space & "type='video/webm'" after someHTML
+         break
+      case "mp4"
+         put  space & "type='video/mp4'" after someHTML
+   end switch
+   
+   if pVideoWidth is not empty then put space & "width=" & quote & pVideoWidth & quote after someHTML
+   if pShowControls is not false then put space & "controls" after someHTML
+   if pPosterImageFile is not empty then put space & "poster=" & quote & pPosterImageFile & quote after someHTML
+   put ">" after someHTML
+   
+   put "<p>" after someHTML
+   put pFallbackHtml after someHTML
+   put "</p>" after someHTML
+   put "</video>" after someHTML
+   
+   return someHTML
+end html_ConstructVideoTag
+
+function html_ConstructOpenVideoTag pVideoWidth, pShowControls, pPosterImageFile
+   -- this constructs an opening video tag
+   put "<video" into someHTML
+   if pPosterImageFile is not empty then put space & "poster=" & quote & pPosterImageFile & quote after someHTML
+   if pVideoWidth is not empty then put space & "width=" & quote & pVideoWidth & quote after someHTML
+   if pShowControls is not false then put space & "controls" after someHTML
+   put ">" after someHTML
+   return someHTML
+end html_ConstructOpenVideoTag
+
+function html_ConstructVideoSourceTag videoURL, pMediaType
+   -- multiple source video tag
+   -- should enhance to extract pMediaType from file extension
+   put "<source src=" & quote & videoURL & quote into someHTML
+   switch pMediaType
+      case "webm"
+         put space & "type='video/webm" after someHTML
+         break
+      case "mp4"
+         put  space & "type='video/mp4" after someHTML
+   end switch
+   -- maybe add codecs?
+   put ">" after someHTML
+   return someHTML
+end html_ConstructVideoSourceTag
+
+
+--> Html | Sections
+-
+function html_AddHeaders someBody, htmlTitle, headerSection
+    -- was "htmlHeaders"
+    put "<HTML>" into someHtml
+    if headerSection is empty then
+        put CR & tab & "<HEAD><TITLE>" & htmlTitle & "</TITLE></HEAD>" after someHtml
+    else
+        put CR & tab & "<HEAD>" after someHtml
+        put CR & tab & tab & "<TITLE>" & htmlTitle & "</TITLE>" after someHtml
+        put CR & outline_IncreaseIndent(headerSection, 2) after someHtml
+        put CR & tab & "</HEAD>" after someHtml
+    end if
+    put CR & tab & "<BODY>" after someHtml
+    put CR & outline_IncreaseIndent(someBody, 2) after someHtml
+    put CR & tab & "</BODY>" after someHtml
+    put CR & "</HTML>" after someHtml
+    return someHtml
+end html_AddHeaders
+
+on html_Deconstruct someHTML, @someHeader, @someBody, @someTitle
+    put html_ExtractHeader(someHTML) into someHeader
+    put xml_GetTagContents("title", someHeader) into someTitle
+    put html_ExtractBody(someHTML) into someBody
+end html_Deconstruct
+
+function html_ExtractTitle someHTML
+   return html_ExtractNode ("html/head/title", someHTML)
+end html_ExtractTitle
+
+function html_ExtractHeader someHTML
+    return html_ExtractNode ("html/head", someHTML)
+end html_ExtractHeader
+
+function html_ExtractBody someHTML
+   put html_ExtractNode ("html/body", someHTML) into bodyXML
+   return bodyXML
+end html_ExtractBody
+
+function html_ExtractBodyContents someHTML
+   put html_ExtractNodeContents ("html/body", someHTML) into innerXML
+   return innerXML
+end html_ExtractBodyContents
+
+function html_Anchors someHtml
+    return html_AttributeValues (someHtml, "name")
+end html_Anchors
+
+function html_ExtractAnchors someHtml
+    put someHtml into htmlPage
+    replace CR with empty in htmlPage --text is now one line
+    replace "name=" with "name=" & CR in htmlPage
+    replace "</a" with "</a" & CR in htmlPage
+     
+    -- filter htmlPage with "*http://*"
+    -- set the itemdel to ">"
+    filter htmlPage with (quote & "*</a")
+    set the itemdel to quote
+    
+    put empty into newLinkList
+    repeat for each line LNN in htmlPage
+        put item 2 of LNN & cr after newLinkList
+        -- put item 1 of LNN & cr after newLinkList
+    end repeat
+    delete last char of newLinkList
+    return newLinkList
+end html_ExtractAnchors
+
+function html_ExtractLink someLine
+   html_DeconstructLink someLine, someText, someLink
+   return someLink
+end html_ExtractLink
+
+function html_ExtractLinks someHtml
+    -- Not all links have "http://"
+    
+    replace CR with empty in someHtml -- text is now one line
+    replace "href=" with "href=" & CR in someHtml
+    replace "</a" with "</a" & CR in someHtml
+    filter someHtml with "*http://*"
+    
+    set the itemdel to ">"
+    put empty into newLinkList
+    repeat for each line linkLine in someHtml
+        put item 1 of linkLine & CR after newLinkList
+    end repeat
+    delete last char of newLinkList
+    return newLinkList
+end html_ExtractLinks
+    
+function html_ExtractHREF someHtml
+   /*
+   This one is prob better:
+   
+   <a[\s]+[^>]*?href[\s]?=[\s\"\']+(.*?)[\"\']+.*?>([^<]+|.*?)?<\/a>
+   
+   from http://regexlib.com/REDetails.aspx?regexp_id=968
+   based on http://regexlib.com/REDetails.aspx?regexp_id=774
+   
+   Pattern:  href[\s]*=[\s]*&quot;[^\n&quot;]*&quot;
+   RegExp Author:  Tony Hawe
+   Matching Text:	href =&quot;http://www.theregister.com/&quot;|||href=&quot;http://theregister.co.uk&quot;|||hre
+   Non-Matching Text:	href=http://theregister.co.uk
+   Description:	A very short pattern for extracting hrefs from HTML, does not validate they are within a tag
+   */
+   
+   local urlIndex
+   replace lineFeed with empty in someHtml -- seems necessary
+   
+   put "href[\s]*=[\s]*'([^\n']*)'" into someReg
+   replace "'" with quote in someReg -- for now to make regExp readable
+   
+   if matchtext(someHtml, someReg, someUrl) is false then
+      return empty
+   else
+      return someUrl
+   end if
+end html_ExtractHREF
+
+function html_ExtractAllLinks someHtml
+    /*
+    This one is prob better:
+    
+    <a[\s]+[^>]*?href[\s]?=[\s\"\']+(.*?)[\"\']+.*?>([^<]+|.*?)?<\/a>
+    
+    from http://regexlib.com/REDetails.aspx?regexp_id=968
+    
+    
+    based on http://regexlib.com/REDetails.aspx?regexp_id=774
+    
+    Pattern:  href[\s]*=[\s]*&quot;[^\n&quot;]*&quot;
+    RegExp Author:  Tony Hawe
+    Matching Text:	href =&quot;http://www.theregister.com/&quot;|||href=&quot;http://theregister.co.uk&quot;|||hre
+    Non-Matching Text:	href=http://theregister.co.uk
+    Description:	A very short pattern for extracting hrefs from HTML, does not validate they are within a tag
+    */
+    
+    local urlIndex
+    replace lineFeed with empty in someHtml -- seems necessary
+    
+    put "href[\s]*=[\s]*'([^\n']*)'" into someReg
+    replace "'" with quote in someReg -- for now to make regExp readable
+    
+    repeat
+        if matchchunk(someHtml, someReg, startCharNum, endCharNum) is false then
+            delete last char of urlIndex
+            return urlIndex
+        else
+            put char startCharNum to endCharNum of someHtml into someUrl
+            put someUrl & CR after urlIndex
+            delete char 1 to endCharNum + 1 of someHtml
+        end if
+    end repeat
+end html_ExtractAllLinks
+
+function html_ExtractImages someHtml
+    /*
+    Not all 'img' tags are in link tags
+    */
+    
+    replace CR with empty in someHtml -- text is now one line
+    replace "img src=" with ("img" & CR & "src=") in someHtml -- assumes a single space
+    replace ".jpg" with ".jpg" & cr in someHtml
+    replace ".gif" with ".gif" & cr in someHtml
+    filter someHtml with "src=*"
+    set the itemdel to "="
+    
+    put empty into newImgList
+    repeat for each line LNN in someHtml
+        put item 2 of LNN & cr after newImgList
+    end repeat
+    delete last char of newImgList
+    return newImgList
+end html_ExtractImages
+
+
+--> HTML | Span
+-
+/* Strip span tags
+These functions replace html span tags such as those found in basic html / jabber / im html with tags for rev htmltext
+*/
+
+function html_BasicToRev someHtml
+    put html_BoldSpanToRev(someHtml) into someHtml
+    put html_ColourSpanToRev(someHtml) into someHtml
+    return someHtml
+end html_BasicToRev
+
+function html_RevToBasic someHtmlText
+    put html_RevToColourSpan(someHtmlText) into someHtml
+    return html_RevToBoldSpan(someHtml)
+end html_RevToBasic
+
+function html_RevToColourSpan someHtml
+    replace quote with "'" in someHtml
+    put "(?miU)(<font color=').*(</font>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, oTagStart, oTagEnd, cTagStart, cTagEnd) is true then
+            put "</span>" into char cTagStart to cTagEnd of someHtml
+            put "<span style='color:" into char oTagStart to oTagEnd of someHtml
+        else
+            replace quote with "'" in someHtml
+            return someHtml
+        end if
+    end repeat
+end html_RevToColourSpan
+
+function html_RevToBoldSpan someHtml
+    put "(?miU)(<b>).*(</b>)" into someReg
+    -- put "(?mi)(<b>)[^\<]*(</b>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, oTagStart, oTagEnd, cTagStart, cTagEnd) is true then
+            put "</span>" into char cTagStart to cTagEnd of someHtml
+            put "<span style='font-weight:bold'>" into char oTagStart to oTagEnd of someHtml
+        else
+            return someHtml
+        end if
+    end repeat
+end html_RevToBoldSpan
+
+function html_ColourSpanToRev someHtml
+    -- U is for non-greedy
+    replace quote with "'" in someHtml
+    put "(?miU)(<span style='color:).*(</span>)" into someReg
+    -- put "(?mi)(<span style='color:)[^\<]*(</span>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, oTagStart, oTagEnd, cTagStart, cTagEnd) is true then
+            put "</font>" into char cTagStart to cTagEnd of someHtml
+            put "<font color='" into char oTagStart to oTagEnd of someHtml
+        else
+            replace "'" with quote in someHtml
+            return someHtml
+        end if
+    end repeat
+end html_ColourSpanToRev
+
+function html_BoldSpanToRev someHtml
+    put "(?miU)(<span style='font-weight:bold'>).*(</span>)" into someReg
+    -- put "(?mi)(<span style='font-weight:bold'>)[^\<]*(</span>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, oTagStart, oTagEnd, cTagStart, cTagEnd) is true then
+            put "</b>" into char cTagStart to cTagEnd of someHtml
+            put "<b>" into char oTagStart to oTagEnd of someHtml
+        else
+            return someHtml
+        end if
+    end repeat
+end html_BoldSpanToRev
+
+
+--> HTML | Strip
+-
+function html_StripAllTags taggedText
+    --was "stripAllTags", "html_StripTags"
+    return text_StripAllTags(taggedText)
+end html_StripAllTags
+
+function html_StripTags pHtml
+   -- returns the meaningful text from a web page
+   local tRegex,tPrevText
+   -----
+   replace return with space in pHtml
+   replace numtochar(13) with empty in pHtml
+   replace tab with empty in pHtml
+   -----
+   put replacetext(pHtml,"(?Usi)<SCRIPT.*</SCRIPT>","") into pHtml
+   put replacetext(pHtml,"(?Usi)<STYLE>.*</STYLE>","") into pHtml
+   put replacetext(pHtml,"(?Usi)<\?.*\?>","") into pHtml
+   -----
+   replace "&nbsp;" with space in pHtml
+   replace "<BR>" with return in pHtml
+   replace "<p>" with return in pHtml
+   -----
+   put  "<[^><]*>" into tRegex
+   put replacetext(pHtml,tRegex,"") into pHtml
+   put replacetext(pHtml,tRegex,"") into pHtml
+   -----
+   repeat until tPrevText is pHtml
+      put pHtml into tPrevText
+      put replacetext(pHtml," +",space) into pHtml
+      put replacetext(pHtml,"^ ","") into pHtml
+   end repeat
+   -----
+   replace (space & return) with return in pHtml
+   replace (return & space) with return in pHtml
+   filter pHtml without empty
+   -----
+   put html_ReplaceEntities(pHtml) into pHtml
+   -----
+   return pHtml
+end html_StripTags
+
+-- function stripHtmlTags someHTML, anyCase
+    -- version Metacard, 8/15/00
+    
+    replace return with empty in someHTML
+    if anyCase is false then set the casesensitive to true
+    replace "</P>" with return in someHTML
+    put html_StripTags(someHTML) into someText
+     
+    replace "&#9;" with tab in someText
+    replace "&lt;" with "<" in someText
+    replace "&gt;" with ">" in someText
+    return someText
+end stripHtmlTags
+
+
+--> HTML | Nodes
+-
+function html_ExtractNode someNode, someHTML
+   -- similar as "xml_ExtractNode" (differs in strictness of "revXMLCreateTree") 
+   -- could tidy someHTML first
+   if someHTML is empty then return empty
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLText (treeID, someNode) into nodeXml
+   revDeleteXMLTree treeID
+   return nodeXml
+end html_ExtractNode
+
+function html_ExtractNodeContents someNode, someHTML
+   put html_ExtractNode (someNode, someHTML) into someXML
+   
+   -- hack:  now get rid of that tag
+   set the itemdelimiter to slash
+   put item -1 of someNode into tagName
+   local startTag, endTag, someTag, tagContents
+   xml_TagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+   return tagContents
+   
+   /*
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLNodeContents (treeID, rootNode) into innerContent -- this is not what I think of as "contents" :)
+   revDeleteXMLTree treeID
+   return innerContent
+   */
+end html_ExtractNodeContents
+
+function html_ExtractChildNodeNames someNode, someHTML
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLChildNames (treeID, someNode, CR, empty, true) into tNodeNames
+   revDeleteXMLTree treeID
+   return tNodeNames
+end html_ExtractChildNodeNames
+
+function html_ListNodes someHTML
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLRootNode (treeID) into rootNode
+   put revXMLTree (treeID, rootNode, CR, space, true, -1) into allNodes
+   revDeleteXMLTree treeID
+   return allNodes
+end html_ListNodes
+
+function html_ExtractAttribute attributeName, someNode, someHTML
+   -- similar as "xml_ExtractNode" (differs in strictness of "revXMLCreateTree") 
+   -- could tidy someHTML first
+   if someHTML is empty then return empty
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLAttribute (treeID, someNode, attributeName) into nodeXml
+   revDeleteXMLTree treeID
+   return nodeXml
+end html_ExtractAttribute
+
+
+--> HTML | Tags
+-
+/*
+An assorted array of handlers old and new for parsing and creating HTML tags.
+*/
+
+command html_AddTag @someText, tagName
+   put format ("<%s>%s</%s>", tagName, someText, tagName) into someText
+end html_AddTag
+
+command html_ParamDeconstuct someTag, @someKey, @someValue
+    -- replace lineFeed with empty in inputTag -- seems neessary
+    /*
+    -- from http://regexlib.com/REDetails.aspx?regexp_id=1195
+    
+    Pattern:  \s(type|name|value)=(?:(\w+)|(?:"(.*?)")|(?:\'(.*)\'))
+    Author: 	Carey Bishop
+    Matching Text: 	&lt;input type=&quot;text&quot; value='somevalue' name=fred&gt;
+    Non-Matching Text:	Any attributes that aren't &quot;type&quot;, &quot;name&quot;, or &quot;value&quot;
+    
+    Description
+    Returns the three most important attributes from an HTML &lt;input&gt; tag: 'type', 'name' and 'value'. 
+    Supports attribute values that are double- or single-quoted or unquoted. 
+    Returns four references, the first being the name of the attribute, and the other three being the value,
+    of which only one will be populated based on the way the value was quoted.
+    */
+    
+    put "\s(type|name|value)=(?:(\w+)|(?:" & quote & "(.*?)" & quote & ")|(?:\'(.*)\'))" into someReg
+    if matchchunk(someTag, someReg, sKey, eKey, sValue, eValue) is false then
+        put empty into someKey
+        put empty into someValue
+        return empty
+    else
+        put char sKey to eKey of someTag into someKey
+        put char sValue to eValue of someTag into someValue
+        
+        -- not sure why but empty quoted values rsults in empty sValue and eValue
+        if eValue is empty then
+            put the number of chars of someTag into lastValue
+            return sKey,eKey,0,lastValue
+        else
+            return sKey,eKey,sValue,eValue
+        end if
+    end if
+end html_ParamDeconstuct
+ 
+function html_ExtractOpeningTag tagName, someHtml
+    local tagContents -- not sure if it is still required
+    replace lineFeed with empty in someHtml -- seems neessary
+    
+    put "(<\s*" & tagName & "\s[^>]*>)" into someReg
+    if matchtext(someHtml, someReg, tagContents) is false then
+        return empty
+    else
+        return tagContents
+    end if
+end html_ExtractOpeningTag
+
+function html_ExtractTag tagName, someHtml
+   local tagContents -- not sure if it is still required
+   replace lineFeed with empty in someHtml -- seems neessary
+   
+   put "(<\s*" & tagName & "\s[^>]*>.*<\s*/\s*" & tagName & "\s*>)" into someReg
+   
+   if matchtext(someHtml, someReg, tagContents) is false then
+      return empty
+   else
+      return tagContents
+   end if
+end html_ExtractTag
+
+function html_ExtractTagContents tagName, someHtml
+    replace lineFeed with empty in someHtml -- seems neessary
+    
+    -- get the first one only
+    -- using white space char "\s*" all over the place
+    local tagContents -- not sure if it is still required
+    
+    put "<\s*" & tagName & "\s+name\s*=[^>]*>(.*)<\s*/\s*" & tagName & "\s*>" into someReg
+    -- put "(?m)" before someReg -- does not seem to have an effect
+    
+    if matchtext(someHtml, someReg, tagContents) is false then
+        return empty
+    else
+        return tagContents
+    end if
+end html_ExtractTagContents
+
+function extractTag someTagName, someHTML, startCharNum, wholeTag
+    -- version 9.2
+     
+    get whereIsTag (someTagName, someHTML, startCharNum, wholeTag)
+    if it is "Not Found" then
+        return empty
+    else
+        put item 1 of it into startTagCharNum
+        put item 2 of it into endTagCharNum
+        return char startTagCharNum to endTagCharNum of someHTML
+    end if
+end extractTag
+
+function whereIsTag someTagName, someHTML, startCharNum, wholeTag
+  -- version original, 23 12 99
+  
+  put "<" & someTagName into starsomeHtml
+  put ">" into endText
+  put whereIsText(starsomeHtml, endtext, someHTML, startCharNum) into tagOfset
+  if tagOfset is "Not Found" then
+    return "Not Found"
+  else
+    put item 1 of tagOfset into startTagChar
+    put item 2 of tagOfset into endTagChar
+    get char (startTagChar + 1) to (endTagChar - 1) of someHTML
+    put word 1 of it into fullTagName
+    
+    if wholeTag is not false then
+      if someTagName is fullTagName then
+        return tagOfset
+      else
+        return whereIsTag(someTagName, someHTML, endTagChar, wholeTag)
+      end if
+    else
+      return tagOfset
+    end if
+  end if
+end whereIsTag
+
+
+--> Html | Entities
+-
+/*
+Rag tag of entity handlers to tidy.
+*/
+
+function html_ReplaceChars someText
+    put html_EntityList() into htmlEntities
+    put html_EntityCharNums() into entityCharNums
+    
+    repeat with ii = 1 to the number of items of htmlEntities
+        put item ii of entityCharNums in entityCharNum
+        put numtochar(entityCharNum) into someChar
+        put item ii of htmlEntities in htmlEntity
+        replace someChar with htmlEntity in someText
+    end repeat
+    return someText
+end html_ReplaceChars
+
+command html_DecodeUnicodeEntites @someHtml
+   put unicode_UnEscape (someHtml) into someHtml
+   
+   --  put "(\\[bfnrtv0])" into someReg
+   replace "\b" with numToChar(8) in someHtml
+   replace "\f" with formfeed in someHtml
+   replace "\n"  with linefeed in someHtml
+   replace "\r"  with CR in someHtml
+   replace "\t"  with tab in someHtml
+   replace "\v"  with numToChar(11) in someHtml
+   -- replace "\0"  with numToChar(0) in someHtml -- (only if the next character is not a decimal digit; else it’s an octal escape sequence)
+   
+   replace "\/" with "/" in someHtml
+   replace ("\" & quote) with quote in someHtml
+   xml_UnEscape someHtml
+   
+   return empty
+   
+   -- this was my earlier hack :) 
+   -- Now using Mark Smith and Trevor's library
+   put "(\\u[a-fA-F0-9]{4})" into someReg
+   repeat
+      if matchchunk (someHtml, someReg, startNum, endNum) is false then
+         return empty
+      else
+         put char startNum to endNum of someHtml into someEscape
+         put char 3 to 4 of someEscape into highNums
+         put char 5 to 6 of someEscape into lowNums
+         
+         put unicode_SurrogatePairToCodePoint (highNums, lowNums) into toReplace
+         
+         put toReplace into char startNum to endNum of someHtml
+      end if
+   end repeat
+end html_DecodeUnicodeEntites
+
+function html_DecodeEntities pText
+   /*
+   -- curtesy of Sarah Reichelt <sarah.reichelt@gmail.com>
+   -- was "decodeEntities"
+   Use it like this:        put decodeEntities("&#8220;Kanwar&#8221")
+   which returns:         “Kanwar” (curly opening & closing quotes which
+   may not show in the email).
+   */
+   
+   if pText contains "&#" is false then return pText
+   
+   set the useunicode to true
+   put empty into tNew
+   repeat until pText is empty
+      put char 1 of pText into c
+      if c <> "&" then
+         put c after tNew
+         delete char 1 of pText
+      else
+         put empty into tCode
+         delete char 1 to 2 of pText
+         repeat until char 1 of pText = ";"
+            put char 1 of pText after tCode
+            delete char 1 of pText
+            if pText is empty then exit repeat
+         end repeat
+         delete char 1 of pText
+         put numtochar(tCode) into tChar
+         set the unicodetext of the templatefield to tChar
+         put the text of the templatefield after tNew
+      end if
+   end repeat
+   
+   set the useunicode to true
+   
+   return tNew
+end html_DecodeEntities
+
+function html_ReplaceEntities someHtml
+   replace "&quot;" with quote in someHtml
+   
+   -- Replace all the html entities that Rev understands with their character equivalents.
+   put html_EntityList() into htmlEntities
+   put html_EntityCharNums() into entityCharNums
+   
+   repeat with ii = 1 to the number of items of htmlEntities
+      put item ii of entityCharNums into entityCharNum
+      put numtochar(entityCharNum) into someChar
+      replace item ii of htmlEntities with someChar in someHtml
+   end repeat
+   return someHtml
+   
+   -- constant htmlEntities = "&eacute;,&agrave;,&ccedil;,&gt;,&lt;,ecirc;,&egrave;,&copy;,&#149;,&#39;,&middot;,&amp;"
+   -- constant htmlChars = "é,à,ç,>,<,ê,è,©,•,',·,&"
+   repeat with i = 1 to the number of items of htmlEntities
+      replace item i of htmlEntities with item i of htmlChars in someHtml
+   end repeat
+   return someHtml
+end html_ReplaceEntities
+
+function html_EntityList
+    /*
+    Special characters (whose ASCII value is greater than 127) are encoded as HTML entities.
+    Revolution recognizes the following named entities:
+    */
+    get "&Aacute;,&aacute;,&Acirc;,&acirc;,&acute;,&AElig;,&aelig;,&Agrave;,&agrave;,&Aring;,&aring;,&Atilde;,&atilde;,&Auml;,&auml;,&brvbar;,&Ccedil;,&ccedil;,&cedil;,&cent;,&copy;,&curren;,&deg;,&divide;,&Eacute;,&eacute;,&Ecirc;,&ecirc;,&Egrave;,&egrave;,&ETH;,&eth;,&Euml;,&euml;,&frac12;,&frac14;,&frac34;,&gt;,&Iacute;,&iacute;,&Icirc;,&icirc;,&iexcl;,&Igrave;,&igrave;,&iquest;,&Iuml;,&iuml;,&laquo;,&lt;,&macr;,&micro;,&middot;,&nbsp;,&not;,&Ntilde;,&ntilde;,&Oacute;,&oacute;,&Ocirc;,&ocirc;,&Ograve;,&ograve;,&ordf;,&ordm;,&Oslash;,&oslash;,&Otilde;,&otilde;,&Ouml;,&ouml;,&para;,&plusmn;,&pound;,&raquo;,&reg;,&sect;,&shy;,&sup1;,&sup2;,&sup3;,&szlig;,&THORN;,&thorn;,&times;,&Uacute;,&uacute;,&Ucirc;,&ucirc;,&Ugrave;,&ugrave;,&uml;,&Uuml;,&uuml;,&Yacute;,&yacute;,&yen;,&yuml"
+    put "&amp;" & comma before it
+    return it
+end html_EntityList
+
+function html_EntityCharNums
+   get "231,135,229,137,171,174,190,203,136,129,140,204,139,128,138,3,130,141,252,162,169,219,161,214,131,142,230,144,233,143,15,19,232,145,12,11,14,62,234,146,235,148,193,237,147,192,236,149,199,60,248,181,225,202,194,132,150,238,151,239,153,241,152,187,188,175,191,205,155,133,154,166,177,163,200,168,164,4,7,5,6,167,18,21,16,242,156,243,158,244,157,172,134,159,17,20,180,216"
+   put "38" & comma before it
+   return it
+   
+   -- or from the table
+   put html_EntityTableList() into entityArray
+   set the columndelimiter to comma
+   set the rowdelimiter to "|"
+   split entityArray by column
+   put entityArray [2] into entityNums
+   replace "|" with comma in entityNums
+   return entityNums
+end html_EntityCharNums
+
+function html_EntityTableList
+    -- arrays are not able to be case insensitive
+    get "&Aacute;,231|&aacute;,135|&Acirc;,229|&acirc;,137|&acute;,171|&AElig;,174|&aelig;,190|&Agrave;,203|&agrave;,136|&Aring;,129|&aring;,140|&Atilde;,204|&atilde;,139|&Auml;,128|&auml;,138|&brvbar;,3|&Ccedil;,130|&ccedil;,141|&cedil;,252|&cent;,162|&copy;,169|&curren;,219|&deg;,161|&divide;,214|&Eacute;,131|&eacute;,142|&Ecirc;,230|&ecirc;,144|&Egrave;,233|&egrave;,143|&ETH;,15|&eth;,19|&Euml;,232|&euml;,145|&frac12;,12|&frac14;,11|&frac34;,14|&gt;,62|&Iacute;,234|&iacute;,146|&Icirc;,235|&icirc;,148|&iexcl;,193|&Igrave;,237|&igrave;,147|&iquest;,192|&Iuml;,236|&iuml;,149|&laquo;,199|&lt;,60|&macr;,248|&micro;,181|&middot;,225|&nbsp;,202|&not;,194|&Ntilde;,132|&ntilde;,150|&Oacute;,238|&oacute;,151|&Ocirc;,239|&ocirc;,153|&Ograve;,241|&ograve;,152|&ordf;,187|&ordm;,188|&Oslash;,175|&oslash;,191|&Otilde;,205|&otilde;,155|&Ouml;,133|&ouml;,154|&para;,166|&plusmn;,177|&pound;,163|&raquo;,200|&reg;,168|&sect;,164|&shy;,4|&sup1;,7|&sup2;,5|&sup3;,6|&szlig;,167|&THORN;,18|&thorn;,21|&times;,16|&Uacute;,242|&uacute;,156|&Ucirc;,243|&ucirc;,158|&Ugrave;,244|&ugrave;,157|&uml;,172|&Uuml;,134|&uuml;,159|&Yacute;,17|&yacute;,20|&yen;,180|&yuml,216"
+    return it
+end html_EntityTableList
+
+function html_EntityArray
+    -- arrays are not able to be case insensitive
+    get html_EntityTableList()
+    split it with "|" and comma
+    return it
+end html_EntityArray
+
+function html_EntityToCharNum htmlEntity
+    put html_EntityList() into entityList
+    put html_EntityCharNums() into entityCharNums
+    set the wholematches to true
+    put itemoffset(htmlEntity, entityList) into itemNum
+    return item itemNum of entityCharNums
+     
+    -- arrays are not able to be case insensitive
+    put html_EntityArray() into entityArray
+    return entityArray [htmlEntity]
+end html_EntityToCharNum
+
+
+--> Deps
+-
+function unicode_UnEscape pString
+   put false into inEsc
+   repeat for each char c in pString
+      add 1 to count
+      put c after buffer
+      
+      if count < 2 then next repeat
+      
+      if buffer is "\u" then put true into inEscape
+      
+      if inEscape then 
+         if length(buffer) < 6 then 
+            next repeat 
+         else 
+            -- TO DEAL WITH DIACRITICS : 
+            -- TKD (26-07-2012): The output of this should be UTF-8. 
+            -- The original code returned platform specific encoding. On Windows
+            -- this worked fine as the code is the same as UTF-8. On Mac this is
+            -- not correct. The code did not take into account integers > 255.
+            --            if platform() is "MacOS" then 
+            --               put isotomac(numtochar(baseconvert(char 3 to 6 of buffer, 16, 10))) into buffer 
+            --            else 
+            --               put numtochar(baseconvert(char 3 to 6 of buffer, 16, 10)) into buffer 
+            --            end if 
+            set the useUnicode to true
+            try
+               # might not be a valid conversion (think C:\Users\...)
+               put unidecode(numToChar(baseconvert(char 3 to 6 of buffer, 16, 10)), "utf8") into buffer
+            catch e
+            end try
+            set the useUnicode to false
+            
+            put buffer after nString
+            put empty into buffer
+            put false into inEscape
+            put 0 into count
+         end if 
+      else 
+         put char 1 of buffer after nString 
+         delete char 1 of buffer 
+      end if 
+      
+   end repeat
+   put buffer after nString
+   return nString
+end unicode_UnEscape
+
+function unicode_SurrogatePairToCodePoint highNums, lowNums
+   local unicodeChar
+   if highNums is not "00" then
+      put numToByte (baseConvert (highNums,16,10)) into unicodeChar
+   end if
+   put numToByte (baseConvert (lowNums,16,10)) after unicodeChar
+   return unicodeChar
+end unicode_SurrogatePairToCodePoint
+

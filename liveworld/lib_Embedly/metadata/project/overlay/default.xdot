@@ -1,0 +1,255 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 318 1578 318 1578 0 ",
+		bb="0,0,1578,318",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n6		 [URL="cloud_FetchEvernoteFolderContents%2Cf%2Cstack+%22lib_Embedly%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 241 188 140.05 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 241 183.8 0 206.07 33 -cloud_FetchEvernoteFolderContents ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_FetchEvernoteFolderContents,
+			pos="241,188",
+			style=filled,
+			width=3.8966];
+		n2		 [URL="json_ToArray%2Cf%2Cstack+%22libOPN_JSON%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1267 188 59.2 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1267 183.8 0 77.56 12 -json_ToArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=json_ToArray,
+			pos="1267,188",
+			style=filled,
+			width=1.6417];
+		n3		 [URL="cloud_RestGet%2Cf%2Cstack+%22lib_Cloud%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 472 106 62.83 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 472 101.8 0 83.21 13 -cloud_RestGet ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_RestGet,
+			pos="472,106",
+			style=filled,
+			width=1.7407];
+		n12		 [URL="cloud_FetchEvernoteFileLink%2Cf%2Cstack+%22lib_Embedly%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 472 262 116.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 472 257.8 0 167.96 27 -cloud_FetchEvernoteFileLink ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_FetchEvernoteFileLink,
+			pos="472,262",
+			style=filled,
+			width=3.2278];
+		n9		 [URL="cloud_FetchEvernoteFile%2Cf%2Cstack+%22lib_Embedly%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 706 262 99.5 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 706 257.8 0 141.52 23 -cloud_FetchEvernoteFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_FetchEvernoteFile,
+			pos="706,262",
+			style=filled,
+			width=2.7639];
+		n11		 [URL="cloud_FetchEvernoteFolderContentsArray%2Cf%2Cstack+%22lib_Embedly%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 177 262 160.8 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 177 257.8 0 238.72 38 -cloud_FetchEvernoteFolderContentsArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_FetchEvernoteFolderContentsArray,
+			pos="177,262",
+			style=filled,
+			width=4.4694];
+		n10		 [URL="text_IsQuoted%2Cf%2Cstack+%22lib_Text%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1465 106 60.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1465 101.8 0 79.32 13 -text_IsQuoted ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_IsQuoted,
+			pos="1465,106",
+			style=filled,
+			width=1.6725];
+		n4		 [URL="cloud_ConstructURL%2Cf%2Cstack+%22lib_Cloud%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 375 34 86.01 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 375 29.8 0 120.54 18 -cloud_ConstructURL ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=cloud_ConstructURL,
+			pos="375,34",
+			style=filled,
+			width=2.3959];
+		n1		 [URL="embedly_FetchArray%2Cf%2Cstack+%22lib_Embedly%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 909 262 85 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 909 257.8 0 118.96 18 -embedly_FetchArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=embedly_FetchArray,
+			pos="909,262",
+			style=filled,
+			width=2.3681];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n8		 [URL="shell_BashParamEscape%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1465 188 96.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1465 183.8 0 136.85 21 -shell_BashParamEscape ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_BashParamEscape,
+			pos="1465,188",
+			style=filled,
+			width=2.682];
+		n7		 [URL="sox_NormalizeAudio%2Cc%2Cstack+%22lib_Embedly%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1098 262 86.49 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1098 257.8 0 120.53 18 -sox_NormalizeAudio ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=sox_NormalizeAudio,
+			pos="1098,262",
+			style=filled,
+			width=2.3957];
+		n5		 [URL="cloud_SetRestHeaders%2Cc%2Cstack+%22lib_Cloud%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 569 34 90.34 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 569 29.8 0 126.75 20 -cloud_SetRestHeaders ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=cloud_SetRestHeaders,
+			pos="569,34",
+			style=filled,
+			width=2.5047];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 281 8 281 154 667 154 667 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 474 138.8 0 99.7 17 -stack \"lib_Cloud\" ",
+			bb="281,8,667,154",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Cloud\"",
+			lheight=0.19,
+			lp="474,143",
+			lwidth=1.38,
+			style=filled
+		];
+		n3;
+		n4;
+		n3 -> n4		 [_draw_="c 7 -#000000 B 4 449.99 89.12 437.12 79.83 420.66 67.95 406.45 57.69 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 408.09 54.57 397.94 51.55 404 60.24 ",
+			pos="e,397.94,51.552 449.99,89.116 437.12,79.829 420.66,67.953 406.45,57.693"];
+		n5;
+		n3 -> n5		 [_draw_="c 7 -#000000 B 4 494.01 89.12 506.88 79.83 523.34 67.95 537.55 57.69 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 540 60.24 546.06 51.55 535.91 54.57 ",
+			pos="e,546.06,51.552 494.01,89.116 506.88,79.829 523.34,67.953 537.55,57.693"];
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 162 8 310 1192 310 1192 162 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 600 294.8 0 116.02 19 -stack \"lib_Embedly\" ",
+			bb="8,162,1192,310",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Embedly\"",
+			lheight=0.19,
+			lp="600,299",
+			lwidth=1.61,
+			style=filled
+		];
+		n6;
+		n12;
+		n9;
+		n11;
+		n11 -> n6		 [_draw_="c 7 -#000000 B 4 192.17 243.94 200.22 234.88 210.25 223.59 219.13 213.6 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 221.91 215.74 225.94 205.94 216.68 211.09 ",
+			pos="e,225.94,205.94 192.17,243.94 200.22,234.88 210.25,223.59 219.13,213.6"];
+		n1;
+		n7;
+	}
+	subgraph cluster3 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 1360 162 1360 236 1570 236 1570 162 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1465 220.8 0 94.25 17 -stack \"lib_Shell\" ",
+			bb="1360,162,1570,236",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Shell\"",
+			lheight=0.19,
+			lp="1465,225",
+			lwidth=1.31,
+			style=filled
+		];
+		n8;
+	}
+	subgraph cluster4 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 1397 80 1397 154 1533 154 1533 80 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1465 138.8 0 90.15 16 -stack \"lib_Text\" ",
+			bb="1397,80,1533,154",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Text\"",
+			lheight=0.19,
+			lp="1465,143",
+			lwidth=1.25,
+			style=filled
+		];
+		n10;
+	}
+	subgraph cluster5 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 1200 162 1200 236 1352 236 1352 162 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1276 220.8 0 126.94 19 -stack \"libOPN_JSON\" ",
+			bb="1200,162,1352,236",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"libOPN_JSON\"",
+			lheight=0.19,
+			lp="1276,225",
+			lwidth=1.76,
+			style=filled
+		];
+		n2;
+		n2 -> n2		 [_draw_="c 7 -#000000 B 7 1306.67 201.47 1326.45 203.33 1344.1 198.84 1344.1 188 1344.1 179.11 1332.23 174.49 1317.04 174.15 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1316.53 170.66 1306.67 174.53 1316.79 177.66 ",
+			pos="e,1306.7,174.53 1306.7,201.47 1326.5,203.33 1344.1,198.84 1344.1,188 1344.1,179.11 1332.2,174.49 1317,174.15"];
+	}
+	n6 -> n3	 [_draw_="c 7 -#000000 B 4 287.19 171 326.84 157.27 383.79 137.55 423.97 123.63 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 425.24 126.9 433.55 120.32 422.95 120.28 ",
+		pos="e,433.55,120.32 287.19,171 326.84,157.27 383.79,137.55 423.97,123.63"];
+	n12 -> n3	 [_draw_="c 7 -#000000 B 4 472 243.93 472 217.45 472 166.22 472 134.49 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 475.5 134.15 472 124.15 468.5 134.15 ",
+		pos="e,472,124.15 472,243.93 472,217.45 472,166.22 472,134.49"];
+	n9 -> n3	 [_draw_="c 7 -#000000 B 4 680.96 244.52 638.31 216.45 551.64 159.41 504.43 128.34 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 506.09 125.25 495.81 122.67 502.24 131.09 ",
+		pos="e,495.81,122.67 680.96,244.52 638.31,216.45 551.64,159.41 504.43,128.34"];
+	n11 -> n2	 [_draw_="c 7 -#000000 B 10 285.71 248.66 306.06 246.76 327.16 245.08 347 244 370.55 242.71 1173.45 242.9 1196 236 1212.19 231.04 1228.11 \
+221.11 1240.76 211.65 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1243.23 214.16 1248.96 205.24 1238.92 208.64 ",
+		pos="e,1249,205.24 285.71,248.66 306.06,246.76 327.16,245.08 347,244 370.55,242.71 1173.4,242.9 1196,236 1212.2,231.04 1228.1,221.11 \
+1240.8,211.65"];
+	n1 -> n2	 [_draw_="c 7 -#000000 B 10 968.24 249.01 979.73 247.05 991.71 245.25 1003 244 1045.67 239.28 1155.16 249.22 1196 236 1212 230.82 1227.8 220.97 \
+1240.41 211.61 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1242.83 214.16 1248.61 205.28 1238.55 208.63 ",
+		pos="e,1248.6,205.28 968.24,249.01 979.73,247.05 991.71,245.25 1003,244 1045.7,239.28 1155.2,249.22 1196,236 1212,230.82 1227.8,220.97 \
+1240.4,211.61"];
+	n8 -> n10	 [_draw_="c 7 -#000000 B 4 1465 169.64 1465 159.3 1465 145.94 1465 134.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1468.5 134.05 1465 124.05 1461.5 134.05 ",
+		pos="e,1465,124.05 1465,169.64 1465,159.3 1465,145.94 1465,134.22"];
+	n7 -> n8	 [_draw_="c 7 -#000000 B 7 1183.39 259.36 1234.2 256.75 1299.56 250.52 1356 236 1379.78 229.88 1405.03 219.28 1425.23 209.69 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1426.96 212.75 1434.43 205.23 1423.9 206.45 ",
+		pos="e,1434.4,205.23 1183.4,259.36 1234.2,256.75 1299.6,250.52 1356,236 1379.8,229.88 1405,219.28 1425.2,209.69"];
+}

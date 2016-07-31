@@ -1,0 +1,14 @@
+function library_FetchObjects libType, setName
+   switch setName
+      case "none"
+         return empty
+      case "all"
+         put library_FetchAllObjects (libType) into someObjects
+         break
+      default
+         put library_FetchObjectTypeArray (libType, setName) into libTypeArray
+         put keys (libTypeArray) into someObjects
+   end switch
+   sort someObjects
+   return someObjects
+end library_FetchObjects

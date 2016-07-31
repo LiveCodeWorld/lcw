@@ -1,0 +1,10 @@
+command xml_SafeEncodeNodeContents @nodeContents
+   xml_Escape nodeContents
+   put unidecode(uniencode(nodeContents,"UTF8"),"ANSII") into nodeContents
+   
+   -- Remove byte order mark from UTF8 text
+   put numtochar(239) & numtochar(187) & numtochar(191) into testBomHeader
+   if char 1 to 3 of utf8Text = testBomHeader then
+      delete char 1 to 3 of tVar
+   end if
+end xml_SafeEncodeNodeContents

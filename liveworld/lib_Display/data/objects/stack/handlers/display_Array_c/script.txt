@@ -1,0 +1,39 @@
+command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pCommandObject
+   put "View|Tree|Widget with Title" into viewName
+   
+   -- new feature for specifying widget and stack label titles using a comma
+   if pDisplayTitle is empty then put "Array" into pDisplayTitle
+   put word 1 to -1 of item 1 of pDisplayTitle into widgetDisplayTitle
+   put word 1 to -1 of item 2 of pDisplayTitle into displayStackLabel
+   
+   -- clone invisible
+   stack_CloneInvisible viewName, "Display Array"
+   put the result into cloneStackName
+   
+   -- set basic data
+   put pTreeMenuTitle into menuArray ["title"]
+   put pLineMenuTitle into menuArray ["line"]
+   
+   if pCommandObject is empty then
+      put script_CallingObject() into pCommandObject
+   end if
+   put pMouseUpCommand into eventArray ["mouseUp"]
+   put pMouseDoubleUpCommand into eventArray ["mouseDoubleUp"]
+   put pCommandObject into eventArray ["eventTarget"]
+   
+   view_SetCloneData cloneStackName, someArray, menuArray, eventArray
+   put the result into displayView
+   
+   -- custom stuff
+   set the title_Colour of displayView to "random"
+   set the style of stack cloneStackName to "palette"
+   
+   if line 1 of keys (someArray) is a number then
+      set the tree_SortType of displayView to "numeric"
+   end if
+   
+   -- show and go
+   view_CloneShow cloneStackName, widgetDisplayTitle, displayStackLabel
+   
+   return displayView
+end display_Array

@@ -1,0 +1,55 @@
+private command process_File
+   -- normal file
+   put it into tfileExt
+   -- Adding support for aliases below.
+   put cr & fld "folders" of card "setup" into tFolderAliases
+   put gRequestA ["Requested URL"] into tRequestedFileURL
+   set the itemdel to "/"
+   put item 1 to -2 of gRequestA ["Requested URL"] into tFolder
+   if tFolder is empty then put "Default" into tFolder
+   -- No matter the folder requested, always find the default folder location.
+   get lineOffset("Default" & tab, tFolderAliases)
+   set the itemdel to tab
+   put item 2 of line it of tFolderAliases into tDefaultFolder
+   
+   -- now, let us look for the folder...
+   if tFolder is not "Default" then
+      get lineOffset (tFolder & tab, tFolderAliases)
+      if it is not 0 then
+         set the itemdel to tab
+         put line it of tFolderAliases into tAliasEntry
+         put item 1 of tAliasEntry into tAlias
+         put item 2 of tAliasEntry into tOriginal
+         replace tFolder with tOriginal in gRequestA["Requested URL"]
+         if char 1 of tOriginal is not "/" then
+            get RevHTTPFolder() &"/"& tDefaultFolder & "/" & gRequestA["Requested URL"]
+         else
+            get gRequestA["Requested URL"]
+         end if
+      else
+         get RevHTTPFolder() &"/"& tDefaultFolder & "/" & gRequestA["Requested URL"]
+      end if
+   else
+      get RevHTTPFolder() &"/"& tDefaultFolder & "/" & gRequestA["Requested URL"]
+   end if
+   
+   replace "//" with "/" in it
+   if there is a file it then
+      put it into tFile
+      get the cMIMETypes of me
+      get line (cr & lineOffset (tFileExt, it)) of it
+      set the itemdel to " "
+      put item 2 of it into tCT
+      
+      -- Andre v1.5 changes: adding support for CGI.
+      get URL ("binfile:" & tFile)
+      if "#!" is not in line 1 of it then -- if there's a she-bang in it, then it's CGI!
+         libCGI_Response it, tCT
+      else
+         process_TextCGI
+      end if
+      -- Andre v1.5 changes end: adding support for CGI.
+   else
+      sendHttpError pSocketID
+   end if
+end process_File

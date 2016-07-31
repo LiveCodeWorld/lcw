@@ -1,0 +1,16 @@
+function menu_SubMenuHierarchy mTitle
+   put menu_GlobalTitles() into gMenuNames
+   set the wholematches to true
+   repeat
+      replace " | " with comma in mTitle
+      delete item -2 of mTitle
+      if the number of items of mTitle < 3 then exit repeat
+      replace comma with " | " in mTitle
+      put lineOffset (mTitle, gMenuNames) into lineNum
+      if lineNum = 0 then next repeat
+      
+      put mTitle & CR after mTitleHierarchy
+   end repeat
+   delete char -1 of mTitleHierarchy
+   return mTitleHierarchy
+end menu_SubMenuHierarchy

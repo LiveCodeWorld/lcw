@@ -1,0 +1,19 @@
+function folder_GetNestedIndex someFolder
+   -- a nested index of folders
+   local foundFolders
+   
+   folder_Format someFolder
+   put someFolder & return after foundFolders
+   
+   put the directory into oFolder
+   set the directory to someFolder
+   put the folders into folderIndex
+   filter folderIndex without ".*"
+   repeat for each line shortFolder in folderIndex
+      put someFolder & shortFolder & "/" into nestedFolder
+      put folder_GetNestedIndex (nestedFolder) & CR after foundFolders
+   end repeat
+   set the directory to oFolder
+   delete last char of foundFolders
+   return foundFolders
+end folder_GetNestedIndex

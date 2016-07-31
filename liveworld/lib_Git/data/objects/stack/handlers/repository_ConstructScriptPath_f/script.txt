@@ -1,0 +1,15 @@
+function repository_ConstructScriptPath shortFileBit, rootFolder
+   put rootFolder & "opn_Plugins/" into opnPluginsFolder
+   put opnPluginsFolder & "opn_Text/rev/" into revTextFolder
+   put revTextFolder & shortFileBit into scriptTextFile
+   
+   set the itemdelimiter to "/"
+   if char -1 of scriptTextFile = "/" then
+      put scriptTextFile into testFolder
+   else
+      put item 1 to -2 of scriptTextFile into testFolder
+   end if
+   folder_CreateNested testFolder
+   
+   return scriptTextFile
+end repository_ConstructScriptPath

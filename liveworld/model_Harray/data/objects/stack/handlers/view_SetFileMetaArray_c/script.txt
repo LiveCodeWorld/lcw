@@ -1,0 +1,5 @@
+command view_SetFileMetaArray viewMetaDataArray
+   model_SetFileArray "viewMetaData.array", viewMetaDataArray
+   put the result into someFile
+   return someFile
+end view_SetFileMetaArray

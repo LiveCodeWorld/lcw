@@ -1,0 +1,4 @@
+function pandoc_ListInputFormats
+   get "commonmark,docbook,docx,epub,haddock,html,json,latex,markdown,markdown_github,markdown_mmd,markdown_phpextra,"
+   put "markdown_strict,mediawiki,native,odt,opml,org,rst,t2t,textile,twiki" after it
+end pandoc_ListInputFormats

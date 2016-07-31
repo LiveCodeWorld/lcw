@@ -1,0 +1,4 @@
+command number_PadLeft @someNum, padNum
+   put "%0" & padNum & "d" into fString
+   put format (fString, someNum) into someNum
+end number_PadLeft

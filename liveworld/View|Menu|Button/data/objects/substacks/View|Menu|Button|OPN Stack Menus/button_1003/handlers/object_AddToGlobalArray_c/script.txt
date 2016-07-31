@@ -1,0 +1,15 @@
+command object_AddToGlobalArray someObject, pExportHandlers, pDontExport
+   put false into pCreateHashArray
+   put false into pForceIndexHandlerCalls
+   
+   global gHkey_Array
+   try
+      put the script of someObject into someScript
+   catch e
+      return merge ("error, [[someObject]] is probably a locked stack so can't index script.")
+   end try
+   
+   object_AddToArray gHkey_Array, someObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
+   put the result into someScript
+   return someScript
+end object_AddToGlobalArray

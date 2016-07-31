@@ -1,0 +1,6 @@
+setprop dot_HeaderArray [pOverlayName] propertyArray
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   overlayArray_SetHeaderArray overlayArray, propertyArray
+   set the overlay_Array [pOverlayName] of the target to overlayArray
+   return overlayArray
+end dot_HeaderArray

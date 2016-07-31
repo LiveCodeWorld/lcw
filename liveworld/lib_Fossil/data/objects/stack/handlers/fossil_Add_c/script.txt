@@ -1,0 +1,22 @@
+command fossil_Add checkoutFileOrFolder
+   put "fossil add" into someShell
+   if there is a file checkoutFileOrFolder then
+      put checkoutFileOrFolder into someFile
+      put someFile into bashFile
+      shell_BashParamEscape bashFile
+      put space & bashFile after someShell
+      
+      set the itemdelimiter to "/"
+      put item 1 to -2 of someFile into someFolder
+      put "/" after someFolder
+   else
+      put checkoutFileOrFolder into someFolder
+      put someFolder into bashFolder
+      shell_BashParamEscape bashFolder
+      put space & bashFolder after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, someFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Add

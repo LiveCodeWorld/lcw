@@ -1,0 +1,8 @@
+command colour_ConvertEnglishName @colourName
+    replace "grey" with "gray" in colourName
+    switch colourName
+        case "grey"
+            put "gray" into colourName
+            break
+    end switch
+end colour_ConvertEnglishName

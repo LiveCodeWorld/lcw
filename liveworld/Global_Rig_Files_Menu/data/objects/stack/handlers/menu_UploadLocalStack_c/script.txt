@@ -1,0 +1,11 @@
+on menu_UploadLocalStack stackObject
+   put the short name of stackObject into stackName
+   
+   set the cursor to watch
+   rig_StoreStack stackName
+   if the result is not empty then
+      put the result
+   else
+      answer "Re-uploaded local stack to the server"
+   end if
+end menu_UploadLocalStack

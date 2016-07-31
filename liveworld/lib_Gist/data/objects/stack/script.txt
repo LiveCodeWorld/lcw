@@ -1,0 +1,96 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Gist
+type: script library
+version: 0.3
+
+/*
+A library for interfacing with GitHub gists.
+*/
+
+
+--> GitHub | Gist
+-
+[[ _FetchHandler (gist_Launch,c) ]]
+
+[[ _FetchHandler (gist_SaveHkey,c) ]]
+
+[[ _FetchHandler (gist_SaveObjectScript,c) ]]
+
+[[ _FetchHandler (gist_SaveOrUpdate,c) ]]
+
+
+--> Rig | Gist | File Translation
+-
+[[ _FetchHandler (gist_ShortFileFromHkey,f) ]]
+
+[[ _FetchHandler (gist_ShortFileFromObject,f) ]]
+
+[[ _FetchHandler (gist_FilterWithKey,f) ]]
+
+[[ _FetchHandler (gist_ShortFileFromKey,f) ]]
+
+[[ _FetchHandler (gist_ShortFileToKey,f) ]]
+
+[[ _FetchHandler (gist_ConstructTypeFilter,f) ]]
+
+[[ _FetchHandler (gist_DeconstructKey,pc) ]]
+
+
+--> Gist | List
+-
+[[ _FetchHandler (gist_FetchFiles,f) ]]
+
+[[ _FetchHandler (gist_List,f) ]]
+
+[[ _FetchHandler (gist_FindInListArray,f) ]]
+
+[[ _FetchHandler (gist_SearchListArray,c) ]]
+
+[[ _FetchHandler (gist_ParseListArray,f) ]]
+
+[[ _FetchHandler (gist_FetchListArray,f) ]]
+
+[[ _FetchHandler (gist_FetchListJson,f) ]]
+
+
+--> Gist | Content
+-
+[[ _FetchHandler (gist_FetchContent,f) ]]
+
+[[ _FetchHandler (gist_ExtractContent,f) ]]
+
+[[ _FetchHandler (gist_DeconstructFileArray,c) ]]
+
+[[ _FetchHandler (gist_FetchArray,f) ]]
+
+[[ _FetchHandler (gist_Edit,c) ]]
+
+[[ _FetchHandler (gist_ConstructEditJSON,f) ]]
+
+[[ _FetchHandler (gist_Delete,c) ]]
+
+[[ _FetchHandler (gist_FetchJson,f) ]]
+
+[[ _FetchHandler (gist_Create,c) ]]
+
+
+--> Gist | Header
+-
+[[ _FetchHandler (gist_ExtractReceivedHeaderArray,c) ]]
+
+[[ _FetchHandler (server_ExtractReceivedHeaderArray,f) ]]
+
+
+--> Gist | Private
+-
+[[ _FetchHandler (_FetchAndAskForScriptHelp,pf) ]]
+
+[[ _FetchHandler (_FetchAndAskForHkeyHelp,pf) ]]
+
+[[ _FetchHandler (_tidyGistHelp,pc) ]]
+
+[[ _FetchHandler (_cleanReceivedURL,pf) ]]
+
+

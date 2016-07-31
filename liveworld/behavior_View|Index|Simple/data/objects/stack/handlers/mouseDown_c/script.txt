@@ -1,0 +1,10 @@
+on mouseDown
+   switch word 1 of the name of the target
+      case "button"
+         _doButtonMenu
+         break
+      case "field"
+         _doFieldDown
+         break
+   end switch
+end mouseDown

@@ -1,0 +1,5 @@
+getprop selected_StackObject
+   -- bit of a hack
+   put the selected_StackObjects of the target into selectedStackObjects
+   return line 1 of selectedStackObjects
+end selected_StackObject

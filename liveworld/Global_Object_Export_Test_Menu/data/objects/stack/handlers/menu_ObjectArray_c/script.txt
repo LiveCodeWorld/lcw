@@ -1,0 +1,5 @@
+on menu_ObjectArray scriptObject
+   put the object_Array of scriptObject into someArray
+   objectArray_StripScripts someArray
+   display_Array someArray, "the object_Array"
+end menu_ObjectArray

@@ -1,0 +1,8 @@
+setprop menu_Table [pMenuTitle] mTable
+   if pMenuTitle is empty then put the menu_Title of the target into pMenuTitle
+   if pMenuTitle is empty then return empty
+   put the menu_Controller [pMenuTitle] of the target into mController
+   
+   menu_SetTable pMenuTitle, mController, mTable
+   return the result
+end menu_Table

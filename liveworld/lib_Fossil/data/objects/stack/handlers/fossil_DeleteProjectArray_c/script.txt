@@ -1,0 +1,9 @@
+command fossil_DeleteProjectArray fossilFile
+   put library_FetchArray ("Fossil") into fossilArray
+   delete variable fossilArray [fossilFile]
+   if fossilArray is not an array then
+      delete variable fossilArray
+   end if
+   library_StoreArray "Fossil", fossilArray
+   return fossilArray
+end fossil_DeleteProjectArray

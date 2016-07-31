@@ -1,0 +1,9 @@
+getprop disabled_EditViewBehavior [someView]
+   put the behavior of someView into bObject
+   put exists (bObject) into bExists
+   if bExists is true then
+      return false
+   else
+      return true
+   end if
+end disabled_EditViewBehavior

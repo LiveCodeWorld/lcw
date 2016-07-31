@@ -1,0 +1,4 @@
+function git_ScriptFile shortFileBit
+   put git_GetRootFolder() into rootFolder
+   return repository_ConstructScriptPath(shortFileBit, rootFolder)
+end git_ScriptFile

@@ -1,0 +1,14 @@
+function hkey_IsDataGridCall hKey
+   -- stub for now
+   -- need to parse the behavior for API calls and store somewhere
+   switch item 1 to 2 of hKey
+      case "DeleteIndex,c"
+         return true
+      case "FindIndex,c"
+         return true
+      case "EditFieldText,c"
+         return true
+      default
+         return false
+   end switch
+end hkey_IsDataGridCall

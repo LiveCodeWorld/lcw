@@ -1,0 +1,11 @@
+function hkeyArray_ConstructTreeArray hKeyArray
+   local treeArray
+   
+   put keys (hKeyArray) into sortedHkeys
+   sort sortedHkeys by item 1 of each
+   
+   repeat for each line sortedHkey in sortedHkeys
+     _addToDepKeyArray treeArray, sortedHkey, hKeyArray
+   end repeat
+   return treeArray
+end hkeyArray_ConstructTreeArray

@@ -1,0 +1,4 @@
+on menu_MakeTextBigger dgView
+   put the browser_ID of dgView into instanceID
+   revBrowserMakeTextBigger instanceID
+end menu_MakeTextBigger

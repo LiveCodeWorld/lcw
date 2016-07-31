@@ -1,0 +1,9 @@
+getprop project_StackPaths [folderName]
+   -- if the folder does not exist this handler return empty
+   put the project_Folder [folderName] of the target into standardFolder
+   if standardFolder is empty then return empty
+   
+   -- ensures the returned long paths are valid references to stacks that exist
+   put folder_ListStackPaths (standardFolder) into stackPaths
+   return stackPaths
+end project_StackPaths

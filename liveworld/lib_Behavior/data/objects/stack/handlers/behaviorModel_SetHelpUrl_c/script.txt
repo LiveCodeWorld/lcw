@@ -1,0 +1,4 @@
+on behaviorModel_SetHelpUrl bName, helpURL
+   behaviorModel_SetRecordValue "helpURL", bName, helpURL
+   return the result
+end behaviorModel_SetHelpUrl

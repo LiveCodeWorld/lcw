@@ -1,0 +1,6 @@
+function project_FetchHandlerHelp hKey
+   put project_HandlerHelpFile (hKey) into someFile
+   if someFile is empty then return empty
+   put url ("binfile:" & someFile) into helpHtml
+   return helpHtml
+end project_FetchHandlerHelp

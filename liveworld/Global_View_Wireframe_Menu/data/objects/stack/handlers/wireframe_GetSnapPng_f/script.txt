@@ -1,0 +1,11 @@
+function wireframe_GetSnapPng someControl, newW
+   -- let's scale the export to wiki width
+   put 420 into newW
+   
+   put the rect of viewObject into originalRect
+   put scale_Heigth (originalRect, newW) into newH
+   put newW,newH into exportDimensions
+   
+   export snapshot from viewObject at size exportDimensions to someImage as PNG
+   return someImage
+end wireframe_GetSnapPng

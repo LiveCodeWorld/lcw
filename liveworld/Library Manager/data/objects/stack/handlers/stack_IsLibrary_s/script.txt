@@ -1,0 +1,12 @@
+setprop stack_IsLibrary [pSetName] someBoolean
+   put the stack_Object of the target into stackObject
+   put the name of stackObject into stackObject
+   if someBoolean then
+      start using stackObject 
+      library_AddUsedStack stackObject, pSetName
+   else
+      library_DeleteUsedStack stackObject, pSetName
+      stop using stackObject 
+   end if
+   return the result
+end stack_IsLibrary

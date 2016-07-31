@@ -1,0 +1,5 @@
+on menu_DecreaseNodeFactor mTarget
+   put the node_Factor of mTarget into nodeFactor
+   subtract (0.1 * nodeFactor) from nodeFactor
+   set the node_Factor of mTarget to nodeFactor
+end menu_DecreaseNodeFactor

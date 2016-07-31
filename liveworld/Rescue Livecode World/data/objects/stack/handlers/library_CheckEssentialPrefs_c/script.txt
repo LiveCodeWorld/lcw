@@ -1,0 +1,5 @@
+command library_CheckEssentialPrefs pSetName
+   pref_SetShellRoot "git", "gitPath"
+   pref_SetShellRoot "fossil", "fossilPath"
+   pref_SetShellRoot "dot", "dotPath"
+end library_CheckEssentialPrefs

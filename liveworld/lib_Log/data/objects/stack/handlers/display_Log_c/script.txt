@@ -1,0 +1,31 @@
+command display_Log pDisplayError, pLogName
+   if pDisplayError is empty then put the log_DisplayError of me into pDisplayError
+   if pDisplayError is false then return false
+
+   put log_GetError (pLogName) into logErrorText
+   if logErrorText is empty then
+      opn_Notify "Log is empty!"
+      return empty
+   end if
+
+   put log_GetFile(pLogName) into pLogFile
+   switch pLogName
+      case "shell"
+         put "Shell Log" into pTitle
+         put "Global | Script | Log | Menu" into mTitle
+         put "opn_ShellLog" into stackName
+         break
+      default
+         put "Error Log" into pTitle
+         put "Global | Script | Log | Menu" into mTitle
+         put "opn_ErrorLog" into stackName
+   end switch
+
+   display_TextFile pLogFile, pTitle, mTitle, stackName
+   put the result into pDisplayView
+   put the stack_Object of pDisplayView into errorStack
+   set the stack_Type of errorStack to "Log|Error"
+   set the displayed_Scroll of pDisplayView to "end"
+
+   return pDisplayView
+end display_Log

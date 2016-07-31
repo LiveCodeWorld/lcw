@@ -1,0 +1,7 @@
+on menu_Init tObject
+   local objectArray
+   put the view_Hierarchy of tObject into objectIndex
+   put object_NamesFromIndex (objectIndex, objectArray) into objectNames
+   put objectNames into LocalArray ["objectNames"]
+   put objectArray into LocalArray ["objectArray"]
+end menu_Init

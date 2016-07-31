@@ -1,0 +1,11 @@
+function hKeyArray_DotNestedObjectClusters hIdArray, hLinkArray, graphNodeType
+    put linkarray_FilterIdArray (hIdArray, hLinkArray) into hIdArray
+    put hKeyArray_ConstructObjectIdArray (hIdArray) into linkObjectIdArray
+    put keys(linkObjectIdArray) into linkObjects
+    sort linkObjects
+    put object_OutlineFromIndex (linkObjects) into objectOutline
+    put outline_ToXmlStructure (objectOutline)into someXml
+    
+    put hKeyArray_XmlToClusters (someXml, objectOutline, hIdArray, graphNodeType) into clusterDefs
+    return clusterDefs
+end hKeyArray_DotNestedObjectClusters

@@ -1,0 +1,27 @@
+on menu_Init targetObject, mPath, mTitlePath
+   put rev_GetHandlerTreeSelectedInfo() into hInfo
+   put word 1 of hInfo into hType
+   switch hType
+      case "M"
+         put "c" into hType
+         break
+      default
+   end switch
+   put word 2 of hInfo into hName
+   put word 3 of hInfo into startLineNum
+   put word 4 of hInfo into endLineNum
+   put rev_ScriptObject() into hObject
+   put hName,hType,hObject,1 into hKey
+   
+   put hKey into LocalArray ["hKey"]
+   put hObject into LocalArray ["scriptObject"]
+   put startLineNum into LocalArray ["startLineNum"]
+   put endLineNum into LocalArray ["endLineNum"]
+   put line startLineNum to endLineNum of the script of hObject into LocalArray ["someHandler"]
+   
+   put library_HandlerFile (hKey, empty, true) into LocalArray ["hkeyFolder"]
+   
+   put hArray_ListHkeyObjects (hKey) into otherObjects
+   line_Delete hObject, otherObjects
+   put word 1 to -1 of otherObjects into LocalArray ["other objects"]
+end menu_Init

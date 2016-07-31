@@ -1,0 +1,10 @@
+private function _guessTextSize innerWidth
+   switch 
+      case innerWidth < 100
+         return innerWidth / 12
+      case innerWidth > 130
+         return innerWidth / 8
+      default
+         return innerWidth / 9
+   end switch
+end _guessTextSize

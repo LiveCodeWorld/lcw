@@ -1,0 +1,9 @@
+function view_StemFromName viewName
+   if viewName is empty then return "event"
+   
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 2 of viewName into viewStem 
+   replace space with empty in viewStem
+   put tolower(viewStem) into viewStem
+   return viewStem
+end view_StemFromName

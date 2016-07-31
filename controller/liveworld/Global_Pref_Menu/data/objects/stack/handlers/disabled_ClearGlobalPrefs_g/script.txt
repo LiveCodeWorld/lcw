@@ -1,0 +1,4 @@
+getprop disabled_ClearGlobalPrefs
+   global gPrefs_Array
+   return keys (gPrefs_Array) is empty
+end disabled_ClearGlobalPrefs

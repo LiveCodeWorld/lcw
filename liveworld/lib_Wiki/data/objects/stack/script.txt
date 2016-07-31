@@ -1,0 +1,31 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Wiki
+type: library
+version: 0.1
+
+/*
+This is a library for working with Fedwiki.
+*/
+
+
+
+--> Wiki
+-
+[[ _FetchHandler (wiki_GetSiteFolder,f) ]]
+
+[[ _FetchHandler (wiki_GetWikiClientFolder,f) ]]
+
+[[ _FetchHandler (wiki_GetModulesFolder,f) ]]
+
+
+--> Javascript
+-
+[[ _FetchHandler (javascript_ConstructInternalLink,f) ]]
+
+[[ _FetchHandler (javascript_ConstructFooterHeight,f) ]]
+
+[[ _FetchHandler (javascript_ConstructHideSiteOwner,f) ]]
+
+[[ _FetchHandler (javascript_ConstructFooterVisibility,f) ]]

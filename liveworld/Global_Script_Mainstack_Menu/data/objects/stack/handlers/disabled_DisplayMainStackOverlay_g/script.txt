@@ -1,0 +1,9 @@
+getprop disabled_DisplayMainStackOverlay [scriptObject]
+   put the textStackOverlay_Folder of scriptObject into overlayFolder
+   put overlay_GetImageFile (overlayFolder, "Mainstack Structure") into imageFile
+   if there is a file imageFile then
+      return false
+   else
+      return true
+   end if
+end disabled_DisplayMainStackOverlay

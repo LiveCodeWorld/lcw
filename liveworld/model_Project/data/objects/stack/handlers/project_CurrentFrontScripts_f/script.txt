@@ -1,0 +1,8 @@
+function project_CurrentFrontScripts
+   -- a lot of IDE backscripts are returned
+   -- filter them out
+   put the frontscripts into someObjects
+   filter someObjects without "*/Contents/Tools/Toolset/libraries/rev*"
+   filter someObjects without "*/Contents/Tools/Toolset/palettes/rev*"
+   return someObjects
+end project_CurrentFrontScripts

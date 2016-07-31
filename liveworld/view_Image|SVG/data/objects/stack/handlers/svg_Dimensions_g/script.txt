@@ -1,0 +1,6 @@
+getprop svg_Dimensions
+   put the svg_HeaderArray of me into svgHeaderArray
+   put svgHeaderArray ["width"] into svgWidth
+   put svgHeaderArray ["height"] into svgHeight
+   return svgWidth,svgHeight
+end svg_Dimensions

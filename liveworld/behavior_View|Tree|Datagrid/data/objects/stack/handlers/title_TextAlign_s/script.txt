@@ -1,0 +1,5 @@
+setprop title_TextAlign alignHow
+   put the title_View of me into titleView
+   if the long id of the target = titleView then pass title_TextAlign
+   set the title_TextAlign of titleView to alignHow
+end title_TextAlign

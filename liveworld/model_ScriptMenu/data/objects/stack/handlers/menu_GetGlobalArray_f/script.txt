@@ -1,0 +1,5 @@
+function menu_GetGlobalArray
+   global gHkey_Array
+   put gHkey_Array ["Global Menus"] into gMenuHkeyArray
+   return gMenuHkeyArray
+end menu_GetGlobalArray

@@ -1,0 +1,5 @@
+getprop arrow_Length [innerWidth]
+   put round (innerWidth / 18) into arrowLength
+   put max (arrowLength, 4) into arrowLength
+   return arrowLength
+end arrow_Length

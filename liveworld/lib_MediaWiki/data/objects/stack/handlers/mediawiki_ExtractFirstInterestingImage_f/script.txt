@@ -1,0 +1,10 @@
+function mediawiki_ExtractFirstInterestingImage imageArray
+   put mediawiki_ListBuiltInImages() into mediaWikiImageList
+   repeat with itemNum = 1 to (item 2 of the extents of imageArray)
+      put imageArray [itemNum] into shortImageFile
+      if shortImageFile is not among the items of mediaWikiImageList then
+         return shortImageFile
+      end if
+   end repeat
+   return empty
+end mediawiki_ExtractFirstInterestingImage

@@ -1,0 +1,7 @@
+function image_RGBToPixel someColour
+    put 0 into char 1 of binaryPixel
+    put numtochar(item 1 of someColour) into char 2 of binaryPixel
+    put numtochar(item 2 of someColour) into char 3 of binaryPixel
+    put numtochar(item 3 of someColour) into char 4 of binaryPixel
+    return binaryPixel
+end image_RGBToPixel

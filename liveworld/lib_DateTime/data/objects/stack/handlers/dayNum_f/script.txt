@@ -1,0 +1,11 @@
+function dayNum pDate
+    ## return day number:
+    -- the single param is a date in dateItems format
+    -- requires convertDate function
+     
+    put pDate into tCurrentDate
+    convert tCurrentDate to seconds
+    put convertDate(pDate,1,1) into tJanuaryFirst -- Æ
+    convert tJanuaryFirst to seconds
+    return round((tCurrentDate-tJanuaryFirst)/86400) + 1
+end dayNum

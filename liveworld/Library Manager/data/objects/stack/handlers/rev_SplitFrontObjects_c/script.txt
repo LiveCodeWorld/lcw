@@ -1,0 +1,13 @@
+command rev_SplitFrontObjects @revFrontObjects, @otherFrontObjects
+   put the frontscripts into revFrontObjects
+   repeat for each line someObject in revFrontObjects
+      put revRuggedID (someObject) into someObject
+      if the stack_Name of someObject begins with "rev" then
+         put someObject & CR after revFrontObjects
+      else
+         put someObject & CR after otherFrontObjects
+      end if
+   end repeat
+   delete char -1 of otherFrontObjects
+   delete char -1 of revFrontObjects
+end rev_SplitFrontObjects

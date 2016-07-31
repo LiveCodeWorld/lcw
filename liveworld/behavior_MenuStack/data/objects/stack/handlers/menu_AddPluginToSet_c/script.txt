@@ -1,0 +1,4 @@
+command menu_AddPluginToSet targetObject, modifierKey, gMenuTitle, pSetName, pObjectTestProp, pPassMouseDown, pBeforeLineNum
+   put menu_ConstructPluginArray (targetObject, modifierKey, gMenuTitle, pObjectTestProp, pPassMouseDown, pBeforeLineNum) into menuArray
+   library_StoreMenuArray menuArray, pSetName
+end menu_AddPluginToSet

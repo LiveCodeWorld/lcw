@@ -1,0 +1,5 @@
+function git_StatusOutline
+   put git_FetchStatusTable() into gitTable
+   put git_ConstructStatusOutline(gitTable, gitTitle, gitHelp) into someOutline
+   return someOutline
+end git_StatusOutline

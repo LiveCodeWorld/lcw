@@ -1,0 +1,5 @@
+getprop disabled_TestViewRectToFormattedRect [mTarget]
+   if exists(mTarget) is false then return true
+   put the view_FormattedRect of mTarget into fRect
+   return fRect is empty
+end disabled_TestViewRectToFormattedRect

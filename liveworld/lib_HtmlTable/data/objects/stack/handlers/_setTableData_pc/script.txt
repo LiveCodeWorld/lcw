@@ -1,0 +1,50 @@
+private command _setTableData pData, pSetHeading
+   -- was "_rigSetTableData"
+   -- deps:  array_IsNumbered
+   
+   if pSetHeading is empty then
+      put TRUE into tSetHeading
+   else
+      put pSetHeading into tSetHeading
+   end if
+   
+   if pData is not an array then
+      return FALSE
+   end if
+   
+   # CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
+   put TRUE into tConsecutive
+   put array_IsNumbered (sRows, tConsecutive) into tArrayInfo
+   
+   put item 1 of tArrayInfo into tNumbered
+   put 1 into tCounter
+   	
+   repeat for each key tKey in pData
+      if tNumbered is TRUE then
+         put tCounter into tKey
+      end if
+      
+      if pData [tKey] is not an array then
+         if sRows is an array then
+            put (the number of lines in the keys of sRows) + 1 into tKeyNum
+            put pData into sRows [tKeyNum]
+         else
+            put pData into sRows [1]
+         end if
+      end if
+      	
+      # IF A HEADING HASN'T ALREADY BEEN SET WE'LL USE THE FIRST ROW OF THE ARRAY AS THE HEADING
+      if (tCounter = 1) and (the number of lines in the keys of pData > 1) and (sHeading is not an array) and (tSetHeading is TRUE) then
+         put pData [tKey] into sHeading
+      else
+         if sRows is an array then
+            put (the number of lines in the keys of sRows) + 1 into tKeyNum
+            put pData [tKey] into sRows [tKeyNum]
+         else
+            put pData [tKey] into sRows [1]
+         end if
+      end if
+      
+      add 1 to tCounter
+   end repeat
+end _setTableData

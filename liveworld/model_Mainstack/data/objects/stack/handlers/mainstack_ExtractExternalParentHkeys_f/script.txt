@@ -1,0 +1,9 @@
+function mainstack_ExtractExternalParentHkeys hKeyWalkArray
+   put hKeyWalkArray ["external"] into someArray
+   repeat for each element parentArray in someArray
+      repeat for each key parentKey in parentArray
+         put empty into uniqueParentArray [parentKey]
+      end repeat
+   end repeat
+   return keys (uniqueParentArray)
+end mainstack_ExtractExternalParentHkeys

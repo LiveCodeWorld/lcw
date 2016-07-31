@@ -1,0 +1,75 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_HkeyArray_Tree_Deps_Menu
+type: controller
+version: 0.1
+
+/*
+This menu is designed to be the title menu of a tree or similar widget that presents an hkeyArray.
+it should allow export to the appropriate place on disk, as it can take a long time to process these arrays,
+and they may want to be examined before they are saved!
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | HkeyArray | Tree | Deps | Menu
+-
+[[ _FetchHandler (menu_CollectDependencyScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StripHkeyProps,c) ]]
+
+[[ _FetchHandler (menu_StripHkeyComponents,c) ]]
+
+[[ _FetchHandler (menu_IncludeHandlersFrom,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreateAndExportHkeyGraphs,c) ]]
+
+[[ _FetchHandler (menu_CreateLongHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_SearchSetFirst,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> HkeyArray | Tree | Deps | Menu | Props
+-
+[[ _FetchHandler (set_Name,g) ]]
+
+[[ _FetchHandler (set_Names,g) ]]
+
+[[ _FetchHandler (include_HandlersFrom,g) ]]
+
+[[ _FetchHandler (include_HandlersFrom,s) ]]
+
+[[ _FetchHandler (include_HandlersFroms,g) ]]
+
+
+--> HkeyArray | Tree | Deps | Menu | Disabled
+-
+[[ _FetchHandler (disabled_CreateLongHkeyArray,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayCollectedDependencies,c) ]]
+
+[[ _FetchHandler (menu_ConstructMenuLibraryHandlers,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (script_ListComponentObjects,f) ]]
+

@@ -1,0 +1,9 @@
+function googleEarth_GetTerrainWindow
+    put googleEarth_GetGetPointOnTerrain("-1,1") into topLeftPoint
+    googleEarth_DeconstructAppleScriptPoint topLeftPoint, tlLatitude, tlLongitude, tlHeight
+    
+    put googleEarth_GetGetPointOnTerrain("1,-1") into bottomRightPoint
+    googleEarth_DeconstructAppleScriptPoint bottomRightPoint, brLatitude, brLongitude, brHeight
+     
+    return tlLatitude, tlLongitude, brLatitude, brLongitude
+end googleEarth_GetTerrainWindow

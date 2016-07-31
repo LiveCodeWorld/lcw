@@ -1,0 +1,6 @@
+function http_ConstructCookieArray someCookie
+   -- does not work with multiple cookies
+   replace "; " with numtochar(4) in someCookie
+   split someCookie by numtochar(4) and "="
+   return someCookie
+end http_ConstructCookieArray

@@ -1,0 +1,5 @@
+getprop hkey_DependencyArray [pSetName]
+   put the long id of the target into scriptObject
+   put script_GetSimpleDependencyArray (scriptObject, pSetName, true) into hKeyLinkArray
+   return hKeyLinkArray
+end hkey_DependencyArray

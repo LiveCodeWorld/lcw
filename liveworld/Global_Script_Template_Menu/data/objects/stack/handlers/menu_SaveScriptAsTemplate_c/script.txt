@@ -1,0 +1,10 @@
+on menu_SaveScriptAsTemplate mTarget, 
+    ask "What name do you want to give this template?" 
+    put it into templateName
+    if templateName is empty then exit to top
+    
+    put rev_ScriptEditorField() into scriptField
+    put the text of scriptField into someScript
+    
+    script_SetTemplate templateName, someScript
+end menu_SaveScriptAsTemplate

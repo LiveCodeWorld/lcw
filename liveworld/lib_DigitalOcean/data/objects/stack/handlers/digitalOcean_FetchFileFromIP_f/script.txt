@@ -1,0 +1,7 @@
+function digitalOcean_FetchFileFromIP somePath, dropletIP, pSshUserName   
+   shell_BashParamEscape somePath
+   put shell_FetchFile (pSshUserName, dropletIP, somePath) into someData
+   set the itemdelimiter to ":"
+   if (item 1 of someData = "cat" and item -1 of someData = " No such file or directory") then return empty
+   return someData
+end digitalOcean_FetchFileFromIP

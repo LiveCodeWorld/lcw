@@ -1,0 +1,20 @@
+function handler_ConstructBehaviorHkeyIndex
+   local allKeys
+   
+   put behavior_Objects() into behaviorButtons
+   repeat for each line someObject in behaviorButtons
+      set the cursor to busy
+      if exists(someObject) is false then
+         put "The behavior" && someObject && "does not exist!" into someError
+         log_Error someError, "handler_ConstructHkeyIndex"
+         opn_Notify someError, true
+         next repeat
+      end if
+      
+      put the script_DictionaryHkeys of someObject into hKeys
+      put hKeys & CR after allKeys
+   end repeat
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructBehaviorHkeyIndex

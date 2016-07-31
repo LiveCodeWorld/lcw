@@ -1,0 +1,9 @@
+on dot_DeconstructTextResult dotTextResult, @dotText, @dotError
+   repeat with firstLineNum = 1 to the number of lines of dotTextResult
+      if word 1 of line firstLineNum of dotTextResult = "digraph" then
+         exit repeat
+      end if
+   end repeat
+   put line firstLineNum to -1 of dotTextResult into dotText
+   put line 1 to (firstLineNum - 1) of dotTextResult into dotError
+end dot_DeconstructTextResult

@@ -1,0 +1,8 @@
+getprop used_StackNames
+   put the used_StackObjects of the target into stackObjects
+   repeat for each line stackObject in stackObjects
+      if exists (stackObject) is false then next repeat
+      put the short name of stackObject & CR after stackNames
+   end repeat
+   return word 1 to -1 of stackNames
+end used_StackNames

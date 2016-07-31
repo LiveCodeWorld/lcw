@@ -1,0 +1,18 @@
+function shell_ListProcesses grepFilter
+   /*
+   The biggest change is in the interpretation of the -u option, 
+   which now displays processes belonging to the specified username(s). 
+   Thus, "ps -aux" will fail (unless you want to know about user "x"). 
+   As a convenience, however, "ps aux" still works as it did in Mac OS X v.10.4.
+*/
+   put "grep" && grepFilter into filterBit
+   
+   shell_BashParamEscape grepFilter
+   -- put "ps -ef | grep grepFilter" into someShell
+   put "grep" && grepFilter into grepBit
+   put "ps aux |" && grepBit into someShell
+   put shell (someShell) into shellResult
+   
+   filter shellResult without ("*" & filterBit)
+   return shellResult
+end shell_ListProcesses

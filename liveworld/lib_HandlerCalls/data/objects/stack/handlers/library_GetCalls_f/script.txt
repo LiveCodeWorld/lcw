@@ -1,0 +1,5 @@
+function library_GetCalls hKey
+   put library_FetchHandlerMetadata (hKey) into metadataArray
+   put metadataArray ["hKeyCalls"] into hKeyCalls
+   return hKeyCalls
+end library_GetCalls

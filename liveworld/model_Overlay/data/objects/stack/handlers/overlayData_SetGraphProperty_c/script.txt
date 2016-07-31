@@ -1,0 +1,5 @@
+command overlayData_SetGraphProperty @overlayData, propName, propValue, pOverlayName
+   put overlayData_GetArray (overlayData, pOverlayName) into overlayArray
+   overlayArray_SetGraphProperty overlayArray, propName, propValue
+   overlayData_SetArray overlayData, overlayArray, pOverlayName
+end overlayData_SetGraphProperty

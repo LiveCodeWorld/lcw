@@ -1,0 +1,16 @@
+function library_FetchSetArray pSetName
+   -- modified to add metadata to "all"
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   switch pSetName
+      case "all"
+         put library_ConstructAllObjectSetArray () into setArray
+         put project_FetchArray (pSetName) into projectSetArray
+         union setArray with projectSetArray recursively
+         return setArray
+      case "none"
+         return empty
+      default
+         put project_FetchArray (pSetName) into setArray
+         return setArray
+   end switch
+end library_FetchSetArray

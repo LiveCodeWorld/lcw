@@ -1,0 +1,6 @@
+function opn_PrefNameOutline
+   global gPrefs_Array
+   -- put pref_FetchGlobal() into prefArray
+   put array_ToOutline (gPrefs_Array) into prefOutline
+   return prefOutline
+end opn_PrefNameOutline

@@ -1,0 +1,13 @@
+command library_RemoveStackFromKnown stackObject
+   -- was "opn_RemoveStack"
+   put library_StackFileStack() into stackFileStack
+   
+   put the short name of stackObject into stackName
+   put the stackfile_Array of stackFileStack into stackFileArray  
+   delete local stackFileArray [stackName]
+   set the stackfile_Array of stackFileStack to stackFileArray  
+   lock messages
+   save stackFileStack
+   unlock messages
+   return newStackFiles
+end library_RemoveStackFromKnown

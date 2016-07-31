@@ -1,0 +1,14 @@
+command hkey_AddToBackLinks overlayData
+   -- for each frontKey add the backKey to the backLinks
+   put overlayData ["data"]["linkArray"] into hkeyArray
+   repeat for each key backKey in hkeyArray
+      put hkeyArray [backKey] into frontKeys
+      repeat for each line frontKey in frontKeys
+         set the cursor to busy
+         put hkey_GetBackLinks (frontKey) into backLinks
+         -- hkey_CheckBackLinks backLinks
+         line_Add backKey, backLinks
+         hkey_SetBackLinks frontKey, backLinks
+      end repeat
+   end repeat
+end hkey_AddToBackLinks

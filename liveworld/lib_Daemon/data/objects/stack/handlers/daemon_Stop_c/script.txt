@@ -1,0 +1,6 @@
+command daemon_Stop
+   -- Handler that stops the server.
+   put the daemon_Port of me into portToListenOn
+   close socket portToListenOn
+   -- daemon_DeleteSocketData
+end daemon_Stop

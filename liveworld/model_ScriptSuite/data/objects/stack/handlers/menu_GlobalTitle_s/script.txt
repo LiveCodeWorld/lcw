@@ -1,0 +1,6 @@
+setprop menu_GlobalTitle suiteTitles
+   put the long id of the target into scriptObject
+   repeat for each line suiteTitle in suiteTitles
+      script_SetGlobalObject suiteTitle, scriptObject
+   end repeat
+end menu_GlobalTitle

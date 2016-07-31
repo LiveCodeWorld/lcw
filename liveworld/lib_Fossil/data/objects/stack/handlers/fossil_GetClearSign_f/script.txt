@@ -1,0 +1,21 @@
+function fossil_GetClearSign pCheckoutFolder, pGetGlobal
+   /*
+   When enabled, fossil will attempt to sign all commits
+   with gpg.  When disabled (the default), commits will
+   be unsigned.  Default: off
+   */
+   
+   put fossil_GetSetting ("clearsign", pCheckoutFolder, pGetGlobal) into someValue
+   put pCheckoutFolder is empty or pGetGlobal is true into pGetGlobal
+   switch
+      case someValue is "off"
+         return false
+      case someValue is "on"
+         return true
+      case pGetGlobal is true
+         -- Default: off
+         return false
+      case pGetGlobal is false
+         return empty
+   end switch
+end fossil_GetClearSign

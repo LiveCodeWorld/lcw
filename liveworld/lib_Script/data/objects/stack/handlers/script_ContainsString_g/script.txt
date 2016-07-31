@@ -1,0 +1,13 @@
+getprop script_ContainsString [someString]
+   put the long id of the target into targetObject
+   try
+      put the script of targetObject into someScript
+      if someScript contains someString then
+         return true
+      else
+         return false
+      end if
+   catch someError
+      return false -- script may be protected
+   end try
+end script_ContainsString

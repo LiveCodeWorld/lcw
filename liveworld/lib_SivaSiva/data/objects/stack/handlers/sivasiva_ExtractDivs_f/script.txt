@@ -1,0 +1,21 @@
+function sivasiva_ExtractDivs someXml
+   put revCreateXMLTree (someXml, true, true, false) into treeID
+   --
+   put "//*[@class='Basic-Graphics-Frame _idGenObjectStyleOverride-2']" into someXPath
+   put revXMLEvaluateXPath (treeID, someXPath) into classNodePaths
+   
+   put 1 into indexNum
+   repeat for each line testPath in classNodePaths
+      -- put any line of classNodePaths into testPath
+      put revXMLDataFromXPathQuery (treeID, testPath) into testResult
+      if word 1 to -1 of testResult is not empty then
+         put line 1 of testResult into contentArray [indexNum]["description"]
+         put line 2 to -1 of testResult into quoteText
+         put quoteText into contentArray [indexNum]["quote"]
+         add 1 to indexNum
+      end if
+   end repeat
+   --
+   revDeleteXMLTree treeID
+   return contentArray
+end sivasiva_ExtractDivs

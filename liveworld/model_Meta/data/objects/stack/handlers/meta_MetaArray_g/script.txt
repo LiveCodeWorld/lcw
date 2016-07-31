@@ -1,0 +1,5 @@
+getprop meta_MetaArray
+   put the object_Folder of the target into objectFolder
+   put object_FetchMetadataArray (objectFolder) into objectMetaArray
+   return objectMetaArray
+end meta_MetaArray

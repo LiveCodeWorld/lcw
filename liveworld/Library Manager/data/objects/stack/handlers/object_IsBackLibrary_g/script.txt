@@ -1,0 +1,5 @@
+getprop object_IsBackLibrary
+   put the rugged_ID of the target into someObject
+   put library_ListBackObjects() into ruggedObjects
+   return someObject is among the lines of ruggedObjects
+end object_IsBackLibrary

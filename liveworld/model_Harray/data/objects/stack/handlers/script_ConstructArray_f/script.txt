@@ -1,0 +1,70 @@
+function script_ConstructArray someScript, rObject, pIsExpanded
+   put pIsExpanded is true into pIsExpanded
+   local suiteTitle
+   put 1 into indexNum
+   put 1 into lineNum
+   put false into commentBlock
+   repeat for each line scriptLine in someScript
+      switch
+         case word 1 of scriptLine = "/*"
+            put true into commentBlock
+            break
+         case commentBlock is true
+            -- keep looping till end of block
+            if word -1 of scriptLine = "*/" then
+               -- could put this commented out section in the index?
+               put false into commentBlock
+            end if
+            break
+         case word 1 of scriptLine = "-->"
+            put word 2 to -1 of scriptLine into suiteTitle
+            
+            put "t" into dataArray [indexNum]["lineType"]
+            put lineNum into dataArray [indexNum]["startLineNum"]
+            put suiteTitle into dataArray [indexNum]["scriptLine"]
+            put true into dataArray [indexNum]["isExpanded"]
+            
+            add 1 to indexNum
+            break
+         case token 1 of scriptLine is among the items of "command,on,function,getprop,setprop,private"
+            if word 2 of scriptLine = "_" then break -- don't index divider handlers
+            
+            put char 1 of scriptLine into lineType
+            if hType = "o" then put "c" into lineType
+            
+            put word 2 of scriptLine into hName
+            -- put word 2 to -1 of scriptLine into hParams
+            
+            put countArray [hName][lineType] into hNum
+            add 1 to hNum
+            put hNum into countArray [hName][lineType]
+            
+            put hName,lineType,rObject,hNum into hKey
+            put lineNum into startLineNum
+            
+            put hKey into dataArray [indexNum]["hKey"]
+            put lineType into dataArray [indexNum]["lineType"]
+            put suiteTitle into dataArray [indexNum]["suiteTitle"]
+            put scriptLine into dataArray [indexNum]["scriptLine"]
+            put pIsExpanded into dataArray [indexNum]["isExpanded"]
+            
+            break
+         case token 1 of scriptLine = "end" and token 2 of scriptLine = hName
+            put lineNum into endLineNum
+            put startLineNum into dataArray [indexNum]["startLineNum"]
+            put endLineNum into dataArray [indexNum]["endLineNum"]
+            put line startLineNum to endLineNum of someScript into dataArray [indexNum]["handler"]
+            
+            add 1 to indexNum
+            break
+         case token 1 of scriptLine is empty
+            -- it's a comment or some junk
+            -- however script suites are also comments (so put at end of tests)!
+            -- not actually needed
+         default
+            -- should not happen ???
+      end switch
+      add 1 to lineNum
+   end repeat
+   return dataArray
+end script_ConstructArray

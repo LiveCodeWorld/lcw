@@ -1,0 +1,4 @@
+getprop mainstack_ExternalParents
+   put the mainstack_WalkArray of the target into hKeyWalkArray
+   return mainstack_ExtractExternalParentHkeys (hKeyWalkArray)
+end mainstack_ExternalParents

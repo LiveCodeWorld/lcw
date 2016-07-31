@@ -1,0 +1,11 @@
+private function known_StackObjects shortStackFiles
+   put stackFile_NamesFromShortFiles (shortStackFiles) into stackNames
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) then
+         put the name of stack stackName into stackObject
+         put stackObject & CR after stackObjects
+      end if
+   end repeat
+   delete char -1 of stackObjects
+   return stackObjects
+end known_StackObjects

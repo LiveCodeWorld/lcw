@@ -1,0 +1,39 @@
+getprop view_FindAssociatedMenu
+   -- searches for likely named menus in the menu_Controller's script
+   -- when it finds one you can writes a custom property to speed up future lookups
+   
+   put the view_Object of the target into someView
+   put the view_Parent of someView into viewParent
+   set the itemdelimiter to "|"
+   
+   put the view_Name of someView into viewName
+   delete item 1 of viewName
+   if exists(viewParent) then
+      put the short name of viewParent into shortName
+      if char 1 of shortName is not "_" then
+         put shortName & "|" & viewName into detailedMenuStem
+         put detailedMenuStem & CR after detailedMenuStems
+      end if
+      
+      put the view_Name of viewParent into viewParentName
+      delete item 1 of viewParentName
+      put viewParentName & "|" & viewName into detailedMenuStem
+      put detailedMenuStem & CR after detailedMenuStems
+   end if
+   put viewName & CR after detailedMenuStems
+   delete char -1 of detailedMenuStems
+   replace "|" with " | " in detailedMenuStems
+   
+   put the menu_TableTitles of someView into mTitles
+   repeat for each line detailedMenuStem in detailedMenuStems
+      repeat with itemNum = the number of items of detailedMenuStem down to 1
+         put word 1 to -1 of detailedMenuStem && "| Menu" into detailedMenuTitle
+         if detailedMenuTitle is among the lines of mTitles then
+            return detailedMenuTitle
+         else
+            delete item -1 of detailedMenuStem
+         end if
+      end repeat
+   end repeat
+   return empty
+end view_FindAssociatedMenu

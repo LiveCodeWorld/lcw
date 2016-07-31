@@ -1,0 +1,13 @@
+function stackArray_ConstructObjectFolder textStackFolder, objectBit, pSubStackName
+   put "data" into dataOrMetadata
+   set the itemdelimiter to "/"
+   put item -1 of textStackFolder into mainstackName
+   if pSubStackName is empty then
+      put textStackFolder & dataOrMetadata & "/objects/" into stackFolder
+   else
+      put textStackFolder & dataOrMetadata & "/objects/substacks/" & pSubStackName & "/" into stackFolder
+      -- put dataOrMetadata & "/objects/"  after stackFolder
+   end if 
+   put stackFolder & objectBit into objectFolder
+   return objectFolder
+end stackArray_ConstructObjectFolder

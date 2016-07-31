@@ -1,0 +1,12 @@
+function rev_ScriptAsHtml
+   -- ignoreCall: scriptGetAsHtml,c
+   
+   # Description
+   #   This command returns the current script as *real* html. The result of this command
+   #   is suitable for displaying in a browser, not in Revolution fields as htmlText. This command
+   #   requires the colorization scheme "Revolution Classic" to be used as it contains hard-coded 
+   #   replacements. For html suitable for printing or displaying in a Revolution field see scriptGetHtmlText.
+   
+   send "scriptGetAsHtml" to rev_ScriptEditorGroup()
+   return the result
+end rev_ScriptAsHtml

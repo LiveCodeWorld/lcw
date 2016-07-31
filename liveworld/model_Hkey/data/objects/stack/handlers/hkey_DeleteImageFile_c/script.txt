@@ -1,0 +1,4 @@
+command hkey_DeleteImageFile hKey, pGraphStyle
+   put hkey_ImageFile (hKey, pGraphStyle) into someFile
+   delete file someFile
+end hkey_DeleteImageFile

@@ -1,0 +1,67 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Menu | Substack | Menu
+type: controller
+version: 0.1
+
+local LocalArray
+
+
+--> Global | Menu | Substack | Menu
+-
+[[ _FetchHandler (menu_ReindexLocalMenus,c) ]]
+
+[[ _FetchHandler (menu_CreateMenuCard,c) ]]
+
+[[ _FetchHandler (menu_EditMenuCard,c) ]]
+
+[[ _FetchHandler (menu_DeleteMenuCard,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ShowMenuStack,c) ]]
+
+[[ _FetchHandler (menu_DeleteMenuStack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Menu | Substack | Menu | Props
+-
+[[ _FetchHandler (local_MenuTitles,g) ]]
+
+[[ _FetchHandler (m_Cards,g) ]]
+
+getprop m_Cards [scriptObject]
+   -- put the mobile_Name of scriptObject into scriptObject
+   put the menu_CardNames of scriptObject into mCards
+   return mCards
+end m_Cards
+
+
+--> Global | Menu | Substack | Menu | Disabled
+-
+[[ _FetchHandler (disabled_EditMenuCard,g) ]]
+
+[[ _FetchHandler (disabled_DeleteMenuCard,g) ]]
+
+[[ _FetchHandler (disabled_ShowMenuStack,g) ]]
+
+[[ _FetchHandler (disabled_DeleteMenuStack,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_CreateItemButtons,c) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]

@@ -1,0 +1,4 @@
+command wikicommons_AddVideoToPageArray @fedwikiPageArray, pageArray
+   put wikicommons_ConstructVideoHtml (pageArray) into imageHTML
+   fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
+end wikicommons_AddVideoToPageArray

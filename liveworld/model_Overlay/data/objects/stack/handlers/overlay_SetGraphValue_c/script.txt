@@ -1,0 +1,11 @@
+command overlay_SetGraphValue overlayFolder, propName, propValue, pOverlayName, pRecreate
+   put overlay_GetData (overlayFolder) into overlayData
+   overlayData_SetGraphProperty overlayData, propName, propValue, pOverlayName
+   if pRecreate is true then
+      overlayArray_CreateFilesAndSetGeometry overlayArray
+      put overlay_GetData (overlayFolder) into overlayData
+   else
+      overlay_SetData overlayFolder, overlayData
+   end if
+   return overlayData
+end overlay_SetGraphValue

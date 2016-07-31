@@ -1,0 +1,35 @@
+command dot_DoImageMapShell dotCommand, dotFile, imageFile, pCmapFile, pXdotFile, pImageFormat
+   -- dot foo.gv -Tpng -o foo.png -Tcmapx -o foo.cmapx
+   dot_NormalizeDotCommand dotCommand -- converts a graphStyle to a dotCommand
+   if pImageFormat is empty then put "png" into pImageFormat
+   put graphViz_GetShellPath() into gvPath
+   
+   shell_BashParamEscape dotFile
+   shell_BashParamEscape imageFile
+   shell_BashParamEscape pCmapFile
+   shell_BashParamEscape pXdotFile
+   
+   put gvPath & dotCommand into someShell
+   -- put space & quote & dotFile & quote after someShell
+   put space & dotFile after someShell
+   
+   put space & "-T" & pImageFormat after someShell
+   -- put space & "-o" && quote & imageFile & quote after someShell
+   put space & "-o" && imageFile after someShell
+   
+   if pCmapFile is not empty then
+      put space & "-Tcmapx" after someShell
+      -- put space & "-o" && quote & pCmapFile & quote after someShell
+      put space & "-o" && pCmapFile after someShell
+   end if
+   
+   if pXdotFile is not empty then
+      put space & "-Txdot" after someShell
+      -- put space & "-o" && quote & pXdotFile & quote after someShell
+      put space & "-o" && pXdotFile after someShell
+   end if
+   
+   put shell (someShell) into gvResult
+   put dot_CheckResult (gvResult, "png", someShell) into shellResult
+   return shellResult
+end dot_DoImageMapShell

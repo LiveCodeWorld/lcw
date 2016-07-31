@@ -1,0 +1,4 @@
+on menu_DisplayPieChart mTarget
+   put the clock_SectionModel of mTarget into clockSectionModel
+   set the display_PieChart of mTarget to clockSectionModel
+end menu_DisplayPieChart

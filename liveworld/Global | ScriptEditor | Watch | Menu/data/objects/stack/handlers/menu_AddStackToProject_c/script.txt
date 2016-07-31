@@ -1,0 +1,5 @@
+on menu_AddStackToProject scriptObject
+   put the stack_Name of scriptObject into projectStackName
+   project_AddStack projectStackName
+   opn_Notify merge("Added stack '[[projectStackName]]' to the project array.")
+end menu_AddStackToProject

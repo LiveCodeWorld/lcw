@@ -1,0 +1,5 @@
+function object_FetchMetaText objectFolder
+   put meta_TextFile (objectFolder) into someFile
+   put url ( "binfile:" & someFile) into objectText
+   return objectText
+end object_FetchMetaText

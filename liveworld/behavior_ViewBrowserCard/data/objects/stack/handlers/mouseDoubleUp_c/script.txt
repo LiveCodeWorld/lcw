@@ -1,0 +1,17 @@
+on mouseDoubleUp
+   switch word 1 of the name of the target
+      case "Image"
+         put the record_Name of the target into vName
+         view_NormalizeName vName
+         put view_GetTemplateObject (vName) into libraryObject
+         object_GoTo libraryObject
+         break
+      case "graphic"
+         -- some blank space in a datagrid
+         display_Views
+         break
+      default
+         -- resizeStack
+         pass mouseDoubleUp
+   end switch
+end mouseDoubleUp

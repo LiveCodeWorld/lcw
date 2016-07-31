@@ -1,0 +1,5 @@
+function _importantStackField
+   put _importantStackGroup() into importantStackGroup
+   put the long id of field 1 of importantStackGroup into importantStackField
+   return importantStackField
+end _importantStackField

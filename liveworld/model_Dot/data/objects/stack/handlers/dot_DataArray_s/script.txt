@@ -1,0 +1,6 @@
+setprop dot_DataArray [pOverlayName] dotDataArray
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   put dotDataArray into overlayArray ["data"]
+   set the overlay_Array [pOverlayName] of the target to overlayArray
+   return overlayArray
+end dot_DataArray

@@ -1,0 +1,4 @@
+function library_ScriptOnlyFolder shortFileBit, pDontCreate
+   -- script only stacks
+   return library_PluginFolder ("opn_Text/rev/libraries/", pDontCreate) & shortFileBit
+end library_ScriptOnlyFolder

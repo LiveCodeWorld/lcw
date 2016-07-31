@@ -1,0 +1,10 @@
+getprop menu_TableDataArray
+   local dataArray
+   put the script of the target into someScript
+   put script_OrderedMenuTitles (someScript) into mTitles
+   repeat for each line mTitle in mTitles
+      put menu_ExtractTableFromScript (mTitle, someScript, mController) into mTable
+      put mTable into dataArray [mTitle]
+   end repeat
+   return dataArray
+end menu_TableDataArray

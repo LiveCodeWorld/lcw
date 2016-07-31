@@ -1,0 +1,27 @@
+getprop hkey_InHierarchy [hKey]
+   put the long id of the target into tObject
+   put item 1 to 2 of hKey into shortHkey
+   return hkey_FindInHierarchy (shortHKey, tObject)
+   
+   /*
+   -- old way
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   hkey_FastFindHandlerAndKey hName, hType, hObject, foundHkey, foundHandler
+   return foundHkey
+   
+   -- another old way
+   if the number of items of shortHkey = 2 then
+      put item 1 of shortHkey into handlerName
+      put item 2 of shortHkey into handlerType
+      put the long id of the target into scriptObject
+      put hkey_Construct (handlerName, handlerType, scriptObject) into hKey
+   else
+      put shortHkey into hKey
+   end if
+   
+   put script_GetEnvironmentFilter() into environmentFilter
+   put the script_Hierarchy [environmentFilter] of the target into scriptHierarchy
+   put hkey_SearchObjectHierarchy (hKey, scriptHierarchy) into foundHkey
+   return foundHkey
+   */
+end hkey_InHierarchy

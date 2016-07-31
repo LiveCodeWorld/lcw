@@ -1,0 +1,7 @@
+function hArray_KeywordHkeys pKeyWordList
+   -- see also "hArray_ListShortKeys"
+   put hArray_KeywordHkeyArray (pKeyWordList) into hKeyArray
+   put keys (hKeyArray) into hKeys
+   sort hKeys by item 1 of each
+   return hKeys
+end hArray_KeywordHkeys

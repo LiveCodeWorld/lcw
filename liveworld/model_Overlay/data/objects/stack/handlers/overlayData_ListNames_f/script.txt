@@ -1,0 +1,5 @@
+function overlayData_ListNames overlayData
+   -- simple for now - but array structure could be expanded to include metadata
+   put keys(overlayData) into overlayNames
+   return overlayNames
+end overlayData_ListNames

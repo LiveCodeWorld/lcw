@@ -1,0 +1,5 @@
+getprop card_TreeField
+   put the dg_Tree of me into dgTree
+   put the card_View ["Tree|Field"] of dgTree into treeField
+   return treeField
+end card_TreeField

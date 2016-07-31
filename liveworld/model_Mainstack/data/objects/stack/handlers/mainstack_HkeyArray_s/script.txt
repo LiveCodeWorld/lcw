@@ -1,0 +1,5 @@
+setprop mainstack_HkeyArray hkeyArray
+   put the mainstack_WalkArray [pCheckHash] of the target into walkArray
+   put hkeyArray into walkArray ["hkeyArray"]
+   set the mainstack_WalkArray [pCheckHash] of the target to walkArray
+end mainstack_HkeyArray

@@ -1,0 +1,13 @@
+getprop selected_LongStackFiles
+   put empty into pSetName
+   put the index_Field of the target into indexField
+   put the selected_ShortStackFiles of indexField into shortStackFiles  
+   repeat for each line shortStackFile in shortStackFiles
+      put stackFile_NameFromShortFile (shortStackFile, pSetName) into stackName
+      if exists (stack stackName) then 
+         put the filename of stack stackName & CR after longStackFiles
+      end if
+   end repeat
+   delete char -1 of longStackFiles
+   return longStackFiles
+end selected_LongStackFiles

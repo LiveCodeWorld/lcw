@@ -1,0 +1,4 @@
+getprop menu_CheckTarget
+   put git_ListStashes() into StashNames
+   return true
+end menu_CheckTarget

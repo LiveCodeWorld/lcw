@@ -1,0 +1,6 @@
+getprop model_IdLinkArray [modelName]
+   put the long id of the target into modelObject
+   if modelName is empty then put "model_IdLinkArray" into modelName
+   put model_GetArray (modelName, modelObject, "file") into idArray
+   return idArray
+end model_IdLinkArray

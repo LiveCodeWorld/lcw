@@ -1,0 +1,8 @@
+function outline_StripLeadingSpace someOutline
+    -- was "outline_StripLeadingTabs"
+    repeat for each line someLine in someOutline
+        put word 1 to -1 of someLine & CR after someIndex
+    end repeat
+    delete char -1 of someIndex
+    return someIndex
+end outline_StripLeadingSpace

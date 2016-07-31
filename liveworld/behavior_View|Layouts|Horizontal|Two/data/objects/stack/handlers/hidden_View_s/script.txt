@@ -1,0 +1,34 @@
+setprop hidden_View whichView
+   -- opn_Notify whichView
+   lock screen
+   put the rect of me into oRect
+   put the left_View of me into leftView
+   put the right_View of me into rightView
+   put the vertical_Divider of me into verticalDivider
+   
+   switch word 1 of whichView
+      case "left"
+         set the visible of leftView to false
+         set the visible of rightView to true
+         set the visible of verticalDivider to false
+         break
+      case "right"
+         set the visible of leftView to true
+         set the visible of rightView to false
+         set the visible of verticalDivider to false
+         break
+      default -- case "none" or empty or...
+         set the visible of leftView to true
+         set the visible of rightView to true
+         set the visible of verticalDivider to true
+         
+         get item 1 of whichView
+         if it is a number then
+            set the width of leftView to it
+         else if LocalArray ["lastLeft"] is a number then
+            set the width of leftView to LocalArray ["lastLeft"]
+         end if
+   end switch
+   LayoutControl oRect
+   unlock screen
+end hidden_View

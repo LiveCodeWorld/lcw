@@ -1,0 +1,5 @@
+getprop mainStack_Hash
+   put the main_Stack of the target into mainStackObject
+   put the filename of mainStackObject into someFile
+   return file_Hash (someFile)
+end mainStack_Hash

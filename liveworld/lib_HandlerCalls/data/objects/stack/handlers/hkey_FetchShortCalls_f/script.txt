@@ -1,0 +1,17 @@
+function hkey_FetchShortCalls hKey, pReindex
+   -- first lets fetch a mainstack hArray
+   put item 3 of hKey into hObject
+   put the textStack_Folder of hObject into mainStackFolder
+   put mainStack_FetchHarray (mainStackFolder) into hArray
+   
+   if hArray is not an array and pReindex is not false then
+      mainStack_ExportAsFiles hObject -- fix:  should just redo hArray here
+      put the result into mainStackMetaArray
+      put mainStackMetaArray ["hArray"] into hArray
+      -- put mainStack_FetchHarray (mainStackFolder) into hArray
+   end if
+   
+   -- found on disk from stack export
+   put hArray_GetCalls (hKey, hArray) into shortCalls
+   return shortCalls
+end hkey_FetchShortCalls

@@ -1,0 +1,8 @@
+getprop stop_Wiki
+   put the openprocesses into oProcesses
+   if "wiki" is among the lines of oProcesses then
+      return flase
+   else
+      return true
+   end if
+end stop_Wiki

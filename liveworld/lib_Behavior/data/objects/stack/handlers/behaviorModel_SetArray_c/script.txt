@@ -1,0 +1,19 @@
+command behaviorModel_SetArray someArray, pWhichArray
+   -- old move to hArray
+   breakpoint
+   
+   switch
+      case char 1 of pWhichArray is empty or char 1 of pWhichArray is "n" -- default for nameArray
+         put library_FetchArray ("OPN_Behavior") into behaviorArray
+         put someArray into behaviorArray ["nameArray"]
+         break
+      case char 1 of pWhichArray is "o" -- for objectArray
+         put library_FetchArray ("OPN_Behavior") into behaviorArray
+         put someArray into behaviorArray ["objectArray"]
+         break
+      default -- "full"
+         put someArray into behaviorArray
+   end switch
+   library_StoreArray "OPN_Behavior", behaviorArray
+   return behaviorArray
+end behaviorModel_SetArray

@@ -1,0 +1,4 @@
+command hkey_DeleteHelpFile hKey
+   put hkey_HelpFile (hKey) into someFile
+   delete file someFile
+end hkey_DeleteHelpFile

@@ -1,0 +1,6 @@
+on menu_UpdateViews indexGroup
+   put the child_Views of indexGroup into childViews
+   repeat for each line childView in childViews
+      view_Update childView
+   end repeat
+end menu_UpdateViews

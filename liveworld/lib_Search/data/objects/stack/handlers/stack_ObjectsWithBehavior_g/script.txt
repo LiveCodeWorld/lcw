@@ -1,0 +1,10 @@
+getprop stack_ObjectsWithBehavior
+   put the stack_BehaviorArray of the target into behaviorArray
+   put behaviorArray ["behavior object"] into objectArray
+   
+   repeat for each key behaviorObject in objectArray
+      put objectArray [behaviorObject] & CR after objectsWithBehavior 
+   end repeat
+   delete char -1 of objectsWithBehavior
+   return objectsWithBehavior
+end stack_ObjectsWithBehavior

@@ -1,0 +1,12 @@
+command menu_InitialiseTopTitle @mTopTitle, targetObject
+   -- used by front scripts
+   if mTopTitle is empty then
+      if the controlkey is "Down" then
+         put the menu_ToolTitle of targetObject into mTopTitle
+      else
+         put the menu_Title of targetObject into mTopTitle
+         -- menu_SearchViewHierarchy targetObject, mTopTitle, mController
+      end if
+   end if
+   menu_SetTopTitle mTopTitle
+end menu_InitialiseTopTitle

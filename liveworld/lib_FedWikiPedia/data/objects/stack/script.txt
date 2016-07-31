@@ -1,0 +1,294 @@
+--> Metadata
+-
+name: lib_FedWikiPedia
+type: script library
+version: 0.9
+copyright: David Bovill
+licence:  GPLv3
+deps: lib_MediaWiki, lib_Fedwiki
+
+/*
+These handlers interface between Wikipedia and Fedwiki.
+*/
+
+
+--> Working On
+-   
+-- function fedwikipedia_FetchPageJson wikipediaUrl
+   -- gets the apiStem from the wikipediaUrl
+   put mediwiki_ExtractPageSlugFromUrl (wikipediaUrl) into pageSlug
+   put fedwikipedia_FetchPageArray (pageSlug, wikipediaURL, empty, false) into fedwikiPageArray
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   return pageJSON
+end fedwikipedia_FetchPageJson
+
+-- function fedwikipedia_FetchPageArray pageTitle, pWikipediaUrl, pSectionFormat, pIntroOnly
+   -- gets the apiStem from the wikipediaUrl
+   -- bit of a mess
+   
+   put wikipedia_GetApiRoot (pWikipediaUrl) into pApiStem
+   if pSectionFormat is empty then put "wiki" into pSectionFormat
+   if pWikipediaUrl is empty then
+      put wikipedia_ConstructUrl (pageTitle) into pWikipediaUrl
+   end if
+   
+   put sandbox_ConstructPageQueryFragment (pageTitle, pSectionFormat, pIntroOnly) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   if sandboxArray is not an array then return empty
+   
+   -- put fedwiki_ConstructWikipediaSummaryPageArray (sandboxArray, pWikipediaUrl) into fedwikiPageArray
+   sandbox_DeconstructPageArray sandboxArray, pageTitle, pageDescription, shortImageFile, lastRevisionID
+   put wikicommons_ConstructTwoImagePageArray (pageTitle, pageDescription, shortImageFile, wikipediaUrl) into fedwikiPageArray
+   
+   if pIntroOnly is not true then
+      put fedwikipedia_FetchWikiText (pageTitle) into wikiText
+      mediawiki_DeleteFirstSection wikiText
+      repeat 
+         put mediwiki_ExtractAndDeleteFirstSection (wikiText) into wikiSection
+         if wikiSection is empty then exit repeat
+         
+         put line 1 of wikiSection into sectionTitle
+         mediawiki_ConvertSectionTitle sectionTitle
+         fedwiki_AddMarkdownToPageArray fedwikiPageArray, sectionTitle
+         delete line 1 of wikiSection
+         put word 1 to -1 of wikiSection into wikiSection
+         fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, wikiSection, shortImageFile
+      end repeat
+   end if
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwikipedia_FetchPageArray
+
+
+--> Wiki Commons | Two Images
+-
+[[ _FetchHandler (wikicommons_FetchBasicTwoImagePageArray,f) ]]
+
+[[ _FetchHandler (wikicommons_ConstructTwoImagePageArray,f) ]]
+
+[[ _FetchHandler (wikicommons_FetchAndAddTwoImages,c) ]]
+
+
+--> FedWiki | Section | Summary
+-
+[[ _FetchHandler (fedwiki_FetchWikipediaSummaryPageJson,f) ]]
+
+[[ _FetchHandler (fedwiki_FetchWikipediaSummaryPageArray,f) ]]
+
+[[ _FetchHandler (wikicommons_ConstructVideoPageArray,f) ]]
+
+
+--> WikiCommons | Media | PageArray
+-
+[[ _FetchHandler (wikicommons_ConstructPageArray,f) ]]
+
+[[ _FetchHandler (wikicommons_AddImageToPageArray,c) ]]
+
+[[ _FetchHandler (wikicommons_AddVideoToPageArray,c) ]]
+
+[[ _FetchHandler (wikicommons_ConstructVideoHtml,f) ]]
+
+[[ _FetchHandler (wikicommons_ConstructVideoCaption,f) ]]
+
+[[ _FetchHandler (wikicommons_ConstructImageHtml,f) ]]
+
+[[ _FetchHandler (wikicommons_DeconstructPageArray,c) ]]
+
+
+--> Fedwiki | TOC
+-
+[[ _FetchHandler (fedwikipedia_ConstructSectionTOC,f) ]]
+
+[[ _FetchHandler (fedwikipedia_ExtractTocLookupArray,c) ]]
+
+[[ _FetchHandler (toc_LookupArray,pc) ]]
+
+[[ _FetchHandler (toc_LookupArrayFromSectionTitle,pc) ]]
+
+[[ _FetchHandler (toc_LookupArrayFromDotNum,pc) ]]
+
+[[ _FetchHandler (fedwikipedia_ConstructTocArray,f) ]]
+
+[[ _FetchHandler (fedwikipedia_ConstructSectionTocArray,c) ]]
+
+
+--> Fedwiki | Sitemap
+-
+[[ _FetchHandler (fedwiki_FetchSitemapArray,f) ]]
+
+[[ _FetchHandler (fedwiki_FetchSitemap,f) ]]
+
+[[ _FetchHandler (fedwiki_JsonSiteMapUrl,f) ]]
+
+
+--> FedWikipedia | Section | Summary
+-
+[[ _FetchHandler (fedwikipedia_FetchSectionSummaryPageJson,f) ]]
+
+[[ _FetchHandler (fedwikipedia_FetchSectionSummaryPageArray,f) ]]
+
+[[ _FetchHandler (fedwikipedia_SplitSectionDescription,f) ]]
+
+
+--> Fedwiki | Section
+-
+[[ _FetchHandler (fedwiki_FetchWikipediaSection,f) ]]
+
+[[ _FetchHandler (fedwiki_AddWikipediaSectionToPageArray,c) ]]
+
+[[ _FetchHandler (fedwikipedia_MakeTextParagraphFirst,c) ]]
+
+[[ _FetchHandler (fedwiki_FetchWikipediaSectionArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructSectionWikipediaPageArray,f) ]]
+
+[[ _FetchHandler (fedwikipedia_ExtractShortImageFile,f) ]]
+
+
+--> Fedwiki | Fetch
+-
+[[ _FetchHandler (fedwiki_ParseDroppedmediaWikiUrl,c) ]]
+
+[[ _FetchHandler (fedwikipedia_GetPageSlug,f) ]]
+
+
+--> FedWiki | Sandbox | Page
+-
+[[ _FetchHandler (fedwikipedia_FetchPageHtml,f) ]]
+
+[[ _FetchHandler (fedwikipedia_FetchWikiText,f) ]]
+
+[[ _FetchHandler (fedwikipedia_FetchWikiTextArray,f) ]]
+
+[[ _FetchHandler (fedwikipedia_FetchPageHtmlArray,f) ]]
+
+
+--> Fedwiki | Mediawiki | Image
+-
+[[ _FetchHandler (wikicommons_FetchImagePageJson,f) ]]
+
+[[ _FetchHandler (wikicommons_CostructBasicSummaryPageArray,f) ]]
+
+
+--> Wiki Commons | Image
+-
+[[ _FetchHandler (wikicommons_AddAllImages,c) ]]
+
+[[ _FetchHandler (wikicommons_FetchImageHtml,f) ]]
+
+[[ _FetchHandler (wikicommons_FetchImagePageArray,f) ]]
+
+[[ _FetchHandler (wikicommons_FetchImageSandboxArray,f) ]]
+
+
+--> Fedwiki | Convert
+-
+[[ _FetchHandler (fedwiki_ConvertWikipediaQueryArray,f) ]]
+
+
+--> Fedwiki | Clean
+-
+/*
+These handlers are for parsing, and cleaning mediawiki stypled wikitext, to turn it into a form that is useful for Fedwiki.
+*/
+
+[[ _FetchHandler (fedwikipedia_CleanLine,c) ]]
+
+[[ _FetchHandler (fedwikipedia_StripAllTemplates,c) ]]
+
+[[ _FetchHandler (fedwikipedia_CleanReferences,c) ]]
+
+[[ _FetchHandler (fedwikipedia_CleanCitations,c) ]]
+
+[[ _FetchHandler (fedwikipedia_CleanConvertTemplate,c) ]]
+
+[[ _FetchHandler (fedwikipedia_CleanSeeAlso,c) ]]
+
+[[ _FetchHandler (fedwikipedia_CleanInternalLinks,c) ]]
+
+
+--> Restbase | Work in progress
+-
+[[ _FetchHandler (restbase_Summary,c) ]]
+
+[[ _FetchHandler (restbase_FetchSectionArray,f) ]]
+
+[[ _FetchHandler (restbase_FetchWikipediaSectionPageArray,f) ]]
+
+[[ _FetchHandler (restbase_Mobile,c) ]]
+
+
+--> Sandbox
+-
+/*
+These handlers are designed to work with the mediawiki sandbox interface - https://en.wikipedia.org/wiki/Special:ApiSandbox
+
+You should be able to explore the api, and copy the sandbox fragments from the web interface,
+and add them to a handler below in order to code simple rest calls that return arrays.
+*/
+
+[[ _FetchHandler (mediawiki_TestSandboxFragment,c) ]]
+
+[[ _FetchHandler (sandbox_DeconstructSectionArray,c) ]]
+
+[[ _FetchHandler (sandbox_FetchSectionArray,f) ]]
+
+[[ _FetchHandler (sandbox_DeconstructPageArray,c) ]]
+
+[[ _FetchHandler (sandbox_ConstructSectionFragment,f) ]]
+
+[[ _FetchHandler (sandbox_ConstructPageQueryFragment,f) ]]
+
+[[ _FetchHandler (sandbox_ConstructWikiTextFragment,f) ]]
+
+[[ _FetchHandler (sandbox_ConstructPageHtmlFragment,f) ]]
+
+[[ _FetchHandler (sandbox_ArrayDeconstructImage,c) ]]
+
+[[ _FetchHandler (sandbox_GetRevision,pf) ]]
+
+[[ _FetchHandler (sandbox_GetExtract,pf) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (construct_SummarySourceArray,pf) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (text_Utf8Encode,c) ]]
+
+[[ _FetchHandler (html_FetchTidy,f) ]]
+
+[[ _FetchHandler (html_Tidy,c) ]]
+
+[[ _FetchHandler (html_FetchScraped,c) ]]
+
+[[ _FetchHandler (html_StripTags,f) ]]
+
+[[ _FetchHandler (html_ReplaceEntities,f) ]]
+
+[[ _FetchHandler (html_EntityList,f) ]]
+
+[[ _FetchHandler (html_EntityCharNums,f) ]]
+
+[[ _FetchHandler (xml_ToArray,f) ]]
+
+[[ _FetchHandler (xml_ArrayFromID,f) ]]
+
+[[ _FetchHandler (xml_ConvertXMLNodeToArray,pf) ]]
+
+[[ _FetchHandler (xml_EncodeString,pf) ]]
+
+[[ _FetchHandler (xml_ExtractEncoding,c) ]]
+
+[[ _FetchHandler (pandoc_ConvertHTML,f) ]]
+
+[[ _FetchHandler (pandoc_ConvertWikiText,f) ]]
+
+[[ _FetchHandler (pandoc_ListInputFormats,f) ]]
+
+[[ _FetchHandler (pandoc_ListExportFormats,f) ]]
+
+[[ _FetchHandler (file_SaveTempText,c) ]]

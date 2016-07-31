@@ -1,0 +1,9 @@
+private function _customHeaders httpStatusCode, contentToSend, httpStatusMessage
+   -- Function that generates custom headers, like redirections and errors. Helper function to generate custom httpd headers.
+   -- see https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+   put "HTTP/1.1" && httpStatusCode && httpStatusMessage into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   _addCorsHeader someHeader
+   _addContentLengthHeader someHeader, contentToSend
+   return someHeader
+end _customHeaders

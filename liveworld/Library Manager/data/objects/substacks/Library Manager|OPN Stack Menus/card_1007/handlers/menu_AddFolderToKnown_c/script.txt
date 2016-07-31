@@ -1,0 +1,19 @@
+on menu_AddFolderToKnown
+   answer folder "Select a folder to search inside..."
+   if it is empty then exit to top
+   put it into someFolder
+   
+   library_FixStackFiles
+   put the result into resultArray
+   put resultArray ["stackFileTable"] into stackFileTable
+   put resultArray ["badArray"] into badArray
+   
+   library_AddFolderToStackFiles someFolder
+   put the result into resultArray
+   
+   put resultArray ["duplicateFileArray"] into duplicateFileArray
+   display_Array duplicateFileArray, "duplicateFileArray"
+   
+   put resultArray ["stackFileArray"] into stackFileArray
+   display_Array stackFileArray, "stackFileArray"
+end menu_AddFolderToKnown

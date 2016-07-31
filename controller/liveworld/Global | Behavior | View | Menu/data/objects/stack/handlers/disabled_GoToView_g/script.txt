@@ -1,0 +1,5 @@
+getprop disabled_GoToView [scriptObject]
+   put the object_MetaData ["type"] of scriptObject into mObectType
+   put mObectType contains "view" into viewOrViewBehavior
+   return viewOrViewBehavior is false
+end disabled_GoToView

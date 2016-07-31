@@ -1,0 +1,7 @@
+on menu_DisplaySelectedSet mTarget
+   put project_GetCurrentName() into projectName
+   put library_FetchSetArray (projectName) into setArray
+   
+   put merge ("library_FetchSetArray ('[[projectName]]')") into someTitle
+   display_Array setArray, someTitle   
+end menu_DisplaySelectedSet

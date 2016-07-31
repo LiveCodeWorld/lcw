@@ -1,0 +1,5 @@
+function fedwiki_JsonSiteExportUrl fedwikiDomain
+   -- http://david.viral.academy/system/export.json
+   put "http://" & fedwikiDomain & "/system/export.json" into someUrl
+   return someUrl
+end fedwiki_JsonSiteExportUrl

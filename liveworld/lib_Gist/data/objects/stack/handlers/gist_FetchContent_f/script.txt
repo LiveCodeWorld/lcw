@@ -1,0 +1,5 @@
+function gist_FetchContent gistID
+   put gist_FetchArray (gistID) into gistFileArray
+   put gist_ExtractContent (gistFileArray) into gistContent
+   return gistContent
+end gist_FetchContent

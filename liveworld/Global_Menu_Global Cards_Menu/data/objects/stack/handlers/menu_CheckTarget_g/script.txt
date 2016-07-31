@@ -1,0 +1,9 @@
+getprop menu_CheckTarget [mTarget]
+   -- lets load cache here
+   put rev_ScriptObject() into scriptObject
+   if exists(scriptObject) is false then return empty
+   
+   -- put the menu_TableTitles of scriptObject into CachedMenuTitles
+   put the menu_ScriptTitles of scriptObject into LocalArray ["menu_ScriptTitles"]
+   return true -- mTarget = scriptObject
+end menu_CheckTarget

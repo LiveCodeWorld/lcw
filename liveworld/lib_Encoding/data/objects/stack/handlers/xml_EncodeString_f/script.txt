@@ -1,0 +1,19 @@
+function xml_EncodeString pString, pInEncoding, pOutEncoding
+   -- Helper function for converting the encoding of strings when converting to and from XML.
+   
+   ## convert utf-8 to utf8 for uniencode/decode
+   replace "-" with empty in pInEncoding
+   replace "-" with empty in pOutEncoding
+   
+   if pInEncoding is not empty then
+      -- if pOutEncoding is empty then pString will be converted to the current platform encoding
+      return unidecode(uniencode(pString, pInEncoding), pOutEncoding)
+   else
+      if pOutEncoding is not empty then
+         -- if pInEncoding is empty then pString is assumed to be in the current platform encoding
+         return unidecode(uniencode(pString, pInEncoding), pOutEncoding)
+      else
+         return pString
+      end if
+   end if
+end xml_EncodeString

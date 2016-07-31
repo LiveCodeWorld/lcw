@@ -1,0 +1,11 @@
+command fedwiki_ActionFork pageSlug, actionArray, pFedwikiDomain, pLocalWikiFolder
+   -- create a blank new page
+   put actionArray ["date"] into pCreateMilliSeconds
+   put actionArray ["item"] into forkPageArray
+   put forkPageArray ["title"] into pageTitle
+   
+   put fedwiki_ConstructSlug (pageTitle) into pageSlug
+   fedwiki_SetLocalPageArray pageSlug, forkPageArray, pFedwikiDomain, pLocalWikiFolder, pCreateMilliSeconds
+   put the result into pageJSON
+   return pageJSON
+end fedwiki_ActionFork

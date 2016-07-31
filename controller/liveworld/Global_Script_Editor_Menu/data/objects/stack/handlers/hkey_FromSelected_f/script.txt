@@ -1,0 +1,25 @@
+function hkey_FromSelected someScript, endChar
+   get char 1 to endChar of someScript
+   put the number of tokens of it into tokenNum
+   
+   put token tokenNum of someScript into thisToken
+   put token (tokenNum + 1) of someScript into nextToken
+   put token (tokenNum - 1) of someScript into previousToken
+   put token (tokenNum - 2) of someScript into setToken
+   
+   if nextToken is "(" then
+      put "f" into handlerType
+   else if previousToken = "the" then
+      if setToken = "set" then
+         put "s" into handlerType
+      else
+         put "g" into handlerType
+      end if
+   else
+      -- what if it is a message?
+      put "c" into handlerType
+   end if
+   
+   -- needs to be short as handler could be anywhere in hierarchy
+   return thisToken, handlerType
+end hkey_FromSelected

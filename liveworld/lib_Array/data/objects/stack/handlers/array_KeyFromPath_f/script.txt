@@ -1,0 +1,9 @@
+function array_KeyFromPath somePath, pPathUpNum, pDelim
+   if pDelim is empty then put "/" into pDelim
+   set the itemdelimiter to pDelim
+   put the number of items of somePath - pPathUpNum into maxNum
+   repeat with itemNum = 1 to maxNum
+      put item itemNum of somePath into arrayKey [itemNum]
+   end repeat
+   return arrayKey
+end array_KeyFromPath

@@ -1,0 +1,7 @@
+on menu_AddTestEditorMenusToSet treeView, setName
+   put the main_Name of rev_ScriptEditorField() into revScriptEditorField
+   put the main_Name of rev_HandlerTreeField() into revHandlerTree
+   put menu_ConstructPluginRecord ("Global | Script | Editor | Test | Menu", false) into menuArray ["control"]["main_Name"][revScriptEditorField][1]
+   
+   library_StoreMenuArray menuArray, setName
+end menu_AddTestEditorMenusToSet

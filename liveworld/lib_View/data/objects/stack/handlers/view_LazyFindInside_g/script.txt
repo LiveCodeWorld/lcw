@@ -1,0 +1,9 @@
+getprop view_LazyFindInside [vNames]
+   replace "/" with CR in vNames
+   put line 1 of vNames into vName
+   put the view_Inside [vName] of the target into foundView
+   if exists(foundView) is false then return empty
+   
+   put the view_SlightlyLazyMatchInside [vNames] of foundView into matchedView
+   return matchedView
+end view_LazyFindInside

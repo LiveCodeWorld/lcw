@@ -1,0 +1,10 @@
+command menuTableArray_AddPlain @mTableArray, lineNum, mLine, mController, pigeon, pDisabledProp
+   put "plain" into mTableArray [lineNum]["mType"]
+   
+   put mLine into mTableArray [lineNum]["mLine"]
+   put pigeon into mTableArray [lineNum]["pigeon"]
+   
+   put mController into mTableArray [lineNum]["mController"]
+   
+   if pDisabledProp is not empty then put pDisabledProp into mTableArray [lineNum]["disabledProp"]
+end menuTableArray_AddPlain

@@ -1,0 +1,12 @@
+command library_SetUsed shortStackNames, pSetName
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   
+   repeat for each line shortStackName in shortStackNames
+      put the name of stack shortStackName into stackObject
+      put empty into objectArray [stackObject]
+   end repeat
+   
+   project_SetObjectTypeArray objectArray, "used", pSetName
+   put the result into librarySetData
+   return librarySetData
+end library_SetUsed

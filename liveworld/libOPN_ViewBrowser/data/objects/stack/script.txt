@@ -1,0 +1,205 @@
+--> MetaData
+-
+name: libOPN_ViewBrowser
+copyright: David Bovill
+type: library
+
+/*
+This browser is a utility for browsing, testing and authoring OPN views.
+It should not required for the functioning of the views to work.
+*/
+
+[[ _FetchHandler (viewBrowser_Library,g) ]]
+
+
+--> Display
+-
+[[ _FetchHandler (display_Views,c) ]]
+
+[[ _FetchHandler (display_ViewRecord,c) ]]
+
+[[ _FetchHandler (display_SisterViews,c) ]]
+
+
+--> Display | Arrays
+-
+[[ _FetchHandler (viewBrowser_ResetTitle,c) ]]
+
+[[ _FetchHandler (viewBrowser_ConstructDataArray,f) ]]
+
+[[ _FetchHandler (viewBrowser_ConstructBehaviorArray,f) ]]
+
+
+--> Display | Props
+-
+[[ _FetchHandler (displayed_ViewNames,g) ]]
+
+[[ _FetchHandler (displayed_Views,g) ]]
+
+[[ _FetchHandler (display_SetDefaults,c) ]]
+
+
+--> View
+-
+[[ _FetchHandler (view_Filter,g) ]]
+
+[[ _FetchHandler (view_Filter,s) ]]
+
+[[ _FetchHandler (view_Filters,g) ]]
+
+[[ _FetchHandler (view_NormalizeName,c) ]]
+
+
+--> Handler | Help
+-
+[[ _FetchHandler (view_AutoLinkHelpText,c) ]]
+
+
+--> View | Templates
+-
+/*
+There are many views arranged organised in a set of files or "library".
+These handlers manipulate this "library".
+
+Need to distinguish this from "view_Templates" which refer to classes of view with associated bahaviors.
+Therefore it is possible to have several "view_TemplateObjects" which share the same behavior and associated view_Template.
+
+Library_Objects may therefore differ significantly in the way they look and function, from their linked view_Template,
+even though they share the same behavior. Howevr they can easily be created from the view_Template by 
+modyfying public properties (getprop/setprops) of the template.
+*/
+
+[[ _FetchHandler (view_ConstructBehaviorOutline,f) ]]
+
+[[ _FetchHandler (view_TestTemplateStackNames,c) ]]
+
+[[ _FetchHandler (view_ExtractExperimental,f) ]]
+
+[[ _FetchHandler (view_ExtractTested,f) ]]
+
+
+--> View | Library | Create
+-
+[[ _FetchHandler (view_AddBehavior,c) ]]
+
+
+--> View | Library | Default | Model
+-
+/*
+For each type of view in the library there should be a view_Stem and a "default_View" for that stem.
+Therefore there may be many "tree" views, but there is only one default tree view.
+*/
+
+[[ _FetchHandler (view_GetDefault,f) ]]
+
+[[ _FetchHandler (view_SetDefault,c) ]]
+
+[[ _FetchHandler (view_GetDefaults,f) ]]
+
+[[ _FetchHandler (view_IsDefault,f) ]]
+
+
+--> View | Layout
+-
+/*
+Layouts are html outlines that use object property references,
+rather than names to refer to their elements.
+*/
+
+[[ _FetchHandler (view_OutlineArray,g) ]]
+
+[[ _FetchHandler (view_ChildOutline,g) ]]
+
+[[ _FetchHandler (view_RecurseReferenceOutline,c) ]]
+
+[[ _FetchHandler (view_TopCardViewOutline,f) ]]
+
+[[ _FetchHandler (view_OutlinesTypes,f) ]]
+
+
+--> View Browser
+-
+[[ _FetchHandler (viewBrowser_GoToDisplayed,c) ]]
+
+[[ _FetchHandler (viewbrowser_GetDataArray,f) ]]
+
+[[ _FetchHandler (viewbrowser_SetDataArray,c) ]]
+
+
+--> Geometry Test
+-
+[[ _FetchHandler (display_GetSavedFrameRect,f) ]]
+
+[[ _FetchHandler (display_SetSavedFrameRect,c) ]]
+
+
+--> Test | Display
+-
+[[ _FetchHandler (display_LibraryViewStack,c) ]]
+
+[[ _FetchHandler (display_ViewOutline,c) ]]
+
+
+--> Display | Close
+-
+[[ _FetchHandler (display_CloseDisplayed,c) ]]
+
+[[ _FetchHandler (display_CloseAllViewStacks,c) ]]
+
+[[ _FetchHandler (display_DeleteDisplayed,c) ]]
+
+
+--> View | Files | Model
+-
+-- getprop view_Files
+return the uOPN ["view_Files"] of me
+end view_Files
+
+-- setprop view_Files viewFiles
+set the uOPN ["view_Files"] of me to viewFiles
+end view_Files
+
+-- getprop view_PathIndex
+return the uOPN ["view_PathIndex"] of me
+end view_PathIndex
+
+-- setprop view_PathIndex pathIndex
+set the uOPN ["view_PathIndex"] of me to pathIndex
+end view_PathIndex
+
+
+--> LibView
+-
+-- on libView_CheckLibStackAndResize
+breakpoint
+view_ResizeToCard 16
+end libView_CheckLibStackAndResize
+
+
+--> LibView | Stack Management
+-
+[[ _FetchHandler (libView_ReplaceTargetObject,c) ]]
+
+
+--> Object
+-
+[[ _FetchHandler (displayed_LibraryView,g) ]]
+
+
+--> Object | View Browser
+-
+[[ _FetchHandler (view_OutlineStack,g) ]]
+
+[[ _FetchHandler (view_BrowserStack,g) ]]
+
+[[ _FetchHandler (viewBrowser_Card,g) ]]
+
+[[ _FetchHandler (viewBrowser_TitleView,g) ]]
+
+[[ _FetchHandler (viewBrowser_DataTree,g) ]]
+
+[[ _FetchHandler (viewBrowser_DataGrid,g) ]]
+
+[[ _FetchHandler (viewBrowser_Recordbehavior,g) ]]
+
+[[ _FetchHandler (viewOutline_Stack,g) ]]

@@ -1,0 +1,8 @@
+setprop card_Margin cardMargin
+   put the card_Object of the target into cardObject
+   if exists(cardObject) is false then return empty
+   
+   lock messages
+   set the card_Margin of cardObject to cardMargin   
+   unlock messages
+end card_Margin

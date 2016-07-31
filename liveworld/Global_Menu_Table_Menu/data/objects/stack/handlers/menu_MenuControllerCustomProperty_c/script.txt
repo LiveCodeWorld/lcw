@@ -1,0 +1,6 @@
+on menu_MenuControllerCustomProperty
+   put rev_ScriptObject() into scriptObject
+   -- put the mobile_Name of scriptObject into scriptObject
+   put the menu_Controller of scriptObject into menuModel
+   object_EditProperty menuModel
+end menu_MenuControllerCustomProperty

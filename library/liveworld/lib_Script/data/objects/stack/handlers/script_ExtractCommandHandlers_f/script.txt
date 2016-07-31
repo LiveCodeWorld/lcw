@@ -1,0 +1,4 @@
+function script_ExtractCommandHandlers someScript, scriptObject
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   return handlerArray ["command"]
+end script_ExtractCommandHandlers

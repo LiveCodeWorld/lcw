@@ -1,0 +1,6 @@
+on menu_SelectProjectStacks mTarget
+   set the multiple_Hilites of mTarget to true
+   put project_FetchValue ("openStacks") into stackNames
+   sort stackNames
+   set the selected_Index of mTarget to stackNames
+end menu_SelectProjectStacks

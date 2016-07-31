@@ -1,0 +1,7 @@
+command mediawiki_TestSandboxFragment sandBoxFragment
+   set the itemdelimiter to "="
+   delete item 1 of sandboxFragment
+   put "https://en.wikipedia.org/wiki/Special:ApiSandbox#action=" & sandboxFragment into someUrl
+   -- put someUrl
+   launch url someUrl
+end mediawiki_TestSandboxFragment

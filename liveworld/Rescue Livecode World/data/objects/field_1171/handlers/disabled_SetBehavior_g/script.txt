@@ -1,0 +1,5 @@
+getprop disabled_SetBehavior [selectedViewStackObject]
+   put the behavior of cd 1 of selectedViewStackObject  into bObject
+   put bObject = the name of stack "behavior_ViewTemplateCard" into behaviorSet
+   return behaviorSet
+end disabled_SetBehavior

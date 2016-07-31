@@ -1,0 +1,5 @@
+getprop dot_InchSize [expandIfNeeded]
+   put the rect of the target into someRect
+   put dot_GraphInchSize (someRect, expandIfNeeded) into targetSize
+   return targetSize
+end dot_InchSize

@@ -1,0 +1,4 @@
+function kwote someText, pQuoteChar
+   if pQuoteChar is empty then put quote into pQuoteChar
+   return pQuoteChar & someText & pQuoteChar
+end kwote

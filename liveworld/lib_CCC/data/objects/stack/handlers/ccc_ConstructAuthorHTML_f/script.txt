@@ -1,0 +1,12 @@
+function ccc_ConstructAuthorHTML cccArray
+   -- https://media.ccc.de/search?q=Robert%20M%20Ochshorn
+   -- this looses the order of authors if this is important
+   put cccArray ["authors"] into authorArray
+   repeat for each key someAuthor in authorArray
+      put authorArray [someAuthor] into authorUrl
+      put html_ConstructRefLink (someAuthor, authorUrl, "_blank") after authorHTML
+      put space & "and" & space  after authorHTML
+   end repeat
+   put word 1 to -2 of authorHTML into authorHTML
+   return authorHTML
+end ccc_ConstructAuthorHTML

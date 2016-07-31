@@ -1,0 +1,6 @@
+command table_ClearVars
+   -- Clears the table arrays.  Useful if multiple tables are being generated.
+   put empty into sRows
+   put empty into sHeading
+   put TRUE into sAutoHeading
+end table_ClearVars

@@ -1,0 +1,14 @@
+getprop wireframe_Snap [pDimensions]
+   put the long id of the target into someControl
+   
+   -- should do something clever with pDimensions
+   -- for now we just assume it is a new width if it is there
+   if pDimensions is empty then
+      put 420 into newW
+   else
+      put item 1 of pDimensions into newW
+   end if
+   
+   put wireframe_GetSnapPng (someControl, newW) into somePNG
+   return somePNG
+end wireframe_Snap

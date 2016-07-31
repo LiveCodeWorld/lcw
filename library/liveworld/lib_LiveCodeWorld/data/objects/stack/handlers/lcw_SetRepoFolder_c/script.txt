@@ -1,0 +1,10 @@
+command lcw_SetRepoFolder @pLibraryRepoFolder
+   -- library_SetRepoFolder
+   if pLibraryRepoFolder is empty then
+      answer folder "Select your Liveworld repository folder"
+      put it into pLibraryRepoFolder
+      if it is empty then exit to top
+   end if
+   if char -1 of pLibraryRepoFolder is not slash then put slash after pLibraryRepoFolder
+   pref_SetValue "libraryRepoFolder", pLibraryRepoFolder
+end lcw_SetRepoFolder

@@ -1,0 +1,19 @@
+function hkey_SmartFind shortCall, hKey, pSetName
+   try
+      hkey_Deconstruct hKey, hName, hType, hObject, hNum
+      put item 1 of shortCall into callName
+      put item 2 of shortCall into callType
+      
+      put hkey_FindInHierarchy (shortCall, hObject, pSetName) into foundCall
+      if foundCall is empty then
+         put item 1 of shortCall into callName
+         put item 2 of shortCall into callType
+         put hkey_FindAndIndex (callName, callType, hObject, pSetName) into foundCall
+      end if
+      return foundCall
+   catch e
+      breakpoint
+      opn_Notify e, true
+      exit to top
+   end try
+end hkey_SmartFind

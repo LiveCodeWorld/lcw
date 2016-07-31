@@ -1,0 +1,4 @@
+on menu_SaveToIpfs scriptObject
+   put the stack_Name of scriptObject into stackName
+   ipfs_SaveStack stackName
+end menu_SaveToIpfs

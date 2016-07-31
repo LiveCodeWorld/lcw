@@ -1,0 +1,4 @@
+function rect_GetInner groupRect, someGroup
+   put the inner_Rect [groupRect] of someGroup into innerRect
+   return innerRect
+end rect_GetInner

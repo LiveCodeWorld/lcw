@@ -1,0 +1,10 @@
+on menu_StoreCheckoutGlobalWith scriptObject, setName
+   put merge ("Are you sure you want to store the current global checkout variables with the set '[[setName]]'?") into someQuestion
+   opn_Answer someQuestion
+   
+   library_StoreCheckoutGlobals setName
+   
+   put library_GetSetName() into currentSetName
+   put merge ("The global checkout variables in the current set '[[currentSetName]]' have been have been saved with the set ('[[setName]])!") into someComment
+   opn_Notify someComment
+end menu_StoreCheckoutGlobalWith

@@ -1,0 +1,21 @@
+function http_GetRecievedCookies
+   put libUrlLastRHHeaders() into tResp
+   
+   put line 1 of tResp into statusLine
+   switch
+      case 503 is among the words of statusLine
+         put "Error, service unavailable" into someError
+         return empty
+      case 200 is among the words of statusLine
+         -- replace ": " with numtochar(4) in tResp
+         delete line 1 of tResp
+         put http_ExtractSetCookie() into cookies
+         return cookies
+      default
+         put  "Error," && word 2 to -1 of statusLine into someError
+         return empty
+   end switch
+   
+   -- get http_GetReceivedHeader("Set-Cookie")
+   return it
+end http_GetRecievedCookies

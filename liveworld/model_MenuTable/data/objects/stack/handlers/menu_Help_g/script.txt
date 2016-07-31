@@ -1,0 +1,6 @@
+getprop menu_Help [mTitle]
+   put the long id of the target into mController
+   put the menu_Array of mController into mArray
+   put mArray [mTitle]["metadata"]["help"]["menu"] into someHtml
+   return someHtml
+end menu_Help

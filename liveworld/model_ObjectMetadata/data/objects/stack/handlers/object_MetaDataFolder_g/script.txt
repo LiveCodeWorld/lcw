@@ -1,0 +1,10 @@
+getprop object_MetaDataFolder [pDontCreate]
+   -- inside the textStack_Folder
+   if pDontCreate is empty then put true into pDontCreate
+   put the long id of the target into someObject
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   
+   put the textStack_Folder of stack mainStackName into mainStackFolder
+   return mainstack_MetadataFolder (mainStackFolder, someObject, pDontCreate)
+ end object_MetaDataFolder

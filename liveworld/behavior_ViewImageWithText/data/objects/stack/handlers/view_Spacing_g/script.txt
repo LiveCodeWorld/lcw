@@ -1,0 +1,8 @@
+getprop view_Spacing
+   put the uOPN ["view_Spacing"] of me into viewSpacing
+   if viewSpacing is empty then
+      return 4
+   else
+      return viewSpacing
+   end if
+end view_Spacing

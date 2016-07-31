@@ -1,0 +1,10 @@
+function shell_MakeOSXShellPath tPath
+    -- was "ijwAPLIB_MakeOSXShellPath"
+    put "set tOut to quoted form of POSIX path of tPath" into tScript
+    replace "tPath" with quote & revMacFromUnixPath(tPath) & quote in tScript
+    do tScript as applescript
+    put the result into tNewPath
+    delete char 1 of tNewPath
+    delete last char of tNewPath
+    return tNewPath
+end shell_MakeOSXShellPath

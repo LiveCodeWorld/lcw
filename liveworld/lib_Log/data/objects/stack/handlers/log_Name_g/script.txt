@@ -1,0 +1,8 @@
+getprop log_Name
+   put the log_Name of me into someName
+   if someName is empty then
+      put "Default" into someName
+      set the log_Name of me to "Default"
+   end if
+   return someName
+end log_Name

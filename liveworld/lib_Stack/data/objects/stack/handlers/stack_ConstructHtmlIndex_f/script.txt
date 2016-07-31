@@ -1,0 +1,19 @@
+function stack_ConstructHtmlIndex someFiles, unknownColour
+    set the itemdelimiter to "/"
+    repeat for each line someFile in someFiles
+        put stack_GetShortName(someFile) into stackName
+        put opn_GetFileName(stackName) into opnFile
+        if opnFile is empty then
+            if unknownColour is empty then
+                put html_ConstructNameLink(stackName, someFile) & CR after someOutline
+            else
+                put html_ConstructNameLink(stackName, someFile) into someLink
+                put html_ConstructColouredText(someLink, unknownColour) & CR after someOutline
+            end if
+        else
+            put html_ConstructNameLink(stackName, someFile) & CR after someOutline
+        end if
+    end repeat
+    delete last char of someOutline
+    return someOutline
+end stack_ConstructHtmlIndex

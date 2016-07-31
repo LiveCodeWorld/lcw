@@ -1,0 +1,35 @@
+command hArray_RemoveObjectFromHandlerArray rObject, @hArray, pSlowClean
+   if pSlowClean is not false then
+      -- this is slower but thorough (should not be needed with a tidy db)
+      put hArray ["handlerArray"] into handlerArray
+      repeat for each key shortHkey in handlerArray
+         put handlerArray [shortHkey] into shortKeyArray
+         repeat for each key hkey in shortKeyArray
+            if item 3 of hkey = rObject then
+               put keys(shortKeyArray) into hKeys
+               if the number of lines of hKeys = 1 then
+                  delete variable hArray ["handlerArray"][shortHkey]
+               else
+                  delete variable hArray ["handlerArray"][shortHkey][hkey]
+               end if
+            end if
+         end repeat
+      end repeat
+   else
+      put hArray_GetObjectData (rObject, "script_DataArray", hArray) into scriptData -- should be old handlers and work
+      repeat for each key indexNum in scriptData
+         put scriptData [indexNum]["hKey"] into hKey
+         if hKey is empty then next repeat
+         
+         put item 1 to 2 of hKey into shortHKey
+         put hArray ["handlerArray"][shortHKey] into shortKeyArray
+         if shortKeyArray is an array then -- not sure if we really need to check this for speed reasons
+            delete variable hArray ["handlerArray"][shortHKey][hKey]
+            put hArray ["handlerArray"][shortHKey] into shortKeyArray
+            if shortKeyArray is not an array then
+               delete variable hArray ["handlerArray"][shortHKey] -- to tidy empty arrays
+            end if
+         end if
+      end repeat
+   end if
+end hArray_RemoveObjectFromHandlerArray

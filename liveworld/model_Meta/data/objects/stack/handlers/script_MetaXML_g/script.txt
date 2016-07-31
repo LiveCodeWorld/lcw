@@ -1,0 +1,4 @@
+getprop script_MetaXML
+   put the script_MetaTable of the target into ripTable
+   return script_MetaTableToXml(ripTable)
+end script_MetaXML

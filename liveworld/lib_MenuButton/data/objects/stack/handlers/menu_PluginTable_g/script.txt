@@ -1,0 +1,11 @@
+getprop menu_PluginTable [pMouseButton]
+   put the menu_PluginArray [pMouseButton] of the target into mPluginArray
+   put item 2 of the extents of mPluginArray into maxNum
+   repeat with indexNum = 1 to maxNum
+      put mPluginArray [indexNum] into mRecordArray
+      menu_ConvertArrayToRecord mRecordArray
+      put mRecordArray & CR after mRecordTable
+   end repeat
+   delete char -1 of mRecordTable   
+   return mRecordTable
+end menu_PluginTable

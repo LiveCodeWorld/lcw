@@ -1,0 +1,5 @@
+on menu_DepsFromExportedLinks hKey
+   put hkey_FetchDeps (hKey) into allShortDeps
+   sort allShortDeps
+   display_Outline allShortDeps, hKey, "Global | HkeyArray | Menu", "Global | HkeyArray | Line | Menu", 1, false,  "palette"
+end menu_DepsFromExportedLinks

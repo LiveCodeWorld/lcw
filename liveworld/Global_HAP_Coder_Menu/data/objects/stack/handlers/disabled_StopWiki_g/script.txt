@@ -1,0 +1,4 @@
+getprop disabled_StopWiki
+   put the openprocesses contains "wiki" into isRunning
+   return isRunning is false
+end disabled_StopWiki

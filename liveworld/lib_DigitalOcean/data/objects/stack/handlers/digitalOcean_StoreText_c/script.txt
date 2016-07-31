@@ -1,0 +1,6 @@
+command digitalOcean_StoreText someData, dropletName, pathToStore, pSshUserName
+   put the tempname into localFile
+   put someData into url ("file://" & localFile)
+   digitalOcean_StoreFile dropletName, pathToStore, localFile, pSshUserName
+   return the result
+end digitalOcean_StoreText

@@ -1,0 +1,6 @@
+function array_DeleteKeys keyList, someArray
+    repeat for each item someItem in keyList
+        delete local someArray[someItem]
+    end repeat
+    return someArray
+end array_DeleteKeys

@@ -1,0 +1,4 @@
+getprop show_HiddenFiles
+   put finder_GetShowInvisibleFiles() into someBoolean
+   return someBoolean
+end show_HiddenFiles

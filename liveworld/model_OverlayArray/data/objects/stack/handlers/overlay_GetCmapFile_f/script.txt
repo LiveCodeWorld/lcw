@@ -1,0 +1,4 @@
+function overlay_GetCmapFile overlayFolder, pOverlayName
+   put overlay_ConstructFile ("cmapx", overlayFolder, pOverlayName) into someFile
+   return someFile
+end overlay_GetCmapFile

@@ -1,0 +1,27 @@
+command fedwiki_DownloadDomainToFolder fedwikiDomain, pLocalWikiFolder
+   /*
+   Fetches each site-json file one at a time, and parses then into json
+   Then spits out individual json files.
+   Better way to back-up is to use git or rsync
+   But it's a good test of the scripts.
+   */
+   
+   put fedwiki_FetchSiteExport (fedwikiDomain) into siteJSON
+   fedwiki_SetLocalSiteJson fedwikiDomain, siteJSON, pLocalWikiFolder
+   
+   put json_ToArray (siteJSON) into siteArray
+   fedwiki_SetLocalSiteArray fedwikiDomain, siteArray, pLocalWikiFolder
+   
+   if siteArray is not an array then return empty
+   repeat for each key pageSlug in siteArray
+      set the cursor to busy
+      put siteArray [pageSlug] into pageArray
+      -- now would be a good time to index
+      
+      put json_FromArray (pageArray) into pageJson
+      fedwiki_SetLocalPageJson pageSlug, pageJSON, fedwikiDomain, pLocalWikiFolder
+   end repeat
+   put fedwiki_FetchFavicon (fedwikiDomain) into pngData
+   fedwiki_SetLocalFavicon fedwikiDomain, pngData
+   return siteArray
+end fedwiki_DownloadDomainToFolder

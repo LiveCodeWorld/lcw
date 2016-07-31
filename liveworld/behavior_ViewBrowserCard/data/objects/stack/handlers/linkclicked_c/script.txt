@@ -1,0 +1,9 @@
+on linkclicked cText
+   switch
+      case cText contains "|"
+         display_ViewRecord cText
+         break
+      default
+         put the params
+   end switch 
+end linkclicked

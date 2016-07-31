@@ -1,0 +1,12 @@
+function digitalOcean_GetDropletArray dropletName
+   put digitalOcean_GetDropletInfoArray() into dropletInfoArray
+   put dropletInfoArray ["droplets"] into indexedDropletArray
+   repeat for each key dropletNum in indexedDropletArray
+      put indexedDropletArray [dropletNum] into dropletArray
+      put dropletArray ["name"] into testDropletName
+      if testDropletName = dropletName then
+         return dropletArray
+      end if
+   end repeat
+   return empty
+end digitalOcean_GetDropletArray

@@ -1,0 +1,13 @@
+setprop hkey_Type hkeyType
+   switch hkeyType
+      case "short"
+         set the header_Colour of me to "83,85,133"
+         break
+      case "long"
+         set the header_Colour of me to "51,51,51"
+         break
+      case "no dependency index"
+         set the header_Colour of me to red
+         break
+   end switch
+end hkey_Type

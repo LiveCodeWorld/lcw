@@ -1,0 +1,27 @@
+getprop rig_Script [pShortControllerFile]
+   /*
+   Here we want to be able to get the revIgniter script of any object. 
+   Specificall of script-only stacks that are libraries or proxies for Livecode server (.lc) scripts.
+   
+   Typically you will want to do something like:
+   
+   put the script_Container of the target into scriptContainer
+   put the displayed_ShortControllerFile of me into pShortControllerFile
+   put the rig_Script [pShortControllerFile] of scriptContainer into rigScript
+   
+   pShortControllerFile is important as it is used to generate the name for the initialisation handler.
+   If you do not pass a value the script will take the short name of the stack as a guess,
+   this default behavior works well for scrip-only stack versions of controllers.
+   
+   These stack based versions of controller scripts use the following convention for a controller named "test_controller.lc":
+   
+   - a script-only stack is created named the same as the controller ("test_controller.lc")
+   - the script of ths stack is set to the handlers of the controller,
+   along with any comments, but with the "<lc... ?lc> tags removed using the 
+   
+   */
+   
+   put the long id of the target into scriptObject
+   put rig_ConstructControllerScript (scriptObject, pShortControllerFile) into rigScript
+   return rigScript
+end rig_Script

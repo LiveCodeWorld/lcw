@@ -1,0 +1,10 @@
+getprop child_Names
+   put the long id of the target into targetObject
+   
+   put the layout_Children of targetObject into layoutChildren
+   repeat for each line layoutChild in layoutChildren
+      put the short name of layoutChild & CR after childNames
+   end repeat
+   delete char -1 of childNames
+   return childNames
+end child_Names

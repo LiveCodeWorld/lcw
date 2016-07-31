@@ -1,0 +1,8 @@
+function image_PixelToRGB binaryPixel
+    -- was "binaryToRGBPixel"
+    put chartonum(char 2 of binaryPixel) into redBit
+    put chartonum(char 3 of binaryPixel) into greenBit
+    put chartonum(char 4 of binaryPixel) into blueBit
+    put redBit, greenBit, blueBit into rgbTriplet
+    return rgbTriplet
+end image_PixelToRGB

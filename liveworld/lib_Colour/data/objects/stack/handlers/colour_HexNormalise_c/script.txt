@@ -1,0 +1,18 @@
+command colour_HexNormalise @someColour, pObject
+   -- convert any colour to web (hex) colour
+   switch
+      case char 1 of someColour = "#"
+      break
+      case the number of items of someColour = 3 and char 1 of someColour is a number
+         put colour_RgbToHex (someColour) into someColour
+      break
+      case char 1 of someColour is not a number
+         put colour_NameToRgb (someColour, pObject) into rgbColour
+         if rgbColour is empty then
+            put empty into someColour
+         else
+            put colour_RgbToHex (rgbColour) into someColour
+         end if
+      break
+   end switch
+end colour_HexNormalise

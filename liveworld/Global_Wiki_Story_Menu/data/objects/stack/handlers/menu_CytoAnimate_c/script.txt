@@ -1,0 +1,12 @@
+on menu_CytoAnimate mTarget
+   /*
+   window.cy2.animate({
+   pan: { x: 10, y: 10 },
+   zoom: 2
+   }, {
+   duration: 1000
+   });
+   */
+   put script_GetCommentAboveMe() into someJavascript
+   set the wiki_Javascript of mTarget to someJavascript
+end menu_CytoAnimate

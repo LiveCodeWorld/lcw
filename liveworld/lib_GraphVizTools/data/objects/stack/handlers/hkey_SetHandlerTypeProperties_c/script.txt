@@ -1,0 +1,40 @@
+command hkey_SetHandlerTypeProperties handlerType, @nodeColour, @nodeFillColour, @nodeShape, @nodeStyle
+    put "filled" into nodeStyle
+    put "" into nodeShape
+     
+    switch handlerType
+        case "m"
+            if scriptObject is "Missing" then
+                put "white" into nodeColour
+                put "white" into nodeFillColour
+            else
+                put "red" into nodeColour
+                put "red" into nodeFillColour
+            end if
+            break
+        case "c"
+            put "Green4" into nodeColour
+            put "GreenYellow" into nodeFillColour
+            break
+        case "f"
+            put "blue" into nodeColour
+            put "LightBlue" into nodeFillColour
+            break
+        case "g"
+            put "white" into nodeColour
+            put "grey" into nodeFillColour
+            break
+        case "s"
+            put "white" into nodeColour
+            put "grey50" into nodeFillColour
+            break
+        default
+            -- put "yellow" into nodeColour
+            -- put "yellow" into nodeFillColour
+            put "" into nodeColour
+            put "" into nodeFillColour
+            break
+    end switch
+    -- linkArray_SetgraphPropertyArray "default_Node", "nodeColour", nodeColour, graphPropertyArray
+    -- linkArray_SetgraphPropertyArray "default_Node", "nodeFillColour", nodeFillColour, graphPropertyArray
+end hkey_SetHandlerTypeProperties

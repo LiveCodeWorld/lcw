@@ -1,0 +1,6 @@
+command git_SetFullPath @relativeFileOrFolder
+   if char 1 of fileOrFolder is "/" then return false
+   put git_GetRootFolder() into baseFolder
+   put baseFolder & relativeFileOrFolder into relativeFileOrFolder
+   return true
+end git_SetFullPath

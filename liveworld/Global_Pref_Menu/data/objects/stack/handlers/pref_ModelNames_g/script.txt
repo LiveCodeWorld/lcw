@@ -1,0 +1,8 @@
+getprop pref_ModelNames
+    get pref_ListSetNames()
+    if it is empty then
+        return "Default"
+    else
+        return it & CR & "-,Default"
+    end if
+end pref_ModelNames

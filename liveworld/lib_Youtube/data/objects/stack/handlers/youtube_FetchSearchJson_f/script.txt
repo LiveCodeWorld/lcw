@@ -1,0 +1,7 @@
+function youtube_FetchSearchJson channelTitle
+   -- https://www.googleapis.com/youtube/v3/search?part=snippet&q=WorldCryptoNetwork&type=channel&key={YOUR_API_KEY}
+   put "search?part=snippet&q=" & urlencode (channelTitle) & "&type=channel" into channelBit
+   put "&maxResults=50" after channelBit
+   put fetch_YoutubeJSON (channelBit) into someJSON
+   return someJSON
+end youtube_FetchSearchJson

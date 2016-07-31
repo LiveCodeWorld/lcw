@@ -1,0 +1,6 @@
+function rig_ExtractPublicHandlers buttonScript
+   put word 1 to -1 of buttonScript into buttonScript
+   replace "on mouseUp" with "on index" in buttonScript
+   replace "end mouseUp" with "end index" in buttonScript
+   return buttonScript
+end rig_ExtractPublichandlers

@@ -1,0 +1,7 @@
+on menu_FixBehavior treeView
+   put the tree_Widget of treeView into treeWidget
+   put the selected_Value of treeWidget into someArray
+   put line 1 of keys (someArray) into bObject
+   put someArray [bObject] into ruggedControl
+   edit the script of ruggedControl
+end menu_FixBehavior

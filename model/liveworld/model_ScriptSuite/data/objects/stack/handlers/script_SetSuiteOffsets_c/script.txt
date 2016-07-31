@@ -1,0 +1,27 @@
+command script_SetSuiteOffsets suiteTitle, someScript, @startLineNum, @endLineNum
+    set wholematches to true
+    put 0 into startLineNum
+    put 0 into endLineNum
+    put lineoffset("-->" &&  suiteTitle, someScript) into startLineNum
+    if startLineNum is zero then
+        put lineoffset("-->" &  suiteTitle, someScript) into startLineNum
+    end if
+    if startLineNum is zero then return false
+    
+    put someScript into suiteTitleLines
+    filter suiteTitleLines with "-->*"
+    put lineoffset("-->" &&  suiteTitle, suiteTitleLines) into titleLineNum
+    put line titleLineNum + 1 of suiteTitleLines into nextTitleLine
+    if nextTitleLine is empty then
+        put the number of lines in someScript into endLineNum
+    else
+        put lineoffset(nextTitleLine, someScript, startLineNum) into afterStartlineNum
+         
+        if afterStartlineNum is zero then
+            put the number of lines in someScript into endLineNum
+        else
+            put startLineNum + afterStartlineNum - 1 into endLineNum
+        end if
+    end if
+    return true
+end script_SetSuiteOffsets

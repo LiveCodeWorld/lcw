@@ -1,0 +1,5 @@
+setprop behavior_Objects bObjects
+   put the long id of the target into targetObject
+   behavior_SetHierarchy targetObject,  bObjects
+   return the result
+end behavior_Objects

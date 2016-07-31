@@ -1,0 +1,10 @@
+on menu_LoadGlobalHarray scriptObject, projectName
+   put project_FetchHarray (projectName) into hArray
+   display_Array hArray, "Stored gHkey_Array"
+   answer warning "Are you sure you want to replace the current gHkey_Array with the one displayed?" with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   project_LoadGlobalHarray projectName
+   put the result into hArray
+   display_Array hArray, "Loaded gHkey_Array"
+end menu_LoadGlobalHarray

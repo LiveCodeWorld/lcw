@@ -1,0 +1,4 @@
+command overlayArray_SetClusterArray @overlayArray, dotClusterArray
+   put overlayArray ["data"] into dotDataArray
+   put dotClusterArray into overlayArray ["data"]["dot_ClusterArray"]
+end overlayArray_SetClusterArray

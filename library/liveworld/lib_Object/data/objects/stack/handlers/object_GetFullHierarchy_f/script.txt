@@ -1,0 +1,7 @@
+function object_GetFullHierarchy someObject
+   -- was getScriptObjectHierachy
+   put object_GetLibrariesInUse() into scriptObjectHierachy
+   put the object_StackHierarchy of someObject into longObjectNames
+   line_Insert longObjectNames, scriptObjectHierachy
+   return scriptObjectHierachy
+end object_GetFullHierarchy

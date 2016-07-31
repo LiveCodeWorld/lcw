@@ -1,0 +1,11 @@
+command sandbox_DeconstructPageArray sandboxArray, @pageTitle, @pageDescription, @shortImageFile, @lastRevisionID
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID
+   put pagesArray [pageID] into sandboxPageArray
+   
+   put sandboxPageArray ["title"] into pageTitle
+   put sandboxPageArray ["extract"] into pageDescription
+   put sandboxPageArray ["pageprops"]["page_image"] into shortImageFile
+   put sandboxPageArray ["lastrevid"] into lastRevisionID
+   return sandboxPageArray
+end sandbox_DeconstructPageArray

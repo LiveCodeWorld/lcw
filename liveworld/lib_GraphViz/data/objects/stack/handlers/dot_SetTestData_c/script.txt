@@ -1,0 +1,6 @@
+command dot_SetTestData shortFile, dotText
+   put dot_TestDataFolder () into dotFolder
+   folder_CreateNested dotFolder
+   put dotFolder & shortFile into someFile
+   put dotText into url ("file:" & someFile)
+end dot_SetTestData

@@ -1,0 +1,6 @@
+setprop view_Rect someRect
+   -- a simple default (override locally)
+   if word 1 of the target is among the items of "field,button,image,player,graphic,scrollbar" and someRect is a rect then
+      set the rect of the target to someRect
+   end if
+end view_Rect

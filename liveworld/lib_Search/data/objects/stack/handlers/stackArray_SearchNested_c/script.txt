@@ -1,0 +1,40 @@
+command stackArray_SearchNested controlID, cardID, stackObject, @propertyArray, containerKey
+   -- trying to be careful with object references for shared backgrounds
+   -- probably no different in results from "stackArray_SearchNestedBackground"
+   local objectArray  
+   
+   put the object_PropertyArray of control id controlID of card id cardID of stackObject into objectResult
+   put objectResult into propertyArray [containerKey]
+   put empty into objectArray [containerKey]
+   
+   /*
+   -- RunRev object reference bug !!!
+   try 
+      put the long id of control id controlID of stackObject into containerObject
+   catch e
+      breakPoint
+      get the long name of control id controlID of card id cardID of stackObject
+   end try
+   */
+   
+   put the long id of control id controlID of card id cardID of stackObject into containerObject
+   put the number of controls in containerObject into maxNum
+   repeat with controlNum = 1 to maxNum -- look at contents
+      put the short id of control controlNum of containerObject into subID
+      put the abbreviated id of control controlNum of containerObject into subKey
+      
+      if word 1 of subKey = "group" then
+         -- recurse
+         stackArray_SearchNested subID, cardID, stackObject, propertyArray, subKey
+         put the result into subArray -- will be a nested array
+         put subArray [subKey] into objectArray [containerKey][subKey]
+         add the number of layers in control id subID of stackObject to controlNum
+      else
+         -- add plain
+         put the object_PropertyArray of control id subID of card id cardID of stackObject into subResult
+         put subResult into propertyArray [subKey]
+         put empty into objectArray [containerKey][subKey]
+      end if
+   end repeat
+   return objectArray
+end stackArray_SearchNested

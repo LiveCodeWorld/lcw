@@ -1,0 +1,8 @@
+function rect_SubtractMargin someMargin, someRect
+   margin_Normalize someMargin, lMargin, tMargin, rMargin, bMargin   
+   add lMargin to item 1 of someRect
+   add tMargin to item 2 of someRect
+   subtract rMargin from item 3 of someRect
+   subtract bMargin from item 4 of someRect
+   return someRect
+end rect_SubtractMargin

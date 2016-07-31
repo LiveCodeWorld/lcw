@@ -1,0 +1,9 @@
+function script_DocumentationTokens pIncludeTokenType
+    if exists(stack "revGLX2 code") then
+        put value("GetTokens()", stack "revGLX2 code")
+    else if exists(stack "revGalaxy code") then -- ???
+        return galaxy_DocumentationTokensOld()
+    else
+        return rev_DocumentationTokens()
+    end if
+end script_DocumentationTokens

@@ -1,0 +1,5 @@
+command hArray_SetBehaviorArray behaviorArray
+   global gHkey_Array
+   put behaviorArray into gHkey_Array ["behaviorArray"]
+   return gHkey_Array
+end hArray_SetBehaviorArray

@@ -1,0 +1,5 @@
+function script_GetLinkArrayDotText scriptObject, pGraphStyle, pGraphSize
+   put scriptObject_DotFile (scriptObject, pGraphStyle, pGraphSize) into someFile
+   put url ("file:" & someFile) into dotText
+   return dotText
+end script_GetLinkArrayDotText

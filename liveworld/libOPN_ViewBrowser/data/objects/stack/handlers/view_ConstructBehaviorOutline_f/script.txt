@@ -1,0 +1,21 @@
+function view_ConstructBehaviorOutline someBoolean
+   put view_PathIndex() into pathIndex
+   filter pathIndex without "Compound|*"
+   
+   repeat for each line viewName in pathIndex
+      set the cursor to busy
+      put view_GetTemplateObject (viewName) into libraryObject
+      if exists(libraryObject) then
+         put the view_Behavior of libraryObject into viewBehavior
+         if exists(viewBehavior) and someBoolean then
+            put html_ConstructNameLink(viewName, libraryObject, "") & CR after htmlIndex
+         else
+            put html_ConstructNameLink(viewName, libraryObject, "green") & CR after htmlIndex
+         end if
+      else
+         put html_ConstructNameLink(viewName, "", "red") & CR after htmlIndex
+      end if
+   end repeat
+   delete char -1 of htmlIndex
+   return htmlIndex
+end view_ConstructBehaviorOutline

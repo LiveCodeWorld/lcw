@@ -1,0 +1,8 @@
+getprop tree_Field
+   put the body_View of me into bodyView
+   if the view_IsClass ["Tree|Field"] of bodyView is true then
+      return bodyView
+   else
+      return empty
+   end if
+end tree_Field

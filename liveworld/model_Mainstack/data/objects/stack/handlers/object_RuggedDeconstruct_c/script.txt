@@ -1,0 +1,19 @@
+command object_RuggedDeconstruct someObject, @mainstackName, @substackName, @controlType, @someID
+   put the long id of someObject into someObject
+   put token 1 of someObject into controlType
+   put revRuggedID (someObject) into rObject
+   put token - 1 of rObject into mainstackName
+   if token -5 of rObject  = "stack" then
+      put token - 4 of rObject into substackName
+      delete token -5 to -1 of rObject
+   else
+      put empty into substackName
+      delete token -2 to -1 of rObject
+   end if
+   
+   if rObject is empty then
+      put empty into someID
+   else
+      put token 3 of rObject into someID
+   end if
+end object_RuggedDeconstruct

@@ -1,0 +1,5 @@
+function date_EndOfMonth someDate
+  put date_FirstOfNextMonth(someDate) into firstNextMonth
+  put addDays(-1, firstNextMonth) into lastOfMonth
+  return date_Round(lastOfMonth, "d")
+end date_EndOfMonth

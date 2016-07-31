@@ -1,0 +1,5 @@
+function view_GetFavourite vName
+   put view_GetFileMetaArray() into metaDataArray
+   put metaDataArray [vName]["isFavourite"] into someBoolean
+   return someBoolean is true
+end view_GetFavourite

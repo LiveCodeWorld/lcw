@@ -1,0 +1,14 @@
+function rect_FitToFill originalW, originalH, targetRect
+    rect_ExtractDimensions targetRect, newW, newH
+     
+    put newW / originalW into xScaleFactor
+    put newH / originalH into yScaleFactor
+    
+    put max(xScaleFactor, yScaleFactor) into sFactor
+    put round(originalW * sFactor) into newW
+    put round(originalH * sFactor) into newH
+    put rect_GetCentre(targetRect) into targetLoc
+    put rect_LocWidthHeight(targetLoc, newW, newH) into newRect
+     
+    return newRect
+end rect_FitToFill

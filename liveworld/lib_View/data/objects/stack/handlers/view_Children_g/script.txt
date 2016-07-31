@@ -1,0 +1,12 @@
+getprop view_Children
+   put the view_Object of the target into someView
+   if exists(someView) is false then return empty
+   
+   put the view_ChildReferences of someView into childReferences
+   put empty into viewChildren
+   repeat for each line childReference in childReferences
+      put the childReference of someView & CR after viewChildren
+   end repeat
+   delete char -1 of viewChildren
+   return viewChildren
+end view_Children

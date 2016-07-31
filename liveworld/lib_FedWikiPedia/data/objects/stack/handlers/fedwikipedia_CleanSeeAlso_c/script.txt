@@ -1,0 +1,21 @@
+command fedwikipedia_CleanSeeAlso @wikiSectionLine
+   -- some start text {{See also|1920s Berlin}} end text 
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "[^\}]+" into untilCurlyBracket
+   put "\{\{See also\|(" & untilCurlyBracket & ")\}\}" into someReg
+   put "(?m)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiSectionLine, someReg, wikiAlsoStart, wikiAlsoEnd) is true then
+         put char wikiAlsoStart to wikiAlsoEnd of wikiSectionLine into wikiAlsoLink
+         if wikiAlsoStart = 12 then
+            put "See also [[" & wikiAlsoLink & "]]" into cleanAlso
+         else
+            put "(see also [[" & wikiAlsoLink & "]])" into cleanAlso
+         end if
+         put cleanAlso into char (wikiAlsoStart - 11) to (wikiAlsoEnd + 2) of wikiSectionLine
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanSeeAlso

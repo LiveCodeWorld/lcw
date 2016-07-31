@@ -1,0 +1,14 @@
+function dot_Tred dotFile
+   /*
+   Computes the transitive reduction of directed graphs, and prints the resulting graphs to standard output. 
+   This removes edges implied by transitivity. Nodes and subgraphs are not otherwise affected. 
+   The “meaning” and validity of the reduced graphs is application dependent. 
+   tred is particularly useful as a preprocessor to dot to reduce clutter in dense layouts. 
+   */
+    shell_BashParamEscape dotFile
+    put merge("tred [[dotFile]]") into someShell
+    
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & someShell into someShell
+    return shell(someShell)
+end dot_Tred

@@ -1,0 +1,9 @@
+command behaviorModel_SetData behaviorArray, pSetName
+   -- old move to hArray
+   breakpoint
+   
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put library_GetModelArray() into modelArray
+   put behaviorArray into modelArray [pSetName]["behavior"]
+   library_SetModelArray modelArray
+end behaviorModel_SetData

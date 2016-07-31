@@ -1,0 +1,34 @@
+function shell_GetBashPathExtraItems
+   -- PATH should be set to correspond to users .bash stuff
+   -- put "/opt/local/bin:/opt/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin" into $PATH
+   
+   -- put "/opt/local/bin:/opt/local/sbin:" into newItems
+   
+   put shell_GetBashProfile() into bashProfile
+   filter bashProfile with "export PATH=*"
+   
+   put empty into newItems
+   put quote & "'" into kwotes
+   repeat for each line exportLine in bashProfile
+      set the itemdelimiter to "="
+      put item 2 to -1 of exportLine into pathItems
+      if char 1 of pathItems is among the chars of kwotes then delete char 1 of pathItems
+      if char -1 of pathItems is among the chars of kwotes then delete char -1 of pathItems
+      
+      replace ":$PATH" with empty in pathItems
+      put pathItems & ":" after newItems
+   end repeat
+   delete last char of newItems
+   
+   set the itemdelimiter to ":"
+   repeat for each item testPath in newItems
+      if testPath is not among the items of extraItems then
+         put testPath & ":" after extraItems
+      end if
+      -- put 0 into testArray [testpath]
+   end repeat
+   delete last char of extraItems
+   return extraItems
+   
+   return keys (testArray)
+end shell_GetBashPathExtraItems

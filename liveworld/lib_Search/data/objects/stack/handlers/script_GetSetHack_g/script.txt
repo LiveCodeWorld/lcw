@@ -1,0 +1,10 @@
+getprop script_GetSetHack
+   -- used above
+   try
+      set the script_IsIndexed of the target to true
+      put the result into mTitleTableArray
+   catch e
+      answer "?"
+   end try
+   return mTitleTableArray
+end script_GetSetHack

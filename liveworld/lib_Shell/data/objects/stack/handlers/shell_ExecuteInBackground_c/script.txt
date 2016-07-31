@@ -1,0 +1,9 @@
+command shell_ExecuteInBackground someShell
+   put the tempname & ".sh" into shellFile
+   put someShell into url ("file:" & shellFile)
+   
+   shell_makeExecutable shellFile
+   launch shellFile
+   put the result into shellResult
+   return shellResult
+end shell_ExecuteInBackground

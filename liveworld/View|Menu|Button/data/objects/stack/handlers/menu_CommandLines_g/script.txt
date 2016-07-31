@@ -1,0 +1,7 @@
+getprop menu_CommandLines [mTitle]
+   -- could remove "on" and lines that are "_" ???
+   put the script_Suite [mTitle] of the target into comLines	# "someScript" allows searching for handlers outside of suite (slower)
+   -- let's not allow "command" for "menus" for speed reasons (they are message handlers after all)
+   filter comLines with "on *"
+   return comLines
+end menu_CommandLines

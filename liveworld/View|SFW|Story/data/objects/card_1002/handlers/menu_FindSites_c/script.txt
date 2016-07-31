@@ -1,0 +1,6 @@
+on menu_FindSites dgView
+   put "tigrutigru" into nameStem
+   put "https://www.google.se/?gfe_rd=cr&ei=ihuFVb6rFaar8wfVj4GoBA" into someURL
+   put merge("&gws_rd=ssl#q=%22Welcome+visitors%22+%22site+owned+by+[[nameStem]]%22") after someURL
+   set the browser_URL of dgView to someURL
+end menu_FindSites

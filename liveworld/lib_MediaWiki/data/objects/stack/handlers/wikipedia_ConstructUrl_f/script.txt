@@ -1,0 +1,11 @@
+function wikipedia_ConstructUrl pageTitle, pSectionTitle
+   replace "-" with space in pageTitle
+   put text_InitialCaps (pageTitle) into pageSlug
+   replace space with "_" in pageSlug
+   put "https://en.wikipedia.org/wiki/" & pageSlug into wikipediaUrl
+   if pSectionTitle is not empty then
+      replace space with "_" in pSectionTitle
+      put "#" & pSectionTitle after wikipediaUrl
+   end if
+   return wikipediaUrl
+end wikipedia_ConstructUrl

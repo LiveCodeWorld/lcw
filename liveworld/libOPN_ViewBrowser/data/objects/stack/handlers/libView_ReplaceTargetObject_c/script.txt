@@ -1,0 +1,19 @@
+on libView_ReplaceTargetObject viewPath, targetObject
+   put view_GetTemplateObject (viewPath) into libraryView
+   if libraryView is targetObject then
+      answer warning "We don't really like the idea of replacing an object with itself!"
+      exit to top
+   end if
+   
+   -- now delete original targetObject (before reindexing)
+   if the cantdelete of targetObject is true then
+      answer "The can't delete of the target object is true. Are you sure you want to cut it?" with "Cancel" or "Yes"
+      if it is "Yes" then
+         set the cantdelete of targetObject to false
+      else
+         exit to top
+      end if
+   end if
+   
+   set the libView_Replacement of targetObject to libraryView
+end libView_ReplaceTargetObject

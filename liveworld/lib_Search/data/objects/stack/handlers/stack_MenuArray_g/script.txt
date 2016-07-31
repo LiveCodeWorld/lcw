@@ -1,0 +1,7 @@
+getprop stack_MenuArray
+   --- put the someProperty of pControllerObject into objectArray [targetObject]
+   put the stack_Object of the target into stackObject
+   put empty into controllerObject
+   put search_StackForResults (stackObject, "menu_Title", controllerObject) into mTitleToControllerArray
+   return mTitleToControllerArray
+end stack_MenuArray

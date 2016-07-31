@@ -1,0 +1,7 @@
+setprop grid_OuterMargin someMargins
+   lock screen
+   put the rect of me into oRect
+   set the margins of me to someMargins
+   LayoutControl oRect
+   unlock screen
+end grid_OuterMargin

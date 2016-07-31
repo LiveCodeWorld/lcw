@@ -1,0 +1,25 @@
+private command outline_ToXMLRecurse tabbedOutline, propertyArray, treeNode, treeID
+   put propertyArray [treeNode] into nodeContents
+   
+   put "tree" into rootNode
+   if treeNode is empty then
+      -- can do a header here?
+      xml_CreateTree rootNode, treeID
+   else
+      put rootNode & "/" & treeNode into someNode
+      
+      set the itemdelimiter to "/"
+      put item -1 of someNode into nodeName
+      put item 1 to -2 of someNode into parentPath
+      
+      put propertyArray [someNode] into nodeContents
+      revAddXMLNode treeID, parentPath, nodeName, nodeContents
+      put the result into createdNode
+   end if
+   
+   put outline_PathChildren(treeNode, tabbedOutline) into childNodes
+   repeat for each line childNode in childNodes
+      outline_ToXMLRecurse tabbedOutline, propertyArray, childNode, treeID
+   end repeat
+   return treeID
+end outline_ToXMLRecurse

@@ -1,0 +1,13 @@
+command display_Views displayPaths, pIsExpanded, pFilterExperimental
+   put the viewBrowser_DataGrid of me into dgView
+   set the viewBrowser_Title of dgView to "Test"
+   
+   if displayPaths is empty then put the display_Path of dgView into displayPaths
+   if pFilterExperimental is empty then put the view_Filter of dgView into pFilterExperimental
+   
+   lock screen     
+   put viewBrowser_ConstructDataArray (displayPaths, pIsExpanded, pFilterExperimental) into dgArray
+   viewBrowser_ResetTitle
+   viewbrowser_SetDataArray dgArray
+   unlock screen
+end display_Views

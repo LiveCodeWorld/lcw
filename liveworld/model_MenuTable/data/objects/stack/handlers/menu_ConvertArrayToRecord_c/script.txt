@@ -1,0 +1,10 @@
+command menu_ConvertArrayToRecord @mRecordArray
+   if mRecordArray is not an array then return false
+   set the itemdelimiter to tab
+   put mRecordArray ["mTitle"] into item 1 of mRecord
+   put mRecordArray ["mController"] into item 2 of mRecord
+   put mRecordArray ["mBeforeLineNum"] into item 3 of mRecord
+   put mRecordArray ["mPassMouseDown"] into item 4 of mRecord
+   put mRecord into mRecordArray
+   return true
+end menu_ConvertArrayToRecord

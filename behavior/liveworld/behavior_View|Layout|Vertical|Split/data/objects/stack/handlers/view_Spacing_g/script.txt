@@ -1,0 +1,9 @@
+getprop view_Spacing
+   put LocalArray ["viewSpacing"] into someNum
+   if someNum is not a number then -- let's set a default
+      -- usually fine to use margins of internal groups
+      put 0 into someNum
+      put someNum into LocalArray ["viewSpacing"]
+   end if
+   return someNum
+end view_Spacing

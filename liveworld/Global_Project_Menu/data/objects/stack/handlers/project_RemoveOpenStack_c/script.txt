@@ -1,0 +1,9 @@
+command project_RemoveOpenStack stackNames
+   put project_FetchValue ("openStacks") into projectStackNames
+   set the wholematches to true
+   repeat for each line stackName in stackNames
+      put lineoffset (stackName, projectStackNames) into lineNum
+      delete line lineNum of projectStackNames
+   end repeat
+   project_SaveValue "openStacks", projectStackNames
+end project_RemoveOpenStack

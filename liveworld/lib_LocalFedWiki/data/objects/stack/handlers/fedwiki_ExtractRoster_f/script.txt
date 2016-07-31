@@ -1,0 +1,12 @@
+function fedwiki_ExtractRoster pageJSON
+   put json_ToArray (pageJSON) into pageArray
+   put pageArray ["story"] into storyArray
+   repeat for each key indexNum in storyArray
+      put storyArray [indexNum] into itemArray
+      if itemArray ["type"] = "roster" then
+         put itemArray ["text"] into someRoster
+         return someRoster
+      end if
+   end repeat
+   return empty
+end fedwiki_ExtractRoster

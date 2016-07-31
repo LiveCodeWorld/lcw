@@ -1,0 +1,19 @@
+function xml_TreeCreateAttributeTag someNode, treeID
+    put xml_TreeNodeAttributeArray(someNode, treeID) into attribute_Array
+    put keys(attribute_Array) into attributeKeys
+     
+    if attributeKeys is empty then
+        put empty into someTag
+    else
+        set the itemdelimiter to "/"
+        put last item of someNode into someTitle
+        put "<" & someTitle into someTag
+        repeat for each line someKey in attributeKeys
+            put attribute_Array[someKey] into someValue
+            put space & someKey & "=" & kwote(someValue) after someTag
+        end repeat
+        if nodeContents is empty then put "/" after someTag
+        put ">" after someTag
+    end if
+    return someTag
+end xml_TreeCreateAttributeTag

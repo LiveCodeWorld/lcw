@@ -1,0 +1,4 @@
+getprop rescue_Files [folderGroupName]
+   put rescue_GetFiles (folderGroupName) into shortFiles
+   return shortFiles
+end rescue_Files

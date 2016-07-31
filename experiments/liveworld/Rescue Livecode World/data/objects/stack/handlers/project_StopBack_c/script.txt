@@ -1,0 +1,8 @@
+command project_StopBack pProjectName
+   put project_FetchObjects ("back", pProjectName) into backObjects
+   repeat for each line someObject in backObjects
+      if exists(someObject) then
+         remove the script of someObject from back
+      end if
+   end repeat
+end project_StopBack

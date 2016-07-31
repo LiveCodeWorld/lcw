@@ -1,0 +1,12 @@
+function card_ListViews cardObject, pViewName
+   local foundObjects
+   view_NormalizeName viewName
+   repeat with cNum = 1 to the number of controls in cardObject
+      put the long id of control cNum of cardObject into testObject
+      put the view_Name of testObject into testViewName
+      if pViewName is empty or testViewName is pViewName then
+         put testObject & CR after foundObjects
+      end if
+   end repeat
+   return foundObjects
+end card_ListViews

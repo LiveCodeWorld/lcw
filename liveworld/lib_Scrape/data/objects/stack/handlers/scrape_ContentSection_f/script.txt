@@ -1,0 +1,6 @@
+function scrape_ContentSection someHtml
+   -- this removes all html tags from the section
+   put "//*[@id='content']" into someXPath
+   put scrape_WithXPath (someHtml, someXPath, true) into contentSection
+   return contentSection
+end scrape_ContentSection

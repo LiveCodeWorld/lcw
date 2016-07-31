@@ -1,0 +1,9 @@
+function dg_FindLine hKey
+   put the dataGrid_View of me into dgView
+   if the display_ProjectHandlers of me is false then
+      put item 1 to 2 of hKey into hKey
+   end if
+   dispatch "FindLine" to dgView with "hKey", hKey
+   put the result into newIndex
+   return newIndex
+end dg_FindLine

@@ -1,0 +1,7 @@
+command script_CreateGraph hkeyArray, scriptObject, pProjectName, pGraphStyle
+   put the textStackOverlay_Folder [false] of scriptObject into overlayFolder
+   overlay_CreateGraph overlayFolder, hkeyArray, pProjectName, scriptObject, pGraphStyle, true, empty, "svg"
+   put the result into overlayArray
+   put overlayArray_GetImageFile (overlayArray, overlayFolder) into imageFile
+   return imageFile
+end script_CreateGraph

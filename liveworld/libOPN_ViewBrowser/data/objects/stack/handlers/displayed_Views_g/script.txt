@@ -1,0 +1,15 @@
+getprop displayed_Views
+   put the viewBrowser_DataGrid of me into dgView
+   put the dgData of dgView into dgArray
+   repeat for each key indexNum in dgArray
+      put dgArray [indexNum]["title"] into viewName
+      try
+         put view_GetTemplateObject (viewName) into templateObject
+      catch e
+         breakPoint
+      end try
+      put templateObject & CR after templateObjects
+   end repeat
+   delete char -1 of templateObjects
+   return templateObjects
+end displayed_Views

@@ -1,0 +1,10 @@
+on scrollbarDrag newMargin
+   put the plusMinus_View of me into plusMinusView
+   if exists (plusMinusView) is false then return empty
+   
+   lock screen
+   put the template_CardRect of plusMinusView into oRect
+   set the margins of plusMinusView to newMargin
+   set the rect of plusMinusView to oRect
+   unlock screen
+end scrollbarDrag

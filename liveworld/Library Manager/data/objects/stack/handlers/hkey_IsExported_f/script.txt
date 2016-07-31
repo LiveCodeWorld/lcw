@@ -1,0 +1,6 @@
+function hkey_IsExported hKey, pFileExistsOnly
+   local objectHandler, libraryHandler
+   hkey_CheckLibraryAndObject hKey, objectHandler, libraryHandler
+   put the result into isExported
+   return isExported
+end hkey_IsExported

@@ -1,0 +1,11 @@
+function menu_DeleteDividerSection dividerTitle, someMenu
+    put menu_GetDividerArray(someMenu) into dividerArray
+    put dividerArray[dividerTitle] into dividerInfo
+    if dividerInfo is empty then
+        return someMenu
+    else
+        _menu_DeconstructDividerInfo dividerInfo, startLineNum, endLineNum, dividerMenuText
+        delete line startLineNum to endLineNum of someMenu
+        return someMenu
+    end if
+end menu_DeleteDividerSection

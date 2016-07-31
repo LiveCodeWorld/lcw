@@ -1,0 +1,17 @@
+command rev_ExportDocumentationTokensFromDictionary
+   put rev_DocumentationTable() into documentationTable
+   opn_SetTable "rev_DocumentationTable", documentationTable
+   
+   set the columndelimiter to tab
+   split documentationTable by column
+   put documentationTable [2] into scriptTokens
+   sort scriptTokens
+   opn_SetIndex "rev_DocumentationTokens", scriptTokens
+   return scriptTokens
+   
+   -- alternatively
+   put rev_DictionaryDataTableField() into fieldObject
+   put the text of fieldObject into dictionaryTable
+   split dictionaryTable by column
+   return dictionaryTable [1]
+end rev_ExportDocumentationTokensFromDictionary

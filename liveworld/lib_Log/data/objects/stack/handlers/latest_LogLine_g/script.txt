@@ -1,0 +1,5 @@
+getprop latest_LogLine
+   put the log_Name of me into pLogName
+   put log_GetLatestLine (pLogName) into latestLogLine
+   return latestLogLine
+end latest_LogLine

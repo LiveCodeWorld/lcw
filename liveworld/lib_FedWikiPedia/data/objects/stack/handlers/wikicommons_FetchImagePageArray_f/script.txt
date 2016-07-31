@@ -1,0 +1,5 @@
+function wikicommons_FetchImagePageArray shortImageFile, pApiStem 
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put wikicommons_ConstructPageArray (sandboxArray) into pageArray
+   return pageArray
+end wikicommons_FetchImagePageArray

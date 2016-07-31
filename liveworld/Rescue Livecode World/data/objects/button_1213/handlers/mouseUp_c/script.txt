@@ -1,0 +1,8 @@
+on mouseUp
+   put the hilite of me into someBoolean
+   put the index_Views of group "Stacks and Libraries" into indexViews
+   repeat for each line indexView in indexViews
+      put the field_Object of indexView into fieldObject
+      set the multiple_Hilites of indexView to someBoolean
+   end repeat
+end mouseUp

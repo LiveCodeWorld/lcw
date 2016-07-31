@@ -1,0 +1,5 @@
+function graph_ConstructDefSection nodeIdArray
+   put graph_ConstructGroupStyleArray (nodeIdArray) into dotGroupStyleArray
+   put dot_ConstructDefSection (dotGroupStyleArray, nodeIdArray) into defSection
+   return defSection
+end graph_ConstructDefSection

@@ -1,0 +1,8 @@
+on menu_CurrentPreference scriptObject, prefName
+   put pref_GetValue (prefName) into prefValue
+   if prefValue is an array then
+      display_Array prefValue, prefName
+   else
+      put prefValue
+   end if
+end menu_CurrentPreference

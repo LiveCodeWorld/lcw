@@ -1,0 +1,11 @@
+getprop top_Factor [pRecalulate]
+   lock messages
+   put the top_Factor of me into fluidFactor
+   unlock messages
+   
+   if fluidFactor is empty or pRecalulate is true then
+      put _calculateTopFactor() into fluidFactor
+      set the top_Factor of me to fluidFactor
+   end if
+   return fluidFactor
+end top_Factor

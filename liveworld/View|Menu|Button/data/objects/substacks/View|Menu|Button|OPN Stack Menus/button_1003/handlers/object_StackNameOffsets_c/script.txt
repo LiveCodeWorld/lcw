@@ -1,0 +1,27 @@
+command object_StackNameOffsets someObject, @mainStackStart, @mainStackEnd, @substackStart, @substackEnd
+   -- now modified to look for substacks
+   
+   put the number of chars of someObject into lastQuoteCharNum
+   put lastQuoteCharNum - 1 into mainStackEnd
+   put text_OffsetBefore(quote, someObject, lastQuoteCharNum) + 1 into mainStackStart
+   
+   put someObject into testSubStack
+   delete char (mainStackStart - 7) to -1 of testSubStack
+   
+   -- put offset(space & "stack" && quote, testSubStack) into substackStart
+   put offset("stack" && quote, testSubStack) into substackStart
+   -- put wordoffset("stack" && quote, testSubStack) into substackStart
+   
+   if substackStart = 0 then
+      put 0 into substackEnd
+      return char (mainStackStart - 7) to -1 of someObject
+   else
+      put 8 - 1 into tweek
+      put substackStart + tweek into tSkip
+      put offset(quote, testSubStack, tSkip) into substackEnd
+      
+      put substackStart + tweek into substackStart
+      put substackEnd + tSkip - 1 into substackEnd
+      return char (substackStart - 7) to -1 of someObject
+   end if
+end object_StackNameOffsets

@@ -1,0 +1,5 @@
+getprop header_MinimumHeight
+   put the back_Property ["header_MinimumHeight"] of me into someHeight
+   if someHeight is empty then return 30
+   return someHeight
+end header_MinimumHeight

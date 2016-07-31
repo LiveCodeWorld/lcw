@@ -1,0 +1,5 @@
+setprop meta_Text objectText
+   put the object_Folder of the target into objectFolder
+   object_ExportMetaText objectFolder, objectText
+   return the result
+end meta_Text

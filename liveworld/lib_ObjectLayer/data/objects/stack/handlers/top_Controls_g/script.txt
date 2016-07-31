@@ -1,0 +1,4 @@
+getprop top_Controls
+   put the long ID of the target into targetObject
+   return object_GetGroupControls (targetObject, false)
+end top_Controls

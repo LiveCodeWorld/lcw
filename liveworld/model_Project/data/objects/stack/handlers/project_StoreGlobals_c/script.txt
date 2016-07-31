@@ -1,0 +1,15 @@
+command project_StoreGlobals pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into projectName
+   
+   project_SaveGlobalHarray pProjectName
+   put the result into hArrayFile
+   
+   project_SaveGlobalPrefs pProjectName
+   
+   -- not sure we use this any more
+   project_SaveGlobalArray pProjectName
+   
+   -- don't do yet
+   -- wait till this is properly tested
+   -- project_ClearGlobals
+end project_StoreGlobals

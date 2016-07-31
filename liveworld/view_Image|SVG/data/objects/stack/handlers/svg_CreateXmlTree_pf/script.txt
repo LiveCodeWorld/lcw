@@ -1,0 +1,9 @@
+private function svg_CreateXmlTree pSvgXML
+   if pSvgXML is empty then
+      put the svg_XML of me into pSvgXML -- in case we have other HTML displayed
+   end if
+   put true into pGoodXML
+   put revCreateXMLTree (pSvgXML, pGoodXML, true, false) into svgXmlTreeID
+   put svgXmlTreeID into LocalArray ["svgXmlTreeID"]
+   return svgXmlTreeID
+end svg_CreateXmlTree

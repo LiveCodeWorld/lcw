@@ -1,0 +1,4 @@
+getprop script_GraphImageFile [pOverlayName]
+   put the long id of the target into scriptObject
+   return scriptObject_ImageFile (scriptObject, pOverlayName)
+end script_GraphImageFile

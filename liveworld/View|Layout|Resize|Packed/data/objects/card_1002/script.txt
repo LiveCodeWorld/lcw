@@ -1,0 +1,111 @@
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Global | Layouts | Resize | Packed | Menu
+-
+[[ _FetchHandler (menu_DisplayImage,c) ]]
+
+[[ _FetchHandler (menu_ResizeImage,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Image,c) ]]
+
+[[ _FetchHandler (menu_EditImageMenu,c) ]]
+
+[[ _FetchHandler (image_MenuTitles,g) ]]
+
+
+[[ _FetchHandler (submenu_Sips,c) ]]
+
+[[ _FetchHandler (submenu_Exif,c) ]]
+
+[[ _FetchHandler (submenu_Effects,c) ]]
+
+[[ _FetchHandler (submenu_Magick,c) ]]
+
+[[ _FetchHandler (some_Widths,g) ]]
+
+[[ _FetchHandler (some_Width,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DeleteIcon,c) ]]
+
+[[ _FetchHandler (menu_DeleteOtherIcons,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ImportIconImage,c) ]]
+
+[[ _FetchHandler (menu_ExportIconImage,c) ]]
+
+[[ _FetchHandler (menu_RevertToFileImage,c) ]]
+
+[[ _FetchHandler (menu_ImportAllIcons,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RefreshLayout,c) ]]
+
+[[ _FetchHandler (menu_UpdatePackedView,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetCardBehavior,c) ]]
+
+[[ _FetchHandler (menu_EditCardBehavior,c) ]]
+
+[[ _FetchHandler (submenu_View,c) ]]
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Development,c) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (submenu_IconGroup,c) ]]
+
+
+--> Global | Layouts | Resize | Packed | Menu | Disabled
+-
+[[ _FetchHandler (disabled_ExportIconImage,g) ]]
+
+[[ _FetchHandler (disabled_ImportIconImage,g) ]]
+
+[[ _FetchHandler (disabled_RevertToFileImage,g) ]]
+
+[[ _FetchHandler (disabled_ImportAllIcons,g) ]]
+
+getprop disabled_ImportIconImage [mTarget]
+   if word 1 of mTarget = "image" then
+      return the text of mTarget is not empty
+   else
+      return "delete"
+   end if
+end disabled_ImportIconImage
+
+[[ _FetchHandler (disabled_EditCardBehavior,g) ]]
+
+
+--> Global | Layouts | Resize | Packed | Menu | Props
+-
+[[ _FetchHandler (set_CardBehavior,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (image_Export,c) ]]

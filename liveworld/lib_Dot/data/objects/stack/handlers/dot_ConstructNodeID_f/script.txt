@@ -1,0 +1,28 @@
+function dot_ConstructNodeID nodeID, nodeDictionary, pNodeType
+   -- some of these are very specific to hKeys and handlers
+   -- maybe should move to a specific link_Array model_Object for handlers?
+   
+   put nodeDictionary [nodeID] into someTranslation
+   switch pNodeType
+      case "nodeID"
+         return nodeID
+      case "hKey"
+         dot_EscapeQuotes someTranslation
+         return kwote(someTranslation)
+      case "shortHKey"
+         hkey_Deconstruct someTranslation, handlerName, handlerType, scriptObject, handlerNum
+         put handlerName,handlerType into shortHKey
+         return kwote(shortHKey)
+      case "handlerName"
+         hkey_Deconstruct someTranslation, handlerName, handlerType, scriptObject, handlerNum
+         return handlerName
+      case "quoted"
+         return kwote(nodeID)
+      default
+         if someTranslation is empty then
+            return kwote(nodeID)
+         else
+            return someTranslation
+         end if
+   end switch
+end dot_ConstructNodeID

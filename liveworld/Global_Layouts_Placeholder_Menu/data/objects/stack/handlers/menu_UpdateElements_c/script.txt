@@ -1,0 +1,6 @@
+on menu_UpdateElements mTarget
+   put the layout_Elements of mTarget into layoutElements
+   repeat for each line someView in layoutElements
+      view_Update someView, true
+   end repeat
+end menu_UpdateElements

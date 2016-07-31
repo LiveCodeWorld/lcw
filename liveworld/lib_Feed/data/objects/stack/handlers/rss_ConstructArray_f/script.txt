@@ -1,0 +1,56 @@
+function rss_ConstructArray someRSS, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean
+   -- return xml_ToArray (someRSS, pStoreEncodedAs, pUseValueKey)
+   -- display_Lines someRSS
+   
+   local itemArray   
+   put revCreateXMLTree(someRSS, true, true, false) into treeID
+   if treeID is an integer then
+      xml_ExtractEncoding someRSS, versionMatch, xmlEncoding
+      
+      put revXMLRootNode(treeID) into rootNode
+      switch rootNode
+         case "rss"
+            put "/rss[1]/channel[1]" into channelNode
+            
+            put xml_TreeNodeAttributeArray("rss", treeID) into rssAttributeArray
+            put rssAttributeArray into rssArray ["rss"]["Metadata"]
+            
+            put revXMLChildNames(treeID, channelNode, CR, "", true) into nodeNames
+            filter nodeNames without "item*"
+            repeat for each line nodeName in nodeNames
+               put channelNode & "/" & nodeName into someNode
+               get xml_ConvertXMLNodeToArray (treeID, someNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean)
+               put it into rssArray ["rss"]["Metadata"][nodeName]
+            end repeat
+            
+            put revXMLChildNames(treeID, channelNode, CR, "item", true) into itemNames
+            repeat with itemNum = 1 to the number of lines of itemNames
+               put line itemNum of itemNames into itemName
+               put channelNode & "/" & itemName into itemNode
+               put xml_ConvertXMLNodeToArray (treeID, itemNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into itemArray [itemNum]
+            end repeat
+            put itemArray into rssArray ["rss"]["Items"]
+            break
+         case "feed"
+            put revXMLChildNames(treeID, rootNode, CR, "", true) into nodeNames
+            filter nodeNames without "entry*"
+            repeat for each line nodeName in nodeNames
+               put rootNode & "/" & nodeName into someNode
+               get xml_ConvertXMLNodeToArray (treeID, someNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean)
+               put it into rssArray ["rss"]["Metadata"][nodeName]
+            end repeat
+            
+            put revXMLChildNames(treeID, rootNode, CR, "entry", true) into entryNames
+            repeat with entryNum = 1 to the number of lines of entryNames
+               put line entryNum of entryNames into entryName
+               put rootNode & "/" & entryName into itemNode
+               put xml_ConvertXMLNodeToArray (treeID, itemNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into itemArray [entryNum]
+            end repeat
+            put itemArray into rssArray ["rss"]["Items"]
+            break
+      end switch
+      
+      revDeleteXMLTree treeID
+   end if
+   return rssArray
+end rss_ConstructArray

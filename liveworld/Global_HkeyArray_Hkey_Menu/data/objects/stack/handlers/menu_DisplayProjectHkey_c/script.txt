@@ -1,0 +1,4 @@
+on menu_DisplayProjectHkey treeView
+   put the displayed_Hkey of treeView into hKey
+   display_Hkey hKey, "project"
+end menu_DisplayProjectHkey

@@ -1,0 +1,103 @@
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Shape | Hexagon | Menu
+-
+[[ _FetchHandler (menu_AnimateStudent,c) ]]
+
+[[ _FetchHandler (aeChangeRectDone,c) ]]
+
+[[ _FetchHandler (menu_AddClass,c) ]]
+
+[[ _FetchHandler (c_Num,g) ]]
+
+[[ _FetchHandler (c_Nums,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_IncreaseNodeFactor,c) ]]
+
+[[ _FetchHandler (menu_DecreaseNodeFactor,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddRing,c) ]]
+
+[[ _FetchHandler (menu_RemoveRing,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_GrowSkin,c) ]]
+
+[[ _FetchHandler (menu_DeleteSkin,c) ]]
+
+[[ _FetchHandler (menu_ColourSkin,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ColourHexagons,c) ]]
+
+[[ _FetchHandler (menu_AddHexagon,c) ]]
+
+[[ _FetchHandler (menu_DeleteMe,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Shape | Hexagon | Menu | Props
+-
+-- command hexagon_IterateSkin sHexagon
+   -- recursive
+   if the commandKey is "Down" then exit to top
+   
+   set the hexagon_NeighbourNums of sHexagon to "all"
+   put the result into allNeighbours
+   repeat for each line someHexagon in allNeighbours
+      hexagon_IterateSkin someHexagon
+   end repeat
+end hexagon_IterateSkin
+
+[[ _FetchHandler (some_Colours,g) ]]
+
+[[ _FetchHandler (g_Num,g) ]]
+
+[[ _FetchHandler (g_Nums,g) ]]
+
+[[ _FetchHandler (lesson_GetClassRect,f) ]]
+
+
+
+--> Global | Shape | Hexagon | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Test,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_InitHexagon,c) ]]
+
+[[ _FetchHandler (menu_HideInnerView,c) ]]
+
+[[ _FetchHandler (menu_DeleteInnerView,c) ]]
+
+[[ _FetchHandler (menu_Points,c) ]]
+
+
+--> Dev | Menu | Props
+-
+[[ _FetchHandler (hide_InnerView,g) ]]
+
+

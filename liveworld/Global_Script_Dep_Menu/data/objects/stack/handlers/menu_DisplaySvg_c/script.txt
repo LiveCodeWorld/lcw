@@ -1,0 +1,9 @@
+on menu_DisplaySvg scriptObject
+   -- should be a simpler way
+   put the project_MetaDataFolder of scriptObject into projectMetaDataFolder
+   put empty into pOverlayName
+   put overlay_GetArray (projectMetaDataFolder, pOverlayName) into overlayArray
+   put overlayArray_GetImageFile (overlayArray, projectMetaDataFolder) into svgFile
+   
+   display_SVG svgFile
+end menu_DisplaySvg

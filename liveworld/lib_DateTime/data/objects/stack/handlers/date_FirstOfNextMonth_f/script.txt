@@ -1,0 +1,12 @@
+function date_FirstOfNextMonth someDate
+  convert someDate to dateItems
+  put item 2 of someDate into oMonthNum
+  put oMonthNum + 1 into overMonthNum
+  put overMonthNum mod 12 into newMonthNum
+  put overMonthNum div 12 into addYearNum
+  
+  put newMonthNum into item 2 of someDate
+  add addYearNum to item 1 of someDate
+  put 1 into item 3 of someDate
+  return date_Round(someDate, "d")
+end date_FirstOfNextMonth

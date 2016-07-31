@@ -1,0 +1,5 @@
+function rev_GetScriptEditorDocumentation pEditorNum
+   put rev_ScriptEditorDocField (pEditorNum) into scriptEditorDocField
+   put the htmlText of scriptEditorDocField into someHtmlText
+   return someHtmlText
+end rev_GetScriptEditorDocumentation

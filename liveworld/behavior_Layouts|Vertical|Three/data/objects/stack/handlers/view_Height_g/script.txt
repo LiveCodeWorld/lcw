@@ -1,0 +1,6 @@
+getprop view_Height
+   -- dangerous to put in a library in this general way
+   -- allow views to define them
+   -- returning empty is the same as undefined.
+   return the height of the target	# a default (can over-ride locally)
+end view_Height

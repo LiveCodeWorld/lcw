@@ -1,0 +1,5 @@
+setprop view_Spacing viewSpacing
+   set the view_DisplayProperty ["view_Spacing"] of me to viewSpacing
+   dispatch "LayoutControl" to me -- changes the target
+   return the result
+end view_Spacing

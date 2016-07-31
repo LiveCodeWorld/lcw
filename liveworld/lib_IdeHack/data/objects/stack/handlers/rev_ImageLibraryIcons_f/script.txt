@@ -1,0 +1,4 @@
+function rev_ImageLibraryIcons libraryName
+    put the long id of stack libraryName into libraryObject
+    return icon_GetImageLibraryTable(libraryObject)
+end rev_ImageLibraryIcons

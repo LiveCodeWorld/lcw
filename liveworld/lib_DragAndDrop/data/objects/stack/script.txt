@@ -1,0 +1,39 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_DragAndDrop
+type: library
+version: 0.1
+
+
+/*
+The start of a library for all things drag and drop.
+
+This library is a fairly crude hack that allow global drag and dropping onto any Livecode control.
+
+See library script events of stack "libOPN_FrontScript":  "dragEnter" and "dragDrop"
+They use "drag_GetGlobalStatus" and "drag_SetGlobalStatus"
+*/
+
+
+-> Events | Drag and Drop
+-
+[[ _FetchHandler (dragEnter,c) ]]
+
+[[ _FetchHandler (dragDrop,c) ]]
+
+
+--> Drag and Drop
+-
+[[ _FetchHandler (drag_SetGlobalStatus,c) ]]
+
+[[ _FetchHandler (drag_GetGlobalStatus,f) ]]
+
+
+--> Drag
+-
+[[ _FetchHandler (drag_Dropped,s) ]]
+
+[[ _FetchHandler (dropped_TargetName,g) ]]
+
+[[ _FetchHandler (drag_GetDroppedTargetView,f) ]]

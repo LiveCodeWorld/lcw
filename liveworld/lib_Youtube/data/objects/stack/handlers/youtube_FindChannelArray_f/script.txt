@@ -1,0 +1,16 @@
+function youtube_FindChannelArray searchChannelSlug
+   put youtube_FetchSearchArray (searchChannelSlug) into searchArray
+   put searchArray ["items"] into itemArray
+   repeat for each key itemNum in itemArray
+      put itemArray [itemNum]["snippet"] into snippetArray
+      put snippetArray ["channelTitle"] into foundChannelSlug
+      put snippetArray ["title"] into someTitle
+      if foundChannelSlug is empty then
+         put someTitle into foundChannelSlug
+      end if
+      if foundChannelSlug = searchChannelSlug then
+         return snippetArray
+      end if
+   end repeat
+   return empty
+end youtube_FindChannelArray

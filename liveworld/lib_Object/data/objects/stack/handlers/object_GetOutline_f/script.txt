@@ -1,0 +1,4 @@
+function object_GetOutline someObject
+   object_SetHierarchy someObject, shortObjects, longObjects, objectOutline, namePath
+   return objectOutline
+end object_GetOutline

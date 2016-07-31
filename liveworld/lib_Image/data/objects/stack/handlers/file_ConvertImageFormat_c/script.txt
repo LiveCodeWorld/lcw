@@ -1,0 +1,10 @@
+on file_ConvertImageFormat inputFile, saveToFile, imageExportFormat
+    -- just using SIPS on OSX for now
+    switch 
+        case the platform = "MacOS" and the systemversion > 10
+            sips_ConvertImageFormat inputFile, saveToFile, imageExportFormat
+            return the result
+        default
+            return false
+    end switch
+end file_ConvertImageFormat

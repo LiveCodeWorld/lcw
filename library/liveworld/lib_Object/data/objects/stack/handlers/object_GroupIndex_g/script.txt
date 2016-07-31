@@ -1,0 +1,5 @@
+getprop object_GroupIndex [setShort]
+   -- was "object_GroupIndex"
+   put the long ID of the target into containerObject
+   return group_GetObjectIndex(containerObject, setShort, false)
+end object_GroupIndex

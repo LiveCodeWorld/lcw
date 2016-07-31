@@ -1,0 +1,17 @@
+on closeField   
+   put the short name of the target into fieldName
+   switch fieldName
+      case "Text"
+         -- in danger of doing it twice (could save hash)
+         put the displayed_Hkey of me into hKey
+         put the displayed_HelpHtmltext of me into helpText
+         put the displayed_HkeyVersion of me into versionName
+         hkey_StoreHelp hKey, helpText, versionName
+         break
+      case "Script"
+         break
+      default
+         -- opn_Notify fieldName, true
+   end switch
+   pass closeField
+end closeField

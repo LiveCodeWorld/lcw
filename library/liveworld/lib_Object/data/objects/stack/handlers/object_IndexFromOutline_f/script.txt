@@ -1,0 +1,7 @@
+function object_IndexFromOutline objectOutline
+   repeat with lineNum = 1 to the number of lines of objectOutline
+      put object_FromOutlineLineNum(lineNum, objectOutline) & CR after objectIndex
+   end repeat
+   delete char -1 of objectIndex
+   return objectIndex
+end object_IndexFromOutline

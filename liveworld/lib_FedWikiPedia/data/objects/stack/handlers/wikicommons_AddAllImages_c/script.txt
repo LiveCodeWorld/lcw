@@ -1,0 +1,16 @@
+command wikicommons_AddAllImages @fedwikiPageArray, mwPageTitle, pLimitNum
+   put mediawiki_ListPageImages (mwPageTitle) into pageImages
+   if pLimitNum is a number then put line 1 to pLimitNum of pageImages into pageImages
+   repeat with lineNum =1 to the number of lines of pageImages
+      put line lineNum of pageImages into shortImageFile -- what if it is not an image???
+      if shortImageFile is empty then next repeat
+      if shortImageFile is among the items of "Commons-logo.svg,Wikisource-logo.svg" then next repeat
+      if shortImageFile begins with "Coat of arms of " then next repeat
+      if shortImageFile begins with "Flag of " then next repeat
+      
+      put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+      put sandboxArray ["query"]["pages"] into pagesArray
+      put pagesArray ["-1"] into pageArray
+      wikicommons_AddImageToPageArray fedwikiPageArray, pageArray
+   end repeat
+end wikicommons_AddAllImages

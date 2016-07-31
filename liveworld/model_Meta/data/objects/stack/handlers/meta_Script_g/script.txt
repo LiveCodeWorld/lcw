@@ -1,0 +1,5 @@
+getprop meta_Script
+   put the object_Folder of the target into objectFolder
+   put object_FetchScript (objectFolder) into someScript
+   return someScript
+end meta_Script

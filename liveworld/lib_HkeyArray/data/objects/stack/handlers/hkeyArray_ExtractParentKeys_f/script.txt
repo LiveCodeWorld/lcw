@@ -1,0 +1,9 @@
+function hkeyArray_ExtractParentKeys hKey, hKeyArray
+   repeat for each key parentKey in hKeyArray
+      if hkey is among the lines of hKeyArray [parentKey] then
+         put parentKey & CR after parentKeys
+      end if
+   end repeat
+   delete char -1 of parentKeys
+   return parentKeys
+end hkeyArray_ExtractParentKeys

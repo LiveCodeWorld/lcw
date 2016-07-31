@@ -1,0 +1,21 @@
+setprop trait_Hilite plusMinusZero
+   lock screen
+   switch plusMinusZero
+      case "positive"
+         set the trait_Hilite of the positive_View of me to true
+         set the trait_Hilite of the negative_View of me to false
+         break
+      case "negative"
+         set the trait_Hilite of the positive_View of me to false
+         set the trait_Hilite of the negative_View of me to true
+         break
+      case "both"
+         set the trait_Hilite of the positive_View of me to true
+         set the trait_Hilite of the negative_View of me to true
+         break
+      default
+         set the trait_Hilite of the positive_View of me to false
+         set the trait_Hilite of the negative_View of me to false
+   end switch
+   unlock screen
+end trait_Hilite

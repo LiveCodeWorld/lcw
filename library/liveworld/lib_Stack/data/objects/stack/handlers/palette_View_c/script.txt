@@ -1,0 +1,5 @@
+command palette_View viewName, pCardMargin, pStackRect, pHidden
+   view_CloneStack viewName, pCardMargin, pStackRect, pStackStyle, pHidden
+   put the result into createdView
+   return createdView
+end palette_View

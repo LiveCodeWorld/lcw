@@ -1,0 +1,29 @@
+on LayoutControl pRect
+   if the long id of the target is not the long id of me then return empty -- this is important for nested datagrids at the moment.
+   if pRect is empty then put the rect of me into pRect
+   
+   if pRect is empty then put the rect of me into pRect
+   put the title_View of me into titleView
+   put the body_View of me into bodyView
+   
+   put the inner_Rect [pRect] of me into innerRect
+   put the view_Spacing of me into viewSpacing
+   put the body_Indent of me into bodyIndent
+   
+   put the title_Height of titleView into titleHeight
+   if titleHeight is empty then put the formatted_Height of titleView into titleHeight
+   if titleHeight is empty then put the height of titleView into titleHeight
+   
+   put innerRect into titleRect
+   put item 2 of innerRect + titleHeight into headerBottom
+   put headerBottom into item 4 of titleRect
+   
+   put innerRect into bodyRect
+   put headerBottom + viewSpacing into item 2 of bodyRect
+   add bodyIndent to item 1 of bodyRect
+   
+   lock screen
+   set the rect of titleView to titleRect
+   set the rect of bodyView to bodyRect
+   unlock screen
+end LayoutControl

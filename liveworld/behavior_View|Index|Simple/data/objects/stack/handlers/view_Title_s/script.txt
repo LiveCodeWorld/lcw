@@ -1,0 +1,6 @@
+setprop view_Title [someColour] someTitle
+   breakpoint
+   -- rename to this as we sound like the view object not the text
+   -- also this is what we used more generally
+   set the title_Text [someColour] of me to someTitle
+end view_Title

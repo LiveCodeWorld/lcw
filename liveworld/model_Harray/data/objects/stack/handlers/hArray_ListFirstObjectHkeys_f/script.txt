@@ -1,0 +1,9 @@
+function hArray_ListFirstObjectHkeys rObject
+   put the hArray_FirstKeyArray of the target into someArray
+   put keys(someArray) into shortHkeys
+   repeat for each line shortHkey in shortHkeys
+      put shortHkey,rObject,1 & CR after hKeys
+   end repeat
+   delete char -1 of hKeys
+   return hKeys
+end hArray_ListFirstObjectHkeys

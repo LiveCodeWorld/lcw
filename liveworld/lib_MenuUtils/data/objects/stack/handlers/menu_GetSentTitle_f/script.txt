@@ -1,0 +1,7 @@
+function menu_GetSentTitle
+   put menu_GetSentPath() into mSentPath
+   menu_DeconstructPath mSentPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType
+   set the itemdelimiter to "/"
+   put item -1 of mTitlePath into sentMenuTitle
+   return sentMenuTitle
+end menu_GetSentTitle

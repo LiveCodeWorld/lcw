@@ -1,0 +1,7 @@
+function mediawiki_ConstructSandboxURL sandBoxFragment, pApiStem
+   if pApiStem is empty then put "http://en.wikipedia.org/w/api.php" into pApiStem
+   set the itemdelimiter to "?"
+   delete item 1 of sandBoxFragment
+   put pApiStem & "?" & sandBoxFragment into restURL
+   return restURL
+end mediawiki_ConstructSandboxURL

@@ -1,0 +1,6 @@
+on menu_CreateNewLibrarySet
+   put opn_Ask ("Give the new library set a name...", "new name") into newSetName
+   put library_ConstructMenuSetArray() into setArray
+   library_StoreSetArray setArray, newSetName
+   display_LibraryStatus
+end menu_CreateNewLibrarySet

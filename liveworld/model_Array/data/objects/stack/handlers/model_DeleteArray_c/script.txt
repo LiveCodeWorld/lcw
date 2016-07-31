@@ -1,0 +1,9 @@
+on model_DeleteArray modelName, modelObject, modelType
+   -- delete the array stored of the control
+   put the custompropertysets of modelObject into setNames
+   line_Delete modelName, setNames
+   set the custompropertysets of modelObject to setNames
+   
+   put the model_RefreshDisplays [modelName] of modelObject into updatedViews
+   return updatedViews
+end model_DeleteArray

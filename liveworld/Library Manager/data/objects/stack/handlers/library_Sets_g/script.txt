@@ -1,0 +1,6 @@
+getprop library_Sets [pLibType]
+   put the long id of the target into someObject
+   if pLibType is empty then put "used" into pLibType
+   put revRuggedId (someObject) into ruggedObject
+   return library_FetchSetsContaining (ruggedObject, pLibType)
+end library_Sets

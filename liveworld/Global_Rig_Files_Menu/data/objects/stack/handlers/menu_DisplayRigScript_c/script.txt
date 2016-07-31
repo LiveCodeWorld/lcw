@@ -1,0 +1,5 @@
+on menu_DisplayRigScript stackObject
+   put the short name of stackObject into shortController
+   put rig_ConstructControllerScript (stackObject, shortController) into rigScript
+   put rigScript
+end menu_DisplayRigScript

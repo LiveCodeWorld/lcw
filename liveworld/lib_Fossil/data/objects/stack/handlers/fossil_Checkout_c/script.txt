@@ -1,0 +1,25 @@
+command fossil_Checkout fossilCheckoutFolder, pVersion
+   /*
+   Usage: fossil checkout ?VERSION | --latest? ?OPTIONS?
+   or: fossil co ?VERSION | --latest? ?OPTIONS?
+   
+   Check out a version specified on the command-line.  This command
+   will abort if there are edited files in the current checkout unless
+   the --force option appears on the command-line.  The --keep option
+   leaves files on disk unchanged, except the manifest and manifest.uuid
+   files.
+   
+   The --latest flag can be used in place of VERSION to checkout the
+   latest version in the repository.
+   
+   Options:
+   --force   Ignore edited files in the current checkout
+   --keep    Only update the manifest and manifest.uuid files
+   */
+   
+   put "fossil checkout" into someShell
+   if pVersion is not empty then put space & kwote (pVersion) after someShell
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Checkout

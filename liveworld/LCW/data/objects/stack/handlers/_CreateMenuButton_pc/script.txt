@@ -1,0 +1,20 @@
+private command _CreateMenuButton
+   -- this should be part of the new script-only  menu library 
+   -- in case we call this handler more that once, do not create multiple buttons
+   if the menu_Button of me is empty then
+      -- this should be a "menu" button
+      create button "Global Menu Button"
+      put it into createdObject
+      set the style of createdObject to "menu"
+      set the menumode of createdObject to "popup"
+      set the backgroundcolor of createdObject to "green" -- for no reason
+      
+      put "on menuPick menuPath" into someScript
+      put CR & "   menu_SendMessage menuPath" after someScript
+      put CR & "end menuPick" after someScript
+      set the script of createdObject to someScript
+      
+      -- set the visible of me to true
+      choose browse tool
+   end if
+end _CreateMenuButton

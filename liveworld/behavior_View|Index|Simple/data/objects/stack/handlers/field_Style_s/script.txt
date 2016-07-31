@@ -1,0 +1,24 @@
+setprop field_Style someStyle
+   put _fieldView() into fieldView
+   lock screen
+   switch someStyle
+      case "text"
+         set the listbehavior of fieldView to false
+         set the dontwrap of fieldView to false
+         set the locktext of fieldView to false
+         break
+      case "scrolling"
+         set the listbehavior of fieldView to true
+         set the multiple_Hilites of fieldView to false
+         set the dontwrap of fieldView to true
+         set the locktext of fieldView to true
+         break
+      case "multiselect"
+         set the listbehavior of fieldView to true
+         set the multiple_Hilites of fieldView to true
+         set the dontwrap of fieldView to true
+         set the locktext of fieldView to true
+         break
+   end switch
+   unlock screen
+end field_Style

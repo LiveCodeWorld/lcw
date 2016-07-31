@@ -1,0 +1,23 @@
+function folder_FoldersInside someFolder, pFilter, pShowInvisible
+   if last char of someFolder is "/" then delete last char of someFolder
+   if there is a folder someFolder then
+      put the directory into originalDirectory
+      set the directory to someFolder
+      put the folders into shortFolders
+      
+      -- what else needs escaping?
+      replace "/" with ":" in shortFolders
+      
+      if pShowInvisible is not false then filter shortFolders without ".*"
+      if pFilter is not empty then filter shortFolders with someFilter
+      
+      repeat for each line shortFolder in shortFolders
+         put someFolder & "/" & shortFolder & "/" & CR after foldersInside
+      end repeat
+      delete last char of foldersInside
+      set the directory to originalDirectory
+      return foldersInside
+   else
+      return empty
+   end if
+end folder_FoldersInside

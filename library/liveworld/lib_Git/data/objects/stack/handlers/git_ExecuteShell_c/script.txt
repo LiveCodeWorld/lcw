@@ -1,0 +1,6 @@
+command git_ExecuteShell someShell, pGitRootFolder
+   put git_PathToCommandLine() into gitPath
+   if pGitRootFolder is empty then put git_GetRootFolder() into pGitRootFolder
+   put shell_ExecuteAtRoot (someShell, pGitRootFolder, gitPath) into shellResult
+   return word 1 to -1 of shellResult
+end git_ExecuteShell

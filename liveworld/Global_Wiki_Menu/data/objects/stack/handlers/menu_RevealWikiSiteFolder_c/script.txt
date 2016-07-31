@@ -1,0 +1,4 @@
+on menu_RevealWikiSiteFolder
+   put wiki_GetSiteFolder() into wikiSiteFolder
+   finder_Reveal wikiSiteFolder
+end menu_RevealWikiSiteFolder

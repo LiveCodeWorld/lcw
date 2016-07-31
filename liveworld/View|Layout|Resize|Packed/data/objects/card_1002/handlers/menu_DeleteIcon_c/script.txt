@@ -1,0 +1,6 @@
+on menu_DeleteIcon imageObject
+   put menu_GetTargetObject() into imageObject
+   if word 1 of imageObject = "image" then
+      send "delete imageObject" to imageObject in 0 ticks
+   end if
+end menu_DeleteIcon

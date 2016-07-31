@@ -1,0 +1,178 @@
+command hkey_WalkHierarchy hKey, @hKeyLinkArray, thisDepth, pMaxDepth, pDontRecurseOutside, pOriginalHkey, pEnvironmentFilter, pTestExceptions, pForceSearch
+   breakpoint
+   put hKey
+   -- based on "script_WalkHierarchy"
+   -- tweaked logic with "the hkey_SearchHierarchy [pEnvironmentFilter] of someObject"
+   if hKeyLinkArray [hKey] is not empty then return empty -- no need to recurse
+   if pMaxDepth is not a number then put empty into pMaxDepth
+   if the commandkey is "Down" and the optionKey is "Down" then
+      hkey_Deconstruct pOriginalHkey, oHandlerName, oHandlerType, oScriptObject, oHandlerNum
+      put "Currently indexing" && kwote (hKey) into pTitle
+      display_ObjectHKeyArray hKeyLinkArray, oScriptObject, empty, empty, pTitle
+      put the result into treeView
+      set the displayed_Hkey of treeView to hKey
+      
+      -- allow storing of work-in-progress (by refering to last hKey)
+      -- give an export!
+      breakpoint
+   end if
+   
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+   
+   -- hack for exceptions
+   if pTestExceptions is not false then
+      if hkey_DontRecurse (hKey, pOriginalHkey) is true then
+         return empty
+      end if
+   end if
+   
+   -- outside object?
+   if pDontRecurseOutside is true then
+      hkey_Deconstruct pOriginalHkey, oHandlerName, oHandlerType, oScriptObject, oHandlerNum
+      if scriptObject is not oScriptObject then
+         -- it is outside the original object, so don'd add and recurse
+         -- the hKey has already been added as a link to
+         return empty
+      end if
+   end if
+   
+   -- OK, lets go ahead and process for adding
+   -- is there a bug here as should add here not before recursion?
+   opn_Notify (item 1 of hKey)
+   
+   put the hkey_SearchHierarchy [pEnvironmentFilter] of scriptObject into fullScriptHierarchy
+   put hkey_SearchObjectHierarchy (hKey, fullScriptHierarchy) into messagePassHierarchy -- not finding private handlers in the hkey object?
+   
+   if messagePassHierarchy is empty then
+      -- bug:   hkey_SearchObjectHierarchy not finding private handlers?
+      put merge ("Cannot find '[[hKey]]' using 'hkey_SearchObjectHierarchy (hKey, fullScriptHierarchy)'!") into someMessage
+      opn_Notify someMessage, true
+      put scriptObject into someObject -- in case messagePassHierarchy is empty?
+   end if
+   
+   repeat with lineNum = (the number of lines of messagePassHierarchy) down to 1
+      set the cursor to busy
+      
+      -- lets do some checks and get then last object in what is left of the hiearchy
+      if the commandkey is "Down" then
+         hkey_Deconstruct pOriginalHkey, oHandlerName, oHandlerType, oScriptObject, oHandlerNum
+         display_ObjectHKeyArray hKeyLinkArray, oScriptObject, empty, oHandlerName
+         breakpoint
+      end if
+      
+      put line lineNum of messagePassHierarchy into someObject
+      if exists(someObject) is false then
+         next repeat	# just in case
+      end if
+      
+      -- construct actual hkey for the object the handler was found in
+      put hkey_Construct (handlerName, handlerType, someObject) into foundHkey
+      
+      -- lets check if somehow we have already indexed this foundHkey
+      if foundHkey is among the lines of keys (hKeyLinkArray) then
+         get "it already been indexed. Lets not index it again please :)"
+      else   
+         -- lets get the call in whats left of hierarchy
+         put the script_Handler [foundHkey] of someObject into someHandler
+         put library_FetchHandler (hKey) into storedHandler
+         if someHandler = storedHandler and pForceSearch is not true then
+            -- already stored, faster to fetch stored calls
+            put hkey_GetCalls (hKey) into handlerCalls
+         else
+            put the hkey_SearchHierarchy [pEnvironmentFilter] of someObject into fullScriptHierarchy
+            put script_ParseHandlerForCalls (someHandler, fullScriptHierarchy, someObject) into handlerCalls
+            hkey_StoreCallsAndHandler foundHkey, someHandler, handlerCalls
+         end if
+         
+         if handlerCalls is empty then
+            put empty into hKeyLinkArray [foundHkey]
+         end if
+         
+         put thisDepth + 1 into nextDepth	# will need to go down 1 level
+         if skipRecursion is true or pMaxDepth is not empty and nextDepth > pMaxDepth then
+            -- lets not recurse any deeper
+            put thisDepth - 1 into nextDepth	# probably not needed
+         else
+            -- now lets repeat and recurse for each call found
+            repeat for each line linkCall in handlerCalls
+               hkey_Deconstruct linkCall, linkName, linkType, linkObject, linkNum
+               
+               if exists(linkObject) is false then
+                  if the script_SkipMissing of me is true then
+                     next repeat
+                  end if
+               end if
+               if linkType is among the items of "g,s" then
+                  put script_GetPropertyTarget (linkName, someHandler, someObject) into propertyTarget -- total hack !!!
+                  if exists (propertyTarget) is false then
+                     put "script_GetPropertyTarget" && linkName & "," && someObject into someError
+                     -- log_Error someError, "script_GetPropertyTarget error!"
+                     opn_Notify someError, true
+                     put someObject into propertyTarget -- total hack !!!
+                  end if
+                  
+                  -- now find property linkName in the hkey_SearchHierarchy of propertyTarget
+                  put hkey_Construct (linkName, linkType, propertyTarget, linkNum) into testKey
+                  put the hkey_InHierarchy [testKey] of propertyTarget into propertyHandlerObject
+                  if exists (propertyHandlerObject) is false then
+                     -- it is a plain custom property
+                     put propertyTarget into propertyHandlerObject
+                     if the script_SkipMissing of me is true then next repeat -- ???
+                     
+                     -- mark as "missing" ???
+                     put "Custom property of" && propertyHandlerObject into missingPropertyCall
+                     -- put "Custom Property" into missingPropertyCall
+                     put hkey_Construct (linkName, linkType, missingPropertyCall, linkNum) into linkCall
+                  else
+                     -- we have found a custom property handler in the hierarchy
+                     -- not sure how but should mark property as plain custom property (not handled by a custom handler)
+                     put hkey_Construct (linkName, linkType, propertyHandlerObject, linkNum) into linkCall
+                  end if
+               end if
+               
+               -- add and recurse
+               array_AddToIndex linkCall, foundHkey, hKeyLinkArray
+               hkey_WalkHierarchy linkCall, hKeyLinkArray, nextDepth, pMaxDepth, pDontRecurseOutside, pOriginalHkey, pEnvironmentFilter, pTestExceptions, pForceSearch
+            end repeat
+         end if
+      end if
+      
+      -- if the handler has been passed
+      -- seems like a hack to me!
+      put line (lineNum - 1) of messagePassHierarchy into messagePassObject
+      if exists (messagePassObject) is false then
+         next repeat -- or should it be exit repeat
+      else
+         breakPoint 
+         put hkey_Construct (handlerName, handlerType, messagePassObject) into messagePassHkey
+         array_AddToIndex messagePassHkey, foundHkey, hKeyLinkArray
+      end if
+   end repeat
+   
+   -- finished hierarchy but still may be trying to pass somewhere (hopefuly the system)
+   -- would be better and faster if this were part of "hkey_InHierarchy" ???
+   
+   if exists (someObject) is false then
+      breakPoint
+      return empty	# not sure why this would be?
+   end if
+   
+   put the script_Handler [foundHkey] of someObject into someHandler
+   hkey_Deconstruct foundHkey, handlerName, handlerType, targetObject, handlerNum
+   if script_HandlerContainsPass (handlerName, someHandler) is true then
+      switch
+         case char 1 of handlerType is among the items of "m,g,s"
+            -- if handerName is a revMessage, then don't index missing passed system messages
+            return empty
+         case handlerName is among the items of "CloseFieldEditor"
+            -- a datagrid method
+            return empty
+         default
+            put hkey_Construct (handlerName, handlerType, "Missing") into pKey
+            array_AddToIndex pKey, foundHkey, hKeyLinkArray
+            if hKeyLinkArray [pKey] is empty then
+               array_AddToIndex empty, pKey, hKeyLinkArray
+            end if
+      end switch
+   end if
+end hkey_WalkHierarchy

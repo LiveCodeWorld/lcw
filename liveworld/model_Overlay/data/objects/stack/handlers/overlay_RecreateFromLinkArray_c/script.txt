@@ -1,0 +1,12 @@
+command overlay_RecreateFromLinkArray dotFolder, overlayName, pGraphStyle
+   put overlay_GetData (dotFolder) into overlayData
+   --
+   put overlayData_GetArray (overlayData, overlayName) into overlayArray
+   put overlayArray_GetHeaderArray (overlayArray) into dotHeaderArray
+   put overlayArray_GetGraphPropertyArray (overlayArray) into graphPropertyArray
+   put overlayArray_GetLinkArray (overlayArray) into linkArray
+   overlayArray_ReconstructAndCreateFiles linkArray, overlayName, dotFolder, pGraphStyle, dotHeaderArray, graphPropertyArray
+   overlayData_SetArray overlayData, overlayArray, overlayName
+   --
+   overlay_SetData dotFolder, overlayData
+end overlay_RecreateFromLinkArray

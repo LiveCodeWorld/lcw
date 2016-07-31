@@ -1,0 +1,6 @@
+function mainstack_GetManifestArrayFile textStackFolder, pDontCreate
+   folder_Format textStackFolder
+   put textStackFolder & "data/manifest.array" into someFile
+   if pDontCreate is false then folder_CreateNested textStackFolder
+   return someFile
+end mainstack_GetManifestArrayFile

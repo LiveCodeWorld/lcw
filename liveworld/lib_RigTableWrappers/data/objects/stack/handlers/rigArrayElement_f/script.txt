@@ -1,0 +1,19 @@
+function rigArrayElement pItem, pArray, pDefault
+   --| Summary: Lets you determine whether an array index is set and whether it has a value.
+   --|                    if the value does not exist it returns FALSE (or whatever you specify as the default value).
+   --| Parameters: string <pItem>, array <pArray>, mixed <pDefault> 
+   --| Return: mixed
+   
+   if pDefault is empty then
+      put FALSE into tDefault
+   else
+      put pDefault into tDefault
+   end if
+   
+   if pArray[pItem] is empty then
+      --if pItem is not among the keys of pArray then
+      return tDefault
+   end if
+   
+   return pArray[pItem]
+end rigArrayElement

@@ -1,0 +1,19 @@
+setprop menu_Burn [mTitle] someBoolean
+   put the long id of the target into targetObject
+   
+   put the menu_MetaDataArray [mTitle] of targetObject into metaArray
+   put someBoolean into metaArray ["burnt"]
+   set the menu_MetaDataArray [mTitle] of targetObject to metaArray
+   
+   if someBoolean is true then
+      if mTitle is empty then put the menu_Title of targetObject into mTitle
+      set the menu_Title of targetObject to mTitle
+      
+      put the menu_ToolTitle of targetObject into mToolTitle
+      set the menu_ToolTitle of targetObject to mToolTitle
+   else
+      set the menu_Title of targetObject to empty
+      set the menu_ToolTitle of targetObject to empty
+   end if
+   return metaArray
+end menu_Burn

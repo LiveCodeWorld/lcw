@@ -1,0 +1,18 @@
+function fossil_InfoArray fossilFileOrCheckoutFolder
+   put fossil_Info (fossilFileOrCheckoutFolder) into projectInfo
+   -- put fossil_ProjectInfo (fossilFileOrCheckoutFolder) into projectInfo
+   
+   set the itemdelimiter to ":"
+   switch
+      case projectInfo = empty
+         return empty
+      case item 2 of line 1 of projectInfo contains "repository does not exist or is in an unreadable directory"
+         -- /Users/...commandLine/fossil: repository does not exist or is in an unreadable directory: /Users/.../Chat.fossil
+         return empty
+      case item 2 of line 1 of projectInfo contains "not within an open checkout"
+         return empty
+      default
+         put fossil_ParseInfo (projectInfo) into projectArray
+         return projectArray
+   end switch
+end fossil_InfoArray

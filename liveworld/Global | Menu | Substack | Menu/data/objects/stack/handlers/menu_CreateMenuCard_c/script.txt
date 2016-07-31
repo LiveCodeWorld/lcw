@@ -1,0 +1,50 @@
+on menu_CreateMenuCard scriptObject, localMenuTitle
+   menu_CreateSubStack scriptObject
+   put the result into subStackObject
+   
+   switch localMenuTitle
+      case "Create"
+         put "Local | Test | Menu" into mTitle
+         put opn_Ask ("What name do you want to give this new menu?", mTitle) into mTitle
+         go to subStackObject
+         if the defaultstack is not the name of subStackObject then
+            breakpoint
+            exit to top
+         end if
+         
+         create card mTitle
+         edit the script of card mTitle
+         break
+      default
+         put the script of scriptObject into someScript
+         put script_GetSuite (localMenuTitle, someScript) into scriptSuite
+         if scriptSuite is empty then
+            opn_Answer "There was a problem copying the menu" && kwote (localMenuTitle) & "!"
+            exit to top
+         end if
+         
+         if exists (card localMenuTitle of subStackObject) is true then
+            set the clipboarddata to scriptSuite
+            edit the script of cd localMenuTitle of subStackObject
+            put "There already is a local menu with named" && kwote (localMenuTitle) & ". Here it is!" into someComment
+            opn_Notify someComment, true
+            exit to top
+         else
+            menu_DeleteTitleSuites localMenuTitle, someScript
+            put the result into scriptSuite
+            rev_SetScriptEditorField someScript
+            
+            set the defaultstack to subStackObject
+            create card localMenuTitle
+            
+            -- could paste the script into the editor rather than set the script
+            set the script of card localMenuTitle to scriptSuite
+            put the long id of cd localMenuTitle of subStackObject into newController
+            menu_CreateAndStoreTables newController
+            edit the script of cd localMenuTitle of subStackObject
+            
+            put "Created new local menu" && kwote(localMenuTitle) into someComment
+            opn_Notify someComment, true
+         end if
+   end switch
+end menu_CreateMenuCard

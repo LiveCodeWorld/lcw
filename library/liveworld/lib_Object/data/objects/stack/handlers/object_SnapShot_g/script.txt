@@ -1,0 +1,38 @@
+getprop object_SnapShot [imageType]
+   put the long ID of the target into targetObject
+   put the stack_Object of targetObject into stackObject
+   
+   put the windowID of stackObject into wID
+   put the rect of targetObject into localRect
+   
+   put the defaultStack into oDefault
+   set the defaultStack to the stack_Object of targetObject
+   
+   switch imageType
+      case "Simple"
+         -- needed because otherwise long reference produces cross hairs
+         put the short ID of targetObject into someID
+         export snapshot from control ID someID to someImage as PNG
+         break
+      case "Transparent"
+         -- this will also snap any overlying windows
+         topLevel stackObject
+         put the global_Rect of targetObject into globalRect
+         if globalRect is not a rect then return empty
+         export snapshot from rect globalRect of targetObject to someImage as PNG
+         break
+      case "GIF"
+         export snapshot from rect localRect of window wID to someImage as GIF
+         break
+      case "JPG"
+         export snapshot from rect localRect of window wID to someImage as JPEG
+         break
+      case "JPEG"
+         export snapshot from rect localRect of window wID to someImage as JPEG
+         break
+      default
+         export snapshot from rect localRect of window wID to someImage as PNG
+   end switch
+   set the defaultStack to oDefault
+   return someImage
+end object_SnapShot

@@ -1,0 +1,18 @@
+command image_ImportFileData imageObject
+    put the filename of imageObject into imageFile
+    if imageFile is empty then return empty
+    
+    put url ("binfile:" & imageFile) into someImage
+     
+    put the long id of imageObject into imageObject
+    get "put someImage into" && imageObject
+    do it
+    set the image_OriginalFile of imageObject to imageFile
+    return someImage
+     
+    put the short id of imageObject into photoID
+    put object_ExtractStack(imageObject) into imageStack
+    put someImage into image id photoID of imageStack
+     
+    return someImage
+end image_ImportFileData

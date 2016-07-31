@@ -1,0 +1,5 @@
+function sitemap_ConstructFilePath shortSitemapFile
+   put the desktop folder & "/" into sitemapRoute
+   put sitemapRoute & shortSitemapFile into someFile
+   return someFile
+end sitemap_ConstructFilePath

@@ -1,0 +1,17 @@
+on menu_DeleteProjectSet mTarget, projectName
+   put project_GetCurrentName() into currentProjectName
+   put projectName = currentProjectName into isSame
+   if isSame then
+      put merge ("The currently loaded project is the same as the library set [[projectName]] you are about to delete. Are you sure you want to do this?") into someQuestion
+   else
+      put merge ("Sure you want to delete library set [[projectName]]?") into someQuestion
+   end if
+   opn_Answer someQuestion
+   
+   project_DeleteArray projectName
+   
+   if isSame then
+      set the displayed_Project of me to "Default" -- also sets the menu choice
+   end if
+   answer merge ("Deleted project '[[projectName]]' from the library!")
+end menu_DeleteProjectSet

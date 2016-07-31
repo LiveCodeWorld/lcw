@@ -1,0 +1,16 @@
+function digitalocean_ConstructDropletDictionary pIndexedDropletArray
+   if pIndexedDropletArray is not an array then
+      put digitalOcean_GetDropletInfoArray() into pIndexedDropletArray
+   end if
+   put pIndexedDropletArray ["droplets"] into indexedArray
+   repeat for each key dropletNum in indexedArray
+      put indexedArray [dropletNum]["name"] into dropletName
+      -- what if it's more than 1 network???
+      put indexedArray [dropletNum]["networks"]["v4"][1]["ip_address"] into ipAddress
+      put ipAddress into nameDictionary [dropletName]
+      put dropletName into ipDictionary [ipAddress]
+   end repeat
+   put nameDictionary into dropletDictionary ["name"]
+   put ipDictionary into dropletDictionary ["ip_address"]
+   return dropletDictionary
+end digitalocean_ConstructDropletDictionary

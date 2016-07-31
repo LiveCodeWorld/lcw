@@ -1,0 +1,6 @@
+function git_ReverseFileHashes relativePath, pMaxNum
+   if pMaxNum is empty then put "10" into pMaxNum
+   put merge("git rev-list -[[pMaxNum]] HEAD --") && kwote(relativePath) into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_ReverseFileHashes

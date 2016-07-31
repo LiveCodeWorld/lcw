@@ -1,0 +1,9 @@
+function hArray_GetKeywordArray pKWord
+   global gHkey_Array
+   
+   if pKWord is empty then
+      return gHkey_Array ["keywordArray"]
+   else
+      return gHkey_Array ["keywordArray"][pKWord]
+   end if
+end hArray_GetKeywordArray

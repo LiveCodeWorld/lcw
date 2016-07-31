@@ -1,0 +1,10 @@
+on menu_StartWiki
+   set the cursor to watch
+   open process wiki for update
+   -- Federated Wiki server listening on 3000 in mode: development
+   read from process wiki until "Federated Wiki server listening on 3000 in mode: development"
+   put it into wikiInfoToParse
+   
+   put "http://localhost:3000" into localWikiURL
+   launch url localWikiURL
+end menu_StartWiki

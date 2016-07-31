@@ -1,0 +1,3 @@
+private command _addCorsHeader @someHeader
+   put CRLF & "Access-Control-Allow-Origin:*" after someHeader
+end _addCorsHeader

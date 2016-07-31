@@ -1,0 +1,14 @@
+setprop menu_HierarchyTitle [whichHierarchy] mTitle
+   put the long id of the target into targetObject
+   menu_FindTitle mTitle, targetObject, mController, whichHierarchy
+   if the result is false then
+      -- can't find mTitle in hierarchy
+      set the menu_Title of targetObject to empty
+      set the menu_Controller [mTitle] of targetObject to empty
+      return false
+   else
+      set the menu_Title of targetObject to mTitle
+      set the menu_Controller [mTitle] of targetObject to mController
+      return true
+   end if
+end menu_HierarchyTitle

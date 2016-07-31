@@ -1,0 +1,4 @@
+getprop disabled_CreateView [scriptObject]
+   put the view_Name of scriptObject into vName
+   return vName is empty
+end disabled_CreateView

@@ -1,0 +1,13 @@
+function script_GetSuiteContents suiteTitle, someScript
+    put script_GetSuite(suiteTitle, someScript) into scriptSuite
+    delete line 1 of scriptSuite
+    switch char 1 of line 1 of scriptSuite
+        case "-"
+            delete line 1 of scriptSuite
+            break
+        case empty
+            delete line 1 of scriptSuite
+            break
+    end switch
+    return word 1 to -1 of scriptSuite
+end script_GetSuiteContents

@@ -1,0 +1,5 @@
+function view_LocalIconFile vName, pDontCreate
+   view_NormalizeName vName
+   put library_TextFile ("icon.png", vName, "view", pDontCreate) into localFile
+   return localFile
+end view_LocalIconFile

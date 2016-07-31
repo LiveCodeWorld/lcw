@@ -1,0 +1,4 @@
+command menu_SetTopTitle mTopTitle
+   global gTemp_ActiveMenuArray
+   put mTopTitle into gTemp_ActiveMenuArray ["top"]["mTitlePath"]
+end menu_SetTopTitle

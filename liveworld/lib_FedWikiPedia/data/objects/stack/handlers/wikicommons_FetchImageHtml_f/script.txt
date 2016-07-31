@@ -1,0 +1,8 @@
+function wikicommons_FetchImageHtml shortImageFile, pImageCaption
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of the keys of pagesArray into pageID
+   put pagesArray [pageID] into pageArray
+   put wikicommons_ConstructImageHtml (pageArray, pImageCaption) into imageHTML
+   return imageHTML
+end wikicommons_FetchImageHtml

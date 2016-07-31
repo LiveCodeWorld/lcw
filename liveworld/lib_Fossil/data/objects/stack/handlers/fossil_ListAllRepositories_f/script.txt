@@ -1,0 +1,7 @@
+function fossil_ListAllRepositories
+   -- lists all fossil repo files
+   put "fossil all list" into someShell
+   fossil_ExecuteShell someShell
+   put the result into fossilNames
+   return fossilNames
+end fossil_ListAllRepositories

@@ -1,0 +1,32 @@
+function revserver_fixSource pSource
+   replace "<?rev" with format("\n<?rev\n") in pSource
+   replace "?>" with format("\n?>\n") in pSource
+   put false into tInsideRevTag
+   repeat with x = 1 to the number of lines in pSource
+      put line x of pSource into tSourceLine
+      if tSourceLine is "<?rev" then
+         put true into tInsideRevTag
+         next repeat
+      end if
+      if tSourceLine is "?>" then
+         put false into tInsideRevTag
+         next repeat
+      end if
+      if tInsideRevTag then
+         if word 1 of tSourceLine is "include" then
+            --! Special Magick, work out the include files
+            put word 2 to -1 of tSourceLine into tIncludeExpression
+            put format("get URL (\"binfile:\" && %s)", tIncludeExpression) into tCMD
+            do tCMD
+            put revserver_fixSource(it) & cr after tFixedSource
+            next repeat
+         end if
+         put tSourceLine & cr after tFixedSource
+      else
+         replace quote with ("\" & quote) in tSourceLine
+         put format("put format(\"%s\")\n", tSourceLine) after tFixedSource
+      end if
+   end repeat
+   revserver_replaceGlobals tFixedSource
+   return tFixedSource
+end revserver_fixSource

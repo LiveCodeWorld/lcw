@@ -1,0 +1,20 @@
+function html_RegExpExtractForm someHtml
+    /*
+    -- get the first one only
+    -- from http://regexlib.com/REDetails.aspx?regexp_id=984
+    
+    (?<HTML><form[^>]*action\s*=\s*[\"\']?(?<HRef>[^"'>\s]*)[\"\']?[^>]*>)
+    */
+    
+    local tagContents -- not sure if it is still required
+    replace lineFeed with empty in someHtml -- seems neessary
+    
+    put "(<form[^>]*action\s*=\s*[\" & quote & "\']??<HRef>[^" & quote & "'>\s]*[\" & quote & "\']?[^>]*>)" into someReg
+    return someReg
+    
+    if matchtext(someHtml, someReg, tagContents) is false then
+        return empty
+    else
+        return tagContents
+    end if
+end html_RegExpExtractForm

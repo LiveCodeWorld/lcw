@@ -1,0 +1,9 @@
+on menu_LiveMenuTable mTarget, scriptMenuTitle
+   put rev_ScriptObject() into mController
+   
+   put script_ConstructSuiteHeader(scriptMenuTitle) into menuHeader
+   script_Edit mController, menuHeader, true
+   
+   put the menu_TableFromScript [scriptMenuTitle] of mController into mTable
+   display_MenuTable mTable, mController, scriptMenuTitle
+end menu_LiveMenuTable

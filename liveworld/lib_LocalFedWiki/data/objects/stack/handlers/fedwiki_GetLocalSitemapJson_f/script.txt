@@ -1,0 +1,9 @@
+function fedwiki_GetLocalSitemapJson pFedwikiDomain
+   put fedwiki_LocalSiteMapFile (pFedwikiDomain) into someFile
+   if there is a file someFile then
+      put url ("file:" & someFile) into pageJSON
+      return pageJSON
+   else
+      return empty
+   end if
+end fedwiki_GetLocalSitemapJson

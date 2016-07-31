@@ -1,0 +1,8 @@
+setprop view_Rect someRect
+   -- this allows for nested views with or without "setprop view_Rect" handlers
+   if the long id of the target = the long id of me then
+      LayoutControl someRect
+   else
+      set the rect of the target to someRect
+   end if
+end view_Rect

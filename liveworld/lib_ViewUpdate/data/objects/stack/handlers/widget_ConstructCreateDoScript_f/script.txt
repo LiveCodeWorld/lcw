@@ -1,0 +1,8 @@
+function widget_ConstructCreateDoScript someName, widgetClass, pTargetOwner
+   if word 1 of pTargetOwner is "group" then
+      put "create invisible widget" && quote & someName & quote && "as" && quote & widgetClass & quote && "in" && pTargetOwner into doScript
+   else
+      put "create invisible widget" && quote & someName & quote && "as" && quote & widgetClass & quote into doScript
+   end if
+   return doScript
+end widget_ConstructCreateDoScript

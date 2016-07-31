@@ -1,0 +1,5 @@
+command rect_SetRight @someRect, newRight
+   put newRight - item 3 of someRect into xVector
+   put xVector,0 into pointVector
+   rect_AddVector someRect, pointVector
+end rect_SetRight

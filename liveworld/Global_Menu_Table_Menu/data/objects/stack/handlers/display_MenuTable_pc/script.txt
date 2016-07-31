@@ -1,0 +1,11 @@
+private command display_MenuTable mTable, mController, mTitle
+   put the mobile_Name of mController into mController
+   put "the menu_Table  [" & kwote(mTitle) & "] of" && mController into someTitle
+   
+   put "mLine,pigeon,mController,mTitle,mFormatProp,mItemType,submenuProp,paramProp,mSendLine" into headerLine
+   replace comma with tab in headerLine
+   put headerLine & CR before mTable
+   
+   -- display_Lines mTable, someTitle
+   display_Table mTable, someTitle, true, true
+end display_MenuTable

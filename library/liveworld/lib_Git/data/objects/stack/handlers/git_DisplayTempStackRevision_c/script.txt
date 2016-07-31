@@ -1,0 +1,22 @@
+command git_DisplayTempStackRevision someObject, commitHash 
+   put the stack_Object of someObject into stackObject
+   -- put the stack_RelativeFile of stackObject into relativePath
+   put the filename of stackObject into thisFile
+   put thisFile into relativePath
+   git_SetRelativePath relativePath
+   put the short name of stack stackObject into oName
+   
+   set lockmessages to true
+   git_ExportFileRevision relativePath, commitHash
+   put the result into toFile
+   
+   set the name of stack thisFile to ("tempStackName" && oName)
+   set the name of stack toFile to (oName && commitHash)
+   go to stack toFile
+   set the name of stack thisFile to oName
+   
+   set the destroystack of stack toFile to true
+   set the destroywindow of stack toFile to true
+   set lockmessages to false
+   -- finder_Reveal toFile
+end git_DisplayTempStackRevision

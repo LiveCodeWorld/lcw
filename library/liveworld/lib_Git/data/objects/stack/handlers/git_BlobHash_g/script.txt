@@ -1,0 +1,5 @@
+getprop git_BlobHash [commitHash]
+   put the git_StackTreeish [commitHash] of the target into stackTreeish
+   put git_BlobHashFromTreeish (stackTreeish) into blobHash
+   return blobHash
+end git_BlobHash

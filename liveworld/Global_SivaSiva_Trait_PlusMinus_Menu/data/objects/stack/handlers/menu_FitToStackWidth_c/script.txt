@@ -1,0 +1,16 @@
+on menu_FitToStackWidth plusMinusView, someBoolean
+   lock screen
+   --
+   if someBoolean is true then
+      set the card_Margin of plusMinusView to 0
+      put the template_CardRect of plusMinusView into oRect
+      set the margins of plusMinusView to 20
+   else
+      set the card_Margin of plusMinusView to 40
+      put the template_CardRect of plusMinusView into oRect
+      set the margins of plusMinusView to 20
+   end if
+   --
+   set the rect of plusMinusView to oRect
+   unlock screen
+end menu_FitToStackWidth

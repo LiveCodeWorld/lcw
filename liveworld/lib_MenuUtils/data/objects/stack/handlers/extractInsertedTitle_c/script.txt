@@ -1,0 +1,53 @@
+command extractInsertedTitle mCommand, mController, someScript, @insertedMenuTitle, @customControllerParam, @dynamicTitleProp, @mLine, @pigeon, mItemType
+   -- ignoreCall: mCommand,c
+   
+   if mItemType = "insert" then -- inserted version
+      -- this is a single menu script item!
+      -- should be the same structure as an mvc controller
+      -- "Global | Library | Menu,menu_StartupLibrary sillyChoice, mTarget"
+      -- with the first item refering to the controller object (or named shortcut), and the second the command
+      
+      try
+         send mCommand to mController
+         put the result into insertedInfo
+      catch someError -- often a compile error
+         return empty
+      end try
+      
+      put item 1 of insertedInfo into insertedMenuTitle
+      put item 2 to -1 of insertedInfo into pigeon
+      put menu_CommandToText (word 1 of pigeon) into mLine
+      
+      put empty into customControllerParam
+      put empty into dynamicTitleProp
+   else if mItemType = "submenu" then -- submenu version
+      
+      put empty into mLine
+      put script_GetCommand (mCommand, someScript) into menuHandler
+      
+      set the wholematches to true
+      put wordoffset ("menu_DoSub", menuHandler) into wordNum
+      if wordNum = 0 then
+         -- now lets try the return technique used by "insert"
+         try
+            send mCommand to mController
+            put the result into insertedInfo
+            put item 1 of insertedInfo into insertedMenuTitle
+            put item 2 of insertedInfo into customControllerParam
+         catch someError -- often a compile error
+            put empty into insertedMenuTitle
+            put empty into customControllerParam
+            return empty
+         end try
+      else
+         delete word 1 to wordNum of menuHandler
+         put token 1 of line 1 of menuHandler into insertedMenuTitle
+         put token 3 of line 1 of menuHandler into customControllerParam
+      end if
+      
+      -- no longer stores pigeon to send, but calculates from subMenuTitle + scriptObject
+      -- put mCommand && "subMenuPath, mTarget" into pigeon
+      put empty into pigeon
+      put empty into dynamicTitleProp
+   end if
+end extractInsertedTitle

@@ -1,0 +1,11 @@
+command git_RevertStack someObject, pCommitHash
+   put the stack_Object of someObject into stackObject
+   put the stack_RelativeFile of stackObject into relativePath
+   
+   git_CheckoutRevision relativePath, pCommitHash
+   put the result into shellResult
+   
+   stack_RevertLoaded someFile
+   put the result into revertedArray
+   return newName
+end git_RevertStack

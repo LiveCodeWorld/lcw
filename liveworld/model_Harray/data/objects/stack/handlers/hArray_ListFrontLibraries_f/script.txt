@@ -1,0 +1,4 @@
+function hArray_ListFrontLibraries
+   put hArray_ListObjectsOfType ("frontscript") into rObjects
+   return rObjects
+end hArray_ListFrontLibraries

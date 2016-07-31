@@ -1,0 +1,48 @@
+function mainstack_ConstructMetaArray mainStackObject, pHarray, pLinkToViews, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   -- this will also construct hArray if pref_GetValue ("add object to hArray on export") is true
+   -- basically a walkArray with added metaArray ["mainStackArray"] key
+   
+   local mainStackArray, subStackArray
+   try
+      -- put hArray ["handlerHashArray"] into oldHandlerHashArray
+      put false into pStripStackRects
+      put the stackArray_Version of me into stackArrayVersion
+      
+      stack_GetPropertArrays mainStackObject, mainStackArray, pHarray, pLinkToViews, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+      if pStripStackRects is true then delete local mainStackArray ["objects"]["stack"]["rev"]["rect"] -- lets strip the stack rects
+   catch e
+      breakpoint
+   end try
+   
+   put the short name of stack mainStackObject into mainStackName
+   put the substacks of mainStackObject into subStackNames
+   repeat for each line subStackName in subStackNames
+      try
+         -- put the long name of stack subStackName of mainStackObject into subStackObject -- LiveCode bug does not work (returns mainstack)
+         -- put the long id of stack subStackName of mainStackObject into subStackObject -- LiveCode bug does not work (returns mainstack)
+         put the long id of stack subStackName of stack mainStackName into subStackObject
+         -- put revRuggedID (subStackObject) into subStackObject
+         
+         put empty into subStackArray
+         stack_GetPropertArrays subStackObject, subStackArray, pHarray, pLinkToViews, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+         delete variable subStackArray ["manifest"]["version"]
+         put subStackArray ["manifest"] into mainStackArray ["manifest"]["substacks"][subStackName]
+         delete variable subStackArray ["manifest"]
+         
+         if pStripStackRects is true then delete local subStackArray ["objects"]["stack"]["rev"]["rect"] -- lets strip the stack rects
+         put subStackArray into mainStackArray ["objects"]["substacks"][subStackName]
+      catch e
+         breakpoint
+      end try
+   end repeat
+   
+   -- put harray_ConstructHkeyArray (pHarray) into hKeyArray
+   -- put hKeyArray into metaArray ["hKeyArray"]
+   
+   put mainStackArray into metaArray ["mainStackArray"]
+   put pHarray into metaArray ["hArray"]
+   put the mainStack_Hash of mainStackObject into mainstackHash
+   put mainstackHash into metaArray ["mainStackArray"]["manifest"]["sha1"]
+   put mainstackHash into metaArray ["hArray"]["metadata"]["sha1"]
+   return metaArray
+end mainstack_ConstructMetaArray

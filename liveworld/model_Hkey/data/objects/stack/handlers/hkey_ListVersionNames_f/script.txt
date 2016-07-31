@@ -1,0 +1,8 @@
+function hkey_ListVersionNames hKey
+   put hkey_ListShortVersionFolders (hKey) into shortFolders
+   repeat for each line shortFolder in shortFolders
+      put word 2 to -1 of shortFolder & CR after versionNames
+   end repeat
+   delete char -1 of versionNames
+   return versionNames
+end hkey_ListVersionNames

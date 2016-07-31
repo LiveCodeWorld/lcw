@@ -1,0 +1,5 @@
+setprop mainstack_Harray hArray
+   put the mainstack_WalkArray [pCheckHash] of the target into walkArray
+   put hArray into walkArray ["hArray"]
+   set the mainstack_WalkArray [pCheckHash] of the target to walkArray
+end mainstack_Harray

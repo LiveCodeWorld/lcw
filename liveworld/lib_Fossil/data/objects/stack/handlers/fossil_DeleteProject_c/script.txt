@@ -1,0 +1,11 @@
+command fossil_DeleteProject fossilFile
+   put fossil_ListProjectCheckouts (fossilFile) into checkoutFolders
+   
+   delete file fossilFile
+   fossil_DeleteProjectArray fossilFile
+   
+   repeat for each line checkoutFolder in checkoutFolders
+      fossil_Close checkoutFolder
+      fossil_CloseServer checkoutFolder
+   end repeat
+end fossil_DeleteProject

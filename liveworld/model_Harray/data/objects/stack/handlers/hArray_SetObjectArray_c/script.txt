@@ -1,0 +1,10 @@
+command hArray_SetObjectArray rObject, objectArray, pHarray
+   if pHarray is an array then
+      put objectArray into pHarray ["scriptArray"][rObject]
+      return pHarray
+   else
+      global gHkey_Array
+      put objectArray into gHkey_Array ["scriptArray"][rObject]
+      return gHkey_Array
+   end if
+end hArray_SetObjectArray 

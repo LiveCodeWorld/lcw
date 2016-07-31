@@ -1,0 +1,14 @@
+command dg_Refresh pHow
+   put the datagrid_View of me into revDataGrid
+   switch pHow
+      case "ResetControl"
+         send "ResetControl"  to revDataGrid in 0 ticks -- Resets the control by clearing out any data.
+         return pHow
+      case "ResetList" 
+         send "ResetList"  to revDataGrid in 0 ticks -- Redraws the data grid data after having copied in fresh copies of any templates.
+         return "ResetList"
+      default -- case "RefreshList"
+         send "RefreshList"  to revDataGrid in 0 ticks -- Redraws the data displayed in the data grid.
+         return pHow
+   end switch
+end dg_Refresh

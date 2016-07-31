@@ -1,0 +1,29 @@
+setprop child_ControlTypes controlTypes
+   replace comma with CR in controlTypes
+   put the long id of the target into layoutView
+   
+   put the childcontrolids of layoutView into topIDs
+   repeat with lineNum = 1 to the number of lines of topIDs
+      put line lineNum of controlTypes into controlType
+      
+      put line lineNum of topIDs into someID
+      if someID is empty then
+         breakpoint
+         -- here we create new things
+         put controlType into someName
+         put toUpper (char 1 of someName) into char 1 of someName
+         put control_ConstructCreateDoScript (controlType, someName, layoutView) into doScript
+         if doScript is empty then next repeat
+         do doScript
+         put it into newControl
+      else
+         put the long id of control id someID into someControl
+         set the control_Type of someControl to controlType
+         put the result into newControl
+      end if
+      
+      put newControl & CR after newControls
+   end repeat
+   delete char -1 of newControls
+   return newControls
+end child_ControlTypes

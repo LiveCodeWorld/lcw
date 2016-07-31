@@ -1,0 +1,10 @@
+getprop view_IsTemplate
+   -- this is an old default
+   -- best method is to have the behavior of the templates card return true
+   -- using it's own "getprop view_IsTemplate" handler
+   
+   put the view_Name of the target into vName
+   if vName is empty then return false
+   
+   return the stack_IsTemplate of the target
+end view_IsTemplate

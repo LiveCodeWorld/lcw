@@ -1,0 +1,4 @@
+on menu_ClearEntireCache
+    put rev_ScriptObject() into scriptObject
+    menu_DeleteTables scriptObject
+end menu_ClearEntireCache

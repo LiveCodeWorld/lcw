@@ -1,0 +1,5 @@
+getprop horizontal_Spacing
+   put LocalArray ["horizontal_Spacing"] into someSpacing
+   if someSpacing is empty then put 4 into someSpacing
+   return someSpacing
+end horizontal_Spacing

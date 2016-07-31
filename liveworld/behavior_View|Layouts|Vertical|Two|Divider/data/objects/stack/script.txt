@@ -1,0 +1,72 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Layouts|Vertical|Two|Divider
+version: 0.4
+copyright: David Bovill
+type: view behavior
+
+/*
+This layout allows you to resize a top_View and a bottom_View in a 2-way vertical layout.
+
+The top_View refers to a view in the same layout_View (a sister view) which is meant to be the top or header view.
+The bottom_View refers to a view in the same layout_View (a sister view) which is meant to be the bottom or footer view.
+
+Requirements: for this view to have any effect there needs to be be teh following handlers somewhere in the script heirarchy above:
+
+-  getprop top_View
+-  getprop bottom_View
+
+These handlers should return the long id of the appropriate view.
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Objects
+-
+[[ _FetchHandler (header_Divider,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (owner_Rect,g) ]]
+
+
+--> Divider
+-
+[[ _FetchHandler (divider_Style,g) ]]
+
+[[ _FetchHandler (divider_Style,s) ]]
+
+[[ _FetchHandler (divider_Styles,g) ]]
+
+
+--> Initialise
+-
+[[ _FetchHandler (clearLocals,pc) ]]
+
+[[ _FetchHandler (initialise_Move,c) ]]
+
+[[ _FetchHandler (clear_Move,c) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (mouseEnter,c) ]]
+
+[[ _FetchHandler (mouseLeave,c) ]]
+
+[[ _FetchHandler (mouseMove,c) ]]
+
+[[ _FetchHandler (mouseUp,c) ]]
+
+[[ _FetchHandler (mouseRelease,c) ]]

@@ -1,0 +1,16 @@
+function linkArray_HashRevert hashedArray, hashDictionary
+   repeat for each key hashKey in hashedArray
+      put hashDictionary [hashKey] into realKey
+      
+      put hashedArray [hashKey] into hashValues
+      
+      put empty into realValues
+      repeat for each line hashValue in hashValues
+         put hashDictionary [hashValue] into realValue
+         put realValue & CR after realValues
+      end repeat
+      delete char -1 of realValues
+      put realValues into realArray [realKey]
+   end repeat
+   return realArray
+end linkArray_HashRevert

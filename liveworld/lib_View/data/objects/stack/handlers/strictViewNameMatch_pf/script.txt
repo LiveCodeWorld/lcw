@@ -1,0 +1,29 @@
+private function strictViewNameMatch vNameOrStem, vName
+   if char -1 of vNameOrStem is "|" then
+      put true into isStem
+      delete char -1 of vNameOrStem
+   else
+      put false into isStem
+   end if
+   view_NormalizeName vNameOrStem
+   view_NormalizeName vName
+   
+   set the itemdelimiter to "|"
+   delete item 1 of vName
+   delete item 1 of vNameOrStem
+   
+   switch
+      case vNameOrStem is empty
+         -- return the first named view
+         return true
+      case isStem is true and (item 1 to (the number of items of vNameOrStem) of vName = vNameOrStem)
+         -- stem match
+         return true
+      case isStem is false and vName = vNameOrStem
+         -- exact match
+         return true
+      default
+         -- no match (so lets try recursing)
+         return false
+   end switch
+end strictViewNameMatch

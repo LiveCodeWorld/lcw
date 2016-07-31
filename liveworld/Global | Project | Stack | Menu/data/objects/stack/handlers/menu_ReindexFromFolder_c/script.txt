@@ -1,0 +1,4 @@
+on menu_ReindexFromFolder
+   put _indexView() into indexView
+   display_StandardShortIndexFiles indexView
+end menu_ReindexFromFolder

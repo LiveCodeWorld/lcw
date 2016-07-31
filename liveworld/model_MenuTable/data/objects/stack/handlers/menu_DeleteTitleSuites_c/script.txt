@@ -1,0 +1,27 @@
+command menu_DeleteTitleSuites mTitle, @someScript
+   put script_GetSuiteTitles (someScript) into suiteTitles
+   put suiteTitles into allMenuTitles
+   sort allMenuTitles
+   filter allMenuTitles with ("*" && "| Menu")
+   put suiteTitles into mTitles
+   filter mTitles with (mTitle & "*")
+   
+   put "Menu | Props" into generalMenuPropTitle
+   put script_GetSuite (generalMenuPropTitle, someScript) into scriptSuite
+   if scriptSuite is not empty then
+      put scriptSuite & CR & CR & CR after scriptSuites
+      if mTitle = allMenuTitles then
+         -- it's the only menu, so others nothing to require "Menu | Props"
+         put script_DeleteSuite (generalMenuPropTitle, someScript) into newScript
+      end if
+   end if
+   
+   repeat for each line mTitle in mTitles
+      put script_GetSuite (mTitle, someScript) into scriptSuite
+      if scriptSuite is not empty then put scriptSuite & CR & CR & CR after scriptSuites
+      put script_DeleteSuite (mTitle, someScript) into someScript
+   end repeat
+   put word 1 to -1 of someScript into someScript -- might as well tidy
+   put word 1 to -1 of scriptSuites into scriptSuites
+   return scriptSuites
+end menu_DeleteTitleSuites

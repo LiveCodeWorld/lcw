@@ -1,0 +1,7 @@
+command object_SelfDelete
+   -- not clean redraw
+   lock  screen
+   put the long ID of the target into emailObject
+   send "delete emailObject" to the target in 2 ticks
+   unlock screen
+end object_SelfDelete

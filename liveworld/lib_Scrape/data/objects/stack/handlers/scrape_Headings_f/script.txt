@@ -1,0 +1,7 @@
+function scrape_Headings someHTML, pHeaderLevel
+   if pHeaderLevel is empty then put 3 into pHeaderLevel
+   put xpath_ConstructHeadingPath (pHeaderLevel) into someXPath
+   -- put format ("h%d", pHeaderLevel) into someXPath
+   put scrape_WithXPath (someHtml, someXPath) into contentSection
+   return contentSection
+end scrape_Headings

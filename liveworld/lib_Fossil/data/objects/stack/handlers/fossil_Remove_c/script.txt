@@ -1,0 +1,15 @@
+command fossil_Remove someFile
+   put "fossil rm" into someShell
+   
+   put someFile into bashFile
+   shell_BashParamEscape bashFile
+   put space & bashFile after someShell
+   
+   set the itemdelimiter to "/"
+   put item 1 to -2 of someFile into someFolder
+   put "/" after someFolder
+   
+   fossil_ExecuteShell someShell, someFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Remove

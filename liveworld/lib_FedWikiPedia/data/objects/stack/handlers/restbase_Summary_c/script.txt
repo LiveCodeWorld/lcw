@@ -1,0 +1,26 @@
+command restbase_Summary pageSlug
+   -- https://rest.wikimedia.org/en.wikipedia.org/v1/page/summary/wiki
+   put "https://rest.wikimedia.org/en.wikipedia.org/v1/page/summary/" & pageSlug into someURL
+   put mediawiki_GetRestArray (someURL) into restBaseArray
+   
+   put restBaseArray ["title"] into pageTitle
+   put restBaseArray ["extract"] into pageDescription
+   put fedwiki_ConstructNewPageArray (pageTitle, pageDescription) into pageArray
+   
+   put restBaseArray ["thumbnail"]["source"] into imageURL
+   set the itemdelimiter to "/"
+   put item -2 of imageURL into shortImageFile
+   set the itemdelimiter to "."
+   put item -1 of shortImageFile into imageType
+   
+   put url imageURL into someImage
+   put "Transported image" into pImageCaption
+   
+   put fedwiki_ConstructImageArray (someImage, imageType, pImageCaption) into imageArray
+   fedwiki_PageArrayAddToEnd imageArray, pageArray
+   
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put wikicommons_ConstructPageArray (sandboxArray) into pageArray
+   
+   return pageArray
+end restbase_Summary

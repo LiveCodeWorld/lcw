@@ -1,0 +1,9 @@
+function html_ExtractNode someNode, someHTML
+   -- similar as "xml_ExtractNode" (differs in strictness of "revXMLCreateTree") 
+   -- could tidy someHTML first
+   if someHTML is empty then return empty
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLText (treeID, someNode) into nodeXml
+   revDeleteXMLTree treeID
+   return nodeXml
+end html_ExtractNode

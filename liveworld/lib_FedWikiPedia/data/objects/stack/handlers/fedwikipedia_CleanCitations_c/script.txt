@@ -1,0 +1,23 @@
+command fedwikipedia_CleanCitations @wikiText
+   -- starting text <ref name="fdsa">{{cite web|author=Nisi Shawl |url=http://seattletimes.nwsource.com/html/books/2008758249_br22sterling.html |title=Books &#124; "The Caryatids": four clones need a home &#124; Seattle Times Newspaper |publisher=Seattletimes.nwsource.com |date=2009-02-19 |accessdate=2010-01-01}}</ref> something at the end
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "[^\}]+" into untilCurlyBracket
+   put "\{\{cite (" & untilCurlyBracket & ")\}\}" into someReg
+   put "(<ref[^\>]*>)" before someReg
+   put "</ref>" after someReg
+   put "(?mi)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiText, someReg, refStart, refEnd, wikCiteStart, wikiCiteEnd) is true then
+         put char wikCiteStart to wikiCiteEnd of wikiText into wikiCitation
+         split wikiCitation with "|" and "="
+         put word 1 to -1 of wikiCitation ["url"] into citationURL
+         put word 1 to -1 of wikiCitation ["title"] into citationTitle
+         put "[" & citationURL && citationTitle & "]" into cleanCitation
+         
+         put cleanCitation into char refStart to (wikiCiteEnd + 8) of wikiText
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanCitations

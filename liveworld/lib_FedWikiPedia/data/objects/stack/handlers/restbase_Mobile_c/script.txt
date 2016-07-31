@@ -1,0 +1,8 @@
+on restbase_Mobile
+   put fedwiki_GetDroppedUrl ($_POST_RAW) into droppedURL
+   put mediwiki_ExtractPageSlugFromUrl (droppedURL) into pageSlug
+   put "https://rest.wikimedia.org/en.wikipedia.org/v1/page/mobile-text/" & pageSlug into someURL
+   put mediawiki_GetRestArray (someURL) into restBaseArray
+   
+   -- display_Array restBaseArray, "mobile-text"
+end restbase_Mobile

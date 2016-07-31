@@ -1,0 +1,11 @@
+function mouse_WithinBottomCorner someObject
+   put 14 into someWidth
+   
+   put the bottomRight of someObject into someLoc
+   put someLoc into resizeRect
+   put someLoc into item 3 of resizeRect
+   subtract someWidth from item 1 of resizeRect
+   subtract someWidth from item 2 of resizeRect
+   
+   return loc_WithinRect(the mouseLoc, resizeRect)
+end mouse_WithinBottomCorner

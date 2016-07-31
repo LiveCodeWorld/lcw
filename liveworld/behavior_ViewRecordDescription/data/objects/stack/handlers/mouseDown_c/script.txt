@@ -1,0 +1,39 @@
+on mouseDown
+   set the dgHilitedLine of me to the dgLine of me
+   put the dgControl of me into dgView
+   if exists(dgView) then
+      put the event_Watchers ["mouseDown"] of dgView into eventWatchers
+      if eventWatchers is not empty then
+         beep
+         return empty
+      end if
+   end if
+   
+   put the long id of the target into targetObject
+   put the short name of targetObject into shortName
+   switch
+      case shortName = "Script"
+         put the record_ImageID of me into imageID
+         _startDrag
+         break
+      case shortName = "Title"
+         if the clicktext is not empty then menu_PullDown
+         break
+      case word 1 of targetObject is "player"
+         put the short id of targetObject into playerID
+         get the paused of player id playerID
+         if it is true then
+            start player id playerID
+         else
+            stop player id playerID
+         end if
+         break
+      case shortName = "Image"
+         put the short id of targetObject into imageID
+         _startDrag imageID
+         break
+      default
+         -- opn_Notify the short name of the target
+         pass mouseDown
+   end switch
+end mouseDown

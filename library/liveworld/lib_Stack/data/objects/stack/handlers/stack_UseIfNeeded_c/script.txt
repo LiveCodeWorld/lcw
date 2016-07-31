@@ -1,0 +1,12 @@
+command stack_UseIfNeeded stackName
+    if exists(stack stackName) is false then
+        put merge("Error: Cannot locate library stack '[[stackName]]'") into someError
+        return someError
+    end if
+    
+    set the wholematches to true
+    if stackname is not among the lines of the stacksinuse then
+        start using stack stackName
+    end if
+    return empty
+end stack_UseIfNeeded

@@ -1,0 +1,4 @@
+function fossil_GetAutoSync pCheckoutFolder, pGetGlobal
+   put fossil_GetSetting ("autosync", pCheckoutFolder, pGetGlobal) into someValue
+   return someValue
+end fossil_GetAutoSync

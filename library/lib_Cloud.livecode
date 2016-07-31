@@ -1,0 +1,33 @@
+﻿script "lib_Cloud"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Cloud
+type: script library
+version: 0.1
+
+
+--> Cloud
+-
+function cloud_RestGet shortApiPath
+   put cloud_ConstructURL (shortApiPath) into someURL
+   cloud_SetRestHeaders
+   put url someURL into someJSON
+   return someJSON 
+end cloud_RestGet
+
+function cloud_ConstructURL shortApiPath
+   local CloudApiStem = "https://api.cloud-elements.com/elements/api-v2/"
+   put CloudApiStem & "hubs/documents/" & shortApiPath into someURL
+   return someURL
+end cloud_ConstructURL
+
+command cloud_SetRestHeaders
+   put "Content-Type: application/json" into someHeader  
+   put CR & "Authorization: User Qhj7YIkvdMrv4n7lKXlbNN5+eeHgJCxXzswgxhSmzeA=, Organization 6ecdd0f52c429b050300a9d0cfb5b424, Element F1rTK7t+hzAbJM2CuUyaibBgfdj+/h3k75GtgciATAA=" after someHeader
+   set the httpheaders to someHeader
+end cloud_SetRestHeaders
+
+
+

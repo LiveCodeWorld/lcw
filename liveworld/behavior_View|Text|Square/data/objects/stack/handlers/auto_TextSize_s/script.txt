@@ -1,0 +1,14 @@
+setprop auto_TextSize [someFactor] squareWidth
+   put the long id of the target into textField
+   
+   if someFactor is empty then
+      put _guessAutoFactor (squareWidth) into someFactor
+   end if
+   
+   put round ( squareWidth / someFactor ) into innerMargin
+   put innerMargin into LocalArray ["inner_Margin"]
+   put round (squareWidth/someFactor) into someSize
+   
+   set the textsize of textField to someSize
+   return innerMargin
+end auto_TextSize

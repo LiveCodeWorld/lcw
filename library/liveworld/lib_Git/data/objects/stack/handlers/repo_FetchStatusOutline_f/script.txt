@@ -1,0 +1,4 @@
+function repo_FetchStatusOutline
+   put url "http://www.rev-co.de/cgi-bin/git_Status.cgi" into someOutline
+   return someOutline
+end repo_FetchStatusOutline

@@ -1,0 +1,144 @@
+--> Events
+-
+-- on resumeStack
+   menu_DisplayGlobalMenus
+   pass resumeStack
+end resumeStack
+
+-- on preOpenCard
+   menu_DisplayGlobalMenus
+   pass preOpenCard
+end preOpenCard
+
+[[ _FetchHandler (resizeStack,c) ]]
+
+[[ _FetchHandler (preOpenCard,c) ]]
+
+
+--> MetaData
+-
+author: David Bovill
+copyright: OPN Technologies LLP
+name: View|Tree|Datagrid
+type: view
+version: 1.2
+
+/*
+View help text...
+*/
+
+[[ _FetchHandler (tree_View,g) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Title,g) ]]
+
+
+--> Menu | Stack | Menu
+-
+[[ _FetchHandler (menu_DisplayMenuPalette,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ScriptEditorMenu,c) ]]
+
+[[ _FetchHandler (menu_AddScriptEditorMenus,c) ]]
+
+[[ _FetchHandler (menu_AddTestEditorMenusToSet,c) ]]
+
+[[ _FetchHandler (menu_ConstructPluginRecord,f) ]]
+
+[[ _FetchHandler (set_Names,g) ]]
+
+[[ _FetchHandler (menu_AddPluginToSet,c) ]]
+
+[[ _FetchHandler (menu_ConstructPluginArray,f) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayPluginArray,c) ]]
+
+[[ _FetchHandler (menu_ClearPluginArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (insert_Menu,c) ]]
+
+
+--> Menu | Stack | Menu | Props
+-
+
+
+
+--> Tree | Field | Menu
+-
+[[ _FetchHandler (menu_DisplayHelp,c) ]]
+
+[[ _FetchHandler (menu_UpdateMenuTable,c) ]]
+
+[[ _FetchHandler (menu_RemoveEntry,c) ]]
+
+
+--> Tree | Field | Menu | Props
+-
+[[ _FetchHandler (disabled_RemoveEntry,g) ]]
+
+
+--> Datagrid
+-
+[[ _FetchHandler (CloseFieldEditor,c) ]]
+
+[[ _FetchHandler (constructDataArrayFromPaths,pf) ]]
+
+[[ _FetchHandler (addToDataArray,pc) ]]
+
+[[ _FetchHandler (FillInData,c) ]]
+
+
+--> Events | Drag
+-
+[[ _FetchHandler (drag_Enter,g) ]]
+
+[[ _FetchHandler (dragEnd,c) ]]
+
+
+--> Events | Tree
+-
+-- on mouseUp
+   if word 1 of the target = "field" then
+      put the clickText into mTitle
+      go to card mTitle
+   else
+      pass mouseUp
+   end if
+end mouseUp
+
+-- on mouseDoubleUp
+   if word 1 of the target = "field" then
+      put the clickText into mTitle
+      edit the script of cd mTitle
+   else
+      pass mouseDoubleUp
+   end if
+end mouseDoubleUp
+
+[[ _FetchHandler (tree_MouseDown,c) ]]
+
+[[ _FetchHandler (tree_MouseUp,c) ]]
+
+[[ _FetchHandler (tree_MouseDoubleUp,c) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (card_TreeField,g) ]]
+
+[[ _FetchHandler (tree_Field,g) ]]
+
+[[ _FetchHandler (dg_Tree,g) ]]

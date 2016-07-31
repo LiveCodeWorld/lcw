@@ -1,0 +1,7 @@
+function pref_ListStoredValues pProjectName
+   -- was "pref_GetValues"
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchData() into dataArray
+   get dataArray [pProjectName]
+   return keys(it)
+end pref_ListStoredValues

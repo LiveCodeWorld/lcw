@@ -1,0 +1,26 @@
+function fossil_ParseFileHistory historyTable
+   /*
+   History of opn_TextStacks/Fossil Project Inspector/objects/substacks/Fossil File Status/objects/card_1002/script.txt
+   2011-10-20 [cece332909] Work on script creation of fossil projects. (user: david, artifact: [072a35a0d3])
+   */
+   
+   set the itemdelimiter to ":"
+   if item 2 of historyTable contains "no history for file" then return empty
+   
+   if word 1 to 2 of historyTable = "History of" then delete line 1 of historyTable
+   put 1 into indexNum
+   repeat for each line someLine in historyTable
+      put word 1 of someLine into commitDate
+      replace "-" with comma in commitDate
+      put ",1,1,1,1" after commitDate
+      convert commitDate from dateitems to long english date
+      put commitDate into indexArray [indexNum]["commitDate"]
+      put token 2 of word 2 of someLine into indexArray [indexNum]["commitHash"]
+      put token 2 of word -1 of someLine into indexArray [indexNum]["artifactHash"]
+      put token 1 of word -3 of someLine into indexArray [indexNum]["userName"]
+      put word 3 to -5 of someLine into indexArray [indexNum]["commitComment"]
+      
+      add 1 to indexNum
+   end repeat
+   return indexArray
+end fossil_ParseFileHistory

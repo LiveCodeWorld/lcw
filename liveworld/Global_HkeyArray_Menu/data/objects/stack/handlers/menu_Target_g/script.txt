@@ -1,0 +1,9 @@
+getprop menu_Target [mTitlePath]
+   -- only called if toplevel menu
+   switch
+      case mTitlePath contains "Global | Overlay | Array | Menu"
+         return LocalArray ["overlayFolder"]
+      default
+         return LocalArray ["treeView"]
+   end switch
+end menu_Target

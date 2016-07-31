@@ -1,0 +1,17 @@
+command hkey_StoreCallsAndHandler hkey, someHandler, hKeyCalls
+   -- , pSetName, pTestExceptions, pOriginalHkey
+   /*
+   For now, not storing anything (by default), other than handlers in a luRip ibrary
+   */
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+   
+   if the script_IsGlobal [hKey] of scriptObject is true then
+      hkey_StoreHandler hKey, someHandler
+      hkey_StoreCalls hKey, hKeyCalls
+      return true
+   else
+      put "Not stored" && hKey into someMessage
+      opn_Notify someMessage
+      return false
+   end if
+end hkey_StoreCallsAndHandler

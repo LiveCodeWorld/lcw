@@ -1,0 +1,9 @@
+function hArray_ListHkeyObjects hKey
+   put item 1 to 2 of hKey into shortHkey
+   put hArray_GetFoundHkeyArray (shortHkey) into hkeyArray
+   put keys (hkeyArray) into foundHkeys
+   repeat for each line foundHkey in foundHkeys
+      put item 3 of foundHkey & CR after foundObject
+   end repeat
+   return foundObject
+end hArray_ListHkeyObjects

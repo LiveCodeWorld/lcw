@@ -1,0 +1,5 @@
+command menu_DeleteGlobalTitle mTitle, someObject
+   put script_ExtractGlobalSuiteArray("Menu") into dataArray
+   put someObject into dataArray [globalMenuTitle]
+   
+end menu_DeleteGlobalTitle

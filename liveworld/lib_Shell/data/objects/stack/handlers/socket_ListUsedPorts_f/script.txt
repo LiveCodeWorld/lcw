@@ -1,0 +1,12 @@
+function socket_ListUsedPorts
+   -- On Linux you can use netstat -atp | grep -i "listen")
+   -- To show all open ports applications on your machine are listening to you can use this workaround
+   
+   if the platform is "MacOS" then
+      put osx_DaemonArray() into daemonArray
+      return keys(daemonArray)
+   else
+      -- ???
+      return empty
+   end if
+end socket_ListUsedPorts

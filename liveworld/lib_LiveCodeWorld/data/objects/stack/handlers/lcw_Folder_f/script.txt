@@ -1,0 +1,14 @@
+function lcw_Folder folderPath
+   -- returns the path to a folder inside the user defined repo folder
+   -- if the folder does not exist it returns empty
+   -- if a repo is not set you are asked to set one (hack), and the result is stored as a user preference
+   
+   put library_GetRepoFolder() into libraryRepoFolder
+   text_Addtrailing folderPath, slash
+   put libraryRepoFolder & folderPath into lcwFolder
+   if there is a folder lcwFolder then
+      return lcwFolder
+   else
+      return empty
+   end if
+end lcw_Folder

@@ -1,0 +1,4 @@
+on menu_DisplayProjectArray mTarget, projectName
+   put project_FetchArray (projectName) into projectArray
+   display_Array projectArray, "project_FetchArray (projectName)"
+end menu_DisplayProjectArray

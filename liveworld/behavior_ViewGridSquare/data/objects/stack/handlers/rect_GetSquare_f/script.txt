@@ -1,0 +1,5 @@
+function rect_GetSquare someRect, pSquareMargin
+   local squareRect, squareCentre, squareWidth, halfSquareWidth
+   calculate_SquareRect someRect, squareRect, squareCentre, squareWidth, halfSquareWidth, pSquareMargin
+   return squareRect
+end rect_GetSquare

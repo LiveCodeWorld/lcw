@@ -1,0 +1,12 @@
+function script_ExtractHandler hKey, pSomeScript, pNotPrivate
+   -- this version uses offsets to find the handler not an hArray index
+   local startHandler, endHandler
+   if pSomeScript is empty then
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      if exists(scriptObject) is false then return empty
+      put the script of scriptObject into pSomeScript
+   end if
+   hkey_SetOffsets hKey, startHandler, endHandler, pSomeScript, pNotPrivate
+   put the result into someHandler
+   return someHandler
+end script_ExtractHandler

@@ -1,0 +1,10 @@
+getprop inner_Margin
+   put LocalArray ["inner_Margin"] into innerMargin
+   if innerMargin is a number then return innerMargin
+   
+   put the inner_Margin of the owner of me into innerMargin
+   if innerMargin is a number then return innerMargin
+   
+   put default_InnerMargin() into innerMargin
+   return innerMargin
+end inner_Margin

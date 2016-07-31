@@ -1,0 +1,314 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 246 1848 246 1848 0 ",
+		bb="0,0,1848,246",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph g {
+		node [color=white,
+			fillcolor=grey50,
+			style=filled
+		];
+		n17		 [URL="loc%2Cg%2CMissing%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 1805 116 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1805 111.8 0 17.1 3 -loc ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=loc,
+			pos="1805,116",
+			style=filled,
+			width=0.75];
+		n12		 [URL="graphic_BezierPoints%2Cg%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 594 190 86.48 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 594 185.8 0 120.52 20 -graphic_BezierPoints ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=graphic_BezierPoints,
+			pos="594,190",
+			style=filled,
+			width=2.3955];
+	}
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n2		 [URL="hexagon_GetPoint%2Cf%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 116 116 75.86 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 116 111.8 0 104.21 16 -hexagon_GetPoint ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hexagon_GetPoint,
+			pos="116,116",
+			style=filled,
+			width=2.1092];
+		n14		 [URL="CMYKtoRGB%2Cf%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1260 190 61.91 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1260 185.8 0 81.68 9 -CMYKtoRGB ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=CMYKtoRGB,
+			pos="1260,190",
+			style=filled,
+			width=1.714];
+		n13		 [URL="DecimaltoRGB%2Cf%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1115 190 65.25 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1115 185.8 0 87.1 12 -DecimaltoRGB ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=DecimaltoRGB,
+			pos="1115,190",
+			style=filled,
+			width=1.809];
+		n4		 [URL="graph_QuadraticLine%2Cf%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 946 190 85.97 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 946 185.8 0 119.72 19 -graph_QuadraticLine ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=graph_QuadraticLine,
+			pos="946,190",
+			style=filled,
+			width=2.3815];
+		n1		 [URL="graph_BezierLine%2Cf%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 594 116 73.89 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 594 111.8 0 101.06 16 -graph_BezierLine ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=graph_BezierLine,
+			pos="594,116",
+			style=filled,
+			width=2.054];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n6		 [URL="graph_ImportEps%2Cc%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 770 190 72 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 770 185.8 0 97.98 15 -graph_ImportEps ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=graph_ImportEps,
+			pos="770,190",
+			style=filled,
+			width=1.9999];
+		n3		 [URL="angle_DegreesToRadians%2Cc%2Cstack+%22lib_Geometry%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 116 34 100.19 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 116 29.8 0 142.86 22 -angle_DegreesToRadians ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=angle_DegreesToRadians,
+			pos="116,34",
+			style=filled,
+			width=2.7874];
+		n16		 [URL="flipG%2Cc%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1368 190 28.08 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1368 185.8 0 28.79 5 -flipG ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=flipG,
+			pos="1368,190",
+			style=filled,
+			width=0.78584];
+		n11		 [URL="flipAllgraphics%2Cc%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 427 190 63.33 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 427 185.8 0 83.99 15 -flipAllgraphics ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=flipAllgraphics,
+			pos="427,190",
+			style=filled,
+			width=1.7545];
+		n10		 [URL="bezier%2Cc%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 314 190 31.91 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 314 185.8 0 34.19 6 -bezier ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=bezier,
+			pos="314,190",
+			style=filled,
+			width=0.88072];
+		n5		 [URL="flipG2%2Cc%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 427 116 32.93 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 427 111.8 0 35.79 6 -flipG2 ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=flipG2,
+			pos="427,116",
+			style=filled,
+			width=0.90867];
+		n15		 [URL="linerect%2Cc%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 228 190 36.74 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 228 185.8 0 41.97 8 -linerect ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=linerect,
+			pos="228,190",
+			style=filled,
+			width=1.0172];
+	}
+	subgraph s {
+		node [color=white,
+			fillcolor=grey,
+			style=filled
+		];
+		n8		 [URL="foreColor%2Cs%2CMissing%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 1536 116 44.48 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1536 111.8 0 54.43 9 -foreColor ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=foreColor,
+			pos="1536,116",
+			style=filled,
+			width=1.2358];
+		n9		 [URL="rect%2Cs%2CMissing%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 1447 116 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1447 111.8 0 20.98 4 -rect ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=rect,
+			pos="1447,116",
+			style=filled,
+			width=0.75];
+		n18		 [URL="loc%2Cs%2CMissing%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 1733 116 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1733 111.8 0 17.1 3 -loc ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=loc,
+			pos="1733,116",
+			style=filled,
+			width=0.75];
+		n7		 [URL="backcolor%2Cs%2CMissing%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 1643 116 44.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1643 111.8 0 55.19 9 -backcolor ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=backcolor,
+			pos="1643,116",
+			style=filled,
+			width=1.2492];
+		n19		 [URL="hexagon_Points%2Cs%2Cstack+%22lib_GeometryBezier%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 107 190 66.71 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 107 185.8 0 89.44 14 -hexagon_Points ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=hexagon_Points,
+			pos="107,190",
+			style=filled,
+			width=1.8501];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#ff0000 C 7 -#ffa500 P 4 1412 90 1412 164 1840 164 1840 90 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1626 148.8 0 45.12 7 -Missing ",
+			bb="1412,90,1840,164",
+			color=red,
+			fillcolor=orange,
+			label=Missing,
+			lheight=0.19,
+			lp="1626,153",
+			lwidth=0.63,
+			style=filled
+		];
+		n17;
+		n8;
+		n9;
+		n18;
+		n7;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 8 8 82 224 82 224 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 116 66.8 0 121.45 20 -stack \"lib_Geometry\" ",
+			bb="8,8,224,82",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Geometry\"",
+			lheight=0.19,
+			lp="116,71",
+			lwidth=1.69,
+			style=filled
+		];
+		n3;
+	}
+	subgraph cluster3 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 32 90 32 238 1404 238 1404 90 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 718 222.8 0 157.99 26 -stack \"lib_GeometryBezier\" ",
+			bb="32,90,1404,238",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_GeometryBezier\"",
+			lheight=0.19,
+			lp="718,227",
+			lwidth=2.19,
+			style=filled
+		];
+		n12;
+		n1;
+		n12 -> n1		 [_draw_="c 7 -#000000 B 4 594 171.94 594 163.81 594 153.88 594 144.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 597.5 144.44 594 134.44 590.5 144.44 ",
+			pos="e,594,134.44 594,171.94 594,163.81 594,153.88 594,144.7"];
+		n2;
+		n14;
+		n13;
+		n4;
+		n6;
+		n16;
+		n11;
+		n5;
+		n11 -> n5		 [_draw_="c 7 -#000000 B 4 427 171.94 427 163.81 427 153.88 427 144.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 430.5 144.44 427 134.44 423.5 144.44 ",
+			pos="e,427,134.44 427,171.94 427,163.81 427,153.88 427,144.7"];
+		n10;
+		n15;
+		n19;
+		n19 -> n2		 [_draw_="c 7 -#000000 B 4 109.13 171.94 110.16 163.72 111.42 153.66 112.57 144.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 116.05 144.8 113.82 134.44 109.11 143.93 ",
+			pos="e,113.82,134.44 109.13,171.94 110.16,163.72 111.42,153.66 112.57,144.41"];
+	}
+	n2 -> n3	 [_draw_="c 7 -#000000 B 4 116 97.64 116 87.3 116 73.94 116 62.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 119.5 62.05 116 52.05 112.5 62.05 ",
+		pos="e,116,52.05 116,97.641 116,87.297 116,73.941 116,62.221"];
+	n6 -> n8	 [_draw_="c 7 -#000000 B 10 819.88 176.95 830.11 174.92 840.86 173.12 851 172 885.9 168.15 1450.25 176.67 1483 164 1495.55 159.15 1507.05 \
+149.86 1516.1 140.82 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1518.8 143.06 1523.11 133.38 1513.7 138.26 ",
+		pos="e,1523.1,133.38 819.88,176.95 830.11,174.92 840.86,173.12 851,172 885.9,168.15 1450.3,176.67 1483,164 1495.5,159.15 1507,149.86 \
+1516.1,140.82"];
+	n6 -> n9	 [_draw_="c 7 -#000000 B 10 819.88 176.96 830.11 174.94 840.86 173.13 851 172 881.76 168.58 1380.08 177.36 1408 164 1418.04 159.19 1426.41 \
+150.42 1432.78 141.75 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1435.82 143.51 1438.48 133.26 1430 139.61 ",
+		pos="e,1438.5,133.26 819.88,176.96 830.11,174.94 840.86,173.13 851,172 881.76,168.58 1380.1,177.36 1408,164 1418,159.19 1426.4,150.42 \
+1432.8,141.75"];
+	n6 -> n7	 [_draw_="c 7 -#000000 B 10 819.88 176.93 830.11 174.91 840.86 173.11 851 172 891.76 167.55 1550.68 178.58 1589 164 1601.71 159.17 1613.41 \
+149.88 1622.65 140.84 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1625.4 143.03 1629.8 133.39 1620.35 138.18 ",
+		pos="e,1629.8,133.39 819.88,176.93 830.11,174.91 840.86,173.11 851,172 891.76,167.55 1550.7,178.58 1589,164 1601.7,159.17 1613.4,149.88 \
+1622.7,140.84"];
+	n16 -> n17	 [_draw_="c 7 -#000000 B 7 1396.27 188.58 1482.18 187.14 1736.34 181.41 1769 164 1778.29 159.05 1785.91 150.54 1791.71 142.1 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1794.75 143.83 1797.08 133.5 1788.82 140.13 ",
+		pos="e,1797.1,133.5 1396.3,188.58 1482.2,187.14 1736.3,181.41 1769,164 1778.3,159.05 1785.9,150.54 1791.7,142.1"];
+	n16 -> n18	 [_draw_="c 7 -#000000 B 7 1396.41 188.16 1471.43 185.77 1670.9 178.14 1697 164 1706.26 158.99 1713.87 150.46 1719.67 142.04 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1722.71 143.78 1725.05 133.45 1716.78 140.06 ",
+		pos="e,1725.1,133.45 1396.4,188.16 1471.4,185.77 1670.9,178.14 1697,164 1706.3,158.99 1713.9,150.46 1719.7,142.04"];
+}

@@ -1,0 +1,6 @@
+function youtube_FetchVideoSnippetArray videoID, pNextPageToken
+   put youtube_FetchVideoJson (videoID, pNextPageToken) into someJSON
+   put json_ToArray (someJSON) into someArray
+   put someArray ["items"][1]["snippet"] into snippetArray
+   return snippetArray
+end youtube_FetchVideoSnippetArray

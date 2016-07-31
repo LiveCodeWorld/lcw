@@ -1,0 +1,7 @@
+function hap_GetImageRelativePath artFolder, fileID, pSize
+   if pSize is empty then put "med" into pSize
+   text_AddTrailing artFolder, "/"
+   put fileID & "_" & pSize & ".jpg" into shortFile
+   put artFolder & shortFile into relmagePath
+   return relmagePath
+end hap_GetImageRelativePath

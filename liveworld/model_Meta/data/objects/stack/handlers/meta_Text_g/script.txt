@@ -1,0 +1,5 @@
+getprop meta_Text
+   put the object_Folder of the target into objectFolder
+   put object_FetchMetaText (objectFolder) into objectText
+   return objectText
+end meta_Text

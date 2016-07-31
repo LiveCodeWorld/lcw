@@ -1,0 +1,6 @@
+function drag_GetDroppedTargetView targetObject
+   put the name of targetObject
+   put the locked_View of targetObject into targetView
+   if exists (targetView) is false then return false
+   return targetView
+end drag_GetDroppedTargetView

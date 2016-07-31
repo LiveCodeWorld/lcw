@@ -1,0 +1,5 @@
+command view_SetMetaData vName, vMetaArray
+   put view_GetFileMetaArray() into metaDataArray
+   put vMetaArray into metaDataArray [vName]
+   view_SetFileMetaArray metaDataArray
+end view_SetMetaData

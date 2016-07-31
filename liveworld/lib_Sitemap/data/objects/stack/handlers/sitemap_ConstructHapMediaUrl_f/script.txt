@@ -1,0 +1,7 @@
+function sitemap_ConstructHapMediaUrl fileSlug
+   -- was "hap_ConstructMediaUrl"
+   sitemap_EntityEscape fileSlug
+   put cHapRoot & "/view/" & fileSlug into someURL
+   put cHapRoot & "/site/viewmedia/" & fileSlug into someURL
+   return someURL
+end sitemap_ConstructHapMediaUrl

@@ -1,0 +1,6 @@
+command overlay_SetData overlayFolder, overlayData
+   put overlay_ArrayFile (overlayFolder) into dotArrayFile
+   overlayData_SetGraphProps overlayData, "overlay_Folder", overlayFolder -- just in case
+   overlayData_Store dotArrayFile, overlayData
+   return dotArrayFile
+end overlay_SetData

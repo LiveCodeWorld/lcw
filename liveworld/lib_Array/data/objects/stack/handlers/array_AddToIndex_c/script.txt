@@ -1,0 +1,7 @@
+command array_AddToIndex newLines, someKey, @someArray
+   -- if the number of lines of keys(someArray) > 5 and someKey contains "form_IsRed" then breakpoint
+   put someArray [someKey] into someIndex
+   line_AddToIndex newLines, someIndex
+   put word 1 to -1 of someIndex into someArray [someKey]
+   return the number of lines of someIndex
+end array_AddToIndex

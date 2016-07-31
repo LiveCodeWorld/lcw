@@ -1,0 +1,14 @@
+command stack_CopyFile oldStackFile, newStackFile
+    -- one way of doing it (using url's)
+    -- may be the most reliable?
+    -- revCopyFile longFile, opnArchiveFile (uses applescript etc)
+    -- put the result
+    
+    put "binfile:" & oldStackFile into oldStackUrl
+    put "binfile:" & newStackFile into newStackUrl
+    
+    put the filetype into oFileType
+    set the filetype to "revoRSTK"
+    put url oldStackUrl into url newStackUrl
+    set the filetype to oFileType
+end stack_CopyFile

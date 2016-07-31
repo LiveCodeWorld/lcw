@@ -1,0 +1,13 @@
+function library_ConstructDescriptionArray modelArray
+   put 1 into indexNum
+   put library_GetSetName() into activeSetName
+   put keys(modelArray) into setNames
+   line_Add "None", setNames
+   repeat for each line setName in setNames
+      put setName into dataArray [indexNum]["title"]
+      -- put library_FetchSetHelp (setName) into dataArray [indexNum]["description"]
+      put setName = activeSetName into dataArray [indexNum]["isActive"]
+      add 1 to indexNum
+   end repeat
+   return dataArray
+end library_ConstructDescriptionArray

@@ -1,0 +1,5 @@
+on menu_AnalizeExportedScript scriptObject
+   put the exported_Script of scriptObject into exportedScript 
+   put the mobile_Name of scriptObject into someTitle
+   display_Script exportedScript, someTitle
+end menu_AnalizeExportedScript

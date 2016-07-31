@@ -1,0 +1,10 @@
+command library_StoreHkeyCalls hKey, hKeyCalls
+   put library_CallsFile (hKey, false) into someFile
+   if hKeyCalls is empty then
+      delete file someFile
+      return empty
+   else
+      put hKeyCalls into url ("binfile:" & someFile)
+      return someFile
+   end if
+end library_StoreHkeyCalls

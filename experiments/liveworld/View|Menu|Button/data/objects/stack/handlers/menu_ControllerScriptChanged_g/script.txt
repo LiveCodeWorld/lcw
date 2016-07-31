@@ -1,0 +1,18 @@
+getprop menu_ControllerScriptChanged [targetObject]
+   -- not used, but useful utility (could change to use RevIde props???
+   put the long id of the target into mController
+   
+   put the uRIP ["date"] of mController into dateControllerScriptChanged
+   if dateControllerScriptChanged is empty then return true
+   
+   put the uOPN_ControllerDate ["date"] of targetObject into dateControllerTableSet
+   if dateControllerTableSet is empty then return true
+   
+   convert dateControllerTableSet to seconds
+   convert dateControllerScriptChanged to seconds
+   if dateControllerScriptChanged > dateControllerTableSet then
+      return true
+   else
+      return false
+   end if
+end menu_ControllerScriptChanged

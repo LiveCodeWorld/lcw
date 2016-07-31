@@ -1,0 +1,12 @@
+function rigCoder_FetchCode shortFile, rigFolder, pURL
+   switch
+      case pURL is empty
+         text_AddTrailing rigFolder, slash
+         put rigFolder & shortFile into someFile
+         put url ("file:" & someFile) into someCode
+         break
+      default
+         -- we are fetching the code directly from the remote server
+   end switch
+   return someCode
+end rigCoder_FetchCode

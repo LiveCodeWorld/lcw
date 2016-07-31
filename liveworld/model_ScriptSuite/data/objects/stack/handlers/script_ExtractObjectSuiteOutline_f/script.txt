@@ -1,0 +1,39 @@
+function script_ExtractObjectSuiteOutline someScript, scriptObject
+   -- creates hKeyLinks
+   local handlerOutline
+   
+   script_TrimNonSuiteHandlers someScript, nonSuiteHandlers
+   if nonSuiteHandlers is not empty then
+      put script_ExtractHkeys (nonSuiteHandlers, scriptObject) into hKeys      
+      repeat for each line hKey in hKeys
+         put item 1 of hKey into handlerName
+         put html_ConstructNameLink (handlerName, hKey) & CR after handlerOutline
+      end repeat
+   end if
+   
+   put script_GetSuiteTitles (someScript) into suiteNames
+   repeat for each line suiteName in suiteNames
+      put script_GetSuite(suiteName, someScript) into suiteScript
+      put script_ExtractHkeys (suiteScript, scriptObject) into hKeys
+      
+      put suiteName & CR after handlerOutline
+      repeat for each line hKey in hKeys
+         put item 1 of hKey into handlerName
+         put tab & html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
+      end repeat
+   end repeat
+   delete last char of handlerOutline
+   
+   if line 1 of handlerOutline = "Metadata" then
+      put the object_MetaDataTable ["script_Help"] of scriptObject into metaDataTable
+      
+      put script_GetMetadataArray(someScript) into metaDataTable
+      delete local metaDataTable ["script_Help"]
+      combine metaDataTable with CR and tab
+      
+      replace tab with ": " in metaDataTable
+      put outline_IncreaseIndent (metaDataTable) & CR before line 2 of handlerOutline
+   end if
+   
+   return handlerOutline
+end script_ExtractObjectSuiteOutline

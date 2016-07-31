@@ -1,0 +1,4 @@
+function library_StackFolder shortFileBit, pDontCreate
+   -- same as "library_StandardFolder" ???
+   return library_PluginFolder ("opn_Libraries/", pDontCreate) & shortFileBit
+end library_StackFolder

@@ -1,0 +1,6 @@
+on menu_ParseAndSaveBookArray
+   put sivasiva_GetXML() into xHtml
+   put sivasiva_ParseXhtml (xHtml) into bookArray
+   sivasiva_SaveBookArray bookArray
+   menu_DisplayBookArray
+end menu_ParseAndSaveBookArray

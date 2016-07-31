@@ -1,0 +1,17 @@
+private command _autoSave hKey, someHtml
+   -- in development, not tested or working
+   breakpoint
+   
+   _setMyLastHkey hKey
+   
+   if someHtml = "<p></p>" then
+      put empty into someHtml
+      hkey_StoreHelp hKey, someHtml
+   end if
+   put _getMyLastHkey() into lastHkey
+   if lastHkey is not empty then
+      put rev_GetScriptEditorDocumentation() into lastHtmlText
+      put "Save" && lastHkey & CR & lastHtmlText into someComment
+      -- opn_Notify someComment, true
+   end if
+end _autoSave

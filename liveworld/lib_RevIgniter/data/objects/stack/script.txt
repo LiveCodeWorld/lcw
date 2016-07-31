@@ -1,0 +1,221 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_RevIgniter
+type: script library
+version: 0.4
+
+
+/*
+This library contains all the revIgniter specific code for teh Himalayan Academy project.
+*/
+
+
+--> Exif
+-
+[[ _FetchHandler (exif_GetInfoArray,f) ]]
+
+[[ _FetchHandler (exif_ExtractLatLong,c) ]]
+
+[[ _FetchHandler (exif_GpsToDegrees,f) ]]
+
+
+--> Working On
+-
+[[ _FetchHandler (rig_FetchStackFolder,f) ]]
+
+[[ _FetchHandler (rig_StoreStackFolder,c) ]]
+
+
+--> rig | Controller | Folder
+-
+[[ _FetchHandler (rig_FetchControllerFolder,f) ]]
+
+[[ _FetchHandler (rig_StoreControllerFolder,c) ]]
+
+
+--> rig | Fetch
+-
+[[ _FetchHandler (rig_DownloadScriptAndCreateStack,c) ]]
+
+[[ _FetchHandler (rig_CreateContainerScript,f) ]]
+
+
+--> rig | Assets
+-
+[[ _FetchHandler (rig_AssetFetchAndSaveImage,c) ]]
+
+[[ _FetchHandler (rig_AssetImageFile,f) ]]
+
+[[ _FetchHandler (rig_AssetImageFolder,f) ]]
+
+
+--> rig | rigScript
+-
+[[ _FetchHandler (rig_ControllerHandlers,g) ]]
+
+[[ _FetchHandler (rig_ControllerHandlerArray,g) ]]
+
+[[ _FetchHandler (rig_Script,g) ]]
+
+[[ _FetchHandler (rig_ConstructControllerScript,f) ]]
+
+[[ _FetchHandler (rig_ConstructControllerFromScript,f) ]]
+
+[[ _FetchHandler (rig_ExtractControllerHandlers,f) ]]
+
+[[ _FetchHandler (rig_ExtractPublicHandlers,f) ]]
+
+[[ _FetchHandler (rig_ExtractDependencies,f) ]]
+
+
+--> Revigniter | Controllers | Create
+-
+[[ _FetchHandler (rig_ConstructInitScriptLines,f) ]]
+
+
+--> revIgniter
+-
+[[ _FetchHandler (rig_ConstructRouteArray,f) ]]
+
+
+--> revIgniter | Wiki
+-
+[[ _FetchHandler (rig_ConstructFedwikiPageArray,f) ]]
+   
+[[ _FetchHandler (rig_ConstructSourceArray,pf) ]]
+   
+[[ _FetchHandler (rig_ConstructMarkdownToc,pc) ]]
+   
+[[ _FetchHandler (rig_AddContentToFedwikiPageArray,c) ]]
+
+[[ _FetchHandler (rig_ScrapeHeadings,c) ]]
+
+[[ _FetchHandler (rig_CleanHandlerNames,c) ]]
+
+
+--> Rig | List
+-
+[[ _FetchHandler (rig_ListHelperFiles,f) ]]
+
+[[ _FetchHandler (rig_ListControllerFiles,f) ]]
+
+[[ _FetchHandler (rig_ListStackFiles,f) ]]
+
+[[ _FetchHandler (rig_ListSystemHelperFiles,f) ]]
+
+[[ _FetchHandler (rig_ListFiles,f) ]]
+
+[[ _FetchHandler (rig_ListServerFiles,f) ]]
+
+
+--> revIgniter | Fetch
+-
+[[ _FetchHandler (rig_FetchController,f) ]]
+
+[[ _FetchHandler (rig_FetchStack,f) ]]
+
+[[ _FetchHandler (rig_FetchSystemHelper,f) ]]
+
+[[ _FetchHandler (rig_FetchProjectFile,f) ]]
+
+[[ _FetchHandler (rig_FetchSystemFile,f) ]]
+
+[[ _FetchHandler (rig_FetchFile,f) ]]
+
+
+--> revIgniter | Store
+-
+[[ _FetchHandler (rig_StoreController,c) ]]
+
+[[ _FetchHandler (rig_StoreStacks,c) ]]
+
+[[ _FetchHandler (rig_StoreStack,c) ]]
+
+[[ _FetchHandler (rig_StoreStackData,c) ]]
+
+[[ _FetchHandler (rig_UploadLocalFile,c) ]]
+
+[[ _FetchHandler (rig_StoreData,c) ]]
+
+[[ _FetchHandler (rig_DeleteStack,c) ]]
+
+
+--> revIgniter | Path | Array
+-
+[[ _FetchHandler (rig_FetchControllerPathArray,f) ]]
+
+[[ _FetchHandler (rig_FetchStackPathArray,f) ]]
+
+[[ _FetchHandler (rig_FetchPathArray,f) ]]
+
+[[ _FetchHandler (rig_SortAndFilterCodeFiles,f) ]]
+
+
+--> Rig | Files
+-
+[[ _FetchHandler (rig_StackPath,f) ]]
+
+[[ _FetchHandler (rig_ControllerPath,f) ]]
+
+
+--> Rig | Folders
+-
+[[ _FetchHandler (rig_HelperFolder,f) ]]
+
+[[ _FetchHandler (rig_StackFolder,f) ]]
+
+[[ _FetchHandler (rig_GetFolder,f) ]]
+
+[[ _FetchHandler (rig_ControllerFolder,f) ]]
+
+[[ _FetchHandler (rig_RoutingScript,f) ]]
+
+[[ _FetchHandler (rig_ApplicationPath,f) ]]
+
+[[ _FetchHandler (rig_GetSystemFolder,f) ]]
+
+[[ _FetchHandler (rig_GetApplicationFolder,f) ]]
+
+
+--> Private | revIgniter
+-
+[[ _FetchHandler (_setControllerHelp,pf) ]]
+
+[[ _FetchHandler (_setScriptStackGistHelp,pc) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (script_HkeysFromAvailable,f) ]]
+
+[[ _FetchHandler (text_Indent,c) ]]
+
+[[ _FetchHandler (opn_Notify,c) ]]
+
+[[ _FetchHandler (osx_Notify,c) ]]
+
+[[ _FetchHandler (array_Fetch,f) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+[[ _FetchHandler (kwote,f) ]]
+
+[[ _FetchHandler (text_AddTrailing,c) ]]
+
+[[ _FetchHandler (version_IsEarlier,f) ]]
+
+[[ _FetchHandler (_convertVersionToNumber,f) ]]
+
+[[ _FetchHandler (text_Merge,f) ]]
+
+[[ _FetchHandler (stack_Object,g) ]]
+
+[[ _FetchHandler (file_DetailedInfo,f) ]]
+
+[[ _FetchHandler (file_GetSize,f) ]]
+
+[[ _FetchHandler (html_Tidy,c) ]]
+
+[[ _FetchHandler (line_Delete,c) ]]

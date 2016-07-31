@@ -1,0 +1,11 @@
+command overlay_CreateAndSetData imageView, linkArray, idLinkArray, idArray
+   -- first of all lets create and set the overlay and overlay data
+   dispatch "overlay_CreateView" to imageView
+   -- overlay_CreateView imageView
+   put the result into overlayView
+   
+   set the displayed_OverlayLinkArray of overlayView to linkArray
+   set the displayed_IdLinkArray of overlayView to idLinkArray
+   set the displayed_IdArray of overlayView to idArray
+   return overlayView
+end overlay_CreateAndSetData

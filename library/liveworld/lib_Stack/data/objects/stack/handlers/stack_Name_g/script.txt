@@ -1,0 +1,8 @@
+getprop stack_Name
+    return the short name of the defaultstack
+     
+    -- old version
+    put the long id of the target into targetObject
+    put object_ExtractStack(targetObject) into stackObject
+    return the short name of stackObject
+end stack_Name

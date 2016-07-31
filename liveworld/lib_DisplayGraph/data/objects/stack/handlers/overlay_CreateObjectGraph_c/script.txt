@@ -1,0 +1,7 @@
+command overlay_CreateObjectGraph scriptObject, hKeyArray, graphStyle, pOverlayName, pDotCluster, pImageFormat
+   if pOverlayName is empty then put graphStyle into pOverlayName
+   put the overlay_Folder of scriptObject into overlayFolder 
+   overlay_CreateGraph overlayFolder, hKeyArray, pOverlayName, scriptObject, graphStyle, pDotCluster, empty, pImageFormat
+   put the result into overlayArray
+   return overlayArray
+end overlay_CreateObjectGraph

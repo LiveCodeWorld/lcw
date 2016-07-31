@@ -1,0 +1,16 @@
+command gist_SearchListArray shortGistFile, @gistListArray, @gistID
+   put empty into gistID
+   if gistListArray is not an array then 
+      put gist_FetchListArray() into gistListArray
+   end if
+   repeat for each key indexNum in gistListArray
+      put gistListArray [indexNum]["files"] into gistFileArray
+      put keys (gistFileArray) into gistFiles
+      if shortGistFile is among the lines of gistFiles then
+         put gistListArray [indexNum]["id"] into gistID
+         gist_DeconstructFileArray gistFileArray, shortGistFile, gistContent, gistDescription, htmlURL, gitPulllURL
+         return gistListArray
+      end if
+   end repeat
+   return gistListArray
+end gist_SearchListArray

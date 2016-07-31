@@ -1,0 +1,204 @@
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Global | Library | Manage | Menu
+-
+[[ _FetchHandler (menu_GitRevertHkeyData,c) ]]
+
+[[ _FetchHandler (menu_TestRevertedHkeyData,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddFolderToKnown,c) ]]
+
+[[ _FetchHandler (menu_AddAllStacksToKnown,c) ]]
+
+[[ _FetchHandler (menu_TidyKnownLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CheckRecentScriptExports,c) ]]
+
+[[ _FetchHandler (menu_CheckAllScriptExports,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CheckExportedLibraryScripts,c) ]]
+
+[[ _FetchHandler (menu_CheckExportedMenuScripts,c) ]]
+
+[[ _FetchHandler (_DisplayFoundDifferences,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RevScriptEditorBehaviors,c) ]]
+
+[[ _FetchHandler (menu_ExportAndIndexOnCompile,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SaveLoadedSet,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddToUsedLibrary,c) ]]
+
+[[ _FetchHandler (menu_RemoveLibraryFromUsed,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddToBackLibrary,c) ]]
+
+[[ _FetchHandler (menu_RemoveFromBackLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddToFrontLibrary,c) ]]
+
+[[ _FetchHandler (menu_RemoveFromFrontLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_ReindexLibrary,c) ]]
+
+[[ _FetchHandler (menu_AddExtraLibrariesTo,c) ]]
+
+[[ _FetchHandler (menu_AddStandardLibrariesTo,c) ]]
+
+[[ _FetchHandler (menu_LoadAllStandardLibraries,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayCurrentlyLoadedLibraryArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayLibraryArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayLibraryData,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_LoadLibrarySetOnly,c) ]]
+
+[[ _FetchHandler (menu_StartEnvironment,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreateNewLibrarySet,c) ]]
+
+[[ _FetchHandler (menu_CloneNewLibrarySet,c) ]]
+
+[[ _FetchHandler (menu_DeleteLibrarySet,c) ]]
+
+[[ _FetchHandler (menu_CopyCurrentlyUsedTo,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Development,c) ]]
+
+
+--> Global | Library | Manage | Menu | Props
+-
+[[ _FetchHandler (display_ObjectScript,c) ]]
+
+[[ _FetchHandler (export_AndIndexOnCompile,g) ]]
+
+[[ _FetchHandler (rev_ScriptEditorBehaviors,g) ]]
+
+[[ _FetchHandler (stack_SetName,g) ]]
+
+[[ _FetchHandler (stack_SetNames,g) ]]
+
+[[ _FetchHandler (back_SetName,g) ]]
+
+[[ _FetchHandler (back_SetNames,g) ]]
+
+[[ _FetchHandler (front_SetName,g) ]]
+
+[[ _FetchHandler (front_SetNames,g) ]]
+
+[[ _FetchHandler (set_Name,g) ]]
+
+[[ _FetchHandler (set_Names,g) ]]
+
+[[ _FetchHandler (library_SetName,g) ]]
+
+[[ _FetchHandler (library_SetNames,g) ]]
+
+
+--> Global | Library | Manage | Menu | Deps
+-
+[[ _FetchHandler (stack_NameToShortFile,f) ]]
+
+[[ _FetchHandler (opn_LibraryStackFiles,f) ]]
+
+-- function opn_GetAllUsedLibraries
+   local allUsedArray
+   put library_GetModelArray() into modelArray
+   repeat for each key setName in modelArray
+      put modelArray [setName]["used"] into usedArray
+      union allUsedArray with usedArray
+   end repeat
+   return allUsedArray
+end opn_GetAllUsedLibraries
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayKnownStacks,c) ]]
+
+[[ _FetchHandler (menu_CleanKnownStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RemoveLibraryFromAll,c) ]]
+
+[[ _FetchHandler (menu_AddLibraryFilesToAllUsed,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreateNewLibrary,c) ]]
+
+-- on menu_ExportAllLibraryHkeys
+put opn_LibraryStackFiles() into stackNames
+repeat for each line stackName in stackNames
+   set the cursor to busy
+   put "stack" && kwote(stackName) into scriptObject
+   scriptObject_ExportHkeys scriptObject
+end repeat
+end menu_ExportAllLibraryHkeys
+
+
+[[ _FetchHandler (menu_DisplayUsedLibraries,c) ]]
+
+[[ _FetchHandler (menu_DisplayLibrarySet,c) ]]
+
+[[ _FetchHandler (menu_RevealLibraryFolder,c) ]]
+
+[[ _FetchHandler (menu_DisplayLibraryFolderStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SaveAllLibraries,c) ]]
+
+
+--> Dep | Menu | Props
+-
+[[ _FetchHandler (all_Stacks,g) ]]

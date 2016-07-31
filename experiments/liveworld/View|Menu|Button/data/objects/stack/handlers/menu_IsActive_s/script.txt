@@ -1,0 +1,24 @@
+setprop menu_IsActive [menuTitle] boolean
+    put the long id of the target into targetObject
+    
+    get the script_MenuTitles of targetObject
+    if menuTitle is empty then
+        put line 1 of it into someMenuName
+    else if menuTitle is among the lines of it then
+        put menuTitle into someMenuName
+    else
+        return false
+    end if
+    
+    put the galaxyScriptMenu_Button of me into someDestination
+    if exists(someDestination) and someMenuName is not empty then
+        if boolean is true then
+            set the menu_AddGlobalPluginName of someDestination to someMenuName
+            return true
+        else
+             
+        end if
+    else
+        return false
+    end if
+end menu_IsActive

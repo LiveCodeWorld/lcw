@@ -1,0 +1,8 @@
+on menu_AddAllStacksToKnown
+   put spotlight_ListStacks() into bigFileIndex
+   library_AddFilesToStackFiles bigFileIndex
+   put the result into resultArray
+   
+   put resultArray ["duplicateFileArray"] into duplicateFileArray
+   display_Array duplicateFileArray, "duplicateFileArray"
+end menu_AddAllStacksToKnown

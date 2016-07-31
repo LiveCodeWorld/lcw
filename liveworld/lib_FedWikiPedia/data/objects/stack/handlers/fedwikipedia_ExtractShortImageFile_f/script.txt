@@ -1,0 +1,14 @@
+function fedwikipedia_ExtractShortImageFile droppedHTML
+   put xml_ToArray (droppedHTML) into imageArray
+   
+   put imageArray ["meta"]["img"]["@attributes"] into attributeArray
+   put attributeArray ["src"] into thumbURL
+   put attributeArray ["srcset"] into srcsetURL
+   put attributeArray ["width"] into thumbWidth
+   put attributeArray ["height"] into thumbHeight
+   
+   -- https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Bruce_Sterling_at_ARE_2010.jpg/220px-Bruce_Sterling_at_ARE_2010.jpg
+   set the itemdelimiter to "/"
+   put item -2 of thumbURL into shortImageFile
+   return shortImageFile
+end fedwikipedia_ExtractShortImageFile

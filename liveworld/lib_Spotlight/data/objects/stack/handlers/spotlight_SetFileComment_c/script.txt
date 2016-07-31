@@ -1,0 +1,11 @@
+on spotlight_SetFileComment someFile, commentText
+    --set Spotlight comment
+    applescript_ConvertPath someFile  
+     
+    replace quote with "'" in commentText
+    put kwote(commentText) into commentText
+    
+    put merge("set the comment of the file [[someFile]] to [[commentText]] as string") into appleScriptLine
+    get appleScript_DoLine(appleScriptLine, "Finder" , true)
+    return it
+end spotlight_SetFileComment

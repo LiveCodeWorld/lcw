@@ -1,0 +1,9 @@
+on menu_StoreBackToCurrentSet
+   -- put "Default" into setName
+   put project_GetCurrentName() into setName
+   
+   put project_CurrentBackScripts() into currentBackScripts
+   put _constructObjectArray (currentBackScripts) into objectArray
+   project_SetObjectTypeArray objectArray, "back", setName
+   menu_DisplaySelectedSet setName
+end menu_StoreBackToCurrentSet

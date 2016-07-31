@@ -1,0 +1,16 @@
+on menu_SetStandardBehavior scriptObject, standardBehaviorStackName
+   put the name of scriptObject into someName
+   if standardBehaviorStackName = "None" then
+      answer merge ("Set the named script-only behavior of [[someName]] to '[[standardBehaviorStackName]]'.") with "Cancel" or "OK"
+      if it is "Cancel" then exit to top
+      
+      set the behavior of scriptObject to empty
+   else    
+      answer merge ("Set the named script-only behavior of [[someName]] to '[[standardBehaviorStackName]]'.") with "Cancel" or "OK"
+      if it is "Cancel" then exit to top
+      
+      put the name of stack standardBehaviorStackName into bObject
+      set the behavior of scriptObject to bObject
+      edit the script of stack standardBehaviorStackName
+   end if
+end menu_SetStandardBehavior

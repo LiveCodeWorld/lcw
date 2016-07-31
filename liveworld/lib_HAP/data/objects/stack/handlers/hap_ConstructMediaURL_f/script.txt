@@ -1,0 +1,4 @@
+function hap_ConstructMediaURL fileSlug
+   put "http://www.himalayanacademy.com/view/" & fileSlug into someURL
+   return someURL
+end hap_ConstructMediaURL

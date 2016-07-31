@@ -1,0 +1,14 @@
+function rect_GetFitAndSetTopLeft originalW, originalH, someRect
+   if not (originalW > 0 and originalH > 0) then return someRect
+   
+   rect_ExtractDimensions someRect, newW, newH
+   put newW / originalW into xScaleFactor
+   put newH / originalH into yScaleFactor
+   
+   put min(xScaleFactor, yScaleFactor) into sFactor
+   put round(originalW * sFactor) into newW
+   put round(originalH * sFactor) into newH
+   
+   put rect_FromTopLeft (someRect, newW, newH) into newRect
+   return newRect
+end rect_GetFitAndSetTopLeft

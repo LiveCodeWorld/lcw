@@ -1,0 +1,17 @@
+on menu_ConstructNestedDependencies treeView
+   put the displayed_MainStackWalkArray of treeView into mainStackWalkArray
+   put mainStackWalkArray ["external"] into externalArray
+   put firstLevelExternalCalls (externalArray) into firstLevelCalls
+   
+   hArray_FilterHkeys firstLevelCalls
+   
+   put hArray_WalkHkeyDeps (firstLevelCalls) into dependencyWalkArray
+   set the displayed_DependencyWalkArray of treeView to dependencyWalkArray
+   
+   put dependencyWalkArray ["hKeyArray"] into dependencyHkeyArray
+   put array_AllNodes (dependencyHkeyArray) into allDeps
+   
+   put the displayed_Object of treeView into mainStackObject
+   put "Nested Deps for" && mainStackObject into someTitle
+   set the tree_Display [someTitle] of treeView to allDeps
+end menu_ConstructNestedDependencies

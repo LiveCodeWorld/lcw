@@ -1,0 +1,10 @@
+getprop card_ViewOutline [withLinks]
+   put withLinks is true into withLinks
+   put the card_TopViews of the target into cardViews
+   repeat for each line cardView in cardViews
+      put the view_NameOutline [withLinks] of cardView & CR after cardViewOutline
+      -- put the view_ReferenceOutline [onlyViewNames] of cardView & CR after cardViewOutline
+   end repeat
+   delete char -1 of cardViewOutline
+   return cardViewOutline
+end card_ViewOutline

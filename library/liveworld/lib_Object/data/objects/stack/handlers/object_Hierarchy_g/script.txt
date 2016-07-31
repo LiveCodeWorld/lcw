@@ -1,0 +1,70 @@
+getprop object_Hierarchy [pWhichBehaviors]
+   -- see also "script_Hierarchy" 
+   put the long id of the target into someObject
+   if pWhichBehaviors is empty then put "no library deps" into pWhichBehaviors
+   
+   put revRuggedId (someObject) into objectHierarchy
+   put the behavior of someObject into objectBehavior
+   object_MaybeAddBehavior objectHierarchy, objectBehavior, pWhichBehaviors
+   
+   put someObject into objectOwner
+   put empty into skipThisBackgroundID
+   repeat
+      switch word 1 of objectOwner
+         case "stack"
+            -- previously added a stack, check if it was a substack
+            put objectOwner into stackObject
+            put the owner of stackObject into mainStackObject
+            if exists(mainStackObject) then
+               put mainStackObject & CR before objectHierarchy
+               put the behavior of mainStackObject into objectBehavior
+               object_MaybeAddBehavior objectHierarchy, objectBehavior, pWhichBehaviors
+            end if
+            return objectHierarchy
+            break
+         case "card"
+            -- previously added a card, so check for backgrounds
+            
+            put objectOwner into cardObject
+            put the backgroundIDs of cardObject into bgIDs
+            -- need to add in reverse to mirror message path
+            repeat with bgNum = the number of lines of bgIDs down to 1
+               put line bgNum of bgIDs into someID
+               if someID = skipThisBackgroundID then next repeat
+               put the long ID of bg ID someID of cardObject into backgroundObject
+               put revRuggedId (backgroundObject) & CR before objectHierarchy
+               put the behavior of backgroundObject into objectBehavior
+               object_MaybeAddBehavior objectHierarchy, objectBehavior, pWhichBehaviors
+            end repeat
+            
+            delete word 1 to 4 of objectOwner
+            
+            -- above a card must be a stack
+            put name of objectOwner into stackObject
+            put stackObject & CR before objectHierarchy
+            put the behavior of stackObject into objectBehavior
+            object_MaybeAddBehavior objectHierarchy, objectBehavior, pWhichBehaviors
+            break
+         case "group"
+            -- previously added a group, check to see if was a bg
+            if the backgroundbehavior of objectOwner is true then
+               -- will need to skip it's own "card" background
+               put the short ID of objectOwner into skipThisBackgroundID
+            end if
+            delete word 1 to 4 of objectOwner
+            if exists (objectOwner) is false then return objectHierarchy
+            put revRuggedId (objectOwner) & CR before objectHierarchy
+            put the behavior of objectOwner into objectBehavior
+            object_MaybeAddBehavior objectHierarchy, objectBehavior, pWhichBehaviors
+            break
+         default
+            -- previously added a normal control
+            delete word 1 to 4 of objectOwner
+            if exists (objectOwner) is false then return objectHierarchy
+            put revRuggedId (objectOwner) & CR before objectHierarchy
+            put the behavior of objectOwner into objectBehavior
+            object_MaybeAddBehavior objectHierarchy, objectBehavior, pWhichBehaviors
+      end switch
+   end repeat
+   return "error" -- should never get here!
+end object_Hierarchy

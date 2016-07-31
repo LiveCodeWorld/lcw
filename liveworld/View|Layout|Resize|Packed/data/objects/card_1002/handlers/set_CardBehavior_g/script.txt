@@ -1,0 +1,5 @@
+getprop set_CardBehavior [mTarget]
+   put the card_Object of mTarget into cardObject
+   get the behavior_Name of cardObject
+   return it = "Card Icons" 
+end set_CardBehavior

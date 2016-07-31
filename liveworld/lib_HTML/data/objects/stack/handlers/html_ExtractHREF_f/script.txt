@@ -1,0 +1,28 @@
+function html_ExtractHREF someHtml
+   /*
+   This one is prob better:
+   
+   <a[\s]+[^>]*?href[\s]?=[\s\"\']+(.*?)[\"\']+.*?>([^<]+|.*?)?<\/a>
+   
+   from http://regexlib.com/REDetails.aspx?regexp_id=968
+   based on http://regexlib.com/REDetails.aspx?regexp_id=774
+   
+   Pattern:  href[\s]*=[\s]*&quot;[^\n&quot;]*&quot;
+   RegExp Author:  Tony Hawe
+   Matching Text:	href =&quot;http://www.theregister.com/&quot;|||href=&quot;http://theregister.co.uk&quot;|||hre
+   Non-Matching Text:	href=http://theregister.co.uk
+   Description:	A very short pattern for extracting hrefs from HTML, does not validate they are within a tag
+   */
+   
+   local urlIndex
+   replace lineFeed with empty in someHtml -- seems necessary
+   
+   put "href[\s]*=[\s]*'([^\n']*)'" into someReg
+   replace "'" with quote in someReg -- for now to make regExp readable
+   
+   if matchtext(someHtml, someReg, someUrl) is false then
+      return empty
+   else
+      return someUrl
+   end if
+end html_ExtractHREF

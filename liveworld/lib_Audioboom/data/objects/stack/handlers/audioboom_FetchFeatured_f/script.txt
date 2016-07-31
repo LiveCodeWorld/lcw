@@ -1,0 +1,5 @@
+function audioboom_FetchFeatured
+   put "audio_clips/featured" into apiPath
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FetchFeatured

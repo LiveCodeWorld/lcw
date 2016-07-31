@@ -1,0 +1,10 @@
+command menu_EditMenuItemScript pigeon, mController, sentMenuTarget
+   put word 1 of pigeon into handlerName
+   put hkey_Construct (handlerName, "c", mController) into hKey
+   try
+      hkey_EditFoundHandler hKey
+   catch e
+      edit the script of mController
+   end try
+   return hKey
+end menu_EditMenuItemScript

@@ -1,0 +1,7 @@
+setprop top_Factor fluidFactor
+   if fluidFactor is empty then put _calculateTopFactor() into fluidFactor
+   lock messages
+   set the top_Factor of me to fluidFactor
+   unlock messages
+   return fluidFactor
+end top_Factor

@@ -1,0 +1,35 @@
+command objectArray_SearchNested containerObject, someProperty, @propertyArray, pObjectKeyProperty, pControllerObject, pSplitArrays
+   local objectArray
+   -- faster
+   
+   objectArray_AddProperty objectArray, propertyArray, containerObject, someProperty, pObjectKeyProperty, pControllerObject, pSplitArrays
+   put the result into containerKey
+   
+   -- look at contents
+   repeat with controlNum = 1 to the number of controls in containerObject
+      put the long id of control controlNum of containerObject into subObject
+      put the object_Name [pObjectKeyProperty] of subObject into subKey
+      
+      if word 1 of subObject = "group" then -- recurse
+         objectArray_SearchNested subObject, someProperty, propertyArray, pObjectKeyProperty, pControllerObject, pSplitArrays
+         put the result into subArray -- will be a nested array
+         if pSplitArrays is not false then
+            -- put subArray ["@prop"][subKey] into objectArray ["@prop"][subKey]
+            put subArray [subKey] into objectArray [containerKey][subKey]
+         else
+            put subArray [subKey] into objectArray [containerKey][subKey]
+         end if
+         add the number of layers in subObject to controlNum
+      else -- add plain
+         put object_GetCustomProperty (subObject, someProperty, pControllerObject) into subResult -- will often be a plain value
+         if pSplitArrays is not false then
+            put subResult into propertyArray [subKey][someProperty]
+            put empty into objectArray [containerKey][subKey]
+         else
+            put subResult into objectArray [containerKey][subKey]["@prop"][someProperty]
+         end if
+      end if
+   end repeat
+   
+   return objectArray
+end objectArray_SearchNested

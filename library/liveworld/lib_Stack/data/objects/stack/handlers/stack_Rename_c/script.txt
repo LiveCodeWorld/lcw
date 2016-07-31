@@ -1,0 +1,43 @@
+command stack_Rename oldName, pNewName, pDontRenameFile
+   if pNewName is empty then
+      put opn_Ask ("What would you like to rename this stack to?", oldName) into pNewName
+      repeat
+         if exists (stack pNewName) then
+            put opn_Ask ("Stack exists. Try another name?", oldName) into pNewName
+         else
+            exit repeat
+         end if
+      end repeat
+   end if
+   
+   -- a check
+   put exists(stack oldName) and exists(stack pNewName) is false into okToRename
+   if okToRename is false then
+      -- should warn?
+      return empty
+   end if
+   
+   put the filename of stack oldName into oldFileName
+   put oldFileName into newFileName
+   put pNewName & ".rev" into newShortFile 
+   set the itemdelimiter to "/"
+   put newShortFile into item -1 of newFileName
+   
+   if pDontRenameFile is true then return oldFileName
+   
+   put the object_Folder of stack oldName into sourceFolder
+   
+   ## Rename the stack
+   git_RenameFile oldFileName, newFileName
+   -- rename file fromFile to toFile
+   set the name of stack oldName to pNewName
+   set the filename of stack pNewName to newFileName
+   save stack pNewName
+   
+   put the object_Folder of stack pNewName into destFolder
+   
+   ## Now if there is a object script folder for this stack rename
+   git_RenameFolder sourceFolder, destFolder
+   
+   return newFileName
+end stack_Rename

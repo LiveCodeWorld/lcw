@@ -1,0 +1,17 @@
+on menu_CheckRecentScriptExports
+   put opn_Ask ("Search for scripts that changed in the last howmany minutes?", 20) into pMinutes
+   put pMinutes * 60 into pSeconds
+   
+   -- put spotlight_ListRecentlyExportedObjectScripts (pSeconds) into someObjects
+   if pSeconds is empty then put 20 * 60 into pSeconds
+   put spotlight_ListRecentlyExportedScriptFiles (pSeconds) into scriptFiles
+   
+   local pMouseDoubleUpHandler, pTitleMenu
+   put merge ("Files changed in last [[pMinutes]] minutes") into pTitle
+   put $HOME into pFolderToStrip
+   display_Files scriptFiles, pFolderToStrip, pMouseDoubleUpHandler, pTitleMenu, pTitle
+   
+   -- display_Outline someObjects, "Recently Exported Script Objects"
+   -- display_Index someObjects, "Recently Exported Script Objects"
+   -- _DisplayFoundDifferences someObjects, "Could not find any errors in the objects of recently exported scripts!"
+end menu_CheckRecentScriptExports

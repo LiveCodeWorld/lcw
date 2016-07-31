@@ -1,0 +1,8 @@
+on googleEarth_FlyToKmlFile someFile
+   applescript_ConvertPath someFile
+   
+   put merge("tell application 'Google Earth' to open file '[[someFile]]'") into doScript
+   replace "'" with quote in doScript
+   do doScript as AppleScript
+   if the result is not empty then put doScript & cr & the result
+end googleEarth_FlyToKmlFile

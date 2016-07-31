@@ -1,0 +1,7 @@
+function server_GetIPaddress
+   if Server_Address is not empty then
+      return Server_Address
+   else
+      return Server_URL
+   end if
+end server_GetIPaddress

@@ -1,0 +1,33 @@
+function opml_RecurseOutlineNodes treeID, rootNode
+    local newOutline
+    
+    if rootNode is empty then
+        put "opml[1]/body[1]" into rootNode
+    else
+        set the itemdelimiter to"/"
+        put empty into indentBit
+        put the number of items of rootNode - 3 into indentLevel
+        repeat indentLevel
+            put tab after indentBit
+        end repeat
+         
+        put revXMLAttributes(treeID, rootNode, tab, CR) into attributeArray
+        split attributeArray using CR and tab
+        put attributeArray ["text"] into someText
+        put attributeArray ["url"] into someLink
+        put html_ConstructNameLink(someText, someLink) into newLine
+         
+        put indentBit & newLine & Cr after newOutline
+    end if
+     
+    put revXMLChildNames(treeID, rootNode, CR, "outline", true) into childNodes
+    if childNodes is not empty then
+        repeat for each line childNode in childNodes
+            put rootNode & "/" & childNode into childRoot
+            get opml_RecurseOutlineNodes(treeID, childRoot)
+            put it & CR after newOutline
+        end repeat
+    end if
+    delete last char of newOutline
+    return newOutline
+end opml_RecurseOutlineNodes

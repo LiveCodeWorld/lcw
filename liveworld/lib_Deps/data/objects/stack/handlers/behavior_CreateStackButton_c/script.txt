@@ -1,0 +1,22 @@
+command behavior_CreateStackButton someObject, bName, pUripName, pBehaviorType
+   if pUripName is empty then put bName into pUripName
+   if pBehaviorType is empty then put "behavior" into pBehaviorType
+   
+   put the stack_BehaviorButton [bName] of someObject into depBehaviorButton
+   if exists (depBehaviorButton) is true then return depBehaviorButton
+   
+   put the defaultstack into oDefault
+   --
+   behavior_CreateSubStackCard someObject
+   put the result into behaviorCard
+   
+   -- behaviorCard exists or has been created
+   -- set the defaultstack to menuSubStack
+   go invisible behaviorCard -- would be good to be able to create it on / in a card and not have to go???
+   create button bName
+   put it into createdButton
+   
+   put metadata_ConstructUripArray (pUripName, pBehaviorType) into uRipArray
+   set the object_Metadata of createdButton to uRipArray
+   return createdButton
+end behavior_CreateStackButton

@@ -1,0 +1,5 @@
+getprop object_RelativeRect [referenceObject]
+   put the long ID of the target into objectToSet
+   put object_GetRelativeRect(referenceObject, objectToSet) into relativeRect
+   return relativeRect
+end object_RelativeRect

@@ -1,0 +1,26 @@
+function fossil_ParseOpenInfo openInfo
+   put fossil_GoodKeys() into goodKeys
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in openInfo
+      put item 1 of someLine into someKey
+      switch someKey
+         case "project-code"
+            put "project-id" into someKey
+            break
+         case "server-code"
+            put "server-id" into someKey
+            break
+      end switch
+      
+      if someKey is among the items of goodKeys then
+         put word 1 to -1 of item 2 to -1 of someLine into someValue
+         put someValue into projectArray [someKey]
+      else
+         put someLine & CR after checkedOutFiles
+      end if
+   end repeat
+   delete char -1 of checkedOutFiles
+   put checkedOutFiles into projectArray ["files"]
+   return projectArray
+end fossil_ParseOpenInfo

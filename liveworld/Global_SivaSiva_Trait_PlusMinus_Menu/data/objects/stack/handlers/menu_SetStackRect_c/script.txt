@@ -1,0 +1,6 @@
+on menu_SetStackRect plusMinusView
+   put the stack_Object of plusMinusView into stackObject
+   set the width of stackObject to 414
+   set the height of stackObject to 736
+   set the resizable of stackObject to false
+end menu_SetStackRect

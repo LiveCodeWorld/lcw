@@ -1,0 +1,12 @@
+on model_DeleteArrayKey someKey, modelObject, modelName, modelType
+   put model_GetArray(modelName, modelObject) into dataArray
+   delete local dataArray[someKey]
+   put keys(dataArray) into dictionaryKeys
+   if dictionaryKeys is empty then
+      model_DeleteArray modelName, modelObject
+      return empty
+   else
+      model_SetArray modelName, modelObject, dataArray
+      return dictionaryKeys
+   end if
+end model_DeleteArrayKey

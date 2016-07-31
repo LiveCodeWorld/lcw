@@ -1,0 +1,4 @@
+function behavior_ListStandardPaths
+   put the project_StackPaths ["behavior"] of stack "LCW" into stackPaths
+   return stackPaths
+end behavior_ListStandardPaths

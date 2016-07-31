@@ -1,0 +1,7 @@
+getprop virtual_Child [fixedName]
+   put the long ID of the target into targetObject
+   
+   -- slower but better would be to restrict to top level
+   put the object_RealName [fixedName] of targetObject into realName
+   return the long ID of control realName of targetObject
+end virtual_Child

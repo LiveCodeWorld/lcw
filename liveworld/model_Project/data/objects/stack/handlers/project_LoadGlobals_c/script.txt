@@ -1,0 +1,15 @@
+command project_LoadGlobals projectName
+   -- we still need to deal with thing like password preferences
+   
+   environment_Start
+   project_LoadWorkingStackFiles projectName
+   -- project_RestoreGlobalPrefs projectName
+   project_LoadGlobalPrefs projectName
+   project_LoadGlobalHarray projectName 
+   project_LoadGlobalArray projectName 
+   
+   /*
+   library_CheckEssentialPrefs -- double check critical prefs like git path
+   project_ReloadCheckoutGlobals projectName  -- load non user globals
+   */
+end project_LoadGlobals

@@ -1,0 +1,8 @@
+setprop stack_IsPalette someBoolean
+    put the stack_Object of the target into stackObject
+    if someBoolean is true then
+        set the style of stackObject to "palette"
+    else
+        set the style of stackObject to "toplevel"
+    end if
+end stack_IsPalette

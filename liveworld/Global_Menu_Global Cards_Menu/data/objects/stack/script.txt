@@ -1,0 +1,60 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Menu_Global Cards_Menu
+type: controller
+version: 0.1
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | Menu | Global Cards | Menu
+-
+[[ _FetchHandler (menu_EditGlobalCard,c) ]]
+
+-- on menu_InUse usedName
+   edit the script of stack usedName
+end menu_InUse
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreateGlobalCard,c) ]]
+
+[[ _FetchHandler (menu_DeleteGlobalCard,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReindexCards,c) ]]
+
+[[ _FetchHandler (menu_ReExportGlobalMenus,c) ]]
+
+
+--> Global | Menu | Global Cards | Menu | Disabled
+-
+-- getprop disabled_ReindexGlobalMenus [mTarget]
+   return true
+end disabled_ReindexGlobalMenus
+
+
+--> Global | Menu | Global Cards | Menu | Props
+-
+[[ _FetchHandler (m_Names,g) ]]
+
+-- getprop used_Names
+   get the stacksinuse
+   sort it
+   return it
+end used_Names
+
+[[ _FetchHandler (card_Names,g) ]]
+
+[[ _FetchHandler (new_GlobalTitles,g) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_CheckTarget,g) ]]

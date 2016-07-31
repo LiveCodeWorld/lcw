@@ -1,0 +1,5 @@
+function library_GetFilteredCalls hKey
+   put library_FetchHandlerMetadata (hKey) into metadataArray
+   put metadataArray ["filteredCalls"] into filteredCalls
+   return filteredCalls
+end library_GetFilteredCalls

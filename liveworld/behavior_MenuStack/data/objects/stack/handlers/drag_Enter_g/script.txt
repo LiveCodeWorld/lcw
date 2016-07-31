@@ -1,0 +1,13 @@
+getprop drag_Enter
+   put the dragDestination into targetObject
+   if the dragsource = targetObject then return false
+   
+   put the view_Object of targetObject into targetView
+   if exists(targetView) then
+      set the dragAction to "link"
+      return true
+   else
+      set the dragAction to "none"
+      return false
+   end if
+end drag_Enter

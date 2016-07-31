@@ -1,0 +1,37 @@
+function script_NodeSectionFromLinkKeys linkKeys, allKeys, someScript, cluster, drawOrphans
+    local nodeSection, internalNodeDefs, externalNodeDefs, nodeLinks, internalMissingDefs
+    
+    script_SetDefsAndLinks linkKeys, someScript, internalNodeDefs, externalNodeDefs, nodeLinks
+    if nodeLinks is not empty and cluster is true then
+        put empty into someColour
+        get dot_ConstructCluster("Internal", 1, internalNodeDefs, "", "filled", someColour)
+        line_Insert it, nodeSection
+    end if
+    
+    if drawOrphans is true then
+        -- now work out orphans
+        put allKeys into remainingLinks
+        line_Delete linkKeys, remainingLinks
+        
+        script_SetDefsAndLinks remainingLinks, someScript, internalMissingDefs, externalNodeDefs, nodeLinks
+        if internalMissingDefs is not empty and cluster is true then
+            put empty into someColour
+            get dot_ConstructCluster("Orphan", 3, internalMissingDefs, "", "filled", someColour)
+            line_Insert it, nodeSection
+        end if
+    end if
+    
+    if cluster is true then
+        get dot_ConstructCluster("External", 2, externalNodeDefs)
+        line_Insert it, nodeSection
+    else
+        line_Add internalNodeDefs, nodeSection
+        line_Add internalMissingDefs, nodeSection
+        line_Add externalNodeDefs, nodeSection
+    end if
+     
+    put CR after nodeSection
+    line_Insert nodeLinks, nodeSection
+     
+    return nodeSection
+end script_NodeSectionFromLinkKeys

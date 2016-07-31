@@ -1,0 +1,6 @@
+command library_SetCalls hKey, hKeyCalls
+   put library_FetchHandlerMetadata (hKey) into metadataArray
+   put hKeyCalls into metadataArray ["hKeyCalls"]
+   library_FetchHandlerMetadata hKey, metadataArray
+   return metadataArray
+end library_SetCalls

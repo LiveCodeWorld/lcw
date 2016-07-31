@@ -1,0 +1,17 @@
+getprop card_Object
+   put the long id of the target into targetObject
+   switch
+      case word 1 of targetObject = "card"
+         return targetObject
+      case word 1 of targetObject is among the items of "stack,background,bkgnd,bg"
+         -- be careful as there is no such thing as a unique card_Object
+         -- lets return the one currently showing
+         put the long id of this cd of the defaultstack into cardObject
+         return cardObject
+      default
+         put text_TokenOffset ("card", targetObject) into tokenNum
+         delete token 1 to (tokenNum - 1) of targetObject
+         put word 1 to -1 of targetObject into cardObject
+         return cardObject
+   end switch
+end card_Object

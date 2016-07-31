@@ -1,0 +1,5 @@
+on menu_AnalizeMainStack hKey
+   put item 3 of hKey into hObject
+   put the main_Stack of hObject into scriptObject
+   display_ScriptObject scriptObject
+end menu_AnalizeMainStack

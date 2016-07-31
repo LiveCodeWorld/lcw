@@ -1,0 +1,7 @@
+function day_SundayBefore someDate
+    convert someDate to dateItems
+    put last item of someDate into dayNum
+    put - 1 * abs(dayNum - 1) into howManyDays
+    put addDays(howManyDays, someDate) into newDate
+    return date_Round(newDate, "d")
+end day_SundayBefore

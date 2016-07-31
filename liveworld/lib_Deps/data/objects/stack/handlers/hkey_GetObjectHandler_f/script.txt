@@ -1,0 +1,11 @@
+function hkey_GetObjectHandler hKey, pNotPrivate
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then return empty
+   if pNotPrivate is true then
+      put the script of hObject into someScript
+      put script_ExtractHandler (hKey, someScript, pNotPrivate) into someHandler
+   else
+      put the script_Handler [hKey] of hObject into someHandler
+   end if
+   return someHandler
+end hkey_GetObjectHandler

@@ -1,0 +1,5 @@
+function script_GetTemplate templateName
+   put script_ConstructTemplateUrl (templateName) into someUrl
+   put url someUrl into someScript
+   return someScript
+end script_GetTemplate

@@ -1,0 +1,49 @@
+function behaviorModel_GetDataArray pWhichBehaviors, pIsExpanded
+   -- suitable for datagrids
+   -- pWhichBehaviors = "view", "all" or empty
+   
+   put 1 into lineNum
+   
+   if pWhichBehaviors is not "view" then
+      put hArray_GetObjectTypeArray ("behavior") into oTypeArray
+      repeat for each key rObject in oTypeArray
+         put rObject into dataArray [lineNum]["ruggedID"]
+         put oTypeArray [rObject]["uRipName"] into dataArray [lineNum]["title"]
+         put oTypeArray [rObject]["scriptHash"] into dataArray [lineNum]["scriptHash"]
+         put pIsExpanded is true into dataArray [lineNum]["isExpanded"]
+         add 1 to lineNum
+      end repeat
+   end if
+   
+   if pWhichBehaviors is not empty then
+      put hArray_GetObjectTypeArray ("view behavior") into oTypeArray
+      repeat for each key rObject in oTypeArray
+         put rObject into dataArray [lineNum]["ruggedID"]
+         put oTypeArray [rObject]["uRipName"] into dataArray [lineNum]["title"]
+         put oTypeArray [rObject]["scriptHash"] into dataArray [lineNum]["scriptHash"]
+         put pIsExpanded is true into dataArray [lineNum]["isExpanded"]
+         add 1 to lineNum
+      end repeat
+   end if
+   
+   return dataArray
+   
+   
+   -- old move to hArray
+   breakpoint
+   
+   put behaviorModel_GetArray ("nameArray") into nameArray
+   put keys(nameArray) into bNames
+   sort bNames
+   repeat with lineNum = 1 to the number of lines of bNames
+      put line lineNum of bNames into bName
+      put bName into dataArray [lineNum]["title"]
+      
+      put nameArray [bName]["ruggedID"] into dataArray [lineNum]["ruggedID"]
+      put nameArray [bName]["sourceURL"] into dataArray [lineNum]["sourceURL"]
+      put nameArray [bName]["helpURL"] into dataArray [lineNum]["helpURL"]
+      
+      put pIsExpanded is true into dataArray [lineNum]["isExpanded"]
+   end repeat
+   return dataArray
+end behaviorModel_GetDataArray

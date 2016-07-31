@@ -1,0 +1,90 @@
+setprop stack_Array [pRename] stackArray
+   local newCreationArray
+   lock screen
+   set the relayerGroupedControls to false -- required otherwize setting layers moves objects out of groups = hack
+   
+   put the stack_Object of the target into stackNameObject
+   set the defaultstack to stackNameObject
+   
+   if pRename is not false then
+      put stackNameObject into stackArray ["manifest"]["object"]
+      put the short name of stackNameObject into stackArray ["manifest"]["name"]
+   end if
+   
+   put stackArray ["objects"]["stack"] into stackPropertyArray
+   set the object_PropertyArray of stackNameObject to stackPropertyArray
+   
+   put stackArray ["manifest"]["cards"] into allCdsArray
+   if allCdsArray is an array then
+      put the number of lines of keys (allCdsArray) into numberOfCards
+      put 1 into cardNum
+      repeat with cardNum = 1 to numberOfCards
+         card_CreateFromArray cardNum, stackArray, newCreationArray
+         if cardNum = numberOfCards then exit repeat
+         
+         -- now loop again
+         create card
+         repeat for each line bgID in the groupIDs of this card
+            -- if there are any bg behavior grps, remove them and let the objectProp set them back if needed
+            remove group id bgID from this cd
+         end repeat
+      end repeat
+   else
+      -- lazy zero manifest (objects only array)
+      put stackArray ["objects"] into oArray
+      repeat for each key aFolder in oArray
+         if aFolder = "stack" then next repeat
+         put oArray [aFolder] into objectPropertyArray
+         put aFolder into aObject
+         replace "_" with " id " in aObject
+         
+         object_Create aObject, empty, objectPropertyArray
+      end repeat
+   end if
+   
+   -- interestingly filename is not in the properties of a stack
+   put manifestArray ["filename"] into someFile
+   if someFile is not empty then set the filename of stackNameObject to someFile
+   
+   put 1 into clipNum
+   repeat for each element clipArray in stackArray ["manifest"]["videoclips"]
+      put clipArray ["object"] into aObject
+      put aObject into aFolder
+      replace " id " with "_" in aFolder
+      put stackArray ["objects"][aFolder]["rev"] into revPropertyArray
+      put stackArray ["objects"][aFolder]["videoclip"] into clipData
+      if clipData is empty then next repeat
+      
+      put the tempname into someFile
+      put clipData into url ("binfile:" & someFile)
+      -- create videoClip -- does not work for videoClips
+      import videoClip from file someFile
+      -- put the result into createdObject -- RunRev bug it or the result does not give the createdObject
+      
+      delete local revPropertyArray ["layer"]
+      set the rev_PropertyArray of videoClip clipNum to revPropertyArray
+      add 1 to clipNum
+   end repeat
+   
+   put 1 into clipNum
+   repeat for each element clipArray in stackArray ["manifest"]["audioClips"]
+      put clipArray ["object"] into aObject
+      put aObject into aFolder
+      replace " id " with "_" in aFolder
+      put stackArray ["objects"][aFolder]["rev"] into revPropertyArray
+      put stackArray ["objects"][aFolder]["audioclip"] into clipData
+      if clipData is empty then next repeat
+      
+      put the tempname into someFile
+      put clipData into url ("binfile:" & someFile)
+      -- create audioClip -- does not work for videoClips
+      import audioClip from file someFile
+      -- put the result into createdObject -- RunRev bug it or the result does not give the createdObject
+      
+      delete local revPropertyArray ["layer"]
+      set the rev_PropertyArray of audioClip clipNum to revPropertyArray
+      add 1 to clipNum
+   end repeat
+   unlock screen
+   return manifestArray
+end stack_Array

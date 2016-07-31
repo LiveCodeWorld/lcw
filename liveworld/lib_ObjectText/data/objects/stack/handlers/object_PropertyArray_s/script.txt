@@ -1,0 +1,41 @@
+setprop object_PropertyArray [stripID] objectPropArray
+   put the long id of the target into targetObject
+   if objectPropArray is not an array then return targetObject
+   
+   lock screen 
+   put objectPropArray ["rev"] into revPropertyArray
+   
+   put objectPropArray ["script"] into someScript
+   if someScript is not empty then set the script of targetObject to someScript
+   put objectPropArray ["custom"] into customArray
+   if customArray is an array then set the custom_PropertyArray of targetObject to customArray
+   
+   switch word 1 of targetObject
+      case "stack" 
+         set the style of targetObject to objectPropArray ["style"]
+         break
+      case "field" 
+         put objectPropArray ["htmlText"] into objectHtml   
+         if objectHtml is not empty then put objectHtml into revPropertyArray ["htmlText"]
+         break
+      case "button" 
+         put objectPropArray ["text"] into objectText
+         if objectText is not empty then put objectText into revPropertyArray ["text"]
+         break
+      case "image"
+         put objectPropArray ["image"] into someImage
+         if someImage is not empty then
+            set the fileName of targetObject to empty
+            set the text of targetObject to someImage
+         end if
+         break
+   end switch
+   
+   if revPropertyArray is an array then
+      set the rev_PropertyArray [stripID] of targetObject to revPropertyArray
+      put the result into targetObject -- id may have changed
+   end if
+   
+   unlock screen
+   return targetObject
+end object_PropertyArray

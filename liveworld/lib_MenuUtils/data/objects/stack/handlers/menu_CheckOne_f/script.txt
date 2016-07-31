@@ -1,0 +1,10 @@
+function menu_CheckOne chosenLineNum, someMenu
+    repeat with osLineNum = 1 to the number of lines of someMenu
+        if osLineNum is chosenLineNum then
+            put menu_SetCheckedLine(chosenLineNum, someMenu, true) into someMenu
+        else
+            put menu_SetCheckedLine(osLineNum, someMenu, false) into someMenu
+        end if
+    end repeat
+    return someMenu
+end menu_CheckOne

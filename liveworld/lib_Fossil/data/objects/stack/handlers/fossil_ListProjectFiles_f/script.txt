@@ -1,0 +1,11 @@
+function fossil_ListProjectFiles pFolder
+   -- lists all files in a fossil repo
+   put fossil_ListShortFiles (pFolder) into shortFiles
+   
+   folder_Format pFolder
+   repeat for each line shortFile in shortFiles
+      put pFolder & shortFile & CR after someFiles
+   end repeat
+   delete char -1 of someFiles
+   return someFiles
+end fossil_ListProjectFiles

@@ -1,0 +1,5 @@
+function github_RestGetFromUrl someUrl
+   _setAuthHeaders
+   put url someUrl into someJSON
+   return someJSON
+end github_RestGetFromUrl

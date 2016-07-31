@@ -1,0 +1,39 @@
+function image_GetSnapShot imageViewOrRect, imageType
+    lock screen
+    if imageViewOrRect is a rect then
+        put imageViewOrRect into globalRect
+    else if exists(imageViewOrRect) then
+        put the image_Object of imageViewOrRect into imageObject
+         
+        -- don't snap the frame (and get global rect)
+        put the showborder of imageObject into oShowBorder
+        set the showborder of imageObject to false
+        put the rect of imageObject into imageRect
+         
+        /*
+        put the borderwidth of imageObject into someBorder
+        put rect_SubtractMargin(someBorder, imageRect) into imageRect
+        */
+         
+        put object_ExtractStackName(imageObject) into stackName
+        put rect_GetGlobal(imageRect, stackName) into globalRect
+    end if
+     
+    switch imageType
+        case "GIF"
+            export snapshot from rect globalRect to someImage as GIF
+            break
+        case "JPG"
+            export snapshot from rect globalRect to someImage as JPEG
+            break
+        case "JPEG"
+            export snapshot from rect globalRect to someImage as JPEG
+            break
+        default
+            export snapshot from rect globalRect to someImage as PNG
+    end switch
+    
+    if exists(imageObject) then set the showborder of imageObject to oShowBorder
+    unlock screen
+    return someImage
+end image_GetSnapShot

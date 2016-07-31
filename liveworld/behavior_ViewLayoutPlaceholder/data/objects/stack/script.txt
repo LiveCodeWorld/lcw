@@ -1,0 +1,74 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Layout|Placeholder
+type: view behavior
+version: 0.4
+copyright: David Bovill
+
+/*
+This "placeholder" view is useful for experimentign with a layout. 
+Drag and drop views onto a placeholder to replace them.
+It's also a great way to test the robsutness of your layout.
+Can you replace all your views with placeholders and back and everything still work?
+*/
+
+local LocalArray
+
+[[ _FetchHandler (view_Name,g) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+
+--> Drag
+-
+[[ _FetchHandler (drag_Hilite,s) ]]
+
+
+--> Events | Drag
+-
+[[ _FetchHandler (dragEnter,c) ]]
+
+[[ _FetchHandler (dragLeave,c) ]]
+
+
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> View
+-
+[[ _FetchHandler (view_IsOpaque,g) ]]
+
+[[ _FetchHandler (view_IsOpaque,s) ]]
+
+[[ _FetchHandler (view_Label,g) ]]
+
+[[ _FetchHandler (view_Label,s) ]]
+
+[[ _FetchHandler (view_Colour,g) ]]
+
+[[ _FetchHandler (view_Colour,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (view_Height,g) ]]
+
+[[ _FetchHandler (view_Height,s) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (placeHolder_Button,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (colour_GetRandom,f) ]]

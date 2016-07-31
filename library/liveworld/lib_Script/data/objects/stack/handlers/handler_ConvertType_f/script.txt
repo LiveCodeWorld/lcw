@@ -1,0 +1,22 @@
+function handler_ConvertType handlerType
+   switch char 1 of word 1 of handlerType
+      case "o"
+         return "on"
+      case "m"
+         return "on"
+      case "c"
+         return "command"
+      case "pc"
+         return "private command"
+      case "f"
+         return "function"
+      case "pf"
+         return "private function"
+      case "g"
+         return "getprop"
+      case "s"
+         return "setprop"
+      default
+         return empty
+   end switch
+end handler_ConvertType

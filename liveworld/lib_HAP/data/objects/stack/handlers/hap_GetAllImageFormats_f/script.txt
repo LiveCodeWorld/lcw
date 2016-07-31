@@ -1,0 +1,7 @@
+function hap_GetAllImageFormats recordArray
+   repeat for each key itemNum in recordArray ["formats"]
+      put recordArray ["formats"][itemNum]["filename"] & CR after imageFiles
+   end repeat
+   delete char -1 of imageFiles
+   return imageFiles
+end hap_GetAllImageFormats

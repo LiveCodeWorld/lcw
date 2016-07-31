@@ -1,0 +1,5 @@
+function trait_GetNegativeResponse chapterArray, pSituationNum
+   if pSituationNum is empty then put 1 into pSituationNum
+   put chapterArray ["tableArray"]["tbody"][pSituationNum][3] into negativeResponse
+   return negativeResponse
+end trait_GetNegativeResponse

@@ -1,0 +1,4 @@
+on menu_CreateDependencyGraphFromExported hKey, fetchHow
+   put hkey_ConstructCallArray (hKey, fetchHow) into hKeyArray
+   hkeyArray_DrawGraph hKeyArray, "hierarchical"
+end menu_CreateDependencyGraphFromExported

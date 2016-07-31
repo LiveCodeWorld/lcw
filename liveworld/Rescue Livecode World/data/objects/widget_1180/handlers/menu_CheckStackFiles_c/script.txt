@@ -1,0 +1,13 @@
+on menu_CheckStackFiles
+   put project_GetCurrentName() into projectName
+   put project_FetchStackFiles (projectName) into storedStackFiles
+   put the project_StackFiles of me into projectHomeStackFiles
+   if projectHomeStackFiles = projectHomeStackFiles then
+      put merge ("The current project home stackfiles is the same as the stored stackfiles for project '[[projectName]]'") into someQuestion
+      answer someQuestion
+   else
+      put merge ("The current project home stackfiles differs from the stored stackfiles for project '[[projectName]]'") into someQuestion
+      beep
+      answer warning someQuestion
+   end if
+end menu_CheckStackFiles

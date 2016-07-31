@@ -1,0 +1,6 @@
+function xml_GetNodeContents someXml, someNode
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    revDeleteXMLTree treeID
+    return nodeContents
+end xml_GetNodeContents

@@ -1,0 +1,7 @@
+command display_ProjectArray pProjectName
+   -- will refresh the display
+   if pProjectName is empty then put the displayed_Project of me into pProjectName
+   put library_FetchSetArray (pProjectName) into setArray
+   set the arrayData of _setTreeWidget() to setArray
+   display_SetFolders setArray
+end display_ProjectArray

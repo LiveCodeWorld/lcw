@@ -1,0 +1,13 @@
+setprop object_GroupLayer withinGroupLayer
+   put the long ID of the target into someObject
+   put someObject into containerGroup
+   delete word 1 to 4 of containerGroup
+   
+   put the short ID of someObject into someID
+   
+   lock screen
+   start editing containerGroup
+   set the layer of control ID someID to withinGroupLayer
+   stop editing
+   unlock screen
+end object_GroupLayer

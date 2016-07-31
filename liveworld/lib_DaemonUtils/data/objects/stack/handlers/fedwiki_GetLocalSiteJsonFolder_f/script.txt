@@ -1,0 +1,12 @@
+function fedwiki_GetLocalSiteJsonFolder
+   put pref_GetValue ("fedwiki_LocalSiteJsonFolder") into localSiteJsonFolder
+   
+   if there is not a folder localSiteJsonFolder then
+      answer folder "Choose a folder for the local wiki-page json files..."
+      put it into localSiteJsonFolder
+      if localSiteJsonFolder is empty then exit to top
+      fedwiki_SetLocalSiteJsonFolder localSiteJsonFolder
+      put the result into localSiteJsonFolder -- here we make sure it has a trailing "/"
+   end if
+   return localSiteJsonFolder
+end fedwiki_GetLocalSiteJsonFolder

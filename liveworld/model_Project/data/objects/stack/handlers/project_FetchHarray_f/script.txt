@@ -1,0 +1,5 @@
+function project_FetchHarray pProjectName
+   -- if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchArray ("Hkey_Data") into hArray
+   return hArray
+end project_FetchHarray

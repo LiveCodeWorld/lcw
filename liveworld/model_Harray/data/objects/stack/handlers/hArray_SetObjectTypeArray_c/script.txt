@@ -1,0 +1,5 @@
+command hArray_SetObjectTypeArray objectType, objectTypeArray, pHarray
+   put hArray_GetObjectTypeData (pHarray) into objectTypeData
+   put objectTypeArray into objectTypeData [objectType]
+   hArray_SetObjectTypeData objectTypeData, pHarray
+end hArray_SetObjectTypeArray

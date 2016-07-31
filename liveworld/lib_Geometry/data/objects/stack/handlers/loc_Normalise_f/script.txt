@@ -1,0 +1,16 @@
+function loc_Normalise someLoc, someRect
+    put item 1 of someLoc into someX
+    if someX <= item 1 of someRect then
+        put item 1 of someRect into item 1 of someLoc
+    else if someX >= item 3 of someRect then
+        put item 3 of someRect into item 1 of someLoc
+    end if
+    
+    put item 2 of someLoc into someY
+    if someY <= item 2 of someRect then
+        put item 2 of someRect into item 2 of someLoc
+    else if someY >= item 4 of someRect then
+        put item 4 of someRect into item 2 of someLoc
+    end if
+    return someLoc
+end loc_Normalise

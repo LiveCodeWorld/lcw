@@ -1,0 +1,13 @@
+getprop menu_BarNames
+   put the long id of the target into menuBarGroup
+   if the object_IsMenuBar of menuBarGroup is false then return empty
+   
+   put the number of buttons of menuBarGroup into maxButtons
+   repeat with btnNum = 1 to maxButtons
+      if the style of button btnNum of menuBarGroup is "menu" then
+         put the short name of button btnNum of menuBarGroup & CR after menuNames
+      end if
+   end repeat
+   delete char -1 of menuNames
+   return menuNames
+end menu_BarNames

@@ -1,0 +1,22 @@
+on dragEnd
+   put the dragDestination into targetObject
+   if exists(targetObject) is false then return false
+   put the view_Object of targetObject into targetView
+   if exists(targetView) is false then return false
+   
+   put the dragdata ["private"] into mTitle
+   if mTitle = "Default Menu" then put empty into mTitle
+   
+   if the controlKey is "Down" then
+      put the menu_ToolTitle of targetView into oTitle
+      set the menu_ToolTitle of targetView to mTitle
+   else
+      put the menu_Title of targetView into oTitle
+      set the menu_Title of targetView to mTitle
+   end if
+   
+   put kwote(mTitle) & CR after someInfo
+   put "was" && kwote(oTitle) & CR after someInfo
+   put the name of targetView & CR after someInfo
+   opn_Notify someInfo, true
+end dragEnd

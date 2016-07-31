@@ -1,0 +1,14 @@
+command project_FixUsed pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_FetchObjects ("used", pProjectName) into stackObjects
+   repeat for each line stackObject in stackObjects
+      if exists (stackObject) then
+         put pProjectName into resultArray [pProjectName]["stack exists"][stackObject]
+         library_AddUsedStack stackObject, pProjectName
+      else
+         put pProjectName into resultArray [pProjectName]["stack does not exist"][stackObject]
+         library_DeleteUsedStack stackObject, pProjectName
+      end if
+   end repeat
+   return resultArray
+end project_FixUsed

@@ -1,0 +1,10 @@
+on menu_KulerDocumentation menuChoice
+   switch menuChoice
+      case "API"
+         revGoUrl "http://learn.adobe.com/wiki/display/kulerdev/B.+Feeds"
+         break
+      case "Kuler"
+         break
+         revGoUrl "http://kuler.adobe.com/"
+   end switch
+end menu_KulerDocumentation

@@ -1,0 +1,5 @@
+command logArray_Delete
+   put logArray_File() into someFile
+   delete file someFile
+   return someFile
+end logArray_Delete

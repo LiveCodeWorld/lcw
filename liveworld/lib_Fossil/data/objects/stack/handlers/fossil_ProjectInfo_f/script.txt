@@ -1,0 +1,9 @@
+function fossil_ProjectInfo fossilFile
+   put "fossil info" into someShell
+   
+   shell_BashParamEscape fossilFile
+   put space && fossilFile after someShell
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_ProjectInfo

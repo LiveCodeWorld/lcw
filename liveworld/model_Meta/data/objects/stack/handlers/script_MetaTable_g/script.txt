@@ -1,0 +1,5 @@
+getprop script_MetaTable
+   put the script_MetaArray of the target into ripArray
+   combine ripArray with CR and tab
+   return ripArray
+end script_MetaTable

@@ -1,0 +1,17 @@
+getprop disabled_EvaluateFunction [mTarget]
+   put LocalArray ["someHandler"] into someHandler
+   put line 1 of someHandler into handlerLine
+   switch
+      case word 1 of handlerLine = "on"
+         return "delete"
+      case word 1 of handlerLine = "command"
+         return "delete"
+      case word 1 of handlerLine = "private"
+         return "delete"
+      case the number of items of handlerLine = 1
+         -- the number of words of handlerLine > 2
+         return false
+      default
+         return true
+   end switch
+end disabled_EvaluateFunction

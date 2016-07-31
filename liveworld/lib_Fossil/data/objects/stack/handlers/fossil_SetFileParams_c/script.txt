@@ -1,0 +1,22 @@
+command fossil_SetFileParams fileOrRelativeFile, @fossilCheckoutFolder, @relativeFile
+   if fossilCheckoutFolder is empty then
+      put fileOrRelativeFile into someFile
+      if there is not a file someFile then return empty
+      
+      -- put fossil_InfoArray (someFile) into fossilStatusArray
+      -- put fossilStatusArray ["local-root"] into fossilCheckoutFolder
+      put fossil_FindCheckoutFolder (someFile) into fossilCheckoutFolder
+      if fossilCheckoutFolder is empty then return empty
+      
+      if someFile begins with fossilCheckoutFolder then -- a safety check
+         folder_Format fossilCheckoutFolder
+         put fileOrRelativeFile into relativeFile
+         delete char 1 to (the number of chars of fossilCheckoutFolder) of relativeFile
+      else
+         breakpoint -- a strange result?
+         return empty
+      end if
+   else
+      put fileOrRelativeFile into relativeFile
+   end if
+end fossil_SetFileParams

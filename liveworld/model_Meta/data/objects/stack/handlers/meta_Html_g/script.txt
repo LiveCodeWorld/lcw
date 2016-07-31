@@ -1,0 +1,5 @@
+getprop meta_Html
+   put the object_Folder of the target into objectFolder
+   put object_FetchMetaHtml (objectFolder) into objectHtml
+   return objectHtml
+end meta_Html

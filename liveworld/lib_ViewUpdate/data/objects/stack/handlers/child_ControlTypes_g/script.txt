@@ -1,0 +1,12 @@
+getprop child_ControlTypes
+   put the long id of the target into targetObject
+   
+   put the childcontrolids of targetObject into topIDs
+   repeat for each line someID in topIDs
+      put the long id of control id someID into someControl
+      put the control_Type of someControl into controlType
+      put controlType & CR after controlTypes
+   end repeat
+   delete char -1 of controlTypes
+   return controlTypes
+end child_ControlTypes

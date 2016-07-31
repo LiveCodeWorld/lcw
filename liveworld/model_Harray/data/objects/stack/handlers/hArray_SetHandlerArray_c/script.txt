@@ -1,0 +1,9 @@
+command hArray_SetHandlerArray handlerArray, pHkey
+   global gHkey_Array
+   put item 1 to 2 of pHkey into shortHkey
+   if shortHkey is empty then
+      put handlerArray into gHkey_Array ["handlerArray"]
+   else
+      put handlerArray into gHkey_Array ["handlerArray"][shortHkey]
+   end if
+end hArray_SetHandlerArray

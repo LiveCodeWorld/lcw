@@ -1,0 +1,13 @@
+on menu_SetClockSections mTarget
+   local sColour, pDuration, pSectionName
+   
+   set the clock_SectionArray ["Talk"] of mTarget to construct_ClockSectionArray (1, sColour, 8)
+   set the clock_SectionArray ["Tools"] of mTarget to construct_ClockSectionArray (2, sColour, 3)
+   set the clock_SectionArray ["Questions"] of mTarget to construct_ClockSectionArray (3, sColour, pDuration)
+   set the clock_SectionArray ["Practice"] of mTarget to construct_ClockSectionArray (4, sColour, pDuration)
+   set the clock_SectionArray ["Requirements"] of mTarget to construct_ClockSectionArray (5, sColour, 3)
+   set the clock_SectionArray ["Info"] of mTarget to construct_ClockSectionArray (6, sColour, 3)
+   
+   put the clock_SectionModel of mTarget into clockSectionModel
+   display_Array clockSectionModel, "the clock_SectionModel"
+end menu_SetClockSections

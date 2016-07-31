@@ -1,0 +1,26 @@
+function fedwikipedia_FetchSectionSummaryPageArray pageSlug, sectionNum
+   -- see also "fedwiki_FetchWikipediaSummaryPageArray"
+   -- need to make a "query" call to get a nice clean text
+   -- this will fetch all the nested text into sectionDescription which can be to long.
+   local sectionTocArray, sectionTitle, lookUpArray, sectionTOC
+   
+   mediawiki_FetchSectionQueryInfo pageSlug, sectionNum, sectionDescription, pageTitle, shortImageFile, sectionArray, wikipediaRevisionID
+   put the result into sandboxArray
+   fedwikipedia_ConstructSectionTocArray sectionArray, sectionNum, sectionTocArray, sectionTitle
+   fedwikipedia_ExtractTocLookupArray sectionTocArray, lookUpArray, sectionTOC   -- don't look for sectionTitle as we have extracted subsections
+   put wikipedia_ConstructUrl (pageSlug, sectionTitle) into wikipediaUrl
+   
+   put construct_SummarySourceArray (pageTitle, pageSlug, wikipediaUrl, wikipediaRevisionID, lookUpArray) into pSourceArray
+   
+   -- now let's construct the page
+   put fedwikipedia_SplitSectionDescription (pageTitle, shortImageFile, sectionDescription, sectionTocArray) into sectionIntro
+   put wikicommons_ConstructTwoImagePageArray (sectionTitle, sectionIntro, shortImageFile, wikipediaUrl, pSourceArray) into fedwikiPageArray
+   
+   if sectionTOC is not empty then
+      put "# See also" & CR & sectionTOC into markdownSection
+      fedwiki_AddMarkdownToPageArray fedwikiPageArray, markdownSection
+   end if
+   
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwikipedia_FetchSectionSummaryPageArray

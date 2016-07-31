@@ -1,0 +1,12 @@
+on DragReorderDrop pOriginatingIndex, pStartLine, pDroppedOnLine
+   local tTheDragData
+   
+   ## in case you need it
+   -- put the dgDragReorderData of me into tTheDragData
+   
+   ## Reorder Lines
+   if (pStartLine is not pDroppedOnLine) then
+      SetLineOfIndex pOriginatingIndex, pDroppedOnLine
+      send "RefreshList" to me in 0 secs
+   end if
+end DragReorderDrop

@@ -1,0 +1,13 @@
+command browser_Show someBoolean, pURL
+   put the browser_Widget of me into browserWidget
+   put the serverFile_View of me into serverFileView
+   
+   lock screen
+   set the visible of browserWidget to someBoolean
+   set the visible of serverFileView to (someBoolean is false)
+   
+   if pURL is not empty then
+      set the url of browserWidget to pURL
+   end if
+   unlock screen
+end browser_Show

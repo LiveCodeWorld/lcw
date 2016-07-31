@@ -1,0 +1,11 @@
+function view_ListNamesOfStandardFiles
+   put view_ShortFiles() into shortFiles
+   
+   put empty into viewPaths
+   repeat for each line someFile in shortFiles
+      put view_FileToPath (someFile, includeStem) into viewPath
+      put viewPath & CR after viewPaths
+   end repeat
+   delete last char of viewPaths
+   return viewPaths
+end view_ListNamesOfStandardFiles

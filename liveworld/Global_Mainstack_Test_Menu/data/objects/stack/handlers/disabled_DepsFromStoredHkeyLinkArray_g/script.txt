@@ -1,0 +1,8 @@
+getprop disabled_DepsFromStoredHkeyLinkArray [hKey]
+   put hkey_ArrayFile (hKey) into someFile
+   if there is a file someFile then
+      return false
+   else
+      return true
+   end if
+end disabled_DepsFromStoredHkeyLinkArray

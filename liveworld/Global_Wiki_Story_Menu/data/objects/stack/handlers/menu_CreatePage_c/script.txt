@@ -1,0 +1,27 @@
+on menu_CreatePage mTarget
+   put the tree_Array of mTarget into jsonArray
+   
+   if jsonArray is an array then
+      put the tree_Field of mTarget into treeField
+      put the fedwiki_Domain of treeField into fedwikiDomain
+      put jsonArray ["Title"] into oldTitle
+   else  
+      put the textDisplay_View of mTarget into textDisplayView
+      put the fedwiki_Domain of textDisplayView into fedwikiDomain
+      put the view_Text of textDisplayView into someJson
+      put json_ToArray (someJson) into jsonArray
+      put jsonArray ["Title"] into oldTitle
+   end if
+   
+   put opn_Ask ("Give the page a new title...", oldTitle) into newTitle
+   put newTitle into jsonArray ["Title"]
+   
+   put json_FromArray (jsonArray) into someJson
+   -- put someJson
+   
+   put tolower (newTitle) into wikiPageSlug
+   replace space with "-" in wikiPageSlug
+   dispatch "fedwiki_StoreData" to stack "Wiki Crawl" with wikiPageSlug, fedwikiDomain, someJson
+   put the result into someResult
+   put someResult
+end menu_CreatePage

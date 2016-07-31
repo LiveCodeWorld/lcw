@@ -1,0 +1,27 @@
+getprop view_OutlineArray [viewOutlineType]
+   -- old - look at search now?
+   put the long id of the target into targetObject
+   
+   local someOutline, objectIndex, treeArray
+   switch word 1 of targetObject
+      case "stack"
+         opn_Notify "Not done yet!"
+         breakpoint
+         break
+      case "card"
+         put the card_TopViews of targetObject into cardTopViews
+         repeat for each line topView in cardTopViews
+            put object_GetNestedDepth(topView) into oDepth
+            view_RecurseReferenceOutline topView, someOutline, oDepth, "", objectIndex, false, viewOutlineType, treeArray
+         end repeat
+         break
+      default
+         put object_GetNestedDepth(targetObject) into oDepth
+         -- view_RecurseReferenceOutline targetObject, someOutline, oDepth, "", objectIndex, false, viewOutlineType, treeArray
+         put empty into viewReference
+         view_RecurseReferenceOutline targetObject, someOutline, oDepth, viewReference, objectIndex, false, viewOutlineType, treeArray
+   end switch
+   put word 1 to -1 of someOutline into outlineArray["outline"]
+   put treeArray into outlineArray["tree"]
+   return outlineArray
+end view_OutlineArray

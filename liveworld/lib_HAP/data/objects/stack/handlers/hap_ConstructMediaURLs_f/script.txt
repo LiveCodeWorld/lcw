@@ -1,0 +1,7 @@
+function hap_ConstructMediaURLs fileIDs
+   repeat for each line fileID in fileIDs
+      put hap_ConstructMediaURL (fileID) & CR after someURLs
+   end repeat
+   delete char -1 of someURLs
+   return someURLs
+end hap_ConstructMediaURLs

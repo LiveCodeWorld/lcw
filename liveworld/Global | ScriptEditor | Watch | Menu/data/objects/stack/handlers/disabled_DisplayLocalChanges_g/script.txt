@@ -1,0 +1,8 @@
+getprop disabled_DisplayLocalChanges [scriptObject]
+   if the script_IsDifferent of scriptObject is true then
+      return false
+   else
+      return true
+      return "delete"
+   end if
+end disabled_DisplayLocalChanges

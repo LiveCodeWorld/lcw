@@ -1,0 +1,8 @@
+function fossil_GetDiffCommand pCheckoutFolder, pGetGlobal
+   /*
+   External command to run when performing a diff.
+   If undefined, the internal text diff will be used.
+   */
+   put fossil_GetSetting ("diff-command", pCheckoutFolder, pGetGlobal) into diffCommand
+   return diffCommand
+end fossil_GetDiffCommand

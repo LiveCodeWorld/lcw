@@ -1,0 +1,36 @@
+function hkey_FetchLinkArray hKey, pFetchHow
+   -- this handler is mainly to show the different ways of fetching hkeyLinkArray
+   switch pFetchHow
+      case "stored hkeyLinkArray"
+         put hkey_GetLinkArray (hKey) into hkeyLinkArray
+         return hkeyLinkArray
+      case "stored script_LinkArray"
+         hkey_Deconstruct hKey, hName, hType, hObject, hNum
+         put the script_LinkArray of hObject into scriptLinkArray
+         put hkeyArray_ExtractSubArray (hKey,scriptLinkArray) into hkeyLinkArray
+         return hkeyLinkArray
+      case "from object"
+         -- does not use hArray
+         put hkey_ScriptDependencyArray (hKey) into hkeyLinkArray
+         return hkeyLinkArray
+      case "library_HkeyFolder()"
+         -- mixture of hArray and walking
+         put library_HkeyFolder (hKey) into hkeyLinkArray
+         return hkeyLinkArray
+      default  -- everywhere but fastest first
+         put hkey_GetLinkArray (hKey) into hkeyLinkArray
+         if hkeyLinkArray is an array then return hkeyLinkArray
+         
+         hkey_Deconstruct hKey, hName, hType, hObject, hNum
+         if exists (hObject) is false then
+            -- breakpoint
+            return empty
+         end if
+         
+         put the script_LinkArray of hObject into hkeyLinkArray
+         if hkeyLinkArray is an array then return hkeyLinkArray
+         
+         put library_HkeyFolder (hKey) into hkeyLinkArray
+         return hkeyLinkArray
+   end switch
+end hkey_FetchLinkArray

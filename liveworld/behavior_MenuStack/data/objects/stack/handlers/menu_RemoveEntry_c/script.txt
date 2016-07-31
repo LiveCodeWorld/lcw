@@ -1,0 +1,5 @@
+on menu_RemoveEntry treeField
+   put the tree_SelectedIndex of treeField into mTitle
+   put menu_GetGlobalController(mTitle) into mController
+   menu_DeleteGlobalTitle
+end menu_RemoveEntry

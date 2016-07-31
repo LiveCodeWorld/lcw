@@ -1,0 +1,9 @@
+on menu_ExportScriptArray treeView
+   put the displayed_Array of treeView into hKeyArray
+   put the displayed_Object of treeView into scriptObject
+   -- set the script_OverlayData of scriptObject
+   put the displayed_OverlayName of treeView into overlayName
+   set the script_LinkArray [overlayName] of scriptObject to hKeyArray
+   put the result into someFile
+   finder_Reveal someFile
+end menu_ExportScriptArray

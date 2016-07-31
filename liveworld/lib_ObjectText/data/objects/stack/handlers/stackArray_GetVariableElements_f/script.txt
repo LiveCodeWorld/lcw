@@ -1,0 +1,5 @@
+function stackArray_GetVariableElements aBackground, stackArray
+   put stackArray_GetBackgroundArray (aBackground, stackArray) into bgArray
+   put bgArray ["variable_elements"] into vElements
+   return vElements
+end stackArray_GetVariableElements

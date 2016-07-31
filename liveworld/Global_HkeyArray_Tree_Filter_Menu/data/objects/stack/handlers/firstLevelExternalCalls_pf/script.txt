@@ -1,0 +1,12 @@
+private function firstLevelExternalCalls externalArray
+   repeat for each key shortHkey in externalArray
+      put externalArray [shortHkey] into hkeyArray
+      repeat for each key parentHkey in hkeyArray
+         put hkeyArray [parentHkey] into externalHkeyCall
+         put parentHkey into allExternalCallArray [externalHkeyCall]
+      end repeat
+   end repeat
+   put keys (allExternalCallArray) into allFirstlevelCalls
+   sort allFirstlevelCalls
+   return allFirstlevelCalls
+end firstLevelExternalCalls

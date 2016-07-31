@@ -1,0 +1,23 @@
+setprop visible_Status someBoolean
+   put the long id of the target into tObject
+   
+   lock screen
+   put the rect of me into oRect
+   set the visible of tObject to someBoolean
+   put the layout_DividerStyle of me into dividerStyle
+   if dividerStyle is not "invisible" then
+      switch -- now figure out which dividers to show or hide
+         case tObject = the header_View of me
+            set the visible of the header_Divider of me to someBoolean
+            break
+         case tObject = the body_View of me
+            set the visible of the header_Divider of me to someBoolean
+            break
+         case tObject = the footer_View of me
+            set the visible of the footer_Divider of me to someBoolean
+            break
+      end switch
+   end if
+   dispatch "LayoutControl" to me with oRect -- fixes target
+   unlock screen
+end visible_Status

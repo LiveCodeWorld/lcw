@@ -1,0 +1,7 @@
+function overlay_GetFile overlayArray, filePropName
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Folder") into overlayFolder
+   put overlayArray_GetGraphProperty (overlayArray, filePropName) into relativeFile
+   folder_Format overlayFolder -- should not be needed
+   put overlayFolder & relativeFile into someFile
+   return someFile
+end overlay_GetFile

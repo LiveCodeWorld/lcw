@@ -1,0 +1,7 @@
+command stack_StopUsed stackObjects
+   repeat for each line stackObject in stackObjects
+      if exists(stackObject) and word 1 of stackObject is "stack" then
+         stop using stackObject
+      end if
+   end repeat
+end stack_StopUsed

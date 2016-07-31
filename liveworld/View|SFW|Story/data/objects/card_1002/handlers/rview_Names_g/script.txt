@@ -1,0 +1,4 @@
+getprop rview_Names [dgView]
+   put view_ListNames ("Record", false) into vNames
+   return "Stack,-," & vNames
+end rview_Names

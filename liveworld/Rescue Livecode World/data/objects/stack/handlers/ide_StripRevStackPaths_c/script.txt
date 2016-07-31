@@ -1,0 +1,11 @@
+command ide_StripRevStackPaths @longStackPaths
+   set the itemdelimiter to slash
+   repeat for each line someLine in longStackPaths
+      if char 1 to 3 of someLine = "rev" and char 4 of someline is not "_" then
+         next repeat
+      end if
+      put someLine & CR after nonRevStackPaths
+   end repeat
+   delete char -1 of nonRevStackPaths
+   put nonRevStackPaths into longStackPaths
+end ide_StripRevStackPaths

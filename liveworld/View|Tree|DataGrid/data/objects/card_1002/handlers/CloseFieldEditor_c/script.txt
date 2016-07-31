@@ -1,0 +1,11 @@
+on CloseFieldEditor pFieldEditor, pRecordView
+   if pRecordView is empty then
+      put the long id of the target into recordView
+   else
+      put pRecordView into recordView
+   end if
+   put the htmltext of pFieldEditor into someHtml
+   put the record_Name of recordView into vName
+   view_SetHelpHtml vName, someHtml
+   -- opn_Notify vName, true
+end CloseFieldEditor

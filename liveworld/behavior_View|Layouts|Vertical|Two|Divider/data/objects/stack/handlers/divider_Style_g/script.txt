@@ -1,0 +1,12 @@
+getprop divider_Style
+   switch
+      case the visible of me is false
+         return "invisible"
+      case the icon of me is 205232
+         return "icon"
+      case the style of me is "transparent"
+         return "transparent"
+      case the style of me is "opaque"
+         return "opaque"
+   end switch
+end divider_Style

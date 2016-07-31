@@ -1,0 +1,31 @@
+on menu_Search mTarget, menuChoice
+   local pTreeMenuTitle, pTreeLineMenuTitle
+   
+   put the search_Term of me into searchTerm
+   put opn_Ask("Search log for string...", searchTerm) into searchTerm
+   set the search_Term of me to searchTerm
+   
+   switch menuChoice
+      case "Commit history"
+         put git_SearchLog (searchTerm) into foundLog
+         put git_LogLinkOutline (foundLog) into someOutline
+         
+         -- display_Lines foundLog
+         put "git log --pretty=oneline -S:" && kwote(searchTerm) into someTitle
+         display_Outline someOutline, someTitle, pTreeMenuTitle, pTreeLineMenuTitle
+         put the result into treeView
+         put the tree_Field of treeView into treeField
+         set the menu_Controller ["Log | Menu"] of treeField to the long id of me
+         break
+      case "Search repository"
+         put git_SearchRepository (searchTerm) into foundLog
+         display_Lines foundLog
+         put git_LogLinkOutline (foundLog) into someOutline
+         put "git grep --text -i" && kwote(searchTerm) into someTitle
+         display_Outline someOutline, someTitle, pTreeMenuTitle, pTreeLineMenuTitle
+         put the result into treeView
+         put the tree_Field of treeView into treeField
+         set the menu_Controller ["Grep | Menu"] of treeField to the long id of me
+         break
+   end switch
+end menu_Search

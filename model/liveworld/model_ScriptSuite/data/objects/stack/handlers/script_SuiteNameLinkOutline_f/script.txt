@@ -1,0 +1,29 @@
+function script_SuiteNameLinkOutline someScript, scriptObject
+   put script_GetSuiteTitles(someScript) into suiteNames
+   
+   -- lets get the handlers before the first suite title
+   put line 1 of suiteNames into firstSuiteName
+   put lineoffset(firstSuiteName, someScript) into firstLineNum
+   put line 1 to (firstLineNum -1) of someScript into firstScriptBit
+   script_ConstructArraysFromScript firstScriptBit, sectionArray, uniqueArray, duplicateArray, scriptObject
+   put the result into noSuiteKeys
+   repeat for each line hKey in noSuiteKeys
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      put html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
+   end repeat
+   
+   repeat for each line suiteName in suiteNames
+      put suiteName & CR after handlerOutline
+      
+      put script_GetSuite(suiteName, someScript) into suiteScript
+      script_ConstructArraysFromScript suiteScript, sectionArray, uniqueArray, duplicateArray, scriptObject
+      put the result into suiteKeys
+      
+      repeat for each line hKey in suiteKeys
+         hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+         put tab & html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
+      end repeat
+   end repeat
+   delete last char of handlerOutline
+   return handlerOutline
+end script_SuiteNameLinkOutline

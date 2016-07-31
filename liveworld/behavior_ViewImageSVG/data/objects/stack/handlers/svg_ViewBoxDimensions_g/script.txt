@@ -1,0 +1,6 @@
+getprop svg_ViewBoxDimensions
+   put the svg_ViewBox of me into svgViewBox
+   put word 3 of svgViewBox - word 1 of svgViewBox into originalWidth
+   put word 4 of svgViewBox - word 2of svgViewBox into originalHeight
+   return originalWidth,originalHeight
+end svg_ViewBoxDimensions

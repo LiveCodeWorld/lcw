@@ -1,0 +1,6 @@
+private command behaviorModel_SetRecordValue recordName, bName, recordValue
+   put behaviorModel_GetArray() into behaviorArray
+   put recordValue into behaviorArray [bName][recordName]
+   behaviorModel_SetArray behaviorArray
+   return the result
+end behaviorModel_SetRecordValue

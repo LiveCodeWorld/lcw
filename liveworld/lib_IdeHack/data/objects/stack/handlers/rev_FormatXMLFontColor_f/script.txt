@@ -1,0 +1,8 @@
+function rev_FormatXMLFontColor pTag
+   -- Given a tag name, returns the color that the contents of this tag
+   -- should be displayed in.
+   local tColor
+   put item 3 of the cStyles[pTag] of revDocumentationStack() into tColor
+   if tColor is "default" then return empty
+   return tColor
+end rev_FormatXMLFontColor

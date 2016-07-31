@@ -1,0 +1,17 @@
+function file_PathIsSafe filePath, maxLength
+    if maxLength is empty then 
+        -- put 28 into maxLength
+        put 255 into maxLength
+    end if
+    
+    set the itemdelimiter to "/"
+    put file_SafeNameReg() into someReg
+    repeat for each item testItem in filePath
+        if the number of chars of testItem > maxLength then
+            return false
+        else if matchtext(testItem, someReg) then
+            return false
+        end if
+    end repeat
+    return true
+end file_PathIsSafe

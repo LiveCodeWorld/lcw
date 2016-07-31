@@ -1,0 +1,6 @@
+function line_AddToIndex newLines, someIndex
+    repeat for each line someLine in newLines
+        line_Add someLine, someIndex
+    end repeat
+    return someIndex
+end line_AddToIndex

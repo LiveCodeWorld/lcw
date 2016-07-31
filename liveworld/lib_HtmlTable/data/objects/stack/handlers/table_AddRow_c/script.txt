@@ -1,0 +1,16 @@
+command table_AddRow pRow
+   -- was "rigAddTableRow"
+   -- Add a table row.
+   -- Can be passed as an array or a string of comma separated params.
+   
+   put pRow into tRow
+   if tRow is not an array then
+      split tRow using comma
+   end if
+   if sRows is an array then
+      put (the number of lines in the keys of sRows + 1) into tKeyNum
+      put tRow into sRows[tKeyNum]
+   else
+      put tRow into sRows[1]
+   end if
+end table_AddRow

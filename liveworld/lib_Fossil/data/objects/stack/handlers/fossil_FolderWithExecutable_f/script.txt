@@ -1,0 +1,7 @@
+function fossil_FolderWithExecutable
+   put fossil_GetExecutablePath() into pathToCommandLine
+   
+   set the itemdelimiter to "/"
+   put empty into item -1 of pathToCommandLine
+   return pathToCommandLine
+end fossil_FolderWithExecutable

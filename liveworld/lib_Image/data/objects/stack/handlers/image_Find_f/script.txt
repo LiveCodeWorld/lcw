@@ -1,0 +1,11 @@
+function image_Find imageID, pStackNames
+   -- good for finding icons of buttons
+   if pStackNames is empty then put revLoadedStacks("all") into pStackNames
+   repeat for each line stackName in pStackNames
+      if exists(image id imageID of stack stackName) then
+         put the long id of image id imageID of stack stackName into imageObject
+         return imageObject
+      end if
+   end repeat
+   return empty
+end image_Find

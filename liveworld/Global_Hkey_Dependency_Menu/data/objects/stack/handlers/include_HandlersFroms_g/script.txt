@@ -1,0 +1,5 @@
+getprop include_HandlersFroms
+   get "stack,application,development,-,full"
+   replace comma with CR in it
+   return it
+end include_HandlersFroms

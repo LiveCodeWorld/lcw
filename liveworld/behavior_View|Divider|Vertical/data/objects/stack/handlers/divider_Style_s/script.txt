@@ -1,0 +1,22 @@
+setprop divider_Style someStyle
+   lock screen
+   switch someStyle
+      case "invisible"
+         set the visible of me to false
+         set the icon of me to empty
+         break
+      case "transparent"
+         set the style of me to "transparent"
+         set the icon of me to empty
+         break
+      case "opaque"
+         set the style of me to "opaque"
+         set the icon of me to empty
+         break
+      case "icon"
+         set the style of me to "transparent"
+         set the icon of me to 205232
+         break
+   end switch
+   unlock screen
+end divider_Style

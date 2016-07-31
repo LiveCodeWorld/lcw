@@ -1,0 +1,7 @@
+function fedwiki_ConstructStoryAudioArray audioUrl, someText, pID
+   fedwiki_SetID pID   
+   put audioUrl & CR & someText into itemArray ["text"]
+   put "audio" into itemArray ["type"]
+   put pID into itemArray ["id"]
+   return itemArray
+end fedwiki_ConstructStoryAudioArray

@@ -1,0 +1,12 @@
+private function rig_ConstructSourceArray pageTitle, sourceUrl, lookUpArray, pVersionNum
+   put "https://livecode.world/revIgniter/transportAgain" into transportURL
+   put "https://github.com/LiveCodeWorld/revIgniter,lc" into repoURL
+   put the milliseconds into dateTransported
+   
+   put fedwiki_ConstructCreateSourceArray (transportURL, sourceUrl, dateTransported, repoURL, pVersionNum) into pSourceArray
+   put pageTitle into pSourceArray ["pageTitle"]
+   if lookUpArray is an array then
+      put lookUpArray into pSourceArray ["link_dictionary"]
+   end if
+   return pSourceArray
+end rig_ConstructSourceArray

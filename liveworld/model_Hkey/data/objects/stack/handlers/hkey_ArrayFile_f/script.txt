@@ -1,0 +1,3 @@
+function hkey_ArrayFile hKey, pDontCreate
+   return hkey_Folder (hKey, pDontCreate) & "overlaydata.array"
+end hkey_ArrayFile

@@ -1,0 +1,8 @@
+command text_Indent @someText, pIndentChars
+   if pIndentChars is empty then put "   " into pIndentChars
+   repeat for each line someLine in someText
+      put pIndentChars & someLine & CR after newText
+   end repeat
+   delete char -1 of newText
+   put newText into someText
+end text_Indent

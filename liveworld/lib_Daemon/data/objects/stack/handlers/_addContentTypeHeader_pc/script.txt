@@ -1,0 +1,5 @@
+private command _addContentTypeHeader @someHeader, pContentType
+   if pContentType is empty then put "text/html" into pContentType
+   put "Content-Type:" && pContentType into headlerLine
+   put CRLF & headlerLine after someHeader 
+end _addContentTypeHeader

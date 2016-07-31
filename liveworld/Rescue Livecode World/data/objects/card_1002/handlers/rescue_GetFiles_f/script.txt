@@ -1,0 +1,6 @@
+function rescue_GetFiles folderGroupName
+   put rescue_GetLibraryFolder (folderGroupName) into someFolder
+   put project_GetFolder (groupName, projectName) into someFolder 
+   put folder_ListShortStackFiles (someFolder) into goodShortFiles
+   return goodShortFiles
+end rescue_GetFiles

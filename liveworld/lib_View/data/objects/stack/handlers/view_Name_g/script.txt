@@ -1,0 +1,6 @@
+getprop view_Name
+   put the object_MetaData of the target into mData
+   put mData ["type"] into oType
+   if oType is not "View" then return empty
+   return mData ["name"]
+end view_Name

@@ -1,0 +1,46 @@
+function scriptObject_ConstructBadExportArray
+   set the cursor to watch
+   
+   set the itemdelimiter to "/"
+   put library_GetTextStackFolder() into someFolder
+   put the number of items of someFolder + 1 into scriptFolderItemNum
+   
+   put folder_NestedFilesInside (someFolder) into scriptFiles
+   filter scriptFiles with "*/script.txt"
+   
+   repeat for each line scriptFile in scriptFiles
+      put item 1 to -2 of scriptFile into dotFolder
+      put scriptObject_ReferenceFromFolder (dotFolder) into scriptObject
+      
+      if exists (scriptObject) then
+         put the script of scriptObject into nowScript
+         put url ("file:" & scriptFile) into localObjectScript
+         
+         put the rugged_ID of scriptObject into scriptObject
+         put the mobile_Name of scriptObject into objectName
+         if nowScript = localObjectScript then
+            put scriptObject & CR after goodExports
+         else
+            put scriptObject & CR after badExports
+            put html_ConstructNameLink (objectName, scriptObject) & CR after badExportOutline
+         end if
+      else
+         put scriptObject & CR after unkownExports
+         put html_ConstructNameLink (objectName, scriptObject) & CR after unkownExportOutline
+      end if
+   end repeat
+   
+   delete char -1 of goodExports
+   delete char -1 of badExports
+   delete char -1 of badExportOutline
+   delete char -1 of unkownExports
+   delete char -1 of unkownExportOutline
+   
+   put goodExports into exportArray ["goodExports"]
+   put badExports into exportArray ["badExports"]
+   put badExportOutline into exportArray ["badExportOutline"]
+   put unkownExports into exportArray ["unkownExports"]
+   put unkownExportOutline into exportArray ["unkownExportOutline"]
+   
+   return exportArray
+end scriptObject_ConstructBadExportArray

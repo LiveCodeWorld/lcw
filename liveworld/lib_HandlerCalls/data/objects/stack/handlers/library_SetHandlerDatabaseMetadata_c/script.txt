@@ -1,0 +1,6 @@
+command library_SetHandlerDatabaseMetadata dbMetaData
+   put library_FetchHandlerDatabaseArray() into handlerDatabaseArray
+   put dbMetaData into handlerDatabaseArray ["metadata"]
+   library_StoreHandlerDatabaseArray handlerDatabaseArray
+   return handlerDatabaseArray
+end library_SetHandlerDatabaseMetadata

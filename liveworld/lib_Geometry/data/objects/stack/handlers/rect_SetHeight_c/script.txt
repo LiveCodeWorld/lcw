@@ -1,0 +1,11 @@
+command rect_SetHeight @someRect, newHeight, pDontCentre
+   if pDontCentre is true then
+      put item 2 of someRect + newHeight into item 4 of someRect
+   else
+      put item 2 of rect_GetCentre(someRect) into centreY
+      put round(newHeight/2) into bottomHeight
+      put newHeight - bottomHeight into topHeight
+      put centreY - topHeight into item 2 of someRect
+      put centreY + bottomHeight into item 4 of someRect
+   end if
+end rect_SetHeight

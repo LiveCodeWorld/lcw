@@ -1,0 +1,4 @@
+on menu_DepsFromObjectsScriptLinkArray hKey
+   put hkey_FetchDeps (hKey, "stored script_LinkArray") into hKeyDeps
+   display_Outline hKeyDeps
+end menu_DepsFromObjectsScriptLinkArray

@@ -1,0 +1,4 @@
+getprop left_View
+   if exists (LeftView) is false then view_IndexChildren
+   return LeftView
+end left_View

@@ -1,0 +1,6 @@
+private function _constructRescueStackLabel
+   put project_GetCurrentName() into currentProjectName
+   put the short name of this stack into rescueStackName
+   put rescueStackName && "(" & currentProjectName & ")" into rescueStackLabel
+   return rescueStackLabel
+end _constructRescueStackLabel

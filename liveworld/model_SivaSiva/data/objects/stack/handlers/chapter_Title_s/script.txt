@@ -1,0 +1,5 @@
+setprop chapter_Title chapterTitle
+   local bookArray
+   put sivasiva_GetChapterNum (chapterTitle, bookArray) into chapterNum
+   set the chapter_Num of the target to chapterNum
+end chapter_Title

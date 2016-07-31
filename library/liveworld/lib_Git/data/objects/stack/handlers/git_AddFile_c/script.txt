@@ -1,0 +1,9 @@
+command git_AddFile someFile
+   shell_BashParamEscape someFile
+   
+   put "git add" into someShell
+   put space & someFile after someShell
+   
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_AddFile

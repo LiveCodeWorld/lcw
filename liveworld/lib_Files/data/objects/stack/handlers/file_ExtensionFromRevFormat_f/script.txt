@@ -1,0 +1,13 @@
+function file_ExtensionFromRevFormat dataType
+    -- was "revDataFormat_ToExtension"
+    switch dataType
+        case "rtf"
+            return "rtfText"
+        case "htm"
+            return "htmlText"
+        case "html"
+            return "htmlText"
+        default
+            return "text"
+    end switch
+end file_ExtensionFromRevFormat

@@ -1,0 +1,14 @@
+function object_FromOutlineHierarchy objectHierarchy
+   -- was "outLineToObject"
+   put objectHierarchy into indexObjectLines
+   replace tab with empty in indexObjectLines
+   
+   put the number of lines of indexObjectLines into lastLine
+   put last line of indexObjectLines into someObject
+   repeat with lineNum = (lastLine - 1) down to 1
+      put line lineNum of indexObjectLines into objectBit
+      replace tab with empty in objectBit
+      put space & "of" && objectBit after someObject
+   end repeat
+   return someObject
+end object_FromOutlineHierarchy

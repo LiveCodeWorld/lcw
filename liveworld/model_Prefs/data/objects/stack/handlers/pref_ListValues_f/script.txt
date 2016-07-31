@@ -1,0 +1,6 @@
+function pref_ListValues
+   -- changed to list current global prefs (not stored)
+   -- was "pref_GetValues"
+   global gPrefs_Array
+   return keys (gPrefs_Array)
+end pref_ListValues

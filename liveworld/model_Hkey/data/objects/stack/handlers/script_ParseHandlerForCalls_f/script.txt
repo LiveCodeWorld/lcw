@@ -1,0 +1,80 @@
+function script_ParseHandlerForCalls someHandler, scriptHierarchy, someObject
+   put empty into allCalls
+   put someHandler into oHandler
+   script_CleanForCalls someHandler -- clean and remove first and last lines
+   
+   repeat for each line someLine in someHandler
+      set the itemdelimiter to "#"
+      put word 1 to -1 of item 1 of someLine into someLine
+      if char 1 to 2 of someLine is "--" then next repeat
+      
+      put token 1 of someLine into testComand
+      if testComand is empty then next repeat
+      
+      if script_DictionaryTerm (testComand) is false then
+         script_AddToExtractCalls testComand, "c", scriptHierarchy, allCalls
+      end if
+      
+      put script_ExtractFunctionCalls (someLine, false) into fNames
+      -- script_ExtractFunctionCallOfLine someLine, fName, bracketedStuff
+      -- if fName is "(" then breakpoint
+      script_AddToExtractCalls fNames, "f", scriptHierarchy, allCalls
+      
+      set the wholematches to true
+      -- could still have other stufff on line
+      put wordoffset ("the", someLine) into wordNum
+      if wordNum is 0 then next repeat
+      
+      put word (wordNum + 1) of someLine into handlerName
+      -- get word (wordNum + 1) to -1 of someLine
+      -- put token 1 of it into handlerName
+      if script_DictionaryTerm (handlerName) is true then next repeat
+      
+      -- now check getprop / setprop calls
+      -- "the xxx [zzz] of"  (should change to use tokens)
+      put wordNum + 2 into ofWordNum
+      get word ofWordNum of someLine
+      if it contains "[" then
+         put wordNum + 5 into ofWordNum
+         get word ofWordNum of someLine
+      end if
+      if it is "of" then
+         put word (wordNum - 1) of someLine into setGetPut
+         put scriptHierarchy into sendHierarchy -- default
+         
+         -- Here we can "try" to work out which object is being called
+         put word (ofWordNum + 1) of someLine into objectWord
+         if script_DictionaryTerm(objectWord) is true then
+            -- probably "stack,background,group etc
+            -- give up for now
+         else
+            -- lets assume it is a customproperty
+            -- find the line which defines the object objectWord int the handler
+            script_ExtractPutTheInto someHandler, objectWord, objectReference, targetObject
+            if objectReference is empty then
+               opn_Notify ("Can't find reference for object" && kwote(objectWord))
+            else
+               if targetObject is among the items of "me,target" then put someObject into targetObject
+               
+               if exists(targetObject) is false then
+                  opn_Notify someHandler
+               else
+                  put the objectReference of targetObject into sendObject
+                  if exists(sendObject) then
+                     put the hkey_SearchHierarchy of sendObject into sendHierarchy
+                  end if
+               end if
+            end if
+         end if
+         
+         if setGetPut is "set" and "to" is among the words of someLine then
+            script_AddToExtractCalls handlerName, "s", sendHierarchy, allCalls
+         else -- if setGetPut is among the items of "case,if,get,put" then
+            script_AddToExtractCalls handlerName, "g", sendHierarchy, allCalls
+         end if
+      end if
+   end repeat
+   
+   -- sort allCalls
+   return allCalls
+end script_ParseHandlerForCalls

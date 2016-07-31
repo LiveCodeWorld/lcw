@@ -1,0 +1,14 @@
+function overlay_ListAllFiles overlayFolder, pImageFormat
+   put overlay_GetData (overlayFolder) into overlayData 
+   put overlayData_ListNames (overlayData) into overlayNames
+   repeat for each line overlayName in overlayNames
+      overlay_Files overlayFolder, dotFile, imageFile, cmapxFile, xdotFile, dotArrayFile, overlayName, pImageFormat
+      if there is a file dotFile then put dotFile & CR after overlayFiles
+      if there is a file imageFile then put imageFile & CR after overlayFiles
+      if there is a file cmapxFile then put cmapxFile & CR after overlayFiles
+      if there is a file xdotFile then put xdotFile & CR after overlayFiles
+      if there is a file dotArrayFile then put dotArrayFile & CR after overlayFiles
+   end repeat
+   delete char -1 of overlayFiles
+   return overlayFiles
+end overlay_ListAllFiles

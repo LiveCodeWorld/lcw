@@ -1,0 +1,6 @@
+on menu_SaveStack mTarget
+   put the stack_Name of mTarget into stackName
+   save stack stackName
+   put merge ("Saved stack '[[stackName]]'") into someMessage
+   opn_Notify someMessage
+end menu_SaveStack

@@ -1,0 +1,18 @@
+on menu_AddToThisProject stackObject
+   if exists (stackObject) is false then
+      answer warning merge ("I cannot locate [[stackObject]]. Please locate and add to the stackfiles.")
+      exit to top
+   end if
+   
+   put _indexView() into indexView
+   put the displayed_project of indexView into projectName
+   
+   library_AddUsedStack stackObject, projectName
+   
+   put the short name of stackObject into stackName
+   start using stack stackName
+   start using stackObject -- seems to have changed
+   
+   dispatch "refresh" to indexView
+   set the hilite_Used of indexView to true
+end menu_AddToThisProject

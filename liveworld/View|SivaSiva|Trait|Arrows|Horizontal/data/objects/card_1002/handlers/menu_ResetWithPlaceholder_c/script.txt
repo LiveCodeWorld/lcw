@@ -1,0 +1,5 @@
+on menu_ResetWithPlaceholder mTarget
+   put the horizontalArrow_View of mTarget into horizontalArrowView
+   put the square_View of horizontalArrowView into squareView
+   set the control_Type of squareView to "placeholder"
+end menu_ResetWithPlaceholder

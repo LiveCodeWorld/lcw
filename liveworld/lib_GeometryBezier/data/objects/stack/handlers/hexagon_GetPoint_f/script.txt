@@ -1,0 +1,14 @@
+function hexagon_GetPoint pNum, someDiameter, pCentreLoc, pRotation
+   if pCentreLoc is empty then put 0,0 into pCentreLoc
+   
+   put (pNum -1) * 60 + 30 into someRad
+   subtract pRotation from someRad
+   angle_DegreesToRadians someRad
+   
+   put someDiameter * sin (someRad) into someX
+   put someDiameter * cos (someRad) into someY
+   
+   add round(someX) to item 1 of pCentreLoc
+   add round(someY) to item 2 of pCentreLoc
+   return pCentreLoc
+end hexagon_GetPoint

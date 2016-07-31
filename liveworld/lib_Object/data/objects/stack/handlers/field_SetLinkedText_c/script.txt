@@ -1,0 +1,17 @@
+command field_SetLinkedText newLinkText, startChar, endChar, someField
+   if startChar is empty then
+      put the selectedChunk into someChunk
+      put the selectedField into someField 
+      put word 2 of someChunk into startChar
+      put word 4 of someChunk into endChar
+   end if
+   
+   put the linkText of someChunk into someLink
+   put the textStyle of someChunk into oStyle
+   
+   set the field_Text [startChar,endChar] of someField to newLinkText
+   
+   put startChar + the number of chars of newLinkText into endChar
+   set the textStyle of char startChar to endChar of someField to oStyle
+   set the linkText of char startChar to endChar of someField to someLink
+end field_SetLinkedText

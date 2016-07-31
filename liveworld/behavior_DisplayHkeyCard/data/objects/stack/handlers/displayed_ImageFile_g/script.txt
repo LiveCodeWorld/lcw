@@ -1,0 +1,9 @@
+getprop displayed_ImageFile [pOverlayName]
+   put the displayed_Hkey of me into hKey
+   if the display_ProjectHandlers of me is true then
+      put hkey_ProjectImageFile (hKey, pOverlayName) into imageFile
+   else
+      put hkey_LibraryImagetFile (hKey, pOverlayName) into imageFile
+   end if
+   return imageFile
+end displayed_ImageFile

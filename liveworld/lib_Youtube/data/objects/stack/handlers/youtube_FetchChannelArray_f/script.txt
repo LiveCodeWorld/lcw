@@ -1,0 +1,5 @@
+function youtube_FetchChannelArray channelID
+   put youtube_FetchChannelJson (channelID) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end youtube_FetchChannelArray

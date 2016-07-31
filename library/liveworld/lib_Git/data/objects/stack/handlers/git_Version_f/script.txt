@@ -1,0 +1,5 @@
+function git_Version
+   git_ExecuteShell "git --version"
+   put word 3 of the result into someVersion
+   return someVersion
+end git_Version

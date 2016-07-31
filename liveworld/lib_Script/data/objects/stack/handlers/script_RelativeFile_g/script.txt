@@ -1,0 +1,6 @@
+getprop script_RelativeFile
+   put the script_File of the target into scriptFile
+   put git_GetRootFolder() into baseFolder
+   file_SetRelativePath scriptFile, baseFolder
+   return scriptFile
+end script_RelativeFile

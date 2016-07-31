@@ -1,0 +1,6 @@
+setprop positive_Label positiveText
+   put _positiveView() into positiveView
+   set the trait_Text of positiveView to positiveText
+   put the result into fieldControl
+   return fieldControl
+end positive_Label

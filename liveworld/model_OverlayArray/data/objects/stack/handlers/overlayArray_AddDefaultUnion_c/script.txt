@@ -1,0 +1,28 @@
+command overlayArray_AddDefaultUnion @overlayArray, dotDefaultArray
+   put overlayArray ["metadata"] into metadataArray
+   
+   put dotDefaultArray ["metadata"] into defaultNamedMetadataArray
+   put overlayArray ["metadata"] into namedMetadataArray
+   
+   put namedMetadataArray ["graph_PropertyArray"] into graphArray
+   put defaultNamedMetadataArray ["graph_PropertyArray"] into defaultGraphArray
+   array_Union graphArray, defaultGraphArray
+   put graphArray into overlayArray ["metadata"]["graph_PropertyArray"]
+   
+   put namedMetadataArray ["dot_HeaderArray"] into headerArray
+   put defaultNamedMetadataArray ["dot_HeaderArray"] into defaultHeaderArray
+   array_Union headerArray, defaultHeaderArray
+   put headerArray into overlayArray ["metadata"]["dot_HeaderArray"]
+   
+   put namedMetadataArray ["dot_GroupStyleArray"] into groupStyleArray
+   repeat for each key handlerType in groupStyleArray
+      put defaultNamedMetadataArray ["dot_GroupStyleArray"][handlerType]["node_StyleArray"] into defaultHandlerTypeStyleArray
+      put groupStyleArray [handlerType]["node_StyleArray"] into handlerTypeStyleArray
+      array_Union handlerTypeStyleArray, defaultHandlerTypeStyleArray
+      if handlerTypeStyleArray is an array then
+         put handlerTypeStyleArray into overlayArray ["metadata"]["dot_GroupStyleArray"][handlerType]["node_StyleArray"]
+      else
+         delete local overlayArray ["metadata"]["dot_GroupStyleArray"][handlerType]["node_StyleArray"]
+      end if
+   end repeat
+end overlayArray_AddDefaultUnion

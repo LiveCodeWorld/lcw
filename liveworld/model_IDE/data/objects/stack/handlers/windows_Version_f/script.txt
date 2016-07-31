@@ -1,0 +1,26 @@
+function windows_Version
+   if the platform is not "Win32" then return empty
+   
+   put word 2 of the systemversion into vNum
+   if word 2 of the systemversion = "Windows" then
+      switch
+         case vNum >= 4.0 and vNum < 4.1
+            return "Windows 95"
+         case vNum >= 4.1 and vNum < 4.9
+            return "Windows 98"
+         case vNum >= 4.9
+            return "Windows Me"
+      end switch
+   else
+      switch
+         case vNum >= 4.0 and vNum < 5.0
+            return "Windows NT 4"
+         case vNum >= 5.0 and vNum < 5.1
+            return "Windows 2000"
+         case vNum >= 5.1 and vNum < 5.6
+            return "Windows XP"
+         case vNum >= 5.6
+            return "Windows Vista"
+      end switch
+   end if
+end windows_Version

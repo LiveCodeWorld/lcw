@@ -1,0 +1,166 @@
+--> MetaData
+-
+name: lib_DaemonUtils
+type: behavior
+version: 0.3
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+Put scripts here that aid the speed of scripting a server,
+but that eventually shoud be factored out (for speed reasons) of the final server,
+or at least bundled in with the server script.
+
+It is placed at the very back of the behavior chain (behind lib_Log),
+or it could go before non-daemon libs like lib_Log
+*/
+
+
+--> Folders | Old
+-
+[[ _FetchHandler (fedwiki_SetLocalFolders,c) ]]
+
+[[ _FetchHandler (fedwiki_GetBinaryFile,f) ]]
+
+[[ _FetchHandler (fedwiki_GetTextFile,f) ]]
+
+[[ _FetchHandler (fedwiki_GetFileData,f) ]]
+
+[[ _FetchHandler (fedwiki_GetFile,f) ]]
+
+[[ _FetchHandler (fedwiki_Files,g) ]]
+
+[[ _FetchHandler (fedwiki_GetWelcomeFolder,f) ]]
+
+-- getprop fedwiki_LocalWikiRoot
+   put pref_GetValue ("fedwiki_LocalWikiFolder") into localWikiFolder
+end fedwiki_LocalWikiRoot
+
+[[ _FetchHandler (fedwiki_SetLocalWikiFolder,c) ]]
+
+
+--> Fedwiki | Local | Site Json | Files
+-
+/*
+The original site JSON files should be stored as a backup, before they are parsed into arrays, and spat out as original JSON files.
+That way if there is a script error we can always go back to the original JSON files as a backup.
+We also store the arrays created from the Json files in the same folder.
+*/
+
+[[ _FetchHandler (fedwiki_LocalSiteJsonFile,f) ]]
+
+[[ _FetchHandler (fedwiki_GetLocalSiteJsonFolder,f) ]]
+
+[[ _FetchHandler (fedwiki_SetLocalSiteJsonFolder,c) ]]
+
+[[ _FetchHandler (fedwiki_GetRootFolder,f) ]]
+
+-- getprop daemon_RootFolder
+   return fedwiki_GetRootFolder()
+end daemon_RootFolder
+
+[[ _FetchHandler (fedwiki_GetWelcomeHtml,f) ]]
+
+[[ _FetchHandler (fedwiki_GetWelcomeFile,f) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (daemon_Library,g) ]]
+
+[[ _FetchHandler (daemon_RouterLibrary,g) ]]
+
+[[ _FetchHandler (daemon_MiddlewareLibrary,g) ]]
+  
+[[ _FetchHandler (daemon_LogLibrary,g) ]]
+
+
+--> Utils
+-
+[[ _FetchHandler (script_MessageHandlers,g) ]]
+
+[[ _FetchHandler (daemon_RouteHandlers,g) ]]
+
+[[ _FetchHandler (daemon_ConstructDotHandler,f) ]]
+
+
+--> Request | Utils
+-
+/*
+These handlers simply make it easier to remember the way to extract the value from the requestArray.
+Better would be to simply name the array keys better?
+*/
+
+[[ _FetchHandler (request_SocketID,f) ]]
+
+[[ _FetchHandler (request_Method,f) ]]
+
+[[ _FetchHandler (request_UrlPath,f) ]]
+
+[[ _FetchHandler (request_QueryString,f) ]]
+
+
+--> Server | Utils
+-
+[[ _FetchHandler (daemon_OpenBehaviorStacks,c) ]]
+
+
+--> Junk
+-
+-- function fedwiki_RouteToFile someRoute
+   -- this translates stuff to single folder file export form browser
+   set the itemdelimiter to "/"
+   switch
+      case item 1 to 4 of someRoute = "/view/Welcome%20Visitors_files/communication_iframe_data"
+         put item -2 to -1 of someRoute into shortFile
+         return "js/" & shortFile
+      case item 2 of someRoute = "images"
+         return item 2 to 3 of someRoute
+      case item 2 of someRoute = "system"
+         return item 3 of someRoute
+      case someRoute = "/view/Welcome%20Visitors_files/client.js"
+         return "client.js"
+      case item 1 to 3 of someRoute = "/view/Welcome%20Visitors_files"
+         put item 4 of someRoute into shortFile
+         set the itemdelimiter to "."
+         if item -1 of shortFile = "js" then
+            return "js/" & shortFile
+         else
+            return shortFile
+         end if
+      case someRoute = "/view/welcome-visitors" or someRoute is "/"
+         return "Welcome Visitors.html"
+      case someRoute = "system/sitemap.json"
+         return "sitemap.json"
+      case someRoute = "/favicon.png"
+         return "favicon.png"
+      case the number of items of someRoute = 2 and char -5 to -1 of someRoute = ".json"
+         return someRoute
+      default
+         return empty
+   end switch
+end fedwiki_RouteToFile
+
+-- function daemon_RouteToPath someRoute
+   put urldecode (someRoute) into somePath
+   return somePath
+end daemon_RouteToPath
+
+--> Fedwiki | Routes
+-
+/*
+These handlers are now mainly superceded by array based standardised daemon routing?
+*/
+
+[[ _FetchHandler (fedwiki_NormlizeRoute,c) ]]
+
+[[ _FetchHandler (fedwiki_GetRouteData,f) ]]
+
+[[ _FetchHandler (fedwiki_SetRouteData,c) ]]
+
+
+--> To Trash
+-
+[[ _FetchHandler (test_PersonaServer,c) ]]
+
+[[ _FetchHandler (demo_Reply,c) ]]

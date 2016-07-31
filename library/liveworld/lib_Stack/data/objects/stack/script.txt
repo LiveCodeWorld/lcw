@@ -1,0 +1,196 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Stack
+type: library
+version: 0.4
+copyright: David Bovill
+
+/*
+A library for stuff about stacks.
+*/
+
+
+--> Stack
+-
+[[ _FetchHandler (card_Object,g) ]]
+
+[[ _FetchHandler (stack_Name,g) ]]
+
+[[ _FetchHandler (stack_Object,g) ]]
+
+
+--> Stack | Utilities
+-
+[[ _FetchHandler (stack_Drag,c) ]]
+
+[[ _FetchHandler (stack_UseIfNeeded,c) ]]
+
+[[ _FetchHandler (stack_SetToMainScreen,c) ]]
+
+[[ _FetchHandler (rect_MoveTopLeft,c) ]]
+
+--> Stack | Create
+-
+[[ _FetchHandler (palette_View,c) ]]
+
+[[ _FetchHandler (view_CloneStack,c) ]]
+
+[[ _FetchHandler (stack_Create,c) ]]
+
+[[ _FetchHandler (view_CreateHiddenStack,c) ]]
+
+[[ _FetchHandler (stack_ConstructNewCloneName,f) ]]
+
+[[ _FetchHandler (stack_ClonedStackNames,f) ]]
+
+[[ _FetchHandler (stack_CreateFileFromBinaryData,c) ]]
+
+[[ _FetchHandler (stack_NotNeeded,f) ]]
+
+
+--> Stack | Props
+-
+[[ _FetchHandler (stack_IsPalette,g) ]]
+
+[[ _FetchHandler (stack_IsPalette,s) ]]
+
+[[ _FetchHandler (stack_Resizable,g) ]]
+    
+[[ _FetchHandler (stack_Resizable,s) ]]
+
+[[ _FetchHandler (stack_TitleStyle,g) ]]
+
+[[ _FetchHandler (stack_TitleStyle,s) ]]
+
+[[ _FetchHandler (stack_TitleStyles,g) ]]
+
+
+--> Stack | Delete
+-
+[[ _FetchHandler (stack_DeleteFile,c) ]]
+
+[[ _FetchHandler (stack_ClearFrontAndBackLibraries,c) ]]
+
+[[ _FetchHandler (stack_DeleteScriptFolder,c) ]]
+
+
+--> Stack | Props
+-
+[[ _FetchHandler (stack_Type,g) ]]
+
+[[ _FetchHandler (stack_Type,s) ]]
+
+
+--> Stack | Visual Effects
+-
+[[ _FetchHandler (stack_Display,c) ]]
+
+[[ _FetchHandler (stack_IsVisible,g) ]]
+
+[[ _FetchHandler (stack_IsVisible,s) ]]
+
+[[ _FetchHandler (stack_Faded,g) ]]
+
+[[ _FetchHandler (stack_Faded,s) ]]
+
+[[ _FetchHandler (stack_BlendIn,c) ]]
+
+[[ _FetchHandler (stack_BlendOut,c) ]]
+
+
+--> Stack | Utilities
+-
+[[ _FetchHandler (stack_SetViewSize,c) ]]
+
+[[ _FetchHandler (stack_PlaceGroupOnAllCards,c) ]]
+
+
+--> Stack | Data
+-
+[[ _FetchHandler (stack_CompressedData,g) ]]
+    
+[[ _FetchHandler (stack_Data,g) ]]
+    
+
+--> Stack | Open, Close and Move
+-
+[[ _FetchHandler (stack_Rename,c) ]]
+
+[[ _FetchHandler (stack_Delete,c) ]]
+
+[[ _FetchHandler (stack_MoveFile,c) ]]
+
+[[ _FetchHandler (stack_SubName,g) ]]
+
+[[ _FetchHandler (stack_CreateSubStack,c) ]]
+
+[[ _FetchHandler (stack_Save,c) ]]
+
+[[ _FetchHandler (stack_CopyFile,c) ]]
+
+[[ _FetchHandler (stack_SaveBinaryData,c) ]]
+
+[[ _FetchHandler (stack_CloneAndMakeSubStack,c) ]]
+
+[[ _FetchHandler (stack_DeleteSubStackClones,c) ]]
+
+[[ _FetchHandler (stack_CloseSub,c) ]]
+
+
+--> Stack | Is
+-
+[[ _FetchHandler (stack_CheckProtected,f) ]]
+
+[[ _FetchHandler (stack_IsProtected,g) ]]
+
+[[ _FetchHandler (stack_Exists,f) ]]
+
+[[ _FetchHandler (stack_IsOpen,f) ]]
+
+[[ _FetchHandler (stack_IsLoaded,g) ]]
+
+[[ _FetchHandler (stack_GetIsLoaded,f) ]]
+
+[[ _FetchHandler (stack_IsUsed,g) ]]
+
+[[ _FetchHandler (stack_GetIsUsed,f) ]]
+
+[[ _FetchHandler (stack_LoadedPaths,f) ]]
+
+[[ _FetchHandler (stack_IsClosed,f) ]]
+
+
+--> Stack | Names
+-
+[[ _FetchHandler (stack_ListNames,f) ]]
+
+[[ _FetchHandler (stack_ListObjects,f) ]]
+
+[[ _FetchHandler (stack_LoadedWithoutFiles,f) ]]
+
+[[ _FetchHandler (stack_GetShortName,f) ]]
+
+[[ _FetchHandler (stack_SetShortName,c) ]]
+
+[[ _FetchHandler (stack_GetSubStacks,f) ]]
+
+
+--> Stack | Outlines
+-
+[[ _FetchHandler (stack_Outline,g) ]]
+
+[[ _FetchHandler (stack_SubStackOutline,f) ]]
+
+[[ _FetchHandler (stack_ConstructHtmlIndex,f) ]]
+
+[[ _FetchHandler (stack_ConstructHtmlOutline,f) ]]
+
+[[ _FetchHandler (stack_ConstructNameOutline,f) ]]
+
+[[ _FetchHandler (stack_OutlineFromObjectArray,f) ]]
+
+
+--> Stack | OSX
+-
+[[ _FetchHandler (stack_RevealInFinder,c) ]]

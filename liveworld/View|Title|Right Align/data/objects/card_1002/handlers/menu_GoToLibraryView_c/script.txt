@@ -1,0 +1,7 @@
+on menu_GoToLibraryView menuChoice, mTarget
+   put the title_View of mTarget into titleView
+   if exists(titleView) is false then exit to top
+   
+   put the view_Template of titleView into libraryObject
+   if exists(libraryObject) then object_GoTo libraryObject
+end menu_GoToLibraryView

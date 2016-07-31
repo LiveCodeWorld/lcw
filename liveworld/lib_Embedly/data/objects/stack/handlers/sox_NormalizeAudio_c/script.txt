@@ -1,0 +1,7 @@
+command sox_NormalizeAudio audioFile, normalizedFile
+   shell_BashParamEscape audioFile
+   shell_BashParamEscape normalizedFile
+   put "sox --norm" &&  audioFile && normalizedFile into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end sox_NormalizeAudio

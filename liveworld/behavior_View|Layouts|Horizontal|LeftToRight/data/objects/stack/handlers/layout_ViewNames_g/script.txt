@@ -1,0 +1,10 @@
+getprop layout_ViewNames
+   local vNames
+   put the object_TopControls of me into topControls
+   repeat for each line someObject in topControls
+      put the view_Name of someObject into vName 
+      put vName & CR after vNames
+   end repeat
+   delete last char of vNames
+   return vNames
+end layout_ViewNames

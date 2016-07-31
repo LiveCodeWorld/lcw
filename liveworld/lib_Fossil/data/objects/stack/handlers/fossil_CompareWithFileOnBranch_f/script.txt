@@ -1,0 +1,16 @@
+function fossil_CompareWithFileOnBranch fileOrRelativeFile, branchName, pFossilCheckoutFolder, pToCurrent, pSideBySide
+   local relativeFile
+   fossil_SetFileParams fileOrRelativeFile, pFossilCheckoutFolder, relativeFile
+   shell_BashParamEscape relativeFile
+   put space & relativeFile after someShell
+   
+   put "fossil diff" into someShell
+   if pSideBySide is not false then put space & "--side-by-side" after someShell
+   
+   put space & "--from" && kwote (branchName) after someShell
+   if pToCurrent is true then put space & "--to current" after someShell
+   put space & relativeFile after someShell
+   
+   fossil_ExecuteShell someShell, pFossilCheckoutFolder
+   return the result
+end fossil_CompareWithFileOnBranch

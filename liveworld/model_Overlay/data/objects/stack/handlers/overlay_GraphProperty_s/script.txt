@@ -1,0 +1,5 @@
+setprop overlay_GraphProperty [propName] propValue
+   -- for the default overlay, and don;t recreate
+   put the overlay_Folder of the target into overlayFolder
+   overlay_SetGraphValue overlayFolder, propName, propValue, empty, false
+end overlay_GraphProperty

@@ -1,0 +1,4 @@
+function sitemap_ConstructShortFileName refinementName
+   put tolower (refinementName) & "-sitemap.xml" into shortSitemapFile   
+   return shortSitemapFile
+end sitemap_ConstructShortFileName

@@ -1,0 +1,15 @@
+command xml_FirstTagOffsets someXML, @tagName, @startTag, @endTag, @someTag, @tagContents
+   -- won't work with nested tags of same name
+   -- but should work well with single and double tags sread over any number of lines
+   
+   put empty into someTag
+   put empty into tagContents
+   
+   put xml_FirstTagName (someXML) into tagName
+   if tagName is empty then
+      return false
+   else 
+      xml_TagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+      return the result
+   end if
+end xml_FirstTagOffsets

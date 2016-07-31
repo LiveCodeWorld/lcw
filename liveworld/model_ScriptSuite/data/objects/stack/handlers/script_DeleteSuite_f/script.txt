@@ -1,0 +1,9 @@
+function script_DeleteSuite suiteTitle, someScript
+    script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
+    if the result is true then
+        delete line startLineNum to endLineNum of someScript
+        return someScript
+    else
+        return someScript
+    end if
+end script_DeleteSuite

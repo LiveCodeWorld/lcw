@@ -1,0 +1,5 @@
+function rig_ListSystemHelperFiles
+   put rig_GetSystemFolder ("helpers") into someFolder
+   put rig_ListFiles (someFolder) into shortFiles
+   return shortFiles
+end rig_ListSystemHelperFiles

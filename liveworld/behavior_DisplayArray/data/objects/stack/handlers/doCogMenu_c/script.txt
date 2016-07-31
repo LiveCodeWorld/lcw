@@ -1,0 +1,18 @@
+command doCogMenu
+   if the shiftKey is "Down" then
+      put "Global | Array | Menu" into titleMenuName
+   else if the optionKey is "Down" then
+      put "Local | Array | Menu" into titleMenuName
+   else
+      put the title_Menu of me into titleMenuName
+   end if
+   put the clickloc into pLocation
+   add 2 to item 1of pLocation
+   add 4 to item 2 of pLocation
+   
+   menu_PopUp titleMenuName, pLocation
+   if the result is not true then
+      put titleMenuName
+      answer warning "Cannot locate menu!"
+   end if
+end doCogMenu

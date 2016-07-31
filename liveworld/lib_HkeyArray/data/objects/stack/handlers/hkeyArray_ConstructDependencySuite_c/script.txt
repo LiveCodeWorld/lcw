@@ -1,0 +1,50 @@
+command hkeyArray_ConstructDependencySuite hkeyArray, pStripScriptObject, @depSuite, pStripObjects, pStripProps, pNotifyMissing
+   local depScript
+   
+   put array_AllNodes (hkeyArray) into allCalls
+   hkey_StripDuplicates allCalls
+   put the result into duplicateHkeyArray
+   
+   if exists (pStripScriptObject) is true then
+      -- strip the nodes from the scriptObject whose hkeyArray we are processing
+      hkey_SimpleStripObject allCalls, pStripScriptObject
+      put the result into strippedKeys
+   end if
+   
+   if pStripProps is true then
+      -- this does not do a network walk (does this matter?)
+      hkey_StripGetProps allCalls
+      line_Add the result, strippedKeys
+      
+      hkey_StripSetProps allCalls
+      line_Add the result, strippedKeys
+   end if
+   
+   -- now let's recursively strip the nodes from the objects in pStripObjects we don't want
+   repeat for each line stripObject in pStripObjects
+      -- take care that the object name is fromatted correctly
+      if exists(stripObject) is false then
+         put merge ("Cannot find [[stripObject]]!") into someMessage
+         opn_Notify someMessage, true
+         next repeat
+      end if
+      
+      -- lets get rid of any calls to the objects we are stripping
+      -- hkeyArray_RemoveObjectLinks hkeyArray, stripObject
+      hkey_SimpleStripObject allCalls, stripObject
+      line_Add the result, strippedKeys
+   end repeat
+   
+   sort allCalls
+   
+   -- put script_ConstructDependencySuite (allCalls) into depSuite
+   local missingHkeys
+   script_FetchFromHkeys allCalls, depScript, missingHkeys, pNotifyMissing
+   put script_ConstructSuite ("Deps", depScript) into depSuite
+   
+   put allCalls into someArray ["uniqueHkeys"]
+   put strippedKeys into someArray ["strippedKeys"]
+   put missingHkeys into someArray ["missingHkeys"]
+   put duplicateHkeyArray into someArray ["duplicateHkeyArray"]
+   return someArray
+end hkeyArray_ConstructDependencySuite

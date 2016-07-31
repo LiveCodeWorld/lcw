@@ -1,0 +1,13 @@
+command hkey_Edit hKey
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then
+      put hArray_SimpleSearch (hKey) into hKey
+      put item 3 of hKey into foundObject
+      if exists (foundObject) is false then
+         return empty
+      end if
+   end if
+   
+   hkey_EditFoundHandler hkey
+   return hkey
+end hkey_Edit

@@ -1,0 +1,9 @@
+function kml_ConstructPhotoDescription photoTitle, description, photoUrl, photoLink, flickrUserName, flickrUserUrl
+    -- put uniEncode(photoTitle,"UTF8") into photoTitle
+    -- text_XmlEscape photoTitle
+    -- text_XmlEscape flickrUserName
+    -- put uniEncode(flickrUserName,"UTF8") into flickrUserName	
+    
+    put the uOPN ["googleearth_DescriptionTemplate"] of me into descriptionTemplate
+    return "<![CDATA[" & merge(descriptionTemplate) & "]]>"
+end kml_ConstructPhotoDescription

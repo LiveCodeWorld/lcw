@@ -1,0 +1,11 @@
+on menu_TakePictureOfStack viewObject
+   wireframe_SnapAndExport viewObject, true
+   put the result into imageFile
+   
+   put the wireframe_LocalhostURL of viewObject into localhostURL
+   finder_Reveal imageFile
+   
+   -- lcw_UploadImage imageFile
+   put the wireframe_RemoteURL of viewObject into remoteUrl
+   launch url remoteUrl
+end menu_TakePictureOfStack

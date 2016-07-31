@@ -1,0 +1,9 @@
+function fedwiki_GetLocalWikiRoot
+   put the fedwiki_LocalWikiRoot of me into localWikiFolder -- so we can override if we want
+   if localWikiFolder is empty then
+      put "~/.wiki/" into localWikiFolder -- this is the default root for a wiki-node server on OSX and Linux
+   else
+      folder_Format localWikiFolder
+   end if
+   return localWikiFolder
+end fedwiki_GetLocalWikiRoot

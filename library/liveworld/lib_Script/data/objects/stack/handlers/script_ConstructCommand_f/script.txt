@@ -1,0 +1,20 @@
+function script_ConstructCommand pigeon, hBody, pUseOn
+   put tolower(char 1 of pigeon) into char 1 of pigeon
+   
+   set the itemdelimiter to "_"
+   get item 2 of pigeon
+   put toupper(char 1 of it) into char 1 of it
+   put it into item 2 of pigeon
+   
+   if pUseOn is true then
+      put "on" && pigeon into someHandler
+   else
+      put "command" && pigeon into someHandler
+   end if
+   put CR after someHandler
+   repeat for each line scriptLine in hBody
+      put "   " & scriptLine & CR after someHandler
+   end repeat
+   put "end" && word 1 of pigeon after someHandler
+   return someHandler
+end script_ConstructCommand

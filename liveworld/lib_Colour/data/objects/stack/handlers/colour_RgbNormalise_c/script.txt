@@ -1,0 +1,13 @@
+command colour_RgbNormalise @someColour, pObject
+    -- convert any colour to rgbColour
+    switch
+        case char 1 of someColour = "#"
+            put colour_HexToRgb (someColour) into someColour
+            break
+        case the number of items of someColour = 3 and char 1 of someColour is a number
+            break
+        case char 1 of someColour is not a number
+            put colour_NameToRgb (someColour, pObject) into someColour
+            break
+    end switch
+end colour_RgbNormalise

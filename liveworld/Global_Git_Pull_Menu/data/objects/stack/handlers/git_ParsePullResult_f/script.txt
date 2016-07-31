@@ -1,0 +1,20 @@
+function git_ParsePullResult pullResult
+   -- beware deletions and insertiosn and non-binary things
+   put line 1 to 4 of pullResult into pullHeader
+   delete line 1 to 4 of pullResult
+   put line -1 of pullResult into pullFooter
+   delete line -1 of pullResult
+   put word 1 of item 1 of pullFooter into changedFileNum
+   put word 1 of item 2 of pullFooter into insertionNum
+   put word 1 of item 1 of pullFooter into deletionNum
+   
+   put git_GetRootFolder() into rootFolder
+   repeat for each line someLine in pullResult
+      -- |  Bin 208584 -> 207138 bytes
+      put word - 6 to -1 of someLine into binBit
+      put word 1 to -7 of someLine into relativePath
+      put rootFolder & relativePath & CR after changedFiles
+   end repeat
+   delete char -1 of changedFiles
+   return changedFiles
+end git_ParsePullResult

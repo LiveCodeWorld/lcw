@@ -1,0 +1,14 @@
+getprop view_Objects
+   put the view_Object of the target into someView
+   if someView is empty then return empty
+   
+   put object_SearchGroup(someView, "object_IsView", true) into searchArray
+   put empty into viewObjects
+   repeat for each key someObject in searchArray
+      if searchArray [someObject] is true then
+         put someObject & CR after viewObjects
+      end if
+   end repeat
+   delete last char of viewObjects
+   return viewObjects
+end view_Objects

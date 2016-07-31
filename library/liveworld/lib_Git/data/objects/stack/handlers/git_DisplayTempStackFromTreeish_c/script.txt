@@ -1,0 +1,13 @@
+command git_DisplayTempStackFromTreeish treeish, pToFile
+   git_ExportFileRevision relativePath, treeish
+   put the result into toFile
+   
+   set lockmessages to true
+   put the name of stack toFile into oName
+   set the name of stack toFile to (oName && treeish)
+   go to stack toFile
+   set lockmessages to false
+   
+   set the destroystack of stack toFile to true
+   set the destroywindow of stack toFile to true
+end git_DisplayTempStackFromTreeish

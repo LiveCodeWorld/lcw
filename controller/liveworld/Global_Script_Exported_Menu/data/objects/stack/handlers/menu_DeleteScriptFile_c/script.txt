@@ -1,0 +1,4 @@
+on menu_DeleteScriptFile mTarget
+   put the script_File of mTarget into someFile
+   file_Delete someFile
+end menu_DeleteScriptFile

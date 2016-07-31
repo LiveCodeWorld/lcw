@@ -1,0 +1,4 @@
+on menu_FetchStoredGlobalHarray scriptObject, projectName
+   put project_FetchHarray (projectName) into hArray
+   display_Array hArray, "Stored gHkey_Array"
+end menu_FetchStoredGlobalHarray

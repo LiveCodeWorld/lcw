@@ -1,0 +1,16 @@
+command line_Add someLines, @someIndex
+   repeat for each line someLine in someLines
+      if someLine is empty then next repeat
+      set the wholematches to true
+      put lineoffset(someLine, someIndex) into lineNum
+      if lineNum is 0 then
+         put the number of lines of someIndex into maxLine
+         put maxLine + 1 into lineNum
+         put someLine into line lineNum of someIndex
+      else
+         put lineNum & comma after lineNums
+      end if
+   end repeat
+   delete char -1 of lineNums
+   return lineNums
+end line_Add

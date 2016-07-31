@@ -1,0 +1,6 @@
+getprop title_TextColour
+   put the title_View of me into titleView
+   if the long id of the target = titleView then pass title_TextColour
+   get the title_TextColour of titleView
+   return it
+end title_TextColour

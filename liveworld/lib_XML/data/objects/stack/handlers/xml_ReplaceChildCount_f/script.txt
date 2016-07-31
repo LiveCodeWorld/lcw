@@ -1,0 +1,8 @@
+function xml_ReplaceChildCount treeOutline
+    -- put "." into notabracket
+    -- put "\d*" into notabracket	# a digit
+    put "[^\]]*" into notabracket
+    put "\[" & notabracket & "\]" into matchExpression
+    get replacetext(treeOutline, matchExpression, empty)
+    return it
+end xml_ReplaceChildCount

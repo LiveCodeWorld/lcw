@@ -1,0 +1,8 @@
+function folder_DetailedInfo folderPath
+   put the directory into oDirectory
+   set the directory to folderPath
+   get the detailed folders
+   set the directory to oDirectory
+   
+   return it
+end folder_DetailedInfo

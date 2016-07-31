@@ -1,0 +1,9 @@
+on colour_InitialiseNameArray
+    if "uOPN_ColourArray" is not among the lines of the custompropertysets of me then
+        opn_Answer "Create colour lookup array?"
+        colour_ConstructArray
+    end if
+    
+    put the long id of me into modelObject
+    return model_GetArrayKeys("uOPN_ColourArray", modelObject, "array")
+end colour_InitialiseNameArray

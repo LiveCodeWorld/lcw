@@ -1,0 +1,7 @@
+getprop view_Spacing
+   put the uOPN ["view_Spacing"] of me into viewSpacing
+   if viewSpacing is not a number then put the view_DefaultSpacing of me into viewSpacing
+   if viewSpacing is empty then put 2 into viewSpacing
+   -- opn_Notify viewSpacing
+   return viewSpacing
+end view_Spacing

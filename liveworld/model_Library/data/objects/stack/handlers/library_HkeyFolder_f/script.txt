@@ -1,0 +1,10 @@
+function library_HkeyFolder hKey, pDontCreate
+   if pDontCreate is empty then put true into pDontCreate
+   put library_HkeyToPublicShortHkey (hKey) into shortHkey
+   put hkey_FolderName (shortHkey) into folderName
+   put library_HandlerFolder (folderName, pDontCreate) into hkeyFolder
+   if folderName is not empty then put "/" after hkeyFolder
+   
+   if pDontCreate is false then folder_CreateNested hkeyFolder
+   return hkeyFolder
+end library_HkeyFolder

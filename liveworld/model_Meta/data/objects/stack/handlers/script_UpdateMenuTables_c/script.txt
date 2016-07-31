@@ -1,0 +1,22 @@
+command script_UpdateMenuTables scriptObject
+   try
+      menu_CreateAndStoreTables scriptObject
+      put the result into newMenuTitles
+      
+      -- could delete old menus first?
+      repeat for each line mTitle in newMenuTitles
+         if menu_TitleIsGlobal (mTitle) then
+            -- put scriptObject into newArray [mTitle]
+            
+            -- this should already be set by hArray indexing of script I believe
+            -- but just in case
+            menu_SetGlobalController mTitle, scriptObject
+         end if
+      end repeat
+      -- script_AddToGlobalSuiteArray newArray -- now uses hArray
+      return newMenuTitles
+   catch someError
+      opn_Notify "Failed to update menus. Probably duplicate menu names on the card!", true
+      return empty
+   end try
+end script_UpdateMenuTables

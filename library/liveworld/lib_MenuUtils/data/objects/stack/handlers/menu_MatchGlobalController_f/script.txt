@@ -1,0 +1,9 @@
+function menu_MatchGlobalController globalMenuTitle
+   menu_SearchGlobalObjectHierarchy globalMenuTitle, mController
+   if exists(mController) is false then
+      opn_Notify merge("Cannot find global menu '[[mTitle]]'!"), true
+      return empty
+   else
+      return mController
+   end if
+end menu_MatchGlobalController

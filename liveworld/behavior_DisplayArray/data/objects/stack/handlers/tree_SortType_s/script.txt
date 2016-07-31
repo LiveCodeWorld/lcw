@@ -1,0 +1,5 @@
+setprop tree_SortType treeSortType
+   put _treeWidget() into treeWidget
+   set the sortType of treeWidget to treeSortType
+   return treeWidget
+end tree_SortType

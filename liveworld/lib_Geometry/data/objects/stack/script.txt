@@ -1,0 +1,200 @@
+--> MetaData
+-
+name: lib_Geometry
+license: GPLv3
+type: library
+version: 0.8
+copyright: David Bovill
+
+
+--> Geometry | Props
+-
+[[ _FetchHandler (smaller_Rect,g) ]]
+
+[[ _FetchHandler (bigger_Rect,g) ]]
+
+[[ _FetchHandler (stack_Dimensions,g) ]]
+
+[[ _FetchHandler (stack_Dimensions,s) ]]
+
+[[ _FetchHandler (stack_RectWithin,s) ]]
+
+[[ _FetchHandler (box_Rect,g) ]]
+
+[[ _FetchHandler (inner_Rect,g) ]]
+
+[[ _FetchHandler (rect_GetInner,f) ]]
+
+
+--> Scale
+-
+[[ _FetchHandler (scaled_Height,g) ]]
+
+[[ _FetchHandler (scale_Height,f) ]]
+
+
+--> Angle
+-
+[[ _FetchHandler (angle_DegreesToRadians,c) ]]
+
+[[ _FetchHandler (angle_RadiansToDegrees,c) ]]
+
+
+--> Margins
+-
+[[ _FetchHandler (margin_Normalize,c) ]]
+
+[[ _FetchHandler (margins_Add,f) ]]
+
+
+--> Geometry | Card and stack
+-
+[[ _FetchHandler (card_SpaceControls,c) ]]
+
+[[ _FetchHandler (stack_GetDimensions,f) ]]
+
+[[ _FetchHandler (stack_SetDimensions,c) ]]
+
+
+--> Rect | Scale | Fit
+-
+[[ _FetchHandler (rect_FitToFill,f) ]]
+
+[[ _FetchHandler (rect_FitToHeight,f) ]]
+
+[[ _FetchHandler (rect_FitToWidth,f) ]]
+
+[[ _FetchHandler (rect_ScaleToFitInside,f) ]]
+
+[[ _FetchHandler (rect_FitInside,f) ]]
+
+[[ _FetchHandler (rect_GetFitInside,f) ]]
+
+[[ _FetchHandler (rect_FitAndSetTopLeft,c) ]]
+
+[[ _FetchHandler (rect_GetFitAndSetTopLeft,f) ]]
+
+[[ _FetchHandler (rect_ShiftWithin,c) ]]
+
+
+--> Rect | Boundaries and Limits
+
+[[ _FetchHandler (rect_Normalize,c) ]]
+
+[[ _FetchHandler (rect_Limit,f) ]]
+
+[[ _FetchHandler (rect_SetMinimumWidth,c) ]]
+
+[[ _FetchHandler (rect_GetRectBoundary,f) ]]
+
+[[ _FetchHandler (rect_GetGroupBoundary,f) ]]
+
+[[ _FetchHandler (rect_SetMaxWidthAndHeight,c) ]]
+
+
+--> Rect
+-
+[[ _FetchHandler (rect_SubtractMargin,f) ]]
+
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (rect_AddMargins,c) ]]
+
+[[ _FetchHandler (rect_AddMargin,f) ]]
+
+[[ _FetchHandler (rect_GetInnerTabMenu,f) ]]
+
+
+--> Rect
+-
+[[ _FetchHandler (rect_GetMinimumBoundary,f) ]]
+
+[[ _FetchHandler (rect_GetGlobal,f) ]]
+
+[[ _FetchHandler (rect_GetCentre,f) ]]
+
+[[ _FetchHandler (rect_FromTopLeft,f) ]]
+
+[[ _FetchHandler (rect_Resize,f) ]]
+
+[[ _FetchHandler (rect_FromWidthAndHeight,f) ]]
+    
+[[ _FetchHandler (rect_LocWidthHeight,f) ]]
+
+[[ _FetchHandler (rect_SetCentre,f) ]]
+
+[[ _FetchHandler (rect_CentreLeft,f) ]]
+
+[[ _FetchHandler (rect_CentreRight,f) ]]
+
+[[ _FetchHandler (rect_SetWidth,c) ]]
+
+[[ _FetchHandler (rect_SetHeight,c) ]]
+
+[[ _FetchHandler (rect_SetLeft,c) ]]
+
+[[ _FetchHandler (rect_SetRight,c) ]]
+
+
+--> Rect | Dimensions
+-
+[[ _FetchHandler (rect_ExtractDimensions,c) ]]
+
+[[ _FetchHandler (rect_SetDimensions,f) ]]
+
+[[ _FetchHandler (rect_CentreWidthAndHeight,c) ]]
+
+
+--> Rect | Vectors
+-
+[[ _FetchHandler (rect_Scale,f) ]]
+
+[[ _FetchHandler (rect_ScaleByVector,f) ]]
+
+[[ _FetchHandler (rect_ShrinkByVector,f) ]]
+
+[[ _FetchHandler (rect_ScaleByVectors,f) ]]
+
+[[ _FetchHandler (rect_TranslateByVector,f) ]]
+
+[[ _FetchHandler (rect_AddVector,c) ]]
+
+[[ _FetchHandler (rect_SubtractVector,c) ]]
+
+[[ _FetchHandler (rect_Translate,c) ]]
+
+
+
+--> Rect | Scale
+-
+[[ _FetchHandler (rect_RelativeRect,f) ]]
+
+[[ _FetchHandler (rect_ScaleFromCentre,f) ]]
+
+[[ _FetchHandler (rect_ScaleGroup,c) ]]
+
+[[ _FetchHandler (rect_SetScaleVectors,c) ]]
+
+
+--> Loc
+-
+[[ _FetchHandler (loc_DistanceBetween,f) ]]
+
+[[ _FetchHandler (loc_GetTranslation,f) ]]
+
+[[ _FetchHandler (loc_TranslateByVector,f) ]]
+
+[[ _FetchHandler (loc_TranslationVector,f) ]]
+
+[[ _FetchHandler (loc_GetPercentagePoints,c) ]]
+
+[[ _FetchHandler (loc_SetTranslationVector,c) ]]
+
+[[ _FetchHandler (loc_WithinWhichScreenRect,f) ]]
+
+[[ _FetchHandler (loc_Normalise,f) ]]
+
+
+--> Handlers
+-
+[[ _FetchHandler (number_NormalizeRange,f) ]]

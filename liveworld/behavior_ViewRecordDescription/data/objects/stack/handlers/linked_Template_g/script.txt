@@ -1,0 +1,5 @@
+getprop linked_Template
+   put the record_Name of me into vName
+   put view_GetTemplateObject (vName) into viewTemplate
+   return viewTemplate
+end linked_Template

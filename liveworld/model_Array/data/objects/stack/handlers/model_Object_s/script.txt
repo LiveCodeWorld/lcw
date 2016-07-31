@@ -1,0 +1,6 @@
+setprop model_Object [modelName] modelObject
+   put the long id of the target into targetObject
+   if modelName is empty then put the model_Name of targetObject into modelName
+   
+   set the uOPN [modelName] of targetObject to the rugged_ID of modelObject
+end model_Object

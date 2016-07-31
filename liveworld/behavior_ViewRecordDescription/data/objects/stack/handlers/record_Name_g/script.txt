@@ -1,0 +1,5 @@
+getprop record_Name
+   put title_Field() into titleField
+   put the text of titleField into recordName
+   return recordName
+end record_Name

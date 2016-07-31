@@ -1,0 +1,5 @@
+getprop overlay_PropertyArray [pOverlayName]
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   put overlayArray ["graph_PropertyArray"] into propertyArray
+   return propertyArray
+end overlay_PropertyArray

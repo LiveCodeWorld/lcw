@@ -1,0 +1,11 @@
+private command display_ScriptArray pScriptArray
+   set the cursor to watch
+   if pScriptArray is not an array then
+      put the displayed_ScriptArray of me into pScriptArray
+   else
+      set the displayed_ScriptArray of me to pScriptArray
+   end if
+   
+   put the scriptLibrary_Tree of me into scriptLibraryTree
+   set the dg_Data of scriptLibraryTree to pScriptArray
+end display_ScriptArray

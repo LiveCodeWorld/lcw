@@ -1,0 +1,10 @@
+getprop script_Hkeys [fetchHow]
+   switch fetchHow
+      case "hArray"
+         return the hArray_Hkeys of the target
+      case "script"
+         return the script_ArrayHkeys of the target
+      default -- case "revAvailableHandlers"
+         return the script_FirstHkeys of the target
+   end switch
+end script_Hkeys

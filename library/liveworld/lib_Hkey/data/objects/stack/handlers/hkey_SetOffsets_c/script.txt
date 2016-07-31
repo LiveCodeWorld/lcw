@@ -1,0 +1,26 @@
+command hkey_SetOffsets hKey, @startHandler, @endHandler, pScript, notPrivate
+   -- much better in general to use the revAvailableHandlers of pObject
+   -- see "hkey_ExtractHandlerFromObject"
+   
+   -- get offsets to first found handler only
+   put 0 into startHandler
+   put 0 into endHandler
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+   
+   if pScript is empty then
+      if exists(scriptObject) is false then return empty
+      put the script of scriptObject into pScript
+   end if
+   
+   if char 1 of handlerType = "p" then
+      if notPrivate is true then return empty
+      delete char 1 of handlerType
+      put handler_ConvertType (handlerType) into onWord
+      script_SetPrivateHandlerOffsets startHandler, endHandler, handlerName, onWord, pScript
+   else
+      put handler_ConvertType (handlerType) into onWord
+      script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, pScript
+   end if   
+   put the result into foundHandler
+   return foundHandler
+end hkey_SetOffsets

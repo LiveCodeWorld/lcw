@@ -1,0 +1,10 @@
+getprop menu_CheckTarget [topMenuTarget]
+   /*
+   This is a default sent by  "menu_ConvertTable" 
+   Usually - all you want to do is check that the topMenuTarget exists.
+   But it could be a file or some other non-Rev structure.
+   */
+   return true
+   put the long id of the target into mController
+   return exists(topMenuTarget)
+end menu_CheckTarget

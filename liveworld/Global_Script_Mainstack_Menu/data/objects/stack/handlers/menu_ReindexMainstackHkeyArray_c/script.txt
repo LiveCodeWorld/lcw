@@ -1,0 +1,17 @@
+on menu_ReindexMainstackHkeyArray scriptObject
+   -- deps_ConstructDependencyArray scriptObject
+   -- put the result into walkArray
+   -- taken from above
+   put "HAP" into pSetName
+   put the mainstack_Harray of scriptObject into hArray
+   put empty into pDepObject
+   put project_ConstructWalkArray (hArray, pDepObject, pSetName) into walkArray
+   set the mainstack_WalkArray of scriptObject to walkArray
+   
+   put walkArray ["hKeyArray"] into hKeyArray
+   
+   opn_Answer "Saved dependency array. Do you want to graph the result?"
+   hkeyArray_DrawGraph hKeyArray, "undirected spring"
+   put the mainstack_WalkArray of scriptObject into walkArray
+   display_HkeyWalkArray scriptObject, walkArray
+end menu_ReindexMainstackHkeyArray

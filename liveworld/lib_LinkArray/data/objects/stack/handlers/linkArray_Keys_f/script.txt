@@ -1,0 +1,5 @@
+function linkArray_Keys linkArray
+   local allKeys, idArray, backIdArray, nodeIDs
+   linkArray_ConstructIdArray linkArray, allKeys, idArray, backIdArray, nodeIDs
+   return allKeys
+end linkArray_Keys

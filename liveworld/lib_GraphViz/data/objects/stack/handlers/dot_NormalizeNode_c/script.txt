@@ -1,0 +1,6 @@
+on dot_NormalizeNode @someNode
+    replace quote with empty in someNode
+    if the number of words of someNode > 1 then
+        put kwote(someNode) into someNode
+    end if
+end dot_NormalizeNode

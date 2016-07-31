@@ -1,0 +1,14 @@
+getprop card_TopViews [viewName]
+   put the card_Object of the target into cardObject
+   put the object_TopControls of cardObject into topControls
+   repeat for each line someControl in topControls
+      put the view_Name of someControl into testViewName
+      if viewName is empty and testViewName is not empty then
+         put someControl & CR after topCardViews
+      else if viewName = testViewName then
+         put someControl & CR after topCardViews
+      end if
+   end repeat
+   delete char -1 of topCardViews
+   return topCardViews
+end card_TopViews

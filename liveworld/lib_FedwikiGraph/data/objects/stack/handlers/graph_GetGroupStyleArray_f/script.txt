@@ -1,0 +1,5 @@
+function graph_GetGroupStyleArray overlayArray
+   -- put overlayArray ["data"]["idArray"] into idArray
+   put overlayArray ["metadata"]["dot_GroupStyleArray"] into dotGroupStyleArray
+   return dotGroupStyleArray
+end graph_GetGroupStyleArray

@@ -1,0 +1,10 @@
+function outline_ToXML tabbedOutline, propertyArray
+   -- local lineNumber
+   -- outline_RecurseToXML someOutline, someXml, 0, lineNumber, "Test XML"
+   
+   outline_ToXMLRecurse tabbedOutline, propertyArray
+   put the result into treeID
+   put revXMLText (treeID, "", true) into someXml
+   revDeleteXMLTree treeID
+   return someXml
+end outline_ToXML

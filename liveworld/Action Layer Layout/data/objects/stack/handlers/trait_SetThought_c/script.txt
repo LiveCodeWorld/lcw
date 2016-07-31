@@ -1,0 +1,13 @@
+command trait_SetThought
+   put the long id of card "Thoughts" into thoughtCard
+   put the plusMinus_View of thoughtCard into plusMinusView
+   
+   lock screen
+   put the thought_Label of plusMinusView into someThought
+   set the text of fld "Thought Label" of thoughtCard to someThought
+   set the displayed_PositiveLabel of plusMinusView to the positive_Label of plusMinusView
+   set the displayed_NegativeLabel of plusMinusView to the negative_Label of plusMinusView
+   set the show_TraitLabels of plusMinusView to false
+   set the trait_Hilite of plusMinusView to "none"
+   unlock screen
+end trait_SetThought

@@ -1,0 +1,5 @@
+getprop sivaSquareText_View
+   if exists (group "Square Text" of me) is false then return empty
+   put the long id of group "Square Text" of me into sivaTraitView
+   return sivaTraitView
+end sivaSquareText_View

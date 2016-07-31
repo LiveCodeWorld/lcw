@@ -1,0 +1,12 @@
+function javascript_ConstructFooterVisibility someBoolean
+   -- put "document.getElementById('site-owner').style.visibility = 'hidden'" into someJavascript
+   -- put "var myElement = document.querySelector('footer');myElement.style.visibility = 'hidden'" into someJavascript
+   -- put "var myElement = document.querySelector('footer');myElement.style.visibility = 'visible'" into someJavascript
+   
+   if someBoolean is true then
+      put "document.querySelector('footer').style.visibility = 'hidden'" into someJavascript
+   else
+      put "document.querySelector('footer').style.visibility = 'visible'" into someJavascript
+   end if
+   return someJavascript
+end javascript_ConstructFooterVisibility

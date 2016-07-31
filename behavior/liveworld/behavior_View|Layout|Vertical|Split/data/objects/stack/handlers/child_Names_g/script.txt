@@ -1,0 +1,11 @@
+getprop child_Names
+   put the childcontrolids of me into topControlIDs
+   put the number of lines of topControlIDs into numberOfChildren
+   repeat with cNum = 1 to numberOfChildren    
+      put line cNum of topControlIDs into topControlID
+      put the short name of control id topControlID into childName
+      put childName & CR after childNames
+   end repeat
+   delete char -1 of childNames
+   return childNames
+end child_Names

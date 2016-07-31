@@ -1,0 +1,105 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_HAP_Coder_Menu
+type: controller
+version: 0.2
+
+
+--> Menu | Props
+-
+/*
+on menu_Init  
+   local shortStackArray, filteredStackNameArray, filteredShortStackArray
+   
+   put library_ListScriptLibNames() into scriptOnlyLibNames
+   sort scriptOnlyLibNames
+   put scriptOnlyLibNames into LocalArray ["scriptOnlyLibNames"]
+   
+   put view_ListStackFiles() into serverStackFiles
+   put serverStackFiles into LocalArray ["server_StackFiles"]
+   
+   put view_ListControllerFiles() into LocalArray ["server_ControllerFiles"]
+   
+   put server_GetURL() into projectName
+   stackFile_DeconstructShortFileIndex serverStackFiles, shortStackArray, filteredStackNameArray, filteredShortStackArray
+   put keys (filteredStackNameArray) into projectLibraryNames
+   sort projectLibraryNames
+   put projectLibraryNames into LocalArray ["projectLibraryNames"]
+   put shortStackArray into LocalArray ["shortStackArray"]
+   put filteredStackNameArray into LocalArray ["filteredStackNameArray"]
+   put filteredShortStackArray into LocalArray ["filteredShortStackArray"]
+   
+   put rev_ListEditedStackNames() into editedStackNames
+   put editedStackNames into LocalArray ["editedStackNames"]
+   
+   put stack_ListEditedScriptOnlyLibraryNames (projectLibraryNames, scriptOnlyLibNames, editedStackNames) into editedScriptOnlyLibraryNames
+   put editedScriptOnlyLibraryNames into LocalArray ["editedScriptOnlyLibraryNames"]
+end menu_Init
+
+getprop menu_Target
+   put menu_GetTargetObject() into mTarget
+   put the script_Container of mTarget into scriptContainer
+   return scriptContainer
+end menu_Target
+
+-- getprop menu_Controller
+return the long id of me
+end menu_Controller
+*/
+
+
+--> Global | HAP | Coder | Menu
+-
+[[ _FetchHandler (menu_DisplayRigscript,c) ]]
+
+[[ _FetchHandler (menu_ChooseLocalRigFolder,c) ]]
+
+[[ _FetchHandler (menu_SaveNavigationSettings,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (insert_WikiMenu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_GraphController,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayProcessedHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayDependencyObjectArray,c) ]]
+
+[[ _FetchHandler (menu_DependencyObjects,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayControllerGraph,c) ]]
+
+[[ _FetchHandler (menu_CreateControllerProject,c) ]]
+
+[[ _FetchHandler (menu_RevealOverlayFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_UpoadControllerAndStacks,c) ]]
+
+[[ _FetchHandler (menu_UpoadController,c) ]]
+
+
+--> Global | HAP | Coder | Menu | Props
+-
+
+--> Global | HAP | Coder | Menu | Disabled
+-
+[[ _FetchHandler (disabled_StartWiki,g) ]]
+
+[[ _FetchHandler (disabled_StopWiki,g) ]]
+
+

@@ -1,0 +1,6 @@
+function library_ListLibraryFolderFiles
+   put library_StandardFolder() into libraryFolder
+   put folder_FilesInside (libraryFolder) into opnLibraryFiles
+   filter opnLibraryFiles with (libraryFolder & "libOPN_*")
+   return opnLibraryFiles
+end library_ListLibraryFolderFiles

@@ -1,0 +1,16 @@
+function hKeyArray_ConstructObjectDot hLinkArray, hIdArray, graphName, graphHeader, graphNodeType, pTargetObject
+   if graphName is empty then put "Test" into graphName
+   
+   put hKeyArray_DotNodeSubGraphDefs (hLinkArray, hIdArray, pTargetObject) into colourDefs
+   put hKeyArray_DotObjectClusters (hLinkArray, hIdArray, false, true, graphNodeType, pTargetObject) into clusterDefs
+   put colourDefs & CR & CR & clusterDefs into defSection
+   
+   put hKeyArray_DotNodeLinks(hLinkArray, empty) into linkSection
+   if defSection is empty then
+      put linkSection into nodeSection
+   else
+      put defSection & CR & CR & linkSection into nodeSection
+   end if
+   put dot_Construct(graphName, nodeSection, graphHeader) into dotText
+   return dotText
+end hKeyArray_ConstructObjectDot

@@ -1,0 +1,35 @@
+getprop menu_PluginArray [pMouseButton]
+   -- ignoreCall: pObjectTestProp,g
+   
+   global gOPN_MenuArray
+   put the long id of the target into targetObject
+   
+   put item 2 of pMouseButton into pObjectTestProp
+   -- use main_Name as default as this is what is needed by revScriptEditor and faster to have only one prop to search
+   if pObjectTestProp is empty then put "main_Name" into pObjectTestProp
+   
+   put item 1 of pMouseButton into pMouseButton
+   switch pMouseButton 
+      case 3
+         put "control" into toolMode
+         break
+      default
+         put "none" into toolMode
+         -- put menu_ModifierKeys() into toolMode
+         -- if toolMode is empty then put "none" into toolMode
+   end switch
+   
+   put gOPN_MenuArray [toolMode] into toolModeArray
+   put keys(toolModeArray) into pObjectTestProps
+   repeat for each line pObjectTestProp in pObjectTestProps
+      try
+         put the pObjectTestProp of targetObject into objectRefValue
+         put toolModeArray [pObjectTestProp][objectRefValue] into mPluginArray
+         return mPluginArray
+      catch someError
+         breakPoint
+         put the pObjectTestProp of targetObject into objectRefValue
+      end try
+   end repeat
+   return empty
+end menu_PluginArray

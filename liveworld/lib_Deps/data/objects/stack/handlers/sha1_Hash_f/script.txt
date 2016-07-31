@@ -1,0 +1,6 @@
+function sha1_Hash someData
+   local hexDigest
+   put sha1digest (someData) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end sha1_Hash

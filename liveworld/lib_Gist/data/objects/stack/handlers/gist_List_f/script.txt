@@ -1,0 +1,20 @@
+function gist_List
+   local previousURL, nextURL, firstURL, lastURL,rateLimitRemaining
+   
+   put gist_FetchListArray() into gistListArray
+   gist_ExtractReceivedHeaderArray previousURL, nextURL, firstURL, lastURL,rateLimitRemaining
+   put gist_ParseListArray (gistListArray) into gistList
+   
+   if nextURL is not empty then
+      repeat 20 -- while nextURL is not empty -- careful could repeat forever
+         put gist_FetchListArray (nextURL) into moreGistListArray
+         
+         gist_ExtractReceivedHeaderArray previousURL, nextURL, firstURL, lastURL,rateLimitRemaining
+         put gist_ParseListArray (moreGistListArray) into moreGistList
+         put CR & moreGistList after gistList
+         
+         if nextUrl is empty then exit repeat
+      end repeat
+   end if
+   return gistList
+end gist_List

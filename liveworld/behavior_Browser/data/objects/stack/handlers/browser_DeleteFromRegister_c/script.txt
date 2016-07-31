@@ -1,0 +1,10 @@
+command browser_DeleteFromRegister IdOrObject
+   global gOPN_BrowserArray
+   if IdOrObject is a number then
+      put IdOrObject into browserID
+      dictionary_Delete gOPN_BrowserArray, browserID
+   else if exists (IdOrObject) then
+      put revRuggedID (tObject) into tObject
+      dictionary_Delete gOPN_BrowserArray, tObject
+   end if
+end browser_DeleteFromRegister

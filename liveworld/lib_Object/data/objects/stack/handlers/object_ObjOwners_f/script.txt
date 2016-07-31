@@ -1,0 +1,12 @@
+function object_ObjOwners pObj
+   -- return the owners of any object until the card (not included)
+   local tOwner,tOwners
+   -----
+   put pObj into tOwner
+   repeat until "Card" is word 1 of the long owner of tOwner
+      put the long owner of tOwner & cr after tOwners
+      put the long owner of tOwner into tOwner
+   end repeat
+   if tOwners = empty then return pObj
+   return pObj & cr & line 1 to -1 of tOwners
+end object_ObjOwners

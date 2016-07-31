@@ -1,0 +1,9 @@
+function gitter_FetchMyRooms
+   -- curl -i -H "Accept: application/json" -H "Authorization: Bearer 6de5229ab216b137776afd3f0e0da393400f4481" 
+   -- "https://api.gitter.im/v1/user/54cfdaf2db8155e6700f5d5d/rooms"
+   
+   put gitter_MyUserID() into userID
+   put "user/" & userID & "/rooms" into someCommand
+   put gitter_RestfulGet (someCommand) into jsonResult
+   return jsonResult
+end gitter_FetchMyRooms

@@ -1,0 +1,5 @@
+function mediawiki_GetRestArray restURL
+   put mediawiki_GetRestJSON (restURL) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end mediawiki_GetRestArray

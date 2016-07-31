@@ -1,0 +1,5 @@
+getprop disabled_Owner [mTarget]
+   put the view_Object of the owner of mTarget into viewOwner
+   if exists (viewOwner) is false then return empty   
+   return false
+end disabled_Owner

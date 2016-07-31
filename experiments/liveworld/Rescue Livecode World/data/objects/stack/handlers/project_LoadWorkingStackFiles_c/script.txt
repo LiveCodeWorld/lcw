@@ -1,0 +1,5 @@
+command project_LoadWorkingStackFiles pProjectName, pProjectHomeStack
+   project_GuessHomeStack pProjectHomeStack
+   put project_FetchStackFiles (pProjectName) into stackFileTable
+   set the project_StackFiles of pProjectHomeStack to stackFileTable
+end project_LoadWorkingStackFiles

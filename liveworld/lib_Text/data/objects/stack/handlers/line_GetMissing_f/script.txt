@@ -1,0 +1,11 @@
+function line_GetMissing testIndex, referenceIndex
+    set the wholematches to true
+    put empty into missingIndex
+    repeat for each line someLine in testIndex
+        if someLine is not among the lines of referenceIndex then
+            put someLine & return after missingIndex
+        end if
+    end repeat
+    delete last char of missingIndex
+    return missingIndex
+end line_GetMissing

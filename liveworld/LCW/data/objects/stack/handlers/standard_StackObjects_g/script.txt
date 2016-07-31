@@ -1,0 +1,5 @@
+getprop standard_StackObjects [folderName]
+   put the standard_Folder [folderName] of the target into standardFolder
+   put folder_ListStackPaths (standardFolder) into stackObjects
+   return stackObjects
+end standard_StackObjects

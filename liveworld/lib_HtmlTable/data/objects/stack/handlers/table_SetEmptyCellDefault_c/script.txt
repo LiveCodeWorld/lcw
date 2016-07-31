@@ -1,0 +1,4 @@
+command table_SetEmptyCellDefault pValue
+   -- Set "empty" cells. Set a default value for use in any table cells that are empty.
+   put pValue into sEmptyCells
+end table_SetEmptyCellDefault

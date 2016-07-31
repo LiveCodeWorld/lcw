@@ -1,0 +1,15 @@
+command overlayData_SetDefaultName @overlayData, defaultGraphName
+   put keys(overlayData) into overlayNames
+   set the wholematches to true
+   if defaultGraphName is among the lines of overlayNames then
+      repeat for each line overlayName in overlayNames
+         put overlayData [overlayName] into overlayArray
+         put overlayName = defaultGraphName into someBoolean
+         overlayArray_SetGraphProperty overlayArray, "overlay_IsDefault", someBoolean
+         
+         put overlayArray into overlayData [overlayName]
+      end repeat
+   else
+      -- could fix here
+   end if
+end overlayData_SetDefaultName

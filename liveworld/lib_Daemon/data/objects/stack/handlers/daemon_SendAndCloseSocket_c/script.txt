@@ -1,0 +1,6 @@
+command daemon_SendAndCloseSocket someHeader, contentToSend, socketID
+   -- always adds "Content-Length:" header
+   _addContentLengthHeader someHeader, contentToSend
+   put someHeader & CRLF & CRLF & contentToSend into headersAndContent
+   daemon_RawSendAndClose headersAndContent, socketID
+end daemon_SendAndCloseSocket

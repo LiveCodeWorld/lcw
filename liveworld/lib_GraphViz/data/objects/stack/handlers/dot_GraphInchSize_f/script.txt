@@ -1,0 +1,12 @@
+function dot_GraphInchSize someRect, expandIfNeeded
+   if someRect is empty then return empty
+   put item 3 of someRect - item 1 of someRect into someWidth
+   put item 4 of someRect - item 2 of someRect into someHeight
+   
+   put someWidth,someHeight into someSize
+   dot_ConvertToInches someSize
+   if expandIfNeeded is true then
+      put "!" after someSize
+   end if
+   return someSize
+end dot_GraphInchSize

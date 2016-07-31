@@ -1,0 +1,10 @@
+on scrollbarDrag newValue
+   put the horizontalArrow_View of me into horizontalArrowView
+   if exists (horizontalArrowView) is false then return empty
+     
+   lock screen
+   put the template_CardRect of horizontalArrowView into oRect
+   set the arrow_Margin of horizontalArrowView to newValue
+   set the rect of horizontalArrowView to oRect
+   unlock screen
+end scrollbarDrag

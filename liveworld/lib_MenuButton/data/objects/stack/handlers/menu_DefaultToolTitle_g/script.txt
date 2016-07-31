@@ -1,0 +1,10 @@
+getprop menu_DefaultToolTitle
+   -- put the view_Name of the target into viewName
+   put the view_Object of the target into viewObject
+   if exists (viewObject) is false then put the long id of the target into viewObject
+   
+   put the view_Name of viewObject into viewName
+   if viewName is empty then return empty
+   put "Global |" && menu_TitleFromViewName (viewName) into globalMenuTitle
+   return globalMenuTitle
+end menu_DefaultToolTitle

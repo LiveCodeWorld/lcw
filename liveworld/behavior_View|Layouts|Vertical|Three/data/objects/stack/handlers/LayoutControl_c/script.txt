@@ -1,0 +1,66 @@
+on LayoutControl pRect
+   -- should be more sophisticated with min heights and different fluid options.
+   if the long id of the target is not the long id of me then return empty -- this is important for nested datagrids at the moment.
+   if pRect is empty then put the rect of me into pRect
+   
+   put the header_View of me into headerView
+   put the header_Divider of me into headerBodySpacer
+   put the body_View of me into bodyView
+   put the footer_Divider of me into bodyFooterSpacer
+   put the footer_View of me into footerView
+   
+   put the visible of headerView into headerVisible
+   put the visible of bodyView into bodyVisible
+   put the visible of footerView into footerVisible
+   
+   put the vertical_Spacing of me into vSpacing
+   put the header_Rect [pRect] of me into headerRect
+   put the body_Rect [pRect] of me into bodyRect
+   put the footer_Rect [pRect] of me into footerRect
+   
+   if headerVisible is false then
+      put item 2 of headerRect into item 2 of bodyRect
+   end if
+   
+   if bodyVisible is false then
+      if the fluid_View of me is "header_View" then
+         put item 4 of bodyRect into item 4 of headerRect
+      else
+         put item 2 of bodyRect into item 2 of footerRect
+      end if
+   end if
+   
+   if footerVisible is false then
+      put item 4 of footerRect into item 4 of bodyRect
+   end if
+   
+   if the visible of headerView is true then
+      -- HeaderBody Spacer Rect
+      put bodyRect into headerBodySpacerRect
+      put item 4 of headerRect into item 2 of headerBodySpacerRect
+      put item 2 of bodyRect into item 4 of headerBodySpacerRect
+      
+      set the view_Rect of headerBodySpacer to headerBodySpacerRect
+   end if
+   
+   if the visible of footerView is true then
+      -- BodyFooter Spacer Rect
+      put bodyRect into bodyFooterSpacerRect
+      put item 2 of footerRect into footerTop
+      put footerTop into item 4 of bodyFooterSpacerRect
+      put footerTop - vSpacing into spacerTop
+      put spacerTop into item 2 of bodyFooterSpacerRect
+      
+      set the view_Rect of bodyFooterSpacer to bodyFooterSpacerRect
+      
+      if spacerTop < item 4 of bodyRect then
+         -- minimal sized fluid footer won't squash anymore
+         put spacerTop into item 4 of bodyRect -- hack
+      end if
+   end if
+   
+   set the view_Rect of headerView to headerRect
+   set the view_Rect of bodyView to bodyRect
+   set the view_Rect of footerView to footerRect
+   set the rect of me to pRect
+end LayoutControl

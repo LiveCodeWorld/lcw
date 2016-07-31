@@ -1,0 +1,8 @@
+command hkey_SetOverlayArray hKey, overlayArray, pOverlayName
+   hkey_StripDefaultDotArray overlayArray
+   
+   put hkey_GetOverlayData (hKey) into overlayData
+   overlayData_NormalizeName pOverlayName, overlayData
+   put overlayArray into overlayData [pOverlayName]
+   hkey_SetOverlayData hKey, overlayData
+end hkey_SetOverlayArray

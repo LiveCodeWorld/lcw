@@ -1,0 +1,11 @@
+on menu_TestLiveCodeJavascript mTarget
+   put the browser_Widget of mTarget into browserWidget
+   
+   -- Set up the browser javascript handler list
+   -- This code goes in a suitable setup handler
+   set the javascriptHandlers of browserWidget to "myJSHandler"
+   
+   // Calling the handler from JavaScript within the browser
+   put "$('.header H1 > a').click(function() { liveCode.myJSHandler('myMessage', 12345) });" into someJavascript
+   do someJavascript in browserWidget
+end menu_TestLiveCodeJavascript

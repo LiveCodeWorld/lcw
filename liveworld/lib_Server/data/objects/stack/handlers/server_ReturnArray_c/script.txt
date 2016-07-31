@@ -1,0 +1,10 @@
+command server_ReturnArray someArray
+  if the environment = "server" then
+    put new header "Content-Type: application/lc.array.compressed"
+    put new header "Access-Control-Allow-Origin: *"
+    put new header "Access-Control-Allow-Headers: Accept, Authorization, Content-Type"
+    put new header "Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS, LINK, UNLINK"
+  end if
+  put base64Encode(arrayEncode(someArray)) into tEncodedArray
+  put tEncodedArray
+end server_ReturnArray

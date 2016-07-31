@@ -1,0 +1,5 @@
+getprop graphic_BezierPoints [zdt]
+   put the points of the target into listOfPoints
+   put graph_BezierLine (listOfPoints) into bezierPoints
+   return bezierPoints
+end graphic_BezierPoints

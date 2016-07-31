@@ -1,0 +1,10 @@
+command rig_AskSetLocalControllerFolder
+   put rig_FetchControllerFolder() into rigControllerFolder
+   answer folder "Select the folder to store all your controllers..." with rigControllerFolder
+   put it into rigControllerFolder
+   if it is empty then exit to top
+   text_AddTrailing rigControllerFolder, slash
+   
+   rig_StoreControllerFolder rigControllerFolder
+   return rigControllerFolder
+end rig_AskSetLocalControllerFolder

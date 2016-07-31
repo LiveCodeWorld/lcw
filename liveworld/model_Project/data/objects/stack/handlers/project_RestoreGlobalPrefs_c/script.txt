@@ -1,0 +1,7 @@
+command project_RestoreGlobalPrefs pProjectName
+   -- was "libary_RestoreGlobalPrefs"   
+   project_DeleteGlobalPrefs
+   project_LoadGlobalPrefs pProjectName
+   put the result into projectPrefsArray
+   return projectPrefsArray
+end project_RestoreGlobalPrefs

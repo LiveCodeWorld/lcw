@@ -1,0 +1,5 @@
+setprop title_Height titleHeight 
+   set the view_DisplayProperty ["title_Height"] of me to titleHeight
+   dispatch "LayoutControl" to me -- changes the target
+   return the result
+end title_Height

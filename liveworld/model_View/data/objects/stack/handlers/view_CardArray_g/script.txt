@@ -1,0 +1,13 @@
+getprop view_CardArray [pShortName]
+   -- stores the info with the card (so replacing views is OK)
+   put the view_Object of the target into viewObject
+   if viewObject is empty then return empty
+   
+   if pShortName is empty then put the short name of viewObject into pShortName
+   put the card_Object of the target into cardObject
+   put the view_Name of viewObject into vName
+   
+   put the uOPN_NamedViewArray of cardObject into namedViewArray
+   put namedViewArray [vName][pShortName] into viewArray
+   return viewArray
+end view_CardArray

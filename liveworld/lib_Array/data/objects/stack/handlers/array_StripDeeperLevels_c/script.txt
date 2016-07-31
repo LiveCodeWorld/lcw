@@ -1,0 +1,8 @@
+command array_StripDeeperLevels @someArray
+   repeat for each key someKey in someArray
+      put someArray [someKey] into nextLevel
+      if nextLevel is an array then
+         put keys (nextLevel) into someArray [someKey]
+      end if
+   end repeat
+end array_StripDeeperLevels

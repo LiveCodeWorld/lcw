@@ -1,0 +1,7 @@
+private command _setDefaultHeight @headerHeight
+   if headerHeight is empty then
+      -- let's set a default
+      put 30 into headerHeight
+      put headerHeight into LocalArray ["headerHeight"]
+   end if
+end _setDefaultHeight

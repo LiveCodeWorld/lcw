@@ -1,0 +1,4 @@
+on menu_DepsFromStoredHkeyLinkArray hKey
+   put hkey_FetchDepsFromLinkArray (hKey) into hKeyDeps
+   display_Outline hKeyDeps
+end menu_DepsFromStoredHkeyLinkArray

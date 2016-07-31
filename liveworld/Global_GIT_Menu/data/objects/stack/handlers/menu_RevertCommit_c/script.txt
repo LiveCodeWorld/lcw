@@ -1,0 +1,10 @@
+on menu_RevertCommit
+   put "git revert --no-edit HEAD" into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   git_RefreshDisplay true, "Git Status"
+   
+   if shellResult is not empty then
+      beep
+      opn_Notify shellResult
+   end if
+end menu_RevertCommit

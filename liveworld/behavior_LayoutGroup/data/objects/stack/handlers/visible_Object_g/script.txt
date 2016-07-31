@@ -1,0 +1,9 @@
+getprop visible_Object
+   put the childcontrolids of me into topIDs
+   repeat for each line someID in topIDs
+      if the visible of control id someID is true then
+         return the long id of control id someID
+      end if
+   end repeat
+   return empty
+end visible_Object

@@ -1,0 +1,5 @@
+command library_StoreArray shortName, dataArray
+   put library_ArrayFile (shortName) into someFile
+   array_Save someFile, dataArray
+   return someFile
+end library_StoreArray

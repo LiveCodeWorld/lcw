@@ -1,0 +1,34 @@
+command overlayData_ConstructAndSetGroupStyleArray @overlayArray
+   put overlayArray ["metadata"]["dot_GroupStyleArray"] into dotGroupStyleArray
+   put overlayArray ["data"]["idArray"] into idArray
+   
+   repeat for each key nodeID in idArray
+      put idArray [nodeID] into hKey
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      
+      put dotGroupStyleArray [handlerType]["nodeIDs"] into nodeIDs
+      put nodeID & comma after nodeIDs
+      put nodeIDs into dotGroupStyleArray [handlerType]["nodeIDs"]
+   end repeat
+   
+   overlayData_SetFunctionStyle dotGroupStyleArray
+   overlayData_SetCommandStyle dotGroupStyleArray
+   
+   overlayData_SetGetPropStyle dotGroupStyleArray
+   overlayData_SetSetPropStyle dotGroupStyleArray
+   
+   overlayData_SetMessageStyle dotGroupStyleArray
+   overlayData_SetMissingStyle dotGroupStyleArray
+   
+   repeat for each item handlerType in "c,f,g,s,m,missing"
+      put dotGroupStyleArray [handlerType]["nodeIDs"] into nodeIDs
+      delete char -1 of nodeIDs
+      if nodeIDs is not empty then
+         put nodeIDs into dotGroupStyleArray [handlerType]["nodeIDs"]
+      else
+         delete local dotGroupStyleArray [handlerType]
+      end if
+   end repeat
+   
+   put dotGroupStyleArray into overlayArray ["metadata"]["dot_GroupStyleArray"]
+end overlayData_ConstructAndSetGroupStyleArray

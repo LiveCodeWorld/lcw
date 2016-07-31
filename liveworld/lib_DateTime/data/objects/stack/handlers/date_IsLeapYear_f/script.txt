@@ -1,0 +1,10 @@
+function date_IsLeapYear someDate
+    convert someDate to dateitems
+    put item 1 of someDate into theYear
+    return (theYear mod 400 = 0) or (theYear mod 100 <> 0) and (theYear mod 4 = 0)
+    
+    put 2 into item 2 of someDate
+    put 29 into item 3 of someDate
+    convert someDate to dateitems
+    return item 2 of someDate = 2
+end date_IsLeapYear

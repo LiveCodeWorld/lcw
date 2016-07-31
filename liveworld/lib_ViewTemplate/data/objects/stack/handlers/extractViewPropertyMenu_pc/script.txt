@@ -1,0 +1,68 @@
+private command extractViewPropertyMenu someView, @propMenu, @publicProps  
+   put empty into propMenu
+   put empty into publicProps
+   put the view_BehaviorScript of someView into viewBehaviorScript
+   
+   put viewBehaviorScript into setPropLines
+   filter setPropLines with "setprop *"
+   
+   put viewBehaviorScript into getPropLines
+   filter getPropLines with "getprop *"
+   repeat for each line scriptLine in getPropLines
+      put word 2 of scriptLine into gProp
+      put gProp & CR after getProps
+   end repeat
+   delete char -1 of getProps
+   
+   set the wholeMatches to true
+   sort setPropLines
+   repeat for each line scriptLine in setPropLines
+      put word 2 of scriptLine into someProp
+      
+      if someProp is among the items of "view_Rect" then next repeat
+      if someProp is among the lines of foundProps then next repeat
+      if someProp is not among the lines of getProps then next repeat
+      
+      put someProp & CR after foundProps
+      try
+         put someProp & CR after publicProps
+         put someProp & CR after propMenu
+         put word -1 of line 1 of scriptLine into setPropParam
+         if setPropParam is among the items of "boolean,someBoolean" then
+            get the someProp of someView
+            if it is true then
+               put tab & "!ctrue" & CR & tab & "false" & CR after propMenu
+            else if it is false then
+               put tab & "true" & CR & tab & "!cfalse" & CR after propMenu
+            else -- could be empty ?
+               put "(" before line -1 of propMenu
+               put tab & "true" & CR & tab & "false" & CR after propMenu
+            end if
+         else
+            if char - 1 of someProp = "y" then
+               put char 1 to -2 of someProp & "ies" into somePropChoice
+            else
+               put someProp & "s" into somePropChoice
+            end if
+            
+            if somePropChoice is among the lines of getProps then
+               put the somePropChoice of someView into subMenu
+            else
+               put script_ExtractSetpropConditions (someProp, viewBehaviorScript) into subMenu
+            end if
+            
+            if subMenu is not empty then
+               replace comma with CR in subMenu
+               put the someProp of someView into someMenuItem
+               menu_SetCheckedItem someMenuItem, subMenu, true
+               put outline_IncreaseIndent (subMenu, 1) & CR after propMenu
+            end if
+         end if
+      catch someError
+         put "(" before line -1 of propMenu
+      end try
+   end repeat
+   delete char -1 of propMenu
+   delete char -1 of publicProps
+   return propMenu
+end extractViewPropertyMenu

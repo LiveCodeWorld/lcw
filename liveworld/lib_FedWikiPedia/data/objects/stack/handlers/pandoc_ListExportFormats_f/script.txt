@@ -1,0 +1,6 @@
+function pandoc_ListExportFormats
+   get "asciidoc,beamer,commonmark,context,docbook,docx,dokuwiki,dzslides,epub,epub3,fb2,haddock,html,html5,icml,json,"
+   put "latex,man,markdown,markdown_github,markdown_mmd,markdown_phpextra,markdown_strict,mediawiki,native,odt," after it
+   put "opendocument,opml,org,pdf,plain,revealjs,rst,rtf,s5,slideous,slidy,texinfo,textile" after it
+   return it
+end pandoc_ListExportFormats

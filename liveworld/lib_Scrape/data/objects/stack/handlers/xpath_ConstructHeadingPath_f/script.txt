@@ -1,0 +1,9 @@
+function xpath_ConstructHeadingPath pHeaderLevel, pBelowAttributeID
+   if pHeaderLevel is empty then put 3 into pHeaderLevel
+   if pBelowAttributeID is empty then
+      put format ("h%d", pHeaderLevel) into someXPath
+   else
+      put format ("//*[@id='%s']/h%d", pBelowAttributeID, pHeaderLevel) into someXPath
+   end if
+   return someXPath
+end xpath_ConstructHeadingPath

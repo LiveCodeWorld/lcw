@@ -1,0 +1,7 @@
+function rev_ListEditorPrefs
+   put rev_ListPrefs("editor") into prefItems
+   set the columndelimiter to comma
+   split prefItems by column
+   put prefItems [2] into revEditorPrefs
+   return revEditorPrefs
+end rev_ListEditorPrefs

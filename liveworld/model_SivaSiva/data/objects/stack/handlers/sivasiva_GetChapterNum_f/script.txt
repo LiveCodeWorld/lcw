@@ -1,0 +1,10 @@
+function sivasiva_GetChapterNum chapterTitle, pBookArray
+   if pBookArray is not an array then put sivasiva_FetchBookArray() into pBookArray
+   repeat for each key chapterNum in pBookArray
+      put pBookArray [chapterNum] into chapterArray
+      if chapterArray ["chapterTitle"] = chapterTitle then
+         return chapterNum
+      end if
+   end repeat
+   return empty
+end sivasiva_GetChapterNum

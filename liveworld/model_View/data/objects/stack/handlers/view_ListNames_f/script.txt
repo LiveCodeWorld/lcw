@@ -1,0 +1,13 @@
+function view_ListNames pStartFilter, pIncludeStem
+   put hArray_ListViewNames() into vNames
+   if pIncludeStem is not true then put replacetext (vNames, "(View\|)\W*", empty) into vNames
+   if pStartFilter is empty then return vNames
+   
+   view_NormalizeName pStartFilter
+   if pIncludeStem is not true then
+      set the itemdelimiter to "|"
+      delete item 1 of pStartFilter
+   end if
+   filter vNames with (pStartFilter & "*")
+   return vNames
+end view_ListNames

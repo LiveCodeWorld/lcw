@@ -1,0 +1,37 @@
+function googleEarth_GetGetPointOnTerrain openglLoc
+    /*
+    set results to results & {GetPointOnTerrain {0, 0}}
+    (* The {0, 0} is in standard OpenGL coordinates; the space you draw
+    in with the projection and modelview matrices set to the identity.
+    {-1, -1} is the bottom left, {1, -1} is the bottom right, {1, 1} is
+    the top right, and the rest should be obvious. We pick the center. *) 
+    
+    The return value of GetPointOnTerrainFromScreenCoords
+    is a SAFEARRAY of Latitude in decimal degrees, Longitude in decimal degrees, and altitude (of the terrain point) in meters.
+    
+    The trick is reading a SAFEARRAY. In VBA it can be done with a Variant,
+    in C++ there are functions for SAFEARRAYs,
+    and there is a relatively straightforward way to do it in C#, but I don't know what it is.
+    */
+    
+    if openglLoc is empty then put "0,0" into openglLoc
+    
+    put "tell application 'Google Earth'" into doScript
+    put cr & "GetPointOnTerrain {[[openglLoc]]}" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    put merge(doScript) into doScript
+    -- return doScript
+     
+    do doScript as AppleScript
+    put the result into threeLoc
+    return threeLoc
+    
+    delete char 1 of threeLoc
+    delete char -1 of threeLoc
+    
+    put "latitude:" & word 1 of item 1 of threeLoc into googleView
+    put ", longitude:" & word 1 of item 2 of threeLoc after googleView
+    put ", someHeight:" && word 1 of item 3 of threeLoc after googleView
+    return googleView
+end googleEarth_GetGetPointOnTerrain

@@ -1,0 +1,56 @@
+command template_CreateLibraryStack viewPath, cardMargin
+   -- was "libView_CreateBlankViewStack"
+   -- see newer "template_ConstructStackFromObject"
+   
+   if cardMargin is empty then put 12 into cardMargin
+   if viewPath is empty then
+      put the top_LevelPath [true] of the target into viewStem
+      if viewStem is empty then put "Test" into viewStem
+      put "|View" after viewStem
+      ask "Give this view a class path name.." with viewStem
+      put it into viewPath
+      if viewPath is empty then
+         exit to top
+      end if
+   end if
+   
+   put view_NameToFile (viewPath) into someFile
+   if there is a file someFile then	# error checking first
+      opn_Notify "There is already a view of this name! Here it is!", true
+      
+      -- put view_GetTemplateObject(viewPath) into someObject
+      go to stack viewPath
+      exit to top
+   end if
+   
+   stack_Create viewPath
+   put the result into createdObject
+   
+   if exists(createdObject) is false then 
+      answer warning "Problem creating library stack!"
+      exit to top
+   end if
+   
+   put the stack_Object of createdObject into stackObject
+   
+   put template_DefaultCardScript() into cardScript
+   
+   set the script of card 1 of stackObject to cardScript
+   set the behavior_Name of card 1 of stackObject to "Card View Behavior"
+   
+   put view_NameToFile (viewPath) into someFile
+   
+   -- create folder in case it is not already created
+   put someFile into someFolder
+   set the itemdelimiter to "/"
+   delete last item of someFolder
+   folder_CreateNested someFolder
+   
+   set the filename of stackObject to someFile
+   set the destroystack of stackObject to false
+   set the destroywindow of stackObject to false
+   save stack viewPath
+   set the stack_IsKnown of stackObject to true
+   
+   return stackObject
+end template_CreateLibraryStack

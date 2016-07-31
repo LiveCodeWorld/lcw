@@ -1,0 +1,78 @@
+--> MetaData
+-
+license: GPLv3
+name: View|Index|Group
+type: view behavior
+version: 0.3
+
+
+--> Variables
+-
+local LocalArray
+
+
+--> Work in Progress
+-
+
+--> Objects
+-
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (index_Group,g) ]]
+
+[[ _FetchHandler (horizontal_Layout,g) ]]
+
+[[ _FetchHandler (layout_View,g) ]]
+
+
+--> Hilite
+-
+[[ _FetchHandler (view_Hilite,s) ]]
+
+
+--> Selected
+-
+[[ _FetchHandler (selected_ShortStackFiles,g) ]]
+
+[[ _FetchHandler (selected_StackObjects,g) ]]
+
+[[ _FetchHandler (selected_StackNames,g) ]]
+
+[[ _FetchHandler (selected_LongStackFiles,g) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (index_Width,g) ]]
+
+[[ _FetchHandler (index_Width,s) ]]
+
+[[ _FetchHandler (view_Spacing,g) ]]
+
+[[ _FetchHandler (view_Spacing,s) ]]
+
+
+--> Children
+-
+[[ _FetchHandler (child_Views,g) ]]
+
+[[ _FetchHandler (child_Controls,g) ]]
+
+[[ _FetchHandler (child_Names,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]

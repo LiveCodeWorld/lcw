@@ -1,0 +1,140 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_GraphVizTools
+type: script library
+version: 0.1
+
+
+--> Script Calls | Graphing
+-
+[[ _FetchHandler (script_GetDotText,f) ]]
+
+[[ _FetchHandler (script_GetReverseLinkKeys,f) ]]
+
+[[ _FetchHandler (script_SetDefsAndLinks,c) ]]
+
+[[ _FetchHandler (script_ConstructDefs,f) ]]
+
+[[ _FetchHandler (script_ConstructLinks,f) ]]
+
+[[ _FetchHandler (script_ConstructReverseLinks,f) ]]
+
+[[ _FetchHandler (script_ConstructNodeFromHkey,f) ]]
+
+[[ _FetchHandler (script_ConstructDotNodeSection,f) ]]
+
+[[ _FetchHandler (script_GetNodeDef,f) ]]
+
+
+--> Script | Graphing
+-
+[[ _FetchHandler (script_GetLinkKeys,f) ]]
+
+[[ _FetchHandler (script_NodeSectionFromLinkKeys,f) ]]
+
+
+--> Hkey
+-
+[[ _FetchHandler (hkey_SetHandlerTypeProperties,c) ]]
+
+
+--> HkeyArray | Dot
+-
+[[ _FetchHandler (hkeyArray_FromStoredCalls,f) ]]
+
+[[ _FetchHandler (hkeyArray_Construct,c) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructObjectDot,f) ]]
+
+
+--> HkeyArray | Clusters | Nested
+-
+[[ _FetchHandler (hKeyArray_DotNestedObjectClusters,f) ]]
+      
+[[ _FetchHandler (hKeyArray_XmlToClusters,f) ]]
+
+[[ _FetchHandler (hKeyArray_SubGraphContents,f) ]]
+
+[[ _FetchHandler (hKeyArray_ReplaceOpeningTag,f) ]]
+
+
+--> HkeyArray | Clusters | Object
+-
+[[ _FetchHandler (hKeyArray_DotObjectClusters,f) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructDotClusters,f) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructStackIdArray,f) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructObjectIdArray,f) ]]
+
+
+--> HkeyArray | SubGraph Definitions
+-
+[[ _FetchHandler (hKeyArray_DotNodeSubGraphDefs,f) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructSubGraph,f) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructIdTypeArray,f) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructNodeDefLine,f) ]]
+
+-- function linkArray_GetNodePropertyArray nodeID, graphPropertyArray
+    put graphPropertyArray [nodeID] into styleTable
+    split styleTable with CR and tab
+    return styleTable
+end linkArray_GetNodePropertyArray
+
+
+--> HkeyArray | Objects
+-
+[[ _FetchHandler (hKeyArray_ObjectOutline,f) ]]
+
+[[ _FetchHandler (hKeyArray_ExtractObjects,f) ]]
+
+function hKeyArray_ConstructObjectIdArray idArray
+    local hObjectIdArray
+    repeat for each key nodeID in idArray
+        put idArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        array_AddToIndex nodeID, scriptObject, hObjectIdArray
+        -- line_Add scriptObject, scriptObjects
+    end repeat
+    return hObjectIdArray
+end hKeyArray_ConstructObjectIdArray
+  
+
+--> HkeyArray | Properties
+-
+[[ _FetchHandler (hKeyArray_AddTographPropertyArray,c) ]]
+
+[[ _FetchHandler (linkArray_SetGraphPropertyArray,c) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructGraphPropertyArray,f) ]]
+
+
+--> Node | Graphs
+-
+/*
+Old? stuff for working with "nodes" as objects for dot graphs
+*/
+
+[[ _FetchHandler (dot_ConstructGraph,f) ]]
+
+[[ _FetchHandler (dot_ConstructSingleNodeGraph,f) ]]
+
+[[ _FetchHandler (graph_ConstructSub,f) ]]
+
+[[ _FetchHandler (graph_ConstructNodeSection,f) ]]
+
+[[ _FetchHandler (graph_ConstructNodeLine,f) ]]
+
+[[ _FetchHandler (graph_GetTemplate,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (math_IsOdd,f) ]]
+
+[[ _FetchHandler (outline_LineOffset,f) ]]

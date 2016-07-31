@@ -1,0 +1,11 @@
+private function autoCommitComment scriptObject, textLine
+   put the internet date into someDate
+   delete word -1 of someDate
+   put someDate & ":  changed script" && the mobile_Name of scriptObject into someSuggestion
+   put CR after someSuggestion
+   put CR after someSuggestion
+   
+   if textLine is empty then put "OPN auto-commit" into textLine
+   put textLine after someSuggestion
+   return someSuggestion
+end autoCommitComment

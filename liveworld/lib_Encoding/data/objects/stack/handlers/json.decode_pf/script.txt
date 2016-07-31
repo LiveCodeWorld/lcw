@@ -1,0 +1,39 @@
+private function json.decode pString
+   switch pString
+      case "false"
+         return "false"
+         break
+      case "true"
+         return "true"
+         break
+      case "null"
+         return empty
+         break
+      default
+         if pString is a number then
+            return pString
+         else
+            replace "\" & quote with quote in pString
+            replace "\\" with "\" in pString
+            replace "\b" with numtochar(8) in pString
+            replace "\t" with numtochar(9) in pString
+            replace "\f" with numtochar(12) in pString
+            replace "\r" with numtochar(13) in pString
+            replace "\n" with numtochar(10) in pString
+            
+            -- some more common unicode escapees
+            replace "\u0022" with quote in pString
+            replace "\u005C" with "\" in pString
+            -- any others
+            if "\u" is in pString then
+               put unicodeEscapes(pString) into pString
+            end if
+            
+            if not sOutputUnicode then
+               return utf8decode(pString)
+            else
+               return pString
+            end if
+         end if
+   end switch
+end json.decode

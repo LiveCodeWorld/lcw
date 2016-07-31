@@ -1,0 +1,9 @@
+function menu_ConstructTemplateScript mTitle
+   put menu_ConstructSubMenuScript (mTitle) into upSubMenus
+   if upSubMenus is not empty then put CR & upSubMenus & CR into upSubMenus
+   
+   put mTitle into MenuTitle
+   put script_GetTemplate ("Menu Script") into menuScriptTemplate
+   put merge (menuScriptTemplate) into someScript
+   return someScript
+end menu_ConstructTemplateScript

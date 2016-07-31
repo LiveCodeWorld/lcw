@@ -1,0 +1,10 @@
+setprop view_FileMetaData vMetaDataArray
+   put the long id of the target into someView 
+   put the view_Name of someView into vName
+   if nameKey is empty then put the rugged_ID of someView into vName
+   
+   put view_GetFileMetaArray() into metaDataArray
+   put vMetaDataArray into metaDataArray [vName]
+   view_SetFileMetaArray metaDataArray
+   return metaDataArray
+end view_FileMetaData

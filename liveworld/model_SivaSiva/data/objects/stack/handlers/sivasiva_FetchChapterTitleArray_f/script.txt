@@ -1,0 +1,5 @@
+function sivasiva_FetchChapterTitleArray pBookArray
+   if pBookArray is not an array then put sivasiva_FetchBookArray() into pBookArray
+   -- put project_FetchValue ("chapterTitleArray", "SivaSiva") into chapterTitleArray
+   return chapterTitleArray
+end sivasiva_FetchChapterTitleArray

@@ -1,0 +1,5 @@
+getprop project_OverlayFolder
+   put the textStack_Folder of the target into textStackFolder
+   put textStackFolder & "metadata/project/overlay/" into projectOverlayFolder
+   return projectOverlayFolder
+end project_OverlayFolder

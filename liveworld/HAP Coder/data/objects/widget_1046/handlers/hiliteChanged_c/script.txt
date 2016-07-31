@@ -1,0 +1,53 @@
+on hiliteChanged
+   put the hilitedItemName of me into someLabel
+   put hap_LabelToUrl (someLabel) into someURL
+   
+   set the itemdelimiter to slash
+   put item 3 of someURL into serverDomain
+   
+   switch someLabel
+      case "local"
+         lock screen
+         put the hap_LocalRigFolder of me into rigFolder
+         set the displayed_RigFolder of me to rigFolder
+         browser_Show false, empty
+         set the backgroundcolor of this cd to "gray"
+         unlock screen
+         break
+      case "livecode"
+         lock screen
+         browser_Show false, empty
+         set the backgroundcolor of this cd to "187,190,93"
+         unlock screen
+         
+         set the displayed_ServerURL of me to serverDomain
+         break
+      case "github"
+         lock screen
+         set the backgroundcolor of this cd to empty
+         browser_Show true, someURL
+         unlock screen
+         break
+      case "wiki" 
+         lock screen
+         set the backgroundcolor of this cd to empty
+         browser_Show true, someURL
+         unlock screen
+         break
+      case "com"
+         lock screen
+         browser_Show false, empty
+         set the backgroundcolor of this cd to "254,193,195"
+         unlock screen
+         
+         set the displayed_ServerURL of me to serverDomain
+         break
+      case "dev"
+         lock screen
+         browser_Show false, empty
+         set the backgroundcolor of this cd to "255,204,102" -- "Cantaloupe"
+         unlock screen
+         
+         set the displayed_ServerURL of me to serverDomain
+   end switch
+end hiliteChanged

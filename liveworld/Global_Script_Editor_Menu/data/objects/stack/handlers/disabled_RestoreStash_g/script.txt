@@ -1,0 +1,11 @@
+getprop disabled_RestoreStash [scriptObject]
+   global gTemp_Stash
+   
+   put revRuggedID (scriptObject) into scriptObject
+   put gTemp_Stash ["scripts"][scriptObject]["stashFile"] into stashFile
+   if stashFile is empty then
+      return true
+   else
+      return false
+   end if
+end disabled_RestoreStash

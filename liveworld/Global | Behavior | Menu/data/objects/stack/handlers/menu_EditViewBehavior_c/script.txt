@@ -1,0 +1,6 @@
+on menu_EditViewBehavior scriptObject, vbName
+   if vbName is "Clear" then return false
+   
+   put hArray_GetNamedObjectType (vbName, "view behavior") into someObject
+   edit the script of someObject
+end menu_EditViewBehavior

@@ -1,0 +1,10 @@
+function fossil_GetDefaultRemoteUrl fossilFileOrCheckoutFolder
+   put fossil_GetRawRemoteUrl (fossilFileOrCheckoutFolder) into shellResult
+   
+   set the itemdelimiter to ":"
+   if word 1 to -1 of item 2 of line 1 of shellResult = "incorrect repository schema version" then
+      -- need to rebuild
+      put empty into shellResult
+   end if
+   return word 1 to -1 of shellResult
+end fossil_GetDefaultRemoteUrl

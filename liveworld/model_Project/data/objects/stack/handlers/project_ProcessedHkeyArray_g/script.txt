@@ -1,0 +1,5 @@
+getprop project_ProcessedHkeyArray
+   put the project_ProcessedHkeyArrayFile of the target into someFile
+   put array_Fetch (someFile) into rigHkeyArray
+   return rigHkeyArray
+end project_ProcessedHkeyArray

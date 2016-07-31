@@ -1,0 +1,11 @@
+on mouseUp
+   put the index_Views of group "Stacks and Libraries" into indexViews
+   repeat for each line indexView in indexViews
+      set the cursor to busy
+      set the behavior of indexView to the name of stack "behavior_View|Index|Simple"
+   end repeat
+   
+   fix_CardBehaviors
+   put the result into resultArray
+   resizeStack
+end mouseUp

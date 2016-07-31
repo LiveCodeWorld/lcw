@@ -1,0 +1,18 @@
+function object_NotInGroupIndex containerObject, visibleCheck
+   -- was "notInGroup_Objects"
+   put empty into cardObjects
+   repeat with controlNum = 1 to the number of controls in containerObject
+      put the long ID of control controlNum of containerObject into cardControlObject
+      if word 1 of cardControlObject is "group" then
+         add the number of controls in cardControlObject to controlNum
+      else if word 1 of cardControlObject is not "group" then
+         -- do something to cardControlObject
+         if visibleCheck is true and the visible of cardControlObject is false then
+            next repeat
+         end if
+         put cardControlObject & return after cardObjects
+      end if
+   end repeat
+   delete last char of cardObjects
+   return cardObjects
+end object_NotInGroupIndex

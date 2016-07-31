@@ -1,0 +1,9 @@
+command library_SetRepoFolder @pLibraryRepoFolder
+   if pLibraryRepoFolder is empty then
+      answer folder "Select your Liveworld repository folder"
+      put it into pLibraryRepoFolder
+      if it is empty then exit to top
+   end if
+   text_AddTrailing pLibraryRepoFolder, slash
+   pref_SetValue "libraryRepoFolder", pLibraryRepoFolder
+end library_SetRepoFolder

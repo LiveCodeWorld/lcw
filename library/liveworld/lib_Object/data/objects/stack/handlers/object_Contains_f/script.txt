@@ -1,0 +1,17 @@
+function object_Contains someContainer, testObject
+   put the long ID of someContainer into someContainer
+   get the long ID of testObject
+   if someContainer = it then
+      -- inside
+      return true
+   else if someContainer contains it then
+      -- scriptObject is shorter so it is outside
+      return false
+   else if it contains someContainer then
+      -- it is inside
+      return true
+   else
+      -- -- somwhere entirely else
+      return false
+   end if
+end object_Contains

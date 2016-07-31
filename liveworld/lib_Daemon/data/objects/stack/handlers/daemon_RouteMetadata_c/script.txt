@@ -1,0 +1,5 @@
+command daemon_RouteMetadata someRoute, @someData, @headerArray
+   put daemon_GetRouteValue (someRoute) into routeData
+   put routeData ["data"] into someData
+   put routeData ["headers"] into headerArray
+end daemon_RouteMetadata

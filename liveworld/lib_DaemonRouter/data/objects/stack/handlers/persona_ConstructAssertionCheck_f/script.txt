@@ -1,0 +1,5 @@
+function persona_ConstructAssertionCheck someAssertion, someAudience
+   -- put persona_SendToVerifierService (someAssertion, someAudience) into someJSON
+   put libURLFormData ("assertion", someAssertion, "audience", someAudience) into formData
+   return formData
+end persona_ConstructAssertionCheck

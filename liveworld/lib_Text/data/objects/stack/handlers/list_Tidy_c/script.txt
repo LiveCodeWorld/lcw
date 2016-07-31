@@ -1,0 +1,10 @@
+command list_Tidy @someList
+    repeat for each item someItem in someList
+        get word 1 to -1 of someItem
+        if it is not empty then
+            put it & "," after tidyList
+        end if
+    end repeat
+    delete char -1 of tidyList
+    put tidyList into someList
+end list_Tidy

@@ -1,0 +1,254 @@
+--> Metadata
+-
+name: Rescue Livecode World
+type: stack
+author: David Bovill
+copyright: David Bovill
+deps: model_Project
+
+
+/*
+There are currently 5 active globals in use by the LiveCode environment.
+These are:
+
+-  gHkeyArray
+-  gLibrarySetArray
+-  gPrefs_Array
+- gTemp_ActiveMenuArray
+
+gHkeyArray is broken down into:
+
+-  Global Menus = an array of all Global Menus linked to a numerically linked array of menu items, and the ruggedID of the menu_Controller 
+-  behaviorArray = an array of objects with behaviors linked to metadata about that object
+-  handlerArray = also known as hArray - a huge array of all handlers linked to every object they occur in with metadata such as hash and lineNums in script.
+-  keywordArray = keyword automatically extracted from (library handlers) referencing the last object they were exported from
+-  objectType = an automatically cahced index of objects tagged using the uRIP metadata convention on script compile
+-  scriptArray = metadata about an objects script (without information about depndency calls)
+
+gLibrarySetArray is broken down to data and metadata:
+
+-  data         = front, back, used arrays and information like whether to add the ide_AddBehaviorHacks
+- metadata  = the library set name
+
+gOPN at the moment contains just the active library_SetName
+gPrefs_Array contains things like paths to command line tools
+gTemp_ActiveMenuArray is a global that contains infromation useful to the functioning of the last or current menu being used
+
+These should probably be rationalised into one for clarity, and ease of removal.
+Let's call the new array we move over to:  gLiveCodeWorld
+But that is for later...
+*/
+
+
+--> Currently Working On | Project | Stack Files
+-
+
+/*
+The handlers have an exact equivalent with regard to "library" handlers.
+
+The aim is to move over from one huge library, to individual projects.
+Each project would have it's own "home" stack, where we store stackfiles to all the stacks it needs to know about.
+Associated with this home stack we can use the standardised technique of logging metadata,
+where we can store arbitrary information.
+
+In this way the metadata of the projects home stack contains all the information we need about the project.
+
+For now let's keep using the old "library" rather than "project" based model for stackFiles.
+By this I mean we continue to store set array in the global library rather than in a folder associated with the project.
+The first stage of teh transition is to see if multiple home stacks with stackfiles works well.
+See also "meta_StackArrayFile" for project level stackfile storage
+*/
+
+
+--> Project | Home
+-
+[[ _FetchHandler (project_HomeStack,g) ]]
+
+[[ _FetchHandler (project_GuessHomeStack,c) ]]
+
+
+--> Fix Things
+-
+[[ _FetchHandler (project_FixUsed,c) ]]
+
+[[ _FetchHandler (fix_CardBehaviors,c) ]]
+
+
+--> Rescue
+-
+[[ _FetchHandler (rescue_Me,c) ]]
+
+[[ _FetchHandler (_importantView,f) ]]
+
+
+--> Stackfiles | Known
+-
+[[ _FetchHandler (known_Stackfiles,g) ]]
+
+[[ _FetchHandler (known_StackfileArray,g) ]]
+
+[[ _FetchHandler (know_Me,c) ]]
+
+[[ _FetchHandler (know_Everything,c) ]]
+
+[[ _FetchHandler (known_ListRelativeStackFiles,f) ]]
+
+[[ _FetchHandler (known_GetStackFileArray,f) ]]
+
+[[ _FetchHandler (ide_StripRevStackPaths,c) ]]
+
+[[ _FetchHandler (spotlight_ListAllStacks,f) ]]
+
+
+--> Project | Deps | To Sort
+-
+--> Environment | Start
+-
+/*
+Here we start basic things that all projects need.
+*/
+
+[[ _FetchHandler (environment_Start,c) ]]
+
+[[ _FetchHandler (bash_AddSystemPathsToPATH,c) ]]
+
+[[ _FetchHandler (stack_CheckStackMetadata,f) ]]
+
+[[ _FetchHandler (global_Load,c) ]]
+
+
+--> Deps | hArray
+-
+[[ _FetchHandler (hArray_GetNamedObjectType,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeData,f) ]]
+
+[[ _FetchHandler (hArray_GetUripArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectArray,f) ]]
+
+
+--> Deps | OPN Notify
+-
+[[ _FetchHandler (opn_Notify,c) ]]
+
+[[ _FetchHandler (osx_Notify,c) ]]
+
+
+--> Deps | Text
+-
+[[ _FetchHandler (kwote,f) ]]
+
+[[ _FetchHandler (text_AddTrailing,c) ]]
+
+[[ _FetchHandler (version_IsEarlier,f) ]]
+
+[[ _FetchHandler (_convertVersionToNumber,f) ]]
+
+[[ _FetchHandler (text_Merge,f) ]]
+
+
+--> Deps | Files
+-
+[[ _FetchHandler (file_FromRelativeRoot,f) ]]
+
+[[ _FetchHandler (file_GetRelativePath,f) ]]
+
+[[ _FetchHandler (folder_Above,f) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+[[ _FetchHandler (folder_Format,c) ]]
+
+
+--> Deps | Stack
+-
+[[ _FetchHandler (stack_Name,g) ]]
+
+[[ _FetchHandler (stack_Object,g) ]]
+
+
+--> Deps | Stackfiles
+-
+[[ _FetchHandler (stackfile_Paths,g) ]]
+
+[[ _FetchHandler (stackfile_Paths,s) ]]
+
+[[ _FetchHandler (stackFile_ExtraPaths,s) ]]
+
+[[ _FetchHandler (stackfile_Array,g) ]]
+
+[[ _FetchHandler (stackfile_Array,s) ]]
+
+[[ _FetchHandler (stackFile_ToArray,f) ]]
+
+[[ _FetchHandler (stackFile_FromArray,f) ]]
+
+[[ _FetchHandler (stackFile_AddToArray,c) ]]
+
+[[ _FetchHandler (stackFile_TableFromPaths,f) ]]
+
+[[ _FetchHandler (stackFile_AddStackPaths,c) ]]
+
+[[ _FetchHandler (stackFile_ConstructFileIndex,f) ]]
+
+
+--> Deps | Array
+-
+[[ _FetchHandler (array_Fetch,f) ]]
+
+[[ _FetchHandler (array_Save,c) ]]
+
+
+--> Old or needs sorting
+-
+--> Library | Model | gOPN_LibrarySets
+-
+/*
+This is old and should be removed.
+
+Information about "sets" are stored in an array named after an old global variable "gOPN_LibrarySets"
+It is a light-weight array. The heavy duty stuff is linked to, but stored in another model.
+
+A set is simple a named collection of things to use and set up in an evnironment.
+In particular stacks to use, back and front scripts,
+but also things like preferences.
+
+It's being used every day, but is an evolvign data structure.
+A set should becoem what we need to define a project.
+*/
+
+[[ _FetchHandler (library_Sets,s) ]]
+
+[[ _FetchHandler (library_ListSetNames,f) ]]
+
+[[ _FetchHandler (library_StoreSetNames,c) ]]
+
+[[ _FetchHandler (library_RemoveSetNamesFromStore,c) ]]
+
+[[ _FetchHandler (library_FetchSetArray,f) ]]
+
+[[ _FetchHandler (library_StoreSetArray,c) ]]
+
+[[ _FetchHandler (library_FetchSetData,f) ]]
+
+[[ _FetchHandler (library_StoreSetData,c) ]]
+
+
+--> Project | Prefs | To Sort
+-
+[[ _FetchHandler (library_CheckEssentialPrefs,c) ]]
+
+[[ _FetchHandler (project_ReloadCheckoutGlobals,c) ]]
+
+--> Project | Checkout Globals
+-
+[[ _FetchHandler (project_StoreCheckoutGlobals,c) ]]
+
+[[ _FetchHandler (library_ConstructCheckoutArray,f) ]]
+
+[[ _FetchHandler (library_StoreCheckoutGlobal,c) ]]
+
+[[ _FetchHandler (library_FetchCheckoutGlobal,f) ]]

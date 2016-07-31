@@ -1,0 +1,27 @@
+command objectArray_ExportAsFiles objectPropArray, objectFolder, pUseCustomFolders, pExportHandlers, pDontExport
+   local revPropText, someScript, objectText, objectHtml, metadataArray, customArray, someImage
+   
+   folder_Format objectFolder
+   object_DeconstructPropertyArray objectPropArray, revPropertyArray, someScript, objectText, objectHtml, customArray, someImage
+   put rev_PropertyArrayToText (revPropertyArray) into revPropText
+   
+   -- don't translate to native encoding for text files (keep with unix line endings on all platforms)
+   if someScript is not empty then object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport
+   if revPropText is not empty then object_ExportRevPropText objectFolder, revPropText
+   if objectText is not empty then object_ExportMetaText objectFolder, objectText
+   if objectHtml is not empty then object_ExportMetaHtml objectFolder, objectHtml
+   if someImage is not empty then object_ExportMetaImage objectFolder, someImage -- put someImage into url ("binfile:" & objectFolder & "image.png")  -- no idea what type of image it is (use imagedata) ???
+   
+   put objectPropArray ["videoclip"] into someData
+   if someData is not empty then
+      put someData into url ("binfile:" & objectFolder & "video")
+   end if
+   
+   put objectPropArray ["audioclip"] into someData
+   if someData is not empty then
+      put someData into url ("binfile:" & objectFolder & "audioclip_object")
+   end if
+   
+   object_ExportCustomArray objectFolder, customArray, pUseCustomFolders
+   return objectFolder
+end objectArray_ExportAsFiles

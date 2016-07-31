@@ -1,0 +1,8 @@
+command hArray_StripSuitesFromScriptDataArray @dataArray
+   repeat for each key indexNum in dataArray
+      put dataArray [indexNum]["hKey"] into hKey
+      if hKey is empty then
+         delete dataArray [indexNum]["hKey"]
+      end if
+   end repeat
+end hArray_StripSuitesFromScriptDataArray

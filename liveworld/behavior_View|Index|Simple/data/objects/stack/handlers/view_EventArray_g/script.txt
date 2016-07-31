@@ -1,0 +1,7 @@
+getprop view_EventArray eventArray   
+   put the event_Target of me into eventArray ["eventTarget"]
+   put the drag_Command of me into eventArray ["dragCommand"]
+   put the mouse_UpEvent of me into eventArray ["mouseUp"]
+   put the mouse_DoubleUpEvent of me into eventArray ["mouseDoubleUp"]
+   return eventArray
+end view_EventArray

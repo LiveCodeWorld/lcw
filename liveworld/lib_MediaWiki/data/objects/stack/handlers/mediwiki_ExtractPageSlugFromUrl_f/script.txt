@@ -1,0 +1,15 @@
+function mediwiki_ExtractPageSlugFromUrl someUrl
+   -- was mediwiki_ExtractPageSlugFromUrl
+   -- https://en.wikipedia.org/wiki/Cat#/media/File:AfricanWildCat.jpg
+   -- url_Deconstruct someUrl, someProtocol, urlDomain, urlPath, shortName, fileExtension, uName, pWord
+   set the itemdelimiter to "/"
+   put item 3 of someUrl into urlDomain
+   if urlDomain ends with ".wikipedia.org" is false then return empty
+   put item 4 of someUrl into urlPath
+   if urlPath is not "wiki" then return empty
+   put item 5 of someUrl into shortName
+   
+   put urldecode (shortName) into pageSlug
+   text_Utf8Decode pageSlug
+   return pageSlug
+end mediwiki_ExtractPageSlugFromUrl

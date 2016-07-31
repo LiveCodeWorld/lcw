@@ -1,0 +1,6 @@
+command view_DeleteIcon vName
+   view_NormalizeName vName
+   put library_TextFile ("icon.png", vName, "view", true) into someFile
+   delete file someFile
+   return someFile
+end view_DeleteIcon

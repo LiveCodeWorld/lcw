@@ -1,0 +1,55 @@
+function git_GetCheckoutFolder pFolderOrFile
+   -- see also "git_WithinCheckoutFolder"
+   put the defaultFolder into oFolder
+   if pFolderOrFile is empty then
+      put the defaultFolder into pFolderOrFile
+   else
+      if there is a file pFolderOrFile then
+         set the itemdelimiter to "/"
+         delete item -1 of pFolderOrFile
+      end if
+      set the defaultFolder to pFolderOrFile
+   end if
+   
+   put git_Version() into someVersion
+   if someVersion begins with "1.7." then
+      put "git rev-parse --show-toplevel" into someShell
+      put git_PathToCommandLine() into gitPath
+      shell_BashParamEscape gitPath
+      put gitPath before someShell
+      put shell (someShell) into shellResult
+      
+      set the itemdelimiter to ":"
+      if item 1 of shellResult = "fatal" then
+         set the defaultFolder to oFolder
+         return empty
+      end if
+      
+      put word 1 to -1 of shellResult & "/" into gitRootFolder
+   else
+      put "git rev-parse --show-cdup" into someShell
+      put git_PathToCommandLine() into gitPath
+      shell_BashParamEscape gitPath
+      put gitPath before someShell
+      put shell (someShell) into shellResult
+      
+      set the itemdelimiter to ":"
+      if item 1 of shellResult = "fatal" then
+         set the defaultFolder to oFolder
+         return empty
+      end if
+      
+      put word 1 to -1 of shellResult into someChars
+      put the number of chars of someChars/3 into upCount
+      
+      set the itemdelimiter to "/"
+      put -1 - upCount into minusItem
+      put (item 1 to minusItem of pFolderOrFile) into gitRootFolder
+      put "/" after gitRootFolder
+   end if
+   
+   -- put git_FindDotGitFolder (someFile) into gitRootFolder -- an older verison could use
+   
+   set the defaultFolder to oFolder
+   return gitRootFolder
+end git_GetCheckoutFolder

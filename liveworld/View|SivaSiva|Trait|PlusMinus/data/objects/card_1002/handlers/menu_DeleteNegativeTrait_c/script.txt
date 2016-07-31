@@ -1,0 +1,5 @@
+on menu_DeleteNegativeTrait plusMinusView
+   put the negative_View of plusMinusView into negativeView
+   delete negativeView
+   put the top_ControlNames of plusMinusView
+end menu_DeleteNegativeTrait

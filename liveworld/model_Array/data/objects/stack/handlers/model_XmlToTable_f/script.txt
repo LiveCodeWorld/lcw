@@ -1,0 +1,12 @@
+function model_XmlToTable someXML
+   -- only for simple XML
+   put revCreateXMLTree(someXML,true,true,false) into treeID
+   if treeID is not a number then
+      return treeID
+   else
+      put revXMLRootNode(treeID) into rootNode
+      put revXMLChildContents(treeID, rootNode, tab, CR, true, 1) into dataTable
+      revDeleteXMLTree treeID
+      return dataTable
+   end if
+end model_XmlToTable

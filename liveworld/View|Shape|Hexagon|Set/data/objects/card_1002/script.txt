@@ -1,0 +1,49 @@
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Shape | Hexagon | Set | Menu
+-
+[[ _FetchHandler (menu_IncreaseNodeFactor,c) ]]
+
+-- on menu_DecreaseNodeFactor mTarget
+   put the hexagon_Views of mTarget into hexagonViews
+   repeat for each line hexagonView in hexagonViews
+      put the node_Factor of hexagonView into nodeFactor
+      subtract (0.1 * nodeFactor) from nodeFactor
+      set the node_Factor of hexagonView to nodeFactor
+   end repeat
+end menu_DecreaseNodeFactor
+
+on _
+end _
+
+[[ _FetchHandler (submenu_ShapeHexagon,c) ]]
+
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Shape | Hexagon | Set | Menu | Props
+-
+[[ _FetchHandler (some_Prop,g) ]]
+
+[[ _FetchHandler (some_Props,g) ]]
+
+
+--> Global | Shape | Hexagon | Set | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Test,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_UpdateHexagons,c) ]]

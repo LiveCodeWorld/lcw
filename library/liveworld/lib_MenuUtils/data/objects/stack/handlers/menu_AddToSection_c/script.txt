@@ -1,0 +1,16 @@
+on menu_AddToSection subMenu, mainMenu, btnObject
+    put the text of btnObject into myMenu
+    put outline_LineOffset(mainMenu, myMenu) into lineNum
+     
+    put outline_ExtractSection(lineNum, myMenu) into oldSimplMenu
+    put outline_LineOffset(line 1 of newOS, oldSimplMenu) into osLineNum
+    -- <patch> for bug in outline_ReplaceSection </patch>
+    if osLineNum is 0 then
+        put oldSimplMenu & return & outline_IncreaseIndent(subMenu, 1) into newSimplMenu
+    else
+        put outline_ReplaceSection(osLineNum, oldSimplMenu, subMenu, oldOsLength) into newSimplMenu
+    end if
+     
+    put outline_ReplaceSection(lineNum, myMenu, newSimplMenu, oldOsLength) into newMenu
+    set the text of btnObject to newMenu
+end menu_AddToSection

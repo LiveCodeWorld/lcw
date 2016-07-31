@@ -1,0 +1,33 @@
+command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+   put "View|Index|Simple" into viewName
+   -- replace comma with CR in someIndex
+   
+   -- new feature for specifying widget and stack label titles using a comma
+   _setTitles widgetDisplayTitle, displayStackLabel, pDisplayTitle, "Index"
+   
+   -- clone invisible
+   stack_CloneInvisible viewName, "Display Index"
+   put the result into cloneStackName
+   
+   -- set basic data  
+   put script_CallingObject() into eventArray ["eventTarget"]
+   put pMouseUpCommand into eventArray ["mouseUp"]
+   put pMouseDoubleUpCommand into eventArray ["mouseDoubleUp"]
+   put pDragCommand into eventArray ["dragCommand"]
+   
+   put pTreeMenuTitle into menuArray ["title"]
+   put pLineMenuTitle into menuArray ["line"]
+   
+   view_SetCloneData cloneStackName, someIndex, menuArray, eventArray
+   put the result into displayView
+   
+   -- custom stuff
+   set the card_Margin of displayView to 0
+   set the title_Colour of displayView to "random"
+   set the style of stack cloneStackName to "palette"
+   
+   -- show and go
+   view_CloneShow cloneStackName, widgetDisplayTitle, displayStackLabel
+   
+   return displayView
+end display_Index

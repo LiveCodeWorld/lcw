@@ -1,0 +1,10 @@
+getprop overlay_IsNew [pOverlayName]
+   put the long id of the target into scriptObject
+   
+   put the script of scriptObject into someScript
+   put sha1_Hash (someScript) into hashNow
+   
+   put the overlay_Folder of scriptObject into overlayFolder
+   put overlay_GetGraphValue (overlayFolder, "sha1 of script when overlay created", pOverlayName) into hashWhenCreated
+   return hashNow = hashWhenCreated
+end overlay_IsNew

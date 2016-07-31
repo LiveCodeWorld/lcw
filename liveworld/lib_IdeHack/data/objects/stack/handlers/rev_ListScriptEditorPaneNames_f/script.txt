@@ -1,0 +1,12 @@
+function rev_ListScriptEditorPaneNames pStackObject
+   if pStackObject is empty then put revTopMostScriptEditor() into pStackObject
+   if exists (pStackObject) is false then return empty
+   
+   local paneNames
+   repeat with btnNum = 1 to the number of btns of group "Pane Tabs" of pStackObject
+      put the the short name of btn btnNum of group "Pane Tabs" of pStackObject into tabName
+      put tabName & comma after paneNames
+   end repeat  
+   delete char -1 of paneNames
+   return paneNames
+end rev_ListScriptEditorPaneNames

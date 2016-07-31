@@ -1,0 +1,8 @@
+private function _squareView
+   if exists (control "Square Text" of me) is false then
+      return empty
+   end if
+   
+   put the long id of control "Square Text" of me into squareView
+   return squareView
+end _squareView

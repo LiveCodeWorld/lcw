@@ -1,0 +1,4 @@
+getprop stack_IsProtected
+   put the stack_Name of the target into stackName
+   return stack_CheckProtected (stackName)
+end stack_IsProtected

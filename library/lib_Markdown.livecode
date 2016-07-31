@@ -1,0 +1,34 @@
+﻿script "lib_Markdown"
+--> MetaData
+-
+license: GPLv3
+name: lib_Markdown
+type: script library
+version: 0.1
+
+
+--> MetaData
+-
+function markdownVersion
+   return shell("markdown --shortversion")
+end markdownVersion
+
+function markdownAvailable
+   get  markdownVersion()
+   if it is a number then
+      return true
+   else
+      return false
+   end if
+end markdownAvailable
+
+function markdown pText
+   put tempname() into tTextFile
+   put tempname() into tOutFile
+   put pText into url ("binfile:" & tTextFile)
+   put shell ("markdown" && tTextFile && ">>" & tOutFile) into tResult
+   delete file tTextFile
+   put url ("binfile:" & tOutFile) into tOut
+   delete file tOutFile
+   return tOut
+end markdown

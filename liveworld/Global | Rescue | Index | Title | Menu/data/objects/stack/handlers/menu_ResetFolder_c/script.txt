@@ -1,0 +1,8 @@
+on menu_ResetFolder indexView
+   put the lcw_FolderName of indexView into folderName
+   lcw_NewName folderName
+   put lcw_GetFolder (folderName) into newIndexFolder
+   set the index_Folder of indexView to newIndexFolder
+   
+   dispatch "refresh" to indexView
+end menu_ResetFolder

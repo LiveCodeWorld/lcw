@@ -1,0 +1,27 @@
+on kml_ExtractFolder searchName
+    if searchName is empty then
+        ask "What folder do you want to search for?"
+        put it into searchName
+        if searchName is empty then exit to top
+    end if
+    
+    put the tree_Field of me into treeField
+    put the tree_XmlID of treeField into treeID
+     
+    put "kml[1]/Document[1]/Folder[1]" into rootFolder
+    -- put revXMLChildContents(treeID, rootFolder, tab, CR, true, 1)
+     
+    put revXMLChildNames(treeID, rootFolder, CR, "Folder", true) into folderNames
+    put empty into foundContents
+    repeat for each line folderName in folderNames
+        put rootFolder & "/" & folderName into folderNode
+        put folderNode & "/name[1]" into someNode
+        get revXMLNodeContents(treeID, someNode)
+        if it is searchName then
+            put revXMLTree(treeID, folderNode, CR, tab, true, -1) into subTree
+            put revXMLText(treeID, folderNode) into foundContents
+            exit repeat
+        end if
+    end repeat
+    set the text of the description_Field of me to subTree & CR & CR & foundContents
+end kml_ExtractFolder

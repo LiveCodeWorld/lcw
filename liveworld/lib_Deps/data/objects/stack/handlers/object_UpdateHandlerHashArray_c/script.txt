@@ -1,0 +1,26 @@
+command object_UpdateHandlerHashArray scriptObject, pUpdateAll
+   if pUpdateAll is false then
+      hArray_TidyHandlerHashes scriptObject, true
+      put the result into resultArray
+      if resultArray ["isTidy"] is true then return resultArray
+      put resultArray ["oldHandlerHashArray"] into objectHandlerHashArray
+      put resultArray ["newHkeys"] into newHkeys
+      
+      put the mainstack_HandlerHashArray of scriptObject into mainStackHandlerHashArray
+      repeat for each key handlerHash in objectHandlerHashArray
+         delete variable mainStackHandlerHashArray ["cached"][handlerHash]
+         delete variable mainStackHandlerHashArray ["new"][handlerHash]
+      end repeat
+      set the mainstack_HandlerHashArray of scriptObject to mainStackHandlerHashArray
+   else
+      set the mainstack_HandlerHashArray of scriptObject to empty
+   end if
+   
+   -- force reindex
+   mainStack_ExportAsFiles scriptObject, true, true
+   put the result into mainStackMetaArray
+   
+   -- update
+   object_CheckHandlerHashArray scriptObject
+   return the result
+end object_UpdateHandlerHashArray

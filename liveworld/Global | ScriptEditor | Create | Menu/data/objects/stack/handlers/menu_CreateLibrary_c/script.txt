@@ -1,0 +1,12 @@
+on menu_CreateLibrary scriptObject
+   put "Choose a name for your script-only library stack...." into someQuestion
+   put the script_MetaData ["name"] of scriptObject into scriptName
+   if scriptName is empty then put "Example" into scriptName
+   if char 1 to 4 of scriptName is not "lib_" then
+      put "lib_" & scriptName into suggestedAnswer
+   else
+      put scriptName into suggestedAnswer
+   end if
+   
+   lcw_CreateLibrary "library", someQuestion, suggestedAnswer
+end menu_CreateLibrary

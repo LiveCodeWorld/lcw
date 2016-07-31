@@ -1,0 +1,23 @@
+function graph_QuadraticLine threecoordinates -- x2,y2,xa,ya,x1,y1
+   
+   put item 1 of threecoordinates into x2
+   put item 2 of threecoordinates into y2
+   put item 3 of threecoordinates into xa
+   put item 4 of threecoordinates into ya
+   put item 5 of threecoordinates into x1
+   put item 6 of threecoordinates into y1
+   
+   put 0 into v1
+   -- put fld bezierResolution into zdt
+   put 32 into zdt
+   Repeat with i = 1 to zdt -- zdt is a integer number like 32
+      put i * 1/zdt into v1 -- v1 = (1-t)
+      put 1 - v1 into v2  -- v2 = t
+      put ((v1 * v1 * x1) + (2 * v2 * v1 * xa ) + (v2 * v2 * x2)) into x
+      put ((v1 * v1 * y1) + (2 * v2 * v1 * ya ) + (v2 * v2 * y2)) into y
+      if (x div 1 & "," & y div 1) <> last line of variablezxc then put (x div 1 & "," & y div 1) & return after variablezxc
+   end repeat
+   if x1,y1 <> last line of variablezxc then put x1,y1 & return after variablezxc
+   if x2,y2 <> first line of variablezxc then put x2,y2 & return before variablezxc
+   return variablezxc
+end graph_QuadraticLine

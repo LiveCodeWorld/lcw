@@ -1,0 +1,5 @@
+function menu_GetTableTitles mController
+   put menu_GetDataArray (mController) into menuTableArray
+   put keys(menuTableArray) into tableTitles
+   return tableTitles
+end menu_GetTableTitles

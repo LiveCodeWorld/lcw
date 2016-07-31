@@ -1,0 +1,6 @@
+setprop record_Behavior someObject
+   put the record_View of the target into recordObject
+   if exists (recordObject) is false then return empty
+   set the behavior of recordObject to someObject
+   return someObject
+end record_Behavior

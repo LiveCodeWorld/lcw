@@ -1,0 +1,10 @@
+on menu_SaveAsGist hKey
+   local shortGistFile
+   gist_SaveHkey hKey, shortGistFile
+   put the result into gistReplyArray
+   
+   put gistReplyArray ["html_url"] into htmlURL
+   launch url htmlURL
+   
+   display_Array gistReplyArray, shortGistFile
+end menu_SaveAsGist

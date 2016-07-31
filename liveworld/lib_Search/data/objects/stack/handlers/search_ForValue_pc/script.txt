@@ -1,0 +1,16 @@
+private command search_ForValue @objectArray, targetObject, someProperty, pControllerObject
+   if pControllerObject is empty then
+      put the someProperty of targetObject into someValue
+   else
+      -- a getprop controller somewhere (most likely where search is called from) 
+      put someProperty & "[" & targetObject & "]" into someProp
+      put the someProp of pControllerObject into someValue
+   end if
+   if someValue is empty then return empty
+   
+   put objectArray [someValue] into foundObjects
+   put the rugged_ID of targetObject into targetObject
+   line_Add targetObject, foundObjects
+   put foundObjects into objectArray [someValue]
+   return someValue
+end search_ForValue

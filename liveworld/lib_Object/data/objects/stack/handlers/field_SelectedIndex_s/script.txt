@@ -1,0 +1,14 @@
+setprop field_SelectedIndex someIndex
+   put the long ID of the target into fieldObject
+   if word 1 of fieldObject is not "field" then return empty
+   
+   set the wholeMatches to true
+   put the text of fieldObject into fullIndex
+   repeat for each line someLine in someIndex
+      put lineOffset(someLine, fullIndex) into lineNum
+      if lineNum is not 0 then put lineNum & comma after litLines
+   end repeat
+   delete char -1 of litLines
+   set the hilitedlines of fieldObject to litLines
+   return litLines
+end field_SelectedIndex

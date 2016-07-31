@@ -1,0 +1,9 @@
+function fedwiki_JsonSiteMapPathBit pFedwikiDomain
+   --   .wiki/audio.commons.academy/status/sitemap.json
+   if pFedwikiDomain is empty then
+      return "status/sitemap.json"
+   else
+      put pFedwikiDomain & "/status/sitemap.json" into pathBit
+      return pathBit
+   end if
+end fedwiki_JsonSiteMapPathBit

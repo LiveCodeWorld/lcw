@@ -1,0 +1,27 @@
+function handler_GetType handlerLine
+   if token 1 of handlerLine = "private" then
+      delete token 1 of handlerLine
+      put true into isPrivate
+   end if
+   
+   switch token 1 of handlerLine
+      case "on"
+         put rev_MessageNames() into revMessageNames
+         put token 2 of handlerLine into cName
+         if cName is among the lines of revMessageNames then
+            return _addPrivate ("m", isPrivate)    # message
+         else
+            return _addPrivate ("c", isPrivate)    # command
+         end if
+      case "command"
+         return _addPrivate ("c", isPrivate)    # command
+      case "function"
+         return _addPrivate ("f", isPrivate)    # function
+      case "getprop"
+         return "g"	# getprop
+      case "setprop"
+         return "s"	# setprop
+      default
+         return empty
+   end switch
+end handler_GetType

@@ -1,0 +1,12 @@
+on menu_AddFileToGit scriptObject
+   if the git_FileIsTracked of scriptObject is true then
+      answer warning "File already tracked!"
+      return false
+   end if
+   
+   set the git_FileIsTracked of scriptObject to true
+   
+   put the mobile_Name of scriptObject into paramArray ["mobileObject"]
+   put "Added script file for [[mobileObject]] to GIT!" into someText
+   opn_Notify someText, false, paramArray
+end menu_AddFileToGit

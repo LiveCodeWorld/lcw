@@ -1,0 +1,4 @@
+command fedwiki_AddAudioToPageArray @pageArray, audioUrl, someText, pID
+   put fedwiki_ConstructStoryAudioArray (audioUrl, someText, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddAudioToPageArray

@@ -1,0 +1,32 @@
+getprop displayed_StandardFiles
+   put the child_Names of group "Stacks and Libraries" into indexGroupNames
+   repeat for each line indexGroupName in indexGroupNames
+      put the child_Views of group indexGroupName of group "Stacks and Libraries" into indexViews
+      repeat for each line indexView in indexViews
+         put the lcw_FolderName of indexView into lcwFolderName
+         switch lcwFolderName
+            case "Title"
+               -- bug in name (should be "Important Stacks"
+               put the index_LongStackFiles of indexView into longFiles
+               break
+            case "behavior"
+               put the index_LongStackFiles of indexView into longFiles
+               break
+            case "view"
+               put the index_LongStackFiles of indexView into longFiles
+               break
+            case "livecode library stacks"
+               -- not going to move these
+               -- hack for now - should use library_List....
+               put the index_LongStackFiles of indexView into longFiles
+               -- put the lcw_LongFiles of indexView into longFiles
+               break
+            default
+               put lcw_ListStackPaths (lcwFolderName) into longFiles
+         end switch
+         put longFiles & CR after lcwFiles
+      end repeat
+   end repeat
+   sort lcwFiles
+   return word 1 to -1 of lcwFiles
+end displayed_StandardFiles

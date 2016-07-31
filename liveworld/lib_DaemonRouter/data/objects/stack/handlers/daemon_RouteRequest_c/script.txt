@@ -1,0 +1,19 @@
+command daemon_RouteRequest requestArray
+   -- this is the core handler that lib_Daemon dispatches
+   set the itemdelimiter to "/"
+   request_DeconstructArray requestArray, socketID, someMethod, someRoute, queryString, requestUrl
+   switch someMethod
+      case "GET"
+         process_GET someRoute, socketID, requestArray
+         break
+      case "POST"
+         process_POST someRoute, socketID, requestArray
+         break
+      case "PUT"
+         process_PUT someRoute, socketID, requestArray
+         break
+      case "DELETE"
+         process_DELETE someRoute, socketID, requestArray
+         break
+   end switch
+end daemon_RouteRequest

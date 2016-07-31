@@ -1,0 +1,5 @@
+command script_IncrementCompileCount scriptObject
+   put the hArray_ObjectMetaData ["script_CompileCount"] of scriptObject into someNum
+   add 1 to someNum
+   set the hArray_ObjectMetaData ["script_CompileCount"] of the target to someNum
+end script_IncrementCompileCount

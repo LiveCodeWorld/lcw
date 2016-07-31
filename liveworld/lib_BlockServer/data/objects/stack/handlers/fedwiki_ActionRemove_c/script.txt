@@ -1,0 +1,23 @@
+command fedwiki_ActionRemove pageSlug, actionArray
+   put actionArray ["id"] into itemID
+   put fedwiki_FetchLocalOrDefaultArray (pageSlug) into pageArray
+   put pageArray ["story"] into storyArray
+   put fedwiki_FindStoryItemID (pageArray, itemID) into storyItemNum
+   
+   -- let's delete the item and renumber
+   put item 2 of the extents of storyArray into maxNum
+   repeat with toMoveNum = (storyItemNum + 1) to maxNum
+      put toMoveNum - 1 into previousNum
+      put storyArray [toMoveNum] into storyArray [previousNum]
+   end repeat
+   delete variable storyArray [maxNum]
+   
+   -- add to journal
+   put pageArray ["journal"] into journalArray
+   fedwiki_AddToJournalArray journalArray, actionArray, "remove"
+   put journalArray into pageArray ["journal"]
+   
+   -- save to disk
+   put json_FromArray (pageArray) into pageJSON  
+   fedwiki_SetLocalPageJson pageSlug, pageJSON, pFedwikiDomain, pLocalWikiFolder
+end fedwiki_ActionRemove

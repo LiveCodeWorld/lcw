@@ -1,0 +1,10 @@
+getprop vertical_Spacing
+   put LocalArray ["vertical_Spacing"] into someSpacing
+   if someSpacing is empty then
+      put _defaultVerticalSpacing() into defaultVerticalSpacing
+      put defaultVerticalSpacing into LocalArray ["vertical_Spacing"]
+      return defaultVerticalSpacing
+   end if
+   
+   return someSpacing
+end vertical_Spacing

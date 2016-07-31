@@ -1,0 +1,13 @@
+private command setUpLearningObject mTarget
+   local sColour, pDuration, pSectionName
+   
+   put the clock_Duration of mTarget into cDuration
+   put cDuration/60 into cFactor
+   
+   set the clock_SectionArray ["Talk"] of mTarget to construct_ClockSectionArray (1, "black", 10*cFactor)
+   set the clock_SectionArray ["Tools"] of mTarget to construct_ClockSectionArray (2, sColour, 5*cFactor)
+   set the clock_SectionArray ["Questions"] of mTarget to construct_ClockSectionArray (3, sColour, 15*cFactor)
+   set the clock_SectionArray ["Practice"] of mTarget to construct_ClockSectionArray (4, sColour)
+   set the clock_SectionArray ["Requirements"] of mTarget to construct_ClockSectionArray (5, sColour, 5*cFactor)
+   set the clock_SectionArray ["Info"] of mTarget to construct_ClockSectionArray (6, sColour, 5*cFactor)
+end setUpLearningObject

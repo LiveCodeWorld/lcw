@@ -1,0 +1,216 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Files
+type: script library
+copyright: David Bovill
+license: GPLv3
+version: 0.1
+
+
+--> Currently Working On
+-
+[[ _FetchHandler (file_GetRelativePath,f) ]]
+
+[[ _FetchHandler (file_FromRelativeRoot,f) ]]
+
+[[ _FetchHandler (folder_Above,f) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+[[ _FetchHandler (folder_Format,c) ]]
+
+
+--> Files
+-
+[[ _FetchHandler (file_ConstructFolderArray,f) ]]
+
+[[ _FetchHandler (file_GetType,f) ]]
+
+[[ _FetchHandler (file_IsAlias,f) ]]
+
+[[ _FetchHandler (file_ExtensionFromRevFormat,f) ]]
+
+[[ _FetchHandler (file_ExtensionToRevFormat,f) ]]
+
+[[ _FetchHandler (file_SetPath,c) ]]
+
+[[ _FetchHandler (file_ConstructSafeName,f) ]]
+
+[[ _FetchHandler (file_FixNasPath,f) ]]
+
+[[ _FetchHandler (file_PathIsSafe,f) ]]
+
+[[ _FetchHandler (file_SafeNameReg,f) ]]
+
+[[ _FetchHandler (file_SetRelativePath,c) ]]
+
+[[ _FetchHandler (file_LongToShort,f) ]]
+
+[[ _FetchHandler (file_ShortToLong,c) ]]
+
+[[ _FetchHandler (file_IndexToOutline,f) ]]
+
+[[ _FetchHandler (file_ExtractFileSuffix,f) ]]
+
+[[ _FetchHandler (file_UrlEncode,c) ]]
+
+function file_FromRelativeRoot relativeFile, relativeRoot
+    -- was "getFile_FromRelativeRoot"
+    if last char of relativeRoot is "/" then delete last char of relativeRoot -- it is :)
+    put the itemdelimiter into oDelim
+    set the itemdelimiter to "/"
+    repeat while item 1 of relativeFile is ".."
+        delete item 1 of relativeFile
+        delete last item of relativeRoot
+    end repeat
+    set the itemdelimiter to oDelim
+    return relativeRoot & "/" & relativeFile
+end file_FromRelativeRoot
+
+[[ _FetchHandler (file_DetailedInfo,f) ]]
+
+[[ _FetchHandler (file_GetSize,f) ]]
+
+[[ _FetchHandler (file_LastModifed,f) ]]
+
+[[ _FetchHandler (file_CreatorAndType,f) ]]
+
+[[ _FetchHandler (file_GetMostRecent,f) ]]
+
+
+--> File | Change
+-
+[[ _FetchHandler (file_Copy,c) ]]
+ 
+[[ _FetchHandler (file_CreateImage,c) ]]
+
+[[ _FetchHandler (file_CreateBinary,c) ]]
+
+
+--> File | Standard Paths
+-
+[[ _FetchHandler (file_ReplaceHome,c) ]]
+
+[[ _FetchHandler (file_SetHomeRelative,c) ]]
+
+
+--> File | Hashes
+-
+[[ _FetchHandler (file_HashName,f) ]]
+
+[[ _FetchHandler (file_TemporaryFolder,f) ]]
+
+[[ _FetchHandler (file_FastHashGuess,f) ]]
+
+[[ _FetchHandler (file_Md5Hash,f) ]]
+
+[[ _FetchHandler (file_SafeHashName,f) ]]
+
+[[ _FetchHandler (file_IsHashName,f) ]]
+
+[[ _FetchHandler (file_CheckHashName,f) ]]
+
+
+--> File | Choose
+-
+[[ _FetchHandler (file_ChooseImage,f) ]]
+
+[[ _FetchHandler (file_ChooseAny,f) ]]
+
+[[ _FetchHandler (file_ChooseStack,f) ]]
+
+[[ _FetchHandler (_askLinuxImage,f) ]]
+
+[[ _FetchHandler (_askMacImage,f) ]]
+
+[[ _FetchHandler (_askWindowsImage,f) ]]
+
+[[ _FetchHandler (_getMacImageTypes,f) ]]
+
+[[ _FetchHandler (_getLinuxImageTypes,f) ]]
+ 
+[[ _FetchHandler (_getWindowsImageTypes,f) ]]
+
+
+--> Folder
+-
+[[ _FetchHandler (folder_GetSize,f) ]]
+
+[[ _FetchHandler (folder_DetailedInfo,f) ]]
+
+[[ _FetchHandler (folder_GetDocuments,f) ]]
+
+command folder_CreateNested @someFolder
+   folder_Format someFolder
+   if there is a folder someFolder then return empty
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of someFolder
+      put item 1 to itemNum of someFolder & "/" into testFolder
+      if there is a folder testFolder then next repeat
+      create folder testFolder
+   end repeat
+end folder_CreateNested
+
+command folder_Format @someFolder
+   -- should be renamed "folder_Normalize"
+   if someFolder is empty then return empty
+   repeat while last char of someFolder is "/"
+      delete last char of someFolder
+   end repeat
+   put "/" after someFolder
+end folder_Format
+
+function folder_Above fileOrFolder
+    set the itemdelimiter to "/"
+    if char -1 of fileOrFolder is "/" then delete char -1 of fileOrFolder
+    delete last item of fileOrFolder
+    if fileOrFolder is empty then 
+        return "."
+    else
+        return fileOrFolder & "/"
+    end if
+end folder_Above
+
+[[ _FetchHandler (folder_Rename,c) ]]
+
+[[ _FetchHandler (folder_Delete,c) ]]
+
+[[ _FetchHandler (folder_GetInfoTable,f) ]]
+
+[[ _FetchHandler (folder_ConstructInfoTable,c) ]]
+
+[[ _FetchHandler (folder_ConstructInfoTableLine,pf) ]]
+
+[[ _FetchHandler (folder_NestedFilesInside,f) ]]
+
+[[ _FetchHandler (folder_ShortFoldersInside,f) ]]
+
+[[ _FetchHandler (folder_FoldersInside,f) ]]
+
+[[ _FetchHandler (folder_ExtensionFiles,f) ]]
+
+[[ _FetchHandler (folder_FilesInside,f) ]]
+
+[[ _FetchHandler (folder_ShortFiles,f) ]]
+
+[[ _FetchHandler (folder_ShortNameAboveFile,f) ]]
+
+[[ _FetchHandler (folder_ConstructArray,f) ]]
+
+[[ _FetchHandler (folder_ConstructDatagridArray,f) ]]
+
+[[ _FetchHandler (folder_ConstructFileOutline,f) ]]
+
+[[ _FetchHandler (folder_GetNestedIndex,f) ]]
+
+
+--> Folder | Search
+-
+[[ _FetchHandler (folder_SearchForFiles,f) ]]
+
+[[ _FetchHandler (folder_SearchForStacks,f) ]]
+
+[[ _FetchHandler (folder_ConstructStackArrays,c) ]]
+
+[[ _FetchHandler (_FilterAndAddStacks,pc) ]]

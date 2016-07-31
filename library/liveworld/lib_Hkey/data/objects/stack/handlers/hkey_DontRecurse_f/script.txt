@@ -1,0 +1,51 @@
+function hkey_DontRecurse hKey, pOriginalHkey
+   -- should check hkey database and allow manual customisation
+   -- return false
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put library_FetchHandler (hKey) into someHandler
+   
+   switch
+      case the object_MetaData ["component"] of hObject is true and pref_GetValue ("skip_HkeyComponents") is true
+         return true
+      case hObject contains "View|Menu|Button" and "View|Menu|Button" is not in pOriginalHkey
+         return false -- not needed because of the above
+      case hObject contains "View|Title|Right Align" and "View|Title|Right Align" is not in pOriginalHkey
+         if hType is among the items of "g,s" then
+            return true
+         else
+            return false
+         end if
+      case line 2 of someHandler contains "-- custom: true"
+         return false
+      case line 2 of someHandler contains "-- component: true"
+         return true
+      case hName begins with "display_"
+         return true
+      case lineoffset ("name: View|", someHandler) is not 0 and hType is among the items of "g,s"
+         -- case lineoffset ("type: view behavior", someHandler) is not 0 and hType is among the items of "g,s"
+         -- skip a handler in a views behavior, when it is called outside of the view and it is a getprop or setprop.
+         breakpoint
+         hkey_Deconstruct pOriginalHkey, oName, oType, oObject, oNum
+         return the long id of hObject = the long id of oObject 
+      case hName is "view_Object" and hObject contains "libOPN_View"
+         return true
+      case hName is among the items of "opn_Notify"
+         return true
+      case hName begins with "tree_" and hType is among the items of "g,s"
+         return false
+         /*
+      case scriptObject contains "libOPN_Menus" and pref_GetValue ("skip_HkeyComponents") is true
+         put the object_MetaData ["component"] of scriptObject
+         return false
+      case scriptObject contains "libOPN_MenuModel" and pref_GetValue ("skip_HkeyComponents") is true
+         return false
+      case handlerName begins with "menu_"
+         return false
+      case the view_Name of scriptObject is not empty
+         -- skip if it is a view (assume views are created as standalones)
+         return true
+         */
+      default
+         return false
+   end switch
+end hkey_DontRecurse

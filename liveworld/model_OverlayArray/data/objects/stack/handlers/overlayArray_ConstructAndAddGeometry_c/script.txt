@@ -1,0 +1,6 @@
+command overlayArray_ConstructAndAddGeometry @dataArray, cmapxFile
+   -- to add geometryArray need dot to export the file cmapxFile
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Name") into overlayName
+   put the script_GeometryArrayFromCmap [overlayName] of scriptObject into geometryArray
+   overlayArray_SetGeometryArray overlayArray, geometryArray
+end overlayArray_ConstructAndAddGeometry

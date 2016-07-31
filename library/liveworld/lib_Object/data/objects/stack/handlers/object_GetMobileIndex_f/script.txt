@@ -1,0 +1,18 @@
+function object_GetMobileIndex someGroup, nested, useID
+   -- was "getMobileObjects"
+   if someGroup is empty then put the long ID of the target into someGroup
+   put empty into myControls
+   repeat with controlNum = 1 to the number of controls in someGroup
+      if useID is true then
+         put the mobile_ID of control controlNum of someGroup into controlObject
+      else
+         put the mobile_Name of control controlNum of someGroup into controlObject
+      end if
+      if nested is not true and word 1 of controlObject is "group" then
+         add the number of layers in controlObject to controlNum
+      end if
+      put controlObject & return after myControls
+   end repeat
+   delete last char of myControls
+   return myControls
+end object_GetMobileIndex

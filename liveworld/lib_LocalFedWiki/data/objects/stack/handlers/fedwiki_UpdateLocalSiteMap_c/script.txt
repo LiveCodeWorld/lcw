@@ -1,0 +1,18 @@
+command fedwiki_UpdateLocalSiteMap pageArray, pFedwikiDomain, pDateInMilliseconds
+   put pageArray ["title"] into pageTitle
+   put pageArray ["story"][1]["text"] into pageSynopsis
+   put pageArray ["journal"] into journalArray
+   if pDateInMilliseconds is empty then
+      -- setting pDateInMilliseconds to the value of the time of a forl
+      -- allows page forking to be set to the date of the fork event
+      -- not the date of the original page creation
+      put item 2 of the extents of journalArray into lastItemNum
+      put journalArray [lastItemNum]["date"] into pDateInMilliseconds
+   end if
+   
+   put fedwiki_GetLocalSitemapJson (pFedwikiDomain) into localSitemapJson
+   put json_ToArray (localSitemapJson) into sitemapArray
+   fedwiki_AddToSitemapArray sitemapArray, pageTitle, pageSynopsis, pDateInMilliseconds
+   put json_FromArray (sitemapArray) into updatedSitemapJson
+   fedwiki_SetLocalSitemapJson pFedwikiDomain, updatedSitemapJson
+end fedwiki_UpdateLocalSiteMap

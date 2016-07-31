@@ -1,0 +1,10 @@
+getprop disabled_ImportAllIcons [mTarget]
+   put the icon_Images of mTarget into imageObjects
+   repeat for each line imageObject in imageObjects
+      put the text of imageObject is empty into notImported
+      if notImported is true then
+         return false
+      end if
+   end repeat
+   return true
+end disabled_ImportAllIcons

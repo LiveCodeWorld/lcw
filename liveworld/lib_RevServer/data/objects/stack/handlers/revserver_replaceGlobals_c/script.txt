@@ -1,0 +1,4 @@
+on revserver_replaceGlobals @pSource
+   replace "$_POST" with format("gRequestA") in pSource
+   replace "$_GET" with format("gRequestA") in pSource
+end revserver_replaceGlobals

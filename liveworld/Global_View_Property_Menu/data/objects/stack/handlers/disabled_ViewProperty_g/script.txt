@@ -1,0 +1,10 @@
+getprop disabled_ViewProperty [mTarget]
+   if the long id of the target is not the long id of me then return false
+   if exists(mTarget) is false then return true
+   
+   if ViewPropertyMenu is empty then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_ViewProperty

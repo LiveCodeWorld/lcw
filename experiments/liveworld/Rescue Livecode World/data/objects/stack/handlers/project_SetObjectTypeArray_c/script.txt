@@ -1,0 +1,12 @@
+command project_SetObjectTypeArray objectArray, libType, pProjectName
+   -- was "project_SetLibraryArray"
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchSetData() into librarySetData
+   if objectArray is an array then
+      put objectArray into librarySetData [pProjectName]["data"][libType]
+   else
+      delete variable librarySetData [pProjectName]["data"][libType]
+   end if
+   library_StoreSetData librarySetData
+   return librarySetData
+end project_SetObjectTypeArray

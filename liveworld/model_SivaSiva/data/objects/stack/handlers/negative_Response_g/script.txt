@@ -1,0 +1,5 @@
+getprop negative_Response [situationNum]
+   put the chapter_Array of the target into chapterArray
+   put trait_GetNegativeResponse (chapterArray, situationNum) into negativeResponse
+   return negativeResponse
+end negative_Response

@@ -1,0 +1,59 @@
+function stack_ConstructHtmlOutline someFolder, rootFolder, unknownColour, tabBit
+    local htmlOutline
+    set the cursor to busy
+     
+    put the directory into oDirectory
+    set the directory to someFolder
+    
+    put the files into shortFiles
+    filter shortFiles without ".*"
+    repeat for each line shortFile in shortFiles
+        put someFolder & shortFile into someFile
+        put stack_GetShortName(someFile) into stackName
+        
+        -- this also checks that the file is a stack
+        if stackName is empty then next repeat
+        if rootFolder is empty then
+            put someFile into fileLink
+        else
+            put file_GetRelativePath(someFile, rootFolder, commonPath) into fileLink
+        end if
+        
+        -- put html_ConstructNameLink(stackName, fileLink) into nameLink
+        put opn_GetFileName(stackName) into opnFile
+        if opnFile is empty then
+            if unknownColour is empty then
+                put html_ConstructNameLink(stackName, fileLink) into nameLink
+            else
+                get html_ConstructNameLink(stackName, fileLink)
+                put html_ConstructColouredText(it, unknownColour) into nameLink
+            end if
+        else
+            put html_ConstructNameLink(stackName, fileLink) into nameLink
+        end if
+         
+        put tabBit & nameLink into osTilte
+        put osTilte & CR after htmlOutline
+    end repeat
+     
+    put the folders into newShortFolders
+    filter newShortFolders without ".*"
+    
+    repeat for each line shortFolder in newShortFolders
+        put someFolder & shortFolder & "/" into nestedFolder
+        put tabBit & tab into nextTabBit
+        put stack_ConstructHtmlOutline (nestedFolder, rootFolder, unknownColour, nextTabBit) into nestedOutline
+         
+        put tabBit & shortFolder into osTilte
+        if nestedOutline is empty then
+            -- don't bother if there are no stacks there.
+        else
+            put osTilte & CR after htmlOutline
+            put nestedOutline & CR after htmlOutline
+        end if
+    end repeat
+    delete char -1 of htmlOutline
+     
+    set the directory to oDirectory
+    return htmlOutline
+end stack_ConstructHtmlOutline

@@ -1,0 +1,11 @@
+function sivasiva_FetchChapters pBookArray
+   -- put project_FetchValue ("orderedChapterTitleIndex", "SivaSiva") into orderedChapterTitleIndex
+   if pBookArray is not an array then put sivasiva_FetchBookArray() into pBookArray
+   
+   repeat for each key chapterNum in pBookArray
+      put pBookArray [chapterNum]["chapterTitle"] & CR after chapterTitles
+   end repeat
+   delete char -1 of chapterTitles
+   sort chapterTitles
+   return chapterTitles
+end sivasiva_FetchChapters

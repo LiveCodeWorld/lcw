@@ -1,0 +1,11 @@
+command overlay_ReconstructArray @overlayArray, pLinkArray, pDotDefaultArray
+   if pLinkArray is not an array then put overlayArray_GetLinkArray (overlayArray) into pLinkArray -- reconstruct
+   if pDotDefaultArray is an array then overlayArray_AddDefaultUnion overlayArray, pDotDefaultArray
+   
+   put overlayArray_GetHeaderArray (overlayArray) into dotHeaderArray
+   put overlayArray_GetGraphPropertyArray (overlayArray) into graphPropertyArray 
+   put overlayArray_FromLinkArray (pLinkArray, dotHeaderArray, graphPropertyArray) into overlayArray
+   
+   overlayArray_CreateFilesAndSetGeometry overlayArray
+   return overlayArray
+end overlay_ReconstructArray

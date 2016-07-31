@@ -1,0 +1,43 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Behavior | View | Menu
+type: controller
+version: 0.1
+
+local LocalArray
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Behavior | View | Menu
+-
+[[ _FetchHandler (menu_GoToView,c) ]]
+
+[[ _FetchHandler (menu_CreateView,c) ]]
+
+[[ _FetchHandler (menu_ConvertViewBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetViewBehavior,c) ]]
+
+[[ _FetchHandler (menu_EditViewBehavior,c) ]]
+
+
+--> Global | Behavior | View | Menu | Props
+-
+[[ _FetchHandler (vb_Name,g) ]]
+
+[[ _FetchHandler (vb_Names,g) ]]
+
+
+--> Global | Behavior | View | Menu | Disabled
+-
+[[ _FetchHandler (disabled_GoToView,g) ]]
+
+[[ _FetchHandler (disabled_ConvertViewBehavior,g) ]]

@@ -1,0 +1,5 @@
+function version_IsEarlier testVersion, refVersion
+   get _convertVersionToNumber (refVersion)
+   put it  > _convertVersionToNumber (testVersion) into isEarlier
+   return isEarlier
+end version_IsEarlier

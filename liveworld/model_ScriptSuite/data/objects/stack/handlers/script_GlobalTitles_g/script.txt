@@ -1,0 +1,5 @@
+getprop script_GlobalTitles [suiteType]
+   put the script of the target into someScript
+   put script_ExtractGlobalTitles (someScript, suiteType) into globalMenuTitles
+   return globalMenuTitles
+end script_GlobalTitles

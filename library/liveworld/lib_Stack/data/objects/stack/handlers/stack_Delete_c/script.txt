@@ -1,0 +1,14 @@
+command stack_Delete stackName
+   if there is not a stack stackName then return merge("Error: stack '[[viewName]]' does not exist!")
+   put the filename of stack stackName into someFile
+   stack_RemoveFromMemory stackName
+   file_Delete someFile, true
+   put the result into deleteResult
+   
+   put the name of stack stackName into oldStack
+   library_RemoveStackFromKnown oldStack
+   
+   -- opn_DeleteFromObjectIndex someName, objectType, someObject
+   -- opn_DeleteLibraryType libraryType
+   return deleteResult
+end stack_Delete

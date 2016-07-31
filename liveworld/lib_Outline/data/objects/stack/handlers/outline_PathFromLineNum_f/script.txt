@@ -1,0 +1,5 @@
+function outline_PathFromLineNum osLineNum, tabbedOutline, pathDelim
+    put outline_LinePath(osLineNum, tabbedOutline, osLineNumList, pathDelim) into somePath
+    -- replace return with pathDelim in somePath
+    return somePath
+end outline_PathFromLineNum

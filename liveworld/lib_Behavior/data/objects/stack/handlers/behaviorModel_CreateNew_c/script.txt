@@ -1,0 +1,23 @@
+command behaviorModel_CreateNew bName
+   if bName is empty then put opn_Ask ("New behavior name...") into bName
+   put the behaviorButton_Card of me into behaviorButtonCard
+   
+   put the defaultstack into oDefault
+   set the defaultstack to the name of me
+   lock screen
+   go to behaviorButtonCard
+   if the result is not empty then return empty
+   
+   create button bName
+   put it into behaviorObject
+   
+   -- behaviorModel_SetObject bName, behaviorObject
+   set the component_Name ["behavior"] of behaviorObject to bName
+   
+   dispatch "resizeStack" to behaviorButtonCard
+   unlock screen
+   set the defaultstack to oDefault
+   
+   display_Behaviors
+   edit the script of behaviorObject
+end behaviorModel_CreateNew

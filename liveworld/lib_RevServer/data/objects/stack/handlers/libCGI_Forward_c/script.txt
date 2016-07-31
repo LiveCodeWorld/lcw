@@ -1,0 +1,17 @@
+command libCGI_Forward pURL
+   -- redirect user to another page.
+   -- Handler that Forwards the user to another URL. It needs an absolute url as a parameter.
+   -- This handler uses a 301 (permanent redirection) to drive the browser to a new location.
+   
+   local tSocketID,tContent,tRetVal,tType
+   put gRequestA["socketID" ] into tSocketID
+   put "should redirect to <a href=" & quote & pURL & quote & ">" & pURL & "</a>" into tContent
+   put "HTTP/1.1 307 redirect" & crlf into tRetVal
+   put "Content-Type: " & tType & crlf after tRetVal
+   put "Location: " & pURL & crlf after tRetVal
+   put "Connection: Close " & crlf after tRetVal
+   put "Date: " & the date & the time & crlf after tRetVal
+   put "Content-Length: " & length(tContent)  after tRetVal
+   write tRetVal &  crlf & crlf & tContent to socket tSocketID
+   close socket tSocketID
+end libCGI_Forward

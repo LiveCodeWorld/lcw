@@ -1,0 +1,5 @@
+on menu_CachedMenuArray mController, cachedMenuTitle
+   put rev_ScriptObject() into mController
+   put the menu_TableArray [cachedMenuTitle] of mController into mTableArray
+   display_Array mTableArray
+end menu_CachedMenuArray

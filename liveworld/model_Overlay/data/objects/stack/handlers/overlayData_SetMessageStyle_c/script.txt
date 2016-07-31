@@ -1,0 +1,5 @@
+command overlayData_SetMessageStyle @dotGroupStyleArray   
+   put "Orange" into dotGroupStyleArray ["m"]["node_StyleArray"]["fillcolor"]
+   put "Red" into dotGroupStyleArray ["m"]["node_StyleArray"]["color"]
+   put "filled" into dotGroupStyleArray ["m"]["node_StyleArray"]["style"]
+end overlayData_SetMessageStyle

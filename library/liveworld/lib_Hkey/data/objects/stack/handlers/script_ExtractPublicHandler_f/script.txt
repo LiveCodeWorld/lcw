@@ -1,0 +1,5 @@
+function script_ExtractPublicHandler handlerName, onWord, someScript
+   script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+   put the result into foundHandler
+   return foundHandler
+end script_ExtractPublicHandler

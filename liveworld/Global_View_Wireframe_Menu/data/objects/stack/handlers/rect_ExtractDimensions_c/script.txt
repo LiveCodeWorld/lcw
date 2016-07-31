@@ -1,0 +1,4 @@
+command rect_ExtractDimensions someRect, @someW, @someH
+   put item 3 of someRect - item 1 of someRect into someW
+   put item 4 of someRect - item 2 of someRect into someH
+end rect_ExtractDimensions

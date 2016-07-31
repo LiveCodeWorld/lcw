@@ -1,0 +1,12 @@
+function menu_GetScript mTitle, targetObject
+   put the menu_Controller [mTitle] of targetObject into mController
+   put the script of mController into someScript
+   put script_GetSuite (mTitle, someScript) into scriptSuite
+   
+   put mTitle && "| Props" into scriptMenuPropsTitle
+   put script_GetSuite (scriptMenuPropsTitle, someScript) into scriptPropsSuite
+   if scriptPropsSuite is not empty then
+      put CR & CR & scriptPropsSuite after scriptSuite
+   end if
+   return scriptSuite
+end menu_GetScript

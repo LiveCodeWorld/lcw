@@ -1,0 +1,5 @@
+getprop lcw_Folder
+   put the lcw_FolderName of the target into lcwFolderName
+   put lcw_GetFolder (lcwFolderName) into lcwFolder
+   return lcwFolder
+end lcw_Folder

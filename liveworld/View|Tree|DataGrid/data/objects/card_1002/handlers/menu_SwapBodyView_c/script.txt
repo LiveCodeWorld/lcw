@@ -1,0 +1,4 @@
+on menu_SwapBodyView mTarget, treeBodyViewName
+   put the body_View of mTarget into bodyView
+   set the view_Swap of bodyView to treeBodyViewName
+end menu_SwapBodyView

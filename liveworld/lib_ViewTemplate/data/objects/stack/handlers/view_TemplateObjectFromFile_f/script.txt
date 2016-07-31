@@ -1,0 +1,15 @@
+function view_TemplateObjectFromFile longStackName
+   -- was "view_GetLibraryObjectFromFile"
+   if exists(control 1 of card 1 of stack longStackName) then
+      put the long id of control 1 of card 1 of stack longStackName into libraryObject
+      return libraryObject
+      
+      if the object_IsView of libraryObject is true then	# check (could do more)
+         return libraryObject
+      else
+         return empty
+      end if
+   else
+      return empty
+   end if
+end view_TemplateObjectFromFile

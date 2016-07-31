@@ -1,0 +1,36 @@
+function fedwikipedia_FetchPageArray pageTitle, pWikipediaUrl, pSectionFormat, pIntroOnly
+   -- gets the apiStem from the wikipediaUrl
+   -- problematic due to "wikicommons_ConstructTwoImagePageArray" and videos
+   
+   put wikipedia_GetApiRoot (pWikipediaUrl) into pApiStem
+   if pSectionFormat is empty then put "wiki" into pSectionFormat
+   if pWikipediaUrl is empty then
+      put wikipedia_ConstructUrl (pageTitle) into pWikipediaUrl
+   end if
+   
+   put sandbox_ConstructPageQueryFragment (pageTitle, pSectionFormat, pIntroOnly) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   if sandboxArray is not an array then return empty
+   
+   -- put fedwiki_ConstructWikipediaSummaryPageArray (sandboxArray, pWikipediaUrl) into fedwikiPageArray
+   sandbox_DeconstructPageArray sandboxArray, pageTitle, pageDescription, shortImageFile, lastRevisionID
+   put wikicommons_ConstructTwoImagePageArray (pageTitle, pageDescription, shortImageFile, wikipediaUrl) into fedwikiPageArray
+   
+   if pIntroOnly is not true then
+      put fedwikipedia_FetchWikiText (pageTitle) into wikiText
+      mediawiki_DeleteFirstSection wikiText
+      repeat 
+         put mediwiki_ExtractAndDeleteFirstSection (wikiText) into wikiSection
+         if wikiSection is empty then exit repeat
+         
+         put line 1 of wikiSection into sectionTitle
+         mediawiki_ConvertSectionTitle sectionTitle
+         fedwiki_AddMarkdownToPageArray fedwikiPageArray, sectionTitle
+         delete line 1 of wikiSection
+         put word 1 to -1 of wikiSection into wikiSection
+         fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, wikiSection, shortImageFile
+      end repeat
+   end if
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwikipedia_FetchPageArray

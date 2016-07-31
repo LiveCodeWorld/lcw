@@ -1,0 +1,13 @@
+on menu_FixBehavior treeView
+   put the tree_Widget of treeView into treeWidget
+   put the view_Data ["behavior_Target"] of treeView into cardObject
+   
+   put the selected_Value of treeWidget into someArray
+   put line 1 of keys (someArray) into bObject
+   put someArray [bObject] into shortObject
+   
+   get merge ("put the long id of [[shortObject]] of [[cardObject]] into ruggedControl")
+   do it
+   
+   edit the script of ruggedControl
+end menu_FixBehavior

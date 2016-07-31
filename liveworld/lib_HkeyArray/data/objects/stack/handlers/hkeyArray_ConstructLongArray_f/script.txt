@@ -1,0 +1,8 @@
+function hkeyArray_ConstructLongArray hKey, shortHkeyArray, pSetName
+   local longHkeyArray
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put hName,hType into shortHKey
+   
+   hkeyArray_ConstructLongSubArray shortHKey, hObject, shortHkeyArray, longHkeyArray, pSetName
+   return longHkeyArray
+end hkeyArray_ConstructLongArray

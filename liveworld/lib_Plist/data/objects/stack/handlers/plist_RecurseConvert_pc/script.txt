@@ -1,0 +1,38 @@
+private command plist_RecurseConvert treeID, dictNode, @newOutline
+    put revXMLChildNames(treeID, dictNode, CR, "key", true) into childNames
+    set the itemdelimiter to "/"
+    repeat for each line childName in childNames
+        put dictNode & "/" & childName into keyNode
+         
+        put revXMLNextSibling(treeID, keyNode) into valueNode
+        put revXMLNodeContents(treeID, keyNode) into someTitle
+        
+        put html_ConstructNameLink(someTitle, valueNode) into linkedTitle
+        
+        put the number of items of keyNode - 3 into repeatNum
+        put text_RepeatString(tab, repeatNum) & linkedTitle into newOsLine
+        put newOsLine & CR after newOutline
+        
+        get xml_ReplaceChildCount(valueNode)
+        put last item of it into valueType
+        if valueType = "dict" then
+            plist_RecurseConvert treeID, valueNode, newOutline
+        else if valueType = "array" then
+            -- some nesting going on
+            put valueNode into arrayNode
+            
+            put revXMLChildNames(treeID, arrayNode, CR, "dict", true) into childDictNames
+            repeat with lineNum = 1 to the number of lines of childDictNames
+                put line lineNum of childDictNames into childDictName
+                put arrayNode & "/" & childDictName into childDictNode
+                
+                -- should add a line to newOutline?
+                put repeatNum + 1 into nextRepeatNum
+                put text_RepeatString(tab, nextRepeatNum) & (lineNum-1) into newOsLine
+                put newOsLine & CR after newOutline
+                 
+                plist_RecurseConvert treeID, childDictNode, newOutline
+            end repeat
+        end if
+    end repeat
+end plist_RecurseConvert

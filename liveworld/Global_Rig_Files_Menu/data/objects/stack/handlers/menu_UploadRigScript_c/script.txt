@@ -1,0 +1,14 @@
+on menu_UploadRigScript stackObject
+   put the short name of stackObject into shortController
+   put rig_ConstructControllerScript (stackObject, shortController) into rigScript
+   
+   rig_StoreController shortController, rigScript
+   put the result into shellResult
+   if shellResult is empty then
+      put rigScript
+      answer "Uploaded controller to server!"
+   else
+      put shellResult
+      answer warning "Problem uploading controller to the server!"
+   end if
+end menu_UploadRigScript

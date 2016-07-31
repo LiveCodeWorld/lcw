@@ -1,0 +1,5 @@
+command text_Utf8Encode @someText
+   -- put unidecode(uniencode(someText),"UTF8") into someText
+   put uniencode (someText) into someU16
+   put unidecode (someU16,"UTF8") into someText
+end text_Utf8Encode

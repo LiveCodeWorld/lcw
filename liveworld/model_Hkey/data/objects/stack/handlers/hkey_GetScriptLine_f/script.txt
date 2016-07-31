@@ -1,0 +1,13 @@
+function hkey_GetScriptLine hKey, pHandler
+   switch
+      case pHandler is not empty
+         return line 1 of pHandler
+      case the number of items of hKey = 2
+         put library_FetchHandler (hKey) into pHandler
+         return line 1 of pHandler
+      case the number of items of hKey = 4
+         put hkey_ExtractHandlerFromObject (hKey) into pHandler
+         return line 1 of pHandler
+   end switch
+   return empty
+end hkey_GetScriptLine

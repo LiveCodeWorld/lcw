@@ -1,0 +1,5 @@
+getprop header_Types [svgView]
+   -- strange bug trying to set this to header_Keys, or some_Keys
+   put the svg_HeaderArray of svgView into svgHeaderArray
+   return keys (svgHeaderArray)
+end header_Types

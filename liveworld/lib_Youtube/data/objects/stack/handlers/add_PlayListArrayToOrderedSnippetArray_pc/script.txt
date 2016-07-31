@@ -1,0 +1,12 @@
+private command add_PlayListArrayToOrderedSnippetArray @orderedSnippetArray, nextPlaylistArray
+   -- nextPlaylistArray is ordered in any case - but always 1-50
+   put nextPlaylistArray ["items"] into someArray
+   repeat for each key itemNum in someArray
+      put someArray [itemNum] into itemArray
+      put itemArray ["snippet"] into snippetArray
+      put snippetArray ["position"] into playListNum
+      add 1 to playListNum -- as "position" is zero-based
+      
+      put itemArray into orderedSnippetArray [playListNum]
+   end repeat
+end add_PlayListArrayToOrderedSnippetArray

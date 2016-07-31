@@ -1,0 +1,9 @@
+function audioboom_FetchClipJSON audioClipID
+   -- GET /audio_clips/*audio_clip_id* returns the details of the audio clip specified by audio_clip_id.
+   if audioClipID is not a number then return "Error, param audioClipID is not a number"
+   
+   put "audio_clips/" & audioClipID into apiPath
+   put ".mp3" after apiPath -- this fiexes no "high_mp3" url being returned bug
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FetchClipJSON

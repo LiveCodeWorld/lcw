@@ -1,0 +1,9 @@
+command display_FormArray recordArray
+   view_CloneHidden "Form|Simple", 12
+   put the result into formView
+   set the form_Array of formView to recordArray
+   set textfont of formView to empty
+   set textsize of formView to empty
+   dispatch "LayoutControl" to formView
+   set the stack_Visible of formView to true
+end display_FormArray

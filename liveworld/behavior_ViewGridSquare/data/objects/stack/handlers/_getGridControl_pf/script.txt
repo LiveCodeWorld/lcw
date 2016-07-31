@@ -1,0 +1,7 @@
+private function _getGridControl gridNum
+   put the childControlIDs of me into childIDs
+   put line gridNum of childIDs into childID
+   if childID is empty then return empty
+   put the long id of control id childID of me into gridControl
+   return gridControl
+end _getGridControl

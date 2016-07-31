@@ -1,0 +1,4 @@
+on menu_GoToLink mTarget
+   put javascript_ConstructInternalLink ("Federated Wiki") into someJavascript
+   set the wiki_Javascript of mTarget to someJavascript
+end menu_GoToLink

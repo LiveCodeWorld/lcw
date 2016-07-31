@@ -1,0 +1,10 @@
+function _getViewName someView
+   switch
+      case the placeHolder_Button of someView is not empty
+         return "placeholder"
+      case word 1 of bodyView = "field"
+         return "field"
+      default
+         return empty
+   end switch
+end _getViewName

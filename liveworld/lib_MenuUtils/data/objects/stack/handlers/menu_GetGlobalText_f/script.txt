@@ -1,0 +1,14 @@
+function menu_GetGlobalText globalMenuTitles, mView
+   local pTitlePath, pTextPath
+   
+   set the itemdelimiter to "|"
+   repeat for each line globalMenuTitle in globalMenuTitles
+      put menu_GetGlobalController (globalMenuTitle) into globalMenuController
+      if exists(globalMenuController) is false then next repeat
+      put the menu_Table [globalMenuTitle] of globalMenuController into mTable
+      put menu_ConvertTable (mTable, mView, pTitlePath, pTextPath) into globalMenuText
+      put globalMenuText & CR after mText
+   end repeat
+   delete char -1 of mText
+   return mText
+end menu_GetGlobalText

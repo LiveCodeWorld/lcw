@@ -1,0 +1,5 @@
+function mediawiki_GetSandboxJSON sandBoxFragment, pApiStem
+   put mediawiki_ConstructSandboxURL (sandBoxFragment, pApiStem) into restURL
+   put mediawiki_GetRestJSON (restURL) into someJSON
+   return someJSON
+end mediawiki_GetSandboxJSON

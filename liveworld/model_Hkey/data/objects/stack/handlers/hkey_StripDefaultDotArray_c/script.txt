@@ -1,0 +1,4 @@
+command hkey_StripDefaultDotArray overlayArray
+   put overlay_GetDefaultArray() into defaultArray
+   overlayArray_StripDefaultProps overlayArray, defaultArray
+end hkey_StripDefaultDotArray

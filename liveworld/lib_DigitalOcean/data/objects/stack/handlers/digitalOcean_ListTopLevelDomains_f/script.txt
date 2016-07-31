@@ -1,0 +1,13 @@
+function digitalOcean_ListTopLevelDomains pDomainInfoArray
+   put digitalOcean_GetDnsDictionary (pDomainInfoArray) into dnsDictionary
+   put keys (dnsDictionary) into allDomainNames
+   set the itemdelimiter to "."
+   repeat for each key someDomain in dnsDictionary
+      if the number of items of someDomain = 2 then
+         put dnsDictionary [someDomain] into topDomainDictionary [someDomain]
+      end if
+   end repeat
+   put keys (topDomainDictionary) into topDomains
+   sort topDomains by item -2 of each & item -1 of each
+   return topDomains
+end digitalOcean_ListTopLevelDomains

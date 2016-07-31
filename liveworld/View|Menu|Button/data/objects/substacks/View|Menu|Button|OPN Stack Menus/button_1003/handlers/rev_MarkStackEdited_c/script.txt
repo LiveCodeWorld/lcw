@@ -1,0 +1,8 @@
+command rev_MarkStackEdited stackName
+   global gREVStackStatus
+   
+   if stackName is empty then put the short name of this stack into stackName
+   if char 1 to 3 of stackName is not "rev" then
+      put "edited" into gREVStackStatus [stackName]
+   end if
+end rev_MarkStackEdited

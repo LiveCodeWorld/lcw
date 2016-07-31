@@ -1,0 +1,52 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Settings_Menu
+type: controller
+version: 0.1
+
+
+--> Global | GIT | Settings | Menu
+-
+[[ _FetchHandler (menu_ConfigureGitLogin,c) ]]
+
+[[ _FetchHandler (menu_ConfigureGitEmail,c) ]]
+
+[[ _FetchHandler (menu_IgnoreWhiteSpace,c) ]]
+
+[[ _FetchHandler (menu_DisplayGitConfig,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditLocalGitIgnoreFile,c) ]]
+
+[[ _FetchHandler (menu_EditGlobalGitIgnoreFile,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | GIT | Settings | Menu | Props
+-
+--> Menu | Props
+-
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_OverwriteIgnoreFile,c) ]]
+
+[[ _FetchHandler (menu_TestIgnoreFile,c) ]]
+
+[[ _FetchHandler (menu_FixGitIgnoreFile,c) ]]
+
+
+--> Dev | Menu | Props
+-
+[[ _FetchHandler (git_CreateIgnoreFile,c) ]]
+
+[[ _FetchHandler (git_ConstructIgnoreText,f) ]]
+
+[[ _FetchHandler (text_LineEndingPlatform,f) ]]

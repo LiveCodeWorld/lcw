@@ -1,0 +1,9 @@
+getprop object_ScriptSaved
+   put the long ID of the target into someObject
+   
+   --  put the git_RevisionScript of someObject into revisionScript
+   put the script of someObject into nowScript
+   put the script_File of someObject into someFile
+   put URL ("file:" & someFile) into localScript
+   return localScript = nowScript
+end object_ScriptSaved

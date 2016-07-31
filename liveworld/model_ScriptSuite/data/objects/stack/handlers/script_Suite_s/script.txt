@@ -1,0 +1,7 @@
+setprop script_Suite [suiteName] newSuite
+   put the long id of the target into targetObject
+   
+   put the script of targetObject into someScript
+   put script_ReplaceSuite (suiteName, someScript, newSuite) into newScript
+   set the script of targetObject to newScript
+end script_Suite

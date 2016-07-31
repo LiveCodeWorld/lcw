@@ -1,0 +1,27 @@
+function rigImplode pArray, pGlue
+   --| Requires: rigIsNumberedArray(), rigNumToCodepoint()
+   --| Summary: Joins array elements with a string.
+   --| Parameters: array <pArray>, string <pGlue> the string to join the array elements with
+   
+   if item 1 of rigIsNumberedArray(pArray) is "true" then
+      # SORT ARRAY KEYS
+      put the keys of pArray into tKeys
+      sort tKeys numeric
+      
+      # BUILD STRING
+      repeat for each line k in tKeys
+         put pArray[k] & pGlue after tBuf
+      end repeat
+      
+      # REMOVE LAST GLUE
+      get the len of pGlue
+      delete char - it to -1 of tBuf
+   else
+      # ARRAY IS NOT NUMBERED
+      put pArray into tBuf
+      combine tBuf using rigNumToCodepoint(1)
+      replace rigNumToCodepoint(1) with pGlue in tBuf
+   end if
+   
+   return tBuf
+end rigImplode

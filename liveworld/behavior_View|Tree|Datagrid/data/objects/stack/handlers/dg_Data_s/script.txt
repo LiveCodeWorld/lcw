@@ -1,0 +1,13 @@
+setprop dg_Data [someTitle] dataArray
+   put the dg_View of me into revDataGrid
+   if exists(revDataGrid) is false then return empty
+   
+   lock screen
+   set the dgData of revDataGrid to dataArray
+   if someTitle is not empty then
+      put the title_View of me into titleView
+      set the title_Text of titleView to someTitle
+   end if
+   unlock screen
+   return dgView
+end dg_Data

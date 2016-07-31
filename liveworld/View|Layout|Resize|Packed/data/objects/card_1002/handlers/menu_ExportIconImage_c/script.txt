@@ -1,0 +1,8 @@
+on menu_ExportIconImage imageObject
+   image_Export imageObject
+   put the result into imageFile
+   set the filename of imageObject to imageFile
+   set the image_OriginalFile of imageObject to imageFile
+   
+   opn_Notify the filename of imageObject -- into someFile
+end menu_ExportIconImage

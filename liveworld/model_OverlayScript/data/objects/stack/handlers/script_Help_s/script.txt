@@ -1,0 +1,5 @@
+setprop script_Help someHelp
+   put the script_HelpFile [false] of the target into someFile
+   put someHelp into url ("binfile:" & someFile)
+   return someFile
+end script_Help

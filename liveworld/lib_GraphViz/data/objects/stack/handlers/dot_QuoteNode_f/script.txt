@@ -1,0 +1,8 @@
+function dot_QuoteNode someNodeID
+    -- comma's and other chars can also result in badly named nodes.
+    if the number of words of someNodeID > 1 or char 1 of someNodeID is a number then
+        return kwote(someNodeID)
+    else
+        return someNodeID
+    end if
+end dot_QuoteNode

@@ -1,0 +1,10 @@
+function model_GetArrayElements modelName, modelObject, modelType
+   put model_GetArray(modelName, modelObject, modelType) into dataArray
+   
+   put empty into someElements
+   repeat for each element someElement in dataArray
+      put someElement & CR after someElements
+   end repeat
+   delete last char of someElements
+   return someElements
+end model_GetArrayElements

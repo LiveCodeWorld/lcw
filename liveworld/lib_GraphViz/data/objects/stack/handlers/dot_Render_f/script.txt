@@ -1,0 +1,11 @@
+function dot_Render dotText, pDotCommand, pTextFile, pOutputFormat
+   -- pDotCommand is an english equivalent of graphStyle
+   dot_SaveTemporaryFile dotText, pTextFile
+   put the result into pTextFile
+   put dot_DoShell (pTextFile, pDotCommand, pOutputFormat) into shellResult
+   if shellResult is false or shellResult is empty then
+      exit to top
+   else
+      return shellResult
+   end if
+end dot_Render

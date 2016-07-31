@@ -1,0 +1,40 @@
+getprop card_View [vNames]
+   -- a guess (makes views "sticky")
+   -- first it looks "inside" the target view
+   -- next it looks "up" the target view hirarchy
+   -- then it looks down from the card view
+   
+   if vNames is empty then
+      return line 1 of the card_TopViews of the target
+   else
+      put the long id of the target into targetObject
+      
+      if word 1 of targetObject is not "card" then
+         -- first search inside the target view
+         put the view_LazyFindInside [vNames] of targetObject into foundView
+         if exists(foundView) then return foundView
+         
+         -- next search up from the target view
+         put the view_Above [vNames] of targetObject into foundView
+         if exists(foundView) then return foundView
+         
+      end if
+      
+      put the card_Object of targetObject into cardObject
+      
+      -- lets do a strict match for each vName in turn for every view from the card down
+      put the card_ViewMatch [vNames] of cardObject into foundView
+      if exists(foundView) then return foundView
+      
+      -- finally lets search lazily from the card down
+      put the view_LazyFindInside [vNames] of cardObject into foundView
+      if exists(foundView) then
+         return foundView
+      else
+         return empty
+         
+         get the card_TopViews of the target
+         return line 1 of it
+      end if
+   end if
+end card_View

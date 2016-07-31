@@ -1,0 +1,10 @@
+function googleEarth_SetViewAppleScript latitude, longitude, someHeight, someTilt, someRotation, someSpeed
+    if someSpeed is empty then put "0.1" into someSpeed
+    put "tell application 'Google Earth'" into doScript
+    put googleEarth_ConstructView(latitude, longitude, someHeight, someTilt, someRotation) into googleView
+    put cr & "set newInfo to [[googleView]]" after doScript
+    put cr & "SetViewInfo newInfo speed [[someSpeed]]" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    return merge(doScript)
+end googleEarth_SetViewAppleScript

@@ -1,0 +1,7 @@
+command log_DeconstructLineEntry logLineEntry, @logValue, logTitle, @logDate
+   set the itemdelimiter to tab
+   put item 1 of logLineEntry into titleLine
+   put item 2 of logLineEntry into logValue
+
+   log_DeconstructTitle titleLine, logTitle, logDate
+end log_DeconstructLineEntry

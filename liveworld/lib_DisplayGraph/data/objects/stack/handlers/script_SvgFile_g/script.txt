@@ -1,0 +1,6 @@
+getprop script_SvgFile
+   put the long id of the target into scriptObject
+   put the textStackOverlay_Folder [false] of scriptObject into overlayFolder
+   put overlayArray_GetImageFile (overlayArray, overlayFolder) into svgFile
+   
+end script_SvgFile

@@ -1,0 +1,251 @@
+function menu_ConvertTable mTable, mView, pTitlePath, pTextPath, pMenuTarget, pMenuIsDisabled
+   -- ignoreCall:  dynamicSubmenuTitleProp,g
+   -- ignoreCall:  еее,c
+   -- this is called first for each line of mTable to draw a menu
+   
+   global gTemp_ActiveMenuArray
+   local mPath, mTitlePath, mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp   
+   
+   repeat for each line mTableLine in mTable
+      if mTableLine is "-" then
+         put "-" & CR after mText
+         next repeat
+      end if
+      menu_DeconstructTableLine mTableLine, mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp, mSendLine
+      
+      switch
+         case mItemType is among the items of "submenu"
+            put submenuProp into subMenuTitle
+            
+            if pTextPath is empty then
+               put mSendLine into mPath
+            else
+               put pTextPath & "|" & mSendLine into mPath
+            end if
+            
+            if pTitlePath is empty then
+               put mTitle & "/" & subMenuTitle into mTitlePath -- first time
+               -- should I put something into pTitlePath?
+            else
+               -- already added subMenuTitle first time above
+               put pTitlePath & "/" & mTitle & "/" & subMenuTitle into mTitlePath
+               -- breakPoint
+            end if
+            break
+         case mItemType = "insert"
+            put pTextPath into mPath
+            
+            if pTitlePath is empty then
+               put mTitle into mTitlePath
+            else
+               put pTitlePath & "/" & mTitle into mTitlePath     
+               -- put pTitlePath into mTitlePath
+            end if
+            break
+         default
+            if pTextPath is empty then
+               put mSendLine into mPath
+            else
+               put pTextPath & "|" & mSendLine into mPath
+            end if
+            
+            if pTitlePath is empty then
+               put mTitle into mTitlePath
+            else
+               put pTitlePath & "/" & mTitle into mTitlePath
+            end if
+      end switch
+      if mTitlePath begins with "/" then breakPoint
+      addToMenuActiveArray mPath, mTitlePath, pigeon, mController, mView, mItemType, pMenuTarget
+      if exists (mController) is false then next repeat
+      
+      try
+         -- first lets allow the mController to initialise itself and avoid repeat calls to common routines
+         if initArray [mController]["menu_Init"] is not true then
+            -- now it gets sent one time only for each mController, or recursive call to a submenu
+            -- could cut out multiple call on recursion with some hacking with locals or globals.
+            dispatch "menu_Init" to mController with mView,mPath,mTitlePath -- think mView is the same as targetObject
+            put true into initArray [mController]["menu_Init"]
+         end if
+         
+         -- get the mTarget next
+         if pMenuTarget is empty then
+            put menu_TargetFromGlobal (mPath) into mTarget -- mTarget must be same as what "menu_SendMessage 
+         else
+            put pMenuTarget into mTarget
+         end if
+         
+         -- now check the mTarget
+         -- if pMenuIsDisabled is empty then
+         -- first time (not used for recursive sub menus - these are already checked in the recursive handler)
+         -- we get an error if mTarget is custom set to an array.
+         try
+            put initArray [mController]["menu_CheckTarget"][mTarget]["already checked"] is true into menuAlreadyChecked
+            if menuAlreadyChecked is true then
+               put initArray [mController]["menu_CheckTarget"][mTarget]["targetOK"] into targetOK
+            else
+               put the menu_CheckTarget [mTarget] of mController into targetOK
+               put targetOK into initArray [mController]["menu_CheckTarget"][mTarget]["targetOK"]
+               put true into initArray [mController]["menu_CheckTarget"][mTarget]["already checked"]
+            end if
+         catch e
+            put false into targetOK
+            
+            breakPoint
+            put the menu_CheckTarget [mTarget] of mController into targetOK
+         end try
+         
+         switch targetOK
+            case "delete"
+               next repeat
+               break
+            case false
+               put targetOK is false into menuIsDisabled
+               break
+            case true
+               put targetOK is false into menuIsDisabled
+               break
+            default
+               -- could be used to replace a disabled menu with another menu
+               -- use to fix reason why menu is disabled for instance
+               put targetOK is false into menuIsDisabled
+         end switch
+         -- else
+         -- allows override (but should false = empty = do another check for recursive menus?)
+         -- put pMenuIsDisabled into menuIsDisabled
+         -- end if
+         
+         switch mItemType
+            -- case mItemType = "inserted"
+            case "insert"
+               -- not sure "insert" is working fully (with disabling etc 
+               -- needs testing !!!
+               -- seems not to check the menu_CheckTarget?
+               put pigeon into dynamicSubmenuTitleProp
+               
+               if subMenuProp is empty then
+                  -- old version of mTable
+                  put subMenuTitle into insertedMenuTitle
+                  put menu_GetDefaultController (insertedMenuTitle, mController, false) into insertedMenuController
+               else if dynamicSubmenuTitleProp is empty then
+                  put subMenuProp into insertedMenuTitle
+                  put paramProp into insertedMenuController
+               else
+                  -- experimental and not tested
+                  breakPoint
+                  put the dynamicSubmenuTitleProp of mController into insertedMenuTitle
+                  put menu_GetDefaultController (subMenuTitle, mController, false) into insertedMenuController
+               end if
+               
+               menu_IncludeMenuText mText, insertedMenuTitle, mView, insertedMenuController, menuIsDisabled, mTitlePath, mPath, pMenuTarget
+               break
+            case "submenu"
+               put pigeon into dynamicSubmenuTitleProp
+               
+               -- if the number of tokens of pigeon < 2 then -- pigeon is empty then
+               if true then -- temp hack for now !!!
+                  put subMenuProp into subMenuTitle
+                  put paramProp into subMenuController
+                  if subMenuController is empty then
+                     -- a temporary hack for old menu tables
+                     put menu_GetDefaultController (subMenuTitle, mController, false) into subMenuController
+                  end if
+               else
+                  -- experimental and not tested 
+                  -- idea is to allow a getprop to dynamicaly return a subMenuTitle based on local conditions
+                  breakPoint
+                  put the dynamicSubmenuTitleProp of mController into subMenuTitle
+                  put menu_GetDefaultController (subMenuTitle, mController, false) into subMenuController
+               end if
+               if exists (subMenuController) is false then
+                  -- menu needs fixing
+                  -- breakPoint
+                  next repeat
+               end if
+               put mPath into subMenuPath
+               put mTitlePath into subMenuTitlePath
+               put mTarget into subMenuTarget
+               
+               try
+                  if initArray [subMenuController][subMenuTarget]["already checked"] is not true then
+                     put the menu_CheckTarget [subMenuTarget] of subMenuController into targetOK
+                     put targetOK into initArray [subMenuController][subMenuTarget]["targetOK"]
+                     put true into initArray [subMenuController][subMenuTarget]["already checked"]
+                  else
+                     put initArray [subMenuController][subMenuTarget]["targetOK"] into targetOK
+                  end if
+               catch e
+                  put false into targetOK
+               end try
+               
+               switch targetOK
+                  case "delete"
+                     next repeat
+                     break
+                  case false
+                     -- get the mobile_Name of subMenuTarget
+                     put true into subMenuIsDisabled
+                     break
+                  case true
+                     put menu_CheckDisabled (mFormatProp, mTarget, mController) into subMenuIsDisabled
+                     break
+                  default
+                     -- could be used to replace a disabled menu with another menu
+                     -- use to fix reason why menu is disabled for instance
+                     put menu_CheckDisabled (mFormatProp, mTarget, mController) into subMenuIsDisabled
+               end switch
+               
+               if subMenuIsDisabled is true then
+                  menu_DisableLine mLine
+               else if subMenuIsDisabled is not false then
+                  -- error_CheckDisabled mController, mTarget, mTitlePath, mTableLine, someError
+               end if
+               
+               menu_InsertSubMenu mText, mLine, subMenuTitle, mView, subMenuController, mTitlePath, mPath, pMenuTarget, subMenuIsDisabled
+               break
+            default
+               -- it is not a recursively called menu insertion
+               -- lets check if menu item is disabled
+               if menuIsDisabled is true then
+                  put true into itemIsDisabled
+               else
+                  put menu_CheckDisabledItem (mFormatProp, mTarget, mController, false, mTitlePath, mTableLine) into itemIsDisabled
+               end if
+               
+               switch
+                  case itemIsDisabled = "delete"
+                     -- dont add mLine
+                     break
+                  case itemIsDisabled =  true or menuIsDisabled is true
+                     -- disable mLine
+                     menu_DisableLine mLine
+                     put mLine & CR after mText
+                     break
+                  case itemIsDisabled is not false and itemIsDisabled is not empty
+                     -- replace mLine with substituted text
+                     put itemIsDisabled & CR after mText
+                     break
+                  case mItemType = "boolean"
+                     -- add check sub menu to mLine
+                     menu_AddBooleanLine mText, mLine, paramProp, mTarget, mController
+                     break
+                  case mItemType = "fixed"
+                     -- fetch sub menu from custom property and add to mLine
+                     menu_InsertFixed mText, mLine, pigeon, mController, paramProp, mTarget, mItemType
+                     break
+                  case mItemType is among the items of "custom submenu,custom external"
+                     -- fetch sub menu from getprop and add to mLine
+                     menu_FetchCustomMenuItems mText, mLine, submenuProp, mController, paramProp, mTarget, mItemType
+                     break
+                  default -- mItemType = empty
+                     -- a plain menu item - just add to mLine
+                     put mLine & CR after mText
+               end switch
+         end switch
+      catch someError
+         -- display_Text (mTableLine & CR & CR & someError), mTableLine
+      end try
+   end repeat
+   menu_TidyText mText
+   return mText
+end menu_ConvertTable

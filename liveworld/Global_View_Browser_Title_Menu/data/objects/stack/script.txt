@@ -1,0 +1,83 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_View_Browser_Title_Menu
+type: controller
+version: 0.2
+
+local LocalArray
+
+
+--> Global | View | Browser | Title | Menu
+-
+[[ _FetchHandler (menu_DisplaySet,c) ]]
+
+[[ _FetchHandler (menu_AddViewSet,c) ]]
+
+[[ _FetchHandler (menu_RefreshDisplay,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Filter,c) ]]
+
+[[ _FetchHandler (menu_KnowAllViews,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreateTemplateFromSelectedGroup,c) ]]
+
+[[ _FetchHandler (menu_CreateBlankTemplate,c) ]]
+
+[[ _FetchHandler (menu_DodgyCreateButtonView,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayOutlinePalette,c) ]]
+
+[[ _FetchHandler (submenu_DisplayOutline,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayViewBrowserRecord,c) ]]
+
+[[ _FetchHandler (menu_ViewBrowserRecordBehavior,c) ]]
+
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditScript,c) ]]
+
+[[ _FetchHandler (menu_EditViewToolMenu,c) ]]
+
+
+--> Global | View | Browser | Title | Menu | Props
+-
+[[ _FetchHandler (display_Path,g) ]]
+
+[[ _FetchHandler (display_Paths,g) ]]
+
+[[ _FetchHandler (object_References,g) ]]
+
+[[ _FetchHandler (viewBrowser_Title,g) ]]
+
+[[ _FetchHandler (top_LevelPath,g) ]]
+
+[[ _FetchHandler (top_LevelPath,s) ]]
+
+[[ _FetchHandler (top_LevelPaths,g) ]]
+
+[[ _FetchHandler (display_Grid,s) ]]
+
+[[ _FetchHandler (display_Grid,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (outline_FirstColumnFromPathIndex,f) ]]
+
+[[ _FetchHandler (menu_GetClassOutline,f) ]]

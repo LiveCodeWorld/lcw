@@ -1,0 +1,6 @@
+function linkArray_ExtractTreeArray someKeys, linkArray
+   repeat for each line someKey in someKeys
+      linkArray_WalkKeys linkArray, someKey, subLinkArray
+   end repeat
+   return subLinkArray
+end linkArray_ExtractTreeArray

@@ -1,0 +1,6 @@
+getprop script_Files
+   put the long id of the target into scriptObject
+   put the object_MetaDataFolder [true] of scriptObject into metadataFolder
+   put folder_ShortFiles (metadataFolder) into someFiles
+   return someFiles
+end script_Files

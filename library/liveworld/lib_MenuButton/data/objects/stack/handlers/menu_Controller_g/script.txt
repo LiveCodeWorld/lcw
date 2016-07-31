@@ -1,0 +1,13 @@
+getprop menu_Controller [pMenuTitle]
+   put the long id of the target into targetObject
+   
+   put the burnt_MenuController [pMenuTitle] of targetObject into mController
+   if exists(mController) then return mController
+   
+   -- now lets see if mTitle exists in the menu_SubStack
+   put the menu_SubStackCard [pMenuTitle] of targetObject into mController
+   if exists(mController) then return mController
+   
+   put menu_GetDefaultController (pMenuTitle, targetObject, false) into mController
+   return mController
+end menu_Controller

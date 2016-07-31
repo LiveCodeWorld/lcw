@@ -1,0 +1,105 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Array
+type: script library
+version: 0.5
+
+
+--> Arrays
+-
+[[ _FetchHandler (array_Fetch,f) ]]
+
+[[ _FetchHandler (array_Save,c) ]]
+
+[[ _FetchHandler (array_ToFolder,c) ]]
+
+[[ _FetchHandler (array_FromFolder,f) ]]
+
+[[ _FetchHandler (array_IsNumbered,f) ]]
+
+[[ _FetchHandler (array_PruneLeaves,f) ]]
+
+[[ _FetchHandler (array_Compare,c) ]]
+
+[[ _FetchHandler (array_Sample,f) ]]
+
+[[ _FetchHandler (array_KeyFromPath,f) ]]
+
+[[ _FetchHandler (array_Union,c) ]]
+
+[[ _FetchHandler (array_FlatUnion,c) ]]
+
+[[ _FetchHandler (array_MakeTwoWay,f) ]]
+
+[[ _FetchHandler (array_Reverse,f) ]]
+
+[[ _FetchHandler (array_StripDeeperLevels,c) ]]
+
+[[ _FetchHandler (array_ConstructReverseDictionary,f) ]]
+
+[[ _FetchHandler (array_AddToIndex,c) ]]
+
+
+--> Array | More
+-
+[[ _FetchHandler (array_FilterKeys,f) ]]
+
+[[ _FetchHandler (array_Difference,f) ]]
+
+[[ _FetchHandler (array_Subtract,f) ]]
+
+[[ _FetchHandler (array_DeleteKeys,f) ]]
+
+[[ _FetchHandler (array_Add,c) ]]
+
+[[ _FetchHandler (array_AddNew,c) ]]
+
+[[ _FetchHandler (array_GetSortByNumber,f) ]]
+
+[[ _FetchHandler (array_ShortFileNames,f) ]]
+
+
+--> Array | Search
+-
+[[ _FetchHandler (array_MatchContents,f) ]]
+
+[[ _FetchHandler (array_FindContents,f) ]]
+
+
+--> Array | Index
+-
+[[ _FetchHandler (array_ConstructSimpleKeys,f) ]]
+
+[[ _FetchHandler (array_InsertIntoIndex,c) ]]
+
+[[ _FetchHandler (array_DeleteFromIndex,c) ]]
+
+[[ _FetchHandler (array_TranslateIndex,f) ]]
+
+
+--> Array | Elements
+-
+/*
+These handlers work on both keys and values (treated as indexes or lines) of arrays.
+*/
+
+[[ _FetchHandler (array_ReplaceElement,c) ]]
+
+[[ _FetchHandler (array_AllNodes,f) ]]
+    
+[[ _FetchHandler (array_Elements,f) ]]
+
+[[ _FetchHandler (array_SortElements,f) ]]
+
+
+--> Array | Outline
+-
+[[ _FetchHandler (array_FromOutline,f) ]]
+
+[[ _FetchHandler (array_ToOutline,f) ]]
+
+[[ _FetchHandler (array_ExpandSorted,f) ]]
+
+[[ _FetchHandler (array_ToHtmlLinks,f) ]]

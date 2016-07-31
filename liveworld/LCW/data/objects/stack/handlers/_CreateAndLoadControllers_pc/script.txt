@@ -1,0 +1,9 @@
+private command _CreateAndLoadControllers
+   -- in case we call this handelr more that once
+   -- do not create multiple buttons
+   if the menu_Button of me is empty then
+      -- this should be a "menu" button
+      create button "Global Menu Button"
+      set the visible of me to true
+   end if
+end _CreateAndLoadControllers

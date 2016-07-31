@@ -1,0 +1,30 @@
+function menu_GetLineNum someMenuItem, someMenu
+   set the itemdelimiter to tab
+   repeat with lineNum = 1 to the number of lines of someMenu
+      put item -1 of line lineNum of someMenu into lastItem
+      
+      if char 1 of lastItem = "!" then delete char 1 to 2 of lastItem
+      if char 1 of lastItem = "(" then delete char 1 of lastItem
+      if lastItem = someMenuItem then
+         return lineNum
+      end if
+   end repeat
+   return 0
+   
+   replace "/" with "\/" in someMenuItem
+   put menu_CleanMarks (someMenu) into testMenu
+   
+   -- does not return the title with the greatest indent
+   -- and so does not deal with titles which include subtitles of the same name ie colour names
+   -- return outline_LineOffset(someMenuItem, testMenu)
+   
+   -- needs to be fast (repeats are)
+   set the itemdelimiter to tab
+   repeat with lineNum = the number of lines of someMenu down to 1
+      get item -1 of line lineNum of someMenu
+      if it = someMenuItem then
+         return lineNum
+      end if
+   end repeat
+   return 0
+end menu_GetLineNum

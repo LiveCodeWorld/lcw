@@ -1,0 +1,9 @@
+getprop dot_NodeType [nodeID]
+   -- default value
+   put the uOPN ["dot_NodeType"] of the linkArray_Model of the target into nodeType
+   if nodeType is empty then
+      put "nodeID" into nodeType
+      set the uOPN ["dot_NodeType"] of the linkArray_Model of the target to nodeType
+   end if
+   return nodeType
+end dot_NodeType

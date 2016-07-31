@@ -1,0 +1,7 @@
+getprop script_OverlayArray  [pOverlayName]
+   put the long id of the target into scriptObject
+   put the script_OverlayData of scriptObject into overlayData
+   if pOverlayName is empty then put overlayData_GetDefaultName (overlayData) into pOverlayName
+   put overlayData [pOverlayName] into overlayArray
+   return overlayArray
+end script_OverlayArray

@@ -1,0 +1,18 @@
+function dot_ConstructShapeFileDefs shapeFileArray, someWidth, someHeight, fixedSize
+     -- shapefile is deprecated
+  local nodeDefs
+    
+    put shapeFileArray ["Node titles"] into defNodes
+    repeat for each line someNode in defNodes
+        set the cursor to busy
+        
+        put shapeFileArray [someNode] into nodeShapeFile
+        put shapeFileArray [someNode,"url"] into nodeUrl
+        put shapeFileArray [someNode,"tooltip"] into nodeToolTip
+        
+        get dot_ConstructShapeFileDef(someNode, nodeShapeFile, someWidth, someHeight, fixedSize, nodeUrl, nodeToolTip)   
+        put nodeDef & CR after nodeDefs
+    end repeat
+    delete last char of nodeDefs
+    return nodeDefs
+end dot_ConstructShapeFileDefs

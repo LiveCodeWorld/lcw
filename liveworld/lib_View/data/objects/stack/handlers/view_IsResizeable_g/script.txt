@@ -1,0 +1,6 @@
+getprop view_IsResizeable
+    put the long id of the target into targetObject
+    put the script_SetPropHandlers of targetObject into setPropHandlerIndex
+    set the wholematches to true
+    return "view_Rect" is among the lines of setPropHandlerIndex
+end view_IsResizeable

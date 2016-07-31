@@ -1,0 +1,5 @@
+command object_ExportMetaText objectFolder, objectText
+   put meta_TextFile (objectFolder, false) into someFile
+   put objectText into url ( "binfile:" & someFile)
+   return someFile
+end object_ExportMetaText

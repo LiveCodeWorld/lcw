@@ -1,0 +1,92 @@
+--> MetaData
+-
+name: lib_Audioboom
+type: script library
+version: 0.6
+copyright: David Bovill
+licence:  GPLv3
+deps: lib_Fedwiki
+
+/*
+A library for interfacing with https://github.com/audioBoom/api/blob/master/sections/authentication.md
+*/
+
+-- constant AudioboomApiStem = "https://api.audioboom.com/" --certificates problem???
+constant AudioboomApiStem = "http://api.audioboom.com/"
+constant AudioboomConsumerkey = "66a37abac6e7e57078934f6f"
+constant AudioboomConsumerSecret = "41a3ca57c14e8d813f13137798dfc4abbe8428f03f71f2aa69801ce99b7216c3"
+
+local AudioboomUserName = "fortyfoxes"
+local AudioboomUserID = 40897
+local AudioboomUserArray
+
+
+--> AudioBoom | Drag and Drop URL
+-
+[[ _FetchHandler (audioboom_GuessClipJSON,f) ]]
+
+[[ _FetchHandler (audioboom_IDExtractFromURL,f) ]]
+
+
+--> AudioBoom | Array
+-
+[[ _FetchHandler (fedwiki_ConstructAudioBoomPageArray,f) ]]
+
+[[ _FetchHandler (audioboom_ConstructUserParagraph,f) ]]
+
+[[ _FetchHandler (audioboom_GetAudioClipArray,f) ]]
+
+
+--> Audioboom | Clips
+-
+/*
+GET /audio_clips/*audio_clip_id*.mp3 this will respond with a browser re-direct to the mp3 audio data for the audio clip specified by audio_clip_id
+*/
+
+[[ _FetchHandler (audioboom_FetchTaggedClipArray,f) ]]
+
+[[ _FetchHandler (audioboom_FetchClipJSON,f) ]]
+
+[[ _FetchHandler (audioboom_FetchClipArray,f) ]]
+
+
+--> Audioboom
+-
+/*
+When fetching lists of entities from the api, the response is broken up into pages. 
+You can control the pagination with the following parameters :
+¥	page[number] - the page of results you'd like to return, starting at 1.
+¥	page[items] - the number of results you'd like on each page. This value is capped at 150.
+¥	max_time - an optional unix timestamp of the most recent time you'd like pagination to start from. 
+This is used to stabilize pagination - if you're paging through sequential pages, 
+you can record a start time and send that with each request, 
+to ensure that audio clips created since you started paging don't shuffle your results around. 
+(Even so, this isn't a guarantee, and you should check for duplicate entity ids when fetching multiple pages).
+-- https://github.com/audioboom/api/blob/master/sections/pagination.md
+*/
+
+[[ _FetchHandler (audioboom_FindUser,f) ]]
+
+[[ _FetchHandler (audioboom_FetchUserClips,f) ]]
+
+[[ _FetchHandler (audioboom_FetchFeatured,f) ]]
+
+
+--> Audioboom | Arrays
+-
+[[ _FetchHandler (audioboom_ConstructUserClipTitleArray,f) ]]
+
+[[ _FetchHandler (audioboom_ConstructUserClipDateArray,f) ]]
+
+
+--> Audioboom | REST
+-
+[[ _FetchHandler (audioboom_RestGET,f) ]]
+
+
+--> Audioboom | Authentication
+-
+-- function audioboom_RequestToken
+   put url "https://api.audioboom.com/oauth/request_token" into someJson
+   return someJson
+end audioboom_RequestToken

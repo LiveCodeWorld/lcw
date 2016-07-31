@@ -1,0 +1,11 @@
+function rect_GetGlobal localRect, stackName
+   -- was "globalRect" or "localToGlobalRect"
+   if stackName is not empty then
+      put the defaultstack into oDefault
+      set the defaultstack to stackName
+   end if
+   put globalloc(item 1 to 2 of localRect) into globalStackRect
+   put globalloc(item 3 to 4 of localRect) into item 3 of globalStackRect
+   if stackName is not empty then set the defaultstack to oDefault
+   return globalStackRect
+end rect_GetGlobal

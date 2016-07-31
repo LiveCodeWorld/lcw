@@ -1,0 +1,4 @@
+on menu_InstalledExternals scriptObject, opnExternal
+   put not external_GetInstalled (opnExternal) into toggleBoolean
+   external_SetInstalled opnExternal, toggleBoolean
+end menu_InstalledExternals

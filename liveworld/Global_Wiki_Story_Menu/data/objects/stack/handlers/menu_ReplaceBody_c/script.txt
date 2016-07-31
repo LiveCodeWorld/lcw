@@ -1,0 +1,6 @@
+on menu_ReplaceBody mTarget
+   put the wiki_View of mTarget into wikiView
+   put the body_View of mTarget into bodyView
+   
+   set the control_Type of bodyView to "View|Layout|Group"  
+end menu_ReplaceBody

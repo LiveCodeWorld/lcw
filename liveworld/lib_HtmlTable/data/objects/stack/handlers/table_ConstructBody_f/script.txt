@@ -1,0 +1,34 @@
+function table_ConstructBody tabTable
+   -- should be modified to use tabs or commas, or array?
+   -- see also "table_Construct"
+   
+   put "<tbody>" into htmlTable
+   --
+   set the itemdelimiter to tab
+   repeat with rowNum = 1 to the number of lines of tabTable
+      put "row" & rowNum into rowLabel
+      put CR & tab & "<tr>" after htmlTable
+      
+      -- first row "header" tag
+      put line rowNum of tabTable into someLine
+      put item 1 of someLine into someKey
+      get xml_Tag(someKey, "th", "id", rowLabel)
+      put CR & tab & tab & it after htmlTable
+      
+      -- repeat for the "body" tags
+      repeat with columnNum = 2 to the number of items of someLine
+         put item columnNum of someLine into someValue
+         put word 1 to -1 of someValue into someValue
+         
+         put "col" & columnNum into columnLabel
+         put columnLabel && rowLabel into headerLabel
+         get xml_Tag(someValue, "td", "headers", headerLabel)
+         put CR & tab & tab & it after htmlTable
+      end repeat
+      --
+      put CR & tab & "</tr>" after htmlTable
+   end repeat
+   --
+   put CR & "</tbody>" after htmlTable
+   return htmlTable
+end table_ConstructBody

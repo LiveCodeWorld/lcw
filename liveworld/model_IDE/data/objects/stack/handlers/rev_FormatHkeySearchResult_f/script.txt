@@ -1,0 +1,50 @@
+function rev_FormatHkeySearchResult shortHKeys, scriptObject, searchText
+   #   Format of pResultsString is a list of search results, one per line, where each search result is in the following form:
+   #      <object long id> <line number> <start char> <end char> <matched text with context>
+   #       (all fields are separated by tabs).
+   #   pResultsString also contains a header, this makes up the first two lines of the string. Line 1 is the search term and line 2 is the search scope.
+   
+   put searchText & CR into tFormattedResults
+   put "for handlers" & CR after tFormattedResults
+   
+   repeat for each line shortHKey in shortHKeys 
+      put hArray_FindHkeyInHierarchy (shortHKey, scriptObject) into foundHkey
+      if foundHkey is empty then
+         -- not sure what to do
+         put "Missing" & tab & 0 & tab & 0 & tab & 0 & tab & "Cannot find" && shortHKey & CR after tFormattedResults
+         next repeat
+      end if
+      
+      put hArray_GetHandlerArray (foundHkey) into hkeyInfoArray
+      if hkeyInfoArray is an array then
+         put hkeyInfoArray ["handlerLine"] into handlerLine
+         put hkeyInfoArray ["startLineNum"] into startLineNum
+         put item 3 of foundHkey into foundObject
+         
+         -- here if we had also stored char nums this would be much faster (only required for search results so far)
+         try
+            put the script of foundObject into someScript
+            put the number of chars of line 1 to (startLineNum - 1) of someScript into startCharNum
+            add 1 to startCharNum
+            put startCharNum + the number of chars of handlerLine into endCharNum
+         catch e
+            breakpoint
+         end try
+      else
+         -- it should be (broken database)
+         put shortHKey && "(broken handler array)" into handlerLine
+         put 1 into startLineNum
+         put 0 into startCharNum
+         put 0 into endCharNum
+      end if
+      
+      put foundObject into resultLine
+      put tab & startLineNum after resultLine
+      put tab & startCharNum after resultLine  
+      put tab & endCharNum after resultLine
+      put tab & handlerLine after resultLine
+      put resultLine & CR after tFormattedResults
+   end repeat
+   delete char -1 of tFormattedResults
+   return tFormattedResults
+end rev_FormatHkeySearchResult

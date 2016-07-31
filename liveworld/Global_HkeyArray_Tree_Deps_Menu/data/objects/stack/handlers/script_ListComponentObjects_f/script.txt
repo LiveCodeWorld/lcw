@@ -1,0 +1,6 @@
+function script_ListComponentObjects
+   -- stub for now
+   put the name of stack "View|Menu|Button" into componentObjects
+   put CR & the behavior of stack "View|Menu|Button" after componentObjects
+   return componentObjects
+end script_ListComponentObjects

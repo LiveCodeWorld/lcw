@@ -1,0 +1,53 @@
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Shape | Ring | Menu
+-
+[[ _FetchHandler (menu_NodeNumber,c) ]]
+
+[[ _FetchHandler (point_Num,g) ]]
+
+[[ _FetchHandler (point_Nums,g) ]]
+
+[[ _FetchHandler (menu_ShowRing,c) ]]
+
+[[ _FetchHandler (menu_ShowBorder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_IncreaseNodeFactor,c) ]]
+
+[[ _FetchHandler (menu_DecreaseNodeFactor,c) ]]
+
+on _
+end _
+
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Shape | Ring | Menu | Props
+-
+[[ _FetchHandler (show_Ring,g) ]]
+
+[[ _FetchHandler (show_Border,g) ]]
+
+
+--> Global | Shape | Ring | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Test,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_RefreshNodes,c) ]]

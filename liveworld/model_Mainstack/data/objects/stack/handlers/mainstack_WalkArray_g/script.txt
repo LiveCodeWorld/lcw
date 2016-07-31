@@ -1,0 +1,12 @@
+getprop mainstack_WalkArray [pCheckHash]
+   put the textStack_Folder of the target into mainStackFolder
+   put mainstack_FetchWalkArray (mainStackFolder) into mainstackWalkArray
+   if pCheckHash is true then
+      put the mainstack_Hash of the target into mainstackHash
+      get walkArray_GetMainstackHash (mainstackWalkArray)
+      if it is not mainstackHash then
+         return empty
+      end if
+   end if
+   return mainstackWalkArray
+end mainstack_WalkArray

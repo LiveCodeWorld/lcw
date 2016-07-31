@@ -1,0 +1,5 @@
+command fedwiki_SendPNG shortFile, socketID, someETag
+   put server_GetBinaryFile (shortFile) into someData
+   daemon_SendPNG socketID, someData, someETag
+   return "Sent PNG. Socket still open."
+end fedwiki_SendPNG

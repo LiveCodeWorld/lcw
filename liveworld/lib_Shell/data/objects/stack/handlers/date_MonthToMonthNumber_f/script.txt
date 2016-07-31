@@ -1,0 +1,12 @@
+function date_MonthToMonthNumber monthName
+    -- "Oct 10, 2006"
+    put char 1 to 3 of monthName into shortMonth
+    set the wholematches to true
+    return itemoffset(shortMonth, "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec")
+    
+    put the date into testDate
+    convert testDate to abbreviated date
+    put char 1 to 3 of monthName into word 1 of item 2 of testDate
+    convert testDate to dateItems
+    return item 2 of testDate
+end date_MonthToMonthNumber

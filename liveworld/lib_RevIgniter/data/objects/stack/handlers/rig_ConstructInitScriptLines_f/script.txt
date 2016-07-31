@@ -1,0 +1,35 @@
+function rig_ConstructInitScriptLines stackObjects
+   replace CR with comma in stackObjects
+   repeat for each item stackObject in stackObjects
+      -- get the short file of the library stack
+      set the itemdelimiter to slash
+      get the filename of stackObject
+      put item -1 of it into shortLibraryFile
+      set the itemdelimiter to comma
+      
+      -- start using stack (gAPPPATH & "stacks/lib_Audioboom.livecode")
+      put "stacks/" & shortLibraryFile into relPath
+      put "start using stack (gAPPPATH &" && kwote (relPath) & ")" into scriptLine
+      
+      put CR & scriptLine after scriptLines
+   end repeat
+   delete char 1 of scriptLines
+   return scriptLines
+   
+   -- old version that took the short files of scripts (shortLibPaths) as an input
+   replace CR with comma in shortLibPaths
+   repeat for each item shortLibPath in shortLibPaths
+      -- could do more checking that it is a valid stack here
+      if "." is not in shortLibPath then -- consider removing this hack
+         put ".livecode" after shortLibPath -- a crappy guess in case we've passed short pretty names
+      end if
+      
+      -- start using stack (gAPPPATH & "stacks/lib_Audioboom.livecode")
+      put "stacks/" & shortLibPath into relPath
+      put "start using stack (gAPPPATH &" && kwote (relPath) & ")" into scriptLine
+      
+      put CR & scriptLine after scriptLines
+   end repeat
+   delete char 1 of scriptLines
+   return scriptLines
+end rig_ConstructInitScriptLines

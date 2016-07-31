@@ -1,0 +1,28 @@
+function colour_HSVToRGB hsvColour
+    -- was "hsv_2RGB"
+    local rgb, i, f, p, q, t
+    
+    put item 1 of hsvColour into h
+    put item 2 of hsvColour into s
+    put item 3 of hsvColour into v
+    
+    set the numberformat to "0.###############"
+    divide s by 100
+    divide v by 100
+    if s is 0 then put v,v,v into rgb
+    else
+        divide h by 60
+        put trunc(h) into i
+        put h - i into f
+        put v * (1 - s) into p
+        put v * (1 - s * f) into q
+        put v * (1 - s * (1- f)) into t
+        if i is 0 then put v,t,p into rgb
+        if i is 1 then put q,v,p into rgb
+        if i is 2 then put p,v,t into rgb
+        if i is 3 then put p,q,v into rgb
+        if i is 4 then put t,p,v into rgb
+        if i is 5 then put v,p,q into rgb
+    end if
+    return round(item 1 of rgb * 255), round(item 2 of rgb * 255), round(item 3 of rgb * 255)
+end colour_HSVToRGB

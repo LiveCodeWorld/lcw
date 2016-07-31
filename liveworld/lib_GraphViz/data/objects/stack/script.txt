@@ -1,0 +1,253 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_GraphViz
+type: library
+version: 1.0
+copyright: David Bovill
+
+
+/* libOPN_GraphViz
+A library for interfacing with the GraphViz command line utitlites.
+
+What is the coordinate transformation between the graph bb and a .png image?
+
+1. The bb is expanded by 4 graph-units in all directions (pad) to allow for finite line widths.
+2. then it is zoomed and/or rotated according to -Gviewport, -Gsize, -Glandscape, -Gorientation options. 
+At the default scaling of 1:1, one graph unit = 1 point (1/72 inch).
+3. then it is paginated, if requested by -Gpage and if the output format supports it. Not the -Tpng renderer, yet.
+4. then a margin is added, -Gmargin, in absolute units (inches). The top/bottom margin can be set independently of the left/right margin.
+5. then it is converted to device units, according to -Gdpi, or a dpi value that is given by the output device, or a default that is provided by each render. There are separate dpi values for x and y to allow for non-square pixels. Some renderers invert the Y axis and need an offset to place the origin in the top left corner. The default dpi for -Tpng is 96dpi (approximating the resolution of most computer monitors) so this is where the scaling by 96/72 (4/3) comes from. 
+
+At the renderer api, plugins have a choice of coordinate representation:
+
+* coordinates in graph-units, and composite transformation data consisting of: scaling, rotation, and translation. (used by svg, cairo, ps, renderers)
+* coordinates pre-transformed into device units. 
+
+At present, most device-independent units are either inches or points, which we take as 72 points per inch. 
+*/
+
+
+--> Graph | Model
+-
+/*
+This model contains the data needed to determine how a graph is drawn from a given dot file.
+*/
+
+[[ _FetchHandler (graph_Model,g) ]]
+
+
+--> GraphViz
+-
+[[ _FetchHandler (graphviz_ColourOutline,f) ]]
+
+
+--> Dot
+-
+[[ _FetchHandler (dot_ConvertToXml,f) ]]
+
+[[ _FetchHandler (graph_DeconstructPropertyArray,c) ]]
+
+[[ _FetchHandler (graph_ConstructPropertyArray,c) ]]
+
+
+--> Dot
+-
+[[ _FetchHandler (dot_NormalizeDotCommand,c) ]]
+
+[[ _FetchHandler (dot_OutputFormats,f) ]]
+
+[[ _FetchHandler (dot_OutputMainFormats,f) ]]
+
+[[ _FetchHandler (dot_ImageFormats,f) ]]
+
+[[ _FetchHandler (dot_OutputImageFormats,f) ]]
+
+[[ _FetchHandler (dot_OutputTextFormats,f) ]]
+
+[[ _FetchHandler (dot_OutputStrangeFormats,f) ]]
+
+
+--> Dot | Overlay
+-
+[[ _FetchHandler (dot_ConstructOverlayArray,f) ]]
+
+
+--> Dot
+-
+[[ _FetchHandler (dot_TestDataFolder,f) ]]
+
+[[ _FetchHandler (dot_GetTestData,f) ]]
+
+[[ _FetchHandler (dot_SetTestData,c) ]]
+
+[[ _FetchHandler (dot_DeconstructTextResult,c) ]]
+
+[[ _FetchHandler (dot_GetLinkSection,f) ]]
+
+[[ _FetchHandler (dot_NormalizeNode,c) ]]
+
+[[ _FetchHandler (dot_Construct,f) ]]
+
+[[ _FetchHandler (dot_ConstructCluster,f) ]]
+
+[[ _FetchHandler (dot_ConstructSubgraph,f) ]]
+
+[[ _FetchHandler (dot_SubGraphContents,f) ]]
+
+[[ _FetchHandler (dot_SetGraphSectionOffsets,c) ]]
+
+
+--> Dot | Geometry
+-
+[[ _FetchHandler (dot_RectFromSize,f) ]]
+
+[[ _FetchHandler (dot_BboxSize,g) ]]
+
+[[ _FetchHandler (dot_InchSize,g) ]]
+
+[[ _FetchHandler (dot_TargetSizeLine,g) ]]
+
+[[ _FetchHandler (dot_ConvertGraphRect,f) ]]
+
+[[ _FetchHandler (dot_BboxSize,f) ]]
+
+[[ _FetchHandler (dot_GraphInchSize,f) ]]
+
+[[ _FetchHandler (dot_ConvertToInches,c) ]]
+
+[[ _FetchHandler (dot_ConvertToPngPixels,c) ]]
+
+[[ _FetchHandler (dot_ConvertDrawRect,f) ]]
+
+[[ _FetchHandler (dot_ReflectPoint,f) ]]
+
+
+--> Dot | Files
+-
+[[ _FetchHandler (dot_SaveAndDisplayImage,c) ]]
+
+
+--> Dot | Render
+-
+[[ _FetchHandler (dot_Render,f) ]]
+
+[[ _FetchHandler (dot_CheckResult,pf) ]]
+
+
+--> Dot | Node Defs
+-
+[[ _FetchHandler (dot_NodeDefFromDataArray,f) ]]
+
+[[ _FetchHandler (dot_NodeDefFromArray,f) ]]
+
+[[ _FetchHandler (dot_NodeDefLineFromArray,f) ]]
+
+[[ _FetchHandler (dot_AddParamToNodeDef,c) ]]
+
+[[ _FetchHandler (dot_ConstructDefLine,f) ]]
+
+
+--> Dot | Node Defs | ShapeFile
+-
+[[ _FetchHandler (dot_ConstructShapeDef,f) ]]
+
+[[ _FetchHandler (dot_ConstructShapeFileDefs,f) ]]
+
+[[ _FetchHandler (dot_ConstructGraphicDef,f) ]]
+
+[[ _FetchHandler (dot_ConstructShapeFileDef,f) ]]
+
+
+--> Dot | Node Defs | Poly
+-
+[[ _FetchHandler (dot_ConstructPolyDefs,f) ]]
+
+
+--> Dot | Node Defs | Defaults
+-
+[[ _FetchHandler (dot_ConstructDefaultNodeDefs,f) ]]
+
+[[ _FetchHandler (dot_ConstructDefaultEdgeDefs,f) ]]
+
+[[ _FetchHandler (dot_ConstructEdgeDefParams,f) ]]
+
+
+
+--> Dot | Formats
+-
+[[ _FetchHandler (dot_MakeSpringText,f) ]]
+
+
+--> Dot | Draw
+-
+[[ _FetchHandler (dot_MakeSpringImage,f) ]]
+
+[[ _FetchHandler (dot_MakeCircular,f) ]]
+
+[[ _FetchHandler (dot_MakeRadial,f) ]]
+
+[[ _FetchHandler (dot_MakeRadialImage,f) ]]
+
+
+
+--> Dot | Shell
+-
+[[ _FetchHandler (dot_DoImageMapShell,c) ]]
+  
+[[ _FetchHandler (dot_DoShell,f) ]]
+
+-- function dot_DoShell someFile, pDotCommand, pOutputFormat
+   dot_NormalizeDotCommand pDotCommand
+   if pImageFormat is empty then put "png" into pImageFormat
+   put graphViz_GetShellPath() into gvPath
+   
+   put gvPath & pDotCommand into someShell
+   if pOutputFormat is not empty then put space & "-T" & pOutputFormat after someShell
+   put space & quote & someFile & quote after someShell
+   
+   put shell(someShell) into gvResult
+   put dot_CheckResult(gvResult, "png", someShell) into shellResult
+   return shellResult
+end dot_DoShell
+
+[[ _FetchHandler (graphViz_GetShellPath,f) ]]
+
+[[ _FetchHandler (graphViz_SetShellPath,c) ]]
+
+
+--> Dot | Shell | Text
+-
+[[ _FetchHandler (graphViz_CreateCmapx,f) ]]
+
+
+--> Dot | Shell | Other
+-
+[[ _FetchHandler (dot_StripLeastConected,f) ]]
+
+[[ _FetchHandler (dot_ExtractConnected,f) ]]
+
+[[ _FetchHandler (dot_Biconected,f) ]]
+
+[[ _FetchHandler (dot_Tred,f) ]]
+
+[[ _FetchHandler (dot_UnFlatten,f) ]]
+
+[[ _FetchHandler (dot_MakeAcyclic,f) ]]
+
+[[ _FetchHandler (dot_AcyclicInfo,f) ]]
+
+
+--> Dot | Colours
+-
+[[ _FetchHandler (dot_RGBToHex,f) ]]
+  
+[[ _FetchHandler (dot_ConvertRevShape,f) ]]
+
+
+--> Dot | Utilities
+-
+[[ _FetchHandler (dot_EscapeQuotes,c) ]]
+
+[[ _FetchHandler (dot_QuoteNode,f) ]]
+

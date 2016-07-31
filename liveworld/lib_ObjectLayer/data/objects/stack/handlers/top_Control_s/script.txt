@@ -1,0 +1,10 @@
+setprop top_Control someObject
+   put the long id of the target into someGroup
+   if word 1 of someGroup is not "group" then return empty
+     
+   relayer someObject to back of someGroup
+   dispatch "refresh" to someGroup
+   
+   put the top_ControlNames of someGroup into topControlNames
+   return topControlNames
+end top_Control

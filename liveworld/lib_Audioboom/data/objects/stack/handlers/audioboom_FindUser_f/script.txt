@@ -1,0 +1,5 @@
+function audioboom_FindUser userName
+   put "users/?find[username]=" & userName into apiPath
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FindUser

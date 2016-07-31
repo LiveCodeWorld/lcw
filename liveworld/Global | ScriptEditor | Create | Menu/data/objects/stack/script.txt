@@ -1,0 +1,30 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | ScriptEditor | Create | Menu
+type: controller
+version: 0.2
+
+local LocalArray
+
+
+--> Global | ScriptEditor | Create | Menu
+-
+/*
+This menu is for creating standard script only stcks in the right library folders.
+*/
+
+[[ _FetchHandler (menu_CreateView,c) ]]
+
+[[ _FetchHandler (menu_CreateMenuStack,c) ]]
+
+[[ _FetchHandler (menu_CreateModel,c) ]]
+
+[[ _FetchHandler (menu_CreateBehavior,c) ]]
+
+[[ _FetchHandler (menu_CreateLibrary,c) ]]
+
+
+--> Global | ScriptEditor | Create | Menu | Disabled
+-
+[[ _FetchHandler (disabled_CreateView,g) ]]

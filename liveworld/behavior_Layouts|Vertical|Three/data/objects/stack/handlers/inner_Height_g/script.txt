@@ -1,0 +1,7 @@
+getprop inner_Height [pRect]
+   put the long id of the target into targetObject
+   if pRect is empty then put the rect of targetObject into pRect
+   put rect_GetInner (pRect, targetObject) into innerRect
+   put item 4 of innerRect - item 2 of innerRect into innerHeight
+   return innerHeight
+end inner_Height

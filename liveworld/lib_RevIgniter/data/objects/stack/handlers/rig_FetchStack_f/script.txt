@@ -1,0 +1,5 @@
+function rig_FetchStack shortFile, pServerURL
+   put rig_GetFolder ("stacks") & shortFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchStack

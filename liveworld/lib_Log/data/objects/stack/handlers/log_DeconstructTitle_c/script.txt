@@ -1,0 +1,5 @@
+command log_DeconstructTitle titleLine, @logTitle, @logDate
+   set the itemdelimiter to ":"
+   put item 1 of titleLine into logTitle
+   put item 2 of titleLine into logDate
+end log_DeconstructTitle

@@ -1,0 +1,5 @@
+function shell_GetBashProfileUrl
+    put $HOME & "/.profile" into someFile -- for Tiger?
+    -- put $HOME & "/.bash_profile" into someFile
+    return "file:" & someFile
+end shell_GetBashProfileUrl

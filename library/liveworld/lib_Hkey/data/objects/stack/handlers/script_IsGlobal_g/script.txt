@@ -1,0 +1,19 @@
+getprop script_IsGlobal [hKey]
+   -- should the handlers in this script be exported by default into the hkey handler library?
+   -- place a "getprop script_IsGlobal" in an object if you want to override the default behavior below
+   put the uRIP ["type"] of the target into scriptType
+   switch
+      case scriptType contains "library"
+         return true
+      case scriptType contains "model"
+         return true
+      case scriptType contains "behavior"
+         return true
+      case scriptType contains "front script"
+         return true
+      case scriptType contains "backscript"
+         return true
+      default
+         return false
+   end switch
+end script_IsGlobal

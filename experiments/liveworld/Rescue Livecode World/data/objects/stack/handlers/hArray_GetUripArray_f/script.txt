@@ -1,0 +1,8 @@
+function hArray_GetUripArray rObject, pKey
+   put hArray_GetObjectArray (rObject) into objectArray
+   if pKey is empty then
+      return objectArray ["metadata"]["uripArray"]
+   else
+      return objectArray ["metadata"]["uripArray"][pKey]
+   end if
+end hArray_GetUripArray

@@ -1,0 +1,14 @@
+on menu_RemoveMissingProjects
+   put git_GetProjectArray() into gitProjectArray   
+   repeat for each key gitFolder in gitProjectArray
+      put gitProjectArray [gitFolder]["project name"] into projectName
+      if there is a folder gitFolder then next repeat
+      
+      put "Remove project" && kwote (projectName) into someQuestion
+      answer someQuestion with "Cancel" or "OK"
+      if it is "Cancel" then next repeat
+      
+      delete variable gitProjectArray [gitFolder]
+   end repeat
+   git_SetProjectArray gitProjectArray
+end menu_RemoveMissingProjects

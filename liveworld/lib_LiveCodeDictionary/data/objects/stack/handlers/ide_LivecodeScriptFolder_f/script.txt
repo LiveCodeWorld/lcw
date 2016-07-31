@@ -1,0 +1,4 @@
+function ide_LivecodeScriptFolder
+   put revEnvironmentToolsPath() & "/Toolset/libraries/" into someFolder
+   return someFolder
+end ide_LivecodeScriptFolder

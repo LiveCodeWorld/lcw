@@ -1,0 +1,14 @@
+command text_ConstructLineChunk charNum, someText, @charOfLine, @wordOfLine, @itemOfLine, @lineNum
+    get char 1 to charNum of someText
+    if someText is empty then
+        put 1 into lineNum
+        put 1 into itemOfLine
+        put 1 into wordOfLine
+        put 1 into charOfLine
+    else
+        put the number of lines of it into lineNum
+        put the number of items of line lineNum of it into itemOfLine
+        put the number of words of item itemOfLine of line lineNum of it into wordOfLine
+        put the number of chars of line lineNum of it into charOfLine
+    end if
+end text_ConstructLineChunk

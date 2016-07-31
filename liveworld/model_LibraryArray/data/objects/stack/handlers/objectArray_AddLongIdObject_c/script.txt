@@ -1,0 +1,8 @@
+command objectArray_AddLongIdObject someObjects, @longIdObjectArray
+   repeat for each line someObject in someObjects
+      if exists(someObject) then
+         put the long id of someObject into longIDObject
+         put empty into longIdObjectArray [longIDObject]
+      end if
+   end repeat
+end objectArray_AddLongIdObject

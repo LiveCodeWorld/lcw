@@ -1,0 +1,25 @@
+command rss_Parse tRSSfeed, maxNum
+   -- was "rss_Parse"
+    if maxNum is empty then put 50 into maxNum
+    
+    if tRSSfeed is empty then exit rss_Parse
+    put 0 into newsID
+    set the wholematches to false
+    put replacetext(tRSSfeed,"[\t\n\r]"," ") into tRSSfeed
+     
+    put offset("<item>", tRSSfeed) into tStart
+    delete char 1 to (tStart - 1) of tRSSfeed
+    repeat until newsID > maxNum
+        add 1 to newsID
+        put offset("</item>",tRSSfeed) into tOffset
+        if (tOffset+0) is zero then exit repeat
+        put char 1 to (tOffset + 6) of tRSSfeed into tItem
+        
+        delete char 1 to (tOffset + 6) of tRSSfeed
+         
+        rss_DeconstructItem tItem, tTitle, tLink, tGuid, tDescription, tpubDate
+        put tLink into lstLinks[newsID]
+        put tTitle & cr after newsTitles
+    end repeat
+    delete char -1 of newsTitles
+end rss_Parse

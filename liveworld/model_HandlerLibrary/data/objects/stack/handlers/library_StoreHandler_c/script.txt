@@ -1,0 +1,11 @@
+command library_StoreHandler shortHkey, @someHandler
+   put library_HandlerFile (shortHkey, "script.txt", false) into someFile
+   if someHandler is empty then
+      delete file someFile
+      return empty
+   else
+      if word 1 of someHandler = "private" then delete word 1 of someHandler
+      put someHandler into url ("binfile:" & someFile)
+      return someFile
+   end if
+end library_StoreHandler

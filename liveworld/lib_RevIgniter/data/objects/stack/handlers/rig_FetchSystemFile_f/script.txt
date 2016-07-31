@@ -1,0 +1,5 @@
+function rig_FetchSystemFile shortStackFile, shortFolder, pServerURL  
+   put rig_GetSystemFolder (shortFolder) & shortStackFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchSystemFile

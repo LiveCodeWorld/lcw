@@ -1,0 +1,5 @@
+setprop body_ViewName vName
+   put the body_View of the target into bodyView
+   set the view_Swap of bodyView to vName
+   return the result
+end body_ViewName

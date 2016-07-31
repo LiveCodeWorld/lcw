@@ -1,0 +1,7 @@
+function rig_ListServerFiles someFolder
+   put rigGetFileNames (someFolder) into shortFiles
+   set the columndelimiter to CR
+   combine shortFiles by column
+   sort shortFiles
+   return shortFiles
+end rig_ListServerFiles

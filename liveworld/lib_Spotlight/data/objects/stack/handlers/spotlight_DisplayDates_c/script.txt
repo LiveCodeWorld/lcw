@@ -1,0 +1,13 @@
+on spotlight_DisplayDates someFile
+    -- does not change when copied
+    get "ItemAttributeChangeDate"
+    repeat for each item someItem in it
+        put someItem & ":" && spotlight_GetAttribute(someFile, someItem)
+    end repeat
+     
+    -- all change when copied!
+    get "FSCreationDate,FSContentChangeDate,ContentModificationDate,ContentModificationDate"
+    repeat for each item someItem in it
+        put someItem & ":" && spotlight_GetAttribute(someFile, someItem)
+    end repeat
+end spotlight_DisplayDates

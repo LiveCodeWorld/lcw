@@ -1,0 +1,6 @@
+getprop object_LocalID
+   put the long ID of the target into someObject
+   object_SetShortStackName someObject, mainStackStart, mainStackEnd
+   object_WithinStackReference someObject
+   return someObject
+end object_LocalID

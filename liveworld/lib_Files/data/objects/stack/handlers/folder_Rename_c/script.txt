@@ -1,0 +1,9 @@
+command folder_Rename fromFolder, toFolder, someMessage
+    svn_Move fromFolder, toFolder, someMessage
+    if matchchunk(the result, "svn: '(.*)' is not a working copy") then
+        rename folder fromFolder to toFolder
+        return the result
+    else
+        return the result
+    end if
+end folder_Rename

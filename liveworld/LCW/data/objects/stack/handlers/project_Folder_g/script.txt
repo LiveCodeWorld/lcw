@@ -1,0 +1,13 @@
+getprop project_Folder [folderName]
+   -- assumes the project home stack exists and is at the root of the project folder
+   set the itemdelimiter to slash
+   put the project_HomeStack of the target into projectHomeStack   
+   put the filename of projectHomeStack into standardFolder
+   put folderName into item -1 of standardFolder
+   if char -1 of standardFolder is not slash then put slash after standardFolder -- not required
+   if there is a folder standardFolder then
+      return standardFolder
+   else
+      return empty
+   end if
+end project_Folder

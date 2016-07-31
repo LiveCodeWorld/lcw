@@ -1,0 +1,149 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Search
+type: library
+version: 0.4
+
+/*
+This library is for searching things.
+
+An objectArray is short for an objectPropertyArray, 
+which is an array keyed by an objects name, containing object properties as an (array) value.
+
+That is objectArray's contain propArray's - or object property arrays as returned by "the properties of the target"
+*/
+
+
+--> Search | Props
+-
+[[ _FetchHandler (menu_ReIndex,g) ]]
+
+[[ _FetchHandler (script_GetSetHack,g) ]]
+
+[[ _FetchHandler (stack_MenuArray,g) ]]
+
+[[ _FetchHandler (stack_Search,g) ]]
+
+[[ _FetchHandler (search_Stack,g) ]]
+
+[[ _FetchHandler (search_Container,g) ]]
+
+[[ _FetchHandler (search_FlatContainer,g) ]]
+
+
+--> Search | Utils
+-
+/*
+Handy utilities built on top of the search library/
+*/
+
+[[ _FetchHandler (stack_ObjectsWithExternalBehavior,g) ]]
+
+[[ _FetchHandler (stack_ObjectsWithBehavior,g) ]]
+
+[[ _FetchHandler (stack_Behaviors,g) ]]
+
+[[ _FetchHandler (stack_BehaviorArray,g) ]]
+
+[[ _FetchHandler (stack_ViewObjects,g) ]]
+
+[[ _FetchHandler (stack_ViewNames,g) ]]
+
+[[ _FetchHandler (stack_ViewArray,g) ]]
+
+[[ _FetchHandler (object_Name,g) ]]
+
+[[ _FetchHandler (object_Views,g) ]]
+
+[[ _FetchHandler (object_SearchArray,g) ]]
+
+
+--> Search
+-
+[[ _FetchHandler (stackArray_SearchNestedBackground,c) ]]
+
+[[ _FetchHandler (stackArray_SearchNested,c) ]]
+     
+
+--> Search
+-
+[[ _FetchHandler (search_StackNames,f) ]]
+
+
+--> Object | Search | Stack | For Results
+-
+[[ _FetchHandler (search_Stack,c) ]]
+
+[[ _FetchHandler (search_StackForResults,f) ]]
+
+[[ _FetchHandler (search_StackAndSubstacks,c) ]]
+
+[[ _FetchHandler (search_SubStackForResult,c) ]]
+
+[[ _FetchHandler (search_ForValue,pc) ]]
+
+[[ _FetchHandler (search_ForResults,pc) ]]
+
+
+--> Object | Search | Stack | For Value
+-
+[[ _FetchHandler (search_StackForValue,f) ]]
+   
+[[ _FetchHandler (search_SubStackForValue,f) ]]
+
+[[ _FetchHandler (search_TestObject,pc) ]]
+
+
+--> OPN | Search
+-
+[[ _FetchHandler (opn_SearchLibraries,f) ]]
+
+[[ _FetchHandler (object_SearchGroupForProperty,f) ]]
+
+
+-->Search | Object | Index
+-
+[[ _FetchHandler (opn_ObjectSearch,f) ]]
+
+[[ _FetchHandler (object_SearchForProperty,f) ]]
+
+
+--> Search | Object | Group
+-
+[[ _FetchHandler (object_SearchGroup,f) ]]
+
+[[ _FetchHandler (object_SearchGroupElements,f) ]]
+
+[[ _FetchHandler (object_SearchGroupArray,f) ]]
+
+[[ _FetchHandler (objectArray_AddProperty,c) ]]
+
+[[ _FetchHandler (objectArray_SearchNested,c) ]]
+
+[[ _FetchHandler (objectArray_SearchNestedGroup,f) ]]
+
+[[ _FetchHandler (objectArray_SearchGroupForValue,c) ]]
+
+[[ _FetchHandler (objectArray_FlatSearchGroup,c) ]]
+
+-- private command objectArray_AddProperty @objectArray, containerObject, someProperty, pObjectKeyProperty, pControllerObject
+put object_GetCustomProperty (containerObject, someProperty, pControllerObject) into objectResult
+if pObjectKeyProperty is empty then
+   put objectResult into objectArray [containerObject]
+else
+   put the pObjectKeyProperty of containerObject into formattedObject
+   put objectResult into objectArray [formattedObject]
+end if
+end objectArray_AddProperty
+
+[[ _FetchHandler (object_GetCustomProperty,pf) ]]
+
+
+--> Object | Search | Group | For Value
+-
+[[ _FetchHandler (object_SearchGroupForValue,f) ]]
+
+[[ _FetchHandler (object_SearchGroupArrayForValue,f) ]]
+
+[[ _FetchHandler (object_SearchGroupElementsForValue,f) ]]

@@ -1,0 +1,5 @@
+function git_FileLogOutline someFile, pHowMany, pAllBranches
+   put git_FileLog (someFile, pHowMany, pAllBranches) into simpleLog
+   put git_LogLinkOutline (simpleLog) into someOutline
+   return someOutline
+end git_FileLogOutline

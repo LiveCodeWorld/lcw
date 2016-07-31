@@ -1,0 +1,5 @@
+function hap_ListImageFiles recordArray 
+   put hap_GetImageFolder (recordArray) into relFolderPath
+   put hap_ListFiles (relFolderPath) into fileNamesList
+   return fileNamesList
+end hap_ListImageFiles

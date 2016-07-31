@@ -1,0 +1,11 @@
+command rescue_Me
+   put _importantView() into importantView
+   -- put the selected_LongStackFiles of importantView into pImportantPaths
+   put the index_LongStackFiles of importantView into importantPaths
+   
+   know_Me importantPaths
+   put the result into stackFileTable
+   
+   put the stackFile_ErrorArray of me into resultArray
+   display_Array resultArray, "the stackFile_ErrorArray"
+end rescue_Me

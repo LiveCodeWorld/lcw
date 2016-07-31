@@ -1,0 +1,27 @@
+function folder_ConstructArray someFolder
+   local dataArray
+   folder_Format someFolder
+   put the directory into oDirectory
+   set the directory to someFolder
+   
+   put the folders into newShortFolders
+   if includeInvisible is not false then filter newShortFolders without ".*"
+   -- what else needs escaping?
+   replace "/" with ":" in newShortFolders
+   
+   repeat for each line shortFolder in newShortFolders
+      put someFolder & shortFolder & "/" into nestedFolder
+      set the directory to nestedFolder
+      put the files into shortFiles
+      if includeInvisible is not false then filter shortFiles without ".*"
+      repeat for each line shortFile in shortFiles
+         put nestedFolder & shortFile into filePath
+         
+         put dataArray [shortFolder] into fileIndex
+         line_Insert shortFile, fileIndex
+         put fileIndex into dataArray [shortFolder]
+      end repeat
+   end repeat
+   set the directory to someFolder
+   return dataArray
+end folder_ConstructArray

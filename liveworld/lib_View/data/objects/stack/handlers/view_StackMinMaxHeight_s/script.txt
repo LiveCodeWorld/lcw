@@ -1,0 +1,10 @@
+setprop view_StackMinMaxHeight minMaxList
+    put item 1 of minMaxList into maxStackHeight
+    if maxStackHeight is empty then put 65535 into maxStackHeight
+    
+    put item 2 of minMaxList into minStackHeight
+    if minStackHeight is empty then put 32 into minStackHeight
+    
+    set the maxheight of this stack to maxStackHeight
+    set the minheight of this stack to minStackHeight
+end view_StackMinMaxHeight

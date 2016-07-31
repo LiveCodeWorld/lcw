@@ -1,0 +1,6 @@
+getprop view_LivePropertyMenu
+   put the long id of the target into targetObject
+   local liveMenu, publicProps
+   extractViewPropertyMenu targetObject, liveMenu, publicProps
+   return liveMenu
+end view_LivePropertyMenu

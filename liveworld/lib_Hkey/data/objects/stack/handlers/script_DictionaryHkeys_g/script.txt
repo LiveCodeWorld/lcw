@@ -1,0 +1,6 @@
+getprop script_DictionaryHkeys
+   put the long id of the target into someObject
+   put the script of someObject into someScript
+   put script_ExtractDictionaryHkeys (someScript, someObject) into hKeys
+   return hKeys
+end script_DictionaryHkeys

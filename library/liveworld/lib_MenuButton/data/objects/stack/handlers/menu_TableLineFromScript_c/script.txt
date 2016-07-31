@@ -1,0 +1,67 @@
+command menu_TableLineFromScript mVersion, mTitle, comLine, scriptObject, someScript, @mLine, @mTableLine, @mFormatProp, @submenuProp, @paramProp, @fixedSubMenu 
+   -- see "menu_ConvertTable" for counterpart that creates menu from the stored mTable created here
+   
+   menu_DeconstructCommandLine mVersion, comLine, mCommand, mPrefix, mSuffix, customParam
+   put empty into mItemType
+   switch
+      case mSuffix is empty
+         put "-" into mLine
+         put mLine into mTableLine
+         put empty into mFormatProp
+         put empty into submenuProp
+         put empty into paramProp
+         put empty into fixedSubMenu
+         return empty
+      case mPrefix is "submenu"
+         -- see function menu_ConstructSubmenuTableLine for how it should be done
+         put "submenu" into mItemType
+         put menu_GetDefaultController (mTitle, scriptObject, true) into mController
+         
+         extractInsertedTitle mCommand, mController, someScript, subMenuTitle, customControllerParam, dynamicTitleProp, mLine, pigeon, mItemType
+         
+         -- find subMenuController
+         put menu_GetDefaultController (subMenuTitle, scriptObject, true) into subMenuController
+         put revRuggedID (subMenuController) into subMenuController
+         
+         put "disabled_" & mSuffix into mFormatProp
+         if script_GetGetProp (mFormatProp, someScript) is empty then put empty into mFormatProp
+         
+         put text_SplitCaps (mSuffix) into mLine
+         put menu_ConstructTableLine (mController, dynamicTitleProp, mTitle, mLine, mFormatProp, mItemType, subMenuTitle, subMenuController) into mTableLine
+         return mItemType
+      case mPrefix is "insert"
+         put "insert" into mItemType
+         put menu_GetDefaultController (mTitle, scriptObject, true) into mController
+         
+         extractInsertedTitle mCommand, mController, someScript, insertedMenuTitle, customControllerParam, dynamicTitleProp, mLine, pigeon, mItemType
+         
+         if pigeon is empty then -- the number of items of insertedMenuTitle = 1 then
+            -- it's a whole menu to insert
+            -- could insert the whole thing into the table now rather than late with "menu_CovertTable"
+            
+            put "disabled_" & mSuffix into mFormatProp
+            if script_GetGetProp (mFormatProp, someScript) is empty then put empty into mFormatProp
+            
+            -- find inserted mControllers
+            put menu_GetDefaultController (insertedMenuTitle, scriptObject, true) into insertedMenuController
+            put revRuggedID (insertedMenuController) into insertedMenuController
+            put menu_ConstructTableLine (mController, dynamicTitleProp, mTitle, "insert", mFormatProp, mItemType, insertedMenuTitle, insertedMenuController) into mTableLine
+         else
+            -- this is a single menu script item!
+            put menu_GetDefaultController (insertedMenuTitle, scriptObject, true) into insertedMenuController
+            put revRuggedID (insertedMenuController) into insertedMenuController
+            put menu_ConstructTableLine (mController, dynamicTitleProp, mTitle, mLine, mFormatProp, "inserted", insertedMenuTitle, insertedMenuController) into mTableLine
+         end if
+         return "insert"
+      default
+         put menu_GetDefaultController (mTitle, scriptObject, true) into mController
+         if exists(mController) is false then
+            put "Cannot find Global menu" && kwote(mTitle) & "!" into someError
+            opn_Notify someError, true
+            -- put menu_GetDefaultController (mTitle, scriptObject, true) into mController
+            return mItemType
+         end if
+         menu_DefaultTableLine mVersion, comLine, mCommand, mSuffix, customParam, someScript, mController, mTitle, mFormatProp, mLine, mTableLine, mItemType, submenuProp, paramProp, fixedSubMenu
+         return mItemType
+   end switch
+end menu_TableLineFromScript

@@ -1,0 +1,47 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Array_Menu
+type: controller
+version: 0.1
+
+
+--> Menu | Props
+-
+-- getprop menu_Controller
+return the name of stack "behavior_DisplayArray"
+end menu_Controller
+
+
+--> Global | Array | Menu
+-
+/*
+Menus in behaviors are a bit odd - as "me" does not work
+*/
+
+[[ _FetchHandler (menu_TestArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TreeBehavior,c) ]]
+
+[[ _FetchHandler (menu_Toplevel,c) ]]
+
+[[ _FetchHandler (menu_SortType,c) ]]
+
+
+--> Global | Array | Menu | Props
+-
+[[ _FetchHandler (tree_SortType,g) ]]
+
+[[ _FetchHandler (tree_SortTypes,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (_displaySelectedValue,pc) ]]
+
+
+
+

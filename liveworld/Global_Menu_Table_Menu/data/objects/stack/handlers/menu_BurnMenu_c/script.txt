@@ -1,0 +1,7 @@
+on menu_BurnMenu mTarget
+   put rev_ScriptObject() into mController
+   put the mobile_Name of mController into mController
+   
+   put the mobile_Name of mTarget into mTarget
+   put the menu_Button of mTarget
+end menu_BurnMenu

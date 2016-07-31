@@ -1,0 +1,3 @@
+function hkey_CallsFile hKey, pDontCreate
+   return hkey_Folder (hKey, pDontCreate) & "links.txt"
+end hkey_CallsFile

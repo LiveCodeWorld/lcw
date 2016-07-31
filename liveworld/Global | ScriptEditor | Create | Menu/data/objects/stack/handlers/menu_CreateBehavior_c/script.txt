@@ -1,0 +1,8 @@
+on menu_CreateBehavior scriptObject
+   put "Choose a name for your script-only behavior stack...." into someQuestion
+   put the script_MetaData ["name"] of scriptObject into scriptName
+   if scriptName is empty then put "Example" into scriptName
+   put "behavior_" & scriptName into suggestedAnswer
+   
+   lcw_CreateLibrary "behavior", someQuestion, suggestedAnswer
+end menu_CreateBehavior

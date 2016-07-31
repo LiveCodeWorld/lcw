@@ -1,0 +1,17 @@
+function ccc_ConstructVideoHtml cccArray 
+   put cccArray ["media"]["en-de"] into mediaArray
+   if mediaArray is not an array then put cccArray ["media"]["en"] into mediaArray
+   
+   -- put keys (mediaArray) into videoTypes
+   -- get mp4 first as it works on iOS
+   put "MP4 (HD),mp4,WEBM (HD),webm" into videoTypes
+   repeat for each item videoType in videoTypes
+      put mediaArray [videoType] into videoURL
+      if videoURL is not empty then exit repeat
+   end repeat
+   
+   put html_ConstructVideoTag (videoURL, videoType, 420, true) into someHTML
+   put ccc_ConstructVideoCaption (cccArray) after someHTML
+   
+   return someHTML
+end ccc_ConstructVideoHtml

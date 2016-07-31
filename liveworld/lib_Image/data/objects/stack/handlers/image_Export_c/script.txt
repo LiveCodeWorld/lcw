@@ -1,0 +1,40 @@
+command image_Export imageObject, pSavedFile, pImageFileType
+   put the short id of imageObject into imageID
+   put the stack_Object of imageObject into stackObject
+   put the defaultstack into oStack
+   set the defaultstack to stackObject
+   
+   if pSavedFile is empty then
+      put merge("Export this image as a [[imageFileType]]...") into someComment
+      ask file someComment
+      put it into pSavedFile
+      if pSavedFile is empty then exit to top
+   end if
+   
+   if the platform is MacOS then
+      put the filetype into oFileType
+   end if
+   
+   switch pImageFileType
+      case "JPG"
+         set the filetype to "prvwJPEG"
+         export image id imageID to file pSavedFile as JPEG 
+         break
+      case "JPEG"
+         set the filetype to "prvwJPEG"
+         export image id imageID to file pSavedFile as JPEG 
+         break
+      case "GIF"
+         export image id imageID to file pSavedFile as GIF 
+         break
+      default
+         set the filetype to "prvwPNGf"
+         export image id imageID to file pSavedFile as PNG 
+   end switch
+   
+   if the platform is MacOS then
+      set the filetype to oFileType
+   end if
+   set the defaultstack to oStack
+   return pSavedFile
+end image_Export

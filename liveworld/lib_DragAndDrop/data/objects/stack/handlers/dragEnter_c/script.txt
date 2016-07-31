@@ -1,0 +1,18 @@
+on dragEnter
+   if drag_GetGlobalStatus() is true then
+      put the dragdestination into dropTarget
+      put the dragsource into gDragSource
+      switch
+         case gDragSource = dropTarget
+            set the dragAction to "none"
+            break
+         case the view_Name of dropTarget is empty and word 1 of the owner of dropTarget = "card"
+            set the dragAction to "copy"
+            break
+         default
+            -- it's a view
+            set the dragAction to "link"
+      end switch
+   end if
+   pass dragEnter
+end dragEnter

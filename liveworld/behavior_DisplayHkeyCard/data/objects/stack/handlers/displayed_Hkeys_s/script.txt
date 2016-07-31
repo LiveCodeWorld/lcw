@@ -1,0 +1,13 @@
+setprop displayed_Hkeys [libraryOrProject] hKeys
+   lock screen
+   if libraryOrProject = "project" then
+      set the display_ProjectHandlers of me to true
+      put project_ConstructDisplayDataArray (hKeys) into dataArray
+   else
+      set the display_ProjectHandlers of me to false
+      put library_ConstructDisplayDataArray (hKeys) into dataArray
+   end if
+   put line 1 of hKeys into hKey
+   display_HkeyDataArray hKey, dataArray
+   unlock screen
+end displayed_Hkeys

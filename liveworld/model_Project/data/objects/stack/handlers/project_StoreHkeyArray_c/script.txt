@@ -1,0 +1,7 @@
+command project_StoreHkeyArray hKey, hkeyArray, pOverlayName, pMainstackHash, pGraphStyle
+   -- store hKeyArray in hkey project metadata folder
+   if pOverlayName is empty then put "hierarchical" into pOverlayName
+   put project_HandlerMetadataFolder (hKey) into overlayFolder
+   overlay_SetLinkArray overlayFolder, hkeyArray, pOverlayName, pGraphStyle, pMainstackHash
+   return hkeyArray
+end project_StoreHkeyArray

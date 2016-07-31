@@ -1,0 +1,8 @@
+command export_Script pAutoCommit, pObject
+   -- same as when pressing compile, so may do other fancy stuff liek index menus
+   if pObject is empty then put the long id of the target into pObject
+   put the script of pObject into someScript
+   set the exported_Script [pAutoCommit] of pObject to someScript
+   put the result into scriptFile
+   return scriptFile
+end export_Script

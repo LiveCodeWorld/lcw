@@ -1,0 +1,337 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 236 2553 236 2553 0 ",
+		bb="0,0,2553,236",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph pf {
+		n12		 [URL="unicodeEscapes%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 1983 106 66.67 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1983 101.8 0 89.41 14 -unicodeEscapes ",
+			height=0.5,
+			label=unicodeEscapes,
+			pos="1983,106",
+			width=1.8495];
+		n3		 [URL="utf8encode%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 1317 34 49.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1317 29.8 0 62.19 10 -utf8encode ",
+			height=0.5,
+			label=utf8encode,
+			pos="1317,34",
+			width=1.372];
+		n2		 [URL="swapEndianness%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 2235 34 68.62 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2235 29.8 0 92.54 14 -swapEndianness ",
+			height=0.5,
+			label=swapEndianness,
+			pos="2235,34",
+			width=1.9045];
+		n13		 [URL="json.encodeValue%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 2246 180 72.47 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2246 175.8 0 98.36 16 -json.encodeValue ",
+			height=0.5,
+			label="json.encodeValue",
+			pos="2246,180",
+			width=2.0065];
+		n1		 [URL="json.toUtf8%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 2235 106 50.3 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2235 101.8 0 63.39 11 -json.toUtf8 ",
+			height=0.5,
+			label="json.toUtf8",
+			pos="2235,106",
+			width=1.393];
+		n19		 [URL="json.encodeString%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 535 106 73.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 535 101.8 0 100.71 17 -json.encodeString ",
+			height=0.5,
+			label="json.encodeString",
+			pos="535,106",
+			width=2.0478];
+		n20		 [URL="json.decode%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 2104 180 52.2 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2104 175.8 0 66.48 11 -json.decode ",
+			height=0.5,
+			label="json.decode",
+			pos="2104,180",
+			width=1.4472];
+		n21		 [URL="utf8decode%2Cpf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#000000 e 2117 106 49.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2117 101.8 0 62.19 10 -utf8decode ",
+			height=0.5,
+			label=utf8decode,
+			pos="2117,106",
+			width=1.372];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n11		 [URL="sitemap_EntityEscape%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1945 180 88.88 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1945 175.8 0 124.41 20 -sitemap_EntityEscape ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=sitemap_EntityEscape,
+			pos="1945,180",
+			style=filled,
+			width=2.4637];
+		n16		 [URL="xml_SetTagSafe%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1770 180 68.36 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1770 175.8 0 92.33 14 -xml_SetTagSafe ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=xml_SetTagSafe,
+			pos="1770,180",
+			style=filled,
+			width=1.9009];
+		n17		 [URL="text_UnixToMac%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1613 180 70.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1613 175.8 0 95.44 14 -text_UnixToMac ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_UnixToMac,
+			pos="1613,180",
+			style=filled,
+			width=1.9554];
+		n10		 [URL="xml_Escape%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1399 106 53.15 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1399 101.8 0 68.42 10 -xml_Escape ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=xml_Escape,
+			pos="1399,106",
+			style=filled,
+			width=1.4813];
+		n7		 [URL="text_Utf8Encode%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1828 106 70.53 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1828 101.8 0 95.63 15 -text_Utf8Encode ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_Utf8Encode,
+			pos="1828,106",
+			style=filled,
+			width=1.9588];
+		n6		 [URL="text_Utf8Decode%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1454 180 71.01 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1454 175.8 0 96.41 15 -text_Utf8Decode ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_Utf8Decode,
+			pos="1454,180",
+			style=filled,
+			width=1.9724];
+		n4		 [URL="xml_UnEscape%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1301 180 64.27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1301 175.8 0 85.53 12 -xml_UnEscape ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=xml_UnEscape,
+			pos="1301,180",
+			style=filled,
+			width=1.7815];
+		n9		 [URL="xml_SafeEncodeNodeContents%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1098 180 121.23 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1098 175.8 0 175.74 26 -xml_SafeEncodeNodeContents ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=xml_SafeEncodeNodeContents,
+			pos="1098,180",
+			style=filled,
+			width=3.3643];
+		n8		 [URL="text_PListEscape%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 887 180 71.51 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 887 175.8 0 97.2 16 -text_PListEscape ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_PListEscape,
+			pos="887,180",
+			style=filled,
+			width=1.9863];
+		n22		 [URL="text_MacToUnix%2Cc%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 727 180 70.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 727 175.8 0 95.44 14 -text_MacToUnix ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_MacToUnix,
+			pos="727,180",
+			style=filled,
+			width=1.9554];
+	}
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n14		 [URL="kwote%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2374 106 31.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2374 101.8 0 34.21 5 -kwote ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=kwote,
+			pos="2374,106",
+			style=filled,
+			width=0.88108];
+		n5		 [URL="text_SwapEOL%2Cf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 574 180 64.76 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 574 175.8 0 86.32 12 -text_SwapEOL ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_SwapEOL,
+			pos="574,180",
+			style=filled,
+			width=1.7953];
+		n18		 [URL="xml_EncodeString%2Cf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 415 180 76.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 415 175.8 0 104.99 16 -xml_EncodeString ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=xml_EncodeString,
+			pos="415,180",
+			style=filled,
+			width=2.1229];
+		n15		 [URL="%A5%A5%A5%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2510 106 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2510 101.8 0 21 3 -еее ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=еее,
+			pos="2510,106",
+			style=filled,
+			width=0.75];
+		n23		 [URL="text_Utf8ToHtml%2Cf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 249 180 71.27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 249 175.8 0 97.01 15 -text_Utf8ToHtml ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_Utf8ToHtml,
+			pos="249,180",
+			style=filled,
+			width=1.9829];
+		n24		 [URL="json_Utf8Encode%2Cf%2Cstack+%22lib_Encoding%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 88 180 72 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 88 175.8 0 97.98 15 -json_Utf8Encode ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=json_Utf8Encode,
+			pos="88,180",
+			style=filled,
+			width=1.9999];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#ff0000 C 7 -#ffa500 P 4 2475 80 2475 154 2545 154 2545 80 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2510 138.8 0 45.12 7 -Missing ",
+			bb="2475,80,2545,154",
+			color=red,
+			fillcolor=orange,
+			label=Missing,
+			lheight=0.19,
+			lp="2510,143",
+			lwidth=0.63,
+			style=filled
+		];
+		n15;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 2334 80 2334 154 2467 154 2467 80 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2400.5 138.8 0 117.59 18 -stack \"lib_Common\" ",
+			bb="2334,80,2467,154",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Common\"",
+			lheight=0.19,
+			lp="2400.5,143",
+			lwidth=1.63,
+			style=filled
+		];
+		n14;
+	}
+	subgraph cluster3 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 8 8 228 2326 228 2326 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1167 212.8 0 119.13 20 -stack \"lib_Encoding\" ",
+			bb="8,8,2326,228",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Encoding\"",
+			lheight=0.19,
+			lp="1167,217",
+			lwidth=1.65,
+			style=filled
+		];
+		n12;
+		n3;
+		n2;
+		n13;
+		n1;
+		n1 -> n3		 [_draw_="c 7 -#000000 B 7 2206.97 90.99 2197.1 86.69 2185.78 82.45 2175 80 2022.65 45.36 1545.09 37.28 1376.59 35.49 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1376.45 31.98 1366.42 35.38 1376.38 38.98 ",
+			pos="e,1366.4,35.381 2207,90.988 2197.1,86.691 2185.8,82.452 2175,80 2022.6,45.356 1545.1,37.278 1376.6,35.486"];
+		n1 -> n2		 [_draw_="c 7 -#000000 B 4 2235 87.7 2235 79.98 2235 70.71 2235 62.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2238.5 62.1 2235 52.1 2231.5 62.1 ",
+			pos="e,2235,52.104 2235,87.697 2235,79.983 2235,70.712 2235,62.112"];
+		n19;
+		n19 -> n3		 [_draw_="c 7 -#000000 B 4 603.03 98.91 754.56 85.35 1117.63 52.85 1259.15 40.18 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1259.7 43.64 1269.35 39.27 1259.07 36.67 ",
+			pos="e,1269.3,39.266 603.03,98.91 754.56,85.346 1117.6,52.846 1259.1,40.179"];
+		n20;
+		n20 -> n12		 [_draw_="c 7 -#000000 B 7 2077.23 164.4 2071.2 161.04 2064.86 157.44 2059 154 2044.97 145.77 2029.69 136.4 2016.54 128.21 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2018.14 125.08 2007.81 122.75 2014.43 131.02 ",
+			pos="e,2007.8,122.75 2077.2,164.4 2071.2,161.04 2064.9,157.44 2059,154 2045,145.77 2029.7,136.4 2016.5,128.21"];
+		n21;
+		n20 -> n21		 [_draw_="c 7 -#000000 B 4 2107.08 161.94 2108.56 153.72 2110.38 143.66 2112.05 134.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2115.52 134.9 2113.85 124.44 2108.63 133.66 ",
+			pos="e,2113.9,124.44 2107.1,161.94 2108.6,153.72 2110.4,143.66 2112.1,134.41"];
+		n11;
+		n10;
+		n11 -> n10		 [_draw_="c 7 -#000000 B 10 1882.13 167.22 1870.48 165.29 1858.39 163.45 1847 162 1803.21 156.44 1791.89 158.73 1748 154 1645.23 142.94 1525.98 \
+125.99 1456.85 115.75 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1457.01 112.24 1446.6 114.23 1455.98 119.16 ",
+			pos="e,1446.6,114.23 1882.1,167.22 1870.5,165.29 1858.4,163.45 1847,162 1803.2,156.44 1791.9,158.73 1748,154 1645.2,142.94 1526,125.99 \
+1456.8,115.75"];
+		n7;
+		n11 -> n7		 [_draw_="c 7 -#000000 B 4 1918.45 162.66 1901.92 152.49 1880.47 139.29 1862.61 128.3 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1863.99 125.04 1853.64 122.78 1860.32 131 ",
+			pos="e,1853.6,122.78 1918.5,162.66 1901.9,152.49 1880.5,139.29 1862.6,128.3"];
+		n16;
+		n17;
+		n6;
+		n4;
+		n9;
+		n9 -> n10		 [_draw_="c 7 -#000000 B 4 1158.91 164.43 1214.1 151.23 1294.57 131.98 1346.86 119.47 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1347.69 122.87 1356.6 117.14 1346.06 116.06 ",
+			pos="e,1356.6,117.14 1158.9,164.43 1214.1,151.23 1294.6,131.98 1346.9,119.47"];
+		n8;
+		n22;
+		n5;
+		n18;
+		n23;
+		n24;
+		n24 -> n19		 [_draw_="c 7 -#000000 B 7 140.2 167.58 149.76 165.62 159.67 163.68 169 162 270.02 143.82 387.47 126.92 461.52 116.77 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 462.24 120.21 471.67 115.39 461.29 113.27 ",
+			pos="e,471.67,115.39 140.2,167.58 149.76,165.62 159.67,163.68 169,162 270.02,143.82 387.47,126.92 461.52,116.77"];
+	}
+	n13 -> n14	 [_draw_="c 7 -#000000 B 7 2299.36 167.75 2309.96 164.26 2320.68 159.76 2330 154 2339.8 147.94 2348.84 139.14 2356.14 130.79 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2358.89 132.96 2362.58 123.03 2353.5 128.49 ",
+		pos="e,2362.6,123.03 2299.4,167.75 2310,164.26 2320.7,159.76 2330,154 2339.8,147.94 2348.8,139.14 2356.1,130.79"];
+	n13 -> n15	 [_draw_="c 7 -#000000 B 7 2317.27 176.84 2372.99 174.1 2445.18 167.92 2471 154 2480.66 148.79 2488.88 140.11 2495.25 131.62 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2498.18 133.54 2500.99 123.33 2492.42 129.56 ",
+		pos="e,2501,123.33 2317.3,176.84 2373,174.1 2445.2,167.92 2471,154 2480.7,148.79 2488.9,140.11 2495.3,131.62"];
+}

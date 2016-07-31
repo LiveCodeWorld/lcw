@@ -1,0 +1,16 @@
+getprop view_IsOld
+   put the long id of the target into someView
+   
+   put the object_Version of someView into thisVersion
+   put the view_Template of someView into libraryObject
+   if exists (libraryObject) is false then return "Error: library object does not exist. Maybe target is not a view?"
+   
+   put the object_Version of libraryObject into libraryVersion
+   if thisVersion > libraryVersion then
+      return false
+   else if thisVersion = libraryVersion then
+      return empty
+   else
+      return true
+   end if
+end view_IsOld

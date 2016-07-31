@@ -1,0 +1,4 @@
+on menu_DisplayDependencyObjectArray scriptObject
+   put the project_DependencyStackArray of scriptObject into depObjectArray
+   display_Array depObjectArray
+end menu_DisplayDependencyObjectArray

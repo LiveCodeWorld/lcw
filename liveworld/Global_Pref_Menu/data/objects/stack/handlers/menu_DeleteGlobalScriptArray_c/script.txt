@@ -1,0 +1,6 @@
+on menu_DeleteGlobalScriptArray mTarget, hkeyArrayKey
+   opn_Answer merge ("Are you sure you want to remove ths key '[[hkeyArrayKey]]' of the global variable gHkey_Array from memory?")
+   global gHkey_Array
+   delete variable gHkey_Array [opnKey]
+   opn_Notify merge("Deleted key '[[hkeyArrayKey]]' of global variable gHkey_Array.")
+end menu_DeleteGlobalScriptArray

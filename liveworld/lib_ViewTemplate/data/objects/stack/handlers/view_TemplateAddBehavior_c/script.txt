@@ -1,0 +1,89 @@
+command view_TemplateAddBehavior viewTemplate, pEditScripts
+   put the view_Name of viewTemplate into vName
+   if vName is empty then
+      put "The view template has not view_Name set!"
+      put viewTemplate
+      answer warning someWarning
+      breakpoint
+      return viewTemplate
+   end if
+   
+   put the stack_Object of viewTemplate into viewTemplateStack
+   put the defaultstack into oDefaultStack
+   set the defaultstack to viewTemplateStack
+   
+   if there is a button "View Behavior" of card "View Behavior" then
+      -- don't create if it already exists
+      set the defaultstack to oDefaultStack
+      return the long id of button "View Behavior" of card "View Behavior"
+   end if
+   
+   -- now fetch an appropriate default template behavior script
+   put the behavior of viewTemplate into oldBehavior
+   if exists(oldBehavior) then
+      put the script of oldBehavior into templateBehaviorScript
+   else 
+      put the script of viewTemplate into templateBehaviorScript
+      if the revAvailableHandlers of viewTemplate is empty then
+         put the template_DefaultScript ["view behavior"] of viewTemplate into templateBehaviorScript
+         put script_GetMetadataArray (templateBehaviorScript) into uRipArray -- ugly, could get from above
+         urip_AddDefaults uRipArray, vName, "view behavior"
+      else
+         put script_GetMetadataArray (templateBehaviorScript) into uRipArray
+         urip_AddDefaults uRipArray, vName, "view behavior"
+         script_SetMetadataArray templateBehaviorScript, uRipArray
+      end if
+   end if
+   
+   lock screen
+   --
+   put the stack_Object of viewTemplate into viewTemplateStack
+   set the defaultstack to viewTemplateStack
+   if exists (card "View Behavior") then
+      go to card "View Behavior"
+   else
+      create card "View Behavior"
+      repeat for each line gID in the sharedgroupIDs of this card
+         -- in case the template is a shared gorup or background
+         remove group id gID from this card
+      end repeat
+   end if
+   
+   create button "View Behavior"
+   put it into createdButton
+   
+   put vName && "behavior" into someLabel
+   set the label of createdButton to someLabel
+   set the width of createdButton to (the formattedwidth of createdButton + 12)
+   set the topleft of createdButton to "50,50"
+   
+   set the script of createdButton to templateBehaviorScript
+   set the customproperties ["uRIP"] of createdButton to uRipArray
+   object_AddToGlobalArray tObject
+   
+   put "view" into uRipArray ["type"]
+   put script_ConstuctMetaDataHeader (uRipArray) into newTemplateScript
+   
+   set the behavior of viewTemplate to createdButton
+   set the script of viewTemplate to newTemplateScript
+   -- set the view_Name ["view"] of viewTemplate to vName
+   set the customproperties ["uRIP"] of viewTemplate to uRipArray
+   
+   get the view_IsTemplate of viewTemplate
+   object_AddToGlobalArray viewTemplate
+   
+   go to card 1
+   --
+   unlock screen
+   
+   if pEditScripts is not false then
+      edit the script of viewTemplate
+      edit the script of createdButton
+      if the shiftKey is "Down" then
+         put view_ConstructBehaviorOutline() into viewFiles
+         display_Outline viewFiles, "Behavior outline"
+      end if
+   end if
+   set the defaultstack to oDefaultStack
+   return createdButton
+end view_TemplateAddBehavior

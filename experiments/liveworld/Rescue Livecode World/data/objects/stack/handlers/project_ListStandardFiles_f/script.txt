@@ -1,0 +1,13 @@
+function project_ListStandardFiles pImportantPaths
+   put "model,view,controller,library,behavior,library stacks" into folderNames
+   repeat for each item folderName in folderNames
+      put lcw_ListStackPaths (folderName) & CR after longFiles
+   end repeat
+   delete char -1 of longFiles
+   
+   if pImportantPaths is not empty then
+      put pImportantPaths & CR before longFiles
+   end if
+   sort longFiles
+   return word 1 to -1 of longFiles
+end project_ListStandardFiles

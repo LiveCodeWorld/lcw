@@ -1,0 +1,3 @@
+function shell_ConvertHtmlToXHTML  someHTML
+   return shell_Tidy (someHTML, "-asxhtml")
+end shell_ConvertHtmlToXHTML

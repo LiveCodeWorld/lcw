@@ -1,0 +1,5 @@
+on menu_SetFooterHeight mTarget
+   put javascript_ConstructFooterHeight () into someJavascript
+   put the browser_Widget of mTarget into browserWidget
+   do someJavascript in browserWidget
+end menu_SetFooterHeight

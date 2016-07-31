@@ -1,0 +1,12 @@
+getprop view_InsideViews [viewStem]
+   put the long id of the target into containerObject
+   put the number of chars of viewStem into maxNum
+   repeat with controlNum = 1 to the number of controls in containerObject
+      put the long id of control controlNum of containerObject into testObject
+      if char 1 to maxNum of the view_Name of testObject =  viewStem then
+         put testObject & CR after foundObjects
+      end if
+   end repeat
+   delete char -1 of foundObjects
+   return foundObjects
+end view_InsideViews

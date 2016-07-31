@@ -1,0 +1,5 @@
+function library_GetHandlerDatabaseMetadata
+   put library_FetchHandlerDatabaseArray() into handlerDatabaseArray
+   put handlerDatabaseArray ["metadata"] into dbMetaData
+   return dbMetaData
+end library_GetHandlerDatabaseMetadata

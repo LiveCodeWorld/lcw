@@ -1,0 +1,23 @@
+command mainstack_ConstructHandlerHashArray hArray, mainStackFolder
+   put hArray ["scriptArray"] into objectArray
+   repeat for each key rObject in objectArray
+      put objectArray [rObject] into scriptObjectArray
+      put scriptObjectArray ["data"]["firstHkeyArray"] into firstHkeyArray
+      repeat for each key firstShortHkey in firstHkeyArray
+         put firstShortHkey,rObject,1 into hKey
+         
+         put hArray_GetHandler (hKey, hArray) into callHandler
+         put sha1_Hash (callHandler) into handlerHash
+         put hArray_GetShortCalls (handlerHash, hArray) into shortCalls
+         
+         -- it has not been indexed lets get the handler from the global index
+         -- and extract the calls from the handler
+         put hArray_GetHandler (hKey) into callHandler
+         put handler_ExtractCalls (callHandler) into shortCalls
+         
+         put hArray_GetHandler (hKey, hArray) into callHandler
+         put handler_ExtractCalls (callHandler) into shortCalls
+         
+      end repeat
+   end repeat
+end mainstack_ConstructHandlerHashArray

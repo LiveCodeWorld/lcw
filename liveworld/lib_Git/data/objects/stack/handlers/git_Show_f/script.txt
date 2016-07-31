@@ -1,0 +1,9 @@
+function git_Show treeish
+   -- see also "git_ExportFileRevision"
+   git_NormalizeTreeish treeish
+   
+   put "git show" && treeish into someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   -- text_UnixToMac shellResult
+   return shellResult
+end git_Show

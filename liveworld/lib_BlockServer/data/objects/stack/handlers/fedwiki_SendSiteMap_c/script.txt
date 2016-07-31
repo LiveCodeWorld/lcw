@@ -1,0 +1,5 @@
+command fedwiki_SendSiteMap socketID
+   put the fedwiki_SiteMap of me into someJSON
+   daemon_SendJSON socketID, someJSON
+   return "Sent JSON. Socket still open."
+end fedwiki_SendSiteMap

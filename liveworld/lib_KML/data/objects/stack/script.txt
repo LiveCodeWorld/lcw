@@ -1,0 +1,115 @@
+--> MetaData
+-
+name: lib_KML
+type: script library 
+version: 0.4
+copyright: David Bovill
+licence:  GPLv3
+deps:
+
+/*
+A library for interfacing with KML
+*/
+
+
+--> Google Earth
+-
+[[ _FetchHandler (googleEarth_Speed,g) ]]
+    
+[[ _FetchHandler (googleEarth_Speed,s) ]]
+    
+[[ _FetchHandler (googleearth_Speeds,g) ]]
+
+[[ _FetchHandler (googleEarth_GetViewLongitude,f) ]]
+
+[[ _FetchHandler (googleEarth_GetViewLatitude,f) ]]
+
+[[ _FetchHandler (googleEarth_GetViewRotation,f) ]]
+
+[[ _FetchHandler (googleEarth_SetViewRotation,c) ]]
+
+[[ _FetchHandler (googleEarth_GetViewHeight,f) ]]
+
+[[ _FetchHandler (googleEarth_SetViewHeight,c) ]]
+
+
+--> Google Earth | Model
+-
+[[ _FetchHandler (googleEarth_DisplayView,c) ]]
+
+[[ _FetchHandler (googleEarth_Nudge,c) ]]
+
+[[ _FetchHandler (googleEarth_SaveAndFlyKML,c) ]]
+
+[[ _FetchHandler (googleEarth_FlyToKmlFile,c) ]]
+
+[[ _FetchHandler (googleEarth_DeconstructPoint,c) ]]
+
+[[ _FetchHandler (googleEarth_DeconstructView,c) ]]
+
+[[ _FetchHandler (googleEarth_ConstructView,f) ]]
+    
+[[ _FetchHandler (googleEarth_MoveView,c) ]]
+
+[[ _FetchHandler (googleEarth_SetView,c) ]]
+
+[[ _FetchHandler (googleEarth_GetView,f) ]]
+
+[[ _FetchHandler (googleEarth_GetViewAppleScript,f) ]]
+
+[[ _FetchHandler (googleEarth_SetViewAppleScript,f) ]]
+
+[[ _FetchHandler (googleEarth_GetWindowDimensions,c) ]]
+
+[[ _FetchHandler (googleEarth_GetTerrainWindow,f) ]]
+           
+[[ _FetchHandler (googleEarth_DeconstructAppleScriptPoint,c) ]]
+
+[[ _FetchHandler (googleEarth_GetGetPointOnTerrain,f) ]]
+
+[[ _FetchHandler (googleEarth_GetVersion,f) ]]
+
+
+--> Google Earth | KML
+-
+[[ _FetchHandler (googleEarth_FlyToEncodedKml,c) ]]
+
+[[ _FetchHandler (googleEarth_FlyToKml,c) ]]
+
+[[ _FetchHandler (googleEarth_ExtractTree,f) ]]
+
+[[ _FetchHandler (googleEarth_MyPlacesFile,f) ]]
+
+[[ _FetchHandler (googleEarth_TempPlacesFile,f) ]]
+
+
+--> KML
+-
+[[ _FetchHandler (kml_GetRandomPlaceMark,f) ]]
+
+[[ _FetchHandler (kml_NormaliseValue,c) ]]
+
+[[ _FetchHandler (kml_ExtractFolder,c) ]]
+
+[[ _FetchHandler (kml_EditPlacemark,f) ]]
+
+[[ _FetchHandler (kml_DeconstructPlacemark,c) ]]
+
+[[ _FetchHandler (kml_ConstructPhotoDescription,f) ]]
+
+[[ _FetchHandler (kml_ConstructPlaceMark,f) ]]
+
+[[ _FetchHandler (kml_ConstructAndFly,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (opn_Notify,c) ]]
+
+[[ _FetchHandler (xml_AddHeaderLine,c) ]]
+
+[[ _FetchHandler (line_Insert,c) ]]
+
+[[ _FetchHandler (applescript_ConvertPath,c) ]]
+
+[[ _FetchHandler (kwote,f) ]]

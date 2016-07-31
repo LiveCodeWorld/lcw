@@ -1,0 +1,5 @@
+setprop record_Height recordHeight
+   set the view_DisplayProperty ["record_Height"] of me to recordHeight
+   dispatch "LayoutControl" to me -- changes the target
+   return the result
+end record_Height

@@ -1,0 +1,12 @@
+command library_StoreSetArray setArray, pSetName
+   -- don't store anything for the standard sets "all" and "none" which are calculated from other info.
+   switch pSetName
+      case "all"
+         return empty
+      case "none"
+         return empty
+      default
+         project_SaveArray setArray, pSetName
+         return the result
+   end switch
+end library_StoreSetArray

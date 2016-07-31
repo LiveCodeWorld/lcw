@@ -1,0 +1,8 @@
+getprop view_TopControls
+   put the childcontrolids of me into topIDs
+   repeat for each line someID in topIDs
+      put the long id of control id someID & CR after topControls
+   end repeat
+   delete char -1 of topControls
+   return topControls
+end view_TopControls

@@ -1,0 +1,76 @@
+private command outline_AddHtmlPathLinksPath somePath, @tabbedOutline, @linkedOutline, pathDelim, beforeTag, afterTag, insertTitleAtEnd
+   -- links whole line muck up tree functions (so disabled)
+   if pathDelim is empty then put "/" into pathDelim
+   
+   set the itemdelimiter to pathDelim
+   set the wholematches to true
+   put 0 into lastFoundLine
+   put empty into tabBit
+   
+   put the number of items of somePath into lastItemNum
+   put 0 into lastFoundLine
+   repeat with itemNum = 1 to lastItemNum
+      put item itemNum of somePath into pathItem
+      put item 1 to itemNum of somePath into pathFragment
+      put html_ConstructNameLink (pathItem, pathFragment) into outlineItem
+      
+      put tabBit & pathItem into osLine
+      put lineoffset(osLine, tabbedOutline, lastFoundLine) into foundLineNum
+      if foundLineNum is not 0 then
+         -- already there
+         -- probably the folder part of the outline (not the leaf)
+         put tab after tabBit
+         add foundLineNum to lastFoundLine
+      else
+         -- need to add this path to the right place in the outline
+         -- lets construct the "osLineSection" to add
+         
+         if itemNum + 1 > lastItemNum then
+            put tabBit & beforeTag & pathItem & afterTag into osLineSection
+            put tabBit & beforeTag & outlineItem & afterTag into linkedLineSection
+         else
+            put osLine into osLineSection
+            
+            put item 1 to itemNum of somePath into pathFragment
+            put tabBit & html_ConstructNameLink (pathItem, pathFragment) into linkedLineSection
+            
+            repeat with foundItemNum = (itemNum + 1) to lastItemNum
+               put item foundItemNum of somePath into foundPathItem
+               put item 1 to foundItemNum of somePath into pathFragment
+               put html_ConstructNameLink (foundPathItem, pathFragment) into foundOutlineItem
+               
+               put tab after tabBit
+               if foundItemNum is lastItemNum then
+                  put CR & tabBit & beforeTag & foundPathItem & afterTag after osLineSection
+                  put CR & tabBit & beforeTag & foundOutlineItem & afterTag after linkedLineSection
+               else
+                  put CR & tabBit & foundPathItem after osLineSection
+                  put CR & tabBit & foundOutlineItem after linkedLineSection
+               end if
+            end repeat
+         end if
+         
+         -- now lets add the new "osLineSection" to the right place in the outline
+         if tabbedOutline is empty then
+            put osLineSection into tabbedOutline
+            put linkedLineSection into linkedOutline
+         else
+            if lastFoundLine is 0 then put the number of lines of tabbedOutline into lastFoundLine
+            
+            -- where do we want to add the line ???
+            if insertTitleAtEnd is false then
+               -- just after the osTitle above
+               put CR & osLineSection after line lastFoundLine of tabbedOutline
+               put CR & linkedLineSection after line lastFoundLine of linkedOutline
+            else
+               -- or how about at the end of the section?
+               outline_SetChildrenOffsets lastFoundLine, firstOsTitleLineNum, lastOsTitleLineNum, tabbedOutline
+               put CR & osLineSection after line lastOsTitleLineNum of tabbedOutline
+               put CR & linkedLineSection after line lastOsTitleLineNum of linkedOutline
+            end if
+         end if
+         return linkedOutline
+      end if
+   end repeat
+   return linkedOutline
+end outline_AddHtmlPathLinksPath

@@ -1,0 +1,10 @@
+function file_Md5Hash filePath
+    put file_GetSize(filePath) into someSize
+    if someSize > 200000000 then
+        breakpoint
+        return shell_Md5Hash(filePath)
+    else
+        put url ("binfile:" & filePath) into someData
+        return text_Hash(someData)
+    end if
+end file_Md5Hash

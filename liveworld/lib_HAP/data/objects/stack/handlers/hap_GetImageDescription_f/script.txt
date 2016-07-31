@@ -1,0 +1,6 @@
+function hap_GetImageDescription recordArray
+   -- stub for now
+   -- put markdown (markdownDescription) into htmlDescription
+   put recordArray ["description"] into markdownDescription
+   return markdownDescription
+end hap_GetImageDescription

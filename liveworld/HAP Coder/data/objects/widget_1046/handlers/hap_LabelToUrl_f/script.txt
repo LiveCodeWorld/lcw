@@ -1,0 +1,14 @@
+function hap_LabelToUrl someLabel
+   switch someLabel
+      case "livecode"
+         return "http://livecode.world"
+      case "dev"
+         return "http://dev.himalayanacademy.com"
+      case "com"
+         return "http://www.himalayanacademy.com"
+      case "wiki"
+         return "http://dev.himalayan.academy"
+      case "github"
+         return "https://github.com/Himalayan-Academy/ha_RigApplication"
+   end switch
+end hap_LabelToUrl

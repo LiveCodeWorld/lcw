@@ -1,0 +1,5 @@
+getprop meta_ManifestArray
+   put the textStack_Folder of the target into mainStackFolder
+   put mainstack_FetchHarray (mainStackFolder) into hArray
+   return manifestArray
+end meta_ManifestArray

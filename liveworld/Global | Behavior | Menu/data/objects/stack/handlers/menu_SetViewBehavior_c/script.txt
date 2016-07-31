@@ -1,0 +1,10 @@
+on menu_SetViewBehavior scriptObject, vbName
+   if vbName is "Clear" then put empty into vbName
+   set the view_Behavior of scriptObject to vbName
+   put the result into someObject
+   
+   put "Set the view behavior of" && the mobile_Name of scriptObject && "to" && kwote(vbName) into someMessage
+   opn_Notify someMessage
+   
+   edit the script of someObject
+end menu_SetViewBehavior

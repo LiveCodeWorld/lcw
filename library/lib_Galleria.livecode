@@ -1,0 +1,48 @@
+﻿script "lib_Galleria"
+--> MetaData
+-
+license: GPLv3
+name: lib_Galleria
+type: script library
+version: 0.1
+
+
+--> Galleria
+-
+function galleria_GetRecordFiles pGalleryPath
+   put rigTrim(pGalleryPath, "/") into tGalleryPath
+   
+   # GET PATH TRANSLATED - NEEDED TO GET FILE INFO
+   put $_SERVER["PATH_TRANSLATED"] into tPathTranslated
+   # REMOVE index.lc
+   set the itemDel to "/"
+   put (item 1 to - 2 of tPathTranslated) & "/" into tPathTranslated
+   
+   # GET BASE URL
+   put rigFetchConfigItem("baseUrl") into tURLbase
+   
+   # GET FULL PATHS TO FILES 
+   rigLoadHelper "file"
+   if there is a folder (tPathTranslated & tGalleryPath) then
+      put rigGetFileNames((tPathTranslated & tGalleryPath), TRUE,) into tFileNamesArray
+   else
+      -- rigLogMessage "error", "Missing galleria folder."
+      return "error, Missing galleria folder."
+   end if
+   	
+   # GET SORTED LIST OF FILES
+   repeat for each key tKey in tFileNamesArray
+      put tFileNamesArray[tKey] & return after tFileNamesList
+   end repeat
+   delete byte -1 of tFileNamesList
+   sort lines of tFileNamesList ascending text by item -1 of each
+   return tFileNamesList
+end galleria_GetRecordFiles
+
+function galleria_GetRecordFolder pRecordA
+   put pRecordA ["file_id"] into tFileID 
+   set the itemdel to "-"
+   put item 1 of pRecordA ["date_created"] into tYear
+   put format ("media/slideshows/%s/%s", tYear, tFileID) into tFilePath
+   return tFilePath
+end galleria_GetRecordFolder

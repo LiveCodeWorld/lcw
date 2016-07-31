@@ -1,0 +1,7 @@
+setprop stackFile_AddFolder [askAdd] someFolder
+   put the stack_Object of the target into stackObject
+   put folder_SearchForStacks (someFolder) into bigFileIndex
+   stackFile_AddStackPaths bigFileIndex, stackObject, askAdd
+   put the result into stackFileTable
+   return stackFileTable
+end stackFile_AddFolder

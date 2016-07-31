@@ -1,0 +1,4 @@
+getprop menu_Controller [mTitle]
+   put menu_GetTargetObject() into mController
+   return mController
+end menu_Controller

@@ -1,0 +1,20 @@
+private command rig_ConstructMarkdownToc sectionArray, sectionPath, @lookUpArray, @markdownTOC
+   put (the number of lines of the keys of sectionArray) - 2 into subSectionNum
+   repeat with sectionNum = subSectionNum down to 1
+      put sectionArray [sectionNum] into subSectionArray
+      put subSectionArray ["@attributes"] into attributeArray
+      put attributeArray ["title"] into sectionTitle
+      put attributeArray ["level"] into sectionLevel
+      
+      put sectionPath & comma & sectionNum into subSectionPath
+      put subSectionPath into lookUpArray [sectionTitle]["sectionPath"]
+      put sectionLevel into lookUpArray [sectionTitle]["sectionLevel"]
+      put sectionNum into lookUpArray [sectionTitle]["sectionNum"]
+      
+      -- don't really need this as the idea is to fetch it with sectionPath and sourceURL
+      put subSectionArray ["@content"] into lookUpArray [sectionTitle]["@content"]
+      
+      put "* [[" & sectionTitle & "]]" & CR before markdownTOC
+   end repeat
+   delete char -1 of markdownTOC
+end rig_ConstructMarkdownToc

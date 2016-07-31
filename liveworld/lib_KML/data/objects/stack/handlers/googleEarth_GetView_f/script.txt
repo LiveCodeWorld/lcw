@@ -1,0 +1,5 @@
+function googleEarth_GetView
+    put googleEarth_GetViewAppleScript() into doScript
+    do doScript as AppleScript
+    return the result
+end googleEarth_GetView

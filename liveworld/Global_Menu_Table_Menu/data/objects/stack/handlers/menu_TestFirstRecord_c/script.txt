@@ -1,0 +1,5 @@
+on menu_TestFirstRecord treeView
+   put the displayed_Array of treeView into menuTableArray
+   put menuTableArray [1] into recordArray
+   display_FormArray recordArray
+end menu_TestFirstRecord

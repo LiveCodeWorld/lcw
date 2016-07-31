@@ -1,0 +1,25 @@
+on mouseUp
+   put the dgControl of me into dgView
+   if exists(dgView) then
+      put the event_Watchers ["mouseUp"] of dgView into eventWatchers
+      if eventWatchers is not empty then
+         beep
+         return empty
+      end if
+   end if
+   
+   put the long id of the target into targetObject
+   put the short name of targetObject into shortName
+   switch
+      case shortName = "Script"
+         break
+      case shortName = "Title"
+         break
+      case shortName = "Image"
+         put the record_Name of me into viewName
+         break
+      default
+         -- opn_Notify the short name of the target
+         pass mouseUp
+   end switch
+end mouseUp

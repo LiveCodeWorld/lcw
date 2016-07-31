@@ -1,0 +1,21 @@
+function fedwiki_ExtractReferenceLinks pageArray, fromSlug, fromDomain
+   put fromDomain & "/" & fromSlug into fromLink
+   put pageArray ["story"] into storyArray
+   repeat for each key nodeNum in storyArray
+      put storyArray [nodeNum] into nodeArray
+      put nodeArray ["type"] into nodeType
+      if nodeType = "reference" then
+         put nodeArray ["site"] into toDomain
+         put nodeArray ["slug"] into toSlug
+         
+         -- a bit archaic (should use nested arrays I think)
+         put toDomain & "/" & toSlug into toLink
+         if toDomain = fromDomain then
+            put nodeArray into linkArray ["internal"][fromLink][toLink]
+         else
+            put nodeArray into linkArray ["external"][fromLink][toLink]
+         end if
+      end if
+   end repeat
+   return linkArray
+end fedwiki_ExtractReferenceLinks

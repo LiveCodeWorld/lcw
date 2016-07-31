@@ -1,0 +1,8 @@
+on menu_EditLink fieldObject
+   put the selectedChunk into someChunk
+   put the linktext of someChunk into someLink
+   put opn_Ask ("Enter some new text for this link...", someLink) into someLink
+   set the linktext of someChunk to someLink
+   set the textstyle of someChunk to "link"
+   put the linktext of someChunk
+end menu_EditLink

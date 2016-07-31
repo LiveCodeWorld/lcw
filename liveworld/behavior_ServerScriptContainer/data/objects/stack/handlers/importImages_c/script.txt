@@ -1,0 +1,5 @@
+on importImages
+   put fedwiki_GetWikipediaPageSlug ($_POST_RAW) into pageTitle
+   put fedwiki_FetchWikipediaImagesPageJson (pageTitle, 6) into pageJSON
+   fedwiki_ReturnJSON pageJSON
+end importImages

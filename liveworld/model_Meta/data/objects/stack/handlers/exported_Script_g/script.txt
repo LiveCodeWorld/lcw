@@ -1,0 +1,12 @@
+getprop exported_Script [pDontMerge]
+   put the script_File of the target into scriptFile
+   put url ("binfile:" & scriptFile) into someScript
+   hack_UpdateBinFile someScript, scriptFile
+   
+   if pDontMerge is true then
+      return someScript
+   else
+      put script_MergeHandlers (scriptFile, someScript) into someScript
+      return someScript
+   end if
+end exported_Script

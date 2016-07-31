@@ -1,0 +1,12 @@
+private function _letsFindNestedStartBracketNum startWikiTemplate, endWikiTemplate, wikiText
+   put char (startWikiTemplate+2) to (endWikiTemplate-2) of wikiText into testBit
+   put 0 into lastOffset
+   put 0 into foundNum
+   repeat
+      put offset ("{{", testBit, lastOffset) into newOffset
+      if newOffset = 0 then exit repeat
+      add 1 to foundNum
+      add newOffset to lastOffset
+   end repeat
+   return foundNum
+end _letsFindNestedStartBracketNum

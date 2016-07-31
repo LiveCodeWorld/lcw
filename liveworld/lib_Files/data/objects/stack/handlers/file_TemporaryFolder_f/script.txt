@@ -1,0 +1,6 @@
+function file_TemporaryFolder
+   put the the tempname into tempFolder
+   set the itemdelimiter to "/"
+   delete item -1 of tempFolder
+   return tempFolder & "/"
+end file_TemporaryFolder

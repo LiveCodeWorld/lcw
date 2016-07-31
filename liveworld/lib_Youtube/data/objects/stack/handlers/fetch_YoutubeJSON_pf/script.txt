@@ -1,0 +1,5 @@
+private function fetch_YoutubeJSON apiBit
+   put construct_YoutubeRestUrl (apiBit) into someUrl
+   put url someUrl into someJSON
+   return someJSON
+end fetch_YoutubeJSON

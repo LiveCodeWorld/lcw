@@ -1,0 +1,7 @@
+getprop disabled_EditCardBehavior [mTarget]
+   if exists (the behavior of mTarget) then
+      return false
+   else
+      return true
+   end if
+end disabled_EditCardBehavior

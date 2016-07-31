@@ -1,0 +1,5 @@
+getprop dg_View
+   put the body_View of me into bodyView
+   put the dgControl of bodyView into dgView
+   return dgView
+end dg_View

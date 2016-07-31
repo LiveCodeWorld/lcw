@@ -1,0 +1,13 @@
+setprop field_HtmlText [charOffsets] someHtml
+   put the long ID of the target into someField
+   
+   if charOffsets is empty then
+      put "set the htmltext of someField to someHtml" into doScript
+   else
+      put item 1 of charOffsets into startChar
+      put item 2 of charOffsets into endChar
+      put "set the htmltext of char startChar to endChar of someField to someHtml" into doScript
+   end if
+   do doScript
+   return the result
+end field_HtmlText

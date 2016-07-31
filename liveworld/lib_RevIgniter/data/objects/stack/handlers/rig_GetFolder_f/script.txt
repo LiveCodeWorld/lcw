@@ -1,0 +1,5 @@
+function rig_GetFolder shortFolder
+   put rig_GetApplicationFolder() into someFolder
+   put shortFolder & "/" after someFolder
+   return someFolder
+end rig_GetFolder

@@ -1,0 +1,12 @@
+function rev_ListPrefArray
+   local prefArray
+   
+   put rev_ListPrefs() into someTable
+   repeat for each line someLine in someTable
+      put item 1 of someLine into someKey
+      put item 2 of someLine into someValue
+      
+      array_AddToIndex someValue, someKey, prefArray
+   end repeat
+   return prefArray
+end rev_ListPrefArray

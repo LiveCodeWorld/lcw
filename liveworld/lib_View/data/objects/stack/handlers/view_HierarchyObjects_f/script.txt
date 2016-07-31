@@ -1,0 +1,21 @@
+function view_HierarchyObjects testGroup
+    put empty into groupHierarchy
+    repeat
+        -- background groups can cause infinite loops
+        -- so have to stop hierarchy check at the card level
+        -- which means this will not work for views etc which are at the card level or above!
+         
+        if word 1 of testGroup is "card" then
+            return word 1 to -1 of groupHierarchy
+        else
+            put the view_Object of testGroup into someView
+            put someView & CR before groupHierarchy
+            
+             put someView into testGroup
+            delete word 1 to 4 of testGroup
+            if testGroup is empty then
+                return word 1 to -1 of groupHierarchy
+            end if
+        end if
+    end repeat
+end view_HierarchyObjects

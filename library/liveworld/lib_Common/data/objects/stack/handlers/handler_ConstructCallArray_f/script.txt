@@ -1,0 +1,143 @@
+function handler_ConstructCallArray someHandler, pSkipHkeyComponents, pSkipHkeyProps
+   -- this is slow, and needs to be as fast as possible as we want to call it on every script compile!
+   -- should be modified to include "pass"
+   
+   local allCalls
+   
+   put library_ListForgetHkeys() into forgetHkeys
+   
+   put word 1 to -1 of someHandler into someHandler
+   delete line 1 of someHandler
+   delete line -1 of someHandler
+   
+   put false into repeatUntilEndOfComment
+   repeat for each line someLine in someHandler
+      if repeatUntilEndOfComment is true then
+         put char -2 to -1 of someLine into endCommentBit
+         if endCommentBit = "*/" then
+            put false into repeatUntilEndOfComment
+         end if
+         next repeat
+      else if char 1 to 2 of word 1 of someLine = "/*" then
+         put true into repeatUntilEndOfComment
+         next repeat
+      else
+         -- first lt's deal with single line comments
+         repeat for each item commentBlock in "--,#"
+            if someLine contains commentBlock then
+               put text_StripQuoted (someLine) into commentLine
+               
+               put wordOffset (commentBlock, commentLine) into wordNum
+               if wordNum > 0 then
+                  put word wordNum to -1 of commentLine into someComment
+                  
+                  if char -1 of word 2 of someComment = ":" then
+                     set the itemdelimiter to ":"
+                     put word 2 of item 1 of someComment into someKey
+                     put word 1 to -1 of item 2 of commentLine into someValue
+                     set the itemdelimiter to ","
+                     
+                     put metadataArray [someKey] into someIndex
+                     line_Add someValue, someIndex
+                     put someIndex into metadataArray [someKey]
+                  end if
+                  
+                  -- delete the comments part
+                  delete word wordNum to -1 of someLine
+               end if
+            end if
+         end repeat
+         
+         if the number of words of someLine = 0 then next repeat
+         
+         put someLine into testLine
+         replace " then " with CR in testLine
+         replace " else " with CR in testLine
+         repeat for each line testBit in testLine
+            put token 1 of testBit into testComand
+            if testComand is empty then next repeat
+            
+            switch
+               case testComand = "dispatch"
+                  put token 2 of testBit into dispatchCommand
+                  put dispatchCommand,"c" into shortHKey
+                  
+                  handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+                  
+                  delete token 1 to 3 of someLine  -- let's look at the rest of the line
+                  break
+               case testComand is among the items of "send,call"
+                  put token 2 of testBit into sendMessage
+                  put token 1 of sendMessage into sendComand
+                  put sendComand,"c" into shortHKey
+                  
+                  handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+                  
+                  delete token 1 to 3 of someLine  -- let's look at the rest of the line
+                  break
+               case script_DictionaryTerm (testComand) is true
+                  break
+               default
+                  -- first word and not a LiveCode term
+                  put testComand,"c" into shortHKey
+                  
+                  handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+                  
+                  delete token 1 of someLine  -- let's look at the rest of the line
+            end switch
+         end repeat
+         
+         put script_ExtractFunctionCalls (someLine, false) into fNames
+         repeat for each line fName in fNames
+            put fName,"f" into shortHKey
+            
+            handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+         end repeat
+         
+         -- could still have other stuff on line
+         set the wholematches to true
+         put wordoffset ("the", someLine) into theWordNum
+         if theWordNum is 0 then next repeat
+         
+         put theWordNum - 1 into setGetPutWordNum
+         put word setGetPutWordNum to -1 of someLine into testLineBit
+         
+         put 3 into handlerTokenNum
+         put token handlerTokenNum of testLineBit into handlerName
+         if script_DictionaryTerm (handlerName) is true then next repeat
+         
+         -- now check getprop / setprop calls ("the xxx [zzz] of")
+         
+         put handlerTokenNum + 1 into ofTokenNum
+         get token ofTokenNum of testLineBit
+         if it is "[" then
+            put handlerTokenNum + 4 into ofTokenNum
+            get token ofTokenNum of testLineBit
+         end if
+         
+         if it is "of" then
+            put token 1 of testLineBit into setGetPut
+            if setGetPut is "set" and "to" is among the words of someLine then
+               put handlerName,"s" into shortHKey
+               
+               handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+            else -- if setGetPut is among the items of "case,if,get,put" then
+               put handlerName,"g" into shortHKey
+               
+               handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+            end if
+         end if
+      end if
+   end repeat
+   
+   put tempArray ["hkeyCalls"] into someArray
+   put keys (someArray) into metadataArray ["hkeyCalls"]
+   put tempArray ["filteredCalls"] into someArray
+   put keys (someArray) into metadataArray ["filteredCalls"]
+   
+   put sha1_Hash (someHandler) into handlerHash
+   put handlerHash into metadataArray ["sha1"]
+   -- hkey_AddToKeyWordArray metadataArray, hKey, handlerHash
+   
+   return metadataArray
+end handler_ConstructCallArray

@@ -1,0 +1,6 @@
+function library_PrefFolder shortFile
+   put pref_Folder() & "OPN/" into opnPreferenceFolder
+   folder_CreateNested opnPreferenceFolder
+   put shortFile after opnPreferenceFolder
+   return opnPreferenceFolder
+end library_PrefFolder

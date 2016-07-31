@@ -1,0 +1,19 @@
+function html_ExtractAnchors someHtml
+    put someHtml into htmlPage
+    replace CR with empty in htmlPage --text is now one line
+    replace "name=" with "name=" & CR in htmlPage
+    replace "</a" with "</a" & CR in htmlPage
+     
+    -- filter htmlPage with "*http://*"
+    -- set the itemdel to ">"
+    filter htmlPage with (quote & "*</a")
+    set the itemdel to quote
+    
+    put empty into newLinkList
+    repeat for each line LNN in htmlPage
+        put item 2 of LNN & cr after newLinkList
+        -- put item 1 of LNN & cr after newLinkList
+    end repeat
+    delete last char of newLinkList
+    return newLinkList
+end html_ExtractAnchors

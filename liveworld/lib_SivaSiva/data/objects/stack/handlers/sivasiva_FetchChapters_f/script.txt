@@ -1,0 +1,4 @@
+function sivasiva_FetchChapters
+   put project_FetchValue ("orderedChapterTitleIndex", "SivaSiva") into orderedChapterTitleIndex
+   return orderedChapterTitleIndex
+end sivasiva_FetchChapters

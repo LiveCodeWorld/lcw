@@ -1,0 +1,6 @@
+getprop stack_Data
+    put the effective filename of the target into someFile
+    put "binfile:" & someFile into someUrl
+    put url someUrl into stackData
+    return stackData
+end stack_Data

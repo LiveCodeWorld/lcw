@@ -1,0 +1,14 @@
+command hArray_SearchHierarchyAndEdit shortHKey, pScriptObject, pAlsoOutsideHierarchy
+   put hArray_FindHkeyInHierarchy (shortHKey, pScriptObject) into foundHkey
+   if foundHkey is not empty then
+      hkey_EditFoundHandler foundHkey
+   else
+      put hArray_FindHkey (shortHkey) into foundHkey
+      if foundHkey is not empty and pAlsoOutsideHierarchy is true then
+         hkey_EditFoundHandler foundHkey
+      else
+         opn_Notify merge ("Cannot find handler '[[foundHkey]]' in heirarchy!")
+         return empty
+      end if
+   end if
+end hArray_SearchHierarchyAndEdit

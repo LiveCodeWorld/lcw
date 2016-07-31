@@ -1,0 +1,6 @@
+command server_UploadStacks stackNames
+   repeat for each line stackName in stackNames
+      set the cursor to busy
+      server_UploadStack stackName
+   end repeat
+end server_UploadStacks

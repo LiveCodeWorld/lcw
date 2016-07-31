@@ -1,0 +1,8 @@
+function imageMagick_FetchGpsArray imageURL
+   put merge ("wget -O - [[imageURL]] | identify -format '%[EXIF:GPS*]' -") into someShell
+   put shell (someShell) into gpsArray
+   filter gpsArray with "exif:*"
+   replace "exif:" with empty in gpsArray
+   split gpsArray with CR and "="
+   return gpsArray
+end imageMagick_FetchGpsArray

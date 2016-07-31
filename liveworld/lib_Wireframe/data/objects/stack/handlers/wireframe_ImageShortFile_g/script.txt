@@ -1,0 +1,7 @@
+getprop wireframe_ImageShortFile
+   put the card_Object of the target into cardObject
+   put the short name of cardObject into tidyName
+   replace space with "_" in tidyName
+   put tidyName & ".png" into shortFile
+   return shortfile
+end wireframe_ImageShortFile

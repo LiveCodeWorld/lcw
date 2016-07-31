@@ -1,0 +1,6 @@
+function digitalocean_TranslateIP someIP, pDropletInfoArray
+   put digitalocean_ConstructDropletDictionary (pDropletInfoArray) into dropletDictionary
+   digitalocean_DeconstructDropletDictionary dropletDictionary, nameDictionary, ipDictionary
+   put ipDictionary [someIP] into dropletName
+   return dropletName
+end digitalocean_TranslateIP

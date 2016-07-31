@@ -1,0 +1,25 @@
+function line_ConstructDupicateArray someIndex
+    local badLineArray
+    
+    set the wholematches to true
+    repeat while someIndex is not empty
+        put line 1 of someIndex into testLine
+        delete line 1 of someIndex
+        
+        put badLineArray [testLine] into howManyBadLines
+        if howManyBadLines is empty then
+            -- not already a duplicate 
+            -- see if it is the rest of the container
+            put lineoffset(testLine, someIndex) into lineNum
+            if lineNum > 0 then
+                -- first duplicate
+                delete line lineNum of someIndex
+                put 1 into badLineArray [testLine]
+            end if
+        else
+            put howManyBadLines + 1 into badLineArray [testLine]
+            next repeat
+        end if
+    end repeat
+    return badLineArray
+end line_ConstructDupicateArray

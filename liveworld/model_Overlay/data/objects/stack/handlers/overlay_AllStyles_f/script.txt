@@ -1,0 +1,6 @@
+function overlay_AllStyles overlayFolder
+   put overlay_Getdata (overlayFolder) into overlayData
+   repeat for each key overlayName in overlayData
+      get overlayData_GetGraphProperty (overlayData, "overlay_MaximumDepth", pOverlayName)
+   end repeat
+end overlay_AllStyles

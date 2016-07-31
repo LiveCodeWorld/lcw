@@ -1,0 +1,11 @@
+on menu_IncreaseNodeFactor mTarget
+   put the hexagon_Views of mTarget into hexagonViews
+   repeat for each line hexagonView in hexagonViews
+      put the inner_View of hexagonView into ringView
+      if exists (ringView) is false then next repeat
+      
+      put the node_Factor of ringView into nodeFactor
+      add (0.1 * nodeFactor) to nodeFactor
+      set the node_Factor of ringView to nodeFactor
+   end repeat
+end menu_IncreaseNodeFactor

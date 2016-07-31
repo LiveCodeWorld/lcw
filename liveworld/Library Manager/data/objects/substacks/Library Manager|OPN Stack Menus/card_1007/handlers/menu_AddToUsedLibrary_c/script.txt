@@ -1,0 +1,4 @@
+on menu_AddToUsedLibrary ideScriptObject, stackSetName
+   put the stack_Object of ideScriptObject into stackObject
+   library_AddUsedStack stackObject, stackSetName
+end menu_AddToUsedLibrary

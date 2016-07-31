@@ -1,0 +1,161 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Meta
+type: model
+version: 0.9
+
+
+--> Meta | Data
+-
+/*
+Meta refers to props not stored in the object but in named files associated with the object.
+
+The newer metadata stored in text files / encoded arrays as part of the text based stack export format.
+These depend on the textStack_Folder.
+
+An objects script is stored as a text file, so it can be versioned in a repository.
+The file is stored inside a folder named after the stack the object is in, 
+not nested, but in a flat namespace, derived from the rugged_ID
+*/
+
+
+--> Currently Working On | Metadata | Missing
+-
+[[ _FetchHandler (meta_Script,g) ]]
+
+[[ _FetchHandler (meta_Script,s) ]]
+
+[[ _FetchHandler (meta_MetaArray,g) ]]
+
+[[ _FetchHandler (meta_MetaArray,s) ]]
+
+
+--> Meta
+-
+[[ _FetchHandler (meta_Image,g) ]]
+
+[[ _FetchHandler (meta_Image,s) ]]
+
+[[ _FetchHandler (meta_ManifestArray,g) ]]
+
+[[ _FetchHandler (meta_ManifestArray,s) ]]
+
+[[ _FetchHandler (meta_CustomArray,g) ]]
+
+[[ _FetchHandler (meta_CustomArray,s) ]]
+
+[[ _FetchHandler (meta_Html,g) ]]
+
+[[ _FetchHandler (meta_Html,s) ]]
+
+[[ _FetchHandler (meta_Text,g) ]]
+
+[[ _FetchHandler (meta_Text,s) ]]
+
+[[ _FetchHandler (meta_RevPropText,g) ]]
+
+[[ _FetchHandler (meta_RevPropText,s) ]]
+
+[[ _FetchHandler (meta_Data,g) ]]
+
+[[ _FetchHandler (meta_Data,s) ]]
+
+
+--> Object | Metadata
+-
+[[ _FetchHandler (object_FetchMetadataArray,f) ]]
+
+[[ _FetchHandler (object_ExportMetadataArray,c) ]]
+
+
+--> Meta | Html
+-
+[[ _FetchHandler (object_FetchMetaHtml,f) ]]
+
+[[ _FetchHandler (object_ExportMetaHtml,c) ]]
+
+
+--> Meta | Text
+-
+[[ _FetchHandler (object_FetchMetaText,f) ]]
+
+[[ _FetchHandler (object_ExportMetaText,c) ]]
+
+
+--> Meta | Image
+-
+[[ _FetchHandler (object_FetchMetaImage,f) ]]
+
+[[ _FetchHandler (object_ExportMetaImage,c) ]]
+
+
+--> Meta | RevPropText
+-
+[[ _FetchHandler (object_FetchRevPropText,f) ]]
+
+[[ _FetchHandler (object_ExportRevPropText,c) ]]
+
+
+--> Meta | Files
+-
+[[ _FetchHandler (meta_CustomArrayFile,g) ]]
+
+[[ _FetchHandler (meta_ScriptMetaDataFile,g) ]]
+
+/*
+These are not done yet, manifests are stored at the stack level, and sub-stack level.
+Consider creating a mainstack manifest
+*/
+
+getprop meta_ManifestArray
+   -- extract the manifest array from the mainstackManifestArray
+   put the long id of the target into tObject
+   put the mainStack_ManifestArray [true] of the target into mainStackManifestArray
+   
+   object_RuggedDeconstruct tObject, mainstackName, substackName, controlType, someID
+   if substackName is empty then
+      put mainStackManifestArray into manifestArray
+      delete variable manifestArray ["substacks"]
+   else
+      put mainStackManifestArray ["substacks"][substackName] into manifestArray
+   end if
+   return manifestArray
+end meta_ManifestArray
+
+[[ _FetchHandler (meta_ScriptMetaDataFile,f) ]]
+
+[[ _FetchHandler (meta_GetCustomArrayFile,f) ]]
+
+[[ _FetchHandler (meta_StackArrayFile,f) ]]
+
+[[ _FetchHandler (meta_PropTextFile,f) ]]
+
+[[ _FetchHandler (meta_HtmlFile,f) ]]
+
+[[ _FetchHandler (meta_TextFile,f) ]]
+
+[[ _FetchHandler (meta_ImageFile,f) ]]
+
+
+--> Script | Metadata | Export
+-
+/*
+Not sure about these....
+*/
+
+[[ _FetchHandler (script_MetaTable,g) ]]
+
+[[ _FetchHandler (script_MetaXML,g) ]]
+
+[[ _FetchHandler (script_MetaHtmlTable,g) ]]
+
+[[ _FetchHandler (script_MetaHtml,g) ]]
+
+[[ _FetchHandler (script_MetaTableToXml,f) ]]
+
+[[ _FetchHandler (script_MetaTableToXhtml,f) ]]
+
+[[ _FetchHandler (script_GetUniqueTitle,f) ]]
+
+[[ _FetchHandler (script_FileFromMetadataArray,f) ]]

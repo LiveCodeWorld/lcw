@@ -1,0 +1,12 @@
+function overlayData_GetDefaultName overlayData 
+   -- search for a overlayArray labled "overlay_IsDefault"
+   put keys(overlayData) into overlayNames
+   repeat for each line overlayName in overlayNames
+      put overlayData [overlayName] into overlayArray
+      put overlayArray_GetGraphProperty (overlayArray, "overlay_IsDefault") into graphIsDefault
+      if graphIsDefault is true then
+         return overlayName
+      end if
+   end repeat
+   return line 1 of overlayNames
+end overlayData_GetDefaultName

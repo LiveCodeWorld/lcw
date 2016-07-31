@@ -1,0 +1,5 @@
+command pref_SetValue prefName, someValue
+   global gPrefs_Array
+   put someValue into gPrefs_Array [prefName]
+   return gPrefs_Array
+end pref_SetValue

@@ -1,0 +1,16 @@
+function file_ConstructSafeName someName, someExtension
+    -- was "construct_SafeFileName"
+    put wiki_ConstructID(someName) into sname
+    if someExtension is not empty then put "." & someExtension after sname
+    return sname
+     
+    -- lifted from "Metacard Menu Bar" stack script for compatibility
+    -- <renamed frome="MCfixpath shortname"/>
+    put tolower(someName) into sname
+    if someExtension is not empty then put "." & someExtension after sname
+    repeat with c = 1 to the length of sname
+        if char c of sname is in " :?*<>/\()[]{}|'`" & quote & tab
+        then put "_" into char c of sname
+    end repeat
+    return sname
+end file_ConstructSafeName

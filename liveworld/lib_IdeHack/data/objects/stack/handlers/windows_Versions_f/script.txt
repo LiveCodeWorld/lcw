@@ -1,0 +1,10 @@
+function windows_Versions
+   return "Windows 95,Windows 98,Windows Me,Windows NT 4,Windows 2000,Windows XP,Windows Vista"
+   
+   put windows_SystemVersionArray() into versionArray
+   put array_Reverse(versionArray) into versionArray
+   put keys(versionArray) into versionKeys
+   sort versionKeys
+   replace CR with comma in versionKeys
+   return versionKeys
+end windows_Versions

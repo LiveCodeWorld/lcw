@@ -1,0 +1,9 @@
+function dot_ConstructTracMacro dotText
+    put "{{{" & CR after tracMacro
+    put "#!graphviz" & CR after tracMacro
+    put dotText & CR after tracMacro
+    put "}}}" & CR after tracMacro
+    
+    delete char -1 of tracMacro
+    return tracMacro
+end dot_ConstructTracMacro

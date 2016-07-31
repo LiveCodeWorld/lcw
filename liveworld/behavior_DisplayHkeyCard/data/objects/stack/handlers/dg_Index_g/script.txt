@@ -1,0 +1,9 @@
+getprop dg_Index [hKey]
+   if hKey is empty then
+      put the dgHilitedIndex of the dataGrid_View of me into theIndex
+   else
+      dispatch "FindIndex" to the dataGrid_View of me with "hKey", hKey
+      put the result into theIndex
+   end if
+   return theIndex
+end dg_Index

@@ -1,0 +1,13 @@
+getprop behavior_Instances [bName]
+   if bName is empty then
+      put behaviorModel_GetArray (modelObject) into behaviorArray
+      put empty into behaviorObjectIndex
+      repeat for each key bName in behaviorArray
+         put behaviorArray [bName] into newObjects
+         put line_AddToIndex(newObjects, behaviorObjectIndex) into behaviorObjectIndex
+      end repeat
+      return behaviorObjectIndex
+   else
+      return behaviorModel_GetInstances(bName, modelObject)
+   end if
+end behavior_Instances

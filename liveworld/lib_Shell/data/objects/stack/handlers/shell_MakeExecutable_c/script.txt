@@ -1,0 +1,4 @@
+command shell_MakeExecutable someFile
+   shell_Chmod "+x", someFile
+   return the result
+end shell_MakeExecutable

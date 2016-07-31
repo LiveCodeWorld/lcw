@@ -1,0 +1,9 @@
+function hkey_GetHandler hKey
+   return hkey_ExtractHandlerFromObject (hKey)
+   
+   -- does this also get it from hierarchy???
+   put item 1 to 2 of hKey into shortHKey
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then return empty
+   return the script_Handler [shortHKey] of hObject
+end hkey_GetHandler

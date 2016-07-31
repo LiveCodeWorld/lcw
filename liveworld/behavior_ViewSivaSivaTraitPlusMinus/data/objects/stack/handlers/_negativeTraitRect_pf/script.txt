@@ -1,0 +1,10 @@
+private function _negativeTraitRect centreX, traitWidth, nTop, nBottom
+   put round (traitWidth / 2) into halfWidth
+   put centreX - halfWidth into item 1 of negativeTraitRect
+   put centreX + halfWidth into item 3 of negativeTraitRect
+   
+   put nBottom into item 4 of negativeTraitRect
+   put nTop into item 2 of negativeTraitRect
+   
+   return negativeTraitRect
+end _negativeTraitRect

@@ -1,0 +1,6 @@
+on menu_CreateControllerProject scriptObject
+   -- put the textStack_Folder of scriptObject into mainStackFolder
+   put the project_OverlayFolder of scriptObject into projectOverlayFolder
+   put projectOverlayFolder
+   finder_Reveal projectOverlayFolder
+end menu_CreateControllerProject

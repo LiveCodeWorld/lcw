@@ -1,0 +1,5 @@
+command overlayData_SetMissingStyle @dotGroupStyleArray   
+   put "red" into dotGroupStyleArray ["missing"]["node_StyleArray"]["fillcolor"]
+   put "red" into dotGroupStyleArray ["missing"]["node_StyleArray"]["color"]
+   put "filled" into dotGroupStyleArray ["missing"]["node_StyleArray"]["style"]
+end overlayData_SetMissingStyle

@@ -1,0 +1,9 @@
+function menu_SortTitles mTitles
+   -- it is not possible to do a proper sort with non-reverse polish notation naiming of menus
+   -- without deleting last "Menu" bit for each line and then reconstructing then!
+   
+   set the itemdelimiter to "|"
+   sort mTitles ascending by the number of items of each
+   sort mTitles ascending by item 2 of each
+   return mTitles
+end menu_SortTitles

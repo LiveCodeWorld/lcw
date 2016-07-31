@@ -1,0 +1,5 @@
+function fossil_GetBrowserShellCommand pCheckoutFolder, pGetGlobal
+   -- web-browser          (local)  echo
+   put fossil_GetSetting ("web-browser", pCheckoutFolder, pGetGlobal) into someValue
+   return someValue
+end fossil_GetBrowserShellCommand

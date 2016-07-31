@@ -1,0 +1,125 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Wiki_Story_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Wiki | Story | Menu
+-
+[[ _FetchHandler (insert_Wikimenu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_GoToLink,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CytoAnimate,c) ]]
+
+[[ _FetchHandler (menu_CytoZoom,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddBrowserMenu,c) ]]
+
+[[ _FetchHandler (menu_HideSiteOwner,c) ]]
+
+[[ _FetchHandler (menu_HideFooter,c) ]]
+
+[[ _FetchHandler (menu_SetFooterHeight,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Wiki | Story | Menu | Props
+-
+[[ _FetchHandler (vis_BodyName,g) ]]
+
+[[ _FetchHandler (vis_BodyNames,g) ]]
+
+
+--> Global | Wiki | Story | Menu | Disabled
+-
+
+--> Wiki | View | Model
+-
+[[ _FetchHandler (footer_Array,g) ]]
+
+[[ _FetchHandler (footer_Array,s) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_TestJavascript,c) ]]
+
+[[ _FetchHandler (menu_TryAndDisableClicks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_VisibleBody,c) ]]
+
+[[ _FetchHandler (menu_SaveFooterArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReplaceFooter,c) ]]
+
+[[ _FetchHandler (menu_ResetFooter,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReplaceBody,c) ]]
+
+[[ _FetchHandler (menu_ResetBody,c) ]]
+
+[[ _FetchHandler (menu_EditBodyBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TestGeometry,c) ]]
+
+[[ _FetchHandler (menu_EditBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TestJson,c) ]]
+
+[[ _FetchHandler (menu_FetchLastPage,c) ]]
+
+[[ _FetchHandler (menu_WikiSiteMap,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FindSites,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreatePage,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplaySites,c) ]]
+
+-- on menu_SiteMap
+   put url "http://david.viral.academy/system/export.json" into someJSON
+   put json_ToArray (someJSON) into someArray
+   display_Array someArray
+end menu_SiteMap
+
+[[ _FetchHandler (menu_DoubleJson,c) ]]

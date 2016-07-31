@@ -1,0 +1,10 @@
+function graph_ConstructDotHeaderArray overlap, splines, defaultShape, defaultUrl
+   local dotHeaderArray, cluster, direction, dotOrder
+   put true into concentrate
+   put false into overlap
+   put true into splines
+   put "rectangle" into defaultShape
+   
+   dot_ConstructPropertyArray dotHeaderArray, overlap, concentrate, splines, cluster, direction, dotOrder, defaultShape, defaultUrl
+   return dotHeaderArray
+end graph_ConstructDotHeaderArray

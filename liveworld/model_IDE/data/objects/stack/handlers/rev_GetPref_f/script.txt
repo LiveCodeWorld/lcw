@@ -1,0 +1,7 @@
+function rev_GetPref prefType, revEditorPref   
+   put prefType,revEditorPref into prefRecord
+   put "sePrefGet(" & kwote(prefRecord) &")" into someExpression
+   put the name of stack "revNewScriptEditor" into someObject
+   get value (someExpression, someObject)
+   return it
+end rev_GetPref

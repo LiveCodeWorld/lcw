@@ -1,0 +1,21 @@
+command fedwikipedia_StripAllTemplates @wikiText
+   --  starting text {{cite web|author=Nisi Shawl |url=http://seattletimes.nwsource.com/html/books/2008758249_br22sterling.html |title=Books &#124; "The Caryatids": four clones need a home &#124; Seattle Times Newspaper |publisher=Seattletimes.nwsource.com |date=2009-02-19 |accessdate=2010-01-01}} something at the end
+   -- put script_GetCommentAboveMe() into wikiText
+   
+   put empty into templateName
+   put false into changedTemplate
+   repeat
+      mediawiki_SetTemplateOffsets templateName, wikiText, startWikiTemplate, endWikiTemplate
+      put the result into foundTemplate
+      if foundTemplate is empty then exit repeat
+      put true into changedTemplate
+      delete char startWikiTemplate to endWikiTemplate of wikiText
+      
+      -- below is just an ugly hack
+      get char (startWikiTemplate+0) of wikiText
+      if it = ";" then
+         delete char (startWikiTemplate+0) of wikiText
+      end if
+   end repeat
+   return changedTemplate
+end fedwikipedia_StripAllTemplates

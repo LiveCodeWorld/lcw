@@ -1,0 +1,9 @@
+command rss_DeconstructItem tItem, @tTitle, @tLink, @tGuid, @tDescription, @tpubDate
+   -- was "rss_DeconstructItem"
+   get matchtext (tItem, "<item>(.*)</item>", tItemContent)
+   get matchtext (tItemContent, "<title>(.*)</title>", tTitle)
+   get matchtext (tItemContent, "<link>(.*)</link>", tLink)
+   get matchtext (tItemContent, "<guid>(.*)</guid>", tGuid)
+   get matchtext (tItemContent, "<description>(.*)</description>", tDescription)
+   get matchtext (tItemContent, "<pubDate>(.*)</pubDate>", tpubDate)
+end rss_DeconstructItem

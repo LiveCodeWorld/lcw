@@ -1,0 +1,31 @@
+on menu_TrimAndCropMovie
+   put get_VideoFileName() into someVideoFile
+   file_Deconstruct someVideoFile,  someRoot, shortName, fileExtension
+   put someRoot & shortName & "_cropped." & fileExtension into exportFileName
+   put exportFileName into exportedVideoPath
+   
+   shell_BashParamEscape someVideoFile
+   shell_BashParamEscape exportFileName
+   
+   -- put "crop=1280:544:0:88" into cropBit
+   put 1280 into cWidth
+   put 544 into cHeight
+   put 0 into cOriginLeft
+   put 88 into cOriginTop
+   
+   put "crop=" & cWidth & ":" & cHeight & ":" & cOriginLeft & ":" & cOriginTop into cropBit
+   
+   put "ffmpeg -i" && someVideoFile && "-filter:v" &&kwote(cropBit) into someShell
+   
+   -- trims the end of a movie clip youtube file (they are all the same length)
+   put space & "-ss 00:00:00 -t 00:02:12" after someShell
+   
+   put space & "-c:a copy" after someShell -- keeps the audio codec the same
+   
+   put space & exportFileName after someShell
+   
+   set the cursor to watch
+   put shell (someShell) into shellResult
+   put shellResult
+   set the filename of player 1 to exportedVideoPath
+end menu_TrimAndCropMovie

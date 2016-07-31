@@ -1,0 +1,5 @@
+function mediawiki_GetSandboxArray sandBoxFragment, pApiStem
+   put mediawiki_GetSandboxJSON (sandBoxFragment, pApiStem) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray 
+end mediawiki_GetSandboxArray

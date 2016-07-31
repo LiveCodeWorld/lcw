@@ -1,0 +1,26 @@
+command sandbox_ArrayDeconstructImage sandboxArray, @imageTitle, @imageURL, @imageDescription, @imageCaption, @descriptionURL, @imageCategoryIndex
+   -- let's deconstruct information about the file
+   put sandboxArray ["query"]["pages"] into pageArray
+   
+   put line 1 of keys (pageArray) into pageID -- should only be one line
+   put pageArray [pageID]["title"] into imageTitle -- same as shortImageFile
+   put pageArray [pageID]["imageinfo"][1] into imageInfoArray
+   
+   put imageInfoArray ["descriptionurl"] into descriptionURL
+   put imageInfoArray ["url"] into imageURL
+   put imageInfoArray ["extmetadata"] into extmetArray
+   
+   put extmetArray ["Categories"]["value"] into imageCategoryIndex
+   replace "|" with CR in imageCategoryIndex
+   put extmetArray ["ImageDescription"]["value"] into imageDescription
+   put extmetArray ["LicenseShortName"]["value"] into licenseDescription
+   
+   put imageDescription into imageCaption
+   put word 1 to -1 of imageCaption into imageCaption
+   if char 1 to 3 of imageCaption = "<p>" then
+      delete char 1 to 3 of imageCaption
+      if char -4 to -1 of imageCaption = "</p>" then
+         delete char -4 to -1 of imageCaption
+      end if
+   end if
+end sandbox_ArrayDeconstructImage

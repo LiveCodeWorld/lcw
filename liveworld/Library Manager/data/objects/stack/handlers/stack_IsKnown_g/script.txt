@@ -1,0 +1,18 @@
+getprop stack_IsKnown
+   -- misleading name. Could reame "opn_IsKnown"
+   -- This script does not check all stackfiles, instead it only checks OPN stackfiles
+   -- Can use "exist" for more general "is known"
+   
+   put the stack_Object of the target into stackObject
+   if stackObject = the opn_Library of me then return true	# assume the opn_Library is known by Rev
+   
+   put the short name of stackObject into stackName
+   put library_GetStackFile (stackName) into relativeFile
+   if relativeFile is empty then
+      return false
+   else
+      put the effective filename of stackObject into someFile
+      put rev_PluginFullPath (relativeFile) into testFile
+      return testFile = someFile
+   end if
+end stack_IsKnown

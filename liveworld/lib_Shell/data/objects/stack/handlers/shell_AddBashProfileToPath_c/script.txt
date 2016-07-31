@@ -1,0 +1,16 @@
+command shell_AddBashProfileToPath pNewItems
+    /*
+    -- was "shell_BashAddToPATH"
+    if pNewItems is empty then put shell_GetBashPathExtraItems() into pNewItems
+    set the itemdelimiter to ":"
+    repeat for each item someItem in pNewItems
+        if someItem is not among the items of $PATH then
+            put the number of items of $PATH into maxItem
+            put someItem into item (maxItem + 1) of $PATH
+        end if
+    end repeat
+    */
+    
+    put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH
+    return $PATH
+end shell_AddBashProfileToPath

@@ -1,0 +1,12 @@
+getprop selected_StackObjects
+   put empty into pSetName
+   put the selected_ShortStackFiles of the target into shortStackFiles
+   repeat for each line shortStackFile in shortStackFiles
+      put stackFile_NameFromShortFile (shortStackFile, pSetName) into stackName
+      if exists (stack stackName) then 
+         put the name of stack stackName & CR after stackObjects
+      end if
+   end repeat
+   delete char -1 of stackObjects
+   return stackObjects
+end selected_StackObjects

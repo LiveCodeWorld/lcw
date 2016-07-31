@@ -1,0 +1,9 @@
+command pref_SaveValue prefName, someValue, pProjectName
+   global gPrefs_Array
+   put pref_fetchArray (pProjectName) into prefArray
+   put someValue into prefArray [prefName]
+   pref_StoreArray prefArray, pProjectName
+   put the result into  dataArray
+   put prefArray into gPrefs_Array
+   return dataArray
+end pref_SaveValue

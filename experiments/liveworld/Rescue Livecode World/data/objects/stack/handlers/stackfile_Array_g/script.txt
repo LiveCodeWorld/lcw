@@ -1,0 +1,6 @@
+getprop stackfile_Array
+   put the stack_Object of the target into someStack
+   put the stackfiles of someStack into stackFileTable
+   put stackFile_ToArray (stackFileTable) into stackFileArray
+   return stackFileArray
+end stackfile_Array

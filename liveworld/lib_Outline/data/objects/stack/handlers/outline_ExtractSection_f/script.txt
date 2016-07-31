@@ -1,0 +1,35 @@
+function outline_ExtractSection lineNumOrTitle, someOutLine
+    -- renamed from "getOutlineSection", then "outline_ExtractSection"
+    -- version original, 7/4/99
+     
+    if lineNumOrTitle is a number then
+        put lineNumOrTitle into osTitleLineNum
+        put line osTitleLineNum of someOutLine into someOsTitle
+        if osTitleLineNum < 1 then
+            put 0 into baseTabLevel
+        else
+            put outline_TabLevel(someOsTitle) into baseTabLevel
+        end if
+    else
+        put lineNumOrTitle into someOsTitle
+        put outline_TabLevel(someOsTitle) into baseTabLevel
+        put line_FindInIndex(lineNumOrTitle, someOutLine) into osTitleLineNum
+        if osTitleLineNum is 0 then
+            return empty
+        end if
+    end if
+     
+    put osTitleLineNum + 1 into startLineNum
+    put someOsTitle & return into nextLevelTitles
+    repeat with lineNum = startLineNum to the number of lines of someOutLine
+        put line lineNum of someOutLine into someOsTitle
+        put outline_TabLevel(someOsTitle) into someTabLevel
+        if someTabLevel is baseTabLevel then
+            exit repeat
+        else if someTabLevel > baseTabLevel then
+            put someOsTitle & CR after nextLevelTitles
+        end if
+    end repeat
+    delete last char of nextLevelTitles
+    return nextLevelTitles
+end outline_ExtractSection

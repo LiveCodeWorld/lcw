@@ -1,0 +1,5 @@
+command git_SetProject projectName
+   put git_TranslateProjectName (projectName) into longGitFolder
+   git_SetRootFolder longGitFolder
+   return longGitFolder
+end git_SetProject

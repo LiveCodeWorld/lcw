@@ -1,0 +1,29 @@
+function ijwAPLIB_MakeOSXShellPath tPath
+    -- Ian Wood <revlist@azurevision.co.uk>
+    put "set tOut to POSIX path of tPath" into tScript
+    replace "tPath" with quote & revMacFromUnixPath(tPath) & quote in tScript
+    do tScript as applescript
+    
+    put the result into tNewPath
+    delete char 1 of tNewPath
+    delete last char of tNewPath
+    replace space with "\" & space in tNewPath
+    replace quote with "\" & quote in tNewPath
+    replace "'" with "\" & "'" in tNewPath
+    replace "*" with "\" & "*" in tNewPath
+    replace "?" with "\" & "?" in tNewPath
+    replace "[" with "\" & "[" in tNewPath
+    replace "]" with "\" & "]" in tNewPath
+    replace "{" with "\" & "{" in tNewPath
+    replace "}" with "\" & "}" in tNewPath
+    replace "$" with "\" & "$" in tNewPath
+    replace "!" with "\" & "!" in tNewPath
+    replace "&" with "\" & "&" in tNewPath
+    replace "|" with "\" & "|" in tNewPath
+    replace ">" with "\" & ">" in tNewPath
+    replace "<" with "\" & "<" in tNewPath
+    replace ";" with "\" & ";" in tNewPath
+    replace "(" with "\" & "(" in tNewPath
+    replace "(" with "\" & ")" in tNewPath
+    return tNewPath
+end ijwAPLIB_MakeOSXShellPath

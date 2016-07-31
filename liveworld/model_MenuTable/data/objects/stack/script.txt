@@ -1,0 +1,132 @@
+--> MetaData
+-
+license: GPLv3
+name: model_MenuTable
+type: model
+version: 0.1
+
+/*
+The main menu model is handled by the model_ScriptMenu stack.
+
+I'm not sure this is really useful or needed.
+Used to be libOPN_MenuModel.rev
+*/
+
+
+--> Menu | Extras
+-
+[[ _FetchHandler (menu_ReIndexSubStack,c) ]]
+
+[[ _FetchHandler (menu_GetTitleSuites,f) ]]
+
+[[ _FetchHandler (menu_DeleteTitleSuites,c) ]]
+
+
+--> Model | Menu | Plugin
+-
+/*
+References to menus are stored in the global vairable "gOPN_MenuArray".
+It allows for front scripts to override existing menus (like those in the IDE),
+based on the contents of this global array.
+
+This model is stored along with other OPN Globals in the opn_Preferences stack.
+These preferences are automatically stored on exiting the open environment and loaded on opening it.
+*/
+
+[[ _FetchHandler (menu_Plugin,g) ]]
+
+[[ _FetchHandler (menu_Plugin,s) ]]
+
+-- getprop menu_PluginArray [pToolMode]
+   global gOPN_MenuArray
+   put the long id of the target into targetObject
+   
+   put item 2 of pToolMode into pObjectTestProp
+   -- use main_Name as default as this is what is needed by revScriptEditor and faster to have only one prop to search
+   if pObjectTestProp is empty then put "main_Name" into pObjectTestProp
+   put item 1 of pToolMode into toolMode
+   if toolMode is empty then
+      put menu_ModifierKeys() into toolMode
+      if toolMode is empty then put "none" into toolMode
+   end if
+   
+   put gOPN_MenuArray [toolMode] into toolModeArray
+   put keys(toolModeArray) into pObjectTestProps
+   repeat for each line pObjectTestProp in pObjectTestProps
+      try
+         put the pObjectTestProp of targetObject into objectRefValue
+         put toolModeArray [pObjectTestProp][objectRefValue] into mPluginArray
+         return mPluginArray
+      catch someError
+         breakPoint
+         put the pObjectTestProp of targetObject into objectRefValue
+      end try
+   end repeat
+   return empty
+end menu_PluginArray
+
+[[ _FetchHandler (menu_PluginArray,s) ]]
+
+[[ _FetchHandler (menu_SetPlugin,c) ]]
+
+[[ _FetchHandler (menu_AddPlugin,c) ]]
+
+[[ _FetchHandler (menu_SetPluginArray,c) ]]
+
+-- getprop menu_PluginTable [pToolMode]
+   put the menu_PluginArray [pToolMode] of the target into mPluginArray
+   put item 2 of the extents of mPluginArray into maxNum
+   repeat with indexNum = 1 to maxNum
+      put mPluginArray [indexNum] into mRecordArray
+      menu_ConvertArrayToRecord mRecordArray
+      put mRecordArray & CR after mRecordTable
+   end repeat
+   delete char -1 of mRecordTable   
+   return mRecordTable
+end menu_PluginTable
+
+[[ _FetchHandler (menu_PluginTable,s) ]]
+
+[[ _FetchHandler (menu_ConvertRecordToArray,c) ]]
+
+[[ _FetchHandler (menu_ConvertArrayToRecord,c) ]]
+
+[[ _FetchHandler (menu_NormalizePluginArray,c) ]]
+
+[[ _FetchHandler (menu_NormalizeRecordArray,c) ]]
+
+[[ _FetchHandler (menu_ConstructPluginRecord,f) ]]
+
+[[ _FetchHandler (menu_DeconstructPluginRecord,c) ]]
+
+[[ _FetchHandler (menu_DeletePluginRecord,c) ]]
+
+[[ _FetchHandler (object_ShortID,g) ]]
+
+
+--> Menu | Model | Table
+-
+/*
+Stored in the menu_DataArray - mDataArray [mTitle], or mArray [mTitle]
+*/
+
+-- getprop menu_Table [pMenuTitle]
+   if pMenuTitle is empty then put the menu_Title of the target into pMenuTitle
+   if pMenuTitle is empty then return empty
+   put the menu_Controller [pMenuTitle] of the target into mController
+   
+   put menu_GetTable (pMenuTitle, mController) into mTable
+   return mTable
+end menu_Table
+
+[[ _FetchHandler (menu_TableArrayHeaders,f) ]]
+
+[[ _FetchHandler (menu_TableArray,g) ]]
+
+[[ _FetchHandler (menuTableArray_AddBoolean,c) ]]
+
+[[ _FetchHandler (menuTableArray_AddPlain,c) ]]
+
+[[ _FetchHandler (_AddToArray,pc) ]]
+
+[[ _FetchHandler (_AddObjectToArray,pc) ]]

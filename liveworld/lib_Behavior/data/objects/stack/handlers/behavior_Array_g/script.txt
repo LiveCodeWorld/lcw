@@ -1,0 +1,7 @@
+getprop behavior_Array
+   -- hArray | Behaviors
+   put the rugged_ID of the target into behaviorObject
+   put hArray_GetBehaviorArray() into behaviorArray
+   put behaviorArray [behaviorObject] into objectArray
+   return objectArray
+end behavior_Array

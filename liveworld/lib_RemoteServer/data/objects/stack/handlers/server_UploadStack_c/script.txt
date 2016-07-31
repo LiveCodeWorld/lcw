@@ -1,0 +1,21 @@
+command server_UploadStack stackName, pDontNotify
+   put the filename of stack stackName into stackPath
+   set the itemdelimiter to "/"
+   put item -1 of stackPath into shortPath
+   put rig_StackPath (shortPath) into serverStackPath
+   
+   put the name of stack stackName into stackObject
+   save stackObject
+   
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   put server_GetSshKeyPath() into sshKeyPath
+   server_StoreFile stackPath, serverStackPath, serverAddress, sshUser, sshKeyPath
+   put the result into someResult
+   
+   if pDontNotify is not true then
+      put merge ("Uploaded stack" && shortPath && "to [[serverAddress]]!") into someComment
+      opn_Notify someComment
+   end if
+   return someResult
+end server_UploadStack

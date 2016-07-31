@@ -1,0 +1,16 @@
+function dot_ConstructHeader graphSize, pDotPropertyArray, graphStyle, pUseInches
+   put dot_ConstructHeaderBase (graphSize, pDotPropertyArray, graphStyle, pUseInches) into graphHeaderBase
+   
+   put "graph [" & CR after graphHeader
+   put outline_IncreaseIndent(graphHeaderBase) & CR after graphHeader
+   put "];" & CR after graphHeader
+   
+   -- default node section
+   dot_DeconstructPropertyArray pDotPropertyArray, overlap, concentrate, splines, cluster, direction, dotOrder, defaultShape, defaultUrl
+   if defaultUrl is not empty then put "node [URL=" & kwote(defaultUrl) & "];" & CR after defaultNodeSection
+   if defaultShape is not empty then put "node [shape=" & defaultShape & "];" & CR after defaultNodeSection
+   if defaultNodeSection is not empty then put CR & defaultNodeSection & CR after graphHeader
+   
+   delete last char of graphHeader
+   return graphHeader
+end dot_ConstructHeader

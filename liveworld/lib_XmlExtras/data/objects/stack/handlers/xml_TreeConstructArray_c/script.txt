@@ -1,0 +1,9 @@
+on xml_TreeConstructArray treeID, startNode, @treeArray
+    xml_TreeAddToArray startNode, treeID, treeArray
+    
+    put revXMLChildNames(treeID, startNode, return, empty, true) into childNames
+    repeat for each line childName in childNames
+        put startNode & "/" & childName into childNode
+        xml_TreeConstructArray treeID, childNode, treeArray
+    end repeat
+end xml_TreeConstructArray

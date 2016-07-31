@@ -1,0 +1,20 @@
+getprop menu_Title
+   -- simple version that does not refer to menu_Controller, local burn then default if empty
+   -- can be over-ridden by a menu_Title handler in the card script
+   -- so try to avoid putting these handers in a views script
+   
+   put the long id of the target into targetObject
+   put the menu_BurntTitle of targetObject into mTitle
+   if mTitle is not empty then return mTitle
+   put the menu_DefaultTitle of targetObject into mTitle
+   
+   if mTitle is empty then
+      -- quick hack
+      -- this version does not getch the first mTitle in the script as arrays are not numerically indexed
+      put the menu_DataArray of targetObject into menuDataArray
+      put keys (menuDataArray) into mTitles
+      -- sort mTitles
+      return line 1 of mTitles
+   end if
+   return mTitle
+end menu_Title

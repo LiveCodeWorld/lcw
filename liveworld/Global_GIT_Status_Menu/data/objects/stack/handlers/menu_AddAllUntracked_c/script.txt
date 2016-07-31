@@ -1,0 +1,8 @@
+on menu_AddAllUntracked
+   put the shiftKey is "Down" into shiftStatus
+   set the cursor to watch
+   put "git add --all" into someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   opn_Notify shellResult, true
+   if shiftStatus is false then git_RefreshDisplay
+end menu_AddAllUntracked

@@ -1,0 +1,6 @@
+command project_LoadGlobalPrefs pProjectName
+   -- this loads the globals without clearing any of the others
+   put project_FetchPrefs (pProjectName) into projectPrefsArray
+   global_Load projectPrefsArray -- now let's load the globals
+   return projectPrefsArray
+end project_LoadGlobalPrefs

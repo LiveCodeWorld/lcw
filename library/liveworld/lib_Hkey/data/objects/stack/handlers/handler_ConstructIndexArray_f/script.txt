@@ -1,0 +1,9 @@
+function handler_ConstructIndexArray hKeyIndex
+   repeat for each line hKey in hKeyIndex
+      put item 1 of hKey into handlerName
+      put hkeyIndexArray [handlerName] into hKeys
+      line_Add hKey, hKeys
+      put hKeys into hkeyIndexArray [handlerName]
+   end repeat
+   return hkeyIndexArray
+end handler_ConstructIndexArray

@@ -1,0 +1,9 @@
+command view_Update someView, pSendReplace
+   -- replaces a view with a library version if the library version is more up-to-date
+   put pSendReplace is not false into pSendReplace
+   put the view_Template of someView into libraryView
+   if exists (libraryView) is false then return "Error: library view does not exist. maybe target is not a view?"
+   
+   set the view_Replacement [pSendReplace] of someView to libraryView
+   return the result
+end view_Update

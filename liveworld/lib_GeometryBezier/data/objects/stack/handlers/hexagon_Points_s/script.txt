@@ -1,0 +1,13 @@
+setprop hexagon_Points [someRotation] someDiameter
+   put the loc of the target into myLoc
+   if someDiameter is empty then put 30 into someDiameter
+   
+   set the style of the target to polygon
+   repeat with pNum = 1 to 6
+      put hexagon_GetPoint (pNum, someDiameter, myLoc, someRotation) into somePoint
+      put somePoint & CR after somePoints
+   end repeat
+   delete char -1 of somePoints
+   set the points of the target to somePoints
+   return somePoints
+end hexagon_Points

@@ -1,0 +1,13 @@
+command menu_IndexStackMenuCards pStackObject
+   if pStackObject is empty then put the stack_Object of the target into pStackObject
+   
+   repeat for each line someID in the cardids of pStackObject
+      set the cursor to busy
+      put the long id of card id someID of pStackObject into cardObject
+      
+      -- menu_CreateAndStoreTables
+      object_AddToGlobalArray cardObject
+           
+      opn_Notify ("Updated index for menu" && kwote (the short name of cardObject) & "!")
+   end repeat
+end menu_IndexStackMenuCards

@@ -1,0 +1,5 @@
+function daemon_GetRouteContentType someRoute
+   put daemon_GetRouteHeaderArray (someRoute) into headerArray
+   put headerArray ["Content-Type"] into contentType
+   return contentType
+end daemon_GetRouteContentType

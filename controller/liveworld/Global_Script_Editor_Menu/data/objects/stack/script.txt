@@ -1,0 +1,160 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Script | Editor | Menu
+type: controller
+version: 0.3
+
+/*
+Moved to a script-only stack menu.
+*/
+
+
+--> Variables
+-
+local LocalArray
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (field_SetSelected,c) ]]
+
+[[ _FetchHandler (hkey_GetSelected,f) ]]
+
+[[ _FetchHandler (hkey_FromSelected,f) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_Title,g) ]]
+
+
+--> Global | Script | Editor | Menu
+-
+[[ _FetchHandler (menu_ScriptEditorMenu,c) ]]
+
+[[ _FetchHandler (menu_FindLibraryHandler,c) ]]
+
+[[ _FetchHandler (find_Whats,g) ]]
+
+[[ _FetchHandler (_getSelectedText,pf) ]]
+
+[[ _FetchHandler (menu_FindProjectHandler,c) ]]
+
+[[ _FetchHandler (launchFile,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+[[ _FetchHandler (submenu_Behavior,c) ]]
+
+[[ _FetchHandler (submenu_ScriptBehavior,c) ]]
+
+[[ _FetchHandler (submenu_Template,c) ]]
+
+[[ _FetchHandler (submenu_Prefs,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_StackHistory,c) ]]
+
+-- on submenu_ScriptHistory
+   return "Global | Script | History | Menu"
+end submenu_ScriptHistory
+
+-- on submenu_Teamster
+   return "Global | Teamster | Menu"
+end submenu_Teamster
+
+-- on submenu_Script
+   return "Global | Script | Menu"
+end submenu_Script
+
+[[ _FetchHandler (submenu_Archive,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Go,c) ]]
+
+[[ _FetchHandler (menu_GoToObject,c) ]]
+
+[[ _FetchHandler (submenu_Object,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Library,c) ]]
+
+[[ _FetchHandler (submenu_ManageLibrary,c) ]]
+
+on _
+end _
+
+-- on submenu_Opn
+   return "Global | OPN | Menu"
+end submenu_Opn
+
+[[ _FetchHandler (submenu_Stack,c) ]]
+
+-- on submenu_Extras
+   return "Global | Script Editor | Extras | Menu"
+end submenu_Extras
+
+
+--> Global | Script Editor | Extras | Menu
+-
+[[ _FetchHandler (menu_FindHandlerInHierarchy,c) ]]
+
+[[ _FetchHandler (menu_SearchkeyWords,c) ]]
+
+[[ _FetchHandler (submenu_Menu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_ScriptArray,c) ]]
+
+[[ _FetchHandler (submenu_Dependencies,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Search,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_View,c) ]]
+
+[[ _FetchHandler (submenu_Card,c) ]]
+
+on _
+end _
+
+-- on submenu_Dev
+   return "Global | Script | Editor | Dev | Menu"
+end submenu_Dev
+
+[[ _FetchHandler (menu_EditScriptEditorMenu,c) ]]
+
+
+--> Global | Script | Editor | Props
+-
+[[ _FetchHandler (disabled_FindInHierarchy,g) ]]
+
+
+--> Display | Controllers
+-
+[[ _FetchHandler (tree_MouseDoubleUp,c) ]]
+
+
+--> Display
+-
+[[ _FetchHandler (display_ScriptKeywordLinks,c) ]]
+
+[[ _FetchHandler (_ConstructSortedOutlineSection,pf) ]]

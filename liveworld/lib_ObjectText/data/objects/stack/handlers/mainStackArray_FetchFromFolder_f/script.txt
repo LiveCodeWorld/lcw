@@ -1,0 +1,40 @@
+function mainStackArray_FetchFromFolder mainStackFolder, pUseCustomFolders
+   -- should work for mainstack folder of substack folders
+   folder_Format mainStackFolder
+   put stack_FetchManifestArray (mainStackFolder) into manifestArray
+   put manifestArray into mainStackArray ["manifest"]
+   
+   put mainStackFolder & "objects/" into objectsFolder
+   put the directory into originalDirectory
+   set the directory to objectsFolder
+   put the folders into shortFolders  
+   put false into hasSubStacks
+   repeat for each line shortFolder in shortFolders
+      switch
+         case char 1 of shortFolder = "." 
+            next repeat
+         case shortFolder = "substacks"
+            put true into hasSubStacks
+            next repeat
+         default
+            put objectsFolder & shortFolder & "/" into objectFolder
+            put object_ConstructArrayFromFolder (objectFolder, pUseCustomFolders) into objectArray
+            put objectArray into objectsArray [shortFolder]
+      end switch
+   end repeat
+   
+   if hasSubStacks is true then
+      put objectsFolder & "substacks/" into subStackRoot
+      set the directory to subStackRoot
+      put the folders into shortSubStackFolders  
+      repeat for each line shortSubStackFolder in shortSubStackFolders
+         if char 1 of shortSubStackFolder = "." then next repeat
+         put subStackRoot & shortSubStackFolder & "/" into subStackFolder
+         put stackArray_FetchFromFolder (subStackFolder, pUseCustomFolders) into subStackArray
+         put subStackArray into objectsArray ["substacks"][shortSubStackFolder]
+      end repeat
+   end if
+   put objectsArray into mainStackArray ["objects"]
+   set the directory to originalDirectory
+   return mainStackArray
+end mainStackArray_FetchFromFolder

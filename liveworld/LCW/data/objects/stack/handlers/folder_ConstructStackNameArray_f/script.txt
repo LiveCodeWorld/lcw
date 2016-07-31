@@ -1,0 +1,21 @@
+function folder_ConstructStackNameArray someFolder, pHomeFolder
+   if char -1 of someFolder is not slash then put slash after someFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into stackFilePath
+      if there is a stack stackFilePath then
+         put the short name of stack stackFilePath into stackName
+         if pHomeFolder is not empty then
+            -- make a relative path
+            replace pHomeFolder with empty in stackFilePath
+         end if
+         put stackFilePath into stackNameArray [stackName]
+      end if
+   end repeat
+   set the defaultfolder to oFolder
+   return stackNameArray
+end folder_ConstructStackNameArray

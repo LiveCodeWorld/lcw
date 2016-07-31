@@ -1,0 +1,6 @@
+on menu_SnapImage scriptObject
+   wireframe_SnapAndExport scriptObject, true
+   put the result into imageFile
+   set the filename of image 1 of cd 1 of stack "Test Wireframe Image" to imageFile
+   finder_Reveal imageFile
+end menu_SnapImage

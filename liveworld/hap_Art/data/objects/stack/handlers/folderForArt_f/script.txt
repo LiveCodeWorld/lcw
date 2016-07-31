@@ -1,0 +1,5 @@
+function folderForArt pA
+   set the itemdel to slash
+   put item 2 of pA["media_type"] into tType
+   return ($_SERVER["DOCUMENT_ROOT"] & "/media/art/" & tType &"/"& pA["file_id"]) 
+end folderForArt

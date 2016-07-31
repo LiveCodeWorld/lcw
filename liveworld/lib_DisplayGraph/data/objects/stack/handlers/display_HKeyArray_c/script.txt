@@ -1,0 +1,9 @@
+command display_HKeyArray hKeyArray, hkeyOrObject
+   local pDoubleUpCommand
+   
+   put hkeyArray_ConstructTreeArray (hkeyArray) into treeArray
+   display_HkeyTreeArray treeArray, hkeyOrObject, pDoubleUpCommand
+   put the result into treeView
+   set the view_Data of treeView to hKeyArray
+   return treeview
+end display_HKeyArray

@@ -1,0 +1,9 @@
+function hkey_Construct hName, hType, hObject, pHandlerNum
+   if exists (hObject) then
+      put revRuggedID (hObject) into hObject
+   else
+      put "Missing" into hObject	# could add scriptObject info ??? 
+   end if
+   if pHandlerNum is empty then put 1 into pHandlerNum
+   return hName,hType,hObject,pHandlerNum
+end hkey_Construct

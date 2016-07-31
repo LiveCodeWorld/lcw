@@ -1,0 +1,30 @@
+function ccc_ConstructMultiSourceVideoHtml cccArray
+   -- used to create multiple source video tag
+   -- this HTML5 does not display in Fedwiki HTML plugin for unknown (sanitization?) reasons
+     
+   put cccArray ["media"]["en-de"] into mediaArray
+   if mediaArray is not an array then put cccArray ["media"]["en"] into mediaArray
+   
+   put empty into posterImageFile
+   put html_ConstructVideoTag (420, true, posterImageFile) after someHTML -- opening video tag
+   put keys (mediaArray) into videoTypes
+   -- put "WEBM (HD),MP4 (HD),webm,mp4" into videoTypes
+   repeat for each line videoType in videoTypes
+      -- let's skip low res versions
+      if videoTypes contains "WEBM (HD)" and videoType = "webm" then next repeat
+      if videoTypes contains "MP4 (HD)" and videoType = "mp4" then next repeat
+      
+      put mediaArray [videoType] into videoURL
+      if videoURL is empty then next repeat
+      
+      put html_ConstructVideoSourceTag (videoURL, videoType) after someHTML
+   end repeat
+   put "<p>" after someHTML
+   put "This is fallback content to display for user agents that do not support the video tag." after someHTML
+   put "</p>" after someHTML
+   put "</video>" after someHTML
+   
+   put ccc_ConstructVideoCaption (cccArray) after someHTML
+   
+   return someHTML
+end ccc_ConstructMultiSourceVideoHtml

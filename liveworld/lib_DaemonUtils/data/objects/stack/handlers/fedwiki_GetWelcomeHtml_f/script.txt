@@ -1,0 +1,5 @@
+function fedwiki_GetWelcomeHtml
+   put "file:" & fedwiki_GetWelcomeFile () into someUrl
+   put url someUrl into welcomeHtml
+   return welcomeHtml
+end fedwiki_GetWelcomeHtml

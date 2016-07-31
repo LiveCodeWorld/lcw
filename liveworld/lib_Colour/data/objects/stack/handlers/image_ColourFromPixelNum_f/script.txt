@@ -1,0 +1,9 @@
+function image_ColourFromPixelNum pixelNum, imageObject
+  put the imagedata of imageObject into someData
+   
+  put pixelNum - 1 into zeroedNum
+  put chartonum(char ((4 *zeroedNum) + 2) of someData) into someRed
+  put chartonum(char (4 * zeroedNum) + 3 of someData) into someGreen
+  put chartonum(char (4 * zeroedNum) + 4 of someData) into someBlue
+  return someRed,someGreen,someBlue
+end image_ColourFromPixelNum

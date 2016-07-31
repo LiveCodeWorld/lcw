@@ -1,0 +1,8 @@
+on menu_DoubleJson mTarget
+   -- put url "http://wiki.viral.academy/teachers.json?random=22d425f7" into someJSON
+   -- put url "http://wiki.viral.academy/welcome-visitors.json?random=6fcfffef" into someJSON
+   put url "http://wiki.viral.academy/welcome-visitors.json" into someJSON
+   -- put url "http://wiki.viral.academy/view/welcome-visitors/view/teachers" into someJSON
+   put json_ToArray (someJSON) into someArray
+   display_Array someArray
+end menu_DoubleJson

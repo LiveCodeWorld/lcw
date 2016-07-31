@@ -1,0 +1,13 @@
+getprop field_HtmlText [charOffsets]
+   put the long ID of the target into someField
+   
+   if charOffsets is eempty then
+      put "get the htmltext of someField" into doScript
+   else
+      put item 1 of charOffsets into startChar
+      put item 2 of charOffsets into endChar
+      put "get the htmltext of char startChar to endChar of someField" into doScript
+   end if
+   do doScript
+   return it
+end field_HtmlText

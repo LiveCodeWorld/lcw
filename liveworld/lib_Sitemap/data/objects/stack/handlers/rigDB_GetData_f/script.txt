@@ -1,0 +1,19 @@
+function rigDB_GetData pFieldList
+   switch pFieldList
+      case empty
+         rigDbSelect "file_id"
+         put rigDbGet() into tQuery
+         put rigDB_ExtractFirstThing (tQuery) into fileIDs
+         sort fileIDs
+         return fileIDs
+      case "*"
+         put rigDbGet() into tResultArray
+         put base64Encode(arrayEncode(tResultArray)) into tEncodedArray
+         return tEncodedArray
+      default
+         rigDbSelect pFieldList
+         put rigDbGet() into tResultArray
+         put base64Encode(arrayEncode(tResultArray)) into tEncodedArray
+         return tEncodedArray
+   end switch
+end rigDB_GetData

@@ -1,0 +1,4 @@
+function shell_ManPage someShell
+   put shell ("man " & someShell & " | col -b") into manpage
+   return manpage
+end shell_ManPage

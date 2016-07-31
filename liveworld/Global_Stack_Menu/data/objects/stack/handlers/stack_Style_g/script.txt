@@ -1,0 +1,5 @@
+getprop stack_Style [mTarget]
+   if exists(mTarget) is false then return empty
+   put the stack_Object of mTarget into stackObject
+   return the style of stackObject
+end stack_Style

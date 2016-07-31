@@ -1,0 +1,5 @@
+on menu_ResetPositiveTrait plusMinusView
+   put the positive_View of plusMinusView into positiveView
+   set the control_Type of positiveView to "placeholder"
+   put the top_ControlNames of plusMinusView
+end menu_ResetPositiveTrait

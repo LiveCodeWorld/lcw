@@ -1,0 +1,6 @@
+on menu_DependencyArrayFromObjects scriptObject, projectName
+   put true into pAllCalls
+   put the script_FirstHkeys of scriptObject into hKeys
+   put hkey_DependencyArrayFromObjects (hKeys, projectName, pAllCalls) into hKeyLinkArray
+   display_Array hKeyLinkArray, "hkey_DependencyArrayFromObjects"
+end menu_DependencyArrayFromObjects

@@ -1,0 +1,62 @@
+command menu_SendMessage mPath, pMenuTarget, pCreateActiveArray
+   -- ignoreCall: mCommand,c
+   -- ignoreCall: callCommand,c
+   -- ignoreCall: menu_Version,g
+   
+   -- to avoid menuPick handler in front script calling this twice must return non-empty if the menu is handled
+   if pCreateActiveArray is true then
+      breakpoint
+      get the menu_Text of the target -- will usually have already been constructed with dynamic menus on mouseDown
+   end if
+   
+   menu_DeconstructPath mPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType -- look up in array
+   if the result is false then return empty  -- when frontscript is active will be called by every menu (even Rev Ide menus)
+   if exists (mController) is false then breakPoint -- something wrong
+   
+   if exists (pMenuTarget) then
+      menu_SetItemTargetOveride mPath, pMenuTarget
+      put pMenuTarget into mTarget
+   else
+      put menu_TargetFromGlobal (mPath) into mTarget  -- mTarget must be same as what "menu_SendMessage does
+   end if
+   
+   -- set the defaultstack to the stack_Object of mTarget
+   set the defaultstack to the stack_Object of menu_GetTargetObject()
+   
+   menu_SetSentPath mPath -- everything can be derived from that
+   menu_SetTitlePath mTitlePath     
+   
+   if the menu_OptionEdit of me is true and the optionkey is "Down" then
+      dispatch "menu_EditMenuItem" to mController with pigeon,foundPath,subMenuPath,mController,mTarget
+      return the result
+   else
+      put token 1 of pigeon into mCommand
+      put token 2 of pigeon into firstParamName
+      put token 4 of pigeon into secondParamName
+      
+      switch the menu_Version of mController
+         case 2
+            dispatch mCommand to mController with mTarget, subMenuPath
+            break
+         default -- case empty
+            put mCommand && "mTarget, subMenuPath" into callCommand
+            try
+               call callCommand of mController -- does not change the defaultstack
+            catch e
+               -- handle here to offer some menu authoring / error checking
+               beep
+               -- breakpoint
+            end try
+      end switch
+      
+      switch it
+         case "handled"
+            return it
+         case "passed"
+            return it
+         case "not handled"
+            -- menu_SendMessageError tError
+            return it
+      end switch
+   end if
+end menu_SendMessage

@@ -1,0 +1,7 @@
+setprop component_Name [pComponentType] uRipName
+   -- same as "view_Name"
+   put the long id of the target into tObject
+   component_SetName tObject, uripName, pComponentType
+   put the result into someScript
+   return someScript
+end component_Name

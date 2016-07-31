@@ -1,0 +1,20 @@
+command git_CreateIgnoreFile pIsGlobal, pIgnoreType
+   put git_ConstructIgnoreText ("LF") into ignoreText
+   if pIsGlobal is true then
+      put git_GlobalIgnoreFile() into ignoreFile
+   else
+      put git_LocalIgnoreFile() into ignoreFile
+   end if 
+   put "binfile:" & ignoreFile into someUrl
+   put ignoreText into url someUrl
+   
+   put ignoreFile into bashFile
+   shell_BashParamEscape bashFile
+   if pIsGlobal is true then
+      put "git config --global core.excludesfile" && bashFile into someShell
+   else
+      put "touch" & bashFile into someShell
+   end if
+   git_ExecuteShell someShell
+   return ignoreFile
+end git_CreateIgnoreFile

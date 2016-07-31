@@ -1,0 +1,127 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | ScriptEditor | Watch | Menu
+type: controller
+version: 0.6
+
+/*
+This is designed to be the main or the default menu for manipulating a script in an editor.
+As such it is currently used in the Livecode IDE's script editor.
+You can attach it anywhere you want. I personally add it to the Script Editors "watch" button on the top right bar of the editor.
+
+Below we include any local variables or constants that this menu needs.
+*/
+
+local LocalArray
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (rev_ListEditedStackNames,f) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Global | ScriptEditor | Watch | Menu
+-
+[[ _FetchHandler (menu_DisplayLocalChanges,c) ]]
+
+[[ _FetchHandler (submenu_Stack,c) ]]
+
+[[ _FetchHandler (menu_RecentScripts,c) ]]
+
+[[ _FetchHandler (menu_SaveEditedStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_View,c) ]]
+
+[[ _FetchHandler (submenu_Create,c) ]]
+
+[[ _FetchHandler (submenu_Behavior,c) ]]
+
+[[ _FetchHandler (menu_EditLivecodeBehaviorButton,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Go,c) ]]
+
+[[ _FetchHandler (menu_RevealProjectFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+[[ _FetchHandler (submenu_Exported,c) ]]
+
+[[ _FetchHandler (submenu_Gist,c) ]]
+
+[[ _FetchHandler (submenu_Template,c) ]]
+
+[[ _FetchHandler (submenu_Library,c) ]]
+
+[[ _FetchHandler (submenu_ManageLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Archive,c) ]]
+
+on submenu_Exported
+   return "Global | Script | Exported | Menu"
+end submenu_Exported
+
+[[ _FetchHandler (submenu_Mainstack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_EditScripts,c) ]]
+
+[[ _FetchHandler (submenu_Teamster,c) ]]
+
+[[ _FetchHandler (submenu_TextStack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FindFromKeywords,c) ]]
+
+
+--> Global | ScriptEditor | Watch | Menu | Props
+-
+[[ _FetchHandler (ide_BNames,g) ]]
+
+[[ _FetchHandler (disabled_SaveEditedStacks,g) ]]
+
+[[ _FetchHandler (edited_StackNames,g) ]]
+
+[[ _FetchHandler (recent_Objects,g) ]]
+
+
+--> Global | ScriptEditor | Watch | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DisplayLocalChanges,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (terminal_Diff,c) ]]
+
+[[ _FetchHandler (diff_CreateTempFile,c) ]]
+
+[[ _FetchHandler (diff_Files,c) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+[[ _FetchHandler (text_AddTrailing,c) ]]
+
+[[ _FetchHandler (objects_MakeFriendly,c) ]]
+
+[[ _FetchHandler (object_MakeFriendly,f) ]]

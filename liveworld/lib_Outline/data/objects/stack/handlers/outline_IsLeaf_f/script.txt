@@ -1,0 +1,3 @@
+function outline_IsLeaf startOsLineNum, tabbedOutline
+    return outline_GetChildren(startOsLineNum, tabbedOutline) is empty
+end outline_IsLeaf

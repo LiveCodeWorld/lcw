@@ -1,0 +1,16 @@
+command deconstruct_VideoSnippetArray snippetArray, @videoTitle, @videoDescription,@videoID, @thumbNailURL, @publishedAt, @episodeNum, @tagArray, @thumbNailWidth
+   put snippetArray ["title"] into videoTitle
+   put snippetArray ["description"] into videoDescription
+   put snippetArray ["tags"] into tagArray
+   
+   put snippetArray ["publishedAt"] into publishedAt
+   date_Convert8601 publishedAt
+   
+   put snippetArray ["position"] into episodeNum
+   add 1 to episodeNum
+   
+   put snippetArray ["resourceId"]["videoId"] into videoID
+   
+   -- thumbnail_SetMedium snippetArray, thumbNailURL, thumbNailWidth
+   thumbnail_SetStandard snippetArray, thumbNailURL, thumbNailWidth
+end deconstruct_VideoSnippetArray

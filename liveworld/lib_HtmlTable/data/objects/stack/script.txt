@@ -1,0 +1,149 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_HtmlTable
+type: script library
+version: 0.1
+
+/*
+Here we look to produce a minimal but effective library for creating and parsing HTML tables.
+*/
+
+--> Declare Variables
+-
+local sRows, sHeading, sAutoHeading, sCaption, sTemplate, sNewline, sEmptyCells
+
+put TRUE into sAutoHeading
+put return into sNewline
+
+
+--> Working On
+-
+[[ _FetchHandler (test_Table,c) ]]
+
+[[ _FetchHandler (table_ConstructArrayFromTree,f) ]]
+
+[[ _FetchHandler (table_ParseSection,pc) ]]
+
+
+--> Table | Construct
+-
+[[ _FetchHandler (table_ConstructHeader,f) ]]
+
+
+--> Table | Construct | From Tabs
+-
+[[ _FetchHandler (table_ConstructBody,f) ]]
+
+
+--> Table | xHTML
+-
+/*
+The handlers use Livecodes XML features to process tables. 
+*/
+
+[[ _FetchHandler (table_Extract,f) ]]
+
+[[ _FetchHandler (table_ExtractFromXmlID,f) ]]
+
+
+--> Table | From revIgniter
+-
+[[ _FetchHandler (table_Construct,f) ]]
+
+
+--> Table | Rows and Columns
+-
+[[ _FetchHandler (table_AddRow,c) ]]
+
+[[ _FetchHandler (table_MakeColumns,f) ]]
+
+
+--> Table | Template | Construct
+-
+/*
+Table template is an array stored in the local variable "sTemplate".
+
+The handlers below let you construct, build your own custom templates.
+You then need to "set" the template with the "table_SetTemplate" handler.
+*/
+
+[[ _FetchHandler (table_ConstructOpenTag,f) ]]
+
+[[ _FetchHandler (table_SetTemplateOpeningTag,c) ]]
+
+[[ _FetchHandler (table_SetTemplate,c) ]]
+
+[[ _FetchHandler (table_DefaultTemplate,f) ]]
+
+
+--> Table | Heading
+-
+[[ _FetchHandler (table_SetHeading,c) ]]
+
+[[ _FetchHandler (table_SetEmptyCellDefault,c) ]]
+
+[[ _FetchHandler (table_ClearVars,c) ]]
+
+
+--> Private | Table
+-
+[[ _FetchHandler (_compileTemplate,pc) ]]
+
+[[ _FetchHandler (_setTableData,pc) ]]
+
+
+--> Table | Junk
+-
+-- function table_ToTabbed xmlID, tableNode
+if char -1 of tableNode is "/" then delete char -1 of tableNode
+
+breakpoint
+put tableNode & "/tbody/" into bodyNode
+put xml_TreeChildNodes(xmlID, bodyNode, "tr", true) into trNodes
+if trNodes is not empty then
+   put tableNode & "/thead/tr/" into headNode
+   put xml_TreeChildNodes(xmlID, headNode, "th", true) into thNodes
+else
+   put xml_TreeChildNodes(xmlID, tableNode, "th", true) into thNodes
+   put xml_TreeChildNodes(xmlID, tableNode, "tr", true) into trNodes
+end if
+
+if thNodes is not empty then put xml_TreeNodeValues(xmlID, thNodes, tab) & CR into tabTable
+
+repeat for each line trNode in trNodes
+   put xml_TreeChildNodeContents(xmlID, trNode, "td", tab) into tableLine
+   put tableLine & CR after tabTable
+end repeat
+delete char -1 of tabTable
+return tabTable
+end table_ToTabbed
+
+-- private function html_TableToTabbedUtil innerTableNode
+put revXMLChildNames(xmlID, innerTableNode, CR, "tr", true) into rowNames
+repeat f or each line rowName in rowNames
+   put empty into tabTableLine
+   put innerTableNode & rowName into rowNode
+   
+   put revXMLChildNames(xmlID, rowNode, CR, "td", true) into itemTagNames
+   repeat for each line itemTagName in itemTagNames
+      put rowNode & "/" & itemTagName into itemNode
+      put revXMLNodeContents(xmlID, itemNode) into itemValue
+      put itemValue & tab after tabTableLine
+   end repeat
+   delete char -1 of tabTableLine
+   if tabTableLine is empty then next repeat
+   
+   put tabTableLine & CR after tabTable
+end repeat
+delete char -1 of tabTable
+
+put revXMLChildNames(xmlID, rowNode, CR, "th", true) into itemTagNames
+repeat for each line itemTagName in itemTagNames
+   put rowNode & "/" & itemTagName into itemNode
+   put revXMLNodeContents(xmlID, itemNode) into itemValue
+   put itemValue & tab after tabTableLine
+end repeat
+delete char -1 of tabTableLine
+end html_TableToTabbedUtil

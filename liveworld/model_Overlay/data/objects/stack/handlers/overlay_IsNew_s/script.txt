@@ -1,0 +1,21 @@
+setprop overlay_IsNew [pOverlayName] someBoolean
+   put the long id of the target into scriptObject
+   put "sha1 of script when overlay created" into pKey
+   
+   if someBoolean is true then
+      put the script of scriptObject into someScript
+      put sha1_Hash (someScript) into hashWhenCreated
+      
+      -- set the hdb_ObjectMetaData [pKey] of scriptObject to hashWhenCreated
+      -- set the overlay_GraphProperty [pKey] of scriptObject to hashWhenCreated
+      
+      put the overlay_Folder of scriptObject into overlayFolder
+      overlay_SetGraphValue overlayFolder, pKey, hashWhenCreated, pOverlayName, false
+      
+      return hashWhenCreated
+   else
+      -- don't really need to do anything as it will return false when the script hash changes
+      -- so may as well keep old hash
+      -- set the hdb_ObjectMetaData [pKey] of scriptObject to empty ???
+   end if
+end overlay_IsNew

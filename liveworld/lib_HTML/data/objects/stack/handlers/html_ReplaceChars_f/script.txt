@@ -1,0 +1,12 @@
+function html_ReplaceChars someText
+    put html_EntityList() into htmlEntities
+    put html_EntityCharNums() into entityCharNums
+    
+    repeat with ii = 1 to the number of items of htmlEntities
+        put item ii of entityCharNums in entityCharNum
+        put numtochar(entityCharNum) into someChar
+        put item ii of htmlEntities in htmlEntity
+        replace someChar with htmlEntity in someText
+    end repeat
+    return someText
+end html_ReplaceChars

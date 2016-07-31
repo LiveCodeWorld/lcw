@@ -1,0 +1,9 @@
+command object_RealNameChanged oldName, newName, someView, modelObject
+   put the customProperties ["uOPN_ObjectNameArray"] of modelObject into nameArray
+   repeat for each key fixedName in nameArray
+      put nameArray [fixedName] into oldRealName
+      if oldRealName is oldName then
+         set the uOPN_ObjectNameArray [fixedName] of modelObject to newName
+      end if
+   end repeat
+end object_RealNameChanged

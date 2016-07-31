@@ -1,0 +1,5 @@
+function git_FileCommitHashArray someFile, pHowMany, pAllBranches
+   put git_FileLog (someFile, pHowMany, pAllBranches) into simpleLog
+   put git_LogLinkArray(simpleLog) into commitHashArray
+   return commitHashArray
+end git_FileCommitHashArray

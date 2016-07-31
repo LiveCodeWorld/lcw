@@ -1,0 +1,13 @@
+setprop exported_Script [pExportHandlers] someScript
+   put the long id of the target into scriptObject
+   
+   set the meta_Script [pExportHandlers] of scriptObject to someScript
+    -- script_UpdateAndExport scriptObject
+  put the result into someFile
+   
+   -- newUpdate someScript, scriptObject, relativeFile, someFile
+   script_UpdateMeta scriptObject, someScript
+   -- script_UpdateGlobalSuiteIndex scriptObject, someScript
+   script_UpdateMenuTables scriptObject
+   return someFile
+end exported_Script

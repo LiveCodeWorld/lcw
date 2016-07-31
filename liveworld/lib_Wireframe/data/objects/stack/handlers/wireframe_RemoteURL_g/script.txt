@@ -1,0 +1,5 @@
+getprop wireframe_RemoteURL
+   put the wireframe_ImageShortFile of the target into shortFile
+   put lcw_ConstructImageURL (shortFile) into remoteURL
+   return remoteURL
+end wireframe_RemoteURL

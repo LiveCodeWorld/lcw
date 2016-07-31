@@ -1,0 +1,11 @@
+command gist_SaveOrUpdate someScript, shortGistFile, pGistHelp, pIsPublic, pGistListArray
+   put gist_FindInListArray (shortGistFile, pGistListArray) into gistID
+   if gistID is empty then
+      gist_Create someScript, pGistHelp, shortGistFile, pIsPublic
+   else
+      gist_Edit gistID, shortGistFile, someScript, pGistHelp, pIsPublic
+   end if
+   put the result into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end gist_SaveOrUpdate

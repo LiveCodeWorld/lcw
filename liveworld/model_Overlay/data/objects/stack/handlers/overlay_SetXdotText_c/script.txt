@@ -1,0 +1,5 @@
+command overlay_SetXdotText overlayFolder, xdotText, pOverlayName
+   put overlay_ConstructFile ("xdot", overlayFolder, pOverlayName) into someFile
+   put xdotText into url ("file:" & someFile)
+   return someFile
+end overlay_SetXdotText

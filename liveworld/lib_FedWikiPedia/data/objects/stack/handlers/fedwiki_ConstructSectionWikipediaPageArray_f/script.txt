@@ -1,0 +1,8 @@
+function fedwiki_ConstructSectionWikipediaPageArray sectionTitle, wikiSection, shortImageFile, wikipediaUrl, pSourceArray
+   put sectionTitle into fedwikiPageArray ["title"]
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into fedwikiPageArray ["journal"]
+   
+   delete line 1 of wikiSection -- == sectionTitle ==
+   fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, wikiSection, shortImageFile
+   return fedwikiPageArray
+end fedwiki_ConstructSectionWikipediaPageArray

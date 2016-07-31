@@ -1,0 +1,8 @@
+function menu_GetItemScript handlerName, mController, mFormatProp
+   put script_ExtractMenuSuiteTitles (someScript) into scriptMenuTitles
+   
+   put hkey_Construct (handlerName, "c", mController) into hKey
+   put the script_StandAlone [hKey] of mController into someScript
+   -- put the script_Command [handlerName] of mController into someScript
+   return someScript
+end menu_GetItemScript

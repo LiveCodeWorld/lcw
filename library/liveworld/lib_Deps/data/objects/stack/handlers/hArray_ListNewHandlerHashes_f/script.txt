@@ -1,0 +1,4 @@
+function hArray_ListNewHandlerHashes hArray
+   put hArray ["handlerHashArray"]["new"] into hashArray
+   return keys(hashArray)
+end hArray_ListNewHandlerHashes

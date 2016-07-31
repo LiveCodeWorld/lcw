@@ -1,0 +1,22 @@
+private function construct_AllVideoPageArray orderedSnippetArray, pageTitle, pNextPageToken, pDontLinkTitle, pUseThumbs, pSourceArray
+   put pageTitle into pageArray ["title"]
+   
+   -- add some metadata so transported pages can be found, and next paginated page authored
+   put "Youtube Transport" into pageArray ["metadata"]["author"]
+   if pNextPageToken is not empty then put pNextPageToken into pageArray ["metadata"]["nextPageToken"]
+   
+   put item 2 of the extents of orderedSnippetArray into maxNum
+   repeat with episodeNum = 1 to maxNum
+      put orderedSnippetArray [episodeNum] into itemArray
+      put itemArray ["snippet"] into snippetArray
+      
+      if pUseThumbs is true then
+         add_SnippetToThumbPageArray pageArray, snippetArray
+      else
+         add_SnippetToPageArray pageArray, snippetArray, empty, false, pDontLinkTitle
+      end if
+      put the result into videoTitle
+   end repeat
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into pageArray ["journal"]  -- strip journal to minimum
+   return pageArray
+end construct_AllVideoPageArray

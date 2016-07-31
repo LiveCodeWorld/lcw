@@ -1,0 +1,7 @@
+getprop object_ViewBehavior
+   -- this assumes that the behavior has a custom property uRIP ["name']
+   -- which is the same as the view_Name
+   
+   put the behavior of the target into someBehavior
+   return the view_Name of someBehavior
+end object_ViewBehavior

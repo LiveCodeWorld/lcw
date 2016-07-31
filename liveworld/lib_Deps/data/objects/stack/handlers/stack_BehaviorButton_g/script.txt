@@ -1,0 +1,6 @@
+getprop stack_BehaviorButton [bName]
+   if bName is empty then put "Stack Handler Deps" into bName
+   put the menu_SubStack of the target into menuSubStack
+   if exists (btn bName of cd "Behaviors" of menuSubStack) is false then return empty
+   return the long id of btn bName of cd "Behaviors" of menuSubStack
+end stack_BehaviorButton

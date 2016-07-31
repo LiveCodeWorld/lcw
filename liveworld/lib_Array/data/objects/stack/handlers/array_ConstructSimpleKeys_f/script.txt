@@ -1,0 +1,34 @@
+function array_ConstructSimpleKeys someKeyArray, @idArray, @keyArray, pNumberOnly
+   -- modified to use nested someKeyArray instead of just an index of keys
+   -- quick hack
+   if someKeyArray is an array then
+      put keys (someKeyArray) into someKeys
+   else
+      put someKeyArray into someKeys
+   end if
+   
+   -- a general technique for building incremental unique ids and their translations
+   -- as in a database id
+   -- for a single key key this returns the (new) or existing simlified translation
+   -- while building the two way arrays
+   -- will also add multiple keys if needed (as with childNodes)
+   
+   repeat for each line someKey in someKeys
+      put keyArray [someKey] into simpleID
+      if simpleID is empty then
+         -- not already indexed 
+         -- work out new incremental ID and add to idArray and keyArray
+         put the number of lines of keys(idArray) + 1 into keyNumber
+         if pNumberOnly is true then
+            put keyNumber into simpleID
+         else
+            put "n" & keyNumber into simpleID
+         end if
+         put simpleID into keyArray [someKey]
+         put someKey into idArray [simpleID]
+      end if
+      put simpleID & CR after simpleIDs
+   end repeat
+   delete char -1 of simpleIDs
+   return simpleIDs
+end array_ConstructSimpleKeys

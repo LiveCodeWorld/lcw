@@ -1,0 +1,7 @@
+function rigDB_GetVideoData pFieldList
+   rigDB_ItemByMediaType "video/building,video/news,video/pubdesk,video/ritual,video/talk,video/teaching,video/travel"
+   if pFieldList is not empty then
+      rigDbJoin "item_format", "item_format.item_id = item.item_id" -- item_Format.item_id is not unique
+   end if
+   return rigDB_GetData (pFieldList)
+end rigDB_GetVideoData

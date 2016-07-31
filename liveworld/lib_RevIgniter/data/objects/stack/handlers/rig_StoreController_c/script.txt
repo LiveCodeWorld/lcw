@@ -1,0 +1,6 @@
+command rig_StoreController shortFile, rigScript
+   put rig_ApplicationPath ("controllers/" & shortFile) into somePath
+   rig_StoreData rigScript, somePath
+   put the result into shellResult
+   return shellResult
+end rig_StoreController

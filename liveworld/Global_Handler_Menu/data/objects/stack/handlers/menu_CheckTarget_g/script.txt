@@ -1,0 +1,6 @@
+getprop menu_CheckTarget [hKey]
+   put library_HandlerFile (hKey, empty, true) into hkeyFolder
+   put hkeyFolder into LocalArray ["hkeyFolder"]
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   return exists (hObject)
+end menu_CheckTarget

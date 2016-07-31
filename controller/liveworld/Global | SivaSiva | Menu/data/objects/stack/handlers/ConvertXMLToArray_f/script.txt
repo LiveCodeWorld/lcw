@@ -1,0 +1,24 @@
+function ConvertXMLToArray pXML, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes
+   local theArray,theResult,theRootNode,theTreeID
+   local theXMLEncoding
+   
+   ## Create an XML tree from XML text
+   put revCreateXMLTree(pXML, true, true, false) into theTreeID
+   
+   if theTreeID is an integer then
+      ## Determine the encoding of the XML, default to UTF-8
+      put matchText(pXML, "<\?xml (.*)encoding=" & quote & "(.*)" & quote & "\?>", versionMatch, theXMLEncoding) into theResult
+      if theXMLEncoding is empty then put "utf-8" into theXMLEncoding
+      
+      ## Now convert to array. 
+      ## The 1st dimension has one key which is the name of the root node.
+      put revXMLRootNode(theTreeID) into theRootNode
+      if theRootNode is not empty and not(theRootNode begins with "xmlerr,") then
+         put ConvertXMLNodeToArray(theTreeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes) into theArray[theRootNode]
+      end if
+      
+      revDeleteXMLTree theTreeID
+   end if
+   
+   return theArray
+end ConvertXMLToArray

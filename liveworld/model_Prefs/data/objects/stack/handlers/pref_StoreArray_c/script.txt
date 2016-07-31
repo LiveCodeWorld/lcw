@@ -1,0 +1,9 @@
+command pref_StoreArray prefArray, pProjectName
+   -- contains all the preference globals int the set with the keys as global names
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchData() into dataArray
+   put prefArray into dataArray [pProjectName]
+   pref_StoreData dataArray
+   put the result into  someFile
+   return dataArray
+end pref_StoreArray

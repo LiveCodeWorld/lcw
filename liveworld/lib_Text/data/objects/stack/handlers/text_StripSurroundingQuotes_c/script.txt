@@ -1,0 +1,12 @@
+command text_StripSurroundingQuotes @someText
+   -- think this should work
+   put token 1 of someText into someText
+   return empty
+   
+   get word 1 to -1 of someText
+   put quote & "'" into quoteChars
+   if char 1 of it is among the chars of quoteChars and char -1 of it is among the chars of quoteChars then
+      delete char 1 of someText
+      delete char -1 of someText
+   end if
+end text_StripSurroundingQuotes

@@ -1,0 +1,10 @@
+on display_SetSavedFrameRect viewName, frameRect
+   view_NormalizeName viewName
+   if exists(stack viewName) is false then return merge("Error: stack [[viewName]] does not exist")
+   if frameRect is empty then put the rect of the frame_View of me into frameRect
+   
+   set the uOPN ["frame_Rect"] of stack viewName to frameRect
+   -- if you want to remember this permanently should save stack
+   -- save stack viewName
+   return empty
+end display_SetSavedFrameRect

@@ -1,0 +1,11 @@
+function file_SafeHashName filePath
+    -- need to check. Not tested
+    set the cursor to watch
+    deconstruct_File filePath, someFolder, shortName, someExtension
+    put line 1 of shell_Md5Hash(filePath) into tHexDigest
+    -- get binaryDecode("H*", someBinaryData, tHexDigest)
+    put "hash_" & tHexDigest into hashName
+    put someFolder & "/" & hashName into hashFile
+    if someExtension is not empty then put "." & someExtension after hashFile
+    return hashFile
+end file_SafeHashName

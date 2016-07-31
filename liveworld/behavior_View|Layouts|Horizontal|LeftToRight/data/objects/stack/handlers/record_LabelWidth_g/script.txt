@@ -1,0 +1,10 @@
+getprop record_LabelWidth
+   -- if the long id of the target is not the long id of me then pass record_LabelWidth
+   -- put the view_DisplayProperty ["record_LabelWidth"] of me into recordLabelWidth
+   put the customproperties of me into propArray
+   put propArray ["record_LabelWidth"] into recordLabelWidth
+   
+   if recordLabelWidth is empty then put the record_LabelWidth of the owner of me into recordLabelWidth
+   if recordLabelWidth is empty then put the record_DefaultLabelWidth of me into recordLabelWidth
+   return recordLabelWidth
+end record_LabelWidth

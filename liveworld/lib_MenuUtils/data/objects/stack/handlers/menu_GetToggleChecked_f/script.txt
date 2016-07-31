@@ -1,0 +1,49 @@
+function menu_GetToggleChecked someMenuItem, someMenu, @isChecked
+    -- was "menu_ToggleMainMenu"
+    if someMenuItem contains "|" then
+        put the itemdelimiter into oDelim
+        set the itemdelimiter to "|"
+        put item 1 of someMenuItem into mainMenu
+        put item 2 of someMenuItem into subMenu
+        put line_FindInIndex(mainMenu, someMenu) into startOsLineNum
+        
+        put 0 into checkedLine
+        set the itemdelimiter to tab
+        repeat with lineNum = (startOsLineNum + 1) to the number of lines of someMenu
+            put line lineNum of someMenu into someLine
+            if char 1 of someLine is tab then
+                if item 2 of someLine is subMenu then
+                    put "!c" before line lineNum of someMenu
+                else
+                    next repeat
+                end if
+            else
+                put char 1 to 3 of line lineNum of someMenu into checkChars
+                if checkChars is ("!c" & tab) then
+                    -- put lineNum into checkedLine
+                    delete char 1 to 2 of line lineNum of someMenu
+                else
+                    exit repeat
+                end if
+            end if
+        end repeat
+    else  
+        put someMenuItem into plainLine
+        put "!c" & someMenuItem into checkedLine 
+         
+        put lineoffset(checkedLine, someMenu) into lineNum
+        if lineNum = 0 then
+            put lineoffset(plainLine, someMenu) into lineNum
+            if lineNum = 0 then
+                return someMenu -- menuItem not present
+            else
+                put true into isChecked
+                put checkedLine into line lineNum of someMenu
+            end if
+        else
+            put false into isChecked
+            put plainLine into line lineNum of someMenu
+        end if
+    end if
+    return someMenu
+end menu_GetToggleChecked

@@ -1,0 +1,3 @@
+function is_Hkey hKey
+   return item 2 of hKey is among the items of "g,s,c,m,f,pg,ps,pc,pm,pf"
+end is_Hkey

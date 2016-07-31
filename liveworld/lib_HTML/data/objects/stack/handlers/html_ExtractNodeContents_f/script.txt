@@ -1,0 +1,17 @@
+function html_ExtractNodeContents someNode, someHTML
+   put html_ExtractNode (someNode, someHTML) into someXML
+   
+   -- hack:  now get rid of that tag
+   set the itemdelimiter to slash
+   put item -1 of someNode into tagName
+   local startTag, endTag, someTag, tagContents
+   xml_TagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+   return tagContents
+   
+   /*
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLNodeContents (treeID, rootNode) into innerContent -- this is not what I think of as "contents" :)
+   revDeleteXMLTree treeID
+   return innerContent
+   */
+end html_ExtractNodeContents

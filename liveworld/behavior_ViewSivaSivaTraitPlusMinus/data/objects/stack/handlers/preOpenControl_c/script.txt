@@ -1,0 +1,7 @@
+on preOpenControl
+   put _squareView() into squareView
+   put _positiveView() into positiveView
+   put _negativeView() into negativeView
+   put _verticalArrow() into verticalArrow
+   _createNestedViews squareView, positiveView, negativeView, verticalArrow
+end preOpenControl

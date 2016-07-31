@@ -1,0 +1,8 @@
+function fedwiki_StoryExtractorderedIDArray storyArray
+   put item 2 of the extents of storyArray into maxItem
+   repeat with itemNum = 1 to maxItem
+      put storyArray [itemNum]["id"] into storyID
+      put storyID into oderedIdArray [itemNum]
+   end repeat
+   return oderedIDArray
+end fedwiki_StoryExtractorderedIDArray

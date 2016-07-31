@@ -1,0 +1,5 @@
+command fedwiki_ParseDroppedWikipediaImage droppedURL
+   put mediwiki_ExtractImageFileFromUrl (droppedURL) into shortImageFile
+   put wikicommons_FetchImagePageJson (shortImageFile) into someJSON
+   fedwiki_ReturnJSON someJSON
+end fedwiki_ParseDroppedWikipediaImage

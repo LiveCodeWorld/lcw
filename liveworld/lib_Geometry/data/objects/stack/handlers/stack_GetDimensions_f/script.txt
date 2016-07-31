@@ -1,0 +1,18 @@
+function stack_GetDimensions someRect, someWidth, someHeight, pMargin, pDontCentre, pDontLimit
+   put max (someWidth, 100) into someWidth
+   put max (someHeight, 100) into someHeight
+   
+   if pMargin is not empty then rect_SubtractMargins someRect, pMargin
+   rect_SetWidth someRect, someWidth, pDontCentre
+   rect_SetHeight someRect, someHeight, pDontCentre
+   
+   if pDontLimit is not true then
+      put rect_GetCentre (someRect) into gLoc
+      put loc_WithinWhichScreenRect (gLoc) into sRect
+      put rect_SubtractMargin (50, sRect) into outsideRect
+      -- rect_Normalize someRect, outsideRect
+      rect_ShiftWithin someRect, outsideRect
+   end if
+   
+   return someRect
+end stack_GetDimensions

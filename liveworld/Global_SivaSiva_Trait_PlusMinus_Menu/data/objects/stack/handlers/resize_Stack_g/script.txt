@@ -1,0 +1,5 @@
+getprop resize_Stack [plusMinusView]
+   put the stack_Object of plusMinusView into stackObject
+   put the resizable of stackObject into someBoolean
+   return someBoolean
+end resize_Stack

@@ -1,0 +1,9 @@
+on menu_Reflog
+   put "git reflog" into someShell
+   -- put " --all" after someShell
+   
+   git_ExecuteShell someShell
+   put the result into gitResult
+   
+   display_Lines gitResult
+end menu_Reflog

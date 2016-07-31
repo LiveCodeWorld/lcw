@@ -1,0 +1,9 @@
+getprop menu_CardArray
+   put the menu_CardNames of the target into mCardNames
+   repeat for each line mCardName in mCardNames
+      put the rugged_ID of card mCardName of stack menuSubStack into rObject
+      put rObject into mCardArray ["mTitle"][mCardName]
+      put mCardName into mCardArray ["rugged_ID"][rObject]
+   end repeat
+   return mCardArray
+end menu_CardArray

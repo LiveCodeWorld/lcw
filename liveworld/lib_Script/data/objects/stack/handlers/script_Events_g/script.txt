@@ -1,0 +1,6 @@
+getprop script_Events
+   put the long id of the target into scriptObject
+   put the script_AndBehavior of scriptObject into someScript
+   put script_ExtractMessageHandlers(someScript, scriptObject) into scriptEvents
+   return scriptEvents
+end script_Events

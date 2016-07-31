@@ -1,0 +1,6 @@
+getprop image_PixelArray
+    put the long id of the target into imageObject
+    if word 1 of imageObject is not "image" then return empty
+    
+    return image_ConstructPixelArray(imageObject, 1, 1)
+end image_PixelArray

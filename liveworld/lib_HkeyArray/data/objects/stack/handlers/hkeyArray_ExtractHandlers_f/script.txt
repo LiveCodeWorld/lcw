@@ -1,0 +1,13 @@
+function hkeyArray_ExtractHandlers hkeyArray
+    local hKeys
+    local arrayObjects
+    repeat for each key hKey in hkeyArray
+        set the cursor to busy
+        line_Add hKey, hKeys
+        
+        put hkeyArray [hKey] into handlerCalls
+        line_Add handlerCalls, hKeys
+    end repeat
+    sort hKeys
+    return hKeys
+end hkeyArray_ExtractHandlers

@@ -1,0 +1,14 @@
+setprop selected_Index someLines
+   put the view_Index of me into viewIndex
+   set the itemdelimiter to slash
+   repeat for each line someLine in someLines
+      put lineOffset (someLine, viewIndex) into lineNum
+      if lineNum > 0 then
+         put lineNum & comma after lineNumList
+      end if
+   end repeat
+   delete char -1 of lineNumList
+   
+   set the hilitedlines of _fieldView() to lineNumList
+   return lineNumList
+end selected_Index

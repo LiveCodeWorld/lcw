@@ -1,0 +1,9 @@
+getprop icon_Button
+   -- should be a better way of doing this rather than searching
+   repeat with btnNum = the number of btns of me down to 1
+      if the short name of btn btnNum of me is not among the items of "_Title Menu,_Title Button,_Title Background" then
+         return the long id of btn btnNum of me
+      end if
+   end repeat
+   return empty
+end icon_Button

@@ -1,0 +1,17 @@
+function rev_ListPrefOutline
+   local tabbedOutline
+   
+   put rev_ListPrefArray () into prefArray
+   put array_ToOutline (prefArray, true) into tabbedOutline
+   return tabbedOutline
+   
+   put rev_ListPrefs() into someTable
+   repeat for each line someLine in someTable
+      put item 1 of someLine into someKey
+      put item 2 of someLine into someValue
+      
+      array_AddToIndex someValue, someKey, prefArray
+      outline_AddTitle someValue, someKey, tabbedOutline
+   end repeat
+   return tabbedOutline
+end rev_ListPrefOutline

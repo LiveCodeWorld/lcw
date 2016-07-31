@@ -1,0 +1,10 @@
+function rect_Resize someRect, someWidth, someHeight
+   -- a quick hack (speed up and simplify!)
+   put rect_GetCentre(someRect) into fromLoc
+   if someWidth is not empty then put item 1 of someRect + someWidth into item 3 of someRect
+   if someHeight is not empty then put item 2 of someRect + someHeight into item 4 of someRect
+   put rect_GetCentre(someRect) into toLoc
+   put loc_TranslationVector (fromLoc, toLoc, xVector, yVector) into someVector
+   put rect_TranslateByVector (someRect, xVector, yVector) into newRect
+   return newRect
+end rect_Resize

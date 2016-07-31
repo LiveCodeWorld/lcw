@@ -1,0 +1,7 @@
+getprop public_Props
+    put menu_GetTargetObject() into targetObject
+    put the view_Object of targetObject into someView
+    delete word 1 to 4 of someView
+    if exists(someView) is false then return empty
+    return the view_PropertyMenu of someView
+end public_Props

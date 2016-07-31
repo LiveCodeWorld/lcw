@@ -1,0 +1,9 @@
+on layout_DeleteDividers
+   put the object_TopControls of me into topControls
+   repeat for each line someObject in topControls
+      put the view_Name of someObject into vName
+      if vName begins with "View|Divider|" then
+         delete someObject
+      end if
+   end repeat
+end layout_DeleteDividers

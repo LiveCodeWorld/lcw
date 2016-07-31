@@ -1,0 +1,14 @@
+getprop template_DefaultScript [pObjectType]
+   put the long id of the target into scriptObject
+   
+   -- get variables for merge script
+   if pObjectType is empty then put "view template" into pObjectType
+   put the view_Name of the target into ViewName
+   put objectType into UripType
+   put user_GetName() into AuthorName
+   put the template_ObjectDefScript of scriptObject into DefScript
+   
+   put script_GetTemplate ("View Template") into templateScript
+   put merge (templateScript) into someScript
+   return someScript
+end template_DefaultScript

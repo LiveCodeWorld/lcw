@@ -1,0 +1,4 @@
+function menu_GetDataArray mController
+   put the customproperties ["menu_Table"] of mController into mDataArray
+   return mDataArray
+end menu_GetDataArray

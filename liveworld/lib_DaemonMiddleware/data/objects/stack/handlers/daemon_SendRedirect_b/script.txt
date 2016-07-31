@@ -1,0 +1,3 @@
+before daemon_SendRedirect redirectURL, socketID, pDescriptiveContent
+   daemon_Log ("daemon_SendRedirect:" && socketID)
+end daemon_SendRedirect

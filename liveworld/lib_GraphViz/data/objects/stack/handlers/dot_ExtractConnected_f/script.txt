@@ -1,0 +1,8 @@
+function dot_ExtractConnected dotFile
+    shell_BashParamEscape dotFile
+    put merge("sccmap -d [[dotFile]]") into someShell
+    
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & someShell into someShell
+    return shell(someShell)
+end dot_ExtractConnected

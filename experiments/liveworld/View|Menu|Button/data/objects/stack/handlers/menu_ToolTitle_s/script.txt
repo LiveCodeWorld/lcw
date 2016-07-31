@@ -1,0 +1,7 @@
+setprop menu_ToolTitle mTitle
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   set the menu_BurntToolTitle of someView to mTitle
+end menu_ToolTitle

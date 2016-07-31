@@ -1,0 +1,7 @@
+on menu_EditThisTemplate mTarget
+   put the displayed_Url of mTarget into someFile
+   set the itemdelimiter to ":"
+   delete item 1 of someFile
+   put "edit" && kwote(someFile) into someShell
+   put shell (someShell) into shellResult
+end menu_EditThisTemplate

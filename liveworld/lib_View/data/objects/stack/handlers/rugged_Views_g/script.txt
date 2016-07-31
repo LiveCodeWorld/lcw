@@ -1,0 +1,6 @@
+getprop rugged_Views
+   put the view_NestedArray of the target into viewOutlineArray
+   put viewOutlineArray ["@prop"] into ruggedArray
+   put keys (ruggedArray) into ruggedViews
+   return ruggedViews
+end rugged_Views

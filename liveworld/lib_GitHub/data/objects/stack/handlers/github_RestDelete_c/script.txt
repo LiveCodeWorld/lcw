@@ -1,0 +1,7 @@
+command github_RestDelete restPath
+   -- this is slow
+   _setAuthHeaders
+   put _constructApiUrl (restPath) into someUrl
+   delete url someUrl
+   return the result
+end github_RestDelete

@@ -1,0 +1,8 @@
+function opn_Ask someQuestion, pDefault
+   -- removed complexity of "text_Merge"
+   replace "'" with quote in someQuestion
+   ask someQuestion with pDefault
+   put it into theResult
+   if the result is "Cancel" then exit to top
+   return theResult
+end opn_Ask

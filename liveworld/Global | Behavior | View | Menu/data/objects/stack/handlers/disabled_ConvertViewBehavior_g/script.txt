@@ -1,0 +1,4 @@
+getprop disabled_ConvertViewBehavior [scriptObject]
+   put the object_IsOldBehavior of scriptObject into isOldBehavior
+   return isOldBehavior is false
+end disabled_ConvertViewBehavior

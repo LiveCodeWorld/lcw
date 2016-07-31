@@ -1,0 +1,5 @@
+command library_StoreCheckoutGlobal checkoutArray, pSetName
+   put library_FetchArray ("Checkout_Globals") into checkoutSetData
+   put checkoutArray into checkoutSetData [pSetName]
+   library_StoreArray "Checkout_Globals", checkoutSetData
+end library_StoreCheckoutGlobal

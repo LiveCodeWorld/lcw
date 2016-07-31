@@ -1,0 +1,10 @@
+function menu_SuiteScript globalMenuTitle
+   put menu_GetGlobalController(globalMenuTitle) into menuController
+   if exists(menuController) is false then
+      put the executioncontexts into logExecutionContexts
+      log_Error globalMenuTitle, "Object does not exist for:", true, logExecutionContexts
+      return empty
+   end if
+   put the script_Suite [globalMenuTitle] of menuController into menuSuiteScript
+   return menuSuiteScript
+end menu_SuiteScript

@@ -1,0 +1,11 @@
+private function script_ExtractHandler handlerName, onWord, someScript, notPrivate
+   -- picks the public handler first (should really pick the first in the hierarchy)
+   put script_ExtractPublicHandler (handlerName, onWord, someScript) into foundHandler
+   if foundHandler is not empty then
+      return foundHandler
+   else if notPrivate is not true then
+      put script_ExtractPrivateHandler (handlerName, onWord, someScript) into foundHandler
+      return foundHandler
+   end if
+   return empty
+end script_ExtractHandler

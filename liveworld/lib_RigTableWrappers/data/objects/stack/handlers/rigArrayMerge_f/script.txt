@@ -1,0 +1,46 @@
+function rigArrayMerge pArrayA, pArrayB, pFirstDelim, pSecondDelim
+   --| Summary: Merge two one dimnensional arrays.
+   
+   put pArrayA into tArrayToReturn
+   put pArrayB into tArrayToAppend
+   
+   if pFirstDelim is empty then
+      put return into tFirstDelim
+   else
+      put pFirstDelim into tFirstDelim
+   end if
+   
+   if pSecondDelim is empty then
+      put comma into tSecondDelim
+   else
+      put pSecondDelim into tSecondDelim
+   end if
+   
+   # MERGE LISTS
+   if tArrayToReturn is an array then
+      combine tArrayToReturn using tFirstDelim and tSecondDelim
+   else
+      put empty into tArrayToReturn
+   end if
+   
+   if tArrayToAppend is an array then
+      combine tArrayToAppend using tFirstDelim and tSecondDelim
+   else
+      put empty into tArrayToAppend
+   end if
+   
+   if tArrayToReturn is not empty then
+      if tArrayToAppend is not empty then
+         put tFirstDelim & tArrayToAppend after tArrayToReturn
+      end if
+   else
+      if tArrayToAppend is not empty then
+         put tArrayToAppend into tArrayToReturn
+      end if
+   end if
+   
+   #BUILD ARRAY AGAIN
+   split tArrayToReturn using tFirstDelim and tSecondDelim
+   
+   return tArrayToReturn
+end rigArrayMerge

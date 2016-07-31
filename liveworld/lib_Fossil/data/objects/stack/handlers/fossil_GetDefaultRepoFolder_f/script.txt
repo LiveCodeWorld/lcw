@@ -1,0 +1,9 @@
+function fossil_GetDefaultRepoFolder
+   put pref_GetValue ("fossil_GetDefaultRepoFolder") into defaultRepoFolder
+   if there is a folder defaultRepoFolder then return defaultRepoFolder
+   
+   put rev_PluginsFolder() & "Fossils/" into defaultRepoFolder
+   folder_CreateNested defaultRepoFolder
+   pref_SetValue "fossil_GetDefaultRepoFolder", defaultRepoFolder
+   return defaultRepoFolder
+end fossil_GetDefaultRepoFolder

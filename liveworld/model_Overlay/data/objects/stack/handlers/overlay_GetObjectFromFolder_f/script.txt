@@ -1,0 +1,5 @@
+function overlay_GetObjectFromFolder overlayFolder, pOverlayName
+   put overlay_GetGraphValue (overlayFolder, "overlay_Of", pOverlayName) into hKeyOrObject
+   if exists(hKeyOrObject) is false then return empty
+   return hKeyOrObject
+end overlay_GetObjectFromFolder

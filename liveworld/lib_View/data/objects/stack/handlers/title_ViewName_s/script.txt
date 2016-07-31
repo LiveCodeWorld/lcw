@@ -1,0 +1,5 @@
+setprop title_ViewName vName
+   put the title_View of the target into titleView
+   set the view_Swap of titleView to vName
+   return the result
+end title_ViewName

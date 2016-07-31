@@ -1,0 +1,6 @@
+function spotlight_ListRecentlyExportedObjectScripts pSeconds
+   if pSeconds is empty then put 20 * 60 into pSeconds
+   put spotlight_ListRecentlyExportedScriptFiles (pSeconds) into scriptFiles
+   put script_FileToObject (scriptFiles) into recentObjectExports -- not working
+   return recentObjectExports
+end spotlight_ListRecentlyExportedObjectScripts

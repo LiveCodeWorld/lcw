@@ -1,0 +1,43 @@
+command fossil_AskCreateProject pFolder, pProjectName, pShortFile, pDontAsk, pCommitComment
+   if pCommitComment is empty then put "Initial commit"  into pCommitComment
+   
+   if there is a folder pFolder then
+      put pFolder into newFolder
+   else
+      answer folder "Select a folder for your new project..." with pFolder
+      if the result is "Cancel" then exit to top
+      put it into newFolder
+   end if
+   
+   if pProjectName is empty then
+      set the itemdelimiter to "/"
+      put item -1 of newFolder into pProjectName
+      put opn_Ask ("Give this new project a name...", pProjectName) into pProjectName
+   end if
+   
+   if pShortFile is empty then put pProjectName into pShortFile
+   put fossil_GetDefaultRepoFolder() into someRoot
+   put someRoot & pShortFile & ".fossil" into testFile
+   if pDontAsk is true then
+      put testFile into fossilFile
+   else
+      ask file "Select a file to create a new Fossil repository in..." with testFile
+      put it into fossilFile
+      if fossilFile is empty then return empty
+   end if
+   
+   fossil_New newFolder, fossilFile, pProjectName
+   put the result into projectArray
+   put projectArray ["repository"] into fossilFile
+   
+   fossil_Open fossilFile, newFolder
+   put the result into checkoutArray
+   
+   fossil_Add newFolder
+   put the result into addResult
+   
+   fossil_Commit newFolder, pCommitComment
+   put the result into commitResult
+   
+   return projectArray
+end fossil_AskCreateProject

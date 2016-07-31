@@ -1,0 +1,88 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_HAP
+type: script library
+version: 0.5
+
+/*
+This script-only stack is designed to work as a library file for the Himalayan Academy Web Site.
+It contains handlers which manipulate and understand the web sites structure.
+
+To do: review and move handlers that work only on the desktop to lib_HAPDesktop
+*/
+
+
+--> Variables
+-
+constant cHapRoot = "http://himalayanacademy.com"
+constant cHapDevRoot = "http://dev.himalayanacademy.com"
+
+
+--> Working On
+-
+[[ _FetchHandler (hap_JsonFromArray,f) ]]
+
+[[ _FetchHandler (hap_JsonToArray,f) ]]
+
+
+--> HAP | Walk
+-
+[[ _FetchHandler (hap_ListHtmlFiles,f) ]]
+
+
+--> HAP | Only on server
+-
+[[ _FetchHandler (hap_GetFileNameArray,f) ]]
+
+[[ _FetchHandler (hap_GetPathTranslated,f) ]]
+
+
+--> HAP | Files and Folders
+-
+[[ _FetchHandler (hap_GetImageFolder,f) ]]
+
+[[ _FetchHandler (hap_GetImageRelativePath,f) ]]
+
+[[ _FetchHandler (hap_GetDocumentRoot,f) ]]
+
+
+--> HAP | URLs
+-
+[[ _FetchHandler (hap_ConstructUrls,f) ]]
+
+[[ _FetchHandler (hap_ConstructMediaURLs,f) ]]
+   
+[[ _FetchHandler (hap_ConstructMediaURL,f) ]]
+
+
+--> HAP | URLS | REST
+-
+[[ _FetchHandler (hap_SitemapRestURL,f) ]]
+
+[[ _FetchHandler (hap_ConstructRestURL,f) ]]
+
+
+--> HAP | List Files
+-
+/*
+Himlayan Academy Project specific handlers.
+These handlers we extract from the HAP revIgniter application code, in order to make them independent of server side functionality.
+This allows for testing and use in Desktop and mobile clients.
+*/
+
+[[ _FetchHandler (hap_ListImageFiles,f) ]]
+
+[[ _FetchHandler (hap_ListFiles,f) ]]
+
+
+--> HAP | List Files
+-
+[[ _FetchHandler (hap_GetImageDescription,f) ]]
+
+[[ _FetchHandler (hap_GetImageAuthor,f) ]]
+
+[[ _FetchHandler (hap_GetAllImageFormats,f) ]]
+
+[[ _FetchHandler (hap_ListImageFormats,f) ]]

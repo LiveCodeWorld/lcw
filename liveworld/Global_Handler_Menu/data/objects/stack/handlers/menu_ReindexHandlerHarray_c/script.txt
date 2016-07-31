@@ -1,0 +1,40 @@
+on menu_ReindexHandlerHarray hKey
+   -- could directly do this
+   -- hArray_AddHandlerHash hArray, hKey, someHandler, handlerHash, indexTime
+   -- but may not properly index the entire script that way?
+   
+   -- the other way to do it is to hack hArray, and delete the handlerHashEntry for that key
+   -- if handlerHashArray ["cached"][handlerHash]["indexTime"] is empty then -- this is what "object_AddToArray" check to reindex
+   --alternatively we could look up the hKey in all the handler hashes, but for now lets assume the existing hash is valid
+   opn_Answer "Fix this handlers global hArray entry?"
+   
+   put hArray_GetHandlerHash (hKey) into handlerHash
+   
+   /* forgot handlerHashArray is not stored in the global array, only locally stored mainstack arrays
+   -- first let's do the global hArray
+   global gHkey_Array
+   if gHkey_Array ["handlerHashArray"]["cached"][handlerHash] is an array then -- othewise could just get this one handler indexed?
+      put empty into gHkey_Array ["handlerHashArray"]["cached"][handlerHash]["indexTime"]
+      object_AddToGlobalArray someObject
+      put "Reindexed" && hKey & ", and updated the global gHkey_Array!" into someComment
+      opn_Notify someComment
+   end if
+   */
+   
+   put item 3 of hKey into scriptObject
+   put the textStack_Folder of scriptObject into mainStackFolder
+   put mainstack_FetchHarray (mainStackFolder) into hArray
+   --
+   if hArray ["handlerHashArray"]["cached"][handlerHash] is an array then
+      put empty into hArray ["handlerHashArray"]["cached"][handlerHash]["indexTime"]
+   end if
+   put the script of scriptObject into someScript
+   put false into pExportHandlers
+   put pref_GetValue ("Construct hashArray on stack export") into pCreateHashArray
+   object_AddToArray hArray, scriptObject, someScript, pExportHandlers, pCreateHashArray  -- force reindex
+   --
+   mainstack_StoreHarray hArray, mainStackFolder
+   
+   put "Reindexed" && hKey & ", and stored the new mainstack metadata!" into someComment
+   opn_Notify someComment
+end menu_ReindexHandlerHarray

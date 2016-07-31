@@ -1,0 +1,4 @@
+getprop hkey_Calls [shortHkey]
+   put the object_Hkey [shortHkey] of the target into hKey
+   return hkey_FetchShortCalls (hKey)
+end hkey_Calls

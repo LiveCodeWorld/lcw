@@ -1,0 +1,6 @@
+command menu_EditScript mTitle
+   put menu_GetGlobalController (mTitle) into someObject
+   if exists (someObject) then
+      edit the script of someObject
+   end if
+end menu_EditScript

@@ -1,0 +1,6 @@
+command daemon_AddRequestToLogArray requestArray
+   put daemon_FetchLogArray() into dataArray
+   put item 2 of the extents of dataArray + 1 into indexNum
+   put requestArray into dataArray [indexNum]
+   daemon_StoreLogArray dataArray
+end daemon_AddRequestToLogArray

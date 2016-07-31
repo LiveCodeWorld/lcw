@@ -1,0 +1,10 @@
+function array_FindContents searchValue, someArray, matchWhole
+    set the wholematches to (matchWhole is not false)
+    repeat for each key foundKey in someArray
+        put someArray [foundKey] into testIndex
+        if searchValue is among the lines of testIndex then
+            return foundKey
+        end if
+    end repeat
+    return empty
+end array_FindContents

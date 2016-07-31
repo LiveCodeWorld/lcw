@@ -1,0 +1,17 @@
+setprop title_TextAlign alignHow
+   put title_Button() into titleButton
+   lock screen
+   switch alignHow
+      case "left"
+         set the margins of titleButton to "16,7,4,4"
+         break
+      case "center"
+         set the margins of titleButton to "4,7,4,4"
+         break
+      case "right"
+         set the margins of titleButton to "4,7,16,4"
+         break
+   end switch
+   set the textalign of titleButton to alignHow
+   unlock screen
+end title_TextAlign

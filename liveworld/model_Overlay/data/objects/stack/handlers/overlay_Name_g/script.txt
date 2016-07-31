@@ -1,0 +1,11 @@
+getprop overlay_Name
+   -- stored with the card (not the target) to indicate which overly is being displayed
+   put the long id of the target into targetObject
+   put the stack_Object of targetObject into stackObject
+   if exists(stackObject) is false then
+      beep
+      return targetObject
+   end if
+   put the uOPN ["overlay_Name"] of stackObject into overlayName
+   return overlayName
+end overlay_Name

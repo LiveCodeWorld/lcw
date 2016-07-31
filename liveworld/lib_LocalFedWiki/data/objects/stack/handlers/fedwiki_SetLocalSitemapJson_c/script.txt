@@ -1,0 +1,5 @@
+command fedwiki_SetLocalSitemapJson pageSlug, pageJSON, pFedwikiDomain
+   put fedwiki_LocalSiteMapFile (pFedwikiDomain) into someFile
+   put pageJSON into url ("file:" & someFile)
+   return someFile
+end fedwiki_SetLocalSitemapJson

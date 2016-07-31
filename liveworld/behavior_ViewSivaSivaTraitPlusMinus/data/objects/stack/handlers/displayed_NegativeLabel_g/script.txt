@@ -1,0 +1,5 @@
+getprop displayed_NegativeLabel
+   put _negativeView() into negativeView
+   put the trait_Text of negativeView into negativeText
+   return negativeText
+end displayed_NegativeLabel

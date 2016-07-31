@@ -1,0 +1,6 @@
+setprop card_Margin cardMargin
+   put the card_Object of the target into cardObject
+   if exists(cardObject) is false then return empty
+   
+   set the uOPN ["card_Margin"] of cardObject to cardMargin
+end card_Margin

@@ -1,0 +1,11 @@
+function html_EntityToCharNum htmlEntity
+    put html_EntityList() into entityList
+    put html_EntityCharNums() into entityCharNums
+    set the wholematches to true
+    put itemoffset(htmlEntity, entityList) into itemNum
+    return item itemNum of entityCharNums
+     
+    -- arrays are not able to be case insensitive
+    put html_EntityArray() into entityArray
+    return entityArray [htmlEntity]
+end html_EntityToCharNum

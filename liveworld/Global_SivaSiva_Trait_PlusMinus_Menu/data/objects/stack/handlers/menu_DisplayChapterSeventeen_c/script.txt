@@ -1,0 +1,11 @@
+on menu_DisplayChapterSeventeen plusMinusView
+   -- there is a bug in chapter 17 import
+   put sivasiva_GetChapterArray (17) into chapterArray
+   display_Array chapterArray, "chapter 17"
+   
+   put sivasiva_GetChapterArray (16) into chapterArray
+   display_Array chapterArray, "chapter 16"
+   
+   put sivasiva_GetChapterArray (18) into chapterArray
+   display_Array chapterArray, "chapter 18"
+end menu_DisplayChapterSeventeen

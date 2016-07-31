@@ -1,0 +1,10 @@
+function library_ListScriptLibNames
+   put library_GetScriptLibArray() into typeArray
+   repeat for each key rObject in typeArray
+      put typeArray [rObject]["uRipName"] into vName
+      if vName is empty then next repeat -- should not be
+      put empty into nameArray [vName]
+   end repeat
+   put keys (nameArray) into scriptLibNames
+   return scriptLibNames
+end library_ListScriptLibNames

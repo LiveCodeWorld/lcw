@@ -1,0 +1,10 @@
+getprop stackData_Folder [pDontCreate]
+   -- lazy, manifest is in inconsistant place, but prob best until merge into one mainstack manifest
+   put the long ID of the target into someObject
+   put the stack_Object of someObject into stackObject
+   put the short name of stackObject into stackName
+   put the mainstack of stackObject into mainStackName
+   
+   put stackData_GetFolder (someObject, stackName, mainStackName, pDontCreate) into stackDataFolder
+   return stackDataFolder
+end stackData_Folder

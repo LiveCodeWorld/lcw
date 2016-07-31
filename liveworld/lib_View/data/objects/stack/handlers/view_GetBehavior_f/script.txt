@@ -1,0 +1,6 @@
+function view_GetBehavior vName
+   -- first line will be the top view behavior if it has one
+   put view_GetTemplateObject (vName) into templateObject
+   put the behavior of templateObject into vBehavior
+   return vBehavior
+end view_GetBehavior

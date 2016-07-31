@@ -1,0 +1,197 @@
+--> MetaData
+-
+name: lib_Youtube
+type: script library
+version: 0.6
+license: GPLv3
+copyright: David Bovill
+deps: lib_Fedwiki
+
+/*
+A library for XML and XML related data structures.
+*/
+
+--> Youtube | API
+-
+local LocalApiStem = "https://www.googleapis.com/youtube/v3/"
+
+[[ _FetchHandler (youtube_ConstructWatchUrl,f) ]]
+
+
+--> Google | Translate
+-
+[[ _FetchHandler (translate_ToGerman,f) ]]
+
+
+--> Youtube | Parse
+-
+/*
+This section makes more sense in the controller "youtube.lc" controller.
+The handlers are here tmporarily, to make it easy to graph and look for dependencies.
+*/
+
+[[ _FetchHandler (youtube_FetchNextPageJson,f) ]]
+
+
+--> Youtube | Playlist | Index
+-
+[[ _FetchHandler (youtube_FetchPlayListIndexPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchPlayListIndexPageArray,f) ]]
+
+
+--> Youtube | Channel | Index
+-
+[[ _FetchHandler (youtube_FetchChannelIndexPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchChannelIndexPageArray,f) ]]
+
+
+--> Youtube | Channel | Uploads
+-
+[[ _FetchHandler (youtube_FetchChannelUploadPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchChannelUploadPlayListArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchChannelUploadPageArray,f) ]]
+
+
+--> Youtube | User | Uploads
+-
+[[ _FetchHandler (youtube_FetchUserUploadPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchUserUploadPageArray,f) ]]
+
+
+--> Youtube | ThumbNails
+-
+[[ _FetchHandler (youtube_FetchVideoThumbPageJSON,f) ]]
+
+[[ _FetchHandler (youtube_FetchVideoThumbPageArray,f) ]]
+
+
+--> Youtube | Playlists
+-
+[[ _FetchHandler (youtube_FetchVideoPageJSON,f) ]]
+
+[[ _FetchHandler (youtube_FetchVideoPageArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchVideoSnippetArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchVideoJson,f) ]]
+
+
+--> Youtube | Playlist | All
+-
+[[ _FetchHandler (youtube_FetchAllUserUploadPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchAllUserUploadPageArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchAllChannelUploadPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchAllChannelUploadPageArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchAllPlayListPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchAllPlayListPageArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchAllPlayListArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchAllSearchChannelArray,f) ]]
+
+
+
+--> Youtube | Playlist
+-
+[[ _FetchHandler (youtube_FetchPlayListPageJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchPlayListPageArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchPlayListArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchPlayListJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchPlayListInfoArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchPlayListInfoJson,f) ]]
+
+
+--> Youtube | Channels | Search
+-
+[[ _FetchHandler (youtube_FetchSearchChannelArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchSearchChannelJson,f) ]]
+
+
+--> Youtube | Channels
+-
+[[ _FetchHandler (youtube_FetchChannelArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchChannelJson,f) ]]
+
+[[ _FetchHandler (youtube_FetchChannelUploadsPlayListID,f) ]]
+
+[[ _FetchHandler (youtube_FetchUserChannelID,f) ]]
+
+[[ _FetchHandler (youtube_FetchUserChannelJson,f) ]]
+
+
+--> Youtube | Search
+-
+[[ _FetchHandler (youtube_FindChannelID,f) ]]
+
+[[ _FetchHandler (youtube_FindChannelArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchSearchArray,f) ]]
+
+[[ _FetchHandler (youtube_FetchSearchJson,f) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (fetch_YoutubeJSON,pf) ]]
+
+[[ _FetchHandler (set_PlayListPageTitle,pc) ]]
+
+[[ _FetchHandler (convert_SnippetToThumbPageArray,pf) ]]
+
+[[ _FetchHandler (convert_SnippetToPageArray,pf) ]]
+
+[[ _FetchHandler (construct_YoutubeRestUrl,pf) ]]
+
+[[ _FetchHandler (deconstruct_PlayListInfoArray,pc) ]]
+
+[[ _FetchHandler (construct_VideoIndexPageArray,pf) ]]
+
+[[ _FetchHandler (construct_HtmlIndex,pf) ]]
+
+[[ _FetchHandler (construct_HtmlIndexArrays,pc) ]]
+
+[[ _FetchHandler (construct_MarkDownIndex,pf) ]]
+
+[[ _FetchHandler (construct_MarkdownArrays,pc) ]]
+
+[[ _FetchHandler (construct_AllVideoPageArray,pf) ]]
+
+[[ _FetchHandler (add_SnippetToThumbPageArray,pc) ]]
+
+[[ _FetchHandler (add_SnippetToPageArray,pc) ]]
+
+[[ _FetchHandler (add_SearchArrayToOrderedSnippetArray,pc) ]]
+
+[[ _FetchHandler (add_PlayListArrayToOrderedSnippetArray,pc) ]]
+
+[[ _FetchHandler (deconstruct_ChannelArray,pc) ]]
+
+[[ _FetchHandler (deconstruct_VideoSnippetArray,c) ]]
+
+[[ _FetchHandler (thumbnail_SetStandard,pc) ]]
+
+[[ _FetchHandler (thumbnail_SetMedium,pc) ]]
+
+[[ _FetchHandler (thumbnail_SetSmall,pc) ]]
+   
+
+--> Deps
+-
+[[ _FetchHandler (date_Convert8601,c) ]]

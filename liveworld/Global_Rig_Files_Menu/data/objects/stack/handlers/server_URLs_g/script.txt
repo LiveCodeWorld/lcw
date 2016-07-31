@@ -1,0 +1,4 @@
+getprop server_URLs
+   put pref_FetchServerArray() into serverArray
+   return keys (serverArray)
+end server_URLs

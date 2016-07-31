@@ -1,0 +1,5 @@
+function audioboom_FetchClipArray audioClipID
+   put audioboom_FetchClipJSON (audioClipID) into someJson
+   put json_ToArray (someJson) into someArray
+   return someArray
+end audioboom_FetchClipArray

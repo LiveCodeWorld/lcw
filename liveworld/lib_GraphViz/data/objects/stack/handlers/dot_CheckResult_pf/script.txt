@@ -1,0 +1,24 @@
+private function dot_CheckResult gvResult, outputFormat, someShell
+   if outputFormat is among the items of "png,jpeg,jpg,gif" then
+      set the itemdelimiter to ":"
+      switch item 1 of gvResult
+         case "Error"
+            opn_Notify gvResult
+            break
+         case "Warning"
+            opn_Notify (line 1 of gvResult), true
+            repeat while item 1 of line 1 of gvResult is "Warning"
+               delete line 1 of gvResult
+            end repeat
+            return gvResult
+         case "Assertion failed"
+            opn_Notify (line 1 of gvResult), true
+            put gvResult
+            return gvResult
+         default
+            return gvResult
+      end switch
+   else
+      return gvResult
+   end if
+end dot_CheckResult

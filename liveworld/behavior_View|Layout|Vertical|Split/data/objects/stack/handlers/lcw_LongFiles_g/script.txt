@@ -1,0 +1,5 @@
+getprop lcw_LongFiles
+   put the lcw_FolderName of the target into folderName
+   put lcw_ListStackPaths (folderName) into stackPaths
+   return stackPaths
+end lcw_LongFiles

@@ -1,0 +1,116 @@
+command objectArray_AddCard cardObject, @stackArray, @hArray, pLinkToViews, pCardNum, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   local objectPropArray
+   if pCardNum is empty then
+      put "card" into cardArrayKey
+   else
+      put "card[" & pCardNum & "]" into cardArrayKey
+   end if
+   
+   put the abbreviated id of cardObject into abbreviatedID
+   put abbreviatedID into stackArray ["manifest"]["cards"][cardArrayKey]["object"]
+   -- put pCardNum into stackArray ["manifest"]["cards"][cardArrayKey]["layer"] -- stored already with rev array
+   
+   -- just for readability
+   put the short name of cardObject into cardName
+   put cardName into stackArray ["manifest"]["cards"][cardArrayKey]["name"]
+   
+   object_GetPropertyArrays cardObject, objectPropArray, hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   
+   put object_ConvertAbbreviated (abbreviatedID) into aFolderName
+   put objectPropArray into stackArray ["objects"][aFolderName]
+   
+   put the number of controls in cardObject into controlMaxNum
+   put 1 into controlNum
+   put 0 into indexNum -- the order in the index of things to create
+   repeat controlMaxNum
+      try
+         set the cursor to busy
+         add 1 to indexNum
+         if controlMaxNum = 1 then
+            put "index" into indexArrayKey
+         else
+            put "index[" & indexNum & "]" into indexArrayKey
+         end if
+         
+         put the long id of control controlNum of cardObject into someObject
+         put the abbreviated id of someObject into abbreviatedID
+         put abbreviatedID into stackArray ["manifest"]["cards"][cardArrayKey]["controls"][indexArrayKey]["object"]
+         put indexNum into stackArray ["manifest"]["cards"][cardArrayKey]["controls"][indexArrayKey]["create_order"] -- not same as rev layer (so need to store for XML)
+         
+         -- just for readability
+         put the short name of someObject into objectName
+         put objectName into stackArray ["manifest"]["cards"][cardArrayKey]["controls"][indexArrayKey]["name"]
+         
+         put object_ConvertAbbreviated (abbreviatedID) into aFolderName
+         put stackArray ["objects"][aFolderName] into indexedObjectPropArray
+         if indexedObjectPropArray is an array then
+            -- it must be a background that has already been indexed
+            -- even if the backgroundbehavior is false? = old bug that is fixed now I think!
+            put the number of controls of someObject into skipNum
+            objectArray_AddClonedBackgroundToCard someObject, abbreviatedID, stackArray, cardObject
+            put the result into bgNum
+            put true into stackArray ["manifest"]["cards"][cardArrayKey]["controls"][indexArrayKey]["is_background"]
+            
+            -- if there are any variable background elements
+            put stackArray_GetVariableElements (abbreviatedID, stackArray) into vElements
+            put the number of lines of vElements into eMaxNum
+            repeat with eNum = 1 to eMaxNum
+               if eMaxNum = 1 then
+                  put "element" into elementArrayKey -- to be equivalent to xml import script
+               else
+                  put "element[" & eNum & "]" into elementArrayKey
+               end if
+               put line eNum of vElements into someLine -- onCardObject
+               
+               put token 3 of someLine into controlID
+               if exists (control id controlID of cardObject) is false then
+                  breakpoint
+                  next repeat
+               end if
+               
+               put the long id of control id controlID of cardObject into onCardObject
+               
+               put onCardObject into stackArray ["manifest"]["cards"][cardArrayKey]["variable"][elementArrayKey]["object"]
+               switch word 1 of onCardObject
+                  case "field"
+                     put the htmlText of onCardObject into stackArray ["manifest"]["cards"][cardArrayKey]["variable"][elementArrayKey]["html"]
+                     break
+                  case "button"
+                     put the hilite of onCardObject into stackArray ["manifest"]["cards"][cardArrayKey]["variable"][elementArrayKey]["hilite"]
+                     break
+               end switch
+            end repeat
+            
+            add skipNum to controlNum
+         else
+            -- it's a new control to be indexed
+            object_GetPropertyArrays someObject, objectPropArray, hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+            
+            put objectPropArray into stackArray ["objects"][aFolderName]
+            put the abbreviated id of the owner of someObject into abbreviatedOwner
+            put abbreviatedOwner into stackArray ["manifest"]["cards"][cardArrayKey]["controls"][indexArrayKey]["owner"]
+            
+            if pLinkToViews is not false then
+               put the view_Name of someObject into vName
+               if vName is not empty then
+                  -- it is a view or datagrid
+                  -- so reference the view
+                  put vName into stackArray ["objects"][aFolderName]["view"]
+                  
+                  -- and store it's initial properties (already stored above?)
+                  
+                  -- then skip it's inner controls
+                  put the number of controls of someObject into skipNum
+                  add skipNum to controlNum
+               end if
+            end if
+         end if
+         
+         add 1 to controlNum
+         if controlNum > controlMaxNum then exit repeat
+      catch e
+         breakpoint
+         -- put the mobile_Name of control controlNum of cardObject
+      end try
+   end repeat
+end objectArray_AddCard

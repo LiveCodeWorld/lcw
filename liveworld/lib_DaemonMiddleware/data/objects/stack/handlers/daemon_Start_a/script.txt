@@ -1,0 +1,3 @@
+after daemon_Start
+   daemon_Log ("Server started. Using port:" && the daemon_Port of me)
+end daemon_Start

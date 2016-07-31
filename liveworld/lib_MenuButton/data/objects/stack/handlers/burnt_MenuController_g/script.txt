@@ -1,0 +1,12 @@
+getprop burnt_MenuController [pMenuTitle]
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   if pMenuTitle is empty then put the menu_Title of targetObject into pMenuTitle
+   
+   set lockmessages to true
+   put the menu_Controller [pMenuTitle] of someView into mController
+   set lockmessages to false
+   return mController
+end burnt_MenuController

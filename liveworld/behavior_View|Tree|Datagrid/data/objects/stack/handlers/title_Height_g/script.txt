@@ -1,0 +1,7 @@
+getprop title_Height
+   put the customproperties of me into propArray
+   put propArray ["title_Height"] into titleHeight
+   
+   if titleHeight is empty then pass title_Height
+   return titleHeight
+end title_Height

@@ -1,0 +1,5 @@
+command library_SetStackFiles stackFileTable
+   -- was "opn_SetStackFiles"
+   put library_StackFileStack() into stackFileStack
+   set the stackfiles of stackFileStack to stackFileTable
+end library_SetStackFiles

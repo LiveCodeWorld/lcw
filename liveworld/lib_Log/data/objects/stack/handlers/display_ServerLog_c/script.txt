@@ -1,0 +1,8 @@
+command display_ServerLog
+   put the log_View of me into logView
+   if exists (logView) is false then return empty
+
+   put the log_Text of logView into logText
+   set the displayed_Log of logView to logText
+   return logView
+end display_ServerLog

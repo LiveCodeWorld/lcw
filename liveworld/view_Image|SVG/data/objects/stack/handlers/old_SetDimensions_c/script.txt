@@ -1,0 +1,16 @@
+command old_SetDimensions @svgXML, svgWidth, svgHeight
+   -- <svg width="880pt" height="480pt"  
+   set the wholematches to false
+   put lineOffset ("<svg ", svgXML) into lineNum
+   put line lineNum of svgXML into firstLine
+   put "<svg width=\'(.+)pt\' height=\'(.+)pt\'" into someReg
+   replace "'" with quote in someReg
+   get matchChunk (firstLine, someReg, sWidth, eWidth, sHeight, eHeight)
+   
+   put char sWidth to eWidth of line lineNum of svgXML into oldWidth
+   put char sHeight to eHeight of line lineNum of svgXML into oldHeight
+   
+   put svgWidth into char sWidth to eWidth of line lineNum of svgXML
+   put svgHeight into char sHeight to eHeight of line lineNum of svgXML
+   return oldWidth,oldHeight
+end old_SetDimensions

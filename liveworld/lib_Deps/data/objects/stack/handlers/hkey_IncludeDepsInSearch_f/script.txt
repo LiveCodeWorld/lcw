@@ -1,0 +1,8 @@
+function hkey_IncludeDepsInSearch
+   global gOPN
+   put gOPN ["include_DependencyBehaviors"] is not false into someBoolean
+   return someBoolean
+   
+   put pref_GetValue ("include_DependencyBehaviors") is not false into someBoolean
+   return someBoolean
+end hkey_IncludeDepsInSearch

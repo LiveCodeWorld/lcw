@@ -1,0 +1,28 @@
+command ipfs_AddFile pFile, pPort, pDomain
+   if pFile is empty then
+      answer file "Select a file to add to IPFS..."
+      put it into pFile
+      if pFile is empty then return empty
+   end if
+   
+   put empty into tForm
+   -- http://localhost:5001/api/v0/add?stream-channels=true
+   put empty into pArgs
+   put ipfs_ConstructUrl ("add", pArgs, "stream-channels=true", pPort, pDomain) into tUrl  
+   put "<file>" & pFile into tFile
+   
+   if libURLMultipartFormData (tForm, "file", tFile) is not empty then
+      put it into someError
+      put someError into someArray ["Error"]
+   else
+      put line 1 of tForm into postHeaders
+      set the httpHeaders to postHeaders
+      post line 2 to -1 of tForm to url tUrl
+      ## check the result, etc., here
+      put it into someJSON
+      -- set the httpHeaders to empty
+      
+      put json_ToArray (someJSON) into someArray
+   end if
+   return someArray
+end ipfs_AddFile

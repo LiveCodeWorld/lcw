@@ -1,0 +1,6 @@
+on menu_EditScriptHelp scriptObject
+   put the script_Help of scriptObject into scriptHelp
+   put opn_Ask (merge("Give a description for [[scriptObject]]..."), scriptHelp) into scriptHelp
+   set the script_Help of scriptObject to scriptHelp
+   opn_Notify merge ("Saved description for [[scriptObject]].")
+end menu_EditScriptHelp

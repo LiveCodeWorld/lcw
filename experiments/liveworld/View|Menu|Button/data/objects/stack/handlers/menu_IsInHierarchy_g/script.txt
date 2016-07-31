@@ -1,0 +1,6 @@
+getprop menu_IsInHierarchy [mTitle]
+   put the long id of the target into targetObject
+   menu_FindTitle mTitle, targetObject, mController
+   put the result into someBoolean
+   return someBoolean
+end menu_IsInHierarchy

@@ -1,0 +1,191 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Outline
+type: library
+version: 0.1
+
+/*
+A library for processing tab delimitted "outlines".
+*/
+
+--> Outline
+-
+[[ _FetchHandler (outline_TopLevelTitles,f) ]]
+
+[[ _FetchHandler (outline_StripLeadingSpace,f) ]]
+
+[[ _FetchHandler (outline_TabLevel,f) ]]
+
+[[ _FetchHandler (outline_FilterTabLevel,f) ]]
+
+[[ _FetchHandler (outline_SetIndent,f) ]]
+
+[[ _FetchHandler (outline_DecreaseIndent,f) ]]
+
+[[ _FetchHandler (outline_IncreaseIndent,f) ]]
+
+
+--> Outline | Arrays
+-
+[[ _FetchHandler (outline_ToDatagridArray,f) ]]
+
+[[ _FetchHandler (outline_ToNestedArray,f) ]]
+
+[[ _FetchHandler (array_ToOutline,f) ]]
+
+[[ _FetchHandler (outline_ToArray,f) ]]
+
+[[ _FetchHandler (outline_ConvertToTable,f) ]]
+
+[[ _FetchHandler (outline_ToPathArray,f) ]]
+
+
+--> Outline | Sections
+-
+[[ _FetchHandler (outline_AddTitleSection,c) ]]
+
+[[ _FetchHandler (outline_AddSection,f) ]]
+
+[[ _FetchHandler (outline_SetSectionOffsets,c) ]]
+
+[[ _FetchHandler (outline_IsLeaf,f) ]]
+
+[[ _FetchHandler (outline_ExtractLineSection,f) ]]
+
+[[ _FetchHandler (outline_ExtractSection,f) ]]
+
+[[ _FetchHandler (outline_ReplaceSection,f) ]]
+
+
+--> Outline | Html Index
+-
+[[ _FetchHandler (outline_ReverseNameLinks,f) ]]
+
+
+
+--> Outline | Paths
+-
+/*
+See also "Object | Outline" section in libOPN_Objects
+*/
+
+[[ _FetchHandler (outline_FirstColumnFromPathIndex,f) ]]
+
+[[ _FetchHandler (outline_LeafIndex,f) ]]
+
+[[ _FetchHandler (outline_ToPathIndex,f) ]]
+
+[[ _FetchHandler (outline_FromPathIndex,f) ]]
+
+[[ _FetchHandler (outline_AddHtmlPathLinksPath,pc) ]]
+
+[[ _FetchHandler (outline_AddPath,f) ]]
+
+[[ _FetchHandler (outline_HierarchyFromPath,f) ]]
+
+[[ _FetchHandler (outline_PathFromLineNum,f) ]]
+
+[[ _FetchHandler (outline_PathOffset,f) ]]
+
+[[ _FetchHandler (outline_GetChildPaths,f) ]]
+
+[[ _FetchHandler (outline_PathChildren,f) ]]
+
+
+--> Outline | Paths | LinkArray
+-
+/*
+Not at all sure about these recursive functions.
+*/
+
+[[ _FetchHandler (outline_ToLinkArray,f) ]]
+
+[[ _FetchHandler (outline_AddToLinkArray,c) ]]
+
+
+
+--> Outline | Parents
+-
+[[ _FetchHandler (outline_LineParent,f) ]]
+
+
+--> Outline | Children
+-
+[[ _FetchHandler (outline_ChildDuplicateNum,f) ]]
+
+[[ _FetchHandler (outline_StripLeaves,f) ]]
+    
+[[ _FetchHandler (outline_AddTitle,c) ]]
+
+[[ _FetchHandler (outline_AddToChildren,c) ]]
+
+[[ _FetchHandler (outline_TopChildren,f) ]]
+    
+[[ _FetchHandler (outline_GetChildren,f) ]]
+
+[[ _FetchHandler (outline_GetChildLineNums,f) ]]
+
+[[ _FetchHandler (outline_GetChildArray,f) ]]
+
+[[ _FetchHandler (outline_SetChildrenOffsets,c) ]]
+
+[[ _FetchHandler (outline_GetNestedChildren,f) ]]
+
+[[ _FetchHandler (outline_SetChildren,c) ]]
+
+[[ _FetchHandler (outline_IsAmongChildren,f) ]]
+
+
+--> Outline | Hierarchy
+-
+[[ _FetchHandler (outline_ExtractMainHierarchySection,f) ]]
+
+[[ _FetchHandler (outline_LinePath,f) ]]
+
+-- function extractOutlineHierarchy osLineNum, someOutline
+    -- version latest, 10/27/00
+    put empty into outlineHierarchy
+    repeat with lineNum = osLineNum down to 1
+        put line lineNum of someOutline into someTitle
+        put outline_TabLevel(someTitle) into someTabLevel
+        if someTabLevel is 0 then
+            put someTitle & return before outlineHierarchy
+            exit repeat
+        else if someTabLevel < lastTabLevel then
+            put someTitle & return before outlineHierarchy
+            put someTabLevel into lastTabLevel
+        end if
+    end repeat
+    if last char of outlineHierarchy is return then delete last char of outlineHierarchy
+    return outlineHierarchy
+end extractOutlineHierarchy
+
+
+--> Outline | Searching
+-
+[[ _FetchHandler (outline_TabTitleOffset,f) ]]
+
+[[ _FetchHandler (outline_EndOfSection,f) ]]
+
+[[ _FetchHandler (outline_NextSameLevel,f) ]]
+
+
+--> Outline | XML
+-
+/*
+See also OPML section in libOPN_Data
+*/
+
+[[ _FetchHandler (outline_Simplify,f) ]]
+
+[[ _FetchHandler (outline_ToXmlStructure,f) ]]
+
+[[ _FetchHandler (outline_ToXML,f) ]]
+
+[[ _FetchHandler (outline_ToXMLRecurse,pc) ]]
+
+
+--> Outline | Utilities
+-
+[[ _FetchHandler (outline_ConstructBranchSections,f) ]]

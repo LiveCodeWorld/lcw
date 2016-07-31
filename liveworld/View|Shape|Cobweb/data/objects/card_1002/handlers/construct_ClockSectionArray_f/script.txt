@@ -1,0 +1,11 @@
+function construct_ClockSectionArray sIndex, sColour, pDuration, pSectionName
+   -- if pDuration is empty each empty slice is set to an equal share of what is left
+   put pDuration into sArray ["section_Duration"]
+   
+   -- pSectionName is needed but can be set as "set the clock_SectionArray [pSectionName] of..."
+   put pSectionName into sArray ["section_Name"]
+   
+   put sColour into sArray ["section_Colour"]
+   put sIndex into sArray ["section_Index"]
+   return sArray
+end construct_ClockSectionArray

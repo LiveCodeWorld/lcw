@@ -1,0 +1,5 @@
+getprop disabled_DisplayDependencyObjectArray [stackObject]
+   put the project_ProcessedHkeyArrayFile of stackObject into processedHkeyArrayFile
+   put there is a file processedHkeyArrayFile into fileExists
+   return fileExists is false
+end disabled_DisplayDependencyObjectArray

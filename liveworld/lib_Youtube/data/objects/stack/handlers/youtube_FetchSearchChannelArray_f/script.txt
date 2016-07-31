@@ -1,0 +1,5 @@
+function youtube_FetchSearchChannelArray channelID, pSearchQuery, pMaxResults, pNextPageToken
+   put youtube_FetchSearchChannelJson (channelID, pSearchQuery, pMaxResults, pNextPageToken) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end youtube_FetchSearchChannelArray

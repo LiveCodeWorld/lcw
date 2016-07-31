@@ -1,0 +1,4 @@
+command preview_Image imagePath
+   finder_Open imagePath, "Macintosh HD:Applications:Preview.app:"
+   return the result
+end preview_Image

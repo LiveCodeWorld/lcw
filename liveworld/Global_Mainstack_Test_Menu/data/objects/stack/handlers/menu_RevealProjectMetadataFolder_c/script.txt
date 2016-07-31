@@ -1,0 +1,4 @@
+on menu_RevealProjectMetadataFolder scriptObject
+   put the project_MetaDataFolder of scriptObject into projectMetaDataFolder
+   finder_Reveal projectMetaDataFolder
+end menu_RevealProjectMetadataFolder

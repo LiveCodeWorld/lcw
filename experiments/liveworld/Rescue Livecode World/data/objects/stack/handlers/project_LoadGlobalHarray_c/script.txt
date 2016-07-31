@@ -1,0 +1,5 @@
+command project_LoadGlobalHarray pProjectName
+   global gHkey_Array
+   put project_FetchHarray (pProjectName) into gHkey_Array
+   return gHkey_Array
+end project_LoadGlobalHarray

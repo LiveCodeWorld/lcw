@@ -1,0 +1,6 @@
+on menu_Views indexGroup, vName
+   put the child_Views of indexGroup into childViews
+   repeat for each line childView in childViews
+      set the control_Type of childView to "placeholder"
+   end repeat
+end menu_Views

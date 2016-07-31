@@ -1,0 +1,6 @@
+function library_FetchHandler shortHkey
+   put library_HandlerFile (shortHkey, "script.txt", false) into someFile
+   put url ("binfile:" & someFile) into someHandler
+   hack_UpdateBinFile someHandler, someFile
+   return someHandler
+end library_FetchHandler

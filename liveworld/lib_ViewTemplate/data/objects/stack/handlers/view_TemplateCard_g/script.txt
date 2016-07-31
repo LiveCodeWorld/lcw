@@ -1,0 +1,5 @@
+getprop view_TemplateCard
+   put the view_Name of the target into vName
+   put view_GetTemplateCard (vName) into viewTemplateCard
+   return viewTemplateCard
+end view_TemplateCard

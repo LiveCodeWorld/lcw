@@ -1,0 +1,19 @@
+function daemon_ConstructHeaderArray someHeaders, pFast
+   if pFast is true then
+      split someHeaders with CR and ":"
+      return someHeaders
+   end if
+   
+   set the itemdelimiter to ":"
+   put quote & "'" into someQuotes
+   repeat for each line headerLine in someHeaders
+      put word 1 to -1 of item 1 of headerLine into headerKey
+      put word 1 to -1 of item 2 of headerLine into headerValue
+      if char 1 of headerValue is among the chars of someQuotes and char -1 of headerValue is among the chars of someQuotes then
+         delete char 1 of headerValue
+         delete char -1 of headerValue
+      end if
+      put headerValue into headerArray [headerKey]
+   end repeat
+   return headerArray
+end daemon_ConstructHeaderArray

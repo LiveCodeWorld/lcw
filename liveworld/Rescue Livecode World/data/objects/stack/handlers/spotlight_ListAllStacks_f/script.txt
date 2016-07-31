@@ -1,0 +1,11 @@
+function spotlight_ListAllStacks
+   /*
+   This is not picking up script only stacks for some reason
+   */
+   put "(kMDItemKind = 'LiveCode Stack')" into queryExpression
+   put "mdfind" && kwote (queryExpression) into someShell  
+   get shell (someShell)
+   put word 1 to -1 of it into longStackFiles
+   put CR & project_ListStandardScriptOnlyFiles() after longStackFiles -- bug: here we spotlight not indexing livecodescript files
+   return longStackFiles
+end spotlight_ListAllStacks

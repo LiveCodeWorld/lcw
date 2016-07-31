@@ -1,0 +1,5 @@
+function rev_DocumentationTokens
+   -- should be spead up by using a global
+   put opn_GetIndex ("rev_DocumentationTokens") into scriptTokens
+   return scriptTokens
+end rev_DocumentationTokens

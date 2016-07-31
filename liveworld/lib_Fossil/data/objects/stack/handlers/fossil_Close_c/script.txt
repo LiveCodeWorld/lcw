@@ -1,0 +1,9 @@
+command fossil_Close checkoutFolder
+   put "fossil close" into someShell
+   fossil_ExecuteShell someShell, checkoutFolder
+   put the result into openInfo
+   
+   fossil_DeleteCheckoutArray checkoutFolder
+   put the result into fossilCheckoutArray
+   return fossilCheckoutArray
+end fossil_Close

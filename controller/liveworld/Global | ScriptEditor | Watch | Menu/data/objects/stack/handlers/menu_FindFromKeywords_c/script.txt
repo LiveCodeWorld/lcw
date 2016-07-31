@@ -1,0 +1,5 @@
+on menu_FindFromKeywords
+   put opn_Ask ("Input some handler names or keywords seperated by commas...", "path,array") into keywordList
+   put hArray_KeywordHkeys (keywordList) into hKeys
+   display_HkeyIndex hKeys
+end menu_FindFromKeywords

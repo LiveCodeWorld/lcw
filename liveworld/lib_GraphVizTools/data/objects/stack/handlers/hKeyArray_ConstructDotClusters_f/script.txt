@@ -1,0 +1,34 @@
+function hKeyArray_ConstructDotClusters idObjectArray, linkArray, idArray, labelNodes, notIfEmpty, graphNodeType, pTargetObject
+   put keys(idObjectArray) into someObjects
+   
+   put 1 into clusterNum
+   repeat for each line someObject in someObjects
+      put idObjectArray [someObject] into stackIds
+      
+      repeat for each line nodeID in stackIds
+         put dot_NodeDefLine (nodeID, idArray, pTargetobject) into nodeDefLine
+         put tab & nodeDefLine & CR after nodeSection
+      end repeat
+      delete char -1 of nodeSection
+      
+      if notIfEmpty is not false and nodeSection is empty then next repeat
+      
+      if exists(someObject) then
+         put the short name of someObject into subGraphName
+         dot_EscapeQuotes subGraphName
+      else
+         put someObject into subGraphName
+      end if
+      put "" into someRank
+      put "grey60" into someColour
+      put "grey90" into fillColour
+      put "" into someStyle
+      
+      get dot_ConstructCluster (subGraphName, clusterNum, nodeSection, someRank, someStyle, someColour, fillColour)
+      put it & CR after clusterSection
+      
+      add 1 to clusterNum
+   end repeat
+   delete char -1 of clusterSection
+   return clusterSection
+end hKeyArray_ConstructDotClusters

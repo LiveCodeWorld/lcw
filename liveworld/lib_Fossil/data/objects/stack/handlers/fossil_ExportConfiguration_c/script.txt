@@ -1,0 +1,15 @@
+command fossil_ExportConfiguration fossilFile, pConfigFile, pWhichConfig
+   if pWhichConfig is empty then put "project" into pWhichConfig
+   if pConfigFile is empty then
+      put fossil_GetDefaultRepoFolder() & "config.txt" into pConfigFile
+      -- put the tempname & ".txt" into pConfigFile
+   end if
+   
+   shell_BashParamEscape pConfigFile
+   shell_BashParamEscape fossilFile
+   put merge ("fossil configuration export [[pWhichConfig]] [[pConfigFile]] --repository [[fossilFile]]") into someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_ExportConfiguration

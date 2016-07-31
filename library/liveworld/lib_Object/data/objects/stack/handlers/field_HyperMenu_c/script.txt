@@ -1,0 +1,55 @@
+command field_HyperMenu
+   put the long ID the target into targetObject
+   
+   if the selection is empty then
+      select the clickChunk
+   end if
+   
+   if the selection is empty then
+      put the clickLoc into somelocation
+      put the textStyle of the clickChunk into selectedStyle
+      put the field_Menu [""] of targetObject into menuTitle	# ???
+   else
+      put the formattedRect of the selectedChunk into selectedRect
+      if selectedRect is empty then return false
+      
+      if loc_WithinRect(the clickLoc, selectedRect) then
+         put the field_Menu ["Inside"] of targetObject into menuTitle
+      else
+         select the clickChunk
+         put the formattedRect of the selectedChunk into selectedRect
+         if selectedRect is empty then return false
+         
+         put the field_Menu ["Outside"] of targetObject into menuTitle
+      end if
+      
+      put item 1 of selectedRect into someLocation
+      put item 4 of selectedRect + 6 into item 2 of someLocation
+      
+      put the textStyle of the selectedChunk into selectedStyle
+   end if
+   
+   put the linkText of the selectedChunk into someLink
+   switch someLink
+      case ""
+         menu_PopUp menuTitle, someLocation
+         return true
+      default
+         if word 1 of someLink is "menu_Option" then
+            -- this sets the text of the menu
+            -- field_HyperText someLink, targetObject
+            send someLink to targetObject
+            
+            put the menu_Button of the target into mButton
+            menu_ClearTargetGlobals
+            -- should set other stuff here mTitle and mTarget???
+            menu_SetTargetObject targetObject
+            
+            popup mButton at someLocation
+            set the menu_Action of mButton to empty
+            return true
+         else
+            return false
+         end if
+   end switch
+end field_HyperMenu

@@ -1,0 +1,5 @@
+getprop menu_ControllerSearch [mTitle]
+   put the long id of the target into targetObject
+   menu_FindTitle mTitle, targetObject, mController
+   return mController
+end menu_ControllerSearch

@@ -1,0 +1,70 @@
+function outline_AddPath somePath, tabbedOutline, pDelim, pBeforeTag, pAfterTag, insertWhere
+   if pDelim is empty then put "/" into pDelim
+   
+   set the itemdelimiter to pDelim
+   set the wholematches to true
+   put 0 into lastFoundLine
+   put empty into tabBit
+   
+   put 0 into lastFoundLine
+   put the number of items of somePath into lastItemNum
+   repeat with itemNum = 1 to lastItemNum
+      put item itemNum of somePath into pathItem
+      
+      put tabBit & pathItem into osLine
+      put lineoffset(osLine, tabbedOutline, lastFoundLine) into foundLineNum
+      if foundLineNum is not 0 then
+         -- already there
+         put tab after tabBit
+         add foundLineNum to lastFoundLine
+      else
+         -- need to add this path to the right place in the outline
+         
+         -- first lets construct osLineSection
+         if itemNum + 1 > lastItemNum then
+            put tabBit & pBeforeTag & pathItem & pAfterTag into osLineSection
+         else
+            put osLine into osLineSection
+            repeat with foundItemNum = (itemNum + 1) to lastItemNum
+               put item foundItemNum of somePath into foundPathItem
+               
+               put tab after tabBit
+               if foundItemNum is lastItemNum then
+                  put CR & tabBit & pBeforeTag & foundPathItem & pAfterTag after osLineSection
+               else
+                  put CR & tabBit & foundPathItem after osLineSection
+               end if
+            end repeat
+         end if
+         
+         -- now lets add the new "osLineSection" to the right place in the outline
+         if tabbedOutline is empty then
+            put osLineSection into tabbedOutline
+         else
+            if lastFoundLine is 0 then put the number of lines of tabbedOutline into lastFoundLine
+            
+            -- where do we want to add the line ???
+            switch insertWhere
+               case "if this worked it would be sorted"
+                  put outline_LineParent (lastFoundLine, tabbedOutline, parentLineNum) into parentTitle
+                  outline_SetChildrenOffsets parentLineNum, firstOsTitleLineNum, lastOsTitleLineNum, tabbedOutline
+                  -- put outline_GetChildren (lastFoundLine, tabbedOutline) into osChildren
+                  put line firstOsTitleLineNum to lastOsTitleLineNum of tabbedOutline into sortedChildren
+                  line_Insert osLineSection, sortedChildren
+                  sort sortedChildren
+                  put sortedSection into line (firstOsTitleLineNum + 1) to lastOsTitleLineNum of tabbedOutlinecase
+                  -- just after the osTitle above
+                  put CR & osLineSection after line lastFoundLine of tabbedOutline
+                  break
+               default -- case "End of section"
+                  -- or how about at the end of the section?
+                  outline_SetChildrenOffsets lastFoundLine, firstOsTitleLineNum, lastOsTitleLineNum, tabbedOutline
+                  put CR & osLineSection after line lastOsTitleLineNum of tabbedOutline
+                  break
+            end switch
+         end if
+         return tabbedOutline
+      end if
+   end repeat
+   return tabbedOutline
+end outline_AddPath

@@ -1,0 +1,6 @@
+function git_GetProject pGitRootFolder
+   if pGitRootFolder is empty then put git_GetRootFolder() into pGitRootFolder
+   put git_GetProjectArray() into gitProjectArray
+   put gitProjectArray [gitRootFolder]["project name"] into projectName
+   return projectName
+end git_GetProject

@@ -1,0 +1,7 @@
+function rect_Scale someRect, someScale
+   put round (item 1 of someRect * someScale) into item 1 of scaledRect
+   put round (item 3 of someRect * someScale) into item 3 of scaledRect
+   put round (item 2 of someRect * someScale) into item 2 of scaledRect
+   put round (item 4 of someRect * someScale) into item 4 of scaledRect
+   return scaledRect
+end rect_Scale

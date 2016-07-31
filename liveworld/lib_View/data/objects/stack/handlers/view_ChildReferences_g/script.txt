@@ -1,0 +1,13 @@
+getprop view_ChildReferences
+   -- put the script_Suite ["View | Object | Children"] of the target into suiteScript
+   
+   put the script_AndBehavior of the target into someScript
+   put script_GetSuiteTitles(someScript) into suiteTitles
+   filter suiteTitles with "View * Children"
+   put line 1 of suiteTitles into suiteTitle
+   if suiteTitle is empty then return empty
+   put script_GetSuite(suiteTitle, someScript) into suiteScript
+   
+   put script_ExtractGetPropHandlers(suiteScript) into objectPropertyNames
+   return objectPropertyNames
+end view_ChildReferences

@@ -1,0 +1,34 @@
+setprop view_NewName newViewName
+   put the long id of the target into newTemplateObject
+   put the view_Name of newTemplateObject into oldViewName
+   
+   put the object_Metadata of newTemplateObject into newTemplateMetadata
+   put newViewName into newTemplateMetadata ["name"]
+   -- tidy it up a bit
+   put "view" into newTemplateMetadata ["type"] -- just in case
+   delete variable newTemplateMetadata ["version"] -- tidy old version stuff
+   put pref_GetValue ("username") into newTemplateMetadata ["author"]
+   put pref_GetValue ("username") into newTemplateMetadata ["copyright"]
+   set the object_Metadata of newTemplateObject to newTemplateMetadata
+   set the object_IsIndexed of newTemplateObject to true
+   
+   put the behavior of newTemplateObject into newTemplateBehavior
+   if exists (newTemplateBehavior) then
+      put the object_Metadata of newTemplateBehavior into newBehaviorMetadata
+      put newViewName into newBehaviorMetadata ["name"]
+      
+      -- tidy it up a bit
+      put "view behavior" into newBehaviorMetadata ["type"] -- just in case
+      delete variable newBehaviorMetadata ["version"] -- tidy old version stuff
+      put pref_GetValue ("username") into newBehaviorMetadata ["author"]
+      put pref_GetValue ("username") into newBehaviorMetadata ["copyright"]
+      
+      set the object_Metadata of newTemplateBehavior to newBehaviorMetadata
+   end if
+   
+   put library_TextFolder (oldViewName, "view", true) into oldMetaDataFolder
+   put library_TextFolder (newViewName, "view", true) into newMetaDataFolder
+   if there is a folder oldMetaDataFolder and there is not a folder newMetaDataFolder then
+      rename folder oldMetaDataFolder to newMetaDataFolder
+   end if
+end view_NewName

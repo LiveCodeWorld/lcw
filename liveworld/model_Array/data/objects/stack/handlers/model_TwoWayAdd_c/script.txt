@@ -1,0 +1,5 @@
+on model_TwoWayAdd someKey, someValue, modelName, modelObject, modelType
+   put model_GetArray(modelName, modelObject, modelType) into dataArray
+   dictionary_Set dataArray, someKey, someValue
+   model_SetArray modelName, modelObject, dataArray, modelType
+end model_TwoWayAdd

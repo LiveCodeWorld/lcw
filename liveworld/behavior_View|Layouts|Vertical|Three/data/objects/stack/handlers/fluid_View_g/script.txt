@@ -1,0 +1,4 @@
+getprop fluid_View
+   put the back_Property ["fluid_View"] of me into fluidView
+   if fluidView is empty then return "body_View"
+end fluid_View

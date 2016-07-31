@@ -1,0 +1,5 @@
+command url_EmptyCache
+    repeat for each line someURL in the cachedurls 
+        unload url someURL 
+    end repeat
+end url_EmptyCache

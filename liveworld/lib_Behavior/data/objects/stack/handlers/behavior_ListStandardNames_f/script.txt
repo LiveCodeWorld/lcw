@@ -1,0 +1,9 @@
+function behavior_ListStandardNames
+   put behavior_ListStandardPaths() into stackPaths
+   repeat for each line stackPath in stackPaths
+      put the short name of stack stackPath & CR after stackNames
+   end repeat
+   delete char -1 of stackNames
+   sort stackNames
+   return stackNames
+end behavior_ListStandardNames

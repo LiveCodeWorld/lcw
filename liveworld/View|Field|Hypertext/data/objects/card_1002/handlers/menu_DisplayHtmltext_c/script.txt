@@ -1,0 +1,4 @@
+on menu_DisplayHtmltext fieldObject
+   put the htmltext of fieldObject into someHtml
+   display_Text someHtml, fieldObject
+end menu_DisplayHtmltext

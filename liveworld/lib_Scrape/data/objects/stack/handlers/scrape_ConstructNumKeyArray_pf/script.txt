@@ -1,0 +1,11 @@
+private function scrape_ConstructNumKeyArray numKeyList, headerNum
+   repeat with itemNum =1 to headerNum
+      if item itemNum of numKeyList is empty then
+         put 1 into item itemNum of numKeyList
+      end if
+   end repeat
+   
+   put item 1 to headerNum of numKeyList into numKeyList
+   split numKeyList by comma
+   return numKeyList
+end scrape_ConstructNumKeyArray

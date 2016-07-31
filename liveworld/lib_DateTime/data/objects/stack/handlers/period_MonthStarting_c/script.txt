@@ -1,0 +1,4 @@
+on period_MonthStarting someDate, @startDate, @endDate
+    put date_FirstOfMonth(someDate) into startDate
+    put date_EndOfMonth(someDate) into endDate
+end period_MonthStarting

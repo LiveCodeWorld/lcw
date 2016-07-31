@@ -1,0 +1,9 @@
+function html_ConstructOpenVideoTag pVideoWidth, pShowControls, pPosterImageFile
+   -- this constructs an opening video tag
+   put "<video" into someHTML
+   if pPosterImageFile is not empty then put space & "poster=" & quote & pPosterImageFile & quote after someHTML
+   if pVideoWidth is not empty then put space & "width=" & quote & pVideoWidth & quote after someHTML
+   if pShowControls is not false then put space & "controls" after someHTML
+   put ">" after someHTML
+   return someHTML
+end html_ConstructOpenVideoTag

@@ -1,0 +1,9 @@
+command display_HKeyArray hKeyArray, hkeyOrObject
+   -- these old params were removed ", pOverlayName, pTreeTitle, pPlainOutline"
+   
+   put hkeyArray_ConstructTreeArray (hkeyArray) into treeArray
+   
+   display_HkeyTreeArray treeArray, hkeyOrObject
+   put the result into treeView
+   return treeview
+end display_HKeyArray

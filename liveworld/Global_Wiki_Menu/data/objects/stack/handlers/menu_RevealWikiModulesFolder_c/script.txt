@@ -1,0 +1,4 @@
+on menu_RevealWikiModulesFolder
+   put wiki_GetModulesFolder() into wikiModulesFolder
+   finder_Reveal wikiModulesFolder
+end menu_RevealWikiModulesFolder

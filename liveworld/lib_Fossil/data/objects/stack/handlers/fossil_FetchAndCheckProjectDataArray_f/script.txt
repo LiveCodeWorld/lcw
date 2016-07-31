@@ -1,0 +1,20 @@
+function fossil_FetchAndCheckProjectDataArray
+   put fossil_ConstructLiveProjectData() into liveProjectData
+   put library_FetchArray ("Fossil") into storedFossilData
+   
+   repeat for each key liveIndexNum in liveProjectData
+      put liveProjectData [liveIndexNum] into liveProjectArray
+      put liveProjectArray ["project-id"] into liveID
+      
+      repeat for each key storedIndexNum in storedFossilData
+         put storedFossilData [storedIndexNum] into storedProjectArray
+         put storedProjectArray ["project-id"] into storedID
+         if storedID = liveID then
+            union liveProjectArray with storedProjectArray
+            put liveProjectArray into liveProjectData [liveIndexNum]
+            exit repeat
+         end if
+      end repeat
+   end repeat
+   return liveProjectData
+end fossil_FetchAndCheckProjectDataArray

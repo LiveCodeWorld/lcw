@@ -1,0 +1,8 @@
+function menu_GetClassOutline
+   put display_GetClassPathArray() into pathArray
+   put keys(pathArray) into pathIndex
+   put "|" into pathDelim
+   set the itemdelimiter to pathDelim
+   sort pathIndex
+   put outline_FromPathIndex(pathIndex, pathDelim) into tabbedOutline
+end menu_GetClassOutline

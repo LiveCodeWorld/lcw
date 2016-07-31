@@ -1,0 +1,14 @@
+function youtube_FetchAllSearchChannelArray channelID, pSearchQuery
+   local nextPageToken, orderedSnippetArray
+   repeat
+      put youtube_FetchSearchChannelArray (channelID, pSearchQuery, 50, nextPageToken) into nextPlaylistArray
+      put nextPlaylistArray ["nextPageToken"] into nextPageToken
+      if nextPageToken is empty then
+         add_SearchArrayToOrderedSnippetArray orderedSnippetArray, nextPlaylistArray -- last or first and only item
+         exit repeat
+      else
+         add_SearchArrayToOrderedSnippetArray orderedSnippetArray, nextPlaylistArray
+      end if
+   end repeat
+   return orderedSnippetArray
+end youtube_FetchAllSearchChannelArray

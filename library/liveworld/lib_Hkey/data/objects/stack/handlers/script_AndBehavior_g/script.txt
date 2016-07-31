@@ -1,0 +1,6 @@
+getprop script_AndBehavior
+   put the script of the target into targetScript
+   put the behavior of the target into someBehavior
+   if exists(someBehavior) then put CR & CR & the script of someBehavior after targetScript
+   return targetScript
+end script_AndBehavior

@@ -1,0 +1,10 @@
+setprop view_Index [someTitle] someIndex
+   lock screen
+   put _fieldView() into fieldObject
+   if someTitle is not empty then
+      set the view_Label of me to someTitle
+   end if
+   set the text of fieldObject to someIndex
+   unlock screen
+   return fieldObject
+end view_Index

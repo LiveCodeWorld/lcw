@@ -1,0 +1,8 @@
+setprop stack_RectWithin [pMargin] outsideRect
+   if pMargin is not empty then rect_SubtractMargins outsideRect, pMargin
+   put the stack_Object of the target into stackObject
+   put the rect of stackObject into someRect
+   rect_ShiftWithin someRect, outsideRect
+   set the rect of stackObject to someRect
+   return someRect
+end stack_RectWithin

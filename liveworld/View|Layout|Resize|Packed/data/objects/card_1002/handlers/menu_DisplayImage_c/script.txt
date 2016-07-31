@@ -1,0 +1,15 @@
+on menu_DisplayImage imageObject
+   local pResizeStyle, pStackStyle, pStackRect, pKeepInvisible
+   
+   put the short name of imageObject into pStackLabel
+   put the text of imageObject into someImage
+   put "orange" into pBackgroundColour
+   if someImage is empty then
+      put the filename of imageObject into imageFile
+      display_Image imageFile, pResizeStyle, pStackStyle, pStackLabel, pKeepInvisible, pStackRect, pBackgroundColour
+   else
+      display_ImageContents someImage, pResizeStyle, pStackStyle, pStackLabel, pKeepInvisible, pStackRect, pBackgroundColour
+   end if
+   put the result into imageView
+   set the image_ToolTitle of imageView to "Global | Image | Magick | Menu"
+end menu_DisplayImage

@@ -1,0 +1,6 @@
+getprop git_Project
+   put the git_CheckoutFolder of the target into gitRootFolder
+   put git_GetProjectArray() into gitProjectArray
+   put gitProjectArray [gitRootFolder]["project name"] into projectName
+   return projectName
+end git_Project

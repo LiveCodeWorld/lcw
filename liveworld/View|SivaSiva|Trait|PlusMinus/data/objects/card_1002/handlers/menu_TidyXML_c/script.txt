@@ -1,0 +1,5 @@
+on menu_TidyXml
+   put LocalArray ["xmlFile"] into xmlFile
+   put url ("file:" & xmlFile) into someXML
+   put shell_XmlTidy (someXML)
+end menu_TidyXml

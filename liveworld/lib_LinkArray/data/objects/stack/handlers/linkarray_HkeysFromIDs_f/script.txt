@@ -1,0 +1,8 @@
+function linkarray_HkeysFromIDs hIDs, hIdArray
+   local hKeys
+   repeat for each line hID in hIDs
+      put hIdArray [hID] & CR after hKeys
+   end repeat
+   delete char -1 of hKeys
+   return hKeys
+end linkarray_HkeysFromIDs

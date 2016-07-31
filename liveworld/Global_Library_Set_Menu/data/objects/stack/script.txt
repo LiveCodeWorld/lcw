@@ -1,0 +1,33 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Library_Set_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Project | Set | Menu
+-
+[[ _FetchHandler (menu_CreateNewProjectSet,c) ]]
+
+[[ _FetchHandler (menu_SetProjectUsed,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DeleteProjectSet,c) ]]
+
+[[ _FetchHandler (menu_CopyCurrentlyUsedTo,c) ]]
+
+
+--> Global | Library | Set | Menu | Props
+-
+[[ _FetchHandler (project_Name,g) ]]
+
+[[ _FetchHandler (project_Names,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (project_ConstructMenuSetArray,f) ]]
+

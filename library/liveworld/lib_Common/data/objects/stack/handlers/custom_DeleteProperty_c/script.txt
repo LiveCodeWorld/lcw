@@ -1,0 +1,14 @@
+command custom_DeleteProperty propName, targetObject, pSetName
+   put the custompropertyset of targetObject into oSetName
+   set the custompropertyset of targetObject to pSetName
+   put the customproperties of targetObject into propArray
+   put propArray [propName] into propValue
+   put the customkeys of targetObject into cKeys
+   line_Delete propName, cKeys
+   set the customkeys of targetObject to cKeys
+   if cKeys is empty then
+      custom_DeleteSet pSetName, targetObject
+   end if
+   set the custompropertyset of targetObject to oSetName
+   return propValue
+end custom_DeleteProperty

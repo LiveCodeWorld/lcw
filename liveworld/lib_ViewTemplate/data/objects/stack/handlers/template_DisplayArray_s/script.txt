@@ -1,0 +1,5 @@
+setprop template_DisplayArray displayArray
+   put the template_Array of the target into viewArray
+   put displayArray into viewArray ["display"]
+   set the template_Array of the target to viewArray
+end template_DisplayArray

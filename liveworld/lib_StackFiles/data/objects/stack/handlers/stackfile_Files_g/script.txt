@@ -1,0 +1,7 @@
+getprop stackfile_Files
+   put the stack_Object of the target into libraryStackFileStack
+   put the filename of libraryStackFileStack into stackFileRoot
+   put the stackfiles of libraryStackFileStack into stackFileTable
+   put stackFile_ConstructFileIndex (stackFileTable, stackFileRoot) into stackPaths
+   return stackPaths
+end stackfile_Files

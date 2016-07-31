@@ -1,0 +1,13 @@
+command daemon_Send someHeader, contentToSend, socketID, pSendCompressed
+   -- always adds "Content-Length:" header
+   -- should choose compression based on headers of requestArray
+   if pSendCompressed is true then
+      put CRLF & "Content-Encoding: gzip" after someHeader
+      put compress (contentToSend) into contentToSend
+   end if
+   
+   _addContentLengthHeader someHeader, contentToSend
+   
+   daemon_SendRaw someHeader, contentToSend, socketID
+   return the result
+end daemon_Send

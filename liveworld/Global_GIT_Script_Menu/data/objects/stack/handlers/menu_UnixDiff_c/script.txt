@@ -1,0 +1,8 @@
+on menu_UnixDiff treeField
+   put the tree_SelectedLink of treeField into gitHash
+   put merge("git diff [[gitHash]]") into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   text_UnixToMac shellResult
+   
+   display_Text shellResult
+end menu_UnixDiff

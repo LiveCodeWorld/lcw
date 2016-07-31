@@ -1,0 +1,15 @@
+function html_ColourSpanToRev someHtml
+    -- U is for non-greedy
+    replace quote with "'" in someHtml
+    put "(?miU)(<span style='color:).*(</span>)" into someReg
+    -- put "(?mi)(<span style='color:)[^\<]*(</span>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, oTagStart, oTagEnd, cTagStart, cTagEnd) is true then
+            put "</font>" into char cTagStart to cTagEnd of someHtml
+            put "<font color='" into char oTagStart to oTagEnd of someHtml
+        else
+            replace "'" with quote in someHtml
+            return someHtml
+        end if
+    end repeat
+end html_ColourSpanToRev

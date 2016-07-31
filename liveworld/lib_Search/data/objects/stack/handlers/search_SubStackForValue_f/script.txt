@@ -1,0 +1,49 @@
+function search_SubStackForValue stackObject, someProperty, someValue, controllerObject
+    local objectArray
+    
+    if the someProperty of stackObject = someValue then
+        put stackObject & CR after foundObjects
+    end if
+     
+    -- get the objects in the backgrounds
+    put the backgroundids of stackObject into someBgIds
+    repeat for each line someId in someBgIds
+        put the long id of background id someId of stackObject into someBackground
+         
+        if the someProperty of someBackground = someValue then
+            put someBackground & CR after foundObjects
+        end if
+         
+        repeat with controlNum = 1 to the number of controls in someBackground
+            put the long id of control controlNum of someBackground into someObject
+            if the someProperty of someObject = someValue then
+                put someObject & CR after foundObjects
+            end if
+        end repeat
+    end repeat
+    
+    -- get the card only objects of the cards
+    put the cardids of stackObject into someCardIDs
+    repeat for each line cardID in someCardIDs
+        put the long id of card id cardId of stackObject into cardObject
+         
+        if the someProperty of cardObject = someValue then
+            put cardObject & CR after foundObjects
+        end if
+         
+        repeat with controlNum = 1 to the number of controls in cardObject
+            put the long id of control controlNum of cardObject into someObject
+            
+            put word 3 of someObject into someID
+            if someID is among the lines of someBgIds then
+                add the number of controls in someObject to controlNum
+            else
+                if the someProperty of someObject = someValue then
+                    put someObject & CR after foundObjects
+                end if
+            end if
+        end repeat
+    end repeat
+    delete char -1 of foundObjects
+    return foundObjects
+end search_SubStackForValue

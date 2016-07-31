@@ -1,0 +1,10 @@
+getprop menu_ToolTitles
+   local mTitles
+   put the view_Hierarchy of the target into viewHierarchy
+   --repeat with lineNum = 1 to the number of lines of viewHierarchy
+   repeat with lineNum = the number of lines of viewHierarchy down to 1
+      put line lineNum of viewHierarchy into testView
+      line_Insert the menu_ToolTitle of testView, mTitles
+   end repeat
+   return mTitles
+end menu_ToolTitles

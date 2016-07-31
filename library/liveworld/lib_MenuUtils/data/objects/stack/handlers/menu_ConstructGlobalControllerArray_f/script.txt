@@ -1,0 +1,13 @@
+function menu_ConstructGlobalControllerArray pObjectFormat
+   put menu_GlobalTitles() into globalTitles
+   repeat for each line globalTitle in globalTitles
+      put menu_GetGlobalController(globalTitle) into someObject
+      if exists(someObject) then
+         if pObjectFormat is not empty then
+            put the pObjectFormat of someObject into someObject
+         end if
+         array_AddToIndex globalTitle, someObject, menuObjectArray
+      end if
+   end repeat
+   return menuObjectArray
+end menu_ConstructGlobalControllerArray

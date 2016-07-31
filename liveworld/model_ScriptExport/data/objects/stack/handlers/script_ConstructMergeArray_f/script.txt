@@ -1,0 +1,25 @@
+function script_ConstructMergeArray someScript
+   -- 20% faster than not using revAvailableHandlers
+   -- 50% slower than fetching from disk
+   -- 10x slower than just using revAvailableHandlers
+   -- hashing ony makes 5% difference
+   put the revAvailableHandlers of tObject into handlerTable
+   put handlerTable into mergeScriptArray ["handlerTable"]
+   
+   sort numeric descending handlerTable by word 3 of each
+   repeat for each line handlerTableLine in handlerTable
+      put word 1 of handlerTableLine into hType
+      put word 2 of handlerTableLine into hName
+      put word 3 of handlerTableLine into startLineNum
+      put word 4 of handlerTableLine into endLineNum
+      
+      put hName,hType into shortHkey
+      put line startLineNum to endLineNum of someScript into someHandler
+      put sha1_Hash (someHandler) into mergeScriptArray ["handler"][shortHkey]["sha1"]
+      put someHandler into mergeScriptArray ["handler"][shortHkey]
+      
+      put "[[ library_FetchHandler (" & shortHkey & ") ]]" into line startLineNum to endLineNum of someScript
+   end repeat
+   put someScript into mergeScriptArray ["mergeScript"]
+   return mergeScriptArray
+end script_ConstructMergeArray

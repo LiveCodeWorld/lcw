@@ -1,0 +1,14 @@
+setprop svg_HeaderArray svgHeaderArray
+   -- combine svgHeaderArray with space and "=" -- does not quote the attributes
+   put "<svg" & space into newSvgHeader
+   repeat for each key attributeName in svgHeaderArray
+      put svgHeaderArray [attributeName] into attributeValue
+      put attributeName & "=" & quote & attributeValue & quote & space after newSvgHeader
+   end repeat
+   delete char -1 of newSvgHeader
+   put ">" after newSvgHeader
+
+   set the svg_Header of me to newSvgHeader
+   put the result into svgXML
+   return svgXML
+end svg_HeaderArray

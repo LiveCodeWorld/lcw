@@ -1,0 +1,6 @@
+command project_GetLibraryArray libType, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchSetData() into librarySetData
+   put librarySetData [pProjectName]["data"][libType] into objectArray
+   return objectArray
+end project_GetLibraryArray

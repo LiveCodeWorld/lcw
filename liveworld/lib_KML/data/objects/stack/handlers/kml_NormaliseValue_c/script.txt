@@ -1,0 +1,4 @@
+on kml_NormaliseValue @someValue
+    set the numberformat to "#.000000000000"
+    put someValue & empty into someValue
+end kml_NormaliseValue

@@ -1,0 +1,6 @@
+function cloud_RestGet shortApiPath
+   put cloud_ConstructURL (shortApiPath) into someURL
+   cloud_SetRestHeaders
+   put url someURL into someJSON
+   return someJSON 
+end cloud_RestGet

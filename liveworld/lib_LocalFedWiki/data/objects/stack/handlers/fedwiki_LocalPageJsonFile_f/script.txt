@@ -1,0 +1,8 @@
+function fedwiki_LocalPageJsonFile pageSlug, pFedwikiDomain, pCreateFolder, pLocalWikiFolder
+   put fedwiki_LocalPagesFolder (pFedwikiDomain, pLocalWikiFolder) into localPagesFolder
+   if pCreateFolder is true then
+      folder_CreateNested localPagesFolder
+   end if
+   put localPagesFolder & pageSlug into someFile
+   return someFile
+end fedwiki_LocalPageJsonFile

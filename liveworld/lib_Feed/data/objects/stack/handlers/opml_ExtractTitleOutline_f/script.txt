@@ -1,0 +1,16 @@
+function opml_ExtractTitleOutline someOPML, @treeID
+    revDeleteAllXMLTrees
+     
+    put revCreateXMLTree(someOPML, false, true, false) into treeID
+     
+    put revXMLNodeContents(treeID, "/opml/head/title") into treeTitle
+    put revXMLNodeContents(treeID, "/opml/head/dateCreated") into treeCreationDate
+    put revXMLNodeContents(treeID, "/opml/head/dateModified") into treeModifiedDate
+    
+    put revXMLText(treeID, "/opml/body") into nodeXml
+     
+    put xml_TreeRecurse(treeID, "/opml/body") into tabbedOutline
+    delete line 1 of tabbedOutline
+    put outline_DecreaseIndent(tabbedOutline, 1) into tabbedOutline
+    return tabbedOutline
+end opml_ExtractTitleOutline

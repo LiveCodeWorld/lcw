@@ -1,0 +1,5 @@
+command fedwiki_SendCSS shortFile, socketID
+   put server_GetBinaryFile (shortFile) into someJSON
+   daemon_SendCSS socketID, someJSON
+   return "Sent JSON. Socket still open."
+end fedwiki_SendCSS

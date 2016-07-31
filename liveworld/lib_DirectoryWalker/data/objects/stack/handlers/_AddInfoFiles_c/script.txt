@@ -1,0 +1,23 @@
+command _AddInfoFiles @fileIndex, topFolder
+   /*
+   /html/info/*    # exclude all files except 
+   contact.html
+   copyright.html
+   privacy.html
+   
+   Ignore (and others)
+   /html/info/livecode-in-action
+   /html/info/search
+   */
+   
+   -- first let's tidy input
+   folder_Format topFolder
+   put char 1 to -1 of fileIndex into fileIndex
+   
+   -- now add the 3 files specified
+   repeat for each item shortBit in "contact,copyright,privacy"
+      put topFolder & "info/" & shortBit & ".html" into someFile
+      if there is not a file someFile then next repeat -- just in case
+      put CR & someFile after fileIndex
+   end repeat
+end _AddInfoFiles

@@ -1,0 +1,7 @@
+function lcw_GetRepoFolder
+   -- library_GetRepoFolder
+   put pref_GetValue ("libraryRepoFolder") into libraryRepoFolder
+   if libraryRepoFolder is empty then lcw_SetRepoFolder libraryRepoFolder
+   if char -1 of libraryRepoFolder is not slash then put slash after libraryRepoFolder
+   return libraryRepoFolder
+end lcw_GetRepoFolder

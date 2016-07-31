@@ -1,0 +1,8 @@
+command mediawiki_FetchPageQueryInfo pageSlug, @pageDescription, @pageTitle, @shortImageFile, @lastRevisionID, pApiStem
+   put sandbox_ConstructPageQueryFragment (pageSlug, "wiki", true) into sandBoxFragment
+   -- mediawiki_TestSandboxFragment sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   sandbox_DeconstructPageArray sandboxArray, pageTitle, pageDescription, shortImageFile, lastRevisionID
+   put the result into sandboxPageArray
+   return sandboxPageArray
+end mediawiki_FetchPageQueryInfo

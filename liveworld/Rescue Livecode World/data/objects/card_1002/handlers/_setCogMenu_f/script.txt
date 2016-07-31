@@ -1,0 +1,5 @@
+function _setCogMenu
+   put _setDisplayGroup() into setDisplayGroup
+   put the long id of widget "Cog menu" of setDisplayGroup into setCogMenu
+   return setCogMenu
+end _setCogMenu

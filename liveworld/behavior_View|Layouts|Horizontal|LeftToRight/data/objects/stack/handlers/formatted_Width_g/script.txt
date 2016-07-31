@@ -1,0 +1,24 @@
+getprop formatted_Width
+   -- in development
+   if the long id of the target is not the long id of me then pass formatted_Width
+   /*
+   put the layout_Style of me into layoutStyle
+   switch layoutStyle
+      case "fixed"
+         -- put the layout_TotalElementWidth of me into fWidth
+         -- add 
+         break
+      default
+   end switch
+   */
+   
+   put the left of group 1 of me into innerLeft
+   put the right of last group of me into innerRight
+   put innerRight - innerLeft into fWidth
+   
+   put the margins of me into myMargins
+   margin_Normalize myMargins, lMargin, tMargin, rMargin, bMargin
+   add lMargin to fWidth
+   add rMargin to fWidth
+   return fWidth
+end formatted_Width

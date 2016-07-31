@@ -1,0 +1,11 @@
+on readRequest pSocketId, pSocketData
+   /*
+   This handler gets the next set of data that comes in a connection. 
+   It is possible for this data to come in a separate packet from the initial connection. 
+   Under certain conditions Revolution may assume that the first packet was all the data there was and think it is ready to let the code process the data. 
+   This causes it to wait for more of the request when the request spans multiple packets.
+   */
+   
+   put pSocketData into SocketData [pSocketId]["request"]
+   read from socket pSocketID until CRLF & CRLF with message "readheaders"
+end readRequest

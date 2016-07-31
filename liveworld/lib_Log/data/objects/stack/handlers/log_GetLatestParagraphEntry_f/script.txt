@@ -1,0 +1,6 @@
+function log_GetLatestParagraphEntry pLogName
+   set the itemdelimiter to tab
+   put item 1 to 2 of fullLogIndex into latestEntry
+   delete line -1 of latestEntry
+   return latestEntry
+end log_GetLatestParagraphEntry

@@ -1,0 +1,8 @@
+command display_DuplicateKey treeField
+   if the tree_IsLeaf of treeField is true then
+      put the selected_Index of treeField into hKey
+      hkey_Edit hKey
+   else
+      pass display_DuplicateKey
+   end if
+end display_DuplicateKey

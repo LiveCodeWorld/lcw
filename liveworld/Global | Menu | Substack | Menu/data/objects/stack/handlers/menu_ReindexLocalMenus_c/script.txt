@@ -1,0 +1,7 @@
+on menu_ReindexLocalMenus scriptObject
+   put the menu_SubStack of scriptObject into subStackObject
+   menu_IndexStackMenuCards subStackObject
+   hArray_StoreGlobal
+   put merge ("Stored global hArray database to disk!") into someComment
+   opn_Notify someComment
+end menu_ReindexLocalMenus

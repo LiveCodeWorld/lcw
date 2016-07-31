@@ -1,0 +1,3 @@
+function ConvertXMLTreeToArray pXMLTree, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes
+    return ConvertXMLToArray(revXMLText(pXMLTree), pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes)
+end ConvertXMLTreeToArray

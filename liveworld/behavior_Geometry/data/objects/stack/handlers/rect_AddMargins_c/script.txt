@@ -1,0 +1,7 @@
+command rect_AddMargins @someRect, pMargin
+   margin_Normalize pMargin, leftM, topM, rightM, bottomM   
+   subtract leftM from item 1 of someRect
+   subtract topM from item 2 of someRect
+   add rightM to item 3 of someRect
+   add bottomM to item 4 of someRect
+end rect_AddMargins

@@ -1,0 +1,6 @@
+function handler_HkeyFromName handlerName
+   put handler_GetIndexArray() into indexArray
+   -- put handlerName & "," & indexArray [handlerName] into hKey
+   put indexArray [handlerName] into hKey
+   return hKey
+end handler_HkeyFromName

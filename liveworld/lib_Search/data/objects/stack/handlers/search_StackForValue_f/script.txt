@@ -1,0 +1,11 @@
+function search_StackForValue stackObject, someProperty, someValue, controllerObject
+    put object_SearchSubStackForValue(stackObject, someProperty, someValue, controllerObject) into objectArray
+    
+    put the substacks of stackObject into subStackNames
+    repeat for each line subStackName in subStackNames
+        put the long id of stack subStackName of stackObject into stackObject
+        put search_SubStackForValue (stackObject, someProperty, someValue, controllerObject) & CR after foundObjects
+    end repeat
+    delete char -1 of foundObjects
+    return foundObjects
+end search_StackForValue

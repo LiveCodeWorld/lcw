@@ -1,0 +1,8 @@
+function text_GetBetween startText, endText, someText, startAfterCharNum
+    -- was "getTextBetween"
+    text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
+    if startChar = 0 or endChar = 0 then return empty
+    add the number of chars of startText to startChar
+    subtract the number of chars of endText from endChar
+    return char startChar to endChar of someText
+end text_GetBetween

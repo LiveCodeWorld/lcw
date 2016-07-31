@@ -1,0 +1,23 @@
+function hArray_ListViewNames pStripViewBit
+   put hArray_ListObjectNamesOfType ("view template") into vNames
+   
+   set the itemdelimiter to "|"
+   sort vNames by item 5 of each
+   sort vNames by item 4 of each
+   sort vNames by item 3 of each
+   sort vNames by item 2 of each
+   
+   if pStripViewBit is true then
+      /*
+      -- leaves lines like "Graph|Flatworld||"
+      set the columnDelimiter to "|"
+      put vNames into columnArray
+      split columnArray by column
+      delete variable columnArray [1]
+      combine columnArray by column
+      */
+      
+      view_TrimFirstViewNameItem vNames
+   end if
+   return vNames
+end hArray_ListViewNames

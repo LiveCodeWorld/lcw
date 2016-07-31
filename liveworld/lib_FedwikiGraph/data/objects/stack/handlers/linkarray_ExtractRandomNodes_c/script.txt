@@ -1,0 +1,13 @@
+command linkarray_ExtractRandomNodes @nodeIdArray, someNumber
+   repeat someNumber
+      if nodeIdArray is not an array then exit repeat
+      put keys (nodeIdArray) into nodeKeys
+      put the number of lines of nodeKeys into maxNum
+      put random (maxNum) into lineNum
+      put line lineNum of nodeKeys into nodeID
+      put nodeID & comma after nodeIDs
+      delete variable nodeIdArray [nodeID]
+   end repeat
+   delete char -1 of nodeIDs
+   return nodeIDs
+end linkarray_ExtractRandomNodes

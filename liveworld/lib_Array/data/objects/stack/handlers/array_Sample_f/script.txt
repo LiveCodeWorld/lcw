@@ -1,0 +1,10 @@
+function array_Sample someArray, pHowMany
+   if pHowMany is empty then put 10 into pHowMany
+   put keys (someArray) into someKeys
+   repeat pHowMany
+      put any line of someKeys into someKey
+      put someArray [someKey] into sampleArray [someKey]
+      line_Delete someKey, someKeys
+   end repeat
+   return sampleArray
+end array_Sample

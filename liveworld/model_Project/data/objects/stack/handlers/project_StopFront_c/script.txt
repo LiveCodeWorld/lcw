@@ -1,0 +1,9 @@
+command project_StopFront pProjectName
+   -- renamed from "library_StopFront"
+   put project_FetchObjects ("front", pProjectName) into frontObjects
+   repeat for each line someObject in frontObjects
+      if exists(someObject) then
+         remove the script of someObject from front
+      end if
+   end repeat
+end project_StopFront

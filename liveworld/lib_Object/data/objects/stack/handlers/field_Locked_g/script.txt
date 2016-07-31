@@ -1,0 +1,5 @@
+getprop field_Locked
+   put the field_Object of the target into fieldObject
+   if exists(fieldObject) is false then return empty
+   return the lockText of fieldObject
+end field_Locked

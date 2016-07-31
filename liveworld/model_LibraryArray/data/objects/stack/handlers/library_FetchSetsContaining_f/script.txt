@@ -1,0 +1,12 @@
+function library_FetchSetsContaining ruggedObject, libType
+   put library_FetchSetData() into modelArray
+   repeat for each key setName in modelArray
+      put modelArray [setName]["data"][libType] into libTypeArray
+      put keys (libTypeArray) into rObjects
+      if ruggedObject is among the lines of rObjects then
+         put setName & CR after setNames
+      end if
+   end repeat
+   delete char -1 of setNames
+   return setNames
+end library_FetchSetsContaining

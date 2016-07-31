@@ -1,0 +1,5 @@
+command demo_Reply
+   put "eyJhbGciOiJSUzI1NiJ9.eyJwdWJsaWMta2V5Ijp7ImFsZ29yaXRobSI..." into someAssertion
+   put "http://localhost:8082" into someAudience
+   put persona_ConstructAssertionCheckReply (someAssertion, someAudience)
+end demo_Reply

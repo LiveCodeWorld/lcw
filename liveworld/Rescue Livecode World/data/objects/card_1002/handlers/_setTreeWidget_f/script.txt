@@ -1,0 +1,5 @@
+function _setTreeWidget
+   put _setDisplayGroup() into setDisplayGroup
+   put the long id of widget "Tree View" of setDisplayGroup into setTreeWidget
+   return setTreeWidget
+end _setTreeWidget

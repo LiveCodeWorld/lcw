@@ -1,0 +1,5 @@
+getprop dot_ClusterArray [pOverlayName]
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   put overlayArray_GetClusterArray (overlayArray) into propertyArray
+   return propertyArray
+end dot_ClusterArray

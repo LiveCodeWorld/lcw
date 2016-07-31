@@ -1,0 +1,10 @@
+function hkey_ExternalHkeysFromArray externalHkeyArray
+   repeat for each key shortExternalCall in externalHkeyArray
+      put externalHkeyArray [shortExternalCall] into callArray
+      put line 1 of keys (callArray) into parentKey
+      put callArray [parentKey] into externalHkey
+      put externalHkey & CR after externalHkeys
+   end repeat
+   delete char -1 of externalHkeys
+   return externalHkeys
+end hkey_ExternalHkeysFromArray 

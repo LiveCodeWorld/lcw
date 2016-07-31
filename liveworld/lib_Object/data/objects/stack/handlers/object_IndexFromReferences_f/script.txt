@@ -1,0 +1,8 @@
+function object_IndexFromReferences someReferences, targetObject
+   put empty into objectIndex
+   repeat for each line someReference in someReferences
+      put object_ReferenceToControl(someReference, targetObject) & return after objectIndex
+   end repeat
+   delete last char of objectIndex
+   return objectIndex
+end object_IndexFromReferences

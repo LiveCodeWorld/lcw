@@ -1,0 +1,5 @@
+setprop title_Colour someColour
+   put the title_View of me into titleView
+   if the long id of the target = titleView then pass title_Colour
+   set the title_Colour of titleView to someColour
+end title_Colour

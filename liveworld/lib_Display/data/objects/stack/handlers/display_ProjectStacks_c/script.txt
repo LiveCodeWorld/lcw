@@ -1,0 +1,11 @@
+command display_ProjectStacks
+   put project_FetchValue ("openStacks") into stackNames
+   sort stackNames
+   
+   put project_GetCurrentName() into projectName
+   put projectName & ",Project" into displayTitle
+   display_Index stackNames, displayTitle, "Global | Project | Menu", "Global | Project | Line | Menu", empty, "project_GoToStack"
+   put the result into displayView
+   set the multiple_Hilites of displayView to false
+   return displayView
+end display_ProjectStacks

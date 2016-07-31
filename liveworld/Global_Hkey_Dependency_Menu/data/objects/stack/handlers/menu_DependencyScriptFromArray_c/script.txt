@@ -1,0 +1,23 @@
+on menu_DependencyScriptFromArray hKey, overlayName
+   set the cursor to watch
+   
+   put library_HandlerFile (hKey) into hkeyFolder
+   put overlay_GetLinkArray (hkeyFolder, overlayName) into hkeyArray
+   
+   put the strip_HkeyComponents of me is true into stripComponents
+   put the strip_HkeyProps of me into stripProps
+   -- put the include_HandlersFrom of me into includeHandlersFrom
+   put item 3 of hKey of scriptObject
+   put empty into pStripObjects
+   
+   display_HkeyArrayDependencyScript hkeyArray, scriptObject, pStripObjects, stripProps, false
+   put the result into someArray
+   
+   put someArray ["uniqueHkeys"] into uniqueHkeys
+   put someArray ["missingHkeys"] into missingHkeys
+   put someArray ["duplicateHkeyArray"] into duplicateHkeyArray
+   
+   display_Outline uniqueHkeys, "uniqueHkeys"
+   if missingHkeys is not empty then display_Outline missingHkeys, "missingHkeys"
+   if duplicateHkeyArray is not empty then display_Array duplicateHkeyArray, "duplicateHkeyArray"
+end menu_DependencyScriptFromArray

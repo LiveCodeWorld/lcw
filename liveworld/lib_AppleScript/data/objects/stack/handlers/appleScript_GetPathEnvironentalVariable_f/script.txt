@@ -1,0 +1,12 @@
+function appleScript_GetPathEnvironentalVariable
+   put "echo $PATH" into aScript
+   terminal_DoShell aScript
+   put word 6 of the result into wID
+   put "contents of window id" && wID into terminalShell
+   put appleScript_DoLine (terminalShell, "terminal") into echoResult
+   
+   put "close window id" && wID into aScript
+   put appleScript_DoLine (aScript, "terminal") into closeResult
+   
+   return  line 4 of echoResult
+end appleScript_GetPathEnvironentalVariable

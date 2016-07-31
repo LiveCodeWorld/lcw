@@ -1,0 +1,8 @@
+getprop g_Num [sHexagon]
+   put the hexagon_NeighbourNums of sHexagon into numList
+   if numList = "1,2,3,4,5,6" then
+      return "1,2,3,4,5,6,all"
+   else
+      return numList
+   end if
+end g_Num

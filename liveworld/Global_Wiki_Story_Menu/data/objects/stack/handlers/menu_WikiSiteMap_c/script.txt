@@ -1,0 +1,5 @@
+on menu_WikiSiteMap dgView
+   put the browser_Url of dgView into someUrl
+   url_Deconstruct someUrl, someProtocol, fedwikiDomain, urlPath, shortName, fileExtension, uName, pWord
+   put fedwiki_FetchSiteExport (fedwikiDomain) into siteJSON
+end menu_WikiSiteMap

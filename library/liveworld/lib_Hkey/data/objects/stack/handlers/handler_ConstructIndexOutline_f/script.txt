@@ -1,0 +1,9 @@
+function handler_ConstructIndexOutline
+   put handler_ConstructHkeyIndex() into hKeyIndex
+   put handler_ConstructIndexArray(hKeyIndex) into handlerIndexArray
+   handler_SetIndexArray handlerIndexArray
+   
+   put html_FromArray(handlerIndexArray) into someIndex
+   filter someIndex without "*>_</a>"
+   return someIndex
+end handler_ConstructIndexOutline

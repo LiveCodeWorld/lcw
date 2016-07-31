@@ -1,0 +1,17 @@
+command rev_LookUpDictionary someText
+    /*
+    # Parameters
+    #   pTag : the filename of the xml file that contains the entry to display
+    #   pType : the type of the entry, eg "command"
+    #   pFolder : either "dictionary" or "glossary"
+    #   pDontUpdateHistory : if this is true, the entry will not be added to the history
+    # Description
+    #   Called when the user double-clicks in the dictionary grid / list. This displays the required dictionary
+    #   entry fullscreen on a separate card.
+     
+    entryGoto pTag, pType, pFolder, false
+    */
+     
+    -- version 3.0
+    revDocumentationGo someText
+end rev_LookUpDictionary

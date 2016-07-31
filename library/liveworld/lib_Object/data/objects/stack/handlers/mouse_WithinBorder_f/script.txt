@@ -1,0 +1,32 @@
+function mouse_WithinBorder someObject
+   put 14 into someWidth
+   put the rect of someObject into objectRect
+   
+   put item 2 of the mouseLoc into mouseY
+   if mouseY < item 2 of objectRect then
+      return empty    
+   else if mouseY < (item 2 of objectRect + someWidth) then
+      put "T" after theResult
+   else if mouseY > item 4 of objectRect then
+      return empty    
+   else if mouseY > (item 4 of objectRect - someWidth) then
+      put "B" after theResult
+   end if
+   
+   put item 1 of the mouseLoc into mouseX
+   if mouseX < item 1 of objectRect then
+      return empty    
+   else if mouseX < (item 1 of objectRect + someWidth) then
+      put "L" after theResult
+      return theResult
+   else if mouseX > item 3 of objectRect then
+      return empty
+   else if mouseX > (item 3 of objectRect - someWidth) then
+      put "R" after theResult
+      return theResult
+   else if theResult = "Inside" then
+      return "Inside"
+   else
+      return theResult 
+   end if
+end mouse_WithinBorder

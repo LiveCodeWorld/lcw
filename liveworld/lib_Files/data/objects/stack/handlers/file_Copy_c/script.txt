@@ -1,0 +1,11 @@
+command file_Copy filePath, newFile, isText	# if the file exists it does not copy anything???
+    -- rename file filePath to newFile
+     
+    if isText is false then	# does not copy fileTypes and resources / bundles.
+        put url ("binfile:" & filePath) into binaryData
+        file_CreateBinary binaryData, newFile
+    else
+        put url ("file:" & filePath) into someText
+        file_CreateText someText, filePath
+    end if
+end file_Copy

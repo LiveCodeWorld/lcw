@@ -1,0 +1,7 @@
+command overlayArray_SetHeaderArray @overlayArray, dotHeaderArray
+   if dotHeaderArray is not an array then return empty
+   put overlayArray_GetMetadataArray (overlayArray) into metadataArray
+   put dotHeaderArray into metadataArray ["dot_HeaderArray"]
+   overlayArray_SetMetadataArray overlayArray, metadataArray
+   return metadataArray
+end overlayArray_SetHeaderArray

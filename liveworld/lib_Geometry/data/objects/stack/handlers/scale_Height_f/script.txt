@@ -1,0 +1,6 @@
+function scale_Height originalRect, newW
+   rect_ExtractDimensions originalRect, originalW , originalH
+   put newW / originalW into sFactor
+   put round (originalH * sFactor) into newH
+   return newH
+end scale_Height

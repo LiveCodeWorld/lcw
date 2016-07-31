@@ -1,0 +1,10 @@
+setprop menu_MetaDataArray [mTitle] metaDataArray
+   put the menu_Array of the target into mArray
+   if metaDataArray is an array then
+      put metaDataArray into mArray [mTitle]["metadata"]
+   else
+      delete variable mArray [mTitle]["metadata"]
+   end if
+   set the menu_Array of the target to mArray
+   return mArray
+end menu_MetaDataArray

@@ -1,0 +1,14 @@
+getprop search_Container [someProperty]
+   local objectArray, propertyArray
+   put the long id of the target into containerObject
+   if word 1 of containerObject is not among the items of "card,group,background" then return empty
+   
+   put item 3 to -1 of someProperty into controllerObject
+   put item 2 of someProperty into objectKeyProperty
+   put item 1 of someProperty into someProperty
+   
+   objectArray_SearchNested containerObject, someProperty, propertyArray, objectKeyProperty, controllerObject, true
+   put the result into objectArray
+   put propertyArray into objectArray ["@prop"]
+   return objectArray
+end search_Container

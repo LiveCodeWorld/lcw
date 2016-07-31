@@ -1,0 +1,10 @@
+command daemon_SendMovedTemporarily socketID, locationURL
+   /*
+   ¥	Date:Tue, 28 Jul 2015 16:27:39 GMT
+   ¥	Location:welcome-visitors.html
+   ¥	Vary:Accept
+   */
+   put _movedTemporarilyHeaders (locationURL) into someHeader
+   daemon_Send someHeader, "Moved Temporarily", socketID, false
+   return the result
+end daemon_SendMovedTemporarily

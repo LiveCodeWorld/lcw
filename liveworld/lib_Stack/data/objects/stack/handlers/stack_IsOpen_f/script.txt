@@ -1,0 +1,4 @@
+function stack_IsOpen stackName
+    set the wholematches to true
+    return stackName is among the lines of the openstacks
+end stack_IsOpen

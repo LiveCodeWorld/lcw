@@ -1,0 +1,10 @@
+function view_FileToPath someFile, includeStem
+   set the itemdelimiter to "/"
+   put last item of someFile into viewPath
+   
+   replace "_" with "|" in viewPath
+   set the itemdelimiter to "."
+   if item -1 of viewPath is among the items of "livecode.rev.opml.html" then delete last item of viewPath
+   if includeStem is true then view_NormalizeName viewPath
+   return viewPath
+end view_FileToPath

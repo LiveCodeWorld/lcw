@@ -1,0 +1,15 @@
+function menu_CleanLines mLines
+   -- this works on a whole table
+   
+   -- consider speeding up
+   replace "!c" with empty in mLines
+   replace "!n" with empty in mLines
+   
+   -- replace "(" with empty in someMenu	# only at start!
+   put replacetext (mLines, "(?m)^\(", empty) into mLines
+   put replacetext (mLines, "/.*", empty) into mLines
+   
+   return mLines
+   
+   return table_GetColumn (mLine, 1, "/")
+end menu_CleanLines

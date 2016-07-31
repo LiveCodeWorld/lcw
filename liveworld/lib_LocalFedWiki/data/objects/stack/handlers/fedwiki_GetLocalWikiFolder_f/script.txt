@@ -1,0 +1,10 @@
+function fedwiki_GetLocalWikiFolder pFedwikiDomain
+   put fedwiki_GetLocalWikiRoot() into localWikiFolder
+   if localWikiFolder is empty then return empty
+   
+   if pFedwikiDomain is not empty then
+      put pFedwikiDomain after localWikiFolder
+      folder_Format localWikiFolder
+   end if
+   return localWikiFolder
+end fedwiki_GetLocalWikiFolder

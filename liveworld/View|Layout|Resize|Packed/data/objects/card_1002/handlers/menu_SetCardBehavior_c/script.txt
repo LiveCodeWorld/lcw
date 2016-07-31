@@ -1,0 +1,4 @@
+on menu_SetCardBehavior mTarget, someBoolean
+   put the card_Object of mTarget into cardObject
+   set the behavior_Name of cardObject to "Card Icons"
+end menu_SetCardBehavior

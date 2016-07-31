@@ -1,0 +1,13 @@
+command menu_ReIndexSubStack pStackObject
+   if pStackObject is empty then put the stack_Object of the target into pStackObject
+   repeat with cardNum = 1 to the number of cards of pStackObject
+      set the cursor to busy
+      put the long id of card cardNum of pStackObject into cardObject
+      -- object_AddToGlobalArray cardObject
+      
+      -- script_JustCompiled cardObject
+      object_AddToGlobalArray cardObject
+      put the script of cardObject into someScript
+      set the exported_Script of cardObject to someScript
+   end repeat
+end menu_ReIndexSubStack

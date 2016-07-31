@@ -1,0 +1,6 @@
+function ccc_NumFromYear dateDisplay
+   set the itemdelimiter to "-"
+   put item 1 of dateDisplay into someYear
+   put someYear - 1983 into cccNum
+   return cccNum
+end ccc_NumFromYear

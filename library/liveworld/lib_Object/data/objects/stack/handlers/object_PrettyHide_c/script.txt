@@ -1,0 +1,7 @@
+command object_PrettyHide someObject
+   if "Cross Fade" is among the lines of the QTEffects then
+      hide someObject with visual effect "Cross Fade"
+   else
+      hide someObject with visual effect dissolve
+   end if
+end object_PrettyHide

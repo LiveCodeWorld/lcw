@@ -1,0 +1,8 @@
+function rigDB_ExtractFirstThing tQuery
+   repeat for each key tKey in tQuery ["resultarray"]
+      put tQuery ["resultarray"][tKey][1] into fThing
+      put empty into indexArray [fThing]
+   end repeat
+   put keys (indexArray) into fThings
+   return fThings
+end rigDB_ExtractFirstThing

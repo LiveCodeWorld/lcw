@@ -1,0 +1,23 @@
+command view_DoPropertyMenu viewPropPath, someView
+   menu_SetChoice viewPropPath, publicProp, publicValue
+   if publicValue is empty then
+      put view_AskPublicValue (publicProp, someView) into publicValue
+      set the publicProp of someView to publicValue
+   else
+      -- if publicValue is not an "s", or perhaps a switch
+      -- lets check by introspecting the script and checking the name of the param
+      put the view_BehaviorScript of someView into viewBehaviorScript
+      put script_GetSetProp (publicProp, viewBehaviorScript) into propHandler
+      if propHandler is empty then
+         -- check to see if it is OK, then continue
+         breakPoint
+      end if
+      
+      script_DeconstructSetPropHandler propHandler, handlerName, setPropValue, setPropParam
+      if setPropParam = empty then
+         set the publicProp of someView to publicValue
+      else
+         view_DoParamProp someView, publicProp, publicValue
+      end if
+   end if
+end view_DoPropertyMenu

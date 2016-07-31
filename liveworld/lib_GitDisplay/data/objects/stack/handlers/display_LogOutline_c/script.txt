@@ -1,0 +1,18 @@
+command display_LogOutline someOutline, someFile, pTitle, pDoubleUpThing, pStackLabel
+   put empty into pExpandLevel
+   put false into pKeepHidden
+   put "palette" into pStackStyle
+   display_Outline someOutline, pTitle, "Global | Git | Log | Menu", "Global | Git | Line | Log | Menu", pExpandLevel, pKeepHidden, pStackStyle, pStackLabel
+   
+   put the result into treeView
+   put the tree_Field of treeView into treeField
+   
+   set the displayed_File of treeField to someFile
+   if exists (pDoubleUpThing) then 
+      set the trigger_Object ["tree_MouseDoubleUp"] of treeField to pDoubleUpThing
+   else if pDoubleUpThing is not empty then
+      -- assume it is a trigger_Name
+      set the trigger_Name ["mouseDoubleUp"] of treeField to pDoubleUpThing
+   end if 
+   return treeView
+end display_LogOutline

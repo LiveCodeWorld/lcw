@@ -1,0 +1,14 @@
+function colour_IsRgb someColour
+    if the number of items of someColour = 3 then
+        repeat for each item someNumber in someColour
+            if someNumber is not a number then
+                return false
+            else if someNumber > 256 or someNumber < 0 then
+                return false
+            end if
+        end repeat
+        return true
+    else
+        return false
+    end if
+end colour_IsRgb

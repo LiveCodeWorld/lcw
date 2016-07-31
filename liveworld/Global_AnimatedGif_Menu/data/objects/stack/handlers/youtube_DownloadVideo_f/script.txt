@@ -1,0 +1,22 @@
+function youtube_DownloadVideo pTestUrl, pDownloadFolder
+   if pTestUrl is empty then
+      put "https://www.youtube.com/watch?v=ns-qtoxnAS8" into testUrl
+      put opn_Ask ("Enter a YouTube video url...", testUrl) into pTestUrl
+   end if
+   
+   if pDownloadFolder is empty then
+      put specialFolderPath("Desktop") into pDownloadFolder
+   end if
+   folder_Format pDownloadFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to pDownloadFolder
+   
+   set the cursor to watch
+   put youtube_ConstructDownloadShell (pTestUrl) into someShell
+   put shell (someShell) into shellResult
+   
+   youtube_DownloadParseShellResult shellResult, shortDownloadedFile
+   put pDownloadFolder & shortDownloadedFile into downloadedFile
+   set the defaultfolder to oFolder
+   return downloadedFile
+end youtube_DownloadVideo

@@ -1,0 +1,12 @@
+on menu_Gitk mTarget, menuChoice
+   switch menuChoice
+      case "gitk"
+         put "gitk" into someShell
+         break
+      case "all branches"
+         put "gitk --all" into someShell
+         break
+   end switch
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end menu_Gitk

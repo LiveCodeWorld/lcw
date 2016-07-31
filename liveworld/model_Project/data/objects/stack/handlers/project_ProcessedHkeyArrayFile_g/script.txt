@@ -1,0 +1,7 @@
+getprop project_ProcessedHkeyArrayFile
+   -- this puts object hkeyarray files in the project overlay folder (wrong place)
+   -- fix so it (and related handlers) use 
+   put the project_OverlayFolder of the target into projectOverlayFolder
+   put projectOverlayFolder & "processedHkey.array" into someFile
+   return someFile
+end project_ProcessedHkeyArrayFile

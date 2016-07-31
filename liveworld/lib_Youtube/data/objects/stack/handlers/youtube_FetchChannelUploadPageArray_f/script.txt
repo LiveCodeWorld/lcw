@@ -1,0 +1,7 @@
+function youtube_FetchChannelUploadPageArray channelID, pMaxResults, pDontLinkTitle, pNextPageToken
+   put youtube_FetchChannelArray (channelID) into channelArray   
+   deconstruct_ChannelArray channelArray, channelTitle, channelDescription, thumbnailURL, uploadsPlaylistID
+   put channelTitle && "Videos" into pageTitle
+   put youtube_FetchPlayListPageArray (uploadsPlaylistID, pageTitle, pMaxResults, pDontLinkTitle, pNextPageToken) into pageArray
+   return pageArray
+end youtube_FetchChannelUploadPageArray

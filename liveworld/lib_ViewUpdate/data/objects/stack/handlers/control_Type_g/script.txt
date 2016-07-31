@@ -1,0 +1,17 @@
+getprop control_Type
+   put the long id of the target into targetObject
+   
+   put the view_Name of targetObject into vName
+   switch
+      case word 1 of targetObject = "widget"
+         put the kind of targetObject into someKind
+         set the itemdelimiter to "."
+         return item -1 of someKind
+      case vName is "View|Layout|Placeholder"
+         return "placeholder"
+      case vName is not empty
+         return vName
+      default
+         return word 1 of targetObject
+   end switch
+end control_Type

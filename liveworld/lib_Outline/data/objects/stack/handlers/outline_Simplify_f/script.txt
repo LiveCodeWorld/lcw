@@ -1,0 +1,10 @@
+function outline_Simplify tabbedOutline, @idArray, @keyArray
+    repeat for each line someLine in tabbedOutline
+        put word 1 to -1 of someLine into someText
+        put array_ConstructSimpleKeys(someText, idArray, keyArray) into nodeID
+        put nodeID into word 1 to -1 of someLine
+        put someLine & CR after simpleOutline
+    end repeat
+    delete char -1 of simpleOutline
+    return simpleOutline
+end outline_Simplify

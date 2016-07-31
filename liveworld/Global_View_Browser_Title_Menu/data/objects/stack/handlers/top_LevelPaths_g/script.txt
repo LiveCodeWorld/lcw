@@ -1,0 +1,5 @@
+getprop top_LevelPaths
+   put view_PathIndex() into pathIndex
+   put outline_FirstColumnFromPathIndex (pathIndex, "|") into rootIndex
+   return "All,-," & rootIndex
+end top_LevelPaths

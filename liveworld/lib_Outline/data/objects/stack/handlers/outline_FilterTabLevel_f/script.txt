@@ -1,0 +1,7 @@
+function outline_FilterTabLevel osSection, domainTabLevel
+    -- was "filter_TabLevel"
+    put text_RepeatString(tab, domainTabLevel) into tabBit
+    put tabBit & "[a-zA-Z0-9]*" into filterString
+    filter osSection with filterString
+    return osSection
+end outline_FilterTabLevel

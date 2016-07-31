@@ -1,0 +1,25 @@
+getprop behavior_TestArray
+   put the card_Object of the target into pCardObject
+   
+   put the rugged_Views of pCardObject  into ruggedViews
+   put the stack_Name of pCardObject  into stackName
+   
+   set the defaultstack to stackName
+   repeat for each line ruggedView in ruggedViews
+      put the name of ruggedView into namedRuggedView
+      put the behavior of ruggedView into bObject
+      switch
+         case bObject is empty
+            put namedRuggedView into testArray ["empty"][bObject]
+            break
+         case exists (bObject)
+            put namedRuggedView into testArray ["exists"][bObject]
+            set the behavior of ruggedView to bObject
+            break
+         default
+            -- behavior exists and is broken
+            put namedRuggedView into testArray ["exists and is broken"][bObject]
+      end switch
+   end repeat
+   return testArray
+end behavior_TestArray

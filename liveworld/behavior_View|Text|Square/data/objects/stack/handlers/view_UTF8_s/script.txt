@@ -1,0 +1,12 @@
+setprop view_UTF8 someUTF8
+   put _textField() into textField
+   lock screen
+   put uniencode (someUTF8,"UTF8") into someU16
+   -- set the unicodetext of textField to someU16
+   put unidecode (someU16, "ANSI") into someText
+   put someText into LocalArray ["view_Text"]
+   set the text of textField to someText
+   LayoutControl
+   unlock screen
+   return textField
+end view_UTF8

@@ -1,0 +1,9 @@
+command view_SetCloneData cloneStackName, pArray, pMenuArray, pEventArray
+   put _displayView (cloneStackName) into displayView
+   --  set the data
+   set the displayed_Data of displayView to pArray
+   set the view_MenuArray of displayView to pMenuArray
+   set the view_EventArray of displayView to pEventArray
+   
+   return displayView
+end view_SetCloneData

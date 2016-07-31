@@ -1,0 +1,6 @@
+command objectArray_SearchGroupForValue @objectArray, @propertyArray, containerObject, someProperty, pObjectKeyProperty, pControllerObject, pSplitArrays
+   -- same a "objectArray_FlatSearchGroup", but includes the actual group itself
+   
+   objectArray_AddProperty objectArray, propertyArray, containerObject, someProperty, pObjectKeyProperty, pControllerObject, pSplitArrays
+   objectArray_FlatSearchGroup objectArray, propertyArray, containerObject, someProperty, pObjectKeyProperty, pControllerObject
+end objectArray_SearchGroupForValue

@@ -1,0 +1,8 @@
+command menu_NormalizePluginArray @mPluginArray
+   put item 2 of the extents of mPluginArray into maxNum
+   repeat with indexNum = 1 to maxNum
+      put mPluginArray [indexNum] into mRecordArray
+      menu_NormalizeRecordArray mRecordArray
+      put mRecordArray into mPluginArray [indexNum]
+   end repeat
+end menu_NormalizePluginArray

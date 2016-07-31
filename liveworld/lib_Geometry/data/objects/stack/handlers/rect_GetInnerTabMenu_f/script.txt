@@ -1,0 +1,10 @@
+function rect_GetInnerTabMenu tabButton, someMargin
+   -- was "menu_TabInnerGroupRect"
+   if someMargin is empty then put 16 into someMargin
+   put the rect of tabButton into someRect
+   put rect_SubtractMargin(someMargin, someRect) into innerRect
+   put the textheight of tabButton into someHeight
+   add someHeight to item 2 of innerRect
+   
+   return innerRect
+end rect_GetInnerTabMenu

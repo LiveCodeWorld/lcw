@@ -1,0 +1,12 @@
+command hkey_DeconstructFolder scriptFolder, @shortHkey, @versionName
+   set the itemdelimiter to "/"
+   get item -1 of scriptFolder
+   
+   put word 1 of it into shortFolder
+   put word 2 of it into versionName
+   
+   set the itemdelimiter to "_"
+   put item 1 to -2 of shortFolder into handlerName
+   put item -1 of shortFolder into handlerType
+   put handlerName,handlerType into shortHkey
+end hkey_DeconstructFolder

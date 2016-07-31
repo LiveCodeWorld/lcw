@@ -1,0 +1,10 @@
+function server_ConstructPrefArray serverURL, sshUser, sshKeyPath, rigApplicationFolder, serverAddress, dropletName
+   put serverURL into serverPrefArray [serverURL]["serverURL"]
+   put sshUser into serverPrefArray [serverURL]["sshUser"]
+   put sshKeyPath into serverPrefArray [serverURL]["sshKeyPath"]
+   put rigApplicationFolder into serverPrefArray [serverURL]["rigApplicationFolder"]
+   
+   put serverAddress into serverPrefArray [serverURL]["serverAddress"]
+   put dropletName into serverPrefArray [serverURL]["dropletName"]
+   return serverPrefArray
+end server_ConstructPrefArray

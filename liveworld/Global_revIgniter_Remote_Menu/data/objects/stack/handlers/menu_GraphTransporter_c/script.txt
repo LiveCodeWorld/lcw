@@ -1,0 +1,4 @@
+on menu_GraphTransporter hKey
+   put item 3 of hKey into scriptObject
+   display_IndexScriptAndDisplaySVG scriptObject, "LCW"
+end menu_GraphTransporter

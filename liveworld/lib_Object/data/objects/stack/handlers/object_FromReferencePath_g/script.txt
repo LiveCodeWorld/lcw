@@ -1,0 +1,4 @@
+getprop object_FromReferencePath [objectRefPath]
+   put the long ID of the target into someObject
+   return object_ConstructFromReferencePath(objectRefPath, someObject, "/")
+end object_FromReferencePath

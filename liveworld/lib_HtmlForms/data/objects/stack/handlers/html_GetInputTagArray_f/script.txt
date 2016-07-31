@@ -1,0 +1,12 @@
+function html_GetInputTagArray inputTag
+    repeat
+        html_ParamDeconstuct inputTag, someKey, someValue
+        put last item of the result into endCharNum
+        if endCharNum is empty then
+            return inputTagArray
+        else
+            put someValue into inputTagArray [someKey]
+            delete char 1 to endCharNum of inputTag
+        end if
+    end repeat
+end html_GetInputTagArray

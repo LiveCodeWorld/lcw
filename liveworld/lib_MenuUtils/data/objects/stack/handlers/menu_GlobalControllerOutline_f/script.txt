@@ -1,0 +1,7 @@
+function menu_GlobalControllerOutline pObjectFormat
+   put menu_ConstructGlobalControllerArray (pObjectFormat) into menuObjectArray
+   put keys(menuObjectArray) into uniqueObjects
+   sort uniqueObjects
+   put object_OutlineFromIndex (uniqueObjects) into objectOutline
+   return objectOutline
+end menu_GlobalControllerOutline

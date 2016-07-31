@@ -1,0 +1,7 @@
+function hap_DeconstructFileArray
+   -- was "sitemap_FetchPhotoArray"
+   put hap_SitemapRestURL ("list_PhotoArray") into someURL
+   put url someURL into tEncodedArray
+   put arrayDecode(base64Decode(tEncodedArray)) into tResultArray
+   return tResultArray
+end hap_DeconstructFileArray

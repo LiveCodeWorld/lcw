@@ -1,0 +1,5 @@
+getprop node_BorderColour [groupNameOrNum]
+   put the dot_GroupStyleArray of the target into dotGroupStyleArray
+   put dotGroupStyleArray [groupNameOrNum]["node_StyleArray"] into nodeStyleArray
+   return nodeStyleArray ["color"]
+end node_BorderColour

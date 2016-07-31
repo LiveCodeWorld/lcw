@@ -1,0 +1,19 @@
+on menu_RenameFolder
+   answer folder "Select a folder..."
+   put it into sourceFolder
+   if sourceFolder is empty then return empty
+   
+   set the itemdelimiter to "/"
+   put item -1 of sourceFolder into shortDestFolder
+   
+   put opn_Ask ("Select a new folder name...", shortDestFolder) into shortDestFolder
+   put sourceFolder into destFolder
+   put shortDestFolder into item -1 of destFolder
+   
+   git_RenameFolder sourceFolder, destFolder
+   if the result is not empty then
+      opn_Notify the result, true
+   else
+      git_RefreshDisplay
+   end if
+end menu_RenameFolder

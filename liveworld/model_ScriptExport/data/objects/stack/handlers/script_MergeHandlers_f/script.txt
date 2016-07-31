@@ -1,0 +1,13 @@
+function script_MergeHandlers scriptFile, someScript
+   put scriptFile into objectFolder
+   set the itemdelimiter to "/"
+   delete item -1 of objectFolder
+   put objectFolder into LocalArray ["ObjectFolder"]
+   
+   put objectFolder & "/handlers/" into handlersFolder
+   if there is a folder handlersFolder then
+      return merge (someScript)
+   else
+      return someScript
+   end if
+end script_MergeHandlers

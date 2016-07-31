@@ -1,0 +1,11 @@
+getprop disabled_DeleteMenuCard [scriptObject]
+   put the menu_SubStack of scriptObject into menuSubStack
+   if exists (menuSubStack) is false then return "delete"
+   put the cardNames of menuSubStack into mCards
+   filter mCards without "card *"
+   if mCards is empty then
+      return true
+   else
+      return false
+   end if
+end disabled_DeleteMenuCard

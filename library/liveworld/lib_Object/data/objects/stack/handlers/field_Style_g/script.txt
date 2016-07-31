@@ -1,0 +1,7 @@
+getprop field_Style
+   put the field_Object of the target into fieldObject
+   if exists(fieldObject) is false then return empty
+   
+   put the uOPN ["field_Style"] of fieldObject into fieldStyle
+   return fieldStyle
+end field_Style

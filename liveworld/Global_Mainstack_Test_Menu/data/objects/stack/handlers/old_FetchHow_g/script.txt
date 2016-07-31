@@ -1,0 +1,13 @@
+getprop old_FetchHow [hKey]
+   -- put hkey_GetLinkArray (hKey) into hkeyLinkArray
+   put hkey_ArrayFile (hKey) into someFile
+   if there is a file someFile then put "stored hkeyLinkArray" & CR after fetchHows
+   
+   -- put the script_LinkArray of hObject into hkeyLinkArray
+   put item 3 of hKey into hObject
+   put the script_OverlayFile of hObject into someFile
+   if there is a file someFile then put "stored script_LinkArray" & CR after fetchHows
+   
+   put "from object" after fetchHows
+   return fetchHows
+end old_FetchHow

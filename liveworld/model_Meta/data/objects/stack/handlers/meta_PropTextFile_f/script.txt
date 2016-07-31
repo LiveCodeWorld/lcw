@@ -1,0 +1,6 @@
+function meta_PropTextFile objectFolder, pDontCreate
+   folder_Format objectFolder
+   put objectFolder & "props.txt" into someFile
+   if pDontCreate is false then folder_CreateNested objectFolder
+   return someFile
+end meta_PropTextFile

@@ -1,0 +1,16 @@
+function month_GetPeriod pStartTime, pEndTime
+    -- was "monthsBetween"
+    -- complex as depends on which month
+    convert pStartTime to dateItems
+    convert pEndTime to dateItems
+    put item 1 of pStartTime into startYear
+    put item 2 of pStartTime into startMonth
+    put startYear * 12 + startMonth into startMonthNum
+     
+    put item 1 of pEndTime into endYear
+    put item 2 of pEndTime into endMonth
+    put endYear * 12 + endMonth into endMonthNum
+     
+    put endMonthNum - startMonthNum into numberOfMonths
+    return numberOfMonths
+end month_GetPeriod

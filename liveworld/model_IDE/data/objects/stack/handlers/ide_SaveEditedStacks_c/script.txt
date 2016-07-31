@@ -1,0 +1,29 @@
+command ide_SaveEditedStacks editedStackName
+   global gREVStackStatus
+   
+   if editedStackName = "Save All" then
+      put rev_ListEditedStackNames() into stackNames
+   else
+      put editedStackName into stackNames
+   end if
+   
+   repeat for each line stackName in stackNames
+      try
+         put the effective fileName of stack stackName into pFilePath
+         save stack stackName
+         delete global gREVStackStatus [stackName]
+         
+         opn_Notify merge ("Saved stack '[[stackName]]'!")
+      catch e
+         breakpoint
+         put stackName & CR after couldntSaveStackNames
+         answer warning merge ("Could not save stack '[[stackName]]'!")
+      end try
+   end repeat
+   
+   if couldntSaveStackNames is not empty then
+      put couldntSaveStackNames
+   else
+      opn_Notify "Saved all edited stacks!"
+   end if
+end ide_SaveEditedStacks

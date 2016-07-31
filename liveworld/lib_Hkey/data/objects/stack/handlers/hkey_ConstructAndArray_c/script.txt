@@ -1,0 +1,28 @@
+command hkey_ConstructAndArray @intersectArray
+   put library_FetchHandlerDatabaseArray() into dbArray
+   put dbArray ["keywordIndex"] into keywordArray
+   put dbArray ["handlerNameIndex"] into handlerIndexArray
+   
+   put intersectArray ["ordered keywords"] into orderedKeywords
+   put intersectArray ["handler keyword"] into handlerKeywordArray
+   
+   repeat for each line kWord in orderedKeywords
+      put intersectArray ["handler keyword"][kWord] into linkedHkeys
+      put hkey_ConstructKeyWordLinks (linkedHkeys, handlerIndexArray) into keyWordLinks
+      
+      put orderedKeywords into otherKeyWords
+      line_Delete kWord, otherKeyWords
+      repeat for each line otherKeyWord in otherKeyWords
+         put kWord,otherKeyWord into andItems
+         put hkey_ConstructAndTitle (andItems) into andTitle
+         if intersectArray ["and"][andTitle] is empty then
+            put intersectArray ["handler keyword"][otherKeyWord] into otherHkeys
+            put hkey_ConstructKeyWordLinks (otherHkeys, handlerIndexArray) into otherWordLinks
+            put line_GetCommon (keyWordLinks, otherWordLinks) into andLinks
+            if andLinks is not empty then
+               put andLinks into intersectArray ["and"][andTitle]
+            end if
+         end if
+      end repeat
+   end repeat
+end hkey_ConstructAndArray

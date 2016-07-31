@@ -1,0 +1,13 @@
+function fossil_ListCommands
+   get fossil_Help()
+   delete line 1 to 2 of it
+   put line -1 of it into versionLine
+   delete line -1 of it
+   
+   repeat for each word someCommand in it
+      put someCommand & CR after someCommands
+   end repeat
+   delete char -1 of someCommands
+   sort someCommands
+   return someCommands
+end fossil_ListCommands

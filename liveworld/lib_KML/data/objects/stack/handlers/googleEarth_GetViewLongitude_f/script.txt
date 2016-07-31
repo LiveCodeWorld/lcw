@@ -1,0 +1,5 @@
+function googleEarth_GetViewLongitude
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    return longitude
+end googleEarth_GetViewLongitude

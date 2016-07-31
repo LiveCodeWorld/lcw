@@ -1,0 +1,45 @@
+command hkey_ObjectWalk shortCall, hKey, @hKeyLinkArray, pSetName, pAllCalls
+   -- see "lib_HarrayWalk"
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put item 1 of shortCall into callName
+   put item 2 of shortCall into callType
+     
+   -- find it
+   -- put hkey_SmartFind (shortCall, hKey, pSetName) into foundCall
+   put hkey_FindInHierarchy (shortCall, hObject, pSetName) into foundCall
+   
+   switch
+      case foundCall is empty
+         put merge ("Call '[[shortCall]]' for handler '[[hKey]]' is missing!") into someMessage
+         opn_Notify someMessage, true
+         
+         put hkey_Construct (callName, callType, "missing", 1) into foundCall
+         array_AddToIndex foundCall, hKey, hKeyLinkArray
+         return empty
+      case foundCall is among the keys of hKeyLinkArray
+         -- already indexed so no need to recurse
+         -- array_AddToIndex foundCall, hKey, hKeyLinkArray
+         return empty
+   end switch
+   
+   -- add it to the array
+   put merge ("Added [[foundCall]] to hKeyArray!") into someMessage
+   opn_Notify someMessage
+   array_AddToIndex foundCall, hKey, hKeyLinkArray
+   
+   -- now lets repeat and recurse for each call found
+   -- should this be hkey_GetHandler - anywhere from hierarchy ????
+   put hkey_ExtractHandlerFromObject (foundCall) into callHandler
+   if callHandler is empty then breakPoint
+   
+   if pAllCalls is true then
+      put handler_ExtractCalls (callHandler) into shortCalls
+   else
+      put handler_ExtractFilteredCalls (callHandler) into shortCalls
+   end if
+   
+   repeat for each line shortCall in shortCalls
+      hkey_ObjectWalk shortCall, foundCall, hKeyLinkArray, pSetName, pAllCalls
+   end repeat
+   return empty
+end hkey_ObjectWalk

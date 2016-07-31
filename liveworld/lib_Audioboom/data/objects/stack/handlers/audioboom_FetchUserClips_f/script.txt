@@ -1,0 +1,16 @@
+function audioboom_FetchUserClips pUserID, pPageNum, pMaxNum
+   if pUserID is empty then put AudioboomUserID into pUserID 
+   put "users/" & pUserID & "/audio_clips" into apiPath
+   
+   if pMaxNum is empty then 
+      put "page[items]=150&" into extraBit
+   else
+      put "page[items]=" & pMaxNum & "&" into extraBit
+   end if
+   if pPageNum is not empty then put "page[number]=" & pPageNum & "&" after extraBit
+   delete char -1 of extraBit
+   put "?" & extraBit after apiPath
+   
+   put audioboom_RestGET (apiPath) into someJson
+   return someJson
+end audioboom_FetchUserClips

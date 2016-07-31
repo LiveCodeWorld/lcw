@@ -1,0 +1,27 @@
+getprop inner_Rect [groupRect]
+   -- put rect_GetInner (groupRect, someGroup) into innerRect
+   
+   put the long id of the target into someGroup
+   if groupRect is empty then put the rect of someGroup into groupRect
+   
+   if word 1 of someGroup is not "group" then return groupRect
+   put the margins of someGroup into someMargin
+   put the scrollbarwidth of someGroup into scrollBarMargin
+   if the vscrollbar of someGroup is true then subtract scrollBarMargin from item 3 of groupRect
+   if the hscrollbar of someGroup is true then subtract scrollBarMargin from item 4 of groupRect
+   
+   if the showborder of someGroup is true then
+      put the borderwidth of someGroup into bWidth
+      
+      if the showname of someGroup is true then
+         put the effective textheight of someGroup - bWidth - 1 into someBit
+         add someBit to item 2 of someMargin
+      end if
+      
+      rect_SubtractMargins groupRect, bWidth
+   end if
+   
+   rect_SubtractMargins groupRect, someMargin
+   
+   return groupRect
+end inner_Rect

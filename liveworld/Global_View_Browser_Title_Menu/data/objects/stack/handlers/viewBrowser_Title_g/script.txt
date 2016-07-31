@@ -1,0 +1,6 @@
+getprop viewBrowser_Title
+   put the view_Filter of me into viewFilter
+   put the display_Path of me into displayPath
+   replace CR with "/" in displayPath
+   return displayPath && "(" & viewFilter & ")"
+end viewBrowser_Title

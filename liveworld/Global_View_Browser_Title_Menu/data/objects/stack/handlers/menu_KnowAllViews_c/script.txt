@@ -1,0 +1,9 @@
+on menu_KnowAllViews
+   put library_ViewFiles() into stackPaths
+   set the stackfile_Paths of me to stackPaths
+   
+   -- put the stack_Name of me into stackName
+   put "libOPN_ViewBrowser" into stackName
+   save stack stackName
+   display_Views
+end menu_KnowAllViews

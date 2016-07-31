@@ -1,0 +1,5 @@
+on menu_CopyTemplateToClipboard mTarget, templateName
+   put script_GetTemplate (templateName) into templateScript
+   set the clipboarddata ["text"] to templateScript
+   opn_Notify "Script copied to clipboard!"
+end menu_CopyTemplateToClipboard

@@ -1,0 +1,6 @@
+on menu_RevealOverlayFolder svgView
+   put the displayed_Object of svgView into scriptObject
+   put the overlay_Folder of scriptObject into overlayFolder
+   put "the overlay_Folder:" && overlayFolder
+   finder_Reveal overlayFolder
+end menu_RevealOverlayFolder

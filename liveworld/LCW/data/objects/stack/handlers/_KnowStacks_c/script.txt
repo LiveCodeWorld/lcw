@@ -1,0 +1,5 @@
+command _KnowStacks
+   -- a dynamic loading of all toplevel stacks
+   put the home_StackFileArray of me into homeStackFileArray
+   set the home_StackFileArray of me to homeStackFileArray
+end _KnowStacks

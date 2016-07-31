@@ -1,0 +1,6 @@
+command overlay_SetDefaultName overlayFolder, overlayName
+   put overlay_GetData (overlayFolder) into overlayData
+   overlayData_SetDefaultName overlayData, overlayName
+   overlay_SetData overlayFolder, overlayData
+   return overlayData
+end overlay_SetDefaultName

@@ -1,0 +1,4 @@
+function hArray_ListUsedLibraries
+   put hArray_ListObjectsOfType ("library") into rObjects
+   return rObjects
+end hArray_ListUsedLibraries

@@ -1,0 +1,9 @@
+command overlay_SetNodeLinks overlayFolder, nodeLinks
+   put overlay_LinkFile (overlayFolder) into someFile
+   if nodeLinks is empty then
+      -- file_Delete someFile
+      delete file someFile
+   else
+      put nodeLinks into url ("file:" & someFile)
+   end if
+end overlay_SetNodeLinks

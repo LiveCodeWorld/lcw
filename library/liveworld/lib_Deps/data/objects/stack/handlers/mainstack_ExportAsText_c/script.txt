@@ -1,0 +1,19 @@
+command mainstack_ExportAsText stackObject, pHashArrayBoolean, pExportHandlers, pUseCustomFolders, pForceCreate
+   put the mainstack of stackObject into mainStackName
+   
+   put the effective filename of stackObject into someFile
+   if someFile is empty and the create_NewProjects of stackObject is true then
+      breakpoint
+      project_CreateNew mainStackName
+      put the result into gitRootFolder
+      git_InitFolder gitRootFolder
+      return "git project created in:" && gitRootFolder
+   else  
+      dispatch "stack_CleanBeforeSave" to stackObject
+      stack_Save stackObject
+      put the name of stackObject into mainStackObject
+      mainStack_ExportAsFiles mainStackObject, pHashArrayBoolean, pExportHandlers, pUseCustomFolders, pForceCreate
+      put the result into mainStackArray
+      return "exported"
+   end if
+end mainstack_ExportAsText

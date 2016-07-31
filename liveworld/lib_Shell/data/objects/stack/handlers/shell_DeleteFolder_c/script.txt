@@ -1,0 +1,7 @@
+command shell_DeleteFolder sshUser, remoteDomain, relativePath
+   -- relative to the user specified in sshUser's $HOME directory
+   put "rm -R" && relativePath into remoteCommand
+   shell_RemoteExecute sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end shell_DeleteFolder

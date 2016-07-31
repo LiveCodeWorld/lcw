@@ -1,0 +1,5 @@
+function rev_ListTabScriptObjects
+   send "revSEGetTargetObjects" to rev_ScriptEditorGroup()
+   put the result into ruggedIDs
+   return ruggedIDs
+end rev_ListTabScriptObjects

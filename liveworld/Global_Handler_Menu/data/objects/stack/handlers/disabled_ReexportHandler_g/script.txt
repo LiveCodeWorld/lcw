@@ -1,0 +1,8 @@
+getprop disabled_ReexportHandler [hKey]
+   put LocalArray ["hkeyFolder"] into hkeyFolder
+   if there is a folder hkeyFolder then
+      return false
+   else
+      return "delete"
+   end if
+end disabled_ReexportHandler

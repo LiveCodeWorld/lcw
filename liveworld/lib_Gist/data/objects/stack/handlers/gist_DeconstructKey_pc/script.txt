@@ -1,0 +1,18 @@
+private command gist_DeconstructKey shortGistFile, @shortController, @shortServer
+   -- was "rig_DeconstructGistShortFile"
+   
+   set the itemdelimiter to ":  "
+   put item 1 of shortGistFile into gistTag
+   get item 2 to -1 of shortGistFile
+   
+   set the itemdelimiter to space
+   if item -1 of gistTag is not among the words of "controller stack library helper handler script" then
+      put empty into shortController
+      put empty into shortServer
+      return false
+   end if
+   
+   put it into shortController
+   put item 1 of gistTag into shortServer
+   return true
+end gist_DeconstructKey

@@ -1,0 +1,7 @@
+command project_StoreMetadata projectMetaData, projectName
+   if projectName is empty then put project_GetCurrentName() into projectName
+   put library_FetchSetData() into librarySetData
+   put projectMetaData into librarySetData [projectName]["metadata"]
+   library_StoreSetData librarySetData
+   return librarySetData
+end project_StoreMetadata

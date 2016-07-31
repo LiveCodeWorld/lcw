@@ -1,0 +1,25 @@
+on image_SnapRect gRect, someFile, imageFileType
+    if someFile is empty then
+        put merge("Export this image as a [[imageFileType]]...") into someComment
+        ask file someComment
+        put it into someFile
+        if somefile is empty then exit to top
+    end if
+    if imageFileType is empty then
+        -- guess from file extension
+        file_Deconstruct someFile, someRoot, shortName, imageExtension
+        if imageExtension is empty then put "png" into imageExtension
+        put image_GetFileType(imageExtension) into imageFileType
+    end if
+     
+    put the filetype into oFileType
+    set the filetype to imageFileType
+     
+    -- export snapshot from rect "0,0,200,200" to file "Nav.jpg" as JPEG
+    put merge("export snapshot from rect '[[gRect]]' to file '[[someFile]]' as [[imageFileType]]") into doScript
+    replace "'" with quote in doScript
+    do doScript
+     
+    set the filetype to oFileType
+    return someFile
+end image_SnapRect

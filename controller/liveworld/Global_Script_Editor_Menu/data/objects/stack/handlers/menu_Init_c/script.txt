@@ -1,0 +1,13 @@
+on menu_Init
+   put rev_ScriptEditorField() into scriptField
+   put scriptField into LocalArray ["scriptField"]
+   
+   field_SetSelected scriptField, textSelected, someLine, lineNum, someScript, startChar, endChar
+   put textSelected into LocalArray ["textSelected"]
+   put someLine into LocalArray ["someLine"]
+   put lineNum into LocalArray ["lineNum"]
+   put someScript into LocalArray ["someScript"]
+   
+   put hkey_FromSelected (someScript, endChar) into shortHkey
+   put shortHkey into LocalArray ["selectedHkey"]
+end menu_Init

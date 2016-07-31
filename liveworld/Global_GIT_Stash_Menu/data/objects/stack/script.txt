@@ -1,0 +1,77 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Stash_Menu
+type: controller
+version: 0.1
+
+
+--> Menu | Target
+-
+local StashNames
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | GIT | Stash | Menu
+-
+/*
+git stash list [<options>] 
+git stash show [<stash>] 
+git stash drop [-q|--quiet] [<stash>] 
+git stash ( pop | apply ) [--index] [-q|--quiet] [<stash>] 
+git stash branch <branchname> [<stash>] 
+git stash [save [--patch] [-k|--[no-]keep-index] [-q|--quiet] [<message>]] 
+git stash clear 
+git stash create
+*/
+
+[[ _FetchHandler (menu_Stash,c) ]]
+
+[[ _FetchHandler (menu_PopStash,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ShowStash,c) ]]
+
+[[ _FetchHandler (menu_DropStash,c) ]]
+
+[[ _FetchHandler (menu_ClearStash,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Development,c) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayStashFile,c) ]]
+
+[[ _FetchHandler (menu_ReExportStash,c) ]]
+
+[[ _FetchHandler (menu_Reflog,c) ]]
+
+[[ _FetchHandler (menu_StashDocs,c) ]]
+
+
+--> Global | GIT | Stash | Menu | Props
+-
+[[ _FetchHandler (stash_Names,g) ]]
+
+
+--> Global | GIT | Stash | Menu | Disabled
+-
+[[ _FetchHandler (disabled_ClearStash,g) ]]
+
+[[ _FetchHandler (disabled_PopStash,g) ]]
+
+[[ _FetchHandler (disabled_ShowStash,g) ]]
+
+[[ _FetchHandler (disabled_DropStash,g) ]]
+
+
+--> Global | GIT | Stash | Menu | Deps
+-
+[[ _FetchHandler (git_ParseShowStash,f) ]]

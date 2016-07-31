@@ -1,0 +1,11 @@
+command fedwikipedia_MakeTextParagraphFirst @fedwikiPageArray
+   put fedwikiPageArray ["story"] into storyArray
+   repeat with itemNum = 1 to (the number of lines of the keys of storyArray)
+      put storyArray [itemNum]["type"] into itemType
+      if itemType = "paragraph" then
+         fedwiki_MoveStoryItem fedwikiPageArray, itemNum, 1
+         return true
+      end if
+   end repeat
+   return false
+end fedwikipedia_MakeTextParagraphFirst

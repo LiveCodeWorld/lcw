@@ -1,0 +1,14 @@
+function menu_LineIsChecked menuLine
+   put word 1 to -1 of menuLine into menuLine
+    if char 1 of menuLine is "!" then
+        if char 2  of menuLine is "n" then
+            return false
+        else if char 2  of menuLine is "c" then
+            return true
+        else
+            return false
+        end if
+    else
+        return false
+    end if    
+end menu_LineIsChecked

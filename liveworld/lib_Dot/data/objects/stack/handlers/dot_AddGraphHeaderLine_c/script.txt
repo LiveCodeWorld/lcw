@@ -1,0 +1,40 @@
+on dot_AddGraphHeaderLine @dotText, headerKey, headerValue, kwoted
+   /*
+   Should not rely on lines and use text offset instead
+   */
+   
+   put lineoffset("digraph ", dotText) into dotStartLineNum
+   if dotStartLineNum = 0 then
+      opn_Notify "Need to add digraph header (and footer)?", true
+      breakpoint
+      return false
+   end if
+   
+   put "graph [" into graphHeaderStart
+   put "];" into graphHeaderEnd
+   
+   -- set the wholematches to true	# misses tab
+   put lineoffset (graphHeaderStart, dotText, dotStartLineNum) into extraStartLineNum
+   if extraStartLineNum = 0 then
+      -- lets assume there is no header and add one
+      put CR & tab & graphHeaderStart & CR & tab & graphHeaderEnd & CR after line dotStartLineNum of dotText
+      put 1 + dotStartLineNum into startLineNum
+      put 2 + dotStartLineNum into endLineNum
+   else
+      put dotStartLineNum + extraStartLineNum into startLineNum
+      put lineoffset(graphHeaderEnd,dotText, startLineNum) into extraNum
+      if startLineNum = 0 then
+         opn_Notify "Graph header is broken or non-standard!", true
+         breakpoint
+         return empty
+      else
+         put startLineNum + extraStartLineNum into endLineNum
+      end if
+   end if
+   
+   if kwoted is true then
+      put tab & tab & headerKey & "=" & kwote(headerValue) & CR before line endLineNum of dotText
+   else
+      put tab & tab & headerKey & "=" & headerValue & CR before line endLineNum of dotText
+   end if
+end dot_AddGraphHeaderLine

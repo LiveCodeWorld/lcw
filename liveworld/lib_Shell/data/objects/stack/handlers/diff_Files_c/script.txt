@@ -1,0 +1,7 @@
+command diff_Files thisFile, lastFile
+   put "opendiff" into someShell
+   -- put "sdiff" into someShell
+   put space & kwote(thisFile) && kwote(lastFile) after someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end diff_Files

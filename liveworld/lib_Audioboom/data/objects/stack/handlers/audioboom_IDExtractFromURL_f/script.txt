@@ -1,0 +1,12 @@
+function audioboom_IDExtractFromURL someUrl
+   -- was "audioboom_ParseUrl"
+   -- https://audioboom.com/boos/3256201-antibodies-part-1-crispr
+   url_Deconstruct someUrl, someProtocol, urlDomain, urlPath, shortName, fileExtension, uName, pWord
+   if urlDomain = audioboom.com and someProtocol = "https" and item 1 of urlPath = "boos" then
+      set the itemdelimiter to "-"
+      put item 1 of shortName into someID
+      return someID
+   else
+      return empty
+   end if
+end audioboom_IDExtractFromURL

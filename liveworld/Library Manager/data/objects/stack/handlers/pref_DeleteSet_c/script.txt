@@ -1,0 +1,6 @@
+command pref_DeleteSet pSetName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put pref_FetchData() into dataArray
+   delete variable dataArray [pSetName]
+   pref_StoreData dataArray
+end pref_DeleteSet

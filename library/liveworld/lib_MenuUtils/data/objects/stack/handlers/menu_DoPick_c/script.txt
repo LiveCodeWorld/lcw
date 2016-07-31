@@ -1,0 +1,5 @@
+command menu_DoPick menuChoice
+   menu_SetChoice menuChoice, mainChoice, secondChoice
+   put menu_CommandFromText (mainChoice) into mCommand
+   dispatch mCommand to the target with secondChoice
+end menu_DoPick

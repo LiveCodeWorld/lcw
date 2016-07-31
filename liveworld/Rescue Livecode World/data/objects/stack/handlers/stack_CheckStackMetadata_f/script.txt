@@ -1,0 +1,13 @@
+function stack_CheckStackMetadata stackObjects
+   -- bit of a hack
+   repeat for each line stackObject in stackObjects
+      set the cursor to busy    
+      put the script of stackObject into someScript
+      put lineOffset ("type: library", someScript) into someNumber
+      if someNumber > 1 and someNumber < 50 then
+         put stackObject & CR after goodStacks
+      end if
+   end repeat
+   delete char -1 of goodStacks
+   return goodStacks
+end stack_CheckStackMetadata

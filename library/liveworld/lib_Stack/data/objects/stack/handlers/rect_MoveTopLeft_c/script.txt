@@ -1,0 +1,5 @@
+command rect_MoveTopLeft @someRect, newTopLeft
+   put item 1 of newTopLeft - item 1 of someRect into xVector
+   put item 2 of newTopLeft - item 2 of someRect into yVector
+   put rect_TranslateByVector (someRect, xVector, yVector) into someRect
+end rect_MoveTopLeft

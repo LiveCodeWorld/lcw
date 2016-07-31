@@ -1,0 +1,14 @@
+command colour_ConstructArray pObject
+    put the long id of me into modelObject
+    
+    put the colornames into colourNames
+    put the backgroundcolor of modelObject into oColour
+    repeat for each line colourName in colourNames
+        -- set the backgroundcolor of me to colourName
+        -- put the backgroundcolor of me into rgbColour
+        put colour_TranslateName(colourName, pObject) into rgbColour
+        set the uOPN_ColourArray [rgbColour] of modelObject to colourName
+        set the uOPN_ColourArray [colourName] of modelObject to rgbColour
+    end repeat
+    set the backgroundcolor of modelObject to oColour
+end colour_ConstructArray

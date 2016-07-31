@@ -1,0 +1,4 @@
+command applescript_CreateRecord @someValue
+    put  "{" before someValue
+    put  "}" after someValue
+end applescript_CreateRecord

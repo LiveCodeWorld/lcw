@@ -1,0 +1,21 @@
+on display_LibraryViewStack viewName
+   view_NormalizeName viewName
+   
+   go to stack viewName
+   if the result is not empty then
+      beep
+      put view_NameToFile (viewName) into longStackName
+      go to stack longStackName
+      if the result is empty then
+         opn_Notify merge("I think the Library stack '[[viewName]]' is named wrong!"), true
+      else
+         opn_Notify merge("I can't the Library stack '[[viewName]]'"), true
+         exit to top
+      end if
+   end if
+   
+   put view_GetTemplateObject(viewName) into libraryObject
+   display_ViewOutline libraryObject
+   
+   return libraryObject
+end display_LibraryViewStack

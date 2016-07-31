@@ -1,0 +1,25 @@
+getprop view_Match [vNames]
+   -- lets do a strict match for each vName in turn for every view from the card down
+   -- does not search top to bottom but in control order
+   -- consider changeing to top down search (slower)
+   put the long id of the target into targetObject
+   if word 1 of targetObject is not among the items of "card,stack" then
+      put the view_Name of targetObject into vName
+      if vName is not empty and strictViewNameMatch (matchName, vName) is true then
+         return targetObject
+      end if
+   end if
+   
+   -- should go down from the top (most unusual match)
+   repeat for each line matchName in vNames
+      repeat with controlNum = 1 to the number of controls in targetObject
+         put the long id of control controlNum of targetObject into someControl
+         put the view_Name of someControl into vName
+         if vName is empty then next repeat
+         if strictViewNameMatch (matchName, vName) is true then
+            return someControl
+         end if
+      end repeat
+   end repeat
+   return empty
+end view_Match

@@ -1,0 +1,10 @@
+function menu_ReplaceItem someMenuPath, newItem, someMenu
+    -- way slower than needed!
+    
+    replace "|" with return in someMenuPath
+    put menu_CleanMarks(someMenu) into cleanMenu
+    put outline_PathOffset(someMenuPath, cleanMenu) into chosenLineNum
+    if chosenLineNum = 0 then return someMenu
+    put newItem into line chosenLineNum of someMenu
+    return someMenu
+end menu_ReplaceItem

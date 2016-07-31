@@ -1,0 +1,6 @@
+private function default_ArrowMargin arrowWidth
+   if arrowWidth is not a number then return -7
+   
+   put -1 * round ( arrowWidth / 3.2 ) into defaultArrowMargin
+   return defaultArrowMargin
+end default_ArrowMargin

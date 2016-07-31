@@ -1,0 +1,14 @@
+getprop object_Outline
+   put the long ID of the target into someGroup
+   put object_GetNestedDepth(someGroup) into oDepth
+   
+   put the name of someGroup into objectOutline
+   repeat with controlNum = 1 to the number of controls in someGroup
+      put the long ID of control controlNum of someGroup into controlObject
+      put object_GetNestedDepth(controlObject) into someDepth
+      put someDepth - oDepth into repeatNum
+      put text_RepeatString(tab, repeatNum) into someIndent
+      put CR & someIndent & the name of controlObject after objectOutline
+   end repeat
+   return objectOutline
+end object_Outline

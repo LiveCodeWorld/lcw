@@ -1,0 +1,100 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_RemoteServer
+type: script library
+version: 0.1
+
+/*
+This library  is for manipulating a remote server using ssh and scp.
+It should work on teh desktop or from server to server.
+
+As there are no passwords (it relies on public/private key access), 
+or REST accesspoints left open, 
+this is much more secure than scripting things directly in LiveCode
+*/
+
+
+--> Variables
+-
+/*
+Should probably tidy and use LocalArray
+*/
+
+local LocalArray, Server_URL, SSH_KeyPath, SSH_UserName, Server_Address, Server_DropletName, Rig_ApplicationFolder
+
+
+--> Server | Remote | Model | Initialisation
+-
+/*
+Here we should remove references to prefs, 
+so that we can simply get and set array values using any simple data source
+and not have the handler dependecies in this library.
+*/
+
+[[ _FetchHandler (server_LoadDetails,c) ]]
+
+[[ _FetchHandler (server_SaveDetails,c) ]]
+
+[[ _FetchHandler (server_DeleteDetails,c) ]]
+
+[[ _FetchHandler (server_FetchPrefArray,f) ]]
+
+[[ _FetchHandler (server_SavePrefArray,c) ]]
+
+
+--> Server | Remote | Model
+-
+[[ _FetchHandler (server_PreferenceArray,g) ]]
+
+[[ _FetchHandler (server_PreferenceArray,s) ]]
+
+[[ _FetchHandler (server_Array,g) ]]
+
+[[ _FetchHandler (server_Array,s) ]]
+
+
+--> Server | Remote | Upload
+-
+[[ _FetchHandler (server_UploadStacks,c) ]]
+
+[[ _FetchHandler (server_UploadStack,c) ]]
+
+
+--> Server | Remote
+-
+[[ _FetchHandler (server_FetchFileArray,f) ]]
+
+[[ _FetchHandler (server_FetchFileList,f) ]]
+
+[[ _FetchHandler (server_FetchFile,f) ]]
+
+[[ _FetchHandler (server_StoreData,c) ]]
+
+[[ _FetchHandler (server_StoreFile,c) ]]
+
+[[ _FetchHandler (server_FileInfoArray,f) ]]
+
+
+--> Server | Remote | Model | Utils
+-
+[[ _FetchHandler (server_GetSshUser,f) ]]
+
+[[ _FetchHandler (server_GetSshKeyPath,f) ]]
+
+[[ _FetchHandler (server_GetDropletName,f) ]]
+
+[[ _FetchHandler (server_GetIPaddress,f) ]]
+
+[[ _FetchHandler (server_GetURL,f) ]]
+
+[[ _FetchHandler (server_ConstructPrefArray,f) ]]
+
+
+--> Server | Remote | Rig | Paths
+-
+[[ _FetchHandler (server_RigApplicationFolder,f) ]]
+
+
+--> Deps
+-

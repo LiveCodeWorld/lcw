@@ -1,0 +1,18 @@
+function wikicommons_ConstructTwoImagePageArray pageTitle, pageDescription, shortImageFile, wikipediaUrl, pSourceArray
+   put wikicommons_CostructBasicSummaryPageArray (pageTitle, pageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   
+   if shortImageFile is an array then
+      put shortImageFile into imageArray
+      repeat for each key imageNum in imageArray
+         put imageArray [imageNum] into shortImageFile
+         wikicommons_FetchAndAddTwoImages fedwikiPageArray, shortImageFile
+      end repeat
+   else
+      wikicommons_FetchAndAddTwoImages fedwikiPageArray, shortImageFile
+   end if
+   
+   -- add the other lines
+   delete line 1 of pageDescription -- was added alrady with "wikicommons_CostructBasicSummaryPageArray"
+   fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, pageDescription, shortImageFile
+   return fedwikiPageArray
+end wikicommons_ConstructTwoImagePageArray

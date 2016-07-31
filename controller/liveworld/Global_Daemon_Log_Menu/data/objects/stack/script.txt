@@ -1,0 +1,16 @@
+--> Global | Daemon | Log | Menu
+-
+/*
+Scripts only have access to handlers in the behavior hierarchy before the current script.
+In this case that would be only "lib_DaemonUtils, lib_Log"
+Another reason to put any useful utility scripts out of the minimal lib_Daemon script.
+*/
+
+[[ _FetchHandler (menu_Display,c) ]]
+
+[[ _FetchHandler (menu_Test,c) ]]
+
+
+--> Global | Daemon | Log | Line | Menu
+-
+[[ _FetchHandler (menu_TestRoute,c) ]]

@@ -1,0 +1,5 @@
+private function _negativeView
+   if exists (control "Negative Trait" of me) is false then return empty
+   put the long id of control "Negative Trait" of me into negativeView
+   return negativeView
+end _negativeView

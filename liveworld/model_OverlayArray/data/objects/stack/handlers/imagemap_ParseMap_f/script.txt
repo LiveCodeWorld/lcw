@@ -1,0 +1,34 @@
+function imagemap_ParseMap someXml
+   if someXml is empty then return empty
+   replace ("\" & CR) with empty in someXml
+   
+   put revCreateXMLTree (someXml, false, true, false) into treeID
+   if item 1 of treeID is "xmlerr" then return empty
+   
+   put revXMLRootNode(treeID) into rootNode
+   put revXMLAttribute (treeID, rootNode, "id") into mapID
+   put revXMLAttribute (treeID, rootNode, "name") into mapName
+   
+   put revXMLChildNames(treeID, rootNode, CR, "", true) into nodeIndex
+   put 1 into indexNum
+   repeat for each line shortNode in nodeIndex
+      put rootNode & "/" & shortNode into childNode
+      put revXMLAttributes(treeID, childNode, tab, CR) into tagArray
+      split tagArray using CR and tab
+      
+      put tagArray into dgArray [indexNum]["area"]
+      
+      put tagArray ["href"] into someUrl
+      put someUrl into dgArray [indexNum]["rev"]["url"] -- useful for images or nodes without labels
+      put tagArray ["id"] into dgArray [indexNum]["rev"]["name"]
+      put tagArray ["title"] into dgArray [indexNum]["rev"]["label"]
+      -- put tagArray ["alt"] into dgArray [indexNum]["rev"]["name"] -- = "label" in nodeDef
+      put tagArray ["shape"] into someShape
+      put someShape into dgArray [indexNum]["rev"]["style"]
+      put tagArray ["coords"] into dgArray [indexNum]["rev"]["rect"]
+      put tagArray ["coords"] into dgArray [indexNum]["rev"][someShape]
+      add 1 to indexNum
+   end repeat
+   revDeleteXMLTree treeID
+   return dgArray
+end imagemap_ParseMap

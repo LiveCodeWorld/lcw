@@ -1,0 +1,15 @@
+on sips_ConvertImageFormat inputFile, saveToFile, imageExportFormat
+    -- need to be long file names or set the default folder
+    if imageExportFormat = "jpg" then put "jpeg" into imageExportFormat
+    if imageExportFormat is not among the items of sips_ExportFormats() then
+        put "Export format not recognised by sips" into someError
+        log_Error someError, imageExportFormat, true, true
+        return someError
+    end if
+     
+    shell_BashParamEscape inputFile
+    shell_BashParamEscape saveToFile
+    put merge("sips -s format [[imageExportFormat]] [[inputFile]] --out [[saveToFile]]") into someShell
+    put shell(someShell) into shellResult
+    return shellResult
+end sips_ConvertImageFormat

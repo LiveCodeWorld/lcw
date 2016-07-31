@@ -1,0 +1,5 @@
+function library_FetchHandlerMetadata hKey
+   put item 1 to 2 of hKey into shortHkey
+   put library_FetchHandlerDatabaseArray() into hKeyData
+   return hKeyData [shortHkey]
+end library_FetchHandlerMetadata

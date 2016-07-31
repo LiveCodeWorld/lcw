@@ -1,0 +1,8 @@
+private command _setEnvironmentalVariables requestArray
+   -- not vital (check them???)
+   -- must happen after "_constructRequestArray"
+   put "LiveDaemon" into $SERVER_SOFTWARE
+   put the daemon_Port of me into $SERVER_PORT
+   put requestArray ["SCRIPT_NAME"] into $SCRIPT_NAME
+   put requestArray ["QUERY_STRING"] into $QUERY_STRING
+end _setEnvironmentalVariables

@@ -1,0 +1,8 @@
+function dot_ConvertGraphRect someRect, expandIfNeeded, useBbox
+   if useBbox is false then
+      put dot_GraphInchSize (someRect, expandIfNeeded) into someRect
+   else
+      put dot_BboxSize (someRect) into someRect
+   end if
+   return someRect
+end dot_ConvertGraphRect

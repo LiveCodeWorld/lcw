@@ -1,0 +1,6 @@
+function date_ConstructWc3Datetime someDate
+   -- extended is true:  1981-04-05T14:30:30-05:00
+   put date_Construct8601 (someDate, true, true) into someDate
+   replace space with empty in someDate
+   return someDate
+end date_ConstructWc3Datetime

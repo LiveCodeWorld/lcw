@@ -1,0 +1,20 @@
+command hArray_RemoveSameNameTypeObjects rObject, @hArray, uRipArray 
+   put uRipArray ["name"] into uripName
+   put uRipArray ["type"] into objectType
+   if objectType is "view" and the view_IsTemplate of rObject is true then
+      put "view template" into objectType
+   end if
+   
+   -- only for the particular type
+   -- an object with the same uRipName can have different "types"
+   -- but the uripName / type cobination must be unique
+   -- so here we delete any other objects of the same type and uRipName
+   put hArray ["objectType"][objectType] into rObjectTypeArray
+   repeat for each key testObject in rObjectTypeArray
+      put rObjectTypeArray [testObject]["uripName"] into testName
+      if testName is empty then next repeat
+      if testName = uripName then
+         delete variable hArray ["objectType"][objectType][testObject]
+      end if
+   end repeat
+end hArray_RemoveSameNameTypeObjects

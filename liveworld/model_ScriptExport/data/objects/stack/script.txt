@@ -1,0 +1,138 @@
+--> MetaData
+-
+name: model_ScriptExport
+type: model
+author: David Bovill
+copyright: David Bovill
+license: GPLv3
+version: 0.9
+
+/*
+This model handles exported scripts and handlers.
+
+It uses a "merge" technique to combine individual handlers with an exported script template. This is surprisingly fast and has a number of advantages:
+
+-  changes to individual handlers show up in git
+-  spotlight and similar tools can easily find and index handlers
+-  avoids duplication of handlers
+-- makes it easy to see duplicate handlers and badly formatted scripts
+
+
+## Future Enhancements
+
+In the future we will look at the hash of a handler and check if this is present in the "Handler Library",
+If it is we will only store a ling to that particular version of the handler.
+For this we need to finsih the "Handler Library" with robust versioning and git integration.
+*/
+
+
+--> Working on
+-
+*/
+This is a global variable at the moment.
+Should be changed to use
+
+This model is here as it is used by the front script (which can depend on it being there!), 
+and therefore any controls can access it.
+*/
+
+[[ _FetchHandler (script_IncrementCompileCount,c) ]]
+
+
+--> Script Export
+-
+[[ _FetchHandler (script_UpdateAndExport,c) ]]
+
+
+--> Script Export | Props
+-
+[[ _FetchHandler (exported_Script,g) ]]
+
+[[ _FetchHandler (exported_Script,s) ]]
+
+[[ _FetchHandler (script_IsDifferent,g) ]]
+
+[[ _FetchHandler (script_IsIndexed,s) ]]
+
+[[ _FetchHandler (script_MenuTitleTableArray,g) ]]
+
+
+--> hArray | Status
+-
+[[ _FetchHandler (script_ConstructArray,f) ]]
+
+[[ _FetchHandler (object_AddToGlobalArray,c) ]]
+
+[[ _FetchHandler (object_AddToArray,c) ]]
+
+[[ _FetchHandler (_addMenuToHarray,pc) ]]
+
+[[ _FetchHandler (hkey_AddToKeyWordArray,c) ]]
+
+
+--> Object | Script | Export
+-
+[[ _FetchHandler (object_FetchScript,f) ]]
+
+[[ _FetchHandler (object_ExportScript,c) ]]
+
+[[ _FetchHandler (script_ExportHandlersAndCalls,c) ]]
+
+[[ _FetchHandler (hkey_NormalizeType,c) ]]
+
+[[ _FetchHandler (script_UpdateUrip,c) ]]
+
+
+--> Menu | Table | Construct
+-
+[[ _FetchHandler (menu_DeleteTables,c) ]]
+
+[[ _FetchHandler (menu_SetSubmenuFixedProp,c) ]]
+
+[[ _FetchHandler (menu_TableLineFromScript,c) ]]
+
+[[ _FetchHandler (menu_ConstructSubmenuTableLine,f) ]]
+
+
+--> Menu | Param Order
+-
+[[ _FetchHandler (menu_DeconstructCommandLine,c) ]]
+
+[[ _FetchHandler (menu_DefaultTableLine,c) ]]
+
+
+--> Script Export | Merge
+-
+/*
+This suite of handlers uses a local array so that the merge function can work across handlers.
+It depends of a particular file and folder structure of the exported script template and handlers.
+*/
+
+local LocalArray
+
+[[ _FetchHandler (script_MergeHandlers,f) ]]
+
+[[ _FetchHandler (object_ConstructMergeScriptArray,f) ]]
+   
+[[ _FetchHandler (script_ConstructMergeArray,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_FetchHandler,pf) ]]
+
+[[ _FetchHandler (mainStack_FetchHandler,pf) ]]
+
+[[ _FetchHandler (script_MergeLines,f) ]]
+
+[[ _FetchHandler (export_Script,c) ]]
+
+[[ _FetchHandler (newUpdate,pc) ]]
+
+[[ _FetchHandler (hack_UpdateBinFile,c) ]]
+

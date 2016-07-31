@@ -1,0 +1,5 @@
+private function _browserWidget
+   put the body_View of _wikiView() into bodyView
+   put the long id of widget "Browser" of bodyView into browserWidget
+   return browserWidget
+end _browserWidget

@@ -1,0 +1,386 @@
+﻿script "Global | SivaSiva | Menu"
+--> MetaData
+-
+license: GPLv3
+name: Global | SivaSiva | Menu
+type: controller
+version: 0.1
+
+
+--> Global | SivaSiva | Menu
+-
+on menu_ParseDiv
+   put script_GetTemplate ("SivaSiva XML") into someDiv
+   
+   answer file "select an XML file..."
+   put it into someFile
+   if it is empty then exit to top
+   
+   put url ("file:" & someFile) into someHTML
+   -- put html_ExtractBodyContents (someHTML) into someXML
+   
+   -- xml needs a root node  
+   put html_ExtractBody (someHTML) into someXML
+   
+   put ConvertXMLToArray (someXML, "utf8", true, true) into someArray
+   -- put true into pUseValueKey
+   -- put ConvertXMLToArray (someXML, "utf8", pUseValueKey) into someArray
+   -- put ConvertXMLToArray (someXML) into someArray
+   display_Array someArray
+end menu_ParseDiv
+
+
+
+-->Deps
+-
+/**
+* Handlers for converting XML to LiveCode arrays and vice versa. 
+*
+* Provided by Trevor DeVore of Blue Mango Learning Systems.
+*/
+
+/**
+* \brief Escapes the predefined XML entities in a string.
+*
+* \param pStr The string to escape the characters in.
+*
+* \return String
+*/
+function EscapePredefinedXMLEntities pStr
+    replace "&" with "&amp;" in pStr
+    replace "<" with "&lt;" in pStr
+    replace ">" with "&gt;" in pStr
+    replace "'" with "&apos;" in pStr
+    replace quote with "&quot;" in pStr
+    
+    return pStr
+end EscapePredefinedXMLEntities
+
+
+/**
+* \brief Unescapes predefined xml entities in a string.
+*
+* \param pStr The strin to unescape the characters in.
+*
+* \return String
+*/
+function UnescapePredefinedXMLEntities pStr
+    replace "&amp;" with "&" in pStr
+    replace "&lt;" with "<" in pStr
+    replace "&gt;" with ">" in pStr
+    replace "&apos;" with "'" in pStr
+    replace "&quot;" with quote in pStr
+    
+    return pStr
+end UnescapePredefinedXMLEntities
+
+
+/**
+* \brief Helper function for sorting keys of an array based on order in the XML document the array was created from.
+*
+* \param pKeys List of keys or array whose keys you want to sort.
+* \param pStripMetaKeys By default any meta keys (keys starting with "@") will be stripped. Pass in false to bypass this behavior.
+*
+* LiveCode array keys are never guaranteed to be in order you created them in 
+* so we must come up with some other way of maintaining proper sequence. 
+* For arrays representing XML, the XML syntax is used (i.e. node[1], node[2], etc.). 
+* This handler will sort keys that use this syntax for representing sequence.
+*
+* \return String
+*/
+function SortArrayKeysWithXMLOrdering pKeys, pStripMetaKeys
+   local theKeys
+   
+   put pStripMetaKeys is not false into pStripMetaKeys
+   
+   if pKeys is an array then
+      put the keys of pKeys into pKeys
+   end if
+      
+   set the itemDelimiter to "["
+   sort pKeys numeric by the last item of each -- 1], 2], 3], etc.
+   
+   if pStripMetaKeys then
+      filter pKeys without "@*"
+   end if
+   
+   return pKeys
+end SortArrayKeysWithXMLOrdering
+
+
+/**
+* \brief Converts an XML tree into a LiveCode multi-dimensional array.
+*
+* \param pXML The xml to convert.
+* \param pStoreEncodedAs Encoding to use. Must be a value that can be passed to uniDecode. Default is "utf8".
+* \param pUseValueKey  By default node values are stored in a key named after the node. This means you can't have a node with attributes and a node value. Pass in true if you want to store node values in a '@value' key. This will allow a key to have both attributes (in @attributes key) and a value (in @value key).
+* \param pForceNumberIndexForNodes A comma delimited list of node names that should always have numbered indexes (NODE[index]) added to them. This makes it easier to loop over results that may have 1 or more results.
+*
+* A nodes attributes will be stored as an array of it's "@attributes" key.
+* Node names will retain the sequence information (i.e. node[1], node[2], etc.).
+* This information is necessary to determine order that keys should be processed in. Example:
+* set the itemDelimiter to "["
+* put the keys of theArray into theKeys
+* sort theKeys numeric by the last item of each
+*
+* \return Array
+*/
+function ConvertXMLToArray pXML, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes
+   local theArray,theResult,theRootNode,theTreeID
+   local theXMLEncoding
+   
+   ## Create an XML tree from XML text
+   put revCreateXMLTree(pXML, true, true, false) into theTreeID
+   
+   if theTreeID is an integer then
+      ## Determine the encoding of the XML, default to UTF-8
+      put matchText(pXML, "<\?xml (.*)encoding=" & quote & "(.*)" & quote & "\?>", versionMatch, theXMLEncoding) into theResult
+      if theXMLEncoding is empty then put "utf-8" into theXMLEncoding
+      
+      ## Now convert to array. 
+      ## The 1st dimension has one key which is the name of the root node.
+      put revXMLRootNode(theTreeID) into theRootNode
+      if theRootNode is not empty and not(theRootNode begins with "xmlerr,") then
+         put ConvertXMLNodeToArray(theTreeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes) into theArray[theRootNode]
+      end if
+      
+      revDeleteXMLTree theTreeID
+   end if
+   
+   return theArray
+end ConvertXMLToArray
+
+
+/**
+* \brief Converts and revXML created XML Tree to an array.
+*
+* \param pXMLTree The xml tree id.
+* \param pStoreEncodedAs See docs for ConvertXMLToArray.
+* \param pUseValueKey See docs for ConvertXMLToArray.
+* \param pForceNumberIndexForNodes See docs for ConvertXMLToArray.
+*
+* See docs for ConvertXMLToArray.
+*
+* \return Array
+*/
+function ConvertXMLTreeToArray pXMLTree, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes
+    return ConvertXMLToArray(revXMLText(pXMLTree), pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes)
+end ConvertXMLTreeToArray
+
+
+/**
+* \brief Converts a multi-dimensional array to an XML tree.
+*
+* \param pArray The array to convert.
+* \param pArrayEncoding Encoding used in the array. Must be a value that can be passed to uniEncode. Default is the current platform encoding.
+* \param pStoreEncodedAs Encoding to use. Must be a value that can be passed to uniDecode. Default is "utf8".
+*
+* The array should consist of one key in the 1st dimension. This key becomes the root node in the XML tree.
+* Attributes of a node should be stored as an array in an @attributes key. 
+* Sequence information for multiple nodes with the same name should be included in the node name using brackets (i.e. node[1], node[2], node[3]).
+*
+* \return XML Tree id (integer) or error message.
+*/
+function ConvertArrayToXML pArray, pArrayEncoding, pStoreEncodedAs
+   local theError,theRootNode,theXML,theXMLTree
+   
+   ## if pArrayEncoding is empty then current platform encoding is assumed
+   if pStoreEncodedAs is empty then put "UTF-8" into pStoreEncodedAs
+   
+   ## Create XML for root node. Note that we take extra steps in order to support
+   ## converting an array that only represents part of a tree rather than the entire tree.
+   ## In this case there may be multiple nodes at the root level.
+   put line 1 of the keys of pArray into theRootNode 
+   set the itemDelimiter to "["
+   put "<" & item 1 of theRootNode & "/>" into theXML
+   
+   ## Create XML needed to create tree
+   put format("<?xml version=\"1.0\" encoding=\"%s\"?>%s", \
+         pStoreEncodedAs, theXML) into theXML
+   put revCreateXMLTree(theXML, true, true, false) into theXMLTree
+   
+   if theXMLTree is an integer then
+      ## Loop over all nodes at root level
+      put false into stripMetaKeys
+      put SortArrayKeysWithXMLOrdering(the keys of pArray, stripMetaKeys) into theNodes
+      
+      ## Create tree using helper function
+      repeat for each line theKey in theNodes
+         put theKey into theNode
+         replace space with "-" in theNode
+         ConvertArrayDimensionToXML pArray[theKey], theXMLTree, slash & theNode, \
+               pArrayEncoding, pStoreEncodedAs
+         put the result into theError
+         
+         if theError is not empty then exit repeat
+      end repeat
+      
+      if theError is not empty then
+         ## something went wrong, clean bad tree
+         revDeleteXMLTree theXMLTree
+      end if
+   else
+      put theXMLTree into theError
+   end if
+   
+   if theError is not empty then
+      return theError
+   else
+      return theXMLTree
+   end if
+end ConvertArrayToXML
+ 
+ 
+ /**
+* \brief Helper function for ConvertArrayToXML.
+*
+* Converts the multi-dimensional array pArray to nodes in pTreeID. Calls itself recursively.
+*
+* \return Error message.
+*/
+private command ConvertArrayDimensionToXML pArray, pTreeID, pNode, pArrayEncoding, pStoreEncodedAs
+   local theError,theKey,theKeys,theNode
+   
+   ## A workaround for fact that Revolution does not return
+   ## keys in the order we created them
+   put false into stripMetaKeys
+   put SortArrayKeysWithXMLOrdering(the keys of pArray, stripMetaKeys) into theNodes
+   
+   ## Arrays might have sequencing info in name 
+   ## (i.e. step[1], step[2], ... )
+   set the itemDelimiter to "["
+   
+   repeat for each line theArrayKey in theNodes
+      put theArrayKey into theFullNode
+      replace space with "-" in theFullNode
+      put item 1 of theFullNode into theNode
+      
+      ## Look for attributes. These will be added as attributes to pNode.
+      if theNode is "@attributes" or theNode is "@attr" then
+         repeat for each line theKey in the keys of pArray[theArrayKey]
+            put theKey into theAttr
+            replace space with "-" in theAttr
+            
+            revSetXMLAttribute pTreeID, pNode, theAttr, \
+                  EncodeString(pArray[theArrayKey][theKey], \
+                  pArrayEncoding, pStoreEncodedAs)
+            if the result begins with "xmlerr," then 
+               put the result && "(setting attribute" && theKey && "for node" && pNode & ")" into theError
+            end if
+            
+            if theError is not empty then exit repeat
+         end repeat
+         
+      else if theNode is "@value" then
+         ## This XML tree is using complex structure. Node is the value of the parent node
+         revPutIntoXMLNode pTreeID, pNode, EncodeString(pArray[theArrayKey], pArrayEncoding, pStoreEncodedAs)
+         if the result begins with "xmlerr," then
+            put the result && "(adding child node" && theNode && "to node" && pNode & ")" into theError
+         end if
+         
+      else
+         if the keys of pArray[theArrayKey] is not empty then
+            ## Node has children. Add node to XML tree then call self recursivly to create children nodes. 
+            revAddXMLNode pTreeID, pNode, theNode, empty
+            if the result begins with "xmlerr," then
+               put the result && "(adding node" && theNode & ")" into theError
+            end if
+            
+            if theError is empty then
+               ConvertArrayDimensionToXML pArray[theArrayKey], pTreeID, pNode & slash & theFullNode, \
+                     pArrayEncoding, pStoreEncodedAs
+               put the result into theError
+            end if
+         else
+            ## Node has no children but possibly a value. Create node and add value (which may be empty).
+            revAddXMLNode pTreeID, pNode, theNode, \
+                  EncodeString(pArray[theArrayKey], pArrayEncoding, pStoreEncodedAs)
+            if the result begins with "xmlerr," then
+               put the result && "(adding child node" && theNode && "to node" && pNode & ")" into theError
+            end if
+         end if
+      end if 
+      
+      if theError is not empty then exit repeat
+   end repeat
+   
+   return theError
+end ConvertArrayDimensionToXML
+ 
+
+/**
+* \brief Helper function for ConvertXMLToArray.
+*
+* Converts an XML node to a multi-dimensional array. Calls itself recursively.
+*
+* \return Array
+*/
+private function ConvertXMLNodeToArray pTreeID, pNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes
+    local theArrayA,theAttributes,theChildNode,theKey
+     
+    ## Look for attributes of the node. Store as array in "@attributes" key
+    put revXMLAttributes(pTreeID, pNode, tab, cr) into theAttributes
+    if theAttributes is not empty then
+        put EncodeString(theAttributes, pXMLTreeEncoding, pStoreEncodedAs) into theAttributes
+        split theAttributes by cr and tab -- create array
+        put theAttributes into theArrayA["@attributes"]
+    end if
+     
+    ## Look for children nodes. 
+    set the itemDelimiter to slash
+    put revXMLFirstChild(pTreeID, pNode) into theChildNode
+    if theChildNode is empty or theChildNode begins with "xmlerr," then
+        put EncodeString(revXMLNodeContents(pTreeID, pNode), pXMLTreeEncoding, pStoreEncodedAs) into theValue
+        if word 1 to -1 of theValue is empty and the keys of theArrayA is not empty then
+            ## Empty node that has attributes
+            return theArrayA
+        else if pUseValueKey then
+            ## Force value into @value
+            put theValue into theArrayA["@value"]
+            return theArrayA
+        else
+            ## Single Node with value: Return value. Attributes are ignored.
+            return theValue
+        end if
+    else
+        ## Child nodes were found. Recursively call self and store result in array.
+        set the wholeMatches to true
+        replace comma with cr in pForceNumberIndexForNodes
+        repeat while theChildNode is not empty and not (theChildNode begins with "xmlerr,")
+            put the last item of theChildNode into theKey
+            if theKey is among the lines of pForceNumberIndexForNodes then
+                ## Oops, key that needs index doesn't have one. Only 1 entry in XML.
+                put "[1]" after theKey
+            end if      
+            put ConvertXMLNodeToArray(pTreeID, theChildNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, \
+                    pForceNumberIndexForNodes) into theArrayA[theKey]
+            put revXMLNextSibling(pTreeID, theChildNode) into theChildNode
+        end repeat
+         
+        return theArrayA
+    end if
+end ConvertXMLNodeToArray
+ 
+ 
+/**
+* \brief Helper function for converting the encoding of strings when converting to and from XML.
+*
+* \return String
+*/
+private function EncodeString pString, pInEncoding, pOutEncoding
+   ## convert utf-8 to utf8 for uniencode/decode
+   replace "-" with empty in pInEncoding
+   replace "-" with empty in pOutEncoding
+   
+   if pInEncoding is not empty then
+      -- if pOutEncoding is empty then pString will be converted to the current platform encoding
+      return uniDecode(uniEncode(pString, pInEncoding), pOutEncoding)
+   else
+      if pOutEncoding is not empty then
+         -- if pInEncoding is empty then pString is assumed to be in the current platform encoding
+         return uniDecode(uniEncode(pString, pInEncoding), pOutEncoding)
+      else
+         return pString
+      end if
+   end if
+end EncodeString

@@ -1,0 +1,6 @@
+command project_SaveGlobalArray pProjectName
+   global gLibrarySet_Array
+   project_SaveArray gLibrarySet_Array, pProjectName
+   put the result into librarySetData
+   return librarySetData
+end project_SaveGlobalArray

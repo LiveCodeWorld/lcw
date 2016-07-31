@@ -1,0 +1,69 @@
+setprop control_Type [pClassOrViewName] controlType
+   lock screen
+   -- 
+   put the long id of the target into targetObject
+   put the long id of the owner of targetObject into targetOwner
+   
+   put the short name of targetObject into oName
+   put the short id of targetObject into originalID
+   put the rect of targetObject into oRect
+   
+   put control_ConstructCreateDoScript (controlType, oName, targetOwner, pClassOrViewName) into doScript
+   if doScript is empty then return empty
+   
+   do doScript
+   put it into tempCreatedObject
+   if exists (tempCreatedObject) is false then
+      breakpoint
+      return empty
+   end if
+   set the rect of tempCreatedObject to oRect
+   
+   relayer tempCreatedObject before targetObject
+   
+   -- some utitlity hacks
+   switch
+      case controlType is empty
+      case controlType = "View|Layout|Placeholder"
+      case controlType = "placeholder"
+         -- it's a placeholder view
+         if pClassOrViewName is empty then
+            put "random" into someColour
+         else
+            put pClassOrViewName into someColour
+         end if
+         set the view_Colour of tempCreatedObject to someColour
+         set the urip_Type of tempCreatedObject to "view"
+         break
+      case controlType = "view"
+         -- put pClassOrViewName into viewName
+         set the urip_Type of tempCreatedObject to "view"
+         break
+      case controlType contains "|"
+         -- put controlType into viewName
+         set the urip_Type of tempCreatedObject to "view"
+         break
+      default
+         -- it's a standard Livecode control
+         -- here we could look at "pClassOrViewName" and 
+         -- add some customisation to things list list fields
+   end switch
+   
+   object_Delete targetObject
+   
+   set the name of tempCreatedObject to oName
+   show tempCreatedObject
+   set the id of tempCreatedObject to originalID
+   dispatch "view_IndexChildren" to targetOwner -- should not be need as the id is the same
+   
+   -- does not seem to work well without sending in 2 ticks
+   -- dispatch "LayoutControl" to targetOwner
+   send "LayoutControl" to targetOwner in 2 ticks
+   -- 
+   unlock screen
+   
+   -- this is a pretty useless reference as the id has been reset
+   -- so the original "targetObject" is what you need
+   -- here for interest / testing
+   return tempCreatedObject
+end control_Type

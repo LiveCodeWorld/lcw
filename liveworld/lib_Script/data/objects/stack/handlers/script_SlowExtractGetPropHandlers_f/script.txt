@@ -1,0 +1,7 @@
+function script_SlowExtractGetPropHandlers someScript, scriptObject
+   -- slower but talerant of white space
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   put handlerArray ["getprop"] into handlerNames
+   put handlerNames
+   return handlerNames
+end script_SlowExtractGetPropHandlers

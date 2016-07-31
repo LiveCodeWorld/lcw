@@ -1,0 +1,4 @@
+function menu_CheckTitleController mTitle, mController
+   put menu_GetTableTitles (mController) into mTitles
+   return mTitle is among the lines of mTitles
+end menu_CheckTitleController

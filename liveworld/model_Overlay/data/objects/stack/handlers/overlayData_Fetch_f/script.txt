@@ -1,0 +1,6 @@
+function overlayData_Fetch dotArrayFile
+   put url ("binfile:" & dotArrayFile) into encodedArray
+   if encodedArray is empty then return empty
+   put arraydecode (encodedArray) into overlayData
+   return overlayData
+end overlayData_Fetch

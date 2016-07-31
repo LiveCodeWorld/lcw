@@ -1,0 +1,9 @@
+getprop local_MenuTitles [scriptObject]
+   put the menu_ScriptTitles of scriptObject into localMenuTitles
+   if localMenuTitles is empty then
+      return "Create"
+   else
+      put CR & "-,Create" after localMenuTitles
+      return localMenuTitles
+   end if
+end local_MenuTitles

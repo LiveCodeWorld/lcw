@@ -1,0 +1,9 @@
+function dot_ReflectPoint someLoc, gHeight
+    -- was "graphViz_ReflectPoint"
+    put item 1 of someLoc into nodeX
+    put item 2 of someLoc into nodeY
+    
+    put gHeight - nodeY into reflectedY
+    put nodeX,reflectedY into reflectedLoc
+    return reflectedLoc
+end dot_ReflectPoint

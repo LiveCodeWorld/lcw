@@ -1,0 +1,7 @@
+function youtube_FetchUserChannelJson userName
+   -- GET https://www.googleapis.com/youtube/v3/channels?part=id&forUsername=WorldCryptoNetwork&key={YOUR_API_KEY}
+   put "channels?" into channelBit
+   put "part=id&forUsername=" & urlencode (userName) after channelBit
+   put fetch_YoutubeJSON (channelBit) into someJSON
+   return someJSON
+end youtube_FetchUserChannelJson

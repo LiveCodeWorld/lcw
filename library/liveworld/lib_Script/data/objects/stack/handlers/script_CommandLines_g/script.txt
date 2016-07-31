@@ -1,0 +1,5 @@
+getprop script_CommandLines
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   return script_ExtractCommandLines(someScript, scriptObject)
+end script_CommandLines

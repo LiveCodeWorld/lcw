@@ -1,0 +1,5 @@
+getprop view_Data [someKey]
+   put LocalArray ["view_Data"] into viewData
+   if someKey is empty then return viewData
+   return viewData [someKey]
+end view_Data

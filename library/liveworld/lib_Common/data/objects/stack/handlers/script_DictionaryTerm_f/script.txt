@@ -1,0 +1,7 @@
+function script_DictionaryTerm someWord
+   if char 1 to 3 of someWord is "rev" and char 4 of someWord is not "_" then return true -- a bit risky to assume this!
+   
+   put rev_DictionaryTerms() into knownTerms
+   set the wholematches to true
+   return someWord is among the words of knownTerms
+end script_DictionaryTerm

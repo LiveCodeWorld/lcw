@@ -1,0 +1,27 @@
+command text_SetOffsets startText, endText, someText, @startChar, @endChar, startAfterCharNum
+  -- version whereIsText 8.9,30/4/02
+  
+  delete char 1 to startAfterCharNum of someText
+  put offset (startText, someText) into startChar
+  if startChar is 0 then
+    put 0 into startChar
+    put 0 into endChar
+    return empty
+  end if
+  put the length of startText - 1 into startBit
+  if endText = empty then
+    put startChar + startBit into endChar
+  else
+    put text_OffsetAfter (endText, someText, startChar + startBit) into endChar
+    if endChar is 0 then
+      put 0 into startChar
+      put 0 into endChar
+      return empty
+    end if
+    add the length of endText - 1 to endChar
+  end if
+  
+  add startAfterCharNum to startChar
+  add startAfterCharNum to endChar
+  return char startChar to endChar of someText
+end text_SetOffsets

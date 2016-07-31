@@ -1,0 +1,32 @@
+function xml_GetAttribute attributeName, someXMLTag, @startAttributeValue, @endAttributeValue
+    -- older non-regexp version below:
+    -- quick hack, should use regular expression.
+    -- bug in that it does not allow single quotes "'"
+     
+    put attributeName & "=" & quote into startString
+    put tab & CRLF & space into whiteSpace
+     
+    put offset(startString, someXMLTag) into startAttributeValue
+    if startAttributeValue is 0 then
+        put 0 into endAttributeValue
+        return empty
+    else if char (startAttributeValue-1) of someXMLTag is not in whiteSpace then
+        put 0 into startAttributeValue
+        put 0 into endAttributeValue
+        return empty
+    else
+        add the length of startString to startAttributeValue
+        put text_OffsetAfter(quote, someXMLTag, startAttributeValue) into endAttributeValue
+        if endAttributeValue is 0 then
+            put 0 into startAttributeValue
+            return empty
+        else
+            subtract 1 from endAttributeValue
+            put char startAttributeValue to endAttributeValue of someXMLTag into attributeValue
+            replace "'" with quote in attributeValue
+            return attributeValue
+        end if
+        -- set the itemDelimiter to quote
+        -- return item 2 of someXMLTag
+    end if
+end xml_GetAttribute

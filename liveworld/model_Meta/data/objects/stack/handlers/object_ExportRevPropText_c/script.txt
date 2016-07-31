@@ -1,0 +1,10 @@
+command object_ExportRevPropText objectFolder, revPropText
+   put meta_PropTextFile (objectFolder, false) into someFile
+   if revPropText is empty then
+      delete file someFile
+      return empty
+   else
+      put revPropText into url ( "binfile:" & someFile)
+      return someFile
+   end if
+end object_ExportRevPropText

@@ -1,0 +1,10 @@
+command daemon_SendNotFound socketID
+   put _notFoundHeaders() into someHeader
+   daemon_Send someHeader, "Page not found", socketID, false
+   return the result
+   
+   -- put _customHeaders (404, "Error: 404", "file not found") into someHeader
+   put someHeader & CRLF & CRLF & contentToSend into headersAndContent
+   write headersAndContent to socket socketID
+   return headersAndContent
+end daemon_SendNotFound

@@ -1,0 +1,4 @@
+getprop menu_CardMenu
+   put the menu_CardNames of the target into mCards
+   return menu_ConstructCardMenu (mCards)
+end menu_CardMenu

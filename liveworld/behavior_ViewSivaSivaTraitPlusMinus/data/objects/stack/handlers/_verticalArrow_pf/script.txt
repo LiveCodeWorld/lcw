@@ -1,0 +1,5 @@
+private function _verticalArrow
+   if exists (graphic "Trait Line" of me) is false then return empty
+   put the long id of graphic "Trait Line" of me into verticalArrow
+   return verticalArrow
+end _verticalArrow

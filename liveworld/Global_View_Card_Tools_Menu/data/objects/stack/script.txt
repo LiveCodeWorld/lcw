@@ -1,0 +1,54 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_View_Card_Tools_Menu
+type: controller
+version: 0.1
+
+local LocalArray
+
+
+--> Global | View | Card | Tools | Menu
+-
+[[ _FetchHandler (menu_Clone,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ViewProperty,c) ]]
+
+[[ _FetchHandler (menu_EditBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_OpenSubstack,c) ]]
+
+[[ _FetchHandler (menu_TestLayout,c) ]]
+
+[[ _FetchHandler (submenu_Geometry,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditViewCardScript,c) ]]
+
+[[ _FetchHandler (menu_EditViewCardBehavior,c) ]]
+
+[[ _FetchHandler (menu_SetViewCardBehavior,c) ]]
+
+[[ _FetchHandler (disabled_SetViewCardBehavior,g) ]]
+
+[[ _FetchHandler (disabled_EditViewCardBehavior,g) ]]
+
+
+--> Global | View | Card | Tools | Menu | Disabled
+-
+[[ _FetchHandler (disabled_OpenSubstack,g) ]]
+
+
+--> Global | View | Card | Tools | Menu | Props
+-
+[[ _FetchHandler (substack_Names,g) ]]
+
+[[ _FetchHandler (view_Props,g) ]]

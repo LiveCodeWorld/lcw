@@ -1,0 +1,5 @@
+function linkArray_IsNested linkArray
+   put line 1 of keys (linkArray) into testKey
+   put linkArray [testKey] is an array into isNested
+   return isNested
+end linkArray_IsNested

@@ -1,0 +1,53 @@
+function git_ApplyTestPatch gitUnifiedDiff, pGitRootFolder, pTestDirectory
+   if pGitRootFolder is empty then put git_GetRootFolder() into pGitRootFolder
+   if pTestDirectory is empty then
+      put the tempName & "/" into pTestDirectory
+      create folder pTestDirectory
+   else
+      folder_Format pTestDirectory
+   end if
+   
+   -- finder_Reveal pTestDirectory
+   
+   put git_ConstructDiffArray (gitUnifiedDiff) into diffArray
+   put diffArray ["header"]["original path"] into originalFile
+   put diffArray ["header"]["new path"] into newFile
+   
+   set the itemdelimiter to "/"
+   
+   delete item 1 of originalFile
+   put pGitRootFolder before originalFile
+   delete item 1 of newFile
+   put pGitRootFolder before newFile
+   
+   put item -1 of originalFile into originalShortFile
+   put item -1 of newFile into newShortFile
+   
+   put pTestDirectory & "patch.txt" into patchFile
+   put gitUnifiedDiff into url ("binfile:" & patchFile)
+   -- put gitUnifiedDiff into url ("file:" & patchFile)
+   
+   put pTestDirectory & originalShortFile into originalTempFile
+   put url ("binfile:" & originalFile) into url ("binfile:" & originalTempFile)
+   -- put url ("file:" & originalFile) into url ("file:" & originalTempFile)
+   
+   shell_BashParamEscape patchFile
+   shell_BashParamEscape pTestDirectory
+   
+   put the number of items of pGitRootFolder into pNum
+   -- this works I think but complains of "patch unexpectedly ends in middle of line"
+   -- put merge("patch --reverse --strip=[[pNum]] --directory=[[pTestDirectory]] --input=[[patchFile]] -o [[pUpdatedFile]]") into someShell
+   put merge("patch --reverse --strip=[[pNum]] --directory=[[pTestDirectory]] --input=[[patchFile]]") into someShell
+   
+   -- put merge("git apply directory=[[pTestDirectory]] [[patchFile]]") into someShell
+   -- put merge("git apply directory=[[pTestDirectory]] originalShortFile.patch") into someShell
+   
+   put shell (someShell) into shellResult
+   
+   put url ("file:" & originalTempFile) into reversePatchedResult
+   
+   put pTestDirectory & originalShortFile & ".orig" into originalBackupFile
+   put url ("file:" & originalBackupFile) into originalBackupResult
+   
+   return reversePatchedResult
+end git_ApplyTestPatch

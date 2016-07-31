@@ -1,0 +1,4 @@
+getprop object_GroupIDs [visibleOnly]
+   put the long ID of the target into targetObject
+   return object_GroupShortIds(targetObject, visibleOnly)
+end object_GroupIDs

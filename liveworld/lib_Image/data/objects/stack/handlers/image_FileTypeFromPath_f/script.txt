@@ -1,0 +1,4 @@
+function image_FileTypeFromPath imageFile
+    put image_TypeFromPath(imageFile) into imageType
+    return image_GetFileType(imageType)
+end image_FileTypeFromPath

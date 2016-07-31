@@ -1,0 +1,7 @@
+on menu_CheckAllScriptExports
+   set the cursor to watch
+   put spotlight_ListExportedScriptFiles() into scriptFiles
+   put script_FileToObject (scriptFiles) into someObjects
+   
+   _DisplayFoundDifferences someObjects, "Could not find any errors in all the objects of exported scripts!"
+end menu_CheckAllScriptExports

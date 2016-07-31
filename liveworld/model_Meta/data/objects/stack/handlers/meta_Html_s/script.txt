@@ -1,0 +1,5 @@
+setprop meta_Html objectHtml
+   put the object_Folder of the target into objectFolder
+   object_ExportMetaHtml objectFolder, objectHtml
+   return the result
+end meta_Html

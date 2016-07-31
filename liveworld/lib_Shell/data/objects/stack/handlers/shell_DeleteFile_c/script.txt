@@ -1,0 +1,6 @@
+command shell_DeleteFile sshUser, remoteDomain, somePath
+   put "rm" && somePath into remoteCommand
+   shell_RemoteExecute sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end shell_DeleteFile

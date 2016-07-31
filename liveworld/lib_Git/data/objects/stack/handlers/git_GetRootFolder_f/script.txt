@@ -1,0 +1,5 @@
+function git_GetRootFolder
+   put pref_GetValue ("gitRootFolder") into gitRootFolder
+   if gitRootFolder is empty then put revEnvironmentUserPluginsPath() & "/" into gitRootFolder -- a default
+   return gitRootFolder
+end git_GetRootFolder

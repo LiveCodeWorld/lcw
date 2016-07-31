@@ -1,0 +1,13 @@
+function template_DefaultCardScript viewName
+   put menu_GlobalTitleFromViewName (viewName) into mTitle
+   put menu_ConstructTemplateScript (mTitle) into cardScript
+   return cardScript
+   
+   /*
+   put script_GetTemplate("View Library Card Script") into cardScript
+   put user_GetName() into AuthorName
+   put view_StemFromName(viewName) into LibraryStem 
+   put view_StemFromName(viewName) into LibraryName
+   put merge(cardScript) into cardScript
+   */
+end template_DefaultCardScript

@@ -1,0 +1,7 @@
+function scrape_WithXPath someHtml, someXPath, pTidyIsTrue
+   if pTidyIsTrue then html_Tidy someHtml
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLDataFromXPathQuery (treeID, someXPath) into someContent
+   revDeleteXMLTree treeID
+   return someContent
+end scrape_WithXPath

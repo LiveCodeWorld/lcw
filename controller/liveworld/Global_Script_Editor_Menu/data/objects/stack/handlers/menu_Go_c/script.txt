@@ -1,0 +1,23 @@
+on menu_Go mTarget, whichStack
+   switch whichStack
+      case "Display Array"
+         go to stack "Display Array"
+         break
+      case "Edit libOPN_Display"
+         edit the script of stack "libOPN_Display"
+         break
+      case "-"
+      case "View Browser"
+         go to stack "libOPN_ViewBrowser"
+         break
+      case "libOPN_Menus"
+         go to stack "libOPN_Menus"
+         get library_ListGlobalMenuNames()
+         sort it
+         display_Lines it
+         break
+      case "libOPN_GIT"
+         go to stack "libOPN_GIT"
+         break
+   end switch
+end menu_Go

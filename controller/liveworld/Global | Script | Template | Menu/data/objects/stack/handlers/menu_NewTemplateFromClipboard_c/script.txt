@@ -1,0 +1,11 @@
+on menu_NewTemplateFromClipboard
+   ask "What would you like to call this template as..."
+   put it into templateName
+   if templateName is empty then exit to top
+   
+   put the clipboarddata ["text"] into someScript
+   script_SetTemplate templateName, someScript
+   put the result into savedFile
+   
+   display_ScriptTemplate templateName
+end menu_NewTemplateFromClipboard

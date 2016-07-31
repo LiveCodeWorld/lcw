@@ -1,0 +1,32 @@
+function osx_DaemonArray
+   put "lsof -i -P | grep -i 'listen'" into someShell
+   put shell (someShell) into shellResult
+   repeat for each line someLine in shellResult
+      /*
+      1) the `^' (negated) login name or user ID (UID), specified with the -u option;
+      2) the `^' (negated) process ID (PID), specified with the -p option;
+      3) the `^' (negated) process group ID (PGID), specified with the -g option;
+      4) the `^' (negated) command, specified with the -c option;
+      5) the (`^') negated TCP or UDP protocol state names, specified with the -s [p:s] option.
+      */
+      
+      put word 1 of someLine into appName
+      put word 2 of someLine into pID
+      put word 3 of someLine into uName
+      put word 4 of someLine into noIdea
+      put word 5 of someLine into ipWhat
+      put word 6 of someLine into someHex
+      put word 7 of someLine into someThingElse
+      put word 8 of someLine into pCol
+      put word 9 to -1 of someLine into urlBit
+      if word -1 of urlBit = "(LISTEN)" then put word 1 to -2 of urlBit into urlBit
+      set the itemdelimiter to ":"
+      put item 1 of urlBit into someHost
+      put item 2 of urlBit into somePort
+      
+      put appName into daemonArray [somePort]["appName"]
+      put someHost into daemonArray [somePort]["host"]
+      put pID into daemonArray [somePort]["process id"]
+   end repeat
+   return daemonArray
+end osx_DaemonArray

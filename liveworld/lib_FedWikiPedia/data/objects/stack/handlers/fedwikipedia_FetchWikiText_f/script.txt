@@ -1,0 +1,5 @@
+function fedwikipedia_FetchWikiText pageTitle
+   put fedwikipedia_FetchWikiTextArray (pageTitle) into anotherArray   
+   put sandbox_GetRevision (anotherArray) into wikiText
+   return wikiText 
+end fedwikipedia_FetchWikiText

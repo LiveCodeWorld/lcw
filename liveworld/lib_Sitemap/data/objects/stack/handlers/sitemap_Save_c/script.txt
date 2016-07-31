@@ -1,0 +1,5 @@
+command sitemap_Save shortSitemapFile, sitemapXML
+   put sitemap_ConstructFilePath (shortSitemapFile) into someFile
+   put sitemapXML into url ("binfile:" & someFile)
+   return someFile
+end sitemap_Save

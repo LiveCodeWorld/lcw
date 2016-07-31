@@ -1,0 +1,10 @@
+command finder_BringToFront appName
+    if appName is empty then put "Revolution" into appName
+    put "tell application '[[appName]]'" into doScript
+    put cr & "activate" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    get merge(doScript)
+    do it as AppleScript
+    return the result
+end finder_BringToFront

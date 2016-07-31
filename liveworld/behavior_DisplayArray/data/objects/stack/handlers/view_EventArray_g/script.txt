@@ -1,0 +1,6 @@
+getprop view_EventArray eventArray   
+   put the display_MouseTarget of me into eventArray ["eventTarget"]
+   put the action_InspectCommand of me into eventArray ["mouseUp"]
+   put the action_DoubleClickCommand of me into eventArray ["mouseDoubleUp"]
+   return eventArray
+end view_EventArray

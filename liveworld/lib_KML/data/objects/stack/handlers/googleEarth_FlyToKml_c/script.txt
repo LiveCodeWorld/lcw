@@ -1,0 +1,11 @@
+on googleEarth_FlyToKml nodeXML, flyToWhat
+    put xml_ConstructTag(nodeXML, "kml", "xmlns", "http://earth.google.com/kml/2.1") into someKML
+    xml_AddHeaderLine someKML
+    kml_DeconstructPlacemark nodeXML, latitude, longitude, range, someTilt, heading, pointLongitude, pointLatitude, pointHeight
+     
+    if flyToWhat is "View" then
+        googleEarth_SetView latitude, longitude, range, someTilt, heading
+    else
+        googleEarth_SetView pointLatitude, pointLongitude, pointHeight, 0, 0
+    end if
+end googleEarth_FlyToKml

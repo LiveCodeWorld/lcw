@@ -1,0 +1,20 @@
+command object_ExportCustomArray objectFolder, customArray, pUseCustomFolders
+   if pUseCustomFolders is not true then
+      -- export as encoded array
+      put meta_GetCustomArrayFile (objectFolder) into someFile
+      array_Save someFile, customArray
+      return someFile
+   else
+      -- export as folder
+      folder_Format objectFolder
+      put objectFolder & "custom/" into customFolder
+      if customArray is not an array then
+         revDeleteFolder customFolder
+         return empty
+      else
+         put objectFolder & "custom/" into customFolder
+         array_ToFolder customFolder, customArray
+         return customFolder
+      end if
+   end if
+end object_ExportCustomArray

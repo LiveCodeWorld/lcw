@@ -1,0 +1,5 @@
+on menu_DisplayLibrarySet ideScriptObject, setName
+   put library_FetchSetArray (setName) into someArray
+   put "Library set" && kwote(setName) into someTitle
+   display_Array someArray, someTitle
+end menu_DisplayLibrarySet

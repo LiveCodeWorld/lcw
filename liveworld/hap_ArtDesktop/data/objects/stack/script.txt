@@ -1,0 +1,28 @@
+--> MetaData
+-
+license: GPLv3
+name: hap_ArtDesktop
+type: script library
+version: 0.1
+
+
+--> HAP | Art | Desktop
+-
+/*
+Not being used right now. Instead we index hap_Art.
+
+In the future this might be a front script of before handerl behavior of the library for use on Desktop?
+
+These handlers we extract from the HAP revIgniter application code.
+They may have been modified slightly in order to make them independent of server side functionality, or to be made more readable.
+This allows for testing and use in Desktop and mobile clients.
+*/
+
+[[ _FetchHandler (folderForArt,f) ]]
+
+[[ _FetchHandler (getArtFormat,f) ]]
+
+[[ _FetchHandler (getPathForArt,f) ]]
+
+
+

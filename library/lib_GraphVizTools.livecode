@@ -1,0 +1,891 @@
+﻿script "lib_GraphVizTools"
+--> MetaData
+-
+license: GPLv3
+name: lib_GraphVizTools
+type: script library
+version: 0.1
+
+
+--> Script Calls | Graphing
+-
+function script_GetDotText graphName, someScript, whichLinks, cluster, graphHeader, drawOrphans
+    local linkSection, defSection, inNodeDefs, exNodeDefs, inMissingDefs, exMissingDefs
+    
+    put script_GetLinkKeys (someScript, whichLinks, allKeys) into linkKeys
+    script_SetDefsAndLinks linkKeys, someScript, inNodeDefs, exNodeDefs, linkSection
+     
+    if drawOrphans is true then
+        -- now work out orphans
+        put allKeys into remainingLinks
+        line_Delete linkKeys, remainingLinks
+        script_SetDefsAndLinks remainingLinks, someScript, inMissingDefs, exMissingDefs, linkSection
+    end if
+    
+    if cluster is true then
+        put empty into someColour
+        if drawOrphans is true then
+            if inNodeDefs is not empty then
+                put dot_ConstructCluster("Internal", 1, inNodeDefs, "", "filled", someColour) into inCluster
+                put inCluster & CR after defSection
+            end if
+            if inMissingDefs is not empty then
+                put dot_ConstructCluster("Missing Internal", 2, inMissingDefs, "", "filled", someColour) into missingInCluster
+                put missingInCluster & CR after defSection
+            end if
+            if exNodeDefs is not empty then
+                put dot_ConstructCluster("External", 3, exNodeDefs, "", "filled", someColour) into exCluster
+                put exCluster & CR after defSection
+            end if
+            if exMissingDefs is not empty then
+                put dot_ConstructCluster("Missing External", 4, exMissingDefs, "", "filled", someColour) into missingExCluster
+                put missingExCluster & CR after defSection
+            end if
+            delete last char of defSection
+        else
+            put dot_ConstructCluster("Internal", 1, inNodeDefs, "", "filled", someColour) into inCluster
+            put dot_ConstructCluster("External", 2, exNodeDefs, "", "filled", someColour) into exCluster
+            put inCluster & CR & exCluster into defSection
+        end if
+    else
+        if drawOrphans is true then
+            put inNodeDefs into defSection
+            line_Add inMissingDefs, defSection
+            line_Add exNodeDefs, defSection
+            line_Add exMissingDefs, defSection
+        else
+            put inNodeDefs into defSection
+            line_Add exNodeDefs, defSection
+        end if
+    end if
+    
+    put defSection & CR & CR & linkSection into nodeSection
+     
+    -- put script_NodeSectionFromLinkKeys(linkKeys, allKeys, someScript, cluster, drawOrphans) into nodeSection
+    put dot_Construct (graphName, nodeSection, graphHeader) into dotText
+    return dotText
+end script_GetDotText
+
+function script_GetReverseLinkKeys handlerKey, someScript
+    -- just inside the script
+    -- could also look at objects below in hierarchy later
+    -- so use a general technique
+    
+    local reverseKeys, graphData, uArray, dArray
+    
+    script_ConstructHandlerArrays someScript, graphData, uArray, dArray
+    put keys(uArray) into allKeys
+    put allKeys into otherKeys
+    line_Delete handlerKey, otherKeys
+     
+    set the wholematches to true
+    repeat for each line otherKey in otherKeys
+        set the cursor to busy
+        put item 1 of otherkey into otherName
+        put item 2 of otherkey into otherType
+        if otherName is "_" then next repeat
+        put kwote(otherKey) into someNode
+        
+        put script_ExtractHandlerType(otherName, someScript, otherType) into otherHandler
+        put script_ExtractCalls(otherHandler) into otherCalls
+        
+        if otherKey is among the lines of otherCalls then
+            put otherKey & CR after reverseKeys
+        end if
+    end repeat
+    delete last char of reverseKeys
+    return reverseKeys
+end script_GetReverseLinkKeys
+
+on script_SetDefsAndLinks handlerKeys, someScript, @internalNodeDefs, @externalNodeDefs, @nodeLinks, scriptObject
+    set the wholematches to true
+    repeat for each line handlerKey in handlerKeys
+        set the cursor to busy
+        hkey_Deconstruct handlerKey, handlerName, handlerType, scriptObject, handlerNum
+        if handlerName is "_" then next repeat
+        
+        put handlerName,handlerType into generalKey
+        put kwote(generalKey) into someNode
+         
+        put script_GetNodeDef(someNode, handlerName, handlerType) into nodeDef
+        line_Add nodeDef, internalNodeDefs
+         
+        put script_ExtractHandlerType(handlerName, someScript, handlerType) into someHandler
+        put script_ExtractCalls(someHandler) into handlerCalls
+        
+        put the script_HandlerKeys of scriptObject into objectHandlerKeys
+        repeat for each line handlerCall in handlerCalls
+            put item 1 handlerCall into childName
+            put item 2 handlerCall into childType
+            if childName is "_" then next repeat
+            put kwote(handlerCall) into someChild
+             
+            put someNode && "->" && someChild & ";" into nodeLink
+            line_Insert nodeLink, nodeLinks
+             
+            put script_GetNodeDef(someChild, childName, childType) into nodeDef
+            
+            -- put uArray [childGeneralKey] is empty into callIsExternal
+            put hkey_Construct (childName, childType, scriptObject) into internalTestCall
+            put internalTestCall is not among the lines of objectHandlerKeys into callIsExternal
+            if callIsExternal then
+                line_Add nodeDef, externalNodeDefs
+            else
+                line_Add nodeDef, internalNodeDefs
+            end if
+        end repeat
+    end repeat
+end script_SetDefsAndLinks
+
+function script_ConstructDefs hKeys
+    local nodeDefs
+    repeat for each line hKey in hKeys
+        set the cursor to busy
+        if the number of items of hKey = 4 then
+            hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+            if handlerName is "_" then next repeat
+            put script_ConstructNodeFromHkey(hKey) into someNode
+            put script_GetNodeDef(someNode, handlerName, handlerType, scriptObject) & CR after nodeDefs
+        else
+            -- put hKey into scriptObject
+            put script_ConstructNodeFromHkey(hKey) into someNode
+            put someNode & CR after nodeDefs
+        end if
+         
+    end repeat
+    delete last char of nodeDefs
+    return nodeDefs
+end script_ConstructDefs
+
+function script_ConstructLinks hKeys, toLink
+    local nodeLinks
+     
+    hkey_Deconstruct toLink, toName, toType, scriptObject, handlerNum
+    put toName,toType into toKey
+    put kwote(toKey) into toNode
+     
+    repeat for each line hKey in hKeys
+        set the cursor to busy
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        put handlerName,handlerType into generalKey
+        if handlerName is "_" then next repeat
+        put kwote(generalKey) into someNode
+        
+        put someNode && "->" && toNode & ";" & CR after nodeLinks
+    end repeat
+    delete last char of nodeLinks
+    return nodeLinks
+end script_ConstructLinks
+
+function script_ConstructReverseLinks hKeys, fromLink
+    local nodeLinks
+     
+    put script_ConstructNodeFromHkey(fromLink) into fromNode
+    repeat for each line hKey in hKeys
+        set the cursor to busy
+        put script_ConstructNodeFromHkey(hKey) into someNode
+        put fromNode && "->" && someNode & ";" & CR after nodeLinks
+    end repeat
+    delete last char of nodeLinks
+    return nodeLinks
+end script_ConstructReverseLinks
+
+function script_ConstructNodeFromHkey hKey
+    if the number of items of hKey = 4 then
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        if exists(scriptObject) then
+            set the itemdelimiter to "|"
+            put the object_IDPath of scriptObject into objectRef
+            delete item 1 of objectRef
+        else
+            put scriptObject into objectRef
+            replace quote with empty in objectRef
+        end if
+        put handlerName,handlerType,objectRef into someNode
+    else
+        put hKey into scriptObject
+        if exists(scriptObject) then
+            put the object_IDPath of scriptObject into someNode
+            set the itemdelimiter to "|"
+            delete item 1 of someNode
+        else
+            put scriptObject into someNode
+            replace quote with empty in someNode
+        end if
+    end if
+    
+    return kwote(someNode)
+end script_ConstructNodeFromHkey
+
+function script_ConstructDotNodeSection someScript
+    local nodeLinks, nodeDefs, graphData, uArray, dArray
+    
+    script_ConstructHandlerArrays someScript, graphData, uArray, dArray, "dummy"
+    repeat for each key someKey in uArray
+        set the cursor to busy
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        put handlerName,handlerType into generalKey
+        if handlerName is "_" then next repeat
+        put kwote(generalKey) into someNode
+         
+        put script_GetNodeDef(someNode, handlerName, handlerType, scriptObject) into nodeDef
+        line_Add nodeDef, nodeDefs
+         
+        put script_ExtractHandlerType(handlerName, someScript, handlerType) into someHandler
+        put script_ExtractCalls(someHandler) into handlerCalls
+        
+        repeat for each line handlerCall in handlerCalls
+            -- put kwote(handlerCall) into someChild
+            hkey_Deconstruct handlerCall, childName, childType, childObject, childNum
+            if childName is "_" then next repeat
+            put childName,childType into childGeneralKey
+            put kwote(childGeneralKey) into someChild
+             
+            put someNode && "->" && someChild & ";" & CR after nodeLinks
+            put script_GetNodeDef(someChild, childName, childType, childObject) into nodeDef
+            line_Add nodeDef, nodeDefs
+        end repeat
+    end repeat
+    
+    if nodeLinks is empty then
+        return empty
+    else
+        if the shiftkey is "Down" then
+            return nodeLinks
+        else
+            put nodeDefs into nodeSection
+            put CR & nodeLinks after nodeSection
+            return nodeSection
+        end if
+    end if
+end script_ConstructDotNodeSection
+
+function script_GetNodeDef someNode, handlerName, handlerType, scriptObject
+    local nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile
+    
+    put "filled" into nodeStyle
+    switch handlerType
+        case "m"
+            if scriptObject is "Missing" then
+                put "white" into nodeColour
+                put "white" into nodeFillColour
+            else
+                put "red" into nodeColour
+                put "red" into nodeFillColour
+            end if
+            break
+        case "c"
+            put "green" into nodeColour
+            put "green" into nodeFillColour
+            break
+        case "f"
+            put "blue" into nodeColour
+            put "blue3" into nodeFillColour
+            break
+        case "g"
+            put "white" into nodeColour
+            put "grey" into nodeFillColour
+            break
+        case "s"
+            put "white" into nodeColour
+            put "grey50" into nodeFillColour
+            break
+        default
+            -- put "yellow" into nodeColour
+            -- put "yellow" into nodeFillColour
+            break
+    end switch
+     
+    get dot_ConstructDefLine(handlerName, nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile)
+    put someNode && "[" & it & "];" into nodeDef
+    return nodeDef
+end script_GetNodeDef
+
+
+--> Script | Graphing
+-
+function script_GetLinkKeys someScript, whichLinks, allKeys
+    local linkKeys, graphData, uArray, dArray
+     
+    -- this could be more elegant ???
+    script_ConstructHandlerArrays someScript, graphData, uArray, dArray
+    put keys(uArray) into allKeys
+    
+    if whichLinks is "events" then
+        get graphData ["message"]
+        put hkey_Construct (it, "m") into linkKeys
+        get graphData ["getprop"]
+        put hkey_Construct (it, "g") into moreKeys
+        line_Insert moreKeys, linkKeys
+        get graphData ["setprop"]
+        put hkey_Construct (it, "s") into moreKeys
+        line_Insert moreKeys, linkKeys
+    else
+        get graphData [whichLinks]
+        if it is empty then
+            set the wholematches to true
+            if whichLinks is among the lines of allKeys then
+                -- whichLinks must be a handlerkey
+                put whichLinks into linkKeys
+            else
+                -- the default
+                put allKeys into linkKeys
+            end if
+        else
+            -- would be better if this was doen in "script_ConstructHandlerArrays" ???
+            put hkey_Construct (it, whichLinks) into linkKeys
+        end if
+    end if
+    return linkKeys
+end script_GetLinkKeys
+
+function script_NodeSectionFromLinkKeys linkKeys, allKeys, someScript, cluster, drawOrphans
+    local nodeSection, internalNodeDefs, externalNodeDefs, nodeLinks, internalMissingDefs
+    
+    script_SetDefsAndLinks linkKeys, someScript, internalNodeDefs, externalNodeDefs, nodeLinks
+    if nodeLinks is not empty and cluster is true then
+        put empty into someColour
+        get dot_ConstructCluster("Internal", 1, internalNodeDefs, "", "filled", someColour)
+        line_Insert it, nodeSection
+    end if
+    
+    if drawOrphans is true then
+        -- now work out orphans
+        put allKeys into remainingLinks
+        line_Delete linkKeys, remainingLinks
+        
+        script_SetDefsAndLinks remainingLinks, someScript, internalMissingDefs, externalNodeDefs, nodeLinks
+        if internalMissingDefs is not empty and cluster is true then
+            put empty into someColour
+            get dot_ConstructCluster("Orphan", 3, internalMissingDefs, "", "filled", someColour)
+            line_Insert it, nodeSection
+        end if
+    end if
+    
+    if cluster is true then
+        get dot_ConstructCluster("External", 2, externalNodeDefs)
+        line_Insert it, nodeSection
+    else
+        line_Add internalNodeDefs, nodeSection
+        line_Add internalMissingDefs, nodeSection
+        line_Add externalNodeDefs, nodeSection
+    end if
+     
+    put CR after nodeSection
+    line_Insert nodeLinks, nodeSection
+     
+    return nodeSection
+end script_NodeSectionFromLinkKeys
+
+
+--> Hkey
+-
+command hkey_SetHandlerTypeProperties handlerType, @nodeColour, @nodeFillColour, @nodeShape, @nodeStyle
+    put "filled" into nodeStyle
+    put "" into nodeShape
+     
+    switch handlerType
+        case "m"
+            if scriptObject is "Missing" then
+                put "white" into nodeColour
+                put "white" into nodeFillColour
+            else
+                put "red" into nodeColour
+                put "red" into nodeFillColour
+            end if
+            break
+        case "c"
+            put "Green4" into nodeColour
+            put "GreenYellow" into nodeFillColour
+            break
+        case "f"
+            put "blue" into nodeColour
+            put "LightBlue" into nodeFillColour
+            break
+        case "g"
+            put "white" into nodeColour
+            put "grey" into nodeFillColour
+            break
+        case "s"
+            put "white" into nodeColour
+            put "grey50" into nodeFillColour
+            break
+        default
+            -- put "yellow" into nodeColour
+            -- put "yellow" into nodeFillColour
+            put "" into nodeColour
+            put "" into nodeFillColour
+            break
+    end switch
+    -- linkArray_SetgraphPropertyArray "default_Node", "nodeColour", nodeColour, graphPropertyArray
+    -- linkArray_SetgraphPropertyArray "default_Node", "nodeFillColour", nodeFillColour, graphPropertyArray
+end hkey_SetHandlerTypeProperties
+
+
+--> HkeyArray | Dot
+-
+function hkeyArray_FromStoredCalls hKey
+   local hKeyLinkArray
+   hkeyArray_Construct hKey, hKeyLinkArray
+   return hKeyLinkArray
+end hkeyArray_FromStoredCalls
+
+command hkeyArray_Construct hKey, @hKeyLinkArray
+   put hkey_GetCalls (hKey) into hKeyCalls -- this extracts from file
+   -- if hkeyCalls is empty then put hkey_HandlerCalls (hKey) into hKeyCalls -- maybe it just has not been indexed
+   repeat for each line hKeyCall in hKeyCalls
+      if hKeyCall is among the keys of hKeyLinkArray then next repeat
+      
+      put hKeyCall into hKeyLinkArray [hKey]
+      hkeyArray_Construct hKeyCall, hKeyLinkArray
+   end repeat
+end hkeyArray_Construct
+
+function hKeyArray_ConstructObjectDot hLinkArray, hIdArray, graphName, graphHeader, graphNodeType, pTargetObject
+   if graphName is empty then put "Test" into graphName
+   
+   put hKeyArray_DotNodeSubGraphDefs (hLinkArray, hIdArray, pTargetObject) into colourDefs
+   put hKeyArray_DotObjectClusters (hLinkArray, hIdArray, false, true, graphNodeType, pTargetObject) into clusterDefs
+   put colourDefs & CR & CR & clusterDefs into defSection
+   
+   put hKeyArray_DotNodeLinks(hLinkArray, empty) into linkSection
+   if defSection is empty then
+      put linkSection into nodeSection
+   else
+      put defSection & CR & CR & linkSection into nodeSection
+   end if
+   put dot_Construct(graphName, nodeSection, graphHeader) into dotText
+   return dotText
+end hKeyArray_ConstructObjectDot
+
+
+--> HkeyArray | Clusters | Nested
+-
+function hKeyArray_DotNestedObjectClusters hIdArray, hLinkArray, graphNodeType
+    put linkarray_FilterIdArray (hIdArray, hLinkArray) into hIdArray
+    put hKeyArray_ConstructObjectIdArray (hIdArray) into linkObjectIdArray
+    put keys(linkObjectIdArray) into linkObjects
+    sort linkObjects
+    put object_OutlineFromIndex (linkObjects) into objectOutline
+    put outline_ToXmlStructure (objectOutline)into someXml
+    
+    put hKeyArray_XmlToClusters (someXml, objectOutline, hIdArray, graphNodeType) into clusterDefs
+    return clusterDefs
+end hKeyArray_DotNestedObjectClusters
+      
+function hKeyArray_XmlToClusters someXml, objectOutline, hIdArray, graphNodeType
+    put word 1 to -1 of someXml into someXml
+    delete line 1 to 3 of someXml
+    delete line -1 of someXml
+    put outline_DecreaseIndent(someXml, 1) into someXml
+     
+    put object_IndexFromOutline(objectOutline) into linkObjects
+    repeat with objectNum = 1 to the number of lines of linkObjects
+        put line objectNum of linkObjects into linkObject
+        put "n" & objectNum into linkONodeID
+        
+        put hKeyArray_ReplaceOpeningTag(objectNum, someXml) into someXml
+         
+        put "subgraph cluster" & objectNum && "{}" into emptyDef
+        put "<" & linkONodeID & "[ ]*/>" into someReg
+        put replacetext (someXml, someReg, emptyDef) into someXml
+        
+        put "<contents nodeID=" & kwote (linkONodeID) & "></contents>" into subContentsTag
+        put outline_LineOffset (subContentsTag, someXml) into lineNum
+        if lineNum = 0 then next repeat
+        
+        put line lineNum of someXml into someLine
+        put outline_TabLevel (someLine) into indentLevel
+        
+        put hKeyArray_SubGraphContents (linkONodeID, indentLevel, linkObject, hIdArray, graphNodeType) into subSection
+        -- replace subContentsTag with subSection in someXml
+        put subSection into line lineNum of someXml
+    end repeat
+     
+    -- put CR & "}" & CR into closingDef
+    put "}" into closingDef
+    put replacetext (someXml, "</n.+>", closingDef)  into someXml
+    return someXml
+end hKeyArray_XmlToClusters
+
+function hKeyArray_SubGraphContents linkONodeID, indentLevel, linkObject, hIdArray, graphNodeType
+   -- but this is hKeys and not nodeIDs ??? 
+   -- put linkArray_HkeysInObject(linkObject, hIdArray) into nodeSection
+   
+   -- should depend on the dot_NodeType
+   put hKeyArray_NodeIdsInObject (linkObject, hIdArray) into nodeSection
+   replace CR with "; " in nodeSection
+   
+   if exists(linkObject) then
+      put the name of linkObject into subGraphLabel
+   else
+      put linkObject into subGraphLabel
+   end if
+   
+   if subGraphLabel = "Missing" then
+      put "orange" into fillColour
+      put "red" into someColour
+   else
+      put "grey60" into someColour
+      if math_IsOdd (indentLevel) is true then
+         put "grey60" into fillColour
+      else
+         put "grey90" into fillColour
+      end if
+   end if
+   
+   put empty into someRank
+   get dot_SubGraphContents (subGraphLabel, nodeSection, someRank, "filled", someColour, fillColour)
+   
+   put outline_IncreaseIndent (it, indentLevel) into subGraphContents
+   return subGraphContents
+end hKeyArray_SubGraphContents
+
+function hKeyArray_ReplaceOpeningTag tagNumber, someXml
+    put "subgraph cluster" & tagNumber && "{" into subHeader
+    -- put CR after subHeader
+    put "<n" & tagNumber & ">" into openingTag
+    put replacetext(someXml, openingTag, subHeader) into someXml
+    return someXml
+end hKeyArray_ReplaceOpeningTag
+
+
+--> HkeyArray | Clusters | Object
+-
+function hKeyArray_DotObjectClusters linkArray, idArray, labelNodes, notIfEmpty, graphNodeType, pTargetObject
+    put hKeyArray_ConstructStackIdArray (idArray) into idObjectArray
+    put hKeyArray_ConstructDotClusters (idObjectArray, linkArray, idArray, labelNodes, notIfEmpty, graphNodeType, pTargetObject) into clusterSection
+    return clusterSection
+end hKeyArray_DotObjectClusters
+
+function hKeyArray_ConstructDotClusters idObjectArray, linkArray, idArray, labelNodes, notIfEmpty, graphNodeType, pTargetObject
+   put keys(idObjectArray) into someObjects
+   
+   put 1 into clusterNum
+   repeat for each line someObject in someObjects
+      put idObjectArray [someObject] into stackIds
+      
+      repeat for each line nodeID in stackIds
+         put dot_NodeDefLine (nodeID, idArray, pTargetobject) into nodeDefLine
+         put tab & nodeDefLine & CR after nodeSection
+      end repeat
+      delete char -1 of nodeSection
+      
+      if notIfEmpty is not false and nodeSection is empty then next repeat
+      
+      if exists(someObject) then
+         put the short name of someObject into subGraphName
+         dot_EscapeQuotes subGraphName
+      else
+         put someObject into subGraphName
+      end if
+      put "" into someRank
+      put "grey60" into someColour
+      put "grey90" into fillColour
+      put "" into someStyle
+      
+      get dot_ConstructCluster (subGraphName, clusterNum, nodeSection, someRank, someStyle, someColour, fillColour)
+      put it & CR after clusterSection
+      
+      add 1 to clusterNum
+   end repeat
+   delete char -1 of clusterSection
+   return clusterSection
+end hKeyArray_ConstructDotClusters
+
+function hKeyArray_ConstructStackIdArray idArray
+    repeat for each key nodeID in idArray
+        put idArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        
+        if exists(scriptObject) then
+            put the stack_Object of scriptObject into stackObject
+            put the name of stackObject into stackObject
+        else
+            put scriptObject into stackObject
+        end if
+        array_AddToIndex nodeID, stackObject, stackIdArray
+    end repeat
+    return stackIdArray
+end hKeyArray_ConstructStackIdArray
+
+function hKeyArray_ConstructObjectIdArray hIdArray, hIDs
+   local objectIdArray
+   if hIDs is empty then put keys(hIdArray) into hIDs
+   repeat for each line nodeID in hIDs
+      put hIdArray [nodeID] into hKey
+      if hKey is empty then next repeat
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      -- if exists(scriptObject) then put the mobile_Name of scriptObject into scriptObject
+      array_AddToIndex nodeID, scriptObject, objectIdArray
+   end repeat
+   return objectIdArray
+end hKeyArray_ConstructObjectIdArray
+
+
+--> HkeyArray | SubGraph Definitions
+-
+function hKeyArray_DotNodeSubGraphDefs hLinkArray, idArray, pTargetObject
+    put linkarray_FilterIdArray (idArray, hLinkArray) into idArray
+    put hKeyArray_ConstructIdTypeArray (idArray) into idTypeArray
+    repeat for each key handlerType in idTypeArray
+        put idTypeArray [handlerType] into nodeIDs
+        if nodeIDs is not empty then
+            put hKeyArray_ConstructSubGraph (nodeIDs, idArray, handlerType, pTargetObject) & CR after nodeDefs
+        end if
+    end repeat
+    return nodeDefs
+end hKeyArray_DotNodeSubGraphDefs
+
+function hKeyArray_ConstructSubGraph nodeIDs, idArray, handlerType, modelObject
+   -- was "linkArray_ConstructSubGraph"
+   hkey_SetHandlerTypeProperties handlerType, nodeColour, nodeFillColour, nodeShape, nodeStyle
+   put dot_ConstructDefaultNodeDefs (nodeShape, nodeStyle, nodeColour, nodeFillColour) into defaultNodeDefs
+   
+   put "{" & CR into subGraph
+   put tab & defaultNodeDefs & CR after subGraph
+   put CR after subGraph
+   
+   if exists(modelObject) then
+      repeat for each line nodeID in nodeIDs
+         put the dot_NodeDefLine [nodeID] of modelObject into nodeDefLine
+         put tab & nodeDefLine & CR after subGraph
+      end repeat
+   end if
+   delete char -1 of subGraph
+   
+   put "}" after subGraph
+   return subGraph
+end hKeyArray_ConstructSubGraph
+
+function hKeyArray_ConstructIdTypeArray idToHkeyArray
+    repeat for each key nodeID in idToHkeyArray
+        put idToHkeyArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        array_AddToIndex nodeID, handlerType, IdTypeArray
+    end repeat
+    return IdTypeArray
+end hKeyArray_ConstructIdTypeArray
+
+function hKeyArray_ConstructNodeDefLine nodeID, idArray, graphPropertyArray
+    put idArray [nodeID] into hKey
+    hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+    hkey_SetHandlerTypeProperties handlerType, nodeColour, nodeFillColour, nodeShape, nodeStyle
+    put dot_ConstructDefaultNodeDefs(nodeShape, nodeStyle, nodeColour, nodeFillColour) into defaultNodeDefs
+    
+    put handlerName into nodeLabel
+    put dot_ConstructDefLine(nodeLabel) into nodeDefs
+    
+    /*
+    put linkArray_GetNodePropertyArray(nodeID, graphPropertyArray) into nodeStyleArray
+    put nodeStyleArray ["polyParams"] into polyParams
+    put nodeStyleArray ["nodeUrl"] into nodeUrl
+    put nodeStyleArray ["nodeToolTip"] into nodeToolTip
+    put nodeStyleArray ["nodeShapeFile"] into nodeShapeFile
+    put dot_ConstructDefLine(nodeLabel, nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile) into nodeDefs
+    */
+     
+    return defaultNodeDefs & CR & nodeID && "[" & nodeDefs & "];"
+end hKeyArray_ConstructNodeDefLine
+
+-- function linkArray_GetNodePropertyArray nodeID, graphPropertyArray
+    put graphPropertyArray [nodeID] into styleTable
+    split styleTable with CR and tab
+    return styleTable
+end linkArray_GetNodePropertyArray
+
+
+--> HkeyArray | Objects
+-
+function hKeyArray_ObjectOutline idArray, linkArray
+    put linkarray_FilterIdArray(idArray, linkArray) into idArray
+    put hKeyArray_ConstructObjectIdArray(idArray) into objectIdArray
+    put keys(objectIdArray) into scriptObjects
+    sort scriptObjects
+    put object_OutlineFromIndex(scriptObjects) into someOutline
+    return someOutline
+end hKeyArray_ObjectOutline
+
+function hKeyArray_ExtractObjects idArray
+    put hKeyArray_ConstructObjectIdArray(idArray) into hObjectIdArray
+    put keys(hObjectIdArray) into scriptObjects
+    sort scriptObjects
+    return scriptObjects
+end hKeyArray_ExtractObjects
+
+function hKeyArray_ConstructObjectIdArray idArray
+    local hObjectIdArray
+    repeat for each key nodeID in idArray
+        put idArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        array_AddToIndex nodeID, scriptObject, hObjectIdArray
+        -- line_Add scriptObject, scriptObjects
+    end repeat
+    return hObjectIdArray
+end hKeyArray_ConstructObjectIdArray
+  
+
+--> HkeyArray | Properties
+-
+on hKeyArray_AddTographPropertyArray idArray, @graphPropertyArray
+    repeat for each key nodeID in idArray
+        put idArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        
+        put handlerName into nodeLabel
+        linkArray_SetGraphPropertyArray nodeID, "nodeLabel", nodeLabel, graphPropertyArray
+    end repeat
+end hKeyArray_AddTographPropertyArray
+
+on linkArray_SetGraphPropertyArray nodeID, someKey, someValue, @graphPropertyArray
+    put graphPropertyArray [nodeID] into nodeTable
+    split nodeTable with CR and tab
+    put someValue into nodeTable [someKey]
+    combine nodeTable with CR and tab
+    put nodeTable into graphPropertyArray [nodeID]
+end linkArray_SetgraphPropertyArray
+
+function hKeyArray_ConstructGraphPropertyArray
+   return empty
+   hKeyArray_AddTographPropertyArray idArray, graphPropertyArray
+end hKeyArray_ConstructGraphPropertyArray
+
+
+--> Node | Graphs
+-
+/*
+Old? stuff for working with "nodes" as objects for dot graphs
+*/
+
+function dot_ConstructGraph nodeIndex, onlyLinked, gTemplateName, graphName, graphSize, dotOrder, direction, defaultShape
+    local dotNodeDefs, dotNodeLinks
+    
+    put the node_View of me into nodeView
+    if nodeIndex is empty then put the node_Index of nodeView into nodeIndex
+    if gTemplateName is empty then put "black" into gTemplateName
+    if graphName is empty then put "G" into graphName
+    
+    put graph_GetTemplate(gTemplateName) into graphTemplate
+    if graphSize is "" then
+        put the width of the graph_view of me into item 1 of graphSize
+        put the height of the graph_view of me into item 2 of graphSize
+        -- put graphSize
+        dot_ConvertToInches graphSize
+        
+        put "10,4" into graphSize
+        put kwote(graphSize) into graphSize
+    else if graphSize is "Full" then
+        put graph_GetTemplate("PlainLeftRight") into graphTemplate
+    else if graphSize is "Full Black" then
+        replace ", size=[[graphSize]]" with empty in graphTemplate
+        -- put replaceText(graphTemplate, ", size=[[graphSize]]", empty) into graphTemplate
+    else
+        dot_ConvertToInches graphSize
+        put kwote(defaultSize) into graphSize
+    end if
+     
+    repeat for each line someNodeID in nodeIndex
+        put the node_FrontLinks [someNodeID] of nodeView into nodeFrontLinks
+        put the node_BackLinks [someNodeID] of nodeView into nodeBackLinks
+        if onlyLinked is true and nodeFrontLinks is empty and nodeBackLinks is empty then next repeat
+         
+        put the node_DotParams [someNodeID] of nodeView into nodeParams
+         
+        put dot_QuoteNode(someNodeID) into safeNodeID
+        put safeNodeID && "[" &  nodeParams & "];" into nodeSection
+        put nodeSection & CR after dotNodeDefs
+         
+        repeat for each line nodeFrontLink in nodeFrontLinks
+            put dot_QuoteNode(nodeFrontLink) into safeFrontNodeID
+            put safeNodeID && "->" && safeFrontNodeID & ";" & CR after dotNodeLinks
+        end repeat
+    end repeat
+    delete last char of dotNodeDefs
+    delete last char of dotNodeLinks
+     
+     put outline_IncreaseIndent(dotNodeDefs, 1) into dotNodeDefs
+    delete char 1 of dotNodeDefs
+    put outline_IncreaseIndent(dotNodeLinks, 1) into dotNodeLinks
+    delete char 1 of dotNodeLinks
+     
+    return merge(graphTemplate)
+end dot_ConstructGraph
+
+function dot_ConstructSingleNodeGraph nodeDotParams, graphName, someNodeID, graphSize
+   local dotNodeDefs, dotNodeLinks
+   
+   if someNodeID is empty then put the text of the nodeID_Field of me into someNodeID
+   dot_ConstructPropertyArray dotPropertyArray
+   put dot_ConstructHeader (graphSize) into graphHeader
+   
+   put dot_QuoteNode (someNodeID) into someNodeID
+   put someNodeID && "[" &  nodeDotParams & "];" into nodeSection
+   
+   put graphHeader into dotText
+   line_Insert nodeSection, dotText
+   
+   put "digraph" && graphName && "{" & return & outline_IncreaseIndent(dotText, 1) & CR & "}" into dotGraph
+   return dotGraph
+end dot_ConstructSingleNodeGraph
+
+function graph_ConstructSub subGraphName, nodeIndex, onlyLinked
+    put graph_ConstructNodeSection(nodeIndex, onlyLinked) into nodeSection
+    return graph_ConstructSubraph(subGraphName, nodeSection)
+end graph_ConstructSub
+
+function graph_ConstructNodeSection nodeIndex, onlyLinked
+    local nodeSection, nodeLinks
+    
+    put the node_View of me into nodeView
+    repeat for each line someNodeID in nodeIndex
+        put dot_QuoteNode(someNodeID) into safeNodeID
+        put the node_FrontLinks [someNodeID] of nodeView into nodeFrontLinks
+        put the node_BackLinks [someNodeID] of nodeView into nodeBackLinks
+        if onlyLinked is true and nodeFrontLinks is empty and nodeBackLinks is empty then next repeat
+        
+        put graph_ConstructNodeLine(safeNodeID, nodeView, onlyLinked) into nodeLine
+        put nodeLine & CR after nodeSection
+         
+        -- for now lets put the links here
+        repeat for each line nodeFrontLink in nodeFrontLinks
+            put dot_QuoteNode(nodeFrontLink) into safeFrontNodeID
+            put safeNodeID && "->" && safeFrontNodeID & ";" & CR after nodeLinks
+        end repeat
+    end repeat
+    delete last char of nodeLinks
+     
+    if nodeLinks is not empty then
+        put CR & nodeLinks after nodeSection
+    else
+        delete last char of nodeSection
+    end if
+    return nodeSection  
+end graph_ConstructNodeSection
+
+function graph_ConstructNodeLine someNodeID, nodeView, nodeParams
+    -- put the node_DotParams [someNodeID] of nodeView into nodeParams
+    put dot_QuoteNode(someNodeID) into safeNodeID
+    return safeNodeID && "[" &  nodeParams & "];"
+end graph_ConstructNodeLine
+
+function graph_GetTemplate templateName
+    put "graphHeader_" & templateName into propName
+    return the uOPN [propName] of me
+end graph_GetTemplate
+
+
+--> Deps
+-
+function math_IsOdd someNumber
+    -- was "isOdd"
+    return someNumber mod 2 = 1
+end math_IsOdd
+
+function outline_LineOffset osTitle, someOutline
+   -- was "whichOsLine"
+   replace tab with empty in someOutline
+   replace tab with empty in osTitle
+   set the wholematches to true
+   put lineoffset (osTitle, someOutline) into lineNum
+   return lineNum
+end outline_LineOffset

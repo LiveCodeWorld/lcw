@@ -1,0 +1,16 @@
+on CloseFieldEditor pFieldEditor, pRecordView
+   if pRecordView is empty then
+      put the long id of the target into recordView
+   else
+      put pRecordView into recordView
+   end if
+   
+   put the title_Text of  of the dg_Tree of me into mTitle
+   put menu_GetGlobalController (mTitle) into mController
+   
+   -- put the unicodetext of pFieldEditor into uText
+   put the htmltext of pFieldEditor into someHtml
+   put the record_Name of recordView into mPath
+   
+   menu_SetItemHelp mTitle, mPath, mController, someHtml
+end CloseFieldEditor

@@ -1,0 +1,6 @@
+on menu_Init treeView
+   put the tree_View of treeView into treeView
+   put the displayed_Hkey of treeView into hKey
+   put hKey into LocalArray ["hKey"]
+   put project_HandlerMetadataFolder (hKey, false) into LocalArray ["overlayFolder"] 
+end menu_Init

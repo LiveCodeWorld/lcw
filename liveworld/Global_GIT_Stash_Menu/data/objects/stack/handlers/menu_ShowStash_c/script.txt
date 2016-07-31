@@ -1,0 +1,20 @@
+on menu_ShowStash stashName
+   /*
+   show [<stash>]
+   
+   Show the changes recorded in the stash as a diff between the stashed state and its original parent. 
+   When no <stash> is given, shows the latest one. By default, the command shows the diffstat, 
+   but it will accept any format known to git diff (e.g., git stash show -p stash@{1} to view the second most recent stash in patch form).
+   */
+   
+   put "git stash show" into someShell
+   -- put space & "-p " after someShell
+   put space & "--numstat " after someShell
+   put space & stashName after someShell
+   git_ExecuteShell someShell
+   put the result into gitResult
+   
+   put git_ParseShowStash (gitResult) into someOutline
+   
+   display_Outline someOutline, stashName, "Global | GIT | Stash | Menu", "Global | GIT | Stash | Line | Menu", 2
+end menu_ShowStash

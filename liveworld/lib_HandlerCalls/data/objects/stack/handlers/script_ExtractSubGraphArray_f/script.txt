@@ -1,0 +1,5 @@
+function script_ExtractSubGraphArray shortHkey, scriptHkey, pSetName, pTestExceptions
+   put hkey_GetLinkArray (scriptHkey) into scriptHkeyArray
+   put hkeyArray_ExtractSubArray (shortHkey, hkeyArray) into hKeySubGraphArray
+   return hKeySubGraphArray
+end script_ExtractSubGraphArray

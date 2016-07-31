@@ -1,0 +1,36 @@
+function fedwiki_ConstructAudioBoomPageArray audioClipArray
+   put audioClipArray ["title"] into clipTitle
+   put audioClipArray ["description"] into clipDescription
+   put audioClipArray ["location"] into locationArray
+   put audioClipArray ["recorded_at_ts"] into clipDate
+   put audioClipArray ["tags"] into clipTags
+   
+   put audioClipArray ["urls"]["detail"] into booURL
+   put audioClipArray ["urls"]["high_mp3"] into audioURL
+   put audioClipArray ["urls"]["image"] into imageURL
+   put audioClipArray ["urls"]["wave_img"] into waveyImageURL
+   
+   put audioClipArray ["user"] into userArray
+   put userArray ["username"] into booName
+   put userArray ["urls"]["image"] into userImageUrl
+   put userArray ["urls"]["profile"] into profileUrl
+   
+   put fedwiki_ConstructNewPageArray (clipTitle) into pageArray 
+   fedwiki_AddParagraphToPageArray pageArray, clipDescription
+   put fedwiki_ConstructImageDiv (imageURL) into imageHTML
+   fedwiki_AddHtmlToPageArray pageArray, imageHTML
+   fedwiki_AddAudioToPageArray pageArray, audioURL, "."
+   
+   put locationArray ["description"] into locationDescription
+   put locationArray ["accuracy"] into locationAccuracy
+   put locationArray ["latitude"] into mapLat
+   put locationArray ["longitude"] into mapLong
+   put 17 into mapZoom
+   put fedwiki_ConstructOpenStreetMapDescription (locationDescription, mapZoom, mapLat, mapLong) into mapText
+   
+   fedwiki_AddMapToPageArray pageArray, mapLat, mapLong, mapText, mapZoom
+   
+   put audioboom_ConstructUserParagraph (locationDescription, userArray, clipDate, booURL) into wikiText
+   fedwiki_AddParagraphToPageArray pageArray, wikiText
+   return pageArray
+end fedwiki_ConstructAudioBoomPageArray

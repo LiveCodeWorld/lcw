@@ -1,0 +1,26 @@
+function hArray_FindHkeyInHierarchy shortHkey, hObject, pHarray, pSetName
+   -- see also "hkey_FindInHierarchy"
+   if exists (hObject) is false then return empty
+   if pHarray is an array and pSetName is empty then put "none" into pSetName -- assume we only want to look in a mainstack
+   
+   put the hkey_SearchHierarchy [pSetName] of hObject into pSearchHierarchy
+   put hArray_GetFoundHkeyArray (shortHkey, pHarray) into hkeyArray
+   
+   -- also look for private handlers in the first object
+   if hkeyArray is not an array and char 1 of item 2 of shortHkey is not "p" then
+      put "p" before char 1 of item 2 of shortHkey
+      put hArray_GetFoundHkeyArray (shortHkey, pHarray) into hkeyArray
+   end if
+   
+   -- lets get the nearest hKey in the hierarchy
+   -- ususally faster to get an indexed shortHkey and do this, than crawl a long hierarchy
+   set the wholematches to true
+   repeat for each key foundHkey in hkeyArray
+      put item 3 of foundHkey into foundObject
+      if item 4 of foundHkey > 1 then next repeat -- hack for now (should not be adding repeat hKeys to hKeyArray but using first / revAvailablehandler approach
+      put lineOffset (foundObject, pSearchHierarchy) into lineNum
+      put foundHkey into foundArray [lineNum]
+   end repeat
+   put item 2 of the extents of foundArray into maxLineNum
+   return foundArray [maxLineNum]
+end hArray_FindHkeyInHierarchy

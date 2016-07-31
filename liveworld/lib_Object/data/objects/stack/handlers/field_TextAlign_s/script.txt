@@ -1,0 +1,9 @@
+setprop field_TextAlign fieldTextAlign
+   put the long ID of the target into someField
+   if word 1 of someField is "field" then
+      set the textAlign of someField to fieldTextAlign
+      return true
+   else
+      return false
+   end if
+end field_TextAlign

@@ -1,0 +1,8 @@
+on googleEarth_SetViewRotation newRotation, someSpeed
+    if someSpeed is empty then put the googleEarth_Speed of me into someSpeed
+    
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    googleEarth_SetView latitude, longitude, someHeight, someTilt, newRotation, someSpeed
+    return the result
+end googleEarth_SetViewRotation

@@ -1,0 +1,6 @@
+function hKeyArray_ExtractObjects idArray
+    put hKeyArray_ConstructObjectIdArray(idArray) into hObjectIdArray
+    put keys(hObjectIdArray) into scriptObjects
+    sort scriptObjects
+    return scriptObjects
+end hKeyArray_ExtractObjects

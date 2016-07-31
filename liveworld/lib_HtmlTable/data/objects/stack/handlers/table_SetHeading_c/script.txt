@@ -1,0 +1,14 @@
+command table_SetHeading pHeading pFirstUpper
+   -- Set the table heading.
+   -- Can be passed as an array or a string of comma separated params.
+   
+   put pHeading into sHeading
+   if sHeading is not an array then
+      split sHeading using comma
+   end if
+   if pFirstUpper is TRUE then
+      repeat for each key tKey in sHeading
+         put rigUcwords (sHeading [tKey]) into sHeading [tKey]
+      end repeat
+   end if
+end table_SetHeading

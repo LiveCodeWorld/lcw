@@ -1,0 +1,12 @@
+function object_GetLibrariesInUse
+   put the frontScripts into activeLibraries
+   get the backScripts
+   line_Insert it, activeLibraries
+   put the stacksInUse into usedStacks
+   repeat for each line stackName in usedStacks
+      put return & the name of stack stackName after activeLibraries
+   end repeat
+   put "*stack" && kwote("/Applications/Revolution*") into revFilter
+   filter activeLibraries without revFilter
+   return activeLibraries
+end object_GetLibrariesInUse

@@ -1,0 +1,13 @@
+function menu_CheckDisabledItem mFormatProp, mTarget, mController, menuIsDisabled
+   -- ignoreCall: mFormatProperty,g
+   
+   if menuIsDisabled is true then return true
+   if mFormatProp is empty then return false
+   try
+      put mFormatProp & "[" & mTarget & "]" into mFormatProperty
+      put the mFormatProperty of mController into itemIsDisabled
+   catch someError
+      -- error_CheckDisabled mController, mTarget, mTitlePath, mTableLine, someError
+   end try
+   return itemIsDisabled
+end menu_CheckDisabledItem

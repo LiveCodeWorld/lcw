@@ -1,0 +1,10 @@
+on menu_DisplayViewTemplate selectedViewStackObject
+   put the template_View of cd 1 of selectedViewStackObject into templateView
+   go to selectedViewStackObject
+   edit the script of templateView
+   
+   put the behavior of templateView into bObject
+   if exists (bObject) then
+      edit the script of bObject
+   end if
+end menu_DisplayViewTemplate

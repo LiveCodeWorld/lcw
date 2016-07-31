@@ -1,0 +1,16 @@
+function outline_NextSameLevel startOsLineNum, tabbedOutline
+    -- was "nextOsTitle"
+    put line startOsLineNum of tabbedOutline into startOsLine
+    put outline_TabLevel(startOsLine) into baseTabLevel
+     
+    add 1 to startOsLineNum
+    put empty into nextLevelTitles
+    repeat with osLineNum = startOsLineNum to the number of lines of tabbedOutline
+        put line osLineNum of tabbedOutline into someOsLine
+        put outline_TabLevel(someOsLine) into someTabLevel
+        if someTabLevel <= baseTabLevel then
+            return osLineNum
+        end if
+    end repeat
+    return 0
+end outline_NextSameLevel

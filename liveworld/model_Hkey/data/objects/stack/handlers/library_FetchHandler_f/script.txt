@@ -1,0 +1,6 @@
+function library_FetchHandler hKey
+   put hkey_HandlerFile (hKey) into someFile
+   put url ("binfile:" & someFile) into someHandler
+   hack_UpdateBinFile someHandler, someFile
+   return someHandler
+end library_FetchHandler

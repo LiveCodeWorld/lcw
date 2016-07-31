@@ -1,0 +1,22 @@
+on menu_DisplayMergeScript scriptObject
+   answer file "Choose a script file to display..."
+   put it into scriptFile
+   if it is empty then exit to top
+   
+   put url ("file:" & scriptFile) into mergeScript
+   put script_MergeHandlers (scriptFile, mergeScript) into someScript
+   
+   set the itemdelimiter to slash
+   put item -2 of scriptFile into rObject
+   if item -4 of scriptFile = "substacks" then
+      put item -7 of scriptFile into mStackName
+      put item -3 of scriptFile into substackName
+      
+      put mStackName into stackLabel
+      put rObject && "of stack" && kwote (substackName) into someTitle
+   else
+      put item -3 of scriptFile into stackLabel
+   end if
+   
+   display_TextFile scriptFile, someTitle, "Global | Script | Merge | Menu", stackLabel
+end menu_DisplayMergeScript

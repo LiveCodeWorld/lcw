@@ -1,0 +1,215 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_ViewTemplate
+type: script library
+version: 2.1
+
+/*
+This script-only library is a utility for browsing, testing and authoring lcw views.
+It should not required for the functioning of the views to work.
+*/
+
+
+--> Currently Working On (needs renaming)
+-
+[[ _FetchHandler (view_Library,g) ]]
+
+[[ _FetchHandler (view_TemplateName,s) ]]
+
+[[ _FetchHandler (view_GetTemplateObject,f) ]]
+
+[[ _FetchHandler (view_TemplateStack,g) ]]
+
+[[ _FetchHandler (view_TemplateObjects,f) ]]
+
+[[ _FetchHandler (view_GetTemplateCard,f) ]]
+
+
+--> View Template | Icons
+-
+/*
+A view_Template is a view library stack, that uses a behavior shared with other view library stacks.
+These other view library stacks should share the same view (the view_Template),
+but differ only in exposed public properites of the view.
+*/
+
+[[ _FetchHandler (view_FindTemplateIconGroup,f) ]]
+
+[[ _FetchHandler (view_CreateTemplateIconGroup,c) ]]
+
+
+
+--> Template | Property Menu
+-
+[[ _FetchHandler (template_PropertyMenu,g) ]]
+
+[[ _FetchHandler (template_PropertyMenu,s) ]]
+
+[[ _FetchHandler (template_GetPropertyMenu,f) ]]
+
+[[ _FetchHandler (view_HasProp,g) ]]
+
+[[ _FetchHandler (view_Props,g) ]]
+
+[[ _FetchHandler (view_Props,s) ]]
+
+[[ _FetchHandler (view_PropertyMenu,g) ]]
+
+[[ _FetchHandler (view_PropertyMenu,s) ]]
+
+[[ _FetchHandler (view_LivePropertyMenu,g) ]]
+
+[[ _FetchHandler (view_PropertyMenuIsCached,g) ]]
+
+[[ _FetchHandler (view_PropertyMenuIsCached,s) ]]
+
+[[ _FetchHandler (script_PublicProps,g) ]]
+
+[[ _FetchHandler (view_DoPropertyMenu,c) ]]
+
+
+--> View | Properties | Vanilla
+-
+/*
+Sets plain custom properties of the existing (usually the default) custom propertew_DisplayProperty ["record_LabelWidth"] of me to recordLen if the value is empty). 
+*/
+
+[[ _FetchHandler (view_DisplayProperty,g) ]]
+
+[[ _FetchHandler (view_DisplayProperty,s) ]]
+
+
+
+--> TemplateStack | Props
+-
+/*
+The "view_TemplateArray" is stored in the stack of the library object, as this makes it more portable / easier to send.
+Use for default values for all views, or default behaviors of tools for views that require common data to work.
+*/
+
+[[ _FetchHandler (template_DisplayArray,g) ]]
+
+[[ _FetchHandler (template_DisplayArray,s) ]]
+
+[[ _FetchHandler (template_MetaData,g) ]]
+
+[[ _FetchHandler (template_MetaData,s) ]]
+
+[[ _FetchHandler (template_DataArray,g) ]]
+
+[[ _FetchHandler (template_DataArray,s) ]]
+
+[[ _FetchHandler (template_CardBehavior,g) ]]
+
+[[ _FetchHandler (template_Card,g) ]]
+
+[[ _FetchHandler (template_Model,g) ]]
+
+[[ _FetchHandler (template_Array,g) ]]
+
+[[ _FetchHandler (template_Array,s) ]]
+
+[[ _FetchHandler (view_TemplateName,g) ]]
+
+[[ _FetchHandler (templateStack_View,g) ]]
+
+[[ _FetchHandler (view_IsTemplate,g) ]]
+
+[[ _FetchHandler (stack_IsTemplate,g) ]]
+
+[[ _FetchHandler (template_DefaultScript,g) ]]
+
+[[ _FetchHandler (template_ObjectDefScript,g) ]]
+
+[[ _FetchHandler (template_Icons,g) ]]
+
+[[ _FetchHandler (template_IconGroup,g) ]]
+
+[[ _FetchHandler (view_Paths,g) ]]
+
+[[ _FetchHandler (view_TemplateCard,g) ]]
+
+[[ _FetchHandler (template_Instances,g) ]]
+
+
+--> Template | Objects
+-
+[[ _FetchHandler (view_Template,g) ]]
+
+[[ _FetchHandler (template_Object,g) ]]
+
+
+--> View | Template | Create
+-
+[[ _FetchHandler (template_CreateInvisibleStack,c) ]]
+
+[[ _FetchHandler (template_ConstructStackFromObject,c) ]]
+
+[[ _FetchHandler (template_DefaultCardScript,f) ]]
+
+[[ _FetchHandler (template_StackAlreadyExists,pc) ]]
+
+[[ _FetchHandler (template_ConstructCloneStack,c) ]]
+
+function template_DefaultCardScript viewName
+   put menu_GlobalTitleFromViewName (viewName) into mTitle
+   put menu_ConstructTemplateScript (mTitle) into cardScript
+   return cardScript
+   
+   /*
+   put script_GetTemplate("View Library Card Script") into cardScript
+   put user_GetName() into AuthorName
+   put view_StemFromName(viewName) into LibraryStem 
+   put view_StemFromName(viewName) into LibraryName
+   put merge(cardScript) into cardScript
+   */
+end template_DefaultCardScript
+
+[[ _FetchHandler (template_CreateLibraryStack,c) ]]
+
+
+--> View | Template
+-
+[[ _FetchHandler (view_TemplateAddBehavior,c) ]]
+
+[[ _FetchHandler (view_SetTemplateNames,c) ]]
+
+
+--> View | Template | Files
+-
+[[ _FetchHandler (view_TemplateObjectFromFile,f) ]]
+
+[[ _FetchHandler (view_TemplateFiles,f) ]]
+
+[[ _FetchHandler (view_TemplateBehaviors,f) ]]
+
+[[ _FetchHandler (view_TemplateNames,f) ]]
+
+[[ _FetchHandler (view_StackNames,f) ]]
+
+[[ _FetchHandler (view_ShortFiles,f) ]]
+
+[[ _FetchHandler (view_TrimFirstViewNameItem,c) ]]
+
+[[ _FetchHandler (view_ListNames,f) ]]
+
+[[ _FetchHandler (view_FilteredPaths,f) ]]
+
+[[ _FetchHandler (view_PathIndex,f) ]]
+
+[[ _FetchHandler (view_ListNamesOfStandardFiles,f) ]]
+
+[[ _FetchHandler (view_FileToPath,f) ]]
+
+[[ _FetchHandler (view_NameToFile,f) ]]
+
+[[ _FetchHandler (view_LongFiles,f) ]]
+
+[[ _FetchHandler (view_PathToShortFile,f) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (extractViewPropertyMenu,pc) ]]
+

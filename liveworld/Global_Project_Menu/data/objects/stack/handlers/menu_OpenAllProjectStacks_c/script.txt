@@ -1,0 +1,6 @@
+on menu_OpenAllProjectStacks
+   put project_FetchValue ("openStacks") into stackNames
+   repeat for each line projectStackName in stackNames
+      _safeGoProjectStack projectStackName
+   end repeat
+end menu_OpenAllProjectStacks

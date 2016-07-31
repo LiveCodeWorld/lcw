@@ -1,0 +1,16 @@
+function viewbrowser_GetDataArray pFilterExperimental
+   if pFilterExperimental is empty then put the view_Filter of me into pFilterExperimental
+   put the viewBrowser_DataGrid of me into dgView
+   put the dgData of dgView into dgArray
+   if pFilterExperimental = "All" or pFilterExperimental is empty then return dgArray
+   
+   switch pFilterExperimental
+      case "Experimental"
+         put view_ExtractExperimental (dgArray) into dgArray
+         break
+      default -- case "Tested"
+         put view_ExtractTested (dgArray) into dgArray
+         break
+   end switch
+   return dgArray
+end viewbrowser_GetDataArray

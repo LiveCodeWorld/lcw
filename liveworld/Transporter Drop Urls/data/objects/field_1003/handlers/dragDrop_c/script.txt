@@ -1,0 +1,9 @@
+on dragDrop
+   put the dragData ["text"] into droppedURL
+   if droppedURL is empty then pass dragDrop
+   
+   put droppedURL & CR before me
+   set the hilitedlines of me to 1
+   put the selectedtext of me into someURL
+   set the fedwiki_DroppedURL of this stack to someURL
+end dragDrop

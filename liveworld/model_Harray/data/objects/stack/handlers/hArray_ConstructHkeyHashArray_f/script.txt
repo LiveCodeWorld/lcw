@@ -1,0 +1,20 @@
+function hArray_ConstructHkeyHashArray
+   global gHkey_Array
+   
+   -- timer_Start "hArray_ConstructHkeyHashArray"
+   put gHkey_Array ["handlerArray"] into handlerArray
+   repeat for each key shortHkey in handlerArray
+      if shortHkey = "_,c" then next repeat
+      put handlerArray [shortHkey] into hKeyArray
+      repeat for each key hKey in hKeyArray
+         put hKeyArray [hKey]["handlerHash"] into handlerHash
+         
+         -- can get anything, could get info from objectArray?
+         put hKeyArray [hKey]["scriptLine"] into scriptLine
+         put scriptLine into hkeyHashArray [handlerHash][hKey]
+      end repeat
+   end repeat
+   -- timer_Stop "hArray_ConstructHkeyHashArray"
+   
+   return hkeyHashArray
+end hArray_ConstructHkeyHashArray

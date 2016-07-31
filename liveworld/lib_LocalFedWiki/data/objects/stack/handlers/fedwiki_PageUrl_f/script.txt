@@ -1,0 +1,8 @@
+function fedwiki_PageUrl fedwikiDomain, pSlug
+   -- launch url "http://david.viral.academy/view/bicycle-bug"
+   if pSlug is empty then
+      return "http://" & fedwikiDomain
+   else
+      return "http://" & fedwikiDomain & "/view/" & pSlug
+   end if
+end fedwiki_PageUrl

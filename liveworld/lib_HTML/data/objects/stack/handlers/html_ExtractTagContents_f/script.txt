@@ -1,0 +1,16 @@
+function html_ExtractTagContents tagName, someHtml
+    replace lineFeed with empty in someHtml -- seems neessary
+    
+    -- get the first one only
+    -- using white space char "\s*" all over the place
+    local tagContents -- not sure if it is still required
+    
+    put "<\s*" & tagName & "\s+name\s*=[^>]*>(.*)<\s*/\s*" & tagName & "\s*>" into someReg
+    -- put "(?m)" before someReg -- does not seem to have an effect
+    
+    if matchtext(someHtml, someReg, tagContents) is false then
+        return empty
+    else
+        return tagContents
+    end if
+end html_ExtractTagContents

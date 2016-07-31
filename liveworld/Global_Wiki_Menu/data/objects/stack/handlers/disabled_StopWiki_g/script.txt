@@ -1,0 +1,8 @@
+getprop disabled_StopWiki
+   put the openprocesses into oProcesses
+   if "wiki" is among the lines of oProcesses then
+      return false
+   else
+      return "delete"
+   end if
+end disabled_StopWiki

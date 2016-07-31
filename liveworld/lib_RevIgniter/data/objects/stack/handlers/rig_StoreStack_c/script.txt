@@ -1,0 +1,16 @@
+command rig_StoreStack stackName
+   if exists (stack stackName) is false then
+      return merge ("error, stack '[[stackName]]' does not exist")
+   end if
+   
+   put the name of stack stackName into stackObject
+   save stackObject
+   
+   put the filename of stack stackName into localFile
+   set the itemdelimiter to slash
+   put item -1 of localFile into shortFile
+   put rig_GetFolder ("stacks") & shortFile into somePath
+   
+   rig_UploadLocalFile localFile, somePath
+   return the result
+end rig_StoreStack

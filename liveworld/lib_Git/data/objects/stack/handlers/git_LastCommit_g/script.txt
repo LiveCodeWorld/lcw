@@ -1,0 +1,5 @@
+getprop git_LastCommit
+   put the script_File of the target into someFile
+   put git_ShowFileHead (someFile) into previousExport
+   return previousExport
+end git_LastCommit 

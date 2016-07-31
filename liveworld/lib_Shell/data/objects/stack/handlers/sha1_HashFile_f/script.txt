@@ -1,0 +1,4 @@
+function sha1_HashFile pPath
+   -- for hash of a file:
+   return word -1 of shell ("openssl dgst -sha1" && pPath)
+end sha1_HashFile

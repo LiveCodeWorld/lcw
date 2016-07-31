@@ -1,0 +1,5 @@
+on menu_ShowTaggedFiles tagName
+   put "git show" && kwote(tagName) into someShell
+   put git_ExecuteShellCommand("git ls-files") into shellResult
+   display_Text shellResult
+end menu_ShowTaggedFiles

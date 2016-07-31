@@ -1,0 +1,18 @@
+command stack_SetShortName someFile, newName
+    set lockmessages to true
+    set the wholematches to true
+    put the mainstacks into oMainStacks
+    if newName is among the lines of oMainStacks then
+        put merge("A stack called [[newName]] is already in memory!")
+        answer warning someWarning
+        exit to top
+    end if
+    if exists(stack someFile) is false then return empty
+    
+    put the short name of stack someFile to oldName
+    set the name of stack someFile to newName
+     
+    if not(oldName is among the lines of oMainStacks) then delete stack someFile
+    set lockmessages to false
+    return oldName
+end stack_SetShortName

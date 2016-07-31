@@ -1,0 +1,4 @@
+private command _addDateHeader @someHeader
+   put "Date:" && the date & the time into headlerLine  
+   put CRLF & headlerLine after someHeader 
+end _addDateHeader

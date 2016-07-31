@@ -1,0 +1,6 @@
+function object_GetRelativeRect referenceObject, objectToSet
+   put the topLeft of referenceObject into topLeftLoc
+   put the rect of objectToSet into someRect
+   rect_SubtractVector someRect, topLeftLoc
+   return someRect
+end object_GetRelativeRect

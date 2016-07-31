@@ -1,0 +1,8 @@
+getprop top_ControlName
+   put the childcontrolids of me into topIDs
+   if topIDs is empty then return empty
+   
+   put line 1 of topIDs into topID
+   put the short name of control id topID into topControlName
+   return topControlName
+end top_ControlName

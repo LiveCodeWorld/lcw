@@ -1,0 +1,6 @@
+function dot_ConstructOverlayArray dotText, graphStyle, pTextFile
+   put dot_Render (dotText, graphStyle, pTextFile, "cmapx") into cmapxText
+   put imagemap_ParseMap (cmapxText) into dgArray
+   put dgArray into graphArray ["data"]
+   return graphArray
+end dot_ConstructOverlayArray

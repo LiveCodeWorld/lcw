@@ -1,0 +1,6 @@
+command overlay_SetNode overlayFolder, pOverlayName
+   -- so not to depend of the name of the overlay folder 
+   put overlay_GetData (overlayFolder) into overlayData
+   overlayData_SetGraphProperty overlayData, "overlay_Node", overlayNode, pOverlayName
+   return overlayData
+end overlay_SetNode

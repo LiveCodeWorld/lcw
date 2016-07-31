@@ -1,0 +1,22 @@
+function rev_FixPath pPath
+   -- copy of revFixPath from revbackScript
+   put pPath into tReturnPath
+   if the platform is "MacOS" then
+      put ":" & tab into tRemoveChars
+   else if the platform is "Win32" then
+      put "\/:*?<>|" & quote & tab into tRemoveChars
+      if char -4 to -1 of tReturnPath is not ".rev" and revExtensionShow() then
+         put ".rev" after tReturnPath
+      end if
+   else
+      put " :?*<>/\()[]{}|'`" & quote & tab into tRemoveChars
+      if char -4 to -1 of tReturnPath is not ".rev" then
+         put ".rev" after tReturnPath
+      end if
+      put tolower(pPath) into tReturnPath
+   end if
+   repeat for each char c in tRemoveChars
+      replace c with "_" in tReturnPath
+   end repeat
+   return tReturnPath
+end rev_FixPath

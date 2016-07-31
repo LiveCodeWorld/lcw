@@ -1,0 +1,8 @@
+command form_AddToPostData recordName, recordValue, @postData
+   get recordName & "=" & urlencode(recordValue)
+   if postData is empty then
+      put it into postData
+   else
+      put "&" & it after postData
+   end if
+end form_AddToPostData

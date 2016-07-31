@@ -1,0 +1,10 @@
+function widget_ConstructCreateDoScript someName, widgetClass, pTargetOwner
+   if word 1 of pTargetOwner is "group" then
+      -- create widget oldName as "com.livecode.widget.navbar" in targetOwner
+      put "create invisible widget" && quote & someName & quote && "as" && quote & widgetClass & quote && "in" && pTargetOwner into doScript
+   else
+      -- create widget oldName as "com.livecode.widget.navbar"
+      put "create invisible widget" && quote & someName & quote && "as" && quote & widgetClass & quote into doScript
+   end if
+   return doScript
+end widget_ConstructCreateDoScript

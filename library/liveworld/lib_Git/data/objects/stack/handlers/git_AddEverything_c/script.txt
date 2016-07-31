@@ -1,0 +1,9 @@
+command git_AddEverything pSomeFolder
+   put the defaultfolder into oDefault
+   if pSomeFolder is not empty then set the defaultfolder to pSomeFolder
+   
+   put gitPath & "git add ." into someShell
+   put shell (someShell) into shellResult
+   set the defaultfolder to oDefault
+   return shellResult
+end git_AddEverything

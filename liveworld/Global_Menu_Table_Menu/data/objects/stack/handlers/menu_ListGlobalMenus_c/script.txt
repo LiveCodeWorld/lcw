@@ -1,0 +1,9 @@
+on menu_ListGlobalMenus
+   put menu_ListGlobalNames() into globalMenuTitles
+   put empty into pLineMenuTitle
+   display_Outline globalMenuTitles, "Global Menus", "Global | Menu | Tree | Menu", pLineMenuTitle
+   put the result into treeView
+   put the tree_Field of treeView into treeField
+   put the object_Hkey ["editTreeMenu,c"] of me into hKey
+   set the event_Trigger ["mouseDoubleUp"] of treeField to hKey
+end menu_ListGlobalMenus

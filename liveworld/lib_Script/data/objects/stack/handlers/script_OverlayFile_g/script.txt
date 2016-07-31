@@ -1,0 +1,8 @@
+getprop script_OverlayFile [pDontCreate]
+   put the long id of the target into scriptObject
+   put the overlay_Folder [pDontCreate] of scriptObject into overlayFolder
+   
+   -- put overlayFolder & "overlaydata.array" into someFile
+   put overlay_ArrayFile (overlayFolder) into someFile
+   return someFile
+end script_OverlayFile

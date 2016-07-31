@@ -1,0 +1,6 @@
+function behavior_GetHelpHtml bName
+   put library_TextUrl ("help.html", bName, "behavior", true) into someUrl
+   if someUrl is empty then return empty
+   put url someUrl into helpHtml
+   return helpHtml
+end behavior_GetHelpHtml

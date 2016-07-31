@@ -1,0 +1,24 @@
+function sitemap_HapRefinementToMediaTypes refinementName
+   switch refinementName
+      case "Image"
+         put "art/photography,art/painting,art/drawing,art/vector" into mTypeList
+      case "Photo"
+         return "art/photography,slideshow/external,slideshow/galleria" into mTypeList
+      case "Art"
+         return "art/drawing,art/painting,art/vector" into mTypeList
+      case "ArtPhoto"
+         return "art/photography" into mTypeList
+      case "Galleria"
+         return "slideshow/galleria" into mTypeList
+      case "Slideshow"
+         return "slideshow/external,slideshow/galleria" into mTypeList
+      case "Book"
+         return "text/book,text/booklet,text/review" into mTypeList
+      case "Audio"
+         return "audio/inspiredtalk,audio/shum,audio/chant,audio/song" into mTypeList
+      case "Video"
+         return "video/building,video/news,video/pubdesk,video/ritual,video/talk,video/teaching,video/travel" into mTypeList
+      default
+         return empty
+   end switch
+end sitemap_HapRefinementToMediaTypes

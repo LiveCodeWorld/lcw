@@ -1,0 +1,34 @@
+function menu_LibraryOutline
+    local subMenu
+    
+    put "Used libraries" & CR after subMenu
+    put library_ListUsedNames () into usedNames
+    put outline_IncreaseIndent(usedNames, 1) & CR after subMenu
+    
+    put library_ListBackNames() into backNames
+    if backNames is empty then
+        put "(Backscript libraries" & CR after subMenu
+    else
+        put "Backscript libraries" & CR after subMenu
+        put outline_IncreaseIndent(backNames) & CR after subMenu
+    end if
+     
+    put library_ListFrontNames() into frontNames
+    if frontNames is empty then
+        put "(Frontscript libraries" & CR after subMenu
+    else
+        -- put the opn_FrontLibraries of the opn_Library of me into frontNames
+        -- sort frontNames
+        put "Frontscript libraries" & CR after subMenu
+        put outline_IncreaseIndent(frontNames) & CR after subMenu
+    end if
+    put "-" & CR after subMenu
+     
+    put "In use" & CR after subMenu
+    get the stacksinuse
+    sort it
+    put outline_IncreaseIndent(it) & CR after subMenu
+    
+    delete char -1 of subMenu
+    return subMenu
+end menu_LibraryOutline

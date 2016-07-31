@@ -1,0 +1,21 @@
+function fedwikipedia_ConstructTocArray sandboxArray
+   put sandboxArray ["parse"]["sections"] into sectionArray
+   put sectionArray [1]["fromTitle"] into tocTitle
+   
+   repeat for each key tocNum in sectionArray
+      put sectionArray [tocNum]["level"] into tocLevel
+      put sectionArray [tocNum]["line"] into tocLine
+      put sectionArray [tocNum]["number"] into tocNumber
+      
+      put tocNumber into tocArray ["index"][tocLine]["dot_number"]
+      put tocNum into tocArray ["index"][tocLine]["section_number"]
+      
+      put tocNumber into dotKeyArray
+      split dotKeyArray by "."
+      put tocLine into tocArray [dotKeyArray]["meta"]["title"]
+      put tocNumber into tocArray [dotKeyArray]["meta"]["dot_number"]
+      put tocNum into tocArray [dotKeyArray]["meta"]["section_number"]
+      put tocLevel into tocArray [dotKeyArray]["meta"]["section_level"]
+   end repeat
+   return tocArray
+end fedwikipedia_ConstructTocArray

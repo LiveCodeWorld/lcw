@@ -1,0 +1,9 @@
+private command _setTitles @widgetDisplayTitle, @displayStackLabel, pDisplayTitle, pDefault
+   if pDisplayTitle is empty then
+      put pDefault into widgetDisplayTitle
+      put empty into displayStackLabel
+   else
+      put word 1 to -1 of item 1 of pDisplayTitle into widgetDisplayTitle
+      put word 1 to -1 of item 2 of pDisplayTitle into displayStackLabel
+   end if
+end _setTitles

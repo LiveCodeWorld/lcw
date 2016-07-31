@@ -1,0 +1,5 @@
+function hkey_Files hKey, pVersionName
+   put library_HandlerFile (hKey, empty, true) into someFolder
+   put folder_ShortFiles (someFolder) into someFiles
+   return someFiles
+end hkey_Files

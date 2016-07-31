@@ -1,0 +1,23 @@
+command ffmpeg_TrimVideo someVideoFile, sTime, cDuration
+   set the cursor to watch
+   file_Deconstruct someVideoFile, someRoot, shortName, fileExtension
+   put someRoot & "/" & shortName & "_trimmed." & fileExtension into exportFileName
+   put exportFileName into exportedVideoPath
+   
+   shell_BashParamEscape someVideoFile
+   shell_BashParamEscape exportFileName
+   
+   put "ffmpeg -i" && someVideoFile into someShell
+   put space & "-ss" && sTime && "-t" && cDuration after someShell
+   put space & "-c:a copy" after someShell -- keeps the audio codec the same
+   put space & exportFileName after someShell
+   
+   put shell (someShell) into shellResult
+   put line -1 of shellResult into fileBit
+   if fileBit ends with "Overwrite ? [y/N] Not overwriting - exiting" then
+      -- File '/Users/.../.mp4' already exists. Overwrite ? [y/N] Not overwriting - exiting
+      return empty
+   else
+      return exportedVideoPath
+   end if
+end ffmpeg_TrimVideo

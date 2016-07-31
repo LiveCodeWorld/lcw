@@ -1,0 +1,3 @@
+function project_HandlerHelpFile hKey, pDontCreate
+   return project_HandlerMetadataFolder (hKey, pDontCreate) & "help.html"
+end project_HandlerHelpFile

@@ -1,0 +1,7 @@
+private command set_PlayListPageTitle @pageTitle, playlistID
+   if pageTitle is empty then
+      put youtube_FetchPlayListInfoArray (playlistID) into infoArray
+      deconstruct_PlayListInfoArray infoArray, playListTitle, thumbnailURL, playListDescription
+      put playListTitle into pageTitle
+   end if
+end set_PlayListPageTitle

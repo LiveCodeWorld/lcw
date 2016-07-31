@@ -1,0 +1,6 @@
+getprop image_Contents
+   put image_Object() into imageObject
+   put the short id of imageObject into imageObjectID
+   put image id imageObjectID of me into someImage
+   return someImage
+end image_Contents

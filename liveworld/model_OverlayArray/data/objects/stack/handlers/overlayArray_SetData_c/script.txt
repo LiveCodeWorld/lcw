@@ -1,0 +1,5 @@
+command overlayArray_SetData @overlayArray, linkArray
+   linkArray_IdConstruct linkArray, nodeLinkArray, nodeIdArray
+   put linkArray_ConstructDataArray (linkArray, nodeLinkArray, nodeIdArray) into dataArray
+   put dataArray into overlayArray ["data"]
+end overlayArray_SetData

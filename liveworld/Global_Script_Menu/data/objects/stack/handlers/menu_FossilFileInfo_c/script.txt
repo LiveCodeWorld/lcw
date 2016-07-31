@@ -1,0 +1,5 @@
+on menu_FossilFileInfo scriptObject
+   put the script_File of scriptObject into scriptFile
+   put fossil_InfoArray (scriptFile) into infoArray
+   display_Array infoArray
+end menu_FossilFileInfo

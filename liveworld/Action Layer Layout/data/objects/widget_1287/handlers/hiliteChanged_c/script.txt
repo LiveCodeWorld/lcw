@@ -1,0 +1,29 @@
+on hiliteChanged
+   -- put the hilitedItem of me && the hilitedItemName of me
+   put the grid_View of me into gridView
+   lock screen
+   switch the hilitedItemName of me
+      case "four"
+         set the control_Type of gridView to "View|Grid|Square"
+         set the tiles_Across of gridView to 2
+         break
+      case "sixteen"
+         set the control_Type of gridView to "View|Grid|Square"
+         set the tiles_Across of gridView to 8
+         break
+      case "list"
+         set the control_Type of gridView to "View|Grid|Square"
+         set the tiles_Across of gridView to 4
+         break
+      case "help"
+         -- display_Index chapterNames
+         set the control_Type of gridView to "View|Index|Simple"
+         put the result into listView
+         put sivasiva_FetchChapters() into chapterNames
+         set the view_Index ["Index"] of gridView to chapterNames
+         set the mouse_UpEvent of gridView to "display_Chapter"
+         set the event_Target of gridView to the long id of this cd
+         break
+   end switch
+   unlock screen
+end hiliteChanged

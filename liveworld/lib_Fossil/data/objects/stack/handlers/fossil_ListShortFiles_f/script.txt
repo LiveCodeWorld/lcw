@@ -1,0 +1,8 @@
+function fossil_ListShortFiles pFolder, pMoreInfo
+   -- lists all files in a fossil repo
+   put "fossil ls" into someShell
+   if pMoreInfo is true then put space & "-l" after someShell
+   fossil_ExecuteShell someShell, pFolder
+   put the result into shortFiles
+   return shortFiles
+end fossil_ListShortFiles

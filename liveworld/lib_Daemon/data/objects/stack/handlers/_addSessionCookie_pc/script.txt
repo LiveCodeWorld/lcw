@@ -1,0 +1,8 @@
+private command _addSessionCookie @someHeader
+   return empty
+   
+   -- for now a quick hack
+   if SessionArray is empty then return "Cookie not set"
+   get "qvHx_T04gEAtKXxlGHG0Cw.j9Kd9ZUK-wSPFr12Ml4jtqhQsvXve3AnwUbVOYu081QD3Xe65TuV5s0Ts8IQWSYi.1438080455096.86400000.7Q_SkgQfc7nrHgjZoLfL-xSOKtNUKNounvxyD-oIjtI"
+   _addCookieHeader someHeader, "session", it
+end _addSessionCookie

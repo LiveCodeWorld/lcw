@@ -1,0 +1,12 @@
+function line_LineNumberStartingWithWord someWord, someText
+    -- gets the first line number
+    
+    put word 1 to -1 of someWord into someWord
+    put someText into someLine
+    filter someLine with (someWord && "*")
+    if someLine is empty then return 0
+    
+    put line 1 of someLine into someLine
+    set the wholematches to true
+    return lineoffset(someLine, someText)
+end line_LineNumberStartingWithWord

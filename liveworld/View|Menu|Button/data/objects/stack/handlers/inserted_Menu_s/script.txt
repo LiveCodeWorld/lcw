@@ -1,0 +1,17 @@
+setprop inserted_Menu [menuLabel] mTitle
+   /*
+   These handlers allows switching between menus using dynamic menu insertion.
+   
+   Typically used with a insertedMenu param and
+   the "on insert_Menu" handler returning "the inserted_Menu of me"
+   */
+   
+   put the long id of the target into mController
+   
+   if menuLabel is not empty then set menu_Label of mController to menuLabel
+   set the uOPN ["inserted_Menu"] of mController to mTitle
+   
+   -- now reconstruct mTables for all menus to catch dynamic inserted menu
+   menu_CreateAndStoreTables mController
+   return the result
+end inserted_Menu

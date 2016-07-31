@@ -1,0 +1,6 @@
+on view_SetHelpHtml vName, someHtml, pOnLineMode
+   view_NormalizeName vName
+   put library_TextUrl ("help.html", vName, "view", false) into someUrl
+   if someUrl is not empty then put someHtml into url someUrl
+   return someUrl
+end view_SetHelpHtml

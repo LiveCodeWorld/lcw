@@ -1,0 +1,5 @@
+on menu_RecordCard scriptObject, someBoolean
+   put scriptObject into LocalArray ["scriptObject"]
+   put someBoolean into LocalArray ["isRecoring"]
+   export_SnapShot
+end menu_RecordCard

@@ -1,0 +1,13 @@
+on closeField
+   put the short name of the target into fieldName
+   switch fieldName
+      case "Text"
+         script_SaveDisplayedHelp
+         break
+      case "Script"
+         break
+      default
+         opn_Notify fieldName, true
+   end switch
+   pass closeField
+end closeField

@@ -1,0 +1,7 @@
+command stackArray_ExportStackFiles objectFolder, objectPropArray
+   put objectPropArray ["stackfiles"] into stackFileTable
+   if stackFileTable is empty then return empty
+   
+   put meta_StackArrayFile (objectFolder, false) into someFile
+   put stackFileTable into url ("binfile:" & someFile)
+end stackArray_ExportStackFiles

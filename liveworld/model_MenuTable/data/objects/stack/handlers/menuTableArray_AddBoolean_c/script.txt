@@ -1,0 +1,11 @@
+command menuTableArray_AddBoolean @mTableArray, lineNum, mLine, mController, pigeon, pCheckedProp, pDisabledProp
+   put "boolean" into mTableArray [lineNum]["mType"]
+   
+   put mLine into mTableArray [lineNum]["mLine"]
+   put pigeon into mTableArray [lineNum]["pigeon"]
+   
+   put mController into mTableArray [lineNum]["mController"]
+   
+   if pCheckedProp is not empty then put pCheckedProp into mTableArray [lineNum]["submenu_CheckedProp"]
+   if pDisabledProp is not empty then put pDisabledProp into mTableArray [lineNum]["disabledProp"]
+end menuTableArray_AddBoolean

@@ -1,0 +1,13 @@
+function file_IsVersioned someFile
+   -- was "file_IsUnderSvn"
+   switch repository_GetType() 
+      case "svn"
+         put svn_GetRootFolder() into rootFolder
+         return someFile contains rootFolder
+      case "git"
+         put git_GetRootFolder() into rootFolder
+         return someFile contains rootFolder
+      default
+         return false
+   end switch
+end file_IsVersioned

@@ -1,0 +1,12 @@
+function git_HashInfo someHash
+   put git_HashType (someHash) into hashType
+   
+   -- if hashType = "blob" then -- will return the data of the file
+   -- else describes tree
+   put "git cat-file" into someShell
+   put space & hashType after someShell
+   put space & someHash after someShell
+   
+   put git_ExecuteShellCommand(someShell) into hashInfo
+   return hashInfo
+end git_HashInfo

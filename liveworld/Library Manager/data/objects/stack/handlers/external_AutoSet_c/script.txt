@@ -1,0 +1,51 @@
+command external_AutoSet
+   -- component:  true
+   try
+      put fossil_TestInstalled() into someBoolean
+   catch e
+      put false into someBoolean
+   end try
+   external_SetInstalled "fossil", someBoolean
+   
+   try
+      put git_TestInstalled() into someBoolean
+   catch e
+      put false into someBoolean
+   end try
+   external_SetInstalled "git", someBoolean
+   
+   try
+      put svn_TestInstalled() into someBoolean
+   catch e
+      put false into someBoolean
+   end try
+   external_SetInstalled "svn", someBoolean
+   
+   try
+      put graphviz_TestInstalled() into someBoolean
+   catch e
+      put false into someBoolean
+   end try
+   external_SetInstalled "graphviz", someBoolean
+   
+   try
+      put growl_TestInstalled() into someBoolean
+   catch e
+      put false into someBoolean
+   end try
+   external_SetInstalled "growl", someBoolean
+   
+   try
+      put eqt_TestInstalled() into someBoolean
+   catch e
+      put false into someBoolean
+   end try
+   external_SetInstalled "eqt", someBoolean
+   
+   try
+      put yoga_TestInstalled() into someBoolean
+   catch e
+      put false into someBoolean
+   end try
+   external_SetInstalled "sqlYoga", someBoolean
+end external_AutoSet

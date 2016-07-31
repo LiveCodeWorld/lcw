@@ -1,0 +1,10 @@
+private function _positiveTraitRect centreX, traitWidth, positiveTop, positiveBottom
+   put round (traitWidth / 2) into halfWidth
+   put centreX - halfWidth into item 1 of positiveTraitRect
+   put centreX + halfWidth into item 3 of positiveTraitRect
+   
+   put positiveTop into item 2 of positiveTraitRect
+   put positiveBottom into item 4 of positiveTraitRect
+   
+   return positiveTraitRect
+end _positiveTraitRect

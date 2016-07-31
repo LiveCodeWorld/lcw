@@ -1,0 +1,7 @@
+private command _addImageXML @urlXML, pImageUrl
+   if pImageUrl is not empty then
+      put xml_Enclose (pImageUrl, "image:loc", false) & CR into imageLocTag
+      put xml_Enclose (imageLocTag, "image:image", true) into imageXML
+      put imageXML & CR after urlXML
+   end if
+end _addImageXML

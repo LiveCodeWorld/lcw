@@ -1,0 +1,7 @@
+setprop image_QrCode someText
+   put the long id of the target into imageObject
+   put the width of imageObject into someWidth
+   put the height of imageObject into someWidth
+   put image_FetchQrCode (someText, someWidth, someHeight) into someImage
+   set text of imageObject to someImage
+end image_QrCode

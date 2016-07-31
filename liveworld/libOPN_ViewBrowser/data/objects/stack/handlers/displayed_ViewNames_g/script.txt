@@ -1,0 +1,11 @@
+getprop displayed_ViewNames
+   put the viewBrowser_DataGrid of me into dgView
+   put the dgData of dgView into dgArray
+   repeat for each key indexNum in dgArray
+      put dgArray [indexNum]["title"] into viewName
+      view_NormalizeName viewName
+      put viewName & CR after viewNames
+   end repeat
+   delete char -1 of viewNames
+   return viewNames
+end displayed_ViewNames

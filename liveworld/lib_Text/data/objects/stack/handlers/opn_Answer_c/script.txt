@@ -1,0 +1,7 @@
+command opn_Answer someQuestion
+   -- removed complexity of "text_Merge"
+   answer someQuestion with "Cancel" or "OK"
+   put it into theResult
+   if theResult is "Cancel" then exit to top
+   return theResult
+end opn_Answer

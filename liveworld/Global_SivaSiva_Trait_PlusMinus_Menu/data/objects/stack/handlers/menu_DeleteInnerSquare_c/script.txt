@@ -1,0 +1,5 @@
+on menu_DeleteInnerSquare plusMinusView
+   put the square_View of plusMinusView into squareView
+   delete squareView
+   put the top_ControlNames of plusMinusView
+end menu_DeleteInnerSquare

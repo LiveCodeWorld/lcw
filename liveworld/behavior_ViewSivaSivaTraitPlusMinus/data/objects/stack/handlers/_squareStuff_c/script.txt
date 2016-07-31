@@ -1,0 +1,7 @@
+on _squareStuff
+   calculate_SquareRect pRect, squareRect, squareCentre, squareWidth, halfSquareWidth, someMargins
+   put item 1 of squareCentre into centreX
+   put item 2 of squareCentre into centreY
+   put item 2 of squareRect into squareTop
+   put item 4 of squareRect into squareBottom
+end _squareStuff

@@ -1,0 +1,6 @@
+function rig_ApplicationPath pShortpath
+   -- was "revigniter_ApplicationPath"
+   put rig_GetApplicationFolder() into rigApplicationPath
+   if pShortpath is not empty then put pShortpath after rigApplicationPath
+   return rigApplicationPath
+end rig_ApplicationPath

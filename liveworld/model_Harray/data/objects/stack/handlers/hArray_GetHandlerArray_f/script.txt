@@ -1,0 +1,9 @@
+function hArray_GetHandlerArray pHkey
+   global gHkey_Array
+   put item 1 to 2 of pHkey into shortHkey
+   if shortHkey is empty then
+      return gHkey_Array ["handlerArray"]
+   else
+      return gHkey_Array ["handlerArray"][shortHkey]
+   end if
+end hArray_GetHandlerArray

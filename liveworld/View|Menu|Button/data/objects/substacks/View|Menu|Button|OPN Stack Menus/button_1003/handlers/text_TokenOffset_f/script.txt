@@ -1,0 +1,9 @@
+function text_TokenOffset someString, someContainer
+   repeat with tokenNum = 1 to the number of tokens in someContainer
+      put token tokenNum of someContainer into someToken
+      if someToken = someString then
+         return tokenNum
+      end if
+   end repeat
+   return 0
+end text_TokenOffset

@@ -1,0 +1,4 @@
+command angle_RadiansToDegrees @someRadians
+   put 180 * someRadians / pi into someDegrees
+   put someDegrees into someRadians
+end angle_RadiansToDegrees

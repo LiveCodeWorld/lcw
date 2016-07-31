@@ -1,0 +1,44 @@
+command view_SearchNested targetObject, @propertyArray, @someOutline, indentNum
+   local objectArray  
+   
+   put text_RepeatString (tab, indentNum) into someIndent
+   -- add 1 to indentNum
+   put the view_Name of targetObject into vName
+   put the abbreviated id of targetObject into containerKey
+   
+   if vName is not empty then
+      add 1 to indentNum
+      
+      put vName into propertyArray [containerKey]
+      put empty into objectArray [containerKey]
+      put the rugged_ID of targetObject into ruggedObject
+      put someIndent & html_ConstructNameLink (vName, ruggedObject) & CR after someOutline
+   end if
+   
+   put the number of controls in targetObject into maxNum
+   repeat with controlNum = 1 to maxNum -- look at contents
+      put the long id of of control controlNum of targetObject into subObject
+      
+      put the abbreviated id of subObject into subKey
+      if word 1 of subKey = "group" then
+         -- recurse
+         view_SearchNested subObject, propertyArray, someOutline, indentNum
+         put the result into subArray -- will be a nested array
+         if subArray is an array then
+            put subArray [subKey] into objectArray [containerKey][subKey]
+            get the extents of objectArray
+         end if
+         add the number of layers in subObject to controlNum
+      else
+         -- add plain
+         put the view_Name of subObject into subViewName
+         if subViewName is not empty then
+            put empty into objectArray [subKey]
+            put subViewName into propertyArray [subKey]
+            put the rugged_ID of subObject into ruggedSubObject
+            put tab & someIndent & html_ConstructNameLink (subViewName, ruggedSubObject) & CR after someOutline
+         end if
+      end if
+   end repeat
+   return objectArray
+end view_SearchNested

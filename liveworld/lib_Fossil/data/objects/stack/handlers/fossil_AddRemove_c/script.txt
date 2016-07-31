@@ -1,0 +1,8 @@
+command fossil_AddRemove pCheckoutFolder
+   -- fossil addremove ?--dotfiles? ?--ignore GLOBPATTERN? ?--test?
+   put "fossil addremove" into someShell
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_AddRemove

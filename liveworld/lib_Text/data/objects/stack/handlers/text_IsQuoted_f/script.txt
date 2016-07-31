@@ -1,0 +1,11 @@
+function text_IsQuoted someText, pString
+   local quotedText
+   put "['" & quote & "]" into someQuote
+   if pString is empty then
+      put "(?m)" & someQuote & "(.*)" & someQuote into someReg
+   else
+      put "(?m)" & someQuote & "(.*" & pString & ".*)" & someQuote into someReg
+   end if
+   put matchtext (someText, someReg, quotedText) into someBoolean
+   return someBoolean
+end text_IsQuoted

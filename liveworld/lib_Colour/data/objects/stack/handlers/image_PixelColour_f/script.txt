@@ -1,0 +1,4 @@
+function image_PixelColour pixelLoc, imageObject
+  put image_PixelNum(pixelLoc, imageObject) into pixelNum
+  return image_ColourFromPixelNum(pixelNum, imageObject)
+end image_PixelColour

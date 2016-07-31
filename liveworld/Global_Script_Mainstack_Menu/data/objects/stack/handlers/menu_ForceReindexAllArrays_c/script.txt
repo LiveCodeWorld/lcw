@@ -1,0 +1,10 @@
+on menu_ForceReindexAllArrays scriptObject
+   deps_ConstructDependencyArray scriptObject, true
+   put the result into walkArray
+   put walkArray ["hKeyArray"] into hKeyArray
+   
+   opn_Answer "Saved Dependency Array. Do you want to graph the result?"
+   hkeyArray_DrawGraph hKeyArray, "undirected spring"
+   put the mainstack_WalkArray of scriptObject into walkArray
+   display_HkeyWalkArray scriptObject, walkArray
+end menu_ForceReindexAllArrays

@@ -1,0 +1,4 @@
+function library_GetUsedStack libName, pSetName
+   put library_GetObject (libName, "used", pSetName) into someObject
+   return someObject
+end library_GetUsedStack

@@ -1,0 +1,9 @@
+function hArray_ObjectIsIndexStatus rObject, pHarray
+   put hArray_GetObjectMetaData (rObject, "sha1", pHarray) into scriptHash
+   try
+      put the script of rObject into someScript
+      return sha1_Hash (someScript) = scriptHash
+   catch e
+      return empty
+   end try
+end hArray_ObjectIsIndexStatus

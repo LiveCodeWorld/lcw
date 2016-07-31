@@ -1,0 +1,5 @@
+function repository_GetArchiveNowCount
+   put the uOPN ["repository_ArchiveNowCount"] of me into someNum
+   if someNum is not a number then put 8 into someNum
+   return someNum
+end repository_GetArchiveNowCount

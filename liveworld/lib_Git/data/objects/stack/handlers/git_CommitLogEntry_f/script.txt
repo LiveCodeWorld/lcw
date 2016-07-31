@@ -1,0 +1,7 @@
+function git_CommitLogEntry someHash
+   -- needs to be a commit, or maybe a tree?
+   put "git log --stat -n1" into someShell
+   put space & someHash after someShell
+   put git_ExecuteShellCommand(someShell) into logText
+   return logText
+end git_CommitLogEntry

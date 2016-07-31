@@ -1,0 +1,15 @@
+function linkArray_IdRevert linkArray, hIdArray
+    repeat for each key keyID in linkArray
+        put linkArray [keyID] into linkIDs
+        put empty into realValues
+        repeat for each line linkID in linkIDs
+            put hIdArray [linkID] into realValue
+            put realValue & CR after realValues
+        end repeat
+        delete char -1 of realValues
+        
+        put hIdArray [keyID] into realKey
+        put realValues into realArray [realKey]
+    end repeat
+    return realArray
+end linkArray_IdRevert

@@ -1,0 +1,13 @@
+command script_SetMetadataArray @someScript, uRipArray
+   -- now add any handlers etc (stuff after an empty line) from old Metadata suite
+   put script_GetSuite ("MetaData", someScript) into oldMetaDataSuite
+   script_DeconstructMetaDataSuite oldMetaDataSuite, oldMetadataBit, oldCommentBit, handlerBit
+   
+   put oldCommentBit into uRipArray ["script_Help"]
+   put script_ConstuctMetaDataHeader (uRipArray) into newMetaDataSuite
+   if handlerBit is not empty then put CR & CR & word 1 to -1 of handlerBit after newMetaDataSuite
+   
+   put script_DeleteSuite ("Metadata", someScript) into cleanScript
+   put newMetaDataSuite & CR & CR & CR & word 1 to -1 of cleanScript into someScript
+   return newMetaDataSuite
+end script_SetMetadataArray

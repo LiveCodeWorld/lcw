@@ -1,0 +1,6 @@
+function rev_GetHandlerTreeSelectedInfo
+   put rev_HandlerTreeField() into handlerField
+   put the hilitedLine of handlerField into lineNum
+   put line lineNum of the cHandlers of handlerField into tHandler
+   return tHandler
+end rev_GetHandlerTreeSelectedInfo

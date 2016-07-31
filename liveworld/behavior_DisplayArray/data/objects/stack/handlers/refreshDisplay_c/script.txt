@@ -1,0 +1,4 @@
+on refreshDisplay
+   put the rect of this card into cardRect
+   LayoutControl cardRect
+end refreshDisplay

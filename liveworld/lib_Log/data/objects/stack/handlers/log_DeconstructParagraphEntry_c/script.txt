@@ -1,0 +1,6 @@
+command log_DeconstructParagraphEntry logParagraph, @logValue, logTitle, @logDate
+   put line 1 of logParagraph into titleLine
+   log_DeconstructTitle titleLine, logTitle, logDate
+
+   put line 2 to -1 of logParagraph into logValue
+end log_DeconstructParagraphEntry

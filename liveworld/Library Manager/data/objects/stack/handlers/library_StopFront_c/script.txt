@@ -1,0 +1,8 @@
+command library_StopFront pSetName
+   put library_FetchObjects ("front", pSetName) into frontObjects
+   repeat for each line someObject in frontObjects
+      if exists(someObject) then
+         remove the script of someObject from front
+      end if
+   end repeat
+end library_StopFront

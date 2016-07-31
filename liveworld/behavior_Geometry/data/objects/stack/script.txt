@@ -1,0 +1,35 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_Geometry
+type: behavior
+version: 0.1
+
+/*
+Here we experiment with creating an abstract geometry behavior library that can be used behind view specific libraries.
+We do this instead of creating global libraries in order to not polute the name space.
+
+We try to migrate useful handelr shere bit by bit.
+*/
+
+
+--> Geometry | Props
+-
+[[ _FetchHandler (smaller_Rect,g) ]]
+
+[[ _FetchHandler (bigger_Rect,g) ]]
+
+[[ _FetchHandler (inner_Rect,g) ]]
+
+
+
+
+--> Geometry | Margins
+-
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (rect_AddMargins,c) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]
+
+[[ _FetchHandler (margins_Add,f) ]]

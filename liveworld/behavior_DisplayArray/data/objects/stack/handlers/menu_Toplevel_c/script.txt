@@ -1,0 +1,4 @@
+on menu_Toplevel treeView
+   put the stack_Name of treeView into stackName
+   toplevel stack stackName
+end menu_Toplevel

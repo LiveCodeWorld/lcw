@@ -1,0 +1,4 @@
+command project_StopUsed pProjectName
+   put project_FetchObjects ("used", pProjectName) into stackObjects
+   stack_StopUsed stackObjects
+end project_StopUsed

@@ -1,0 +1,357 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Overlay
+type: model
+version: 0.4
+
+
+--> Overlay | Model
+-
+/*
+There are many other model handlers in libOPN_Overlay
+
+OverlayData is a data format which contains multiple named overlayArray's (see libOPN_DotArray).
+The data is contained in an arrayencoded text file "overlaydata.array".
+
+These handlers all operate on this data structure (array) wherever it comes from (custom property or file)
+*/
+
+[[ _FetchHandler (overlay_GetArray,f) ]]
+
+[[ _FetchHandler (overlay_SetArray,c) ]]
+
+[[ _FetchHandler (overlay_GetData,f) ]]
+
+[[ _FetchHandler (overlay_SetData,c) ]]
+
+[[ _FetchHandler (overlayData_Fetch,f) ]]
+
+[[ _FetchHandler (overlayData_Store,c) ]]
+
+[[ _FetchHandler (overlay_ArrayFile,f) ]]
+
+
+--> Overlay | Files
+-
+[[ _FetchHandler (overlay_GetCmapFile,f) ]]
+
+[[ _FetchHandler (overlay_LinkFile,f) ]]
+
+[[ _FetchHandler (overlay_GetFile,f) ]]
+
+[[ _FetchHandler (overlay_Files,c) ]]
+
+[[ _FetchHandler (overlay_ShortFiles,c) ]]
+
+[[ _FetchHandler (overlay_ListAllFiles,f) ]]
+
+[[ _FetchHandler (overlay_ImageFiles,f) ]]
+
+
+--> Overlay
+-
+[[ _FetchHandler (overlay_Delete,c) ]]
+
+
+--> Overlay
+-
+[[ _FetchHandler (overlay_IsNew,g) ]]
+
+[[ _FetchHandler (overlay_TestGraph,f) ]]
+
+[[ _FetchHandler (overlay_GetObjectFromFolder,f) ]]
+
+[[ _FetchHandler (overlay_IsNew,s) ]]
+
+
+--> Overlay | To Sort
+-
+[[ _FetchHandler (overlay_GetNode,f) ]]
+
+[[ _FetchHandler (overlay_SetNode,c) ]]
+
+[[ _FetchHandler (overlay_GetNodeLinks,f) ]]
+
+[[ _FetchHandler (overlay_SetNodeLinks,c) ]]
+
+
+--> Overlay
+-
+[[ _FetchHandler (overlay_SetFileNames,c) ]]
+
+[[ _FetchHandler (overlay_ReconstructDotArray,c) ]]
+
+[[ _FetchHandler (overlay_ReconstructArray,c) ]]
+
+
+--> Overlay
+-
+/*
+Some default values that can be calculated for "the overlay_Data of the target" 
+Override locally for fine grain control.
+*/
+
+[[ _FetchHandler (textStackOverlay_Data,g) ]]
+
+[[ _FetchHandler (overlay_Array,g) ]]
+
+[[ _FetchHandler (overlay_Array,s) ]]
+
+[[ _FetchHandler (overlay_Data,g) ]]
+
+[[ _FetchHandler (overlay_Data,s) ]]
+
+[[ _FetchHandler (overlay_Name,g) ]]
+
+[[ _FetchHandler (overlay_Name,s) ]]
+
+[[ _FetchHandler (overlay_Names,g) ]]
+
+[[ _FetchHandler (overlay_DefaultName,g) ]]
+
+[[ _FetchHandler (overlay_DefaultName,s) ]]
+
+[[ _FetchHandler (overlay_Node,g) ]]
+
+[[ _FetchHandler (overlay_Node,s) ]]
+
+[[ _FetchHandler (overlay_Files,g) ]]
+
+
+--> Graph | Property
+-
+[[ _FetchHandler (overlay_Style,g) ]]
+
+[[ _FetchHandler (overlay_Style,s) ]]
+
+[[ _FetchHandler (overlay_Styles,g) ]]
+
+[[ _FetchHandler (overlay_MaximumDepth,g) ]]
+
+[[ _FetchHandler (overlay_MaximumDepth,s) ]]
+
+[[ _FetchHandler (overlay_MaximumDepths,g) ]]
+
+[[ _FetchHandler (overlay_Controller,g) ]]
+
+[[ _FetchHandler (overlay_Controller,s) ]]
+
+[[ _FetchHandler (overlay_Of,g) ]]
+
+[[ _FetchHandler (overlay_Of,s) ]]
+
+[[ _FetchHandler (overlay_Size,g) ]]
+
+[[ _FetchHandler (overlay_Size,s) ]]
+
+[[ _FetchHandler (overlay_Sizes,g) ]]
+
+[[ _FetchHandler (overlay_FlattenNum,g) ]]
+
+[[ _FetchHandler (overlay_FlattenNum,s) ]]
+
+[[ _FetchHandler (overlay_FlattenNums,g) ]]
+
+[[ _FetchHandler (overlay_UseInches,g) ]]
+
+[[ _FetchHandler (overlay_UseInches,s) ]]
+
+
+--> Overaly | Property | Array
+-
+/*
+Short cuts.
+*/
+
+[[ _FetchHandler (overlay_ImageFile,g) ]]
+
+[[ _FetchHandler (overlay_GraphProperty,g) ]]
+
+[[ _FetchHandler (overlay_GraphProperty,s) ]]
+
+[[ _FetchHandler (overlay_GetGraphValue,f) ]]
+
+[[ _FetchHandler (overlay_SetGraphValue,c) ]]
+
+[[ _FetchHandler (overlay_PropertyArray,g) ]]
+
+[[ _FetchHandler (overlay_PropertyArray,s) ]]
+
+
+--> Overlay | Props
+-
+[[ _FetchHandler (overlay_GetDefaultName,f) ]]
+
+[[ _FetchHandler (overlay_SetDefaultName,c) ]]
+
+[[ _FetchHandler (overlay_ListNames,f) ]]
+
+[[ _FetchHandler (overlay_GetOverlayObject,f) ]]
+
+[[ _FetchHandler (overlay_SetOverlayObject,c) ]]
+
+[[ _FetchHandler (overlay_GetXdotText,f) ]]
+
+[[ _FetchHandler (overlay_SetXdotText,c) ]]
+
+[[ _FetchHandler (overlay_GetDotText,f) ]]
+
+[[ _FetchHandler (overlay_SetDotText,c) ]]
+
+[[ _FetchHandler (overlay_GetCmapText,f) ]]
+
+[[ _FetchHandler (overlay_SetCmapText,c) ]]
+
+[[ _FetchHandler (overlay_GetLinkArray,f) ]]
+
+[[ _FetchHandler (overlay_SetLinkArray,c) ]]
+
+[[ _FetchHandler (overlay_GetImageFile,f) ]]
+
+[[ _FetchHandler (overlayArray_GetImageFile,f) ]]
+
+
+--> Overlay | File | Utilities
+-
+[[ _FetchHandler (overlay_RecreateFromLinkArray,c) ]]
+
+[[ _FetchHandler (overlay_CreateFilesAndSetGeometry,c) ]]
+
+[[ _FetchHandler (overlay_CreateDotFiles,c) ]]
+
+[[ _FetchHandler (overlay_AllStyles,f) ]]
+
+
+--> Overlay | File | Bits
+-
+[[ _FetchHandler (overlay_SetAndStoreFileRelative,pc) ]]
+
+[[ _FetchHandler (overlay_SetFileRelative,c) ]]
+
+[[ _FetchHandler (overlay_ConstructFile,f) ]]
+
+
+--> OverlayData
+-
+/*
+OverlayData is a data format which contains multiple named overlayArray's (see libOPN_DotArray).
+The data is contained in an arrayencoded text file "overlaydata.array".
+
+These handlers all operate on this data structure (array) wherever it comes from (custom property or file)
+*/
+
+[[ _FetchHandler (overlayData_ListNames,f) ]]
+
+[[ _FetchHandler (overlayData_NormalizeName,c) ]]
+
+[[ _FetchHandler (overlayData_GetDefaultName,f) ]]
+
+[[ _FetchHandler (overlayData_SetDefaultName,c) ]]
+
+[[ _FetchHandler (overlayData_GetArray,f) ]]
+
+[[ _FetchHandler (overlayData_SetArray,c) ]]
+
+
+--> overlayData | Data
+-
+[[ _FetchHandler (overlayData_GetLinkArray,f) ]]
+
+[[ _FetchHandler (overlayData_SetLinkArray,c) ]]
+
+[[ _FetchHandler (overlayData_GetDataArray,f) ]]
+
+[[ _FetchHandler (overlayData_SetDataArray,c) ]]
+
+
+--> overlayData | Metadata
+-
+[[ _FetchHandler (overlayData_GetGroupStyleArray,f) ]]
+
+[[ _FetchHandler (overlayData_SetGroupStyleArray,c) ]]
+
+[[ _FetchHandler (overlayData_GetHeaderArray,f) ]]
+
+[[ _FetchHandler (overlayData_SetHeaderArray,c) ]]
+
+[[ _FetchHandler (overlayData_GetGraphPropertyArray,f) ]]
+
+[[ _FetchHandler (overlayData_SetGraphPropertyArray,c) ]]
+
+[[ _FetchHandler (overlayData_GetMetadataArray,f) ]]
+
+[[ _FetchHandler (overlayData_SetMetadataArray,c) ]]
+
+
+--> overlayData | Graph Property
+-
+[[ _FetchHandler (overlayData_GetGraphProperty,f) ]]
+
+[[ _FetchHandler (overlayData_SetGraphProperty,c) ]]
+
+[[ _FetchHandler (overlayData_SetGraphProps,c) ]]
+
+
+--> Hkey | overlayArray | Group Style
+-
+[[ _FetchHandler (overlayData_ConstructAndSetGroupStyleArray,c) ]]
+
+[[ _FetchHandler (overlayData_SetFunctionStyle,c) ]]
+
+[[ _FetchHandler (overlayData_SetCommandStyle,c) ]]
+
+[[ _FetchHandler (overlayData_SetGetPropStyle,c) ]]
+
+[[ _FetchHandler (overlayData_SetSetPropStyle,c) ]]
+
+[[ _FetchHandler (overlayData_SetMessageStyle,c) ]]
+
+[[ _FetchHandler (overlayData_SetMissingStyle,c) ]]
+
+
+--> Hkey | overlayArray | Clusters
+-
+[[ _FetchHandler (overlayData_ConstructClusterArray,f) ]]
+
+[[ _FetchHandler (hKeyArray_ConstructObjectIdArray,f) ]]
+
+[[ _FetchHandler (overlayData_ConstructClusterSection,f) ]]
+
+[[ _FetchHandler (overlayData_ConstructDotClusters,f) ]]
+
+
+--> LinkArray | Model
+-
+/*
+This is old!
+Use overlay_Folder related stuff now.
+
+A LinkArray is used to graph arrays. To do this LinkArrays provide a suite of tools that take complex keys and convert them into simple IDs,
+and dictionaries to translate from these IDS to the orginal keys.
+
+This new model uses default custom properties that can be used to get and set each of the three inter-connected arrays.
+As these are default custom properties, they can be over-ridden locally.
+
+The default behavior is to store the array in a file, in a default folder (named after the object), inside the opn_Model folder.
+Later this folder can be moved, and the scripts re-directed to this model folder using the "model_Folder" property (see model_File).
+*/
+
+[[ _FetchHandler (linkArray_Get,c) ]]
+
+[[ _FetchHandler (linkArray_Set,c) ]]
+
+[[ _FetchHandler (model_LinkArray,g) ]]
+
+[[ _FetchHandler (model_LinkArray,s) ]]
+
+[[ _FetchHandler (model_IdArray,g) ]]
+
+[[ _FetchHandler (model_IdLinkArray,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (_GetGraphProperty,pf) ]]
+
+[[ _FetchHandler (_SetGraphProperty,pc) ]]

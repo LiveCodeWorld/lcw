@@ -1,0 +1,11 @@
+function table_ConstructOpenTag pBorderWidth, pCellPadding, pCellSpacing, pTableClass
+   -- put table_ConstructOpenTag (1, 2, 1, "mytable") into tableTemplateArray ["tableOpen"]
+   
+   put "<table" into openTag
+   if pBorderWidth is a number then put space & "border=" & quote & pBorderWidth & quote after openTag
+   if pCellPadding is a number then put space & "cellpadding=" & quote & pCellPadding & quote after openTag
+   if pCellSpacing is a number then put space & "cellspacing=" & quote & pCellSpacing & quote after openTag
+   if pTableClass is not empty then put space & "class=" & quote & pTableClass & quote after openTag
+   put ">" after openTag
+   return openTag   
+end table_ConstructOpenTag

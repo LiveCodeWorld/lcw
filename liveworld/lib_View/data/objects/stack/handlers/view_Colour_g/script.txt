@@ -1,0 +1,5 @@
+getprop view_Colour
+   put the view_Object of the target into someView
+   if exists(someView) is false then return empty
+   return the effective backgroundcolor of someView
+end view_Colour

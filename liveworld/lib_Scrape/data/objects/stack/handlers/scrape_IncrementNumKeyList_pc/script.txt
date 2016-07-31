@@ -1,0 +1,6 @@
+private command scrape_IncrementNumKeyList @numKeyList, headerNum
+   put item headerNum of numKeyList into lastCount
+   add 1 to lastCount
+   put lastCount into item headerNum of numKeyList
+   return lastCount
+end scrape_IncrementNumKeyList

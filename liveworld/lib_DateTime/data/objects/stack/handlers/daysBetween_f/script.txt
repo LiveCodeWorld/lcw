@@ -1,0 +1,6 @@
+function daysBetween startDate, someDate
+    convert startDate to seconds
+    convert someDate to seconds
+    put (someDate - startDate)/(60*60*24) into days
+    return days
+end daysBetween

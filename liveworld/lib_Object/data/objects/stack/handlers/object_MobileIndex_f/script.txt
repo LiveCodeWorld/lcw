@@ -1,0 +1,13 @@
+function object_MobileIndex objectIndex, @badObjects
+   repeat for each line someObject in objectIndex
+      if exists(someObject) is false then
+         put someObject & return after badObjects
+      else
+         object_SetShortStackName someObject, mainStackStart, mainStackEnd
+         put someObject & return after newObjectObjects
+      end if
+   end repeat
+   delete last char of newObjectObjects
+   delete last char of badObjects
+   return newObjectObjects
+end object_MobileIndex

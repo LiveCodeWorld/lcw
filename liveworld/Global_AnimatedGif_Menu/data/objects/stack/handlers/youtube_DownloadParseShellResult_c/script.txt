@@ -1,0 +1,24 @@
+command youtube_DownloadParseShellResult shellResult, @shortDownloadedFile
+   /*
+   [youtube] ns-qtoxnAS8: Downloading webpage
+   [youtube] ns-qtoxnAS8: Downloading video info webpage
+   [youtube] ns-qtoxnAS8: Extracting video information
+   [youtube] ns-qtoxnAS8: Searching for annotations.
+   [youtube] ns-qtoxnAS8: Downloading MPD manifest
+   [info] Writing video description to: Paddy's Lamentation - Gangs of New York (6_12) Movie CLIP (2002) HD-ns-qtoxnAS8.description
+   [info] Writing video annotations to: Paddy's Lamentation - Gangs of New York (6_12) Movie CLIP (2002) HD-ns-qtoxnAS8.annotations.xml
+   [info] Writing video description metadata as JSON to: Paddy's Lamentation - Gangs of New York (6_12) Movie CLIP (2002) HD-ns-qtoxnAS8.info.json
+   [download] Destination: Paddy's Lamentation - Gangs of New York (6_12) Movie CLIP (2002) HD-ns-qtoxnAS8.mp4
+   [download]   0.0% of 33.43MiB at Unknown speed ETA Unknown ETA
+   [download]   0.0% of 33.43MiB at 138.07KiB/s ETA 04:08
+   [download]   0.0% of 33.43MiB at 316.21KiB/s ETA 
+   */
+   
+   -- [download] Destination: Paddy's Lamentation - Gangs of New York (6_12) Movie CLIP (2002) HD-ns-qtoxnAS8.mp4
+   set the wholematches to false
+   put lineoffset ("[download] Destination: ", shellResult) into lineNum
+   put line lineNum of shellResult into downloadLine
+   set the itemdelimiter to ":"
+   delete item 1 of downloadLine
+   put word 1 to -1 of downloadLine into shortDownloadedFile
+end youtube_DownloadParseShellResult

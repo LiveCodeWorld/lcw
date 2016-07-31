@@ -1,0 +1,41 @@
+command gist_ExtractReceivedHeaderArray @previousURL, @nextURL, @firstURL, @lastURL,@rateLimitRemaining
+   put server_ExtractReceivedHeaderArray() into receivedHeaderArray
+   
+   put receivedHeaderArray ["Status"] into someStatus
+   put receivedHeaderArray ["X-RateLimit-Limit"] into rateLimit
+   put receivedHeaderArray ["X-RateLimit-Remaining"] into rateLimitRemaining
+   
+   get receivedHeaderArray ["Link"]
+   set the itemdelimiter to ";"
+   set the linedelimiter to comma
+   
+   -- needed if the links are not there
+   put empty into previousURL
+   put empty into nextURL
+   put empty into firstURL
+   put empty into lastURL
+   
+   -- now extract the ones that are
+   repeat for each line urlBit in it
+      put item 1 of urlBit into someUrl
+      put item 2 of urlBit into someRef
+      put token 3 of someRef into urlType
+      switch urlType
+         case "next"
+            put _cleanReceivedURL (someUrl) into nextURL
+            break
+         case "last"
+            put _cleanReceivedURL (someUrl) into lastURL
+            break
+         case "first"
+            put _cleanReceivedURL (someUrl) into firstURL
+            break
+         case "prev"
+            put _cleanReceivedURL (someUrl) into previousURL
+            break
+         default
+            breakpoint
+      end switch
+   end repeat
+   return someStatus
+end gist_ExtractReceivedHeaderArray

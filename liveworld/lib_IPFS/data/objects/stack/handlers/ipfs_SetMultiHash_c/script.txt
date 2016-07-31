@@ -1,0 +1,5 @@
+command ipfs_SetMultiHash stackName, ipfsMultiHash
+   put ipfs_FetchArray() into ipfsArray
+   put ipfsMultiHash into ipfsArray [stackName]
+   ipfs_SaveArray ipfsArray
+end ipfs_SetMultiHash

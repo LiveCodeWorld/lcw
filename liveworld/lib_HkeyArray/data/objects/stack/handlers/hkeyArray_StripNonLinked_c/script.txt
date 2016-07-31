@@ -1,0 +1,10 @@
+command hkeyArray_StripNonLinked @hkeyArray, topKey
+    -- should keep repeating / recursing
+    put array_Reverse(hkeyArray) into reversedArray
+    repeat for each key hKey in reversedArray
+        if hKey = topKey then next repeat
+        if reversedArray [hKey] is empty then
+            linkArray_DeleteNode hkeyArray, hKey
+        end if
+    end repeat
+end hkeyArray_StripNonLinked

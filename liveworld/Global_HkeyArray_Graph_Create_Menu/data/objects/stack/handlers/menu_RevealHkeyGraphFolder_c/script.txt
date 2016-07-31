@@ -1,0 +1,7 @@
+on menu_RevealHkeyGraphFolder treeView
+   deconstructLocalArray overlayFolder, hKey, stackLabel, scriptObject
+   put item 3 of hKey into hObject
+   put the overlay_Folder of hObject into overlayFolder
+   
+   finder_Reveal overlayFolder
+end menu_RevealHkeyGraphFolder

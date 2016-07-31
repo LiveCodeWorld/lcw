@@ -1,0 +1,7 @@
+function checkout_ConstructDefaultFolder objectFile
+   put objectFile into checkoutFolder
+   set the itemdelimiter to "/"
+   -- put "opn_TextStacks/" into item -1 of checkoutFolder
+   put "liveworld/" into item -1 of checkoutFolder
+   return checkoutFolder
+end checkout_ConstructDefaultFolder

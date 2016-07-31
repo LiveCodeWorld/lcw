@@ -1,0 +1,12 @@
+command ipfs_AddFolder someFolder
+   /*
+   david:Audioboom BabyBlue$ ipfs add -r 2455591/
+   */
+   
+   ipfs_AddToPATH
+   shell_BashParamEscape someFolder
+   put "ipfs add -r" && someFolder into someShell
+   put shell (someShell) into shellResult
+   put ipfs_ParseAddFolderResult (shellResult, someFolder) into ipfsTable
+   return ipfsTable
+end ipfs_AddFolder

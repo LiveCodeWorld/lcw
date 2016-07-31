@@ -1,0 +1,6 @@
+on menu_SwitchGitProject projectName
+   set the cursor to watch
+   git_SetProject projectName
+   git_RefreshDisplay true, "Git Status"
+   -- display_Lines longGitFolder, "GIT root folder"
+end menu_SwitchGitProject

@@ -1,0 +1,10 @@
+getprop script_OverlayData
+   -- was "script_GraphArray" then "script_GraphData"
+   put the long id of the target into scriptObject
+   put the script_OverlayFile of scriptObject into someFile
+   
+   put url ("binfile:" & someFile) into encodedArray
+   if encodedArray is empty then return empty
+   put arraydecode (encodedArray) into overlayData
+   return overlayData
+end script_OverlayData

@@ -1,0 +1,5 @@
+on menu_HiliteUsed indexView
+   set the cursor to watch
+   put the used_ShortStackFiles of indexView into usedShortViewStackFiles
+   set the selected_Index of indexView to usedShortViewStackFiles
+end menu_HiliteUsed

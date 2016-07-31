@@ -1,0 +1,7 @@
+function handler_IsComponent someHandler
+   -- this uses regular expression (http://www.regextester.com/pregsyntax.html)
+   -- may be faster way of checking
+   put "--\s*component\s*:\s*true\b" into someReg
+   put matchtext (someHandler, someReg) into someBoolean
+   return someBoolean
+end handler_IsComponent

@@ -1,0 +1,18 @@
+function SortArrayKeysWithXMLOrdering pKeys, pStripMetaKeys
+   local theKeys
+   
+   put pStripMetaKeys is not false into pStripMetaKeys
+   
+   if pKeys is an array then
+      put the keys of pKeys into pKeys
+   end if
+      
+   set the itemDelimiter to "["
+   sort pKeys numeric by the last item of each -- 1], 2], 3], etc.
+   
+   if pStripMetaKeys then
+      filter pKeys without "@*"
+   end if
+   
+   return pKeys
+end SortArrayKeysWithXMLOrdering

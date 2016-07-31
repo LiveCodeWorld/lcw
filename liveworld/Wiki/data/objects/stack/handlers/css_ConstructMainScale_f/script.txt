@@ -1,0 +1,6 @@
+function css_ConstructMainScale hScale, vScale
+   put ".main {" & CR into someCSS
+   put css_ConstructScaleLines (hScale, pVerticalScale, pIndenText) & CR after someCSS
+   put "}" after someCSS
+   return someCSS
+end css_ConstructMainScale

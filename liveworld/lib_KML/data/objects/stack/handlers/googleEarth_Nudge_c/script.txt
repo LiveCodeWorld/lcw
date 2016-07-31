@@ -1,0 +1,36 @@
+on googleEarth_Nudge howMuch, shiftStatus
+    put the googleEarth_Speed of me into someSpeed
+    switch howMuch
+        case "Right Screen"
+            googleEarth_MoveView 0, -0.006863621916, 0, someSpeed
+            break
+        case "up"
+            if shiftStatus is true then
+                googleEarth_MoveView 0.000100000000, 0, 0, someSpeed
+            else
+                googleEarth_MoveView 0.000010000000, 0, 0, someSpeed
+            end if
+            break
+        case "down"
+            if shiftStatus is true then
+                googleEarth_MoveView -0.000100000000, 0, 0, someSpeed
+            else
+                googleEarth_MoveView -0.000010000000, 0, 0, someSpeed
+            end if
+            break
+        case "right"
+            if shiftStatus is true then
+                googleEarth_MoveView 0.000000000000, -0.000100000000, 0.000000000000, someSpeed
+            else
+                googleEarth_MoveView 0.000000000000, -0.000010000000, 0.000000000000, someSpeed
+            end if
+            break
+        case "left"
+            if shiftStatus is true then
+                googleEarth_MoveView 0, 0.000100000000, 0, someSpeed
+            else
+                googleEarth_MoveView 0, 0.000010000000, 0, someSpeed
+            end if
+            break
+    end switch
+end googleEarth_Nudge

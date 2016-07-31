@@ -1,0 +1,9 @@
+getprop disabled_AddHandlerToLibrary [hKey]
+   -- want to be able to re-add it
+   put hkey_IsInLibrary (hKey) into isInLibrary
+   if isInLibrary is true then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_AddHandlerToLibrary

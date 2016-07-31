@@ -1,0 +1,7 @@
+command hkey_Deconstruct hKey, @hName, @hType, @hObject, @hNum
+   put word 1 to -1 of item 1 of hKey into hName
+   put word 1 to -1 of item 2 of hKey into hType
+   if hType is empty then put "c" into hType
+   put word 1 to -1 of item 3 of hKey into hObject
+   put item 4 of hKey into hNum
+end hkey_Deconstruct

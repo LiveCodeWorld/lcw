@@ -1,0 +1,50 @@
+private function rev_DocCleanup theStuff needsP tagToRemove
+   -- from BVG
+   if char 1 to 6 of theStuff  = "xmlerr" then
+      return ""
+   end if
+   if tagToRemove <>  "" then
+      replace "<" & tagToRemove & ">" with "" in theStuff
+      replace "</" & tagToRemove & ">" with "" in theStuff
+      replace "<" & tagToRemove & "/>" with "" in theStuff
+   end if
+   if theStuff contains "<docRef" then
+      set the itemdelimiter to "<"
+      set the linedelimiter to ">"
+      put "" into temp
+      put false into theSkip
+      repeat for each line theLine in theStuff
+         --add your own glossary handling in the next if statement
+         if item -1 of theLine contains "src=" & quote & "glossary/" or item -1 of theLine contains "src=" & quote & "../glossary/" or item -1 of theLine contains "src=" & quote & "reference/" then
+            put item 1 to -2 of theLine after temp
+            put true into theSkip
+         else if item -1 of theLine contains "src=" & quote & "dictionary/" then
+            put item 1 to -2 of theLine after temp
+            set the itemdelimiter to "/"
+            put "<docRef src=" & quote & item -1 of theLine & ">" after temp
+            set the itemdelimiter to "<"
+         else
+            if theSkip and item -1 of theLine = "/docRef" then
+               put item 1 to -2 of theLine after temp
+               put false into theSkip
+            else
+               put theLine & ">" after temp
+            end if
+         end if
+      end repeat
+      put temp into theStuff
+      replace "<docRef src=" with "<a href=" in theStuff
+      replace "</docRef>" with "</a>" in theStuff
+      set the itemdelimiter to comma
+      set the linedelimiter to return
+   end if
+   if needsP then
+      put "" into temp
+      repeat for each line theLine in theStuff
+         put "<p>" & item 2 of theLine & "</p>" & return after temp
+      end repeat
+      put char 1 to -2 of temp into theStuff
+   end if
+   replace "<p/>" with "<p></p>" in theStuff
+   return theStuff
+end rev_DocCleanup

@@ -1,0 +1,247 @@
+﻿script "lib_LiveWorld"
+--> MetaData
+-
+name: lib_LiveWorld
+type: script library
+version: 0.4
+copyright: David Bovill
+licence:  GPLv3
+deps:
+
+/*
+This library is for creating, and modifying web site content for the www.livecode.world site.
+The lessons learnt here should be abstracted and applied more generally to any domain.
+*/
+
+
+/*
+--> Variables
+-
+local Server_URL, SSH_KeyPath, SSH_UserName, Server_Address, Server_DropletName, Rig_ApplicationFolder
+
+
+--> Server | Upload
+-
+command server_UploadStacks stackNames
+   repeat for each line stackName in stackNames
+      set the cursor to busy
+      server_UploadStack stackName
+   end repeat
+end server_UploadStacks
+
+command server_UploadStack stackName, pDontNotify
+   put the filename of stack stackName into stackPath
+   set the itemdelimiter to "/"
+   put item -1 of stackPath into shortPath
+   put rig_StackPath (shortPath) into serverStackPath
+   
+   put the name of stack stackName into stackObject
+   stack_Save stackObject
+   
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   put server_GetSshKeyPath() into sshKeyPath
+   server_StoreFile stackPath, serverStackPath, serverAddress, sshUser, sshKeyPath
+   put the result into someResult
+   
+   if pDontNotify is not true then
+      put merge ("Uploaded stack" && shortPath && "to [[serverAddress]]!") into someComment
+      opn_Notify someComment
+   end if
+   return someResult
+end server_UploadStack
+
+
+--> Server
+-
+function server_FetchFileArray serverAddress, sshUser, serverPath, pSshKeyPath
+   if the environment = "server" then
+      
+   else
+      put server_FetchFileList (serverAddress, sshUser, serverPath, true, pSshKeyPath) into lsResult
+      put shell_ConstructLSArray (lsResult, true) into fileArray
+   end if
+   return fileArray
+end server_FetchFileArray
+
+function server_FetchFileList serverAddress, sshUser, serverPath, pListAll, pSshKeyPath
+   -- was "digitalocean_ShellFetchListFiles"
+   put "ssh" into someShell
+   if pSshKeyPath is not empty then
+      shell_BashParamEscape pSshKeyPath
+      put space & "-i " && pSshKeyPath after someShell
+   end if
+   
+   put space & sshUser & "@" & serverAddress && "ls" after someShell
+   if pListAll is true then put space &  "-la" after someShell
+   
+   shell_BashParamEscape serverPath
+   put space & serverPath after someShell
+   
+   put word 1 to -1 of shell (someShell) into fileListing
+   return fileListing   
+end server_FetchFileList
+
+function server_FetchFile pathToFetch, serverAddress, sshUser
+   if char 1 of pathToFetch is "/" then
+      put pathToFetch into fullPath
+   else
+      put "~/" & pathToFetch into fullPath
+   end if
+   shell_BashParamEscape fullPath
+   
+   put shell_FetchFile (sshUser, serverAddress, fullPath) into someData
+   set the itemdelimiter to ":"
+   if (item 1 of someData = "cat" and item -1 of someData = " No such file or directory") then return empty
+   return someData
+end server_FetchFile
+
+command server_StoreData someData, pathToStore, serverAddress, sshUser, pSshKeyPath
+   -- uses "scp" and private keys
+   put the tempname into localFile
+   put someData into url ("binfile://" & localFile)
+   server_StoreFile localFile, pathToStore, serverAddress, sshUser
+   return the result
+end server_StoreData
+
+command server_StoreFile localFile, pathToStore, serverAddress, sshUser, pSshKeyPath
+   -- uses "scp" and private keys
+   if char 1 of pathToStore is "/" then
+      put pathToStore into fullPath
+   else
+      put "~/" & pathToStore into fullPath
+   end if
+   shell_StoreFile sshUser, serverAddress, fullPath, localFile, pSshKeyPath
+   put the result into someResult
+   return someResult
+end server_StoreFile
+
+function server_FileInfoArray someFile
+   put server_GetURL() into remoteDomain
+   put server_GetSshUser() into sshUser
+   
+   put someFile into bashFile
+   shell_BashParamEscape bashFile
+   put "ls -la" && bashFile into remoteShell
+   shell_RemoteExecute sshUser, remoteDomain, remoteShell
+   put the result into lsResult
+   
+   put lsResult into fileArray ["ls_la_Result"]
+   switch
+      case word 1 of lsResult = "total"
+         -- it's a folder
+         put someFile into fileArray ["file"]
+         put char 1 of line 2 of of lsResult = "d" into fileArray ["isFolder"]
+         return fileArray
+      case lsResult ends with ": No such file or directory"
+         -- file or folder is missing
+         return fileArray
+      default
+         put shell_ConstructLSArray (lsResult, true) into lsArray
+         put lsArray ["file"] into filesArray
+         put line 1 of keys (filesArray) into filePath
+         put filesArray [filePath] into fileArray
+         
+         put filePath into fileArray ["file"]
+         put remoteDomain into fileArray ["domain"]
+         
+         set the itemdelimiter to "/"
+         put item -1 of filePath into shortFile
+         put shortFile into fileArray ["shortFile"]
+         
+         if shortFile contains "." then
+            set the itemdelimiter to "."
+            put item -1 of shortFile into fileArray ["fileExtension"]
+         else
+            put empty into fileArray ["fileExtension"]
+         end if
+         return fileArray
+   end switch
+end server_FileInfoArray
+
+
+--> Server | Arrays
+-
+command server_ReturnEncodedArray someArray
+   put server_EncodeArray (someArray)
+end server_ReturnEncodedArray
+
+function server_EncodeArray someArray
+   put base64Encode(arrayEncode (someArray)) into tEncodedArray
+   return tEncodedArray
+end server_EncodeArray
+
+
+--> Server | Model
+-
+command server_LoadDetails serverURL
+   put pref_GetValue ("server_Array") into prefArray
+   put prefArray [serverURL] into serverArray
+   if serverArray is not an array then return empty
+   
+   put serverArray ["serverURL"] into Server_URL
+   put serverArray ["sshKeyPath"] into SSH_KeyPath
+   put serverArray ["sshUser"] into SSH_UserName
+   put serverArray ["serverAddress"] into Server_Address
+   put serverArray ["dropletName"] into Server_DropletName
+   put serverArray ["rigApplicationFolder"] into Rig_ApplicationFolder
+   
+   return serverArray
+end server_LoadDetails
+
+command server_SaveDetails serverURL, sshUser, sshKeyPath, rigApplicationFolder, serverAddress, dropletName
+   put pref_GetValue ("server_Array") into prefArray
+   
+   put serverURL into prefArray [serverURL]["serverURL"]
+   put sshUser into prefArray [serverURL]["sshUser"]
+   put sshKeyPath into prefArray [serverURL]["sshKeyPath"]
+   put rigApplicationFolder into prefArray [serverURL]["rigApplicationFolder"]
+   
+   put serverAddress into prefArray [serverURL]["serverAddress"]
+   put dropletName into prefArray [serverURL]["dropletName"]
+   
+   pref_SaveValue "server_Array", prefArray
+end server_SaveDetails
+
+command server_DeleteDetails serverURL
+   put pref_GetValue ("server_Array") into serverArray
+   delete variable serverArray [serverURL]
+   pref_SaveValue "server_Array", serverArray
+end server_DeleteDetails
+
+function server_GetSshUser
+   return SSH_UserName
+end server_GetSshUser
+
+function server_GetSshKeyPath
+   return SSH_KeyPath
+end server_GetSshKeyPath
+
+function server_GetDropletName
+   return Server_DropletName
+end server_GetDropletName
+
+function server_GetIPaddress
+   if Server_Address is not empty then
+      return Server_Address
+   else
+      return Server_URL
+   end if
+end server_GetIPaddress
+
+function server_GetURL
+   if Server_URL is not empty then
+      return Server_URL
+   else
+      return Server_Address
+   end if
+end server_GetURL
+
+
+--> Server | Rig | Paths
+-
+function server_RigApplicationFolder
+   text_AddTrailing Rig_ApplicationFolder, "/"
+   return Rig_ApplicationFolder
+end server_RigApplicationFolder
+*/

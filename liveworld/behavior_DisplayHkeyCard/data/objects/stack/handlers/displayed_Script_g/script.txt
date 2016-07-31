@@ -1,0 +1,19 @@
+getprop displayed_Script
+   put the dataGrid_View of me into dgView
+   put the dgIndexes of dgView into sIndex
+   
+   put the dgdata of dgView into dataArray
+   put the display_ProjectHandlers of me into isProject
+   repeat for each item indexNum in sIndex
+      put dataArray [indexNum]["hKey"] into hKey
+      
+      if isProject is true then
+         put hkey_ExtractHandlerFromObject (hKey) into someHandler
+      else
+         put library_FetchHandler (hKey) into someHandler
+      end if
+      put someHandler & CR & CR after someScript
+   end repeat
+   delete char -2 to -1 of someScript
+   return someScript
+end displayed_Script

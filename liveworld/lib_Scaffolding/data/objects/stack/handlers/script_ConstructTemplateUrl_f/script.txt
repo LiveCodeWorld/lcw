@@ -1,0 +1,4 @@
+function script_ConstructTemplateUrl templateName
+   put library_ScriptTemplateFolder (templateName) into someFile
+   return "file:" & someFile
+end script_ConstructTemplateUrl

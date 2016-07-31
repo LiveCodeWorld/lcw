@@ -1,0 +1,12 @@
+on xml_AddNodeArray @someXml, nodeArray
+    -- can have many "someNode, nodeContents" params pairs
+    
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    repeat for each key someNode in nodeArray
+        put nodeArray [someNode] into nodeContents
+        xml_TreeAddNode someNode, nodeContents, treeID
+    end repeat
+    put revXMLText(treeID) into someXml
+    revDeleteXMLTree treeID
+    return the result
+end xml_AddNodeArray

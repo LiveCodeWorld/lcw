@@ -1,0 +1,48 @@
+function opml_ConvertOutline tabbedOutline, startIndent
+    local opmlOutline
+    
+    put startIndent into thisIndent
+    put "</outline>" into endTag
+    put 0 into extraindent
+    repeat with lineNum = 1 to the number of lines of tabbedOutline
+        put line lineNum of tabbedOutline into someLine
+        put line (lineNum + 1) of tabbedOutline into nextLine
+        if someLine is empty then
+            exit repeat
+        else
+            put word 1 to -1 of someLine into someText
+            put empty into linkType
+            put empty into someUrl
+            put empty into dateCreated
+            put opml_ConstructLine(someText, linkType, someUrl, dateCreated) into opmlLine
+             
+            if nextLine is empty then
+                put thisIndent & opmlLine & CR after opmlOutline
+                exit repeat
+            else
+                put outline_TabLevel(someLine) into thisTabLevel
+                put outline_TabLevel(nextLine) into nextTabLevel
+                if nextTabLevel > thisTabLevel then
+                    put ">" into char -2 to -1 of opmlLine
+                    put thisIndent & opmlLine & CR after opmlOutline
+                    put tab after thisIndent
+                    add 1 to extraindent
+                else if nextTabLevel = thisTabLevel then
+                    put thisIndent & opmlLine & CR after opmlOutline
+                else
+                    put thisIndent & opmlLine & CR after opmlOutline
+                    delete char -1 of thisIndent
+                    put thisIndent & endTag & CR after opmlOutline
+                    subtract 1 from extraindent
+                end if
+            end if
+        end if
+    end repeat
+    repeat extraindent
+        -- opn_notify "Not balanced!" && extraindent, true
+        delete char -1 of thisIndent
+        put thisIndent & endTag & CR after opmlOutline
+    end repeat
+    delete last char of opmlOutline
+    return opmlOutline
+end opml_ConvertOutline

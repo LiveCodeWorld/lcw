@@ -1,0 +1,11 @@
+getprop m_Names
+   -- seems to me that there may to many lines for a menu
+   -- should filter for only good published menus?
+   -- maybe a switch for different sets?
+   
+   put menu_GlobalTitles() into mNames
+   -- put line 138 to -1 of mNames
+   return line 1 to 138 of mNames
+   display_Lines mNames, "menu_GlobalTitles()"
+   return word 1 to -1 of mNames
+end m_Names

@@ -1,0 +1,6 @@
+on menu_ReloadCurrentCheckoutGlobals
+   library_ReloadCheckoutGlobals
+   
+   put library_GetSetName() into setName
+   opn_Notify merge ("Restored the gOPN globals from the stored array, to the current set ('[[setName]]')!")
+end menu_ReloadCurrentCheckoutGlobals

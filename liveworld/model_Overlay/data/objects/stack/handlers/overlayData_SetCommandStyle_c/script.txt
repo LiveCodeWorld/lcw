@@ -1,0 +1,5 @@
+command overlayData_SetCommandStyle @dotGroupStyleArray    
+   put "GreenYellow" into dotGroupStyleArray ["f"]["node_StyleArray"]["fillcolor"]
+   put "Green4" into dotGroupStyleArray ["f"]["node_StyleArray"]["color"]
+   put "filled" into dotGroupStyleArray ["f"]["node_StyleArray"]["style"]
+end overlayData_SetCommandStyle

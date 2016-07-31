@@ -1,0 +1,1437 @@
+﻿script "lib_FedWikiPedia"
+--> Metadata
+-
+name: lib_FedWikiPedia
+type: script library
+version: 0.9
+copyright: David Bovill
+licence:  GPLv3
+deps: lib_MediaWiki, lib_Fedwiki
+
+/*
+These handlers interface between Wikipedia and Fedwiki.
+*/
+
+
+--> Working On
+-   
+-- function fedwikipedia_FetchPageJson wikipediaUrl
+   -- gets the apiStem from the wikipediaUrl
+   put mediwiki_ExtractPageSlugFromUrl (wikipediaUrl) into pageSlug
+   put fedwikipedia_FetchPageArray (pageSlug, wikipediaURL, empty, false) into fedwikiPageArray
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   return pageJSON
+end fedwikipedia_FetchPageJson
+
+-- function fedwikipedia_FetchPageArray pageTitle, pWikipediaUrl, pSectionFormat, pIntroOnly
+   -- gets the apiStem from the wikipediaUrl
+   -- bit of a mess
+   
+   put wikipedia_GetApiRoot (pWikipediaUrl) into pApiStem
+   if pSectionFormat is empty then put "wiki" into pSectionFormat
+   if pWikipediaUrl is empty then
+      put wikipedia_ConstructUrl (pageTitle) into pWikipediaUrl
+   end if
+   
+   put sandbox_ConstructPageQueryFragment (pageTitle, pSectionFormat, pIntroOnly) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   if sandboxArray is not an array then return empty
+   
+   -- put fedwiki_ConstructWikipediaSummaryPageArray (sandboxArray, pWikipediaUrl) into fedwikiPageArray
+   sandbox_DeconstructPageArray sandboxArray, pageTitle, pageDescription, shortImageFile, lastRevisionID
+   put wikicommons_ConstructTwoImagePageArray (pageTitle, pageDescription, shortImageFile, wikipediaUrl) into fedwikiPageArray
+   
+   if pIntroOnly is not true then
+      put fedwikipedia_FetchWikiText (pageTitle) into wikiText
+      mediawiki_DeleteFirstSection wikiText
+      repeat 
+         put mediwiki_ExtractAndDeleteFirstSection (wikiText) into wikiSection
+         if wikiSection is empty then exit repeat
+         
+         put line 1 of wikiSection into sectionTitle
+         mediawiki_ConvertSectionTitle sectionTitle
+         fedwiki_AddMarkdownToPageArray fedwikiPageArray, sectionTitle
+         delete line 1 of wikiSection
+         put word 1 to -1 of wikiSection into wikiSection
+         fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, wikiSection, shortImageFile
+      end repeat
+   end if
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwikipedia_FetchPageArray
+
+
+--> Wiki Commons | Two Images
+-
+function wikicommons_FetchBasicTwoImagePageArray shortImageFile, pPageTitle, pSomeText
+   if pPageTitle is empty then put "Wikimedia Image" into pPageTitle
+   if pSomeText is empty then put "Drag these images to your source page..." into pSomeText
+   
+   put fedwiki_ConstructSimplePageArray (pPageTitle, pSomeText) into fedwikiPageArray   
+   set the itemdelimiter to "."
+   if item -1 of shortImageFile is "webm" then
+      put wikicommons_ConstructVideoPageArray (pPageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   else
+      wikicommons_FetchAndAddTwoImages fedwikiPageArray, shortImageFile
+   end if
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end wikicommons_FetchBasicTwoImagePageArray
+
+function wikicommons_ConstructTwoImagePageArray pageTitle, pageDescription, shortImageFile, wikipediaUrl, pSourceArray
+   put wikicommons_CostructBasicSummaryPageArray (pageTitle, pageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   
+   if shortImageFile is an array then
+      put shortImageFile into imageArray
+      repeat for each key imageNum in imageArray
+         put imageArray [imageNum] into shortImageFile
+         wikicommons_FetchAndAddTwoImages fedwikiPageArray, shortImageFile
+      end repeat
+   else
+      wikicommons_FetchAndAddTwoImages fedwikiPageArray, shortImageFile
+   end if
+   
+   -- add the other lines
+   delete line 1 of pageDescription -- was added alrady with "wikicommons_CostructBasicSummaryPageArray"
+   fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, pageDescription, shortImageFile
+   return fedwikiPageArray
+end wikicommons_ConstructTwoImagePageArray
+
+command wikicommons_FetchAndAddTwoImages @fedwikiPageArray, shortImageFile
+   put urlencode (word 1 to -1 of shortImageFile) into shortImageFile
+   if shortImageFile is among the items of mediawiki_ListBuiltInImages() then
+      return false
+   end if
+   
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   sandbox_ArrayDeconstructImage sandboxArray, imageTitle, imageURL, imageDescription, imageCaption, descriptionURL, imageCategoryIndex
+   
+   set the itemdelimiter to "."
+   switch 
+      case imageURL = empty
+         return false
+      case item -1 of imageURL = "webm"
+         -- should not be
+         return false
+         break
+      default
+         wikipedia_SetUserAgent
+         put url imageURL into someImage
+         if someImage is empty then return ("Error, image" && imageURL && "is empty")
+         
+         set the itemdelimiter to "."
+         put item -1 of imageURL into imageType -- bit of a hack
+         put html_StripTags (imageCaption) into plainCaption
+         put " - [" & descriptionURL && "wikimedia]" after plainCaption
+         
+         put fedwiki_ConstructImageHtml (imageURL, plainCaption, descriptionURL, "- wikimedia") into imageHTML
+         
+         fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
+         
+         put fedwiki_ConstructImageArray (someImage, imageType, plainCaption) into imageArray
+         fedwiki_PageArrayAddToEnd imageArray, fedwikiPageArray
+         return true
+   end switch
+end wikicommons_FetchAndAddTwoImages
+
+
+--> FedWiki | Section | Summary
+-
+function fedwiki_FetchWikipediaSummaryPageJson pageSlug, pApiStem
+   put fedwiki_FetchWikipediaSummaryPageArray (pageSlug, pApiStem) into fedwikiPageArray
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   return pageJSON
+end fedwiki_FetchWikipediaSummaryPageJson
+
+function fedwiki_FetchWikipediaSummaryPageArray pageSlug, pApiStem
+   -- see also "fedwikipedia_FetchSectionSummaryPageArray"
+   -- need to make a "parse" call to get TOC
+   local pSectionNum
+   
+   mediawiki_FetchPageParseInfo pageSlug, pageDescription, pageTitle, shortImageFile, infoBoxArray, pSectionNum, pApiStem
+   put the result into sandboxArray
+   put fedwikipedia_ConstructTocArray (sandboxArray) into tocArray
+   fedwikipedia_ExtractTocLookupArray tocArray, lookUpArray, markdownTOC
+   
+   -- need to make a "query" call to get a nice clean text
+   mediawiki_FetchPageQueryInfo pageSlug, simplePageDescription, pageTitleAgain, shortImageFile, wikipediaRevisionID, pApiStem
+   put the result into sandboxPageArray
+      
+   -- put wikipedia_ConstructUrl (pageSlug) into wikipediaUrl
+   put sandboxPageArray ["fullurl"] into wikipediaUrl
+   put sandboxPageArray ["coordinates"] into coordArray
+   
+   put construct_SummarySourceArray (pageTitle, pageSlug, wikipediaUrl, wikipediaRevisionID, lookUpArray) into pSourceArray
+   
+   -- now let's construct the page
+   set the itemdelimiter to "."
+   if item -1 of shortImageFile is "webm" then
+      put wikicommons_ConstructVideoPageArray (pageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   else
+      put wikicommons_ConstructTwoImagePageArray (pageTitle, simplePageDescription, shortImageFile, wikipediaUrl, pSourceArray) into fedwikiPageArray
+   end if
+   
+   if coordArray is an array then
+      -- add a map?
+   end if
+   
+   put "# See also" & CR & markdownTOC into markdownSection
+   fedwiki_AddMarkdownToPageArray fedwikiPageArray, markdownSection
+   
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwiki_FetchWikipediaSummaryPageArray
+
+function wikicommons_ConstructVideoPageArray pageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray
+   --need to add imagedescription
+   
+   put wikicommons_CostructBasicSummaryPageArray (pageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   
+   put urlencode (word 1 to -1 of shortImageFile) into shortImageFile
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID
+   put pagesArray [pageID] into pageArray
+   wikicommons_AddVideoToPageArray fedwikiPageArray, pageArray
+   -- fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, pageDescription, shortImageFile
+   -- fedwiki_PageArrayAddToEnd imageArray, fedwikiPageArray
+   return fedwikiPageArray
+end wikicommons_ConstructVideoPageArray
+
+
+--> WikiCommons | Media | PageArray
+-
+function wikicommons_ConstructPageArray sandboxArray, pPageTitle, pPageComment
+   if pPageTitle is empty then put "Wikpedia Image Import" into pageTitle
+   
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID
+   put pagesArray [pageID] into pageArray
+   
+   put pageArray ["imageinfo"]["1"]["mime"] into someMime
+   set the itemdelimiter to slash
+   switch item 1 of someMime
+      case "video"
+         if pPageComment is empty then put "Here is an video from Wikipedia ready to drag onto your page..." into pPageComment
+         put fedwiki_ConstructNewPageArray (pageTitle, pPageComment) into fedwikiPageArray
+         
+         wikicommons_AddVideoToPageArray fedwikiPageArray, pageArray
+         break
+      default
+         -- we assume it is an image
+         if pPageComment is empty then put "Here is an image from Wikipedia ready to drag onto your page..." into pPageComment
+         put fedwiki_ConstructNewPageArray (pageTitle, pPageComment) into fedwikiPageArray
+         
+         wikicommons_AddImageToPageArray fedwikiPageArray, pageArray
+   end switch
+   
+   return fedwikiPageArray
+end wikicommons_ConstructPageArray
+
+command wikicommons_AddImageToPageArray @fedwikiPageArray, pageArray
+   put wikicommons_ConstructImageHtml (pageArray) into imageHTML
+   fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
+end wikicommons_AddImageToPageArray
+
+command wikicommons_AddVideoToPageArray @fedwikiPageArray, pageArray
+   put wikicommons_ConstructVideoHtml (pageArray) into imageHTML
+   fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
+end wikicommons_AddVideoToPageArray
+
+function wikicommons_ConstructVideoHtml pageArray, pImageCaption, pWikimediaLink
+   wikicommons_DeconstructPageArray pageArray, pageTitle, webmURL, descriptionURL, pImageCaption
+   
+   -- put "MP4 (HD),mp4,WEBM (HD),webm" into videoTypes
+   put empty into pPosterImageFile -- could get thubnail
+   put html_ConstructVideoTag (webmURL, "webm", 420, true, pPosterImageFile) into someHTML
+   put wikicommons_ConstructVideoCaption (pageTitle, descriptionURL) after someHTML
+   return someHTML
+end wikicommons_ConstructVideoHtml
+
+function wikicommons_ConstructVideoCaption pageTitle, descriptionURL   
+   put "<br></br>" into someHTML
+   put html_ConstructRefLink (pageTitle, descriptionURL, "_blank") after someHTML 
+   return someHTML
+end wikicommons_ConstructVideoCaption
+
+function wikicommons_ConstructImageHtml pageArray, pImageCaption, pWikimediaLink
+   wikicommons_DeconstructPageArray pageArray, pageTitle, imageURL, descriptionURL, pImageCaption
+   put fedwiki_ConstructImageHtml (imageURL, pImageCaption, descriptionURL, "- wikimedia") into imageHTML
+   return imageHTML
+end wikicommons_ConstructImageHtml
+
+command wikicommons_DeconstructPageArray pageArray, @imageTitle, @imageURL, @descriptionURL, @pImageCaption
+   put pageArray ["title"] into imageTitle
+   
+   put pageArray ["imageinfo"]["1"] into imageInfoArray  -- if there is only one
+   put imageInfoArray ["descriptionURL"] into descriptionURL
+   put imageInfoArray ["width"] into imageWidth
+   put imageInfoArray ["height"] into imageHeight
+   put imageInfoArray ["url"] into imageURL
+   
+   put imageInfoArray ["thumburl"] into thumbURL
+   put imageInfoArray ["thumbwidth"] into thumbWidth
+   put imageInfoArray ["thumbheight"] into thumbHeight
+   put imageInfoArray ["thumbmime"] into thumbMime
+   
+   if pImageCaption is empty then
+      put imageInfoArray ["extmetadata"]["imageDescription"]["value"] into pImageCaption
+   end if
+end wikicommons_DeconstructPageArray
+
+
+--> Fedwiki | TOC
+-
+function fedwikipedia_ConstructSectionTOC tocArray, pSectionTitle
+   local lookUpArray, sectionTOC
+   fedwikipedia_ExtractTocLookupArray tocArray, lookUpArray, sectionTOC, pSectionTitle
+   return sectionTOC
+end fedwikipedia_ConstructSectionTOC
+
+command fedwikipedia_ExtractTocLookupArray tocArray, @lookUpArray, @sectionTOC, pSectionTitle
+   if pSectionTitle is empty then
+      toc_LookupArray tocArray, lookUpArray, sectionTOC
+   else
+      toc_LookupArrayFromSectionTitle tocArray, sectionTitle, lookUpArray, sectionTOC
+   end if
+   if lookUpArray is an array then
+      put "https://livecode.world/mediawiki/importSection" into lookUpArray ["default"]["transport"]
+   end if
+end fedwikipedia_ExtractTocLookupArray
+
+private command toc_LookupArray tocArray, @lookUpArray, @markdownTOC
+   delete variable tocArray ["index"]
+   repeat with itemNum = (the number of lines of the keys of tocArray) down to 1
+      put tocArray [itemNum]["meta"] into metaTocArray
+      put metaTocArray ["title"] into sectionTitle
+      delete variable metaTocArray ["title"]
+      
+      put metaTocArray into lookUpArray ["wiki_links"][sectionTitle]
+      put "* [[" & sectionTitle & "]]" & CR before markdownTOC
+   end repeat
+   delete char -1 of markdownTOC
+end toc_LookupArray
+
+private command toc_LookupArrayFromSectionTitle tocArray, sectionTitle, @lookUpArray, @markdownTOC
+   put tocArray ["index"][sectionTitle]["dot_number"] into dotNum
+   toc_LookupArrayFromDotNum tocArray, dotNum, lookUpArray, markdownTOC
+end toc_LookupArrayFromSectionTitle
+
+private command toc_LookupArrayFromDotNum tocArray, dotNum, @lookUpArray, @markdownTOC
+   split dotNum by "."
+   put tocArray [dotNum] into sectionTocArray
+   delete variable sectionTocArray ["meta"]
+   toc_LookupArray sectionTocArray, lookUpArray, markdownTOC
+end toc_LookupArrayFromDotNum
+
+function fedwikipedia_ConstructTocArray sandboxArray
+   put sandboxArray ["parse"]["sections"] into sectionArray
+   put sectionArray [1]["fromTitle"] into tocTitle
+   
+   repeat for each key tocNum in sectionArray
+      put sectionArray [tocNum]["level"] into tocLevel
+      put sectionArray [tocNum]["line"] into tocLine
+      put sectionArray [tocNum]["number"] into tocNumber
+      
+      put tocNumber into tocArray ["index"][tocLine]["dot_number"]
+      put tocNum into tocArray ["index"][tocLine]["section_number"]
+      
+      put tocNumber into dotKeyArray
+      split dotKeyArray by "."
+      put tocLine into tocArray [dotKeyArray]["meta"]["title"]
+      put tocNumber into tocArray [dotKeyArray]["meta"]["dot_number"]
+      put tocNum into tocArray [dotKeyArray]["meta"]["section_number"]
+      put tocLevel into tocArray [dotKeyArray]["meta"]["section_level"]
+   end repeat
+   return tocArray
+end fedwikipedia_ConstructTocArray
+
+command fedwikipedia_ConstructSectionTocArray sectionArray, sectionNum, @sectionTocArray, @sectionTitle
+   put sectionArray [1]["fromTitle"] into tocTitle
+   put sectionArray [1]["line"] into sectionTitle
+   
+   put item 2 of the extents of sectionArray into maxNum
+   set the itemdelimiter to "."
+   repeat with itemNum = 2 to maxNum
+      put sectionArray [itemNum]["line"] into tocLine
+      put sectionArray [itemNum]["number"] into tocNumber
+      put sectionArray [itemNum]["level"] into tocLevel
+      
+      delete item 1 of tocNumber
+      put itemNum - 1 + sectionNum into tocNum
+      
+      put tocNumber into sectionTocArray ["index"][tocLine]["dot_number"]
+      put tocNum into sectionTocArray ["index"][tocLine]["section_number"]
+      put tocLevel into sectionTocArray ["index"][tocLine]["section_level"]
+      
+      put tocNumber into dotKeyArray
+      split dotKeyArray by "."
+      put tocLine into sectionTocArray [dotKeyArray]["meta"]["title"]
+      put tocNumber into sectionTocArray [dotKeyArray]["meta"]["dot_number"]
+      put tocNum into sectionTocArray [dotKeyArray]["meta"]["section_number"]
+      put tocLevel into sectionTocArray [dotKeyArray]["meta"]["section_level"]
+   end repeat
+   return sectionTocArray
+end fedwikipedia_ConstructSectionTocArray
+
+
+--> Fedwiki | Sitemap
+-
+function fedwiki_FetchSitemapArray fedwikiDomain
+   put fedwiki_FetchSitemap (fedwikiDomain) into someJson
+   put json_ToArray (someJson) into sitemapArray
+   return sitemapArray
+end fedwiki_FetchSitemapArray
+
+function fedwiki_FetchSitemap fedwikiUrl
+   -- http://david.narrative.world/view/welcome-visitors/view/currently-working-on/view/fedwiki-tools
+   -- put script_GetCommentAboveMe() into fedwikiUrl
+   
+   put fedwiki_JsonSiteMapUrl (fedwikiUrl) into sitemapURL
+   put url sitemapURL into sitemapJSON
+   return sitemapJSON
+end fedwiki_FetchSitemap
+
+function fedwiki_JsonSiteMapUrl fedwikiUrl   
+   set the itemDelimiter to "/"
+   put item 1 to 3 of fedwikiUrl into sitemapURL
+   put "/system/sitemap.json" after sitemapURL
+   return sitemapURL
+end fedwiki_JsonSiteMapUrl
+
+
+--> FedWikipedia | Section | Summary
+-
+function fedwikipedia_FetchSectionSummaryPageJson pageSlug, sectionNum, pSourceArray
+   put fedwikipedia_FetchSectionSummaryPageArray (pageSlug, sectionNum, pSourceArray) into fedwikiPageArray
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   return pageJSON
+end fedwikipedia_FetchSectionSummaryPageJson
+
+function fedwikipedia_FetchSectionSummaryPageArray pageSlug, sectionNum
+   -- see also "fedwiki_FetchWikipediaSummaryPageArray"
+   -- need to make a "query" call to get a nice clean text
+   -- this will fetch all the nested text into sectionDescription which can be to long.
+   local sectionTocArray, sectionTitle, lookUpArray, sectionTOC
+   
+   mediawiki_FetchSectionQueryInfo pageSlug, sectionNum, sectionDescription, pageTitle, shortImageFile, sectionArray, wikipediaRevisionID
+   put the result into sandboxArray
+   fedwikipedia_ConstructSectionTocArray sectionArray, sectionNum, sectionTocArray, sectionTitle
+   fedwikipedia_ExtractTocLookupArray sectionTocArray, lookUpArray, sectionTOC   -- don't look for sectionTitle as we have extracted subsections
+   put wikipedia_ConstructUrl (pageSlug, sectionTitle) into wikipediaUrl
+   
+   put construct_SummarySourceArray (pageTitle, pageSlug, wikipediaUrl, wikipediaRevisionID, lookUpArray) into pSourceArray
+   
+   -- now let's construct the page
+   put fedwikipedia_SplitSectionDescription (pageTitle, shortImageFile, sectionDescription, sectionTocArray) into sectionIntro
+   put wikicommons_ConstructTwoImagePageArray (sectionTitle, sectionIntro, shortImageFile, wikipediaUrl, pSourceArray) into fedwikiPageArray
+   
+   if sectionTOC is not empty then
+      put "# See also" & CR & sectionTOC into markdownSection
+      fedwiki_AddMarkdownToPageArray fedwikiPageArray, markdownSection
+   end if
+   
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwikipedia_FetchSectionSummaryPageArray
+
+function fedwikipedia_SplitSectionDescription pageTitle, shortImageFile, sectionDescription, sectionTocArray
+   -- strip the top bit including sectionTitle and intro image
+   
+   put sectionTocArray [1]["meta"]["title"] into firstSectionTitle
+   
+   if firstSectionTitle is empty then
+      put word 1 to -1 of sectionDescription into sectionIntro
+   else
+      put sectionTocArray [1]["meta"]["section_level"] into toclevel
+      repeat toclevel
+         put "=" after titleBit
+      end repeat
+      put titleBit & firstSectionTitle & titleBit into testLine
+      -- return testLine & CR & sectionDescription
+      
+      -- set the wholematches to true -- bug in server (seems not to match CR)
+      put lineOffset (testLine, sectionDescription) into lineNum
+      -- return lineNum
+      
+      if lineNum = 0 then
+         put sectionDescription into sectionIntro
+      else
+         put line 1 to (lineNum - 1) of sectionDescription into sectionIntro
+      end if
+   end if
+   
+   replace "_" with space in shortImageFile -- why is it encoded like this?
+   repeat -- let's just strip all templates and headers until we get normal text?
+      switch
+         case char 1 of sectionIntro is among the chars of "{="
+            delete line 1 of sectionIntro
+            break
+         case line 1 of sectionIntro begins with ("[[File:" & shortImageFile)
+            delete line 1 of sectionIntro
+            break
+         case sectionIntro is empty
+            put "No section text, so add your own here..." into sectionIntro
+            exit repeat
+            break
+         case line 1 of sectionIntro is empty
+            delete line 1 of sectionIntro
+            break
+         default
+            exit repeat
+      end switch
+   end repeat
+   
+   return sectionIntro
+end fedwikipedia_SplitSectionDescription
+
+
+--> Fedwiki | Section
+-
+function fedwiki_FetchWikipediaSection pageTitle, sectionNum
+   put sandbox_FetchSectionArray (pageTitle, sectionNum) into sandboxArray
+   put sandboxArray ["parse"] into parseArray
+   put parseArray ["wikitext"]["*"] into sectionWikiText
+   return sectionWikiText
+end fedwiki_FetchWikipediaSection
+
+command fedwiki_AddWikipediaSectionToPageArray @fedwikiPageArray, wikiSection, pNotTheseImages
+   --  [[File:Thefalloftheberlinwall1989.JPG|thumb|left|The [[Berlin Wall#The Fall|fall of the Berlin Wall]] on 9 November 1989. On [[German Unity Day|3 October 1990]], the [[German reunification]] process was formally finished.]]
+   -- put script_GetCommentAboveMe() into testLine
+   
+   fedwikipedia_CleanLine wikiSection
+   
+   put empty into markDownBulletSection
+   repeat for each line wikisectionLine in wikiSection
+      put word 1 to - 1 of wikisectionLine into wikisectionLine
+      switch
+         case char 1 to 2 of wikisectionLine = "* "
+            put wikisectionLine & CR after markDownBulletSection
+            next repeat
+         case markDownBulletSection is not empty
+            delete char -1 of markDownBulletSection
+            fedwiki_AddMarkdownToPageArray fedwikiPageArray, markDownBulletSection
+            put empty into markDownBulletSection
+            break
+         case char 1 to 7 of wikisectionLine = "[[File:"
+            mediawiki_DeconstructImageWikiText wikisectionLine, shortImageFile, captionBit
+            if shortImageFile is not among the lines of pNotTheseImages then
+               put wikicommons_FetchImageHtml (shortImageFile, captionBit) into imageHTML
+               fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
+            end if
+            break
+         case char 1 of wikisectionLine = "<"
+            fedwikipedia_CleanInternalLinks wikiSectionLine
+            fedwiki_AddHtmlToPageArray fedwikiPageArray, wikisectionLine
+            break
+         case char 1 of wikisectionLine = "=" and char -1 of wikisectionLine = "="
+            mediawiki_ConvertSectionTitle wikisectionLine
+            fedwiki_AddMarkdownToPageArray fedwikiPageArray, wikisectionLine
+            break
+         case wikisectionLine is not empty
+            fedwikipedia_CleanInternalLinks wikiSectionLine
+            fedwiki_AddParagraphToPageArray fedwikiPageArray, wikisectionLine
+            break
+         case wikisectionLine is empty
+            next repeat
+      end switch
+   end repeat
+   
+   if markDownBulletSection is not empty then
+      -- exitted without adding markDownBulletSection
+      delete char -1 of markDownBulletSection
+      fedwiki_AddMarkdownToPageArray fedwikiPageArray, markDownBulletSection
+      -- put empty into markDownBulletSection
+   end if
+   
+   delete char -2 to -1 of cleanedSections
+   fedwikipedia_MakeTextParagraphFirst fedwikiPageArray
+end fedwiki_AddWikipediaSectionToPageArray
+
+command fedwikipedia_MakeTextParagraphFirst @fedwikiPageArray
+   put fedwikiPageArray ["story"] into storyArray
+   repeat with itemNum = 1 to (the number of lines of the keys of storyArray)
+      put storyArray [itemNum]["type"] into itemType
+      if itemType = "paragraph" then
+         fedwiki_MoveStoryItem fedwikiPageArray, itemNum, 1
+         return true
+      end if
+   end repeat
+   return false
+end fedwikipedia_MakeTextParagraphFirst
+
+function fedwiki_FetchWikipediaSectionArray sectionTitle, sectionNum, wikipediaUrl
+   put sandbox_FetchSectionArray (sectionTitle, sectionNum) into sandboxArray
+   
+   put sandboxArray ["parse"] into parseArray
+   put parseArray ["title"] into pageTitle
+   put parseArray ["text"]["*"] into sectionHTML
+   put parseArray ["wikitext"]["*"] into sectionWikiText
+   
+   put parseArray ["links"] into sectionLinks
+   put parseArray ["categories"] into sectionCategories
+   put parseArray ["externallinks"] into sectionExternalLinks
+   put parseArray ["images"] into sectionImageArray
+   
+   put parseArray ["sections"][1] into sectionInfoArray
+   put sectionInfoArray ["line"] into sectionTitle
+   put sectionInfoArray ["toclevel"] into toclevel
+   
+   put fedwiki_ConstructSectionWikipediaPageArray (sectionTitle, sectionWikiText, sectionImageArray, wikipediaUrl) into fedwikiPageArray
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end fedwiki_FetchWikipediaSectionArray
+
+function fedwiki_ConstructSectionWikipediaPageArray sectionTitle, wikiSection, shortImageFile, wikipediaUrl, pSourceArray
+   put sectionTitle into fedwikiPageArray ["title"]
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into fedwikiPageArray ["journal"]
+   
+   delete line 1 of wikiSection -- == sectionTitle ==
+   fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, wikiSection, shortImageFile
+   return fedwikiPageArray
+end fedwiki_ConstructSectionWikipediaPageArray
+
+function fedwikipedia_ExtractShortImageFile droppedHTML
+   put xml_ToArray (droppedHTML) into imageArray
+   
+   put imageArray ["meta"]["img"]["@attributes"] into attributeArray
+   put attributeArray ["src"] into thumbURL
+   put attributeArray ["srcset"] into srcsetURL
+   put attributeArray ["width"] into thumbWidth
+   put attributeArray ["height"] into thumbHeight
+   
+   -- https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Bruce_Sterling_at_ARE_2010.jpg/220px-Bruce_Sterling_at_ARE_2010.jpg
+   set the itemdelimiter to "/"
+   put item -2 of thumbURL into shortImageFile
+   return shortImageFile
+end fedwikipedia_ExtractShortImageFile
+
+
+--> Fedwiki | Fetch
+-
+command fedwiki_ParseDroppedmediaWikiUrl droppedURL, @pageTitle, @apiStem
+   -- this should inspect the wiki's pecial page and extract the apistem from things like
+   -- https://en.wikipedia.org/wiki/Laetoli#Hominid_footprints
+   -- http://hackteria.org/wiki/api.php?action=query&prop=categories
+   -- http://p2pfoundation.net/Decision-Making_Tools
+   -- http://hackteria.org/wiki/Explorations_in_BioLuminescence
+   -- for now we just look it up in an internal array
+   
+   set the itemdelimiter to "/"
+   put item 3 of droppedURL into wikiDomain
+   switch
+      case wikiDomain = "hackteria.org"
+         put "http://hackteria.org/wiki/api.php" into apiStem
+         put item 5 of droppedURL into pageTitle
+         break
+      case wikiDomain = "p2pfoundation.net"
+         put "http://p2pfoundation.net/api.php" into apiStem
+         put item 4 of droppedURL into pageTitle
+         break
+      default
+         -- case wikiDomain = "en.wikipedia.org"
+         put wikipedia_GetApiRoot() into apiStem
+         put item 5 of droppedURL into pageTitle
+   end switch
+   set the itemdelimiter to "#"
+   put item 1 of pageTitle into pageTitle
+   replace "_" with space in pageTitle
+end fedwiki_ParseDroppedmediaWikiUrl
+
+function fedwikipedia_GetPageSlug dropJSON
+   put fedwiki_GetDroppedUrl (dropJSON) into droppedURL
+   put mediwiki_ExtractPageSlugFromUrl (droppedURL) into pageSlug
+   fedwiki_ReturnError pageSlug, "Not a Wikipedia page!"
+   return pageSlug
+end fedwikipedia_GetPageSlug
+
+
+--> FedWiki | Sandbox | Page
+-
+function fedwikipedia_FetchPageHtml pageTitle, pApiStem
+   put fedwikipedia_FetchPageHtmlArray (pageTitle, pApiStem) into sandboxArray
+   put sandbox_GetExtract (sandboxArray) into pageHTML
+   return pageHTML
+end fedwikipedia_FetchPageHtml
+
+function fedwikipedia_FetchWikiText pageTitle
+   put fedwikipedia_FetchWikiTextArray (pageTitle) into anotherArray   
+   put sandbox_GetRevision (anotherArray) into wikiText
+   return wikiText 
+end fedwikipedia_FetchWikiText
+
+function fedwikipedia_FetchWikiTextArray pageTitle, pApiStem
+   put sandbox_ConstructWikiTextFragment (pageTitle) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   return sandboxArray
+end fedwikipedia_FetchWikiTextArray
+
+function fedwikipedia_FetchPageHtmlArray pageTitle, pApiStem
+   put sandbox_ConstructPageHtmlFragment (pageTitle) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   return sandboxArray
+end fedwikipedia_FetchPageHtmlArray
+
+
+--> Fedwiki | Mediawiki | Image
+-
+function wikicommons_FetchImagePageJson shortImageFile
+   -- just HTML version
+   put wikicommons_FetchImagePageArray (shortImageFile, true) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end wikicommons_FetchImagePageJson
+
+function wikicommons_CostructBasicSummaryPageArray pageTitle, pageDescription, wikipediaUrl, shortImageFile, pSourceArray
+   local fedwikiPageArray
+   
+   put pageTitle into fedwikiPageArray ["title"]
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into fedwikiPageArray ["journal"]
+   
+   -- let's add wikipedia url link to first line
+   put word 1 to -1 of pageDescription into pageDescription
+   put line 1 of  pageDescription into firstLine
+   delete line 1 of pageDescription
+   
+   if wikipediaUrl is not empty then
+      put word 1 to -1 of firstLine into firstLine
+      if char -1 of firstLine = "." then delete char -1 of firstLine
+      put space & "- [" & wikipediaUrl && "wikipedia]" after firstLine
+   end if
+   fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, firstLine, shortImageFile
+   return fedwikiPageArray
+end wikicommons_CostructBasicSummaryPageArray
+
+
+--> Wiki Commons | Image
+-
+command wikicommons_AddAllImages @fedwikiPageArray, mwPageTitle, pLimitNum
+   put mediawiki_ListPageImages (mwPageTitle) into pageImages
+   if pLimitNum is a number then put line 1 to pLimitNum of pageImages into pageImages
+   repeat with lineNum =1 to the number of lines of pageImages
+      put line lineNum of pageImages into shortImageFile -- what if it is not an image???
+      if shortImageFile is empty then next repeat
+      if shortImageFile is among the items of "Commons-logo.svg,Wikisource-logo.svg" then next repeat
+      if shortImageFile begins with "Coat of arms of " then next repeat
+      if shortImageFile begins with "Flag of " then next repeat
+      
+      put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+      put sandboxArray ["query"]["pages"] into pagesArray
+      put pagesArray ["-1"] into pageArray
+      wikicommons_AddImageToPageArray fedwikiPageArray, pageArray
+   end repeat
+end wikicommons_AddAllImages
+
+function wikicommons_FetchImageHtml shortImageFile, pImageCaption
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of the keys of pagesArray into pageID
+   put pagesArray [pageID] into pageArray
+   put wikicommons_ConstructImageHtml (pageArray, pImageCaption) into imageHTML
+   return imageHTML
+end wikicommons_FetchImageHtml
+
+function wikicommons_FetchImagePageArray shortImageFile, pApiStem 
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put wikicommons_ConstructPageArray (sandboxArray) into pageArray
+   return pageArray
+end wikicommons_FetchImagePageArray
+
+function wikicommons_FetchImageSandboxArray shortImageFile 
+   if not (shortImageFile begins with "File:") then put "File:" before shortImageFile
+   put wikimedia_GetApiRoot() into pApiStem
+   
+   put "/w/api.php?action=query&format=json&prop=imageinfo" into sandBoxFragment
+   put "&titles=" & shortImageFile after sandBoxFragment
+   put "&iiprop=" & "comment|url|dimensions|size|sha1|metadata|extmetadata|thumbmime" after sandBoxFragment
+   put "&iiurlwidth=420" after sandBoxFragment
+   
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   return sandboxArray
+end wikicommons_FetchImageSandboxArray
+
+
+--> Fedwiki | Convert
+-
+function fedwiki_ConvertWikipediaQueryArray wikipediaQueryArray
+   put wikipediaQueryArray ["query"]["pages"] into pagesArray
+   repeat for each key pageID in pagesArray
+      put pagesArray [pageID] into pageArray
+      
+      put pageArray ["title"] into pageTitle
+      put pageArray ["extract"] into pageExtract
+      put pageArray ["terms"]["description"][1] into pageDescription
+      
+      put pageArray ["pageImage"] into shortImageFile
+      put pageArray ["thumbnail"] into thumbnail
+      put pageArray ["images"] into imageArray
+      
+      exit repeat -- just do one page for now
+   end repeat
+   
+   put fedwiki_ConstructNewPageArray (pageTitle, pageDescription) into pageArray
+   fedwiki_AddHtmlToPageArray pageArray, pageExtract
+   
+   wikicommons_AddAllImages pageArray, pageTitle
+   
+   return pageArray
+end fedwiki_ConvertWikipediaQueryArray
+
+
+--> Fedwiki | Clean
+-
+/*
+These handlers are for parsing, and cleaning mediawiki stypled wikitext, to turn it into a form that is useful for Fedwiki.
+*/
+
+command fedwikipedia_CleanLine @wikiText
+   fedwikipedia_CleanCitations wikiText
+   fedwikipedia_CleanReferences wikiText
+   fedwikipedia_CleanSeeAlso wikiText
+   fedwikipedia_CleanConvertTemplate wikiText
+   
+   fedwikipedia_StripAllTemplates wikiText
+   put word 1 to -1 of wikiText into wikiText
+end fedwikipedia_CleanLine
+
+command fedwikipedia_StripAllTemplates @wikiText
+   --  starting text {{cite web|author=Nisi Shawl |url=http://seattletimes.nwsource.com/html/books/2008758249_br22sterling.html |title=Books &#124; "The Caryatids": four clones need a home &#124; Seattle Times Newspaper |publisher=Seattletimes.nwsource.com |date=2009-02-19 |accessdate=2010-01-01}} something at the end
+   -- put script_GetCommentAboveMe() into wikiText
+   
+   put empty into templateName
+   put false into changedTemplate
+   repeat
+      mediawiki_SetTemplateOffsets templateName, wikiText, startWikiTemplate, endWikiTemplate
+      put the result into foundTemplate
+      if foundTemplate is empty then exit repeat
+      put true into changedTemplate
+      delete char startWikiTemplate to endWikiTemplate of wikiText
+      
+      -- below is just an ugly hack
+      get char (startWikiTemplate+0) of wikiText
+      if it = ";" then
+         delete char (startWikiTemplate+0) of wikiText
+      end if
+   end repeat
+   return changedTemplate
+end fedwikipedia_StripAllTemplates
+
+command fedwikipedia_CleanReferences @wikiText
+   -- '''Leon Trotsky'''(;<ref>[http://dictionary.reference.com/browse/trotsky "Trotsky"]. ''[[Random House Webster's Unabridged Dictionary]]''.</ref> ; ; born '''Lev Davidovich Bronstein'''; ‚Äì 21 August 1940) was a [[Marxist]] revolutionary and theorist, Soviet politician, and the founding leader of the [[Red Army]].
+   -- put script_GetCommentAboveMe() into wikiText
+   
+   put "[^\<]+" into untilAngleBracket
+   put "(\<ref[^\>]*\>)" into someReg
+   put "(" & untilAngleBracket & ")" after someReg
+   put "\<\/ref\>" after someReg
+   put "(?mi)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiText, someReg, refStart, refEnd, wikiRefStart, wikiRefEnd) is true then
+         put char wikiRefStart to wikiRefEnd of wikiText into wikiRef
+         delete char refStart to (wikiRefEnd + 6) of wikiText
+         if char (refStart-1) of wikiText = ";" then
+            delete char (refStart-1) of wikiText
+         end if
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanReferences
+
+command fedwikipedia_CleanCitations @wikiText
+   -- starting text <ref name="fdsa">{{cite web|author=Nisi Shawl |url=http://seattletimes.nwsource.com/html/books/2008758249_br22sterling.html |title=Books &#124; "The Caryatids": four clones need a home &#124; Seattle Times Newspaper |publisher=Seattletimes.nwsource.com |date=2009-02-19 |accessdate=2010-01-01}}</ref> something at the end
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "[^\}]+" into untilCurlyBracket
+   put "\{\{cite (" & untilCurlyBracket & ")\}\}" into someReg
+   put "(<ref[^\>]*>)" before someReg
+   put "</ref>" after someReg
+   put "(?mi)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiText, someReg, refStart, refEnd, wikCiteStart, wikiCiteEnd) is true then
+         put char wikCiteStart to wikiCiteEnd of wikiText into wikiCitation
+         split wikiCitation with "|" and "="
+         put word 1 to -1 of wikiCitation ["url"] into citationURL
+         put word 1 to -1 of wikiCitation ["title"] into citationTitle
+         put "[" & citationURL && citationTitle & "]" into cleanCitation
+         
+         put cleanCitation into char refStart to (wikiCiteEnd + 8) of wikiText
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanCitations
+
+command fedwikipedia_CleanConvertTemplate @wikiSectionLine
+   -- some start text {{convert|22|–|25|C|F}} also {{convert|4|C-change|sigfig=1}} end text 
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "[^\}]+" into untilCurlyBracket
+   put "\{\{convert\|(" & untilCurlyBracket & ")\}\}" into someReg
+   put "(?m)" before someReg -- multiline search
+   
+   set the itemdelimiter to "|"
+   repeat
+      if matchchunk (wikiSectionLine, someReg, someStart, someEnd) is true then
+         put char someStart to someEnd of wikiSectionLine into someText
+         switch the number of items of someText
+            case 3
+               -- 4|C-change|sigfig=1
+               put item 1 of someText into someNum
+               put item 2 of someText into someSymbol
+               replace "-change" with empty in someSymbol
+               put someNum & fromSymbol into cleanText
+               break
+            default -- case 5
+               put item 1 to - 3 of someText into someData
+               replace "|" with empty in someData
+               put item -2 of someText into fromSymbol
+               put item -1 of someText into toSymbol
+               put someData & fromSymbol into cleanText
+         end switch
+         
+         subtract 10 from someStart
+         add 2 to someEnd
+         put cleanText into char someStart to someEnd of wikiSectionLine
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanConvertTemplate
+
+command fedwikipedia_CleanSeeAlso @wikiSectionLine
+   -- some start text {{See also|1920s Berlin}} end text 
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "[^\}]+" into untilCurlyBracket
+   put "\{\{See also\|(" & untilCurlyBracket & ")\}\}" into someReg
+   put "(?m)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiSectionLine, someReg, wikiAlsoStart, wikiAlsoEnd) is true then
+         put char wikiAlsoStart to wikiAlsoEnd of wikiSectionLine into wikiAlsoLink
+         if wikiAlsoStart = 12 then
+            put "See also [[" & wikiAlsoLink & "]]" into cleanAlso
+         else
+            put "(see also [[" & wikiAlsoLink & "]])" into cleanAlso
+         end if
+         put cleanAlso into char (wikiAlsoStart - 11) to (wikiAlsoEnd + 2) of wikiSectionLine
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanSeeAlso
+
+command fedwikipedia_CleanInternalLinks @wikiSectionLine
+   -- strips out image files as well (carefull)
+   -- some starting text [[Machtergreifung|came to power]] something [[Real Link|well a second one]] at end
+   -- Berlin was devastated by [[Bombing of Berlin in World War II|bombing raids]], fires and street battles during 
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "\[\[([^\]]+)\|([^\]]+)\]\]" into someReg
+   put "(?m)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiSectionLine, someReg, wikiLinkStart, wikiLinkEnd, linktextStart, linktextEnd) is true then
+         put char wikiLinkStart to wikiLinkEnd of wikiSectionLine into wikiLink
+         put char linktextStart to linktextEnd of wikiSectionLine into wikiLinkText
+         put wikiLinkText && "([[" & wikiLink & "]])" into cleanedLink
+         put cleanedLink into char (wikiLinkStart - 2) to (linktextEnd + 2) of wikiSectionLine
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanInternalLinks
+
+
+--> Restbase | Work in progress
+-
+command restbase_Summary pageSlug
+   -- https://rest.wikimedia.org/en.wikipedia.org/v1/page/summary/wiki
+   put "https://rest.wikimedia.org/en.wikipedia.org/v1/page/summary/" & pageSlug into someURL
+   put mediawiki_GetRestArray (someURL) into restBaseArray
+   
+   put restBaseArray ["title"] into pageTitle
+   put restBaseArray ["extract"] into pageDescription
+   put fedwiki_ConstructNewPageArray (pageTitle, pageDescription) into pageArray
+   
+   put restBaseArray ["thumbnail"]["source"] into imageURL
+   set the itemdelimiter to "/"
+   put item -2 of imageURL into shortImageFile
+   set the itemdelimiter to "."
+   put item -1 of shortImageFile into imageType
+   
+   put url imageURL into someImage
+   put "Transported image" into pImageCaption
+   
+   put fedwiki_ConstructImageArray (someImage, imageType, pImageCaption) into imageArray
+   fedwiki_PageArrayAddToEnd imageArray, pageArray
+   
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put wikicommons_ConstructPageArray (sandboxArray) into pageArray
+   
+   return pageArray
+end restbase_Summary
+
+function restbase_FetchSectionArray pageSlug
+   put "https://rest.wikimedia.org/en.wikipedia.org/v1/page/mobile-sections/" & pageSlug into someURL
+   put mediawiki_GetRestArray (someURL) into restBaseArray
+   return restBaseArray
+end restbase_FetchSectionArray
+
+function restbase_FetchWikipediaSectionPageArray pageSlug, sectionNum, someLang
+   -- https://en.wikipedia.org/w/index.php?title=Bruce_Sterling&action=edit&section=5&editintro=Template:BLP_editintro
+   put restbase_FetchSectionArray (pageSlug, someLang) into sectionPageArray
+   
+   put sectionPageArray ["lead"]["description"] into pageDescription
+   put sectionPageArray ["lead"]["displayTitle"] into pageTitle
+   put sectionPageArray ["lead"]["image"] into imageArray
+   put imageArray ["file"] into shortImageFile
+   put "https:" & imageArray ["640"] into imageURL
+   put sectionPageArray ["lead"]["sections"]["1"]["text"] into htmlPageDescription
+   
+   put sectionPageArray ["remaining"]["sections"] into sectionArray
+   put sectionArray [sectionNum]["line"] into sectionTitle
+   put sectionArray [sectionNum]["tocLevel"] into tocLevel
+   put sectionArray [sectionNum]["text"] into sectionHTML
+   
+   put empty into wikipediaUrl
+   put wikicommons_ConstructTwoImagePageArray (pageTitle, pageDescription, shortImageFile, wikipediaUrl) into fedwikiPageArray
+   
+   return fedwikiPageArray
+end restbase_FetchWikipediaSectionPageArray
+
+on restbase_Mobile
+   put fedwiki_GetDroppedUrl ($_POST_RAW) into droppedURL
+   put mediwiki_ExtractPageSlugFromUrl (droppedURL) into pageSlug
+   put "https://rest.wikimedia.org/en.wikipedia.org/v1/page/mobile-text/" & pageSlug into someURL
+   put mediawiki_GetRestArray (someURL) into restBaseArray
+   
+   -- display_Array restBaseArray, "mobile-text"
+end restbase_Mobile
+
+
+--> Sandbox
+-
+/*
+These handlers are designed to work with the mediawiki sandbox interface - https://en.wikipedia.org/wiki/Special:ApiSandbox
+
+You should be able to explore the api, and copy the sandbox fragments from the web interface,
+and add them to a handler below in order to code simple rest calls that return arrays.
+*/
+
+command mediawiki_TestSandboxFragment sandBoxFragment
+   set the itemdelimiter to "="
+   delete item 1 of sandboxFragment
+   put "https://en.wikipedia.org/wiki/Special:ApiSandbox#action=" & sandboxFragment into someUrl
+   -- put someUrl
+   launch url someUrl
+end mediawiki_TestSandboxFragment
+
+command sandbox_DeconstructSectionArray sandboxArray, @pageTitle, @sectionDescription, @imageArray, @sectionArray, @wikipediaRevisionID
+   -- display_Array sandboxArray, "sandbox_DeconstructSectionArray"
+   put sandboxArray ["parse"] into parseArray
+   put parseArray ["pageid"] into pageID
+   put parseArray ["title"] into pageTitle
+   put parseArray ["wikitext"]["*"] into sectionDescription
+   put parseArray ["images"] into imageArray
+   put parseArray ["sections"] into sectionArray
+   -- put parseArray ["text"]["*"] into sectionHTML
+   put parseArray ["revid"] into wikipediaRevisionID
+end sandbox_DeconstructSectionArray
+
+function sandbox_FetchSectionArray pageTitle, sectionNum, pApiStem
+   -- was "sandbox_FetchSectionArray"
+   put sandbox_ConstructSectionFragment (pageTitle, sectionNum) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   return sandboxArray
+end sandbox_FetchSectionArray
+
+command sandbox_DeconstructPageArray sandboxArray, @pageTitle, @pageDescription, @shortImageFile, @lastRevisionID
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID
+   put pagesArray [pageID] into sandboxPageArray
+   
+   put sandboxPageArray ["title"] into pageTitle
+   put sandboxPageArray ["extract"] into pageDescription
+   put sandboxPageArray ["pageprops"]["page_image"] into shortImageFile
+   put sandboxPageArray ["lastrevid"] into lastRevisionID
+   return sandboxPageArray
+end sandbox_DeconstructPageArray
+
+function sandbox_ConstructSectionFragment pageTitle, pSectionNum
+   -- pSectionNum = 0 returns the summary section
+   -- /w/api.php?action=parse&format=json&page=Spacecraft&redirects=1&prop=text%7Cimages%7Cwikitext%7Cexternallinks%7Clinks%7Ccategories%7Csections&section=0&mobileformat=1&mainpage=1
+   put "/w/api.php?action=parse&format=json&page=" into sandBoxFragment
+   
+   text_Utf8Encode pageTitle
+   put urlencode (pageTitle) after sandBoxFragment
+   
+   -- put "&prop=text|images|wikitext" after sandBoxFragment
+   put "&prop=extracts|info|pageprops|text|wikitext|images|revid" after sandBoxFragment
+   put "|pageterms"  after sandBoxFragment
+   -- put "|categories" after sandBoxFragment
+   put "|sections" after sandBoxFragment
+   
+   if pSectionNum is a number then
+      put "&section=" & pSectionNum after sandBoxFragment
+   end if
+   put "&redirects" after sandBoxFragment
+   put "&mobileformat=1&mainpage=1" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructSectionFragment
+
+function sandbox_ConstructPageQueryFragment pageTitle, pSectionFormat, pIntroOnly
+   -- use parse like "sandbox_ConstructSectionFragment" instead?
+   -- /w/api.php?action=query&format=json&prop=extracts%7Ccategories%7Cpageprops%7Cinfo&titles=Therion&exintro=1&explaintext=1&exsectionformat=wiki
+   -- /w/api.php?action=query&format=json&prop=extracts%7Cinfo%7Cpageprops%7Cpageterms&continue=&titles=Trotsky&redirects=1&exintro=1&explaintext=1&exsectionformat=wiki
+   
+   -- /w/api.php?action=query&format=json
+   -- &prop=extracts%7Cinfo%7Cpageprops%7Cpageterms%7Ccoordinates
+   -- &titles=Alexanderplatz&redirects=1&exintro=1&explaintext=1&exsectionformat=wiki
+   -- &inprop=url%7Cdisplaytitle
+   
+   text_Utf8Encode pageTitle
+   put urlencode (pageTitle) into pageTitle
+   
+   if pSectionFormat is empty then put "plain" into pSectionFormat
+   put "/w/api.php?action=query" into sandBoxFragment
+   put "&prop=extracts|info|pageprops|pageterms|coordinates" after sandBoxFragment
+   put "|pageterms"  after sandBoxFragment
+   -- put "|categories" after sandBoxFragment
+   
+   if pIntroOnly is true then
+      put "&exintro=" & "1" after sandBoxFragment
+      put "&explaintext=&exsectionformat=" & pSectionFormat after sandBoxFragment
+   end if
+   put "&titles=" & pageTitle after sandBoxFragment
+   put "&inprop=url|displaytitle" after sandBoxFragment
+   put "&redirects" after sandBoxFragment
+   put "&format=json" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructPageQueryFragment
+
+function sandbox_ConstructWikiTextFragment pageTitle
+   -- use parse like "sandbox_ConstructSectionFragment" instead?
+   --action=query&format=json&prop=revisions&titles=Pliocene&rvprop=content&rvexpandtemplates=1&rvsection=0
+   
+   put "/w/api.php?action=query&format=json&prop=revisions&titles=" into sandBoxFragment
+   put urlencode (pageTitle) after sandBoxFragment
+   put "&rvprop=content&rvexpandtemplates=1"after sandBoxFragment
+   -- put "&rvsection=0" after sandBoxFragment
+   put "&redirects" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructWikiTextFragment
+
+function sandbox_ConstructPageHtmlFragment pageTitle
+   -- use parse like "sandbox_ConstructSectionFragment" instead?
+   put "/w/api.php?action=query&prop=extracts&format=json&titles=" into sandBoxFragment
+   put urlencode (pageTitle) after sandBoxFragment
+   put "&redirects" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructPageHtmlFragment
+
+command sandbox_ArrayDeconstructImage sandboxArray, @imageTitle, @imageURL, @imageDescription, @imageCaption, @descriptionURL, @imageCategoryIndex
+   -- let's deconstruct information about the file
+   put sandboxArray ["query"]["pages"] into pageArray
+   
+   put line 1 of keys (pageArray) into pageID -- should only be one line
+   put pageArray [pageID]["title"] into imageTitle -- same as shortImageFile
+   put pageArray [pageID]["imageinfo"][1] into imageInfoArray
+   
+   put imageInfoArray ["descriptionurl"] into descriptionURL
+   put imageInfoArray ["url"] into imageURL
+   put imageInfoArray ["extmetadata"] into extmetArray
+   
+   put extmetArray ["Categories"]["value"] into imageCategoryIndex
+   replace "|" with CR in imageCategoryIndex
+   put extmetArray ["ImageDescription"]["value"] into imageDescription
+   put extmetArray ["LicenseShortName"]["value"] into licenseDescription
+   
+   put imageDescription into imageCaption
+   put word 1 to -1 of imageCaption into imageCaption
+   if char 1 to 3 of imageCaption = "<p>" then
+      delete char 1 to 3 of imageCaption
+      if char -4 to -1 of imageCaption = "</p>" then
+         delete char -4 to -1 of imageCaption
+      end if
+   end if
+end sandbox_ArrayDeconstructImage
+
+private function sandbox_GetRevision sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID -- assume only one
+   put pagesArray [pageID] into pageArray
+   put pageArray ["revisions"]["1"]["*"] into someExtract
+   return someExtract
+end sandbox_GetRevision
+
+private function sandbox_GetExtract sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID -- assume only one
+   put pagesArray [pageID] into pageArray
+   put pageArray ["extract"] into someExtract
+   return someExtract
+end sandbox_GetExtract
+
+
+--> Private
+-
+private function construct_SummarySourceArray pageTitle, pageSlug, wikipediaUrl, wikipediaRevisionID, lookUpArray
+   put "https://livecode.world/mediawiki/transportAgain" into transportURL
+   put the milliseconds into dateTransported
+   put "https://github.com/LiveCodeWorld/lib_MediaWiki" into repoURL
+   put fedwiki_ConstructCreateSourceArray (transportURL, wikipediaUrl, dateTransported, repoURL, wikipediaRevisionID) into pSourceArray
+   -- put infoBoxArray into pSourceArray ["infobox"]
+   
+   text_Utf8Encode pageSlug -- this fixes bug / crash if page_Slug has non-utf8 characters
+   put pageSlug into pSourceArray ["pageSlug"]
+   put pageTitle into pSourceArray ["pageTitle"]
+   if lookUpArray is an array then
+      put lookUpArray into pSourceArray ["link_dictionary"]
+   end if
+   return pSourceArray
+end construct_SummarySourceArray
+
+
+--> Deps
+-
+command text_Utf8Encode @someText
+   -- put unidecode(uniencode(someText),"UTF8") into someText
+   put utf8_Encode (someText) into someText
+end text_Utf8Encode
+
+function html_FetchTidy someUrl
+   put url someUrl into someHtml
+   html_Tidy someHtml
+   return someHtml
+end html_FetchTidy
+
+command html_Tidy @someHtml
+   put the tempname & ".html" into inputFile 
+   put someHtml into url ("file:" & inputFile)
+   
+   put "tidy --force-output true --char-encoding utf8 --input-encoding utf8 --output-encoding utf8 --output-xml true -asxml -m" && inputFile into someShell
+   put shell (someShell) into shellResult   
+   put url ("file:" & inputFile) into someHtml
+end html_Tidy
+
+command html_FetchScraped someURL, @tidyXML, @xmlArray, @treeID
+   put html_FetchTidy (someURL) into tidyXML
+   put revXMLCreateTree (tidyXML, false, true, false) into treeID
+   xml_ExtractEncoding tidyXML, versionMatch, theXMLEncoding
+   put xml_ArrayFromID (treeID, theXMLEncoding) into xmlArray
+end html_FetchScraped
+
+function html_StripTags pHtml
+   -- returns the meaningful text from a web page
+   local tRegex,tPrevText
+   -----
+   replace return with space in pHtml
+   replace numtochar(13) with empty in pHtml
+   replace tab with empty in pHtml
+   -----
+   put replacetext(pHtml,"(?Usi)<SCRIPT.*</SCRIPT>","") into pHtml
+   put replacetext(pHtml,"(?Usi)<STYLE>.*</STYLE>","") into pHtml
+   put replacetext(pHtml,"(?Usi)<\?.*\?>","") into pHtml
+   -----
+   replace "&nbsp;" with space in pHtml
+   replace "<BR>" with return in pHtml
+   replace "<p>" with return in pHtml
+   -----
+   put  "<[^><]*>" into tRegex
+   put replacetext(pHtml,tRegex,"") into pHtml
+   put replacetext(pHtml,tRegex,"") into pHtml
+   -----
+   repeat until tPrevText is pHtml
+      put pHtml into tPrevText
+      put replacetext(pHtml," +",space) into pHtml
+      put replacetext(pHtml,"^ ","") into pHtml
+   end repeat
+   -----
+   replace (space & return) with return in pHtml
+   replace (return & space) with return in pHtml
+   filter pHtml without empty
+   -----
+   put html_ReplaceEntities (pHtml) into pHtml
+   -----
+   return pHtml
+end html_StripTags
+
+function html_ReplaceEntities someHtml
+   replace "&quot;" with quote in someHtml
+   
+   -- Replace all the html entities that Rev understands with their character equivalents.
+   put html_EntityList() into htmlEntities
+   put html_EntityCharNums() into entityCharNums
+   
+   repeat with ii = 1 to the number of items of htmlEntities
+      put item ii of entityCharNums into entityCharNum
+      put numtochar(entityCharNum) into someChar
+      replace item ii of htmlEntities with someChar in someHtml
+   end repeat
+   return someHtml
+end html_ReplaceEntities
+
+function html_EntityList
+   /*
+   Special characters (whose ASCII value is greater than 127) are encoded as HTML entities.
+   Revolution recognizes the following named entities:
+   */
+   get "&Aacute;,&aacute;,&Acirc;,&acirc;,&acute;,&AElig;,&aelig;,&Agrave;,&agrave;,&Aring;,&aring;,&Atilde;,&atilde;,&Auml;,&auml;,&brvbar;,&Ccedil;,&ccedil;,&cedil;,&cent;,&copy;,&curren;,&deg;,&divide;,&Eacute;,&eacute;,&Ecirc;,&ecirc;,&Egrave;,&egrave;,&ETH;,&eth;,&Euml;,&euml;,&frac12;,&frac14;,&frac34;,&gt;,&Iacute;,&iacute;,&Icirc;,&icirc;,&iexcl;,&Igrave;,&igrave;,&iquest;,&Iuml;,&iuml;,&laquo;,&lt;,&macr;,&micro;,&middot;,&nbsp;,&not;,&Ntilde;,&ntilde;,&Oacute;,&oacute;,&Ocirc;,&ocirc;,&Ograve;,&ograve;,&ordf;,&ordm;,&Oslash;,&oslash;,&Otilde;,&otilde;,&Ouml;,&ouml;,&para;,&plusmn;,&pound;,&raquo;,&reg;,&sect;,&shy;,&sup1;,&sup2;,&sup3;,&szlig;,&THORN;,&thorn;,&times;,&Uacute;,&uacute;,&Ucirc;,&ucirc;,&Ugrave;,&ugrave;,&uml;,&Uuml;,&uuml;,&Yacute;,&yacute;,&yen;,&yuml"
+   put "&amp;" & comma before it
+   return it
+end html_EntityList
+
+function html_EntityCharNums
+   get "231,135,229,137,171,174,190,203,136,129,140,204,139,128,138,3,130,141,252,162,169,219,161,214,131,142,230,144,233,143,15,19,232,145,12,11,14,62,234,146,235,148,193,237,147,192,236,149,199,60,248,181,225,202,194,132,150,238,151,239,153,241,152,187,188,175,191,205,155,133,154,166,177,163,200,168,164,4,7,5,6,167,18,21,16,242,156,243,158,244,157,172,134,159,17,20,180,216"
+   put "38" & comma before it
+   return it
+end html_EntityCharNums
+
+function xml_ToArray pXML, pTranslateKeyBoolean, pStoreEncodedAs, pUseValueKey, pGoodXML
+   -- was "xml_ConvertXmlToArray"
+   local theArray, theResult, theRootNode, treeID
+   local theXMLEncoding
+   
+   ## Create an XML tree from XML text
+   put pGoodXML is true into pGoodXML
+   put revCreateXMLTree (pXML, pGoodXML, true, false) into treeID
+   
+   if treeID is an integer then
+      xml_ExtractEncoding pXML, versionMatch, theXMLEncoding
+      
+      ## Now convert to array.
+      ## The 1st dimension has one key which is the name of the root node.
+      put revXMLRootNode(treeID) into theRootNode
+      if theRootNode is not empty and not (theRootNode begins with "xmlerr,") then
+         put xml_ConvertXMLNodeToArray (treeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArray [theRootNode]
+      end if
+      
+      revDeleteXMLTree treeID
+   end if
+   return theArray
+end xml_ToArray
+
+function xml_ArrayFromID treeID, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean
+   xml_ExtractEncoding pXML, versionMatch, theXMLEncoding
+   put revXMLRootNode (treeID) into theRootNode
+   if theRootNode is not empty and not (theRootNode begins with "xmlerr,") then
+      put xml_ConvertXMLNodeToArray (treeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArray [theRootNode]
+   else
+      return empty
+   end if
+   return theArray
+end xml_ArrayFromID
+
+private function xml_ConvertXMLNodeToArray pTreeID, pNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean
+   /*
+   Helper function for xml_ToArray.
+   Converts an XML node to a multi-dimensional array.-- Calls itself recursively.
+   */
+   local theArrayA, theAttributes, theChildNode, theKey
+   
+   ## Look for attributes of the node. Store as array in "@attributes" key
+   put revXMLAttributes (pTreeID, pNode, tab, cr) into theAttributes
+   if theAttributes is not empty then
+      put xml_EncodeString (theAttributes, pXMLTreeEncoding, pStoreEncodedAs) into theAttributes
+      split theAttributes by cr and tab -- create array
+      put theAttributes into theArrayA ["@attributes"]
+   end if
+   
+   ## Look for children nodes.
+   set the itemdelimiter to slash
+   put revXMLFirstChild (pTreeID, pNode) into theChildNode
+   if theChildNode is empty or theChildNode begins with "xmlerr," then
+      put xml_EncodeString (revXMLNodeContents (pTreeID, pNode), pXMLTreeEncoding, pStoreEncodedAs) into theValue
+      if word 1 to -1 of theValue is empty and the keys of theArrayA is not empty then
+         ## Empty node that has attributes
+         return theArrayA
+      else if pUseValueKey then
+         ## Force value into @value
+         put theValue into theArrayA ["@value"]
+         return theArrayA
+      else
+         ## Single Node with value: Return value. Attributes are ignored.
+         return theValue
+      end if
+   else
+      ## Child nodes were found. Recursively call self and store result in array.
+      repeat while theChildNode is not empty and not (theChildNode begins with "xmlerr,")
+         put the last item of theChildNode into theKey
+         
+         /*
+         if pTranslateKeyBoolean is true then
+            put the array_KeyTranslation [theKey] of the target into theKey
+            if theKey is empty then next repeat -- this can repeat forever
+         end if 
+         */
+         
+         put xml_ConvertXMLNodeToArray (pTreeID, theChildNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArrayA [theKey]
+         put revXMLNextSibling (pTreeID, theChildNode) into theChildNode
+      end repeat
+      
+      return theArrayA
+   end if
+end xml_ConvertXMLNodeToArray
+
+private function xml_EncodeString pString, pInEncoding, pOutEncoding
+   -- Helper function for converting the encoding of strings when converting to and from XML.
+   
+   ## convert utf-8 to utf8 for uniencode/decode
+   replace "-" with empty in pInEncoding
+   replace "-" with empty in pOutEncoding
+   
+   if pInEncoding is not empty then
+      -- if pOutEncoding is empty then pString will be converted to the current platform encoding
+      return unidecode(uniencode(pString, pInEncoding), pOutEncoding)
+   else
+      if pOutEncoding is not empty then
+         -- if pInEncoding is empty then pString is assumed to be in the current platform encoding
+         return unidecode(uniencode(pString, pInEncoding), pOutEncoding)
+      else
+         return pString
+      end if
+   end if
+end xml_EncodeString
+
+command xml_ExtractEncoding someXML, @versionMatch, @xmlEncoding
+   put matchtext(someXML, "<\?xml (.*)encoding=" & quote & "(.*)" & quote & "\?>", versionMatch, xmlEncoding) into theResult
+   if xmlEncoding is empty then put "utf-8" into xmlEncoding
+   return theResult
+end xml_ExtractEncoding
+
+function pandoc_ConvertHTML someHTML, pFormat
+   if pFormat is empty then put "plain" into pFormat
+   file_SaveTempText someHTML, "html"
+   put the result into someFile
+   put "pandoc --from html --to" && pFormat && "-i" && someFile into someShell
+   put shell (SomeShell) into convertedText
+   return convertedText
+end pandoc_ConvertHTML
+
+function pandoc_ConvertWikiText wikiText, pFormat
+   if pFormat is empty then put "plain" into pFormat
+   file_SaveTempText wikiText, "wiki"
+   put the result into someFile
+   put "pandoc --from mediawiki --to" && pFormat && "-i" && someFile into someShell
+   put shell (SomeShell) into convertedText
+   return convertedText
+end pandoc_ConvertWikiText
+
+function pandoc_ListInputFormats
+   get "commonmark,docbook,docx,epub,haddock,html,json,latex,markdown,markdown_github,markdown_mmd,markdown_phpextra,"
+   put "markdown_strict,mediawiki,native,odt,opml,org,rst,t2t,textile,twiki" after it
+end pandoc_ListInputFormats
+
+function pandoc_ListExportFormats
+   get "asciidoc,beamer,commonmark,context,docbook,docx,dokuwiki,dzslides,epub,epub3,fb2,haddock,html,html5,icml,json,"
+   put "latex,man,markdown,markdown_github,markdown_mmd,markdown_phpextra,markdown_strict,mediawiki,native,odt," after it
+   put "opendocument,opml,org,pdf,plain,revealjs,rst,rtf,s5,slideous,slidy,texinfo,textile" after it
+   return it
+end pandoc_ListExportFormats
+
+command file_SaveTempText someText, pFileExt
+   if pFileExt is empty then put "txt" into pFileExt
+   put the tempname & "." & pFileExt into someFile
+   put someText into url ("file:" & someFile)
+   return someFile
+end file_SaveTempText

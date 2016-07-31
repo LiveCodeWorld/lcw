@@ -1,0 +1,7 @@
+setprop template_DataArray [modelType] dataArray
+   -- store default values (ie in newly created objects) with this script 
+   put the long id of the target into someView 
+   put the template_Array of someView into viewArray
+   put dataArray into viewArray ["data"]
+   set the template_Array of someView to viewArray
+end template_DataArray

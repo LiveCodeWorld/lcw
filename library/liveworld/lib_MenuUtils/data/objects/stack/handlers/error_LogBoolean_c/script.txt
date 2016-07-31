@@ -1,0 +1,16 @@
+command error_LogBoolean mController, mTableLine, mTitle, mTitlePath, mLine, tError
+   put merge("Error: fetching boolean custom property '[[paramProperty]]' of mController") & CR into someError
+   put CR after someError
+   if exists(someError) then
+      put "mController:" && the mobile_Name of mController after someError
+   else
+      put "mController:" && mController after someError
+   end if
+   put "mTableLine:" && mTableLine & CR after someError
+   put "mTitle:" && mTitle & CR after someError
+   put "mTitlePath:" && mTitlePath & CR after someError
+   put "mLine:" && mLine & CR after someError
+   put CR after someError
+   put tError & CR after someError
+   log_Error someError, "menu_ConvertTable", true, true
+end error_LogBoolean

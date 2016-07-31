@@ -1,0 +1,29 @@
+command process_PUT someRoute, socketID, requestArray
+   put daemon_GetPostData (requestArray) into putInput
+   set the itemdelimiter to "/"
+   -- if char 1 of someRoute is not "/" then put  "/" before someRoute
+   switch
+      -- /page/hikey-board/action
+      case item -1 of someRoute = "action" and item 2 of someRoute = "page"
+         put item 3 of someRoute into pageSlug    
+         put request_ConstructHeaderArray (requestArray) into receivedHeaderArray
+         put receivedHeaderArray ["Referer"] into someReferer
+         put receivedHeaderArray ["Accept-Encoding"] into encodingAccepted
+         put receivedHeaderArray ["Host"] into someHost
+         
+         --  action:{"type":"create","item":{"title":"HiKey Board","story":[]},"date":1438036497154}
+         split putInput with "&" and "="
+         put putInput [action] into encodedAction
+         put urldecode (encodedAction) into actionJSON
+         put json_ToArray (actionJSON) into actionArray
+         
+         fedwiki_DoAction actionArray, pageSlug
+         put the result into someError
+         
+         -- send "ok" back
+         daemon_SendText socketID, "ok"
+         break
+      default
+         put "PUT" & CR & someRoute & CR & CR & putInput
+   end switch
+end process_PUT

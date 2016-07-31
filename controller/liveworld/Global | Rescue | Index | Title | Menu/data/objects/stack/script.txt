@@ -1,0 +1,82 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Rescue | Index | Title | Menu
+type: controller
+version: 0.4
+
+/*
+This global menu contains the shared code for the menu of the "Title" buttons of the group "Stacks and Libraries" 
+*/
+
+
+--> Global | Rescue | Index | Title | Menu
+-
+[[ _FetchHandler (menu_OpenFolder,c) ]]
+
+[[ _FetchHandler (menu_RefreshIndex,c) ]]
+
+[[ _FetchHandler (menu_SetIndexFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddSelectedToProject,c) ]]
+
+[[ _FetchHandler (menu_RemoveSelectedFromProject,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_MoveToNewFolder,c) ]]
+
+[[ _FetchHandler (menu_TrashStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_HiliteUsed,c) ]]
+
+[[ _FetchHandler (menu_HiliteAll,c) ]]
+
+[[ _FetchHandler (menu_HiliteNone,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+[[ _FetchHandler (submenu_IndexView,c) ]]
+
+
+--> Tools | Script | Menu
+-
+[[ _FetchHandler (menu_IndexGroupScript,c) ]]
+
+[[ _FetchHandler (menu_IndexBehaviorScript,c) ]]
+
+[[ _FetchHandler (menu_HorizontalLayoutScript,c) ]]
+
+[[ _FetchHandler (menu_HorizontalBehaviorScript,c) ]]
+
+[[ _FetchHandler (menu_VerticalLayoutScript,c) ]]
+
+[[ _FetchHandler (menu_VerticalBehaviorScript,c) ]]
+
+
+--> Menu | Props
+-
+-- getprop menu_Target
+-- also this is not called at all when a submenu
+-- bug in menus - first time this menu is called mTarget is set wrong
+put menu_GetTargetObject() into tObject
+put the index_View of tObject into indexView
+return indexView
+end menu_Target
+
+
+--> Deps
+-
+[[ _FetchHandler (display_AddSelectedShortFilesToUsed,c) ]]
+
+[[ _FetchHandler (display_StandardShortIndexFiles,c) ]]

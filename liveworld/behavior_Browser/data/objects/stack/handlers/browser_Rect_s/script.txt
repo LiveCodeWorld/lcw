@@ -1,0 +1,9 @@
+setprop browser_Rect someRect
+   put the browser_ID of me into browserID
+   if browserID is empty then return "Error: no browser open for this object"
+   
+   put the inner_Rect [someRect] of me into innerRect
+   if innerRect is empty then put someRect into innerRect
+   revBrowserSet browserID, "rect", innerRect	
+   return the result
+end browser_Rect

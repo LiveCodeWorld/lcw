@@ -1,0 +1,31 @@
+command script_UpdateAndExport scriptObject
+   -- merged with "script_IndexHarrayAndUpateMenus"
+   -- this is a simple all in one command that updates and exports everything you need
+   global gHkey_Array
+   global gTemp_ActiveMenuArray
+   delete variable gTemp_ActiveMenuArray
+   
+   -- script_IndexHarrayAndUpateMenus scriptObject, true, true
+   try
+      put the script of scriptObject into someScript
+   catch e
+      return merge ("error, [[scriptObject]] is probably a locked stack so can't index script.")
+   end try
+   
+   -- update the extensive metadata stored in gHkey_Array
+   put true into createHashArray
+   put false into forceIndexHandlerCalls
+   put false into dontExport
+   object_AddToArray gHkey_Array, scriptObject, someScript, createHashArray, forceIndexHandlerCalls, dontExport
+   put the result into scriptFile
+   
+   -- let's fix and index the menus 
+   -- may have been done above?
+   put the script_MenuTitleTableArray of scriptObject into mTitleTableArray      
+   menu_SetDataArray scriptObject, mTitleTableArray
+   
+   -- let's set the uRipArray (no reason not to)
+   -- this will be lost for script-only stacks
+   script_UpdateUrip scriptObject, someScript
+   return scriptFile
+end script_UpdateAndExport

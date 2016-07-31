@@ -1,0 +1,6 @@
+getprop bigger_Rect [someMargin]
+   if someMargin is empty then put 8 into someMargin
+   put the rect of the target into someRect
+   rect_AddMargins someRect, someMargin
+   return someRect
+end bigger_Rect

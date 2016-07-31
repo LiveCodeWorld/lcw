@@ -1,0 +1,5 @@
+function script_ExtractMenuSuiteTitles someScript
+   put script_GetSuiteTitles (someScript) into suiteTitles
+   put script_MenuTitleArrayFromSuiteTitles (suiteTitles) into menuTitleArray
+   return menuTitleArray ["OrderedMenuTitles"]
+end script_ExtractMenuSuiteTitles

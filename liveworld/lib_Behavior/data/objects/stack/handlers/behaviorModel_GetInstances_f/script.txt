@@ -1,0 +1,9 @@
+function behaviorModel_GetInstances bName
+   -- put behaviorModel_GetRecordValue ("instances", bName) into bInstances
+   -- put behaviorModel_GetRecordValue ("ruggedID", bName) into behaviorObject
+   put behaviorModel_GetArray ("all") into someArray
+   put someArray ["nameArray"][bName]["ruggedID"] into ruggedID
+   put the mobile_ID of ruggedID into mobileID -- annoying !!! -- behaviors are stored using my custom mobile_ID - not revs internal ruggedID
+   put someArray ["objectArray"][mobileID] into bInstances
+   return bInstances
+end behaviorModel_GetInstances

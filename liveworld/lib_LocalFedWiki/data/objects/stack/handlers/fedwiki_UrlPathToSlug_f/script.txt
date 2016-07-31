@@ -1,0 +1,7 @@
+function fedwiki_UrlPathToSlug urlPath
+   set the itemdelimiter to "/"
+   get item -1 of urlPath
+   set the itemdelimiter to "."
+   put item 1 of it into pageSlug
+   return pageSlug
+end fedwiki_UrlPathToSlug

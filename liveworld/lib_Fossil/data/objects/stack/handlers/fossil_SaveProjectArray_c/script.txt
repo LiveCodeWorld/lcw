@@ -1,0 +1,10 @@
+command fossil_SaveProjectArray fossilFile, projectArray
+   put library_FetchArray ("Fossil") into fossilArray
+   if projectArray is an array then
+      put projectArray into fossilArray [fossilFile]
+   else
+      delete variable fossilArray [fossilFile]
+   end if
+   library_StoreArray "Fossil", fossilArray
+   return fossilArray
+end fossil_SaveProjectArray

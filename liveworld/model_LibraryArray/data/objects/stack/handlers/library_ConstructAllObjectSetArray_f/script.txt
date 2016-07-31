@@ -1,0 +1,6 @@
+function library_ConstructAllObjectSetArray
+   repeat for each item libType in "back,used,front"
+      put library_ConstructAllObjectTypeArray (libType) into setArray ["data"][libType]
+   end repeat
+   return setArray
+end library_ConstructAllObjectSetArray

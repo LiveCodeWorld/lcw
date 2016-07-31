@@ -1,0 +1,5 @@
+function overlay_GetLinkArray overlayFolder, pOverlayName
+   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
+   put overlayArray_GetLinkArray (overlayArray) into linkArray
+   return linkArray
+end overlay_GetLinkArray

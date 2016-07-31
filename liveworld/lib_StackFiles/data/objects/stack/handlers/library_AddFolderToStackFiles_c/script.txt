@@ -1,0 +1,16 @@
+command library_AddFolderToStackFiles someFolder, pAskAdd
+   -- was "opn_AddFolderToStackFiles"
+   if the platform = "MacOS" then
+      try -- should test for spotlight
+         put spotlight_ListStacks (someFolder) into bigFileIndex
+      catch e
+         put folder_SearchForStacks (someFolder) into bigFileIndex
+      end try
+   else
+      put folder_SearchForStacks (someFolder) into bigFileIndex
+   end if
+   
+   library_AddFilesToStackFiles bigFileIndex, pAskAdd
+   put the result into resultArray
+   return resultArray
+end library_AddFolderToStackFiles

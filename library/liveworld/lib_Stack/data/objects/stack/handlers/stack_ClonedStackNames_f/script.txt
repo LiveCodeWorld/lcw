@@ -1,0 +1,7 @@
+function stack_ClonedStackNames stackName
+    put the mainstacks into stackNames
+    filter stackNames with (stackName & "*")
+    put word 1 to -1 of stackNames into stackNames
+    if stackNames is empty then return stackName
+    return stackNames
+end stack_ClonedStackNames

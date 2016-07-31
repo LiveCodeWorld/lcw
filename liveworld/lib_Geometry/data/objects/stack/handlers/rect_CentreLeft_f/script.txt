@@ -1,0 +1,8 @@
+function rect_CentreLeft someRect, newW, newH
+   -- quick hack (burn to basics instad of using lots of functions)
+   put rect_GetCentre(someRect) into someLoc
+   put rect_LocWidthHeight(someLoc, newW, newH) into newRect
+   put item 1 of someRect into newLeft
+   rect_SetLeft newRect, newLeft
+   return newRect
+end rect_CentreLeft

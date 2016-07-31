@@ -1,0 +1,9 @@
+function hArray_GetObjectArray rObject
+   global gHkey_Array
+   
+   if rObject is empty then
+      return gHkey_Array ["scriptArray"]
+   else
+      return gHkey_Array ["scriptArray"][rObject]
+   end if
+end hArray_GetObjectArray

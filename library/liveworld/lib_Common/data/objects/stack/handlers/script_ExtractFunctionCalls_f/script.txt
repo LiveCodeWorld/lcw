@@ -1,0 +1,47 @@
+function script_ExtractFunctionCalls scriptLine, pIncludeBuiltinFunctions
+   local fNames
+   
+   put text_StripQuoted (scriptLine) into scriptLine
+   -- put "(\w+)\s*" & "\((.*)\)" into greedyExpression -- error with handlers that use "." notation
+   -- if matchtext(scriptLine, greedyExpression, wordBefore, bracketedStuff) is true then
+   
+   put "\((.*)\)" into bracketExpression
+   if matchchunk (scriptLine, bracketExpression, startBracketedStuff, endBracketedStuff) is true then
+      put char startBracketedStuff to endBracketedStuff of scriptLine into bracketedStuff
+      get char 1 to (startBracketedStuff - 1) of scriptLine
+      put token -2 of it into wordBefore
+      if wordBefore is among the chars of "[()]" then
+         -- hack
+         put empty into wordBefore
+      end if
+      
+      if bracketedStuff contains "(" then
+         put script_ExtractFunctionCalls (bracketedStuff, pIncludeBuiltinFunctions) into innerFunctions
+         
+         if pIncludeBuiltinFunctions is true then
+            repeat for each line innerFunction in innerFunctions
+               line_Add innerFunction, fNames
+            end repeat
+         else
+            repeat for each line innerFunction in innerFunctions
+               if script_DictionaryTerm(innerFunction) is false then
+                  line_Add innerFunction, fNames
+               end if
+            end repeat
+         end if
+      end if
+      
+      if wordBefore is not empty then
+         if pIncludeBuiltinFunctions is true then
+            line_Add wordBefore, fNames
+         else
+            if script_DictionaryTerm (wordBefore) is false then
+               line_Add wordBefore, fNames
+            end if
+         end if
+      end if
+      return word 1 to -1 of fNames
+   else
+      return empty
+   end if
+end script_ExtractFunctionCalls

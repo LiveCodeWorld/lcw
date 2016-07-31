@@ -1,0 +1,21 @@
+on menu_DiffLocalBranch localBranchName
+   put "git diff" into someShell
+   -- put space & "--git-diff-index" after someShell
+   put space & "--raw" after someShell
+   
+   put git_CurrentBranchName() into currentBranchName
+   
+   shell_BashParamEscape currentBranchName
+   shell_BashParamEscape localBranchName
+   put space & currentBranchName & ".." & localBranchName after someShell
+   
+   put git_ExecuteShellCommand(someShell) into rawDiff
+   put git_ParseRawDiff (rawDiff) into dataArray
+   
+   display_Table dataArray, someShell, true, true, true, "status,srcPath,srcHash,dstHash,srcMode,dstMode,dstPath", "status,srcPath,srcHash,dstHash"
+   put the result into tableView
+    
+   -- set the menu_Title of tableView to "Global | Git | Diff | Raw | Menu"
+   set the table_BodyTitle of tableView to "Global | Git | Diff | Raw | Menu"
+   -- set the table_HeaderTitle ["srcPath"] of tableView to "Global | Git | Diff | Raw | Menu"
+end menu_DiffLocalBranch

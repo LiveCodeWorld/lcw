@@ -1,0 +1,5 @@
+on menu_ReplaceWithWidget targetObject, widgetName 
+   set the header_Height of targetObject to 64
+   set footer_Height of targetObject to 49
+   set the control_Type of targetObject to widgetName
+end menu_ReplaceWithWidget

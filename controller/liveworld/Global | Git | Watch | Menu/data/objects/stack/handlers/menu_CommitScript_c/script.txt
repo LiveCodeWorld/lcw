@@ -1,0 +1,10 @@
+on menu_CommitScript mTarget   
+   put the script_File of mTarget into someFile
+   put the script of mTarget into someScript
+   put someScript into url ("binfile:" & someFile)
+   
+   put the script_CommitComment of mTarget into commitComment
+   git_CommitFile someFile, commitComment, true, true
+   put the result into commitResult
+   display_Lines commitResult
+end menu_CommitScript

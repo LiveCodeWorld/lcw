@@ -1,0 +1,6 @@
+setprop right_Margin rMargin
+   put the margins of me into someMargin
+   margin_Normalize someMargin, lMargin, tMargin, oldRightMargin, bMargin
+   put lMargin,tMargin,rMargin,bMargin into newMargins
+   set the margins of me to newMargins
+end right_Margin

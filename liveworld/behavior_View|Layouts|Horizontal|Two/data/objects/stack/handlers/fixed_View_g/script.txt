@@ -1,0 +1,5 @@
+getprop fixed_View
+   put LocalArray ["fixed_View"] into leftOrRight
+   if leftOrRight is empty then return "left"
+   return leftOrRight
+end fixed_View

@@ -1,0 +1,5 @@
+getprop footer_Rect [pRect]
+   put the inner_Rect [pRect] of me into footerRect
+   put item 4 of footerRect - the footer_Height of me into item 2 of footerRect
+   return footerRect
+end footer_Rect

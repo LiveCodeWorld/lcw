@@ -1,0 +1,8 @@
+function hap_ConstructRestURL someController, pHandlerName, pID
+   text_TopAndTail someController, "/"
+   text_TopAndTail pHandlerName, "/"
+   if pHandlerName is empty then put "index" into pHandlerName
+   
+   put someController & "/" & pHandlerName into somePath
+   return url_Construct (cHapDevRoot, somePath, pID)
+end hap_ConstructRestURL

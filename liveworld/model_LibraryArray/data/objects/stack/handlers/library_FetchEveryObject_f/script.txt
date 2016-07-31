@@ -1,0 +1,30 @@
+function library_FetchEveryObject pAddHaaray, pAddStandard
+   local bigObjectArray
+   put library_FetchSetData() into setData
+   repeat for each key setName in setData
+      repeat for each item libType in "back,used,front"
+         put setData [setName]["data"][libType] into rObjectArray
+         union bigObjectArray with rObjectArray
+      end repeat
+   end repeat
+   
+   repeat for each key rObject in bigObjectArray
+      if exists(rObject) then
+         put revRuggedID (rObject) into rObject
+         put empty into safeBigObjectArray [rObject]
+      end if
+   end repeat
+   
+   if pAddStandard is not false then
+      objectArray_AddRuggedObject library_ListStandardBackScripts(), safeBigObjectArray
+      objectArray_AddRuggedObject library_ListStandardUsedStacks(), safeBigObjectArray
+      objectArray_AddRuggedObject library_ListStandardUsedStacks(), safeBigObjectArray
+   end if
+   
+   if pAddHaaray is not false then
+      objectArray_AddRuggedObject hArray_ListAllObjects(), safeBigObjectArray
+   end if
+   put keys (safeBigObjectArray) into everyObject
+   sort everyObject
+   return everyObject
+end library_FetchEveryObject

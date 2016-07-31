@@ -1,0 +1,13 @@
+on menu_DisplayOldGlobalMenu mTarget
+   put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Menus.rev" into longStackFile
+   put the cardnames of stack longStackFile into globalMenuCardNames
+   sort globalMenuCardNames
+   
+   put "" into pTreeMenuTitle
+   put "" into pLineMenuTitle
+   put "opnMenus_EditScript" into mouseUpCommand
+   put "" into pMouseDoubleUpCommand
+   put "" into pDragCommand
+   
+   display_Index globalMenuCardNames, "Old Global Menus,libOPN_Menus", pTreeMenuTitle, pLineMenuTitle, mouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+end menu_DisplayOldGlobalMenu

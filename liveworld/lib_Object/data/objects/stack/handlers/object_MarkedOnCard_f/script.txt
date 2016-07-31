@@ -1,0 +1,33 @@
+function object_MarkedOnCard someMark, cardObject, @object_Array, setShort
+   -- version latest,2/2/03
+   
+   put the long ID of cardObject into cardObject
+   put the someMark of cardObject into markValue
+   put empty into objectIndex
+   
+   if markValue is not empty then
+      if setShort is not false then object_SetShortStackName cardObject, stackNameStart, stackNameEnd
+      put markValue into object_Array[cardObject]
+      put cardObject & return after objectIndex
+   end if
+   
+   put the backgroundIDs of cardObject into bg_IDs
+   repeat with controlNum = 1 to the number of controls in cardObject
+      put the long ID of control controlNum of cardObject into cardControlObject
+      put the someMark of cardControlObject into markValue
+      put word 3 of cardControlObject into someID
+      if someID is among the lines of bg_IDs then
+         add the number of controls in cardControlObject to controlNum
+      else if markValue is not empty then
+         if setShort is not false then object_SetShortStackName cardControlObject, stackNameStart, stackNameEnd
+         put markValue into object_Array[cardControlObject]
+         put cardControlObject & return after objectIndex
+      end if
+   end repeat
+   delete last char of objectIndex
+   
+   -- local objects
+   return objectIndex
+   -- not accumulated results
+   -- return keys(object_Array)
+end object_MarkedOnCard

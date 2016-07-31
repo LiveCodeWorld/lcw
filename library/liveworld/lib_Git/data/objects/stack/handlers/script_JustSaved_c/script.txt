@@ -1,0 +1,9 @@
+command script_JustSaved scriptObject
+   switch repository_GetType()
+      case "git"
+         put the stack_Object of scriptObject into stackObject
+         save stackObject
+         put the short name of stackObject into stackName
+         rev_MarkStackSaved stackName
+   end switch
+end script_JustSaved

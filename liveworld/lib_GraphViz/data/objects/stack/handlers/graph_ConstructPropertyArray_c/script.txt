@@ -1,0 +1,6 @@
+on graph_ConstructPropertyArray @dotPropertyArray, nodeIDs, flattenNum
+   if flattenNum is empty then put the overlay_FlattenNum of the graph_Model of the target into flattenNum
+   
+   put nodeIDs into dotPropertyArray ["nodeIDs"]
+   put flattenNum into dotPropertyArray ["flattenNum"]
+end graph_ConstructPropertyArray

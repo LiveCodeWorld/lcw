@@ -1,0 +1,4 @@
+function library_GetBackObject libName, pSetName
+   put library_GetObject (libName, "back", pSetName) into someObject
+   return someObject
+end library_GetBackObject

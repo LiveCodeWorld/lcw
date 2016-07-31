@@ -1,0 +1,33 @@
+command menu_AddBooleanLine @mText, mLine, paramProp, topMenuTarget, mController
+   put mLine & CR after mText
+   
+   if the number of tokens of paramProp = 1 then
+      put paramProp & "[" & topMenuTarget & "]" into paramProperty
+   else
+      put paramProp into paramProperty
+   end if
+   try
+      put the paramProperty of mController into someBoolean
+      
+      if someBoolean is true then
+         put "!ctrue" & CR & "!nfalse" into subMenu
+      else if someBoolean is false then
+         put "!ntrue" & CR & "!cfalse" into subMenu
+      else
+         put "true" & CR & "false" into subMenu
+      end if
+      put outline_IncreaseIndent(subMenu) into subMenu
+      put subMenu & CR after mText
+      return empty
+   catch tError
+      put merge("Error: fetching boolean custom property '[[paramProperty]]' of mController") & CR into someError
+      put CR after someError
+      if exists(someError) then
+         put "mController:" && the mobile_Name of mController after someError
+      else
+         put "mController:" && mController after someError
+      end if
+      -- error_LogBoolean mController, mTableLine, mTitle, mTitlePath, mLine, tError
+      return someError
+   end try
+end menu_AddBooleanLine

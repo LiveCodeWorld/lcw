@@ -1,0 +1,43 @@
+getprop formatted_Width [layoutID]
+   -- should work out the largest fWidth of the 3 subviews
+   -- unfortunately lockmessages does not allow view property to be fetched
+   
+   put the short id of me into viewID
+   if layoutID is viewID then
+      -- cannot work out how to do this nested!
+      -- can use the executioncontexts but
+      -- try layoutID?
+      return empty
+   end if
+   
+   /*
+   put the header_View of me into HeaderView
+   put the body_View of me into BodyView
+   put the footer_View of me into FooterView
+   */
+   
+   put the formatted_Width [viewID] of HeaderView into fHeaderWidth
+   if fHeaderWidth is empty then put the formattedwidth of HeaderView into fHeaderWidth
+   put fHeaderWidth & comma after widthList
+   
+   put the formatted_Width [viewID] of BodyView into fBodyWidth
+   if fBodyWidth is empty then put the formattedwidth of BodyView into fBodyWidth
+   put fBodyWidth & comma after widthList
+   
+   put the formatted_Width [viewID] of FooterView into fFooterWidth
+   if fFooterWidth is empty then put the formattedwidth of FooterView into fFooterWidth
+   put fFooterWidth & comma after widthList
+   
+   delete last char of widthList
+   if widthList is empty then 
+      put the width of me into fWidth
+   else
+      put max(widthList) into fWidth
+   end if
+   
+   put the margins of me into someMargin
+   margin_Normalize someMargin, left_Margin, top_Margin, right_Margin, bottom_Margin
+   add left_Margin to fWidth
+   add right_Margin to fWidth
+   return fWidth
+end formatted_Width

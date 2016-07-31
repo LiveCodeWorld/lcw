@@ -1,0 +1,14 @@
+getprop menu_LinkedView [mTitlePath]
+   put the long id of the target into mTarget
+   set the itemdelimiter to "/"
+   repeat for each item mTitle in mTitlePath
+      put menu_ViewNameFromTitle(mTitle) into viewName
+      if viewName is empty then next repeat
+      -- put the view_Inside [viewName] of mTarget into viewGuess
+      put the view_InsideViews [viewName] of mTarget into viewGuess
+      if exists(viewGuess) is empty then next repeat
+      
+      return line 1 of viewGuess
+   end repeat
+   return empty
+end menu_LinkedView

@@ -1,0 +1,7 @@
+setprop script_OverlayData overlayData
+   put the long id of the target into scriptObject
+   put the script_OverlayFile [false] of scriptObject into someFile
+   put arrayencode (overlayData) into encodedArray
+   put encodedArray into url ("binfile:" & someFile)
+   return someFile
+end script_OverlayData

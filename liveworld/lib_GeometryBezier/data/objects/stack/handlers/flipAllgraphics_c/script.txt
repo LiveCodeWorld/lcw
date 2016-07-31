@@ -1,0 +1,9 @@
+on flipAllgraphics
+   global IdsAllgrcCreated
+   repeat with i = 1 to the number of lines of IdsAllgrcCreated
+      put line i of IdsAllgrcCreated & comma after ihftg
+   end repeat
+   delete the last char of ihftg
+   -- put ihftg -- uncomment for debug
+   flipG2 V,ihftg
+end flipAllgraphics

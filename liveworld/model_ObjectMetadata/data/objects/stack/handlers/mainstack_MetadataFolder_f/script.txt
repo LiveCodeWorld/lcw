@@ -1,0 +1,6 @@
+function mainstack_MetadataFolder mainStackFolder, pObject, pDontCreate
+   put mainStackFolder & "metadata/" into metadataFolder
+   if pObject is not empty then folder_AddObjectBit metadataFolder, pObject
+   if pDontCreate is not true then folder_CreateNested metadataFolder
+   return metadataFolder
+end mainstack_MetadataFolder

@@ -1,0 +1,5 @@
+command digitalocean_UpdateDropletInfoArray
+   put digitalocean_FetchDropletInfoArray() into dropletInfoArray
+   digitalOcean_SetDropletInfoArray dropletInfoArray
+   return dropletInfoArray
+end digitalocean_UpdateDropletInfoArray

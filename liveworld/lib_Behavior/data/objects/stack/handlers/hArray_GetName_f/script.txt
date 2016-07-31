@@ -1,0 +1,9 @@
+function hArray_GetName behaviorObject, harrayName
+   put revRuggedID (behaviorObject) into rObject
+   put hArray_GetObjectTypeArray (harrayName) into objectArray
+   put objectArray [rObject]["scriptHash"] into scriptHash
+   if scriptHash is empty then return empty
+   
+   put hArray_GetUripArray (rObject, "name") into objectViewName
+   return objectViewName
+end hArray_GetName

@@ -1,0 +1,36 @@
+command script_SetOffsetArrays someScript, @hKeyToOffsetArray, @offsetToCacheArray, scriptObject
+   -- this hander is a real mess (slow and duplicates effort)
+   -- as "script_ExtractHandlerLines" already parses every line (via "script_ConstructArraysFromScript")
+   
+   local handlerNumArray
+   
+   -- put the mobile_Name of scriptObject into scriptObject
+   
+   -- put script_ExtractHandlerLines(someScript) into handlerLines
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   put handlerArray ["handlerLines"] into handlerLines
+   
+   repeat for each line handlerLine in handlerLines
+      put word 1 of handlerLine into onWord
+      put word 2 of handlerLine into handlerName
+      script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+      put char 1 of handler_GetType(handlerLine) into hType
+      
+      put handlerNumArray [handlerName,hType] into lastHandlerNum
+      put lastHandlerNum + 1 into handlerNum
+      put hkey_Construct(handlerName, hType, scriptObject, handlerNum) into handlerKey
+      put handlerNum into handlerNumArray [handlerName,hType]
+      
+      -- while we are at it cache the script?
+      put char startHandler to endHandler of someScript into someHandler
+      
+      put someHandler into offsetToCacheArray [startHandler,endHandler]
+      put startHandler,endHandler into hKeyToOffsetArray [handlerKey]
+      put handlerKey & CR after handlerKeys
+   end repeat
+   
+   -- "orderedHandlerKeys" allow "number" ie handler 2 or 3rd "getMe"
+   delete last char of handlerKeys
+   put handlerKeys into hKeyToOffsetArray ["orderedHandlerKeys"]
+   return handlerKeys
+end script_SetOffsetArrays

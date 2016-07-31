@@ -1,0 +1,6 @@
+function hkeyArray_ExtractParentsAndChildrenArray hKey, hkeyArray
+   local subArray
+   hkeyArray_ConstructSubArray hKey, hkeyArray, subArray
+   hkeyArray_ConstructParentArray hKey, hkeyArray, subArray
+   return subArray
+end hkeyArray_ExtractParentsAndChildrenArray

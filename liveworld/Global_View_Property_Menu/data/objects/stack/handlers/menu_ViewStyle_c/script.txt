@@ -1,0 +1,7 @@
+on menu_ViewStyle mTarget, styleName
+   if styleName = "Create new style" then
+      view_CreateNewStyle mTarget
+   else
+      set the view_Style of mTarget to styleName
+   end if
+end menu_ViewStyle

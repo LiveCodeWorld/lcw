@@ -1,0 +1,5 @@
+function overlay_LinkFile overlayFolder
+   folder_Format overlayFolder
+   put overlayFolder & "links.txt" into someFile
+   return someFile
+end overlay_LinkFile

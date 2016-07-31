@@ -1,0 +1,7 @@
+getprop stackDataObjects_Folder [pDontCreate]
+   put the long ID of the target into someObject
+   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
+   put folder_AddStackBit ("data", textStackFolder, someObject) into stackFolder
+   if pDontCreate is false then folder_CreateNested stackFolder
+   return stackFolder
+end stackDataObjects_Folder

@@ -1,0 +1,6 @@
+function rev_Platforms
+   put rev_PlatformArray() into revPlatformArray
+   put keys(revPlatformArray) into revPlatforms
+   sort revPlatforms
+   return revPlatforms
+end rev_Platforms

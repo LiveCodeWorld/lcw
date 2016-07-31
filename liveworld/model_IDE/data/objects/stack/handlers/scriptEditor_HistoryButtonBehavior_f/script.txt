@@ -1,0 +1,12 @@
+function scriptEditor_HistoryButtonBehavior
+   if exists (stack "behavior_IdeRecentButton") then
+      put the name of stack "behavior_IdeRecentButton" into bObject
+      return bObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put scriptEditor_GetBehaviorButton ("Livecode Script History Button") into bObject
+      if exists(bObject) is false then return empty
+      return revRuggedID (bObject)
+   end if
+end scriptEditor_HistoryButtonBehavior

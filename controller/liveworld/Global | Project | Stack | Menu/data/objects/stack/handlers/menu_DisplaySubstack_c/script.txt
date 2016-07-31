@@ -1,0 +1,4 @@
+on menu_DisplaySubstack stackObject, subStackName
+   put the short name of stackObject into stackName
+   go to stack subStackName of stack stackName
+end menu_DisplaySubstack

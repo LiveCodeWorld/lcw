@@ -1,0 +1,53 @@
+function dot_ConstructGraph nodeIndex, onlyLinked, gTemplateName, graphName, graphSize, dotOrder, direction, defaultShape
+    local dotNodeDefs, dotNodeLinks
+    
+    put the node_View of me into nodeView
+    if nodeIndex is empty then put the node_Index of nodeView into nodeIndex
+    if gTemplateName is empty then put "black" into gTemplateName
+    if graphName is empty then put "G" into graphName
+    
+    put graph_GetTemplate(gTemplateName) into graphTemplate
+    if graphSize is "" then
+        put the width of the graph_view of me into item 1 of graphSize
+        put the height of the graph_view of me into item 2 of graphSize
+        -- put graphSize
+        dot_ConvertToInches graphSize
+        
+        put "10,4" into graphSize
+        put kwote(graphSize) into graphSize
+    else if graphSize is "Full" then
+        put graph_GetTemplate("PlainLeftRight") into graphTemplate
+    else if graphSize is "Full Black" then
+        replace ", size=[[graphSize]]" with empty in graphTemplate
+        -- put replaceText(graphTemplate, ", size=[[graphSize]]", empty) into graphTemplate
+    else
+        dot_ConvertToInches graphSize
+        put kwote(defaultSize) into graphSize
+    end if
+     
+    repeat for each line someNodeID in nodeIndex
+        put the node_FrontLinks [someNodeID] of nodeView into nodeFrontLinks
+        put the node_BackLinks [someNodeID] of nodeView into nodeBackLinks
+        if onlyLinked is true and nodeFrontLinks is empty and nodeBackLinks is empty then next repeat
+         
+        put the node_DotParams [someNodeID] of nodeView into nodeParams
+         
+        put dot_QuoteNode(someNodeID) into safeNodeID
+        put safeNodeID && "[" &  nodeParams & "];" into nodeSection
+        put nodeSection & CR after dotNodeDefs
+         
+        repeat for each line nodeFrontLink in nodeFrontLinks
+            put dot_QuoteNode(nodeFrontLink) into safeFrontNodeID
+            put safeNodeID && "->" && safeFrontNodeID & ";" & CR after dotNodeLinks
+        end repeat
+    end repeat
+    delete last char of dotNodeDefs
+    delete last char of dotNodeLinks
+     
+     put outline_IncreaseIndent(dotNodeDefs, 1) into dotNodeDefs
+    delete char 1 of dotNodeDefs
+    put outline_IncreaseIndent(dotNodeLinks, 1) into dotNodeLinks
+    delete char 1 of dotNodeLinks
+     
+    return merge(graphTemplate)
+end dot_ConstructGraph

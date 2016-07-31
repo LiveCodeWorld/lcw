@@ -1,0 +1,9 @@
+private function _displayView cloneStackName
+   -- put view_GetTemplateControl (cloneStackName) into displayView
+   if exists (control 1 of cd 1 of stack cloneStackName) is false then
+      breakpoint
+      return empty
+   end if
+   put the long id of control 1 of cd 1 of stack cloneStackName into displayView
+   return displayView
+end _displayView

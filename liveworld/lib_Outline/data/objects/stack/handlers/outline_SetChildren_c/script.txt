@@ -1,0 +1,14 @@
+on outline_SetChildren thisNode, newDomain, @tabbedOutline
+    -- version original,3/3/03
+    -- a domain is index of children that are descendent of a node
+     
+    outline_SetChildrenOffsets thisNode, first_OsLine, last_OsLine, tabbedOutline
+    put outline_TabLevel(line thisNode of tabbedOutline) + 1 into domainTabLevel
+    put outline_IncreaseIndent(newDomain, domainTabLevel) into newOsSection
+     
+    if last_OsLine < first_OsLine then
+        put return & newOsSection after line thisNode of tabbedOutline
+    else
+        put newOsSection into line first_OsLine to last_OsLine of tabbedOutline
+    end if
+end outline_SetChildren

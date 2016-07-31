@@ -1,0 +1,5 @@
+function youtube_FetchPlayListInfoArray playlistID
+   put youtube_FetchPlayListInfoJson (playlistID) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end youtube_FetchPlayListInfoArray

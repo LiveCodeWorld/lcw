@@ -1,0 +1,17 @@
+function hArray_SimpleSearch hKey, pHandlerHash
+   put hArray_GetFoundHkeyArray (hKey) into hkeyArray
+   if pHandlerHash is empty then
+      -- let's get the hKey with the shortest object reference
+      put keys (hkeyArray) into foundHKeys
+      sort numeric lines of foundHKeys by the number of chars of item 3 of each
+      put line 1 of foundHKeys into foundHKey
+      return foundHKey
+   else
+      repeat for each key foundHKey in hkeyArray
+         if hkeyArray [hKey]["handlerHash"] is pHandlerHash then
+            return foundHKey
+         end if
+      end repeat
+      return empty
+   end if
+end hArray_SimpleSearch

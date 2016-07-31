@@ -1,0 +1,4 @@
+on menu_FetchProjectHandler hKey
+   put project_FetchHandler (hKey) into someHandler
+   script_CreateAndEditHashCard someHandler
+end menu_FetchProjectHandler

@@ -1,0 +1,5 @@
+on refreshDisplay
+   -- put the rect of this card into cardRect
+   put the rect of me into viewRect
+   LayoutControl viewRect
+end refreshDisplay

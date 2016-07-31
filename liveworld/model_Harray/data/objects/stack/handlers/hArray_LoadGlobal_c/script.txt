@@ -1,0 +1,4 @@
+command hArray_LoadGlobal
+   global gHkey_Array
+   put hArray_FetchData() into gHkey_Array
+end hArray_LoadGlobal

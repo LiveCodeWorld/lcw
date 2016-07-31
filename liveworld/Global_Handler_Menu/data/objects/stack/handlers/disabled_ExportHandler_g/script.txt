@@ -1,0 +1,8 @@
+getprop disabled_ExportHandler [hKey]
+   put LocalArray ["hkeyFolder"] into hkeyFolder
+   if there is a folder hkeyFolder then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_ExportHandler

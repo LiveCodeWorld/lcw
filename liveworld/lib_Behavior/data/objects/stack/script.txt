@@ -1,0 +1,273 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Behavior
+type: script library
+version: 0.4
+
+/*
+A library for script behaviors.
+*/
+
+--> Global | Display | Behaviors | Menu
+-
+[[ _FetchHandler (menu_Test,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_End,c) ]]
+
+
+--> Global | Display | Behaviors | Line | Menu
+-
+[[ _FetchHandler (menu_FixBehavior,c) ]]
+
+
+--> View | Behavior | List
+-
+[[ _FetchHandler (behavior_ListNames,f) ]]
+
+[[ _FetchHandler (hArray_ListBehaviorNames,f) ]]
+
+[[ _FetchHandler (hArray_ListViewBehaviorNames,f) ]]
+
+[[ _FetchHandler (hArray_ListBehaviors,f) ]]
+
+[[ _FetchHandler (hArray_ListViewBehaviors,f) ]]
+
+
+--> View | Behavior | List | Standard
+-
+[[ _FetchHandler (behavior_ListStandardNames,f) ]]
+
+[[ _FetchHandler (behavior_ListStandardPaths,f) ]]
+
+
+--> Old | View | Behavior | List
+-
+[[ _FetchHandler (behavior_ListLibraryCardButtons,f) ]]
+
+
+--> View | Behavior
+-
+[[ _FetchHandler (fix_Behaviors,c) ]]
+
+[[ _FetchHandler (behavior_Fix,c) ]]
+
+[[ _FetchHandler (behavior_TestArray,g) ]]
+
+[[ _FetchHandler (view_WithBehaviorObjects,f) ]]
+
+
+--> Behavior | Props
+-
+[[ _FetchHandler (object_IsOldBehavior,g) ]]
+
+[[ _FetchHandler (stack_IsBehavior,g) ]]
+
+[[ _FetchHandler (object_HasBehavior,g) ]]
+
+[[ _FetchHandler (behavior_Version,g) ]]
+
+[[ _FetchHandler (behavior_Name,g) ]]
+
+[[ _FetchHandler (behavior_Name,s) ]]
+ 
+[[ _FetchHandler (view_Behavior,g) ]]
+
+[[ _FetchHandler (view_Behavior,s) ]]
+
+
+--> Behavior | Hierarchy
+-
+[[ _FetchHandler (behavior_Objects,g) ]]
+
+[[ _FetchHandler (behavior_Objects,s) ]]
+
+[[ _FetchHandler (behavior_Names,g) ]]
+
+[[ _FetchHandler (behavior_Names,s) ]]
+
+[[ _FetchHandler (behavior_LastObject,g) ]]
+
+
+--> Old | Behavior | Hierarchy
+-
+[[ _FetchHandler (behavior_Hierarchy,g) ]]
+
+[[ _FetchHandler (behavior_Hierarchy,s) ]]
+
+[[ _FetchHandler (behavior_NameHierarchy,g) ]]
+
+[[ _FetchHandler (behavior_NameHierarchy,s) ]]
+
+[[ _FetchHandler (behavior_LibraryObjectName,g) ]]
+
+[[ _FetchHandler (behavior_LibraryObjectName,s) ]]
+
+[[ _FetchHandler (behavior_Instances,g) ]]
+
+[[ _FetchHandler (objects_WithBehavior,g) ]]
+
+[[ _FetchHandler (behavior_Array,g) ]]
+
+
+--> Behaviors
+-
+[[ _FetchHandler (behavior_GetNameHierarchy,f) ]]
+
+[[ _FetchHandler (behavior_SetNameHierarchy,c) ]]
+
+[[ _FetchHandler (behavior_GetHierarchy,f) ]]
+
+[[ _FetchHandler (behavior_SetHierarchy,c) ]]
+
+[[ _FetchHandler (behavior_GetObjects,f) ]]
+
+[[ _FetchHandler (behavior_Clear,c) ]]
+
+
+--> Behavior | Model
+-
+/*
+The newer handlers compatible with hArray object types.
+Any script labeled "type: behavior" is not added
+*/
+
+[[ _FetchHandler (behavior_GetObject,f) ]]
+
+function behavior_GetObjects bNames
+   repeat for each line bName in bNames
+      put behavior_GetObject (bName) into bObject
+      if exists (bObject) is false then
+         -- not sure what to do -- should return an error
+         return empty
+      end if
+      put bObject & CR after bObjects
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_GetObjects
+
+-- function behaviorModel_GetObject bName
+   -- old name?
+   return hArray_GetBehavior (bName)
+end behaviorModel_GetObject
+
+[[ _FetchHandler (hArray_GetBehaviorArray,f) ]]
+
+[[ _FetchHandler (hArray_SetBehaviorArray,c) ]]
+
+[[ _FetchHandler (behaviorModel_CreateNew,c) ]]
+
+
+--> Behavior
+-
+[[ _FetchHandler (behavior_GetName,f) ]]
+
+[[ _FetchHandler (behavior_FindStoredName,f) ]]
+
+[[ _FetchHandler (behavior_Objects,f) ]]
+
+[[ _FetchHandler (behavior_EditScript,c) ]]
+
+
+--> Behavior | Scripts
+-
+[[ _FetchHandler (behavior_GetScript,f) ]]
+
+[[ _FetchHandler (behavior_SetScript,c) ]]
+
+
+--> Behavior | Help
+-
+[[ _FetchHandler (behavior_GetHelpHtml,f) ]]
+
+[[ _FetchHandler (behavior_SetHelpHtml,c) ]]
+
+
+--> Behavior | Repository Script
+-
+[[ _FetchHandler (behavior_GetRepositoryScript,f) ]]
+
+[[ _FetchHandler (behavior_SetRepositoryScript,c) ]]
+
+
+--> Behavior | Utilities
+-
+[[ _FetchHandler (behavior_GetStackOutline,f) ]]
+
+
+--> hArray | Behaviors
+-
+/*
+put scriptHash into hArray ["behaviorArray"][behaviorObject]["data"]["object"][ruggedObject]["scriptHash"]
+*/
+
+[[ _FetchHandler (hArray_GetOtherPlaces,f) ]]
+
+[[ _FetchHandler (hArray_GetBehavior,f) ]]
+
+[[ _FetchHandler (hArray_GetBehaviorName,f) ]]
+
+[[ _FetchHandler (hArray_GetName,f) ]]
+
+
+--> Behavior | Model | Old
+-
+/*
+These handlers use a unique stored file based array for each Library Set.
+put library_FetchArray ("OPN_Behavior") into behaviorArray
+
+The new model has moved over to the more general object types of hArray.
+*/
+-- getprop behavior_Model
+   return the the long id of me
+end behavior_Model
+
+[[ _FetchHandler (behaviorModel_SetObject,c) ]]
+
+[[ _FetchHandler (behaviorModel_GetSourceUrl,f) ]]
+
+[[ _FetchHandler (behaviorModel_SetSourceUrl,c) ]]
+
+[[ _FetchHandler (behaviorModel_GetHelpUrl,f) ]]
+
+[[ _FetchHandler (behaviorModel_SetHelpUrl,c) ]]
+
+[[ _FetchHandler (behaviorModel_GetInstances,f) ]]
+
+[[ _FetchHandler (behaviorModel_SetInstances,c) ]]
+
+
+--> Behavior | Model | Named Record Arrays
+-
+/*
+Each behavior has a name and a record array associated with that name stored in a nested array.
+These utility handlers make it easy to get and set properties of these record arrays.
+*/
+
+[[ _FetchHandler (behaviorModel_GetRecordValue,pf) ]]
+
+[[ _FetchHandler (behaviorModel_SetRecordValue,pc) ]]
+
+
+--> Behavior | Model | CRUD
+-
+[[ _FetchHandler (behaviorModel_DeleteNamedRecord,c) ]]
+
+[[ _FetchHandler (behaviorModel_RenameRecord,c) ]]
+
+[[ _FetchHandler (behaviorModel_GetData,f) ]]
+
+[[ _FetchHandler (behaviorModel_SetData,c) ]]
+
+
+--> Behavior | Model | Arrays
+-
+[[ _FetchHandler (behaviorModel_GetDataArray,f) ]]
+
+[[ _FetchHandler (behaviorModel_GetArray,f) ]]
+
+[[ _FetchHandler (behaviorModel_SetArray,c) ]]

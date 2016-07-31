@@ -1,0 +1,15 @@
+command view_DeleteTemplate vName
+   view_NormalizeName vName
+   if there is a stack vName then
+      put the filename of stack vName into someFile
+      delete stack vName
+   else
+      put view_NameToFile (vName) into someFile
+   end if
+   
+   if there is a file someFile then delete file someFile
+   view_DeleteMetaData vName
+   view_DeleteHelpText vName
+   view_DeleteIcon vName
+   return someFile
+end view_DeleteTemplate

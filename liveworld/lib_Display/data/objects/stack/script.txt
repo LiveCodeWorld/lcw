@@ -1,0 +1,96 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Display
+type: library
+version: 0.3
+
+/*
+Here we gather handlers that display things.
+
+Displaying stuff, that is taking data from a model, processing it (with a controller),
+and then laying it out in a display (view) is not the job of a library, 
+but while creating libraries we often find the need to do some generic display code,
+either for testing, or because it is useful.
+
+We use this library to pull out any display code from other libraries into one place,
+so that there is no view oriented code in the other libraries.
+
+You can "view" this library as contaminated :)
+*/
+
+
+--> Working On
+-
+[[ _FetchHandler (display_Array,c) ]]
+
+[[ _FetchHandler (display_ProjectStacks,c) ]]
+
+[[ _FetchHandler (display_LoadedStacks,c) ]]
+
+[[ _FetchHandler (display_Menus,c) ]]
+
+[[ _FetchHandler (display_Behaviors,c) ]]
+
+
+--> Display | Lines
+-
+[[ _FetchHandler (display_ScriptTemplate,c) ]]
+
+[[ _FetchHandler (display_TextFile,c) ]]
+
+[[ _FetchHandler (display_Lines,c) ]]
+
+[[ _FetchHandler (display_Index,c) ]]
+
+
+--> Display | Text
+-
+[[ _FetchHandler (display_Text,c) ]]
+
+[[ _FetchHandler (display_Files,c) ]]
+
+[[ _FetchHandler (display_HTML,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (stack_CloneInvisible,c) ]]
+
+[[ _FetchHandler (stack_Clone,c) ]]
+
+[[ _FetchHandler (view_SetCloneData,c) ]]
+
+[[ _FetchHandler (view_CloneShow,c) ]]
+
+
+--> Display | Event Handlers
+-
+/*
+These handlers handle events from display views that are created from the code in this library.
+They do not have to be here, as you can change their location by setting the "event_Target" property of the display_View.
+*/
+
+[[ _FetchHandler (project_RemoveOpenStack,c) ]]
+
+[[ _FetchHandler (project_GoToStack,c) ]]
+
+[[ _FetchHandler (display_ObjectHkeyArrayHandler,c) ]]
+
+[[ _FetchHandler (display_HkeyArrayHandler,c) ]]
+
+[[ _FetchHandler (opnMenus_EditScript,c) ]]
+
+[[ _FetchHandler (opnScripts_EditScript,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_displayView,pf) ]]
+
+[[ _FetchHandler (_setTitles,pc) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (view_GetTemplateControl,f) ]]

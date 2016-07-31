@@ -1,0 +1,15 @@
+getprop disabled_EditMenuCard [scriptObject]
+   put the menu_CardNames of scriptObject into mCards
+   sort mCards
+   put mCards into globalMenuTitles
+   filter globalMenuTitles with "Global |*"
+   
+   put mCards into mCardMenu
+   filter mCardMenu without "Global |*"
+   
+   if mCardMenu is not empty and globalMenuTitles is not empty then put ",-," after mCardMenu
+   if globalMenuTitles is not empty then put globalMenuTitles after mCardMenu
+   
+   put mCardMenu into LocalArray ["mCardMenu"]
+   return mCardMenu is empty
+end disabled_EditMenuCard

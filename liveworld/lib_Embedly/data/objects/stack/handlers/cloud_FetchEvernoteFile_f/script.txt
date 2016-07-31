@@ -1,0 +1,10 @@
+function cloud_FetchEvernoteFile fileID
+   -- https://console.cloud-elements.com:443/elements/api-v2/hubs/documents
+   -- /files/b7aa7c4a-4716-4426-813e-0eff8233b19a
+   -- put "files/?path=" & urlencode (fPath) into shortApiPath
+   -- put "files/" & urlencode (fPath) into shortApiPath
+   put "files/" & fileID into shortApiPath
+   -- put shortApiPath
+   put cloud_RestGet (shortApiPath) into someJSON
+   return someJSON
+end cloud_FetchEvernoteFile

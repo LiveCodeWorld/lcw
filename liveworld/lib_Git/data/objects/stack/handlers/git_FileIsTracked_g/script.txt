@@ -1,0 +1,8 @@
+getprop git_FileIsTracked
+   -- not sure the fastest way to do this
+   -- timer_Start "git_FileIsTracked"
+   put the git_CheckoutFolder of the target into checkoutFolder
+   -- put git_FileLog (someFile) is empty into someBoolean -- takes about a second
+   -- timer_Stop "git_FileIsTracked"
+   return someBoolean
+end git_FileIsTracked

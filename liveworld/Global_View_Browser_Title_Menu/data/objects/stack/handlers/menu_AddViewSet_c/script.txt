@@ -1,0 +1,9 @@
+on menu_AddViewSet treeView, displayPath
+   put the displayed_ViewSet of treeView into displayedViewSet
+   if displayPath is among the lines of displayedViewSet then
+      line_Delete displayPath, displayedViewSet
+   else
+      line_Add displayPath, displayedViewSet
+   end if
+   set the displayed_ViewSet of treeView to displayedViewSet
+end menu_AddViewSet

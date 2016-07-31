@@ -1,0 +1,9 @@
+on menu_DisplayCurrentPreference scriptObject, prefName
+   -- menu_SetChoice prefName, prefKey, prefValue
+   put pref_GetValue (prefName) into prefValue
+   if prefValue is an array then
+      display_Array prefValue, prefName
+   else
+      put prefValue
+   end if
+end menu_DisplayCurrentPreference

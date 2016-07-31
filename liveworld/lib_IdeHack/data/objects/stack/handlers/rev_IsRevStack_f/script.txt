@@ -1,0 +1,10 @@
+function rev_IsRevStack theStackName
+    if there is a stack theStackName then
+        put the mainstack of stack theStackName into theMainStack
+        put char 1 to 3 of theMainStack is "rev" or \
+                theMainStack is among the items of "Message Box,Home,answer dialog,ask dialog,script debugger,file selector" into isRevStack
+        return isRevStack
+    else
+        return false
+    end if
+end rev_IsRevStack

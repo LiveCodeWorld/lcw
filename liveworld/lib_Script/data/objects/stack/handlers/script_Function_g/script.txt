@@ -1,0 +1,4 @@
+getprop script_Function [fName]
+   put the script of the target into someScript
+   return script_GetFunction (fName, someScript)
+end script_Function

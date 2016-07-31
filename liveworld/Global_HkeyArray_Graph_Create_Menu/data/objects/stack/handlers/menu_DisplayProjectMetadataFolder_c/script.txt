@@ -1,0 +1,8 @@
+on menu_DisplayProjectMetadataFolder treeView
+   put the displayed_Object of treeView into scriptObject
+   -- put the project_MetaDataFolder of scriptObject into projectMetaDataFolder
+   put the project_OverlayFolder of scriptObject into projectMetaDataFolder
+   
+   put projectMetaDataFolder
+   finder_Reveal projectMetaDataFolder
+end menu_DisplayProjectMetadataFolder

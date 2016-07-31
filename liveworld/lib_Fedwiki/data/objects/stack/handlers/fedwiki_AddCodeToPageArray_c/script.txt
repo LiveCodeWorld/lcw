@@ -1,0 +1,4 @@
+command fedwiki_AddCodeToPageArray @pageArray, someCode, pID
+   put fedwiki_ConstructStoryCodeArray (someCode, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddCodeToPageArray

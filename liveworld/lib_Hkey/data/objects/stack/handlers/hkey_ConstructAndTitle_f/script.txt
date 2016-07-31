@@ -1,0 +1,7 @@
+function hkey_ConstructAndTitle andItems
+   sort items of andItems
+   repeat for each item kWord in andItems
+      put kWord && "and " after andTitle
+   end repeat
+   return word 1 to -2 of andTitle
+end hkey_ConstructAndTitle

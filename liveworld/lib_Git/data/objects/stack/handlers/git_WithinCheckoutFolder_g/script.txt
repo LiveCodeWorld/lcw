@@ -1,0 +1,11 @@
+getprop git_WithinCheckoutFolder [pDontUseGit]
+   -- timer_Start word 1 of the params
+   put the script_File of the target into someFile
+   if pDontUseGit is true then
+      put git_FindDotGitFolder (someFile) into checkoutFolder -- slightly faster (2 ticks)
+   else
+      put git_GetCheckoutFolder (someFile) into checkoutFolder -- uses GIT to check things (3 ticks)
+   end if
+   -- timer_Stop word 1 of the params
+   return checkoutFolder is not empty
+end git_WithinCheckoutFolder

@@ -1,0 +1,29 @@
+function outline_GetChildren startOsLineNum, tabbedOutline, pathBit
+   if startOsLineNum is not a number then
+      put outline_LineOffset (startOsLineNum, tabbedOutline) into startOsLineNum
+   end if
+   if startOsLineNum = 0 then
+      filter tabbedOutline without (tab & "*")
+      return tabbedOutline
+   else
+      put line startOsLineNum of tabbedOutline into startOsLine
+      put outline_TabLevel(startOsLine) into baseTabLevel
+      put baseTabLevel + 1 into domainTabLevel
+      
+      put empty into childLines
+      repeat with lineNum = (startOsLineNum + 1) to the number of lines of tabbedOutline
+         put line lineNum of tabbedOutline into osLine
+         put outline_TabLevel(osLine) into tabLevel
+         if tabLevel = domainTabLevel then
+            -- put char (tabLevel + 1) to -1 of osLine & CR after childLines
+            put pathBit & word 1 to -1 of osLine & CR after childLines
+         else if tabLevel > domainTabLevel then
+            next repeat
+         else -- if tabLevel < domainTabLevel then
+            exit repeat
+         end if 
+      end repeat
+      delete last char of childLines
+      return childLines
+   end if
+end outline_GetChildren

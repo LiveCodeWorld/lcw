@@ -1,0 +1,11 @@
+function outline_IncreaseIndent someOsSection, byIndentLevel, indentString
+   if indentString is empty then put tab into indentString
+   if byIndentLevel is not a number then put 1 into byIndentLevel
+   if byIndentLevel = 0 then return someOsSection
+   if byIndentLevel < 0 then return outline_DecreaseIndent(someOsSection, abs(byIndentLevel))
+   put text_RepeatString(indentString, byIndentLevel) into indentWhiteSpace
+   repeat with ii = 1 to the number of lines of someOsSection
+      put indentWhiteSpace before line ii of someOsSection
+   end repeat
+   return someOsSection
+end outline_IncreaseIndent

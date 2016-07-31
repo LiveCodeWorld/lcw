@@ -1,0 +1,18 @@
+command wireframe_TakeSnapshot viewObject, imageExportFileName, pExportDimensions
+   put the rect of viewObject into someRect
+   switch
+      case pIconSize is empty
+         object_GoTo viewObject -- the stack needs to be open and visible, and on top
+         put the stack_Name of viewObject into stackName
+         put the windowid of stack stackName into someWindowID
+         export snapshot from rect someRect of window someWindowID to file imageFile as PNG
+         break
+      case "wiki"
+         put wireframe_GetSnapPng (viewObject) into someImage
+         put someImage into image 1 of stack "Test Image"
+         break
+      case "default"
+         -- bah
+   end switch
+   return imageFile
+end wireframe_TakeSnapshot

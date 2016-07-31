@@ -1,0 +1,34 @@
+command script_JustCompiled scriptObject
+   /*
+   -- the IDE does this already
+   put the stack_Name of scriptObject into stackName
+   rev_MarkStackEdited stackName
+   */
+   
+   put the stack_Object of scriptObject into stackObject
+   put the mainstack of stackObject into mainStackName
+   put the filename of stack mainStackName into someFile
+   -- put the effective filename of scriptObject into someFile -- throws an error if no filename
+   if someFile is empty then
+      put merge ("Not exporting or indexing as [[scriptObject]] has no filename and is not saved anywhere!")
+      return false
+   end if
+   
+   script_UpdateAndExport scriptObject
+   put the result into scriptFile
+   
+   /*
+   -- for debugging
+   put the rugged_ID of scriptObject into ruggedID
+   put merge ("The script_IsDifferent of [[ruggedID]]:") && the script_IsDifferent of scriptObject into someInfo
+   put CR & CR after someInfo
+   put merge ("The script_File of [[ruggedID]]:") && scriptFile after someInfo
+   put CR & CR after someInfo
+   put line 1 to 20 of url ("file:" & scriptFile)  after someInfo
+   put someInfo
+   */
+   
+   put the name of scriptObject into cName
+   opn_Notify merge ("Exported and indexed script of [[cName]]")
+   return scriptFile
+end script_JustCompiled

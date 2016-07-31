@@ -1,0 +1,4 @@
+function menu_GetCheckedLine lineNum, someMenuText
+    put line lineNum of someMenuText into menuLine
+    return menu_LineIsChecked(menuLine)
+end menu_GetCheckedLine

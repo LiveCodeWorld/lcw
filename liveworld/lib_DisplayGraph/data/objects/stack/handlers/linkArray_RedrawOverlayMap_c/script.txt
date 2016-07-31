@@ -1,0 +1,43 @@
+command linkArray_RedrawOverlayMap linkArray, dotFile, graphPropertyModel, graphController, pImageView, pGraphStyle, pGraphSize, pOverlayName
+   -- breakPoint
+   --old => move to using dotFolder
+   
+   -- not from graphData
+   put exists(pImageView) is false into newWindow
+   if pGraphStyle is empty then put "undirected spring" into pGraphStyle
+   
+   put dot_FromLinkArray (linkArray, graphPropertyModel, graphController, pOverlayName, pGraphStyle, pGraphSize) into dotText -- sets OPN_LinkArray (uses the overlay_Size, dot_HeaderArray, overlay_Style of graphController )
+   
+   dot_ProcessAndSaveFiles dotText, pGraphStyle, dotFile, imageFile, cmapxFile, xdotFile, pOverlayName
+   
+   if exists(pImageView) is false then
+      display_Image imageFile, true, pOverlayName, true
+      put the result into pImageView
+   end if
+   
+   if pOverlayName is empty then put dot_NameFromImageFile (imageFile) into pOverlayName
+   set the itemdelimiter to "/"
+   put imageFile into dotFolder
+   delete item -1 of dotFolder
+   put "/" after dotFolder
+   overlay_Files dotFolder, dotFile, imageFile, cmapxFile, xdotFile, dotArrayFile, pOverlayName
+   
+   put url ("file:" & cmapxFile) into cmapxText
+   put imagemap_ParseMap (cmapxText) into geometryArray
+   
+   linkArray_IdConstruct linkArray, idLinkArray, idArray -- this should already be constructed and set in the global store
+   overlay_SetImage pImageView, linkArray, idLinkArray, idArray, geometryArray, imageFile, dotFile, xdotFile, cmapxFile
+   
+   if newWindow is true and exists(graphPropertyModel) then
+      put the overlay_PropertyArray of graphPropertyModel into propertyArray
+      set the overlay_PropertyArray of pImageView to propertyArray
+      if pGraphStyle is not empty then set the overlay_Style of pImageView to pGraphStyle 
+      if pGraphSize is not empty then set the overlay_Size of pImageView to pGraphSize 
+      
+      put the dot_HeaderArray of graphPropertyModel into headerArray
+      set the dot_HeaderArray of pImageView to headerArray
+   end if
+   
+   object_GoTo pImageView, true
+   return pImageView
+end linkArray_RedrawOverlayMap

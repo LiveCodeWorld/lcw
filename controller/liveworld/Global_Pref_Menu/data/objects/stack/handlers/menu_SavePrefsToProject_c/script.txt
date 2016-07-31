@@ -1,0 +1,14 @@
+on menu_SavePrefsToProject scriptObject, projectName
+   answer merge ("Do you want to store all gPref_* info to projectArray for '[[projectName]]'?") with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   project_SaveGlobalPrefs projectName
+   put the result into projectPrefsArray
+   put project_FetchPrefs (projectName) into projectPrefsArray
+   
+   set the displayed_Project of scriptObject to projectName
+   
+   put merge ("project_FetchPrefs ('[[projectName]]')") into someTitle
+   display_Array projectPrefsArray, someTitle
+   answer merge ("Saved all gPref_* info to projectArray for '[[projectName]]'!")
+end menu_SavePrefsToProject

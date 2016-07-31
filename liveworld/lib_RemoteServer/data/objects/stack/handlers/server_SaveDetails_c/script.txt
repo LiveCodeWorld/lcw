@@ -1,0 +1,5 @@
+command server_SaveDetails newServerPrefArray, pProjectName
+   put server_FetchPrefArray (pProjectName) into oldServerPrefArray
+   union newServerPrefArray with oldServerPrefArray recursively
+   server_SavePrefArray newServerPrefArray, pProjectName
+end server_SaveDetails

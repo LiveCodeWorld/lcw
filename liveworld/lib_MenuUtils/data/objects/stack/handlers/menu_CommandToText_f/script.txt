@@ -1,0 +1,8 @@
+function menu_CommandToText handlerName
+   -- was "menu_TextFromCommand"
+   set the itemdelimiter to "_"
+   -- put item 1 of handlerName into mPrefix
+   put item 2 of handlerName into mSuffix
+   put text_SplitCaps(mSuffix) into mLine
+   return mLine
+end menu_CommandToText

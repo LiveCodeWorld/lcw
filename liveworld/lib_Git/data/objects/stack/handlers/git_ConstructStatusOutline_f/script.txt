@@ -1,0 +1,20 @@
+function git_ConstructStatusOutline gitTable,@gitTitle, @gitHelp
+   -- display_Text gitTable
+   
+   filter gitTable without "#   *"
+   filter gitTable without "#"
+   -- replace (CR & "#" & CR) with ("#" & CR) in gitTable
+   replace ("#" & tab & "modified:   ") with tab in gitTable
+   replace ("# ") with empty in gitTable
+   replace (CR & "#" & tab) with (CR & tab) in gitTable
+   
+   put line 1 of gitTable into gitTitle
+   if word 1 to 2 of gitTitle = "On branch" then
+      delete line 1 of gitTable
+      put line -1 of gitTable into gitHelp
+      -- opn_Notify ("gitHelp:" && gitHelp)
+      -- delete line -1 of gitTable
+   end if
+   
+   return gitTable
+end git_ConstructStatusOutline

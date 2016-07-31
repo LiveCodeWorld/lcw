@@ -1,0 +1,6 @@
+function dot_NewTemporaryFilePath dotText
+   put the tempname & "/" into dotFolder
+   folder_CreateNested dotFolder
+   put dotFolder & "dot.txt" into dotFile
+   return dotFile
+end dot_NewTemporaryFilePath

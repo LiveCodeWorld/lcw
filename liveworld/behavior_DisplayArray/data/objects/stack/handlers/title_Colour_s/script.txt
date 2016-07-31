@@ -1,0 +1,6 @@
+setprop title_Colour someColour
+   if someColour is "random" then
+      put colour_GetRandom() into someColour
+   end if
+   set the backgroundcolor of _headerWidget() to someColour
+end title_Colour

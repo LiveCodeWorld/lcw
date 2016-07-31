@@ -1,0 +1,12 @@
+function fossil_Diff fossilCheckoutFolder, pFromBranchName, pToBranchName, pSideBySide
+   put "fossil diff" into someShell
+   if pSideBySide is not false then put space & "--side-by-side" after someShell
+   if pFromBranchName is not empty then
+      put space & "--from" && kwote (pFromBranchName) after someShell
+      if pToBranchName is not empty then
+         put space & "--to" && kwote (pToBranchName) after someShell
+      end if
+   end if
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   return the result
+end fossil_Diff

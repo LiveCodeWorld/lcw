@@ -1,0 +1,12 @@
+function outline_StripLeaves tabbedOutline
+    -- could be optimised up by not using filter
+    
+    put empty into strippedOutline
+    repeat with lineNum = 1 to the number of lines of tabbedOutline
+        get outline_GetChildren(lineNum, tabbedOutline)
+        if it is not empty then
+            put line lineNum of tabbedOutline & return after strippedOutline
+        end if
+    end repeat
+    return strippedOutline
+end outline_StripLeaves

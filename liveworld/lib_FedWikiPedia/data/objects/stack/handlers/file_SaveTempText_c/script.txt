@@ -1,0 +1,6 @@
+command file_SaveTempText someText, pFileExt
+   if pFileExt is empty then put "txt" into pFileExt
+   put the tempname & "." & pFileExt into someFile
+   put someText into url ("file:" & someFile)
+   return someFile
+end file_SaveTempText

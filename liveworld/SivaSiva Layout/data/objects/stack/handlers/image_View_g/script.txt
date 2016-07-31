@@ -1,0 +1,8 @@
+getprop image_View
+   put the card_Object of  the target into cardObject
+   if exists (image 1 of cardObject) is false then
+      _createImage
+   end if
+   put the long id of image 1 of cardObject into imageView
+   return imageView
+end image_View

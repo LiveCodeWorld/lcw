@@ -1,0 +1,7 @@
+function fossil_ListAllTags pFolder
+   -- fossil tag list ?--raw? ?CHECK-IN?
+   put "fossil tag list" into someShell
+   fossil_ExecuteShell someShell, projectFolder
+   put the result into shellResult
+   return shellResult
+end fossil_ListAllTags

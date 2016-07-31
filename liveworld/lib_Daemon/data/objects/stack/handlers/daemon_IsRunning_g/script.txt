@@ -1,0 +1,5 @@
+getprop daemon_IsRunning
+   put the daemon_Port of me into portToListenOn
+   put portToListenOn is among the lines of the opensockets into daemonIsRunning
+   return daemonIsRunning
+end daemon_IsRunning

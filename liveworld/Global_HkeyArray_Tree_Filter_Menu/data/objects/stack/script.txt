@@ -1,0 +1,61 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_HkeyArray_Tree_Filter_Menu
+type: controller
+version: 0.1
+
+/*
+This menu is for checking, comparing and filtering hKeyArrays
+*/
+
+local LocalArray
+
+
+--> Global | HkeyArray | Tree | Filter | Menu
+-
+[[ _FetchHandler (menu_RemoveObject,c) ]]
+
+[[ _FetchHandler (menu_RemoveObjectLinks,c) ]]
+
+[[ _FetchHandler (menu_CheckNestedDeps,c) ]]
+
+[[ _FetchHandler (menu_ConstructNestedDependencies,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FilterDependencies,c) ]]
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_CheckAllKeyArray,c) ]]
+
+[[ _FetchHandler (menu_CompareWith,c) ]]
+
+[[ _FetchHandler (submenu_Filter,c) ]]
+
+
+--> HkeyArray | Tree | Filter | Menu | Props
+-
+[[ _FetchHandler (dep_Objects,g) ]]
+
+
+--> HkeyArray | Tree | Filter | Menu | Disabled
+-
+[[ _FetchHandler (disabled_CheckNestedDeps,g) ]]
+
+[[ _FetchHandler (disabled_DisplayCollectedDependencies,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (firstLevelExternalCalls,pf) ]]
+
+[[ _FetchHandler (_HkeysInMainstack,pf) ]]
+
+[[ _FetchHandler (display_ObjectOutline,c) ]]
+

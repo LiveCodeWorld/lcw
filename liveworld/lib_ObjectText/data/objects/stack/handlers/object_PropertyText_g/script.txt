@@ -1,0 +1,9 @@
+getprop object_PropertyText
+   local objectPropArray, hArray, pExportHandlers, pDontDiff, pForceIndexHandlerCalls
+   local revPropText, someScript, objectText, objectHtml, metadataArray, customArray, someImage
+   object_GetPropertyArrays nestedObject, objectPropArray, hArray, pExportHandlers, pDontDiff, true, pForceIndexHandlerCalls
+   
+   object_DeconstructPropertyArray revPropertyArray, revPropText, someScript, objectText, objectHtml, customArray, someImage
+   put rev_PropertyArrayToText (revPropertyArray) into revPropText
+   return revPropText
+end object_PropertyText

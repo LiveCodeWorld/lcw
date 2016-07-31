@@ -1,0 +1,6 @@
+function mediawikia_ExtractTemplate templateName, wikiText
+   local startWikiTemplate, endWikiTemplate
+   mediawiki_SetTemplateOffsets templateName, wikiText, startWikiTemplate, testEndNum
+   put the result into foundTemplate
+   return word 1 to -1 of foundTemplate
+end mediawikia_ExtractTemplate

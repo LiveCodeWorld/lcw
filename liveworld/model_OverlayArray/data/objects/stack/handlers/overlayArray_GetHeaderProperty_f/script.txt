@@ -1,0 +1,4 @@
+function overlayArray_GetHeaderProperty overlayArray, propName
+   put overlayArray ["metadata"]["dot_HeaderArray"][propName] into propValue
+   return propValue
+end overlayArray_GetHeaderProperty  

@@ -1,0 +1,29 @@
+command stack_CloseLoaded
+   put revLoadedStacks("application") into stackNames
+   repeat for each line stackName in stackNames
+      if exists(stack stackName) is false then
+         -- shouldn't be!
+         breakPoint
+         beep
+         put merge("exists(stack '[[stackName]]') is false") into someError
+         log_Error "stack_CloseLoaded", someError
+         next repeat
+      end if
+      
+      if stackName is "OPN" then
+         save stack stackName
+         stop using stack stackName
+         next repeat
+      end if
+      
+      save stack stackName
+      -- stack_RemoveFromMemory stackName
+      if the owner of stack stackName is empty then
+         delete stack stackname
+      else
+         -- shouldn't be!
+         breakPoint
+         beep
+      end if
+   end repeat
+end stack_CloseLoaded

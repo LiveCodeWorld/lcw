@@ -1,0 +1,7 @@
+function git_BlobHashFromTreeish treeish
+   put "git rev-parse" into someShell
+   put space & "--verify" after someShell
+   put space & treeish after someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_BlobHashFromTreeish

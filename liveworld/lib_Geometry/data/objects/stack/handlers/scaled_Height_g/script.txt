@@ -1,0 +1,5 @@
+getprop scaled_Height [newW]
+   put the rect of the target into originalRect
+   put scale_Height (originalRect, newW) into scaledHeight
+   return newW
+end scaled_Height

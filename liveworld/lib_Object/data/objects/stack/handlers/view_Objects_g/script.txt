@@ -1,0 +1,7 @@
+getprop view_Objects
+   put the long ID of the target into targetObject
+   
+   put the view_FoundChildren of targetObject into viewObjects
+   if the object_IsView of targetObject is true then line_Insert targetObject, viewObjects, 1
+   return viewObjects
+end view_Objects

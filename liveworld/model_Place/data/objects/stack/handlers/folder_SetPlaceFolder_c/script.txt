@@ -1,0 +1,4 @@
+command folder_SetPlaceFolder placeName, someFolder
+    put the opn_Library of me into modelObject
+    model_SetValue placeName, modelObject, someFolder, "uOPN_StackPlace", "array"
+end folder_SetPlaceFolder

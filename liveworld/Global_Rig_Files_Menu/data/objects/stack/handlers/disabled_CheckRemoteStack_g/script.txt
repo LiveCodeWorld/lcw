@@ -1,0 +1,10 @@
+getprop disabled_CheckRemoteStack [stackObject]
+   put the short name of stackObject into shortControllerFile
+   set the itemdelimiter to "."
+   if item -1 of shortControllerFile = "lc" then
+      -- let's assume it is a rig controller script and not a stack
+      return true
+   else
+      return false
+   end if
+end disabled_CheckRemoteStack

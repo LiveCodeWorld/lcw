@@ -1,0 +1,4 @@
+function xml_GetTag tagName, someXml
+   xml_TagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+   return someTag
+end xml_GetTag

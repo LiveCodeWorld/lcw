@@ -1,0 +1,12 @@
+command library_AddStackToKnown someStack
+   -- was "opn_AddStack"
+   put the short name of someStack into newStackName
+   put the effective filename of stack newStackName into newFile
+   if there is a file newFile then
+      library_AddToStackFiles newStackName, newFile
+      library_StoreWorkingStackFiles -- stackfiles are loaded dynamically from a file, so make you sure you store them!
+      return the result
+   else
+      return empty
+   end if
+end library_AddStackToKnown

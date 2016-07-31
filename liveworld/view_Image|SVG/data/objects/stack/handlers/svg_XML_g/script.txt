@@ -1,0 +1,5 @@
+getprop svg_XML
+   put the htmltext of me into someHTML
+   put svg_Get (someHTML) into svgXML
+   return svgXML
+end svg_XML

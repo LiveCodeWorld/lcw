@@ -1,0 +1,8 @@
+getprop view_Spacing
+   put the customproperties of me into propArray
+   put propArray ["view_Spacing"] into viewSpacing
+   
+   if viewSpacing is empty then pass view_Spacing
+   if viewSpacing is empty then return 4
+   return viewSpacing
+end view_Spacing

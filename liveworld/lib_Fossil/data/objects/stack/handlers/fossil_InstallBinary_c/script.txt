@@ -1,0 +1,12 @@
+command fossil_InstallBinary binData, installationPath
+   put "binfile:" & installationPath into someUrl
+   put binData into url someUrl
+   put the result into someError
+   if someError is not empty then
+      # Handle error here
+      opn_Notify someError, true
+      exit to top
+   else
+      return someUrl
+   end if
+end fossil_InstallBinary

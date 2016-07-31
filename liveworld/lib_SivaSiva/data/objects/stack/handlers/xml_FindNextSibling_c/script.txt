@@ -1,0 +1,18 @@
+command xml_FindNextSibling xmlID, @startNode, attName, attValue, pSubNodePath
+   -- walk throug siblings until you find something
+   put startNode into thisNode
+   repeat 20 -- for safety
+      put revXMLNextSibling (xmlID, thisNode) into nextNode
+      put nextNode & pSubNodePath into maybeSubNode -- can be empty
+      get revXMLAttribute (xmlID, maybeSubNode, attName)
+      if it = attValue then
+         put nextNode into startNode
+         return maybeSubNode
+      else
+         put nextNode into thisNode
+      end if
+   end repeat
+   
+   -- often does not find an image
+   return empty
+end xml_FindNextSibling

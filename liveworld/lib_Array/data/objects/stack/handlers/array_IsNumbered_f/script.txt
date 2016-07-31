@@ -1,0 +1,49 @@
+function array_IsNumbered pArray pConsecutive
+   /*
+   was: rigIsNumberedArray ( from revIgniter script Common.lc )
+   
+   Check if array is numbered. 
+   Parameters: array <pArray>, bool <pConsecutive> flag for checking if numbers are consecutive
+   Return: list (bool,integer)
+   
+   copyright: Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
+   author: rabit@revigniter.com
+   license: http://www.apache.org/licenses/LICENSE-2.0
+   */
+   
+   if pConsecutive is "" then
+      put FALSE into tConsecutive
+   else
+      put pConsecutive into tConsecutive
+   end if
+   
+   # CHECK IF ARRAY IS NUMBERED
+   # SET DEFAULT RETURN VALUE
+   put TRUE into tNumbered
+   put the keys of pArray into tArrayKeys
+   
+   if tConsecutive is true then
+      sort lines of tArrayKeys numeric
+      
+      put 2 into tControlValue
+      
+      repeat for each line thisLine in tArrayKeys
+         if (thisLine is not an integer) or (thisLine + 1 <> tControlValue) then
+            put FALSE into tNumbered
+            exit repeat
+         end if
+         add 1 to tControlValue
+      end repeat
+   else
+      repeat for each line thisLine in tArrayKeys
+         if thisLine is not an integer then
+            put FALSE into tNumbered
+            exit repeat
+         end if
+      end repeat
+   end if
+   
+   put line 1 of tArrayKeys into tStartValue
+   
+   return tNumbered & "," & tStartValue
+end array_IsNumbered

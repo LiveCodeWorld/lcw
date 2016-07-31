@@ -1,0 +1,13 @@
+function menu_GetSentArray mPath
+   -- utility function (not really needed)
+   menu_DeconstructPath mPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType
+   put mPath into tArray ["mPath"]
+   put foundPath into tArray ["foundPath"]
+   put mTitlePath into tArray ["mTitlePath"]
+   put mController into tArray ["mController"]
+   put mItemType into tArray ["mItemType"]
+   put pigeon into tArray ["pigeon"]
+   
+   put menu_GetTargetObject() into targetObject
+   put targetObject into tArray ["targetObject"]
+end menu_GetSentArray

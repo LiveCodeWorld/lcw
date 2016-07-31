@@ -1,0 +1,36 @@
+command fedwikipedia_CleanConvertTemplate @wikiSectionLine
+   -- some start text {{convert|22|Ð|25|C|F}} also {{convert|4|C-change|sigfig=1}} end text 
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "[^\}]+" into untilCurlyBracket
+   put "\{\{convert\|(" & untilCurlyBracket & ")\}\}" into someReg
+   put "(?m)" before someReg -- multiline search
+   
+   set the itemdelimiter to "|"
+   repeat
+      if matchchunk (wikiSectionLine, someReg, someStart, someEnd) is true then
+         put char someStart to someEnd of wikiSectionLine into someText
+         switch the number of items of someText
+            case 3
+               -- 4|C-change|sigfig=1
+               put item 1 of someText into someNum
+               put item 2 of someText into someSymbol
+               replace "-change" with empty in someSymbol
+               put someNum & fromSymbol into cleanText
+               break
+            default -- case 5
+               put item 1 to - 3 of someText into someData
+               replace "|" with empty in someData
+               put item -2 of someText into fromSymbol
+               put item -1 of someText into toSymbol
+               put someData & fromSymbol into cleanText
+         end switch
+         
+         subtract 10 from someStart
+         add 2 to someEnd
+         put cleanText into char someStart to someEnd of wikiSectionLine
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanConvertTemplate

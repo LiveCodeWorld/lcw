@@ -1,0 +1,45 @@
+private function ConvertXMLNodeToArray pTreeID, pNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, pForceNumberIndexForNodes
+    local theArrayA,theAttributes,theChildNode,theKey
+     
+    ## Look for attributes of the node. Store as array in "@attributes" key
+    put revXMLAttributes(pTreeID, pNode, tab, cr) into theAttributes
+    if theAttributes is not empty then
+        put EncodeString(theAttributes, pXMLTreeEncoding, pStoreEncodedAs) into theAttributes
+        split theAttributes by cr and tab -- create array
+        put theAttributes into theArrayA["@attributes"]
+    end if
+     
+    ## Look for children nodes. 
+    set the itemDelimiter to slash
+    put revXMLFirstChild(pTreeID, pNode) into theChildNode
+    if theChildNode is empty or theChildNode begins with "xmlerr," then
+        put EncodeString(revXMLNodeContents(pTreeID, pNode), pXMLTreeEncoding, pStoreEncodedAs) into theValue
+        if word 1 to -1 of theValue is empty and the keys of theArrayA is not empty then
+            ## Empty node that has attributes
+            return theArrayA
+        else if pUseValueKey then
+            ## Force value into @value
+            put theValue into theArrayA["@value"]
+            return theArrayA
+        else
+            ## Single Node with value: Return value. Attributes are ignored.
+            return theValue
+        end if
+    else
+        ## Child nodes were found. Recursively call self and store result in array.
+        set the wholeMatches to true
+        replace comma with cr in pForceNumberIndexForNodes
+        repeat while theChildNode is not empty and not (theChildNode begins with "xmlerr,")
+            put the last item of theChildNode into theKey
+            if theKey is among the lines of pForceNumberIndexForNodes then
+                ## Oops, key that needs index doesn't have one. Only 1 entry in XML.
+                put "[1]" after theKey
+            end if      
+            put ConvertXMLNodeToArray(pTreeID, theChildNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, \
+                    pForceNumberIndexForNodes) into theArrayA[theKey]
+            put revXMLNextSibling(pTreeID, theChildNode) into theChildNode
+        end repeat
+         
+        return theArrayA
+    end if
+end ConvertXMLNodeToArray

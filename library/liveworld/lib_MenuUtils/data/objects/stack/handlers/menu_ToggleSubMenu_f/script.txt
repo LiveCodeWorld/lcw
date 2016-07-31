@@ -1,0 +1,14 @@
+function menu_ToggleSubMenu someMenuItem, isChecked, someMenu
+    -- used bi wiki_Storm
+    put tab & someMenuItem into plainLine
+    put "!c" & tab & someMenuItem into checkedLine
+     
+    if isChecked is true then
+        put lineoffset(checkedLine, someMenu) into lineNum
+        put plainLine into line lineNum of someMenu
+    else
+        put lineoffset(plainLine, someMenu) into lineNum
+        put checkedLine into line lineNum of someMenu
+    end if
+    return someMenu
+end menu_ToggleSubMenu

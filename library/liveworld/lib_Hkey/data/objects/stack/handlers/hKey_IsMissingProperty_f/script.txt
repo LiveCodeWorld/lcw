@@ -1,0 +1,3 @@
+function hKey_IsMissingProperty hKey
+   return item 2 of hKey is among the chars of "gs" and item 4 of hKey is "Missing"
+end hKey_IsMissingProperty

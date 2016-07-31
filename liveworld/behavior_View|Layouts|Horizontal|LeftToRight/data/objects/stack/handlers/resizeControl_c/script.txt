@@ -1,0 +1,4 @@
+on resizeControl
+    if the long id of the target is not the long id of me then pass resizeControl
+    LayoutControl the rect of me
+end resizeControl

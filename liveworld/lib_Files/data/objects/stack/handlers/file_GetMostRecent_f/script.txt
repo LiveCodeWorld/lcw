@@ -1,0 +1,14 @@
+function file_GetMostRecent fileNames
+    -- version original,27/12/02
+    -- <scott> Would be nice to have "detailed fileName property modifier" </scott>
+    set the itemdelimiter to "/"
+    repeat for each line filePath in fileNames
+        get file_LastModifed(filePath)
+        put filePath & "," & it & return after fileTable
+    end repeat
+    delete last char of fileTable
+    set the itemdelimiter to ","
+    sort lines of fileTable numeric descending by item 2 of each
+    put urldecode(item 1 of line 1 of fileTable) into filePath
+    return filePath
+end file_GetMostRecent

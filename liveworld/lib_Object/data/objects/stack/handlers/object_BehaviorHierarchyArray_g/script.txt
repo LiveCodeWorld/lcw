@@ -1,0 +1,14 @@
+getprop object_BehaviorHierarchyArray
+   local hierarchyArray, dictionaryArray, longObjects, shortObjects, shortNames, behaviorObjectMenu
+   put the long ID of the target into targetObject
+   
+   object_ConstructBehaviorHierarchy targetObject, behaviorObjectMenu, longObjects, shortObjects, shortNames, dictionaryArray
+   
+   put behaviorObjectMenu into hierarchyArray ["menu"]
+   put longObjects into hierarchyArray ["longObjects"]
+   put shortObjects into hierarchyArray ["shortObjects"]
+   put shortNames into hierarchyArray ["shortNames"]
+   put dictionaryArray into hierarchyArray ["dictionary"]
+   
+   return hierarchyArray
+end object_BehaviorHierarchyArray

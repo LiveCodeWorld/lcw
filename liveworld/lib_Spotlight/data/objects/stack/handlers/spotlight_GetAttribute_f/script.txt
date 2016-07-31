@@ -1,0 +1,4 @@
+function spotlight_GetAttribute someFile, attributeName
+   put spotlight_GetFileInfo(someFile) into spotlightFileInfo
+   return spotlight_ExtractAttribute (spotlightFileInfo, attributeName) 
+end spotlight_GetAttribute 

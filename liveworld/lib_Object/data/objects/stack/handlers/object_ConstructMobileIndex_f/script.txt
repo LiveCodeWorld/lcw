@@ -1,0 +1,13 @@
+function object_ConstructMobileIndex someObjects, useID
+   repeat for each line someObject in someObjects
+      if exists(someObject) is false then next repeat
+      if useID is true then
+         put the mobile_ID of someObject into someObject
+      else
+         put the mobile_Name of someObject into someObject
+      end if
+      put someObject & return after prettyObjects
+   end repeat
+   delete last char of prettyObjects
+   return prettyObjects
+end object_ConstructMobileIndex

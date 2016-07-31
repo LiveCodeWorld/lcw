@@ -1,0 +1,7 @@
+function addWeeks howManyWeeks, someDate
+  -- version addDays 8.4
+  convert someDate to seconds
+  add howManyWeeks * 7*24*60*60 to someDate
+  -- convert someDate to short date
+  return someDate
+end addWeeks

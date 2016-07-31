@@ -1,0 +1,7 @@
+function scriptObject_ImageFile scriptObject, pOverlayName
+   put the object_MetaDataFolder [true] of scriptObject into scriptFolder
+   scriptObject_NormalizeGraphName pOverlayName, scriptFolder
+   put pOverlayName & "." & "png" into shortFile
+   put scriptFolder & shortFile into someFile
+   return someFile
+end scriptObject_ImageFile

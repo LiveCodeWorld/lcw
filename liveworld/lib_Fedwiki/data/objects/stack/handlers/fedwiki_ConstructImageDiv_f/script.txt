@@ -1,0 +1,9 @@
+function fedwiki_ConstructImageDiv imageURL, imageHREF
+   -- older plain html for image
+   if imageHREF is empty then
+      put "<div align=center><img src=" & kwote (imageURL) & " width=428></div>" into imageHTML
+   else
+      put "<div align=center><a href="  & kwote (imageHREF) & "target=" & kwote("_blank") & "><img src=" & kwote (imageURL) & " width=428></a></div>" into imageHTML
+   end if
+   return imageHTML
+end fedwiki_ConstructImageDiv

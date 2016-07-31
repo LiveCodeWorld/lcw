@@ -1,0 +1,5 @@
+command cloud_SetRestHeaders
+   put "Content-Type: application/json" into someHeader  
+   put CR & "Authorization: User Qhj7YIkvdMrv4n7lKXlbNN5+eeHgJCxXzswgxhSmzeA=, Organization 6ecdd0f52c429b050300a9d0cfb5b424, Element F1rTK7t+hzAbJM2CuUyaibBgfdj+/h3k75GtgciATAA=" after someHeader
+   set the httpheaders to someHeader
+end cloud_SetRestHeaders

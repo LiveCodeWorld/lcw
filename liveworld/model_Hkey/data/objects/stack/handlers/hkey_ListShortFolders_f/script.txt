@@ -1,0 +1,9 @@
+function hkey_ListShortFolders
+   put library_PluginFolder ("opn_Text/rev/handlers/") into helpFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to helpFolder
+   put the folders into tFolders
+   filter tFolders without ".*"
+   set the defaultfolder to oFolder  
+   return tFolders
+end hkey_ListShortFolders 

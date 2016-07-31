@@ -1,0 +1,19 @@
+function view_WithBehaviorObjects
+    put view_PathIndex() into pathIndex
+    filter pathIndex without "Compound|*"
+    
+    repeat for each line viewName in pathIndex
+        set the cursor to busy
+        put view_GetTemplateObject (viewName) into libraryObject
+        if exists(libraryObject) then
+            put the view_Behavior of libraryObject into viewBehavior
+            if exists(viewBehavior) then
+                put view_GetTemplateObject (viewName) into libraryObject
+                put libraryObject & CR after libraryObjects
+                -- set the behavior of libraryObject to the behavior of libraryObject
+            end if
+        end if
+    end repeat
+    delete char -1 of libraryObjects
+    return libraryObjects
+end view_WithBehaviorObjects

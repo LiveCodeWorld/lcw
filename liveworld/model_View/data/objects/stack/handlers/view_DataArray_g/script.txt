@@ -1,0 +1,5 @@
+getprop view_DataArray [pUseCard]
+   put the long id of the target into someView
+   put the view_Array [pUseCard] of someView into viewArray
+   return viewArray ["data"]
+end view_DataArray

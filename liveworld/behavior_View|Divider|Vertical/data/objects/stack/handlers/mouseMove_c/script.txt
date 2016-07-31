@@ -1,0 +1,30 @@
+on mouseMove newMouseH, newMouseV
+   if the mouse is "Down" and localMouseIsDown then
+      if localStartH is empty then initialise_Move
+      
+      put newMouseH - localStartH into movedH
+      
+      put localOriginalRect into dividerRect
+      put movedH + item 1 of dividerRect into leftViewRight
+      put leftViewRight into item 1 of dividerRect
+      put movedH + item 3 of dividerRect into rightViewLeft
+      put rightViewLeft into item 3 of dividerRect
+      
+      put the long id of me into myOwner
+      delete word 1 to 4 of myOwner
+      put the inner_Rect of myOwner into innerRect
+      
+      put innerRect into leftViewRect
+      put leftViewRight into item 3 of leftViewRect
+      
+      put innerRect into rightViewRect
+      put rightViewLeft into item 1 of rightViewRect
+      
+      lock screen
+      set the rect of me to dividerRect
+      if exists (localLeftView) then set the rect of localLeftView to leftViewRect
+      if exists (localRightView) then set the rect of localRightView to rightViewRect
+      unlock screen
+   end if
+   pass mouseMove
+end mouseMove

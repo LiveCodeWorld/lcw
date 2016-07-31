@@ -1,0 +1,5 @@
+function hArray_ListViewBehaviorNames
+   put hArray_ListObjectNamesOfType ("view behavior") into bNames
+   sort bNames
+   return bNames
+end hArray_ListViewBehaviorNames

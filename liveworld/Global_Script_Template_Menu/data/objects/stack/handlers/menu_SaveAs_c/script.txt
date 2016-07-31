@@ -1,0 +1,15 @@
+on menu_SaveAs textDisplayView
+   put the view_Text of textDisplayView into someScript
+   put the view_Title of textDisplayView into templateName
+   
+   ask "What would you like to save this template as..." with templateName
+   put it into templateName
+   if templateName is empty then exit to top
+   
+   script_SetTemplate templateName, someScript
+   put the result into savedFile
+   
+   put "file:" & savedFile into newUrl
+   set the displayed_Url of textDisplayView to newUrl
+   set the view_Title of textDisplayView to templateName
+end menu_SaveAs

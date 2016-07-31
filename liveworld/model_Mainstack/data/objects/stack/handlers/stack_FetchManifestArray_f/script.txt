@@ -1,0 +1,8 @@
+function stack_FetchManifestArray textStackFolder
+   -- was "mainStack_FetchManifestArray"
+   put mainstack_GetManifestArrayFile (textStackFolder) into someFile
+   put url ("binfile:" & someFile) into encodedArray
+   if encodedArray is empty then return empty -- bug:  arrayDecode crashes with empty data
+   put arrayDecode (encodedArray) into manifestArray
+   return manifestArray
+end stack_FetchManifestArray

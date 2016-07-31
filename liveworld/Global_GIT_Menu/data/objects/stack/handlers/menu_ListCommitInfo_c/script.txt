@@ -1,0 +1,9 @@
+on menu_ListCommitInfo treeField
+   put the tree_SelectedLink of treeField into commitHash
+   put the displayed_Object of treeField into stackObject
+   
+   put git_List (commitHash) into logText
+   
+   put "git ls-tree" && commitHash into someShell
+   display_Lines logText, someShell
+end menu_ListCommitInfo

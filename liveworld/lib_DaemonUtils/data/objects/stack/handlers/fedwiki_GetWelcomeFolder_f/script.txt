@@ -1,0 +1,6 @@
+function fedwiki_GetWelcomeFolder
+   -- this is for when you use a browser to download standalone web page for w Welcome page.
+   put fedwiki_GetRootFolder() into rootFolder
+   put rootFolder & "Welcome Visitors_files/" into indexFileFolder
+   return indexFileFolder
+end fedwiki_GetWelcomeFolder

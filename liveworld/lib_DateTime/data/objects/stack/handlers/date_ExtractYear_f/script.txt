@@ -1,0 +1,4 @@
+function date_ExtractYear someDate
+    convert someDate to dateItems
+    return item 1 of someDate
+end date_ExtractYear

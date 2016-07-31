@@ -1,0 +1,8 @@
+on kml_ConstructAndFly nodeXML
+    put xml_ConstructTag(nodeXML, "kml", "xmlns", "http://earth.google.com/kml/2.1") into someKML
+    xml_AddHeaderLine someKML
+    
+    put the tempname into someFile
+    put someKML into url ("file:" & someFile)
+    googleEarth_FlyToKmlFile someFile
+end kml_ConstructAndFly

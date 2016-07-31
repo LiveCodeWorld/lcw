@@ -1,0 +1,13 @@
+getprop stack_RelativeFile [toWhat]
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into stackFile
+   switch toWhat
+      case "plugin folder"
+         put revEnvironmentUserPluginsPath() & "/" into baseFolder
+         break
+      default -- case "checkout folder"
+         put checkout_FindRoot (stackFile) into baseFolder
+   end switch
+   file_SetRelativePath stackFile, baseFolder
+   return stackFile
+end stack_RelativeFile

@@ -1,0 +1,19 @@
+command menu_AddPlugin targetObject, modifierKey, gMenuTitle, pBeforeLineNum, pPassMouseDown
+   put gMenuTitle into mRecordArray ["mTitle"]
+   put menu_GetGlobalController (gMenuTitle) into mController
+   -- put the main_Name of mController into mRecordArray ["mController"]
+   put the rugged_ID of mController into mRecordArray ["mController"]
+   
+   if pBeforeLineNum is empty then put 0 into pBeforeLineNum
+   if pPassMouseDown is empty then put false into pPassMouseDown
+   
+   put pBeforeLineNum into mRecordArray ["mBeforeLineNum"]
+   put pPassMouseDown into mRecordArray ["mPassMouseDown"]
+   
+   put the menu_PluginArray [modifierKey] of targetObject into mPluginArray
+   put item 2 of the extents of mPluginArray + 1 into indexNum
+   put mRecordArray into mPluginArray [indexNum]
+   
+   -- set the menu_PluginArray [modifierKey] of targetObject to mPluginArray
+   menu_SetPluginArray targetObject, mPluginArray, modifierKey
+end menu_AddPlugin

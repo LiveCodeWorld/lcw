@@ -1,0 +1,11 @@
+on xml_TreeAddChild childName, someNode, nodeContents, treeID
+    -- changed param order (was "xml_TreeAddNodeChild")
+    put someNode & "/" & childName into childNode
+    revPutIntoXMLNode treeID, childNode, nodeContents
+    put the result into theResult
+    if char 1 to 6 of theResult is "xmlerr" then
+        revAddXMLNode treeID, someNode, childName, nodeContents
+        put the result into theResult
+    end if
+    return theResult
+end xml_TreeAddChild

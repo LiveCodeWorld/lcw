@@ -1,0 +1,6 @@
+command display_ScriptTemplate templateName
+   put library_ScriptTemplateFolder (templateName) into someFile   
+   display_TextFile someFile, templateName, "Global | Script | Template | Menu", "Script Template"
+   put the result into textDisplayView
+   return textDisplayView
+end display_ScriptTemplate

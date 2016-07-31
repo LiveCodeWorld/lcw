@@ -1,0 +1,41 @@
+getprop view_Spacing [innerRect]
+   put the layout_Style of me into layoutStyle
+   switch layoutStyle 
+      case "edge to edge"
+         -- would be faster if calculated within the LayoutControl handler
+         if innerRect is empty then put the inner_Rect of me into innerRect
+         put item 3 of innerRect - item 1 of innerRect into innerWidth
+         
+         put the layout_Elements of me into layoutElements
+         put 0 into layoutElementWidth
+         repeat for each line layoutElement in layoutElements
+            add the layout_ElementWidth of layoutElement to elementWidth
+         end repeat
+         
+         put the number of lines of layoutElements - 1 into spacerNum
+         if spacerNum = 0 then
+            put 0 into viewSpacing
+         else
+            put round ((innerWidth - elementWidth) / spacerNum) into viewSpacing
+         end if
+         break
+      case "distributed"
+         -- would be faster if calculated within the LayoutControl handler
+         if innerRect is empty then put the inner_Rect of me into innerRect
+         put item 3 of innerRect - item 1 of innerRect into innerWidth
+         
+         put the layout_Elements of me into layoutElements
+         put 0 into layoutElementWidth
+         repeat for each line layoutElement in layoutElements
+            add the layout_ElementWidth of layoutElement to elementWidth
+         end repeat
+         
+         put the number of lines of layoutElements + 1 into spacerNum
+         put round ((innerWidth - elementWidth) / spacerNum) into viewSpacing
+         break
+      default -- case "fixed"
+         put the uOPN ["view_Spacing"] of me into viewSpacing
+         if viewSpacing is empty then return 0
+   end switch
+   return viewSpacing
+end view_Spacing

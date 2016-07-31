@@ -1,0 +1,8 @@
+function object_IsHiddenByAnotherControl pObj,pCard
+   -- IsHiddenByAnotherControl checks if a control can be hidden by another one:
+   
+   repeat with i = (the layer of pObj + 1) to the number of controls of pCard
+      if the topLeft of pObj is within the rect of control i of pCard and the botright of pObj is within the rect of control i of pCard and the opaque of control i of pCard then return true
+   end repeat
+   return false
+end object_IsHiddenByAnotherControl

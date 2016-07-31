@@ -1,0 +1,11 @@
+setprop display_ProjectHandlers [pWithDeps] someBoolean
+   if someBoolean is true then
+      if pWithDeps is not false then
+         set the hkey_Type of me to "long"
+      else
+         set the hkey_Type of me to "no dependency index"
+      end if
+   else
+      set the hkey_Type of me to "short"
+   end if
+end display_ProjectHandlers

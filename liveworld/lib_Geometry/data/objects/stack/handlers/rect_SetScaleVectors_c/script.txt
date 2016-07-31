@@ -1,0 +1,13 @@
+on rect_SetScaleVectors someRect, targetRect, @scaleX, @scaleY
+    -- work out the scale factor
+    -- was "set_scaleVector"
+    put item 3 of someRect - item 1 of someRect into someWidth
+    put item 3 of targetRect - item 1 of targetRect into targetWidth
+    put targetWidth/someWidth into scaleX
+     
+    put item 4 of someRect - item 2 of someRect into someHeight
+    put item 4 of targetRect - item 2 of targetRect into targetHeight
+    put targetHeight/someHeight into scaleY
+     
+    return scaleX,scaleY
+end rect_SetScaleVectors

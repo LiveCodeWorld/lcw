@@ -1,0 +1,15 @@
+function image_DetectType someImage
+   -- based on function "revImageType" of the revbackScript
+   --take the numbered image and return a three character file extension for it
+   local tHeader
+   
+   put char 1 to 100 of someImage into tHeader
+   if charToNum(char 1 of tHeader) is 137 and char 2 to 4 of tHeader is "PNG" then return "png"
+   if charToNum(char 1 of tHeader) is among the items of "255,216" and "JFIF" is in tHeader then return "jpg"
+   if "GIF" is in tHeader then return "gif"
+   --PICT
+   --can't get the code to detect this right, use internal format
+   --default
+   --edited in mc or recompressed by MC (imported BMP, XWD etc.)
+   return "ppm"
+end image_DetectType

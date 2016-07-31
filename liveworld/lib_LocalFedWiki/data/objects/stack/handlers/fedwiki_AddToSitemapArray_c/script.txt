@@ -1,0 +1,4 @@
+command fedwiki_AddToSitemapArray @sitemapArray, pageTitle, pageSynopsis, pDateInMilliseconds, pPageSlug
+   put fedwiki_ConstructSiteMapArray (pageTitle, pageSynopsis, pDateInMilliseconds, pPageSlug) into mapArray
+   fedwiki_AddToEndOfIndexArray mapArray, sitemapArray
+end fedwiki_AddToSitemapArray

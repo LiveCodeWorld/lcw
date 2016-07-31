@@ -1,0 +1,14 @@
+function script_StripComments someScript
+   put someScript into testScript
+   script_ExtractAndStripMultiLineComments testScript, mulitLineComment
+   put text_TempReplaceQuoted(testScript, offsetArray) into testScript
+   put text_Strip(testScript, "\", space) into testScript
+   
+   put "(--[^" & return & "]*)" & return into someReg
+   put replacetext(testScript, someReg, return) into testScript -- more junk
+   put "(#[^" & return & "]*)" & return into someReg
+   put replacetext(testScript, someReg, return) into testScript
+   
+   put text_ReReplaceQuoted(testScript, offsetArray) into testScript
+   return testScript
+end script_StripComments

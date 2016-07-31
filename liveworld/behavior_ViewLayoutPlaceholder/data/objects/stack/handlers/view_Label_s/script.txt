@@ -1,0 +1,8 @@
+setprop view_Label someText
+    put the placeHolder_Button of me into placeHolderButton
+    if the short name of placeHolderButton = someText then
+        set the label of placeHolderButton to empty
+    else
+        set the label of placeHolderButton to someText
+    end if
+end view_Label

@@ -1,0 +1,4 @@
+on menu_TestGeometry mTarget
+   put the wiki_View of mTarget into wikiView
+   dispatch "LayoutControl" to wikiView
+end menu_TestGeometry

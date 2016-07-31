@@ -1,0 +1,4 @@
+command libCGI_SetCookies pA
+   put pA ["name"] into gCookieA ["name"]
+   put pA ["value"] into gCookieA ["value"]
+end libCGI_SetCookies

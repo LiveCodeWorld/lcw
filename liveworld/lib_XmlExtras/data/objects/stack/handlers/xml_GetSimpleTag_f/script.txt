@@ -1,0 +1,10 @@
+function xml_GetSimpleTag tagName, someXml, startAfterCharNum
+    -- was "xml_GetTag"
+    -- simple non-whitespace version
+    put "<" & tagName & ">" into startTag
+    put "</" & tagName & ">" into endTag
+    text_SetOffsets startTag, endTag, someXml, startChar, endChar, startAfterCharNum
+    if startChar = 0 or endChar = 0 then return empty
+    put char startChar to endChar of someXml into someTag
+    return someTag
+end xml_GetSimpleTag

@@ -1,0 +1,8 @@
+command rev_SetPref prefType, revEditorPref, revEditorValue
+   put prefType,revEditorPref into prefRecord
+   dispatch "sePrefSet" to stack "revNewScriptEditor" with prefRecord,revEditorValue
+   switch it
+      case "handled"
+   end switch
+   return the result
+end rev_SetPref

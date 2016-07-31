@@ -1,0 +1,4 @@
+command display_Wireframe shortFile
+   put localhost_ConstructImageUrl (shortFile) into imageURL
+   launch url imageURL
+end display_Wireframe

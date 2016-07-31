@@ -1,0 +1,7 @@
+function objectFolder_HandlerFolder shortHkey, objectFolder, pDontCreate
+   folder_Format objectFolder
+   put item 1 shortHkey & "_" & item 2 of shortHkey into folderName
+   put objectFolder & "handlers/" & folderName & "/" into handlerFolder
+   if pDontCreate is false then folder_CreateNested handlerFolder
+   return handlerFolder
+end objectFolder_HandlerFolder

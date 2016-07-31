@@ -1,0 +1,5 @@
+command log_SetTimeStampEntry logLine, pLineTitle, pLogName
+   put log_ConstructEntry (logLine, pLineTitle, true) into logEntry
+   log_SetLatestLine logEntry, pLogName
+   return the result
+end log_SetTimeStampEntry

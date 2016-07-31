@@ -1,0 +1,861 @@
+﻿script "lib_Fedwiki"
+--> MetaData
+-
+name: lib_Fedwiki
+type: script library
+version: 1.3
+copyright: David Bovill
+licence:  GPLv3
+deps: externals
+externals:  mergJSONEncode
+
+
+/*
+This script is designed to be a behavior for a Fedwiki server.
+*/
+
+--> Working On
+-
+/*
+What is a good way to switch handler version, depending on the project?
+And how do we store different versions of the same handler simply (without relying on git).
+*/
+
+--> Fedwiki | Drop
+-
+function fedwiki_GetDroppedUrl dropJSON
+   -- {"text":"http://plugin.fedwiki.org/changes-to-this-site.html","html":"<meta http-equiv=\"Content-Type\" content=\"text/html;charset=UTF-8\"><a href=\"http://plugin.fedwiki.org/changes-to-this-site.html\">plugin.fedwiki.org</a>"}
+   
+   put json_ToArray (dropJSON) into dropArray
+   put dropArray ["html"] into droppedHTML
+   put dropArray ["text"] into droppedText
+   
+   set the itemdelimiter to "."
+   switch
+      case droppedHTML is empty
+         -- does it begin with "<meta http-equiv=\'Content-Type\' content=\'text/html;charset=UTF-8\'><a href=\"
+         return droppedText
+      case item -1 of droppedText = "html"
+         -- "http://plugin.fedwiki.org/changes-to-this-site.html"
+         delete item -1 of droppedText
+         set the itemdelimiter to "/"
+         put "/view" after item 3 of droppedText
+         return droppedText
+      default
+         fedwiki_ReturnError dropJSON, "No URL dropped on the page!"
+   end switch
+end fedwiki_GetDroppedUrl
+
+command fedwiki_ReturnError someValue, errorText
+   if someValue is empty then
+      fedwiki_ExitAndReturnError errorText, pErrorTitle
+   end if
+end fedwiki_ReturnError
+
+command fedwiki_ReturnJSON someJSON
+   if the environment = "server" then
+      put new header "Content-Type: application/json; charset=utf-8"
+      put new header "Access-Control-Allow-Origin: *"
+      put new header "Access-Control-Allow-Headers: Accept, Authorization, Content-Type"
+      put new header "Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS, LINK, UNLINK"
+   end if
+   put someJSON
+end fedwiki_ReturnJSON
+
+
+--> Fedwiki | Links
+-
+function fedwiki_ConstructLink someText, pExternalURL
+   put word 1 to -1 of line 1 of someText into someText
+   if pExternalURL is empty then
+      return "[[" & someText & "]]"
+   else
+      put word 1 to -1 of pExternalURL into pExternalURL
+      return "[" & pExternalURL && someText & "]"
+   end if
+end fedwiki_ConstructLink
+
+
+--> Fedwiki | Metadata
+-
+command fedwiki_DeconstructCreateArray createArray, @parentTitle, @sectionTitle, @transportURL, @sourceURL, @pageTitle, @linkDictionary
+   put createArray ["title"] into sectionTitle
+   put createArray ["create"]["item"]["title"] into parentTitle
+   put createArray ["create"]["source"] into sourceArray
+   
+   put sourceArray ["transport"] into transportURL
+   put sourceArray ["url"] into sourceURL
+   put sourceArray ["pageTitle"] into pageTitle
+   put sourceArray ["link_Dictionary"] into linkDictionary
+   return sourceArray
+end fedwiki_DeconstructCreateArray
+   
+function fedwiki_FetchMetadataArray someURL
+   set the itemdelimiter to "."
+   if item -1 of someURL = "html" then
+      put "json" into item -1 of someURL
+   else
+      set the itemdelimiter to "/"
+      put item -1 of someURL into pageSlug
+      put item 1 to 3 of someURL into rootURL
+      put rootURL & "/" & pageSlug & ".json" into someURL
+   end if
+   put url someURL into someJSON
+   
+   put json_ToArray (someJSON) into fedwikiPageArray
+   put fedwikiPageArray  ["title"] into someTitle
+   if someTitle is empty then return empty
+   put fedwikiPageArray ["metadata"] into metadataArray
+   put someTitle into metadataArray ["pageTitle"]
+   return metadataArray
+end fedwiki_FetchMetadataArray
+
+function fedwiki_FetchTitle someURL
+   set the itemdelimiter to "."
+   put "json" into item -1 of someURL
+   put url someURL into someJSON
+   
+   put json_ToArray (someJSON) into fedwikiPageArray
+   put keys (fedwikiPageArray) into wikiKeys
+   repeat for each item someKey in "title,journal,story"
+      if someKey is not among the lines of wikiKeys then 
+         return empty
+      end if 
+   end repeat
+   return fedwikiPageArray ["title"]
+end fedwiki_FetchTitle
+
+function fedwiki_IsWiki someURL
+   return fedwiki_FetchTitle (someURL) is not empty
+end fedwiki_IsWiki
+
+
+--> Fedwiki | Page | Clean
+-
+function fedwiki_CleanLastLineUpJournal droppedURL, pPreserveActions, pNotTheseSlugs
+   put fedwiki_FetchLastLineUpArray (droppedURL, pNotTheseSlugs) into pageArray
+   fedwiki_CleanJournalArray pageArray, pPreserveActions
+   put json_FromArray (pageArray) into cleanJSON
+   return cleanJSON
+end fedwiki_CleanLastLineUpJournal
+
+function fedwiki_FetchLastLineUpArray droppedURL, pNotTheseSlugs
+   if pNotTheseSlugs is empty then put "journal-cleaner-transport" into pNotTheseSlugs
+   
+   put fedwiki_ConstructUrlArray (droppedURL) into urlArray
+   if urlArray is false then return false
+   
+   put item 2 of the extents of urlArray into lineUpNum
+   put urlArray [lineUpNum]["pageSlug"] into pageSlug
+   if pageSlug is among the items of pNotTheseSlugs and lineUpNum is not 1 then
+      subtract 1 from lineUpNum
+   end if
+   
+   put fedwiki_GetLineUpJson (urlArray, lineUpNum) into someJSON
+   put json_ToArray (someJSON) into pageArray
+   return pageArray
+end fedwiki_FetchLastLineUpArray
+
+function fedwiki_ExtractFirstStoryItem pageArray, itemType
+   put pageArray ["story"] into storyArray
+   put item 2 of the extents of storyArray into lastItemNum
+   repeat with itemNum = 1 to lastItemNum
+      put storyArray [itemNum] into itemArray
+      if itemArray ["type"] = itemType then
+         put itemArray ["text"] into someData
+         return someData
+      end if
+   end repeat
+   return empty
+end fedwiki_ExtractFirstStoryItem
+
+function fedwiki_GetLineUpJson urlArray, lineUpNum
+   if lineUpNum = -1 then put item 2 of the extents of urlArray into lineUpNum
+   
+   put urlArray [lineUpNum]["pageSlug"] into pageSlug
+   put urlArray [lineUpNum]["someDomain"] into someDomain
+   
+   -- http://forage.david.bovill.me/entry-level-browser.json?random=72428048
+   put "http://" & someDomain & "/" & pageSlug & ".json" into someUrl
+   -- put "?random=" & the ticks after someUrl
+   put url someUrl into someJSON
+   return someJSON
+end fedwiki_GetLineUpJson
+
+function fedwiki_ConstructUrlArray someUrl
+   set the itemdelimiter to "/"
+   put item 1 to 3 of someUrl into urlStem
+   put item 3 of someUrl into urlDomain
+   
+   put item 4 to -1 of someUrl into pathBit
+   put the number of items of pathBit into maxNum
+   if (maxNum mod 2) is not 0 then 
+      put item -1 of pathBit into extraBit
+      delete item -1 of pathBit
+      return false -- it is not a Fedwiki url ?
+   end if
+   
+   put maxNum/2 into maxLineUpNum
+   repeat with lineUpNum = 1 to maxLineUpNum
+      put 2*lineUpNum - 1 into itemNum
+      put item itemNum of pathBit into viewOrDomain
+      put item (itemNum + 1) of pathBit into pageSlug
+      _stripEndHashFromSlug pageSlug
+      
+      if viewOrDomain = "view" then
+         put urlDomain into someDomain
+      else
+         put viewOrDomain into someDomain
+      end if
+      put pageSlug into urlArray [lineUpNum]["pageSlug"]
+      put someDomain into urlArray [lineUpNum]["someDomain"]
+   end repeat
+   return urlArray
+end fedwiki_ConstructUrlArray
+
+
+--> Fedwiki | Errors
+-
+function fedwiki_ConstructErrorJSON errorText, pErrorTitle
+   put fedwiki_ConstructNewPageArray (pErrorTitle, errorText) into someArray
+   put json_FromArray (someArray) into someJSON
+   return someJSON
+end fedwiki_ConstructErrorJSON
+
+command fedwiki_ExitAndReturnError errorText, pErrorTitle
+   if pErrorTitle is empty then put "Error" into pErrorTitle
+   put fedwiki_ConstructErrorJSON (errorText, pErrorTitle) into errorJSON
+   fedwiki_ReturnJSON errorJSON
+   exit to top
+end fedwiki_ExitAndReturnError
+
+
+--> Fedwiki | Parse and Return
+-
+command fedwiki_DeconstructDroppedURL dropJSON, @droppedText, @droppedHtml
+   put json_ToArray (dropJSON) into dropArray
+   put dropArray ["text"] into droppedText
+   put dropArray ["html"] into droppedHtml
+end fedwiki_DeconstructDroppedURL
+
+command fedwiki_ReturnPageArray fedwikiPageArray
+   put json_FromArray (pageArray) into pageJSON
+   fedwiki_ReturnJSON someJSON
+end fedwiki_ReturnPageArray
+
+
+--> Fedwiki | Image
+-
+function fedwiki_ConstructImageHtml imageURL, pCaption, pImageSource, pSourceTag, pWidth
+   if pCaption is empty then put "Transported Image - " into pCaption
+   if pImageSource is empty then put imageURL into pImageSource
+   if pWidth is empty then put "100%" into pWidth
+   
+   put "<div style='padding: 12px; background:#eee; width:96%; align=centered;'>" into someHTML
+   put CR & "<a href='" & pImageSource & "' target='_blank'>" after someHTML
+   put CR & "<img style='display:block; margin:auto; width:" & pWidth & ";'" after someHTML
+   put CR & "src='" & imageURL & "'>" after someHTML
+   put CR & "</a>" after someHTML
+   put CR after someHTML
+   put CR & "<p class=caption>" after someHTML
+   put CR & pCaption after someHTML
+   if pSourceTag is not empty then
+      put CR & "[" & pImageSource && pSourceTag & "]" after someHTML
+   end if
+   put CR & "</p></div>" after someHTML
+   return someHTML
+end fedwiki_ConstructImageHtml
+
+function fedwiki_ConstructImageDiv imageURL, imageHREF
+   -- older plain html for image
+   if imageHREF is empty then
+      put "<div align=center><img src=" & kwote (imageURL) & " width=428></div>" into imageHTML
+   else
+      put "<div align=center><a href="  & kwote (imageHREF) & "target=" & kwote("_blank") & "><img src=" & kwote (imageURL) & " width=428></a></div>" into imageHTML
+   end if
+   return imageHTML
+end fedwiki_ConstructImageDiv
+
+function fedwiki_ConstructImageArray someImage, imageType, pImageCaption, pID   
+   fedwiki_SetID pID
+   if pImageCaption is empty then put "Uploaded image" into pImageCaption
+   
+   put "Uploaded image" into imageArray ["caption"] 
+   put pID into imageArray ["id"]
+   put pImageCaption into imageArray ["text"] 
+   put "image" into imageArray ["type"] 
+   
+   put "data:image/" & imageType & ";base64," into dataImageUrl
+   put base64encode (someImage) after dataImageUrl
+   put dataImageUrl into imageArray ["url"] 
+   
+   return imageArray
+end fedwiki_ConstructImageArray
+
+
+--> Fedwiki | PageArray | Construct
+-
+function fedwiki_ConstructOpenStreetMapDescription locationDescription, mapZoom, mapLat, mapLong
+   -- put "[[Mouans-Sartoux]], PACA, France - [http://www.openstreetmap.org/node/344280980#map=19/43.61935/6.97254 openstreetmap]" into mapText
+   put "http://www.openstreetmap.org/#map=" & mapZoom & "/" & mapLat & "/" & mapLong into openstreetmapURL
+   put "[[" & item 1 of locationDescription & "]]" into item 1 of locationDescription
+   put locationDescription && "- [" & openstreetmapURL && "openstreetmap]" into mapDescription
+   return mapDescription
+end fedwiki_ConstructOpenStreetMapDescription
+
+function fedwiki_ConstructSlug pageTitle
+   replace space with "-" in pageTitle
+   repeat for each char someChar in  ".,:;"
+      replace someChar with empty in pageTitle
+   end repeat
+   put tolower (pageTitle) into pageSlug
+   return pageSlug
+end fedwiki_ConstructSlug
+
+function fedwiki_ConstructNewPageJson pageTitle, pSomeText
+   put fedwiki_ConstructNewPageArray (pageTitle, pSomeText) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end fedwiki_ConstructNewPageJson
+
+function fedwiki_ConstructNewPageArray pageTitle, pSomeText, pSourceArray
+   put pageTitle into pageArray ["title"]
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into pageArray ["journal"] 
+   if pSomeText is empty then
+      fedwiki_AddFactoryToPageArray pageArray
+   else
+      fedwiki_AddParagraphToPageArray pageArray, pSomeText
+   end if
+   return pageArray
+end fedwiki_ConstructNewPageArray
+
+function fedwiki_ConstructSimplePageArray pageTitle, pSomeText, pSourceArray
+   put pageTitle into pageArray ["title"]
+   if pSomeText is not empty then fedwiki_AddParagraphToPageArray pageArray, pSomeText
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into pageArray ["journal"] 
+   return pageArray
+end fedwiki_ConstructSimplePageArray
+
+function fedwiki_ConstructCodePageArray pageTitle, someCode, pSomeText, pSourceArray
+   put pageTitle into pageArray ["title"]
+   if pSomeText is not empty then fedwiki_AddParagraphToPageArray pageArray, pSomeText
+   fedwiki_AddCodeToPageArray pageArray, someCode
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into pageArray ["journal"] 
+   return pageArray
+end fedwiki_ConstructCodePageArray
+
+function fedwiki_ConstructNewImagePageArray pageTitle, someImage, imageType, pImageCaption, pSourceArray
+   local fedwikiPageArray, journalArray
+   
+   put pageTitle into fedwikiPageArray ["title"]  
+   put fedwiki_ConstructImageArray (someImage, imageType, pImageCaption) into imageArray
+   fedwiki_PageArrayAddToEnd imageArray, fedwikiPageArray
+   
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into journalArray
+   fedwiki_AddToJournalArray journalArray, imageArray, "add"
+   put journalArray into fedwikiPageArray ["journal"] 
+   
+   return fedwikiPageArray
+end fedwiki_ConstructNewImagePageArray
+
+function fedwiki_ConstructFactoryArray pID
+   fedwiki_SetID pID
+   put "factory" into factoryArray ["type"]
+   put pID into factoryArray ["id"]
+   return factoryArray
+end fedwiki_ConstructFactoryArray
+
+command fedwiki_AddFactoryToPageArray @pageArray, pID
+   put fedwiki_ConstructFactoryArray (pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddFactoryToPageArray
+
+command fedwiki_AddParagraphToPageArray @pageArray, someText, pID
+   put fedwiki_ConstructStoryParagraphArray (someText, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddParagraphToPageArray
+
+command fedwiki_AddHtmlToPageArray @pageArray, someHtml, pID
+   put fedwiki_ConstructStoryHtmlArray (someHtml, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddHtmlToPageArray
+
+command fedwiki_AddMarkdownToPageArray @pageArray, someMarkdown, pID
+   put fedwiki_ConstructStoryMarkdownArray (someMarkdown, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddMarkdownToPageArray
+
+command fedwiki_AddVideoToPageArray @pageArray, videoID, videoType, videoDescription, pID
+   put fedwiki_ConstructVideoCodeArray (videoID, videoType, videoDescription, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddVideoToPageArray
+
+command fedwiki_AddCodeToPageArray @pageArray, someCode, pID
+   put fedwiki_ConstructStoryCodeArray (someCode, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddCodeToPageArray
+
+command fedwiki_AddAudioToPageArray @pageArray, audioUrl, someText, pID
+   put fedwiki_ConstructStoryAudioArray (audioUrl, someText, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddAudioToPageArray
+
+command fedwiki_AddMapToPageArray @pageArray, mapLat, mapLong, mapText, mapZoom, pID
+   put fedwiki_ConstructStoryMapArray (mapLat, mapLong, mapText, mapZoom, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddMapToPageArray
+
+command fedwiki_MoveStoryItem @fedwikiPageArray, fromItemNum, toItemNum
+   /*
+   {
+   "type": "move",
+   "order": [
+   "6b1ba5af044ea0e3",
+   "356858282d59dea1",
+   "ee7ec529a199beea",
+   "f9c392af4c8f542b",
+   "94d049cf1fd90fc5",
+   "a4eb8b77d082c7ef",
+   "e8415143e138a510",
+   "e9b027eaabbea8d8",
+   "ccd0372b0fd27d6e",
+   "fe7b17c7de97c049",
+   "85015e39e3c5ed2f",
+   "8633d7f8e7d89df6",
+   "9e65ab7c58d8edd0",
+   "2e8287f6c7461c55",
+   "7f552aa6a1a735cf",
+   "ca4edfba68461f3f"
+   ],
+   "id": "ca4edfba68461f3f",
+   "date": 1455619718778
+   }
+   */
+   
+   put fedwikiPageArray ["story"] into storyArray
+   --
+   fedwiki_StoryDeleteItem storyArray, fromItemNum
+   put the result into itemArray
+   fedwiki_StoryInsertItem storyArray, toItemNum, itemArray
+   --
+   put storyArray into fedwikiPageArray ["story"]
+   
+   put fedwiki_StoryExtractorderedIDArray (storyArray) into oderedIDArray
+   put the milliseconds into pMilliseconds
+  fedwiki_SetID pID
+   
+   put fedwikiPageArray ["journal"] into journalArray
+   --  
+   put "move" into journalEntryArray ["type"]
+   put pMilliseconds into journalEntryArray ["date"]
+   put pID into journalEntryArray ["id"]
+   put oderedIDArray into journalEntryArray ["order"]
+   fedwiki_AddToEndOfIndexArray journalEntryArray, journalArray
+   --
+   put journalArray into fedwikiPageArray ["journal"]
+end fedwiki_MoveStoryItem
+
+function fedwiki_StoryExtractorderedIDArray storyArray
+   put item 2 of the extents of storyArray into maxItem
+   repeat with itemNum = 1 to maxItem
+      put storyArray [itemNum]["id"] into storyID
+      put storyID into oderedIdArray [itemNum]
+   end repeat
+   return oderedIDArray
+end fedwiki_StoryExtractorderedIDArray
+
+command fedwiki_StoryDeleteItem @storyArray, ItemNumToDelete
+   put storyArray [ItemNumToDelete] into deletedItemArray
+   
+   put item 2 of the extents of storyArray into maxItem
+   repeat with itemNumToMove = (ItemNumToDelete + 1) to maxItem
+      put itemNumToMove - 1 into itemNumDestination
+      put storyArray [itemNumToMove] into storyArray [itemNumDestination]
+   end repeat
+   delete variable storyArray [maxItem]
+   return deletedItemArray
+end fedwiki_StoryDeleteItem
+ 
+command fedwiki_StoryInsertItem @storyArray, itemNumToInsert, itemArray
+   put item 2 of the extents of storyArray into maxItem
+   repeat with itemNumToMove = maxItem down to itemNumToInsert
+      put itemNumToMove + 1 into itemNumDestination
+      put storyArray [itemNumToMove] into storyArray [itemNumDestination]
+   end repeat
+   put itemArray into storyArray [itemNumToInsert]
+end fedwiki_StoryInsertItem
+
+command fedwiki_PageArrayAddToEnd storyItemArray, @fedwikiPageArray
+   -- this add a factory to the journal and a itemArray to the journal and story
+   -- all with the same id
+   put fedwikiPageArray ["story"] into storyArray
+   put fedwikiPageArray ["journal"] into journalArray
+   put storyItemArray ["id"] into itemID
+   
+   -- add the item to the end of the story
+   fedwiki_AddToEndOfIndexArray storyItemArray, storyArray
+   -- figure out what we just added it after
+   -- this can be empty if it is the first entry
+   put the result into afterID
+   put storyArray into fedwikiPageArray ["story"]
+   
+   -- 3) Now let's add the edit or add to the journal
+   -- make the factory have the same id as the item we will add to the story
+   put fedwiki_ConstructFactoryArray (itemID) into factoryArray
+   -- now add a journal entry for adding after the id of the end paragraph
+   fedwiki_AddToJournalArray journalArray, factoryArray, "add", afterID
+   
+   -- finally add the journal entry for editing the factory
+   fedwiki_AddToJournalArray journalArray, storyItemArray, "edit"
+   put journalArray into fedwikiPageArray ["journal"]
+end fedwiki_PageArrayAddToEnd
+
+function fedwiki_ConstructJournalArray pageTitle, pSourceArray
+   put fedwiki_ConstructCreateArray (pageTitle, pSourceArray) into createArray
+   put createArray into journalArray [1]
+   return journalArray
+end fedwiki_ConstructJournalArray
+
+function fedwiki_ConstructCreateArray pageTitle, pSourceArray
+   put "create" into createArray ["type"]
+   put the milliseconds into createArray ["date"]
+   put pageTitle into createArray ["item"]["title"]
+   put empty into createArray ["item"]["story"]
+   if pSourceArray is an array then put pSourceArray into createArray ["source"]
+   return createArray
+end fedwiki_ConstructCreateArray
+
+function fedwiki_ConstructCreateSourceArray transportURL, sourceURL, pDateTransported, pRepo, pRevisionID
+   /*
+   url = "https://en.wikipedia.org/wiki/Hypertext"
+   date = 1458105780000
+   rev = "v128.397"
+   transport = "http://localhost:4020/proxy"
+   repo = "https://github.com/ward/transport-proxy"
+   */
+   if pDateTransported is empty then put the milliseconds into pDateTransported
+   
+   put sourceURL into createSourceArray ["url"]
+   put transportURL into createSourceArray ["transport"]
+   put pDateTransported into createSourceArray ["date"]
+   
+   if pRepo is not empty then put pRepo into createSourceArray ["repo"]
+   if pRevisionID is not empty then put pRevisionID into createSourceArray ["rev"]
+   
+   return createSourceArray
+end fedwiki_ConstructCreateSourceArray
+
+command fedwiki_AddToCreateArray @fedwikiPageArray, someArray
+   put fedwikiPageArray ["journal"]["source"] into sourceArray
+   union sourceArray with someArray
+   put sourceArray into fedwikiPageArray ["journal"]["source"]
+end fedwiki_AddToCreateArray
+
+command fedwiki_AddToJournalArray @journalArray, itemArray, journalType, pAfterID, pMilliseconds
+   if pMilliseconds is empty then put the milliseconds into pMilliseconds
+   if pAfterID is not empty then
+      put pAfterID into journalEntryArray ["after"]
+   end if
+   put pMilliseconds into journalEntryArray ["date"]
+   put itemArray ["id"] into journalEntryArray ["id"]
+   put itemArray into journalEntryArray ["item"]
+   put journalType into journalEntryArray ["type"]
+   
+   fedwiki_AddToEndOfIndexArray journalEntryArray, journalArray
+end fedwiki_AddToJournalArray
+
+command fedwiki_AddToEndOfIndexArray dataOrArray, @someArray
+   put item 2 of the extents of someArray into indexNum
+   put someArray [indexNum]["id"] into afterID
+   add 1 to indexNum
+   put dataOrArray into someArray [indexNum]
+   return afterID -- figure out what we just added it after
+end fedwiki_AddToEndOfIndexArray
+
+function fedwiki_ConstructStoryMapArray mapLat, mapLong, mapText, mapZoom, pID
+   fedwiki_SetID pID
+   put pID into itemArray ["id"]
+   if mapLat is not empty then
+      put mapLat into itemArray ["latlng"]["lat"]
+      put mapLong into itemArray ["latlng"]["lng"]
+   end if
+   if mapText is empty then put "Map" into mapText
+   put mapText into itemArray ["text"]
+   put "map" into itemArray ["type"]
+   put mapZoom into itemArray ["zoom"]
+   return itemArray
+end fedwiki_ConstructStoryMapArray
+
+function fedwiki_ConstructStoryCodeArray someCode, pID
+   return fedwiki_ConstructStoryItemArray (someCode, "code", pID)
+end fedwiki_ConstructStoryCodeArray
+
+function fedwiki_ConstructVideoCodeArray videoID, videoType, videoDescription, pID
+   fedwiki_SetID pID
+   put toUpper (videoType) && videoID & CR & line 1 of videoDescription into itemArray ["text"]
+   put "video" into itemArray ["type"]
+   put pID into itemArray ["id"]
+   return itemArray
+end fedwiki_ConstructVideoCodeArray
+
+function fedwiki_ConstructStoryAudioArray audioUrl, someText, pID
+   fedwiki_SetID pID   
+   put audioUrl & CR & someText into itemArray ["text"]
+   put "audio" into itemArray ["type"]
+   put pID into itemArray ["id"]
+   return itemArray
+end fedwiki_ConstructStoryAudioArray
+
+function fedwiki_ConstructStoryHtmlArray someHtml, pID
+   return fedwiki_ConstructStoryItemArray (someHtml, "html", pID)
+end fedwiki_ConstructStoryHtmlArray
+
+function fedwiki_ConstructStoryMarkdownArray someMarkdown, pID
+   return fedwiki_ConstructStoryItemArray (someMarkdown, "markdown", pID)
+end fedwiki_ConstructStoryMarkdownArray
+
+function fedwiki_ConstructStoryParagraphArray someText, pID
+   return fedwiki_ConstructStoryItemArray (someText, "paragraph", pID)
+end fedwiki_ConstructStoryParagraphArray
+
+function fedwiki_ConstructStoryItemArray someText, itemType, pID  
+   fedwiki_SetID pID   
+   put someText into itemArray ["text"]
+   put itemType into itemArray ["type"]
+   put pID into itemArray ["id"]
+   return itemArray
+end fedwiki_ConstructStoryItemArray
+
+command fedwiki_CleanJournalArray @pageArray, pPreserveActions
+   switch pPreserveActions
+      case empty
+         fedwiki_StripJournalToCreate pageArray
+          break
+      default
+         put pageArray ["journal"] into journalArray
+         put item 2 of the extents of journalArray into lastJournalNum
+         put 1 into newItemNum
+         repeat with jNum = 1 to lastJournalNum
+            put journalArray [jNum] into itemArray
+            if itemArray ["type"] is among the items of pPreserveActions then
+               put itemArray into newJournalArray [newItemNum]
+               add 1 to newItemNum
+            end if
+         end repeat
+         put newJournalArray into pageArray ["journal"]
+   end switch
+end fedwiki_CleanJournalArray
+
+command fedwiki_StripJournalToCreate @pageArray
+   put pageArray ["journal"][1] into createEntryArray
+   delete variable pageArray ["journal"]
+   put createEntryArray into pageArray ["journal"][1]
+end fedwiki_StripJournalToCreate
+
+command fedwiki_SetID @pID
+   if pID is empty then 
+      put uuid () into pID
+   end if
+end fedwiki_SetID
+
+
+--> Private
+-
+private command _stripEndHashFromSlug @pageSlug
+   set the itemdelimiter to "#"
+   put item 1 of pageSlug into pageSlug
+end _stripEndHashFromSlug
+
+
+--> Deps
+-
+function json_FromArray pArray, pForceRootType, pPretty
+   repeat for each key tKey in pArray
+      if pArray[tKey] is an array then
+         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
+      end if
+   end repeat
+   return(mergJSONEncode("pArray",pForceRootType,pPretty))
+end json_FromArray
+
+function json_ToArray pJSON
+   if pJSON is empty then return false
+   try -- as otherwise an error with non-json causes script to exit
+      local tArray,tKeys
+      if pJSON is empty then return empty
+      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
+         put json_ToArray(tArray[tKey]) into tArray[tKey]
+      end repeat
+      return tArray
+   catch e
+      return empty
+   end try
+end json_ToArray
+
+command xml_BlankError @xmlBit
+   if item 1 of xmlBit = "xmlerr" then put empty into xmlBit
+end xml_BlankError
+
+function html_FetchTidy someUrl
+   put url someUrl into someHtml
+   put the tempname & ".html" into inputFile 
+   put someHtml into url ("file:" & inputFile)
+   
+   put "tidy --force-output true --char-encoding utf8 --input-encoding utf8 --output-encoding utf8 --output-xml true -asxml -m" && inputFile into someShell
+   put shell (someShell) into shellResult   
+   put url ("file:" & inputFile) into tidyXML
+   return tidyXML
+end html_FetchTidy
+
+function html_ConstructRefLink someText, someLink, pTarget
+   if someLink is empty then return someText
+   replace quote with "&quot;" in someLink
+   put "<a href=" & quote & someLink & quote  into someLink
+   if pTarget is not empty then
+      -- "_blank" -- for opening in a new window
+      put space & "target=" &quote& pTarget &quote after someLink
+   end if
+   put ">" & someText & "</a>" after someLink
+   return someLink
+end html_ConstructRefLink
+
+function html_ConstructVideoTag videoURL, pMediaType, pVideoWidth, pShowControls, pPosterImageFile, pFallbackHtml
+   -- this is a single source video tag
+   if pFallbackHtml is empty then put "This is fallback content to display for user agents that do not support the video tag." into pFallbackHtml
+   
+   put "<video" into someHTML
+   put space & "src=" & quote & videoURL & quote after someHTML
+   switch word 1 of pMediaType
+      case "webm"
+         put space & "type='video/webm'" after someHTML
+         break
+      case "mp4"
+         put  space & "type='video/mp4'" after someHTML
+   end switch
+   
+   if pVideoWidth is not empty then put space & "width=" & quote & pVideoWidth & quote after someHTML
+   if pShowControls is not false then put space & "controls" after someHTML
+   if pPosterImageFile is not empty then put space & "poster=" & quote & pPosterImageFile & quote after someHTML
+   put ">" after someHTML
+   
+   put pFallbackHtml after someHTML
+   put "</video>" after someHTML
+   
+   return someHTML
+end html_ConstructVideoTag
+
+function html_ConstructOpenVideoTag pVideoWidth, pShowControls, pPosterImageFile
+   -- this constructs an opening video tag
+   put "<video" into someHTML
+   if pPosterImageFile is not empty then put space & "poster=" & quote & pPosterImageFile & quote after someHTML
+   if pVideoWidth is not empty then put space & "width=" & quote & pVideoWidth & quote after someHTML
+   if pShowControls is not false then put space & "controls" after someHTML
+   put ">" after someHTML
+   return someHTML
+end html_ConstructOpenVideoTag
+
+function html_ConstructVideoSourceTag videoURL, pMediaType
+   -- multiple source video tag
+   -- should enhance to extract pMediaType from file extension
+   put "<source src=" & quote & videoURL & quote into someHTML
+   switch pMediaType
+      case "webm"
+         put space & "type='video/webm" after someHTML
+         break
+      case "mp4"
+         put  space & "type='video/mp4" after someHTML
+   end switch
+   -- maybe add codecs?
+   put ">" after someHTML
+   return someHTML
+end html_ConstructVideoSourceTag
+
+function text_StripAllTags someXml
+   put  "(<(.|\n)+?>)" into someReg	# 
+   return word 1 to -1 of replacetext(someXml, someReg, empty)
+end text_StripAllTags
+
+command url_Deconstruct someUrl, @someProtocol, @urlDomain, @urlPath, @shortName, @fileExtension, @uName, @pWord
+   /*
+   -- from http://regexlib.com/REDetails.aspx?regexp_id=628
+   -- put "(?:(?<protocol>http(?:s?)|ftp)(?:\:\/\/)) (?:(?<usrpwd>\w+\:\w+)(?:\@))? (?<domain>[^/\r\n\:]+)? (?<port>\:\d+)? (?<path>(?:\/.*)*\/)? (?<filename>.*?\.(?<ext>\w{2,4}))? (?<qrystr>\??(?:\w+\=[^\#]+)(?:\&?\w+\=\w+)*)* (?<bkmrk>\#.*)?" into someReg
+   */
+   
+   set the itemdelimiter to ":"
+   put item 1 of someUrl into someProtocol
+   if someProtocol is among the items of "file:binFile:ftp:http:https" then
+      put someUrl into someFile
+      delete item 1 of someFile
+      if char 1 to 2 of someFile = "//" then delete char 1 to 2 of someFile
+      
+      -- just in case it has a ? param at the end
+      -- strip it for now
+      set the itemdelimiter to "?"
+      put item 1 of someFile into someFile
+      set the itemdelimiter to ":"
+      
+      get offset("@", someFile)
+      if it = 0 then
+         put empty into uName
+         put empty into pWord
+      else
+         put char 1 to (it - 1) of someFile into authBit
+         repeat while char 1 of authBit is "/"
+            delete char 1 of authBit
+         end repeat
+         if the number of items of authBit = 2 then
+            put item 1 of authBit into uName
+            put item 2 of authBit into pWord
+            delete char 1 to it of someFile
+         else
+            -- "@" must be in url ignore
+            put empty into uName
+            put empty into pWord
+         end if
+      end if
+      file_Deconstruct someFile, someRoot, shortName, fileExtension
+      
+      set the itemdelimiter to "/"
+      put item 1 of someRoot into UrlDomain
+      put item 2 to -1 of someRoot into urlPath
+      return true
+   else
+      put empty into someProtocol
+      put empty into UrlDomain
+      put empty into urlPath
+      put empty into shortName
+      put empty into fileExtension
+      put empty into uName
+      put empty into pWord
+      return false
+   end if
+end url_Deconstruct
+
+command file_Deconstruct someFile, @someRoot, @shortName, @fileExtension
+   -- was "deconstruct_File"
+   -- should turn someRoot into someFolder and add "/" to end
+   
+   if someFile is empty then
+      put the effective filename of this stack into someFile
+   end if
+   put someFile into someRoot
+   put the itemdelimiter into originalDelim
+   
+   set the itemdelimiter to "/"
+   put last item of someFile into shortName
+   delete last item of someRoot
+   
+   if shortName contains "." then
+      set the itemdelimiter to "."
+      put last item of shortName into fileExtension
+      delete last item of shortName
+   else
+      put empty into fileExtension
+   end if
+   set the itemdelimiter to originalDelim
+end file_Deconstruct
+
+function kwote someText, pQuoteChar
+   if pQuoteChar is empty then put quote into pQuoteChar
+   return pQuoteChar & someText & pQuoteChar
+end kwote

@@ -1,0 +1,15 @@
+function opml_ConstructXml opmlHeader, opmlOutline
+    put "<?xml version='1.0' encoding='ISO-8859-1'?>" into opml
+    put CR & "<opml version='1.1'>" after opml
+    --
+    put CR & tab & "<head>" after opml
+    put CR & outline_IncreaseIndent(opmlHeader, 2) after opml
+    put CR & tab & "</head>" after opml
+    
+    put CR & tab & "<body>" after opml
+    put CR & outline_IncreaseIndent(opmlOutline, 2) after opml
+    put CR & tab & "</body>" after opml
+    -- 
+    put CR & "</opml>" after opml
+    return opml
+end opml_ConstructXml

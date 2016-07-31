@@ -1,0 +1,6 @@
+on menu_ShowPatch treeField
+   put the tree_SelectedLink of treeField into gitHash
+   put "git log -p" && gitHash into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   display_Lines shellResult
+end menu_ShowPatch

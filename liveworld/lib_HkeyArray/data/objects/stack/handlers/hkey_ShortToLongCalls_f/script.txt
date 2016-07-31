@@ -1,0 +1,26 @@
+function hkey_ShortToLongCalls shortKeys, hObject, pSetName
+   repeat for each line shortKey in shortKeys
+      
+      put item 1 of shortKey into callName
+      put item 2 of shortKey into callType
+      
+      if exists (hObject) is false then
+         put hkey_Construct (callName, callType, "missing", 1) into foundCall
+      else
+         put the hkey_SearchHierarchy [pSetName] of hObject into scriptHierarchy
+         hkey_AddDevelopmentHierarchy scriptHierarchy
+         hkey_FindHandlerInHierarchy callName, callType, hObject, scriptHierarchy, foundHkey, callHandler
+         if foundHkey is empty then
+            if hkey_MissingHandlerIsNotImportant (callName, callType) is true then
+               -- it is missing but prob a get/setprop so don't bother graphing
+               next repeat
+            else
+               put hkey_Construct (callName, callType, "missing", 1) into foundHkey
+            end if
+         end if
+      end if
+      put foundHkey & CR after foundHkeys
+   end repeat
+   delete char -1 of foundHkeys
+   return foundHkeys
+end hkey_ShortToLongCalls       

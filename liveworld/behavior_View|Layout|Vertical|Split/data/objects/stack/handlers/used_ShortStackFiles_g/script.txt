@@ -1,0 +1,5 @@
+getprop used_ShortStackFiles
+   put the used_StackObjects of the target into stackObjects
+   put project_ConvertStackObjectsToShortFiles (stackObjects) into usedShortViewStackFiles
+   return usedShortViewStackFiles
+end used_ShortStackFiles

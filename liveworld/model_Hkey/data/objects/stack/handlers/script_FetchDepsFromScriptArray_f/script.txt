@@ -1,0 +1,6 @@
+function script_FetchDepsFromScriptArray hKey, pReturnShortHkey
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put the script_LinkArray of hObject into scriptLinkArray
+   put hkeyArray_ExtractSubArray (hKey,scriptLinkArray) into hkeyLinkArray
+   return deps_FromHkeyArray (hKey, hkeyLinkArray, pReturnShortHkey)
+end script_FetchDepsFromScriptArray

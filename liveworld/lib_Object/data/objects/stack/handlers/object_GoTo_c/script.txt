@@ -1,0 +1,15 @@
+command object_GoTo someObject, pStackVisible
+   if exists (someObject) is false then return merge("Error, [[someObject]] does not exist")
+   
+   put the stack_Name of someObject into stackName
+   put the card_Object of someObject into cardObject
+   if exists(cardObject) is false then
+      go to stack stackName
+   else
+      put the short id of cardObject into cardID
+      go to card id cardID of stack stackName
+   end if
+   -- stack_SetToMainScreen stackName
+   show stack stackName
+   return the result
+end object_GoTo

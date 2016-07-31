@@ -1,0 +1,5 @@
+command library_StoreSetData modelArray
+   -- careful not to store data for sets "none" or "all"
+   -- as these are constructed
+   library_StoreArray "gOPN_LibrarySets", modelArray
+end library_StoreSetData

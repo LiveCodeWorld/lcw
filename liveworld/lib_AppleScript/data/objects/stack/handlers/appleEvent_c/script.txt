@@ -1,0 +1,14 @@
+command appleEvent theClass, theID
+   -- put the params
+   switch
+      case theClass is "misc" and theID is "dosc"
+         -- request appleEvent data
+         -- do URL ("file:" & it)
+         break
+      case theClass is "aevt" and theID is "odoc"
+         request appleEvent data
+         -- put "the file opened is:" && it
+         break
+   end switch
+   pass appleEvent
+end appleEvent

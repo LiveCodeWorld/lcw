@@ -1,0 +1,47 @@
+function project_ConstructWalkArray hArray, pDepObject, pSetName
+   -- non-recursive version
+   local hkeyArray
+   
+   if exists (pDepObject) then
+      put revRuggedID (pDepObject) into pDepObject
+      hArray_RemoveObjectFromArray pDepObject, hArray 
+   end if
+   put hArray ["scriptArray"] into objectArray
+   
+   repeat for each key rObject in objectArray
+      put objectArray [rObject] into scriptObjectArray
+      put scriptObjectArray ["data"]["firstHkeyArray"] into firstHkeyArray
+      
+      repeat for each key firstShortHkey in firstHkeyArray
+         set the cursor to busy
+         if firstShortHkey = "_,c" then next repeat -- could check handler is empty
+         
+         put firstShortHkey,rObject,1 into hKey
+         put empty into hkeyArray [hKey]
+         
+         put hArray_GetShortCalls (hKey, hArray) into shortCalls
+         repeat for each line shortCall in shortCalls
+            set the cursor to busy
+            put hArray_FindHkeyInHierarchy (shortCall, rObject, hArray, pSetName) into foundCall
+            if foundCall = hKey then put empty into walkArray ["recursive call"][hKey][shortCall]
+            
+            if foundCall is empty then
+               -- put hArray_FindHkeyInHierarchy (shortHkey, rObject, empty, pSetName) into foundCall
+               put hkey_FindInHierarchy (shortCall, rObject, pSetName) into foundCall
+               if foundCall is empty then
+                  put shortCall,"missing",1 into missingCall
+                  put missingCall into walkArray ["missing"][shortCall][hKey]
+               else
+                  put foundCall into walkArray ["external"][shortCall][hKey]
+               end if
+            end if
+            put empty into hkeyArray [hKey][foundCall]
+         end repeat
+      end repeat
+   end repeat
+   
+   array_StripDeeperLevels hkeyArray
+   put hkeyArray into walkArray ["hkeyArray"]
+   put hArray into walkArray ["hArray"]
+   return walkArray
+end project_ConstructWalkArray

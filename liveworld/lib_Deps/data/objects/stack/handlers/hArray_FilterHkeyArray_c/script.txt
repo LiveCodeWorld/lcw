@@ -1,0 +1,17 @@
+command hArray_FilterHkeyArray @hKeyArray, pHarray
+   local alreadyDeleted
+   repeat for each key hKey in hKeyArray
+      if hkey_IsAuthored (hKey, pHarray) is false then
+         linkArray_DeleteNode hKeyArray, hKey, alreadyDeleted
+         next repeat
+      end if
+      put hKeyArray [hKey] into hkeyLinks
+      if hkeyLinks is an array then put keys (hkeyLinks) into hkeyLinks
+      
+      repeat for each line hkeyLink in hkeyLinks
+         if hkey_IsAuthored (hkeyLink, pHarray) is false then
+            linkArray_DeleteNode hKeyArray, hkeyLink, alreadyDeleted
+         end if
+      end repeat
+   end repeat
+end hArray_FilterHkeyArray

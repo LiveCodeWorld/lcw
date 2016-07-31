@@ -1,0 +1,14 @@
+on dragLeave
+   put the dragdata ["private"] into privateFlag
+   switch
+      case privateFlag is empty
+         break
+      case privateFlag = "behavior"
+         break
+      case privateFlag contains "|"
+         set the drag_Hilite of me to false
+         break
+      default
+   end switch
+   pass dragLeave
+end dragLeave

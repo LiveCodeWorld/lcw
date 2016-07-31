@@ -1,0 +1,21 @@
+getprop object_HkeyArray [pSetName]
+   local walkArray
+   put the rugged_ID of the target into rObject
+   put the script_Hkeys of rObject into hKeys
+   put the mainstack_WalkArray [true] of rObject into walkArray
+   
+   delete variable walkArray ["hKeyArray"]
+   
+   repeat for each line parentHkey in hKeys
+      set the cursor to busy
+      put hArray_GetShortCalls (parentHkey) into shortCalls
+      repeat for each line shortCall in shortCalls
+         project_DependencyWalk shortCall, parentHkey, walkArray
+      end repeat
+   end repeat
+   
+   put walkArray ["hKeyArray"] into mainStackHkeyArray
+   array_StripDeeperLevels mainStackHkeyArray
+   put mainStackHkeyArray into walkArray ["hKeyArray"]
+   return walkArray
+end object_HkeyArray

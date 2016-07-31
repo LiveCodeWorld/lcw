@@ -1,0 +1,14 @@
+function file_ConstructFolderArray filePaths, pFilter, pStripRootFolder
+   if pStripRootFolder is not empty then
+      text_AddTrailing pStripRootFolder, slash
+      replace pStripRootFolder with empty in filePaths
+   end if
+   if pFilter is not empty then filter filePaths with pFilter -- not needed as it's in repeat loop below
+   
+   repeat for each line somePath in filePaths
+      put somePath into someKey
+      split someKey with "/"
+      put somePath into pathArray [someKey]
+   end repeat
+   return pathArray
+end file_ConstructFolderArray

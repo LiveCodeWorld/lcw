@@ -1,0 +1,20 @@
+on menu_DisplayObjectArray treeView
+   -- put the displayed_Data of treeView into treeData
+   put the view_Data of treeView into hkeyArray
+   
+   put the displayed_Object of treeView into hObject
+   put the displayed_Hkey of treeView into hKey
+   put item 1 of hkey into hName
+   put item 3 of hkey into hObject
+   put hName,hObject into displayTitle
+   
+   put hkeyArray_ConstructObjectArray (hkeyArray) into objectHKeyArray
+   put hkeyArray_ConstructObjectTreeArray (objectHKeyArray) into objectTreeArray
+   
+   -- display_HKeyArray objectTreeArray, hName, hObject
+   -- display_Array prettyObjectArray
+   display_Array objectTreeArray, displayTitle, "Global | HkeyArray | Hkey | Menu", "Global | HkeyArray | Line | Menu", mouseUpCommand, "display_ObjectHkeyArrayHandler"
+   put the result into treeView
+   -- set the view_Data of treeView to objectTreeArray
+   
+end menu_DisplayObjectArray

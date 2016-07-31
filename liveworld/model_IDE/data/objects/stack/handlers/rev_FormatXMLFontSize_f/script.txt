@@ -1,0 +1,8 @@
+function rev_FormatXMLFontSize pTag
+   -- Given a tag name, returns the size that the contents of this 
+   -- tag should be displayed in.
+   local tSize
+   put item 2 of the cStyles[pTag] of revDocumentationStack() into tSize
+   if tSize is "default" then return empty
+   return tSize
+end rev_FormatXMLFontSize

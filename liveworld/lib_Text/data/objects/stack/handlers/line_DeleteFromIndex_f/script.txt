@@ -1,0 +1,4 @@
+function line_DeleteFromIndex someLines, indexOrOutline, partLine, lineAfter
+    line_Delete someLines, indexOrOutline, partLine, lineAfter
+    return indexOrOutline
+end line_DeleteFromIndex

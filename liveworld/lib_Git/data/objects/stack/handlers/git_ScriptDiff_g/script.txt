@@ -1,0 +1,12 @@
+getprop git_ScriptDiff [pStripGitHeaders]
+   -- put the script_RelativeFile of the target into someFile
+   put the script_File of the target into someFile
+   put git_GetDiff (someFile, pStripGitHeaders) into unifiedDiff
+   if word 1 to 3 of unifiedDiff = "fatal: ambiguous argument" then
+      if file_IsWithinOpn (someFile) then
+         git_AddFile someFile
+         put git_GetDiff (someFile, pStripGitHeaders) into unifiedDiff
+      end if
+   end if
+   return unifiedDiff
+end git_ScriptDiff

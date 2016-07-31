@@ -1,0 +1,32 @@
+setprop displayed_HkeyGraph [pOverlayName] hKey 
+   put the hkey_ImageView of me into hkeyImageView
+   
+   if the display_ProjectHandlers of me is true then
+      -- put hkey_ProjectImageFile (hKey, pOverlayName) into imageFile
+      put project_HandlerMetadataFolder (hKey) into overlayFolder
+   else
+      -- put hkey_LibraryImagetFile (hKey, pOverlayName) into imageFile
+      put library_HkeyFolder (hKey, true) into overlayFolder
+   end if
+   if there is not a folder overlayFolder then return empty
+   
+   if pOverlayName is empty then put overlay_GetDefaultName (overlayFolder) into pOverlayName
+   if pOverlayName is "default" then -- hack for now to delete the old "default" graph
+      overlay_SetArray overlayFolder, empty, "default"
+      put overlay_GetDefaultName (overlayFolder) into pOverlayName
+   end if
+   
+   put pOverlayName & "." & "png" into shortFile
+   put overlayFolder & shortFile into imageFile
+   put there is a file imageFile into fileExists
+   if fileExists is false then
+      set the visible_Status of hkeyImageView to false
+      return empty
+   else
+      lock screen
+      set the visible_Status of hkeyImageView to true
+      display_Overlay overlayFolder, pOverlayName, hkeyImageView, "fit inside frame"
+      unlock screen
+      return imageFile
+   end if
+end displayed_HkeyGraph

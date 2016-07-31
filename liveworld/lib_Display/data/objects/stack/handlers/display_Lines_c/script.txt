@@ -1,0 +1,8 @@
+command display_Lines someIndex, pDisplayTitle, pMenuTitle, pStackName
+   -- just here for compatability
+   -- may want to switch to display_Text
+   local pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+   
+   put pDisplayTitle,pStackName into displayTitle
+   display_Index someIndex, displayTitle, pMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+end display_Lines

@@ -1,0 +1,7 @@
+command rect_Test someRect
+   -- this puts the button on the card
+   put script_CallingObject() into callingObject
+   if the rect of callingObject is not someRect then
+      set the rect_Mask [someRect] of callingObject to "red"
+   end if
+end rect_Test

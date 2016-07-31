@@ -1,0 +1,13 @@
+command trait_SetSituation pSituationNum
+   if pSituationNum is empty then put 1 into pSituationNum
+   put the long id of card "Situation" into situationCard
+   put the plusMinus_View of situationCard into plusMinusView
+   
+   lock screen
+   set the displayed_SquareText of plusMinusView to the trait_Situation [pSituationNum] of plusMinusView
+   set the displayed_PositiveLabel of plusMinusView to the positive_Label of plusMinusView
+   set the displayed_NegativeLabel of plusMinusView to the negative_Label of plusMinusView
+   set the show_TraitLabels of plusMinusView to true
+   set the trait_Hilite of plusMinusView to empty
+   unlock screen
+end trait_SetSituation

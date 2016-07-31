@@ -1,0 +1,10 @@
+command fedwikipedia_ExtractTocLookupArray tocArray, @lookUpArray, @sectionTOC, pSectionTitle
+   if pSectionTitle is empty then
+      toc_LookupArray tocArray, lookUpArray, sectionTOC
+   else
+      toc_LookupArrayFromSectionTitle tocArray, sectionTitle, lookUpArray, sectionTOC
+   end if
+   if lookUpArray is an array then
+      put "https://livecode.world/mediawiki/importSection" into lookUpArray ["default"]["transport"]
+   end if
+end fedwikipedia_ExtractTocLookupArray

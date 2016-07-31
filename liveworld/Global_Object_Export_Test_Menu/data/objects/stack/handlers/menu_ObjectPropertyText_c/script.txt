@@ -1,0 +1,5 @@
+on menu_ObjectPropertyText scriptObject
+   put the long id of btn 1 of me into scriptObject
+   put the object_PropertyText of scriptObject into propText   
+   display_Text propText
+end menu_ObjectPropertyText

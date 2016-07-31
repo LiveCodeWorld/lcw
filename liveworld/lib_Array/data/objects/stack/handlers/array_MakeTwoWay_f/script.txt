@@ -1,0 +1,5 @@
+function array_MakeTwoWay someArray
+   put array_Reverse(someArray) into reversedArray
+   union someArray with reversedArray
+   return someArray
+end array_MakeTwoWay

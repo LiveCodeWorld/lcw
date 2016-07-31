@@ -1,0 +1,8 @@
+command scriptObject_FileExportDiff scriptObject
+   set the cursor to watch
+   put the script of scriptObject into nowScript
+   put the script_File of scriptObject into scriptFile
+   put url ("file:" & scriptFile) into localObjectScript
+   
+   terminal_Diff localObjectScript, nowScript, "script_File of mTarget", "Objects script"
+end scriptObject_FileExportDiff

@@ -1,0 +1,6 @@
+getprop set_Name
+   lock messages
+   put the set_Name of me into setName
+   unlock messages
+   return setName
+end set_Name

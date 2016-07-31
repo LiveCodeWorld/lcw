@@ -1,0 +1,19 @@
+function exif_ParseExifToolResult shellResult, @tagArray
+    put lineoffset("Command-line shortcuts:",shellResult) into lineNum
+    put line 2 to (lineNum-1) of shellResult into availableTagNames
+    -- put line (lineNum+1) of shellResult into shortCuts
+    put line (lineNum+2) to -1 of shellResult into exifTable
+     
+    set the itemdelimiter to ":"
+    repeat for each line exifLine in exifTable
+        put word 1 to -1 of item 1 of exifLine into tagName
+        put word 1 to -1 of item 2 of exifLine into tagValue
+        put tagValue into tagArray [tagName]
+    end repeat
+     
+    replace CR & "  " with CR in availableTagNames
+    replace space with CR in availableTagNames
+    delete char 1 to 2 of availableTagNames
+    
+    return word 1 to -1 of availableTagNames
+end exif_ParseExifToolResult

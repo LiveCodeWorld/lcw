@@ -1,0 +1,8 @@
+getprop tiles_Across
+   put LocalArray ["tiles_Across"] into tilesAcross
+   if tilesAcross is not a number then
+      put _defaultTilesAcross() into tilesAcross
+      put tilesAcross into LocalArray ["tiles_Across"]
+   end if
+   return tilesAcross
+end tiles_Across

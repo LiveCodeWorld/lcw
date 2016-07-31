@@ -1,0 +1,11 @@
+function linkArray_NodeIdsToHkeys nodeIDs
+   put the linkArray_Model of me into modelObject
+   linkArray_Get modelObject, hLinkArray, hIdArray
+   
+   repeat for each line nodeID in nodeIDs
+      put hIdArray [nodeID] into hKey
+      put hKey & CR after hKeys
+   end repeat
+   delete char -1 of hKeys
+   return hKeys
+end linkArray_NodeIdsToHkeys

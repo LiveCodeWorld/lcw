@@ -1,0 +1,5 @@
+function menu_FindAssociatedViewNames mTitle
+   put menu_ViewNameFromTitle(mTitle) into viewStem
+   put view_FilteredPaths(viewStem, true) into viewNames
+   return viewNames
+end menu_FindAssociatedViewNames

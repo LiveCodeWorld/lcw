@@ -1,0 +1,10 @@
+function view_FilteredPaths vName, pIncludeStem
+   return view_ListNames (vName, pIncludeStem)
+   
+   view_NormalizeName vName
+   put view_PathIndex (pIncludeStem) into viewPathIndex
+   if vName is empty then return viewPathIndex
+   if pIncludeStem is not true then put replacetext (vName, "View\W*", empty) into vName
+   filter viewPathIndex with (vName & "*")
+   return viewPathIndex
+end view_FilteredPaths

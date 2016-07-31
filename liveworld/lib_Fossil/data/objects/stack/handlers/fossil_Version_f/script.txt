@@ -1,0 +1,13 @@
+function fossil_Version pFossilPath
+   -- fossil_ExecuteShell someShell, pFossilPath -- don't use so as to control which fossil executable we use
+   if pFossilPath is not empty then
+      shell_BashParamEscape pFossilPath
+      put pFossilPath && "version" into someShell
+   else
+      put "fossil version" into someShell
+   end if
+   put shell (someShell) into shellResult
+   
+   put word 1 to -1 of shellResult into versionInfo
+   return versionInfo
+end fossil_Version

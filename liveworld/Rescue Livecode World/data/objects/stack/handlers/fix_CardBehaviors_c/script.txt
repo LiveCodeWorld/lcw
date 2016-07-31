@@ -1,0 +1,25 @@
+command fix_CardBehaviors pCardObject
+   if pCardObject is empty then put the long id of this card into pCardObject
+   
+   repeat with controlNum = 1 to the number of controls of this card
+      set the cursor to busy
+      put the long id of control controlNum of this card into someControl
+      -- object_AddToGlobalArray someControl, pExportHandlers, pDontExport
+      
+      put the behavior of someControl into bObject
+      
+      switch
+         case bObject is empty
+            put bObject into testArray ["no behavior"][someControl]
+            break
+         case exists (bObject)
+            put bObject into testArray ["good behavior"][someControl]
+            set the behavior of someControl to bObject
+            break
+         default
+            -- behavior is broken as we can;t find the ruggedID
+            put bObject into testArray ["missing behavior object"][someControl]
+      end switch
+   end repeat
+   return testArray
+end fix_CardBehaviors

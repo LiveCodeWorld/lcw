@@ -1,0 +1,8 @@
+function cloud_FetchEvernoteFileLink fPath
+   -- https://console.cloud-elements.com:443/elements/api-v2/hubs/documents/
+   -- files/links?path=%2FWork%2F655904a6-ed41-4837-9d21-c672ae81330e
+   
+   put "files/links?path=" & urlencode (fPath) into shortApiPath
+   put cloud_RestGet (shortApiPath) into someJSON
+   return someJSON
+end cloud_FetchEvernoteFileLink

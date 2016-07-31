@@ -1,0 +1,44 @@
+command object_GetPropertyArrays targetObject, @objectPropArray, @hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   put the rev_PropertyArray [pDontDiff] of targetObject into revPropertyArray
+   
+   switch word 1 of targetObject
+      case "stack"
+         put the style of targetObject into objectPropArray ["style"]
+         put the stackfiles of targetObject into stackFileTable
+         if stackFileTable is not empty then put stackFileTable into objectPropArray ["stackfiles"]
+         object_AddScriptAndCustomArray objectPropArray, targetObject, hArray, pExportHandlers, pDontExport, pForceIndexHandlerCalls
+         break
+      case "button"
+         get revPropertyArray ["text"]
+         if it is not empty then put it into objectPropArray ["text"]
+         delete local revPropertyArray ["text"]
+         
+         object_AddScriptAndCustomArray objectPropArray, targetObject, hArray, pExportHandlers, pDontExport, pForceIndexHandlerCalls
+         break
+      case "field"
+         get revPropertyArray ["htmlText"]
+         if it is not empty then put it into objectPropArray ["htmlText"]
+         delete local revPropertyArray ["htmlText"]
+         
+         object_AddScriptAndCustomArray objectPropArray, targetObject, hArray, pExportHandlers, pDontExport, pForceIndexHandlerCalls
+         break
+      case "image"
+         if revPropertyArray ["fileName"] is empty then
+            put the text of targetObject into objectPropArray ["image"] -- strange hack to get the full contents of an image
+         end if
+         object_AddScriptAndCustomArray objectPropArray, targetObject, hArray, pExportHandlers, pDontExport, pForceIndexHandlerCalls
+         break
+      case "videoclip"
+         put the text of targetObject into objectPropArray ["videoclip"] -- strange hack to get the full contents of a videoclip
+         break
+      case "audioclip"
+         -- put the text of targetObject into objectPropArray ["audioclip"] -- RunRev bug!!! No way to export an audoclip
+         copy targetObject
+         put the clipboarddata ["objects"] into objectPropArray ["audioclip"]
+         break
+      default
+         object_AddScriptAndCustomArray objectPropArray, targetObject, hArray, pExportHandlers, pDontExport, pForceIndexHandlerCalls
+   end switch 
+   
+   put revPropertyArray into objectPropArray ["rev"] -- contains id
+end object_GetPropertyArrays

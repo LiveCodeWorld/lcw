@@ -1,0 +1,7 @@
+function spotlight_ListExportedScriptFiles
+   put library_PluginFolder ("opn_Text/rev/object/", true) into someFolder
+   shell_BashParamEscape someFolder
+   put merge ("mdfind -name script.txt -onlyin [[someFolder]]") into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end spotlight_ListExportedScriptFiles

@@ -1,0 +1,5 @@
+function stackfile_FilterShortFilesForKnown shortFileIndex, pSetName
+   local shortStackArray, filteredStackNameArray
+   stackFile_DeconstructShortFileIndex shortFileIndex, shortStackArray, filteredStackNameArray, filteredShortStackArray, pSetName
+   return keys (filteredShortStackArray)
+end stackfile_FilterShortFilesForKnown

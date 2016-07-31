@@ -1,0 +1,7 @@
+function log_GetLatestEntry pLogName, pTabBoolean
+   if pTabBoolean is true then
+      return log_GetLatestLine (pLogName)
+   else
+      return log_GetLatestParagraphEntry (pLogName)
+   end if
+end log_GetLatestEntry

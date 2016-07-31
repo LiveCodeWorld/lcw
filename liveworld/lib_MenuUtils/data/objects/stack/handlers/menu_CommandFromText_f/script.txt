@@ -1,0 +1,4 @@
+function menu_CommandFromText someText
+   replace space with empty in someText
+   return "menu_" & someText
+end menu_CommandFromText

@@ -1,0 +1,6 @@
+on importSummary
+   put fedwiki_GetDroppedUrl ($_POST_RAW) into wikipediaUrl
+   put mediwiki_ExtractPageSlugFromUrl (wikipediaUrl) into pageSlug
+   put fedwiki_FetchWikipediaSummaryPageJson (pageSlug) into pageJSON
+   fedwiki_ReturnJSON pageJSON
+end importSummary

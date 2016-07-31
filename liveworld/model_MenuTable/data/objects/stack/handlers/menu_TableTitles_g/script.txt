@@ -1,0 +1,6 @@
+getprop menu_TableTitles
+   -- direct property of mController
+   put the long id of the target into mController
+   put menu_GetTableTitles (mController) into tableTitles
+   return tableTitles
+end menu_TableTitles

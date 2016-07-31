@@ -1,0 +1,16 @@
+command display_TextFile someFile, pDisplayTitle, pMenuTitle, pStackName
+   local pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+   
+   if pMenuTitle is empty then put "Global | Display | File | Menu" into pMenuTitle
+   put "file:" & someFile into someUrl
+   put url someUrl into someText
+   
+   put pDisplayTitle,pStackName into displayTitle
+   display_Index someText, displayTitle, pMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+   put the result into displayView
+   
+   set the field_Style of displayView to "text"
+   set the menu_Title of displayView to pMenuTitle
+   set the displayed_File of displayView to someFile
+   return displayView
+end display_TextFile

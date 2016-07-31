@@ -1,0 +1,25 @@
+on menu_CreateModel
+   put opn_Ask ("Give your script only behavior stack a name", "model_Example") into stackName
+   if there is a stack stackName then
+      go to stack stackName
+      answer warning "Already a stack with that name!"
+      exit to top
+   end if
+   
+   put stackName & ".livecodescript" into shortFile
+   put library_ScriptOnlyModelFolder (shortFile) into someFile
+   
+   -- revIDENewScriptOnlyStackWithScript pName, pScript
+   create script only stack stackName
+   set the filename of stack stackName to someFile
+   
+   put metadata_ConstructUripArray (stackName, "model") into uRipArray
+   set the script_MetaData of stack stackName to uRipArray
+   
+   save stack stackName
+   set the stack_IsKnown of stack stackName to true
+   set the stack_IsLibrary of stack stackName to true
+   
+   edit the script of stack stackName
+   opn_Notify ("Stack" && kwote(stackName) && "is now known and used!")
+end menu_CreateModel

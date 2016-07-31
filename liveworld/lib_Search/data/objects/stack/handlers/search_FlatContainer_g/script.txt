@@ -1,0 +1,13 @@
+getprop search_FlatContainer [someProperty]
+   local objectArray
+   put the long id of the target into containerObject
+   if word 1 of containerObject is not among the items of "card,group,background" then return empty
+   
+   put item 3 to -1 of someProperty into controllerObject
+   put item 2 of someProperty into pObjectKeyProperty
+   if pObjectKeyProperty is empty then put "rugged_ID" into pObjectKeyProperty
+   put item 1 of someProperty into someProperty
+   
+   objectArray_SearchGroupForValue objectArray, propertyArray, containerObject, someProperty, pObjectKeyProperty, controllerObject, pSplitArrays
+   return propertyArray
+end search_FlatContainer

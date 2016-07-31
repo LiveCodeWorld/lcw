@@ -1,0 +1,5 @@
+getprop viewBrowser_DataGrid
+   put the viewBrowser_DataTree of me into dataTree
+   put the long id of grp "Body" of dataTree into dgView
+   return dgView
+end viewBrowser_DataGrid

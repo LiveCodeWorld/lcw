@@ -1,0 +1,6 @@
+command rig_CleanHandlerNames @someContent
+   put "[^\)]*" into notaBracket
+   put "\(" & notaBracket & "\)" into someReg
+   put "\n" after someReg
+   put word 1 to -1 of replaceText (someContent, someReg, empty) into someContent
+end rig_CleanHandlerNames

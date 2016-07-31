@@ -1,0 +1,51 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_ViewTextTrait
+type: behavior
+version: 0.2
+
+local LocalArray
+
+
+--> Traint | Props
+-
+[[ _FetchHandler (trait_Text,g) ]]
+
+[[ _FetchHandler (trait_Text,s) ]]
+
+[[ _FetchHandler (trait_Hilite,g) ]]
+
+[[ _FetchHandler (trait_Hilite,s) ]]
+
+[[ _FetchHandler (trait_Border,g) ]]
+
+[[ _FetchHandler (trait_Border,s) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseUp,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (trait_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (_frameGraphic,pf) ]]
+
+[[ _FetchHandler (_textLabelField,pf) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_guessTextSize,pf) ]]
+
+
+

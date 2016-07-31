@@ -1,0 +1,13 @@
+command text_UnixToMac @someText
+   -- was called "text_MacToUnix"
+   /*
+   Rev uses unix style text internally (numToChar(10) for line endings)
+   That is "fld "Text" contains numtochar(10) = true"
+   
+   If written to a file on a Mac, using URL "file:", they're automatically translated to Macs native numToChar(13).
+   if using URL "binfile:", no translation happens, so numToChar(10) is preserved. 
+   */
+   if the platform = "MacOS" then
+      replace numtochar(13) with numtochar(10) in someText
+   end if
+end text_UnixToMac

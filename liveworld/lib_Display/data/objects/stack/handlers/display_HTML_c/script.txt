@@ -1,0 +1,25 @@
+command display_HTML someHTML, pDisplayTitle, pMenuTitle
+   put "View|Display|Text|Basic" into viewName
+   _setTitles widgetDisplayTitle, displayStackLabel, pDisplayTitle, "HTML"
+   
+   -- clone invisible
+   stack_CloneInvisible viewName, "Display HTML"
+   put the result into cloneStackName
+   set the destroyStack of stack cloneStackName to true
+   set the destroyWindow of stack cloneStackName to true
+   
+   -- set basic data  
+   put _displayView (cloneStackName) into displayView
+   -- set the view_HtmlText of displayView to someHTML
+   set the view_Utf8 of displayView to someHTML
+   set the menu_Title of displayView to pMenuTitle
+   
+   -- custom stuff
+   -- setDisplayStackRect displayView, cloneStackName
+   set the view_TextWrap of displayView to true
+   set the style of stack cloneStackName to "palette"
+   
+   -- show and go
+   view_CloneShow cloneStackName, widgetDisplayTitle, displayStackLabel
+   return displayView
+end display_HTML

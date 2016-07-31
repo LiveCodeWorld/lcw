@@ -1,0 +1,14 @@
+setprop library_DeletedSets [libType] setNames
+   put the rugged_ID of the target into ruggedObject
+   replace comma with CR in setNames
+   
+   put library_GetSetName() into currentSetName
+   if currentSetName is among the lines of setNames then
+      global gLibrarySet_Array
+      delete variable gLibrarySet_Array ["data"][libType][ruggedObject]
+   end if
+   library_RemoveSetNamesFromStore ruggedObject, libType, setNames
+   
+   put library_FetchSetsContaining (ruggedObject, libType) into newSetNames
+   return newSetNames
+end library_DeletedSets

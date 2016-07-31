@@ -1,0 +1,38 @@
+function menu_ExtractTableFromScript mTitle, someScript, scriptObject
+   -- ignoreCall: menu_Version
+   -- scriptObject = mController
+   global gTemp_ActiveMenuArray
+   local titlesSoFar, mLine, mTableLine, mFormatProp, submenuProp, paramProp, fixedSubMenu
+   
+   -- need a recursion check here???
+   put gTemp_ActiveMenuArray ["Recursion title Check"] into titlesSoFar
+   if mTitle is among the lines of titlesSoFar then
+      -- breakpoint called load fix the bug please ?
+      return errorMessage
+   end if
+   
+   line_Insert mTitle, titlesSoFar
+   put titlesSoFar into gTemp_ActiveMenuArray ["Recursion title Check"]
+   
+   put script_GetSuite (mTitle, someScript) into scriptSuite
+   
+   -- put the menu_Version of scriptObject into mVersion -- not needed?
+   put empty into mVersion
+   
+   -- let's not allow "command" for "menus" for speed reasons (they are message handlers after all)
+   filter scriptSuite with "on *"
+   put empty into mTable
+   repeat for each line scriptLine in scriptSuite
+      put word 2 to -1 of of scriptLine into comLine
+      
+      -- work out everything
+      menu_TableLineFromScript mVersion, mTitle, comLine, scriptObject, someScript, mLine, mTableLine, mFormatProp, submenuProp, paramProp, fixedSubMenu  -- uses "someScript" rather than "scriptSuite" in case usefull bits are outside of suite
+      put mTableLine & CR after mTable
+      
+      -- set the subMenuFixed custom prop
+      put the result into mItemType
+      menu_SetSubmenuFixedProp mItemType, comLine, mTitle, scriptObject, fixedSubMenu, paramProp
+   end repeat
+   delete char -1 of mTable
+   return mTable
+end menu_ExtractTableFromScript

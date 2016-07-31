@@ -1,0 +1,15 @@
+function youtube_FetchSearchChannelJson channelID, pSearchQuery, pMaxResults, pNextPageToken
+   -- GET https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCR9gdpWisRwnk_k23GsHfcA&maxResults=50&key={YOUR_API_KEY}
+   if pMaxResults is empty then put 50 into pMaxResults
+   
+   put "search?part=snippet&channelId=" & channelID into channelBit
+   put "&maxResults=" & pMaxResults after channelBit
+   if pNextPageToken is not empty then
+      put "&pageToken=" & pNextPageToken after channelBit
+   end if
+   if pSearchQuery is not empty then
+      put "&q=" & urlencode (pSearchQuery) after channelBit
+   end if
+   put fetch_YoutubeJSON (channelBit) into someJSON
+   return someJSON
+end youtube_FetchSearchChannelJson

@@ -1,0 +1,188 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_HTML
+type: script library
+version: 0.1
+
+/*
+This script only stack contains the latest genral utility handlers for dealing with HTML5.
+*/
+
+
+--> HTML | CLI
+-
+[[ _FetchHandler (html_FetchTidy,f) ]]
+
+[[ _FetchHandler (html_Tidy,c) ]]
+
+
+
+--> Html | List
+-
+[[ _FetchHandler (html_ConstructList,f) ]]
+
+
+--> Html | Style
+-
+[[ _FetchHandler (html_MakeBold,f) ]]
+
+[[ _FetchHandler (html_MakeColoured,f) ]]
+
+[[ _FetchHandler (html_ConstructColouredText,f) ]]
+
+[[ _FetchHandler (html_DeconstructLink,c) ]]
+
+[[ _FetchHandler (html_DeconstructNameLink,c) ]]
+
+[[ _FetchHandler (html_DeconstructRefLink,c) ]]
+
+[[ _FetchHandler (html_ConstructRefLink,f) ]]
+
+[[ _FetchHandler (html_ConstructNameLink,f) ]]
+
+
+--> HTML | Tags
+-
+[[ _FetchHandler (html_ConstructVideoTag,f) ]]
+
+[[ _FetchHandler (html_ConstructOpenVideoTag,f) ]]
+
+[[ _FetchHandler (html_ConstructVideoSourceTag,f) ]]
+
+
+--> Html | Sections
+-
+[[ _FetchHandler (html_AddHeaders,f) ]]
+
+[[ _FetchHandler (html_Deconstruct,c) ]]
+
+[[ _FetchHandler (html_ExtractTitle,f) ]]
+
+[[ _FetchHandler (html_ExtractHeader,f) ]]
+
+[[ _FetchHandler (html_ExtractBody,f) ]]
+
+[[ _FetchHandler (html_ExtractBodyContents,f) ]]
+
+[[ _FetchHandler (html_Anchors,f) ]]
+
+[[ _FetchHandler (html_ExtractAnchors,f) ]]
+
+[[ _FetchHandler (html_ExtractLink,f) ]]
+
+[[ _FetchHandler (html_ExtractLinks,f) ]]
+    
+[[ _FetchHandler (html_ExtractHREF,f) ]]
+
+[[ _FetchHandler (html_ExtractAllLinks,f) ]]
+
+[[ _FetchHandler (html_ExtractImages,f) ]]
+
+
+--> HTML | Span
+-
+/* Strip span tags
+These functions replace html span tags such as those found in basic html / jabber / im html with tags for rev htmltext
+*/
+
+[[ _FetchHandler (html_BasicToRev,f) ]]
+
+[[ _FetchHandler (html_RevToBasic,f) ]]
+
+[[ _FetchHandler (html_RevToColourSpan,f) ]]
+
+[[ _FetchHandler (html_RevToBoldSpan,f) ]]
+
+[[ _FetchHandler (html_ColourSpanToRev,f) ]]
+
+[[ _FetchHandler (html_BoldSpanToRev,f) ]]
+
+
+--> HTML | Strip
+-
+[[ _FetchHandler (html_StripAllTags,f) ]]
+
+[[ _FetchHandler (html_StripTags,f) ]]
+
+-- function stripHtmlTags someHTML, anyCase
+    -- version Metacard, 8/15/00
+    
+    replace return with empty in someHTML
+    if anyCase is false then set the casesensitive to true
+    replace "</P>" with return in someHTML
+    put html_StripTags(someHTML) into someText
+     
+    replace "&#9;" with tab in someText
+    replace "&lt;" with "<" in someText
+    replace "&gt;" with ">" in someText
+    return someText
+end stripHtmlTags
+
+
+--> HTML | Nodes
+-
+[[ _FetchHandler (html_ExtractNode,f) ]]
+
+[[ _FetchHandler (html_ExtractNodeContents,f) ]]
+
+[[ _FetchHandler (html_ExtractChildNodeNames,f) ]]
+
+[[ _FetchHandler (html_ListNodes,f) ]]
+
+[[ _FetchHandler (html_ExtractAttribute,f) ]]
+
+
+--> HTML | Tags
+-
+/*
+An assorted array of handlers old and new for parsing and creating HTML tags.
+*/
+
+[[ _FetchHandler (html_AddTag,c) ]]
+
+[[ _FetchHandler (html_ParamDeconstuct,c) ]]
+ 
+[[ _FetchHandler (html_ExtractOpeningTag,f) ]]
+
+[[ _FetchHandler (html_ExtractTag,f) ]]
+
+[[ _FetchHandler (html_ExtractTagContents,f) ]]
+
+[[ _FetchHandler (extractTag,f) ]]
+
+[[ _FetchHandler (whereIsTag,f) ]]
+
+
+--> Html | Entities
+-
+/*
+Rag tag of entity handlers to tidy.
+*/
+
+[[ _FetchHandler (html_ReplaceChars,f) ]]
+
+[[ _FetchHandler (html_DecodeUnicodeEntites,c) ]]
+
+[[ _FetchHandler (html_DecodeEntities,f) ]]
+
+[[ _FetchHandler (html_ReplaceEntities,f) ]]
+
+[[ _FetchHandler (html_EntityList,f) ]]
+
+[[ _FetchHandler (html_EntityCharNums,f) ]]
+
+[[ _FetchHandler (html_EntityTableList,f) ]]
+
+[[ _FetchHandler (html_EntityArray,f) ]]
+
+[[ _FetchHandler (html_EntityToCharNum,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (unicode_UnEscape,f) ]]
+
+[[ _FetchHandler (unicode_SurrogatePairToCodePoint,f) ]]
+

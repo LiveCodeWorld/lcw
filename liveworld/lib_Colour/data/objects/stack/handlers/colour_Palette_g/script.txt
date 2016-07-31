@@ -1,0 +1,22 @@
+getprop colour_Palette
+   -- a default
+   put the long id of the target into targetObject
+   if word 1 of targetObject = "group" then
+      put targetObject into groupObject
+   else
+      delete word 1 to 4 of groupObject
+   end if
+   put the group_Above of targetObject into groupAboveObject
+   put the stack_Object of targetObject into stackObject
+   
+   put the foregroundcolor of targetObject into colourPaletteArray[1]
+   put the backgroundcolor of targetObject into colourPaletteArray[2]
+   put the backgroundcolor of groupAboveObject into colourPaletteArray[3]
+   if exists(groupObject) then
+      put the backgroundcolor of groupObject into colourPaletteArray[4]
+   else
+      put empty into colourPaletteArray[4]
+   end if
+   put the linkcolor of stackObject into colourPaletteArray[5]
+   return colourPaletteArray
+end colour_Palette

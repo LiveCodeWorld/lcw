@@ -1,0 +1,15 @@
+private command linkArray_ConstructSimpleKey someKey, @idArray, @backIdArray, pNumberOnly
+   put backIdArray [someKey] into simpleID
+   if simpleID is not empty then return empty -- already indexed
+   
+   -- work out new incremental ID and add to idArray and keyArray
+   put the number of lines of keys(idArray) + 1 into keyNumber
+   if pNumberOnly is true then
+      put keyNumber into simpleID
+   else
+      put "n" & keyNumber into simpleID
+   end if
+   put simpleID into backIdArray [someKey]
+   put someKey into idArray [simpleID]
+   return simpleID
+end linkArray_ConstructSimpleKey

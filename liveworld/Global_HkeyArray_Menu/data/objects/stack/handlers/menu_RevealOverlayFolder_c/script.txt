@@ -1,0 +1,4 @@
+on menu_RevealOverlayFolder treeView
+   put LocalArray ["overlayFolder"] into overlayFolder
+   finder_Reveal overlayFolder
+end menu_RevealOverlayFolder

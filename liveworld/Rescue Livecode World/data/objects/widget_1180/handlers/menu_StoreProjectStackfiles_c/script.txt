@@ -1,0 +1,31 @@
+on menu_StoreProjectStackfiles mTarget, which
+   put the displayed_Project of mTarget into projectName  
+   switch which
+      case "Standard Livecode World stackfiles"
+         put merge ("Set project '[[projectName]]' to the lcw standard stackfiles?") into someQuestion
+         put the displayed_StandardFiles of mTarget into projectStackFiles
+         break
+      case "All known stackfiles"
+         put merge ("Set project '[[projectName]]' to the all known stackfiles on your system?") into someQuestion
+         put the known_Stackfiles of mTarget into projectStackFiles
+         break
+      case "Selected stackfiles"
+         put merge ("Set project '[[projectName]]' to the selected stackfiles on your system?") into someQuestion
+         put the selected_StackFiles of mTarget into projectStackFiles
+         break
+   end switch
+   
+   put the project_HomeStack of mTarget into projectHomeStack
+   put stackFile_TableFromPaths (projectStackFiles, projectHomeStack) into stackFileTable
+   
+   put stackFileTable
+   answer someQuestion with "Cancel" or "OK"
+   if it is "Cancel" then exit to top
+   
+   project_StoreStackFiles stackFileTable, projectName
+   display_ProjectArray projectName
+   
+   put the stackFile_ErrorArray of me into errorArray
+   display_Array errorArray, "the stackFile_ErrorArray"
+   answer merge ("Saved stackfiles to project '[[projectName]]'!")
+end menu_StoreProjectStackfiles

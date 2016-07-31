@@ -1,0 +1,5 @@
+command pref_StoreData dataArray
+   put pref_File() into someFile
+   array_Save someFile, dataArray
+   return someFile
+end pref_StoreData

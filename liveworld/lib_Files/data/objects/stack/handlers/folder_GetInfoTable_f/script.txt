@@ -1,0 +1,10 @@
+function folder_GetInfoTable someFolder, maxFileSize
+    put the defaultfolder into oDefault
+    folder_Format someFolder
+     
+    set the itemdelimiter to "/"
+    put the number of items of someFolder into baseItemNum
+    folder_ConstructInfoTable infoTable, someFolder, baseItemNum, maxFileSize
+    set the defaultfolder to oDefault
+    return word 1 to -1 of infoTable
+end folder_GetInfoTable

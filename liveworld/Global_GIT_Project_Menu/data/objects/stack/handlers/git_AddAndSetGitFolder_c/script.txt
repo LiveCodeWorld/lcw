@@ -1,0 +1,17 @@
+command git_AddAndSetGitFolder pGitFolder
+   if pGitFolder is empty then
+      answer folder "Choose Git Folder" with git_GetRootFolder()
+      if the result is "Cancel" then return empty
+      put it into pGitFolder
+   end if
+   
+   git_AddRootFolderToIndex pGitFolder
+   if the result is not empty then
+      opn_Notify the result, true
+      exit to top
+   end if
+   
+   git_SetRootFolder pGitFolder
+   -- put the result into pGitFolder
+   return pGitFolder
+end git_AddAndSetGitFolder

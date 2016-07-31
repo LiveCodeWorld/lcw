@@ -1,0 +1,5 @@
+on menu_CloseAndReloadPulledStacks mTarget
+   put the view_Text of mTarget into pullResult
+   put git_ParsePullResult (pullResult) into changedFiles
+   display_Outline changedFiles, "git pull result", "Global | Git | Pull | Menu", "Global | Git | Pull | Line | Menu"
+end menu_CloseAndReloadPulledStacks

@@ -1,0 +1,6 @@
+private function _plusMinusView
+   put the mainstack of this stack into stackName
+   if exists (group 1 of cd 1 of stack stackName) is false then return empty
+   put the long id of group 1 of cd 1 of stack stackName into plusMinusView
+   return plusMinusView
+end _plusMinusView

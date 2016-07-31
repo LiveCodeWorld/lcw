@@ -1,0 +1,6 @@
+command project_StoreHandlerHelp hKey, helpHtml
+   put project_HandlerHelpFile (hKey, false) into someFile
+   if someFile is empty then return empty
+   put helpHtml into url ("binfile:" & someFile)
+   return someFile
+end project_StoreHandlerHelp

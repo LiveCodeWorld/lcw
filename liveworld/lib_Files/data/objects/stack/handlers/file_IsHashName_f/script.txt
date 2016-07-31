@@ -1,0 +1,16 @@
+function file_IsHashName filePath
+    -- need to check. Not tested
+    deconstruct_File filePath, someFolder, shortName, someExtension
+    if char 1 to 5 of shortName is "hash_" then
+        put shortName into tHexDigest
+        delete char 1 to 5 of tHexDigest
+        put binaryencode("H*", tHexDigest) into someBinaryData
+        if the number of chars of someBinaryData = 16 then
+            return true
+        else
+            return false
+        end if
+    else
+        return false
+    end if
+end file_IsHashName

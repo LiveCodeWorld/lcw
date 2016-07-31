@@ -1,0 +1,16 @@
+command line_AddIndex someLines, @someIndex, beforeLineNum
+    -- was and see new simpler version "line_Add"
+    set the wholematches to true
+    repeat for each line someLine in someLines
+        get lineoffset(someLine, someIndex)
+        put the number of lines of someIndex into maxLine
+        if it is 0 then
+            if beforeLineNum is a number then
+                put someLine & CR before line beforeLineNum of someIndex
+            else
+                put someLine into line (maxLine + 1) of someIndex
+            end if
+        end if
+    end repeat
+    return the number of lines of someIndex
+end line_AddIndex

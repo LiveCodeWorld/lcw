@@ -1,0 +1,6 @@
+function file_ChooseAny preferredFolder, comment
+    if comment is empty then put "Select a file..." into comment
+    answer file comment with preferredFolder
+    if the result is "Cancel" then exit to top
+    return it
+end file_ChooseAny

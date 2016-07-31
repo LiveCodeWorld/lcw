@@ -1,0 +1,9 @@
+setprop view_TemplateName newName
+   if word 1 of the target = "stack" then
+      put the short name of the target into oldName
+   else
+      put the view_Name of the target into oldName
+   end if
+   view_RenameTemplate oldName, newName
+   return the result
+end view_TemplateName

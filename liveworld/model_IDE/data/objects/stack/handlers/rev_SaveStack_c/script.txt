@@ -1,0 +1,8 @@
+command rev_SaveStack stackName
+   if the effective fileName of stack stackName is not empty then
+      revSave stackName
+   else 
+      revSaveAs stackName
+   end if
+   return the result
+end rev_SaveStack

@@ -1,0 +1,5 @@
+private function construct_YoutubeRestUrl apiBit
+   put LocalApiStem & apiBit into someUrl
+   put "&key=" & youTube_GetApiKey() after someUrl
+   return someUrl
+end construct_YoutubeRestUrl

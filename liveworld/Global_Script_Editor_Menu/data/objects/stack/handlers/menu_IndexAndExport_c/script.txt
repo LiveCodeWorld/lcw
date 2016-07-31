@@ -1,0 +1,10 @@
+on menu_IndexAndExport scriptObject
+   hArray_IndexAndStoreScriptAndAllHkeyCalls scriptObject, true
+   put the result into newlyIdexedHkeyArray
+      
+   put "Indexed handlers of script, exported any new ones together with their short calls!" into someComment
+   opn_Notify someComment
+   if newlyIdexedHkeyArray is an array then
+      display_Array newlyIdexedHkeyArray, "Newly indexed handlers"
+   end if
+end menu_IndexAndExport

@@ -1,0 +1,6 @@
+after mouseUp
+   if the shiftKey is "Up" then
+      put rev_ScriptObject() into scriptObject   
+      script_JustCompiled scriptObject
+   end if
+end mouseUp

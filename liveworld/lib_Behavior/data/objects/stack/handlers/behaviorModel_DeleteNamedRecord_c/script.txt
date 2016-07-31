@@ -1,0 +1,15 @@
+command behaviorModel_DeleteNamedRecord bName
+   -- not sure this is doing everything it should
+   global gHkey_Array
+   put hArray_GetBehavior (bName) into rObject
+   hArray_RemoveObjectFromTypeArray rObject, gHkey_Array
+   return gHkey_Array
+   
+   -- old array based model
+   local behaviorArray
+   put behaviorModel_GetArray() into behaviorArray
+   delete local behaviorArray [bName]
+   behaviorModel_SetArray behaviorArray
+   display_Behaviors
+   return the result
+end behaviorModel_DeleteNamedRecord

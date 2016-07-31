@@ -1,0 +1,5 @@
+getprop template_Card
+   put the view_Template of mTarget into templateObject
+   put the the card_Object of templateObject into someObject
+   return someObject
+end template_Card

@@ -1,0 +1,5 @@
+getprop project_Folders [pIncludeInvisible]
+   put the project_Folder of the target into projectFolder
+   put lcw_ListFolders (projectFolder) into standardFolders
+   return standardFolders
+end project_Folders

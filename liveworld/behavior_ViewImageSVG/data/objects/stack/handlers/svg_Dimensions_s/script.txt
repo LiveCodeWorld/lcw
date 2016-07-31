@@ -1,0 +1,20 @@
+setprop svg_Dimensions svgDimensions
+   put item 1 of svgDimensions into svgWidth
+   put item 2 of svgDimensions into svgHeight
+   
+   put the svg_XML of me into svgXML
+   svg_SetDimensions svgXML, svgWidth, svgHeight
+   
+   /*
+   put svg_CreateXmlTree() into treeID
+   revXMLSetAttribute treeID, "/svg","width", svgWidth
+   revXMLSetAttribute treeID, "/svg","height", svgHeight
+   put revXMLText (treeID, empty, true) into newSvgXML
+   svg_DeleteXmlTree
+   delete line 1 of newSvgXML -- the xml header
+   put word 1 to -1 of newSvgXML into svgXML
+   */
+   
+   set the svg_XML of me to svgXML
+   return svgXML
+end svg_Dimensions

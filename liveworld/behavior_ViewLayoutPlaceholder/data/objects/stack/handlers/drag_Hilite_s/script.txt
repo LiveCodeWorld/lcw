@@ -1,0 +1,15 @@
+setprop drag_Hilite someBoolean
+   if someBoolean is true then
+      put the backgroundcolor of me into LocalArray ["originalColour"]
+      set the dragAction to "link"
+      set the backgroundcolor of me to "red"
+      
+      put the dragdata ["private"] into viewName
+      put "About to drop view" & CR & kwote(viewName) into dropInfo
+      set the label of me to dropInfo
+   else
+      set the backgroundcolor of me to LocalArray ["originalColour"]
+      set the label of me to empty
+      set the dragAction to "none"
+   end if
+end drag_Hilite

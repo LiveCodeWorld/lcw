@@ -1,0 +1,17 @@
+function server_FetchFileList serverAddress, sshUser, serverPath, pListAll, pSshKeyPath
+   -- was "digitalocean_ShellFetchListFiles"
+   put "ssh" into someShell
+   if pSshKeyPath is not empty then
+      shell_BashParamEscape pSshKeyPath
+      put space & "-i " && pSshKeyPath after someShell
+   end if
+   
+   put space & sshUser & "@" & serverAddress && "ls" after someShell
+   if pListAll is true then put space &  "-la" after someShell
+   
+   shell_BashParamEscape serverPath
+   put space & serverPath after someShell
+   
+   put word 1 to -1 of shell (someShell) into fileListing
+   return fileListing   
+end server_FetchFileList

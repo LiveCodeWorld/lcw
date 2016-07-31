@@ -1,0 +1,15 @@
+command stack_CreateFileFromBinaryData binaryData, newFile
+    put "binfile:" & newFile into newUrl
+    if the platform is "MacOs" then
+        --   Note:  Revolution's creator signature is 'Revo'. The file type for a stack file created by Revolution is 'RSTK'. 
+        -- The fileType is an eight-character string. The first four characters are the creator signature, and the last four are the file type. 
+         
+        put the filetype into oFileType
+        set the filetype to "RevoRSTK"
+    end if
+     
+    put binaryData into url newUrl
+    if the platform is "MacOs" then
+        set the filetype to oFileType
+    end if
+end stack_CreateFileFromBinaryData

@@ -1,0 +1,7 @@
+on mouseDown pMenuButton
+   if the shiftKey is "Down" then
+      menu_PopUp "Global | Script Editor | Extras | Menu"
+   else
+      menu_PopUp "Global | Script | Editor | Menu"
+   end if
+end mouseDown

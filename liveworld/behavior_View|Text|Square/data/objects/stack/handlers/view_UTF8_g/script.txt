@@ -1,0 +1,5 @@
+getprop view_UTF8
+   put _textField() into textField
+   put the unicodetext of textField into someUTF8
+   return someUTF8
+end view_UTF8

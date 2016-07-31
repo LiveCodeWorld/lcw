@@ -1,0 +1,20 @@
+setprop displayed_Chapter chapterArray
+   put sivasiva_GetChapterArray (chapterName) into chapterArray
+   put chapterArray into LocalArray ["chapter_Array"]
+   put 1 into situationNum
+   
+   put trait_GetPositiveLabel (chapterArray) into positiveLabel
+   put trait_GetNegativeLabel (chapterArray) into negativeLabel   
+   put trait_GetDescription (chapterArray) into traitDescription
+   
+   set the positive_Label of me to positiveLabel
+   set the negative_Label of me to negativeLabel
+   set the square_Text of me to traitDescription
+   
+   put trait_GetQuote (chapterArray) into traitQuote
+   put trait_GetSituation (chapterArray, situationNum) into traitSituation
+   put trait_GetPositiveResponse (chapterArray, situationNum) into positiveResponse
+   put trait_GetNegativeResponse (chapterArray, situationNum) into negativeResponse
+   put trait_GetAssignment (chapterArray) into traitAssignment
+   put trait_GetThoughtLabel (chapterArray) into thoughtLabel
+end displayed_Chapter

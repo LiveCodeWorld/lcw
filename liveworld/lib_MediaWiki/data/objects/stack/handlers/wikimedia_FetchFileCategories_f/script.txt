@@ -1,0 +1,5 @@
+function wikimedia_FetchFileCategories shortImageFile
+   -- put wikimedia_FetchCommonsCategories ("Commons-logo.svg")
+   put wikimedia_RestfulFetch (shortImageFile, "categories") into someJSON
+   return someJSON
+end wikimedia_FetchFileCategories

@@ -1,0 +1,20 @@
+on googleEarth_MoveView moveLat, moveLong, moveDist, someSpeed
+    if someSpeed is empty then put the googleEarth_Speed of me into someSpeed
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+     
+    put moveLat + latitude into newLat
+    put moveLong + longitude into newLong
+    put moveDist + someHeight into newDist
+     
+    /*
+    set the numberformat to "#.000000000000"
+    put moveLat + latitude & empty into newLat
+    put moveLong + longitude & empty into newLong
+    put moveDist + someHeight & empty into newDist
+    */
+    -- if the shiftkey is "Down" then googleEarth_DisplayView newLat, newLong, newDist, someTilt, someRotation, someSpeed
+     
+    googleEarth_SetView newLat, newLong, newDist, someTilt, someRotation, someSpeed
+    return the result -- & cr & doScript
+end googleEarth_MoveView

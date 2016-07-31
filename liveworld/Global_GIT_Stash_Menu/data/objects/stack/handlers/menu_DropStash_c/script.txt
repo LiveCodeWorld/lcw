@@ -1,0 +1,14 @@
+on menu_DropStash stashName
+   /*
+   drop [-q|--quiet] [<stash>]
+   
+   Remove a single stashed state from the stash list. 
+   When no <stash> is given, it removes the latest one. i.e. stash@{0}, otherwise <stash> must a valid stash log reference of the form stash@{<revision>}.
+   */
+   
+   put "git stash drop" && stashName into someShell
+   git_ExecuteShell someShell
+   put the result into gitResult
+   
+   display_Lines gitResult
+end menu_DropStash

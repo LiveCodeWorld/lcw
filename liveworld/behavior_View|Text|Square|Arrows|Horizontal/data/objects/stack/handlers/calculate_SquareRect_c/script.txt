@@ -1,0 +1,12 @@
+command calculate_SquareRect pRect, @squareRect, @squareCentre, @squareWidth, @halfSquareWidth, pSquareMargin
+   rect_ExtractDimensions pRect, someX, someY
+   put min (someX, someY) into squareWidth
+   put round ( squareWidth / 2 ) into halfSquareWidth
+   put 2 * halfSquareWidth into squareWidth
+   
+   put rect_GetCentre (pRect) into squareCentre
+   put rect_LocWidthHeight (squareCentre, squareWidth, squareWidth) into squareRect
+   
+   rect_SubtractMargins squareRect, pSquareMargin
+   return squareRect
+end calculate_SquareRect

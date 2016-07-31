@@ -1,0 +1,6 @@
+function pref_FetchArray pSetName
+   -- contains all the preference globals int the set with the keys as global names
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put pref_FetchData() into dataArray
+   return dataArray [pSetName]
+end pref_FetchArray

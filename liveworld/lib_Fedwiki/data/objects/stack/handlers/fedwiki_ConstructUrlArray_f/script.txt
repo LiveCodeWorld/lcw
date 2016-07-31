@@ -1,0 +1,30 @@
+function fedwiki_ConstructUrlArray someUrl
+   set the itemdelimiter to "/"
+   put item 1 to 3 of someUrl into urlStem
+   put item 3 of someUrl into urlDomain
+   
+   put item 4 to -1 of someUrl into pathBit
+   put the number of items of pathBit into maxNum
+   if (maxNum mod 2) is not 0 then 
+      put item -1 of pathBit into extraBit
+      delete item -1 of pathBit
+      return false -- it is not a Fedwiki url ?
+   end if
+   
+   put maxNum/2 into maxLineUpNum
+   repeat with lineUpNum = 1 to maxLineUpNum
+      put 2*lineUpNum - 1 into itemNum
+      put item itemNum of pathBit into viewOrDomain
+      put item (itemNum + 1) of pathBit into pageSlug
+      _stripEndHashFromSlug pageSlug
+      
+      if viewOrDomain = "view" then
+         put urlDomain into someDomain
+      else
+         put viewOrDomain into someDomain
+      end if
+      put pageSlug into urlArray [lineUpNum]["pageSlug"]
+      put someDomain into urlArray [lineUpNum]["someDomain"]
+   end repeat
+   return urlArray
+end fedwiki_ConstructUrlArray

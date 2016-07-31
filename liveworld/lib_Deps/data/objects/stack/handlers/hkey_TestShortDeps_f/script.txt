@@ -1,0 +1,24 @@
+function hkey_TestShortDeps hKey, someHandler, pSkipHkeyComponents, pSkipHkeyProps
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   if pSkipHkeyComponents is empty then put pref_GetValue ("skip_HkeyComponents") is not false into pSkipHkeyComponents
+   if pSkipHkeyProps is empty then put pref_GetValue ("skip_HkeyProps") is not false into pSkipHkeyProps
+   
+   switch
+      case hName = "_"
+         return false
+      case hName is among the items of "menu_Target,menu_CheckTarget,menu_Version" and hType = "g"
+         return false
+      case hName is "menu_Init" and hType = "c"
+         return false
+      case char 1 of hName = "u" and hType is among the items of "g,s"
+         return false
+      case "_" is not in hName and hType is among the items of "g,s"
+         return false
+      case char 1 to 3 of hName = "rev" and char 4 of hName is not "_"
+         return false
+      case handler_IsComponent (someHandler) and pSkipHkeyComponents is true
+         return false
+      default
+         return true
+   end switch
+end hkey_TestShortDeps

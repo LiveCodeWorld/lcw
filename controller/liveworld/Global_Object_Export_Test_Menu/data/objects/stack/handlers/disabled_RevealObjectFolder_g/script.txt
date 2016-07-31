@@ -1,0 +1,4 @@
+getprop disabled_RevealObjectFolder [scriptObject]
+   put the object_Folder of scriptObject into someFolder
+   return there is not a folder someFolder
+end disabled_RevealObjectFolder

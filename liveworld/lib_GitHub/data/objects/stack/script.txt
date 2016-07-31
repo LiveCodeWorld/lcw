@@ -1,0 +1,90 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_GitHub
+type: script library
+version: 0.3
+
+/*
+A library for interfacing with GitHub APIv3.
+
+The gist library is seperate and moving forwards we wil create individual libraries for each GitHub subproject.
+*/
+
+--> GitHub | Issues
+-
+[[ _FetchHandler (github_GetApiToken,f) ]]
+
+[[ _FetchHandler (github_SetApiToken,c) ]]
+
+
+--> GitHub | Issues
+-
+[[ _FetchHandler (github_CreateIssue,c) ]]
+
+[[ _FetchHandler (github_FetchIssue,f) ]]
+
+[[ _FetchHandler (github_ListRepoIssues,f) ]]
+
+[[ _FetchHandler (github_ListAllMyIssues,f) ]]
+
+[[ _FetchHandler (github_ListMyIssues,f) ]]
+
+[[ _FetchHandler (github_ListOrgIssues,f) ]]
+
+
+--> GitHub | Repos
+-
+[[ _FetchHandler (github_ListRepos,f) ]]
+
+
+--> GitHub | REST
+-
+[[ _FetchHandler (github_RestGet,f) ]]
+
+[[ _FetchHandler (github_RestGetFromUrl,f) ]]
+
+[[ _FetchHandler (github_RestPost,c) ]]
+
+[[ _FetchHandler (github_RestPatch,c) ]]
+
+[[ _FetchHandler (github_RestDelete,c) ]]
+
+
+--> GitHub | Private
+-
+[[ _FetchHandler (_constructIssueJSON,pf) ]]
+
+[[ _FetchHandler (_issueCommandPath,pf) ]]
+
+[[ _FetchHandler (_constructApiUrl,pf) ]]
+
+[[ _FetchHandler (_setAuthHeaders,pc) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (text_EscapeReturns,c) ]]
+
+[[ _FetchHandler (json_EncodeText,f) ]]
+
+private function _constructIssueJSON someTitle, pBody, pAssignee, pMilestone, pLabelArray
+   put someTitle into jsonArray ["title"]
+   
+   if pBody is not empty then
+      put pBody into jsonArray ["body"]
+   end if
+   if pAssignee is not empty then put pAssignee into jsonArray ["assignee"]
+   if pMilestone is not empty then put pMilestone into jsonArray ["milestone"]
+   if pLabelArray is an array then
+      put pLabelArray into jsonArray ["labels"]
+   else if pLabelArray is not empty then
+      replace CR with comma in pLabelArray
+      split pLabelArray with comma
+      put pLabelArray into jsonArray ["labels"]
+   end if
+   
+   put json_FromArray (jsonArray) into someJSON
+   return someJSON
+end _constructIssueJSON

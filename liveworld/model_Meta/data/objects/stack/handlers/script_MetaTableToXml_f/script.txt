@@ -1,0 +1,16 @@
+function script_MetaTableToXml ripTable
+   put "<rip>" into ripXML
+   put CR & tab & "<file>" after ripXML
+   
+   set the itemdelimiter to tab
+   repeat for each line someLine in ripTable
+      put item 1 of someLine into someKey
+      put item 2 of someLine into someValue
+      
+      get xml_Tag(someValue, someKey)
+      put CR & tab & tab & it after ripXML
+   end repeat
+   put CR & tab & "</file>" after ripXML
+   put CR & "</rip>" after ripXML
+   return ripXML
+end script_MetaTableToXml

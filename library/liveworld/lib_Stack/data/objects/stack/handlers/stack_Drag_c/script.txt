@@ -1,0 +1,13 @@
+command stack_Drag stackObject
+    if stackObject is empty then put the stack_Object of the target into stackObject
+    put the rect of stackObject into oRect
+    -- put the the globalloc of the clickloc into fromPoint
+    put the screenmouseloc into fromPoint
+     
+    repeat while the mouse is "Down"
+        put the screenmouseloc into toPoint
+        loc_SetTranslationVector fromPoint, toPoint, xVector, yVector
+        put rect_TranslateByVector(oRect, xVector, yVector) into newRect
+        set the rect of stackObject to newRect
+    end repeat
+end stack_Drag

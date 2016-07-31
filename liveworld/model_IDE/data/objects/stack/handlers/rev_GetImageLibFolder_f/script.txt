@@ -1,0 +1,5 @@
+function rev_GetImageLibFolder
+    put rev_ApplicationFolder() into revImageFolder
+    put "/components/save/usericons/" after revImageFolder
+    return revImageFolder
+end rev_GetImageLibFolder

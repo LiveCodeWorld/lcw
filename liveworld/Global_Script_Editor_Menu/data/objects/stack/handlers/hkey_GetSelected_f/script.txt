@@ -1,0 +1,5 @@
+function hkey_GetSelected scriptField
+   field_SetSelected scriptField, someScript, someLine, lineNum, someScript, startChar, endChar
+   put hkey_FromSelected (someScript, endChar) into shortHkey
+   return shortHkey
+end hkey_GetSelected

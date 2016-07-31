@@ -1,0 +1,12 @@
+private function _getRemoteStackData stackObject
+   if exists (stackObject) is false then return empty
+   -- put the short name of stackObject into shortControllerFile
+   put the filename of stackObject into stackPath
+   set the itemdelimiter to slash
+   put item -1 of stackPath into shortControllerFile
+   put rig_FetchStack (shortControllerFile) into serverStackData
+   if char 1 to 3 of serverStackData = "﻿" then
+      delete char 1 to 3 of serverStackData
+   end if
+   return serverStackData
+end _getRemoteStackData

@@ -1,0 +1,18 @@
+function library_ListStandardUsedStacks
+   -- unload any stacks that are loaded into memory just as a result of using this function
+   put the mainStacks into oStackNamesInMemory
+   put library_ListLibraryFolderFiles() into libFiles
+   put CR & library_ListModelFolderFiles() after libFiles
+   set the wholematches to true
+   repeat for each line someFile in libFiles
+      if there is a stack someFile then
+         put the name of stack someFile into stackObject
+         put stackObject & CR after stackObjects
+         if the short name of stack someFile is not among the lines of oStackNamesInMemory then
+            delete stack someFile
+         end if
+      end if
+   end repeat
+   delete char -1 of stackObjects
+   return stackObjects
+end library_ListStandardUsedStacks

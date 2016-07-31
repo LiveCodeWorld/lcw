@@ -1,0 +1,15 @@
+getprop formatted_Height
+   put the formattedHeight of fieldObject() into fTextHeight
+   put the image_Height of me into iHeight
+   put max(iHeight, fTextHeight) into fHeight
+   
+   -- tweak
+   -- add 4 to fHeight
+   
+   put the margins of me into someMargin
+   margin_Normalize someMargin, lMargin, tMargin, rMargin, bMargin
+   add tMargin to fHeight
+   add bMargin to fHeight
+   
+   return fHeight
+end formatted_Height

@@ -1,0 +1,45 @@
+function viewBrowser_ConstructArrayFromViewNames vNames, pViewFilter, pExpandedViewNames
+   -- uses "metaDataArray" for filtering
+   
+   put view_GetFileMetaArray() into metaDataArray
+   set the wholematches to true
+   repeat with lineNum = 1 to the number of lines of vNames
+      put line lineNum of vNames into vName
+      put metaDataArray [vName]["isTested"] into isTested
+      
+      switch pViewFilter
+         case "all"
+            -- don't skip whatever the value
+            break
+         case "favourites"
+            if metaDataArray [vName]["isFavourite"] is not true then
+               next repeat 
+            end if
+            break
+         case "experimental"
+            if isTested is true then
+               next repeat 
+            end if
+            break
+         case "old"
+            if metaDataArray [vName]["isOld"] is not true then next repeat 
+            break
+         case "not old"
+            if metaDataArray [vName]["isOld"] is true then next repeat 
+            break
+         default -- case "tested"
+            if isTested is not true then
+               next repeat 
+            end if
+            break
+      end switch
+      
+      put vName into dgArray [lineNum]["title"]
+      if vName is among the lines of pExpandedViewNames then
+         put true into dgArray [lineNum]["isExpanded"]
+      else
+         put pIsExpanded is true into dgArray [lineNum]["isExpanded"]
+      end if
+   end repeat
+   return dgArray
+end viewBrowser_ConstructArrayFromViewNames

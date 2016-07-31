@@ -1,0 +1,50 @@
+command LayoutControl pRect
+   if pRect is empty then put the rect of me into pRect
+   lock screen
+   
+   put _frameView() into frameView
+   put _textField() into textField
+   
+   put the margins of me into someMargin
+   
+   rect_ExtractDimensions pRect, someX, someY
+   put min (someX, someY) into squareWidth
+   
+   put rect_GetCentre (pRect) into innerCentre
+   put rect_LocWidthHeight (innerCentre, squareWidth, squareWidth) into innerRect
+   rect_SubtractMargins innerRect, someMargin
+   
+   -- set the rect of textField to innerRect
+   
+   -- put the inner_Margin of me into innerMargin
+   set the auto_TextSize of textField to squareWidth
+   put the result into innerMargin
+   -- _autoSetTextSize squareWidth, innerMargin
+   
+   put innerRect into textFieldRect
+   rect_SubtractMargins textFieldRect, innerMargin
+   
+   -- let's work out how much text there is and centre it
+   set the text of textField to LocalArray ["view_Text"]
+   put the formattedheight of textField into fHeight
+   
+   _fixOverFlow squareWidth,textField, fHeight -- does fancy trimming
+   -- put the formattedheight of textField into fHeight
+   
+   put round (fHeight/2) into halfHeight
+   
+   put item 2 of innerCentre into innerY
+   put innerY - halfHeight into item 2 of textFieldRect
+   put innerY + halfHeight into item 4 of textFieldRect
+   
+   -- tweak
+   -- rect_Translate innerRect, 1, 1
+   
+   set the rect of textField to textFieldRect
+   set the rect of frameView to innerRect
+   
+   -- hack for odd pixel shift
+   set the loc of textField to innerCentre
+   set the loc of frameView to innerCentre
+   unlock screen
+end LayoutControl

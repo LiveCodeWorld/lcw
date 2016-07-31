@@ -1,0 +1,11 @@
+function wikpedia_FetchPageImageSandboxArray pageTitle, pApiStem
+   put "/w/api.php?action=query&format=json&uselang=de&prop=pageimages&meta=filerepoinfo%7Cwikibase&titles=" into sandBoxFragment
+   put urlencode (pageTitle) after sandBoxFragment
+   put "&iiprop=" & "comment|url|dimensions|size|sha1|metadata|extmetadata|thumbmime" after sandBoxFragment
+   put "&iiurlwidth=420" after sandBoxFragment
+   put "&redirects=1" after sandBoxFragment
+   
+   put wikipedia_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   -- display_Array sandboxArray
+   return sandboxArray
+end wikpedia_FetchPageImageSandboxArray

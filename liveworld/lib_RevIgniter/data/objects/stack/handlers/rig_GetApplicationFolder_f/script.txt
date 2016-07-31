@@ -1,0 +1,9 @@
+function rig_GetApplicationFolder
+   if the environment = "server" then
+      put gAPPPATH into rigApplicationFolder
+   else
+      put server_RigApplicationFolder() into rigApplicationFolder
+   end if
+   text_AddTrailing rigApplicationFolder, "/"
+   return rigApplicationFolder
+end rig_GetApplicationFolder

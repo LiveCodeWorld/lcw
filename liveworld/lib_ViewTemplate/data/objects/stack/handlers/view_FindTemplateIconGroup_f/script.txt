@@ -1,0 +1,10 @@
+function view_FindTemplateIconGroup vName
+   if vName is emtpy then return empty
+   put view_GetTemplateObject (vName) into templateObject
+   if exists (templateObject) is false then return empty
+   put the stack_Object of templateObject into stackObject
+   if exists (group "Icons" of cd 2 of stackObject) is false then return empty
+   
+   put the long id of group "Icons" of cd 2 of stackObject into templateIconGroup
+   return templateIconGroup
+end view_FindTemplateIconGroup

@@ -1,0 +1,4 @@
+command menu_SetTopController mTopController
+   global gTemp_ActiveMenuArray
+   put mTopController into gTemp_ActiveMenuArray ["top"]["mController"]
+end menu_SetTopController

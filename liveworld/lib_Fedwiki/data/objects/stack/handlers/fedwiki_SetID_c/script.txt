@@ -1,0 +1,5 @@
+command fedwiki_SetID @pID
+   if pID is empty then 
+      put uuid () into pID
+   end if
+end fedwiki_SetID

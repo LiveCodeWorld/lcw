@@ -1,0 +1,5 @@
+getprop script_ImageFiles
+   put the script_Files of the target into somePngs
+   filter somePngs with "*.png"
+   return somePngs
+end script_ImageFiles

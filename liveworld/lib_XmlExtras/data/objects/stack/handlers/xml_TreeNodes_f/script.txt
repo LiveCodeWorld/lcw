@@ -1,0 +1,5 @@
+function xml_TreeNodes treeID, startNode, includeChildCount
+    if treeID is not a number then return empty
+    put xml_TreeNodeOutline(treeID, startNode, includeChildCount) into someOutline
+    return outline_ToPathIndex(someOutline, "/")
+end xml_TreeNodes

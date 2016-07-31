@@ -1,0 +1,5 @@
+setprop dot_DefaultHeaderValue [someKey] headerValue
+   put the long id of the target into targetObject
+   dot_SetDefaultHeaderValue targetObject, someKey, headerValue
+   return the result
+end dot_DefaultHeaderValue

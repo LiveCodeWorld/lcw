@@ -1,0 +1,5 @@
+on menu_DeleteHeaderKey svgView, headerType
+   put the svg_HeaderArray of svgView into svgHeaderArray
+   delete variable svgHeaderArray [headerType]
+   set the svg_HeaderArray of svgView to svgHeaderArray
+end menu_DeleteHeaderKey

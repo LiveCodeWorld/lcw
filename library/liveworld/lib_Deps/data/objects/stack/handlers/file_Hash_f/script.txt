@@ -1,0 +1,9 @@
+function file_Hash someFile, pUseBinary
+   if there is not a file someFile then return empty
+   if pUseBinary is false then
+      put url ("file:" & someFile) into someData
+   else
+      put url ("binfile:" & someFile) into someData
+   end if
+   return sha1_Hash (someData)
+end file_Hash

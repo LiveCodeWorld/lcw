@@ -1,0 +1,27 @@
+function plist_DictFromArray someArray
+    -- data types seem to be "integer, string, data, dict, array"
+    -- or boolean ie <false/>
+    
+    put empty into dictContents
+    repeat for each key tagName in someArray
+        put someArray [tagName] into arrayContents
+        put xml_Tag(tagName, "key") & CR after dictContents
+        
+        if arrayContents is a number then
+            put xml_Tag(arrayContents, "integer") & CR after dictContents
+        else if char 1 to 7 of arrayContents is "<array>" then
+            put arrayContents & CR after dictContents
+        else if char 1 to 6 of arrayContents is "<dict>" then
+            put word 1 to -1 of arrayContents & CR after dictContents
+        else if the number of lines of arrayContents = 1 then
+            put xml_Tag(arrayContents, "string") & CR after dictContents
+        else
+            put CR & word 1 to -1 of base64encode(arrayContents) & CR into arrayContents
+            -- put CR & word 1 to -1 of urlEncode(arrayContents) & CR into arrayContents
+            put xml_Tag(arrayContents, "data") & CR after dictContents
+        end if
+    end repeat
+    put CR & outline_IncreaseIndent(dictContents) into dictContents	# some uneeded formatting
+    put xml_Tag(dictContents, "dict") & CR into dictXML
+    return dictXML
+end plist_DictFromArray

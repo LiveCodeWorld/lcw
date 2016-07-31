@@ -1,0 +1,75 @@
+command process_GET someRoute, socketID, requestArray
+   put daemon_GetRouteHeaderArray (someRoute) into headerArray
+   set the itemdelimiter to "/"
+   switch
+      case someRoute ends with "tool.json"
+         put item -1 of someRoute into pageSlug
+         delete char -5 to -1 of pageSlug
+         -- put fedwiki_GetLocalPageArray (pageSlug) into localPageArray
+         
+         put "A particular tool goes here:" into someComment
+         put fedwiki_ConstructNewPageArray ("Hello", someComment) into pageArray
+         
+         put "* [[Test Tool]]" into someMarkdown
+         put CR & "* [[Another Tool]]" after someMarkdown
+         fedwiki_AddMarkdownToPageArray pageArray, someMarkdown
+         
+         put library_FetchHandler ("process_Get,c") into someCode
+         fedwiki_AddCodeToPageArray pageArray, someCode
+         
+         put json_FromArray (pageArray) into someJSON
+         daemon_SendJSON socketID, someJSON
+         return the result
+      case someRoute = "tools-index.json"
+         put "An nice tool index goes here:" into someComment
+         put fedwiki_ConstructNewPageArray ("Tools Index", someComment) into pageArray
+         
+         put "* [[Test Tool]]" into someMarkdown
+         put CR & "* [[Another Tool]]" after someMarkdown
+         
+         fedwiki_AddMarkdownToPageArray pageArray, someMarkdown
+         
+         put json_FromArray (pageArray) into someJSON
+         daemon_SendJSON socketID, someJSON
+         return the result
+      case someRoute = "/hello.json"
+         put "This is a test of Hello World. At round about" into someComment
+         put the time after someComment
+         put fedwiki_ConstructNewPageArray ("Hello", someComment) into someArray
+         put json_FromArray (someArray) into someJSON
+         daemon_SendJSON socketID, someJSON
+         return the result
+      case someRoute = "/" or someRoute begins with "/view/welcome-visitors"
+         put daemon_GetRouteData ("/view/welcome-visitors") into someHTML
+         daemon_SendText socketID, someHTML
+         return "Sent HTML. Socket still open."
+      case someRoute = "/system/sitemap.json" -- specific to Fedwiki routing
+         fedwiki_SendSiteMap socketID
+         return the result
+      case someRoute = "/style.css"
+         -- can use Livecode javascript to effect the same as changing CSS
+         -- daemon_SendHeaderArray someRoute, headerArray, socketID
+         put daemon_GetRouteData (someRoute) into someCSS
+         convertCSS someCSS
+         -- put someCSS
+         
+         put "HTTP/1.1 200 OK" into someHeader
+         put CRLF & daemon_DeconstructHeaderArray (headerArray) after someHeader
+         daemon_Send someHeader, someCSS, socketID
+         
+         return "Sent modified CSS based on headerArray. Socket still open."
+      case the number of items of someRoute = 2 and char -5 to -1 of someRoute = ".json" -- specific to Fedwiki routing
+         put fedwiki_UrlPathToSlug (someRoute) into pageSlug
+         fedwiki_SendPageJSON pageSlug, socketID
+         return the result
+      case headerArray is an array
+         -- this is used for pretty much all of the site assets (javascript, css, images etc)
+         daemon_SendHeaderArray someRoute, headerArray, socketID
+         return "Sent something based on headerArray. Socket still open."
+      default
+         -- here we come across new stuff for the first time
+         process_UnGot socketID, someRoute, routeData, requestArray
+         return the result
+   end switch
+   --  put fedwiki_GetWelcomeJSON() into someHTML
+end process_GET

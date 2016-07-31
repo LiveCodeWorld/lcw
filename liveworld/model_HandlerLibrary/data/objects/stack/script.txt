@@ -1,0 +1,67 @@
+--> MetaData
+-
+license: GPLv3
+name: model_HandlerLibrary
+type: model
+version: 0.6
+
+
+--> Handler Library | Props
+-
+[[ _FetchHandler (handler_Help,g) ]]
+
+[[ _FetchHandler (handler_Help,s) ]]
+
+
+--> Handler Library | Help | Model
+-
+[[ _FetchHandler (library_FetchHandlerHelp,f) ]]
+
+[[ _FetchHandler (library_StoreHandlerHelp,c) ]]
+
+
+--> Handler Library | Model
+-
+[[ _FetchHandler (library_AddHkey,c) ]]
+
+[[ _FetchHandler (library_ExportAllHandlersFromObject,c) ]]
+
+[[ _FetchHandler (library_AddHkeys,c) ]]
+
+[[ _FetchHandler (library_HkeyToPublicShortHkey,f) ]]
+
+[[ _FetchHandler (library_FetchHkeyHash,f) ]]
+
+[[ _FetchHandler (library_DeleteHkey,c) ]]
+
+[[ _FetchHandler (library_ListForgetHkeys,f) ]]
+
+[[ _FetchHandler (library_FetchForgetArray,f) ]]
+
+[[ _FetchHandler (library_ForgetHkey,c) ]]
+
+[[ _FetchHandler (library_HandlerParents,f) ]]
+
+[[ _FetchHandler (library_FetchHandler,f) ]]
+
+[[ _FetchHandler (library_StoreHandler,c) ]]
+
+[[ _FetchHandler (library_DeleteHandlerFolder,c) ]]
+
+[[ _FetchHandler (library_FetchHandlerMetadata,f) ]]
+
+[[ _FetchHandler (library_StoreHandlerMetadata,c) ]]
+
+[[ _FetchHandler (library_GetHandlerDatabaseMetadata,f) ]]
+
+[[ _FetchHandler (library_SetHandlerDatabaseMetadata,c) ]]
+
+[[ _FetchHandler (library_FetchHandlerDatabaseArray,f) ]]
+
+[[ _FetchHandler (library_StoreHandlerDatabaseArray,c) ]]
+
+[[ _FetchHandler (library_ListHkeys,f) ]]
+
+[[ _FetchHandler (library_ListHkeysFromFolders,f) ]]
+
+[[ _FetchHandler (library_TidyHanderDatabaseArray,c) ]]

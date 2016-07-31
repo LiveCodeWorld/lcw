@@ -1,0 +1,56 @@
+command xml_TagOffsets someXML, tagName, @startTag, @endTag, @someTag, @tagContents
+   -- won't work with nested tags of same name
+   -- does not work with svg (needs regExp fix)
+   -- but should work well with single and double tags read over any number of lines
+   
+   put empty into someTag
+   put empty into tagContents
+   
+   -- fixed to find first opening tag (even if a simple tag)
+   -- put "(?Uim)(<\s*" & tagName & "\s*>)|(<\s*" & tagName & "\s*/\s*>)" into openingReg
+   put "(" & ">" & "|" & "\s+.*>" & ")" into someEnding
+   put "(?Uim)(<\s*" & tagName & someEnding & ")" into openingReg
+   if matchchunk(someXML, openingReg, startTag, endOpening) is false then
+      put empty into tagName
+      put empty into startTag
+      put empty into endTag
+      return false
+   end if
+   
+   put char startTag to endOpening of someXML into openingTag
+   put endOpening -1 into beforeEndBracketNum
+   repeat with charNum = beforeEndBracketNum down to 1
+      get char charNum of someXML
+      if it is "/" then
+         -- its a single tag
+         put endOpening into endTag
+         get char startTag to endTag of someXML
+         put word 1 to -1 of it into someTag
+         return true
+      else if it is space then
+         next repeat
+      else
+         exit repeat
+      end if
+   end repeat
+   
+   put someXML into testXML
+   delete char 1 to endOpening of testXML
+   put "(?Uim)(<\s*/" & tagName & "\s*>)" into closingReg
+   
+   if matchchunk(testXML, closingReg, startClosing, endClippedTag) is false then
+      -- something seriously wrong
+      put empty into tagName
+      put empty into startTag
+      put empty into endTag
+      return false
+   else
+      put endClippedTag + endOpening + 0 into endTag
+      get char startTag to endTag of someXML
+      put word 1 to -1 of it into someTag
+      
+      get char (endOpening+1) to (startClosing+endOpening-1) of someXML
+      put word 1 to -1 of it into tagContents
+      return true
+   end if
+end xml_TagOffsets

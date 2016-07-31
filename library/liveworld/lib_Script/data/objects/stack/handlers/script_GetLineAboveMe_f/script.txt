@@ -1,0 +1,9 @@
+function script_GetLineAboveMe
+   get line -2 of the executioncontexts
+   put item -1 of it into lineNum
+   -- put item -2 of it into hName
+   put item 1 to -3 of it into scriptObject
+   
+   put line (lineNum - 1) of the script of scriptObject into scriptLine
+   return word 1 to -1 of scriptLine
+end script_GetLineAboveMe

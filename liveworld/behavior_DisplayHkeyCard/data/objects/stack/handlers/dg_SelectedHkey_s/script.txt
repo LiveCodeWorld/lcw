@@ -1,0 +1,11 @@
+setprop dg_SelectedHkey hKey
+   put the dataGrid_View of me into dgView
+   dispatch "FindIndex" to dgView with "hKey", hKey
+   put the result into theIndex
+   
+   -- lock screen
+   set the dgHilitedIndex of dgView to theIndex
+   set the dgFocus of dgView to true
+   -- unlock screen
+   return theIndex
+end dg_SelectedHkey

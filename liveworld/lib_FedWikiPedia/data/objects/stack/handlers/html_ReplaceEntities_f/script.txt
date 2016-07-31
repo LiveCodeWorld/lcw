@@ -1,0 +1,14 @@
+function html_ReplaceEntities someHtml
+   replace "&quot;" with quote in someHtml
+   
+   -- Replace all the html entities that Rev understands with their character equivalents.
+   put html_EntityList() into htmlEntities
+   put html_EntityCharNums() into entityCharNums
+   
+   repeat with ii = 1 to the number of items of htmlEntities
+      put item ii of entityCharNums into entityCharNum
+      put numtochar(entityCharNum) into someChar
+      replace item ii of htmlEntities with someChar in someHtml
+   end repeat
+   return someHtml
+end html_ReplaceEntities

@@ -1,0 +1,4 @@
+on menu_RevealProjectFolder scriptObject
+   put the project_Folder of scriptObject into projectFolder
+   finder_Reveal projectFolder
+end menu_RevealProjectFolder

@@ -1,0 +1,10 @@
+command hkey_SetBackLinks hKey, backLinks, pOverlayName
+   put hkey_GetOverlayArray (hKey, pOverlayName) into overlayArray
+   if backLinks is empty then
+      delete local overlayArray ["data"]["backLinks"]
+   else
+      put backLinks into overlayArray ["data"]["backLinks"]
+   end if
+   hkey_SetOverlayArray hKey, overlayArray, pOverlayName
+   return the result
+end hkey_SetBackLinks

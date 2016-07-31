@@ -1,0 +1,15 @@
+function dot_NodeDefLineFromArray nodeID, defLineArray
+   put nodeID && "[" into defLine
+   delete local defLineArray ["id"] -- in case it is a data array with an "id" value"
+   repeat for each key defProperty in defLineArray
+      put defLineArray [defProperty] into defValue
+      if defValue is a number then 
+         put defProperty & "=" & defValue after defLine
+      else
+         put defProperty & "=" & kwote(defValue) after defLine
+      end if
+      put ", " after defLine
+   end repeat
+   put "];" into char -2 to -1 defLine
+   return defLine
+end dot_NodeDefLineFromArray

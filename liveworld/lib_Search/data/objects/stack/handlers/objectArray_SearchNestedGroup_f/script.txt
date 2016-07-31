@@ -1,0 +1,30 @@
+function objectArray_SearchNestedGroup containerObject, someProperty, pObjectKeyProperty, pControllerObject
+   -- works but is slow due to required unions
+   local objectArray
+   
+   put the object_Name [pObjectKeyProperty] of containerObject into containerKey
+   
+   -- add the values of the top object
+   put object_GetCustomProperty (containerObject, someProperty, pControllerObject) into objectResult
+   put objectResult into objectArray [containerKey]["@prop"][someProperty]
+   
+   -- look at contents
+   repeat with controlNum = 1 to the number of controls in containerObject
+      put the long id of control controlNum of containerObject into subObject
+      put the object_Name [pObjectKeyProperty] of subObject into subKey
+      
+      if word 1 of subObject = "group" then -- recurse
+         put objectArray_SearchNestedGroup (subObject, someProperty, pObjectKeyProperty, pControllerObject) into subArray -- will be a nested array
+         -- put subArray into objectArray [containerKey] -- will clobber @props
+         put objectArray [containerKey] into oldSubArray
+         union subArray with oldSubArray
+         put subArray into objectArray [containerKey]
+         add the number of layers in subObject to controlNum
+      else -- add plain
+         put object_GetCustomProperty (subObject, someProperty, pControllerObject) into subResult -- will often be a plain value
+         put subResult into objectArray [containerKey][subKey]["@prop"][someProperty]
+      end if
+   end repeat
+   
+   return objectArray
+end objectArray_SearchNestedGroup

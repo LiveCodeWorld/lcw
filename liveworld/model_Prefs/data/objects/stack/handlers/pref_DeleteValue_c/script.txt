@@ -1,0 +1,5 @@
+command pref_DeleteValue prefName
+   global gPrefs_Array
+   delete variable gPrefs_Array [prefName]
+   return gPrefs_Array
+end pref_DeleteValue

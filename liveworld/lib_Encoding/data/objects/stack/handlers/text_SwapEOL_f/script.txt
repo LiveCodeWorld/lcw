@@ -1,0 +1,16 @@
+function text_SwapEOL pText, pWhat
+    /*
+    Swap Ends of Line 
+    Does a swap between cr and "Â". This is necessary as the matchtext and replacetext functions only look for 
+    a match within a line, when using regular expressions
+    */
+    switch pWhat
+        case "remove"
+            replace cr with xEOL in pText
+            break
+        case "restore"
+            replace xEOL with cr in pText
+            break
+    end switch
+    return pText
+end text_SwapEOL

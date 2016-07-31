@@ -1,0 +1,27 @@
+function CMYKtoRGB cmyk
+   replace space with comma in cmyk
+   put cmyk into cmykVar
+   
+   repeat 4
+      put trunc(item 1 of cmykVar * 255) & "," after cmykVar2
+      delete item 1 of cmykVar
+   end repeat
+   if item 1 of cmykVar2 = 0 and item 2 of cmykVar2 = 0 and item 3 of cmykVar2 = 0
+   then
+      put item 4 of cmykVar2 into R
+      put item 4 of cmykVar2 into G
+      put item 4 of cmykVar2 into B
+   else
+      if (item 1 of cmykVar2 + item 4 of cmykVar2) < 255
+      then put 255 - (item 1 of cmykVar2 + item 4 of cmykVar2) into R
+      else put 0 into R
+      if (item 2 of cmykVar2 + item 4 of cmykVar2) < 255
+      then put 255 - (item 2 of cmykVar2 + item 4 of cmykVar2) into G
+      else put 0 into G
+      if (item 3 of cmykVar2 + item 4 of cmykVar2) < 255
+      then put 255 - (item 3 of cmykVar2 + item 4 of cmykVar2) into B
+      else put 0 into B
+   end if
+   -- put R & "," & G & "," & B -- Uncomment for debug
+   return R & "," & G & "," & B
+end CMYKtoRGB

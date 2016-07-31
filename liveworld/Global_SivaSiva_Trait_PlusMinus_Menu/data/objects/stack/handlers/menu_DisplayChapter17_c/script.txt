@@ -1,0 +1,5 @@
+on menu_DisplayChapter17 plusMinusView, chapterName
+   put sivasiva_GetChapterArray (17) into chapterArray
+   
+   display_Array chapterArray, "chapter 17"
+end menu_DisplayChapter17

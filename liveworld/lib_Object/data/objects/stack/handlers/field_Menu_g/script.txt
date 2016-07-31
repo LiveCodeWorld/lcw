@@ -1,0 +1,16 @@
+getprop field_Menu [someType]
+   -- more complicated but allows local overriding!
+   
+   switch someType 
+      case "Inside"
+         -- a click on an existing selection
+         -- set the menu_Title of the target to "Field | Menu"
+         put the menu_Title of the target into menuTitle
+         return menuTitle
+      case "Outside"
+         -- a click on a new empty selection
+         return "Global | HyperField | Menu"
+      case empty
+         return "Global | Field | Menu"
+   end switch
+end field_Menu

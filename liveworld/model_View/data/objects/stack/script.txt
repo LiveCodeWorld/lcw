@@ -1,0 +1,270 @@
+--> MetaData
+-
+license: GPLv3
+name: model_View
+type: model
+version: 0.8
+
+
+/*
+This stack contains the model handlers for view data and template data.
+
+Views can store arrays in their stacks using the template_Array property. 
+The data is then no stored with teh view instance itself,
+but as a custom property of the stack.
+
+See also the library "libOPN_Style"
+*/
+
+
+--> View | File | hArray | Model | Wrappers
+-
+/*
+These wrap the hArray database of view_names
+*/
+
+[[ _FetchHandler (view_StackNames,f) ]]
+
+[[ _FetchHandler (view_PathIndex,f) ]]
+
+[[ _FetchHandler (view_FilteredPaths,f) ]]
+
+
+
+--> View | File | hArray | Model
+-
+/*
+This is what libOPN_ViewBrowser uses to display stuff.
+It's all stored in a standard model array on file.
+*/
+
+[[ _FetchHandler (view_ListNames,f) ]]
+
+[[ _FetchHandler (hArray_ListViewNames,f) ]]
+
+[[ _FetchHandler (hArray_GetViewTemplate,f) ]]
+
+
+
+
+--> View | File | Model | Weird
+-
+/*
+These handlers are active, but flaky. Rationalise them.
+*/
+
+[[ _FetchHandler (view_NameToFile,f) ]]
+
+[[ _FetchHandler (view_FileToPath,f) ]]
+
+[[ _FetchHandler (view_PathToShortFile,f) ]]
+
+
+--> View | File | Standard | Model
+-
+/*
+Standard vies are stored in the standard library folder for views.
+They are found using 
+
+-  put library_StandardViewFolder() into someFolder
+
+We now are moving to LCW - so it would eb good to add the LCW standard path.
+*/
+
+[[ _FetchHandler (view_ListStandardShortFiles,f) ]]
+
+[[ _FetchHandler (view_ListStandardLongFiles,f) ]]
+
+[[ _FetchHandler (view_ListStandard,f) ]]
+
+
+--> View | File | Model
+-
+/*
+"viewBrowser_ConstructArrayFromViewNames" is what libOPN_ViewBrowser uses to display stuff.
+It's all stored in a standard model array on file.
+
+This model stores text and data for browsing and navigating view templates,
+but not needed for functioning of view - simply house-keeping.
+So it is not necessary to distribute with working views.
+
+Used for things like presenting and browsing library metadata.
+Stored as a text file (an encoded array), and is not need ed to be distribute with view stack for it to work.
+*/
+
+[[ _FetchHandler (view_FileMetaData,g) ]]
+
+[[ _FetchHandler (view_FileMetaData,s) ]]
+
+
+--> View | File | Model
+-
+/*
+This is what libOPN_ViewBrowser uses to display stuff.
+It's all stored in a standard model array on file.
+*/
+
+[[ _FetchHandler (viewBrowser_ConstructArrayFromViewNames,f) ]]
+
+[[ _FetchHandler (view_GetMetaData,f) ]]
+
+[[ _FetchHandler (view_SetMetaData,c) ]]
+
+[[ _FetchHandler (view_DeleteMetaData,c) ]]
+
+[[ _FetchHandler (view_GetFileMetaArray,f) ]]
+
+[[ _FetchHandler (view_SetFileMetaArray,c) ]]
+
+
+--> View | File | Model | Wrappers
+-
+[[ _FetchHandler (view_IconUrl,f) ]]
+
+[[ _FetchHandler (view_LocalIconFile,f) ]]
+
+[[ _FetchHandler (view_DeleteIcon,c) ]]
+
+[[ _FetchHandler (view_GetHelpHtml,f) ]]
+
+[[ _FetchHandler (view_SetHelpHtml,c) ]]
+
+[[ _FetchHandler (view_DeleteHelpText,c) ]]
+
+[[ _FetchHandler (view_GetOld,f) ]]
+
+[[ _FetchHandler (view_SetOld,c) ]]
+
+[[ _FetchHandler (view_GetPublished,f) ]]
+
+[[ _FetchHandler (view_SetPublished,c) ]]
+
+[[ _FetchHandler (view_GetFavourite,f) ]]
+
+[[ _FetchHandler (view_SetFavourite,c) ]]
+
+[[ _FetchHandler (view_GetTested,f) ]]
+
+[[ _FetchHandler (view_SetTested,c) ]]
+
+
+--> View | Profile
+-
+[[ _FetchHandler (view_Profile,g) ]]
+
+[[ _FetchHandler (view_Profile,s) ]]
+
+
+--> View | Model | Wrappers
+-
+/*
+These properties are stored as part of a structured array associated with a view.
+The array can be sotred with the view, on the card, or with the views behavior (a template_Array).
+*/
+
+[[ _FetchHandler (view_Value,g) ]]
+
+[[ _FetchHandler (view_Value,s) ]]
+
+[[ _FetchHandler (card_ViewValue,g) ]]
+
+[[ _FetchHandler (card_ViewValue,s) ]]
+
+
+--> View | Model
+-
+/*
+There are a number of types of data associated with a view:
+
+1) Metadata associated with a views instance on a card (it's name etc)
+2) Data - the actual data displayed by a view
+3) Display data controlling how the view dispays data
+4) Controller Array
+
+There are also a number of places this data can be stored:
+
+a) associated with a view instance (ie as a named custom propoerty of the card the view is on) (view_Array)
+b) as a custom property of the view templates stack (template_Array)
+c) as a file (put library_ArrayFolder ("viewMetaDataArray") into someFile)
+
+The template_Array and view_Array can be combined with the view-Array over-ridign the properties of the template_Array (not done yet?)
+
+== Data ==
+The data is indexed to view_Name and the short name of the views and not based on their ids
+This is in order to allow replacing / updating of views while retaining their pros and data.
+
+== Metadata ==
+This is not the uRIP metadata attached to the object,
+but the metadata associated with a view template ("class").
+
+We use view_ClassMetaData (for the library object / class), and view_MetaData (for the instance on the card).
+
+Class metadata is stored as a custom property of the library view stack.
+
+== Controller Array ==
+Used by event_Trigger handlers like "event_TriggerArray", "controller_Objects" etc
+
+== Display ==
+Each view should have it's own display model. 
+Deleting a view and replacing / updating it with another view of the same name and type,
+should (as far as posible) result in the new / updated view retaining the display properties of the old view.
+
+The data is indexed to view_Name and the short name of the views and not based on their ids
+This is in order to allow replacing / updating of views while retaining their pros and data.
+The display model is by default stored on the card, and not linked to the id but to the short name of the view.
+*/
+
+[[ _FetchHandler (view_DataArray,g) ]]
+
+[[ _FetchHandler (view_DataArray,s) ]]
+
+[[ _FetchHandler (view_MetaData,g) ]]
+
+[[ _FetchHandler (view_MetaData,s) ]]
+
+[[ _FetchHandler (view_ControllerArray,g) ]]
+
+[[ _FetchHandler (view_ControllerArray,s) ]]
+
+[[ _FetchHandler (view_DeleteProperty,s) ]]
+
+[[ _FetchHandler (view_DisplayArray,g) ]]
+
+[[ _FetchHandler (view_DisplayArray,s) ]]
+
+
+--> View | Model | Array
+-
+[[ _FetchHandler (view_Array,g) ]]
+
+[[ _FetchHandler (view_Array,s) ]]
+
+[[ _FetchHandler (view_CardArray,g) ]]
+
+[[ _FetchHandler (view_CardArray,s) ]]
+
+
+--> View | Model
+-
+/*
+These handlers are the current way views store their metadata.
+Eventually the aim is to update this to the way stacks in general store their metadata for any object,
+which is based on the standard stack export model (with it's associated metadata folders for each exported object).
+These handlers have been place here in order to encourage this migration :)
+*/
+
+[[ _FetchHandler (view_RenameTemplate,c) ]]
+
+[[ _FetchHandler (view_NewName,s) ]]
+
+[[ _FetchHandler (view_DeleteTemplate,c) ]]
+
+[[ _FetchHandler (view_CreateIcon,c) ]]
+
+[[ _FetchHandler (view_IconFile,g) ]]
+
+
+
+--> Private
+-
+[[ _FetchHandler (view_TrimFirstViewNameItem,pc) ]]

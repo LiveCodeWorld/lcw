@@ -1,0 +1,23 @@
+private function lazyViewNameMatch vNameOrStem, vName
+   -- test to see if a view_Name is a lazy match with a vNameOrStem
+   -- as long as vNameOrStem is an item within the view_Name it returns true
+   view_NormalizeName vNameOrStem
+   view_NormalizeName vName
+   
+   set the itemdelimiter to "|"
+   delete item 1 of vName
+   delete item 1 of vNameOrStem
+   if char -1 of vNameOrStem = "|" then delete char -1 of vNameOrStem
+   return vNameOrStem is among the items of vName
+   
+   --old
+   -- if the last match fails the match chops of last item and tries again until a match succeeds
+   -- so "Tree" will match the vName "View|Tree|Simple Tree"
+   repeat the number of items of vName
+      if vName = vNameOrStem then
+         return true
+      end if
+      delete item - 1 of vName
+   end repeat
+   return false
+end lazyViewNameMatch

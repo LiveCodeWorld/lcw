@@ -1,0 +1,5 @@
+on resizeControl
+   put the rect of me into viewRect
+   LayoutControl viewRect
+   -- pass resizeControl
+end resizeControl

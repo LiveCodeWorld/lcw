@@ -1,0 +1,15 @@
+getprop local_BranchNames
+   put "git branch" into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   
+   repeat for each line someLine in shellResult
+      if word 1 of someLine = "*" then
+         put "(" & word 2 to -1 of someLine & CR after branchNames
+         -- put word 2 to -1 of someLine & CR after branchNames
+      else
+         put word 1 to -1 of someLine & CR after branchNames
+      end if
+   end repeat
+   delete char -1 of branchNames
+   return branchNames
+end local_BranchNames

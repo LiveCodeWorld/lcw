@@ -1,0 +1,15 @@
+function stackFile_ConstructShortFileArray pSetName
+   put library_FetchStackFiles (pSetName) into stackFileTable
+   repeat for each line someLine in stackFileTable
+      set the itemdelimiter to comma
+      put item 1 of someLine into stackName
+      put item 2 of someLine into relativePath
+      
+      set the itemdelimiter to "/"
+      put item -1 of someLine into shortFile
+      
+      put stackName into shortStackArray [shortFile]["stackName"]
+      put relativePath into shortStackArray [shortFile]["relativePath"]
+   end repeat
+   return shortStackArray
+end stackFile_ConstructShortFileArray

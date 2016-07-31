@@ -1,0 +1,6 @@
+command rescue_SetLibraryFolder folderGroupName, someFolder
+   put _folderField (folderGroupName) into folderField
+   if char -1 of someFolder is not slash then put slash after someFolder
+   set the text of folderField to someFolder
+   return folderField
+end rescue_SetLibraryFolder

@@ -1,0 +1,9 @@
+function library_TempFolder
+   put LocalArray ["library_TempFolder"] into libraryTempFolder
+   if there is not a folder libraryTempFolder then
+      put the tempname into libraryTempFolder
+      create folder libraryTempFolder
+   end if
+   folder_Format libraryTempFolder
+   return libraryTempFolder
+end library_TempFolder

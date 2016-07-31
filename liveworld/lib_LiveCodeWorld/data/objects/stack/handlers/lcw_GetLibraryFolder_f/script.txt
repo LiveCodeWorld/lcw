@@ -1,0 +1,10 @@
+function lcw_GetLibraryFolder newFolderName
+   -- total hack for now
+   -- folders are set in global prefs
+   -- so can be anywhere the users sets
+   
+   local pProjectName
+   lcw_OldName newFolderName
+   put project_GetFolder (newFolderName, pProjectName) into someFolder 
+   return someFolder
+end lcw_GetLibraryFolder

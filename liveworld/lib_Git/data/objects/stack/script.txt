@@ -1,0 +1,363 @@
+--> MetaData
+-
+name: lib_Git
+type: library
+copyright: David Bovill
+license: GPLv3
+version: 0.7
+
+/*
+A library for working with GIT.
+It has not been tested on unix (should work fine), or Windows machines (beware of line ending issues).
+*/
+
+
+--> Currently Working On
+-
+--> Git | Apply
+-
+[[ _FetchHandler (git_ApplyTestPatch,f) ]]
+
+[[ _FetchHandler (git_ApplyPatchFile,c) ]]
+
+[[ _FetchHandler (git_ConstructDiffArray,f) ]]
+
+[[ _FetchHandler (git_DeconstructAtLine,pc) ]]
+
+[[ _FetchHandler (git_DeconstructOtherLine,pc) ]]
+
+[[ _FetchHandler (git_StripDiffHeader,c) ]]
+
+
+--> Diff
+-
+[[ _FetchHandler (diff_StripHeader,c) ]]
+
+
+--> Git | Script | Diff
+-
+[[ _FetchHandler (git_ScriptDiff,g) ]]
+
+[[ _FetchHandler (git_GetDiff,f) ]]
+
+
+--> Git | Script | Revision
+-
+[[ _FetchHandler (git_RevisionScript,g) ]]
+
+[[ _FetchHandler (git_LastCommit,g) ]]
+
+[[ _FetchHandler (git_LastScript,g) ]]
+
+[[ _FetchHandler (git_GetLastRevision,f) ]]
+
+[[ _FetchHandler (git_HashRevision,f) ]]
+
+[[ _FetchHandler (git_ShowFileHead,f) ]]
+
+[[ _FetchHandler (git_GetRevisionScript,f) ]]
+
+[[ _FetchHandler (git_ConstructFileRevision,f) ]]
+
+[[ _FetchHandler (git_SparseCheckOut,c) ]]
+
+
+--> Git | Props
+-
+[[ _FetchHandler (script_CommitComment,g) ]]
+
+[[ _FetchHandler (git_CheckoutFolder,g) ]]
+
+[[ _FetchHandler (git_WithinCheckoutFolder,g) ]]
+
+[[ _FetchHandler (git_FileIsTracked,g) ]]
+
+[[ _FetchHandler (git_FileIsTracked,s) ]]
+
+[[ _FetchHandler (stack_IsLoaded,g) ]]
+
+[[ _FetchHandler (stack_IsUsed,g) ]]
+
+[[ _FetchHandler (git_MetaDataArray,g) ]]
+
+[[ _FetchHandler (git_LastLog,g) ]]
+
+[[ _FetchHandler (git_StackHashLog,g) ]]
+
+[[ _FetchHandler (git_CommitHash,g) ]]
+
+[[ _FetchHandler (git_ScriptHash,g) ]]
+
+[[ _FetchHandler (git_ScriptFileLog,g) ]]
+
+[[ _FetchHandler (git_BlobHash,g) ]]
+
+[[ _FetchHandler (git_StackTreeish,g) ]]
+
+[[ _FetchHandler (git_RevisionStack,g) ]]
+
+[[ _FetchHandler (git_Project,g) ]]
+
+
+--> Git
+-
+[[ _FetchHandler (git_GetCheckoutFolder,f) ]]
+
+[[ _FetchHandler (stack_GetIsUsed,f) ]]
+
+[[ _FetchHandler (git_Version,f) ]]
+
+[[ _FetchHandler (git_Pull,c) ]]
+
+[[ _FetchHandler (git_CommitScriptFile,c) ]]
+
+
+--> GIT | Stack
+-
+[[ _FetchHandler (stack_RevertLoaded,c) ]]
+
+[[ _FetchHandler (git_RevertStack,c) ]]
+
+[[ _FetchHandler (git_DisplayTempStackFromTreeish,c) ]]
+
+[[ _FetchHandler (git_RestoreFile,c) ]]
+
+[[ _FetchHandler (git_CheckoutRevision,c) ]]
+
+[[ _FetchHandler (git_ConstructCheckoutCommand,f) ]]
+
+[[ _FetchHandler (git_DisplayTempStackRevision,c) ]]
+
+[[ _FetchHandler (git_ExportFileRevision,c) ]]
+
+
+--> GIT | Stash
+-
+[[ _FetchHandler (git_ListStashes,f) ]]
+
+[[ _FetchHandler (git_StashArray,f) ]]
+
+
+--> GIT
+-
+[[ _FetchHandler (git_CurrentBranchName,f) ]]
+
+[[ _FetchHandler (git_SearchRepository,f) ]]
+
+[[ _FetchHandler (git_Searchlog,f) ]]
+
+
+--> GIT | Files
+-
+[[ _FetchHandler (git_DeleteFile,c) ]]
+
+[[ _FetchHandler (git_RenameFile,c) ]]
+
+[[ _FetchHandler (git_RenameFolder,c) ]]
+
+[[ _FetchHandler (git_DeleteFolder,c) ]]
+
+[[ _FetchHandler (git_ScriptFile,f) ]]
+
+
+--> GIT | Show
+-
+[[ _FetchHandler (git_HashInfo,f) ]]
+
+[[ _FetchHandler (git_Show,f) ]]
+
+[[ _FetchHandler (git_NormalizeTreeish,c) ]]
+
+
+--> GIT | Hash
+-
+[[ _FetchHandler (git_GetLastCommitHash,f) ]]
+
+[[ _FetchHandler (git_BlobHashFromTreeish,f) ]]
+
+[[ _FetchHandler (git_CommitLogEntry,f) ]]
+
+[[ _FetchHandler (git_CommitedFiles,f) ]]
+
+[[ _FetchHandler (git_GetCommitFileHash,f) ]]
+
+[[ _FetchHandler (git_ListFiles,f) ]]
+
+[[ _FetchHandler (git_ReverseFileHashes,f) ]]
+
+[[ _FetchHandler (git_UntrackedFiles,f) ]]
+
+[[ _FetchHandler (git_AddFile,c) ]]
+
+[[ _FetchHandler (git_AddChanged,c) ]]
+
+[[ _FetchHandler (git_CommitChanges,c) ]]
+
+[[ _FetchHandler (git_HardReset,c) ]]
+
+[[ _FetchHandler (git_CommitFile,c) ]]
+
+
+--> GIT | Display
+-
+[[ _FetchHandler (git_RefreshDisplay,c) ]]
+
+
+--> Git | Status
+-
+[[ _FetchHandler (git_StatusArray,f) ]]
+
+[[ _FetchHandler (git_StatusOutline,f) ]]
+
+[[ _FetchHandler (git_ConstructStatusOutline,f) ]]
+
+[[ _FetchHandler (git_FetchStatusTable,f) ]]
+
+
+--> Git | Log
+-
+[[ _FetchHandler (git_LogLinkOutline,f) ]]
+
+[[ _FetchHandler (git_LogLinkArray,f) ]]
+
+[[ _FetchHandler (git_FileLogOutline,f) ]]
+
+[[ _FetchHandler (git_FileCommitHashArray,f) ]]
+
+[[ _FetchHandler (git_HashType,f) ]]
+
+[[ _FetchHandler (git_StackHashLog,f) ]]
+
+[[ _FetchHandler (git_FileLog,f) ]]
+
+[[ _FetchHandler (git_GetRevisionHistory,f) ]]
+
+[[ _FetchHandler (git_LogFormats,f) ]]
+
+[[ _FetchHandler (git_ExtractLogMetadataArray,f) ]]
+
+
+--> GIT | List
+-
+[[ _FetchHandler (git_ListCommitHashes,f) ]]
+
+
+--> GIT | List | Tree
+-
+[[ _FetchHandler (git_List,f) ]]
+
+
+--> GIT | Treeish
+-
+[[ _FetchHandler (git_ConstructTreeish,f) ]]
+
+
+--> GIT | Execute
+-
+[[ _FetchHandler (git_ExecuteShell,c) ]]
+
+[[ _FetchHandler (git_ExecuteShellCommand,f) ]]
+
+
+--> GIT | Projects
+-
+[[ _FetchHandler (git_CloneAndFetch,c) ]]
+
+[[ _FetchHandler (git_InitFolder,c) ]]
+
+[[ _FetchHandler (git_AddEverything,c) ]]
+
+
+--> GIT | Model
+-
+[[ _FetchHandler (git_TranslateProjectName,f) ]]
+
+[[ _FetchHandler (git_ListProjectFolders,f) ]]
+
+[[ _FetchHandler (git_AddRootFolderToIndex,c) ]]
+
+[[ _FetchHandler (git_RemoveProject,c) ]]
+
+[[ _FetchHandler (git_GetProject,f) ]]
+
+[[ _FetchHandler (git_SetProject,c) ]]
+
+
+--> GIT | Checkout Folder
+-
+[[ _FetchHandler (git_FindDotGitFolder,f) ]]
+
+[[ _FetchHandler (git_GetRootFolder,f) ]]
+
+[[ _FetchHandler (git_SetRootFolder,c) ]]
+
+
+--> GIT | More
+-
+[[ _FetchHandler (git_GetProjectArray,f) ]]
+
+[[ _FetchHandler (git_SetProjectArray,c) ]]
+
+
+--> Git | Files
+-
+[[ _FetchHandler (git_SetRelativePath,c) ]]
+
+[[ _FetchHandler (git_SetFullPath,c) ]]
+
+[[ _FetchHandler (git_LocalIgnoreFile,f) ]]
+
+[[ _FetchHandler (git_GlobalIgnoreFile,f) ]]
+
+[[ _FetchHandler (git_PathToCommandLine,f) ]]
+
+
+--> Repo
+-
+[[ _FetchHandler (repo_FetchStatusOutline,f) ]]
+
+[[ _FetchHandler (repository_ConstructScriptPath,f) ]]
+
+[[ _FetchHandler (repository_SetCommitComment,c) ]]
+
+
+--> Repository | Local | Event | Helpers
+-
+[[ _FetchHandler (repository_Add,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (stack_GetIsLoaded,f) ]]
+
+[[ _FetchHandler (stack_LoadedPaths,f) ]]
+
+
+--> File
+-
+[[ _FetchHandler (file_CreateBinary,c) ]]
+
+[[ _FetchHandler (file_CreateText,c) ]]
+
+[[ _FetchHandler (file_Delete,c) ]]
+
+[[ _FetchHandler (file_IsWithinOpn,f) ]]
+
+[[ _FetchHandler (file_IsVersioned,f) ]]
+
+[[ _FetchHandler (stack_GoLocal,c) ]]
+
+[[ _FetchHandler (stack_RevertToLocalVersion,c) ]]
+
+[[ _FetchHandler (stack_SaveEdited,c) ]]
+
+[[ _FetchHandler (stack_SaveLoaded,c) ]]
+
+[[ _FetchHandler (_DisplayStackSave,pc) ]]
+
+[[ _FetchHandler (stack_CloseLoaded,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (autoCommitComment,pf) ]]

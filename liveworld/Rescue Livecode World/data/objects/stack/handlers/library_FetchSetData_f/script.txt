@@ -1,0 +1,5 @@
+function library_FetchSetData
+   -- the stored checkout array "gOPN_LibrarySets" does not store sets "none" or "all"
+   put library_FetchArray ("gOPN_LibrarySets") into modelArray
+   return modelArray
+end library_FetchSetData

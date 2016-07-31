@@ -1,0 +1,16 @@
+function xml_TreeChildNodeContents treeID, startNode, pChildName, pDelim
+    if pDelim is empty then put CR into pDelim
+    if char -1 of startNode is "/" then delete char -1 of startNode
+    put revXMLChildNames(treeID, startNode, CR, pChildName, true) into childNames
+    if item 1 of childNames = "xmlerr" then return empty
+    
+    repeat for each line childName in childNames
+        put startNode & "/" & childName into childNode
+        
+        put revXMLText(treeID, childNode) into childNodeContents
+        put revXMLNodeContents(treeID, childNode) into childNodeContents
+        put childNodeContents & pDelim after childNodeContents
+    end repeat
+    delete char -1 of childNodeContents
+    return childNodeContents
+end xml_TreeChildNodeContents

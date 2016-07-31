@@ -1,0 +1,8 @@
+function menu_MenuTextFromTitle mTitle
+   set the itemdelimiter to "|"
+   delete item - 1 of mTitle
+   if word 1 to -1 of item 1 of mTitle = "Global" then delete item 1 of mTitle
+   
+   replace " | " with " " in mTitle
+   return word 1 to -1 of mTitle
+end menu_MenuTextFromTitle

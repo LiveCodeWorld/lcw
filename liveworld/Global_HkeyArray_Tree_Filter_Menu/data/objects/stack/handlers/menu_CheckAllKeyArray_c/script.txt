@@ -1,0 +1,9 @@
+on menu_CheckAllKeyArray treeView
+   put the displayed_Array of treeView into hkeyArray
+   put array_AllNodes (hkeyArray) = keys (hkeyArray) into someBoolean
+   if someBoolean is true then
+      answer "Great, the keys of this array are all the nodes!"
+   else
+      answer "This is an old style array perhaps (as the keys do not equal all the nodes)?"
+   end if
+end menu_CheckAllKeyArray

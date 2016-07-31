@@ -1,0 +1,10 @@
+on colour_SetSwatchArray swatchName, swatchArray, pAddModifiedDate
+   if pAddModifiedDate is not false then
+      -- put date_SixDigits (the date) into modifiedDate
+      -- put modifiedDate into swatchArray ["themeItem"]["themeEditedAt"]
+   end if
+   
+   put opn_SwatchFolder(swatchName) into swatchFile
+   put arrayencode (swatchArray) into encodedArray
+   put encodedArray into url ("binfile:" & swatchFile)
+end colour_SetSwatchArray

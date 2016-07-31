@@ -1,0 +1,5 @@
+command overlayData_SetLinkArray @overlayData, linkArray, pOverlayName
+   put overlayData_GetDataArray (overlayData, pOverlayName) into dataArray
+   put linkArray into dataArray ["linkArray"]
+   overlayData_SetDataArray overlayData, dataArray, pOverlayName
+end overlayData_SetLinkArray

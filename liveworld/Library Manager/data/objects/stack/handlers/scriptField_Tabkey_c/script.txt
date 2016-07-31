@@ -1,0 +1,39 @@
+command scriptField_Tabkey selText, scriptField, pNoLibraryBehaviors
+   if pNoLibraryBehaviors is empty then put false into pNoLibraryBehaviors -- search normal heirarchy (set to true to skip library behaviors).
+   
+   put word 2 of the selectedChunk of scriptField into firstCharNum
+   put word 4 of the selectedChunk of scriptField into lastCharNum
+   put the text of scriptField into someScript
+   
+   put rev_ScriptObject() into scriptObject
+   
+   try
+      put scriptField_ConstructHkey (selText, someScript, lastCharNum) into shortHkey
+      put shortHkey,scriptObject,1 into hKey -- should probably get the full hKey even if not first (ie hNum > 1)
+      -- opn_Notify shortHKey
+      
+      switch
+         case shortHkey is empty
+            opn_Notify "It's a Revolution language term or a variable!"
+            break
+         default
+            switch
+               case the optionKey is "Down"
+                  hArray_SearchAndEdit hKey
+                  break
+               case the shiftKey is "Down"
+                  hArray_SearchHierarchyAndEdit shortHkey, scriptObject, true
+                  break
+               default
+                  scriptField_TabComplete shortHkey, firstCharNum, lastCharNum, selText, scriptObject, scriptField
+                  if the result is empty then
+                     put item 1 of shortHkey into hName
+                     put empty into pTriggerHKey
+                     hkey_DisplayHandlerKeywordIndex hName, pTriggerHKey
+                  end if
+            end switch
+      end switch
+   catch e
+      put e
+   end try
+end scriptField_Tabkey

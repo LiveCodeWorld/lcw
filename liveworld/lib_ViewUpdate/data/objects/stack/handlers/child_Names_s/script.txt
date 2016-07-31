@@ -1,0 +1,16 @@
+setprop child_Names childNames
+   replace comma with CR in childNames
+   put the long id of the target into targetObject
+   
+   -- let's check they are all there and correct
+   put child_AllNamesThere (childNames) into allOK
+   if allOK is false then return empty
+   
+   -- ok - so all there but a different order
+   put the short name of the header_Divider of targetObject & CR into topNames
+   put the short name of the footer_Divider of targetObject & CR after topNames
+   put childNames after topNames
+   
+   set the top_ControlNames of me to topNames
+   return the result
+end child_Names

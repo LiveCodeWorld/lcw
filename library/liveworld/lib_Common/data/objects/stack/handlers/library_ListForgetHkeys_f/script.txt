@@ -1,0 +1,4 @@
+function library_ListForgetHkeys
+   put library_FetchForgetArray() into allwaysFilterHkeyArray
+   return keys (allwaysFilterHkeyArray)
+end library_ListForgetHkeys

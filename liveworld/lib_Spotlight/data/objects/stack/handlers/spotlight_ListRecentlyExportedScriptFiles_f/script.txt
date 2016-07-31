@@ -1,0 +1,16 @@
+function spotlight_ListRecentlyExportedScriptFiles pSeconds
+   set the cursor to watch
+   /*
+   -- stuff that didn't work
+   -- put library_PluginFolder ("opn_Text/rev/object/", true) into someFolder
+   -- shell_BashParamEscape someFolder
+   -- put merge ("mdfind -onlyin [[someFolder]] 'kMDItemFSCreationDate >= $time.now(-[[someSeconds]])'") into someShell
+   -- put merge ("mdfind -name script.txt -onlyin [[someFolder]] 'kMDItemFSCreationDate >= $time.now(-[[someSeconds]])'") into someShell
+   -- 'kMDItemFSName == script.txt' && 
+   */
+   
+   if pSeconds is empty then put 600 into pSeconds
+   put merge ("mdfind 'kMDItemFSContentChangeDate >= $time.now(-[[pSeconds]]) && kMDItemFSName == script.txt'") into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end spotlight_ListRecentlyExportedScriptFiles

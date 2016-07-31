@@ -1,0 +1,4 @@
+command library_DeleteBackObject someObject, pSetName
+   library_DeleteObject someObject, "back", pSetName
+   return the result
+end library_DeleteBackObject

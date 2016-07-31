@@ -1,0 +1,11 @@
+function overlayData_ConstructClusterSection overlayArray
+   --  put hKeyArray_DotObjectClusters (hLinkArray, hIdArray, false, true, graphNodeType, pTargetObject) into clusterDefs
+   put false into labelNodes
+   put true into notIfEmpty
+   overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdLinkArray, dotClusterArray
+   
+   put hKeyArray_ConstructObjectIDArray (idArray) into objectIDArray
+   put overlayData_ConstructDotClusters (objectIDArray, idArray) into clusterSection
+   
+   return clusterSection
+end overlayData_ConstructClusterSection

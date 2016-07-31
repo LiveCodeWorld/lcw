@@ -1,0 +1,26 @@
+command fedwiki_DoAction actionArray, pageSlug
+   put actionArray ["type"] into actionType
+   switch actionType
+      case "edit"
+         fedwiki_ActionEdit pageSlug, actionArray
+         break
+      case "create"
+         fedwiki_ActionCreate pageSlug, actionArray
+         break
+      case "add"
+         fedwiki_ActionAdd pageSlug, actionArray
+         break
+      case "move"
+         fedwiki_ActionMove pageSlug, actionArray
+         break
+      case "remove"
+         fedwiki_ActionRemove pageSlug, actionArray
+         break
+      case "fork"
+         fedwiki_ActionFork pageSlug, actionArray
+         break
+      default
+         display_Array actionArray, ("New action" && actionType && pageSlug)
+   end switch
+   -- display_Array actionArray, actionType
+end fedwiki_DoAction

@@ -1,0 +1,7 @@
+on resizeStack
+   put the wiki_View of me into wikiView
+   if exists (wikiView) is false then pass resizeStack
+   
+   put the rect of this card into cardRect
+   set the rect of wikiView to cardRect
+end resizeStack

@@ -1,0 +1,17 @@
+getprop footer_Height
+   if the visible of the footer_View of me = false then return 0
+   switch the fluid_View of me
+      case "footer_View" -- calculate from other views
+         put the inner_Height of me into someHeight
+         subtract the header_Height of me from someHeight
+         subtract the body_Height of me from someHeight
+         subtract 2 * the vertical_Spacing of me from someHeight
+         break
+      default
+         put LocalArray ["footer_Height"] into someHeight
+   end switch
+   
+   put the footer_MinimumHeight of me into mHeight
+   put max (someHeight, mHeight) into someHeight
+   return someHeight
+end footer_Height

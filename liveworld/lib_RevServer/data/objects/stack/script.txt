@@ -1,0 +1,64 @@
+--> MetaData
+-
+name: lib_RevServer
+type: behavior
+version: 0.1
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+Most of these handlers are for comaptability with other servers. 
+Can probably trash the whole thing.
+*/
+
+
+--> libCGI
+-
+[[ _FetchHandler (libCGI_SetCookies,c) ]]
+
+[[ _FetchHandler (libCGI_Forward,c) ]]
+
+[[ _FetchHandler (OKHeaders,pf) ]]
+
+[[ _FetchHandler (libCGI_Response,c) ]]
+
+[[ _FetchHandler (CustomHeaders,pf) ]]
+
+[[ _FetchHandler (cgiRawOutput,pc) ]]
+
+[[ _FetchHandler (sendHttpError,c) ]]
+
+
+--> RevServer
+-
+[[ _FetchHandler (revserver_replaceGlobals,c) ]]
+
+[[ _FetchHandler (revserver_replacePutHeaders,c) ]]
+
+[[ _FetchHandler (revserver_fixSource,f) ]]
+
+
+--> revHTTP | File and Folder Stuff
+-
+/*
+This code may have useful stuff in it.
+It is complex and generic for a server
+We aim to replace it with lightweight customiseable stuff.
+*/
+
+[[ _FetchHandler (process_Stuff,c) ]]
+
+[[ _FetchHandler (process_File,pc) ]]
+
+[[ _FetchHandler (process_LivecodeStack,pc) ]]
+
+[[ _FetchHandler (process_TextCGI,pc) ]]
+
+
+--> Process | Utilities
+-
+
+
+[[ _FetchHandler (RevHTTPFolder,pf) ]]
+
+[[ _FetchHandler (removePSocketId,pf) ]]

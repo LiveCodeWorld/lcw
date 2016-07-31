@@ -1,0 +1,9 @@
+command stack_DeleteSubStackClones stackNameList, myStackName
+   replace comma with CR in stackNameList
+   repeat for each line toDeleteName in stackNameList
+      set the cursor to busy
+      if there is not a stack toDeleteName of stack myStackname then next repeat
+      delete stack toDeleteName of stack myStackname
+   end repeat
+   save stack myStackName
+end stack_DeleteSubStackClones

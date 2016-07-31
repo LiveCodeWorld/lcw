@@ -1,0 +1,10 @@
+command browser_Close pBrowserID
+   if pBrowserID is empty then put the browser_ID of the target into pBrowserID
+   if pBrowserID is not a number then return empty
+   
+   browser_DeleteFromRegister pBrowserID
+   if browser_Exists (pBrowserID) is true then
+      revBrowserClose pBrowserID
+   end if
+   return the result
+end browser_Close

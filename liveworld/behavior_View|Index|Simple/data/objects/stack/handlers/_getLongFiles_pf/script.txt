@@ -1,0 +1,9 @@
+private function _getLongFiles shortFiles
+   put the index_Folder of me into indexFolder  
+   repeat for each line shortFile in shortFiles
+      put indexFolder & shortFile into longFile
+      put longFile & CR after longFiles
+   end repeat
+   delete char -1 of longFiles
+   return longFiles
+end _getLongFiles

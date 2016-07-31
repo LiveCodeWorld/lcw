@@ -1,0 +1,5 @@
+function group_NameArray someGroup, nested
+   -- was "object_GroupNameArray"
+   group_SetNameArray someGroup, groupNameArray, orderedNames, nested
+   return groupNameArray
+end group_NameArray

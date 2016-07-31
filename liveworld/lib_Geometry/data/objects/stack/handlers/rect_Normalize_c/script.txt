@@ -1,0 +1,6 @@
+command rect_Normalize @someRect, outsideRect
+   put max (item 1 of someRect, item 1 of outsideRect) into item 1 of someRect
+   put max (item 2 of someRect, item 2 of outsideRect) into item 2 of someRect
+   put min (item 3 of someRect, item 3 of outsideRect) into item 3 of someRect
+   put min (item 4 of someRect, item 4 of outsideRect) into item 4 of someRect
+end rect_Normalize

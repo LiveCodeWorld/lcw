@@ -1,0 +1,5 @@
+command menu_SetTitlePath mTitlePath
+   -- could be called "menu_SetSentTitlePath"
+   global gTemp_ActiveMenuArray
+   put mTitlePath into gTemp_ActiveMenuArray ["sent"]["mTitlePath"]
+end menu_SetTitlePath

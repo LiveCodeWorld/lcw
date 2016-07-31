@@ -1,0 +1,5 @@
+getprop viewBrowser_TitleView
+   put the viewBrowser_DataTree of me into dataTree
+   put the long id of grp "Title" of dataTree into titleView
+   return titleView
+end viewBrowser_TitleView

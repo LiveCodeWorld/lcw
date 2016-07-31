@@ -1,0 +1,5 @@
+getprop some_Props [mTarget]
+   -- put the name of mTarget
+   put the view_PropertyMenu of mTarget into viewPropertyMenu
+   return viewPropertyMenu
+end some_Props

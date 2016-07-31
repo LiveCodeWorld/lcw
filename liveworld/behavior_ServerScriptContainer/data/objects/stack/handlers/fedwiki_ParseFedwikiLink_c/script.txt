@@ -1,0 +1,28 @@
+command fedwiki_ParseFedwikiLink droppedURL, dropJSON
+   -- http://plugin.fedwiki.org/test-transport.html
+   -- put fedwiki_FetchTitle (droppedURL) into pageTitle -- does not work for ghost pages
+   put fedwiki_FetchSitemapArray (droppedURL) into someArray
+   if someArray is an array then -- let's test it
+   set the itemDelimiter to "/"
+   put item -1 of droppedURL into pageSlug
+   replace ".html" with empty in pageSlug
+   
+   -- put pageSlug into pageTitle
+   -- replace "-" with space in pageTitle
+   -- put text_InitialCaps (pageTitle) into pageTitle
+   -- put fedwikipedia_FetchPageArray (pageTitle) into fedwikiPageArray
+   
+   put fedwiki_FetchWikipediaSummaryPageArray (pageSlug) into fedwikiPageArray
+   if fedwikiPageArray is an array then
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   else
+   put "The Wikipidia page for" && pageSlug && "is not one that I can parse." & CR & CR & dropJSON into someInfo
+   put fedwiki_ConstructErrorJSON (someInfo) into someJSON
+end if
+   fedwiki_ReturnJSON pageJSON
+   else
+   put "The web page for url" && droppedURL && "is not one that I can parse." & CR & CR & dropJSON into someInfo
+   put fedwiki_ConstructErrorJSON (someInfo) into someJSON
+   fedwiki_ReturnJSON someJSON
+end if
+end fedwiki_ParseFedwikiLink

@@ -1,0 +1,8 @@
+function menu_TableFromHkeys hKeys
+   repeat for each line hKey in hKeys
+      put menu_DefaultTableLine (hKey) into mTableLine
+      put mTableLine & CR after mTable
+   end repeat
+   delete char -1 of mTable
+   return mTable
+end menu_TableFromHkeys

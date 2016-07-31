@@ -1,0 +1,31 @@
+function file_GetRelativePath someFileOrFolder, baseFolder, @commonPath
+   put the itemdelimiter into originalDelim
+   set the itemdelimiter to "/"
+   put empty into commonPath
+   put someFileOrFolder into relativePath
+   put 0 into itemNum
+   repeat with itemNum = 1 to the number of items of baseFolder
+      put item itemNum of baseFolder into basePathComponent
+      put item itemNum of someFileOrFolder into somePathComponent
+      
+      if somePathComponent is basePathComponent then
+         next repeat
+      else
+         subtract 1 from itemNum
+         exit repeat
+      end if
+   end repeat
+   
+   put item 1 to itemNum of someFileOrFolder into commonPath
+   delete item 1 to itemNum of relativePath
+   
+   delete item 1 to itemNum of baseFolder
+   put the number of items of baseFolder into upBits
+   repeat upBits
+      put "../" before relativePath
+   end repeat
+   
+   set the itemdelimiter to originalDelim
+   put "/" after commonpath
+   return relativePath
+end file_GetRelativePath

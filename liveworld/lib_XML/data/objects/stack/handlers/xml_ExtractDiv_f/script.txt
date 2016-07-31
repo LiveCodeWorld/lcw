@@ -1,0 +1,6 @@
+function xml_ExtractDiv xHtml, divID, pStartNode
+    put revCreateXMLTree (xHtml, true, true, false) into xmlID
+    put xml_ExtractDivFromID (xmlID, divID, pStartNode) into someXML
+    revDeleteXmlTree xmlID
+    return someXML
+end xml_ExtractDiv

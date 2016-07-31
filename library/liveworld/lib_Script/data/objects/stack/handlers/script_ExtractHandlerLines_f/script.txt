@@ -1,0 +1,7 @@
+function script_ExtractHandlerLines someScript, scriptObject
+   -- best get rid of?
+   -- replace "[" with " [ " in someScript	#  -- hack ???
+   
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   return handlerArray ["handlerLines"]
+end script_ExtractHandlerLines

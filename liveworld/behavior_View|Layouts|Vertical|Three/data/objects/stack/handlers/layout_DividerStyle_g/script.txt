@@ -1,0 +1,11 @@
+getprop layout_DividerStyle
+   -- return the divider_Style of the header_Divider of me
+   lock messages
+   put the layout_DividerStyle of me into someStyle
+   unlock messages
+   if someStyle is empty then
+      put "icon" into someStyle
+      set the layout_DividerStyle of me to someStyle
+   end if
+   return someStyle
+end layout_DividerStyle

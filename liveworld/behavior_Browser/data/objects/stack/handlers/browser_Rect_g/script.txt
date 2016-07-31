@@ -1,0 +1,9 @@
+getprop browser_Rect [someRect]
+   put the long id of the target into tObject
+   put the browser_ID of tObject into browserID
+   if browserID is empty then
+      return the browser_DefaultRect [someRect] of tObject  -- a default if the browser is not open
+   else
+      return revBrowserGet (browserID, "rect")   -- return actual rect of displayed browser instance
+   end if
+end browser_Rect

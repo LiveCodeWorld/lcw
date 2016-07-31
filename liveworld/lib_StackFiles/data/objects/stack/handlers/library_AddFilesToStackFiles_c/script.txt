@@ -1,0 +1,6 @@
+command library_AddFilesToStackFiles stackPaths, pAskAdd
+   put library_StackFileStack() into libraryStackFileStack
+   stackFile_AddStackPaths stackPaths, libraryStackFileStack, pAskAdd
+   put the result into stackFileTable
+   return stackFileTable
+end library_AddFilesToStackFiles

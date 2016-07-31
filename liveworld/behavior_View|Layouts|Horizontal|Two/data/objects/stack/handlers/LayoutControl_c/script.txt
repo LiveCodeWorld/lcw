@@ -1,0 +1,60 @@
+on LayoutControl pRect
+   if the long id of the target is not the long id of me then return empty -- this is important for nested datagrids at the moment.
+   if pRect is empty then put the the rect of me into pRect
+   
+   put the left_View of me into leftView
+   if exists (leftView) is false then return false
+   put the right_View of me into rightView
+   if exists (rightView) is false then return false
+   
+   put the vertical_Divider of me into verticalDividerView
+   
+   put the inner_rect [pRect] of me into innerRect
+   
+   switch
+      case the visible of leftView is false
+         put innerRect into leftViewRect
+         put innerRect into rightViewRect
+         put innerRect into verticalDividerRect
+         set the visible of verticalDividerView to false
+         break
+      case the visible of rightView is false
+         put innerRect into leftViewRect
+         put innerRect into rightViewRect
+         put innerRect into verticalDividerRect
+         set the visible of verticalDividerView to false
+         break
+      default -- they are both visible
+         set the visible of verticalDividerView to true
+         
+         put the horizontal_Spacing of me into viewSpacing
+         put item 3 of pRect - item 1 of pRect into newLayoutWidth
+         
+         put layout_GetLeftViewWidth (newLayoutWidth, leftView, rightView, verticalDividerView) into leftViewWidth
+         
+         -- left_View rect
+         put innerRect into leftViewRect
+         put item 1 of leftViewRect + leftViewWidth into leftViewRight
+         put leftViewRight into item 3 of leftViewRect
+         
+         -- vertical_Divider Rect
+         put innerRect into verticalDividerRect
+         put leftViewRight into item 1 of verticalDividerRect
+         put leftViewRight + viewSpacing into rightViewLeft
+         put rightViewLeft into item 3 of verticalDividerRect
+         
+         -- right_View rect
+         put innerRect into rightViewRect
+         put rightViewLeft into item 1 of rightViewRect
+         
+         put leftViewWidth into LocalArray ["lastLeft"]
+         put newLayoutWidth into LocalArray ["lastTotalWidth"]
+   end switch
+   
+   -- Set Rects
+   lock screen
+   set the rect of leftView to leftViewRect
+   set the view_Rect of verticalDividerView to verticalDividerRect -- to rest locals for stability hack
+   set the rect of rightView to rightViewRect
+   unlock screen   
+end LayoutControl

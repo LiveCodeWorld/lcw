@@ -1,0 +1,5 @@
+command overlayData_SetGetPropStyle @dotGroupStyleArray
+   put "grey50" into dotGroupStyleArray ["g"]["node_StyleArray"]["fillcolor"]
+   put "white" into dotGroupStyleArray ["g"]["node_StyleArray"]["color"]
+   put "filled" into dotGroupStyleArray ["g"]["node_StyleArray"]["style"]
+end overlayData_SetGetPropStyle

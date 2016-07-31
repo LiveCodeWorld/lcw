@@ -1,0 +1,9 @@
+command dot_StripGraphSize @dotText
+   put dot_GetGraphHeader (dotText) into dotHeader
+   put dot_GraphSectionToArray (dotHeader) into headerArray
+   delete local headerArray ["bb"]
+   delete local headerArray ["size"]
+   put dot_HeaderFromArrays (headerArray) into newHeader
+   dot_SetHeader dotText, newHeader
+   return dotText
+end dot_StripGraphSize

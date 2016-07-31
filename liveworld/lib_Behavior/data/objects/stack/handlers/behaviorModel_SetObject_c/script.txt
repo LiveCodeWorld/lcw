@@ -1,0 +1,5 @@
+command behaviorModel_SetObject bName, behaviorObject
+   put the rugged_ID of behaviorObject into behaviorObject
+   behaviorModel_SetRecordValue "ruggedID", bName, behaviorObject
+   return the result
+end behaviorModel_SetObject

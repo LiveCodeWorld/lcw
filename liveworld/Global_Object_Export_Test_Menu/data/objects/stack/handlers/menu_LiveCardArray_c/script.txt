@@ -1,0 +1,5 @@
+on menu_LiveCardArray scriptObject
+   put the card_Array of scriptObject into someArray
+   objectArray_StripScripts someArray
+   display_Array someArray, "the card_Array"
+end menu_LiveCardArray

@@ -1,0 +1,4 @@
+on menu_RevealLibraryFolder
+   put library_StandardFolder() into opnLibraryFolder
+   finder_Reveal opnLibraryFolder
+end menu_RevealLibraryFolder

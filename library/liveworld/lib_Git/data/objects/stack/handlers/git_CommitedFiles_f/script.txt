@@ -1,0 +1,22 @@
+function git_CommitedFiles commitHash, pHashOutline
+   -- put merge("git diff --name-only [[commitHash]]^ [[commitHash]]") into someShell
+   put "git show --name-status --format=%b" && commitHash into someShell
+   put git_ExecuteShellCommand(someShell) into logText
+   -- display_Lines logText
+   
+   repeat for each line relativeFile in logText
+      put word 1 of relativeFile into modType
+      if modType is among the items of "M,A,D" then
+         delete word 1 of relativeFile
+         if pHashOutline is true then
+            put kwote(commitHash & ":" & relativeFile) into treeish
+            put git_BlobHashFromTreeish (treeish) into blobHash
+            put html_ConstructNameLink(relativeFile, blobHash) & CR after commitedFiles
+         else
+            put relativeFile & CR after commitedFiles
+         end if
+      end if
+   end repeat
+   delete char -1 of commitedFiles
+   return commitedFiles
+end git_CommitedFiles

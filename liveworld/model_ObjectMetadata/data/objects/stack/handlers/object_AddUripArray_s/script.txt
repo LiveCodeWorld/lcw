@@ -1,0 +1,9 @@
+setprop object_AddUripArray uRipArrayToAdd
+   put the customproperties ["uRIP"] of the target into uRipArray
+   -- union uRipArrayToAdd with oldURipArray -- does not check contents
+   repeat for each key someProp in uRipArrayToAdd
+      put uRipArrayToAdd [someProp] into uRipArray [someProp] 
+   end repeat
+   set the customproperties ["uRIP"] of the target to uRipArray
+   return uRipArray
+end object_AddUripArray

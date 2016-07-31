@@ -1,0 +1,4 @@
+command script_JustArchived scriptObject
+   if repository_GetType() = "git" then
+   end if
+end script_JustArchived

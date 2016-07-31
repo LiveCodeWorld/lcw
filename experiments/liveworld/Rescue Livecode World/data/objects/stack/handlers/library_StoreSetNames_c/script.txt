@@ -1,0 +1,15 @@
+command library_StoreSetNames ruggedObject, libType, setNames
+   put library_FetchSetData() into modelArray
+   put keys(modelArray) into otherSetNames
+   -- add
+   repeat for each line setName in setNames
+      put empty into modelArray [setName]["data"][libType][ruggedObject]
+      line_Delete setName, otherSetNames
+   end repeat
+   -- remove from the rest
+   repeat for each line setName in otherSetNames
+      delete variable modelArray [setName]["data"][libType][ruggedObject]
+   end repeat
+   library_StoreSetData modelArray
+   return modelArray
+end library_StoreSetNames

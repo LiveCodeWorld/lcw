@@ -1,0 +1,8 @@
+on menu_SwitchLocalBranch localBranchName
+   -- TO switch TO ANOTHER BRANCH
+   -- The state of your file system will change after executing this command.
+   
+   put "git checkout" && kwote(localBranchName) into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   opn_notify shellResult, true
+end menu_SwitchLocalBranch

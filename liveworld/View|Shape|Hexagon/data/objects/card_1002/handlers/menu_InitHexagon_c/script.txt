@@ -1,0 +1,7 @@
+on menu_InitHexagon sHexagon
+   put the rect of sHexagon into oRect
+   lock screen
+   dispatch "hexagon_InitPoints" to sHexagon
+   -- dispatch "LayoutControl" to sHexagon with oRect
+   unlock screen
+end menu_InitHexagon

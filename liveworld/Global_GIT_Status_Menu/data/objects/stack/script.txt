@@ -1,0 +1,69 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Status_Menu
+type: controller
+copyright: David Bovill
+license: GPLv3
+version: 0.1
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_Title,g) ]]
+
+
+--> Global | GIT | Status | Menu
+-
+[[ _FetchHandler (menu_GitDocumentation,c) ]]
+
+[[ _FetchHandler (menu_Choices,g) ]]
+
+[[ _FetchHandler (menu_DisplayStatus,c) ]]
+
+[[ _FetchHandler (menu_AddAllUntracked,c) ]]
+
+[[ _FetchHandler (menu_StageThenCommit,c) ]]
+
+[[ _FetchHandler (menu_AddChangesToStage,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_PushCurrentBranch,c) ]]
+
+[[ _FetchHandler (menu_Pull,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Stash,c) ]]
+
+[[ _FetchHandler (menu_CompactGit,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Git,c) ]]
+
+[[ _FetchHandler (submenu_GitProjects,c) ]]
+
+[[ _FetchHandler (submenu_GitSettings,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Development,c) ]]
+
+
+--> Tree | GIT | Menu | Props
+-
+[[ _FetchHandler (some_Names,g) ]]
+
+[[ _FetchHandler (search_Term,g) ]]
+
+[[ _FetchHandler (search_Term,s) ]]

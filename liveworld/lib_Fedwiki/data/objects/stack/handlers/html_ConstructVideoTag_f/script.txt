@@ -1,0 +1,24 @@
+function html_ConstructVideoTag videoURL, pMediaType, pVideoWidth, pShowControls, pPosterImageFile, pFallbackHtml
+   -- this is a single source video tag
+   if pFallbackHtml is empty then put "This is fallback content to display for user agents that do not support the video tag." into pFallbackHtml
+   
+   put "<video" into someHTML
+   put space & "src=" & quote & videoURL & quote after someHTML
+   switch word 1 of pMediaType
+      case "webm"
+         put space & "type='video/webm'" after someHTML
+         break
+      case "mp4"
+         put  space & "type='video/mp4'" after someHTML
+   end switch
+   
+   if pVideoWidth is not empty then put space & "width=" & quote & pVideoWidth & quote after someHTML
+   if pShowControls is not false then put space & "controls" after someHTML
+   if pPosterImageFile is not empty then put space & "poster=" & quote & pPosterImageFile & quote after someHTML
+   put ">" after someHTML
+   
+   put pFallbackHtml after someHTML
+   put "</video>" after someHTML
+   
+   return someHTML
+end html_ConstructVideoTag

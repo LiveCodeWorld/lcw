@@ -1,0 +1,9 @@
+getprop menu_ReIndex
+   /*
+   Message execution error:
+   Error description: Array: bad index expression
+   */
+   put the stack_Object of the target into stackObject
+   put search_StackForResults (stackObject, "script_GetSetHack") into mTitleToControllerArray
+   return mTitleToControllerArray
+end menu_ReIndex

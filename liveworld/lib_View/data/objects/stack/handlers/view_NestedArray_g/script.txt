@@ -1,0 +1,10 @@
+getprop view_NestedArray
+   local propertyArray
+   put the long id of the target into targetObject
+   view_SearchNested targetObject, propertyArray, someOutline, 0
+   delete char -1 of someOutline
+   put the result into objectArray
+   put objectArray into nestedArray ["manifest"]
+   put propertyArray into nestedArray ["@prop"]
+   return nestedArray
+end view_NestedArray

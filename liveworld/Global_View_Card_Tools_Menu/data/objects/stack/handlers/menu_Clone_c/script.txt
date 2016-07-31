@@ -1,0 +1,5 @@
+on menu_Clone someView
+   put the stack_Name of someView into stackName
+   stack_Clone stackName
+   put it into clonedStack
+end menu_Clone

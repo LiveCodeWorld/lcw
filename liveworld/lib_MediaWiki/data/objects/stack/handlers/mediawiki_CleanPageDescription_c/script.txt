@@ -1,0 +1,5 @@
+command mediawiki_CleanPageDescription @pageDescription, @infoBoxArray
+   put mediawikia_ExtractInfobox (pageDescription) into infoBox
+   put mediawiki_ConvertInfoBox (infoBox) into infoBoxArray
+   fedwikipedia_CleanLine pageDescription
+end mediawiki_CleanPageDescription

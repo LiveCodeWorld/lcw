@@ -1,0 +1,6 @@
+on menu_SpotlightFileInfo scriptObject
+   put the stack_Object of scriptObject into stackObject
+    put the filename of stackObject into someFile
+    put spotlight_GetFileInfo (someFile) into stackInfo
+    display_Lines stackInfo, "Spotlight file info for" && stackObject
+end menu_SpotlightFileInfo

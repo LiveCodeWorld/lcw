@@ -1,0 +1,4 @@
+function trait_GetNegativeLabel chapterArray
+   put chapterArray ["tableArray"]["theader"][2][3] into positiveTrait
+   return positiveTrait
+end trait_GetNegativeLabel

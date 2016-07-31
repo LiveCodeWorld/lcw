@@ -1,0 +1,5 @@
+function digitalocean_GetDomainArray oceanDomainName, pDomainInfoArray
+   put digitalocean_GetDomainNameArray (pDomainInfoArray) into oceanDomainNameArray
+   put oceanDomainNameArray [oceanDomainName] into domainArray
+   return domainArray
+end digitalocean_GetDomainArray

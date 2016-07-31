@@ -1,0 +1,14 @@
+command display_RemoveSelectedShortFilesFromUsed indexView   
+   put the displayed_Project of indexView into projectName
+   put the selected_Index of indexView into shortFiles
+   put the index_Folder of indexView into indexFolder
+   
+   repeat for each line shortFile in shortFiles
+      put indexFolder & shortFile into longStackFile
+      put the name of stack longStackFile into stackObject
+      
+      stop using stackObject 
+      library_DeleteUsedStack stackObject, projectName
+   end repeat
+   display_ProjectArray
+end display_RemoveSelectedShortFilesFromUsed

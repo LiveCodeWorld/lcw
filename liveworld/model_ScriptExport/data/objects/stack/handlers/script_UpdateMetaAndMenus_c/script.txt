@@ -1,0 +1,11 @@
+command script_UpdateMetaAndMenus scriptObject, someScript
+   -- update the extensive metadata stored in gHkey_Array
+   object_AddToGlobalArray scriptObject
+   
+   -- let's fix and index the menus (may have been done above?)
+   put the script_MenuTitleTableArray of scriptObject into mTitleTableArray      
+   menu_SetDataArray scriptObject, mTitleTableArray
+   
+   -- finally let's set the uRipArray
+   script_UpdateUrip scriptObject, someScript
+end script_UpdateMetaAndMenus

@@ -1,0 +1,4 @@
+on menu_Clone someView
+   put the stack_Name of someView into stackName
+   clone stack stackName
+end menu_Clone

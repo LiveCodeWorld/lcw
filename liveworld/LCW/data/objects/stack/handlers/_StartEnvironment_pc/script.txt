@@ -1,0 +1,14 @@
+private command _StartEnvironment
+   _CreateMenuButton
+   
+   _KnowStacks
+   _LoadGlobals
+   _StartUsed
+   
+   bash_AddSystemPathsToPATH
+   
+   -- how do we know which project to load?
+   _LoadAfterUsingLibraries "default"
+   
+   return the result
+end _StartEnvironment

@@ -1,0 +1,5 @@
+command menu_SetTargetObject targetObject
+   -- the target clicked on by the user
+   global gTemp_ActiveMenuArray
+   put targetObject into gTemp_ActiveMenuArray ["top"]["targetObject"]
+end menu_SetTargetObject

@@ -1,0 +1,4 @@
+setprop index_Folder indexFolder
+   text_AddTrailing indexFolder, slash
+   put indexFolder into LocalArray ["index_Folder"]
+end index_Folder

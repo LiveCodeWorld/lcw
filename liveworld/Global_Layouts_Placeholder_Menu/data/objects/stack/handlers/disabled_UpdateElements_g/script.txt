@@ -1,0 +1,8 @@
+getprop disabled_UpdateElements [mTarget]
+   put the layout_Elements of mTarget into layoutElements
+   if layoutElements is empty then
+      return true
+   else
+      return false
+   end if
+end disabled_UpdateElements

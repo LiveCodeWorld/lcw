@@ -1,0 +1,15 @@
+setprop svg_File [isFluid] svgPath
+   put "file:" & svgPath into svgURL
+   put url svgURL into svgXML
+   if isFluid is true then
+      svg_SetDimensions svgXML, "100%", "100%"
+   end if
+   
+   put svgPath into svgTitle
+   put svg_GetHTMLTemplate() into htmlTemplate
+   put merge (htmlTemplate) into someHtml
+   
+   set the htmltext of me to someHtml
+   put svgURL into LocalArray ["svg_URL"]
+   return someHtml
+end svg_File

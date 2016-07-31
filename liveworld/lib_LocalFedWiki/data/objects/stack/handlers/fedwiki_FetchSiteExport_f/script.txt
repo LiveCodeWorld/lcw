@@ -1,0 +1,6 @@
+function fedwiki_FetchSiteExport fedwikiDomain
+   -- load if you want better responsiveness
+   put fedwiki_JsonSiteExportUrl (fedwikiDomain) into someUrl
+   put url someUrl into someJSON
+   return someJSON
+end fedwiki_FetchSiteExport

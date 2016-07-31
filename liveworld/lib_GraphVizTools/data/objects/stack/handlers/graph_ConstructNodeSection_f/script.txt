@@ -1,0 +1,28 @@
+function graph_ConstructNodeSection nodeIndex, onlyLinked
+    local nodeSection, nodeLinks
+    
+    put the node_View of me into nodeView
+    repeat for each line someNodeID in nodeIndex
+        put dot_QuoteNode(someNodeID) into safeNodeID
+        put the node_FrontLinks [someNodeID] of nodeView into nodeFrontLinks
+        put the node_BackLinks [someNodeID] of nodeView into nodeBackLinks
+        if onlyLinked is true and nodeFrontLinks is empty and nodeBackLinks is empty then next repeat
+        
+        put graph_ConstructNodeLine(safeNodeID, nodeView, onlyLinked) into nodeLine
+        put nodeLine & CR after nodeSection
+         
+        -- for now lets put the links here
+        repeat for each line nodeFrontLink in nodeFrontLinks
+            put dot_QuoteNode(nodeFrontLink) into safeFrontNodeID
+            put safeNodeID && "->" && safeFrontNodeID & ";" & CR after nodeLinks
+        end repeat
+    end repeat
+    delete last char of nodeLinks
+     
+    if nodeLinks is not empty then
+        put CR & nodeLinks after nodeSection
+    else
+        delete last char of nodeSection
+    end if
+    return nodeSection  
+end graph_ConstructNodeSection

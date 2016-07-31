@@ -1,0 +1,21 @@
+function sandbox_ConstructSectionFragment pageTitle, pSectionNum
+   -- pSectionNum = 0 returns the summary section
+   -- /w/api.php?action=parse&format=json&page=Spacecraft&redirects=1&prop=text%7Cimages%7Cwikitext%7Cexternallinks%7Clinks%7Ccategories%7Csections&section=0&mobileformat=1&mainpage=1
+   put "/w/api.php?action=parse&format=json&page=" into sandBoxFragment
+   
+   text_Utf8Encode pageTitle
+   put urlencode (pageTitle) after sandBoxFragment
+   
+   -- put "&prop=text|images|wikitext" after sandBoxFragment
+   put "&prop=extracts|info|pageprops|text|wikitext|images|revid" after sandBoxFragment
+   put "|pageterms"  after sandBoxFragment
+   -- put "|categories" after sandBoxFragment
+   put "|sections" after sandBoxFragment
+   
+   if pSectionNum is a number then
+      put "&section=" & pSectionNum after sandBoxFragment
+   end if
+   put "&redirects" after sandBoxFragment
+   put "&mobileformat=1&mainpage=1" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructSectionFragment

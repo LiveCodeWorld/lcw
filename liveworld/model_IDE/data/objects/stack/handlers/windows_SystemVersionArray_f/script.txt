@@ -1,0 +1,19 @@
+function windows_SystemVersionArray
+   /*
+   on Windows systems, the systemVersion returns the internal Windows version designation.
+      The internal designations for several windows versions are as follows:
+      
+      get word 2 of the systemversion
+      if it >= 4.1 and it < 4.9 then answer "Windows 98!"
+      */
+      
+      put "Windows 95" into windowsVersionArray ["Windows 4.0"]
+      put "Windows 98" into windowsVersionArray ["Windows 4.10"] -- (may return other numbers)
+      put "Windows Me" into windowsVersionArray ["Windows 4.90"] -- (may return other numbers)
+      put "Windows NT 4" into windowsVersionArray ["NT 4.0"]
+      put "Windows 2000" into windowsVersionArray ["NT 5.0"]
+      put "Windows XP" into windowsVersionArray ["NT 5.1"]
+      put "Windows Vista" into windowsVersionArray ["NT 6.0"]
+      
+      return windowsVersionArray
+end windows_SystemVersionArray

@@ -1,0 +1,9 @@
+getprop audio_Inputs [imageView]
+   put revCaptureListAudioInputs() into audioInputs
+   if audioInputs is empty then
+      return "default,none"
+   else
+      put "default,none,-" & CR before audioInputs
+      return audioInputs
+   end if
+end audio_Inputs

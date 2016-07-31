@@ -1,0 +1,7 @@
+function script_ExtractGlobalTitles someScript, suiteType
+   put script_GetSuiteTitles (someScript) into suiteTitles
+   put "Global | *" into someFilter
+   if suiteType is not empty then put space & "|" && suiteType after someFilter
+   filter suiteTitles with someFilter
+   return suiteTitles
+end script_ExtractGlobalTitles

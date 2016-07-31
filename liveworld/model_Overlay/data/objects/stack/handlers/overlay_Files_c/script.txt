@@ -1,0 +1,15 @@
+command overlay_Files overlayFolder, @dotFile, @imageFile, @cmapxFile, @xdotFile, @dotArrayFile, pOverlayName, pImageFormat
+   if pOverlayName is empty then
+      put overlay_Getdata (overlayFolder) into overlayData
+      overlayData_NormalizeName pOverlayName, overlayData
+   end if
+   folder_Format overlayFolder
+   
+   overlay_ShortFiles pOverlayName, shortDotFile, shortImageFile, shortCmapxFile, shortXdotFile, shortDotArrayFile, pImageFormat
+   
+   put overlayFolder & shortDotArrayFile into dotArrayFile
+   put overlayFolder & shortDotFile into dotFile
+   put overlayFolder & shortImageFile into imageFile
+   put overlayFolder & shortCmapxFile into cmapxFile
+   put overlayFolder & shortXdotFile into xdotFile
+end overlay_Files

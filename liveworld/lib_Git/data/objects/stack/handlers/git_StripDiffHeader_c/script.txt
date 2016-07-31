@@ -1,0 +1,38 @@
+command git_StripDiffHeader @unifiedDiff, @headerA   
+   /* -p option produces is slightly different from the traditional diff format.
+   1.  It is preceded with a "git diff" header, that looks like this:  diff --git a/file1 b/file2
+   The a/ and b/ filenames are the same unless rename/copy is involved.
+   */
+   
+   put line 1 of unifiedDiff into diffCommand
+   put diffCommand into headerA ["diff command"]
+   delete line 1 of unifiedDiff
+   
+   /*
+   2.  It is followed by one or more extended header lines:
+   
+   old mode <mode>
+   new mode <mode>
+   deleted file mode <mode>
+   new file mode <mode>
+   copy from <path>
+   copy to <path>
+   rename from <path>
+   rename to <path>
+   similarity index <number>
+   dissimilarity index <number>
+   index <hash>..<hash> <mode>
+   */
+   repeat
+      put line 1 of unifiedDiff into someLine
+      if word 1 of someLine = "---" then exit repeat
+      
+      put word 1 of someLine into gitProp
+      put word 2 to -1 of someLine into gitValue
+      put gitValue into headerA [gitProp]
+      delete line 1 of unifiedDiff
+      if unifiedDiff is empty then return false -- should not reach this!
+   end repeat
+   
+   diff_StripHeader unifiedDiff, headerA
+end git_StripDiffHeader

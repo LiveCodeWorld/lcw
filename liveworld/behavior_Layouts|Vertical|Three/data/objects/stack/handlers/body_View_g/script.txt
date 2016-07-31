@@ -1,0 +1,4 @@
+getprop body_View
+   if exists (BodyView) is false then view_IndexChildren
+   return BodyView
+end body_View

@@ -1,0 +1,307 @@
+--> MetaData
+-
+license: GPLv3
+name: View|Layout|Vertical|Three
+type: view behavior
+version: 0.8
+license: GPLv3
+
+
+/*
+This view is an update of older the "View|Layouts|Vertical|3-way" view.
+
+It is work in progress.
+Still (I think) need to simplify and:
+
+*  remove references to back_Property
+*  remove references to view_DisplayProperty
+
+as these overly complicate things.
+Instead the aim is to move forwards with chained behaviors, so we can separate a minimal read-only mode,
+and an authoring mode with a bunch of options we can turn on by adding the authroing behavior.
+
+We work out which control is which by the following method.
+
+1)  We get all the childControlIDs of the layout_View
+2)  We remove the named header_Divider and footer_Divder
+3)  We allocate HeaderView to the top id in what's left of the childControlIDs 
+4)  And the second for the body_View and third for the footer_View
+
+See the view_IndexChildren handler for details
+
+The consequence of this is that changing the order / layer of the views and view_IndexChildren
+effectively swaps the views around. This is a feature and not a bug :)
+*/
+
+
+--> Variables
+-
+local LocalArray
+local HeaderView, BodyView, FooterView
+
+
+--> Initialisation
+-
+[[ _FetchHandler (view_IndexChildren,c) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (preOpenControl,c) ]]
+
+[[ _FetchHandler (refresh,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (vertical_Layout,g) ]]
+
+[[ _FetchHandler (layout_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (header_View,g) ]]
+
+[[ _FetchHandler (body_View,g) ]]
+
+[[ _FetchHandler (footer_View,g) ]]
+
+[[ _FetchHandler (header_Divider,g) ]]
+
+[[ _FetchHandler (footer_Divider,g) ]]
+
+
+--> Top | Children
+-
+[[ _FetchHandler (child_Names,g) ]]
+
+[[ _FetchHandler (child_Names,s) ]]
+
+[[ _FetchHandler (layout_Children,g) ]]
+
+[[ _FetchHandler (child_AllNamesThere,pf) ]]
+
+
+--> Top | controls
+-
+[[ _FetchHandler (top_Controls,g) ]]
+
+[[ _FetchHandler (top_ControlName,g) ]]
+
+[[ _FetchHandler (top_Control,g) ]]
+
+[[ _FetchHandler (top_ControlNames,g) ]]
+
+[[ _FetchHandler (top_ControlNames,s) ]]
+
+[[ _FetchHandler (bottom_ControlName,g) ]]
+
+[[ _FetchHandler (bottom_ControlName,s) ]]
+
+
+-- getprop layout_Elements
+if the long id of the target is not the long id of me then pass layout_Elements
+
+repeat for each item objectRef in "header_View,body_View,footer_View"
+   put the objectRef of me into someView
+   put the layout_Elements of someView into viewElements
+   if viewElements is empty then
+      put someView & CR after layoutElements
+   else
+      put viewElements & CR after layoutElements
+   end if
+end repeat
+delete char -1 of layoutElements
+return layoutElements
+end layout_Elements
+
+-- getprop placeholder_Num
+put 0 into placeholderNum
+repeat for each line viewChild in the view_Children of me
+   put the view_Name of viewChild into viewChildName
+   if viewChildName = "View|Layout|Placeholder" then
+      add 1 to placeholderNum
+   end if
+end repeat
+return placeholderNum
+end placeholder_Num
+
+
+--> Layout | Styles
+-
+[[ _FetchHandler (layout_Style,g) ]]
+
+[[ _FetchHandler (layout_Style,s) ]]
+
+[[ _FetchHandler (layout_Styles,g) ]]
+
+[[ _FetchHandler (layout_DividerStyle,g) ]]
+
+[[ _FetchHandler (layout_DividerStyle,s) ]]
+
+[[ _FetchHandler (layout_DividerStyles,g) ]]
+
+
+--> Props | Geometry | Spacing
+-
+[[ _FetchHandler (layout_Spacing,g) ]]
+
+[[ _FetchHandler (layout_Spacing,s) ]]
+
+
+[[ _FetchHandler (vertical_Spacing,g) ]]
+
+[[ _FetchHandler (vertical_Spacing,s) ]]
+
+
+--> Props | Geometry | Defaults
+-
+[[ _FetchHandler (header_DefaultHeight,g) ]]
+
+[[ _FetchHandler (body_DefaultHeight,g) ]]
+
+[[ _FetchHandler (footer_DefaultHeight,g) ]]
+
+
+--> Props | Geometry
+-
+[[ _FetchHandler (title_Height,g) ]]
+
+[[ _FetchHandler (title_Height,s) ]]
+
+[[ _FetchHandler (header_Height,g) ]]
+
+[[ _FetchHandler (header_Height,s) ]]
+
+[[ _FetchHandler (body_Height,g) ]]
+
+[[ _FetchHandler (body_Height,s) ]]
+
+[[ _FetchHandler (footer_Height,g) ]]
+
+[[ _FetchHandler (footer_Height,s) ]]
+
+
+--> Layout | Props
+-
+[[ _FetchHandler (title_Visible,g) ]]
+
+[[ _FetchHandler (title_Visible,s) ]]
+
+[[ _FetchHandler (header_Visible,g) ]]
+
+[[ _FetchHandler (header_Visible,s) ]]
+
+[[ _FetchHandler (body_Visible,g) ]]
+
+[[ _FetchHandler (body_Visible,s) ]]
+
+[[ _FetchHandler (footer_Visible,g) ]]
+
+[[ _FetchHandler (footer_Visible,s) ]]
+
+
+--> Props | Children
+-
+[[ _FetchHandler (visible_Status,g) ]]
+
+[[ _FetchHandler (visible_Status,s) ]]
+
+
+--> Props | Geometry | Fluid
+-
+[[ _FetchHandler (fluid_View,g) ]]
+
+[[ _FetchHandler (fluid_View,s) ]]
+
+[[ _FetchHandler (fluid_Views,g) ]]
+
+
+--> Events | Divider
+-
+[[ _FetchHandler (layout_MoveTopDivider,c) ]]
+
+[[ _FetchHandler (layout_MoveBottomDivider,c) ]]
+
+
+--> View | Props
+-
+[[ _FetchHandler (view_Label,g) ]]
+
+[[ _FetchHandler (view_Label,s) ]]
+
+[[ _FetchHandler (view_Text,g) ]]
+
+[[ _FetchHandler (view_Text,s) ]]
+
+[[ _FetchHandler (view_HtmlText,g) ]]
+
+[[ _FetchHandler (view_HtmlText,s) ]]
+
+[[ _FetchHandler (view_IsLocked,g) ]]
+
+[[ _FetchHandler (view_IsLocked,s) ]]
+
+
+--> Geometry | Props
+-
+[[ _FetchHandler (header_Rect,g) ]]
+
+[[ _FetchHandler (body_Rect,g) ]]
+
+[[ _FetchHandler (footer_Rect,g) ]]
+
+
+--> Geometry
+-
+-- setprop view_Rect someRect
+-- this allows for nested views with or without "setprop view_Rect" handlers
+if the long id of the target = the long id of me then
+   LayoutControl someRect
+else
+   set the rect of the target to someRect
+end if
+end view_Rect
+
+[[ _FetchHandler (formatted_Width,g) ]]
+
+
+--> Deps | Props | Back
+-
+/*
+Factor these out. They are too complicated.
+*/
+
+[[ _FetchHandler (back_Property,g) ]]
+
+[[ _FetchHandler (back_Property,s) ]]
+
+[[ _FetchHandler (view_DisplayProperty,s) ]]
+
+
+--> Deps | Geometry
+-
+[[ _FetchHandler (inner_Height,g) ]]
+
+[[ _FetchHandler (inner_Rect,g) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]
+
+[[ _FetchHandler (rect_GetInner,f) ]]
+
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (view_Height,g) ]]
+
+[[ _FetchHandler (view_Height,s) ]]
+
+
+--> Deps | View
+-
+[[ _FetchHandler (view_AboveTarget,g) ]]
+
+[[ _FetchHandler (view_Name,g) ]]

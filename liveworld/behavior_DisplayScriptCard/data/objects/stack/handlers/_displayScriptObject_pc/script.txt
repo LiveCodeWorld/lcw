@@ -1,0 +1,34 @@
+private command _displayScriptObject pScriptObject, pOverlayName
+   set the cursor to watch
+   put false into pIndexSuites
+   
+   if pScriptObject is empty then
+      put the displayed_Object of me into pScriptObject
+   else
+      put pScriptObject into LocalArray ["displayed_Object"]
+   end if
+   
+   -- put the exported_Script of scriptObject into someScript
+   put the script of pScriptObject into someScript
+   set the displayed_Script [pOverlayName] of me to someScript
+   
+   lock screen  
+   set the displayed_Title of me to the mobile_Name of pScriptObject
+   help_SaveAndDisplay pScriptObject, pOverlayName
+   put script_ConstructArray (someScript, pScriptObject, pIndexSuites) into scriptArray
+   display_ScriptArray scriptArray
+   
+   put the overlay_ImageFile [pOverlayName] of pScriptObject into imageFile
+   if there is a file imageFile then
+      set the visible_Status of the description_Header of me to true
+      
+      put the scriptLibrary_Image of me into imageView
+      put the overlay_Folder of pScriptObject into overlayFolder
+      display_Overlay overlayFolder, pOverlayName, imageView
+   else
+      set the visible_Status of the description_Header of me to false
+   end if
+   unlock screen
+   
+   return scriptArray
+end _displayScriptObject

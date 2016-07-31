@@ -1,0 +1,8 @@
+function loc_WithinWhichScreenRect gLoc
+   repeat for each line sRect in the working screenrects
+      if gLoc is within sRect then
+         return sRect
+      end if
+   end repeat
+   return empty
+end loc_WithinWhichScreenRect

@@ -1,0 +1,3 @@
+function html_ExtractTitle someHTML
+   return html_ExtractNode ("html/head/title", someHTML)
+end html_ExtractTitle

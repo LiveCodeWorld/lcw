@@ -1,0 +1,7 @@
+setprop view_Html [someTitle] someHtml
+   if word 1 of the target is "field" then
+      set the htmltext of the target to someHtml
+   else
+      set the uOPN ["html"] of the target to someHtml
+   end if
+end view_Html

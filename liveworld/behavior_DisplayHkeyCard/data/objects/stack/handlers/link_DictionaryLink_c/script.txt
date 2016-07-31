@@ -1,0 +1,13 @@
+command link_DictionaryLink someLink
+   put the displayed_Hkeys of me into displayedHkeys
+   put line 1 of hkey_FindHandler (someLink) into hKey
+   if hKey is among the lines of displayedHkeys then
+      put the displayed_HelpHkey of me into pDisplayedHelpHKey
+      lock screen
+      display_HkeyHelp hKey, pDisplayedHelpHKey
+      set the dg_SelectedHkey of this cd to hKey
+      unlock screen
+   else
+      display_Hkey hKey
+   end if
+end link_DictionaryLink

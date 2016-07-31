@@ -1,0 +1,4 @@
+command menu_SetSentPath mPath
+   global gTemp_ActiveMenuArray
+   put mPath into gTemp_ActiveMenuArray ["sent"]["mPath"]
+end menu_SetSentPath

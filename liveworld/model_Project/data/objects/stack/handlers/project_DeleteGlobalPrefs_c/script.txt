@@ -1,0 +1,10 @@
+command project_DeleteGlobalPrefs
+   put the globals into gNames
+   replace comma with CR in gNames
+   filter gNames with "gPrefs_*"
+   repeat for each line gName in gNames  
+      put "global" && gName & CR & "delete variable" && gName into doScript   
+      do doScript
+   end repeat
+   return gNames
+end project_DeleteGlobalPrefs

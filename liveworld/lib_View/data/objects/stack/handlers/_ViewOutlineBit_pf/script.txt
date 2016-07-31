@@ -1,0 +1,22 @@
+private function _ViewOutlineBit someView, outlineType, vName, someIndent
+   switch outlineType 
+      case "names"
+         put someIndent & the short name of someView into osLine
+         break
+      case "view names"
+         if vName is not empty then
+            put someIndent & vName into osLine
+         end if
+         break
+      case "name links"
+         put the short name of someView into shortName
+         put someIndent & html_ConstructNameLink (shortName, ruggedID) into osLine
+         break
+      default --case "view name links"
+         if viewName is not empty then
+            put someIndent & html_ConstructNameLink (vName, ruggedID) into osLine
+         end if
+         break
+   end switch
+   return osLine
+end _ViewOutlineBit

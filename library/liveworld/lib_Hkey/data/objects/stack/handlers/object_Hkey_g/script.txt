@@ -1,0 +1,5 @@
+getprop object_Hkey [shortHkey]
+   put the rugged_ID of the target into scriptObject
+   put shortHkey,scriptObject,1 into hKey
+   return hKey
+end object_Hkey

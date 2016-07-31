@@ -1,0 +1,5 @@
+getprop disabled_Save [textDisplayView]
+   put LocalArray ["textDisplayView"]  into textDisplayView
+   put exists (textDisplayView) into isTextDisplay
+   return isTextDisplay is false
+end disabled_Save

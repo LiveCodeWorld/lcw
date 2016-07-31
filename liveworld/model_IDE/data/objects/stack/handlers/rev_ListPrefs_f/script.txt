@@ -1,0 +1,11 @@
+function rev_ListPrefs pPrefType
+   if pPrefType is not empty then
+      -- could put a comma here
+   end if
+   put "*" after pPrefType
+   
+   put "sePrefList(" & kwote (pPrefType) & ")" into someExpression
+   put the name of stack "revNewScriptEditor" into someObject
+   get value (someExpression, someObject)
+   return it
+end rev_ListPrefs

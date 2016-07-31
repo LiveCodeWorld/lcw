@@ -1,0 +1,8 @@
+function rig_RoutingScript
+   -- was "rig_RoutingScript"
+   put rig_ApplicationPath() & "/config/routes.lc" into somePath
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   put server_FetchFile (somePath, serverAddress, sshUser) into rigScript
+   return rigScript
+end rig_RoutingScript

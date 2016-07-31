@@ -1,0 +1,7 @@
+getprop checkout_Folder [repoType]
+   -- important handler needs to be fast and work even if there is no version control
+   put the mainstack_File of the target into objectFile
+   put checkout_FindRoot (objectFile, repoType) into checkoutFolder
+   -- put checkout_ConstructDefaultFolder (objectFile) into checkoutFolder
+   return checkoutFolder
+end checkout_Folder

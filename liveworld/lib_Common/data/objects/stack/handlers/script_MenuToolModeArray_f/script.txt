@@ -1,0 +1,22 @@
+function script_MenuToolModeArray someScript
+   local menuToolModeArray
+   put script_GetSuiteTitles(someScript) into suiteTitles
+   
+   set the itemdelimiter to "|"
+   put "Menu \((.*)\)" into regularExpression
+   put empty into menuTitles
+   set the wholematches to true
+   repeat for each line suiteTitle in suiteTitles
+      put word 1 to -1 of last item of suiteTitle into lastMenuItem
+      if lastMenuItem is among the items of "Menu|Menus|Submenu|Submenus" then
+         put suiteTitle & CR after menuTitles
+         put empty into menuToolModeArray [suiteTitle]
+      else if matchtext(lastMenuItem, regularExpression, toolMode) is true then
+         put suiteTitle & CR after menuTitles
+         put toolMode into menuToolModeArray [suiteTitle]
+      end if
+   end repeat
+   delete last char of menuTitles
+   put menuTitles into menuToolModeArray ["OrderedMenuTitles"]
+   return menuToolModeArray
+end script_MenuToolModeArray

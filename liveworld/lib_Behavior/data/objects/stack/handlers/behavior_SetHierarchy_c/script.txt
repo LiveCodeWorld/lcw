@@ -1,0 +1,17 @@
+command behavior_SetHierarchy targetObject,  bObjects
+   if bObjects is empty then
+      -- instead let's clear the existing behavior hierarchy
+      put behavior_GetHierarchy (targetObject) into bObjects
+      behavior_Clear bObjects
+      return empty
+   end if
+      
+   -- first we need to clear any behaviors (or we might casue a behavior loop)
+   behavior_Clear bObjects
+   
+   repeat for each line bObject in bObjects
+      set the behavior of targetObject to bObject
+      put bObject into targetObject
+   end repeat
+   return bObjects
+end behavior_SetHierarchy

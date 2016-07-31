@@ -1,0 +1,5 @@
+getprop use_Stack [stackObject]
+   set the wholematches to true
+   put the short name of stackObject is among the lines of the stacksinuse into isUsed
+   return isUsed
+end use_Stack

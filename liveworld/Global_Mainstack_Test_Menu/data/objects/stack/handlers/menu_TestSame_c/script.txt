@@ -1,0 +1,8 @@
+on menu_TestSame hKey
+   put hkey_FetchDeps (hKey, true) into allShortDeps
+   sort allShortDeps
+   put hkey_FetchDeps (hKey) into shortHkeyDeps
+   sort shortHkeyDeps
+   
+   answer shortHkeyDeps = allShortDeps
+end menu_TestSame

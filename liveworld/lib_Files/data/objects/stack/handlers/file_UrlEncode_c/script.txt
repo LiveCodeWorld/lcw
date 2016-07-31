@@ -1,0 +1,10 @@
+command file_UrlEncode @someFile
+    set the itemdelimiter to "/"
+    repeat with itemNum = 1 to the number of items of someFile
+        put item itemNum of someFile into pathItem
+        -- replace "|" with "%7C" in pathItem
+        put urlencode(pathItem) into pathItem
+        replace "+" with "%20" in pathItem
+        put pathItem into item itemNum of someFile
+    end repeat
+end file_UrlEncode

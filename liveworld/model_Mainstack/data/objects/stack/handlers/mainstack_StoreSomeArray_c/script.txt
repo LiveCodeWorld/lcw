@@ -1,0 +1,11 @@
+command mainstack_StoreSomeArray mainStackFolder, someArray, someKey
+   put mainstack_FetchWalkArray (mainStackFolder) into walkArray
+   if someArray is an array then
+      put someArray into walkArray [someKey]
+   else
+      delete variable walkArray [someKey]
+   end if
+   mainstack_StoreWalkArray mainStackFolder, walkArray
+   put the result into someFile
+   return someFile
+end mainstack_StoreSomeArray

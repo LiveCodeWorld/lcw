@@ -1,0 +1,7 @@
+command server_LoadDetails serverURL, pProjectName
+   put server_FetchPrefArray (pProjectName) into serverPrefArray
+   
+   set the server_PreferenceArray [serverURL] of me to serverPrefArray
+   put the result into serverArray
+   return serverArray
+end server_LoadDetails

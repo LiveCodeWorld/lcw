@@ -1,0 +1,5 @@
+getprop menu_Button
+   -- works but we need to fix dynamic menu button creation
+   if exists (button "Global Menu Button" of cd 1 of me) is false then pass menu_Button
+   return the long id of button "Global Menu Button" of cd 1 of me
+end menu_Button

@@ -1,0 +1,7 @@
+on menu_ConfigureGitLogin
+   put user_GetLogin() into userName
+   put opn_Ask("GIT user name...", userName) into userName
+   put "git config --global user.name" && kwote(userName) into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   display_Text shellResult, "git config --list"
+end menu_ConfigureGitLogin

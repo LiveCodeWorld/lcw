@@ -1,0 +1,19 @@
+function wikicommons_CostructBasicSummaryPageArray pageTitle, pageDescription, wikipediaUrl, shortImageFile, pSourceArray
+   local fedwikiPageArray
+   
+   put pageTitle into fedwikiPageArray ["title"]
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into fedwikiPageArray ["journal"]
+   
+   -- let's add wikipedia url link to first line
+   put word 1 to -1 of pageDescription into pageDescription
+   put line 1 of  pageDescription into firstLine
+   delete line 1 of pageDescription
+   
+   if wikipediaUrl is not empty then
+      put word 1 to -1 of firstLine into firstLine
+      if char -1 of firstLine = "." then delete char -1 of firstLine
+      put space & "- [" & wikipediaUrl && "wikipedia]" after firstLine
+   end if
+   fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, firstLine, shortImageFile
+   return fedwikiPageArray
+end wikicommons_CostructBasicSummaryPageArray

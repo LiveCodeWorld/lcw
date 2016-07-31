@@ -1,0 +1,7 @@
+command library_RemoveObjectFromSessionArray scriptObject
+   put revRuggedID (scriptObject) into scriptObject
+   put library_GetTempArray ("session_ObjectArray") into librarySessionArray
+   delete variable librarySessionArray ["objects"][scriptObject]
+   library_SetTempArray "session_ObjectArray", librarySessionArray
+   return keys (librarySessionArray ["objects"])
+end library_RemoveObjectFromSessionArray

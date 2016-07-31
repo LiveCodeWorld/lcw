@@ -1,0 +1,5 @@
+command file_SetPath someFile, @someFolder, @shortFile
+    set the itemdelimiter to "/"
+    put item 1 to -2 of someFile into someFolder
+    put item -1 of someFile into shortFile
+end file_SetPath

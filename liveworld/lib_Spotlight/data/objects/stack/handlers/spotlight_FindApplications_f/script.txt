@@ -1,0 +1,17 @@
+function spotlight_FindApplications appBit, inFolder  
+   put "mdfind" && kwote("(kMDItemKind = 'Application')") into someShell
+   
+   if inFolder is not empty then
+      shell_BashParamEscape inFolder
+      put space & "-onlyin" && inFolder after someShell
+   end if
+   
+   if fileBit is not empty then
+      text_StripSurroundingQuotes fileBit
+      put kwote (fileBit) into fileBit
+      put space & "&&" && fileBit after someShell
+   end if
+   
+   put shell (someShell) into shellResult
+   return shellResult
+end spotlight_FindApplications

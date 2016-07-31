@@ -1,0 +1,9 @@
+setprop view_Text someText
+   put _textField() into textField
+   lock screen
+   put someText into LocalArray ["view_Text"]
+   set the text of textField to someText
+   LayoutControl
+   unlock screen
+   return textField
+end view_Text

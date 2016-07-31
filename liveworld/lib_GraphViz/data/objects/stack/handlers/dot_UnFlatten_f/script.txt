@@ -1,0 +1,16 @@
+function dot_UnFlatten dotFile, someNum
+   -- unflatten[?f][?llen][?clen][?ooutfile][files ] 
+   
+   put url ("file:" & dotFile) into dotText
+   shell_BashParamEscape dotFile
+   if someNum is empty then put 12 into someNum
+   put merge("unflatten -f -l [[someNum]] -c [[someNum]] [[dotFile]]") into someShell
+   
+   put graphViz_GetShellPath() into gvPath
+   put gvPath & someShell into someShell
+   
+   put shell(someShell) into gvResult
+   return gvResult
+   put dot_CheckResult(gvResult, "png", someShell) into shellResult
+   return shellResult
+end dot_UnFlatten

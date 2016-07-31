@@ -1,0 +1,5 @@
+on menu_GoToView scriptObject
+   put the object_MetaData ["name"] of scriptObject into viewName
+   put view_GetTemplateObject (viewName) into templateObject
+   object_GoTo templateObject
+end menu_GoToView

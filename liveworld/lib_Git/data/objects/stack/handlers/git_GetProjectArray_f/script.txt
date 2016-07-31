@@ -1,0 +1,4 @@
+function git_GetProjectArray
+   put library_FetchArray ("GitProjectArray") into gitProjectArray
+   return gitProjectArray
+end git_GetProjectArray

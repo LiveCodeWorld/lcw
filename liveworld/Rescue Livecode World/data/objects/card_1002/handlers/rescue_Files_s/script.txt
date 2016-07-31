@@ -1,0 +1,9 @@
+setprop rescue_Files [folderGroupName] shortFiles
+   lock screen
+   set the displayed_FolderName of me to folderGroupName
+   
+   -- put rescue_GetFiles (folderGroupName) into shortFiles
+   set the displayed_Libraries of me to shortFiles
+   unlock screen
+   return the result
+end rescue_Files

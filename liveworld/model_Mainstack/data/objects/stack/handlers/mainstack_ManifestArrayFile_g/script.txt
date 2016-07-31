@@ -1,0 +1,9 @@
+getprop mainstack_ManifestArrayFile
+   put the textStack_Folder of the target into textStackFolder
+   put mainstack_GetManifestArrayFile (textStackFolder) into someFile
+   if there is a file someFile then
+      return someFile
+   else
+      return empty
+   end if
+end mainstack_ManifestArrayFile

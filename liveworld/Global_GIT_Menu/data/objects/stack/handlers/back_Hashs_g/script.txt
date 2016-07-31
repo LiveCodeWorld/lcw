@@ -1,0 +1,4 @@
+getprop back_Hashs [mTarget]
+   put the script_RelativeFile of mTarget into relativePath
+   return git_ReverseFileHashes (relativePath)
+end back_Hashs

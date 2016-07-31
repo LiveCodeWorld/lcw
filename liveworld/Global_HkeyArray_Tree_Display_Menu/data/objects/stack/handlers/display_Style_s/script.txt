@@ -1,0 +1,32 @@
+setprop display_Style [treeView] someStyle
+   put the displayed_Array of treeView into hKeyArray
+   
+   switch someStyle
+      case "hkeyArray"
+         put keys (hKeyArray) into someKeys
+         sort someKeys by item 1 of each
+         repeat for each line someKey in someKeys
+            put someKey & CR after someOutline
+            get hKeyArray [someKey]
+            if it is not empty then
+               put outline_IncreaseIndent (it) & CR after someOutline
+            end if
+         end repeat
+         delete last char of someOutline
+         set the tree_Outline [1] of treeView to someOutline
+         break
+      case "index"
+         -- set the title_Text of treeView to hKey
+         put array_AllNodes (hkeyArray) into allCalls
+         sort allCalls by item 1 of each
+         set the tree_Outline of treeView to allCalls
+         break
+      default -- case "object outline"
+         put the title_Text of treeView into someTitle
+         display_ObjectOutline hkeyArray, someTitle, treeView
+   end switch
+   
+   lock messages
+   set the display_Style of treeView to someStyle
+   unlock messages
+end display_Style

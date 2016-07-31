@@ -1,0 +1,5 @@
+command rect_FitAndSetTopLeft @someRect, originalW, originalH
+   if not (originalW > 0 and originalH > 0) then return false
+   put rect_GetFitAndSetTopLeft (originalW, originalH, someRect) into someRect
+   return true
+end rect_FitAndSetTopLeft

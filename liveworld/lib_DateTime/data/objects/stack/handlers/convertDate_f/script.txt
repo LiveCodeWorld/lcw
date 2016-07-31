@@ -1,0 +1,9 @@
+function convertDate pDate,pMonth,pDay
+    ## return a date converted:
+    -- the single param is a date in dateItems format
+     
+    if pMonth <> empty then put pMonth into item 2 of pDate
+    if pDay <> empty then put pDay into item 3 of pDate
+    convert pDate to dateItems
+    return pDate
+end convertDate

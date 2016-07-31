@@ -1,0 +1,6 @@
+on menu_SwitchServer stackObject, serverURL
+   -- put pref_FetchServerArray ("HAP") into serverArray
+   -- pref_StoreServerArray serverArray, "Default"
+   server_LoadDetails serverURL
+   opn_Notify server_GetIPaddress()
+end menu_SwitchServer

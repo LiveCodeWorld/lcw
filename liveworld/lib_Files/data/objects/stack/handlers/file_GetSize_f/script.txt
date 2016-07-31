@@ -1,0 +1,4 @@
+function file_GetSize filePath
+   get file_DetailedInfo (filePath)
+   return item 2 of it
+end file_GetSize

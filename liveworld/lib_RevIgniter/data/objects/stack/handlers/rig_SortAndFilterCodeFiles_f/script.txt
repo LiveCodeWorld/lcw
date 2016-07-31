@@ -1,0 +1,7 @@
+function rig_SortAndFilterCodeFiles fileArray
+   put keys (fileArray) into shortFiles
+   line_Delete "index.html", shortFiles
+   line_Delete "welcome.lc", shortFiles
+   sort shortFiles
+   return shortFiles
+end rig_SortAndFilterCodeFiles

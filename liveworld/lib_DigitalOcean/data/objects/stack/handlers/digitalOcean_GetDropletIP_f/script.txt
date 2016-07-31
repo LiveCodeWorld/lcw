@@ -1,0 +1,15 @@
+function digitalOcean_GetDropletIP dropletName, pIndexedDropletArray
+   if pIndexedDropletArray is not an array then
+      put digitalOcean_GetDropletInfoArray() into pIndexedDropletArray
+   end if
+   put pIndexedDropletArray ["droplets"] into indexedArray
+   repeat for each key dropletNum in indexedArray
+      put indexedArray [dropletNum]["name"] into testDropletName
+      if testDropletName = dropletName then
+         -- what would you do if there was more than one entry ???
+         put indexedArray [dropletNum]["networks"]["v4"][1]["ip_address"] into ipAddress
+         return ipAddress
+      end if
+   end repeat
+   return empty
+end digitalOcean_GetDropletIP

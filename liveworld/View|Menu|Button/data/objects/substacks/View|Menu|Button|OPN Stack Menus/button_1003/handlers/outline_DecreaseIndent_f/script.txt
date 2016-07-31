@@ -1,0 +1,16 @@
+function outline_DecreaseIndent someOsSection, byIndentLevel
+   --was "outline_DecreaseIndent"
+   if byIndentLevel = 0 then return someOsSection
+   repeat with ii = 1 to the number of lines of someOsSection
+      put line ii of someOsSection into osTitle
+      repeat byIndentlevel
+         if char 1 of osTitle is tab then
+            delete char 1 of osTitle
+         else
+            exit repeat
+         end if
+      end repeat
+      put osTitle into line ii of someOsSection
+   end repeat
+   return someOsSection
+end outline_DecreaseIndent

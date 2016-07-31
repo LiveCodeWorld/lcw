@@ -1,0 +1,8 @@
+command library_StopBack pSetName
+   put library_FetchObjects ("back", pSetName) into backObjects
+   repeat for each line someObject in backObjects
+      if exists(someObject) then
+         remove the script of someObject from back
+      end if
+   end repeat
+end library_StopBack

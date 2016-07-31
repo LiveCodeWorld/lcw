@@ -1,0 +1,5 @@
+function sitemap_ListFileIDs refinementName
+   put sitemap_HapRefinementToMediaTypes (refinementName) into mTypeList
+   put sitemap_FileIDsFromMediaType (mTypeList) into fileIDs
+   return fileIDs
+end sitemap_ListFileIDs

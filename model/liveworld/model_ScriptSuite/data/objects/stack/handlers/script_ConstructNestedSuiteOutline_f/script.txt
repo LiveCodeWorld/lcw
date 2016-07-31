@@ -1,0 +1,34 @@
+function script_ConstructNestedSuiteOutline someScript, scriptObject, sortHeaders
+   -- slow ugly hack
+   -- does not return suites in exactly the same order as they are found when unsorted
+   
+   put tab into someDelim
+   put script_GetSuiteTitles(someScript) into suiteNames
+   
+   -- lets get the handlers before the first suite title
+   put line 1 of suiteNames into firstSuiteName
+   put lineoffset(firstSuiteName, someScript) into firstLineNum
+   put line 1 to (firstLineNum -1) of someScript into firstScriptBit
+   
+   put script_ExtractHkeys(firstScriptBit, scriptObject) into noSuiteKeys
+   repeat for each line hKey in noSuiteKeys
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      put html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
+   end repeat
+   
+   repeat for each line suiteName in suiteNames
+      put script_GetSuite(suiteName, someScript) into suiteScript
+      put script_ExtractHkeys(suiteScript, scriptObject) into hKeys
+      
+      put script_SuiteNameToPath(suiteName, someDelim) into suitePath
+      repeat for each line hKey in hKeys
+         put item 1 of hKey into handlerName
+         put suitePath & someDelim & html_ConstructNameLink(handlerName, hKey) & CR after handlerPaths
+      end repeat
+   end repeat
+   delete last char of handlerPaths
+   
+   if sortHeaders is true then sort handlerPaths
+   put outline_FromPathIndex(handlerPaths, someDelim) after handlerOutline
+   return handlerOutline
+end script_ConstructNestedSuiteOutline

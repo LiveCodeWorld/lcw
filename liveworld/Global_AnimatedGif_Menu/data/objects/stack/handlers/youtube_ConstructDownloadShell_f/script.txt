@@ -1,0 +1,19 @@
+function youtube_ConstructDownloadShell youtubeVideoURL
+   /*
+   --write-description
+   Write video description to a .description file
+   
+   --write-info-json
+   Write video metadata to a .info.json file
+   
+   --write-annotations
+   Write video annotations to a .annotations.xml file
+   */
+   
+   shell_BashParamEscape youtubeVideoURL
+   put "youtube-dl -f mp4" && youtubeVideoURL into someShell
+   put space & "--write-description" after someShell
+   put space & "--write-info-json" after someShell
+   put space & "--write-annotations" after someShell
+   return someShell
+end youtube_ConstructDownloadShell

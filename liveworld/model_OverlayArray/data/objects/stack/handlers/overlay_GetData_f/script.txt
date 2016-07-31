@@ -1,0 +1,6 @@
+function overlay_GetData overlayFolder
+   -- was "graphFolder_GetData"
+   put overlay_ArrayFile (overlayFolder) into dotArrayFile
+   put overlayData_Fetch (dotArrayFile) into overlayData
+   return overlayData
+end overlay_GetData

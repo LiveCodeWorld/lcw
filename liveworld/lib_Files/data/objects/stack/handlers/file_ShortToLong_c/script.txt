@@ -1,0 +1,11 @@
+command file_ShortToLong @shortFiles, someFolder, showInvisible, someFilter
+    if showInvisible is not false then filter shortFiles without ".*"
+    if someFilter is not empty then filter shortFiles with someFilter
+     
+    folder_Format someFolder
+    repeat for each line shortFile in shortFiles
+        put someFolder & shortFile & CR after filePaths
+    end repeat
+    delete last char of filePaths
+    put filePaths into shortFiles
+end file_ShortToLong

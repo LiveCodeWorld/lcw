@@ -1,0 +1,16 @@
+function hkey_FindHandler hKey
+   return hKey
+   
+   switch the number of items of hKey
+      case 2
+         -- let's look it up in the handler library
+         break
+      case 4
+         -- let's look it up in the project library
+         break
+      default
+         -- let's look it up in the handler library
+         put hKey into handlerName
+         
+   end switch
+end hkey_FindHandler

@@ -1,0 +1,7 @@
+on menu_FixUsed mTarget, projectName
+   project_FixUsed projectName
+   put the result into resultArray
+   
+   display_Array resultArray, "project_FixUsed"
+   display_ProjectArray projectName
+end menu_FixUsed

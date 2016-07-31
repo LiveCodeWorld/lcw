@@ -1,0 +1,11 @@
+function hKeyArray_DotNodeSubGraphDefs hLinkArray, idArray, pTargetObject
+    put linkarray_FilterIdArray (idArray, hLinkArray) into idArray
+    put hKeyArray_ConstructIdTypeArray (idArray) into idTypeArray
+    repeat for each key handlerType in idTypeArray
+        put idTypeArray [handlerType] into nodeIDs
+        if nodeIDs is not empty then
+            put hKeyArray_ConstructSubGraph (nodeIDs, idArray, handlerType, pTargetObject) & CR after nodeDefs
+        end if
+    end repeat
+    return nodeDefs
+end hKeyArray_DotNodeSubGraphDefs

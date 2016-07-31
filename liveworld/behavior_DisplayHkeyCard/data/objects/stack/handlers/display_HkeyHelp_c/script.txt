@@ -1,0 +1,9 @@
+command display_HkeyHelp hKey, pDisplayedHelpHKey
+   put the long id of me into displayCard
+   put the display_ProjectHandlers of displayCard into displayProjectHandlers
+   if displayProjectHandlers is true then
+      display_ProjectHkeyHelp hKey, pDisplayedHelpHKey
+   else
+      display_HkeyLibraryHelp hKey, pDisplayedHelpHKey
+   end if
+end display_HkeyHelp

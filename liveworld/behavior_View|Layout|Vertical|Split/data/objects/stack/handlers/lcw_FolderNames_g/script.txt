@@ -1,0 +1,12 @@
+getprop lcw_FolderNames
+   put the child_Names of group "Stacks and Libraries" into indexGroupNames
+   repeat for each line indexGroupName in indexGroupNames
+      put the child_Views of group indexGroupName of group "Stacks and Libraries" into indexViews
+      repeat for each line indexView in indexViews
+         put the lcw_FolderName of indexView into lcwFolderName
+         put lcwFolderName & CR after lcwFolderNames
+      end repeat
+   end repeat
+   delete char -1 of lcwFolderNames
+   return lcwFolderNames
+end lcw_FolderNames

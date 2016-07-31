@@ -1,0 +1,9 @@
+getprop inserted_Menus
+   put the menu_TableTitles of the target into mTitles
+   
+   -- avoid nasty recursion
+   -- could be done with "getprop inserted_Menu" handler?
+   put menu_GetTopTitle() into notThisTitle
+   line_Delete notThisTitle, mTitles
+   return mTitles
+end inserted_Menus

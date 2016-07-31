@@ -1,0 +1,8 @@
+command view_CloneStack viewName, pCardMargin, pStackRect, pStackStyle, pHidden
+   -- this is not cloning the stack but the view onto a clean stack
+   local pCardScript
+   put stack_ConstructNewCloneName (viewName) into stackName
+   stack_Create stackName, viewName, pCardMargin, pStackRect, pCardScript, pHidden, pStackStyle
+   put the result into createdView
+   return createdView
+end view_CloneStack

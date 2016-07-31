@@ -1,0 +1,10 @@
+function script_ExtractGetPropHandlers someScript
+   -- very important that this is fast for menus
+   filter someScript with "getprop *"
+   repeat for each line scriptLine in someScript
+      put word 2 of scriptLine into handlerName
+      put handlerName & CR after handlerNames
+   end repeat
+   delete char -1 of handlerNames
+   return handlerNames
+end script_ExtractGetPropHandlers

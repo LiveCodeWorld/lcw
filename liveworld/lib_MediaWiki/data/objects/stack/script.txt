@@ -1,0 +1,157 @@
+--> MetaData
+-
+name: lib_MediaWiki
+type: script library
+version: 0.7
+copyright: David Bovill
+licence:  GPLv3
+deps: none
+
+
+/*
+A library for interfacing with MediaWiki instances.
+*/
+
+--> Mediawiki | Image | Not Working
+-
+[[ _FetchHandler (wikipedia_ListImageRepos,f) ]]
+
+[[ _FetchHandler (wikpedia_FetchPageImageSandboxArray,f) ]]
+
+
+--> Mediawiki
+-
+[[ _FetchHandler (mediawiki_ListBuiltInImages,f) ]]
+
+[[ _FetchHandler (mediawiki_FetchSectionQueryInfo,c) ]]
+
+[[ _FetchHandler (mediawiki_FetchSummaryDescription,f) ]]
+
+[[ _FetchHandler (mediawiki_FetchPageQueryInfo,c) ]]
+
+[[ _FetchHandler (mediawiki_FetchPageParseInfo,c) ]]
+
+[[ _FetchHandler (mediawiki_CleanPageDescription,c) ]]
+
+[[ _FetchHandler (mediawiki_ExtractFirstInterestingImage,f) ]]
+
+
+--> Mediawiki | Template | Infobox
+-
+[[ _FetchHandler (mediawiki_ConvertInfoBox,f) ]]
+
+[[ _FetchHandler (mediawikia_ExtractInfobox,f) ]]
+
+
+--> Mediawiki | Template
+-
+[[ _FetchHandler (mediawikia_ExtractTemplate,f) ]]
+
+[[ _FetchHandler (mediawiki_SetTemplateOffsets,c) ]]
+
+[[ _FetchHandler (_letsFindNestedStartBracketNum,pf) ]]
+
+[[ _FetchHandler (_lastNestedBracket,pf) ]]
+
+[[ _FetchHandler (mediawiki_ListPageImages,f) ]]
+
+[[ _FetchHandler (wikipedia_ConstructUrl,f) ]]
+
+[[ _FetchHandler (mediawiki_DeconstructImageWikiText,c) ]]
+
+[[ _FetchHandler (mediawiki_ConvertSectionTitle,c) ]]
+
+[[ _FetchHandler (mediwiki_ExtractAndDeleteFirstSection,f) ]]
+
+[[ _FetchHandler (mediawiki_DeleteFirstSection,c) ]]
+
+[[ _FetchHandler (mediwiki_ExtractPageTitleFromUrl,f) ]]
+
+[[ _FetchHandler (mediwiki_ExtractPageSlugFromUrl,f) ]]
+
+[[ _FetchHandler (mediwiki_ExtractImageFileFromUrl,f) ]]
+
+[[ _FetchHandler (mediawiki_ExtractShortImageFile,f) ]]
+
+
+--> Wikipedia | Sandbox
+-
+[[ _FetchHandler (wikipedia_GetSandboxArray,f) ]]
+
+[[ _FetchHandler (mediawiki_GetSandboxArray,f) ]]
+
+[[ _FetchHandler (mediawiki_GetSandboxJSON,f) ]]
+
+[[ _FetchHandler (mediawiki_GetRestArray,f) ]]
+
+[[ _FetchHandler (mediawiki_GetRestJSON,f) ]]
+
+[[ _FetchHandler (mediawiki_ConstructSandboxURL,f) ]]
+
+
+--> WikiPedia
+-
+[[ _FetchHandler (wikipedia_ExtractSummary,f) ]]
+
+[[ _FetchHandler (wikipedia_FetchPageExtract,f) ]]
+
+[[ _FetchHandler (wikipedia_FetchPageStuff,f) ]]
+
+[[ _FetchHandler (wikipedia_FetchPageImageInfo,f) ]]
+
+[[ _FetchHandler (wikipedia_FetchPageImages,f) ]]
+
+[[ _FetchHandler (wikipedia_ExtractInfo,f) ]]
+
+
+--> MediaWiki
+-
+[[ _FetchHandler (mediawiki_FetchPageBits,f) ]]
+
+[[ _FetchHandler (mediawiki_FetchWikiText,f) ]]
+
+[[ _FetchHandler (mediawiki_FetchPage,f) ]]
+
+
+--> WikiMedia
+-
+[[ _FetchHandler (wikimedia_ListImages,f) ]]
+
+
+--> WikiMedia | Utilities
+-
+/*
+You can find useful help and examples here - https://commons.wikimedia.org/wiki/Commons:API/MediaWiki
+*/
+
+[[ _FetchHandler (wikimedia_FetchFilesInCategory,f) ]]
+
+[[ _FetchHandler (wikimedia_FetchFileCategories,f) ]]
+
+[[ _FetchHandler (wikimedia_FetchNearbyFiles,f) ]]
+
+[[ _FetchHandler (wikimedia_RestfulFetch,f) ]]
+
+
+--> Wikipedia | Stems
+-
+[[ _FetchHandler (wikipedia_GetApiRoot,f) ]]
+
+[[ _FetchHandler (wikimedia_GetApiRoot,f) ]]
+
+[[ _FetchHandler (wikipedia_SetUserAgent,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (utf8_Encode,f) ]]
+
+[[ _FetchHandler (text_Utf8Decode,c) ]]
+
+[[ _FetchHandler (json_ToArray,f) ]]
+
+[[ _FetchHandler (url_Deconstruct,c) ]]
+
+[[ _FetchHandler (file_Deconstruct,c) ]]
+
+[[ _FetchHandler (text_InitialCaps,f) ]]

@@ -1,0 +1,7 @@
+setprop model_Index [indexKey] someIndex
+   if indexKey is empty then put "Default" into indexKey
+   put the long id of the target into modelObject
+   
+   model_SetValue indexKey, modelObject, someValue, "uOpn", "array"
+   return the result
+end model_Index

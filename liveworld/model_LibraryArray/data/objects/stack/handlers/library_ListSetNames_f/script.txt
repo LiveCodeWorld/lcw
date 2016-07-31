@@ -1,0 +1,9 @@
+function library_ListSetNames pAddDefaults
+   put library_FetchSetData() into modelArray
+   put keys (modelArray) into setNames
+   sort setNames
+   if pAddDefaults is true then
+      put CR & "None" after setNames
+   end if
+   return setNames
+end library_ListSetNames

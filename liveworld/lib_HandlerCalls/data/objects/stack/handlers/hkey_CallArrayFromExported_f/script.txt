@@ -1,0 +1,5 @@
+function hkey_CallArrayFromExported hKey, pSetName
+   local hkeyArray
+   hkey_RecurseLongCallArrayFromExported hKey, hkeyArray, pSetName
+   return hkeyArray
+end hkey_CallArrayFromExported

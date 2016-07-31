@@ -1,0 +1,15 @@
+command hkeyArray_RemoveObjectLinks @hkeyArray, objectToRemove
+   -- assumes all objects in hkeyArray are rugged ids
+   -- may need to check long ids?
+   put the rugged_ID of objectToRemove into objectToRemove
+   
+   put array_AllNodes (hkeyArray) into hkeysToStrip
+   filter hkeysToStrip with ("*," & objectToRemove & ",*")
+   
+   local alreadyDeleted
+   repeat for each line stripKey in hkeysToStrip
+      linkArray_DeleteNode hkeyArray, stripKey, alreadyDeleted
+   end repeat
+   put array_AllNodes (hkeyArray) into keysLeft
+   return keysLeft
+end hkeyArray_RemoveObjectLinks

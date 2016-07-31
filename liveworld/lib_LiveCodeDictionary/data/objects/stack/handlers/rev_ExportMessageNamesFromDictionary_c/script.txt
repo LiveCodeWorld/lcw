@@ -1,0 +1,12 @@
+command rev_ExportMessageNamesFromDictionary
+   put rev_MessageTable() into messageTable
+   opn_SetTable "rev_MessageTable", messageTable
+   
+   set the columndelimiter to tab
+   split messageTable by column
+   put messageTable [2] into scriptTokens
+   sort scriptTokens
+   
+   opn_SetIndex "rev_Messages", scriptTokens
+   return scriptTokens
+end rev_ExportMessageNamesFromDictionary

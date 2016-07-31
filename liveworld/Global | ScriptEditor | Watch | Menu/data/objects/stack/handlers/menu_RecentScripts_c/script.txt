@@ -1,0 +1,8 @@
+on menu_RecentScripts scriptObject, recentObject
+   put LocalArray ["friendlyArray"][recentObject] into someObject
+   if exists (someObject) then
+      edit the script of someObject
+   else
+      breakpoint
+   end if
+end menu_RecentScripts

@@ -1,0 +1,10 @@
+on menu_SetTriggerArray mTarget
+   set the clock_Trigger [3] of mTarget to "clock_ChangeColour,green"
+   set the clock_Trigger [9] of mTarget to "clock_ChangeColour,yellow"
+   set the clock_Trigger [27] of mTarget to "clock_ChangeColour,blue"
+   set the clock_Trigger [38] of mTarget to "clock_ChangeColour,light green"
+   set the clock_Trigger [50] of mTarget to "clock_ChangeColour,orange"
+   
+   put the clock_TriggerArray of mTarget into triggerArray
+   display_Array triggerArray, "the clock_TriggerArray"
+end menu_SetTriggerArray

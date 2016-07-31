@@ -1,0 +1,20 @@
+function hkey_MissingHandlerIsNotImportant callName, callType, hKey
+   switch
+      case callType is among the items of "g,s" and char 1 of callName = "u"
+         return true
+      case callType is among the items of "g,s" and "_" is not in callName
+         return true
+      case char 1 to 3 of callName = "rev" and char 4 of callName is not "_"
+         put "Skipping LiveCode handler:" && callName,callType into someMessage
+         put CR & CR & "It should not have been indexed as a LiveCode IDE handler, please add to dictionary!" after someMessage
+         opn_Notify someMessage, true
+         return true
+      case the number of words of callName > 1
+         -- bug - often "default -- case"
+         put merge ("Bug with call '[[shortCall]]' for handler '[[hKey]]'") into someMessage
+         opn_Notify someMessage, true
+         return true
+      default
+         return false
+   end switch
+end hkey_MissingHandlerIsNotImportant

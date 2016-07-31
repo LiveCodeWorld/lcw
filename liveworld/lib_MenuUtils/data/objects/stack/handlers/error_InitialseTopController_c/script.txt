@@ -1,0 +1,11 @@
+command error_InitialseTopController mTopController, targetObject
+   if exists(mTopController) is false then
+      put menu_GetTopTitle() into mTopTitle
+      put merge("mTopTitle: '[[mTopTitle]]'") & CR after someError
+      put "put the menu_LocalController [mTopTitle] of targetObject into mTopController" & CR after someError
+      put "targetObject:" && the mobile_Name of targetObject & CR after someError
+      
+      log_Error someError, ("menu_InitialiseTopController: mController does not exist for" && mTopTitle), true
+      put targetObject into mTopController
+   end if
+end error_InitialseTopController

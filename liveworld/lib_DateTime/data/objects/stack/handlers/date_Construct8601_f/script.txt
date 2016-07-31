@@ -1,0 +1,45 @@
+function date_Construct8601 someDate, extended, convertToUTC
+    -- extended is true:  1981-04-05T14:30:30-05:00
+    -- extended is false: 19810405T14:30:30-05 00
+    
+    convert someDate to internet date
+    put word -1 of someDate into utcOffset
+     
+    convert someDate to dateItems
+    put item 1 of someDate into y
+    put item 2 of someDate into mons
+    put item 3 of someDate into d
+    put item 4 of someDate into h
+    put item 5 of someDate into mins
+    put item 6 of someDate into s
+    
+    if convertToUTC is true then
+        put char 2 to 3 of utcOffset into extraHours
+        put char 4 to 5 of utcOffset into extraMin
+         
+        if char 1 of utcOffset is "+" then
+            add extraHours to h
+            add extraMin to m
+        else
+            subtract extraHours from h
+            subtract extraMin from m
+        end if
+        
+        if extended is true then
+            put "%04d-%02d-%02dT%02d:%02d:%02d" into baseString
+        else
+            put "%04d%02d%02dT%02d:%02d:%02d" into baseString
+        end if
+        put format(baseString, y, mons, d, h, mins, s) into fDate
+        if char -3 to -1 of fDate = ":00" then delete char -3 to -1 of fDate
+        return fDate & " Z"
+    else
+        if extended is true then
+            put "%04d-%02d-%02dT%02d:%02d:%02d %s" into baseString
+        else
+            put "%04d%02d%02dT%02d:%02d:%02d %s" into baseString
+        end if
+        put format(baseString, y, mons, d, h, mins, s, utcOffset) into fDate
+        return fDate
+    end if
+end date_Construct8601

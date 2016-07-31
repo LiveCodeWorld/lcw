@@ -1,0 +1,7 @@
+function gist_ShortFileFromHkey hKeys
+   put line 1 of hKeys into hKey
+   put handler_ConvertType (item 2 of hKey) && word 1 of item 1 of hKey into prettyHandlerName
+   -- put "handler" & comma & handler_ConvertType (item 2 of hKey) && word 1 of item 1 of hKey into shortGistFile
+   put gist_ShortFileToKey (prettyHandlerName, "handler") into shortGistFile
+   return shortGistFile
+end gist_ShortFileFromHkey

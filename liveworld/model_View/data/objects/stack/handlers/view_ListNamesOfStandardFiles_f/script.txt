@@ -1,0 +1,13 @@
+function view_ListNamesOfStandardFiles
+   put view_ListStandardLongFiles() into longViewFiles
+   
+   put empty into viewPaths
+   repeat for each line longViewFile in longViewFiles
+      -- put view_FileToPath (longViewFile, includeStem) into viewPath
+      -- we assume the short name of the stack is the view_Name
+      put the short name of stack longViewFile into vName
+      put vName & CR after vNames
+   end repeat
+   delete last char of vNames
+   return vNames
+end view_ListNamesOfStandardFiles

@@ -1,0 +1,18 @@
+function text_TempReplaceQuoted someText, @offsetArray
+    -- was "temptext_StripQuoted"
+    -- version original,18/9/01
+    
+    put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
+    put 1 into dummyNum
+    repeat
+        if matchchunk(someText, someReg, startChar, endChar) then
+            put char startChar to endChar of someText into quotedText
+            put "<dummy id=" & dummyNum & "/>" into safeReplaceMent
+            put safeReplaceMent into char startChar to endChar of someText
+            put quotedText into offsetArray[safeReplaceMent]
+            add 1 to dummyNum
+        else
+            return someText
+        end if
+    end repeat
+end text_TempReplaceQuoted

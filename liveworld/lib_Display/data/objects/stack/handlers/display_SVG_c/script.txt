@@ -1,0 +1,11 @@
+command display_SVG svgFile
+   -- "file:/Users/BabyBlue/Documents/Image_SVG.svg"
+   put the "View|Image|SVG" into stackName
+   put the long id of widget 1 of cd 1 of stack stackName into svgView
+   
+   put "file:" & svgFile into someUrl
+   set the svg_URL [true] of svgView to someUrl
+   put the result into someHtml
+   go to stack stackName
+   return someHtml
+end display_SVG

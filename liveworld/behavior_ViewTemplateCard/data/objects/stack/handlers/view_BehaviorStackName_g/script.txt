@@ -1,0 +1,5 @@
+getprop view_BehaviorStackName
+   put the view_Name of the target into vName
+   put "behavior_" & vName into stackName
+   return stackName
+end view_BehaviorStackName

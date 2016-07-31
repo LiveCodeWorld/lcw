@@ -1,0 +1,4 @@
+on menu_ReplaceWithView mTarget, viewPathFragment 
+   -- set the view_Swap [true] of mTarget to viewPathFragment
+   set the control_Type of mTarget to viewPathFragment
+end menu_ReplaceWithView

@@ -1,0 +1,9 @@
+function hArray_ListNewHkeys hArray
+   put hArray ["handlerHashArray"]["new"] into hashArray
+   repeat for each key handlerHash in hashArray
+      put hashArray [handlerHash]["hKey"] into emptyHkeyArray
+      put keys(emptyHkeyArray) & CR after newHkeys
+   end repeat
+   delete char -1 of newHkeys
+   return newHkeys
+end hArray_ListNewHkeys

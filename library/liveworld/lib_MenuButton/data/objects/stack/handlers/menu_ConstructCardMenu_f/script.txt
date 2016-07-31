@@ -1,0 +1,12 @@
+function menu_ConstructCardMenu mCards
+   sort mCards
+   put mCards into globalMenuTitles
+   filter globalMenuTitles with "Global |*"
+   
+   put mCards into mCardMenu
+   filter mCardMenu without "Global |*"
+   
+   if mCardMenu is not empty and globalMenuTitles is not empty then put ",-," after mCardMenu
+   if globalMenuTitles is not empty then put globalMenuTitles after mCardMenu
+   return mCardMenu
+end menu_ConstructCardMenu

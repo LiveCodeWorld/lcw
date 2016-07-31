@@ -1,0 +1,4 @@
+on menu_DisplayLibraryFolderStacks
+   put opn_LibraryStackFiles() into stackNames
+   display_Lines stackNames
+end menu_DisplayLibraryFolderStacks

@@ -1,0 +1,5 @@
+function digitalocean_GetIndexedDomainArray 
+   put digitalocean_GetDomainInfoArray() into domainInfoArray
+   put domainInfoArray ["domains"] into indexedDomainArray
+   return indexedDomainArray
+end digitalocean_GetIndexedDomainArray

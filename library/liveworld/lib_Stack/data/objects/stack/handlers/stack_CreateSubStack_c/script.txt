@@ -1,0 +1,25 @@
+command stack_CreateSubStack someObject, subStackStem
+   put the main_Stack of someObject into mainStackObject
+   put the short name of mainStackObject into mainStackName
+   
+   put the stack_SubName [subStackStem] of mainStackObject into subStackName
+   -- could do extensive checking for a unique name
+   put exists (stack subStackName) is true into stackExists
+   put exists (stack subStackName of stack mainStackName) is true into subStackExists
+   
+   switch
+      case (stackExists is false) and (subStackExists is false)
+         create invisible stack subStackName
+         set the mainstack of stack subStackName to stackObject
+         break
+      case subStackExists is true
+         -- already created -- skip to copy over view_Template
+         return the long id of stack subStackName of stack mainStackName
+      case stackExists is true
+         -- there is a mainstack of this name
+         return the long id of stack subStackName
+      default
+         answer warning merge ("A stack named '[[subStackName]]' already exists! Be careful (check manually)!")
+         exit to top
+   end switch
+end stack_CreateSubStack

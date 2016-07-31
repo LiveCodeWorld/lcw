@@ -1,0 +1,20 @@
+function addHandlersToSuite scriptsToAdd, suiteScripts
+   -- not currently used ?
+   -- version original,6/9/01
+   put getHandlerNames(scriptsToAdd) into handlerNames
+   put line 1 of handlerNames into commandsToAdd
+   put line 2 of handlerNames into functionsToAdd
+   
+   repeat with ii = 1 to the number of items of commandsToAdd
+      put item ii of commandsToAdd into newCommandName
+      put script_GetCommand(newCommandName, scriptsToAdd) into newCommand
+      put replaceCommand(newCommandName, suiteScripts, newCommand) into suiteScripts
+   end repeat
+   
+   repeat with ii = 1 to the number of items of functionsToAdd
+      put item ii of functionsToAdd into newFunctionName
+      put script_GetFunction(newFunctionName, scriptsToAdd) into newFunction
+      put replaceCommand(newFunctionName, suiteScripts, newFunction) into suiteScripts
+   end repeat
+   return suiteScripts
+end addHandlersToSuite

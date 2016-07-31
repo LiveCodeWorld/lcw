@@ -1,0 +1,11 @@
+command object_FastStripIndex objectsToRemove, @objectIndex
+   -- assumes all objects are in the same format
+   repeat for each line objectToRemove in objectsToRemove
+      repeat with lineNum = the number of lines of objectIndex down to 1
+         put line lineNum of objectIndex into indexObject
+         if indexObject = objectToRemove then
+            delete line lineNum of objectIndex
+         end if
+      end repeat
+   end repeat
+end object_FastStripIndex

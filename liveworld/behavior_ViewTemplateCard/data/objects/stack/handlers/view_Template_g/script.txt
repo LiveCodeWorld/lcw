@@ -1,0 +1,4 @@
+getprop view_Template
+   if word 1 the target = "card" then return _templateView()
+   pass view_Template
+end view_Template

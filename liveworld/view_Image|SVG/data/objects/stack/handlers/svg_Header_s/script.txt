@@ -1,0 +1,7 @@
+setprop svg_Header svgHeader
+   -- a hack which asumes the header is on a single line
+   put the svg_XML of me into svgXML
+   put svgHeader into line 1 of svgXML
+   set the svg_XML of me to svgXML
+   return svgXML
+end svg_Header

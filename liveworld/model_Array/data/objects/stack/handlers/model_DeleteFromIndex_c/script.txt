@@ -1,0 +1,14 @@
+on model_DeleteFromIndex someLine, indexKey, modelObject, modelName, modelType
+   put model_GetValue(indexKey, modelObject, modelName, modelType) into oldIndex
+   put line_DeleteFromIndex(someLine, oldIndex) into newIndex
+   if newIndex is empty then -- might as well tidy?
+      model_DeleteArrayKey indexKey, modelObject, modelName, modelType
+      put the result into newKeys
+      if newKeys is empty then
+         model_DeleteArray modelName, modelObject, modelType
+      end if
+   else
+      model_SetValue indexKey, modelObject, newIndex, modelName, modelType
+   end if
+   return newIndex
+end model_DeleteFromIndex

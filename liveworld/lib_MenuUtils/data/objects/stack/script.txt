@@ -1,0 +1,754 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_MenuUtils
+type: script library
+copyright: David Bovill
+licence:  GPLv3
+version: 0.1
+
+
+/* libOPN_MenuExtras
+A dumping ground for old menu scripts which still may be used somewhere :)
+
+We gradually check these and move them over to lib_Menu if they prove robust and useful.
+*/
+
+
+--> Menu | Target | Overide
+-
+/*
+These handlers allow scripts to overlide the default technique of establishing a target (mTarget) for a menu, or menuItem.
+
+You do this by issuing "menu_SetItemTargetOveride", or "menu_SetTitleTargetOveride". 
+The latter applies to a whole menu specified by the mTitle, while the former applies to a specif menu item specifed by a path.
+
+Both these matches depend on whether a single item is passes or a hieararchical path. 
+If a single mItem of a full mPath is set using "menu_SetItemTargetOveride",
+then a match anywhere for any item in the actual mPath will be good. 
+If a path containing several items is passed in mPath, then anything but an exact match will return empty.
+
+Similarly with "menu_SetTitleTargetOveride", a single item will match anywhere in mTitlePath, 
+while multiple items specified in "menu_SetTitleTargetOveride matchTitlePath, mTarget" will only match,
+if the hierachy of the full mTitlePath of the selected menu starts with matchTitlePath. 
+This differs from the "menu_GetItemTargetOveride" match in that it seearches the full hierarchy, 
+allowing a specific class of mTitlePath to be matched.
+*/
+
+[[ _FetchHandler (menu_GetTargetOveride,f) ]]
+
+[[ _FetchHandler (menu_GetTitleTargetOveride,f) ]]
+
+[[ _FetchHandler (menu_SetTitleTargetOveride,c) ]]
+
+[[ _FetchHandler (menu_GetItemTargetOveride,f) ]]
+
+[[ _FetchHandler (menu_SetItemTargetOveride,c) ]]
+
+
+--> Model | Title | Tables
+-
+/*
+Menu Title Tables (mTitleTable) are tab delimited arrangements of multiple mTitles,
+that can be combined to draw a composite menu.
+
+mTitleTables default to simple indexes of global menus,
+however the subsequent item mController should be included when the menu is not indexed as a global menu.
+There is a notion of adding further metadata (mBeforeLineNum and mPassMouseDown) for advanced hacking of existing menus,
+but these are nto currenlty tested or supported.
+
+Internaly the data is now stared as arrays, however the table format has the advantage of speed,
+as it is not necessary to re-index lines when the tables are combined.
+*/
+
+[[ _FetchHandler (menu_GetTextFromTitleTable,f) ]]
+
+
+--> Menu | Utitlites
+-
+[[ _FetchHandler (menu_SetFromMenuPick,c) ]]
+
+
+--> Menu | Tests
+-
+[[ _FetchHandler (menu_StripDividers,c) ]]
+
+[[ _FetchHandler (menu_ClearActiveArray,c) ]]
+
+
+--> Model | Menu | Global Title
+-
+[[ _FetchHandler (menu_AddGlobalTitle,c) ]]
+
+[[ _FetchHandler (menu_DeleteGlobalTitle,c) ]]
+
+[[ _FetchHandler (menu_IsUnder,f) ]]
+
+[[ _FetchHandler (menu_ConstructTemplateScript,f) ]]
+
+[[ _FetchHandler (menu_ConstructSubMenuScript,f) ]]
+
+[[ _FetchHandler (menu_SubMenuHierarchy,f) ]]
+
+[[ _FetchHandler (menu_SortTitles,f) ]]
+
+[[ _FetchHandler (menu_GlobalControllerOutline,f) ]]
+
+[[ _FetchHandler (menu_GlobalControllers,f) ]]
+
+[[ _FetchHandler (menu_ConstructGlobalControllerArray,f) ]]
+
+
+--> Menu | Utilities
+-
+[[ _FetchHandler (menu_SuiteScript,f) ]]
+
+[[ _FetchHandler (menu_FromFolders,f) ]]
+
+[[ _FetchHandler (menu_SetChoice,c) ]]
+
+-- function menu_CheckDisabledItem mFormatProp, mTarget, mController, menuIsDisabled
+if menuIsDisabled is true then return true
+if mFormatProp is empty then return false
+
+try
+   put mFormatProp & "[" & mTarget & "]" into mFormatProperty
+   put the mFormatProperty of mController into itemIsDisabled
+catch someError
+   -- error_CheckDisabled mController, mTarget, mTitlePath, mTableLine, someError
+end try
+return itemIsDisabled
+end menu_CheckDisabledItem
+
+-- function menu_CheckDisabled mFormatProp, mTarget, mController
+if mFormatProp is empty then return false
+
+try
+   put mFormatProp & "[" & mTarget & "]" into mFormatProperty
+   put the mFormatProperty of mController into itemIsDisabled
+   return itemIsDisabled
+catch someError
+   return someError
+end try
+end menu_CheckDisabled
+
+[[ _FetchHandler (menu_ConvertTableArray,f) ]]
+
+[[ _FetchHandler (menu_IncrementPaths,c) ]]
+
+[[ _FetchHandler (menu_GetGlobalText,f) ]]
+
+[[ _FetchHandler (menu_MenuTextFromTitle,f) ]]
+
+
+--> Menu | Send
+-
+[[ _FetchHandler (menu_DoPick,c) ]]
+
+-- command menu_SendMessage mPath, pMenuTarget, pCreateActiveArray
+   -- to avoid menuPick handler in front script calling this twice must return non-empty if the menu is handled
+   if pCreateActiveArray is true then
+      breakpoint
+      get the menu_Text of the target -- will usually have already been constructed with dynamic menus on mouseDown
+   end if
+   
+   menu_DeconstructPath mPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType
+   if the result is false then return empty  -- when frontscript is active will be called by every menu (even Rev Ide menus)
+   
+   if exists (pMenuTarget) then
+      menu_SetItemTargetOveride mPath, pMenuTarget
+      put pMenuTarget into mTarget
+   else
+      put menu_TargetFromGlobal (mPath) into mTarget  -- mTarget must be same as what "menu_SendMessage does
+   end if
+   
+   menu_SetSentPath mPath -- everything can be derived from that
+   menu_SetTitlePath mTitlePath
+   
+   if exists (mController) is false then
+      -- something wrong
+      breakPoint
+   end if
+   
+   if the menu_OptionEdit of me is true and the optionkey is "Down" then
+      dispatch "menu_EditMenuItem" to mController with pigeon,foundPath,subMenuPath,mController,mTarget
+      return the result
+   else
+      put token 1 of pigeon into mCommand
+      put token 2 of pigeon into firstParamName
+      put token 4 of pigeon into secondParamName
+      
+      if the menu_Version of mController is empty then
+         if firstParamName is "subMenuPath" then -- and secondParamName is "mTarget" then
+            dispatch mCommand to mController with subMenuPath, mTarget
+         else -- if firstParamName is "mTarget" and secondParamName is "subMenuPath" then
+            -- not used at the moment - but would be consistent
+            dispatch mCommand to mController with mTarget, subMenuPath
+         end if
+      else
+         -- move over to a consistent param order
+         dispatch mCommand to mController with mTarget, subMenuPath
+      end if
+      
+      switch it
+         case "handled"
+            return it
+         case "passed"
+            return it
+         case "not handled"
+            -- menu_SendMessageError tError
+            return it
+      end switch
+   end if
+end menu_SendMessage
+
+[[ _FetchHandler (menu_EditMenuItem,c) ]]
+
+[[ _FetchHandler (menu_SendMessageError,c) ]]
+
+-- command menu_DeconstructPath mPath, @foundPath, @foundParam, @pigeon, @mController, @mTitlePath, @mItemType
+global gTemp_ActiveMenuArray
+
+put empty into foundParam
+put empty into pigeon
+put empty into mController
+put empty into mTitlePath
+put empty into mItemType
+
+-- lets search to see if there is a param being sent with the menu
+-- pity menus don't use a different delimiter like tab
+-- as the text of the menu item could include "|" we can't just check the first item
+-- but should search back down through all items
+
+set the itemdelimiter to "|"
+put the number of items of mPath into maxNum
+repeat with itemNum = maxNum down to 1
+   put item 1 to itemNum of mPath into foundPath
+   put gTemp_ActiveMenuArray ["mPath"][foundPath] into foundArray
+   
+   if foundArray is an array then
+      -- found a mPath in active menu global
+      
+      put foundArray ["pigeon"] into pigeon
+      put foundArray ["mController"] into mController
+      put foundArray ["mItemType"] into mItemType
+      put foundArray ["mTitlePath"] into mTitlePath
+      
+      put item (itemNum + 1) to maxNum of mPath into foundParam
+      return true
+   end if
+end repeat
+
+put empty into foundPath
+return false
+end menu_DeconstructPath
+
+-- command menu_FetchCustomMenuItems @mText, mLine, submenuProp, mController, paramProp, mTarget, mItemType
+try
+   put mLine & CR after mText
+   
+   put submenuProp & "[" & mTarget & "]" into submenuProperty
+   put the submenuProperty of mController into subMenu
+   
+   if subMenu is not empty then
+      -- check submenu
+      replace comma with CR in subMenu
+      menu_CheckSub subMenu, paramProp, mController, mTarget, mItemType
+      put outline_IncreaseIndent (subMenu, 1) into subMenu
+      put subMenu & CR after mText
+   end if
+catch someError
+   error_LogCustomMenuItems mController, submenuProperty, someError
+end try
+end menu_FetchCustomMenuItems
+
+[[ _FetchHandler (menu_AddBooleanLine,c) ]]
+
+-- command menu_InsertFixed @mText, mLine, pigeon, mController, paramProp, topMenuTarget, mItemType
+put mLine & CR after mText
+put word 1 of pigeon into mCommand
+put the submenu_Fixed [mCommand] of mController into subMenu
+if subMenu is not empty then
+   menu_CheckSub subMenu, paramProp, mController, topMenuTarget, mItemType
+   put outline_IncreaseIndent(subMenu) into subMenu
+   put subMenu & CR after mText
+end if
+end menu_InsertFixed
+
+[[ _FetchHandler (menu_InsertSubMenu,c) ]]
+
+[[ _FetchHandler (menu_IncludeMenuText,c) ]]
+
+[[ _FetchHandler (menu_DisableLine,c) ]]
+
+[[ _FetchHandler (menu_TidyText,c) ]]
+
+-- command menu_CheckSub @subMenu, paramProp, mController, mTarget, mItemType
+if paramProp is empty then return empty
+
+-- passing parameter can cause a custom property to fail to return when no getprop is there.
+put paramProp & "[" & mTarget & "]" into paramProperty
+try
+   put the paramProperty of mController into checkedItems
+   if checkedItems is empty and mItemType is among the items of "custom,fixed" then
+      -- a hack ???
+      -- put the paramProp of mController into checkedItems
+   end if
+   
+   replace comma with CR in checkedItems
+   repeat for each line checkedItem in checkedItems
+      menu_SetCheckedItem checkedItem, subMenu, true
+   end repeat
+catch tError
+   if exists (mController) then put the mobile_Name of mController into mController
+   put paramProperty & CR & mController into errorInfo
+   display_Lines errorInfo, "menu_CheckSub - the paramProperty of"
+   -- breakPoint
+   if exists (mController) then edit the script of mController
+end try
+end menu_CheckSub
+
+
+--> Menu | Controller | Global
+-
+[[ _FetchHandler (menu_MatchGlobalController,f) ]]
+
+[[ _FetchHandler (menu_SearchGlobalObjectHierarchy,c) ]]
+
+[[ _FetchHandler (menu_EditScript,c) ]]
+
+[[ _FetchHandler (menu_GetScript,f) ]]
+
+[[ _FetchHandler (menu_InitialiseTopController,c) ]]
+
+[[ _FetchHandler (menu_ConstructHkey,f) ]]
+
+
+--> Menu | Title
+-
+/*
+A menu_Title is the title of a "script menu".  It is the link between the target and the menu_Controller.
+
+The menu_Title can be set to change wich menu is displayed, but this is not usually needed
+as the default value (menu_DefautTitle) is taken from the stem of the views owner.
+
+These properties are defined globally so that they can be overridden locally. 
+Usually a title_View will not have menu_Title properites.
+
+A title view in this way does not have its own menu, but draws the menu linked to its owner.
+Therefore a title_View in a tree_View draws a "Tree | Menu", 
+while the same title_View in a table_View would draw a "Tree | Menu"
+This allows a title to be changed and the default title remain the same.
+
+There can be different controllers for different mTitles, allowing menus to be switched by changing the mTitle
+It is equivalent to the title of the script_Suite that contains the menu code.
+*/
+
+[[ _FetchHandler (menu_GetToolTitle,f) ]]
+
+[[ _FetchHandler (menu_DeleteTitle,c) ]]
+
+[[ _FetchHandler (menu_GlobalTitleFromViewName,f) ]]
+
+[[ _FetchHandler (menu_TitleFromViewName,f) ]]
+
+[[ _FetchHandler (menu_ViewNameFromTitle,f) ]]
+
+[[ _FetchHandler (menu_CheckTitleController,f) ]]
+
+[[ _FetchHandler (menu_FindTitle,c) ]]
+
+[[ _FetchHandler (menu_SearchViewHierarchy,c) ]]
+
+
+--> Menu | Target
+-
+/*
+All temporary menu data is stored in the global gTemp_ActiveMenuArray
+
+gOPN_MenuArray is where the long term dictionary is stored.
+*/
+
+[[ _FetchHandler (menu_TargetFromGlobal,f) ]]
+
+
+--> Menu | | Title | Translation
+-
+[[ _FetchHandler (menu_TitlePathToView,f) ]]
+
+[[ _FetchHandler (menu_TitleToViewName,f) ]]
+
+[[ _FetchHandler (menu_FindAssociatedViewNames,f) ]]
+
+[[ _FetchHandler (menu_FindAssociatedLibraryObject,f) ]]
+
+[[ _FetchHandler (menu_ViewReferenceFromTitle,f) ]]
+
+
+--> Menu | Table
+-
+/*
+For some reason "menu_Table"s are different from the more general "controller_Tables".
+The reason is to be able to include formatting data for the display of menus.
+
+"menu_Table"s are accessed by fetching the custom property menu_Table" of hte menu_Controller,
+which by default refers to a stored  custom property the menu_Controller (usually the current card).
+*/
+
+
+--> Menu | Table | Utilities
+-
+[[ _FetchHandler (menu_ConstructTableLine,f) ]]
+
+[[ _FetchHandler (menu_DeconstructTableLine,c) ]]
+
+[[ _FetchHandler (menu_CleanLine,f) ]]
+
+[[ _FetchHandler (menu_CleanLines,f) ]]
+
+
+--> Menu | Table | Command Lines
+-
+[[ _FetchHandler (menu_CommandToText,f) ]]
+
+[[ _FetchHandler (menu_CommandFromText,f) ]]
+
+
+--> Menu | Action
+-
+[[ _FetchHandler (menu_SetText,c) ]]
+
+[[ _FetchHandler (menu_SelfEdit,c) ]]
+
+[[ _FetchHandler (menu_EditMenuScript,c) ]]
+
+
+--> Menu | Initialise | Wrappers
+-
+[[ _FetchHandler (menu_MouseDown,c) ]]
+
+[[ _FetchHandler (menu_InitialiseMouseDownGlobals,c) ]]
+
+[[ _FetchHandler (menu_InitialiseTopTitle,c) ]]
+
+[[ _FetchHandler (menu_ClearTargetGlobals,c) ]]
+
+
+--> Menu | Messages
+-
+[[ _FetchHandler (menu_ConstructPigeonHkey,f) ]]
+
+[[ _FetchHandler (menu_DoGlobal,c) ]]
+
+
+--> Menu | Array
+-
+[[ _FetchHandler (menu_GetTargetObject,f) ]]
+
+[[ _FetchHandler (menu_SetTargetObject,c) ]]
+
+[[ _FetchHandler (menu_ControllerFromTitlePath,f) ]]
+
+[[ _FetchHandler (menu_TitlePathFromPath,f) ]]
+
+
+--> Menu | Array | Sent
+-
+[[ _FetchHandler (menu_GetSentController,f) ]]
+
+[[ _FetchHandler (menu_GetSentTitle,f) ]]
+
+[[ _FetchHandler (menu_GetSentPath,f) ]]
+
+[[ _FetchHandler (menu_SetSentPath,c) ]]
+
+[[ _FetchHandler (menu_GetSentTitlePath,f) ]]
+
+[[ _FetchHandler (menu_SetTitlePath,c) ]]
+
+[[ _FetchHandler (menu_GetSentArray,f) ]]
+
+
+--> Menu | Array | Top
+-
+-- function menu_GetTopController
+   -- could probably work out from mTitlePath (by getting first items mController)
+   global gTemp_ActiveMenuArray
+   put gTemp_ActiveMenuArray ["top"]["mController"] into mTopController
+   return mTopController
+end menu_GetTopController
+
+[[ _FetchHandler (menu_SetTopController,c) ]]
+
+[[ _FetchHandler (menu_GetTopTitle,f) ]]
+
+[[ _FetchHandler (menu_SetTopTitle,c) ]]
+
+
+--> Menu | Format
+-
+[[ _FetchHandler (menu_CleanMarks,f) ]]
+
+[[ _FetchHandler (menu_GetLineNum,f) ]]
+
+[[ _FetchHandler (menu_SetCheckedItem,c) ]]
+
+[[ _FetchHandler (menu_SetDisabledItem,c) ]]
+
+[[ _FetchHandler (menu_CheckLineFromPath,f) ]]
+
+[[ _FetchHandler (menu_SetCheckedLine,f) ]]
+
+
+--> Menu | MouseDown Hacks
+-
+/*
+Does not seem to be used (very much), 
+but was an important hack for globally intercepting other peoples mouseDown menus?
+*/
+
+[[ _FetchHandler (menu_AddMouseDownBlock,c) ]]
+
+[[ _FetchHandler (menu_DeleteMouseDownBlock,c) ]]
+
+[[ _FetchHandler (menu_GetMouseDownBlocks,f) ]]
+
+[[ _FetchHandler (menu_SetMouseDownBlocks,c) ]]
+
+
+--> Temp
+-
+[[ _FetchHandler (menu_ConvertArrayToRecord,c) ]]
+
+[[ _FetchHandler (menu_DeconstructPluginRecord,c) ]]
+
+[[ _FetchHandler (menu_ExportMenuItemScript,c) ]]
+
+-- function menu_GetDefaultController mTitle, targetObject, pSearchScript
+-- careful to avoid recursion 
+-- called repeatedly on menu draw (consider speeding up by using caching / and / or using menu_TitleBurn)
+
+-- check if it is global
+set the itemdelimiter to "|"
+put word 1 to -1 of item 1 of mTitle into mTitleStem
+if mTitleStem is "Global" then
+   menu_SearchGlobalObjectHierarchy mTitle, mController
+   if exists (mController) is true then
+      return mController
+   end if
+end if
+
+-- here we allow sub stack cards to override defaults
+put the menu_SubStackCard [mTitle] of targetObject into mController
+if exists (mController) then return mController
+
+-- here are the best guess defaults
+put the view_Object of targetObject into someView
+switch
+   case word 1 of targetObject = "card"
+      -- even when there is a backgound view
+      -- the default controller of a menus card script is the card not the card_Object of the view
+      return targetObject
+   case exists(someView) is false
+      -- the default menu_Controller of anything other than a view is the target itself
+      return the rugged_Id of the target
+   case mTitle is empty
+      -- for views the default controller is the card
+      -- can be unreliable in the case of backgound views (will take the card that is showing)
+      put the card_Object of someView into cardObject
+      return cardObject
+   default
+      -- if pSearchScript is true then 
+      -- does not refer to default values via menu_Table but uses script
+      -- used by menu_CreateOnCompile to construct menu_Tables (so the menu_Table is empty)
+      -- else
+      -- lets search for a possible controller which has the right mTitle
+      -- we can use the menu_Table (a bit faster)
+      menu_SearchViewHierarchy someView, mTitle, mController, pSearchScript
+      if mController is not empty then return mController
+      
+      put the card_Object of someView into cardObject
+      return cardObject
+end switch
+end menu_GetDefaultController
+
+[[ _FetchHandler (menu_GetTable,f) ]]
+
+[[ _FetchHandler (menu_GetTableTitles,f) ]]
+
+[[ _FetchHandler (menu_ModifierKeys,f) ]]
+
+
+--> Menu | Construct | Utilities
+-
+[[ _FetchHandler (menu_ConstructCaseStatement,f) ]]
+
+[[ _FetchHandler (menu_GetToggleSubmenu,f) ]]
+
+
+--> Menu | Sections
+-
+[[ _FetchHandler (menu_ReplaceSubOfButton,c) ]]
+
+[[ _FetchHandler (menu_ReplaceSection,f) ]]
+
+[[ _FetchHandler (menu_AddToSection,c) ]]
+
+
+--> Menu | Sections | Dividers
+-
+[[ _FetchHandler (menu_GetDividerSection,f) ]]
+
+[[ _FetchHandler (menu_DeleteDividerSection,f) ]]
+
+[[ _FetchHandler (menu_ReplaceDividerSection,f) ]]
+
+[[ _FetchHandler (menu_DeleteSection,f) ]]
+
+[[ _FetchHandler (menu_GetDividerArray,f) ]]
+
+[[ _FetchHandler (menu_ConstructDividerIndex,f) ]]
+
+[[ _FetchHandler (menu_StripDividerLines,f) ]]
+
+
+--> Menu | Format
+-
+[[ _FetchHandler (menu_ConstructHtmlOutline,f) ]]
+
+[[ _FetchHandler (menu_ConvertMarksToHtml,c) ]]
+
+
+--> Menu | Format | Replace
+-
+[[ _FetchHandler (menu_ReplaceItem,f) ]]
+
+
+--> Menu | Format | Check and uncheck
+-
+[[ _FetchHandler (menu_SetChecked,c) ]]
+
+[[ _FetchHandler (menu_GetChecked,f) ]]
+
+[[ _FetchHandler (menu_GetCheckedItem,f) ]]
+
+[[ _FetchHandler (menu_GetCheckedLine,f) ]]
+
+[[ _FetchHandler (menu_LineIsChecked,f) ]]
+
+
+--> Menu | Format | Toggles
+-
+[[ _FetchHandler (menu_CheckOne,f) ]]
+
+[[ _FetchHandler (menu_RadioCheck,c) ]]
+
+[[ _FetchHandler (menu_ToggledChecked,c) ]]
+
+[[ _FetchHandler (menu_GetToggleChecked,f) ]]
+
+[[ _FetchHandler (menu_ToggleSubMenu,f) ]]
+
+
+--> Menu | Creation
+-
+[[ _FetchHandler (menu_SetTemplateButton,c) ]]
+
+
+--> Menu | Search and Find
+-
+/*
+This suite is a set of experiments in searching the Global Menu hierarchy, and the message path, 
+to automatically find an appropriate menu. The general experience was this was cool, but prone to mistakes.
+They need tidying.
+*/
+
+[[ _FetchHandler (menu_ScriptTitles,g) ]]
+
+command menu_FindTitle mTitle, targetObject, @mController, pWhichHierarchy
+   -- put the view_Hierarchy of the target into testControllers
+   if pWhichHierarchy is empty then put "stack" into pWhichHierarchy -- or maybe use "development" as default ?
+   put the hkey_SearchHierarchy [pWhichHierarchy] of targetObject into testControllers
+   
+   set the itemdelimiter to "|"
+   set the wholematches to true
+   repeat for each line mController in testControllers
+      put menu_CheckTitleController (mTitle, mController) into isThere
+      if isThere is true then return true
+   end repeat
+   put empty into mController
+   return false
+end menu_FindTitle
+
+[[ _FetchHandler (menu_HierarchyTitle,s) ]]
+
+[[ _FetchHandler (menu_ListGlobalNames,f) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (script_ParamToHandlerName,f) ]]
+
+[[ _FetchHandler (_menu_DeconstructDividerInfo,pc) ]]
+
+[[ _FetchHandler (param_IsObject,f) ]]
+
+[[ _FetchHandler (param_IsBoolean,f) ]]
+
+[[ _FetchHandler (object_IsType,f) ]]
+
+[[ _FetchHandler (script_OrderedMenuTitles,f) ]]
+
+
+--> Private ?
+-
+[[ _FetchHandler (addToMenuActiveArray,c) ]]
+
+-- function _GetDefaultMenuTarget mPath, mTitlePath, targetObject
+-- ignoreCall:  menu_Target,g
+-- default steps below are needed when menu_Target in the controller is not specified
+
+-- a default can be dynamic and defined in the view using a "getprop menu_Target" handler
+put the menu_Target [mTitlePath] of targetObject into mTarget
+-- if exists(mTarget) then return addThenReturn (mTarget)
+if mTarget is not empty then return addThenReturn (mTarget) -- could be something other than an object
+
+/*
+-- this authoring version guesses a default based on mPath (from which it gets mTitles)
+-- look at mTitles associated with mPath and then work out for views with corresponding names.
+
+put menu_TitlePathFromPath (mPath) into mTitlePath
+put menu_TitlePathToView (mTitlePath) into viewNames
+if viewNames is not empty then
+   -- this looks for the top view
+   put the card_View [viewNames] of targetObject into linkedView
+   if exists(linkedView) is true then
+      return linkedView
+   end if
+end if
+*/
+
+-- Finally if all else fails it returns the view or the target object.
+put the view_Object of targetObject into someView
+if exists(someView) is false then put targetObject into someView
+return someView
+end _GetDefaultMenuTarget
+
+[[ _FetchHandler (addThenReturn,f) ]]
+
+[[ _FetchHandler (extractInsertedTitle,c) ]]
+
+
+--> Menu | Error
+-
+[[ _FetchHandler (error_CheckMenuController,f) ]]
+
+[[ _FetchHandler (error_CheckDisabled,c) ]]
+
+[[ _FetchHandler (error_LogBoolean,c) ]]
+
+[[ _FetchHandler (error_LogCustomMenuItems,c) ]]
+
+[[ _FetchHandler (error_CheckSub,c) ]]
+
+[[ _FetchHandler (error_InitialseTopController,c) ]]

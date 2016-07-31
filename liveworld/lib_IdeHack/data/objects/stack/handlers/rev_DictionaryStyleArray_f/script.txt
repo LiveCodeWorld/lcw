@@ -1,0 +1,4 @@
+function rev_DictionaryStyleArray
+   put the customproperties ["cStyles"] of revDocumentationStack() into someArray
+   return someArray
+end rev_DictionaryStyleArray

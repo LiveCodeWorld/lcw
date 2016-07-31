@@ -1,0 +1,9 @@
+getprop menu_ToolOrTitle
+   -- legacy please stop using
+   breakpoint
+   if the controlKey is "Down" then
+      return the menu_ToolTitle of the target
+   else
+      return the menu_Title of the target
+   end if
+end menu_ToolOrTitle

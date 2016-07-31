@@ -1,0 +1,6 @@
+getprop stack_IsTemplate
+   put the stack_Name of the target into vName
+   put the filename of stack vName into viewStackFile
+   put library_ViewFolder () into viewFolder
+   return viewStackFile begins with viewFolder
+end stack_IsTemplate

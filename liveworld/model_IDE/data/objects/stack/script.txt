@@ -1,0 +1,138 @@
+--> Metadata
+-
+name: model_IDE
+type: model
+author: David Bovill
+copyright: David Bovill
+license: GPLv3
+version: 0.9
+
+/*
+This library is for customising the livecode IDE, through understandig it's structure.
+We can then attach and remove our own behaviors to the IDE, and the Script Editor in particular.
+This is not using the official API, so it's brittle but has proven remarkably stable over time.
+
+This model abstracts, both key controls within the Livecode IDE, and behaviors that we can attach to them.
+
+on setBehaviors
+   -- from stack "revSEStackbehavior"
+   set the behavior of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("editor")
+   set the behavior of group "Menubar" of me to the long id of stack revIDEScriptEditorBehavior("menubar")
+   set the behavior of group "Script Tabs" me to the long id of stack revIDEScriptEditorBehavior("scripttabs")
+   set the behavior of group "Toolbar" of me to the long id of stack revIDEScriptEditorBehavior("toolbar")
+   set the behavior of group "Handler List" of me to the long id of stack revIDEScriptEditorBehavior("handlerlist")
+   set the behavior of group "Left Bar" of me to the long id of stack revIDEScriptEditorBehavior("leftbar")
+   set the behavior of field "Filter" of group "Left Bar" of me to the long id of stack revIDEScriptEditorBehavior("filterfield")
+   set the behavior of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablespane")
+   set the behavior of group "Documentation" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("documentationpane")
+   set the behavior of field "Filter" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("filterfield")
+   set the behavior of button "Show Globals" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablescheckbox")
+   set the behavior of button "Show Environment Vars" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablescheckbox")
+   set the behavior of group "Gutter" of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("gutter")
+   set the behavior of group "Interactive Find" of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("interactive find")
+end setBehaviors
+*/
+
+
+--> Events
+-
+[[ _FetchHandler (libraryStack,c) ]]
+
+
+--> IDE | Edited
+-
+/*
+Marks whether or not a stack has been edited. Very useful for deciding what needs saving.
+*/
+
+[[ _FetchHandler (edited_Flag,g) ]]
+
+[[ _FetchHandler (edited_Flag,s) ]]
+
+[[ _FetchHandler (ide_SaveEditedStacks,c) ]]
+
+[[ _FetchHandler (rev_MarkStackSaved,c) ]]
+
+[[ _FetchHandler (rev_MarkStackEdited,c) ]]
+
+[[ _FetchHandler (rev_ListEditedStackNames,f) ]]
+
+
+--> IDE
+-
+[[ _FetchHandler (ide_AddBehaviorHacks,c) ]]
+
+
+--> IDE | Rev
+-
+[[ _FetchHandler (rev_GetModifiedObjects,f) ]]
+
+[[ _FetchHandler (rev_GetScriptEditorHistoryObjects,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorIsOpen,f) ]]
+
+
+--> IDE | ScriptEditor | Rev
+-
+[[ _FetchHandler (rev_LaunchDocsButton,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorStack,f) ]]
+
+[[ _FetchHandler (rev_TopScriptEditor,f) ]]
+
+[[ _FetchHandler (rev_ScriptObject,f) ]]
+
+[[ _FetchHandler (rev_OpenScriptEditorNames,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorField,f) ]]
+
+[[ _FetchHandler (rev_HistoryButton,f) ]]
+
+[[ _FetchHandler (rev_HandlerTreeField,f) ]]
+
+[[ _FetchHandler (rev_SimpleFindField,f) ]]
+
+[[ _FetchHandler (rev_CompileButton,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorDocField,f) ]]
+
+
+--> IDE | ScriptEditor | Rev | Pane
+-
+[[ _FetchHandler (rev_ListScriptEditorPaneNames,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorPaneTabsGroup,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorPanesGroup,f) ]]
+
+
+--> IDE | Behavios
+-
+/*
+We need a model for this.
+*/
+
+[[ _FetchHandler (scriptEditor_HandlerListBehavior,f) ]]
+
+[[ _FetchHandler (scriptEditor_ScriptFieldBehavior,f) ]]
+
+[[ _FetchHandler (scriptEditor_HistoryButtonBehavior,f) ]]
+
+[[ _FetchHandler (scriptEditor_FindFieldBehavior,f) ]]
+
+[[ _FetchHandler (scriptEditor_CompileButtonBehavior,f) ]]
+
+[[ _FetchHandler (scriptEditor_DocumentationFieldBehavior,f) ]]
+
+[[ _FetchHandler (scriptEditor_LaunchDocsBehavior,f) ]]
+
+
+
+--> old hArray way of doing things (a bit brittle)
+-
+/*
+Not needed in this library except for compatability.
+It is a powerful and flexibe way of naming things though.
+*/
+
+[[ _FetchHandler (scriptEditor_GetBehaviorButton,f) ]]

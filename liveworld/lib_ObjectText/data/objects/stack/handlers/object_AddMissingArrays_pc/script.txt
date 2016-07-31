@@ -1,0 +1,28 @@
+private command object_AddMissingArrays @revPropertyArray, targetObject
+   /*
+   I can confirm that the antialiased/gradient props are not included in graphics; and the bitmap effect properties are not reported for controls.
+   antialiased, fillgradient, strokegradient
+   innershadow, innerglow, outerglow, dropshadow, coloroverlay
+   */
+   
+   if word 1 of targetObject is "graphic" then
+      put the antialiased of targetObject into revPropertyArray ["antialiased"]
+      get the fillgradient of targetObject
+      if it is an array then put it into revPropertyArray ["fillgradient"]
+      get the strokegradient of targetObject
+      if it is an array then put it into revPropertyArray ["strokegradient"]
+   end if
+   
+   if word 1 of targetObject is not among the items of "card,stack,videoclip,audioclip" then
+      get the innerShadow of targetObject
+      if it is an array then put it into revPropertyArray ["innershadow"]
+      get the innerglow of targetObject
+      if it is an array then put it into revPropertyArray ["innerglow"]
+      get the outerglow of targetObject
+      if it is an array then put it into revPropertyArray ["outerglow"]
+      get the dropshadow of targetObject
+      if it is an array then put it into revPropertyArray ["dropshadow"]
+      get the coloroverlay of targetObject
+      if it is an array then put it into revPropertyArray ["coloroverlay"]
+   end if
+end object_AddMissingArrays

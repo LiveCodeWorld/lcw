@@ -1,0 +1,5 @@
+private function _fieldControl
+   put the body_View of _wikiView() into bodyView
+   put the long id of field 1 of bodyView into fieldControl
+   return fieldControl
+end _fieldControl

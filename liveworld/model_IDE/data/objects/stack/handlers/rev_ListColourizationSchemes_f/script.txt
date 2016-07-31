@@ -1,0 +1,5 @@
+function rev_ListColourizationSchemes
+   put "seColorizationLoadScheme,c" into shortHkey
+   put the hkey_CaseConditions [shortHkey] of stack "revNewScriptEditor" into colourConditions
+   return colourConditions
+end rev_ListColourizationSchemes

@@ -1,0 +1,22 @@
+command git_RenameFile sourceFile, destFile
+   -- will do folders as well
+   put sourceFile into bashSourceFile
+   shell_BashParamEscape bashSourceFile
+   put destFile into bashDestFile
+   shell_BashParamEscape bashDestFile
+   
+   put "git mv" into someShell
+   put space & bashSourceFile after someShell
+   put space & bashDestFile after someShell
+   
+   put git_ExecuteShellCommand(someShell) into shellResult
+   
+   if shellResult is not empty then opn_Notify shellResult, true
+   if shellResult begins with "fatal: " or shellResult begins with "error:" then
+      -- assume it is untracked (could check before) ?
+      if there is a file sourceFile and there is not a file destFile then
+         rename file sourceFile to destFile
+      end if
+   end if
+   return shellResult
+end git_RenameFile

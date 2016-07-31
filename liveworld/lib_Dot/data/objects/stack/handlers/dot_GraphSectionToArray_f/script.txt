@@ -1,0 +1,25 @@
+function dot_GraphSectionToArray dotHeader
+   -- was "dot_HeaderToArray"
+   put text_GetBetween ("[", "]", dotHeader) into innerBit
+   repeat for each line someLine in innerBit
+      put word 1 to -1 of someLine into someLine
+      if someLine is empty then next repeat
+      repeat 50
+         set the itemdelimiter to "="
+         put word 1 to -1 of item 1 of someLine into someKey
+         delete item 1 of someLine
+         
+         put word 1 of someLine into someValue
+         if char -1 of someValue is comma then delete char -1 of someValue
+         replace quote with empty in someValue
+         delete word 1 of someLine
+         
+         put someValue into headerArray [someKey]
+         
+         if word 1 of someLine is comma then delete word 1 of someLine
+         put word 1 to -1 of someLine into someLine
+         if someLine is empty then exit repeat
+      end repeat
+   end repeat
+   return headerArray
+end dot_GraphSectionToArray

@@ -1,0 +1,13 @@
+command rev_SplitBackObjects @revBackObjects, @otherBackObjects
+   put the backscripts into backObjects
+   repeat for each line someObject in backObjects
+      put revRuggedID (someObject) into someObject
+      if the stack_Name of someObject begins with "rev" then
+         put someObject & CR after revBackObjects
+      else
+         put someObject & CR after otherBackObjects
+      end if
+   end repeat
+   delete char -1 of otherBackObjects
+   delete char -1 of revBackObjects
+end rev_SplitBackObjects

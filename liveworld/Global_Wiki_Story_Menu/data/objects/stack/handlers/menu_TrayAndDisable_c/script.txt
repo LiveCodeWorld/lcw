@@ -1,0 +1,6 @@
+on menu_TrayAndDisable mTarget
+   put the browser_Widget of mTarget into browserWidget
+   put "$( 'a' ).click(function( event ) {event.preventDefault(); alert ('Hello wolrd');return false;});" into someJavascript
+   do someJavascript in browserWidget
+   put someJavascript
+end menu_TrayAndDisable

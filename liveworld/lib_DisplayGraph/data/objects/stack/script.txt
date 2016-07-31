@@ -1,0 +1,194 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_DisplayGraph
+type: script library
+version: 0.1
+
+/*
+A library to do with overlays, creating them from folders of data (overlay_Folder)
+and providing a set of custom properties that can be used to manipulate them.
+
+Previously there were many intefaces and libraries - overlayData, overlayFolder, overlayArray, linkArray etc
+This library is designed to provide a standard way to interface with these handlers, 
+using overlay_Folder and overlay_Name to refer to graph overlays uniquely.
+
+= To Do =
+At the moment the data structure is a nested set of dotArrays keyed by the overlayName of each overlayArray.
+This means there is no real metadata for overlayData, and thngs like overlayName are stored
+as a hack by slooping through metadata proerties of each overlayArray.
+
+The data structure should perhaps be changed to the usual data/metadata arrangement.
+*/
+
+
+--> Display | Event Handlers
+-
+/*
+These handlers handle events from display views that are created from the code in this library.
+They do not have to be here, as you can change their location by setting the "event_Target" property of the display_View.
+*/
+
+[[ _FetchHandler (display_ObjectHkeyArrayHandler,c) ]]
+
+[[ _FetchHandler (display_HkeyArrayHandler,c) ]]
+
+
+--> Working On
+-
+[[ _FetchHandler (graph_ScriptHandlers,c) ]]
+
+[[ _FetchHandler (hkeyArray_Graph,c) ]]
+
+[[ _FetchHandler (display_DotSections,c) ]]
+
+[[ _FetchHandler (display_Dot,c) ]]
+
+[[ _FetchHandler (display_ObjectHkeyArray,c) ]]
+
+[[ _FetchHandler (display_HKeyArray,c) ]]
+
+[[ _FetchHandler (display_HkeyTreeArray,c) ]]
+
+-- private command _setObjectTitleHkey hkeyOrObject, @hKey, @hObject, @displayTitle
+switch
+   case exists (hkeyOrObject)
+      put "script" into hName
+      put hkeyOrObject into hObject
+      put empty into hKey
+      put hName,hObject into displayTitle
+      break
+   case the number of items of hkeyOrObject = 4
+      put hkeyOrObject into hKey
+      put item 1 of hKey into hName
+      put item 3 of hKey into hObject
+      put hName,hObject into displayTitle
+      break
+   default
+      put "hKeyArray" into displayTitle
+      put empty into hKey
+      put empty into hObject
+end switch
+end _setObjectTitleHkey
+
+
+--> Display
+-
+[[ _FetchHandler (display_SVG,c) ]]
+
+[[ _FetchHandler (display_Overlay,c) ]]
+
+[[ _FetchHandler (overlayArray_Graph,c) ]]
+
+[[ _FetchHandler (display_OverlayData,c) ]]
+
+
+--> Working On
+-
+-- getprop script_SvgFile
+   put the long id of the target into scriptObject
+   -- put the textStackOverlay_Folder [false] of scriptObject into overlayFolder
+   put the overlay_Folder [false] of scriptObject into overlayFolder
+   put overlayArray_GetImageFile (overlayArray, overlayFolder) into svgFile
+   return svgFile
+end script_SvgFile
+
+
+--> Graph | SVG
+-
+/*
+You can alter the way the graph is constructed by placing a "hkeyArray_AddToFiltered" handler
+at the same level as the "display_IndexScriptAndDisplaySVG"
+*/
+
+[[ _FetchHandler (display_IndexScriptAndDisplaySVG,c) ]]
+
+[[ _FetchHandler (script_IndexAndCreateOverlay,c) ]]
+
+[[ _FetchHandler (script_CreateGraph,c) ]]
+
+
+--> Overlay | Create
+-
+[[ _FetchHandler (overlay_CreateObjectGraph,c) ]]
+
+[[ _FetchHandler (overlay_CreateGraph,c) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructFromScript,f) ]]
+
+[[ _FetchHandler (hkey_ObjectWalk,c) ]]
+
+[[ _FetchHandler (deps_ConstructDependencyArray,c) ]]
+
+[[ _FetchHandler (deps_CreateMainStackOverlay,c) ]]
+
+[[ _FetchHandler (deps_SaveMainstackAndExportArrays,c) ]]
+
+
+--> Hkey | Array | Draw
+-
+[[ _FetchHandler (script_RedrawDependencyArray,c) ]]
+
+
+[[ _FetchHandler (dot_ProcessAndSaveFiles,c) ]]
+
+
+--> Overlay | Old
+-
+/*
+Now replaced with overlay_Array which contains all the data needed for the overlay.
+*/
+
+[[ _FetchHandler (overlay_SetImage,c) ]]
+
+[[ _FetchHandler (overlay_CreateAndSetData,c) ]]
+
+-- command overlay_CreateView imageView
+   if exists (group "Dot Overlay" of imageView) then
+      return the long id of group "Dot Overlay" of imageView
+   else
+      put the image_Object of imageView into imageObject
+      put the rect of imageObject into someRect
+      set the view_Insert [someRect] of imageView to "View|Graph|Graphviz"
+      put the result into graphvizView
+      set the name of graphvizView to "Dot Overlay"
+      return graphvizView
+   end if
+end overlay_CreateView
+
+
+--> Display | Dot
+-
+[[ _FetchHandler (display_ScriptDotArray,c) ]]
+
+[[ _FetchHandler (display_ScriptArray,c) ]]
+
+-- command display_ScriptGraph scriptObject, pGraphStyle, pGraphSize, pOverlayName
+   _NormalizeGraphParams pOverlayName, pGraphStyle, pGraphSize
+   
+   put the script_MaybeCreateLinkArray [pOverlayName] of scriptObject into hKeyArray
+   script_RedrawDependencyArray hkeyArray, scriptObject, pGraphStyle, pGraphSize
+end display_ScriptGraph
+
+-- private command _NormalizeGraphParams @pOverlayName, @pGraphStyle, @pGraphSize
+   put overlayArray_GetDefaultGraphStyle() into defaultStyle
+   if pGraphStyle is empty then put defaultStyle into pGraphStyle
+   if pGraphSize is empty then put "full" into pGraphSize
+   if pOverlayName is empty then
+      if pOverlayName is defaultStyle then
+         put "default" into pOverlayName
+      else
+         put pGraphStyle into pOverlayName
+      end if
+   end if
+end _NormalizeGraphParams
+
+
+--> Display | OverlayArray
+-
+[[ _FetchHandler (overlayArray_ConstructOverlayAndCreateFiles,c) ]]
+
+
+--> LinkArray | Draw | Old?
+-
+[[ _FetchHandler (linkArray_RedrawOverlayMap,c) ]]

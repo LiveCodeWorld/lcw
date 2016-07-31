@@ -1,0 +1,6 @@
+command bonjour_RegisterPortMapper pMapperPort
+   put merge ("dns-sd -R 'LiveCode Port Mapper' _livecode._udp. . [[pMapperPort]] pdl=application/livecode") into someShell
+   shell_ExecuteInBackground someShell
+   put the result into shellResult
+   return shellResult
+end bonjour_RegisterPortMapper

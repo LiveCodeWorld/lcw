@@ -1,0 +1,15 @@
+function rev_ScriptEditorStack pEditorNum
+   switch
+      case pEditorNum is empty
+         return rev_TopScriptEditor()
+      case pEditorNum = 0
+         put the long id of stack "revSETemplate" of stack "revNewScriptEditor" into stackObject
+         return revRuggedID (stackObject)
+      case pEditorNum is a number
+         put "revNewScriptEditor" && pEditorNum into stackName
+         if exists (stack stackName) is false then return empty
+         return the name stack stackName
+      default
+         return rev_TopScriptEditor()
+   end switch
+end rev_ScriptEditorStack

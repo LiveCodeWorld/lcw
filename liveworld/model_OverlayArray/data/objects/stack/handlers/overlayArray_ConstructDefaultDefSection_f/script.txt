@@ -1,0 +1,16 @@
+function overlayArray_ConstructDefaultDefSection overlayArray, extraBit
+   overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdLinkArray, dotClusterArray
+   repeat for each key nodeID in idArray
+      put idArray [nodeID] into nodeLabel
+      -- put nodeID && "[label=" & kwote(nodeLabel) into nodeDefLine
+      put nodeLabel && "["into nodeDefLine
+      
+      -- put urlencode (hKey) into someUrl
+      -- put space & "URL=" & kwote(someUrl) after nodeDefLine
+      put space & extraBit after nodeDefLine
+      put "];" after nodeDefLine
+      put nodeDefLine & CR after dotDefSection
+   end repeat
+   delete char -1 of dotDefSection
+   return dotDefSection
+end overlayArray_ConstructDefaultDefSection

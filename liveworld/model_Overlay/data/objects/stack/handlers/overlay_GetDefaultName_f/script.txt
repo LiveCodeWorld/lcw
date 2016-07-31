@@ -1,0 +1,5 @@
+function overlay_GetDefaultName overlayFolder
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_GetDefaultName (overlayData) into overlayName
+   return overlayName
+end overlay_GetDefaultName

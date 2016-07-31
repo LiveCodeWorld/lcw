@@ -1,0 +1,8 @@
+command overlayData_SetMetadataArray @overlayData, metadataArray, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   if metadataArray is an array then
+      put metadataArray into overlayData [pOverlayName]["metadata"]
+   else
+      delete local overlayData [pOverlayName]["metadata"]
+   end if
+end overlayData_SetMetadataArray

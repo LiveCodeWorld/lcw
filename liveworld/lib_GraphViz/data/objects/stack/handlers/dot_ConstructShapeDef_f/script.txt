@@ -1,0 +1,12 @@
+function dot_ConstructShapeDef someNode, nodeLabel, nodeShape, nodeFillColour, nodeUrl, nodeToolTip, nodeStyle, nodeColour
+    dot_NormalizeNode someNode
+    if nodeStyle is empty then put "filled" into nodeStyle
+    if nodeColour is empty then put nodeFillColour into nodeColour
+     
+    get dot_ConstructDefLine(nodeLabel, nodeShape, nodeStyle, nodeColour, nodeFillColour, "", nodeUrl, nodeToolTip, "")
+    put someNode && "[" & it & "];" into nodeDef
+    put nodeDef & CR after nodeDefs
+     
+    delete last char of nodeDefs
+    return nodeDefs
+end dot_ConstructShapeDef

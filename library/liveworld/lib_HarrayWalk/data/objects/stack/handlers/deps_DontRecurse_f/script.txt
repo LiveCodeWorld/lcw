@@ -1,0 +1,39 @@
+function deps_DontRecurse hKey, pOriginalHkey, hArray
+   -- remember can also do this after collecting everything
+   -- the purpse here is to stop unecessarily long recursion
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put library_FetchHandler (hKey) into someHandler
+   
+   put pref_GetValue ("skip_HkeyComponents") is not false into skipHkeyComponents
+   switch
+      case hkey_IsAuthored (hKey, hArray) is false
+         return true
+      case the object_MetaData ["component"] of hObject is true and skipHkeyComponents is true
+         return false
+      case hObject contains "View|Menu|Button" and "View|Menu|Button" is not in pOriginalHkey
+         return false -- not needed because of the above
+      case hObject contains "View|Title|Right Align" and "View|Title|Right Align" is not in pOriginalHkey
+         if hType is among the items of "g,s" then
+            return true
+         else
+            return false
+         end if
+      case line 2 of someHandler contains "-- custom: true"
+         return false
+      case line 2 of someHandler contains "-- component: true"
+         return true
+      case hName begins with "display_"
+         return true
+      case lineoffset ("name: View|", someHandler) is not 0 and hType is among the items of "g,s"
+         -- skip a handler in a views behavior, when it is called outside of the view and it is a getprop or setprop.
+         breakpoint
+         hkey_Deconstruct pOriginalHkey, oName, oType, oObject, oNum
+         return the long id of hObject = the long id of oObject 
+      case hName is among the items of "opn_Notify"
+         return true
+      case hName begins with "tree_" and hType is among the items of "g,s"
+         return false
+      default
+         return false
+   end switch
+end deps_DontRecurse

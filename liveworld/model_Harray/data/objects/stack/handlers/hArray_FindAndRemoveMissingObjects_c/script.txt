@@ -1,0 +1,17 @@
+command hArray_FindAndRemoveMissingObjects pDontNotify
+   global gHkey_Array
+   
+   put hArray_ListMissingObjects() into missingObjects
+   repeat for each line rObject in missingObjects
+      hArray_RemoveObjectFromArray rObject, gHkey_Array 
+   end repeat
+   
+   if pDontNotify is true then return missingObjects
+   if missingObjects is empty then
+      opn_Notify "Did not find any missing objects in the global gHkey_Array array!"
+   else
+      opn_Notify "Removed the following missing objects from the global gHkey_Array array!", true
+      put missingObjects
+   end if
+   return missingObjects
+end hArray_FindAndRemoveMissingObjects

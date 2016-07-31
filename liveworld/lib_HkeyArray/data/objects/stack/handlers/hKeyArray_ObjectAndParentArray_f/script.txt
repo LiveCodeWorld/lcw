@@ -1,0 +1,28 @@
+function hKeyArray_ObjectAndParentArray someObject, hKeyLinkArray
+   -- extracts all object hKeys and their parents outside the object.
+   local objectArray
+   put the rugged_Id of someObject into someObject
+   repeat for each key hKey in hKeyLinkArray  
+      hkey_Deconstruct hKey, handlerName, handlerType, keyObject, handlerNum
+      if exists(keyObject) is false then next repeat
+      put hKeyLinkArray [hKey] into keyLinks
+      
+      put empty into insideObjectLinks
+      repeat for each line hkeyLink in keyLinks
+         if item 3 of hkeyLink = someObject then
+            put hkeyLink & CR after insideObjectLinks
+         end if
+      end repeat
+      delete char -1 of insideObjectLinks
+      
+      if insideObjectLinks is empty then
+         if keyObject = someObject and hkey is not among the keys of objectArray then
+            -- may be no internal links, but could be a link from outside
+            put empty into objectArray [hKey]
+         end if
+      else
+         put insideObjectLinks into objectArray [hKey]
+      end if
+   end repeat
+   return objectArray
+end hKeyArray_ObjectAndParentArray

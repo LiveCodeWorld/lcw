@@ -1,0 +1,8 @@
+on menu_FindSimilarHandlers hKey
+   put hkey_ConstructKeywords (item 1 of hKey) into keywordList
+   replace CR with comma in keywordList
+   put opn_Ask ("Input some handler names or keywords seperated by commas...", keywordList) into keywordList
+   
+   put hArray_ListShortKeys (keywordList) into hKeys
+   display_HkeyIndex hKeys
+end menu_FindSimilarHandlers

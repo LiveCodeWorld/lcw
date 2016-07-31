@@ -1,0 +1,145 @@
+function table_Construct pTableData
+   -- was "rigGenerateTable"
+   -- Requires: _setTableData, _compileTemplate, array_IsNumbered()
+   
+   if pTableData is not an array then
+      return FALSE
+   end if
+   
+   if (sHeading is not an array) and (sAutoHeading is FALSE) then
+      put FALSE into tSetHeading
+   else
+      put TRUE into tSetHeading
+   end if
+   _setTableData pTableData, tSetHeading
+   
+   # IS THERE ANYTHING TO DISPLAY?  NO?  SMITE THEM!
+   if (sHeading is not an array) and (sRows is not an array) then
+      return "Undefined table data"
+   end if
+   
+   # COMPILE AND VALIDATE THE TEMPLATE DATA
+   _compileTemplate
+   	
+   # BUILD THE TABLE!
+   put sTemplate ["tableOpen"] into tableHTML
+   put tableHTML & sNewline into tableHTML
+   
+   # ADD ANY CAPTION HERE
+   if sCaption is not empty then
+      put tableHTML & sNewline into tableHTML
+      put tableHTML & "<caption>" & sCaption & "</caption>" into tableHTML
+      put tableHTML & sNewline into tableHTML
+   end if
+   
+   # IS THERE A TABLE HEADING TO DISPLAY?
+   if sHeading is an array then
+      put tableHTML & sTemplate ["headingRowStart"] into tableHTML
+      put tableHTML & sNewline into tableHTML
+      
+      # CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
+      put TRUE into tHeadingNumberedConsecutive
+      put array_IsNumbered (sHeading, tHeadingNumberedConsecutive) into tHeadingArrayInfo
+      
+      put item 1 of tHeadingArrayInfo into tHeadingNumbered
+      		
+      if tHeadingNumbered is TRUE then
+         # USE VALUE OF FIRST LINE OF ARRAY KEYS AS STARTING NUMBER
+         put item 2 of tHeadingArrayInfo into tCounter
+      else
+         put 1 into tCounter
+      end if
+      		
+      repeat for each key tKey in sHeading
+         if tHeadingNumbered is TRUE then
+            put tCounter into tKey
+         end if
+         
+         put tableHTML & sTemplate ["headingCellStart"] into tableHTML
+         put tableHTML & sHeading [tKey] into tableHTML
+         put tableHTML & sTemplate ["headingCellEnd"] into tableHTML
+         			
+         add 1 to tCounter
+      end repeat
+      
+      put tableHTML & sTemplate ["headingRowEnd"] into tableHTML
+      put tableHTML & sNewline into tableHTML
+   end if
+   
+   # BUILD THE TABLE ROWS
+   if sRows is an array then
+      # CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
+      put TRUE into tConsecutive
+      put array_IsNumbered (sRows, tConsecutive) into tArrayInfo
+      
+      put item 1 of tArrayInfo into tNumbered
+      
+      if tNumbered is TRUE then
+         # USE VALUE OF FIRST LINE OF ARRAY KEYS AS STARTING NUMBER
+         put item 2 of tArrayInfo into tCounter
+      else
+         put 1 into tCounter
+      end if
+      
+      repeat for each key tKey in sRows
+         if tNumbered is TRUE then
+            put tCounter into tKey
+         end if
+         
+         if sRows [tKey] is not an array then
+            exit repeat
+         end if
+         
+         # WE USE MODULUS TO ALTERNATE THE ROW COLORS
+         add 1 to tCounter
+         if tCounter mod 2 = 0 then
+            put "" into tName
+         else
+            put "Alt" into tName
+         end if
+         
+         put "row" & tName & "Start" into tTemplateKey
+         put tableHTML & sTemplate [tTemplateKey] into tableHTML
+         put tableHTML & sNewline into tableHTML
+         
+         # CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
+         put TRUE into tRowNumberedConsecutive
+         put array_IsNumbered (sRows, tRowNumberedConsecutive) into tRowArrayInfo
+         
+         put item 1 of tRowArrayInfo into tRowNumbered
+         
+         if tRowNumbered is TRUE then
+            # USE VALUE OF FIRST LINE OF ARRAY KEYS AS STARTING NUMBER
+            put item 2 of tRowArrayInfo into tRowCounter
+         else
+            put 1 into tRowCounter
+         end if
+         
+         repeat for each key tCellKey in sRows [tKey]
+            if tRowNumbered is TRUE then
+               put tRowCounter into tCellKey
+            end if
+            
+            put "cell" & tName & "Start" into tTemplateKey
+            put tableHTML & sTemplate [tTemplateKey] into tableHTML
+            
+            if sRows [tKey][tCellKey] is empty then
+               put tableHTML & sEmptyCells into tableHTML
+            else
+               put tableHTML & sRows [tKey][tCellKey] into tableHTML
+            end if
+            
+            put "cell" & tName & "End" into tTemplateKey
+            put tableHTML & sTemplate [tTemplateKey] into tableHTML
+            
+            add 1 to tRowCounter
+         end repeat
+         		
+         put "row" & tName & "End" into tTemplateKey
+         put tableHTML & sTemplate [tTemplateKey] into tableHTML
+         put tableHTML & sNewline into tableHTML
+      end repeat
+   end if
+   put tableHTML & sTemplate ["tableClose"] into tableHTML
+   return tableHTML
+end table_Construct

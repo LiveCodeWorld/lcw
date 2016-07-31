@@ -1,0 +1,6 @@
+function behavior_GetRepositoryScript bName
+   put library_TextUrl ("script.txt", bName, "behavior", true) into someUrl
+   if someUrl is empty then return empty
+   put url someUrl into someScript
+   return someScript
+end behavior_GetRepositoryScript

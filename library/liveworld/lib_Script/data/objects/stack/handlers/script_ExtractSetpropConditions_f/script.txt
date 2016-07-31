@@ -1,0 +1,12 @@
+function script_ExtractSetpropConditions someProp, viewBehaviorScript
+   put script_GetSetProp (someProp, viewBehaviorScript) into propHandler
+   if propHandler is empty then return empty
+   
+   script_DeconstructSetPropHandler propHandler, handlerName, setPropValue, setPropParam
+   put setPropValue into pSwitchParams
+   if setPropParam is not empty then put comma & setPropParam after pSwitchParams
+   
+   put script_ExtractCaseConditions (propHandler, pSwitchParams) into caseConditions
+   sort caseConditions
+   return caseConditions
+end script_ExtractSetpropConditions

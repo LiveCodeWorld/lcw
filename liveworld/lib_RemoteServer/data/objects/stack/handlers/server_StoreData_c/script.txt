@@ -1,0 +1,8 @@
+command server_StoreData someData, pathToStore, serverAddress, sshUser, pSshKeyPath
+   -- uses "scp" and private keys
+   put the tempname into localFile
+   put someData into url ("binfile://" & localFile)
+   server_StoreFile localFile, pathToStore, serverAddress, sshUser
+   put the result into shellResult
+   return shellResult
+end server_StoreData

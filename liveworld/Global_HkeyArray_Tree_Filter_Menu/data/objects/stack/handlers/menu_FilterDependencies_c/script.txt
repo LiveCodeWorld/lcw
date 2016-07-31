@@ -1,0 +1,12 @@
+on menu_FilterDependencies treeView
+   put the displayed_DependencyWalkArray of treeView into dependencyWalkArray
+   put dependencyWalkArray ["hkeyArray"] into hkeyArray
+   hArray_FilterHkeyArray hkeyArray
+   put array_AllNodes (hKeyArray) into hKeys
+   sort hKeys by item 1 of each
+   
+   -- _DisplayArray treeView, hkeyArray, "Filtered dependencyHkeyArray", 1
+   set the tree_Display ["Filtered dependencyHkeyArray"] of treeView to hKeys
+   
+   display_HkeyArrayGraph hkeyArray, "undirected spring"
+end menu_FilterDependencies

@@ -1,0 +1,11 @@
+command mainstack_StoreWalkArray mainStackFolder, walkArray
+   put mainstack_GetWalkArrayFile (mainStackFolder) into someFile
+   if walkArray is an array then
+      put arrayEncode (walkArray) into encodedArray
+      put encodedArray into url ("binfile:" & someFile)
+      return someFile
+   else
+      delete file someFile
+      return empty
+   end if
+end mainstack_StoreWalkArray

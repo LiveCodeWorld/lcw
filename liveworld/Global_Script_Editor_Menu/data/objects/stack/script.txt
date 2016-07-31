@@ -1,0 +1,185 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Script | Editor | Menu
+type: controller
+version: 0.3
+
+/*
+Moved to a script-only stack menu.
+*/
+
+
+--> Variables
+-
+local LocalArray
+local BehaviorObjectMenu, ObjectDictionary, ViewNames
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Title,g) ]]
+
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Global | Script | Editor | Menu
+-
+[[ _FetchHandler (menu_FindLibraryHandler,c) ]]
+
+[[ _FetchHandler (menu_FindProjectHandler,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_HierarchyObject,c) ]]
+
+[[ _FetchHandler (menu_CardView,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+[[ _FetchHandler (submenu_Behavior,c) ]]
+
+[[ _FetchHandler (submenu_ScriptBehavior,c) ]]
+
+[[ _FetchHandler (submenu_Template,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Go,c) ]]
+
+[[ _FetchHandler (menu_GoToObject,c) ]]
+
+[[ _FetchHandler (submenu_Object,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_StackHistory,c) ]]
+
+-- on submenu_ScriptHistory
+return "Global | Script | History | Menu"
+end submenu_ScriptHistory
+
+-- on submenu_Teamster
+return "Global | Teamster | Menu"
+end submenu_Teamster
+
+-- on submenu_Script
+return "Global | Script | Menu"
+end submenu_Script
+
+[[ _FetchHandler (submenu_Archive,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Library,c) ]]
+
+[[ _FetchHandler (submenu_ManageLibrary,c) ]]
+
+[[ _FetchHandler (submenu_Stack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Script | Editor | Props
+-
+[[ _FetchHandler (some_Things,g) ]]
+
+[[ _FetchHandler (view_Things,g) ]]
+
+[[ _FetchHandler (find_Whats,g) ]]
+
+[[ _FetchHandler (_getSelectedText,pf) ]]
+
+
+--> Global | Script | Editor | Disabled
+-
+[[ _FetchHandler (disabled_DisplayGlobalMenu,g) ]]
+
+[[ _FetchHandler (disabled_HierarchyObject,g) ]]
+
+[[ _FetchHandler (disabled_CardView,g) ]]
+
+[[ _FetchHandler (disabled_FindInHierarchy,g) ]]
+
+
+--> Deps | Display
+-
+[[ _FetchHandler (launchFile,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (field_SetSelected,c) ]]
+
+[[ _FetchHandler (hkey_GetSelected,f) ]]
+
+[[ _FetchHandler (hkey_FromSelected,f) ]]
+
+
+--> Display | Controllers
+-
+[[ _FetchHandler (tree_MouseDoubleUp,c) ]]
+
+
+--> Display
+-
+[[ _FetchHandler (display_ScriptKeywordLinks,c) ]]
+
+[[ _FetchHandler (_ConstructSortedOutlineSection,pf) ]]
+
+
+--> Dev | menu
+-
+/*
+Several script menus want to edit the scripts of objects.
+So put it here where they can all get it.
+
+To do: could break this up into individual menu_Handlers,
+so it can be used both as a submenu and inserted menu.
+*/
+
+[[ _FetchHandler (menu_AddAllHandlersToLibrary,c) ]]
+
+[[ _FetchHandler (menu_OpenHandlerLibraryFolder,c) ]]
+
+[[ _FetchHandler (menu_IndexAndExport,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StashScript,c) ]]
+
+[[ _FetchHandler (menu_RestoreStash,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FindFromKeywords,c) ]]
+
+[[ _FetchHandler (menu_DisplayScriptAnalysis,c) ]]
+
+[[ _FetchHandler (menu_DuplicatesInScript,c) ]]
+
+
+--> Global | Dev | Menu | Disabled
+-
+[[ _FetchHandler (disabled_RestoreStash,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (display_DuplicateKey,c) ]]
+
+[[ _FetchHandler (menu_LibraryOutline,f) ]]

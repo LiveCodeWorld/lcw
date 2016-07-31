@@ -1,0 +1,5 @@
+getprop stack_IsUsed
+   put the stack_Name of the target into stackName
+   put stack_GetIsUsed (stackName) into someBoolean
+   return someBoolean
+end stack_IsUsed

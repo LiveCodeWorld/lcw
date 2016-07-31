@@ -1,0 +1,78 @@
+getprop menu_TableArray [pMenuTitle]
+   -- put the menu_Table [pMenuTitle] of the target into mTable
+   if pMenuTitle is empty then put the menu_Title of the target into pMenuTitle
+   if pMenuTitle is empty then return empty
+   put the menu_Controller [pMenuTitle] of the target into mController
+   
+   put menu_GetDataArray (mController) into dataArray
+   put dataArray [pMenuTitle] into mTable
+   
+   set the itemdelimiter to tab
+   repeat with lineNum = 1 to the number of lines of mTable
+      put line lineNum of mTable into someLine
+      
+      put item 1 of someLine into mLine
+      put item 6 of someLine into mType
+      
+      if mType is empty then put "no params" into mType
+      
+      if mLine is "-" then
+         put "-" into mTableArray [lineNum]["mType"]
+         next repeat
+      else
+         put mType into mTableArray [lineNum]["mType"]
+      end if
+      
+      switch mType
+         case "insert"
+            put item 7 of someLine into mTableArray [lineNum]["submenu_Title"]
+            _AddObjectToArray "submenu_Controller", 8, lineNum, mTableArray, someLine
+            break
+         case "submenu"
+            put mLine into mTableArray [lineNum]["mLine"]
+            
+            put item 7 of someLine into mTableArray [lineNum]["submenu_Title"]
+            _AddObjectToArray "submenu_Controller", 8, lineNum, mTableArray, someLine
+            break
+         case "boolean"
+            put mLine into mTableArray [lineNum]["mLine"]
+            put item 2 of someLine into mTableArray [lineNum]["pigeon"]
+            
+            _AddToArray "submenu_CheckedProp", 8, lineNum, mTableArray, someLine
+            break
+         case "fixed"
+            put mLine into mTableArray [lineNum]["mLine"]
+            put item 2 of someLine into mTableArray [lineNum]["pigeon"]
+            
+            _AddToArray "submenu_GetProp", 7, lineNum, mTableArray, someLine
+            break
+         case "custom submenu"
+            --  if script_GetGetProp(getPropName, someScript) is not empty
+            -- there is a getprop submenuProp handler in the mController script
+            put mLine into mTableArray [lineNum]["mLine"]
+            put item 2 of someLine into mTableArray [lineNum]["pigeon"]
+            
+            _AddToArray "submenu_GetProp", 7, lineNum, mTableArray, someLine
+            _AddToArray "submenu_CheckedProp", 8, lineNum, mTableArray, someLine
+            break
+         case "custom external"
+            put mLine into mTableArray [lineNum]["mLine"]
+            put item 2 of someLine into mTableArray [lineNum]["pigeon"]
+            
+            _AddToArray "submenu_GetProp", 7, lineNum, mTableArray, someLine
+            _AddToArray "submenu_CheckedProp", 8, lineNum, mTableArray, someLine
+            break
+         default -- case "no params"
+            put mLine into mTableArray [lineNum]["mLine"]
+            put item 2 of someLine into mTableArray [lineNum]["pigeon"]
+      end switch
+      
+      _AddObjectToArray "mController", 3, lineNum, mTableArray, someLine
+      put item 4 of someLine into mTableArray [lineNum]["mTitle"]
+      
+      _AddToArray "disabledProp", 5, lineNum, mTableArray, someLine
+      
+      -- put item 9 of someLine into mTableArray [lineNum]["mSendLine"]  -- what is this for?
+   end repeat
+   return mTableArray
+end menu_TableArray

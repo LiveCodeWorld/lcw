@@ -1,0 +1,13 @@
+function dot_ConstructDefaultDefLine nodeID, idArray
+   -- this is a general version suitable for hkeys
+   put idArray [nodeID] into longName
+   put item 1 of longName into nodeLabel -- allows for hKey labels with several items -> but only displaying the first
+   
+   put nodeID && "[label=" & kwote(nodeLabel) into nodeDefLine
+   put urlencode (longName) into someUrl
+   
+   put space & "URL=" & kwote(someUrl) after nodeDefLine
+   
+   put "];" after nodeDefLine
+   return nodeDefLine
+end dot_ConstructDefaultDefLine

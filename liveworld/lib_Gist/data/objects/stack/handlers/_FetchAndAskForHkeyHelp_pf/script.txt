@@ -1,0 +1,15 @@
+private function _FetchAndAskForHkeyHelp hKey
+   -- put hkey_FetchHelp (hKey) into pDescription -- this is the project specific help.
+   put library_FetchHandlerHelp (hkey) into pDescription
+   _tidyGistHelp pDescription
+   put merge ("Give a description for handler '[[item 1 to 2 of hKey]]'...") into someQuestion
+   -- replace "'" with quote in someQuestion
+   put opn_Ask (someQuestion, pDescription) into pDescription
+   if the shiftkey is "down" or the optionkey is "Down" then
+      answer "Do you want to store this new handler description?" with "Cancel" or "OK"
+      if it is "OK" then
+         hkey_StoreHelp hKey, pDescription
+      end if
+   end if
+   return pDescription
+end _FetchAndAskForHkeyHelp

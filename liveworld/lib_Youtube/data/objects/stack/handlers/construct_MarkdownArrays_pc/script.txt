@@ -1,0 +1,24 @@
+private command construct_MarkdownArrays orderedSnippetArray, @markdownLinkIndex, @lookupArray, pDirection
+   put item 2 of the extents of orderedSnippetArray into maxNum
+   switch pDirection
+      case "recentFirst"
+         repeat with episodeNum = 1 to maxNum
+            put orderedSnippetArray [episodeNum]["snippet"] into snippetArray
+            deconstruct_VideoSnippetArray snippetArray, videoTitle, videoDescription, videoID, thumbNailURL, publishedAt, positionPlusOneNum, tagArray, thumbNailWidth
+            put "*" && fedwiki_ConstructLink (videoTitle) into videoLink
+            put videoLink & CR after markdownLinkIndex
+            put snippetArray into lookupArray [videoTitle]
+         end repeat
+         break
+      default
+         repeat with episodeNum = maxNum down to 1
+            put orderedSnippetArray [episodeNum]["snippet"] into snippetArray
+            deconstruct_VideoSnippetArray snippetArray, videoTitle, videoDescription, videoID, thumbNailURL, publishedAt, positionPlusOneNum, tagArray, thumbNailWidth
+            put "*" && fedwiki_ConstructLink (videoTitle) into videoLink
+            put videoLink & CR after markdownLinkIndex
+            put snippetArray into lookupArray [videoTitle]
+         end repeat
+   end switch
+   delete char -1 of markdownLinkIndex
+   return markdownLinkIndex
+end construct_Markdownarrays

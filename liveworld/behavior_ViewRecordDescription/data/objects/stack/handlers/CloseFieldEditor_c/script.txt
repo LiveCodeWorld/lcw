@@ -1,0 +1,15 @@
+on CloseFieldEditor pFieldEditor
+   put the long id of me into recordView
+   -- put the dgControl of me into dgView
+   
+   put the event_Watchers ["CloseFieldEditor"] of me into controllerObjects
+   if controllerObjects is empty then
+      dispatch "dg_CloseFieldEditor" to recordView with pFieldEditor,recordView
+      -- dispatch "closefield" to the dgControl of me -- resets the target so useless dgView needs to pass!
+   else
+      repeat for each line controllerObject in controllerObjects
+         dispatch "dg_CloseFieldEditor" to controllerObject with pFieldEditor,recordView
+      end repeat
+   end if
+   pass CloseFieldEditor
+end CloseFieldEditor

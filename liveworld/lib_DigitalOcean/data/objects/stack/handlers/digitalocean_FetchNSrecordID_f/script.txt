@@ -1,0 +1,8 @@
+function digitalocean_FetchNSrecordID oceanDomainName, nameServer
+   put digitalocean_FetchDomainRecordArray (oceanDomainName) into oceanDomainRecordArray
+   put digitalocean_GetNSrecordID (oceanDomainName, nameServer, oceanDomainRecordArray) into recordID
+   if recordID is empty then
+      return "Error, no NS record found for" && nameServer && "in" && oceanDomainName
+   end if
+   return recordID
+end digitalocean_FetchNSrecordID

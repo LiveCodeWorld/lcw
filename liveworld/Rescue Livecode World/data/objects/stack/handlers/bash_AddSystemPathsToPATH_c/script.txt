@@ -1,0 +1,20 @@
+command bash_AddSystemPathsToPATH
+   -- put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH
+   if the platform = "MacOS" then -- and it is recent ???
+      put url "file:/etc/paths" into systemPaths
+      if systemPaths is empty then return empty
+      
+      put token 1 to -1 of systemPaths into systemPathArray
+      
+      put $PATH into revPATH
+      replace ":" with CR in revPATH
+      put systemPathArray & CR & revPATH into combinedPath
+      sort combinedPath
+      put token 1 to -1 of combinedPath into combinedPath
+      split combinedPath with CR and ":"
+      put keys (combinedPath) into newPathIndex
+      replace CR with ":" in newPathIndex
+      put newPathIndex into $PATH
+   end if
+   return $PATH
+end bash_AddSystemPathsToPATH

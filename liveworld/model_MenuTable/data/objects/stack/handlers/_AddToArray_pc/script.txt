@@ -1,0 +1,5 @@
+private command _AddToArray someKey, itemNum, lineNum, @mTableArray, someLine
+   set the itemdelimiter to tab
+   put item itemNum of someLine into someProp
+   if someProp is not empty then put someProp into mTableArray [lineNum][someKey]
+end _AddToArray

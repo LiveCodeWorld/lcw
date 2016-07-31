@@ -1,0 +1,14 @@
+command browser_Show someBoolean, pURL
+   put the browser_Widget of me into browserWidget
+   put the field_Control of me into fieldControl
+   
+   lock screen
+   set the visible of browserWidget to someBoolean
+   set the visible of fieldControl to (someBoolean is false)
+   
+   if pURL is not empty then
+      set the url of browserWidget to pURL
+   end if
+   dispatch "LayoutControl" to browserWidget
+   unlock screen
+end browser_Show

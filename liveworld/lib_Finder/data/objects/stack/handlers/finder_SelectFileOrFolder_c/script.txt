@@ -1,0 +1,14 @@
+command finder_SelectFileOrFolder pFileOrFolder
+    applescript_ConvertPath pFileOrFolder
+    
+    put "tell application" && kwote("Finder") into someAppleScript
+    put CR & tab & "set appleScriptPath to file" && pFileOrFolder after someAppleScript
+    put CR & tab & "set toselectList to {}" after someAppleScript
+    put CR & tab & "set end of toselectList to appleScriptPath" after someAppleScript
+    put CR & tab & "select toselectList" after someAppleScript
+    put CR & "end tell" after someAppleScript
+    
+    do someAppleScript as AppleScript
+    put someAppleScript
+    return the result
+end finder_SelectFileOrFolder

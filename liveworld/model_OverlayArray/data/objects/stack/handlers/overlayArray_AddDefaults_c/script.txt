@@ -1,0 +1,47 @@
+command overlayArray_AddDefaults @overlayArray, defaultDataArray, defaultMetadataArray
+   -- does not construct geometry array (for that need dot and files)
+   put overlayArray ["metadata"] into metadataArray
+   put overlayArray ["data"] into dataArray
+   
+   put dataArray ["linkArray"] into graphLinkArray
+   overlayArray_ConstructDataArray dataArray, graphLinkArray
+   
+   -- overlayArray_ConstructAndAddGeometry dataArray, cmapxFile
+   
+   -- set "linkArray"
+   -- use default data in case graph data is empty, do not make union for data
+   if graphLinkArray is an array then
+      put graphLinkArray into overlayArray ["data"]["linkArray"]
+   else
+      put defaultDataArray ["linkArray"] into overlayArray ["data"]["linkArray"]
+   end if
+   
+   -- for the rest of the props use a "union" 
+   
+   -- merge "graph_PropertyArray"
+   put metadataArray ["graph_PropertyArray"] into graphPropertyArray
+   put defaultMetadataArray ["graph_PropertyArray"] into defaultGraphPropertyArray
+   array_Union graphPropertyArray, defaultGraphPropertyArray
+   put graphPropertyArray into overlayArray ["metadata"]["graph_PropertyArray"]
+   
+   -- merge "dot_HeaderArray"
+   put metadataArray ["dot_HeaderArray"] into graphPropertyArray
+   put defaultMetadataArray ["dot_HeaderArray"] into defaultGraphPropertyArray
+   array_Union graphPropertyArray, defaultGraphPropertyArray
+   put graphPropertyArray into overlayArray ["metadata"]["dot_HeaderArray"]
+   
+   -- merge "dot_HeaderArray"
+   put metadataArray ["dot_GroupStyleArray"] into groupStyleArray
+   repeat for each key handlerType in groupStyleArray
+      put defaultMetadataArray ["dot_GroupStyleArray"][handlerType]["node_StyleArray"] into defaultHandlerTypeStyleArray
+      put groupStyleArray [handlerType]["node_StyleArray"] into handlerTypeStyleArray
+      
+      array_Union handlerTypeStyleArray, defaultHandlerTypeStyleArray
+      
+      if handlerTypeStyleArray is an array then
+         put handlerTypeStyleArray into overlayArray ["metadata"]["dot_GroupStyleArray"][handlerType]["node_StyleArray"]
+      else
+         delete local overlayArray ["metadata"]["dot_GroupStyleArray"][handlerType]["node_StyleArray"]
+      end if
+   end repeat
+end overlayArray_AddDefaults

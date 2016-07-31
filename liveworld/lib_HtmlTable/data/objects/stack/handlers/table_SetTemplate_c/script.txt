@@ -1,0 +1,9 @@
+command table_SetTemplate pTemplate
+   -- a utility to set the local variable that holds the table template
+   if pTemplate is not an array then
+      delete variable sTemplate
+      return "deleted sTemplate"
+   end if
+   put pTemplate into sTemplate
+   return "set sTemplate"
+end table_SetTemplate

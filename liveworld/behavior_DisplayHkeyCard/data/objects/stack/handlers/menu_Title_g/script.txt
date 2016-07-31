@@ -1,0 +1,23 @@
+getprop menu_Title
+   -- menus should all be in the substack
+   put the short name of the target into someName
+   if the display_ProjectHandlers of me is true then
+      switch someName
+         case "Right Icon"
+            return "Hkey | Project | Record | Menu"  -- "Hkey | Record | Menu" 
+         case "Title"
+            return "Hkey | Project | Menu" -- "Hkey | Menu"
+         default
+            pass menu_Title
+      end switch
+   else -- "long"
+      switch someName
+         case "Right Icon"
+            return "Hkey | Library | Record | Menu"  -- "Hkey | Record | Short | Menu" 
+         case "Title"
+            return "Hkey | Library | Menu" -- "Hkey | Short | Menu"
+         default
+            pass menu_Title
+      end switch
+   end if
+end menu_Title

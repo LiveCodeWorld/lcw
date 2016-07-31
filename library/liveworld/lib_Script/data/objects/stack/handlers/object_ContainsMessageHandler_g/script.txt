@@ -1,0 +1,4 @@
+getprop object_ContainsMessageHandler [messageName]
+   put the script_AndBehavior of the target into someScript
+   return script_ContainsMessageHandler(someScript, messageName)
+end object_ContainsMessageHandler

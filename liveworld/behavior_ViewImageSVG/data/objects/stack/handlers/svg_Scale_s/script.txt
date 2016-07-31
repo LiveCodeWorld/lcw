@@ -1,0 +1,14 @@
+setprop svg_Scale svgScale   
+   put the svg_XML of me into svgXML
+   -- "<g transform='scale([[svgScale]])'>"
+   set the wholematches to false
+   put "<g transform=" & quote & "scale(" & svgScale & ")" & quote & ">" into startTag
+   put lineOffset ("<g id=", svgXML) into startLineNum
+   put startTag & CR before line startLineNum of svgXML
+   
+   put "</g>" into endTag
+   put lineOffset ("</svg>", svgXML) into endLineNum
+   put endTag & CR before line endLineNum of svgXML
+   --
+   set the svg_XML of me to svgXML
+end svg_Scale

@@ -1,0 +1,5 @@
+getprop meta_Image
+   put the object_Folder of the target into objectFolder
+   put object_FetchMetaImage (objectFolder) into someImage
+   return someImage
+end meta_Image

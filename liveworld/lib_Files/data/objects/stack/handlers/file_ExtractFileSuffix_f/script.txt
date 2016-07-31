@@ -1,0 +1,13 @@
+function file_ExtractFileSuffix filePath
+    -- was "extract_FileSuffix"
+    put file_LongToShort(filePath) into shortFile
+    if shortFile contains "." then
+        put the itemdelimiter into oDelim
+        set the itemdelimiter to "."
+        put last item of shortFile into someSuffix
+        set the itemdelimiter to oDelim
+        return someSuffix
+    else
+        return empty
+    end if
+end file_ExtractFileSuffix

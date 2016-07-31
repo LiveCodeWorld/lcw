@@ -1,0 +1,25 @@
+command ask_TrashStacks indexField   
+   put the hilitedlines of indexField into hLineNums
+   put the selected_StackObjects of indexField into stackObjects
+   put the selected_ShortStackFiles of indexField into shortStackFiles
+   put the selected_LongStackFiles of indexField into longStackFiles
+   
+   put shortStackFiles
+   answer warning "Would you like to move the selected stacks to the trash?" with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   library_RemoveStackFromAllProjects stackObjects
+   
+   put the short id of indexField into someID
+   repeat with lineNum = the number of lines of stackObjects down to 1
+      put item lineNum of hLineNums into hLineNum
+      delete line hLineNum of field id someID
+      
+      put line lineNum of stackObjects into stackObject
+      put line lineNum of longStackFiles into longStackFile
+      
+      stop using stackObject
+      delete stackObject
+      delete file longStackFile
+   end repeat
+end ask_TrashStacks

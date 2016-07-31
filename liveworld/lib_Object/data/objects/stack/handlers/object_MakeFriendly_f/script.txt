@@ -1,0 +1,12 @@
+function object_MakeFriendly scriptObject
+   -- same as Script Editor" function "seFriendlyObject"
+   put word 1 of the name of scriptObject & space into tFriendlyName
+   
+   if the name of scriptObject is the short name of scriptObject then
+      -- This means that the object essentially has no name, eg its name is: card id 1002 or similar.
+      put word -1 of the short name of scriptObject after tFriendlyName
+   else
+      put quote & the short name of scriptObject & quote after tFriendlyName
+   end if
+   return tFriendlyName
+end object_MakeFriendly

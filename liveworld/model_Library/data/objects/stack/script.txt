@@ -1,0 +1,104 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Library
+type: model
+version: 0.1
+
+/*
+This model provides an interface to all the standard files and folders used for Library management.
+*/
+
+
+--> Currently Working On
+-
+[[ _FetchHandler (library_ViewFolder,f) ]]
+
+[[ _FetchHandler (library_StackFolder,f) ]]
+
+[[ _FetchHandler (library_GetTextStackFolder,f) ]]
+
+
+--> Library | Folders | Standard | List
+-
+[[ _FetchHandler (library_ListStandardLibs,f) ]]
+
+
+
+--> Library | Folders | Standard
+-
+/*
+These are the standard old location of library folders within the revIDE plugin directory.
+They are now slowly being moved to lcw folders in their own repository anywhere on your system.
+*/
+
+[[ _FetchHandler (library_StandardBehaviorFolder,f) ]]
+
+[[ _FetchHandler (library_StandardFolder,f) ]]
+
+[[ _FetchHandler (library_StandardLibFolder,f) ]]
+
+[[ _FetchHandler (library_StandardViewFolder,f) ]]
+
+[[ _FetchHandler (library_StandardModelFolder,f) ]]
+
+
+--> Library | Folders
+-
+[[ _FetchHandler (library_ArrayFolder,f) ]]
+
+[[ _FetchHandler (library_PluginFolder,f) ]]
+
+
+--> Library | Add and Remove
+-
+[[ _FetchHandler (library_RemoveStackFromAllProjects,c) ]]
+
+
+--> Library | Text Files
+-
+[[ _FetchHandler (library_TextUrl,f) ]]
+
+[[ _FetchHandler (library_TextFile,f) ]]
+
+[[ _FetchHandler (library_TextFolder,f) ]]
+
+
+--> Library | Files
+-
+[[ _FetchHandler (pref_File,f) ]]
+
+[[ _FetchHandler (library_CallsFile,f) ]]
+
+[[ _FetchHandler (library_DotFile,f) ]]
+
+[[ _FetchHandler (library_HandlerFile,f) ]]
+
+[[ _FetchHandler (library_ViewFiles,f) ]]
+
+
+--> Library | Folders | List
+-
+[[ _FetchHandler (library_ListTextStackFolders,f) ]]
+
+[[ _FetchHandler (library_ListHkeyFolders,f) ]]
+
+[[ _FetchHandler (library_ListLibraryFolderFiles,f) ]]
+
+[[ _FetchHandler (library_ListModelFolderFiles,f) ]]
+
+
+--> Library | Folders | Handler
+-
+[[ _FetchHandler (library_HandlerFolder,f) ]]
+
+[[ _FetchHandler (library_HkeyFolder,f) ]]
+
+[[ _FetchHandler (library_HandlerMetadataFolder,f) ]]
+
+
+--> Library | Folders | Prefs
+-
+[[ _FetchHandler (library_PrefFolder,f) ]]
+
+[[ _FetchHandler (pref_Folder,f) ]]

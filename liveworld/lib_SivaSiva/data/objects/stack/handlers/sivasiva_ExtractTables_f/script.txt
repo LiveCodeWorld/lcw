@@ -1,0 +1,18 @@
+function sivasiva_ExtractTables someXml, p
+   put revCreateXMLTree (someXml, true, true, false) into treeID
+   --       
+   put "//*[@class='Virtue-table-style TableOverride-1']" into someXPath
+   put revXMLEvaluateXPath (treeID, someXPath) into tableNodePaths
+   
+   put 1 into indexNum
+   repeat for each line testPath in tableNodePaths
+      put revXMLDataFromXPathQuery (treeID, testPath) into testResult
+      if word 1 to -1 of testResult is not empty then
+         put testResult into tableContentArray [indexNum]["table"]
+         add 1 to indexNum
+      end if
+   end repeat
+   --
+   revDeleteXMLTree treeID
+   return tableContentArray
+end sivasiva_ExtractTables

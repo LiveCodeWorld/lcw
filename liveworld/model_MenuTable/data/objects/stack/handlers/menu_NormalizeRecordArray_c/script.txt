@@ -1,0 +1,19 @@
+command menu_NormalizeRecordArray @mRecordArray
+   if mRecordArray is not an array then return false
+   set the itemdelimiter to tab
+   put mRecordArray ["mTitle"] into mTitle
+   put mRecordArray ["mController"] into mController
+   
+   if exists (mController) is false then
+      put empty into mRecordArray
+      return false
+   end if
+   put menu_CheckTitleController (mTitle, mController) into mTitleIsThere
+   if mTitleIsThere is false then
+      put empty into mRecordArray
+      return false
+   end if
+   
+   -- put the main_Name of mController into mRecordArray ["mController"] 
+   return true
+end menu_NormalizeRecordArray

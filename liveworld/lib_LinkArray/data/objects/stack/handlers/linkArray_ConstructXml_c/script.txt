@@ -1,0 +1,54 @@
+on linkArray_ConstructXml someNode, linkArray, treeID, @propertyArray
+   breakpoint
+   -- now use "outline_ToXmlStructure()"
+   -- a recursive function
+   -- more complex than it needs to be to allow outlines with dodgy xml tag names such as numbers
+   
+   -- add someNode to XML
+   set the itemdelimiter to "/"
+   put item -1 of someNode into tagName
+   put item 1 to -2 of someNode into parentNode
+   
+   put revXMLRootNode(treeID) into rootNode
+   put tagName into someKey
+   xml_UnNormalizeTagName someKey
+   
+   if propertyArray [someKey,"indexedFlag"] = true then return false
+   put true into propertyArray [someKey,"indexedFlag"]
+   
+   if tagName = rootNode then
+      -- dont index
+      -- do a header?
+   else
+      put propertyArray [someKey] into nodeContents
+      put "" into nodeContents
+      -- breakpoint
+      revAddXMLNode treeID, parentNode, tagName, nodeContents
+      
+      -- lets add XML not content so it can be pretty indented and then replaced
+      put the result into createdNode
+      revAddXMLNode treeID, createdNode, "contents", nodeContents
+      put the result into attributeNode
+      revSetXMLAttribute treeID, attributeNode, "nodeID", tagName
+      
+   end if
+   
+   put linkArray [someKey] into childKeys
+   repeat for each line childKey in childKeys
+      put childKey into childName
+      xml_NormalizeTagName childName
+      put someNode & "/" & childName into childNode
+      
+      if propertyArray [childKey,"indexedFlag"] = true then
+         -- do not recurse array node as it has already been indexed
+         
+         -- add child here as it will not be added by recursing!
+         put propertyArray [someKey] into nodeContents
+         revAddXMLNode treeID, someNode, childName, nodeContents
+         next repeat
+      else
+         -- put indexedFlag into propertyArray [childKey]
+         linkArray_ConstructXml childNode, linkArray, treeID, propertyArray
+      end if
+   end repeat  
+end linkArray_ConstructXml

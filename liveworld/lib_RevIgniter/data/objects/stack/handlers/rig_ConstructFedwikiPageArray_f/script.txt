@@ -1,0 +1,19 @@
+function rig_ConstructFedwikiPageArray headerPageArray
+   local lookUpArray, markdownTOC, pVersionNum
+   
+   put headerPageArray [1] into topSectionArray
+   put topSectionArray ["@attributes"]["title"] into pageTitle
+   put topSectionArray ["@content"] into rigPageContentArray
+   put pageTitle into fedwikiPageArray ["title"]
+   rig_AddContentToFedwikiPageArray fedwikiPageArray, rigPageContentArray
+   
+   -- make a TOC
+   rig_ConstructMarkdownToc topSectionArray, 1, lookUpArray, markdownTOC
+   put "# TOC" & CR before markdownTOC
+   fedwiki_AddMarkdownToPageArray fedwikiPageArray, markdownTOC
+   
+   put rig_ConstructSourceArray (pageTitle, sourceUrl, lookUpArray, pVersionNum) into sourceArray
+   put fedwiki_ConstructJournalArray (pageTitle, sourceArray) into fedwikiPageArray ["journal"]
+   
+   return fedwikiPageArray
+end rig_ConstructFedwikiPageArray

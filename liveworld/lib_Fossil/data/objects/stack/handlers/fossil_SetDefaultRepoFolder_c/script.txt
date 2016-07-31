@@ -1,0 +1,9 @@
+command fossil_SetDefaultRepoFolder someFolder
+   pref_SetValue "fossil_GetDefaultRepoFolder", someFolder
+   
+   put folder_FilesInside (someFolder, "*.fossil") into fossilFiles
+   repeat for each line fossilFile in fossilFiles
+      put fossil_InfoArray (fossilFile) into infoArray
+   end repeat
+   display_FossilRepositories
+end fossil_SetDefaultRepoFolder

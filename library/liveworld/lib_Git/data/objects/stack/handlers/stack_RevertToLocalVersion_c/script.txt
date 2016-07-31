@@ -1,0 +1,12 @@
+command stack_RevertToLocalVersion mainStackName
+   stack_RemoveFromMemory mainStackName
+   
+   put opn_GetFileName(mainStackName) into someFile
+   go to stack someFile
+   if the result is empty then
+      return stackFile
+   else
+      opn_Notify (the result & CR & someFile), true
+      return empty
+   end if
+end stack_RevertToLocalVersion

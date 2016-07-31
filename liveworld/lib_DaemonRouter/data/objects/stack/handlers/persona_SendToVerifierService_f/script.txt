@@ -1,0 +1,6 @@
+function persona_SendToVerifierService someAssertion, someAudience
+   put someAssertion into replyArray ["assertion"]
+   put someAudience into replyArray ["audience"]
+   put json_FromArray (replyArray) into someJSON
+   return someJSON
+end persona_SendToVerifierService

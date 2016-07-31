@@ -1,0 +1,16 @@
+on menu_DodgyCreateButtonView
+   ask "Give this button view a name.." with "View|Button|Something"
+   put it into vName
+   if vName is empty then exit to top
+   
+   template_ConstructStackFromObject
+   -- template_CreateLibraryStack vName
+   put the result into stackObject
+   
+   put "View|Button|Cog"  into cloneViewName
+   set the view_Insert of card 1 of stackObject to cloneViewName
+   put the result into createdView
+   set the view_Name of createdView to vName
+   
+   view_CreateTemplateIconGroup createdView
+end menu_DodgyCreateButtonView

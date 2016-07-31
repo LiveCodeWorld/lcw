@@ -1,0 +1,9 @@
+setprop custom_PropertyArray customArray
+   put the customPropertySet of the target into oSetName
+   set the customPropertySet of the target to empty
+   set the customProperties of the target to customArray ["default"]
+   repeat for each key setName in customArray
+      set the customProperties [setName] of the target to customArray [setName]
+   end repeat
+   set the customPropertySet of the target to oSetName
+end custom_PropertyArray

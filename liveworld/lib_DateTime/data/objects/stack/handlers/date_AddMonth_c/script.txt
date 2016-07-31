@@ -1,0 +1,17 @@
+on date_AddMonth monthsToAdd, startDate, @endMonth, @endYear
+    put startDate into someDate
+     
+    convert someDate to dateItems
+    put item 1 of someDate into tYear
+    put item 2 of someDate into tMonth
+    put (monthsToAdd+tMonth) mod 12 into endMonth
+    if endMonth = 0 then put 12 into endMonth
+    put ((monthsToAdd+tMonth) div 12) + tYear into endYear
+    
+    put endYear into item 1 of someDate
+    put endMonth into item 2 of someDate
+    put date_MaxDaysInMonth(endMonth, endYear) into item 3 of someDate
+    put 2 into item 4 of someDate	# seems to be required !!!
+    convert someDate to internet date
+    return someDate
+end date_AddMonth

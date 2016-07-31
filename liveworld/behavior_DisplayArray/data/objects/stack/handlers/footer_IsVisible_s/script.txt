@@ -1,0 +1,6 @@
+setprop footer_IsVisible someBoolean
+   lock screen
+   set the visible of _footerWidget() to someBoolean
+   dispatch "refreshDisplay" to cd 1 of me
+   unlock screen
+end footer_IsVisible

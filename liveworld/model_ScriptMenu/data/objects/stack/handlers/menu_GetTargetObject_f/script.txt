@@ -1,0 +1,5 @@
+function menu_GetTargetObject
+   global gTemp_ActiveMenuArray
+   put gTemp_ActiveMenuArray ["top"]["targetObject"] into targetObject
+   return targetObject
+end menu_GetTargetObject

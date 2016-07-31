@@ -1,0 +1,5 @@
+function hap_JsonToArray pJSON
+   -- needs "json' library but this seems automatically loaded for HA
+   put jsonToArray (pJSON) into someArray
+   return someArray
+end hap_JsonToArray

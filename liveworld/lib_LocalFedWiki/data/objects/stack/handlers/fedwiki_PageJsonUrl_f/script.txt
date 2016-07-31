@@ -1,0 +1,11 @@
+function fedwiki_PageJsonUrl fedwikiDomain, pSlug
+   if pSlug is empty then
+      -- http://c0de.academy/welcome-visitors.json?random=95b9c89e
+      put "http://" & fedwikiDomain & "/welcome-visitors.json" into someUrl
+   else
+      -- put url "http://c0de.academy/currently-working-on.json?random=32c053a"
+      put "http://" & fedwikiDomain & "/" & pSlug & ".json" into someUrl
+   end if
+   put "?random=" & the ticks after someUrl
+   return someUrl
+end fedwiki_PageJsonUrl

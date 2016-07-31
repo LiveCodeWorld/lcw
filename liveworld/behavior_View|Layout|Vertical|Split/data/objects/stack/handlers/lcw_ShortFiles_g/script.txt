@@ -1,0 +1,5 @@
+getprop lcw_ShortFiles
+   put the lcw_FolderName of the target into folderName
+   put lcw_ListShortStackFiles (folderName) into shortStackFiles
+   return shortStackFiles
+end lcw_ShortFiles

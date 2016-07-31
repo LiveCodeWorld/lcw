@@ -1,0 +1,5 @@
+function script_ContainsMessageHandler someScript, messageName
+   put "on" into onWord
+   put "(?mi)^\s*(" & onWord & " +" & messageName & ")\W" after regExp
+   return matchtext(someScript, regExp)
+end script_ContainsMessageHandler

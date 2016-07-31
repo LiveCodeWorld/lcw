@@ -1,0 +1,9 @@
+getprop menu_CheckTarget [scriptObject]
+   put the textStack_Folder of scriptObject into mainStackFolder
+   if there is not a folder mainStackFolder then return false
+   
+   put mainstack_GetManifestArrayFile (mainStackFolder) into LocalArray ["manifestFile"]
+   put mainstack_GetWalkArrayFile (mainStackFolder) into LocalArray ["walkArrayFile"]
+   
+   return true
+end menu_CheckTarget

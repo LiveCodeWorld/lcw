@@ -1,0 +1,11 @@
+function digitalOcean_GetDropletNames pDropletInfoArray
+   if pDropletInfoArray is not an array then
+      put digitalOcean_GetDropletInfoArray () into pDropletInfoArray
+   end if
+   put digitalocean_ConstructDropletDictionary (pDropletInfoArray) into dropletDictionary
+   
+   digitalocean_DeconstructDropletDictionary dropletDictionary, nameDictionary, ipDictionary
+   put keys (nameDictionary) into dropletNames
+   sort dropletNames
+   return dropletNames
+end digitalOcean_GetDropletNames

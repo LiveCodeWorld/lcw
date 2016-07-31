@@ -1,0 +1,23 @@
+command hkey_AddDevelopmentHierarchy @scriptHierarchy, pSetName
+   if pSetName = "none" then return empty -- let's just use the object hierarchy
+   
+   put library_ListFrontObjects (pSetName) into frontObjects
+   object_FastStripIndex scriptHierarchy, frontObjects
+   if hkey_IncludeDepsInSearch() is true then object_AddBehaviors frontObjects
+   
+   put library_ListBackObjects (pSetName) into backObjects
+   object_FastStripIndex scriptHierarchy, backObjects
+   if hkey_IncludeDepsInSearch() is true then object_AddBehaviors backObjects
+   
+   put library_ListUsedStacks (pSetName) into usedStacks
+   object_FastStripIndex scriptHierarchy, usedStacks
+   if hkey_IncludeDepsInSearch() is true then object_AddBehaviors usedStacks
+   
+   global gREVShowStacks
+   if gREVShowStacks is true then
+      -- add the revStacks
+      -- not done yet
+   end if
+   
+   script_AddLibrariesToHierarchy scriptHierarchy, frontObjects, usedStacks, backObjects
+end hkey_AddDevelopmentHierarchy

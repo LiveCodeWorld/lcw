@@ -1,0 +1,29 @@
+command git_ApplyPatchFile patchFile, pOriginalFile, pUpdatedFile
+   /*
+   --directory=<root>
+   Prepend <root> to all filenames. 
+   If a "-p" argument was also passed, it is applied before prepending the new root.
+   
+   For example, a patch that talks about updating a/git-gui.sh to b/git-gui.sh 
+   can be applied to the file in the working tree modules/git-gui/git-gui.sh 
+   by running git apply --directory=modules/git-gui.
+   */
+   
+   shell_BashParamEscape patchFile
+   
+   if pUpdatedFile is empty then
+      put "-" into pUpdatedFile
+   else
+      shell_BashParamEscape pUpdatedFile
+   end if
+   
+   if pOriginalFile is empty then
+      put merge("patch [[pOriginalFile]] -i [[patchFile]]") into someShell
+   else
+      shell_BashParamEscape pUpdatedfile
+      put merge("git apply directory=[[testDirectory]] [[patchFile]]") into someShell
+      --directory=modules/git-gui
+      end if
+   put shell (someShell) into shellResult
+   return shellResult
+end git_ApplyPatchFile

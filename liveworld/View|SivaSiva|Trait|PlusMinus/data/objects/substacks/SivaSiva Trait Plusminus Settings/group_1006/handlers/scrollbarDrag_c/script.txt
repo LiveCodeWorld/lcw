@@ -1,0 +1,12 @@
+on scrollbarDrag newPercent
+   put the horizontalArrow_View of me into horizontalArrowView
+   if exists (horizontalArrowView) is false then return empty
+   
+   put newPercent / 100 into newScale
+   
+   lock screen
+   put the template_CardRect of horizontalArrowView into oRect
+   set the arrow_Scale of horizontalArrowView to newScale
+   set the rect of horizontalArrowView to oRect
+   unlock screen
+end scrollbarDrag

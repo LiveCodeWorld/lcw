@@ -1,0 +1,4 @@
+on menu_EditLivecodeBehaviorButton mTarget, ideBname
+   put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
+   edit the script of ideBehavior
+end menu_EditLivecodeBehaviorButton

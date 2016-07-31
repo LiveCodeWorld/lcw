@@ -1,0 +1,8 @@
+getprop image_Width
+   put the uOPN ["image_Width"] of me into imageWidth
+   if imageWidth is empty then
+      return 40
+   else
+      return imageWidth
+   end if
+end image_Width

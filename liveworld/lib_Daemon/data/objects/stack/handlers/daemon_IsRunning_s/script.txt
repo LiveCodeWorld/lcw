@@ -1,0 +1,10 @@
+setprop daemon_IsRunning someBoolean
+   put the daemon_IsRunning of me into daemonIsRunning
+   if someBoolean is true then
+      if daemonIsRunning is false then daemon_Start
+      return true
+   else
+      if daemonIsRunning is true then daemon_Start
+      return false
+   end if
+end daemon_IsRunning

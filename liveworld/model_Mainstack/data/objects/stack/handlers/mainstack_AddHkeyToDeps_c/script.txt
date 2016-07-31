@@ -1,0 +1,18 @@
+command mainstack_AddHkeyToDeps hKeys, mainStackFolder
+   -- was "mainstack_AddHkeyToDepArray"
+   -- would be quicker with an array but here we have readable text file
+   -- ensures that all the hKeys added are short hKeys for library
+   put mainstack_FetchDepHkeys (mainStackFolder) into depHkeys
+   set the wholematches to true
+   repeat for each line hKey in hKeys
+      if hKey is empty then next repeat
+      put item 1 to 2 of hKey into shortHkey
+      put lineoffset (shortHkey, depHkeys) into lineNum
+      if lineNum is 0 then
+         put the number of lines of depHkeys into maxLine
+         put maxLine + 1 into lineNum
+         put shortHkey into line lineNum of depHkeys
+      end if
+   end repeat
+   mainstack_StoreDepHkeys mainStackFolder, depHkeys
+end mainstack_AddHkeyToDeps

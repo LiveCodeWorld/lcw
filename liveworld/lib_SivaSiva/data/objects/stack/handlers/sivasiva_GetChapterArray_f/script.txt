@@ -1,0 +1,7 @@
+function sivasiva_GetChapterArray chapterName
+   put sivasiva_FetchChapterTitleArray() into chapterTitleArray
+   put sivasiva_FetchBookArray() into bookArray
+   put chapterTitleArray [chapterName] into chapterNum
+   put bookArray [chapterNum] into chapterArray
+   return chapterArray
+end sivasiva_GetChapterArray

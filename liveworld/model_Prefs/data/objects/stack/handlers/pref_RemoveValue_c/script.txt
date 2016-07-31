@@ -1,0 +1,6 @@
+command pref_RemoveValue prefName, pProjectName
+   -- was "pref_DeleteValue" but this was a name clash
+   pref_DeleteValue prefName
+   put the result into prefArray
+   pref_StoreArray prefArray, pProjectName
+end pref_RemoveValue

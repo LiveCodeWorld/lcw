@@ -1,0 +1,5 @@
+on menu_FetchLibraryCalls hKey
+   set the cursor to watch
+   put library_FetchHkeyCalls (hKey) into hkeyCalls
+   put hkeyCalls
+end menu_FetchLibraryCalls

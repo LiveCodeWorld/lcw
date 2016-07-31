@@ -1,0 +1,64 @@
+function xml_MakePretty someXML, tidyHow
+    if tidyHow is empty then put "perfect" into tidyHow
+    switch tidyHow
+        case "perfect"
+            put revCreateXMLTree(someXML, true, true, false) into treeID
+            if treeID is a number then
+                put revXMLText(treeID, "", true) into someXML
+                revDeleteXMLTree treeID
+                xml_TidySpace someXML
+                return someXML
+            else
+                return treeID
+            end if
+            break
+        case "external"
+            put revCreateXMLTree (someXML, true, true, false) into treeID
+            if treeID is a number then
+                put revXMLText(treeID, "", true) into someXML
+                revDeleteXMLTree treeID
+                return someXML
+            else
+                return treeID
+                return someXML
+            end if
+        case "flat"
+            put revCreateXMLTree(someXML, true, true, false) into treeID
+            if treeID is a number then
+                put revXMLText(treeID, "") into someXML
+                revDeleteXMLTree treeID
+                return someXML
+            else
+                put shell_XmlCheck(someXML)
+                return treeID
+                return someXML
+            end if
+        case "shell"
+            put shell_XmlTidy (someXML) into someXML
+            -- xml_TidySpace someXML
+            return someXML
+            break
+        case "broken"
+            -- missing function repeatOffset
+            put offset(">", someXML) into endStartTag
+            put repeatOffset("<", someXML, "last") into startEndTag
+            if endStartTag = 0 or startEndtag = 0 then return someXML
+             
+            if char (endStartTag + 1) of someXML <> return then
+                get ">" & return & indentSpace
+                put the length of it into insertTextLength
+                add insertTextLength to startEndtag
+                put it into char endStartTag of someXML
+            end if
+             
+            if char (startEndtag - 2) of someXML <> return then
+                get indentSpace & return & "<"
+                put it into char (startEndtag - 1) of someXML
+            end if
+            return someXML
+        default
+            if indentSpace is empty then put tab into indentSpace
+            replace "><" with ">" & CR & tab & "<" in someXML
+            return someXML
+    end switch
+end xml_MakePretty

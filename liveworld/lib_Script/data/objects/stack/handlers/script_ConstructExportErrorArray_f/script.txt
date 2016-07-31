@@ -1,0 +1,39 @@
+function script_ConstructExportErrorArray someObjects
+   repeat for each line someObject in someObjects
+      try
+         set the cursor to busy
+         if exists (someObject) is false then next repeat
+         try
+            put the script of someObject into objectScript
+         catch e
+            next repeat -- must be a locked library
+         end try
+         
+         put revRuggedID (someObject) into rObject
+         --put the stack_Object of someObject into stackObject
+         put token -1 of rObject into stackName
+         if char 1 to 3 of stackName = "rev" then
+            next repeat
+         end if
+         
+         put the mobile_Name of someObject into mobileName
+         put "Checking script of" && kwote (mobileName) into someTitle
+         opn_Notify someTitle
+         
+         put the exported_Script of someObject into exportedScript
+         switch
+            case exportedScript is empty and objectScript is empty
+               next repeat
+            case exportedScript is empty and objectScript is not empty
+               put empty into exportErrorArray ["Not Exported"][mobileName][rObject]
+               break
+            case objectScript is not exportedScript
+               put empty into exportErrorArray ["Export Differs"][mobileName][rObject]
+               break
+         end switch
+      catch e
+         breakpoint
+      end try
+   end repeat
+   return exportErrorArray
+end script_ConstructExportErrorArray

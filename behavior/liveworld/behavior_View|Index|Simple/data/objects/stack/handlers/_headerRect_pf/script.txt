@@ -1,0 +1,4 @@
+private function _headerRect someRect
+   put item 2 of someRect + _headerHeight() into item 4 of someRect
+   return someRect
+end _headerRect

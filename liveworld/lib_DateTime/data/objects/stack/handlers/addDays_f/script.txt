@@ -1,0 +1,13 @@
+function addDays howManyDays, someDate
+    convert someDate to seconds
+    add (howManyDays * 24*60*60) to someDate
+    convert someDate to dateItems
+    return someDate
+     
+    -- version addDays 8.4
+    convert someDate to dateItems
+    put item 3 of someDate + howManyDays into dayNum
+    put dayNum into item 3 of someDate
+    -- convert someDate to short date
+    return someDate
+end addDays

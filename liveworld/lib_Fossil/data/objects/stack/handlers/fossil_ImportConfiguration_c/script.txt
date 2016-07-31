@@ -1,0 +1,16 @@
+command fossil_ImportConfiguration fossilFile, pConfigFile
+   -- fossil configuration export project project.txt -R Teamster\ Intro.fossil
+   if pConfigFile is empty then
+      put fossil_GetDefaultRepoFolder() & "config.txt" into pConfigFile
+      -- put the tempname & ".txt" into pConfigFile
+   end if
+   
+   shell_BashParamEscape pConfigFile
+   shell_BashParamEscape fossilFile
+   put merge ("fossil configuration import [[pConfigFile]] --repository [[fossilFile]]") into someShell
+   -- put someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_ImportConfiguration

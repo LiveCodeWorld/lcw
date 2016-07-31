@@ -1,0 +1,11 @@
+function wikipedia_FetchPageImageInfo pageTitle, pApiStem
+   -- /w/api.php?action=query&
+   -- prop=pageimages
+   -- &format=json
+   -- &piprop=thumbnail%7Cname%7Coriginal
+   -- &titles=San_Francisco
+   
+   put "piprop=thumbnail|name|original" into pOtherBits
+   put mediawiki_FetchPageBits (pageTitle, "pageimages", pOtherBits, pApiStem) into someJSON
+   return someJSON
+end wikipedia_FetchPageImageInfo

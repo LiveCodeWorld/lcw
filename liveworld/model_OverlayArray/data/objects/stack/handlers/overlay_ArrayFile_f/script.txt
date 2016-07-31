@@ -1,0 +1,5 @@
+function overlay_ArrayFile overlayFolder
+   folder_Format overlayFolder
+   put overlayFolder & "overlayData.array" into dotArrayFile
+   return dotArrayFile
+end overlay_ArrayFile

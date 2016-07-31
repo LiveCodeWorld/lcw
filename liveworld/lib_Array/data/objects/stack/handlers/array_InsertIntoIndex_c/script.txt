@@ -1,0 +1,5 @@
+command array_InsertIntoIndex someValue, someKey, @someArray
+   put someArray[someKey] into oldIndex
+   line_Insert someValue, oldIndex
+   put oldIndex into someArray[someKey]
+end array_InsertIntoIndex

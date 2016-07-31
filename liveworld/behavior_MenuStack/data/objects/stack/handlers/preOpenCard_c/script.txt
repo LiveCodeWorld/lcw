@@ -1,0 +1,5 @@
+on preOpenCard
+   put the short name of this card into cName
+   set the title_Text of me to cName
+   pass preOpenCard
+end preOpenCard

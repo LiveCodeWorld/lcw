@@ -1,0 +1,67 @@
+command library_TidyHanderDatabaseArray pDontAsk
+   -- users may delelte folders manually
+   -- folders may be empty, or without a hander
+   -- let's remove any entries that do not have corresponding folders
+   
+   put library_FetchHandlerDatabaseArray() into hKeyData
+   
+   put the defaultfolder into oFolder
+   put library_HandlerFolder() into handlersFolder
+   set the defaultfolder to handlersFolder
+   put the folders into shortFolders
+   set the defaultfolder to oFolder
+   
+   set the itemdelimiter to "_"
+   repeat for each line shortFolder in shortFolders
+      set the cursor to busy
+      if char 1 of shortFolder = "." then next repeat
+      
+      put item -1 of shortFolder into hType
+      put item 1 to -2 of shortFolder into hName
+      put hName,hType into shortHkey
+      
+      put handlersFolder & shortFolder into shortHkeyFolder
+      put shortHkeyFolder & "/script.txt" into handlerFile
+      put url ("file:" & handlerFile) into someHandler
+      
+      put not (hType is among the chars of "cfmgs" and the number of chars of hType = 1) into typeIsNotOK
+      
+      if typeIsNotOK or word 1 to -1 of someHandler is empty then -- could check it has handler in it?
+         if pDontAsk is true then
+            put "Deleting folder" && kwote(shortFolder) && "as it has no handler (or it's is incorrect)." into someComment
+            opn_Notify someComment
+            
+            revDeleteFolder shortHkeyFolder
+            put the result into someError
+         else
+            put "Folder" && kwote(shortFolder) && "has no handler (or it's is incorrect). Is it OK to delete it?" into someQuestion
+            answer warning someQuestion with "No" or "OK"
+            if it is not "No" then
+               revDeleteFolder shortHkeyFolder
+               put the result into someError
+            end if
+         end if
+         next repeat
+      end if
+      
+      -- OK add to new clean index  
+      put hKeyData [shortHkey] into oldArray
+      if oldArray is not an array then
+         put "Metadata has not been indexed for" && kwote(shortFolder) && "Recreating from handler." into someComment
+         opn_Notify someComment
+         
+         put handler_ConstructMetadataArray (shortHkey, someHandler) into handlerMetadata
+         if handlerMetadata ["dontSave"] is true then next repeat
+         
+         put handlerMetadata ["hKeyCalls"] into hKeyCalls
+         library_StoreHkeyCalls shortHkey, hKeyCalls
+         
+         put handlerMetadata into goodHKeyData [shortHKey]
+      else
+         -- let's store old metadata in goodHKeyData
+         put hKeyData [shortHkey] into goodHKeyData [shortHkey]
+      end if
+   end repeat
+   
+   library_StoreHandlerDatabaseArray goodHKeyData
+end library_TidyHanderDatabaseArray

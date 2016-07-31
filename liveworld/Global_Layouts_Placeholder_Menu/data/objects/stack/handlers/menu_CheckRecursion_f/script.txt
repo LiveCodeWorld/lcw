@@ -1,0 +1,6 @@
+function menu_CheckRecursion mTitle, ownerMenuTitle
+   set the itemdelimiter to "|"
+   delete item -1 of mTitle
+   delete item -1 of ownerMenuTitle
+   return ownerMenuTitle begins with mTitle
+end menu_CheckRecursion

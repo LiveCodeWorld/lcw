@@ -1,0 +1,4 @@
+setprop title_Colour someColour
+   if someColour is "random" then put colour_GetRandom() into someColour
+   set the backgroundcolor of _titleView() to someColour
+end title_Colour

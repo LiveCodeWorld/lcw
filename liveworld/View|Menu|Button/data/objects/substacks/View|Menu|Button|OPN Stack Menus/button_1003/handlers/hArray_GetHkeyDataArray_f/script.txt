@@ -1,0 +1,11 @@
+function hArray_GetHkeyDataArray hKey, pHArray
+   put item 3 of hKey into hObject
+   put hArray_GetObjectData (hObject, "script_DataArray", pHArray) into scriptArray
+   repeat for each key indexNum in scriptArray
+      put scriptArray [indexNum]["hkey"] into testHkey
+      if testHkey = hKey then
+         return scriptArray [indexNum]
+      end if
+   end repeat
+   return empty
+end hArray_GetHkeyDataArray

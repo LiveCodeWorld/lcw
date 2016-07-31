@@ -1,0 +1,5 @@
+function ipfs_GetVersion
+   put ipfs_RestGetArray ("version") into someArray
+   put someArray ["Version"] into versionNum
+   return versionNum
+end ipfs_GetVersion

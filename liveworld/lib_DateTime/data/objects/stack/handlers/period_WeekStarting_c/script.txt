@@ -1,0 +1,4 @@
+on period_WeekStarting someDate, @startDate, @endDate
+  put day_MondayBefore(someDate) into startDate
+  put addDays(7, startDate) into endDate
+end period_WeekStarting

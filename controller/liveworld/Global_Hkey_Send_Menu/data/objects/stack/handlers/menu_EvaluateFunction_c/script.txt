@@ -1,0 +1,20 @@
+on menu_EvaluateFunction mTarget
+   put LocalArray ["hKey"] into hKey
+   put LocalArray ["someHandler"] into someHandler
+   put LocalArray ["scriptObject"] into hObject
+   
+   put line 1 of someHandler into handlerLine
+   put item 1 of hKey into hName
+   if word 1 of handlerLine is "function" then
+      if the number of words of handlerLine = 3 then
+         put opn_Ask ("Give this function a value", empty) into paramValue
+         put hName & "(" & kwote(paramValue) & ")" into someFunction
+      else
+         -- get value("MyFunction()", the long id of button "Function Library")
+         put hName & "()" into someFunction
+      end if
+      put value (someFunction, hObject)
+   else
+      dispatch hName to hObject
+   end if
+end menu_EvaluateFunction

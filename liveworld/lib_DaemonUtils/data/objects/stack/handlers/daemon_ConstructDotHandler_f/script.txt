@@ -1,0 +1,13 @@
+function daemon_ConstructDotHandler requestArray
+   -- return a handler made from the reguest url's path and method
+   put requestArray ["SCRIPT_NAME"] into someRoute
+   put requestArray ["Request Method"] into someMethod
+   
+   split someRoute by "/"
+   combine someRoute with "."
+   set the itemdelimiter to "."
+   
+   put someMethod & someRoute into messageName
+   replace "-" with "_" in messageName
+   return messageName
+end daemon_ConstructDotHandler

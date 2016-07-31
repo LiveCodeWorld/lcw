@@ -1,0 +1,11 @@
+getprop menu_Title
+   put the long id of the target into targetObject
+   put the view_Name of  targetObject into vName
+   switch
+      case vName contains "Field"
+         return empty
+         return "Tree | Field | Menu"
+      default
+         return "Menu | Stack | Menu"
+   end switch
+end menu_Title

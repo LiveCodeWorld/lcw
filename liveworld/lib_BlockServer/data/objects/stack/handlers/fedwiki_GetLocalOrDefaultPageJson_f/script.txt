@@ -1,0 +1,9 @@
+function fedwiki_GetLocalOrDefaultPageJson pageSlug
+   -- there are a few json files that have defaults for new sites, so here we add the defaults
+   put fedwiki_GetLocalPageJson (pageSlug) into someJSON
+   if someJSON is empty then
+      put pageSlug & ".json" into shortJsonFile
+      put daemon_GetRouteData (shortJsonFile) into someJSON -- get the default
+   end if
+   return someJSON
+end fedwiki_GetLocalOrDefaultPageJson

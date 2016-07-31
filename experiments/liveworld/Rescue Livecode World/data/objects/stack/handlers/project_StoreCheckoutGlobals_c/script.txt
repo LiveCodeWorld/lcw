@@ -1,0 +1,16 @@
+command project_StoreCheckoutGlobals pSetName, pRemoveWhenSaved
+   -- was "library_StoreCheckoutGlobals"
+   
+   -- Modified to save a certain type of global in the projects checkout folder
+   -- any global beginning with gOPN* is automatically stored inside the users checkout folder
+   -- in the standard array folder used by library_FetchArray
+   
+   if pSetName is among the items of "none" then return empty -- for now let's not store anything to the all or "none" sets
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   if pSetName is empty then return empty -- just in case
+   
+   put library_ConstructCheckoutArray (pRemoveWhenSaved) into checkoutArray  
+   library_StoreCheckoutGlobal checkoutArray, pSetName
+   
+   return checkoutSetData
+end project_StoreCheckoutGlobals

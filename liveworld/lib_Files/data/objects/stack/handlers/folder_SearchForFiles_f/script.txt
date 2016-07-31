@@ -1,0 +1,46 @@
+function folder_SearchForFiles someFolder, searchString, recurseFolders, includeInvisible, excludeFolderList
+    -- was "searchFolder", then "file_SearchInFolder"
+    local foundFiles
+    put the directory into oFolder
+    set the directory to someFolder
+    put the files into shortFiles
+    folder_Format someFolder
+    
+    if includeInvisible is not true then filter shortFiles without ".*"
+    if excludeFolderList is not empty then
+        set the itemdelimiter to "/"
+        put last item of someFolder into shortFolder
+        set the itemdelimiter to comma
+        if shortFolder is among the items of excludeFolderList then
+            return empty
+        end if
+    end if
+     
+    repeat for each line filePath in shortFiles
+        if matchtext(tFile, searchString) then
+            -- if searchString is filePath then
+            put someFolder & filePath into tFilePath
+            if foundFiles is empty then
+                put tFilePath into foundFiles
+            else
+                put the number of lines of foundFiles into lastLineNum
+                put tFilePath into line lastLineNum + 1 of foundFiles
+            end if
+        end if
+    end repeat
+     
+    -- if recurseFolders is true then CheckFolders someFolder, searchString
+    if recurseFolders is true then
+        put the folders into tFolderList
+        delete line 1 of tFolderList
+        repeat for each line tFolder in tFolderList
+            put someFolder & tFolder & "/" into tNuFolder
+            get folder_SearchForFiles(tNuFolder, searchString, true, includeInvisible, excludeFolderList)
+            -- put it after foundFiles
+            put the number of lines of foundFiles into lastLineNum
+            put it into line lastLineNum + 1 of foundFiles
+        end repeat
+    end if
+    set the directory to oFolder
+    return foundFiles
+end folder_SearchForFiles

@@ -1,0 +1,33 @@
+function fossil_ParseInfo someInfo
+   # aims to be a general function for parsing info returned by several commands
+   # openInfo contains a series of lines of checked out file paths at the beginning (so not included)
+   # comments etc can be over several lines
+   # each line starts with 14 chars, whcih may or may not contain a new key: 
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in someInfo
+      put char 1 to 14 of someLine into maybeKey
+      put char 15 to -1 of someLine into someValue
+      put word 1 to -1 of item 1 of maybeKey into testKey
+      
+      switch testKey
+         case empty
+            put projectArray [someKey] into oldValue
+            put oldValue & CR & someValue into newValue
+            put newValue into projectArray [someKey]
+            break
+         case "project-code"
+            put "project-id" into someKey
+            put someValue into projectArray [someKey]
+            break
+         case "server-code"
+            put "server-id" into someKey
+            put someValue into projectArray [someKey]
+            break
+         default
+            put testKey into someKey
+            put someValue into projectArray [someKey]
+      end switch
+   end repeat
+   return projectArray
+end fossil_ParseInfo

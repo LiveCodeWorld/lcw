@@ -1,0 +1,13 @@
+on menu_UpdateLayoutPlaceholders mTarget
+   put the layout_View of mTarget into layoutView
+   put the top_Controls of layoutView into topControls
+   repeat for each line someControl in topControls
+      put the view_Name of someControl into vName
+      if vName = "View|Layout|Placeholder" then
+         put the view_Colour of someControl into oColour
+         view_Update someControl, true
+         put the result into newView
+         set the view_Colour of newView to "random"
+      end if
+   end repeat
+end menu_UpdateLayoutPlaceholders

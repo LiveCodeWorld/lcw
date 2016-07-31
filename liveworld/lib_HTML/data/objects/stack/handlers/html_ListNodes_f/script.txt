@@ -1,0 +1,7 @@
+function html_ListNodes someHTML
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLRootNode (treeID) into rootNode
+   put revXMLTree (treeID, rootNode, CR, space, true, -1) into allNodes
+   revDeleteXMLTree treeID
+   return allNodes
+end html_ListNodes

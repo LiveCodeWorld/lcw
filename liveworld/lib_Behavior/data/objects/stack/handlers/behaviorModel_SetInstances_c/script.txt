@@ -1,0 +1,4 @@
+on behaviorModel_SetInstances bName, instanceObjects
+   behaviorModel_SetRecordValue "instances", bName, instanceObjects
+   return the result
+end behaviorModel_SetInstances

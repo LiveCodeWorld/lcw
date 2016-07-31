@@ -1,0 +1,7 @@
+on menu_ChangeName mTarget
+   put the short name of mTarget into someValue
+   ask "Change the name of this place holder?" with someValue
+   if the result is "Cancel" then exit to top
+   put it into newValue
+   set the name of mTarget to newValue
+end menu_ChangeName

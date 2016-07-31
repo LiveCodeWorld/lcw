@@ -1,0 +1,6 @@
+getprop disabled_ViewCardBehavior [someView]
+   put the card_Object of someView into cardObject
+   put the behavior of cardObject into bObject
+   put exists (bObject) into bExists
+   return bExists is false
+end disabled_ViewCardBehavior

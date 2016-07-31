@@ -1,0 +1,5 @@
+function folder_GetStackPlaceNames
+   put the opn_Library of me into modelObject
+   put model_GetArrayKeys ("uOPN_StackPlace", modelObject, "array") into placeNames
+   return placeNames
+end folder_GetStackPlaceNames

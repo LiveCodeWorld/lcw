@@ -1,0 +1,12 @@
+function digitalocean_ExtractIpAddessFrom domainArray
+   put domainArray ["domain_records"] into domainRecordsArray
+   repeat for each key recordNum in domainRecordsArray
+      put domainRecordsArray [recordNum]["type"] into recordType
+      put domainRecordsArray [recordNum]["name"] into recordName
+      if recordType = "A" and recordName = "@" then
+         put domainRecordsArray [recordNum]["data"] into someIP
+         return someIP
+      end if
+   end repeat
+   return empty
+end digitalocean_ExtractIpAddessFrom

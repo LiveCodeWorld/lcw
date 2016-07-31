@@ -1,0 +1,16 @@
+getprop box_Rect [groupRect]
+   put the long id of the target into someGroup
+   if word 1 of someGroup is not "group" then return groupRect
+   if groupRect is empty then put the rect of someGroup into groupRect
+   
+   if the showname of someGroup is true then
+      put the effective textsize of someGroup into tHeight
+      if the threeD of someGroup is true then
+         add tHeight + 4 to someBit
+      else
+         add round (tHeight/2) + 0 to someBit
+      end if
+      add someBit to item 2 of groupRect
+   end if
+   return groupRect
+end box_Rect

@@ -1,0 +1,13 @@
+function object_ConstructControlOutline someControl
+   -- was "formatControlAsOutline" then "object_OutlineFromIndex"
+   put text_TempReplaceQuoted (someControl, offsetArray) into tempUnQuoted
+   replace " of " with CR in tempUnQuoted
+   put empty into someOutline
+   put empty into someIndent
+   repeat with lineNum = the number of lines of tempUnQuoted down to 1
+      put someIndent & line lineNum of tempUnQuoted & return after someOutline
+      put tab after someIndent
+   end repeat
+   delete last char of someOutline
+   return text_ReReplaceQuoted(someOutline, offsetArray)
+end object_ConstructControlOutline

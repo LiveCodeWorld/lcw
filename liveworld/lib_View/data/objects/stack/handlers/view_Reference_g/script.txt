@@ -1,0 +1,13 @@
+getprop view_Reference
+   -- assumes a view has a behavior, and an object reference is in the Metadata suite.
+   put the view_Object of the target into someView
+   if exists(someView) is false then return empty
+   put the behavior of someView into viewBehavior
+   if exists(viewBehavior) is false then put someView into viewBehavior
+   put the script of viewBehavior into someScript
+   
+   put script_GetSuite("Metadata", someScript) into suiteScript
+   put script_ExtractGetPropHandlers(suiteScript) into viewReferences
+   line_Delete "view_Object", viewReferences
+   return viewReferences
+end view_Reference

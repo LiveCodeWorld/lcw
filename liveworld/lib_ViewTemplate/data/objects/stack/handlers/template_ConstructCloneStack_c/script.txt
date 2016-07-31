@@ -1,0 +1,41 @@
+command template_ConstructCloneStack vName, newViewName
+   if newViewName is empty then 
+      put opn_Ask ("Give the cloned view a name...", vName) into newViewName
+      if newViewName is among the lines of view_StackNames() then
+         beep
+         answer warning merge("The view '[[vName]]' already exists! Please manually delete the file or choose a new name.")
+         exit to top
+      end if
+   end if
+   
+   put template_DefaultCardScript (newViewName) into cardScript
+   
+   if vName is empty then
+      put empty into stackRect
+   else
+      put the rect of stack vName into stackRect
+   end if
+   stack_Create newViewName, vName, 12, stackRect, cardScript
+   put the result into viewTemplate
+   
+   put view_NameToFile (newViewName) into someFile
+   put someFile into someFolder
+   
+   set the itemdelimiter to "/"
+   delete item -1 of someFolder
+   folder_CreateNested someFolder
+   set the itemdelimiter to comma
+   
+   if exists (stack newViewName) is false then exit to top
+   
+   set the fileName of stack newViewName to someFile
+   save stack newViewName
+   
+   put the long id of card 1 of stack newViewName into cardObject
+   set the behavior_Name of cardObject to "Card View Behavior"
+   
+   set the view_Name of viewTemplate to newViewName
+   set the stack_IsKnown of viewTemplate to true
+   
+   return viewTemplate
+end template_ConstructCloneStack

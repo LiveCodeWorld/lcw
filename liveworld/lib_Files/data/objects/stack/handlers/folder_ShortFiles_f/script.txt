@@ -1,0 +1,9 @@
+function folder_ShortFiles someFolder, pFilter, pShowInvisible
+   put the defaultFolder into oDirectory
+   set the defaultFolder to someFolder
+   put the files into shortFiles
+   set the defaultFolder to oDirectory
+   if pFilter is not empty then filter shortFiles with pFilter
+   if pShowInvisible is not true then filter shortFiles without ".*"
+   return shortFiles
+end folder_ShortFiles

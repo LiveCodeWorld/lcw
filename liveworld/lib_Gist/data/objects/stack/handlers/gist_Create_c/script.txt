@@ -1,0 +1,17 @@
+command gist_Create someText, someDescription, shortGistFile, pIsPublic
+   -- POST /gists
+   -- {"description": "the description for this gist","public": true,"files": {"file1.txt": {"content": "String file contents"}}}
+   
+   put pIsPublic is not false into pIsPublic
+   put someText into postArray ["content"]
+   put json_FromArray (postArray) into innerJSON
+   put "{" & kwote("description") & ":" & kwote(someDescription) into postJSON
+   put comma & kwote("public")  & ":" & pIsPublic after postJSON
+   put comma & kwote("files")  & ":{" & kwote(shortGistFile) after postJSON
+   put ":" & innerJSON after postJSON
+   put "}}" after postJSON
+   
+   github_RestPost "/gists", postJSON
+   put the result into jsonResult
+   return jsonResult
+end gist_Create

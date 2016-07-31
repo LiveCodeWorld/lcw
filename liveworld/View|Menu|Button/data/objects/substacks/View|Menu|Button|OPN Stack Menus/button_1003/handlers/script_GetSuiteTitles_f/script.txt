@@ -1,0 +1,6 @@
+function script_GetSuiteTitles someScript
+   filter someScript with "-->*"
+   replace "--> " with empty in someScript
+   replace "-->" with empty in someScript
+   return word 1 to -1 of someScript
+end script_GetSuiteTitles

@@ -1,0 +1,8 @@
+getprop body_ToolMenus [mTarget]
+   put the view_ChildToolMenus [true] of mTarget into toolMenu
+   return toolMenu
+   
+   put the body_View of mTarget into bodyView
+   put the view_ToolMenu of bodyView into toolMenu
+   return toolMenu
+end body_ToolMenus

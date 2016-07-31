@@ -1,0 +1,21 @@
+command diff_StripHeader @unifiedDiff, @headerA
+   /*
+   --- /path/to/original ''timestamp''
+   +++ /path/to/new      ''timestamp''
+   
+   --- a/opn_Plugins/opn_Text/rev/object/libOPN_Menus/card_1560/script.txt
+   +++ b/opn_Plugins/opn_Text/rev/object/libOPN_Menus/card_1560/script.txt
+   */
+   
+   -- put word 1 line 1 of unifiedDiff into originalPath
+   -- put word 2 line 1 of unifiedDiff into timeStamp
+   put line 1 of unifiedDiff into originalPath
+   delete word 1 of originalPath
+   put originalPath into headerA ["original path"]
+   
+   put line 2 of unifiedDiff into newPath
+   delete word 1 of newPath
+   put newPath into headerA ["new path"]
+   
+   delete line 1 to 2 of unifiedDiff
+end diff_StripHeader

@@ -1,0 +1,50 @@
+function script_GetCommentAboveMe
+   get line -2 of the executioncontexts
+   put item -1 of it into lineNum
+   -- put item -2 of it into hName
+   put item 1 to -3 of it into scriptObject
+   put the script of scriptObject into someScript
+   
+   -- test until we find a line with content
+   repeat with testLineNum = (lineNum - 1) down to 1
+      put word 1 to -1 of line testLineNum of someScript into scriptLine
+      if scriptLine is not empty then exit repeat 
+   end repeat
+   if scriptLine is empty then return empty -- a blank script
+   
+   switch
+      case char 1 to 2 of scriptLine = "--"
+         delete char 1 to 2 of scriptLine
+         return word 1 to -1 of scriptLine
+      case char 1 of scriptLine = "#"
+         repeat while char 1 of scriptLine = "#"
+            delete char 1 ofscriptLine
+         end repeat
+         return word 1 to -1 of scriptLine
+      case char -2 to -1 of scriptLine = "*/"
+         -- a multiline comment
+         put testLineNum into lastLineNum
+         
+         -- test until we find a line with content
+         repeat with testLineNum = (lastLineNum - 1) down to 1
+            put word 1 to -1 of line testLineNum of someScript into scriptLine
+            if char 1 to 2 of scriptLine = "/*" then
+               put testLineNum into startLineNum
+               put line startLineNum to lastLineNum of someScript into multiComment
+               put word 1 to -1 of multiComment into multiComment
+               delete char 1 to 2 of multiComment
+               delete char -2 to -1 of multiComment
+               put word 1 to -1 of multiComment into multiComment
+               
+               repeat for each line cLine in multiComment
+                  put word 1 to -1 of cLine & CR after cleanMultiComment
+               end repeat
+               delete char -1 of cleanMultiComment
+               return cleanMultiComment
+            end if
+         end repeat
+         return empty -- no start of comment ???
+      default
+         return empty -- not a comment
+   end switch
+end script_GetCommentAboveMe

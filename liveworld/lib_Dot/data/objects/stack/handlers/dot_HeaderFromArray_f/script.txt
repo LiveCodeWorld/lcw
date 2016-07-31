@@ -1,0 +1,7 @@
+function dot_HeaderFromArray overlayArray, pOverlayName
+   overlayArray_DeconstructMetadata overlayArray, graphPropertyArray, dotHeaderArray, nodePropertyArray, edgePropertyArray, dotNodeStyleArray, pOverlayName
+   _AddGraphSize dotHeaderArray, graphPropertyArray
+   _AddHeaderStuff dotHeaderArray, graphPropertyArray
+   put dot_HeaderFromArrays (dotHeaderArray, nodePropertyArray, edgePropertyArray) into dotHeader
+   return dotHeader
+end dot_HeaderFromArray

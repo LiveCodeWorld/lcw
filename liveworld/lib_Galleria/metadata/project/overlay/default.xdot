@@ -1,0 +1,127 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 172 586 172 586 0 ",
+		bb="0,0,586,172",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n6		 [URL="galleria_GetRecordFolder%2Cf%2Cstack+%22lib_Galleria%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 457 116 102.37 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 457 111.8 0 146.17 24 -galleria_GetRecordFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=galleria_GetRecordFolder,
+			pos="457,116",
+			style=filled,
+			width=2.8455];
+		n1		 [URL="galleria_GetRecordFiles%2Cf%2Cstack+%22lib_Galleria%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 240 116 96.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 240 111.8 0 136.84 23 -galleria_GetRecordFiles ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=galleria_GetRecordFiles,
+			pos="240,116",
+			style=filled,
+			width=2.6818];
+		n2		 [URL="rigFetchConfigItem%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 490 34 79.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 490 29.8 0 110.43 18 -rigFetchConfigItem ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rigFetchConfigItem,
+			pos="490,34",
+			style=filled,
+			width=2.2185];
+		n5		 [URL="rigTrim%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 355 34 37.11 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 355 29.8 0 43.06 7 -rigTrim ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rigTrim,
+			pos="355,34",
+			style=filled,
+			width=1.0363];
+		n3		 [URL="rigGetFileNames%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 229 34 71.03 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 229 29.8 0 96.42 15 -rigGetFileNames ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rigGetFileNames,
+			pos="229,34",
+			style=filled,
+			width=1.9726];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n4		 [URL="rigLoadHelper%2Cc%2CMissing%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 78 34 62.32 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 78 29.8 0 82.41 13 -rigLoadHelper ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=rigLoadHelper,
+			pos="78,34",
+			style=filled,
+			width=1.7267];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#ff0000 C 7 -#ffa500 P 4 8 8 8 82 578 82 578 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 293 66.8 0 45.12 7 -Missing ",
+			bb="8,8,578,82",
+			color=red,
+			fillcolor=orange,
+			label=Missing,
+			lheight=0.19,
+			lp="293,71",
+			lwidth=0.63,
+			style=filled
+		];
+		n2;
+		n5;
+		n3;
+		n4;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 135 90 135 164 567 164 567 90 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 351 148.8 0 110.56 20 -stack \"lib_Galleria\" ",
+			bb="135,90,567,164",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Galleria\"",
+			lheight=0.19,
+			lp="351,153",
+			lwidth=1.54,
+			style=filled
+		];
+		n6;
+		n1;
+	}
+	n1 -> n2	 [_draw_="c 7 -#000000 B 10 294.82 101.11 311.22 97.22 329.28 93.18 346 90 370.27 85.38 377.51 89.66 401 82 420.03 75.8 439.84 65.74 455.93 \
+56.51 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 458.09 59.3 464.94 51.22 454.55 53.27 ",
+		pos="e,464.94,51.216 294.82,101.11 311.22,97.215 329.28,93.181 346,90 370.27,85.383 377.51,89.657 401,82 420.03,75.797 439.84,65.738 \
+455.93,56.514"];
+	n1 -> n5	 [_draw_="c 7 -#000000 B 7 278.59 99.46 288.88 94.55 299.71 88.65 309 82 318.19 75.42 327.15 66.9 334.69 58.93 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 337.56 60.98 341.7 51.23 332.38 56.26 ",
+		pos="e,341.7,51.226 278.59,99.462 288.88,94.551 299.71,88.646 309,82 318.19,75.422 327.15,66.903 334.69,58.927"];
+	n1 -> n3	 [_draw_="c 7 -#000000 B 4 237.61 97.64 236.19 87.3 234.35 73.94 232.74 62.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 236.17 61.48 231.34 52.05 229.24 62.43 ",
+		pos="e,231.34,52.05 237.61,97.641 236.19,87.297 234.35,73.941 232.74,62.221"];
+	n1 -> n4	 [_draw_="c 7 -#000000 B 7 192.81 100.28 178.45 95.17 162.81 88.95 149 82 134.87 74.89 120.14 65.51 107.79 57 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 109.45 53.89 99.26 51 105.43 59.62 ",
+		pos="e,99.259,51.002 192.81,100.28 178.45,95.168 162.81,88.951 149,82 134.87,74.887 120.14,65.507 107.79,56.999"];
+}

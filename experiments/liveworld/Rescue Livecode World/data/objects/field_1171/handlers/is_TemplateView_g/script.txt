@@ -1,0 +1,5 @@
+getprop is_TemplateView [selectedViewStackObject]
+   put the template_View of cd 1 of selectedViewStackObject into templateView
+   put the urip_Type of templateView into uripType
+   return uripType = "view template"
+end is_TemplateView

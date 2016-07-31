@@ -1,0 +1,4 @@
+function overlayArray_GetGraphProperty overlayArray, propName
+   put overlayArray ["metadata"]["graph_PropertyArray"][propName] into propValue
+   return propValue
+end overlayArray_GetGraphProperty  

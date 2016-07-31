@@ -1,0 +1,5 @@
+getprop image_ID
+   put image_Object() into imageObject
+   put the short ID of imageObject into imageID
+   return imageID
+end image_ID

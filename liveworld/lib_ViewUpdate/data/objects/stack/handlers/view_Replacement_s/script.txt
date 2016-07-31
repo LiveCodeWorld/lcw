@@ -1,0 +1,62 @@
+setprop view_Replacement [sendReplace] anotherView
+   if exists (anotherView) is false then return empty
+   put the long id of the target into viewToReplace
+   put the long id of anotherView into anotherView
+   if anotherView = viewToReplace then 
+      return empty
+   else if word 1 of viewToReplace is "stack" then
+      return empty
+   end if
+   put viewToReplace into viewOwner
+   delete word 1 to 4 of viewOwner
+   
+   put the rect of viewToReplace into oRect
+   put the short name of viewToReplace into oName
+   -- put the object_GroupLayer of viewToReplace into oGroupLayer
+   put the view_StyleArray of viewToReplace into viewStyleArray
+   put the view_CustomStyleArray of viewToReplace into bigStyleArray
+   if word 1 of viewToReplace is "group" then set the cantdelete of viewToReplace to false
+   
+   put word 1 of viewOwner = "group" into ownerIsGroup
+   if ownerIsGroup then  -- lock so that copied view does not change owner groups rect
+      put the lockloc of viewOwner into oLock
+      set the lockloc of viewOwner to true
+   end if
+   
+   put revRuggedID (viewToReplace) into viewToReplace
+   put revRuggedID (anotherView) into anotherView
+   
+   lock screen
+   copy anotherView to viewOwner
+   put it into copiedView
+   
+   relayer copiedView before viewToReplace
+   
+   try
+      delete viewToReplace
+   catch e
+      send "delete viewToReplace" to viewToReplace in 2 ticks
+   end try
+   try
+      put word 3 of viewToReplace into previousID
+      set the id of copiedView to previousID
+      put viewToReplace into copiedView
+   catch e
+      -- breakpoint
+   end try
+   set the name of copiedView to oName
+   
+   set the view_StyleArray of copiedView to bigStyleArray
+   -- set the object_GroupLayer of copiedView to oGroupLayer
+   if "view_Rect" is among the lines of the script_SetPropHandlers of copiedView then
+      set the view_Rect of copiedView to oRect  -- this will force a redraw
+   else
+      set the rect of copiedView to oRect
+   end if
+   
+   if ownerIsGroup then set the lockloc of viewOwner to oLock
+   unlock screen
+   -- get the view_UpdateIndex of copiedView
+   put the long id of copiedView into copiedView
+   return copiedView
+end view_Replacement

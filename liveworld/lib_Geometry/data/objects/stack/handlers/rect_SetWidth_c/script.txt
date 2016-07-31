@@ -1,0 +1,11 @@
+command rect_SetWidth @someRect, newWidth, pDontCentre
+   if pDontCentre is true then
+      put item 1 of someRect + newWidth into item 3 of someRect
+   else
+      put item 1 of rect_GetCentre(someRect) into centreX
+      put round(newWidth/2) into leftWidth
+      put newWidth - leftWidth into rightWidth
+      put centreX - leftWidth into item 1 of someRect
+      put centreX + rightWidth into item 3 of someRect
+   end if
+end rect_SetWidth

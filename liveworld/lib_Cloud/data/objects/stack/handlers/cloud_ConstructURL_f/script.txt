@@ -1,0 +1,5 @@
+function cloud_ConstructURL shortApiPath
+   local CloudApiStem = "https://api.cloud-elements.com/elements/api-v2/"
+   put CloudApiStem & "hubs/documents/" & shortApiPath into someURL
+   return someURL
+end cloud_ConstructURL

@@ -1,0 +1,6 @@
+getprop view_TopObject
+   -- which is the top (highest) someView in the current layout
+   put the long id of the target into testGroup
+   put view_ConstructHierarchy(testGroup) into viewHierarchy
+   return line 1 of viewHierarchy
+end view_TopObject

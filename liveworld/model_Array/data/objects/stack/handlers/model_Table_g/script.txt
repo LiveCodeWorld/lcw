@@ -1,0 +1,6 @@
+getprop model_Table [modelName]
+   put the long id of the target into modelObject
+   get model_GetArray(modelName, modelObject, "array")
+   combine it using CR and tab
+   return it
+end model_Table

@@ -1,0 +1,5 @@
+setprop daemon_Port portToListenOn
+   set the daemon_Port of me to portToListenOn
+   daemon_Stop
+   daemon_Start
+end daemon_Port

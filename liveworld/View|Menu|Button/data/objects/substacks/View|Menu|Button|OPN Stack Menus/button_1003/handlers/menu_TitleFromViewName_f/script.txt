@@ -1,0 +1,11 @@
+function menu_TitleFromViewName viewName, levelAbove
+   set the itemdelimiter to "|"
+   delete item 1 of viewName
+   if levelAbove is a number then
+      delete item -1 to -levelAbove of viewName
+   end if
+   replace "|" with " | " in viewName
+   
+   put viewName && "| Menu" into mTitle
+   return mTitle
+end menu_TitleFromViewName

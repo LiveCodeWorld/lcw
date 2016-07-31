@@ -1,0 +1,9 @@
+getprop object_WithinLibraryStack
+   put the long ID of the target into targetObject
+   
+   put the view_Name of targetObject into viewName
+   put the stack_Object of targetObject into stackObject
+   put the filename of stackObject into someFile
+   put view_FileToPath(someFile, true) into testViewName
+   return testViewName = viewName
+end object_WithinLibraryStack

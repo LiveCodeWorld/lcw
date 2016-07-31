@@ -1,0 +1,9 @@
+private command deconstruct_ChannelArray channelArray, @channelTitle, @channelDescription, @thumbnailURL, @uploadsPlaylistID
+   put channelArray ["items"][1] into itemArray
+   put itemArray ["snippet"] into snippetArray
+   put snippetArray ["title"] into channelTitle
+   put snippetArray ["description"] into channelDescription
+   put snippetArray ["thumbnails"]["medium"]["url"] into thumbnailURL
+   put itemArray ["contentDetails"]["relatedPlayLists"] into relatedPlayListArray
+   put relatedPlayListArray ["uploads"] into uploadsPlaylistID
+end deconstruct_ChannelArray

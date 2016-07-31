@@ -1,0 +1,49 @@
+on kml_DeconstructPlacemark nodeXML, @latitude, @longitude, @range, @someTilt, @heading, @pointLongitude, @pointLatitude, @pointHeight
+    put revCreateXMLTree(nodeXML, false, true, false) into treeID
+    if char 1 to 6 of treeID is "xmlerr" then
+        opn_Notify treeID
+        return treeID
+    end if
+    
+    put revXMLRootNode(treeID) into rootNode
+    if rootNode is "Placemark" then put empty into rootNode
+    
+    put rootNode & "/Placemark[1]/Point[1]" & "/coordinates[1]" into someNode
+    put revXMLNodeContents(treeID, someNode) into coordinates
+    if char 1 to 6 of latitude is "xmlerr" then
+        put empty into pointLongitude
+        put empty into pointLatitude
+        put empty into pointHeight
+        revDeleteXMLTree treeID
+        return false
+    else
+        put item 1 of coordinates into pointLongitude
+        put item 2 of coordinates into pointLatitude
+        put item 3 of coordinates into pointHeight
+    end if
+    
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/latitude[1]" into someNode
+    put revXMLNodeContents(treeID, someNode) into latitude
+    if char 1 to 6 of latitude is "xmlerr" then
+        put empty into latitude
+        put empty into longitude
+        put empty into range
+        put empty into someTilt
+        put empty into heading
+    else   
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/longitude[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into longitude
+         
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/range[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into range
+         
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/tilt[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into someTilt
+         
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/heading[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into heading
+    end if
+     
+    revDeleteXMLTree treeID
+    return true
+end kml_DeconstructPlacemark

@@ -1,0 +1,10 @@
+function rect_ScaleFromCentre someRect, someMagnification, scaleCentre
+    if scaleCentre is empty then put 0,0 into scaleCentre
+    
+    put item 1 of scaleCentre into xVector
+    put item 2 of scaleCentre into yVector
+    put rect_TranslateByVector(someRect, -xVector, -yVector) into translatedRect
+    put rect_ScaleByVectors(translatedRect, someMagnification, someMagnification) into tScaleRect
+    put rect_TranslateByVector(tScaleRect, xVector, yVector) into finalRect
+    return finalRect
+end rect_ScaleFromCentre

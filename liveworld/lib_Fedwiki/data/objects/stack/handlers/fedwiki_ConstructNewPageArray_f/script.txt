@@ -1,0 +1,10 @@
+function fedwiki_ConstructNewPageArray pageTitle, pSomeText, pSourceArray
+   put pageTitle into pageArray ["title"]
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into pageArray ["journal"] 
+   if pSomeText is empty then
+      fedwiki_AddFactoryToPageArray pageArray
+   else
+      fedwiki_AddParagraphToPageArray pageArray, pSomeText
+   end if
+   return pageArray
+end fedwiki_ConstructNewPageArray

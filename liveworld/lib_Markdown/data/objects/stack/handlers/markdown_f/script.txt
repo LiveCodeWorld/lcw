@@ -1,0 +1,10 @@
+function markdown pText
+   put tempname() into tTextFile
+   put tempname() into tOutFile
+   put pText into url ("binfile:" & tTextFile)
+   put shell ("markdown" && tTextFile && ">>" & tOutFile) into tResult
+   delete file tTextFile
+   put url ("binfile:" & tOutFile) into tOut
+   delete file tOutFile
+   return tOut
+end markdown

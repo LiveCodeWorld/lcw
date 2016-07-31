@@ -1,0 +1,16 @@
+function daemon_GuessContentType someRoute
+   set the itemdelimiter to "."
+   put item - 1 of someRoute into someFileExtension
+   switch
+      case someFileExtension = "png"
+         return "image/png"
+      case someFileExtension is among the items of "js.json"
+         return "application/json; charset=utf-8"
+      case someFileExtension = "css"
+         return "text/css; charset=UTF-8"
+      case someFileExtension is among the items of "txt.html.htm"
+         return "text/html"
+      default
+         return empty
+   end switch
+end daemon_GuessContentType

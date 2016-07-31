@@ -1,0 +1,11 @@
+on menu_TestLineArray mTarget
+   put the selected_Value of mTarget into selectedArray
+   put the displayed_Data of mTarget into bookArray
+   put the title_Text of mTarget into bookTitle
+   -- display_BookData selectedArray, bookTitle
+   
+   put word 1 to -1 of selectedArray ["descriptionXML"] into descriptionDiv
+   
+   put "Global | SivaSiva | Book | Parse | Menu" into menuTitle
+   display_HTML descriptionDiv, "descriptionHTML", menuTitle
+end menu_TestLineArray

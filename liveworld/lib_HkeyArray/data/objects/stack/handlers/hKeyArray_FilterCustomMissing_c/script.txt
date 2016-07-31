@@ -1,0 +1,16 @@
+command hKeyArray_FilterCustomMissing @hKeyLinkArray
+   repeat for each key hKey in hKeyLinkArray
+      if hKey_IsMissingProperty(hKey) then
+         delete local hKeyLinkArray [hKey]
+      else
+         put empty into goodSubKeys
+         repeat for each line subKey in hKeyLinkArray [hKey]
+            if hKey_IsMissingProperty(subKey) is false then
+               put subKey & CR after goodSubKeys
+            end if
+         end repeat
+         delete char -1 of goodSubKeys
+         put goodSubKeys into hKeyLinkArray [hKey]
+      end if
+   end repeat
+end hKeyArray_FilterCustomMissing

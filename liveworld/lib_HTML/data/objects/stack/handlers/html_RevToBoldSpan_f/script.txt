@@ -1,0 +1,12 @@
+function html_RevToBoldSpan someHtml
+    put "(?miU)(<b>).*(</b>)" into someReg
+    -- put "(?mi)(<b>)[^\<]*(</b>)" into someReg
+    repeat
+        if matchchunk(someHtml, someReg, oTagStart, oTagEnd, cTagStart, cTagEnd) is true then
+            put "</span>" into char cTagStart to cTagEnd of someHtml
+            put "<span style='font-weight:bold'>" into char oTagStart to oTagEnd of someHtml
+        else
+            return someHtml
+        end if
+    end repeat
+end html_RevToBoldSpan

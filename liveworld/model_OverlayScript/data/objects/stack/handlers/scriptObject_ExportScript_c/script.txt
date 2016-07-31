@@ -1,0 +1,6 @@
+command scriptObject_ExportScript scriptObject
+   put the script of scriptObject into nowScript
+   put the script_File of scriptObject into scriptFile
+   put nowScript into url ("file:" & scriptFile)
+   return nowScript
+end scriptObject_ExportScript

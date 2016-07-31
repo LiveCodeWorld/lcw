@@ -1,0 +1,38 @@
+private command add_SnippetToPageArray @pageArray, snippetArray, pVideoID, pDontAddSnippetTitle, pDontLinkTitle
+   local lastParagraphs
+   
+   deconstruct_VideoSnippetArray snippetArray, videoTitle, videoDescription, videoID, thumbNailURL, publishedAt, episodeNum, tagArray, thumbNailWidth
+   if pVideoID is not empty then put pVideoID into videoID
+   put word 1 to 3 of item 2 of publishedAt into publishedAt  -- from internet date
+   
+   if pDontAddSnippetTitle is not true then fedwiki_AddMarkdownToPageArray pageArray, ("#" && videoTitle)
+   if videoDescription is not empty then
+      put word 1 to -1 of videoDescription into videoDescription
+      put line 1 of videoDescription into firstParagraph
+      put line 2 to -1 of videoDescription into lastParagraphs
+      fedwiki_AddParagraphToPageArray pageArray, firstParagraph
+   end if
+   
+   if pDontLinkTitle is true then
+      put videoTitle & ". Broadcast on" && publishedAt & "." into videoCaption 
+   else
+      put fedwiki_ConstructLink (videoTitle) & ". Broadcast on" && publishedAt & "." into videoCaption 
+   end if
+   fedwiki_AddVideoToPageArray pageArray, videoID, "YOUTUBE", videoCaption
+   
+   if lastParagraphs is not empty then
+      -- could split into individual paragraphs
+      fedwiki_AddParagraphToPageArray pageArray, lastParagraphs
+   end if
+   
+   repeat for each key tagNum in tagArray
+      put tagArray [tagNum] into someTag
+      put "[[" & someTag & "]], " after tagList
+   end repeat
+   delete char -2 to -1 of tagList
+   if tagList is not empty then
+      fedwiki_AddMarkdownToPageArray pageArray, "# Tags"
+      fedwiki_AddParagraphToPageArray pageArray, tagList
+   end if
+   return videoTitle
+end add_SnippetToPageArray

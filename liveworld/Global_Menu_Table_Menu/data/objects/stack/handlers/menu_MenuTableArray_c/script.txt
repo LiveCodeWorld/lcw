@@ -1,0 +1,10 @@
+on menu_MenuTableArray mTarget, cachedMenuTitle
+   put rev_ScriptObject() into mController
+   put the menu_TableArray [cachedMenuTitle] of mController into mTableArray
+   display_Array mTableArray, cachedMenuTitle
+   put the result into treeView
+   set the menu_Controller of treeView to the long id of me
+   
+   edit the script of treeView
+   edit the script of the behavior of treeView
+end menu_MenuTableArray

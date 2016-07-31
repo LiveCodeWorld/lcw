@@ -1,0 +1,5 @@
+getprop menu_CheckTarget [mTarget]
+   return true
+   put the object_IsView of mTarget into someBoolean
+   return someBoolean
+end menu_CheckTarget

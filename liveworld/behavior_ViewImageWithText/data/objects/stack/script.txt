@@ -1,0 +1,110 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: behavior_ViewImageWithText
+type: behavior
+version: 0.6
+
+/*
+
+*/
+
+
+--> Events
+-
+[[ _FetchHandler (dragEnter,c) ]]
+
+[[ _FetchHandler (dragDrop,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (imageWithText_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (image_View,g) ]]
+
+[[ _FetchHandler (image_Object,g) ]]
+
+[[ _FetchHandler (image_View,pf) ]]
+
+[[ _FetchHandler (image_Object,pf) ]]
+
+[[ _FetchHandler (fieldObject,pf) ]]
+
+
+--> Field
+-
+[[ _FetchHandler (field_IsLocked,g) ]]
+
+[[ _FetchHandler (field_IsLocked,s) ]]
+
+
+--> Image
+-
+[[ _FetchHandler (image_ID,g) ]]
+
+[[ _FetchHandler (image_Contents,g) ]]
+
+[[ _FetchHandler (image_Contents,s) ]]
+
+[[ _FetchHandler (image_File,g) ]]
+
+[[ _FetchHandler (image_File,s) ]]
+
+[[ _FetchHandler (image_Description,g) ]]
+
+[[ _FetchHandler (image_Description,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (formatted_Height,g) ]]
+
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (view_Spacing,s) ]]
+
+[[ _FetchHandler (view_Spacing,g) ]]
+
+[[ _FetchHandler (right_Margin,g) ]]
+
+[[ _FetchHandler (right_Margin,s) ]]
+
+[[ _FetchHandler (left_Margin,g) ]]
+
+[[ _FetchHandler (left_Margin,s) ]]
+
+[[ _FetchHandler (top_Margin,g) ]]
+
+[[ _FetchHandler (top_Margin,s) ]]
+
+[[ _FetchHandler (bottom_Margin,g) ]]
+
+[[ _FetchHandler (bottom_Margin,s) ]]
+
+[[ _FetchHandler (image_Height,g) ]]
+
+[[ _FetchHandler (image_Height,s) ]]
+
+[[ _FetchHandler (image_Width,g) ]]
+
+[[ _FetchHandler (image_Width,s) ]]
+
+[[ _FetchHandler (image_Position,g) ]]
+
+[[ _FetchHandler (image_Position,s) ]]
+
+[[ _FetchHandler (image_Positions,g) ]]
+
+[[ _FetchHandler (image_ViewName,g) ]]
+
+[[ _FetchHandler (image_ViewName,s) ]]
+
+[[ _FetchHandler (image_ViewNames,g) ]]

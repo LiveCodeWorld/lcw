@@ -1,0 +1,5 @@
+on menu_AllTheLastChanges
+   put merge ("git diff HEAD^ HEAD") into someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   display_Lines shellResult
+end menu_AllTheLastChanges

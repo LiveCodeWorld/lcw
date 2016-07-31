@@ -1,0 +1,8 @@
+function fedwiki_ConstructSlug pageTitle
+   replace space with "-" in pageTitle
+   repeat for each char someChar in  ".,:;"
+      replace someChar with empty in pageTitle
+   end repeat
+   put tolower (pageTitle) into pageSlug
+   return pageSlug
+end fedwiki_ConstructSlug

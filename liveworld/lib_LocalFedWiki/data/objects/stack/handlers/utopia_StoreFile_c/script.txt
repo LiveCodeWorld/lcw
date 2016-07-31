@@ -1,0 +1,5 @@
+command utopia_StoreFile fedwikiDomain, wikiPageSlug, localFile
+   put fedwiki_ConstructPath (fedwikiDomain, wikiPageSlug) into wikiPagePath
+   digitalOcean_StoreFile "Utopia", wikiPagePath, localFile
+   return the result
+end utopia_StoreFile

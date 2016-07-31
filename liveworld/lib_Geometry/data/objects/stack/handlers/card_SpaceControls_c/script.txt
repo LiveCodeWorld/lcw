@@ -1,0 +1,48 @@
+command card_SpaceControls someRect, viewSpacer
+   if someRect is empty then put the the rect of me into someRect
+   lock screen 
+   
+   if viewSpacer is empty then put 4 into viewSpacer
+   put rect_SubtractMargin (viewSpacer, someRect) into innerRect
+   
+   put item 1 of innerRect into innerLeft
+   put item 2 of innerRect into lastTop
+   put item 3 of innerRect into innerRight
+   put item 4 of innerRect into innerBottom
+   
+   put 0 into rowHeight
+   put innerLeft into lastLeft
+   put item 3 of innerRect - item 1 of innerRect into innerWidth
+   put the top_Controls of this card into topControls
+   repeat for each line topControl in topControls      
+      put the formatted_Width of topControl into fWidth
+      if fWidth is empty then put the formattedWidth of topControl into fWidth
+      if fWidth is empty then put the width of topControl into fWidth
+      
+      put the formattedHeight of topControl into fHeight
+      if fHeight is empty then put the formatted_Height of topControl into fHeight
+      if fHeight is empty then put the height of topControl into fHeight
+      
+      put lastLeft + fWidth into imageRight
+      
+      if imageRight > innerRight then
+         -- lets move it down a row
+         add rowHeight + viewSpacer to lastTop
+         put 0 into rowHeight
+         put innerLeft into lastLeft
+         put lastLeft + fWidth into imageRight
+      end if
+      
+      put lastLeft,lastTop into cRect
+      put imageRight into item 3 of cRect
+      put lastTop + fHeight into lastBottom
+      put lastBottom into item 4 of cRect
+      put rect_AddMargin (4, cRect) into cRect
+      
+      set the rect of topControl to cRect
+      
+      put max (rowHeight, fHeight) into rowHeight
+      add fWidth + viewSpacer to lastLeft
+   end repeat
+   unlock screen
+end card_SpaceControls

@@ -1,0 +1,12 @@
+private command _displaySelectedValue pTreeWidget
+   if pTreeWidget is empty then
+      put _treeWidget() into pTreeWidget
+   end if
+   
+   put the selected_Value of pTreeWidget into selectedValue
+   if selectedValue is an array then
+      display_Array selectedValue
+   else
+      put selectedValue
+   end if
+end _displaySelectedValue

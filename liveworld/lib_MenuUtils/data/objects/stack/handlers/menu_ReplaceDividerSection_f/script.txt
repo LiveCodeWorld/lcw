@@ -1,0 +1,21 @@
+function menu_ReplaceDividerSection dividerTitle, someMenu, newMenuSection
+    put menu_GetDividerArray(someMenu) into dividerArray
+    put dividerArray[dividerTitle] into dividerInfo
+    if dividerInfo is empty then
+        -- return someMenu
+        
+        -- add to end
+        put dividerTitle & cr & newMenuSection into newPara
+        
+        if someMenu is empty then
+            put newPara into newMenu
+        else
+            put someMenu & cr & "-" & cr & newPara into newMenu
+        end if
+        return newMenu
+    else
+        _menu_DeconstructDividerInfo dividerInfo, startLineNum, endLineNum, dividerMenuText
+        put newMenuSection into line (startLineNum+1) to (endLineNum - 1) of someMenu
+        return someMenu
+    end if
+end menu_ReplaceDividerSection

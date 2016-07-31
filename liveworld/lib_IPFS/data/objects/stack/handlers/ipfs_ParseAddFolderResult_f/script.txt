@@ -1,0 +1,23 @@
+function ipfs_ParseAddFolderResult shellResult, someFolder
+   /*
+   added QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH 
+   added QmWZWvdwZS1G1dcuyLdcWHKGAFCKUukDnnH8SiYAN6s497 /Users/BabyBlue/Desktop/Audioboom/2455591/10618993.jpg
+   added QmSHfQqKQSfACwwisUbL76FExT7EfDVQnBnvdQBzF5cBEM /Users/BabyBlue/Desktop/Audioboom/2455591/2455591-chris-before-ethereum.mp3
+   added QmTxQweL5zinurit4eJ1wNuHR1nSt7Dnwc79FPP9zeHtrd /Users/BabyBlue/Desktop/Audioboom/2455591/2455591-chris-before-ethereum.ogg
+   added QmVmk2po9GsYsamiHhx3pnkpua4yp4X74L3eU4A9djLYcy /Users/BabyBlue/Desktop/Audioboom/2455591/audio.json
+   added QmdKe32rSQ8fCeNmCYyacHZGbFuHwUWX3g6GWJfN1ATNKz /Users/BabyBlue/Desktop/Audioboom/2455591/
+   */
+   local ipfsTable
+   set the itemdelimiter to "/"
+   folder_Format someFolder
+   put the number of chars of someFolder -1 into lastNum
+   repeat for each line someLine in shellResult
+      put word 1 of someLine into isPinned
+      put word 2 of someLine into someHash
+      put word 3 to -1 of someLine into relPath
+      delete char 1 to lastNum of relPath
+      put relPath & tab & someHash & tab & isPinned & CR after ipfsTable
+   end repeat
+   delete last char of ipfsTable
+   return ipfsTable
+end ipfs_ParseAddFolderResult

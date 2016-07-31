@@ -1,0 +1,4 @@
+function html_StripAllTags taggedText
+    --was "stripAllTags", "html_StripTags"
+    return text_StripAllTags(taggedText)
+end html_StripAllTags

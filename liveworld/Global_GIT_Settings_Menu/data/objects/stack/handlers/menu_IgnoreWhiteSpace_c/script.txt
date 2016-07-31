@@ -1,0 +1,6 @@
+on menu_IgnoreWhiteSpace
+   get git_ExecuteShellCommand("git config --global apply.whitespace nowarn")
+   if it is not empty then opn_Notify it, true
+   put git_ExecuteShellCommand("git config --list") into shellResult
+   display_Text shellResult, "git config --list"
+end menu_IgnoreWhiteSpace

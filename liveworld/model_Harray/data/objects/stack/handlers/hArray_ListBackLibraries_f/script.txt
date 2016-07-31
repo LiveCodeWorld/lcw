@@ -1,0 +1,4 @@
+function hArray_ListBackLibraries
+   put hArray_ListObjectsOfType ("backscript") into rObjects
+   return rObjects
+end hArray_ListBackLibraries

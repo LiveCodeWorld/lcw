@@ -1,0 +1,19 @@
+on menu_ParseDiv
+   put script_GetTemplate ("SivaSiva XML") into someDiv
+   
+   answer file "select an XML file..."
+   put it into someFile
+   if it is empty then exit to top
+   
+   put url ("file:" & someFile) into someHTML
+   -- put html_ExtractBodyContents (someHTML) into someXML
+   
+   -- xml needs a root node  
+   put html_ExtractBody (someHTML) into someXML
+   
+   put ConvertXMLToArray (someXML, "utf8", true, true) into someArray
+   -- put true into pUseValueKey
+   -- put ConvertXMLToArray (someXML, "utf8", pUseValueKey) into someArray
+   -- put ConvertXMLToArray (someXML) into someArray
+   display_Array someArray
+end menu_ParseDiv

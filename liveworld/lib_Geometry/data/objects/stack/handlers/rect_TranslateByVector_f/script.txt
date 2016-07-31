@@ -1,0 +1,5 @@
+function rect_TranslateByVector someRect, xVector, yVector
+    put xVector,yVector into pointVector
+    rect_AddVector someRect, pointVector
+    return someRect
+end rect_TranslateByVector

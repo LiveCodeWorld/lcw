@@ -1,0 +1,6 @@
+function view_GetIndexMenu pForceLoad
+   global gLCW
+   
+   view_LoadBigIndex pForceLoad
+   return gLCW ["viewIndexMenu"]
+end view_GetIndexMenu

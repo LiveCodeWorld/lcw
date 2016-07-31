@@ -1,0 +1,5 @@
+command daemon_StoreLogArray dataArray
+   put server_LogArrayFile() into someFile
+   array_Save someFile, dataArray
+   return someFile
+end daemon_StoreLogArray

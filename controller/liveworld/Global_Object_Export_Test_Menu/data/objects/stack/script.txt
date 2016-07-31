@@ -1,0 +1,70 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Object_Export_Test_Menu
+type: controller
+version: 0.1
+
+
+--> Menu | Props
+-
+local LocalArray
+
+
+--> Global | Object | Export | Test | Menu
+-
+[[ _FetchHandler (menu_RevealTextStackFolder,c) ]]
+
+[[ _FetchHandler (menu_RevealObjectFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchManifestArrayForStack,c) ]]
+
+[[ _FetchHandler (menu_FetchMainStackManifestArray,c) ]]
+
+[[ _FetchHandler (stack_Objects,g) ]]
+      
+[[ _FetchHandler (menu_ObjectPropertyArray,c) ]]
+
+[[ _FetchHandler (menu_ObjectArray,c) ]]
+
+
+on _
+end _
+   
+[[ _FetchHandler (menu_LiveMainStackArray,c) ]]
+
+[[ _FetchHandler (menu_LiveStackArray,c) ]]
+
+[[ _FetchHandler (menu_LiveCardArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ObjectPropertyText,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Object | Export | Test | Menu | Disabled
+-
+[[ _FetchHandler (disabled_RevealTextStackFolder,g) ]]
+
+[[ _FetchHandler (disabled_RevealObjectFolder,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayMetaArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TestMergeScript,c) ]]
+
+[[ _FetchHandler (menu_TestSpeeds,c) ]]

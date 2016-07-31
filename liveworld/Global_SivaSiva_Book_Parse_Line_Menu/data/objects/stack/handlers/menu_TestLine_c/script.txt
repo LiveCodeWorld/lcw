@@ -1,0 +1,5 @@
+on menu_TestLine
+   put the displayed_Data of mTarget into someArray
+   put the title_Text of mTarget into bookTitle
+   display_IndexedBookArray someArray, bookTitle
+end menu_TestLine

@@ -1,0 +1,11 @@
+command line_Replace replaceLine, newLine, @someIndex
+    -- only replaces if it is there
+    set the wholematches to true
+    put lineoffset(replaceLine, someIndex) into lineNum
+    if lineNum is 0 then
+        -- uncomment to leave unchanged or
+        line_Add newLine, someIndex
+    else
+        put newLine into line lineNum of someIndex
+    end if
+end line_Replace

@@ -1,0 +1,20 @@
+on menu_UploadToServer imageView
+   put the text of imageView into somePNG
+   put "~/public_html/" into documentRoot
+   put "images/" into imageFolderPathbit
+   put documentRoot & imageFolderPathbit into imageFolder
+   
+   if there is not a folder imageFolder then return empty
+   put the short name of imageView into tidyName
+   replace space with "_" in tidyName
+   put tidyName & ".png" into shortFile
+   put imageFolder & shortFile into imageFile
+   
+   put somePNG into url ("binfile:" & imageFile)
+   
+   put "http://localhost/" & imageFolderPathbit & shortFile into imageURL 
+   set the image_Url of imageView to imageURL
+   launch url imageURL
+   
+   return imageFile
+end menu_UploadToServer

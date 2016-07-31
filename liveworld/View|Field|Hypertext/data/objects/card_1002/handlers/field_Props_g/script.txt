@@ -1,0 +1,5 @@
+getprop field_Props [fieldObject]
+    put the view_Object of fieldObject into someView
+    if exists (someView) is false then return empty
+    return the view_PropertyMenu of someView
+end field_Props

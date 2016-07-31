@@ -1,0 +1,9 @@
+function script_ExtractSetPropHandlers someScript
+   filter someScript with "setprop *"
+   repeat for each line scriptLine in someScript
+      put word 2 of scriptLine into handlerName
+      put handlerName & CR after handlerNames
+   end repeat
+   delete char -1 of handlerNames
+   return handlerNames
+end script_ExtractSetPropHandlers

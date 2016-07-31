@@ -1,0 +1,31 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_IdeHandlerListField
+type: behavior
+version: 0.3
+
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_Init,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (rev_GetHandlerTreeSelectedInfo,f) ]]
+
+[[ _FetchHandler (rev_HandlerTreeField,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorStack,f) ]]
+
+[[ _FetchHandler (rev_TopScriptEditor,f) ]]

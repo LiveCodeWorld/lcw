@@ -1,0 +1,4 @@
+on revserver_replacePutHeaders @pSource
+   replace "put new header" with "put" in pSource
+   replace "put header" with "put" in pSource
+end revserver_replacePutHeaders

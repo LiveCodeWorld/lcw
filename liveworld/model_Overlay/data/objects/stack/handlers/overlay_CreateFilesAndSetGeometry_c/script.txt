@@ -1,0 +1,14 @@
+command overlay_CreateFilesAndSetGeometry overlayFolder, overlayName, pOverlayStyle, pImageFormat
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_GetArray (overlayData, overlayName) into overlayArray
+   
+   overlayArray_SetGraphProperty overlayArray, "overlay_Folder", overlayFolder
+   overlayArray_SetGraphProperty overlayArray, "overlay_Name", overlayName
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", pOverlayStyle
+   
+   overlayArray_CreateFilesAndSetGeometry overlayArray, empty, pImageFormat
+   
+   overlayData_SetArray overlayData, overlayArray, overlayName
+   overlay_SetData overlayFolder, overlayData
+   return overlayArray
+end overlay_CreateFilesAndSetGeometry

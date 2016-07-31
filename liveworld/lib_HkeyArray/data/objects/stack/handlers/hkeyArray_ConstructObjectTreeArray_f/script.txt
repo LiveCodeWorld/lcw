@@ -1,0 +1,23 @@
+function hkeyArray_ConstructObjectTreeArray objectHKeyArray
+   put keys (objectHKeyArray) into sortedObjects
+   sort sortedObjects
+   
+   repeat for each line sortedObject in sortedObjects
+      put objectHKeyArray [sortedObject] into depHkeys
+      sort depHkeys by item 1 of each
+      put empty into depKeyArray
+      repeat for each line depHkey in depHkeys
+         -- put empty into parentHkey -- here we should dig into reversed array
+         put item 1 of depHkey into hName
+         put item 2 of depHkey into hType
+         put hName & "_" & hType into displayName
+         
+         put hName into depKeyArray [displayName]["hName"]
+         put hType into depKeyArray [displayName]["hType"]
+         put item 3 of depHkey into depKeyArray [displayName]["hObject"]
+         put item 4 of depHkey into depKeyArray [displayName]["hNum"]
+      end repeat
+      put depKeyArray into prettyObjectArray [sortedObject]
+   end repeat
+   return prettyObjectArray
+end hkeyArray_ConstructObjectTreeArray

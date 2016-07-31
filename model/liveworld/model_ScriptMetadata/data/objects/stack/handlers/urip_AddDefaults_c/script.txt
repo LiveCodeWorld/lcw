@@ -1,0 +1,15 @@
+command urip_AddDefaults @uRipArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense   
+   if pLibLicense is empty then put pref_GetValue ("userName") into pCopyrightHolder 
+   if pLibLicense is empty then put pref_GetValue ("default copyright license") into pLibLicense
+   if pLibLicense is empty then put "GPLv3" into pLibLicense
+   if pVersion is empty then put "0.1" into pVersion
+   
+   put pLibLicense into uRipArray ["license"]
+   put pVersion into uRipArray ["version"]
+   
+   if pScriptName is not empty then put pScriptName into uRipArray ["name"]
+   if pScriptType is not empty then put pScriptType into uRipArray ["type"]
+   if pCopyrightHolder is not empty then put pCopyrightHolder into uRipArray ["copyright"]
+   if pDeps is not empty then put pDeps into uRipArray ["deps"]
+   if pScriptHelp is not empty then put pScriptHelp into uRipArray ["script_Help"]
+end urip_AddDefaults

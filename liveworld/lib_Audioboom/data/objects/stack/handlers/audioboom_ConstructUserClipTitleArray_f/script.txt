@@ -1,0 +1,8 @@
+function audioboom_ConstructUserClipTitleArray audioboomUserClipArray
+   put audioboom_GetAudioClipArray (audioboomUserClipArray) into audioClipArray
+   repeat for each key indexNum in audioClipArray
+      put audioClipArray [indexNum]["title"] into booTitle
+      put indexNum into titleArray [booTitle]
+   end repeat
+   return titleArray
+end audioboom_ConstructUserClipTitleArray

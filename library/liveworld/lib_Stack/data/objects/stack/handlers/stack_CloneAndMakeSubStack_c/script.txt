@@ -1,0 +1,17 @@
+command stack_CloneAndMakeSubStack toCloneNames, pMyStackname
+   if pMyStackname is empty then 
+      put the short name of the target into pMyStackname
+   end if
+   replace comma with CR in toCloneNames
+   
+   repeat for each line toCloneName in toCloneNames
+      set the cursor to busy
+      if there is not a stack toCloneName then next repeat
+      
+      clone stack toCloneName
+      put it into clonedStack
+      put the short name of clonedStack into clonedName
+      set the mainstack of clonedStack to pMyStackname
+      set the name of stack clonedName of stack pMyStackname to toCloneName
+   end repeat
+end stack_CloneAndMakeSubStack

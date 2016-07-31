@@ -1,0 +1,5 @@
+function fedwiki_LocalSiteMapFile pFedwikiDomain
+   put fedwiki_GetLocalWikiRoot() into localWikiFolder
+   put localWikiFolder & fedwiki_JsonSiteMapPathBit (pFedwikiDomain) into siteMapFile
+   return siteMapFile
+end fedwiki_LocalSiteMapFile

@@ -1,0 +1,11 @@
+getprop indexGroup_Stacks
+   put the child_Views ["View|Index|Simple"] of the target into indexViews
+   repeat for each line indexView in indexViews
+      set the cursor to busy
+      put the indexView_Stacks of indexView into indexViewStackObjects
+      put indexViewStackObjects & CR after stackObjects
+   end repeat
+   delete char -1 of stackObjects
+   sort stackObjects
+   return word 1 to -1 of stackObjects
+end indexGroup_Stacks

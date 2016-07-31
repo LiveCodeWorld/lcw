@@ -1,0 +1,8 @@
+on menu_JabberUsers
+   put dreamhost_ApiKey() into apiKey
+   put merge("https://api.dreamhost.com/?key=[[apiKey]]&cmd=jabber-list_users") into someUrl
+   put url someUrl into someResult
+   
+   put dreamHost_ParseTableResult (someResult) into tableArray
+   display_Array tableArray, "jabber-list_users", "Global | Dreamhost | Jabber | Menu", "Global | Dreamhost | Jabber | Menu"
+end menu_JabberUsers

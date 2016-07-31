@@ -1,0 +1,21 @@
+command gist_SaveHkey hKeys, @pShortGistFile, pGistHelp, pIsPublic
+   put line 1 of hKeys into hKey
+   if pGistHelp is empty then
+      put _FetchAndAskForHkeyHelp (hKey) into pGistHelp
+   end if
+   put json_Utf8Encode (pGistHelp) into pGistHelp
+   
+   put hkey_CollectFromObjects (hKeys) into someScript
+   put gist_ShortFileFromHkey (hKeys) into shortGistFile
+   
+   put gist_FindInListArray (shortGistFile) into gistID
+   if gistID is empty then
+      gist_Create someScript, pGistHelp, shortGistFile, pIsPublic
+   else
+      gist_Edit gistID, shortGistFile, someScript, pGistHelp, pIsPublic
+   end if
+   
+   put the result into someJSON
+   put json_ToArray (someJSON) into gistReplyArray
+   return gistReplyArray
+end gist_SaveHkey

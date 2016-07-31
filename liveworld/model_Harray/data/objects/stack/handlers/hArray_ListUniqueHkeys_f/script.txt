@@ -1,0 +1,14 @@
+function hArray_ListUniqueHkeys
+   local bigHKeyArray
+   -- timer_Start
+   put hArray_ConstructHkeyHashArray() into hkeyHashArray
+   repeat for each key handlerHash in hkeyHashArray
+      put hkeyHashArray [handlerHash] into uniqueHkeyArray
+      union bigHKeyArray with uniqueHkeyArray
+   end repeat
+   put keys (bigHKeyArray) into hkeys
+   sort hkeys by item 1 of each
+   -- timer_Stop
+   
+   return hkeys
+end hArray_ListUniqueHkeys

@@ -1,0 +1,99 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Behavior | Menu
+type: controller
+version: 0.1
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]
+
+
+--> Global | Behavior | Menu
+-
+[[ _FetchHandler (menu_EditBehavior,c) ]]
+
+[[ _FetchHandler (disabled_EditBehavior,g) ]]
+
+[[ _FetchHandler (submenu_ViewBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetStandardBehavior,c) ]]
+
+[[ _FetchHandler (menu_EditStandardBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditNamedBehavior,c) ]]
+
+[[ _FetchHandler (menu_SetNamedBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditLivecodeBehaviorButton,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CheckStandardBehaviors,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Behavior | Menu | Props
+-
+[[ _FetchHandler (standard_BehaviorStackName,g) ]]
+
+[[ _FetchHandler (standard_BehaviorStackNames,g) ]]
+
+
+[[ _FetchHandler (ide_BNames,g) ]]
+
+[[ _FetchHandler (b_Name,g) ]]
+
+[[ _FetchHandler (b_Names,g) ]]
+
+
+--> Global | Script | Behavior | Menu | Disabled
+-
+getprop disabled_EditBehavior [scriptObject]
+   put the behavior of scriptObject into bObject
+   return bObject is empty
+end disabled_EditBehavior
+
+
+--> Menu | Props
+-
+--> Deps
+-
+[[ _FetchHandler (menu_TableFromHkeys,f) ]]
+
+[[ _FetchHandler (menu_TextFromHkeys,f) ]]
+
+[[ _FetchHandler (menu_TableLineFromHkey,f) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayBehaviorHierarchy,c) ]]
+
+[[ _FetchHandler (menu_AddBehaviorToEnd,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_LivecodeBehaviorHacks,c) ]]
+
+on menu_EditLivecodeBehaviorButton mTarget, ideBname
+   put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
+   edit the script of ideBehavior
+end menu_EditLivecodeBehaviorButton

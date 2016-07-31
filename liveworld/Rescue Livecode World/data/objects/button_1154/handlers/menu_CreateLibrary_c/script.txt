@@ -1,0 +1,6 @@
+on menu_CreateLibrary indexView
+   put "Choose a name for your script only menu stack...." into pQuestion
+   put "lib_Example" into suggestedAnswer
+   lcw_CreateLibrary "library", someQuestion, suggestedAnswer
+   dispatch "refresh" to indexView
+end menu_CreateLibrary

@@ -1,0 +1,80 @@
+command card_CreateFromArray cardNum, stackArray, @newCreationArray   
+   -- put the long id of cd cardNum into cardObject
+   put the long id of this cd into cardObject
+   
+   -- put stackArray ["manifest"]["cards"][cardNum] into cardArray -- a lot simpler!
+   if cardNum = empty then
+      put "card" into cardArrayKey
+   else
+      put "card[" & cardNum & "]" into cardArrayKey
+   end if
+   put stackArray ["manifest"]["cards"][cardArrayKey] into cardArray
+   
+   put cardArray ["object"] into aCard
+   put stackArray ["objects"] into objectsArray
+   
+   put object_ConvertAbbreviated (aCard) into aFolder
+   put objectsArray [aFolder] into objectPropArray
+   
+   set the object_PropertyArray of cardObject to objectPropArray
+   
+   put cardArray ["controls"] into controlArray
+   -- put item 2 of the extents of controlArray into maxIndexNum
+   put the number of lines of keys(controlArray) into maxIndexNum
+   put 1 into groupNum
+   repeat with indexNum = 1 to maxIndexNum
+      if maxIndexNum = 1 then
+         put "index" into indexNumKey
+      else
+         put "index[" & indexNum & "]" into indexNumKey
+      end if
+      put controlArray [indexNumKey]["object"] into aControl
+      
+      put word 3 of aControl into aControlID
+      if aControl is among the keys of newCreationArray then
+         -- it must be a background
+         if aControlID is among the lines of the groupIDs of this card then
+            breakpoint -- should never be true
+         else
+            set lockmessages to true
+            place background id aControlID onto this cd
+            set lockmessages to false
+         end if
+      else
+         put controlArray [indexNumKey]["owner"] into cOwner
+         object_Create aControl, cOwner
+         put the result into createdObject
+         
+         put object_ConvertAbbreviated (aControl) into cFolder
+         put objectsArray [cFolder] into objectPropArray
+         delete local objectPropArray ["rev"]["layer"] -- layers can cause problems (hack)
+         put objectPropArray into newCreationArray [aControl]
+         
+         set the object_PropertyArray of createdObject to objectPropArray
+      end if
+   end repeat
+   
+   -- now add variable content
+   put cardArray ["variable"] into vArray
+   repeat for each key eNum in vArray
+      put vArray [eNum]["object"] into vObject
+      switch word 1 of vObject
+         case "field"
+            set the htmltext of vObject to vArray [eNum]["html"]
+            break
+         case "button"
+            set the hilite of vObject to vArray [eNum]["hilite"]
+            break
+      end switch
+   end repeat
+   
+   return true
+   
+   -- this bit does not get the rect right ???
+   -- now set group props (after all content is set)
+   repeat with gNum = (groupNum - 1) down to 1
+      put groupPropArray [gNum]["object"] into aGroup
+      put groupPropArray [gNum]["propArray"] into objectPropArray
+      set the object_PropertyArray of aGroup to objectPropArray
+   end repeat
+end card_CreateFromArray

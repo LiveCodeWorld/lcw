@@ -1,0 +1,37 @@
+on menu_WalkHkey hKey, projectName
+   /*
+   Bug to Fix:
+   
+   At the moment the files:
+   -  processedHkey.array
+   -  overlayData.array
+   - LCW.svg (ie [[projectName]].svg
+   -  etc
+   
+   are bieng stored in the project_OverlayFolder
+   instead of something more suitable for hander dependencies!
+   
+   Should use:
+   
+   -  put project_HandlerMetadataFolder (hKey, true) into hkeyMetadataFolder
+   
+   */
+   
+   local pSetName, pAllCalls
+   project_WalkAndStoreObjectDependencies hKey, pAllCalls, projectName
+   put the result into hKeyArray
+   display_HKeyArray hKeyArray, hkey
+   
+   -- this shoud be an hKey graph (not a script graph)
+   -- stored in the hkeyMetadataFolder -- project_HandlerMetadataFolder (heky)
+   put item 3 of hkey into scriptObject
+   script_CreateGraph hKeyArray, scriptObject, projectName, "hierarchical"
+   put the result into imageFile
+   
+   put hkey into stackLabel
+   display_SVG imageFile, stackLabel
+   put the result into displayView
+   set the displayed_Hkey of displayView to hkey
+   
+   finder_Reveal imageFile
+end menu_WalkHkey

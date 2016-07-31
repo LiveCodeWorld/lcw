@@ -1,0 +1,24 @@
+getprop script_FirstHkeys [returnShort]
+   -- not in order found in script
+   try
+      put the long id of the target into tObject
+      put revRuggedID (tObject) into tObject
+      put the revAvailableHandlers of tObject into handlerTable
+      repeat for each line someLine in handlerTable
+         put word 1 of someLine into hTableType
+         replace "M" with "c" in hTableType
+         put tolower (hTableType) into hType
+         
+         put word 2 of someLine into hName
+         if returnShort is true then
+            put hName,hType & CR after hKeys
+         else
+            put hName,hType,tObject,1 & CR after hKeys -- revAvailableHandlers only return first handler.
+         end if
+      end repeat
+      delete char -1 of hKeys
+      return hKeys
+   catch someError
+      return empty -- a locked stack
+   end try
+end script_FirstHkeys

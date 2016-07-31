@@ -1,0 +1,8 @@
+getprop object_MetaArray [pLinkToViews]
+   -- was "mainStack_Array"
+   -- Also construct hArray live as we loop through all the objects collecting info
+   local hArray
+   put the main_Stack of the target into mainStackObject
+   put mainstack_ConstructMetaArray (mainStackObject, hArray, pLinkToViews, false) into metaArray
+   return metaArray
+end object_MetaArray

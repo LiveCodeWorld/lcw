@@ -1,0 +1,7 @@
+getprop old_FetchHows
+   put hArray_FindHkey ("hkey_FetchLinkArray,f") into hKey
+   if hKey is empty then return empty
+   put item 3 of hKey into foundObject
+   put the hkey_CaseConditions ["hkey_FetchLinkArray,f"] of foundObject into caseConditions
+   return caseConditions
+end old_FetchHows

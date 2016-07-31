@@ -1,0 +1,13 @@
+on overlay_MouseUp tObject
+   put the node_Url of tObject into hKey
+   put dg_FindLine (hKey) into newIndex
+   
+   put the dataGrid_View of me into dgView
+   put the dgHilitedLine of dgView into previouslyHilitedIndex
+   
+   lock screen
+   set the dgHilitedLine of dgView to newIndex
+   click_Handler newIndex, previouslyHilitedIndex
+   set the dg_SelectedHkey of this cd to hKey
+   unlock screen
+end overlay_MouseUp

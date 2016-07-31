@@ -1,0 +1,33 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Script Editor_Extras_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Script Editor | Extras | Menu
+-
+[[ _FetchHandler (menu_FindHandlerInHierarchy,c) ]]
+
+[[ _FetchHandler (menu_SearchkeyWords,c) ]]
+
+[[ _FetchHandler (submenu_Menu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_ScriptArray,c) ]]
+
+[[ _FetchHandler (submenu_Dependencies,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Search,c) ]]
+
+[[ _FetchHandler (submenu_View,c) ]]
+
+[[ _FetchHandler (submenu_Card,c) ]]
+
+[[ _FetchHandler (menu_EditScriptEditorMenu,c) ]]

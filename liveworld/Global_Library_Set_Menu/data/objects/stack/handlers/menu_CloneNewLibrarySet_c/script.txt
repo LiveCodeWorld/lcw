@@ -1,0 +1,6 @@
+on menu_CloneNewLibrarySet
+   put opn_Ask ("Give the new library set a name...", "new name") into newSetName
+   put library_FetchSetArray() into oldSetArray
+   library_StoreSetArray oldSetArray, newSetName
+   display_LibraryStatus
+end menu_CloneNewLibrarySet

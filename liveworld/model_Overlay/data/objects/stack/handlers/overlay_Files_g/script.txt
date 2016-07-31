@@ -1,0 +1,7 @@
+getprop overlay_Files [pOverlayName]
+   put the overlay_Folder of the target into overlayFolder
+   overlay_Files overlayFolder, dotFile, imageFile, cmapFile, xdotFile, dotArrayFile, pOverlayName
+   put dotFile,imageFile,cmapFile,xdotFile into graphFiles
+   replace comma with CR in graphFiles
+   return graphFiles
+end overlay_Files

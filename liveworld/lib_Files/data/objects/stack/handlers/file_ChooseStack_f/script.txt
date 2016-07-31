@@ -1,0 +1,14 @@
+function file_ChooseStack comment
+    -- was "askStack"
+    
+    if comment is empty then put "Select a stack..." into comment
+    if the platform is "MacOS" then
+        answer file comment of type "MSTK"
+    else if the platform is "Linux" then
+        answer file comment with filter "*.mc"
+    else if the platform is "Windows" then
+    else
+    end if
+    put line 1 of it into longStackName
+    return longStackName
+end file_ChooseStack

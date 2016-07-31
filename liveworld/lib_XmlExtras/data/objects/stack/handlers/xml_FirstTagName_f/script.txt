@@ -1,0 +1,8 @@
+function xml_FirstTagName someXML
+   put "(?im)<\s*(\w+)[ />]" into someReg
+   if matchtext(someXML, someReg, tagName) is false then
+      return empty
+   else
+      return tagName
+   end if
+end xml_FirstTagName

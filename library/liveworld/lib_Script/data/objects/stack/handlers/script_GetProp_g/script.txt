@@ -1,0 +1,6 @@
+getprop script_GetProp [handlerName]
+   put the script of the target into someScript
+   put script_GetGetProp (handlerName, someScript) into someHandler
+   -- return script_ExtractGetPropHandlers (someScript, scriptObject)
+   return someHandler
+end script_GetProp

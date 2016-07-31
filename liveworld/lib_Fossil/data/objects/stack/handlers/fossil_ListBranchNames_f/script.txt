@@ -1,0 +1,14 @@
+function fossil_ListBranchNames pCheckoutFolderOrRepositoryFile
+   put "fossil branch list" into someShell
+   
+   set the itemdelimiter to "."
+   if there is a file pCheckoutFolderOrRepositoryFile and item -1 of pCheckoutFolderOrRepositoryFile = "fossil" then
+      shell_BashParamEscape pCheckoutFolderOrRepositoryFile
+      put space & "--repository" && pCheckoutFolderOrRepositoryFile after someShell
+      fossil_ExecuteShell someShell
+   else
+      fossil_ExecuteShell someShell, pCheckoutFolderOrRepositoryFile
+   end if
+   put the result into shellResult
+   return shellResult
+end fossil_ListBranchNames

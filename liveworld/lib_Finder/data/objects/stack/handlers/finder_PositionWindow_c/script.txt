@@ -1,0 +1,11 @@
+command finder_PositionWindow appName, someRect, windowName
+    -- not really scripting the Finder it depends on the Apps support for "bounds of window"
+    if windowName is empty then
+        put 1 into windowName	# Skype Video
+    else if windowName is not a number then
+        put kwote(windowName) into windowName
+    end if
+    
+    put merge("set the bounds of window [[windowName]] to {[[someRect]]}") into appleScriptLine
+    return appleScript_DoLine(appleScriptLine, appName, true)	
+end finder_PositionWindow

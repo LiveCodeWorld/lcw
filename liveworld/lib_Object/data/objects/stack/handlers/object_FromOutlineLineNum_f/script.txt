@@ -1,0 +1,6 @@
+function object_FromOutlineLineNum lineNum, objectOutline
+   put outline_LinePath(lineNum, objectOutline, osLineNumList, CR) into objectHierarchy
+   -- put outline_ExtractHierarchy(lineNum, objectOutline, osLineNumList, CR) into objectHierarchy
+   put object_FromOutlineHierarchy(objectHierarchy) into someObject
+   return someObject
+end object_FromOutlineLineNum

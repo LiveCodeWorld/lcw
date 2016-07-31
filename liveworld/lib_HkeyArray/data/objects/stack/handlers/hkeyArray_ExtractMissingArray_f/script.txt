@@ -1,0 +1,32 @@
+function hkeyArray_ExtractMissingArray hkeyArray, fllterSystem, filterCustomMissing
+    local filteredHkeyArray, noCallKeys
+    
+    set the wholematches to true
+    repeat for each key hKey in hkeyArray
+        set the cursor to busy
+        
+        script_DeconstructHkey hKey, handlerName, handlerType, handlerNum, scriptObject
+        if exists(scriptObject) is false then
+            if fllterSystem is true and handlerType is "m" then next repeat
+            if filterCustomMissing is true and handlerType is among the items of "g,s" then next repeat
+            line_Add hKey, noCallKeys
+        else
+            put hkeyArray [hKey] into handlerCalls
+            repeat for each line callKey in handlerCalls
+                script_DeconstructHkey callKey, handlerName, handlerType, handlerNum, callObject
+                if exists(callObject) is false then
+                    if fllterSystem is true and handlerType is "m" then next repeat
+                    if filterCustomMissing is true and handlerType is among the items of "g,s" then next repeat
+                    array_AddToIndex callKey, hKey, filteredHkeyArray
+                end if
+            end repeat
+        end if
+    end repeat
+    
+    put array_AllNodes(filteredHkeyArray) into missingKeys
+    line_Delete missingKeys, noCallKeys
+    if noCallKeys is not empty then
+        put noCallKeys into filteredHkeyArray ["Missing Solo"]
+    end if
+    return filteredHkeyArray
+end hkeyArray_ExtractMissingArray

@@ -1,0 +1,14 @@
+getprop object_SearchArray [someProperty]
+   put true into useTargetProperty
+   
+   put the long id of the target into targetObject
+   switch word 1 of targetObject
+      case "stack"
+         put the name of targetObject into stackObject
+         put search_StackForResults (stackObject, someProperty) into objectArray
+         return objectArray
+      default -- case "card"
+         put object_SearchGroup (targetObject, someProperty) into searchArray
+         return searchArray
+   end switch
+end object_SearchArray

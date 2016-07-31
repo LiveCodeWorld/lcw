@@ -1,0 +1,4 @@
+function script_GetGlobalSuiteArray 
+   put library_FetchArray ("OPN_GlobalSuite") into modelArray
+   return modelArray
+end script_GetGlobalSuiteArray

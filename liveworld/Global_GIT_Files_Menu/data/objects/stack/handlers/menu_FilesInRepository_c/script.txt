@@ -1,0 +1,10 @@
+on menu_FilesInRepository
+   set the cursor to watch
+   put git_ExecuteShellCommand("git ls-files") into commitedFiles
+   put file_IndexToOutline (commitedFiles, "outline") into fileOutline
+   
+   put fileOutline
+   
+   -- set the tree_Display ["Files In Repository"] of treeView to fileOutline
+   -- display_Outline fileOutline
+end menu_FilesInRepository

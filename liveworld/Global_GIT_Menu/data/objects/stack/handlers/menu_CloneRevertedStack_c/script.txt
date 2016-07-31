@@ -1,0 +1,6 @@
+on menu_CloneRevertedStack treeField
+   put the tree_SelectedLink of treeField into commitHash
+   put the displayed_Object of treeField into stackObject
+   
+   git_DisplayTempStackRevision stackObject, commitHash
+end menu_CloneRevertedStack

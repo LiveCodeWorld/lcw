@@ -1,0 +1,8 @@
+getprop object_DataBaseArray [modelName]
+   answer warning "Database model not implemented!"
+   return empty
+   
+   put the object_DataBaseFile [modelName] of the target into someFile
+   put array_FetchFromDataBase (someFile) into tArray
+   return tArray
+end object_DataBaseArray

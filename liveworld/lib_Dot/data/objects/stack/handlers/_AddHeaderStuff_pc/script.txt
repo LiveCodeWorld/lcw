@@ -1,0 +1,11 @@
+private command _AddHeaderStuff @dotHeaderArray, graphPropertyArray
+   switch graphPropertyArray ["overlay_Style"]
+      case "hierarchical"
+         -- remove these props unless the style is hierarchical "dot"
+         delete local dotHeaderArray ["overlap"]
+         delete local dotHeaderArray ["ordering"]
+         delete local dotHeaderArray ["concentrate"]
+         break
+      default
+   end switch
+end _AddHeaderStuff

@@ -1,0 +1,9 @@
+function object_ConstructFromReferencePath objectRefPath, someObject, pathDelim
+   if pathDelim is empty then put "/" into pathDelim
+   set the itemDelimiter to pathDelim
+   repeat for each item objectRef in objectRefPath
+      if exists(someObject) is false then return empty
+      put the objectRef of someObject into someObject
+   end repeat
+   return someObject
+end object_ConstructFromReferencePath

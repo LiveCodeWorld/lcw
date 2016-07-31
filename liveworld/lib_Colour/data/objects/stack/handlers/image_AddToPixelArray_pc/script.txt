@@ -1,0 +1,15 @@
+private command image_AddToPixelArray rgbPixel, pixelX, pixelY, dimensionX, dimensionY, imagePixelWidth, imagePixelHeight, @imageArray
+    put 1 + trunc(pixelX * dimensionX/imagePixelWidth) into blockX
+    put 1 + trunc(pixelY * dimensionY/imagePixelHeight) into blockY
+    put blockX && blockY into someKey
+ 
+    put item 1 of rgbPixel into someRed
+    put item 2 of rgbPixel into someGreen
+    put item 3 of rgbPixel into someBlue
+     
+    put imageArray[someKey] into oldValues
+    put someRed & "," after line 1 of oldValues
+    put someGreen & "," after line 2 of oldValues
+    put someBlue & "," after line 3 of oldValues
+    put oldValues into imageArray[someKey]
+end image_AddToPixelArray

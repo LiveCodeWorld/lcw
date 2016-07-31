@@ -1,0 +1,10 @@
+command overlayArray_DeconstructMetadata overlayArray, @graphPropertyArray, @dotHeaderArray, @nodePropertyArray, @edgePropertyArray, @dotGroupStyleArray
+   -- overlayArray_DeconstructMetadata overlayArray, graphPropertyArray, dotHeaderArray, nodePropertyArray, edgePropertyArray, dotGroupStyleArray, pOverlayName
+   put overlayArray ["metadata"] into metadataArray
+   
+   put metadataArray ["graph_PropertyArray"] into graphPropertyArray
+   put metadataArray ["dot_HeaderArray"] into dotHeaderArray
+   put metadataArray ["node_PropertyArray"] into nodePropertyArray
+   put metadataArray ["edge_PropertyArray"] into edgePropertyArray
+   put metadataArray ["dot_GroupStyleArray"] into dotGroupStyleArray
+end overlayArray_DeconstructMetadata

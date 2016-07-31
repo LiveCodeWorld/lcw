@@ -1,0 +1,20 @@
+function hKeyArray_ConstructSubGraph nodeIDs, idArray, handlerType, modelObject
+   -- was "linkArray_ConstructSubGraph"
+   hkey_SetHandlerTypeProperties handlerType, nodeColour, nodeFillColour, nodeShape, nodeStyle
+   put dot_ConstructDefaultNodeDefs (nodeShape, nodeStyle, nodeColour, nodeFillColour) into defaultNodeDefs
+   
+   put "{" & CR into subGraph
+   put tab & defaultNodeDefs & CR after subGraph
+   put CR after subGraph
+   
+   if exists(modelObject) then
+      repeat for each line nodeID in nodeIDs
+         put the dot_NodeDefLine [nodeID] of modelObject into nodeDefLine
+         put tab & nodeDefLine & CR after subGraph
+      end repeat
+   end if
+   delete char -1 of subGraph
+   
+   put "}" after subGraph
+   return subGraph
+end hKeyArray_ConstructSubGraph

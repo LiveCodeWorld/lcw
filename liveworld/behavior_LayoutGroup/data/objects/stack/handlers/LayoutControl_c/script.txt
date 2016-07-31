@@ -1,0 +1,11 @@
+on LayoutControl pRect
+   if pRect is empty then put the rect of me into pRect
+   put the top_Controls of me into topControls
+   
+   lock screen
+   repeat for each line topControl in topControls
+      set the rect of topControl to pRect
+   end repeat
+   unlock screen
+   return topControls
+end LayoutControl

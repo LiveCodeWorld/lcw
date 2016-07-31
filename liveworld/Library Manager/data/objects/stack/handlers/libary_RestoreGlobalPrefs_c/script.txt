@@ -1,0 +1,13 @@
+command libary_RestoreGlobalPrefs pSetName
+   -- now called "project_RestoreGlobalPrefs" 
+   -- note typo in original spelling
+   if pSetName is empty then put library_GetSetName() into pSetName
+   
+   libary_ClearGlobalPrefs
+   put pref_FetchArray (pSetName) into prefsArray
+   repeat for each key gName in prefsArray
+      put prefsArray [gName] into globalValue
+      put "global" && gName & CR & "put globalValue into" && gName into doScript
+      do doScript
+   end repeat
+end libary_RestoreGlobalPrefs

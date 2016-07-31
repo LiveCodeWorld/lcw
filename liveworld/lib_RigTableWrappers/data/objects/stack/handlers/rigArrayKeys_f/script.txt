@@ -1,0 +1,10 @@
+function rigArrayKeys pAssocArray
+   --| Summary: Returns the keys, numeric and string, from the input array.
+   put 0 into tCounter
+   repeat for each key tKey in pAssocArray
+      add 1 to tCounter
+      put tKey into tKeysArray[tCounter]
+   end repeat
+   
+   return tKeysArray
+end rigArrayKeys

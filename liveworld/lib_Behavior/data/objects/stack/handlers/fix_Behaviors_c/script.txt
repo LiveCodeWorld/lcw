@@ -1,0 +1,4 @@
+command fix_Behaviors pCardObject, pDisplayArray
+   -- alternative spelling
+   behavior_Fix pCardObject, (pDisplayArray is not false)
+end fix_Behaviors

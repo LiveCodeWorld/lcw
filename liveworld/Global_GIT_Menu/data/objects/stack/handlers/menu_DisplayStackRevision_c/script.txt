@@ -1,0 +1,13 @@
+on menu_DisplayStackRevision scriptObject, backNum
+   put the stack_RelativeFile of scriptObject into relativePath
+   put git_GetCommitFileHash (relativePath, backNum) into commitHash
+   if commitHash is empty then
+      answer warning "Cannot find commit hash for this stack!"
+      exit to top
+   end if
+   
+   -- git_CheckoutRevision relativePath, commitHash
+   -- put the result into shellResult
+   
+   git_DisplayTempStackRevision scriptObject, commitHash
+end menu_DisplayStackRevision

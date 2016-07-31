@@ -1,0 +1,5 @@
+function lcw_ListStacks newFolderName
+   put lcw_GetProjectFolder (newFolderName) into someFolder
+   put folder_ListStacks (someFolder) into stackObjects
+   return stackObjects
+end lcw_ListStacks

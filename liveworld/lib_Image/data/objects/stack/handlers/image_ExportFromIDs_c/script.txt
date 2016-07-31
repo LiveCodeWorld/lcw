@@ -1,0 +1,7 @@
+on image_ExportFromIDs imageIDs, someFolder
+    repeat for each item imageID in imageIDs
+        put image_FindFromID(imageID) into imageObject
+        put the image_GuessFileName [someFolder] of imageObject into someFile
+        set the image_FileExport of imageObject to someFile
+    end repeat
+end image_ExportFromIDs

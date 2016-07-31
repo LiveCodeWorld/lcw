@@ -1,0 +1,7 @@
+getprop menu_Target
+   -- also this is not called at all when a submenu
+   -- bug in menus - first time this menu is called mTarget is set wrong
+   put menu_GetTargetObject() into tObject
+   put the index_View of tObject into indexView
+   return indexView
+end menu_Target

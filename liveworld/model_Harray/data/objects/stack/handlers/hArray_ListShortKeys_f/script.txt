@@ -1,0 +1,25 @@
+function hArray_ListShortKeys pKeyWordList
+   global gHkey_Array
+   
+   if pKeyWordList is empty then
+      -- put hArray_GetHandlerArray() into handlerArray
+      put gHkey_Array ["handlerArray"] into handlerArray
+      put keys(handlerArray) into shortHKeys
+   else
+      replace CR with comma in pKeyWordList -- hack to allow passing lines not just lists
+      
+      put word 1 to -1 of item 1 of pKeyWordList into firstKeyWord
+      delete item 1 of pKeyWordList
+      put gHkey_Array ["keywordArray"][firstKeyWord] into intersectArray
+      
+      repeat for each item pKeyword in pKeyWordList
+         put word 1 to -1 of pKeyword into pKeyword
+         put gHkey_Array ["keywordArray"][pKeyword] into keywordArray
+         intersect intersectArray with keywordArray
+      end repeat
+      
+      put keys (intersectArray) into shortHkeys
+   end if
+   sort shortHkeys by item 1 of each
+   return shortHkeys
+end hArray_ListShortKeys

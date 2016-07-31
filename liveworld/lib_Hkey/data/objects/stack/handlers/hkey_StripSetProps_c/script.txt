@@ -1,0 +1,6 @@
+command hkey_StripSetProps @hkeys
+   put hkeys into strippedKeys
+   filter strippedKeys with ("*,s,*")
+   filter hkeys without ("*,s,*")
+   return strippedKeys
+end hkey_StripSetProps

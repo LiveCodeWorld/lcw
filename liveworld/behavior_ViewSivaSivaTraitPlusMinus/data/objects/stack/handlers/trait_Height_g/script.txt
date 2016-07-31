@@ -1,0 +1,5 @@
+getprop trait_Height [innerHeight]   
+   put round (innerHeight / 8) into traitHeight
+   if traitHeight > 50 then return 50
+   return traitHeight
+end trait_Height

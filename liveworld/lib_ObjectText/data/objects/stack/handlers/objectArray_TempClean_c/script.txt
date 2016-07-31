@@ -1,0 +1,7 @@
+command objectArray_TempClean @customArray
+   -- strip some old Constellation stuff for now
+   delete local customArray ["default"]["cConsLastHandlerName"]
+   delete local customArray ["default"]["cConsLastHandlerScroll"]
+   
+   delete local customArray ["cConsLast"]
+end objectArray_TempClean

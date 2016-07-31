@@ -1,0 +1,1459 @@
+﻿script "lib_Hkey"
+--> MetaData
+-
+license: GPLv3
+name: lib_Hkey
+type: script library
+version: 0.1
+
+/*
+A library for script analysis using hKeys.
+
+An hKey is a unique reference to a handler. It is constructed as follows:
+--    handlerName,scriptObject,handlerNum,handlerType
+
+The handlers in this library are gradually being moved over from the older script libraries,
+with the "script_" extension being replaces by "hkey_"
+*/
+
+--> Hkeys
+-
+command hkey_SimpleStripObject @hkeys, scriptObject
+   put the rugged_ID of scriptObject into scriptObject
+   put hkeys into strippedKeys
+   filter strippedKeys with ("*," & scriptObject & ",*")
+   filter hkeys without ("*," & scriptObject & ",*")
+   return strippedKeys
+end hkey_SimpleStripObject
+
+command hkey_StripGetProps @hkeys
+   put hkeys into strippedKeys
+   filter strippedKeys with ("*,g,*")
+   filter hkeys without ("*,g,*")
+   return strippedKeys
+end hkey_StripGetProps
+
+command hkey_StripSetProps @hkeys
+   put hkeys into strippedKeys
+   filter strippedKeys with ("*,s,*")
+   filter hkeys without ("*,s,*")
+   return strippedKeys
+end hkey_StripSetProps
+
+command library_CheckHandler @errorArray, shortHkey, pNotify
+   put library_FetchHandler (shortHkey) into libraryHandler
+   put libraryHandler into errorArray ["library handler"]
+   if libraryHandler is empty then 
+      put shortHkey into errorArray ["library handler empty"]
+      return empty
+   end if
+   
+   put hArray_GetOtherPlaces (shortHkey) into otherObjects
+   repeat for each line otherObject in otherObjects
+      if exists (otherObject) is false then
+         hArray_RemoveObject otherObject
+         next repeat
+      end if
+      
+      put the script_Handler [shortHKey] of otherObject into otherHandler
+      if otherHandler = libraryHandler then
+         put otherHandler into errorArray ["same"][shortHkey][otherObject]
+         if pNotify is false then next repeat
+         
+         put merge ("The handler in [[otherObject]] is the same as the libray handler!") into someComment
+         opn_Notify someComment
+      else
+         put otherHandler into errorArray ["different"][shortHkey][otherObject]
+      end if
+   end repeat
+end library_CheckHandler
+
+function library_HkeyImageFile hKey, pOverlayName, pDontCreate
+   hkey_NormalizeGraphName pOverlayName
+   put pOverlayName & "." & "png" into shortFile
+   return library_HkeyFolder (hKey, pDontCreate) & shortFile
+end library_HkeyImageFile
+
+function library_ConstructHkeyDgArray hKey
+   put library_HkeyDeps (hKey) into hKeyDeps
+   if hKeyDeps is empty then
+      put hKey into hKeys
+   else
+      sort lines of hKeyDeps by item 1 of each
+      put hKey & CR & hKeyDeps into hKeys
+   end if
+   return library_ConstructDisplayDataArray (hKeys)
+end library_ConstructHkeyDgArray
+
+function library_ConstructDisplayDataArray hKeys
+   put library_FetchHandlerDatabaseArray() into hKeyData
+   
+   put hKeys into hKeyDeps
+   put line 1 of hKeys into hKey
+   delete line 1 of hKeyDeps
+   
+   put 1 into indexNum
+   put library_HkeyToPublicShortHkey (hKey) into shortHkey
+   put shortHkey into dgArray [indexNum]["hKey"]
+   put hKeyData [shortHkey] into dgArray [indexNum]["handlerLibraryArray"]
+   put true into dgArray [indexNum]["isExpanded"]
+   
+   repeat for each line hKeyDep in hKeyDeps
+      add 1 to indexNum
+      put library_HkeyToPublicShortHkey (hKeyDep) into shortHkey
+      put shortHkey into dgArray [indexNum]["hKey"]
+      put false into dgArray [indexNum]["isExpanded"]
+      put hKeyData [shortHkey] into dgArray [indexNum]["handlerLibraryArray"]
+   end repeat
+   return dgArray
+end library_ConstructDisplayDataArray
+
+function hkey_ExportStatus hKey, pHandlerScript
+   put hkey_ExtractHandlerFromObject (hKey) into objectHandler
+   if pHandlerScript is empty then
+      put library_FetchHandler (hKey) into fileHandler
+   else
+      put script_ExtractHandler (hKey, pHandlerScript) into fileHandler
+   end if
+   
+   switch
+      case objectHandler = fileHandler
+         return "ok"
+      case objectHandler is not empty and fileHandler is not empty
+         return "different"
+      case fileHandler = empty
+         return "no file"
+      case objectHandler = empty
+         return "no object script"
+   end switch
+end hkey_ExportStatus
+
+setprop hkey_FetchHow hkeyFetchHow
+   set the uOPN ["hkey_FetchHow"] of me to hkeyFetchHow
+end hkey_FetchHow
+
+getprop hkey_FetchHow
+   put the uOPN ["hkey_FetchHow"] of me into hkeyFetchHow
+   if hkeyFetchHow is empty then
+      return "local"
+   else
+      return hkeyFetchHow
+   end if
+end hkey_FetchHow
+
+getprop hkey_FetchHows
+   return "object,file,-,git,revcode"
+end hkey_FetchHows
+
+
+--> Hkey | Tests
+-
+function is_Hkey hKey
+   return item 2 of hKey is among the items of "g,s,c,m,f,pg,ps,pc,pm,pf"
+end is_Hkey
+
+
+--> Work in Progress
+-
+getprop object_Hkey [shortHkey]
+   put the rugged_ID of the target into scriptObject
+   put shortHkey,scriptObject,1 into hKey
+   return hKey
+end object_Hkey
+
+command hkey_AddHandlerFromObject shortHKey, somePlace
+   put the script_Handler [shortHKey] of somePlace into otherHandler
+   library_AddHkey shortHkey, otherHandler
+   
+   put hkey_IsInLibrary (shortHkey) into someBoolean
+   if someBoolean is true then
+      opn_Notify merge ("Exported handler '[[shortHkey]]', and added it to the hkey library array!")
+   else
+      opn_Notify merge ("Failed to add handler '[[shortHkey]]' to the hkey library array!")
+   end if
+end hkey_AddHandlerFromObject
+
+function script_HkeyLineNumber hKey, pScript
+   hkey_SetOffsets hKey, startHandler, endHandler, pScript
+   put the number of lines of char 1 to startHandler of pScript into lineNum
+   return lineNum
+end script_HkeyLineNumber
+
+command hkey_StripDuplicates @hKeys
+   repeat for each line longKey in hKeys
+      set the cursor to busy
+      put item 1 to 2 of longKey into shortHkey
+      
+      put shortKeyArray [shortHkey] into testLongKey
+      if testLongKey is empty then
+         put longKey into shortKeyArray [shortHkey]
+         put longKey & CR after uniqueKeys
+      else
+         put duplicateArray [shortHkey] into duplicateKeys
+         if duplicateKeys is empty then
+            put shortKeyArray [shortHkey] & CR & longKey into duplicateKeys
+         else
+            line_AddToIndex longKey, duplicateKeys
+         end if
+         put duplicateKeys into duplicateArray [shortHkey]
+      end if
+   end repeat
+   
+   -- put keys (shortKeyArray) into shortHKeys
+   -- sort shortHKeys
+   
+   delete char -1 of uniqueKeys
+   sort uniqueKeys
+   put uniqueKeys into hKeys
+   return duplicateArray
+end hkey_StripDuplicates
+
+function hkey_ConstructCompareArray leftKeys, rightKeys
+   line_SetUnique leftKeys
+   line_SetUnique rightKeys
+   
+   put leftKeys into onlyLeft
+   put rightKeys into onlyRight
+   set the wholematches to false
+   repeat with leftLineLineNum = the number of lines of leftKeys down to 1
+      set the cursor to busy
+      put line leftLineLineNum of leftKeys into longKey
+      put item 1 to 2 of longKey into shortHkey
+      
+      put lineoffset (shortHkey, rightKeys) into rightLineLineNum
+      if rightLineLineNum is not 0 then
+         if shortHkey is not among the lines of shortCommonKeys then
+            put shortHkey & CR after shortCommonKeys
+            put longKey & CR after longCommonKeys
+         end if
+         
+         delete line leftLineLineNum of onlyLeft
+         delete line rightLineLineNum of onlyRight
+      end if
+      
+   end repeat
+   delete last char of longCommonKeys
+   
+   sort longCommonKeys
+   sort onlyLeft
+   sort onlyRight
+   
+   put longCommonKeys into compareArray ["common"]
+   put onlyLeft into compareArray ["onlyLeft"]
+   put onlyRight into compareArray ["onlyRight"]
+   return compareArray   
+end hkey_ConstructCompareArray
+
+function hkey_DontRecurse hKey, pOriginalHkey
+   -- should check hkey database and allow manual customisation
+   -- return false
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put library_FetchHandler (hKey) into someHandler
+   
+   switch
+      case the object_MetaData ["component"] of hObject is true and pref_GetValue ("skip_HkeyComponents") is true
+         return true
+      case hObject contains "View|Menu|Button" and "View|Menu|Button" is not in pOriginalHkey
+         return false -- not needed because of the above
+      case hObject contains "View|Title|Right Align" and "View|Title|Right Align" is not in pOriginalHkey
+         if hType is among the items of "g,s" then
+            return true
+         else
+            return false
+         end if
+      case line 2 of someHandler contains "-- custom: true"
+         return false
+      case line 2 of someHandler contains "-- component: true"
+         return true
+      case hName begins with "display_"
+         return true
+      case lineoffset ("name: View|", someHandler) is not 0 and hType is among the items of "g,s"
+         -- case lineoffset ("type: view behavior", someHandler) is not 0 and hType is among the items of "g,s"
+         -- skip a handler in a views behavior, when it is called outside of the view and it is a getprop or setprop.
+         breakpoint
+         hkey_Deconstruct pOriginalHkey, oName, oType, oObject, oNum
+         return the long id of hObject = the long id of oObject 
+      case hName is "view_Object" and hObject contains "libOPN_View"
+         return true
+      case hName is among the items of "opn_Notify"
+         return true
+      case hName begins with "tree_" and hType is among the items of "g,s"
+         return false
+         /*
+      case scriptObject contains "libOPN_Menus" and pref_GetValue ("skip_HkeyComponents") is true
+         put the object_MetaData ["component"] of scriptObject
+         return false
+      case scriptObject contains "libOPN_MenuModel" and pref_GetValue ("skip_HkeyComponents") is true
+         return false
+      case handlerName begins with "menu_"
+         return false
+      case the view_Name of scriptObject is not empty
+         -- skip if it is a view (assume views are created as standalones)
+         return true
+         */
+      default
+         return false
+   end switch
+end hkey_DontRecurse
+
+command hkey_StoreCallsAndHandler hkey, someHandler, hKeyCalls
+   -- , pSetName, pTestExceptions, pOriginalHkey
+   /*
+   For now, not storing anything (by default), other than handlers in a luRip ibrary
+   */
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+   
+   if the script_IsGlobal [hKey] of scriptObject is true then
+      hkey_StoreHandler hKey, someHandler
+      hkey_StoreCalls hKey, hKeyCalls
+      return true
+   else
+      put "Not stored" && hKey into someMessage
+      opn_Notify someMessage
+      return false
+   end if
+end hkey_StoreCallsAndHandler
+
+getprop script_IsGlobal [hKey]
+   -- should the handlers in this script be exported by default into the hkey handler library?
+   -- place a "getprop script_IsGlobal" in an object if you want to override the default behavior below
+   put the uRIP ["type"] of the target into scriptType
+   switch
+      case scriptType contains "library"
+         return true
+      case scriptType contains "model"
+         return true
+      case scriptType contains "behavior"
+         return true
+      case scriptType contains "front script"
+         return true
+      case scriptType contains "backscript"
+         return true
+      default
+         return false
+   end switch
+end script_IsGlobal
+
+command hkey_RedrawDependencyGraph hKey, pGraphStyle, pImageView, pVersionName
+   local pGraphSize, pOverlayName
+   set the cursor to watch
+   
+   put hkey_GetLinkArray (hKey) into hkeyArray
+   put hkey_DotFile (hKey, pVersionName, false) into dotFile
+   put the scriptLibrary_Card of me into graphController  
+   linkArray_RedrawOverlayMap hkeyArray, dotFile, graphController, graphController, pImageView, pGraphStyle, pGraphSize, hKey
+   put the result into pImageView
+   set the  overlay_Of of pImageView to hKey
+   return pImageView
+end hkey_RedrawDependencyGraph
+
+
+--> Script
+-
+getprop script_AndBehavior
+   put the script of the target into targetScript
+   put the behavior of the target into someBehavior
+   if exists(someBehavior) then put CR & CR & the script of someBehavior after targetScript
+   return targetScript
+end script_AndBehavior
+
+function script_ExtractHandlerType handlerName, someScript, handlerType, notPrivate
+   local startHandler, endHandler
+   put handlerName,handlerType into shortHkey
+   hkey_SetOffsets shortHkey, startHandler, endHandler, someScript, notPrivate
+   put the result into someHandler
+   return someHandler
+end script_ExtractHandlerType
+
+private function script_ExtractHandler handlerName, onWord, someScript, notPrivate
+   -- picks the public handler first (should really pick the first in the hierarchy)
+   put script_ExtractPublicHandler (handlerName, onWord, someScript) into foundHandler
+   if foundHandler is not empty then
+      return foundHandler
+   else if notPrivate is not true then
+      put script_ExtractPrivateHandler (handlerName, onWord, someScript) into foundHandler
+      return foundHandler
+   end if
+   return empty
+end script_ExtractHandler
+
+command hKey_GetHandlerAndCallsFromObject hKey, pSomeScript
+   put script_ExtractHandler (hKey, pSomeScript, false) into someHandler
+   put handler_ExtractCalls (someHandler) into shortCalls
+   hkey_StoreCallsAndHandler hkey, someHandler, shortCalls
+end hKey_GetHandlerAndCallsFromObject
+
+command object_FastStripIndex objectsToRemove, @objectIndex
+   -- assumes all objects are in the same format
+   repeat for each line objectToRemove in objectsToRemove
+      repeat with lineNum = the number of lines of objectIndex down to 1
+         put line lineNum of objectIndex into indexObject
+         if indexObject = objectToRemove then
+            delete line lineNum of objectIndex
+         end if
+      end repeat
+   end repeat
+end object_FastStripIndex
+
+command object_StripIndex objectsToRemove, @objectIndex
+   repeat for each line objectToRemove in objectsToRemove
+      if exists (objectToRemove) is false then next repeat
+      
+      put the long id of objectToRemove into objectToRemove
+      repeat with lineNum = the number of lines of objectIndex down to 1
+         put line lineNum of objectIndex into indexObject
+         if exists (indexObject) is false then
+            delete line lineNum of objectIndex
+         else if the long id of indexObject = objectToRemove then
+            delete line lineNum of objectIndex
+         end if
+      end repeat
+   end repeat
+end object_StripIndex
+
+function stack_NamesToObjects stackNames
+   repeat for each line stackName in stackNames
+      put the name of stack stackName into stackObject
+      put stackObject & CR after stackObjects
+   end repeat
+   delete char -1 of stackObjects
+   return stackObjects
+end stack_NamesToObjects
+
+function hkey_ExtractHandlerFromObject hKey
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum 
+   
+   try
+      put the revAvailableHandlers of hObject into handlerTable
+      script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+      if startLineNum = 0 then
+         -- look for private handler?
+         put "P" before item 2 of hKey
+         script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+         if startLineNum = 0 then
+            return empty
+         end if
+      end if
+      put the script of hObject into someScript
+      put line startLineNum to endLineNum of someScript into foundHandler
+      return foundHandler
+   catch someError
+      return empty -- a locked stack
+   end try
+end hkey_ExtractHandlerFromObject
+
+command hkey_SetOffsets hKey, @startHandler, @endHandler, pScript, notPrivate
+   -- much better in general to use the revAvailableHandlers of pObject
+   -- see "hkey_ExtractHandlerFromObject"
+   
+   -- get offsets to first found handler only
+   put 0 into startHandler
+   put 0 into endHandler
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+   
+   if pScript is empty then
+      if exists(scriptObject) is false then return empty
+      put the script of scriptObject into pScript
+   end if
+   
+   if char 1 of handlerType = "p" then
+      if notPrivate is true then return empty
+      delete char 1 of handlerType
+      put handler_ConvertType (handlerType) into onWord
+      script_SetPrivateHandlerOffsets startHandler, endHandler, handlerName, onWord, pScript
+   else
+      put handler_ConvertType (handlerType) into onWord
+      script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, pScript
+   end if   
+   put the result into foundHandler
+   return foundHandler
+end hkey_SetOffsets
+
+function script_ExtractPublicHandler handlerName, onWord, someScript
+   script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+   put the result into foundHandler
+   return foundHandler
+end script_ExtractPublicHandler
+
+function script_ExtractPrivateHandler handlerName, onWord, someScript
+   script_SetPrivateHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+   put the result into foundHandler
+   return foundHandler
+end script_ExtractPrivateHandler
+
+
+--> hKey
+-
+/*
+In order to make the library smaller a lot of "script" handlers should be renamed "hKey".
+*/
+
+getprop menu_PickConditions
+   put the long id of the target into scriptObject
+   put hkey_GetCaseConditions ("menuPick,c", scriptObject) into caseConditions
+   return caseConditions
+end menu_PickConditions
+
+getprop hkey_CaseConditions [shortHKey]
+   put the long id of the target into scriptObject
+   put hkey_GetCaseConditions (shortHKey, scriptObject) into caseConditions
+   return caseConditions
+end hkey_CaseConditions
+
+function hkey_GetCaseConditions hKey, scriptObject
+   if the number of items of hKey = 4 and scriptObject is empty then put item 3 of hKey into scriptObject
+   put the script_Handler [hKey] of scriptObject into someHandler
+   put script_ExtractCaseConditions (someHandler) into caseConditions
+   return caseConditions
+end hkey_GetCaseConditions
+
+function hkey_ExtractObjects hkeys
+   repeat for each line hkey in hkeys
+      hkey_Deconstruct hkey, handlerName, handlerType, scriptObject, handlerNum
+      put hKey into dumpArray [scriptObject]
+   end repeat
+   return keys (dumpArray)
+end hkey_ExtractObjects
+
+function hkeyArray_ExtractObjects hkeyLinkArray
+   repeat for each key hKey in hkeyLinkArray
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      put hKey into dumpArray [scriptObject]
+      
+      put hkeyLinkArray [hKey] into linkedKeys
+      repeat for each line linkedKey in linkedKeys
+         hkey_Deconstruct linkedKey, handlerName, handlerType, scriptObject, handlerNum
+         put hKey into dumpArray [scriptObject]
+      end repeat
+   end repeat
+   
+   put keys (dumpArray) into scriptObjects
+   return scriptObjects
+end hkeyArray_ExtractObjects
+
+
+--> Hkey | Search
+-
+getprop hkey_Find [shortHkey]
+   local pSetName
+   put the long id of the target into hObject
+   put item 1 of shortHkey into hName
+   put item 2 of shortHkey into hType
+   
+   put hkey_FindAndIndex (hName, hType, hObject, pSetName) into foundHkey
+   return foundHkey
+end hkey_Find
+
+function hkey_Search hKey, pSearchHow 
+   local pSetName
+   
+   switch pSearchHow
+      case "not hdb"
+         hkey_Deconstruct hKey, hName, hType, hObject, hNum
+         put hkey_FindAndIndex (hName, hType, hObject, pSetName) into foundHkey
+         return foundHkey
+      case "not hierarchy"
+         put hArray_SimpleSearch (hKey) into foundHkey
+         return foundHkey
+      default
+         put item 1 to 2 of hKey into shortHKey
+         put item 3 of hKey into pScriptObject
+         if exists (pScriptObject) is false then
+            put hArray_FindHkey (shortHkey) into foundHkey
+            
+            if foundHkey is empty then
+               -- should use rev search
+               hkey_Deconstruct hKey, hName, hType, hObject, hNum
+               put the long id of the target into hObject -- hack
+               put hkey_FindAndIndex (hName, hType, hObject, pSetName) into foundHkey
+               return foundHkey
+            else
+               return foundHkey
+            end if
+         else
+            put hArray_FindHkeyInHierarchy (shortHKey, pScriptObject) into foundHkey
+            return foundHkey
+         end if
+   end switch
+end hkey_Search
+
+function hArray_SimpleSearch hKey, pHandlerHash
+   put hArray_GetFoundHkeyArray (hKey) into hkeyArray
+   if pHandlerHash is empty then
+      -- let's get the hKey with the shortest object reference
+      put keys (hkeyArray) into foundHKeys
+      sort numeric lines of foundHKeys by the number of chars of item 3 of each
+      put line 1 of foundHKeys into foundHKey
+      return foundHKey
+   else
+      repeat for each key foundHKey in hkeyArray
+         if hkeyArray [hKey]["handlerHash"] is pHandlerHash then
+            return foundHKey
+         end if
+      end repeat
+      return empty
+   end if
+end hArray_SimpleSearch
+
+
+--> hdb | Search | Edit
+-
+command hArray_SearchHierarchyAndEdit shortHKey, pScriptObject, pAlsoOutsideHierarchy
+   put hArray_FindHkeyInHierarchy (shortHKey, pScriptObject) into foundHkey
+   if foundHkey is not empty then
+      hkey_EditFoundHandler foundHkey
+   else
+      put hArray_FindHkey (shortHkey) into foundHkey
+      if foundHkey is not empty and pAlsoOutsideHierarchy is true then
+         hkey_EditFoundHandler foundHkey
+      else
+         opn_Notify merge ("Cannot find handler '[[foundHkey]]' in heirarchy!")
+         return empty
+      end if
+   end if
+end hArray_SearchHierarchyAndEdit
+
+command hArray_SearchAndEdit hKey, pHandlerHash
+   put hArray_SimpleSearch (hKey, pHandlerHash) into foundHKey
+   if foundHKey is empty then return false
+   hkey_EditFoundHandler foundHKey
+end hArray_SearchAndEdit
+
+getprop hkey_FindInFullHierarchy [shortHkey]
+   -- was "script_FindInFullHierarchy"
+   /*
+   It includes front scripts and the object itself should it contain the call.
+   Currently it ignores Rev development environment.
+   */
+   if the number of items of shortHkey = 2 then
+      put item 1 of shortHkey into handlerName
+      put item 2 of shortHkey into handlerType
+      put the long id of the target into scriptObject
+      put hkey_Construct (handlerName, handlerType, scriptObject) into hKey
+   else
+      put shortHkey into hKey
+   end if
+   
+   put the hkey_SearchHierarchy of the target into scriptHierarchy
+   put hkey_SearchObjectHierarchy (hKey, scriptHierarchy) into foundHkey
+   return foundHkey
+end hkey_FindInFullHierarchy
+
+function hkey_FindAndIndex hName, hType, hObject, pSetName, pNoLibraryBehaviors
+   put the hkey_SearchHierarchy [pSetName] of hObject into scriptHierarchy
+   
+   if exists (hObject) is false then
+      put hObject && "does not exist! Exiting..." into someMessage
+      opn_Notify someMessage, true
+      return empty
+   end if
+   
+   put hName,hType into shortHKey
+   
+   repeat with lineNum = (the number of lines of scriptHierarchy) down to 1
+      set the cursor to busy
+      put line lineNum of scriptHierarchy into testObject
+      -- opn_Notify testObject, true
+      
+      if exists (testObject) is false then
+         put testObject && "does not exist! Skipping..." into someMessage
+         opn_Notify someMessage
+         next repeat
+      end if
+      
+      switch the hArray_IsCurrent of testObject 
+         case empty
+            put testObject && "is locked... skipping..." into someMessage
+            opn_Notify someMessage
+            next repeat
+         case false
+            -- add to global index so we can search
+            object_AddToGlobalArray testObject
+            break
+         default -- case true
+            -- keep on trucking
+      end switch
+      
+      if the long id of testObject = the long id of hObject then
+         -- allow private handlers (as it is where the shortHkey is called from )
+         if the hArray_HkeyPresent [shortHKey] of testObject is false then next repeat
+         put hkey_Construct (hName, hType, testObject) into foundHkey
+         return foundHkey
+      else
+         -- Don't allow private handlers (not where the shortHkey is called from)
+         if the hArray_PublicKeyPresent [shortHKey] of testObject is false then next repeat
+         put hkey_Construct (hName, hType, testObject) into foundHkey
+         return foundHkey 
+      end if
+   end repeat
+   
+   -- gone through every object in hierarchy
+   return empty 
+end hkey_FindAndIndex
+
+command hkey_FastFindHandlerAndKey hName, hType, hObject, @foundHkey, @foundHandler, pSetName
+   put the hkey_SearchHierarchy [pSetName] of hObject into scriptHierarchy
+   hkey_AddDevelopmentHierarchy scriptHierarchy
+   
+   if exists (hObject) is false then
+      put hObject && "does not exist! Exiting..." into someMessage
+      opn_Notify someMessage, true
+      return empty
+   end if
+   
+   put hName,hType into shortHKey
+   
+   repeat with lineNum = (the number of lines of scriptHierarchy) down to 1
+      set the cursor to busy
+      put line lineNum of scriptHierarchy into testObject
+      -- put testObject
+      
+      if exists (testObject) is false then
+         put testObject && "does not exist! Skipping..." into someMessage
+         opn_Notify someMessage, true
+         next repeat
+      end if
+      
+      switch the hArray_IsCurrent of testObject 
+         case empty
+            put testObject && "is locked... skipping..." into someMessage
+            opn_Notify someMessage
+            next repeat
+         case false 
+            object_AddToGlobalArray testObject
+            break
+         default -- case true
+            -- keep on trucking
+      end switch
+      
+      if the long id of testObject = the long id of hObject then
+         -- allow private handlers (as it is where the shortHkey is called from )
+         
+         if the hArray_HkeyPresent [shortHKey] of testObject is false then next repeat
+         
+         put hkey_Construct (hName, hType, testObject) into foundHkey
+         put library_FetchHandler (foundHkey) into foundHandler
+         return hKey
+      else
+         -- Don't allow private handlers (not where the shortHkey is called from)
+         
+         if the hArray_PublicKeyPresent [shortHKey] of testObject is false then next repeat
+         
+         put hkey_Construct (hName, hType, testObject) into foundHkey
+         put library_FetchHandler (foundHkey) into foundHandler
+         return hKey 
+      end if
+   end repeat
+   
+   -- gone through every object in hierarchy
+   put empty into foundHkey
+   put empty into foundHandler
+   return empty 
+end hkey_FastFindHandlerAndKey
+
+command hkey_Edit hKey
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then
+      put hArray_SimpleSearch (hKey) into hKey
+      put item 3 of hKey into foundObject
+      if exists (foundObject) is false then
+         return empty
+      end if
+   end if
+   
+   hkey_EditFoundHandler hkey
+   return hkey
+end hkey_Edit
+
+command hkey_EditFoundHandler hkey
+   lock screen
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then
+      breakPoint  -- should search?
+      if hObject = "Missing" then exit to top
+      hArray_RemoveObject hObject
+      exit to top
+   end if
+   
+   -- put rev_GetSelectedHandlerTreeLineNum (hkey) into revHandlerTreeLineNum
+   put the revAvailableHandlers of hObject into handlerTable
+   script_HandlerTableOffsets hkey, handlerTable, startLineNum, endLineNum, revHandlerTreeLineNum
+   if the result is false then
+      breakpoint
+      put hObject
+      edit the script of hObject
+      return false
+   end if
+   
+   put rev_ScriptEditorIsOpen() into wasAlreadyOpen
+   if wasAlreadyOpen is true then
+      rev_ActivateScriptEditorTab hObject
+      if the result is false then
+         edit the script of hObject
+      end if
+   else
+      edit the script of hObject
+      wait 5 ticks
+   end if
+   
+   rev_SetSelectedHandlerTreeLineNum revHandlerTreeLineNum   
+   unlock screen
+   -- opn_Notify revHandlerTreeLineNum, true
+   return true
+end hkey_EditFoundHandler
+
+getprop script_MessageHandlers [pReturnHow]
+   try
+      put the long id of the target into tObject
+      put the revAvailableHandlers of tObject into handlerTable -- revAvailableHandlers only return first handler.
+      put the script of tObject into someScript
+      put script_HkeysFromAvailable (handlerTable, someScript, pReturnHow) into hKeys
+      return hKeys
+   catch someError
+      -- a locked stack
+      return empty
+   end try
+end script_MessageHandlers
+
+function script_HkeysFromAvailable handlerTable, someScript, pReturnHow
+   repeat for each line someLine in handlerTable
+      put word 1 of someLine into handlerType
+      if handlerType is not "M" then next repeat
+      
+      put word 3 of someLine into startLineNum
+      -- put word 4 of someLine into endLineNum
+      put line startLineNum of someScript into startLine
+      if word 1 of startLine is not "on" then next repeat
+      
+      put word 2 of someLine into hName
+      switch pReturnHow
+         case "hKey"
+            put hName,hType,tObject,1 & CR after hKeys
+            break
+         case "name"
+            put hName & CR after hKeys
+            break
+         default
+            put hName,hType & CR after hKeys
+      end switch
+   end repeat
+   delete char -1 of hKeys
+   return hKeys
+end script_HkeysFromAvailable
+
+command script_HandlerTableOffsets shortHkey, handlerTable, @startLineNum, @endLineNum, @handlerNum
+   if handlerTable is empty then
+      put 0 into startLineNum
+      put 0 into endLineNum
+      put 0 into handlerNum
+      return false
+   end if
+   
+   put item 1 of shortHkey into hName
+   put item 2 of shortHkey into hType
+   switch char -1 of hType
+      case "c"
+         put "M" into char -1 of hType
+         break
+      case "o"
+         put "M" into char -1 of hType
+         break
+   end switch
+   
+   sort numeric  lines of handlerTable by word 3 of each
+   repeat with handlerNum = 1 to the number of lines of handlerTable
+      put line handlerNum of handlerTable into someLine
+      
+      put word 2 of someLine into hTableName
+      if hTableName is not hName then next repeat
+      
+      put word 1 of someLine into hTableType
+      if char -1 of hTableType = "C" then put "M" into char -1 of hTableType
+      switch    
+         case hTableType = hType
+            put word 3 of someLine into startLineNum
+            put word 4 of someLine into endLineNum
+            return true
+      end switch
+   end repeat
+   put 0 into startLineNum
+   put 0 into endLineNum
+   put 0 into handlerNum
+   return false
+end script_HandlerTableOffsets
+
+command hkey_EditAndSelectLines hKey, startLineNum, endLineNum
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum 
+   script_EditAndSelectLines scriptObject, startLineNum, endLineNum
+   return the result
+end hkey_EditAndSelectLines
+
+command script_EditAndSelectLines scriptObject, startLineNum, endLineNum
+   if startLineNum = 0 or endLineNum = 0 then return empty
+   
+   put rev_ScriptEditorIsOpen() into wasAlreadyOpen
+   edit the script of scriptObject
+   put rev_ScriptEditorField() into someField
+   
+   if wasAlreadyOpen is false then
+      -- without send in time, the editor is not open early enough and the script fails to scroll
+      wait 2 ticks
+   end if
+   
+   field_ScrollToLine startLineNum, someField
+   select line startLineNum to endLineNum of someField
+   -- field_SelectLines startLineNum, endLineNum, someField
+   return someField
+end script_EditAndSelectLines
+
+function hKey_IsHandler hKey, handlerName, handlerType
+   if handlerType is empty then
+      return item 1 of hKey is handlerName
+   else
+      return item 1 of hKey is handlerName and item 2 of hKey is handlerType
+   end if
+end hKey_IsHandler
+
+function hKey_IsMissingProperty hKey
+   return item 2 of hKey is among the chars of "gs" and item 4 of hKey is "Missing"
+end hKey_IsMissingProperty
+
+command script_AddLibrariesToHierarchy @objectIndex, frontObjects, usedStacks, backObjects 
+   if usedStacks is not empty then put usedStacks & CR before objectIndex
+   if backObjects is not empty then put backObjects & CR before objectIndex
+   if frontObjects is not empty then put CR & frontObjects after objectIndex
+end script_AddLibrariesToHierarchy
+
+function hkey_SearchDatabase hKey, pAskKwords
+   -- was "script_SearchDatabase"
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum 
+   set the itemdelimiter to "_"
+   if the number of items of handlerName > 1 and item 1 of handlerName is not empty then
+      put item 1 of handlerName into primaryKeyWord
+      
+      put item 2 to -1 of handlerName into secondPart
+      put hkey_ConstructKeyWords (secondPart) into secondPartWords
+      sort descending numeric lines of secondPartWords by the number of chars of each
+      put primaryKeyWord & CR & secondPartWords into kWords
+   else
+      put hkey_ConstructKeyWords (handlerName) into kWords
+   end if
+   set the itemdelimiter to comma
+   
+   if pAskKwords is true then
+      replace CR with comma in kWords
+      put opn_Ask ("Which keywords woul you like to search for?", kWords) into kWords
+      replace comma with CR in kWords
+   end if
+   
+   put hkey_ConstructIntersectArray (kWords) into intersectArray
+   return intersectArray
+end hkey_SearchDatabase
+
+function hkey_ConstructIntersectArray kWords
+   -- was "script_SearchDatabase"
+   local allLinkedKeys
+   
+   put library_FetchHandlerDatabaseArray() into dbArray
+   put dbArray ["keywordIndex"] into keywordArray
+   put dbArray ["handlerNameIndex"] into handlerIndexArray
+   
+   put kWords into intersectArray ["ordered keywords"]
+   put 1 into interSectNum
+   repeat for each line kWord in kWords
+      put keywordArray [kWord] into linkedHkeys 
+      put linkedHkeys into intersectArray ["handler keyword"][kWord]
+      line_Add linkedHkeys, allLinkedKeys
+   end repeat
+   put allLinkedKeys into intersectArray ["all keyword links"]
+   return intersectArray
+end hkey_ConstructIntersectArray
+
+function hkey_ConstructNameLinks hKeys
+   repeat for each line hkey in hKeys
+      put item 1 of hKey into handlerName
+      put html_ConstructNameLink (handlerName, hKey) & CR after htmlLines
+   end repeat
+   delete char -1 of htmlLines
+   return htmlLines
+end hkey_ConstructNameLinks
+
+command hkey_ConstructAndArray @intersectArray
+   put library_FetchHandlerDatabaseArray() into dbArray
+   put dbArray ["keywordIndex"] into keywordArray
+   put dbArray ["handlerNameIndex"] into handlerIndexArray
+   
+   put intersectArray ["ordered keywords"] into orderedKeywords
+   put intersectArray ["handler keyword"] into handlerKeywordArray
+   
+   repeat for each line kWord in orderedKeywords
+      put intersectArray ["handler keyword"][kWord] into linkedHkeys
+      put hkey_ConstructKeyWordLinks (linkedHkeys, handlerIndexArray) into keyWordLinks
+      
+      put orderedKeywords into otherKeyWords
+      line_Delete kWord, otherKeyWords
+      repeat for each line otherKeyWord in otherKeyWords
+         put kWord,otherKeyWord into andItems
+         put hkey_ConstructAndTitle (andItems) into andTitle
+         if intersectArray ["and"][andTitle] is empty then
+            put intersectArray ["handler keyword"][otherKeyWord] into otherHkeys
+            put hkey_ConstructKeyWordLinks (otherHkeys, handlerIndexArray) into otherWordLinks
+            put line_GetCommon (keyWordLinks, otherWordLinks) into andLinks
+            if andLinks is not empty then
+               put andLinks into intersectArray ["and"][andTitle]
+            end if
+         end if
+      end repeat
+   end repeat
+end hkey_ConstructAndArray
+
+function hkey_ConstructAndTitle andItems
+   sort items of andItems
+   repeat for each item kWord in andItems
+      put kWord && "and " after andTitle
+   end repeat
+   return word 1 to -2 of andTitle
+end hkey_ConstructAndTitle
+
+private function hkey_ConstructKeyWordLinks linkedHkeys, handlerIndexArray
+   repeat for each line linkedHkey in linkedHkeys
+      hkey_Deconstruct linkedHkey, linkedName, linkedType, linkedObject, linkedNum
+      put handlerIndexArray [linkedName] into hKeys
+      put line 1 of hKeys into hKey
+      put html_ConstructNameLink (linkedName, hKey) & CR after linkedNames
+   end repeat
+   delete char -1 of linkedNames
+   return linkedNames
+end hkey_ConstructKeyWordLinks
+
+function hkey_PopularKeyWordOutline keywordArray, pNotPrivate
+   put keys(keywordArray) into kWords
+   sort kWords
+   repeat for each line kWord in kWords
+      set the cursor to busy
+      put keywordArray [kWord] into hKeys
+      sort hKeys
+      put word 1 to -1 of hKeys into hKeys
+      put the number of lines of hKeys into hKeyNum
+      put kWord && hKeyNum & CR after popularKeywords
+   end repeat
+   delete char -1 of popularKeywords
+   sort descending numeric popularKeywords by word 2 of each
+   
+   repeat for each line kWordLine in popularKeywords
+      put word 1 of kWordLine into kWord
+      put kWord && "(" & word 2 of kWordLine & ")" & CR after tabbedOutline
+      put keywordArray [kWord] into hKeys
+      
+      repeat for each line hKey in hKeys
+         if pNotPrivate is not false then
+            if char 1 of hKey = "_" or char 2 of item 2 of hKey is "p" then next repeat
+         end if
+         
+         put html_ConstructNameLink(item 1 of hKey, hKey) into handlerLink
+         put tab & handlerLink & CR after tabbedOutline
+      end repeat
+   end repeat
+   delete char -1 of tabbedOutline
+   return tabbedOutline
+end hkey_PopularKeyWordOutline
+
+function hkey_KeyWordOutline keywordArray, pNotPrivate
+   put keys(keywordArray) into kWords
+   sort kWords
+   repeat for each line kWord in kWords
+      set the cursor to busy
+      put keywordArray [kWord] into hKeys
+      sort hKeys
+      put word 1 to -1 of hKeys into hKeys
+      put the number of lines of hKeys into hKeyNum
+      
+      put kWord && "(" & hKeyNum & ")" & CR after tabbedOutline
+      repeat for each line hKey in hKeys
+         if pNotPrivate is not false then
+            if char 1 of hKey = "_" or char 2 of item 2 of hKey is "p" then next repeat
+         end if
+         
+         put html_ConstructNameLink(item 1 of hKey, hKey) into handlerLink
+         put tab & handlerLink & CR after tabbedOutline
+      end repeat
+   end repeat
+   delete char -1 of tabbedOutline
+   return tabbedOutline
+end hkey_KeyWordOutline
+
+
+--> Handler Index
+-
+function handler_HkeyFromName handlerName
+   put handler_GetIndexArray() into indexArray
+   -- put handlerName & "," & indexArray [handlerName] into hKey
+   put indexArray [handlerName] into hKey
+   return hKey
+end handler_HkeyFromName
+
+function handler_StemOutline
+   put handler_GetIndexArray() into indexArray
+   put keys(indexArray) into handlerIndex
+   put handler_StemIndex(handlerIndex) into stemIndex
+   repeat for each line scriptStem in stemIndex
+      set the cursor to busy
+      put handlerIndex into filteredIndex
+      filter filteredIndex with (scriptStem & "_*")
+      sort filteredIndex
+      put word 1 to -1 of filteredIndex into filteredIndex
+      put the number of lines of filteredIndex into filteredNum
+      
+      put scriptStem && "(" & filteredNum & ")" & CR after tabbedOutline
+      -- put scriptStem & CR after tabbedOutline
+      repeat for each line filteredHandler in filteredIndex
+         put indexArray [filteredHandler] into hKey
+         put html_ConstructNameLink(filteredHandler, hKey) into handlerLink
+         put tab & handlerLink & CR after tabbedOutline
+      end repeat
+   end repeat
+   delete char -1 of tabbedOutline
+   return tabbedOutline
+end handler_StemOutline
+
+function handler_PopularStemOutline
+   local tabbedOutline, stemArray
+   
+   put handler_GetIndexArray() into indexArray
+   put keys(indexArray) into handlerIndex
+   put handler_StemIndex(handlerIndex) into stemIndex
+   repeat for each line scriptStem in stemIndex
+      set the cursor to busy
+      put handlerIndex into filteredIndex
+      filter filteredIndex with (scriptStem & "_*")
+      sort filteredIndex
+      put word 1 to -1 of filteredIndex into filteredIndex
+      put the number of lines of filteredIndex into popularNum
+      
+      put filteredIndex into stemArray [scriptStem]
+      put popularNum & comma & scriptStem & CR after scriptStemTable
+   end repeat
+   delete char -1 of scriptStemTable
+   
+   sort numeric descending scriptStemTable by item 1 of each
+   repeat for each line tableLine in scriptStemTable
+      put item 1 of tableLine into popularNum
+      put item 2 of tableLine into scriptStem
+      put stemArray [scriptStem] into filteredIndex
+      sort filteredIndex
+      
+      put scriptStem && "(" & popularNum & ")" & CR after tabbedOutline
+      -- put scriptStem & CR after tabbedOutline
+      repeat for each line filteredHandler in filteredIndex
+         put indexArray [filteredHandler] into hKey
+         put html_ConstructNameLink(filteredHandler, hKey) into handlerLink
+         put tab & handlerLink & CR after tabbedOutline
+      end repeat
+   end repeat
+   
+   delete char -1 of tabbedOutline
+   return tabbedOutline
+end handler_PopularStemOutline
+
+function handler_ConstructBehaviorHkeyIndex
+   local allKeys
+   
+   put behavior_Objects() into behaviorButtons
+   repeat for each line someObject in behaviorButtons
+      set the cursor to busy
+      if exists(someObject) is false then
+         put "The behavior" && someObject && "does not exist!" into someError
+         log_Error someError, "handler_ConstructHkeyIndex"
+         opn_Notify someError, true
+         next repeat
+      end if
+      
+      put the script_DictionaryHkeys of someObject into hKeys
+      put hKeys & CR after allKeys
+   end repeat
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructBehaviorHkeyIndex
+
+getprop script_DictionaryHkeys
+   put the long id of the target into someObject
+   put the script of someObject into someScript
+   put script_ExtractDictionaryHkeys (someScript, someObject) into hKeys
+   return hKeys
+end script_DictionaryHkeys
+
+function script_ExtractDictionaryHkeys someScript, someObject
+   put script_DeleteSuite ("Geometry", someScript) into someScript
+   put script_DeleteSuite ("Metadata", someScript) into someScript
+   -- put script_DeleteSuite ("View", someScript) into someScript
+   put script_ExtractHkeys(someScript, someObject) into hKeys
+   filter hKeys without "view_*"
+   repeat for each item handlerName in "FillinData,LayoutControl,card_View"
+      filter hKeys without (handlerName & ",*")
+   end repeat
+   repeat for each line handlerName in rev_MessageNames()
+      filter hKeys without (handlerName & ",*")
+   end repeat
+   sort hKeys
+   return word 1 to -1 of hKeys
+end script_ExtractDictionaryHkeys
+
+function handler_ConstructUsedHkeyIndex
+   local allKeys
+   put library_ListUsedStacks() into stackObjects
+   repeat for each line stackObject in stackObjects
+      set the cursor to busy
+      if exists(stackObject) is false then
+         put "Used" && stackObject && "does not exist!" into someError
+         set the log_AddEntry of me to someError
+         opn_Notify someError, true
+         next repeat
+      end if
+      
+      put the script_Hkeys of stackObject into hKeys
+      put hKeys & CR after allKeys
+   end repeat
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructUsedHkeyIndex
+
+function handler_ConstructBackHkeyIndex
+   local allKeys
+   put the opn_BackLibraries of the opn_Library of me into backLibraries
+   repeat for each line someObject in backLibraries
+      set the cursor to busy
+      if exists(someObject) is false then
+         put "The backscript in" && someObject && "does not exist!" into someError
+         set the log_AddEntry of me to someError
+         opn_Notify someError, true
+         
+         -- opn_DeleteFromObjectIndex "backscript", "Library", someObject
+         next repeat
+      end if
+      
+      put the script_Hkeys of someObject into hKeys
+      put hKeys & CR after allKeys
+   end repeat
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructBackHkeyIndex
+
+function handler_ConstructFrontHkeyIndex
+   local allKeys
+   put the opn_FrontLibraries of the opn_Library of me into frontLibraries
+   repeat for each line someObject in frontLibraries
+      set the cursor to busy
+      if exists(someObject) is false then
+         put "The backscript in" && someObject && "does not exist!" into someError
+         set the log_AddEntry of me to someError
+         opn_Notify someError, true
+         
+         -- opn_DeleteFromObjectIndex "frontscript", "Library", someObject
+         next repeat
+      end if
+      
+      put the script_Hkeys of someObject into hKeys
+      put hKeys & CR after allKeys
+   end repeat
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructFrontHkeyIndex
+
+function handler_ConstructMenuHkeyIndex
+   -- lets index all global menu scripts (without menu handlers?)
+   local allKeys
+   
+   put menu_GlobalControllers() into globalMenuControllers
+   repeat for each line someObject in globalMenuControllers
+      set the cursor to busy
+      if word 1 of someObject = "stack" then next repeat
+      if exists(someObject) is false then
+         opn_Notify "Problem with a global menu_Controller", true
+         next repeat
+      end if
+      
+      put the script_Hkeys of someObject into hKeys      
+      put hKeys & CR after allKeys
+   end repeat
+   delete last char of allKeys
+   
+   filter allkeys without "-"
+   filter allkeys without "menu_*"
+   filter allkeys without "disabled_*"
+   filter allkeys without "*,g,"
+   filter allkeys without "*,s,"
+   
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructMenuHkeyIndex
+
+function handler_ConstructHkeyIndex
+   -- Does not index private commands
+   
+   put handler_ConstructBehaviorHkeyIndex() & CR after allKeys
+   put handler_ConstructUsedHkeyIndex() & CR after allKeys
+   put handler_ConstructBackHkeyIndex() & CR after allKeys
+   put handler_ConstructFrontHkeyIndex() & CR after allKeys
+   put handler_ConstructMenuHkeyIndex() & CR after allKeys
+   
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructHkeyIndex
+
+function handler_ConstructIndexArray hKeyIndex
+   repeat for each line hKey in hKeyIndex
+      put item 1 of hKey into handlerName
+      put hkeyIndexArray [handlerName] into hKeys
+      line_Add hKey, hKeys
+      put hKeys into hkeyIndexArray [handlerName]
+   end repeat
+   return hkeyIndexArray
+end handler_ConstructIndexArray
+
+function handler_ConstructIndexOutline
+   put handler_ConstructHkeyIndex() into hKeyIndex
+   put handler_ConstructIndexArray(hKeyIndex) into handlerIndexArray
+   handler_SetIndexArray handlerIndexArray
+   
+   put html_FromArray(handlerIndexArray) into someIndex
+   filter someIndex without "*>_</a>"
+   return someIndex
+end handler_ConstructIndexOutline
+
+function handler_GetIndex scriptStem
+   put handler_GetIndexArray() into indexArray
+   put keys(indexArray) into handlerIndex
+   
+   if scriptStem is not among the items of "Library Handlers,display all" and scriptStem is not empty then
+      filter handlerIndex with scriptStem & "_*"
+   end if
+   sort handlerIndex
+   return word 1 to -1 of handlerIndex
+end handler_GetIndex
+
+function handler_StemIndex handlerIndex
+   if handlerIndex is empty then put handler_GetIndex() into handlerIndex
+   filter handlerIndex with "*_*"
+   
+   -- this is case sensitive (so get  keys applescript and appleScript)!
+   split handlerIndex with CR and "_"
+   put keys(handlerIndex) into stemIndex
+   put line_UniqueIndex(stemIndex) into stemIndex
+   
+   sort stemIndex
+   return word 1 to -1 of stemIndex
+end handler_StemIndex
+
+
+--> Handler Index | Model
+-
+getprop handler_model
+   return the long id of card 1 of me
+end handler_model
+
+-- function handler_GetIndexArray
+put the handler_model of me into modelObject
+put model_GetArray("uOPN_UniqueHandlers", modelObject) into handlerIndexArray
+return handlerIndexArray
+end handler_GetIndexArray
+
+-- on handler_SetIndexArray handlerIndexArray
+put the handler_model of me into modelObject
+model_SetArray "uOPN_UniqueHandlers", modelObject, handlerIndexArray
+end handler_SetIndexArray
+
+
+--> Hkey | Keywords
+-
+function hkey_ConstructKeywords hKeyOrName
+   put word 1 to -1 of item 1 of hKeyOrName into hName
+   put text_SplitIntoWords (hName) into kWords
+   put toLower (kWords) into kWords
+   return kWords
+end hkey_ConstructKeywords
+
+function text_SplitIntoWords someWord
+   local uniqueIndex
+   
+   put word 1 to - 1 of someWord into wordIndex
+   put 1 into charNum
+   put 0 into previousInsert
+   repeat the number of chars of wordIndex
+      put char charNum of wordIndex into someChar
+      if someChar is empty then exit repeat
+      if someChar is among the chars of (space & tab) then exit repeat
+      if someChar is among the chars of "_-,.:;/\|" then
+         if charNum = 1 then
+            delete char 1 of wordIndex
+            next repeat
+         else
+            put CR into char charNum of wordIndex
+            put charNum + 1 into previousInsert
+            add 1 to charNum
+            next repeat
+         end if
+      end if
+      
+      if text_StartsWithCaps(someChar) is true then        
+         get char previousInsert to charNum of wordIndex
+         if the number of chars of it > 2 then
+            put CR before char charNum of wordIndex
+            put charNum + 1 into previousInsert
+            add 2 to charNum
+         else
+            add 1 to charNum
+         end if
+         
+         -- but lets string together capital sequences like
+         repeat
+            put char charNum + 1 of wordIndex into nextChar
+            if nextChar is among the chars of "_-,.:;/\|" then
+               put CR into char charNum + 1 of wordIndex
+               put charNum + 2 into previousInsert
+               add 2 to charNum
+               exit repeat
+            else if nextChar is empty then
+               -- it is the last char
+               return word 1 to - 1 of wordIndex
+               exit repeat
+            else
+               if text_StartsWithCaps(nextChar) is true then
+                  add 1 to charNum
+               else
+                  exit repeat
+               end if
+            end if
+         end repeat
+      else
+         add 1 to charNum
+      end if
+   end repeat
+   
+   put word 1 to - 1 of wordIndex into wordIndex
+   repeat for each line testLine in wordIndex
+      if testLine is empty then next repeat
+      if testLine is among the lines of uniqueIndex then next repeat
+      put testLine & CR after uniqueIndex
+   end repeat
+   delete char -1 of uniqueIndex
+   
+   -- opn_Notify (someWord & CR & CR & uniqueIndex)
+   return uniqueIndex
+end text_SplitIntoWords
+
+function hkey_InStackHierarchy hkey, someObject
+   put item 3 of hkey into hkeyObject
+   if exists(hkeyObject) is false then return empty
+   
+   put the long id of hkeyObject into hkeyObject
+   put object_GetHierarchy (someObject) into objectHierarchy
+   repeat for each line objectInStack in objectHierarchy
+      if hkeyObject = objectInStack then return true
+   end repeat
+   return false
+end hkey_InStackHierarchy

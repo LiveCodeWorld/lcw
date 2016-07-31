@@ -1,0 +1,41 @@
+command script_ExportHandlersAndCalls mergeScript, objectFolder
+   -- here we export a script as a folder of handlers and calls
+   -- could speed up by not having to call revAivailablehandlers on object here and also fully index object script manually
+   put object_FromScriptFolder (objectFolder) into someObject
+   if exists (someObject) is false then
+      -- error checking (should not be)
+      breakpoint
+      put object_FromScriptFolder (objectFolder) into someObject
+      return empty
+   end if
+   
+   put the revAvailableHandlers of someObject into handlerTable
+   if handlerTable is empty then
+      return empty -- everything is deleted before re-exporting
+   end if
+   
+   sort numeric descending handlerTable by word 3 of each
+   repeat for each line handlerTableLine in handlerTable
+      set the cursor to busy
+      put word 1 of handlerTableLine into hType
+      put word 2 of handlerTableLine into hName
+      if hName = "_" then next repeat -- could check handler is empty ?
+      put word 3 of handlerTableLine into startLineNum
+      put word 4 of handlerTableLine into endLineNum
+      
+      put line startLineNum to endLineNum of mergeScript into someHandler
+      hkey_NormalizeType hType
+      put hName,hType into shortHkey
+      
+      -- project_StoreHandler hKey, someHandler
+      put objectFolder_HandlerFolder (shortHkey, objectFolder, false) & "script.txt" into someFile
+      put someHandler into url ( "binfile:" & someFile)
+      
+      put "[[ _FetchHandler (" & hName, hType & ") ]]" into line startLineNum to endLineNum of mergeScript
+      -- put "[[ _FetchHandler (" & kwote(hName) & "," && kwote(hType) & ") ]]" into line startLineNum to endLineNum of mergeScript
+   end repeat
+   
+   put objectFolder_ScriptFile (objectFolder, false) into someFile
+   put mergeScript into url ( "binfile:" & someFile)
+   return someFile
+end script_ExportHandlersAndCalls

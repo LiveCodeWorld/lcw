@@ -1,0 +1,11 @@
+setprop script_IsIndexed someBoolean
+   put the long id of the target into scriptObject
+   if someBoolean is true then
+      script_IndexHarrayAndUpateMenus scriptObject
+      put the result into mTitleTableArray
+      return mTitleTableArray
+   else
+      breakpoint -- not done yet
+      return empty
+   end if
+end script_IsIndexed

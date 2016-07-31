@@ -1,0 +1,12 @@
+private function _lastNestedBracket wikiText, foundNum, endWikiTemplate
+   repeat foundNum
+      put offset ("}}", wikiText, endWikiTemplate) into nextOffset
+      if nextOffset = 0 then
+         -- "err, should be an ending template bracket"
+         return 0
+      else
+         add (nextOffset + 2) to endWikiTemplate 
+      end if
+   end repeat 
+   return endWikiTemplate
+end _lastNestedBracket

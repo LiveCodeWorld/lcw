@@ -1,0 +1,5 @@
+getprop formatted_Height
+   -- default (can over-ride locally)
+   if word 1 of the target is not among the items of "button,field,image,player,group,card" then return empty
+   return the formattedheight of the target
+end formatted_Height

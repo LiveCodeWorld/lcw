@@ -1,0 +1,51 @@
+on LayoutControl pRect
+   if pRect is empty then put the rect of me into pRect
+   
+   lock screen
+   -- set the height to the formatted_Height
+   -- text flow happending during resizing will not be taken into account
+   -- would need to be done at the end or recursively or ???
+   put the formatted_Height of me into fHeight
+   put item 2 of pRect + fHeight into item 4 of pRect
+   
+   put the margins of me into someMargin
+   margin_Normalize someMargin, lMargin, tMargin, rMargin, bMargin
+   put pRect into innerRect 
+   add lMargin to item 1 of innerRect
+   add tMargin to item 2 of innerRect
+   subtract rMargin from item 3 of innerRect
+   
+   subtract bMargin from item 4 of innerRect
+   
+   put the image_Width of me into imageWidth
+   put the image_Height of me into imageHeight
+   put the view_Spacing of me into viewSpacing
+   if viewSpacing is empty then put 4 into viewSpacing
+   
+   if the image_Position of me = "left" then
+      put innerRect into imageRect
+      put item 1 of innerRect into imageLeft
+      put imageLeft + imageWidth into item 3 of imageRect
+      
+      put innerRect into fieldRect
+      put item 3 of imageRect + viewSpacing into item 1 of fieldRect
+   else -- if the image_Position of me = "right" then
+      put innerRect into imageRect
+      put item 3 of innerRect into imageRight
+      put imageRight - imageWidth into item 1 of imageRect
+      
+      put innerRect into fieldRect
+      put item 1 of imageRect - viewSpacing into item 3 of fieldRect
+   end if
+   put item 2 of innerRect into imageTop
+   put imageTop + imageHeight into item 4 of imageRect
+   
+   -- set the rects
+   -- set the view_Rect of image_View() to imageRect
+   set the rect of image_View() to imageRect
+   -- dispatch "LayoutControl" to image_View() with imageRect
+   set the rect of fieldObject() to fieldRect
+   -- set the rect of me to pRect
+   
+   unlock screen
+end LayoutControl

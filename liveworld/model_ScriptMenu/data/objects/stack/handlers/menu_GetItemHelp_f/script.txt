@@ -1,0 +1,5 @@
+function menu_GetItemHelp hName, mController
+   put the menu_Array of mController into mArray
+   put mArray [mTitle]["metadata"]["help"]["menu item"][hName] into someHtml
+   return someHtml
+end menu_GetItemHelp

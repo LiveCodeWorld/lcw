@@ -1,0 +1,15 @@
+function fedwiki_ConstructImageArray someImage, imageType, pImageCaption, pID   
+   fedwiki_SetID pID
+   if pImageCaption is empty then put "Uploaded image" into pImageCaption
+   
+   put "Uploaded image" into imageArray ["caption"] 
+   put pID into imageArray ["id"]
+   put pImageCaption into imageArray ["text"] 
+   put "image" into imageArray ["type"] 
+   
+   put "data:image/" & imageType & ";base64," into dataImageUrl
+   put base64encode (someImage) after dataImageUrl
+   put dataImageUrl into imageArray ["url"] 
+   
+   return imageArray
+end fedwiki_ConstructImageArray

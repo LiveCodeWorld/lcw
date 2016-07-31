@@ -1,0 +1,5 @@
+function fedwikipedia_FetchPageHtml pageTitle, pApiStem
+   put fedwikipedia_FetchPageHtmlArray (pageTitle, pApiStem) into sandboxArray
+   put sandbox_GetExtract (sandboxArray) into pageHTML
+   return pageHTML
+end fedwikipedia_FetchPageHtml

@@ -1,0 +1,14 @@
+function colour_Darken rgbColour, pDarkenPercent
+   if rgbColour is empty then put "256,256,256" into rgbColour
+   colour_RgbNormalise rgbColour
+   if pDarkenPercent is empty then put 10 into pDarkenPercent
+   put colour_RgbToHSV(rgbColour) into hsvColour
+   put (100 - pDarkenPercent)/100 * item 3 of hsvColour into darkerV
+   put min(darkerV, 100) into darkerV
+   put max(darkerV, 0) into darkerV
+   put darkerV into item 3 of hsvColour
+   put colour_HsvToRgb(hsvColour) into newRgbColour
+   
+   -- return rgbColour
+   return newRgbColour
+end colour_Darken

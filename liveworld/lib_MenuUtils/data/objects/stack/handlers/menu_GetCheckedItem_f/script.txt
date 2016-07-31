@@ -1,0 +1,7 @@
+function menu_GetCheckedItem someMenuItem, someMenu
+   -- was menu_CheckItem
+   put menu_GetLineNum (someMenuItem, someMenu) into lineNum
+   if lineNum = 0 then return false
+   put menu_GetCheckedLine (lineNum, someMenu) into isChecked
+   return isChecked
+end menu_GetCheckedItem

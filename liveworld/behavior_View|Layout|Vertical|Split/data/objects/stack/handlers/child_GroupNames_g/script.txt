@@ -1,0 +1,15 @@
+getprop child_GroupNames
+   put the childcontrolids of me into topControlIDs
+   put the number of lines of topControlIDs into numberOfChildren
+   repeat with cNum = 1 to numberOfChildren    
+      put line cNum of topControlIDs into topControlID
+      put the long id of control id topControlID of me into childControl
+      if word 1 of childControl = "group" then
+         -- put the group_Name of childControl into gName
+         put the short name of control id topControlID of me into gName
+         put gName & CR after gNames
+      end if
+   end repeat
+   delete char -1 of gNames
+   return gNames
+end child_GroupNames

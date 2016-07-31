@@ -1,0 +1,5 @@
+setprop body_Indent bodyIndent
+   set the view_DisplayProperty ["body_Indent"] of me to bodyIndent
+   dispatch "LayoutControl" to me -- changes the target
+   return the result
+end body_Indent

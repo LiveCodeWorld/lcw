@@ -1,0 +1,5 @@
+getprop overlay_GraphProperty [propName]
+   put the overlay_Folder of the target into overlayFolder
+   put overlay_GetGraphValue (overlayFolder, propName) into propValue
+   return propValue
+end overlay_GraphProperty

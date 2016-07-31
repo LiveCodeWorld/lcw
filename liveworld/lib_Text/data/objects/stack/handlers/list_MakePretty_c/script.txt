@@ -1,0 +1,7 @@
+command list_MakePretty @someList
+    repeat for each item someItem in someList
+        put word 1 to -1 of someItem & ", " after prettyList
+    end repeat
+    delete char -2 to -1 of prettyList
+    put prettyList into someList
+end list_MakePretty

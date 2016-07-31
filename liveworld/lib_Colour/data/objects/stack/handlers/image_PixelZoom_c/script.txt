@@ -1,0 +1,35 @@
+on image_PixelZoom source_Image, display_Image, maxPixelWidth, zoomPercentList
+    put the short id of source_Image into source_ID 
+    put the short id of display_Image into display_ID 
+    put the number of source_Image into source_ControlNum 
+     
+    if zoomPercentList is empty then put "the kuler_ItemsPerPage of me,60,40,20,13,9,8,7,6,5,4,3,2,1,0.5,0.25" into zoomPercentList
+    if maxPixelWidth is empty then put "6" into maxPixelWidth
+     
+    create invisible image "Temp"
+    put it into temp_Image
+     
+    put the short id of temp_Image into temp_ID 
+    put the number of temp_Image into temp_ControlNum 
+     
+    export image source_ControlNum to myVariable as PNG
+    put myVariable into image id temp_ID
+     
+    put the formattedwidth of source_Image into oWidth
+    put the formattedheight of source_Image into oHeight
+     
+    repeat for each item somePercent in zoomPercentList
+        put round(somePercent/the kuler_ItemsPerPage of me * oWidth) into someWidth
+        put round(somePercent/the kuler_ItemsPerPage of me * oHeight) into someHeight
+         
+        if someWidth < maxPixelWidth then exit repeat
+         
+        set the width of temp_Image to someWidth
+        set the height of temp_Image to someHeight
+         
+        export image temp_ControlNum to myVariable as PNG
+        put myVariable into image id display_ID
+        wait 4 ticks
+    end repeat
+    delete temp_Image
+end image_PixelZoom

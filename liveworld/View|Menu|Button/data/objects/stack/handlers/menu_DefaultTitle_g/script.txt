@@ -1,0 +1,13 @@
+getprop menu_DefaultTitle
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into viewObject
+   if exists(viewObject) is false then put targetObject into viewObject
+   
+   put the view_Name of viewObject into viewName
+   if viewName is empty then return empty
+   
+   set the itemdelimiter to "|"
+   if the number of items of viewName > 2 then delete item -1 of viewName -- experimental (default to class of more general owner)
+   put menu_TitleFromViewName (viewName) into mTitle
+   return mTitle
+end menu_DefaultTitle

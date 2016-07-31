@@ -1,0 +1,6 @@
+function rev_OpenScriptEditorNames
+   put the openstacks into stackNames
+   -- filter stackNames with "revscripteditor *" -- old version ???
+   filter stackNames with "revNewScriptEditor *"
+   return stackNames
+end rev_OpenScriptEditorNames

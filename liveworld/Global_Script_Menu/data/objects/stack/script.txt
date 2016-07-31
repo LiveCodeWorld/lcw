@@ -1,0 +1,44 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Script_Menu
+type: controller
+version: 0.3
+
+/*
+This is the menu called by the Script Editor and other tools that work on scriptObjects.
+
+The menu_target for these handlers is the scriptObject that owns the script currently presented by the Script Editor.
+These menu tools should therefore work equally well on any LiveCode object,
+and in particular either along side any of the more specific version control tools for GIT or Fossil.
+*/
+
+
+--> Global | Script | Menu
+-
+[[ _FetchHandler (menu_AnalizeScript,c) ]]
+
+[[ _FetchHandler (menu_EditScriptHelp,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddScriptHandlersToLibrary,c) ]]
+
+[[ _FetchHandler (menu_OpenHandlerLibraryFolder,c) ]]
+
+
+--> Global | Script | Menu | Props
+-
+
+--> Global | Script | Menu | Disabled
+-
+[[ _FetchHandler (disabled_AnalizeScript,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_FossilFileInfo,c) ]]
+
+[[ _FetchHandler (menu_ScriptGraphFolder,c) ]]
+

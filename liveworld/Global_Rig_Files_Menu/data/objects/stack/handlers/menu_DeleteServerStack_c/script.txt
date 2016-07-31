@@ -1,0 +1,10 @@
+on menu_DeleteServerStack serverStackFile
+   breakpoint
+   put merge ("Are you sure you want to delete the stack '[[serverStackFile]]' from the server?") into someWarning
+   answer warning someWarning with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   set the cursor to watch
+   rig_DeleteStack serverStackFile
+   refresh
+end menu_DeleteServerStack

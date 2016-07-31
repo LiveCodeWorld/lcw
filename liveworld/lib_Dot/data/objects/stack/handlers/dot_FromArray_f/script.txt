@@ -1,0 +1,24 @@
+function dot_FromArray overlayArray, pOverlayName 
+   put dot_HeaderFromArray (overlayArray) into dotHeader
+   put dot_DefSectionFromArray (overlayArray, pOverlayName) into defSection
+   
+   overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdLinkArray, dotClusterArray
+   
+   put overlayArray_GetHeaderProperty (overlayArray, "dot_ClusterRank") into dotCluster
+   if dotClusterArray is an array and dotCluster is not "none" then
+      -- put overlayData_ConstructClusterSection (overlayArray, pOverlayName) into clusterSection
+      put overlayArray_ConstructClusterSection (overlayArray, pOverlayName) into clusterSection
+   end if
+   
+   -- put hKeyArray_ConstructNodeSection (idArray, idLinkArray, graphController, nodeTypeArray) into linkSection
+   put linkArray_DotNodeLinks (idLinkArray) into linkSection
+   
+   if pOverlayName is empty then
+      put "dot_FromArray" into pGraphTitle
+   else
+      put pOverlayName into pGraphTitle
+      replace space with "_" in pGraphTitle
+   end if
+   put dot_TextFromSections (dotHeader, defSection, clusterSection, linkSection, pGraphTitle) into dotText
+   return dotText
+end dot_FromArray

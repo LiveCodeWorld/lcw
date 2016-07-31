@@ -1,0 +1,7 @@
+command text_StripTrailingSpaces @someText, multiLine
+    if multiLine is false then
+        put " *$" into someReg -- may be faster?
+    else
+        put "(?m)( +)$" into someReg
+    end if
+end text_StripTrailingSpaces

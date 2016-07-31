@@ -1,0 +1,11 @@
+setprop stack_IsKnown boolean
+   -- adds or removes a stack from the OPN environment stack files
+   
+   put the stack_Object of the target into stackObject
+   if boolean is true then
+      library_AddStackToKnown stackObject
+   else
+      library_RemoveStackFromKnown stackObject
+   end if
+   return the result
+end stack_IsKnown

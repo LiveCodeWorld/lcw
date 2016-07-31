@@ -1,0 +1,6 @@
+getprop script_CmapText [pOverlayName]
+   put the long id of the target into scriptObject
+   put the script_CmapFile [pOverlayName] of scriptObject into cmapxFile
+   put url ("file:" & cmapxFile) into cmapxText
+   return cmapxText
+end script_CmapText

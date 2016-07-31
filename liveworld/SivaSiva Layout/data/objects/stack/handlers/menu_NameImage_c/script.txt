@@ -1,0 +1,18 @@
+on menu_NameImage imageView
+   put the short name of imageView into someName
+   ask "What name would you like to give this image?" with someName
+   if it is empty then exit to top
+   put it into newName
+   
+   set the name of imageView to newName
+   
+   put the card_Object of imageView into cardObject
+   put the short name of cardObject  into someName
+   if someName begins with "card id " then
+      set the name of cardObject to newName
+      opn_Notify merge ("Set name of image and card to '[[someName]]'.")
+   else
+      opn_Notify merge ("Set name of image to '[[someName]]'.")
+   end if
+   opn_Notify merge ("Set name of image to '[[someName]]'.")
+end menu_NameImage

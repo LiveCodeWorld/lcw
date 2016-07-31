@@ -1,0 +1,5 @@
+function restbase_FetchSectionArray pageSlug
+   put "https://rest.wikimedia.org/en.wikipedia.org/v1/page/mobile-sections/" & pageSlug into someURL
+   put mediawiki_GetRestArray (someURL) into restBaseArray
+   return restBaseArray
+end restbase_FetchSectionArray

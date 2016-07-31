@@ -1,0 +1,13 @@
+function script_MetaTableToXhtml ripTable, headerList, tableSummary, someCaption
+   put "<table summary=" & quote & tableSummary & quote & ">" into htmlTable
+   put CR & tab & xml_Tag(someCaption, "caption") after htmlTable
+   
+   put "Property" & tab & "Value" into headerLine
+   put table_ConstructHeader (headerLine) into htmlHeader
+   put table_ConstructBody (ripTable) into htmlBody
+   get htmlHeader & CR & htmlBody
+   
+   put CR & outline_IncreaseIndent (it, 1) after htmlTable
+   put CR & "</table>" after htmlTable
+   return htmlTable
+end script_MetaTableToXhtml

@@ -1,0 +1,13 @@
+on FillInData pDataArray
+   put the long id of me into recordView
+   put the dgControl of me into dgView
+   
+   put the event_Watchers ["FillInData"] of dgView into controllerObjects
+   if controllerObjects is empty then
+      dispatch "dg_FillInData" to dgView with pDataArray,recordView
+   else
+      repeat for each line controllerObject in controllerObjects
+         dispatch "dg_FillInData" to controllerObject with pDataArray,recordView
+      end repeat
+   end if
+end FillInData

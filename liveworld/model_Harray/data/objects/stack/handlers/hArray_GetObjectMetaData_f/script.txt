@@ -1,0 +1,8 @@
+function hArray_GetObjectMetaData rObject, pKey, pHarray
+   put hArray_GetObjectArray (rObject, pHarray) into objectArray  
+   if pKey is empty then
+      return objectArray ["metadata"]
+   else
+      return objectArray ["metadata"][pKey]
+   end if
+end hArray_GetObjectMetaData

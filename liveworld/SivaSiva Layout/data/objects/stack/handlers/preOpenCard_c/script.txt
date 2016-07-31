@@ -1,0 +1,5 @@
+on preOpenCard
+   put the long id of image 1 into someImage
+   put the rect of this cd into myRect
+   set the rect of someImage to myRect
+end preOpenCard

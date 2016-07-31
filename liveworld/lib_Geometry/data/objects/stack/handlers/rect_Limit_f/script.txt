@@ -1,0 +1,11 @@
+function rect_Limit someRect, minW, maxW, minH, maxH
+    put item 3 of someRect - item 1 of someRect into sWidth
+    put number_NormalizeRange(sWidth, maxW, minW) into lWidth
+     
+    put item 4 of someRect - item 2 of someRect into sHeight
+    put number_NormalizeRange(sHeight, maxH, minH) into lHeight
+     
+    put item 1 of someRect + lWidth into item 3 of someRect
+    put item 2 of someRect + lHeight into item 4 of someRect
+    return someRect
+end rect_Limit

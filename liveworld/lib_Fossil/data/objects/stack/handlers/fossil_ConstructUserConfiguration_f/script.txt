@@ -1,0 +1,17 @@
+function fossil_ConstructUserConfiguration userArray
+   /*
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('david',NULL,'s','',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('anonymous',NULL,'ghmncz','Anon',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('nobody',NULL,'jor','Nobody',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('developer',NULL,'dei','Dev',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('reader',NULL,'kptw','Reader',NULL);
+   */
+   
+   repeat for each key userName in userArray
+      put userArray ["userPerms"] into userPerms
+      put userArray ["contactName"] into contactName
+      put merge ("INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('[[userName]]',NULL,'[[userPerms]]','[[contactName]]',NULL);") & CR after userConfig
+   end repeat
+   delete char -1 of userConfig
+   return userConfig
+end fossil_ConstructUserConfiguration

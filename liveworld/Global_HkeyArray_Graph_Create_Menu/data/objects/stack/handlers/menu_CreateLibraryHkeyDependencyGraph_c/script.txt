@@ -1,0 +1,8 @@
+on menu_CreateLibraryHkeyDependencyGraph treeView, graphStyle
+   deconstructLocalArray overlayFolder, hKey, stackLabel, scriptObject
+   put the displayed_Array of treeView into hKeyArray
+   put item 3 of hKey into hObject
+   put the overlay_Folder of hObject into overlayFolder
+
+   library_CreateHkeyGraph hKey, hKeyArray, graphStyle, pOverlayName, pDotCluster, pOverlayHash
+end menu_CreateLibraryHkeyDependencyGraph

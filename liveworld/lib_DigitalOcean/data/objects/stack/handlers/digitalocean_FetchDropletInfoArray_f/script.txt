@@ -1,0 +1,5 @@
+function digitalocean_FetchDropletInfoArray
+   -- curl -X GET "https://api.digitalocean.com/v2/droplets" -H "Authorization: Bearer $TOKEN" 
+   put digitalocean_FetchJsonArray ("droplets") into dropletArray
+   return dropletArray
+end digitalocean_FetchDropletInfoArray

@@ -1,0 +1,13 @@
+on menu_ConvertMarksToHtml @someLine
+    switch char 1 to 2 word 1 someLine
+        case "!c"
+            put "" into char 1 to 2 word 1 someLine
+            break
+        case "!n"
+            put "" into char 1 to 2 word 1 someLine
+            break
+        case "!u"
+            put "" into char 1 to 2 word 1 someLine
+            break
+    end switch
+end menu_ConvertMarksToHtml

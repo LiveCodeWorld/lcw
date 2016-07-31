@@ -1,0 +1,13 @@
+function scriptArray_ConstructShortHkeyArray dataArray
+   -- fetch from "links.txt" for all hKeys in the scriptArray "dataArray"
+   local hkeyArray
+   repeat for each element recordArray in dataArray
+      set the cursor to busy
+      put recordArray ["hkey"] into hkey
+      if hKey is empty then next repeat
+      if hKey is among the keys of hkeyArray then next repeat
+      
+      hkey_RecurseCallArray hKey, hkeyArray
+   end repeat
+   return hkeyArray
+end scriptArray_ConstructShortHkeyArray

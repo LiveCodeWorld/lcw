@@ -1,0 +1,9 @@
+function error_CheckMenuController mController
+   if exists (mController) is false then
+      put "menu_ConvertTable:  mController" && kwote(mController) && "does not exist" into someError
+      -- log_Error someError, "menu_ConvertTable", false
+      return false
+   else
+      return true
+   end if
+end error_CheckMenuController

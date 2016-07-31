@@ -1,0 +1,13 @@
+on menu_FindHandlerWithSpotlight hKey
+   local handlerFolder -- just look in handler library folder
+   -- put library_HandlerFolder() into handlerFolder
+   
+   put item 1 to 2 of hKey into shortFolder
+   replace comma with "_" in shortFolder
+   put spotlight_FindFile (shortFolder, handlerFolder) into handerFolderPaths
+   
+   put "Global | Hkey | Send | Menu" into titleMenu
+   put merge ("Folders nameshKey '[[shortFolder]]'") into someTitle
+   display_Files handerFolderPaths, handlerFolder, "launchFile", titleMenu, someTitle
+   put the result into treeWidget
+end menu_FindHandlerWithSpotlight

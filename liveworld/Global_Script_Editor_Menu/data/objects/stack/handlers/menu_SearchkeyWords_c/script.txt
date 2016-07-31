@@ -1,0 +1,8 @@
+on menu_SearchkeyWords
+   put rev_ScriptEditorField() into fieldObject
+   put hkey_GetSelected (fieldObject) into hKey
+   put hkey_SearchDatabase (hKey, true) into intersectArray
+   
+   hkey_ConstructAndArray intersectArray
+   display_ScriptKeywordLinks intersectArray
+end menu_SearchkeyWords

@@ -1,0 +1,7 @@
+command fedwiki_OpenModulesFolder
+   put fedwiki_GetModulesFolder() into fedwikiModulesFolder
+   if fedwikiModulesFolder is empty then return empty
+   
+   finder_Reveal fedwikiModulesFolder
+   return fedwikiModulesFolder
+end fedwiki_OpenModulesFolder

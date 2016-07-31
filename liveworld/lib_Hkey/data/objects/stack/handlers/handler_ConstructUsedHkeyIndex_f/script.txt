@@ -1,0 +1,19 @@
+function handler_ConstructUsedHkeyIndex
+   local allKeys
+   put library_ListUsedStacks() into stackObjects
+   repeat for each line stackObject in stackObjects
+      set the cursor to busy
+      if exists(stackObject) is false then
+         put "Used" && stackObject && "does not exist!" into someError
+         set the log_AddEntry of me to someError
+         opn_Notify someError, true
+         next repeat
+      end if
+      
+      put the script_Hkeys of stackObject into hKeys
+      put hKeys & CR after allKeys
+   end repeat
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructUsedHkeyIndex

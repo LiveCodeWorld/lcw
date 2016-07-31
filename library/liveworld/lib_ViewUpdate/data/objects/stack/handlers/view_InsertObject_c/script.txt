@@ -1,0 +1,18 @@
+command view_InsertObject someObject, viewOrCard, someRect
+   lock screen
+   put the loc of viewOrCard into oLoc
+   put the rect of viewOrCard into oRect
+   
+   copy someObject to viewOrCard
+   put it into viewInstance
+   
+   if someRect is not empty then
+      set the rect of viewInstance to someRect
+   else
+      set the loc of viewInstance to oLoc
+   end if
+   
+   set the view_Rect of viewOrCard to oRect
+   unlock screen
+   return viewInstance
+end view_InsertObject

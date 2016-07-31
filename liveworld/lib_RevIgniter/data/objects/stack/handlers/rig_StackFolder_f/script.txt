@@ -1,0 +1,5 @@
+function rig_StackFolder
+   put rig_GetApplicationFolder() into someFolder
+   put "stacks/" after someFolder
+   return someFolder
+end rig_StackFolder

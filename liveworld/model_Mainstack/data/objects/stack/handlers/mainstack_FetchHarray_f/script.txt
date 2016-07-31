@@ -1,0 +1,4 @@
+function mainstack_FetchHarray mainStackFolder
+   -- hack_TidyOldMainstackFiles mainStackFolder
+   return mainstack_FetchSomeArray (mainStackFolder, "hArray")
+end mainstack_FetchHarray

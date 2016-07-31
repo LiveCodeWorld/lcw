@@ -1,0 +1,18 @@
+function linkArray_Xml linkArray, propertyArray
+   breakpoint
+   -- now use "outline_ToXmlStructure()"
+   
+   put "array" into rootNode
+   xml_CreateTree rootNode, treeID
+   
+   repeat for each key someKey in linkArray
+      put someKey into tagName
+      xml_NormalizeTagName tagName
+      
+      put rootNode & "/" & tagName into firstLevelNode
+      linkArray_ConstructXml firstLevelNode, linkArray, treeID, propertyArray
+   end repeat
+   put revXMLText(treeID, "", true) into someXml
+   revDeleteXMLTree treeID
+   return someXml
+end linkArray_Xml

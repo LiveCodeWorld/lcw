@@ -1,0 +1,9 @@
+command dot_FilesFromScriptObject scriptObject, graphStyle, pGraphSize, @dotFile, @imageFile, @cmapxFile, @xdotFile
+   put scriptObject_DotFile (scriptObject, graphStyle, pGraphSize) into dotFile
+   
+   put dotFile into dotFolder
+   set the itemdelimiter to "/"
+   delete item -1 of dotFolder
+   put "/" after dotFolder
+   overlay_Files dotFolder, dotFile, imageFile, cmapxFile, xdotFile, dotArrayFile, graphStyle
+end dot_FilesFromScriptObject

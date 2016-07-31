@@ -1,0 +1,10 @@
+on libraryStack
+   put the short name of the target into libraryStackName
+   if libraryStackName = "View|Menu|Button" then
+      -- if you pass librarystack here this get's called twice (rev bug???)
+      -- answer libraryStackName
+      go invisible stack "View|Menu|Button"
+   else
+      pass libraryStack
+   end if
+end libraryStack

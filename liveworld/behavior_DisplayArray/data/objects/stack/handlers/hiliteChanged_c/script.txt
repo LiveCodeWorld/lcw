@@ -1,0 +1,9 @@
+on hiliteChanged
+   -- put the params
+   if the controlKey is "Down" then
+      put the line_Menu of me into lineMenu
+      menu_PopUp lineMenu
+   else
+      _displaySelectedValue
+   end if
+end hiliteChanged

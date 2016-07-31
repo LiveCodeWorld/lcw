@@ -1,0 +1,5 @@
+getprop stack_ObjectsWithExternalBehavior
+   put the stack_BehaviorArray of the target into behaviorArray
+   put behaviorArray ["outside mainstack"] into objectArray
+   return keys(objectArray)
+end stack_ObjectsWithExternalBehavior

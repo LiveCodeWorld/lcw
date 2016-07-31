@@ -1,0 +1,8 @@
+function pandoc_ConvertHTML someHTML, pFormat
+   if pFormat is empty then put "plain" into pFormat
+   file_SaveTempText someHTML, "html"
+   put the result into someFile
+   put "pandoc --from html --to" && pFormat && "-i" && someFile into someShell
+   put shell (SomeShell) into convertedText
+   return convertedText
+end pandoc_ConvertHTML

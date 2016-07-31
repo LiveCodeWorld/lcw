@@ -1,0 +1,59 @@
+on dg_FillInData recordArray, recordView
+   -- for script title sections
+   lock screen
+   put recordArray ["hKey"] into hKey
+   put recordArray ["isExpanded"] into isExpanded
+   
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   if isExpanded is true then
+      -- put hkey_GetObjectHandler (hKey, false) into someHandler
+      
+      -- fetch live
+      if exists (hObject) is false then
+         set the hkey_Title of recordView to hKey
+         if the display_ProjectHandlers of me is true then
+            -- should this be hkey_GetHandler - anywhere from hierarchy ????
+            put hkey_ExtractHandlerFromObject (hKey) into someHandler
+         else
+            put library_FetchHandler (hKey) into someHandler
+         end if
+         if someHandler is empty then put hKey & CR & CR & "Handler is missing" into someHandler
+         set the record_Handler of recordView to someHandler
+      else
+         -- put the script_Handler [hKey] of hObject into someHandler
+         try
+            put the revAvailableHandlers of hObject into handlerTable
+            script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+            if startLineNum = 0 then
+               -- look for private handler?
+               put "P" before item 2 of hKey
+               script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+               if startLineNum = 0 then
+                  set the record_Handler [startLineNum] of recordView to hKey
+               else
+                  put the script of hObject into someScript
+                  put line startLineNum to endLineNum of someScript into someHandler
+                  set the record_Handler [startLineNum] of recordView to someHandler
+               end if
+            else
+               put the script of hObject into someScript
+               put line startLineNum to endLineNum of someScript into someHandler
+               set the record_Handler [startLineNum] of recordView to someHandler
+            end if
+         catch someError
+            breakpoint
+            -- set the hkey_Title of recordView to hKey  -- a locked stack
+            set the record_Handler [startLineNum] of recordView to hKey
+         end try
+      end if
+   else
+      if exists (hObject) is false and the number of items of hKey = 4 then
+         put CR & "  (handler is missing)" after hKey
+      end if
+      set the hkey_Title of recordView to hKey
+   end if
+   
+   set the record_IsExpanded of recordView to isExpanded
+   -- if hkey_IsInLibrary (hKey) then set the background_Colour of recordView to "red"
+   unlock screen
+end dg_FillInData

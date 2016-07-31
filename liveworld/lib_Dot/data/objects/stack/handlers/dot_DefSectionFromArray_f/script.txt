@@ -1,0 +1,33 @@
+function dot_DefSectionFromArray overlayArray, pOverlayName
+   local defSection
+   overlayArray_DeconstructMetadata overlayArray, graphPropertyArray, dotHeaderArray, nodePropertyArray, edgePropertyArray, dotGroupStyleArray, pOverlayName
+   overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdLinkArray, dotClusterArray
+   
+   put dot_ConstructDefSection (dotGroupStyleArray, idArray) into defSection
+   return defSection
+   
+   
+   repeat for each key numOrName in dotGroupStyleArray
+      put dotGroupStyleArray [numOrName] into groupStyleArray
+      overlayArray_DeconstructGroupStyleArray nodeIds, nodeStyleArray, groupStyleArray
+      put dot_StyleArrayToParams (nodeStyleArray) into styleParams
+      
+      if numOrName is not a number then
+         put "subgraph" && kwote(numOrName) & space after defSection
+      end if
+      put "{" & CR after defSection
+      put tab & "node [" & styleParams & "];" & CR after defSection
+      put CR after defSection
+      
+      -- put tab & nodeIds & CR after defSection  -- simple non-labeled version
+      repeat for each item nodeID in nodeIDs
+         put dot_ConstructDefaultDefLine (nodeID, idArray) into nodeDefLine
+         put tab & nodeDefLine & CR after defSection
+      end repeat
+      
+      put "}"  & CR after defSection
+      put CR after defSection
+   end repeat
+   delete char -2 to -1 of defSection
+   return defSection
+end dot_DefSectionFromArray

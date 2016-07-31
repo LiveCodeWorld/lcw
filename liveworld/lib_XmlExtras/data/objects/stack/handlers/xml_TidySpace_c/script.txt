@@ -1,0 +1,4 @@
+on xml_TidySpace @someXML
+    -- bug as there can be two spaces in the xml.
+    replace space & space with tab in someXML    -- tidy indents by 2 spaces, but I prefer tabs
+end xml_TidySpace

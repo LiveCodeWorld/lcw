@@ -1,0 +1,15 @@
+getprop new_GlobalTitles
+   local newGlobalTitles
+   put LocalArray ["menu_ScriptTitles"] into mTitles
+   put the cardnames of stack "libOPN_Menus" into mCardNames
+   repeat for each line newGlobalTitle in mTitles
+      if newGlobalTitle begins with "Global |" then
+         if newGlobalTitle is not among the lines of mCardNames then
+            put newGlobalTitle & CR after newGlobalTitles
+         end if
+      end if
+   end repeat
+   delete char -1 of newGlobalTitles
+   if newGlobalTitles is not empty then put CR & "-,Create" after newGlobalTitles
+   return newGlobalTitles
+end new_GlobalTitles

@@ -1,0 +1,33 @@
+command library_AddHkey hKey, pHandler, pForceAdd
+   if pHandler is empty then
+      put hkey_ExtractHandlerFromObject (hKey) into pHandler
+   end if
+   if word 1 of pHandler = "private" then delete word 1 of pHandler
+   put library_FetchHandler (hKey) into libraryHandler
+   
+   put libraryHandler = pHandler into isExported
+   if (isExported is true and pForceAdd is not true) then return false
+   
+   put item 1 to 2 of hKey into shortHKey
+   
+   library_StoreHandler shortHKey, pHandler
+   
+   -- sure this could be much faster !
+   put handler_ConstructCallArray (pHandler) into handlerMetadata
+   
+   put handlerMetadata ["sha1"] into handlerHash
+   -- put sha1_Hash (someHandler) into handlerHash
+   
+   hkey_AddToKeyWordArray handlerMetadata, hKey, handlerHash
+   
+   put handlerMetadata ["hKeyCalls"] into hKeyCalls
+   library_StoreHkeyCalls shortHKey, hKeyCalls
+   
+   put library_FetchHandlerDatabaseArray () into hkeyData
+   put hkeyData [shortHKey] into shortHkeyArray
+   union handlerMetadata with shortHkeyArray
+   put handlerMetadata into hkeyData [shortHKey]
+   library_StoreHandlerDatabaseArray hKeyData
+   
+   return shortHkeyArray -- was returning hKeyData
+end library_AddHkey

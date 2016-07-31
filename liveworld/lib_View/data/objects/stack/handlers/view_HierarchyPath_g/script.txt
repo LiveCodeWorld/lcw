@@ -1,0 +1,25 @@
+getprop view_HierarchyPath
+   /*
+   ??? not really working as a class hierarchy!
+   A path is constructed based on the object hierarchy of the views.
+   */
+   
+   put the long id of the target into someView
+   put view_ConstructHierarchy(someView) into viewHierarchy
+   
+   set the itemdelimiter to "|"
+   put line -1 of viewHierarchy into bottomView
+   put item -1 of the uRIP ["name"] of bottomView into bottomViewShortName
+   
+   put "View" into nestedPath
+   repeat for each line hierarchyView in viewHierarchy
+      put the uRIP ["name"] of hierarchyView into hierarchyViewPath
+      if item 1 of hierarchyViewPath is "View" then delete item 1 of hierarchyViewPath
+      delete item -1 of hierarchyViewPath
+      if hierarchyViewPath is not empty then
+         put "|" & hierarchyViewPath after nestedPath
+      end if
+   end repeat
+   get nestedPath & "|" & bottomViewShortName
+   return it
+end view_HierarchyPath

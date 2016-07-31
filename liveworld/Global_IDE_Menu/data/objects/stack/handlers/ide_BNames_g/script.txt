@@ -1,0 +1,5 @@
+getprop ide_BNames
+   put hArray_ListBehaviorNames() into bNames
+   filter bNames with "behavior_Ide*"
+   return bNames
+end ide_BNames

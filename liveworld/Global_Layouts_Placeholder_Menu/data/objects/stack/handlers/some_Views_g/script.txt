@@ -1,0 +1,7 @@
+getprop some_Views
+   if LocalArray ["objectNames"] is empty then
+      return "This menu script"
+   else
+      return it & CR & "-" & CR & "This menu script"
+   end if
+end some_Views

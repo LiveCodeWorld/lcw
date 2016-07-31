@@ -1,0 +1,9 @@
+function getArtFormat pA, widthxHeight
+   -- art.lc
+   repeat for each key tK in pA["formats"]
+      if  pA["formats"][tK]["format_name"] is widthxHeight then
+         return pA["formats"][tK]
+      end if
+   end repeat
+   return empty
+end getArtFormat

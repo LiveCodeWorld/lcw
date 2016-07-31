@@ -1,0 +1,5 @@
+getprop selected_ShortStackFiles
+   put the index_Field of the target into indexField
+   put the selectedtext of indexField into shortStackFiles 
+   return shortStackFiles
+end selected_ShortStackFiles

@@ -1,0 +1,9 @@
+on menu_CreateAndExportHkeyGraphs treeView
+   put the displayed_Array of treeView into hKeyArray
+   
+   repeat for each key hKey in hKeyArray
+      set the cursor to busy
+      put hkeyArray_ExtractSubArray (hKey, hkeyArray) into hkeySubArray
+      library_CreateHkeyGraph hKey, hKeyArray, "hierarchical"
+   end repeat
+end menu_CreateAndExportHkeyGraphs

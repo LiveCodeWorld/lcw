@@ -1,0 +1,18 @@
+function rect_FitInside originalW, originalH, targetRect
+    if originalW > 0 and originalH > 0 then
+        rect_ExtractDimensions targetRect, newW, newH
+         
+        put newW / originalW into xScaleFactor
+        put newH / originalH into yScaleFactor
+         
+        put min(xScaleFactor, yScaleFactor) into sFactor
+        put round(originalW * sFactor) into newW
+        put round(originalH * sFactor) into newH
+        put rect_GetCentre(targetRect) into targetLoc
+        put rect_LocWidthHeight(targetLoc, newW, newH) into newRect
+         
+        return newRect
+    else
+        return targetRect
+    end if
+end rect_FitInside

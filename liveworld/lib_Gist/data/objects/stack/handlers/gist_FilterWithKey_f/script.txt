@@ -1,0 +1,10 @@
+function gist_FilterWithKey gistList, keyType, pShortServer
+   put gistList into shortControllers
+   if keyType is not empty then
+      put gist_ConstructTypeFilter (keyType, pShortServer) into typeFilter
+      filter shortControllers with (typeFilter & "*")
+      replace typeFilter with empty in shortControllers
+   end if
+   sort shortControllers
+   return shortControllers
+end gist_FilterWithKey

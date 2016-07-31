@@ -1,0 +1,15 @@
+function hArray_ListHashHkeys hArray, pHandlerHash
+   if pHandlerHash is empty then
+      -- let's list all of them
+      put hArray ["handlerHashArray"]["cached"] into hashArray
+      repeat for each key handlerHash in hashArray
+         put hashArray [handlerHash]["hKey"] into emptyHkeyArray
+         put keys(emptyHkeyArray) & CR after hashedHkeys
+      end repeat
+      delete char -1 of hashedHkeys
+      return hashedHkeys
+   else
+      put hArray ["handlerHashArray"]["cached"][handlerHash]["hKey"] into emptyHkeyArray
+      return keys(emptyHkeyArray)
+   end if
+end hArray_ListHashHkeys

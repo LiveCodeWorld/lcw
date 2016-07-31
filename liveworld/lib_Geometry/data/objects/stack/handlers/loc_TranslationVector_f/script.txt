@@ -1,0 +1,6 @@
+function loc_TranslationVector fromPoint, toPoint, @xVector, @yVector
+   loc_SetTranslationVector fromPoint, toPoint, xVector, yVector
+   put xVector into tVector[1,1]
+   put yVector into tVector[1,2]
+   return tVector
+end loc_TranslationVector

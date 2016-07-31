@@ -1,0 +1,5 @@
+command fedwiki_SendOriginFavicon socketID
+   put the fedwiki_Favicon of me into fedwikiFavicon
+   daemon_SendPNG socketID, fedwikiFavicon
+   return "Sent Favicon. Socket still open."
+end fedwiki_SendOriginFavicon

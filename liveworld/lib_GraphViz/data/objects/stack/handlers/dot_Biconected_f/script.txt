@@ -1,0 +1,12 @@
+function dot_Biconected dotFile
+   /*
+   decomposes graphs into their biconnected components, printing the components to standard output. 
+   */
+   
+   shell_BashParamEscape dotFile
+   put merge("bcomps [[dotFile]]") into someShell
+   
+   put graphViz_GetShellPath() into gvPath
+   put gvPath & someShell into someShell
+   return shell(someShell)
+end dot_Biconected

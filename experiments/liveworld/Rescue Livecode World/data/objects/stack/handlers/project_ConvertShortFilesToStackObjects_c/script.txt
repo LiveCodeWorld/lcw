@@ -1,0 +1,12 @@
+command project_ConvertShortFilesToStackObjects shortFiles, someFolder, @goodStackObjects, @badStackFiles
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into longStackFile
+      if there is not a file longStackFile then
+         put longStackFile & CR after badStackFiles
+         next repeat
+      end if
+      put the name of stack longStackFile & CR after goodStackObjects
+   end repeat
+   delete char -1 of badStackFiles
+   delete char -1 of goodStackObjects
+end project_ConvertShortFilesToStackObjects

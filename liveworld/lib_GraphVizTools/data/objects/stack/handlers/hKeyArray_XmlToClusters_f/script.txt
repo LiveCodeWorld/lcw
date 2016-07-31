@@ -1,0 +1,34 @@
+function hKeyArray_XmlToClusters someXml, objectOutline, hIdArray, graphNodeType
+    put word 1 to -1 of someXml into someXml
+    delete line 1 to 3 of someXml
+    delete line -1 of someXml
+    put outline_DecreaseIndent(someXml, 1) into someXml
+     
+    put object_IndexFromOutline(objectOutline) into linkObjects
+    repeat with objectNum = 1 to the number of lines of linkObjects
+        put line objectNum of linkObjects into linkObject
+        put "n" & objectNum into linkONodeID
+        
+        put hKeyArray_ReplaceOpeningTag(objectNum, someXml) into someXml
+         
+        put "subgraph cluster" & objectNum && "{}" into emptyDef
+        put "<" & linkONodeID & "[ ]*/>" into someReg
+        put replacetext (someXml, someReg, emptyDef) into someXml
+        
+        put "<contents nodeID=" & kwote (linkONodeID) & "></contents>" into subContentsTag
+        put outline_LineOffset (subContentsTag, someXml) into lineNum
+        if lineNum = 0 then next repeat
+        
+        put line lineNum of someXml into someLine
+        put outline_TabLevel (someLine) into indentLevel
+        
+        put hKeyArray_SubGraphContents (linkONodeID, indentLevel, linkObject, hIdArray, graphNodeType) into subSection
+        -- replace subContentsTag with subSection in someXml
+        put subSection into line lineNum of someXml
+    end repeat
+     
+    -- put CR & "}" & CR into closingDef
+    put "}" into closingDef
+    put replacetext (someXml, "</n.+>", closingDef)  into someXml
+    return someXml
+end hKeyArray_XmlToClusters

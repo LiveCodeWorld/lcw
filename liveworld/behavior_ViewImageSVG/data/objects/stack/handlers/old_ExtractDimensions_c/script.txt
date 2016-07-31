@@ -1,0 +1,9 @@
+command old_ExtractDimensions svgXML, @svgWidth, @svgHeight, @lineNum
+   -- <svg width="880pt" height="480pt"  
+   set the wholematches to false
+   put lineOffset ("<svg ", svgXML) into lineNum
+   put line lineNum of svgXML into firstLine
+   put "<svg width=\'(.+)pt\' height=\'(.+)pt\'" into someReg
+   replace "'" with quote in someReg
+   get matchText (firstLine, someReg, svgWidth, svgHeight)
+end old_ExtractDimensions

@@ -1,0 +1,5 @@
+function cloud_FetchEvernoteFolderContentsArray folderPath
+   put cloud_FetchEvernoteFolderContents (folderPath) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end cloud_FetchEvernoteFolderContentsArray

@@ -1,0 +1,32 @@
+on LayoutControl pRect
+   lock screen
+   local squareRect, squareCentre, squareWidth, halfSquareWidth
+   if pRect is empty then put the rect of me into pRect
+   put the group_InnerRect [pRect] of me into innerRect
+   
+   put the grid_Num of me into gridNum
+   calculate_SquareRect innerRect, squareRect, squareCentre, squareWidth, halfSquareWidth, pSquareMargin
+   
+   put gridNum ^ 0.5 into rowNum
+   put squareWidth/rowNum into nWidth
+   put trunc (nWidth) into nWidth
+   put nWidth * rowNum into squareWidth
+   put rect_LocWidthHeight (squareCentre, squareWidth, squareWidth) into squareRect
+   
+   put grid_ConstructRectArray (squareRect, nWidth, gridNum) into rectArray
+   
+   put the short id of me into groupID
+   put the childControlIDs of me into childIDs
+   repeat with childNum = 1 to gridNum
+      put rectArray [childNum] into childRect
+      
+      put line childNum of childIDs into childID
+      if childID is empty then
+         put "n" & childNum into someName
+         create_PlaceHolder someName, childRect, groupID
+      else
+         set the rect of control id childID to childRect
+      end if
+   end repeat
+   unlock screen
+end LayoutControl

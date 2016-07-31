@@ -1,0 +1,12 @@
+function sivasiva_GetXML
+   put LocalArray ["xmlFile"] into xmlFile
+   if there is not a file xmlFile then
+      answer file "Select an xml file..."
+      put it into xmlFile
+      if xmlFile is empty then exit to top
+      put xmlFile into LocalArray ["xmlFile"]
+   end if
+   
+   put url ("file:" & xmlFile) into someXML
+   return someXML
+end sivasiva_GetXML

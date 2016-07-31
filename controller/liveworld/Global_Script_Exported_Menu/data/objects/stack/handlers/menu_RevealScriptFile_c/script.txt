@@ -1,0 +1,4 @@
+on menu_RevealScriptFile mTarget
+   put the script_File of mTarget into someFile
+   finder_Reveal someFile
+end menu_RevealScriptFile

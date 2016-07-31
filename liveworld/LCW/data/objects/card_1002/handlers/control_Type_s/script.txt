@@ -1,0 +1,30 @@
+setprop control_Type [pClassOrViewName] someType
+   put the long id of the target into targetObject
+   put the short name of targetObject into oldName
+   put the long id of the owner of targetObject into targetOwner
+   
+   put control_ConstructCreateDoScript (someType, oldName, targetOwner, pClassOrViewName) into doScript
+   
+   lock screen
+   put the rect of targetObject into oRect
+   do doScript
+   put it into createdObject
+   relayer createdObject before targetObject
+   object_Delete targetObject
+   set the rect of createdObject to oRect
+   
+   -- some utitlity hacks
+   if someType is empty or someType is "placeholder" then -- it's a placeholder view
+      if pClassOrViewName is not empty then
+         set the name of createdObject to pClassOrViewName
+         set the view_Label of createdObject to empty
+      end if
+      set the view_Colour of createdObject to "random"
+   end if
+   
+   show createdObject
+   unlock screen
+   
+   put the result into createdObject
+   return createdObject
+end control_Type

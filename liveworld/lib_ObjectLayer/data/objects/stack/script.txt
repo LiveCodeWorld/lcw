@@ -1,0 +1,62 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_ObjectLayer
+type: library
+version: 0.1
+
+
+--> Top
+-
+[[ _FetchHandler (top_Controls,g) ]]
+
+[[ _FetchHandler (top_Views,g) ]]
+
+
+--> Object | Top
+-
+[[ _FetchHandler (top_Control,g) ]]
+
+[[ _FetchHandler (object_TopControls,g) ]]
+
+[[ _FetchHandler (object_TopLevelGroup,f) ]]
+
+[[ _FetchHandler (object_TopViews,g) ]]
+
+[[ _FetchHandler (object_GetTopViews,f) ]]
+
+[[ _FetchHandler (object_TopGroupIDs,g) ]]
+
+[[ _FetchHandler (object_TopGroups,g) ]]
+
+[[ _FetchHandler (object_GetTopGroups,f) ]]
+
+[[ _FetchHandler (object_SetToplevelGroupArrays,c) ]]
+
+
+--> Object | Layer
+-
+[[ _FetchHandler (object_GroupLayer,g) ]]
+
+[[ _FetchHandler (object_GroupLayer,s) ]]
+
+[[ _FetchHandler (object_BringToFront,c) ]]
+
+[[ _FetchHandler (object_SendToBack,c) ]]
+
+
+--> Object | Controls
+-
+/*
+The members, elements, objects or rev contols of a group or card.
+The list returned does not include the group group called,
+only the lements inside that group.
+*/
+
+[[ _FetchHandler (object_ControlIDs,f) ]]
+
+[[ _FetchHandler (object_VisibleControls,g) ]]
+
+[[ _FetchHandler (object_GetTopControl,f) ]]
+
+[[ _FetchHandler (object_GetGroupControls,f) ]]

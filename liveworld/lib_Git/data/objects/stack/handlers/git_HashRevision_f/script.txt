@@ -1,0 +1,8 @@
+function git_HashRevision relativePath, someHash
+   git_SetRelativePath relativePath
+   
+   put merge("git show [[someHash]]:[[relativePath]]") into someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   -- text_UnixToMac shellResult
+   return shellResult
+end git_HashRevision

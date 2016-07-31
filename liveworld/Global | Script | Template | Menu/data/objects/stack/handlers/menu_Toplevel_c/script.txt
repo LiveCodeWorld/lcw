@@ -1,0 +1,4 @@
+on menu_TopLevel textDisplayView
+   put the stack_Name of textDisplayView into stackName
+   toplevel stackName
+end menu_TopLevel

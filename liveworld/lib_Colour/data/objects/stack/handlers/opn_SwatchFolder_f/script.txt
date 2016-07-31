@@ -1,0 +1,3 @@
+function opn_SwatchFolder swatchName, pDontCreate
+   return library_PluginFolder ("opn_Text/colour/swatch/", pDontCreate) & swatchName
+end opn_SwatchFolder

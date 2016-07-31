@@ -1,0 +1,6 @@
+setprop menu_PluginArray [pToolMode] mPluginArray
+   put the long id of the target into targetObject
+   
+   menu_SetPluginArray targetObject, mPluginArray, pToolMode
+   return the result
+end menu_PluginArray

@@ -1,0 +1,18 @@
+function sivasiva_GetTestXML someXml
+   /*
+   <div id="_idContainer034" class="Basic-Graphics-Frame _idGenObjectStyleOverride-2">
+   <p class="_trait-definition-text-g2"> Abstemiousness means being moderate in eating and drinking. I strengthen it by exercising willpower when I am tempted to eat too much. Eating a vegetarian diet has a moderating impact not only on the body, but on the environment as well. The opposite is gluttony. </p>
+   <p class="_-Gurudeva-quote-text"><span class="RelatoD-bold-green">Gurudeva observed:</span> ÒOvereating repels one from spiritual sadhana, because the body becomes slothful and lazy, having to digest so much food and run it through its system.ÉA vegetarian diet creates the right chemistry for spiritual life. Other diets create a different chemistry, which affects your endocrine glands and your entire system all day long. A vegetarian diet helps your system all day long. Food is chemistry, and chemistry affects consciousness; and if our goal is higher consciousness, we have to provide the chemistry that evokes it.Ó</p>
+   </div>
+   */
+   
+   put script_GetCommentAboveMe() into someXML
+   put shell_XmlTidy (someXML) into someXML
+   put offset ("<", someXML) into startCharNum
+   if startCharNum > 0 then
+      delete char 1 to (startCharNum -1) of someXML
+      -- delete line 1 to 3 of someXML
+   end if
+   xml_AddHeaderLine someXML
+   return someXML
+end sivasiva_GetTestXML

@@ -1,0 +1,10 @@
+function stack_ListNames pWhichNames
+   switch pWhichNames
+      default -- case "open but not rev"
+         put the openstacks into someNames
+         filter someNames without "rev*"
+         line_Delete "Message Box", someNames
+         sort someNames
+         return someNames
+   end switch
+end stack_ListNames

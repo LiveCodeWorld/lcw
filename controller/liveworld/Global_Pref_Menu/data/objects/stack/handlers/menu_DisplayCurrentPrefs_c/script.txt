@@ -1,0 +1,4 @@
+on menu_DisplayCurrentPrefs
+   put project_GatherGlobalPrefs() into projectPrefsArray
+   display_Array projectPrefsArray, "project_GatherGlobalPrefs()"
+end menu_DisplayCurrentPrefs

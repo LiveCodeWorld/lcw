@@ -1,0 +1,4 @@
+on menu_DisplayBehaviorHierarchy scriptObject, bhName
+   put behavior_GetObject (bhName) into bObject
+   edit the script of bObject
+end menu_DisplayBehaviorHierarchy

@@ -1,0 +1,8 @@
+on menu_CreateModel scriptObject
+   put "Choose a name for your script only model stack...." into someQuestion
+   put the script_MetaData ["name"] of scriptObject into scriptName
+   if scriptName is empty then put "Example" into scriptName
+   put "model_" & scriptName into suggestedAnswer
+   
+   lcw_CreateLibrary "model", someQuestion, suggestedAnswer
+end menu_CreateModel

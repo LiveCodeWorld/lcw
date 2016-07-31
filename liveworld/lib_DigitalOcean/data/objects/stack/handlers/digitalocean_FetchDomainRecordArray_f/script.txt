@@ -1,0 +1,8 @@
+function digitalocean_FetchDomainRecordArray oceanDomainName
+   -- constant dsfa = "https://api.digitalocean.com/v2/domains/digitaloceanisthebombdiggity.com/records"
+   -- curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer $Token' "[[fdas]"
+   
+   put "domains/" & oceanDomainName & "/records" into domainPath
+   put digitalocean_FetchJsonArray (domainPath) into domainInfoArray
+   return domainInfoArray
+end digitalocean_FetchDomainRecordArray

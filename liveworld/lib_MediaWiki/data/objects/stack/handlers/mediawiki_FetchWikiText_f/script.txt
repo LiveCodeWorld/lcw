@@ -1,0 +1,9 @@
+function mediawiki_FetchWikiText pageTitle, pApiStem
+   -- need to add error checking
+   put mediawiki_FetchPage (pageTitle, "revisions", "content", empty, pApiStem) into someJSON
+   put json_ToArray (someJSON) into someArray
+   put someArray ["query"]["pages"] into pageArray
+   put line 1 of keys (pageArray) into pageID
+   put pageArray [pageID]["revisions"]["1"]["*"] into wikiText
+   return wikiText
+end mediawiki_FetchWikiText

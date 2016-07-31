@@ -1,0 +1,6 @@
+on display_ViewOutline pView
+   if pView is empty then put the viewbrowser_SelectedLibraryView of the viewBrowser_Card of me into pView
+   set the displayed_ViewOutline of stack "opn_ViewOutline" to pView
+   go to stack "opn_ViewOutline"
+   set the fixed_Target of stack "opn_ViewOutline" to true
+end display_ViewOutline

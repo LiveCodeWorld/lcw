@@ -1,0 +1,7 @@
+function rev_DictionaryDataGrid
+   if exists(grp "Grid" of card "Index" of stack "revDictionary") then
+      return the long id of grp "Grid" of card "Index" of stack "revDictionary"
+   else
+      return empty
+   end if
+end rev_DictionaryDataGrid

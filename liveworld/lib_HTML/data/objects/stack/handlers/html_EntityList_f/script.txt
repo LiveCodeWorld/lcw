@@ -1,0 +1,9 @@
+function html_EntityList
+    /*
+    Special characters (whose ASCII value is greater than 127) are encoded as HTML entities.
+    Revolution recognizes the following named entities:
+    */
+    get "&Aacute;,&aacute;,&Acirc;,&acirc;,&acute;,&AElig;,&aelig;,&Agrave;,&agrave;,&Aring;,&aring;,&Atilde;,&atilde;,&Auml;,&auml;,&brvbar;,&Ccedil;,&ccedil;,&cedil;,&cent;,&copy;,&curren;,&deg;,&divide;,&Eacute;,&eacute;,&Ecirc;,&ecirc;,&Egrave;,&egrave;,&ETH;,&eth;,&Euml;,&euml;,&frac12;,&frac14;,&frac34;,&gt;,&Iacute;,&iacute;,&Icirc;,&icirc;,&iexcl;,&Igrave;,&igrave;,&iquest;,&Iuml;,&iuml;,&laquo;,&lt;,&macr;,&micro;,&middot;,&nbsp;,&not;,&Ntilde;,&ntilde;,&Oacute;,&oacute;,&Ocirc;,&ocirc;,&Ograve;,&ograve;,&ordf;,&ordm;,&Oslash;,&oslash;,&Otilde;,&otilde;,&Ouml;,&ouml;,&para;,&plusmn;,&pound;,&raquo;,&reg;,&sect;,&shy;,&sup1;,&sup2;,&sup3;,&szlig;,&THORN;,&thorn;,&times;,&Uacute;,&uacute;,&Ucirc;,&ucirc;,&Ugrave;,&ugrave;,&uml;,&Uuml;,&uuml;,&Yacute;,&yacute;,&yen;,&yuml"
+    put "&amp;" & comma before it
+    return it
+end html_EntityList

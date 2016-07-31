@@ -1,0 +1,4 @@
+function view_GetMetaData vName
+   put view_GetFileMetaArray() into metaDataArray
+   return metaDataArray [vName]
+end view_GetMetaData

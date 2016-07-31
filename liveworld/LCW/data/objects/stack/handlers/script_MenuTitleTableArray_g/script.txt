@@ -1,0 +1,13 @@
+getprop script_MenuTitleTableArray
+   -- this is what constructs the mTitleTableArray from a script
+   -- put menu_GetTitleTableArrayGlobal (mController) into mTitleTableArray
+   local mTitleTableArray
+   
+   put the script of the target into someScript
+   put script_OrderedMenuTitles (someScript) into mTitles
+   repeat for each line mTitle in mTitles
+      put menu_ExtractTableFromScript (mTitle, someScript, mController) into mTable
+      put mTable into mTitleTableArray [mTitle]
+   end repeat
+   return mTitleTableArray
+end script_MenuTitleTableArray

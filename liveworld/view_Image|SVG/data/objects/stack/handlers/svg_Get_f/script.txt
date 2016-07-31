@@ -1,0 +1,13 @@
+function svg_Get someHTML
+   local startChar, endChar
+   text_SetOffsets "<svg ", "</svg>", someHTML, startChar, endChar
+   put the result into svgXML
+   return svgXML
+   
+   -- brain dead but brittle way
+   set the wholematches to false
+   put lineOffset ("<svg ", someHTML) into startNum
+   put lineOffset ("</svg>", someHTML) into endNum
+   put line startNum to endNum of someHTML into svgXML
+   return word 1 to -1 of svgXML
+end svg_Get

@@ -1,0 +1,26 @@
+command menu_SearchViewHierarchy someView, @mTitle, @mController, pSearchScript
+   -- slow and very sticky / fuzzy
+   put the view_Hierarchy of someView into testControllers
+   if testControllers is empty then
+      put someView into testControllers  -- fix in case it is nto a view
+   end if
+   put the card_Object of someView into cardObject
+   line_Add cardObject, testControllers 
+   
+   set the itemdelimiter to "|"
+   repeat the number of items of mTitle
+      repeat for each line mController in testControllers
+         if pSearchScript is true then
+            put the menu_ScriptTitles of mController into mTitles
+         else
+            put menu_GetTableTitles (mController) into mTitles
+         end if
+         if mTitle is among the lines of mTitles then return true
+      end repeat
+      delete item -2 of mTitle
+      put word 1 to -1 of mTitle into mTitle
+   end repeat
+   put empty into mTitle
+   put empty into mController
+   return false
+end menu_SearchViewHierarchy

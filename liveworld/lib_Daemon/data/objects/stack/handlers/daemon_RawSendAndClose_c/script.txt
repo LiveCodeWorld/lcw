@@ -1,0 +1,4 @@
+command daemon_RawSendAndClose headersAndContent, socketID
+   write headersAndContent to socket socketID
+   close socket socketID
+end daemon_RawSendAndClose

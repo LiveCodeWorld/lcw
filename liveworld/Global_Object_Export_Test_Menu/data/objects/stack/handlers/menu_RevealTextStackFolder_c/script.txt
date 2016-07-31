@@ -1,0 +1,4 @@
+on menu_RevealTextStackFolder scriptObject
+   put the textStack_Folder of scriptObject into someFolder
+   finder_Reveal someFolder
+end menu_RevealTextStackFolder

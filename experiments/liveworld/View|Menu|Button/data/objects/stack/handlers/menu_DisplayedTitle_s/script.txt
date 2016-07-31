@@ -1,0 +1,7 @@
+setprop menu_DisplayedTitle menuTitle
+    put the long id of the target into menuBtnObject
+    put the text of menuBtnObject into menuText
+    set the wholematches to true
+    put lineoffset(menuTitle, menuText) into lineNum
+    set the menuhistory of menuBtnObject to lineNum
+end menu_DisplayedTitle

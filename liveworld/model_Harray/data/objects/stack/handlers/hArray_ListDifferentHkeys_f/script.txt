@@ -1,0 +1,10 @@
+function hArray_ListDifferentHkeys hKey
+   local identicalHkeys, anotherHashArray
+   hArray_SetHkeyDifferences hKey, identicalHkeys, anotherHashArray
+   repeat for each element handlerHashArray in anotherHashArray
+      put keys(handlerHashArray) & CR after differentKeys
+   end repeat
+   delete char -1 of differentKeys
+   sort differentKeys by item 1 of each
+   return differentKeys
+end hArray_ListDifferentHkeys

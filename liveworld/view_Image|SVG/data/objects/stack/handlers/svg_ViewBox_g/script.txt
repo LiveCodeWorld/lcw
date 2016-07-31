@@ -1,0 +1,5 @@
+getprop svg_ViewBox
+   put the svg_HeaderArray of me into svgHeaderArray
+   put svgHeaderArray ["viewBox"] into svgViewBox
+   return svgViewBox
+end svg_ViewBox

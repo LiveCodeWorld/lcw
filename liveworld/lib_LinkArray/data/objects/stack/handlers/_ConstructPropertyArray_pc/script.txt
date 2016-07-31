@@ -1,0 +1,31 @@
+private command _ConstructPropertyArray pDotPropertyArray, @overlap, @concentrate, @splines, @cluster, @direction, @dotOrder, @defaultShape, @defaultUrl
+   -- see also dot_ConstructPropertyArray
+   put pDotPropertyArray ["graphRect"] into graphRect
+   delete local pDotPropertyArray ["graphRect"] 
+   
+   put pDotPropertyArray ["overlap"] into overlap
+   delete local pDotPropertyArray ["overlap"] 
+   
+   put pDotPropertyArray ["concentrate"] into concentrate
+   delete local pDotPropertyArray ["concentrate"] 
+   
+   put pDotPropertyArray ["splines"] into splines
+   delete local pDotPropertyArray ["splines"] 
+   
+   put pDotPropertyArray ["cluster"] into cluster
+   delete local pDotPropertyArray ["cluster"] 
+   
+   put pDotPropertyArray ["direction"] into direction
+   delete local pDotPropertyArray ["direction"] 
+   
+   put pDotPropertyArray ["dotOrder"] into dotOrder
+   delete local pDotPropertyArray ["dotOrder"] 
+   
+   put pDotPropertyArray ["defaultShape"] into defaultShape
+   delete local pDotPropertyArray ["defaultShape"] 
+   if defaultShape = "none" then put empty into defaultShape
+   
+   put pDotPropertyArray ["defaultUrl"] into defaultUrl
+   delete local pDotPropertyArray ["defaultUrl"]
+   return pDotPropertyArray
+end _ConstructPropertyArray

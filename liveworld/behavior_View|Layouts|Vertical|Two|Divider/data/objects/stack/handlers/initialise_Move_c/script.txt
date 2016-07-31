@@ -1,0 +1,12 @@
+on initialise_Move
+   put the top_View of me into topView
+   put the bottom_View of me into bottomView
+   
+   put topView into LocalArray ["ViewAbove"]
+   put bottomView into LocalArray ["ViewBelow"]
+   put the rect of LocalArray ["ViewAbove"] into LocalArray ["ViewAboveRect"]
+   put the rect of LocalArray ["ViewBelow"] into LocalArray ["ViewBelowRect"]
+   put the mousev into LocalArray ["StartV"]
+   
+   dispatch "layout_StartHorizontalDividerMove" to the owner of me
+end initialise_Move

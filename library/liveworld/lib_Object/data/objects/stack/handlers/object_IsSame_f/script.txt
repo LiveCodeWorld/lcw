@@ -1,0 +1,12 @@
+function object_IsSame
+   put param (1) into firstObject
+   if exists (firstObject) is false then return false
+   put the long id of firstObject into firstObject
+   repeat with paramNum = 2 to the paramcount
+      put param (paramNum) into someObject
+      if exists (someObject) is false then return false
+      put the long id of someObject = firstObject into someBoolean
+      if someBoolean = false then return false
+   end repeat
+   return true
+end object_IsSame

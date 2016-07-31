@@ -1,0 +1,10 @@
+function mediawiki_FetchSummaryDescription pageSlug, pFetchHow
+   switch pFetchHow
+      case "parse"
+         mediawiki_FetchPageParseInfo pageSlug, pageDescription, pageTitle, shortImageFile, infoBoxArray, 0
+         break
+      default -- "query"
+         mediawiki_FetchPageQueryInfo pageSlug, pageDescription, pageTitle, shortImageFile, lastRevisionID
+   end switch
+   return pageDescription
+end mediawiki_FetchSummaryDescription

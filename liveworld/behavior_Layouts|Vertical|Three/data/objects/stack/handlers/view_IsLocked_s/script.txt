@@ -1,0 +1,8 @@
+setprop view_IsLocked someBoolean
+   if the long id of the target is not the long id of me then return empty
+   lock screen
+   set the view_IsLocked of the header_View of me to someBoolean
+   set the view_IsLocked of the body_View of me to someBoolean
+   set the view_IsLocked of the footer_View of me to someBoolean
+   unlock screen
+end view_IsLocked

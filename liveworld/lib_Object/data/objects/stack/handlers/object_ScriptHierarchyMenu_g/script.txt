@@ -1,0 +1,5 @@
+getprop object_ScriptHierarchyMenu
+   put the long ID of the target into targetObject
+   object_ConstructBehaviorHierarchy targetObject, behaviorObjectMenu, longObjects, shortObjects, shortNames, dictionaryArray
+   return behaviorObjectMenu
+end object_ScriptHierarchyMenu

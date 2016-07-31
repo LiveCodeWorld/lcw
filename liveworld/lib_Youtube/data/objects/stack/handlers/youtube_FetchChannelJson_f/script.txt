@@ -1,0 +1,11 @@
+function youtube_FetchChannelJson channelID
+   -- GET https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=UCR9gdpWisRwnk_k23GsHfcA&key={YOUR_API_KEY}
+   put "contentDetails" into somePart
+   put urlencode(comma) & "snippet" after somePart
+   
+   put "channels?" into channelBit
+   put "part=" & somePart after channelBit
+   put "&id=" & channelID after channelBit
+   put fetch_YoutubeJSON (channelBit) into someJSON
+   return someJSON
+end youtube_FetchChannelJson

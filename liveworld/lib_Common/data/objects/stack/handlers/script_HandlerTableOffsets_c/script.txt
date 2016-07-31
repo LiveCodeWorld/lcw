@@ -1,0 +1,41 @@
+command script_HandlerTableOffsets shortHkey, handlerTable, @startLineNum, @endLineNum, @handlerNum
+   if handlerTable is empty then
+      put 0 into startLineNum
+      put 0 into endLineNum
+      put 0 into handlerNum
+      return false
+   end if
+   
+   put item 1 of shortHkey into hName
+   put item 2 of shortHkey into hType
+   switch char -1 of hType
+      case "c"
+         put "M" into char -1 of hType
+         break
+      case "o"
+         put "M" into char -1 of hType
+         break
+   end switch
+   
+   sort numeric  lines of handlerTable by word 3 of each
+   repeat with handlerNum = 1 to the number of lines of handlerTable
+      put line handlerNum of handlerTable into someLine
+      
+      put word 2 of someLine into hTableName
+      if hTableName is not hName then next repeat
+      
+      put word 1 of someLine into hTableType
+      switch
+         if char -1 of hTableType = "C" then put "M" into char -1 of hTableType
+         
+      case hTableType = hType
+         put word 3 of someLine into startLineNum
+         put word 4 of someLine into endLineNum
+         return true
+   end switch
+end repeat
+put 0 into startLineNum
+put 0 into endLineNum
+put 0 into handlerNum
+return false
+end script_HandlerTableOffsets

@@ -1,0 +1,15 @@
+private function _getSelectedText findWhat
+   switch findWhat
+      case "text"
+         put LocalArray ["textSelected"] into textToFind
+         break
+      case "hkey"
+         put LocalArray ["selectedHkey"] into textToFind
+         break
+   end switch
+   
+   if textToFind is empty then
+      put opn_Ask ("Enter some text to do a spotlight search for...") into textToFind
+   end if
+   return textToFind
+end _getSelectedText

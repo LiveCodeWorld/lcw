@@ -1,0 +1,14 @@
+function image_AveragePixel firstMegaPixel
+    get line 1 of firstMegaPixel
+    delete last char of it
+    put round(average(it)) into item 1 of blockPixel
+     
+    get line 2 of firstMegaPixel
+    delete last char of it
+    put round(average(it)) into item 2 of blockPixel
+     
+    get line 3 of firstMegaPixel
+    delete last char of it
+    put round(average(it)) into item 3 of blockPixel
+    return blockPixel
+end image_AveragePixel

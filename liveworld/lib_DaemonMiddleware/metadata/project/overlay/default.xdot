@@ -1,0 +1,357 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 686 1402 686 1402 0 ",
+		bb="0,0,1402,686",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph s {
+		node [color=white,
+			fillcolor=grey,
+			style=filled
+		];
+		n13		 [URL="log_Name%2Cs%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 1102 34 46.89 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1102 29.8 0 58.32 8 -log_Name ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=log_Name,
+			pos="1102,34",
+			style=filled,
+			width=1.304];
+		n20		 [URL="displayed_Log%2Cs%2CMissing%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 1323 466 62.83 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1323 461.8 0 83.21 13 -displayed_Log ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=displayed_Log,
+			pos="1323,466",
+			style=filled,
+			width=1.7407];
+	}
+	subgraph pc {
+		n1		 [URL="daemon_Log%2Cpc%2Cstack+%22lib_DaemonMiddleware%22%2C1",
+			_draw_="c 7 -#000000 e 874 630 56.54 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 874 625.8 0 73.87 10 -daemon_Log ",
+			height=0.5,
+			label=daemon_Log,
+			pos="874,630",
+			width=1.5769];
+	}
+	subgraph g {
+		node [color=white,
+			fillcolor=grey50,
+			style=filled
+		];
+		n12		 [URL="log_View%2Cg%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 1073 466 44.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1073 461.8 0 54.38 8 -log_View ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=log_View,
+			pos="1073,466",
+			style=filled,
+			width=1.2349];
+		n3		 [URL="live_Logging%2Cg%2Cstack+%22lib_DaemonLog%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 601 548 57.52 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 601 543.8 0 75.43 12 -live_Logging ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=live_Logging,
+			pos="601,548",
+			style=filled,
+			width=1.6044];
+		n10		 [URL="log_View%2Cg%2Cstack+%22lib_DaemonMiddleware%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 755 630 44.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 755 625.8 0 54.38 8 -log_View ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=log_View,
+			pos="755,630",
+			style=filled,
+			width=1.2349];
+		n19		 [URL="log_Text%2Cg%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 1195 466 41.33 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1195 461.8 0 49.57 8 -log_Text ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=log_Text,
+			pos="1195,466",
+			style=filled,
+			width=1.1505];
+		n15		 [URL="log_Name%2Cg%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 1102 106 46.89 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1102 101.8 0 58.32 8 -log_Name ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=log_Name,
+			pos="1102,106",
+			style=filled,
+			width=1.304];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n2		 [URL="display_ServerLog%2Cc%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1116 548 77.3 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1116 543.8 0 106.53 17 -display_ServerLog ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=display_ServerLog,
+			pos="1116,548",
+			style=filled,
+			width=2.15];
+		n16		 [URL="dameon_AddToMiddlewareArray%2Cc%2Cstack+%22lib_DaemonMiddleware%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 562 630 130.12 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 562 625.8 0 190.29 27 -dameon_AddToMiddlewareArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=dameon_AddToMiddlewareArray,
+			pos="562,630",
+			style=filled,
+			width=3.6197];
+		n14		 [URL="middleware_DeleteArray%2Cc%2Cstack+%22lib_DaemonMiddleware%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 314 630 99.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 314 625.8 0 142.26 22 -middleware_DeleteArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=middleware_DeleteArray,
+			pos="314,630",
+			style=filled,
+			width=2.777];
+		n7		 [URL="log_SetTemporaryLogFile%2Cc%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1102 250 103.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1102 245.8 0 148.33 23 -log_SetTemporaryLogFile ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=log_SetTemporaryLogFile,
+			pos="1102,250",
+			style=filled,
+			width=2.8834];
+		n4		 [URL="log_SetTimeStampEntry%2Cc%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 874 548 97.97 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 874 543.8 0 138.72 21 -log_SetTimeStampEntry ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=log_SetTimeStampEntry,
+			pos="874,548",
+			style=filled,
+			width=2.7148];
+		n18		 [URL="log_SetLatestLine%2Cc%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 758 466 74.89 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 758 461.8 0 102.64 17 -log_SetLatestLine ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=log_SetLatestLine,
+			pos="758,466",
+			style=filled,
+			width=2.0818];
+		n9		 [URL="log_SetFile%2Cc%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 899 178 50.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 899 173.8 0 64.56 11 -log_SetFile ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=log_SetFile,
+			pos="899,178",
+			style=filled,
+			width=1.4135];
+	}
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n11		 [URL="middleware_GetArray%2Cf%2Cstack+%22lib_DaemonMiddleware%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 106 630 89.83 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 106 625.8 0 125.95 19 -middleware_GetArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=middleware_GetArray,
+			pos="106,630",
+			style=filled,
+			width=2.4907];
+		n17		 [URL="log_ConstructEntry%2Cf%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 931 466 79.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 931 461.8 0 110.43 18 -log_ConstructEntry ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=log_ConstructEntry,
+			pos="931,466",
+			style=filled,
+			width=2.2185];
+		n6		 [URL="log_GetFile%2Cf%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1125 322 52.21 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1125 317.8 0 66.88 11 -log_GetFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=log_GetFile,
+			pos="1125,322",
+			style=filled,
+			width=1.4543];
+		n5		 [URL="log_Get%2Cf%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1171 394 38.7 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1171 389.8 0 45.1 7 -log_Get ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=log_Get,
+			pos="1171,394",
+			style=filled,
+			width=1.0722];
+		n8		 [URL="log_ConstructTemporaryFileName%2Cf%2Cstack+%22lib_Log%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1102 178 133.52 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1102 173.8 0 195.75 30 -log_ConstructTemporaryFileName ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=log_ConstructTemporaryFileName,
+			pos="1102,178",
+			style=filled,
+			width=3.7156];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#ff0000 C 7 -#ffa500 P 4 1252 440 1252 514 1394 514 1394 440 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1323 498.8 0 45.12 7 -Missing ",
+			bb="1252,440,1394,514",
+			color=red,
+			fillcolor=orange,
+			label=Missing,
+			lheight=0.19,
+			lp="1323,503",
+			lwidth=0.63,
+			style=filled
+		];
+		n20;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 516 522 516 596 667 596 667 522 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 591.5 580.8 0 135.45 21 -stack \"lib_DaemonLog\" ",
+			bb="516,522,667,596",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_DaemonLog\"",
+			lheight=0.19,
+			lp="591.5,585",
+			lwidth=1.88,
+			style=filled
+		];
+		n3;
+	}
+	subgraph cluster3 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 604 8 678 939 678 939 604 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 473.5 662.8 0 180.54 28 -stack \"lib_DaemonMiddleware\" ",
+			bb="8,604,939,678",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_DaemonMiddleware\"",
+			lheight=0.19,
+			lp="473.5,667",
+			lwidth=2.51,
+			style=filled
+		];
+		n1;
+		n10;
+		n16;
+		n14;
+		n11;
+	}
+	subgraph cluster4 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 675 8 675 596 1244 596 1244 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 959.5 580.8 0 88.03 15 -stack \"lib_Log\" ",
+			bb="675,8,1244,596",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Log\"",
+			lheight=0.19,
+			lp="959.5,585",
+			lwidth=1.22,
+			style=filled
+		];
+		n13;
+		n13 -> n13		 [_draw_="c 7 -#000000 B 7 1134.75 47.03 1151.68 49.03 1166.94 44.69 1166.94 34 1166.94 25.48 1157.25 21 1144.75 20.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1144.59 17.04 1134.75 20.97 1144.89 24.04 ",
+			pos="e,1134.7,20.975 1134.7,47.025 1151.7,49.029 1166.9,44.688 1166.9,34 1166.9,25.483 1157.3,20.996 1144.7,20.539"];
+		n12;
+		n12 -> n12		 [_draw_="c 7 -#000000 B 7 1104.17 478.99 1120.58 481.09 1135.46 476.76 1135.46 466 1135.46 457.51 1126.2 453.03 1114.23 452.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1114 449.05 1104.17 453.01 1114.32 456.04 ",
+			pos="e,1104.2,453.01 1104.2,478.99 1120.6,481.09 1135.5,476.76 1135.5,466 1135.5,457.51 1126.2,453.03 1114.2,452.54"];
+		n19;
+		n5;
+		n19 -> n5		 [_draw_="c 7 -#000000 B 4 1189.19 448.05 1186.49 440.18 1183.21 430.62 1180.19 421.79 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1183.48 420.6 1176.92 412.28 1176.86 422.87 ",
+			pos="e,1176.9,412.28 1189.2,448.05 1186.5,440.18 1183.2,430.62 1180.2,421.79"];
+		n15;
+		n15 -> n13		 [_draw_="c 7 -#000000 B 4 1102 87.7 1102 79.98 1102 70.71 1102 62.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1105.5 62.1 1102 52.1 1098.5 62.1 ",
+			pos="e,1102,52.104 1102,87.697 1102,79.983 1102,70.712 1102,62.112"];
+		n2;
+		n2 -> n12		 [_draw_="c 7 -#000000 B 4 1106.88 530.03 1101.03 519.14 1093.31 504.79 1086.73 492.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1089.78 490.82 1081.96 483.67 1083.61 494.13 ",
+			pos="e,1082,483.67 1106.9,530.03 1101,519.14 1093.3,504.79 1086.7,492.54"];
+		n2 -> n19		 [_draw_="c 7 -#000000 B 4 1132.75 530.03 1144.26 518.38 1159.68 502.76 1172.29 489.99 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1174.81 492.43 1179.34 482.85 1169.83 487.51 ",
+			pos="e,1179.3,482.85 1132.8,530.03 1144.3,518.38 1159.7,502.76 1172.3,489.99"];
+		n7;
+		n9;
+		n7 -> n9		 [_draw_="c 7 -#000000 B 4 1057.45 233.64 1023.67 221.99 977.45 206.05 943.64 194.39 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 944.62 191.03 934.02 191.08 942.33 197.65 ",
+			pos="e,934.02,191.08 1057.5,233.64 1023.7,221.99 977.45,206.05 943.64,194.39"];
+		n8;
+		n7 -> n8		 [_draw_="c 7 -#000000 B 4 1102 231.7 1102 223.98 1102 214.71 1102 206.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1105.5 206.1 1102 196.1 1098.5 206.1 ",
+			pos="e,1102,196.1 1102,231.7 1102,223.98 1102,214.71 1102,206.11"];
+		n4;
+		n18;
+		n4 -> n18		 [_draw_="c 7 -#000000 B 4 849.96 530.42 832.59 518.44 808.92 502.12 789.95 489.04 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 791.83 486.08 781.61 483.28 787.85 491.84 ",
+			pos="e,781.61,483.28 849.96,530.42 832.59,518.44 808.92,502.12 789.95,489.04"];
+		n17;
+		n4 -> n17		 [_draw_="c 7 -#000000 B 4 886.09 530.03 893.87 519.11 904.13 504.71 912.88 492.43 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 915.98 494.12 918.93 483.94 910.28 490.05 ",
+			pos="e,918.93,483.94 886.09,530.03 893.87,519.11 904.13,504.71 912.88,492.43"];
+		n6;
+		n6 -> n7		 [_draw_="c 7 -#000000 B 4 1119.43 304.05 1116.84 296.18 1113.7 286.62 1110.8 277.79 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1114.12 276.68 1107.68 268.28 1107.47 278.87 ",
+			pos="e,1107.7,268.28 1119.4,304.05 1116.8,296.18 1113.7,286.62 1110.8,277.79"];
+		n5 -> n6		 [_draw_="c 7 -#000000 B 4 1160.1 376.41 1154.62 368.08 1147.87 357.8 1141.75 348.49 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1144.56 346.39 1136.14 339.96 1138.71 350.24 ",
+			pos="e,1136.1,339.96 1160.1,376.41 1154.6,368.08 1147.9,357.8 1141.7,348.49"];
+		n8 -> n15		 [_draw_="c 7 -#000000 B 4 1102 159.7 1102 151.98 1102 142.71 1102 134.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1105.5 134.1 1102 124.1 1098.5 134.1 ",
+			pos="e,1102,124.1 1102,159.7 1102,151.98 1102,142.71 1102,134.11"];
+	}
+	n1 -> n3	 [_draw_="c 7 -#000000 B 10 842.7 614.92 831.91 610.67 819.62 606.48 808 604 748.35 591.27 728.8 615.46 671 596 655.22 590.69 639.64 580.82 \
+627.2 571.49 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 629.16 568.58 619.13 565.18 624.85 574.09 ",
+		pos="e,619.13,565.18 842.7,614.92 831.91,610.67 819.62,606.48 808,604 748.35,591.27 728.8,615.46 671,596 655.22,590.69 639.64,580.82 \
+627.2,571.49"];
+	n1 -> n2	 [_draw_="c 7 -#000000 B 7 913.74 617.11 933.94 610.98 958.84 603.27 981 596 1009.33 586.7 1040.81 575.78 1066.23 566.8 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1067.4 570.1 1075.66 563.47 1065.07 563.5 ",
+		pos="e,1075.7,563.47 913.74,617.11 933.94,610.98 958.84,603.27 981,596 1009.3,586.7 1040.8,575.78 1066.2,566.8"];
+	n1 -> n4	 [_draw_="c 7 -#000000 B 4 874 611.64 874 601.3 874 587.94 874 576.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 877.5 576.05 874 566.05 870.5 576.05 ",
+		pos="e,874,566.05 874,611.64 874,601.3 874,587.94 874,576.22"];
+	n2 -> n20	 [_draw_="c 7 -#000000 B 7 1175.45 536.31 1198.62 531.08 1225.07 523.76 1248 514 1263.66 507.34 1279.8 497.64 1293.09 488.79 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1295.08 491.66 1301.37 483.13 1291.13 485.88 ",
+		pos="e,1301.4,483.13 1175.4,536.31 1198.6,531.08 1225.1,523.76 1248,514 1263.7,507.34 1279.8,497.64 1293.1,488.79"];
+}

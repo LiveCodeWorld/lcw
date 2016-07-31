@@ -1,0 +1,20 @@
+on menu_AddBrowserMenu mTarget
+   put the browser_Widget of mTarget into browserWidget
+   
+   -- Set up the browser javascript handler list
+   -- This code goes in a suitable setup handler
+   set the javascriptHandlers of browserWidget to "myJSHandler"
+   
+   /*
+   We need to disable event propogation
+   $('.header a')
+   .unbind('click')
+   .click(function( event ) {
+   event.preventDefault();
+   alert ('Hello world');return false;})
+   */
+   
+   // Calling the handler from JavaScript within the browser
+   put "$('.header H1 > a').click(function() { liveCode.myJSHandler('myMessage', 12345) });" into someJavascript
+   do someJavascript in browserWidget
+end menu_AddBrowserMenu

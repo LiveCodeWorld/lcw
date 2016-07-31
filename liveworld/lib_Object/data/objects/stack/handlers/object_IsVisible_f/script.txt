@@ -1,0 +1,8 @@
+function object_IsVisible pObj
+   if not the visible of pObj then return false
+   repeat until "Card" is word 1 of the long owner of pObj
+      put the long owner of pObj into pObj
+      if not the visible of pObj then return false
+   end repeat
+   return true
+end object_IsVisible

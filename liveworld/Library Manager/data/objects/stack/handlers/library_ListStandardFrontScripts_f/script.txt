@@ -1,0 +1,7 @@
+function library_ListStandardFrontScripts
+   -- temporary hack for now
+   put the rugged_ID of card id 1057 of stack "libOPN_Scripts" & CR after defaultObjects
+   put the rugged_ID of card id 1296 of stack "libOPN_Menus" & CR after defaultObjects
+   delete char -1 of defaultObjects
+   return defaultObjects
+end library_ListStandardFrontScripts

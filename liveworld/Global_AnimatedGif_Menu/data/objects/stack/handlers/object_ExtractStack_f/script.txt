@@ -1,0 +1,7 @@
+function object_ExtractStack someObject
+   -- was "extract_StackObject"
+   if someObject is empty then put the long ID of the target into someObject
+   object_StackNameOffsets someObject, mainStackStart, mainStackEnd, substackStart, substackEnd
+   put the result into stackObject
+   return stackObject
+end object_ExtractStack

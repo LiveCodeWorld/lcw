@@ -1,0 +1,16 @@
+setprop view_Children newViews
+   put view_GetTemplateObject ("View|Layout|Placeholder") into placeHolderView
+   
+   put the view_Children of the target into viewChildren
+   repeat with viewNum = 1 to the number of lines of viewChildren
+      put line viewNum of viewChildren into childView
+      put line viewNum of newViews into newView
+      if newView is empty then put placeHolderView into newView
+      
+      if exists(childView) and exists(newView) then
+         set the view_Replacement of childView to newView
+      else
+         breakpoint
+      end if
+   end repeat
+end view_Children

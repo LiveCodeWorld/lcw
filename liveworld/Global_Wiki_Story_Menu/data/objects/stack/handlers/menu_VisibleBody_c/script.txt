@@ -1,0 +1,6 @@
+on menu_VisibleBody mTarget, visBodyName
+   put the wiki_View of mTarget into wikiView
+   put the body_View of wikiView into bodyView
+   
+   set the visible_Name of bodyView to visBodyName
+end menu_VisibleBody

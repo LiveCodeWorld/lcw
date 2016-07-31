@@ -1,0 +1,161 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_AppleScript
+type: library
+version: 0.91
+copyright: David Bovill
+
+/*
+A library for html and browser related stuff.
+
+Browser links in Html:
+Windows:  Registering an Application to a URL Protocol
+   <http://msdn.microsoft.com/en-us/library/aa767914(VS.85).aspx>
+
+OS X:  HowToRegisterURLHandler
+  http://www.cocoadev.com/index.pl?HowToRegisterURLHandler
+
+Apple Docs:
+<http://developer.apple.com/documentation/MacOSX/Conceptual/BPRuntimeConfig/Articles/PListKeys.html#//apple_ref/doc/uid/20001431-102207>
+
+I think you need to handle the 'GURL' apple event in your application.
+*/
+
+
+--> Terminal
+-
+[[ _FetchHandler (terminal_DoShell,c) ]]
+
+[[ _FetchHandler (appleScript_DoShell,f) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (appleEvent,c) ]]
+
+
+--> AppleScript
+-
+[[ _FetchHandler (appleScript_GetPathEnvironentalVariable,f) ]]
+
+[[ _FetchHandler (appleScript_GetLiveCodePathEnvironmentalVariable,f) ]]
+   
+function appleScript_DoShell someShell
+   do "do shell script" && kwote (someShell) as AppleScript
+   return the result
+end appleScript_DoShell
+
+[[ _FetchHandler (appleScript_DoLine,f) ]]
+
+[[ _FetchHandler (applescript_ConstructIndex,f) ]]
+
+[[ _FetchHandler (applescript_StripRecord,c) ]]
+
+[[ _FetchHandler (applescript_CreateRecord,c) ]]
+
+-- function appleScript_File filePath, convertOSX
+    -- old
+    
+    breakpoint
+    return revMacFromUnixPath (filePath, convertOSX)
+    
+    replace "/" with ":" in filePath
+    put line 1 of the volumes into systemVolume
+    set the itemdelimiter to ":"
+    put systemVolume into item 1 of filePath
+    return filePath
+end appleScript_File
+
+[[ _FetchHandler (applescript_ConvertPath,c) ]]
+
+
+--> AppleScript | SnapZ
+-
+[[ _FetchHandler (snap_Invoke,c) ]]
+
+
+--> AppleScript | Open Mime
+-
+-- command appleEvent theClass, theID, someSender
+put the params
+ 
+/*
+* The form request appleEvent class is equivalent to request appleEvent data
+with keyword "evcl". It gets the four-character class the Apple event belongs to (for example, misc or aevt).
+* The form request appleEvent id is equivalent to request appleEvent data 
+with keyword "evid". It gets the four-character name of the specific Apple event (for example, dosc or eval).
+* The form request appleEvent sender is equivalent to request appleEvent data
+with keyword "addr". It gets the AppleTalk address of the program that sent the Apple event to Revolution.
+* The form request appleEvent returnID is equivalent to request appleEvent data
+with keyword "rtid". It gets the Apple event's return id number.
+ 
+* The form request appleEvent data gets the data associated with the Apple event. 
+The meaning of this data depends on which kind of Apple event is being handled. 
+For example, the odoc (open document) event sends the file path of the document being opened as the Apple event data.
+For more information about Apple events, see Apple Computer's technical documentation,
+Inside Macintosh: Interapplication Communication, located at
+http://developer.apple.com/techpubs/mac/IAC/IAC-2.html.
+*/
+ 
+switch theClass
+    case "aevt"
+        if theID is "odoc" then
+            pass appleEvent
+             
+            -- appleEvent "aevt","odoc",""
+            -- is what you get when the finder tries to ope a file
+            pass appleEvent
+             
+            -- guess it coming from a browser?
+             
+            -- should be a mime type somewhere?
+             
+            -- this assumes it is from MediaWiki
+            request appleEvent data -- get the content of the AppleEvent
+            put it into someFile
+            put url ("file:" & someFile) into someText
+            put someText
+             
+            put lineoffset("[File]", someText) into lineNum
+            delete line 1 to lineNum of someText
+            split someText with CR and "="
+            put someText ["Extension"] -- into someFileType
+            put someText ["URL"] -- into someFile
+        end if
+        break
+    case "misc"
+        breakpoint
+        if theID is "dosc" then
+            request appleEvent data -- get the content of the AppleEvent
+            put "dosc:" && it
+            -- do URL ("file:" & it)
+        end if
+        break
+    default
+        breakpoint
+end switch
+ 
+pass appleEvent
+end appleEvent
+
+
+--> AppleScript | Firefox
+-
+[[ _FetchHandler (firefox_PositionWindow,c) ]]
+
+[[ _FetchHandler (firefox_GetUrl,f) ]]
+
+[[ _FetchHandler (safari_GetUrl,f) ]]
+
+
+--> AppleScript | iChat
+-
+[[ _FetchHandler (iChat_PositionWindow,c) ]]
+
+
+--> AppleScript | Skype
+-
+[[ _FetchHandler (skype_PositionWindow,c) ]]
+
+[[ _FetchHandler (skype_WindowNames,g) ]]

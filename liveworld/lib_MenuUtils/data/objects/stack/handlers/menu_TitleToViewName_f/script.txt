@@ -1,0 +1,11 @@
+function menu_TitleToViewName mTitle
+   set the itemdelimiter to "|"
+   replace " | " with "|" in mTitle
+   delete item -1 of mTitle
+   if word 1 to -1 of item 1 of mTitle = "Global" then
+      put "View" into item 1 of mTitle
+   else
+      put "View|" before mTitle
+   end if
+   return mTitle
+end menu_TitleToViewName

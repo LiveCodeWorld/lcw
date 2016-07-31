@@ -1,0 +1,25 @@
+command daemon_Log logLine, pDisplayNow, pLogName
+   -- a wrapper to make dispatchinglog request safe
+   -- needs to be in the lib_Daemon server stack, in the case that there is no handler of library present
+   if pLogName is empty then put the live_Logging of me into displayLogNow
+
+   put the log_View of me into logView
+   if exists (logView) then
+      dispatch "log_SetTimeStampEntry" to logView with logLine,pLogName
+      put the result into theResult
+      switch it
+         case "handled"
+            -- the message was handled and not passed
+            if displayLogNow is true then
+               dispatch "display_ServerLog" to logView
+            end if
+            return theResult
+         case "unhandled"
+            -- no matching handlers were found
+            break
+         case "passed"
+            -- the message was handled but passed by all handlers
+            break
+      end switch
+   end if
+end daemon_Log

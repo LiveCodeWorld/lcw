@@ -1,0 +1,4 @@
+on menu_StackResizable scriptObject, someBoolean
+   put the stack_Object of scriptObject into stackObject
+   set the resizable of stackObject to someBoolean
+end menu_StackResizable

@@ -1,0 +1,8 @@
+command dot_SaveAndDisplayImage someImage, imageView, imageFile
+    if imageView is empty then put view_GetTemplateObject ("View|Image|OPN Image") into imageView
+    if imageFile is empty then put dot_LabelFileWithGraphStyle (graphStyle, dotFile) into imageFile
+     
+    file_CreateImage someImage, imageFile
+    set the image_File of imageView to imageFile
+    object_GoTo imageView
+end dot_SaveAndDisplayImage

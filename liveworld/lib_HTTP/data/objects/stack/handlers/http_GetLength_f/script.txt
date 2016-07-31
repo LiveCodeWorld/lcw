@@ -1,0 +1,3 @@
+function http_GetLength pServer, pResource
+    return http_GetHeader(pServer, pResource, "Content-length")
+end http_GetLength

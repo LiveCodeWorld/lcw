@@ -1,0 +1,6 @@
+function library_DotFile hKey, pVersionName, pDontCreate
+   hkey_NormalizeGraphName pOverlayName
+   put pOverlayName & "." & "dot" into shortFile
+   put library_HandlerFile (hKey, shortFile, pDontCreate) into someFile
+   return someFile
+end library_DotFile

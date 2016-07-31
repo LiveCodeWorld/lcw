@@ -1,0 +1,10 @@
+function library_ListHkeys pListHow
+   if char 1 of pListHow = "d" then
+      put library_FetchHandlerDatabaseArray() into hKeyData
+      put keys (hKeyData) into shortHkeys
+      sort lines of shortHkeys by item 1 of each
+   else
+      return library_ListHkeysFromFolders()
+   end if
+   return shortHkeys
+end library_ListHkeys

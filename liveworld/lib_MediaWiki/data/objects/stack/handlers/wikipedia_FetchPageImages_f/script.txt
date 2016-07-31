@@ -1,0 +1,5 @@
+function wikipedia_FetchPageImages pageTitle, pApiStem
+   -- /w/api.php?action=query&prop=images&format=json&titles=Albert%20Einstein
+   put mediawiki_FetchPageBits (pageTitle, "images", empty, pApiStem) into someJSON
+   return someJSON
+end wikipedia_FetchPageImages

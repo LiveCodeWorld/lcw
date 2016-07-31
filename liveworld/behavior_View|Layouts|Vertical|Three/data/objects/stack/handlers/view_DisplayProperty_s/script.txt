@@ -1,0 +1,20 @@
+setprop view_DisplayProperty [someProp] someValue
+   put the long id of the target into targetObject
+   
+   -- put the view_DisplayArray of targetObject into displayArray
+   -- put someValue into displayArray [someProp]
+   -- set the view_DisplayArray of targetObject to displayArray
+   
+   -- lock messages
+   -- set the someProp of targetObject to someValue
+   -- to avoid recursion possibility
+   put the customproperties of targetObject into cArray
+   put someValue into cArray [someProp]
+   set the customproperties of targetObject to cArray
+   
+   repeat with cNum = 1 to the number of controls of targetObject
+      put the long id of control cNum of targetObject into cObject
+      custom_DeleteProperty someProp, cObject
+   end repeat
+   -- unlock messages
+end view_DisplayProperty

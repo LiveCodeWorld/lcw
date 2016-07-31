@@ -1,0 +1,6 @@
+on menu_DeletePicture templateView
+   breakpoint
+   put the view_Name of templateView into viewName
+   put view_LocalIconFile (viewName) into imageFile
+   file_Delete imageFile
+end menu_DeletePicture

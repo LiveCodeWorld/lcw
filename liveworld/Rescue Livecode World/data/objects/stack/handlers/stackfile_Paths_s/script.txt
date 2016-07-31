@@ -1,0 +1,6 @@
+setprop stackfile_Paths [pAskAdd] stackPaths
+   put the stack_Object of the target into stackObject
+   put stackFile_TableFromPaths (stackPaths, stackObject) into stackFileTable
+   set the stackfiles of stackObject to stackFileTable
+   return stackFileTable
+end stackfile_Paths

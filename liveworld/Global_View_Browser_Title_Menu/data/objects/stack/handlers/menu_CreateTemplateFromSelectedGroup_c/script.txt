@@ -1,0 +1,6 @@
+on menu_CreateTemplateFromSelectedGroup
+   -- template_ConstructCloneStack
+   
+   put the selectedObject into someObject
+   template_ConstructStackFromObject someObject
+end menu_CreateTemplateFromSelectedGroup

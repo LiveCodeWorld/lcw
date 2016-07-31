@@ -1,0 +1,12 @@
+getprop virtual_Object [propertyReference]
+   -- old so phase out (use "virtual_Child")
+   
+   put the long ID of the target into someView
+   
+   replace "_" with space in propertyReference
+   put "_" & propertyReference into fixedName
+   
+   put the object_RealName [fixedName] of someView into realName
+   put the long ID of control realName of someView into virtualObject
+   return virtualObject
+end virtual_Object

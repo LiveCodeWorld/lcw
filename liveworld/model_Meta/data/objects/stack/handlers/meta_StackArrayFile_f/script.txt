@@ -1,0 +1,7 @@
+function meta_StackArrayFile objectFolder, pDontCreate
+   -- see also "library_FetchStackFiles"
+   folder_Format objectFolder
+   put objectFolder & "stackfiles.txt" into someFile
+   if pDontCreate is false then folder_CreateNested objectFolder
+   return someFile
+end meta_StackArrayFile

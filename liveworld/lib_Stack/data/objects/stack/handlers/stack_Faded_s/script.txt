@@ -1,0 +1,9 @@
+setprop stack_Faded boolean
+    put the long id of the target into targetObject
+    put the stack_Name of targetObject into stackName
+    if boolean is false then
+        stack_BlendIn stackName
+    else
+        stack_BlendOut stackName
+    end if
+end stack_Faded

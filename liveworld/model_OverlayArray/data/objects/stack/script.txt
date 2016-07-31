@@ -1,0 +1,141 @@
+--> MetaData
+-
+license: GPLv3
+name: model_OverlayArray
+type: model
+version: 0.1
+
+
+--> Overlay | Props
+-
+[[ _FetchHandler (overlay_Folder,g) ]]
+
+[[ _FetchHandler (textStackOverlay_Folder,g) ]]
+
+
+--> OverlayArray | Hash
+-
+[[ _FetchHandler (overlayArray_GetMainStackHash,f) ]]
+
+[[ _FetchHandler (overlayArray_SetMainStackHash,c) ]]
+
+
+--> OverlayArray | Cluster
+-
+[[ _FetchHandler (overlayArray_ConstructDefaultDefSection,f) ]]
+
+[[ _FetchHandler (overlayArray_ConstructFlatSubCluster,f) ]]
+
+[[ _FetchHandler (overlayArray_ConstructClusterSection,f) ]]
+
+[[ _FetchHandler (overlayArray_DotNestedObjectClusters,f) ]]
+
+[[ _FetchHandler (overlayArray_ConstructDotClusters,f) ]]
+
+
+--> overlayArray | Construct
+-
+[[ _FetchHandler (overlayArray_ReconstructAndCreateFiles,c) ]]
+
+[[ _FetchHandler (overlayArray_CreateFilesAndSetGeometry,c) ]]
+
+[[ _FetchHandler (overlayArray_FromLinkArray,f) ]]
+
+[[ _FetchHandler (overlay_GetDefaultArray,f) ]]
+
+[[ _FetchHandler (overlayArray_Construct,f) ]]
+
+[[ _FetchHandler (overlayArray_ResetData,c) ]]
+
+[[ _FetchHandler (overlayArray_ConstructDataArray,c) ]]
+
+[[ _FetchHandler (overlayArray_AddToGroupStyleArray,c) ]]
+
+[[ _FetchHandler (overlayArray_ConstructGroupStyleArray,f) ]]
+
+[[ _FetchHandler (overlayArray_DeconstructGroupStyleArray,c) ]]
+
+
+--> overlayArray | Graph | Props | Toplevel
+-
+[[ _FetchHandler (overlayArray_SetData,c) ]]
+
+[[ _FetchHandler (overlayArray_GetLinkArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetLinkArray,c) ]]
+
+[[ _FetchHandler (overlayArray_GetIdArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetIdArray,c) ]]
+
+[[ _FetchHandler (overlayArray_GetGeometryArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetGeometryArray,c) ]]
+
+[[ _FetchHandler (overlayArray_ConstructAndAddGeometry,c) ]]
+
+[[ _FetchHandler (overlayArray_GetClusterArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetClusterArray,c) ]]
+
+
+--> overlayArray | Sections
+-
+[[ _FetchHandler (overlayArray_GetGroupStyleArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetGroupStyleArray,c) ]]
+
+[[ _FetchHandler (overlayArray_GetHeaderArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetHeaderArray,c) ]]
+
+[[ _FetchHandler (overlayArray_GetGraphPropertyArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetGraphPropertyArray,c) ]]
+
+[[ _FetchHandler (overlayArray_GetMetadataArray,f) ]]
+
+[[ _FetchHandler (overlayArray_SetMetadataArray,c) ]]
+
+
+--> Dot | MetaData | Arrays
+-
+[[ _FetchHandler (overlayArray_GetHeaderProperty,f) ]]
+
+[[ _FetchHandler (overlayArray_SetHeaderProperty,c) ]]
+
+[[ _FetchHandler (overlayArray_GetGraphProperty,f) ]]
+
+[[ _FetchHandler (overlayArray_SetGraphProperty,c) ]]
+
+[[ _FetchHandler (overlayArray_StripDefaultProps,c) ]]
+
+[[ _FetchHandler (overlayArray_AddDefaults,c) ]]
+
+[[ _FetchHandler (overlayArray_AddDefaultUnion,c) ]]
+
+[[ _FetchHandler (overlayArray_DeconstructMetadata,c) ]]
+
+[[ _FetchHandler (overlayArray_DeconstructData,c) ]]
+
+function overlayArray_ConstructDefaultDefSection overlayArray, extraBit
+   overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdLinkArray, dotClusterArray
+   repeat for each key nodeID in idArray
+      put idArray [nodeID] into nodeLabel
+      replace quote with "'" in nodeLabel
+      put nodeID && "[label=" & kwote(nodeLabel) into nodeDefLine
+      -- put nodeLabel && "["into nodeDefLine
+      
+      -- put urlencode (hKey) into someUrl
+      -- put space & "URL=" & kwote(someUrl) after nodeDefLine
+      put space & extraBit after nodeDefLine
+      put "];" after nodeDefLine
+      put nodeDefLine & CR after dotDefSection
+   end repeat
+   return dotDefSection
+end overlayArray_ConstructDefaultDefSection
+
+
+--> Deps
+-
+[[ _FetchHandler (imagemap_ParseMap,f) ]]

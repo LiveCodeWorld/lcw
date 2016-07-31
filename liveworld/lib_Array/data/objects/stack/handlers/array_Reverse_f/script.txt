@@ -1,0 +1,22 @@
+function array_Reverse someArray, pQuick, pStrip
+   local reversedArray
+   if pQuick is true then
+      repeat for each key someKey in someArray
+         put someArray [someKey] into newKeys
+         repeat for each line newKey in newKeys
+            put empty into reversedArray [newKey] [someKey]
+         end repeat
+      end repeat
+      if pStrip is true then
+         array_StripDeeperLevels reversedArray
+      end if
+   else
+      repeat for each key someKey in someArray
+         put someArray [someKey] into newKeys
+         repeat for each line newKey in newKeys
+            array_AddToIndex someKey, newKey, reversedArray
+         end repeat
+      end repeat
+   end if
+   return reversedArray
+end array_Reverse

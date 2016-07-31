@@ -1,0 +1,17 @@
+on menu_TrashStack stackObject
+   put merge ("Are you sure you want to delete the file, and remove the [[stackObject]] from all projects?") into someQuestion
+   answer someQuestion with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   breakpoint
+   put the filename of stackObject into longStackFile
+   library_RemoveStackFromAllProjects stackObject
+   
+   stop using stackObject
+   set the stack_IsKnow of stack longStackFile to false -- do this for all projects ?
+   
+   delete stackObject
+   delete file longStackFile
+   
+   dispatch "refresh" to _indexView() 
+end menu_TrashStack

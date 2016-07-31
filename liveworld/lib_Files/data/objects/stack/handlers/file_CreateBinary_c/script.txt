@@ -1,0 +1,20 @@
+command file_CreateBinary binaryData, filePath, someFileType
+    if filePath is empty then return the script_Error ["No such file"] of me
+    put folder_Above(filePath) into someFolder
+    folder_CreateNested someFolder
+     
+    put there is a file filePath into fileExists
+    if someFileType is not empty then
+        put the filetype into oFileType
+        set the filetype to someFileType
+    end if
+    put binaryData into url ("binfile:" & filePath)
+    if someFileType is not empty then
+        set the filetype to oFileType
+    end if
+    if fileExists is false then
+        if file_IsVersioned (filePath) then
+            svn_Add filePath
+        end if
+    end if
+end file_CreateBinary

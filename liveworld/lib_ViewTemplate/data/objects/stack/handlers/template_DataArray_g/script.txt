@@ -1,0 +1,6 @@
+getprop template_DataArray
+   -- used for default values (ie in newly created objects)
+   put the long id of the target into someView 
+   put the template_Array of someView into viewArray
+   return viewArray ["data"]
+end template_DataArray

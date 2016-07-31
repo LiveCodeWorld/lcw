@@ -1,0 +1,5 @@
+command fedwiki_SetLocalPageJson pageSlug, pageJSON, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_LocalPageJsonFile (pageSlug, pFedwikiDomain, true, pLocalWikiFolder) into someFile
+   put pageJSON into url ("file:" & someFile)
+   return someFile
+end fedwiki_SetLocalPageJson

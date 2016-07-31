@@ -1,0 +1,8 @@
+private function _constructScriptOnlyMenuFileName libName
+   -- set the itemdelimite to " | "
+   replace " | " with "_" in libName
+   replace "|" with "_" in libName -- just in case
+   -- replace space with empty in libName -- maybe good to do this and use initialcaps algo to reconsitute ???
+   put libName & ".livecodescript" into shortFile
+   return shortFile
+end _constructScriptOnlyMenuFileName

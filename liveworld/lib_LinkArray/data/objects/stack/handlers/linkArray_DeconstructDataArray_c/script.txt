@@ -1,0 +1,8 @@
+command linkArray_DeconstructDataArray dataArray, @linkArray, @idLinkArray, @idArray, @reversedIdArray
+   -- same structure used by overlay_View (stored as local property)
+   -- overlayArray = dataArray
+   put dataArray ["linkArray"] into linkArray
+   put dataArray ["idLinkArray"] into idLinkArray
+   put dataArray ["idArray"] into idArray
+   put dataArray ["reverseIdArray"] into reversedIdArray
+end linkArray_DeconstructDataArray

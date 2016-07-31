@@ -1,0 +1,7 @@
+command svg_Set @someHTML, newSvgXml
+   local startChar, endChar
+   text_SetOffsets "<svg ", "</svg>", someHTML, startChar, endChar
+   put the result into oldSvgXML
+   put newSvgXml into char startChar to endChar of someHTML
+   return oldSvgXML
+end svg_Set

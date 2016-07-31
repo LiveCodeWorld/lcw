@@ -1,0 +1,5 @@
+getprop positive_Label
+   put _positiveView() into positiveView
+   put the trait_Text of positiveView into positiveText
+   return positiveText
+end positive_Label

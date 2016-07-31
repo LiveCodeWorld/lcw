@@ -1,0 +1,33 @@
+command overlayArray_Graph overlayArray, pImageView, pResizeStyle, pStackLabel, pStackRect, pStackStyle
+   if pStackStyle is empty then put "modeless" into pStackStyle
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Folder") into overlayFolder
+   if overlayFolder is empty then
+      put the tempname & "/" into overlayFolder
+      folder_CreateNested overlayFolder
+      overlayArray_SetGraphProperty overlayArray, "overlay_Folder", overlayFolder
+   end if
+   
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Name") into overlayName
+   put overlay_GetImageFile (overlayFolder, overlayName) into imageFile
+   
+   if exists (pImageView) is false then
+      put true into needToShow
+      if there is not a file imageFile then return empty
+      if pResizeStyle is empty then put "fit inside frame" into pResizeStyle
+      if pStackLabel is empty then put overlayName into pStackLabel
+      display_Image imageFile, pResizeStyle, pStackStyle, pStackLabel, true, pStackRect
+      put the result into pImageView
+   else
+      put false into needToShow
+   end if 
+   
+   ## Create and set all the props of overlay using overlayData
+   dispatch "overlay_CreateView" to pImageView with overlayArray
+   
+   object_GoTo pImageView, true
+   if needToShow is true then
+      put the stack_Name of pImageView into stackName
+      set the visible of stack stackName to true
+   end if
+   return pImageView
+end overlayArray_Graph

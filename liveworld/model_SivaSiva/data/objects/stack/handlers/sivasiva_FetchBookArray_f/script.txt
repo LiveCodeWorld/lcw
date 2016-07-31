@@ -1,0 +1,5 @@
+function sivasiva_FetchBookArray
+   put project_FetchValue ("bookArray", "SivaSiva") into bookArray
+   put "Curious" into bookArray [17]["chapterTitle"] -- quick hack for import bug
+   return bookArray
+end sivasiva_FetchBookArray

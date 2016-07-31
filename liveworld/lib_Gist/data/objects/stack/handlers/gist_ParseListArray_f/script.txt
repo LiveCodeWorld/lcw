@@ -1,0 +1,10 @@
+function gist_ParseListArray gistListArray
+   repeat for each key indexNum in gistListArray
+      put gistListArray [indexNum]["description"] into gistDescription
+      put gistListArray [indexNum]["files"] into gistFileArray
+      put keys (gistFileArray) into gistFiles
+      put gistFiles & CR after gistList
+   end repeat
+   delete char -1 of gistList
+   return gistList
+end gist_ParseListArray

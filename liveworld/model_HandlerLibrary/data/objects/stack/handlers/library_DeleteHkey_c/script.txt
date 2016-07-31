@@ -1,0 +1,9 @@
+command library_DeleteHkey hKey
+   put library_HkeyToPublicShortHkey (hKey) into shortHkey
+   
+   put library_FetchHandlerDatabaseArray () into hkeyData
+   delete variable hkeyData [shortHKey]
+   library_StoreHandlerDatabaseArray hkeyData
+   
+   hkey_DeleteFolder shortHKey
+end library_DeleteHkey

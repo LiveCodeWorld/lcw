@@ -1,0 +1,25 @@
+on outline_RecurseToLinkArray tabbedOutline, someNode, @linkArray, @hIdArray, @backArray
+   -- this recurses the outline properly
+   -- and creates an abreviated array based on the node paths.
+   
+   -- not sure what its use is / if this makes a sensible array for muli-level outlines?
+   -- so changed it to using paths instead of short names as the key to linkArray
+   -- for a two level linkArray this is equivalent
+   
+   set the itemdelimiter to "/"
+   put item -1 of someNode into nodeName
+   put outline_PathOffset(someNode, tabbedOutline) into startOsLineNum
+   put outline_GetChildren(startOsLineNum, tabbedOutline) into childNames
+   
+   linkArray_Add childNames, someNode, linkArray, hIdArray, backArray
+   if someNode is empty then
+      put empty into someStem
+   else
+      put someNode & "/" into someStem
+   end if
+   
+   repeat for each line childName in childNames
+      put someStem & childName into childNode
+      outline_RecurseToLinkArray tabbedOutline, childNode, linkArray, hIdArray, backArray
+   end repeat
+end outline_RecurseToLinkArray

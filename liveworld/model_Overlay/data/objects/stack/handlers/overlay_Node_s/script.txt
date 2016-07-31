@@ -1,0 +1,7 @@
+setprop overlay_Node [pOverlayName]
+   -- so not to depend of the name of the overlay folder 
+   put the overlay_Folder of the target into overlayFolder
+   overlay_SetNode overlayFolder, pOverlayName
+   put the result into overlayData
+   return overlayData
+end overlay_Node

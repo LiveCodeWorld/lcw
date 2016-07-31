@@ -1,0 +1,5 @@
+on menu_EditCustomProperties
+    put library_PrefFolder("opn_Preferences.rev") into someFile
+    put the name of stack someFile into stackObject
+    object_EditProperty stackObject
+end menu_EditCustomProperties

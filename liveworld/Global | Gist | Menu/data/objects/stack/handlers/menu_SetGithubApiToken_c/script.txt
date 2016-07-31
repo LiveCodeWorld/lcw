@@ -1,0 +1,6 @@
+on menu_SetGithubApiToken
+   put github_GetApiToken () into githubApiToken
+   put opn_Ask ("Enter your token for the GitHubApi...", githubApiToken) into githubApiToken
+   github_SetApiToken gitHubApiToken
+   answer "Stored GitHub API token in your preferences"
+end menu_SetGithubApiToken

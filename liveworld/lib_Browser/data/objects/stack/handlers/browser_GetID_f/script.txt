@@ -1,0 +1,9 @@
+function browser_GetID tObject
+   put browser_GetFromRegister (tObject) into browserID
+   if browser_Exists (browserID) then
+      return browserID
+   else -- tidy up
+      browser_DeleteFromRegister browserID
+      return empty
+   end if
+end browser_GetID

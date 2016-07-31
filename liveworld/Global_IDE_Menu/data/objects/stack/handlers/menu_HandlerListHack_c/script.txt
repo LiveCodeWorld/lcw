@@ -1,0 +1,7 @@
+on menu_HandlerListHack
+   put scriptEditor_HandlerListBehavior() into handlerListBehavior
+   put rev_HandlerTreeField (0) into scriptEditorHandlerListField
+   
+   edit the script of handlerListBehavior
+   edit the script of scriptEditorHandlerListField
+end menu_HandlerListHack

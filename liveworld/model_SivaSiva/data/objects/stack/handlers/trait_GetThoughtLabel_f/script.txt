@@ -1,0 +1,5 @@
+function trait_GetThoughtLabel chapterArray
+   put chapterArray ["assignment"]["assignmentThoughts"] into thoughtsLabel
+   text_StripTags thoughtsLabel
+   return thoughtsLabel
+end trait_GetThoughtLabel

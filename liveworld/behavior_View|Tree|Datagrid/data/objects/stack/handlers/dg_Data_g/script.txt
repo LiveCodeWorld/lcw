@@ -1,0 +1,7 @@
+getprop dg_Data
+   put the dg_View of me into revDataGrid
+   if exists(revDataGrid) is false then return empty
+   
+   put the dgData of revDataGrid into dataArray
+   return dataArray
+end dg_Data

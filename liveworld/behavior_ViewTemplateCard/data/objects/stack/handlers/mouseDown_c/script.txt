@@ -1,0 +1,15 @@
+on mouseDown whichModifier
+   if the long id of the target is not the long id of me then pass mouseDown
+   switch
+      case whichModifier = 3
+         _doViewMenu
+         break
+      case the shiftKey is "Down"
+         put "OK"
+         break
+      default
+         set the dragAction to "link"
+         -- set the dragImage to 3137
+         set the dragData ["private"] to "View|Layout|Placeholder"
+   end switch
+end mouseDown

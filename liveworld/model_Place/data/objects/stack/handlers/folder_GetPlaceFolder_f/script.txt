@@ -1,0 +1,4 @@
+function folder_GetPlaceFolder placeName
+    put the opn_Library of me into modelObject
+    return model_GetValue(placeName, modelObject, "uOPN_StackPlace", "array")
+end folder_GetPlaceFolder

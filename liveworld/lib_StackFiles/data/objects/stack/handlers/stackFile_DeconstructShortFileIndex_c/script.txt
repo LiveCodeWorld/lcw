@@ -1,0 +1,11 @@
+command stackFile_DeconstructShortFileIndex shortFileIndex, @shortStackArray, @filteredStackNameArray, @filteredShortStackArray, pSetName
+   put stackFile_ConstructShortFileArray (pSetName) into shortStackArray
+   repeat for each line shortFile in shortFileIndex
+      put shortStackArray [shortFile]["stackName"] into stackName
+      put shortStackArray [shortFile]["relativePath"] into relativePath
+      if stackName is not empty then
+         put relativePath into filteredStackNameArray [stackName]
+         put relativePath into filteredShortStackArray [shortFile]
+      end if
+   end repeat
+end stackFile_DeconstructShortFileIndex

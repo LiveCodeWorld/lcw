@@ -1,0 +1,27 @@
+private command _fixOverFlow squareWidth,textField, @fHeight
+   -- put squareWidth
+   if squareWidth < 35 then
+      -- for when it is a tiny icon
+      set the text of textField to "Siva SIva"
+      put the formattedheight of textField into fHeight
+      return "zapped"
+   else if fHeight > (squareWidth - 8)  then
+      -- for when the text overflows
+      -- should happen rarely
+      
+      put _guessAutoFactor (squareWidth) into someFactor
+      repeat 5
+         add 1 to someFactor
+         set the auto_TextSize [someFactor] of textField to squareWidth
+         put the formattedheight of textField into fHeight
+         if fHeight <= (squareWidth - 8) then
+            return "tweaked"
+         end if
+      end repeat
+      
+      -- put "trimmed"
+      set the text of textField to (word 1 to 12 of LocalArray ["view_Text"] & "...")
+      put the formattedheight of textField into fHeight
+      return "trimmed"
+   end if
+end _fixOverFlow

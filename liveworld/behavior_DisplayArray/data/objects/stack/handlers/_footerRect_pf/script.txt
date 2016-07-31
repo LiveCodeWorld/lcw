@@ -1,0 +1,4 @@
+private function _footerRect stackRect
+   put item 4 of stackRect - _footerHeight() into item 2 of stackRect
+   return stackRect
+end _footerRect

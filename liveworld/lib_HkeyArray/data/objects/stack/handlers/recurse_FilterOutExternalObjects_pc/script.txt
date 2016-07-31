@@ -1,0 +1,31 @@
+private command recurse_FilterOutExternalObjects hKey, hKeyArray, originalObject, @filteredLinkArray, pIncludeSecondGen
+   set the cursor to busy
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+   if exists(scriptObject) is true then
+      if the long id of scriptObject = the long id of originalObject then
+         -- allways add internal calls
+         put hKeyArray [hKey] into hKeyChildren  
+         put hKeyChildren into filteredLinkArray [hKey]
+         repeat for each line hKeyChild in hKeyChildren
+            if hkeyChild is among the keys of filteredLinkArray then
+               next repeat
+            end if
+            recurse_FilterOutExternalObjects hKeyChild, hKeyArray, originalObject, filteredLinkArray, pIncludeSecondGen
+         end repeat
+      else
+         -- hKey is outside of originalObject
+         -- if it is first time => not added to filteredLinkArray (yet)
+         -- if it is first level recursion => hKey has been already added as a child to filteredLinkArray
+         -- don't recurse
+         if pIncludeSecondGen is true then
+            put hKeyArray [hKey] into externalChildren
+            if externalChildren is not empty then
+               put externalChildren into filteredLinkArray [hKey]
+            end if
+         end if
+      end if
+   else
+      -- script object is missing
+      -- put empty into filteredLinkArray [hKey]
+   end if
+end recurse_FilterOutExternalObjects

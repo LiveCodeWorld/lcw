@@ -1,0 +1,16 @@
+on menu_DisplayScriptMenus
+   put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Scripts.rev" into longStackFile
+   put the cardnames of stack "libOPN_Scripts|OPN Stack Menus" of stack longStackFile into globalMenuCardNames
+   sort globalMenuCardNames
+   
+   put "" into titleMenu
+   put "" into lineMenu
+   put "opnScripts_EditScript" into upCommand
+   put "" into doubleCommand
+   put "" into dragCommand
+   
+   put "Substack Menus,From libOPN_Scripts" into displayTitle
+   display_Index globalMenuCardNames, displayTitle, titleMenu, lineMenu, upCommand, doubleCommand, dragCommand
+   put the result into displayView
+   set the multiple_Hilites of displayView to false
+end menu_DisplayScriptMenus

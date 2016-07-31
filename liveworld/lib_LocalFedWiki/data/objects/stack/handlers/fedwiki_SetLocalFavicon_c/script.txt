@@ -1,0 +1,5 @@
+command fedwiki_SetLocalFavicon fedwikiDomain, pngData, pLocalStatusFolder
+   put fedwiki_LocalFaviconFile (fedwikiDomain, true, pLocalStatusFolder) into someFile
+   put pngData into url ("binfile:" & someFile)
+   return someFile
+end fedwiki_SetLocalFavicon

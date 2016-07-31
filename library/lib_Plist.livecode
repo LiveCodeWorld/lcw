@@ -1,0 +1,119 @@
+﻿script "lib_Plist"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Plist
+type: script library
+version: 0.1
+
+
+--> PLIST
+-
+/*
+A small library for editing plists
+*/
+
+getprop plist_Outline
+    put the tree_XML of the target into someXML
+    put plist_ConvertToNamedOutline(someXML) into someOutline
+    return someOutline
+end plist_Outline
+
+function plist_Read someDomain, someKey
+    /*
+    ie "defaults read com.elgato.eyetv PlayerWindowPos"
+    -- see man defaults
+    */
+    
+    shell_BashParamEscape someKey
+    shell_BashParamEscape someDomain
+     
+    if someDomain contains "." or someDomain contains "/" then
+        get merge("defaults read [[someDomain]] [[someKey]]")
+        put word 1 to -1 of it into someShell
+    else
+        -- lets assume it is the name of an application
+        get merge("defaults read -app [[someDomain]] [[someKey]]")
+        put word 1 to -1 of it into someShell
+    end if
+    put shell(someShell) into someXml
+    return someXml
+end plist_Read
+
+function plist_DictFromArray someArray
+    -- data types seem to be "integer, string, data, dict, array"
+    -- or boolean ie <false/>
+    
+    put empty into dictContents
+    repeat for each key tagName in someArray
+        put someArray [tagName] into arrayContents
+        put xml_Tag(tagName, "key") & CR after dictContents
+        
+        if arrayContents is a number then
+            put xml_Tag(arrayContents, "integer") & CR after dictContents
+        else if char 1 to 7 of arrayContents is "<array>" then
+            put arrayContents & CR after dictContents
+        else if char 1 to 6 of arrayContents is "<dict>" then
+            put word 1 to -1 of arrayContents & CR after dictContents
+        else if the number of lines of arrayContents = 1 then
+            put xml_Tag(arrayContents, "string") & CR after dictContents
+        else
+            put CR & word 1 to -1 of base64encode(arrayContents) & CR into arrayContents
+            -- put CR & word 1 to -1 of urlEncode(arrayContents) & CR into arrayContents
+            put xml_Tag(arrayContents, "data") & CR after dictContents
+        end if
+    end repeat
+    put CR & outline_IncreaseIndent(dictContents) into dictContents	# some uneeded formatting
+    put xml_Tag(dictContents, "dict") & CR into dictXML
+    return dictXML
+end plist_DictFromArray
+
+function plist_ConvertToNamedOutline someXML
+    put revCreateXMLTree(someXML, false, true, false) into treeID
+    put revXMLRootNode(treeID) into rootNode
+    put rootNode & "[1]/dict[1]" into startNode
+    plist_RecurseConvert treeID, startNode, newOutline
+    delete char -1 of newOutline
+    revDeleteXMLTree treeID
+    return newOutline
+end plist_ConvertToNamedOutline
+
+private command plist_RecurseConvert treeID, dictNode, @newOutline
+    put revXMLChildNames(treeID, dictNode, CR, "key", true) into childNames
+    set the itemdelimiter to "/"
+    repeat for each line childName in childNames
+        put dictNode & "/" & childName into keyNode
+         
+        put revXMLNextSibling(treeID, keyNode) into valueNode
+        put revXMLNodeContents(treeID, keyNode) into someTitle
+        
+        put html_ConstructNameLink(someTitle, valueNode) into linkedTitle
+        
+        put the number of items of keyNode - 3 into repeatNum
+        put text_RepeatString(tab, repeatNum) & linkedTitle into newOsLine
+        put newOsLine & CR after newOutline
+        
+        get xml_ReplaceChildCount(valueNode)
+        put last item of it into valueType
+        if valueType = "dict" then
+            plist_RecurseConvert treeID, valueNode, newOutline
+        else if valueType = "array" then
+            -- some nesting going on
+            put valueNode into arrayNode
+            
+            put revXMLChildNames(treeID, arrayNode, CR, "dict", true) into childDictNames
+            repeat with lineNum = 1 to the number of lines of childDictNames
+                put line lineNum of childDictNames into childDictName
+                put arrayNode & "/" & childDictName into childDictNode
+                
+                -- should add a line to newOutline?
+                put repeatNum + 1 into nextRepeatNum
+                put text_RepeatString(tab, nextRepeatNum) & (lineNum-1) into newOsLine
+                put newOsLine & CR after newOutline
+                 
+                plist_RecurseConvert treeID, childDictNode, newOutline
+            end repeat
+        end if
+    end repeat
+end plist_RecurseConvert

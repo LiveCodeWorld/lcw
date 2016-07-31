@@ -1,0 +1,11 @@
+function project_ConstructMetaData setName, scriptOnlyFolder, usedFolder, behaviorFolder, viewFolder, modelFolder
+   put setName into metadataArray ["library_SetName"]
+   
+   put behaviorFolder into metadataArray ["Named Behaviors"]["folder"]
+   put usedFolder into metadataArray ["Library Stacks"]["folder"]
+   put scriptOnlyFolder into metadataArray ["Script Only Libs"]["folder"]
+   put viewFolder into metadataArray ["Views"]["folder"]
+   
+   put modelFolder into metadataArray ["Model Stacks"]["folder"]
+   return metadataArray
+end project_ConstructMetaData

@@ -1,0 +1,7 @@
+command text_AddParagraph newText, @someText, crNum
+    set the wholematches to true
+    if newText is among the lines of someText then return false
+    -- if newText is in someText then return false
+    text_InsertParagraph newText, someText, crNum
+    return true
+end text_AddParagraph

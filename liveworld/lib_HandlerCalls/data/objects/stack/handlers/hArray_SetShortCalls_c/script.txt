@@ -1,0 +1,9 @@
+command hArray_SetShortCalls hkey, hArray, shortCalls
+   put hArray_GetHandlerHash (hKey, hArray) into handlerHash
+   if shortCalls is empty then
+      delete variable hArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"]
+   else
+      put shortCalls into hArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"]
+   end if
+   return shortCalls
+end hArray_SetShortCalls

@@ -1,0 +1,9 @@
+function isLater secondDate, firstDate
+    convert firstDate to seconds
+    convert secondDate to seconds
+    if secondDate >= firstDate then
+        return true
+    else
+        return false
+    end if
+end isLater

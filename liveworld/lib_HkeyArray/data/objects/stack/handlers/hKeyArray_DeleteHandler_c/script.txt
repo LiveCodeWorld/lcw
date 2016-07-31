@@ -1,0 +1,28 @@
+command hKeyArray_DeleteHandler @hKeyLinkArray, handlerName, handlerType
+   -- deletes named nodes
+   -- and named nodes in links
+   local alreadyDeleted
+   repeat for each key hKey in hKeyLinkArray
+      put hKeyLinkArray [hKey] into subKeys
+      
+      put hKey_IsHandler(hKey, handlerName, handlerType) into isNamedHandler
+      if isNamedHandler then
+         linkArray_DeleteNode hKeyLinkArray, hKey, alreadyDeleted
+      end if
+      
+      put empty into goodSubKeys
+      repeat for each line subKey in subKeys
+         if hKey_IsHandler(subKey, handlerName, handlerType) is false then
+            put subKey & CR after goodSubKeys
+         end if
+      end repeat
+      delete char -1 of goodSubKeys
+      
+      -- if goodSubKeys is empty then
+      -- in case
+      -- delete local hKeyLinkArray [hKey]
+      if isNamedHandler is false then
+         put goodSubKeys into hKeyLinkArray [hKey]
+      end if
+   end repeat
+end hKeyArray_DeleteHandler

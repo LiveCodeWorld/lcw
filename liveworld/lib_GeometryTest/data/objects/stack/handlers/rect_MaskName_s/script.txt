@@ -1,0 +1,18 @@
+setprop rect_MaskName [someColour] someName
+    put the long id of the target into targetObject
+     
+    put the rect of targetObject into someRect
+    switch word 1 of targetObject 
+        case "group"
+            put the short id of targetObject into insideID
+            rect_CreateTestButton someRect, someName, empty, insideID, someColour, empty
+            break
+        case "background"
+            put the short id of targetObject into insideID
+            rect_CreateTestButton someRect, someName, empty, insideID, someColour, empty
+            break
+        default
+            rect_CreateTestButton someRect, someName, empty, empty, someColour, empty
+    end switch
+    return the result
+end rect_MaskName

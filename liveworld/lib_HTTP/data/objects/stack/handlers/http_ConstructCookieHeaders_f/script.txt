@@ -1,0 +1,9 @@
+function http_ConstructCookieHeaders pSetCookies, pDomain
+   repeat for each line cookieLine in pSetCookies
+      http_DeconstructCookieLine cookieLine, cookieName, cookieValue, cookieDomain, expires, comment, maxAge, cookieVersion
+      -- if blah blah then next repeat
+      put merge("Cookie: [[cookieName]]=[[cookieValue]]") & "; " after cookieHeaders
+   end repeat
+   delete char -2 to -1 of cookieHeaders
+   return cookieHeaders
+end http_ConstructCookieHeaders

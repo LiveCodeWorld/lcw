@@ -1,0 +1,17 @@
+on menu_TestMergeScript someButton
+   delete variable LocalArray
+   
+   put revRuggedID (someButton) into rObject
+   put the script of rObject into oScript
+   put oScript into mergeScript
+   put the revAvailableHandlers of rObject into handlerTable
+   
+   script_ExportHandlerFolder handlerTable, oScript
+   put the result into mergeScript
+   
+   put script_MergeLines (mergeScript, handlerTable) into remergedScript
+   
+   put remergedScript = oScript into someBoolean
+   put mergeScript & CR & CR & Cr & remergedScript
+   answer someBoolean
+end menu_TestMergeScript

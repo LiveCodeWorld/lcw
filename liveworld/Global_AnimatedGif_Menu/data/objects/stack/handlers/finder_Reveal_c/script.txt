@@ -1,0 +1,40 @@
+command finder_Reveal pFileOrFolder
+   -- does not work for package contents?
+   
+   if pFileOrFolder is empty then
+      put the stack_Object of the target into stackObject
+      put the effective filename of stackObject into pFileOrFolder
+   end if
+   
+   put there is a folder pFileOrFolder is true into isFolder
+   if isFolder is false then
+      if there is a file pFileOrFolder is false then
+         put empty into isFolder
+      end if
+   end if
+   
+   put folder_Above(pFileOrFolder) into enclosingFolder
+   
+   applescript_ConvertPath pFileOrFolder
+   applescript_ConvertPath enclosingFolder
+   
+   put "tell application" && kwote("Finder") into someAppleScript
+   put CR & tab & "activate" after someAppleScript
+   put CR & tab & "open folder" && enclosingFolder after someAppleScript
+   
+   put CR & "if file" && pFileOrFolder && "exists then" after someAppleScript
+   put CR & tab & "set appleScriptPath to file" && pFileOrFolder after someAppleScript
+   put CR & "else" after someAppleScript
+   put CR & tab & "set appleScriptPath to folder" && pFileOrFolder after someAppleScript
+   put CR & "end if" after someAppleScript
+   
+   put CR & tab & "set toselectList to {}" after someAppleScript
+   put CR & tab & "set end of toselectList to appleScriptPath" after someAppleScript
+   put CR & tab & "select toselectList" after someAppleScript
+   
+   put CR & "end tell" after someAppleScript
+   
+   do someAppleScript as AppleScript
+   -- put someAppleScript
+   return the result
+end finder_Reveal

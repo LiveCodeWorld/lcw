@@ -1,0 +1,10 @@
+on menu_DisplayValues
+   put the revletParams of this stack into someArray
+   combine someArray with CR and tab
+   -- put $HTTP_HOST & CR & CR & someArray into someText
+   get the globals
+   replace comma with CR in it
+   -- put it into fld "Display"
+   put $USER & CR & $HOME & CR & $HOME & CR & someArray & CR & CR & it into someText
+   answer someText
+end menu_DisplayValues

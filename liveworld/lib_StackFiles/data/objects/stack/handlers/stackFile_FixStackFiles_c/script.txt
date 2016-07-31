@@ -1,0 +1,10 @@
+command stackFile_FixStackFiles stackFileStack
+   put the stackFile_ErrorArray of stackFileStack into resultArray
+   put resultArray ["fixedStackFileArray"] into stackFileArray
+   put resultArray ["badArray"] into badArray
+   
+   set the stackfile_Array of stackFileStack to stackFileArray
+   put the result into stackFileTable
+   put stackFileTable into resultArray ["stackFileTable"]
+   return resultArray
+end stackFile_FixStackFiles

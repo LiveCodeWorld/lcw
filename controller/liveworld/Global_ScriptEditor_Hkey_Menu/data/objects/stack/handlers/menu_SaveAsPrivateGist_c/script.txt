@@ -1,0 +1,9 @@
+on menu_SaveAsPrivateGist hKey
+   local shortGistFile
+   put hkey_FetchHelp (hKey) into helpText
+   put html_StripAllTags (helpText) into helpText
+   put opn_Ask ("Give a description for [[hKey]]...", helpText) into pDescription
+   gist_SaveHkey hKey, shortGistFile, pDescription, true
+   put the result into gistReplyArray
+   display_Array gistReplyArray, shortGistFile
+end menu_SaveAsPrivateGist

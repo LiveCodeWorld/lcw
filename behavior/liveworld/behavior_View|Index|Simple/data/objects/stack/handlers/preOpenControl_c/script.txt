@@ -1,0 +1,6 @@
+on preOpenControl
+   local headerHeight
+   -- put the height of titleView() into headerHeight
+   _setDefaultHeight headerHeight
+   pass preOpenControl
+end preOpenControl

@@ -1,0 +1,9 @@
+function plist_ConvertToNamedOutline someXML
+    put revCreateXMLTree(someXML, false, true, false) into treeID
+    put revXMLRootNode(treeID) into rootNode
+    put rootNode & "[1]/dict[1]" into startNode
+    plist_RecurseConvert treeID, startNode, newOutline
+    delete char -1 of newOutline
+    revDeleteXMLTree treeID
+    return newOutline
+end plist_ConvertToNamedOutline

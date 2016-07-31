@@ -1,0 +1,6 @@
+getprop stack_Behaviors 
+   put the stack_BehaviorArray of the target into behaviorArray
+   put behaviorArray ["behavior object"] into objectArray
+   put keys (objectArray) into stackBehaviors
+   return stackBehaviors
+end stack_Behaviors

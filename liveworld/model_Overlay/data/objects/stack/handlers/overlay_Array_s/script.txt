@@ -1,0 +1,6 @@
+setprop overlay_Array [pOverlayName] overlayArray
+   put the overlay_Folder of the target into overlayFolder
+   if pOverlayName is empty then put the overlay_Name of the target into pOverlayName
+   overlay_SetArray overlayFolder, overlayArray, pOverlayName
+   return the result
+end overlay_Array

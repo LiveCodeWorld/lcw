@@ -1,0 +1,5 @@
+function xml_TreeNodeAttributeArray someNode, treeID
+    put revXMLAttributes(treeID, someNode, tab, return) into attributeTable
+    split attributeTable by return and tab
+    return attributeTable
+end xml_TreeNodeAttributeArray

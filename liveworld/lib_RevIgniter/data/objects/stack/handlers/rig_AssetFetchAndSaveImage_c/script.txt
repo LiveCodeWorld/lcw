@@ -1,0 +1,30 @@
+command rig_AssetFetchAndSaveImage imageURL, pUseCurl
+   set the itemdelimiter to slash
+   put item -1 of imageURL into shortFile
+   put rig_AssetImageFolder() into imageAssetFolder
+   put imageAssetFolder & shortFile into imagePath
+   
+   put shortFile into resultArray ["shortFile"]
+   put there is a file imagePath into resultArray ["file exists"]
+   put imageAssetFolder into resultArray ["imageAssetFolder"]
+   put imagePath into resultArray ["imagePath"]
+   put "https://livecode.world/assets/img/" & shortFile into assetURL
+   put assetURL into resultArray ["assetURL"]
+   
+   set the defaultfolder to imageAssetFolder
+   if pUseCurl is true then
+      put "curl -O" && kwote (imageURL) into someShell
+      put shell (SomeShell) into fetchResult
+      put shellResult into resultArray ["shellResult"]
+   else
+      put url imageURL into url ("binfile:" & imagePath)
+      if the result is not empty then
+         put the result into resultArray ["shellResult"]
+      end if
+   end if
+   
+   put exif_GetInfoArray (imagePath) into exifArray
+   put exifArray into resultArray ["exifArray"]
+   
+   return resultArray
+end rig_AssetFetchAndSaveImage

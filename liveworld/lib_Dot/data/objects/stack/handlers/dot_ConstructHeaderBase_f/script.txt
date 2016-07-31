@@ -1,0 +1,49 @@
+function dot_ConstructHeaderBase graphSize, dotPropertyArray, graphStyle, pUseInches  
+   dot_DeconstructPropertyArray dotPropertyArray, overlap, concentrate, splines, cluster, direction, dotOrder, defaultShape, defaultUrl
+   put the result into dotPropertyArray
+   
+   put CR into endChar
+   
+   -- put true into pUseInches
+   if pUseInches is not false then
+      -- think there is a bug here (graphs too large)
+      put dot_RectFromSize (graphSize) into bbRect
+      put dot_GraphInchSize (bbRect, true) into inchSize
+      if inchSize is not empty then
+         put "size=" & kwote(inchSize) & endChar after graphHeaderBase
+      end if
+   else
+      put dot_RectFromSize (graphSize) into bbRect
+      if bbRect is not empty then
+         put "bb=" & kwote(bbRect) & endChar after graphHeaderBase
+         -- put "bb=" & bbRect & endChar after graphHeaderBase
+      end if
+   end if
+   
+   -- if overlap is empty then put false into overlap
+   if graphStyle is not "hierarchical"  then
+      if overlap is not empty then put "overlap=" & overlap & endChar after graphHeaderBase
+      
+      if dotOrder is not empty then put  "ordering=" & dotOrder & endChar after graphHeaderBase
+      
+      if concentrate is not empty then
+         put "concentrate=" & concentrate & endChar after graphHeaderBase
+      end if
+   end if
+   
+   -- if cluster is "none" then
+   if cluster is "none" and graphStyle = "hierarchical" then
+      put "clusterrank=" & cluster & endChar after graphHeaderBase
+   end if
+   
+   if splines is not empty then put "splines=" & splines & endChar after graphHeaderBase
+   if direction is not empty then put "rankdir=" & direction & endChar after graphHeaderBase
+   
+   repeat for each key someKey in dotPropertyArray
+      put dotPropertyArray [someKey] into someValue
+      put someKey & "=" & kwote(someValue) & CR after graphHeaderBase
+   end repeat
+   
+   delete char -1 of graphHeaderBase
+   return graphHeaderBase
+end dot_ConstructHeaderBase

@@ -1,0 +1,12 @@
+private command _StartUsed
+   -- only good references to stacks are returned from this handler
+   put the project_StackPaths ["library"] of me into stackPaths
+   put CR & the project_StackPaths ["model"] of me after stackPaths
+   
+   -- temporary while we still have a few non-script-only libraries
+   put CR & the project_StackPaths ["used"] of me after stackPaths
+   
+   repeat for each line stackPath in stackPaths
+      start using stack stackPath
+   end repeat
+end _StartUsed

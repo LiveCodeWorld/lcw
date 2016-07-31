@@ -1,0 +1,224 @@
+--> MetaData
+-
+name: Menu Tools Library
+type: old library
+author: David Bovill
+copyright: David Bovill
+
+/*
+This library holds all references to objects that are needed to draw or display menus.
+
+In addition it holds all the getprop and setprop handlers that are used.
+These handlers do not work well with script only stacks, so we put them here as well.
+
+They need tidying to see which ones are actually used.
+*/
+
+
+--> Working on
+-
+/*
+menu_Title does not seem to be currently implemented as a general feature.
+As such it is not defined in the menu_Controller, 
+but rather as an option that the menu_Target can use to alter the behavior of the toplevel menu.
+
+This makes things simple but removes the ability of submenus to define optional behavior,
+in terms of switching menus based on information it has, or modifier keys.
+*/
+
+[[ _FetchHandler (menu_Title,g) ]]
+
+[[ _FetchHandler (menu_Title,s) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (libraryStack,c) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (object_IsMenuBar,g) ]]
+
+
+--> Currently Working On | Menu | Burn
+-
+/*
+Remove these for basic libray and instead make a tool which pops up when the user option edits a men.
+Also remove the concept of menu_ToolTitle.
+
+These tools allow the dynamic creation of menus directly from scripts. However this comes at a cost.
+There are many defaults that these menu tools calculate on the fly, which in turn require many handlers.
+In order to simplify the shipping of finished code, we "burn" down these values, storing the required scripts and custom properties.
+*/
+
+[[ _FetchHandler (menu_ToolOrTitle,g) ]]
+
+[[ _FetchHandler (menu_ToolTitle,g) ]]
+
+[[ _FetchHandler (menu_ToolTitle,s) ]]
+
+[[ _FetchHandler (menu_GetToolTitle,f) ]]
+
+getprop menu_ToolOrTitle
+   -- legacy please stop using
+   breakpoint
+   if the controlKey is "Down" then
+      return the menu_ToolTitle of the target
+   else
+      return the menu_Title of the target
+   end if
+end menu_ToolOrTitle
+
+[[ _FetchHandler (menu_ToolTitles,g) ]]
+
+[[ _FetchHandler (menu_Burn,g) ]]
+
+[[ _FetchHandler (menu_Burn,s) ]]
+
+[[ _FetchHandler (menu_DefaultTitle,g) ]]
+
+[[ _FetchHandler (menu_FullTitle,g) ]]
+
+[[ _FetchHandler (menu_BurntTitle,g) ]]
+
+[[ _FetchHandler (menu_BurntTitle,s) ]]
+
+[[ _FetchHandler (menu_DefaultToolTitle,g) ]]
+
+[[ _FetchHandler (menu_BurntToolTitle,g) ]]
+
+[[ _FetchHandler (menu_BurntToolTitle,s) ]]
+
+
+--> Not Menu Named
+-
+[[ _FetchHandler (view_MenuHierarchySearch,g) ]]
+
+[[ _FetchHandler (view_MenuControllerSearch,g) ]]
+
+[[ _FetchHandler (view_FindAssociatedMenu,g) ]]
+
+[[ _FetchHandler (inserted_Menu,g) ]]
+
+[[ _FetchHandler (inserted_Menu,s) ]]
+
+[[ _FetchHandler (inserted_Menus,g) ]]
+
+--> Menu | Object | Rev Groups
+-
+/*
+Tests to find the Menu Builder menus on a card. Same hack that the Menu Builder uses.
+*/
+
+[[ _FetchHandler (menu_TopBar,g) ]]
+
+[[ _FetchHandler (menu_BarTitles,g) ]]
+
+[[ _FetchHandler (menu_BarGroups,g) ]]
+
+[[ _FetchHandler (menu_BarNames,g) ]]
+
+[[ _FetchHandler (menu_BarItems,g) ]]
+
+
+--> Menu | Text
+-
+/*
+menu_Text is a property of the targetObject.
+the text is derived from the menu_Table
+which is in turn stored with the menu_Controller 
+
+menu_Text is now quickly constructed from the menu_Table (cached with the menu_Controller)
+Submenus are created by recursively calling menu_Text on the submenu menu_Title
+So script should be modified to prevent recursion.
+
+While fetching the text (usually on a mousedown)
+the menu_Table is also converted to an array
+and added to the global gTemp_ActiveMenuArray
+*/
+
+[[ _FetchHandler (menu_Text,g) ]]
+
+[[ _FetchHandler (menu_Text,s) ]]
+
+[[ _FetchHandler (menu_ActiveArray,g) ]]
+
+[[ _FetchHandler (menu_ActiveArray,s) ]]
+
+[[ _FetchHandler (menu_ControllerScriptChanged,g) ]]
+
+[[ _FetchHandler (menu_Script,g) ]]
+
+[[ _FetchHandler (menu_ConstructTemplateScript,g) ]]
+
+[[ _FetchHandler (menu_FoundTitle,g) ]]
+
+[[ _FetchHandler (menu_IsInHierarchy,g) ]]
+
+[[ _FetchHandler (menu_ControllerExists,g) ]]
+
+[[ _FetchHandler (menu_HierarchyTitle,s) ]]
+
+[[ _FetchHandler (menu_ControllerSearch,g) ]]
+
+[[ _FetchHandler (menu_Titles,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+[[ _FetchHandler (menu_LinkedView,g) ]]
+
+[[ _FetchHandler (menu_AssociatedView,g) ]]
+
+[[ _FetchHandler (menu_CommandLines,g) ]]
+
+[[ _FetchHandler (menu_CommandOutline,g) ]]
+
+[[ _FetchHandler (menu_CreateOnCompile,g) ]]
+
+[[ _FetchHandler (menu_TableFromScript,g) ]]
+
+[[ _FetchHandler (menu_OptionEdit,g) ]]
+
+[[ _FetchHandler (menu_OptionEdit,s) ]]
+
+--> Menu | Extras | Library
+-
+[[ _FetchHandler (menuExtras_Library,g) ]]
+
+[[ _FetchHandler (menuLibraryTree_View,g) ]]
+
+
+--> Menu | Library
+-
+[[ _FetchHandler (menu_Names,g) ]]
+
+[[ _FetchHandler (menu_IsActive,s) ]]
+
+[[ _FetchHandler (menu_DisplayedTitle,g) ]]
+
+[[ _FetchHandler (menu_DisplayedTitle,s) ]]
+
+[[ _FetchHandler (menu_SelectedTitle,g) ]]
+
+[[ _FetchHandler (menu_SelectedTitle,s) ]]
+
+
+--> Menu | Titles
+-
+[[ _FetchHandler (menu_ToolModeArray,g) ]]
+
+--> Menu | Message | Action
+-
+/*
+This over-rides the menu message,
+and allows one command to handle all menu items.
+*/
+
+[[ _FetchHandler (menu_Action,g) ]]
+
+[[ _FetchHandler (menu_Action,s) ]]
+
+[[ _FetchHandler (menu_DontPassFrontHack,g) ]]
+
+[[ _FetchHandler (menu_Array,g) ]]

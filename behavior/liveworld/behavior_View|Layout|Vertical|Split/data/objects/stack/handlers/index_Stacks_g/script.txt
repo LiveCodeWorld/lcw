@@ -1,0 +1,17 @@
+getprop index_Stacks
+   -- here we experiment with a generic handler that
+   -- could be recursive - but avoiding that :)
+   -- also could just place versions of the handler in the various levels (may be best strategy ?)
+   switch
+      case the long id of the target = the long id of me
+         return the verticalLayout_Stacks of me
+      case the view_Name of the target = "View|Index|Simple"
+         return the indexView_Stacks of the target
+      case the view_Name of the target = "View|Index|Group"
+         return the indexGroup_Stacks of the target
+      default
+         -- could be a nested layout?
+         breakpoint
+         return empty
+   end switch
+end index_Stacks

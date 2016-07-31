@@ -1,0 +1,5 @@
+function fedwiki_FetchLocalOrDefaultArray pageSlug
+   put fedwiki_GetLocalOrDefaultPageJson (pageSlug) into pageJSON
+   put json_ToArray (pageJSON) into pageArray
+   return pageArray
+end fedwiki_FetchLocalOrDefaultArray

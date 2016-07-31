@@ -1,0 +1,7 @@
+getprop record_Height
+   put the customproperties of me into propArray
+   put propArray ["record_Height"] into recordHeight
+   
+   if recordHeight is empty then put the record_Height of the owner of me into recordHeight
+   return recordHeight
+end record_Height

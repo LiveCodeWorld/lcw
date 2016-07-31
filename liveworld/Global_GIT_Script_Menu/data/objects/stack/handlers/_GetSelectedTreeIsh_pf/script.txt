@@ -1,0 +1,6 @@
+private function _GetSelectedTreeIsh treeField
+   put the displayed_File of treeField into someFile
+   put the tree_SelectedLink of treeField into cHash
+   put cHash & ":" & someFile into treeish
+   return treeish
+end _GetSelectedTreeIsh

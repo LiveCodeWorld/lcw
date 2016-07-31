@@ -1,0 +1,5 @@
+function script_ConstructSuiteHeader suiteName
+   put "-->" && suiteName into suiteHeader
+   put cr & "-" after suiteHeader
+   return suiteHeader
+end script_ConstructSuiteHeader

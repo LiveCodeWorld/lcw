@@ -1,0 +1,5 @@
+function rev_FormatScript pScript
+   -- ignoreCall: scriptFormatSnippet,c
+   call "scriptFormatSnippet pScript" of rev_ScriptEditorGroup()
+   return the result
+end rev_FormatScript

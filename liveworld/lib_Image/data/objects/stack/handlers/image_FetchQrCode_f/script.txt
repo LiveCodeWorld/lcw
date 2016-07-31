@@ -1,0 +1,6 @@
+function image_FetchQrCode someText, someWidth, someHeight
+   put "http://api.qrserver.com/v1/create-qr-code/?data=" & urlencode(someText) into someUrl
+   put "&size=" & someWidth & "x" & someHeight after someUrl
+   put url someUrl into someImage
+   return someImage
+end image_FetchQrCode

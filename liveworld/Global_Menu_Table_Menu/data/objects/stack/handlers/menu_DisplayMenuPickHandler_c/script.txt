@@ -1,0 +1,23 @@
+on menu_DisplayMenuPickHandler  scriptObject, cachedMenuTitle
+   -- crude simplification for now
+   local handlerBody
+   put the menu_Target of scriptObject into mTarget
+   if mTarget is empty then put the long id of the target into mTarget
+   put the menu_Table [cachedMenuTitle] of scriptObject into mTable
+   
+   put "put the long id of" && mTarget && "into mTarget" & CR after handlerBody
+   put "someChoice" into hParam
+   put "switch" && hParam & CR after handlerBody
+   set the itemdelimiter to tab
+   repeat for each line mTableLine in mTable
+      menu_DeconstructTableLine mTableLine, mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp, mSendLine
+      
+      put "  case" && kwote (mLine) & CR after handlerBody
+      put "    " & pigeon & CR after handlerBody
+      put "    break" & CR after handlerBody
+   end repeat
+   put "end switch" & CR after handlerBody
+   
+   put script_ConstructCommandHandler ("menuPick", handlerBody, hParam) into someHandler
+   display_Lines someHandler
+end menu_DisplayMenuPickHandler

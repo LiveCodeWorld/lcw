@@ -1,0 +1,16 @@
+command fossil_CreateBranch fossilCheckoutFolder, branchName, pColour
+   -- fossil branch new BRANCH-NAME BASIS ?-bgcolor COLOR? 
+   -- put "fossil branch new" && kwote (branchName) into someShell
+   
+   -- fossil commit -f --branch Minimal
+   put "fossil commit -f --branch" && kwote (branchName) into someShell
+   
+   if pColour is not empty then
+      colour_HexNormalise pColour
+      put space & "-bgcolor" & kwote (pColour) after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_CreateBranch

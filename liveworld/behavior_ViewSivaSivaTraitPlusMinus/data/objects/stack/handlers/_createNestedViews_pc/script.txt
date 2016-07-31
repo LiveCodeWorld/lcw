@@ -1,0 +1,27 @@
+private command _createNestedViews @squareView, @positiveView, @negativeView, @verticalArrow
+   -- test_Rect innerRect, "innerRect", "black"
+   
+   put the short id of me into groupID
+   if exists (verticalArrow) is false then
+      set the style of templategraphic to "line"
+      set the linesize of templategraphic to 4
+      set the antialiased of templategraphic to false
+      set the foregroundcolor of templategraphic to "128,128,128"
+      
+      create graphic "Trait Line" in me
+      put it into verticalArrow
+      reset templategraphic
+   end if
+   if exists (squareView) is false then
+      create_Placeholder "innerSquare", empty, groupID, "red"
+      put the result into squareView
+   end if
+   if exists (positiveView) is false then
+      create_Placeholder "Positive Trait", empty, groupID, "yellow"
+      put the result into positiveView
+   end if
+   if exists (negativeView) is false then
+      create_Placeholder "Negative Trait", empty, groupID, "green"
+      put the result into negativeView
+   end if
+end _createNestedViews

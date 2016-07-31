@@ -1,0 +1,11 @@
+function xml_ConstructTreePathArray someXML
+    -- hack for "xmlns
+    replace " xmlns='" with " xmlNameSpace='" in someXml
+    
+    local treeArray
+    put revCreateXMLTree(someXml, true, true, false) into treeID
+    put revXMLRootNode(treeID) into startNode
+    xml_TreeConstructArray treeID, startNode, treeArray
+    revDeleteXMLTree treeID
+    return treeArray
+end xml_ConstructTreePathArray

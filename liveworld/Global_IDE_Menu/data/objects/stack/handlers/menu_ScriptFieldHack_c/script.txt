@@ -1,0 +1,11 @@
+on menu_ScriptFieldHack
+   put scriptEditor_ScriptFieldBehavior() into scriptFieldBehavior
+   put rev_ScriptEditorField (0) into scriptEditorField
+   
+   edit the script of scriptFieldBehavior
+   put scriptEditorField
+   edit the script of scriptEditorField
+   
+   menu_Edit "Global | Script | Editor | Menu"
+   menu_Edit "Global | Script Editor | Extras | Menu"
+end menu_ScriptFieldHack

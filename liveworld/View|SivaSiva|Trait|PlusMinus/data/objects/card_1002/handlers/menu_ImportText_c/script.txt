@@ -1,0 +1,17 @@
+on menu_ImportText
+   put LocalArray ["xmlFile"] into xmlFile
+   answer file "Select an xml file..." with xmlFile
+   put it into xmlFile
+   if xmlFile is empty then exit to top
+   put xmlFile into LocalArray ["xmlFile"]
+   
+   put url ("file:" & xmlFile) into someXML
+   -- pXML, pTranslateKeyBoolean, pStoreEncodedAs, pUseValueKey, pGoodXML
+   put xml_ToArray (someXML, empty, empty, true, true) into bookArray
+   put bookArray ["html"]["head"]["title"] into bookTitle
+   put bookArray ["html"]["body"] into bookBodyArray
+   
+   put "Global | SivaSiva | Book | Parse | Menu" into titleMenu
+   put "Global | SivaSiva | Book | Parse | Line | Menu" into titleLineMenu
+   display_Array bookBodyArray, bookTitle, titleMenu, titleLineMenu
+end menu_ImportText

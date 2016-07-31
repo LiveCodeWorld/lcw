@@ -1,0 +1,5 @@
+command server_DeleteDetails serverURL, pProjectName
+   put server_FetchPrefArray (pProjectName) into serverArray
+   delete variable serverArray [serverURL]
+   server_SavePrefArray serverArray, pProjectName
+end server_DeleteDetails

@@ -1,0 +1,7 @@
+on menu_EditBodyBehavior mTarget
+   put the wiki_View of mTarget into wikiView
+   put the body_View of mTarget into bodyView
+   
+   put the behavior of bodyView into bObject
+   edit the script of bObject
+end menu_EditBodyBehavior

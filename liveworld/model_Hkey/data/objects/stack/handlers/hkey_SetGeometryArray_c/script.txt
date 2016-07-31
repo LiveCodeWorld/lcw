@@ -1,0 +1,5 @@
+command hkey_SetGeometryArray hKey, geometryArray, pOverlayName
+   put hkey_GetOverlayArray (hKey, pOverlayName) into overlayArray
+   put geometryArray into overlayArray ["data"]["geometry"]
+   hkey_SetOverlayArray hKey, overlayArray, pOverlayName
+end hkey_SetGeometryArray

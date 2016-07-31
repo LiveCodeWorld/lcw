@@ -1,0 +1,7 @@
+function fedwiki_ConstructOpenStreetMapDescription locationDescription, mapZoom, mapLat, mapLong
+   -- put "[[Mouans-Sartoux]], PACA, France - [http://www.openstreetmap.org/node/344280980#map=19/43.61935/6.97254 openstreetmap]" into mapText
+   put "http://www.openstreetmap.org/#map=" & mapZoom & "/" & mapLat & "/" & mapLong into openstreetmapURL
+   put "[[" & item 1 of locationDescription & "]]" into item 1 of locationDescription
+   put locationDescription && "- [" & openstreetmapURL && "openstreetmap]" into mapDescription
+   return mapDescription
+end fedwiki_ConstructOpenStreetMapDescription

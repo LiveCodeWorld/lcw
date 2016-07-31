@@ -1,0 +1,34 @@
+function menu_ConstructCaseStatement menuPath, someMenuButton
+    -- was "menu_GetCaseStatement"
+    
+    set the itemdelimiter to "|"
+    put the number of items of menuPath into maxItem
+    if maxItem is 1 then
+        return empty
+    else
+        if word 1 of someMenuButton is not "button" then return empty
+        
+        put the text of someMenuButton into menuText
+        -- put the menuHistory of someMenuButton into osLineNum
+        put outline_PathOffset(menuPath, menuText) into osLineNum
+        put line osLineNum of menuText into test
+        put outline_ExtractMainHierarchySection(osLineNum, menuText) into mainMenuSection
+        put menu_StripDividerLines(mainMenuSection) into mainMenuSection
+        put outline_ToPathIndex(mainMenuSection) into subSectionPaths
+        delete line 1 of subSectionPaths
+        
+        put "    " into indentSpacer
+        put indentSpacer & "switch subMenuPath" into caseStatement
+        repeat for each line subMenuPath in subSectionPaths
+            delete item 1 of subMenuPath
+            put cr & indentSpacer & "case" && kwote(subMenuPath) after caseStatement
+            put cr & indentSpacer & indentSpacer after caseStatement
+            put cr & indentSpacer & indentSpacer & "break" after caseStatement
+        end repeat
+        delete last line of caseStatement
+        put cr & indentSpacer & "default" after caseStatement
+        put cr & indentSpacer after caseStatement
+        put cr & indentSpacer & "end switch" after caseStatement
+        return caseStatement
+    end if
+end menu_ConstructCaseStatement

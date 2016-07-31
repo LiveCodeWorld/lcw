@@ -1,0 +1,42 @@
+function hkeyArray_DeleteObject someObject, hkeyArray
+    set the wholematches to true
+    repeat for each key hKey in hkeyArray
+        set the cursor to busy
+        script_DeconstructHkey hKey, handlerName, handlerType, handlerNum, scriptObject
+        if exists(scriptObject) is false then
+            if someObject is scriptObject then
+                -- Missing
+                delete local hkeyArray [hKey]
+                next repeat
+            else
+                next repeat
+            end if
+        end if
+         
+        if the long id of someObject = the long id of scriptObject then
+            delete local hkeyArray [hKey]
+            next repeat
+        end if
+        
+        put hkeyArray [hKey] into handlerCalls
+        put empty into filteredCalls
+        repeat for each line callKey in handlerCalls
+            script_DeconstructHkey callKey, handlerName, handlerType, handlerNum, callObject
+            if exists(callObject) is false then
+                if someObject is callObject then
+                    -- Missing
+                    next repeat
+                else
+                    put callKey & CR after filteredCalls
+                    next repeat
+                end if
+            end if
+            if the long id of callObject is not the long id of scriptObject then
+                put callKey & CR after filteredCalls
+            end if
+        end repeat
+        delete last char of filteredCalls
+        put filteredCalls into hkeyArray [hKey]
+    end repeat
+    return hkeyArray
+end hkeyArray_DeleteObject

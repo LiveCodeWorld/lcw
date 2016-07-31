@@ -1,0 +1,8 @@
+on menu_FetchDependencyScript hKey
+   local missingHkeys, depScript
+   put hkey_FetchDeps (hKey) into depHkeys
+   script_FetchFromHkeys depHkeys, depScript, missingHkeys, false
+   put script_ConstructSuite ("Deps", depScript) into depSuite
+   
+   display_Lines depSuite, "hkey_FetchDeps (shortHKey)"
+end menu_FetchDependencyScript

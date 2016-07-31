@@ -1,0 +1,36 @@
+private function _constructRequestArray pSocketID
+   put the itemdel into oDelim
+   -- 
+   put pSocketID into requestArray ["SocketID"] -- Store the socket id, we'll use that later for responding back to the browser
+   put DaemonServer into requestArray ["daemonServer"] -- store as it is the only way to reference the daemon_Server instance
+   
+   put SocketData [pSocketId]["request"] into someRequest
+   put word 1 to -1 of SocketData [pSocketId]["headers"] into requestArray ["receivedHeaders"]
+   
+   put word 1 of someRequest into someMethod
+   put someMethod into requestArray ["Request Method"]
+   -- if someMethod is among the items of "POST,PUT" then
+   put SocketData [pSocketId]["theData"] into requestArray ["theData"]
+   -- end if
+   
+   put word 2 of someRequest into requestUrl
+   put requestUrl into requestArray ["Requested URL"]
+   
+   -- could do all of this afterwards and if needed?
+   set the itemdel to "?"
+   put item 1 of requestUrl into requestArray ["SCRIPT_NAME"]
+   put item 2 of requestUrl into queryString
+   put queryString into requestArray ["QUERY_STRING"]
+   
+   put "&" & queryString into tVarsA
+   split tVarsA by "&" and "="
+   repeat for each line tKey in the keys of tVarsA
+      if tKey is empty then next repeat
+      put tVarsA [tKey] into varValue
+      put urldecode (varValue) into requestArray ["queryArray"][tKey]
+   end repeat
+   set the itemdel to oDelim
+   
+   _setEnvironmentalVariables requestArray
+   return requestArray
+end _constructRequestArray

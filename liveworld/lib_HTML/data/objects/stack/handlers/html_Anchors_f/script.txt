@@ -1,0 +1,3 @@
+function html_Anchors someHtml
+    return html_AttributeValues (someHtml, "name")
+end html_Anchors

@@ -1,0 +1,5 @@
+command xml_ExtractEncoding someXML, @versionMatch, @xmlEncoding
+   put matchtext (someXML, "<\?xml (.*)encoding=" & quote & "(.*)" & quote & "\?>", versionMatch, xmlEncoding) into theResult
+   if xmlEncoding is empty then put "utf-8" into xmlEncoding
+   return theResult
+end xml_ExtractEncoding

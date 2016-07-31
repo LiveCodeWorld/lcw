@@ -1,0 +1,4 @@
+private function behaviorModel_GetRecordValue recordName, bName
+   put behaviorModel_GetArray() into behaviorArray
+   return behaviorArray [bName][recordName]
+end behaviorModel_GetRecordValue

@@ -1,0 +1,7 @@
+getprop objects_WithBehavior
+   -- hArray | Behaviors
+   put the behavior_Array of the target into behaviorArray
+   put behaviorArray ["behaviorArray"]["data"]["object"] into objectArray
+   put keys (objectArray) into rObjects
+   return rObjects
+end objects_WithBehavior

@@ -1,0 +1,6 @@
+function view_GetTemplateBehavior viewName
+   put view_GetTemplateObject (viewName) into templateObject
+   if exists (templateObject) is false then return empty
+   put the behavior of templateObject into templateBehavior
+   return templateBehavior
+end view_GetTemplateBehavior

@@ -1,0 +1,17 @@
+private function _getStackNames shortStackFiles
+   put the index_Folder of me into indexFolder  
+   if indexFolder is empty then
+      -- let's assume the stacks are known
+      put stackFile_NamesFromShortFiles (shortStackFiles) into stackNames
+   else 
+      repeat for each line shortStackFile in shortStackFiles
+         put indexFolder & shortStackFile into longStackFile
+         if exists (stack longStackFile) then
+            put the short name of stack longStackFile into stackName
+            put stackName & CR after stackNames
+         end if
+      end repeat
+      delete char -1 of stackNames
+   end if
+   return stackNames
+end _getStackNames

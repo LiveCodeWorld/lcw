@@ -1,0 +1,44 @@
+command library_CreateComponent vName, pSomeView
+   put menu_GlobalTitleFromViewName (vName) into mTitle
+   put menu_ConstructTemplateScript (mTitle) into cardScript
+   
+   library_CreateComponentFolder vName
+   put the result into componentFolder
+   
+   git_InitFolder componentFolder, true
+   
+   put the defaultfolder into oDefault
+   set the defaultfolder to componentFolder
+   
+   create stack vName   
+   put the long id of card 1 of stack vName into cardObject
+   set the behavior_Name of cardObject to "Card View Behavior"
+   
+   if exists (pSomeView) then
+      copy pSomeView to cardObject
+      put it into copiedView
+      set the view_Name of copiedView to newViewName
+   else
+      put cardObject into copiedView
+   end if
+   
+   /*
+   put view_PathToShortFile (vName) into shortFile
+   set the fileName of stack vName to someFile
+   */
+   
+   put "Save component stack..." into pAskComment
+   rev_SaveAs vName, componentFolder, pAskComment
+   put the result into someFile
+   if someFile is empty then
+      -- user cancelled or some error
+      return empty
+   end if
+   
+   set the stack_IsKnown of stack vName to true
+   
+   git_AddEverything componentFolder
+   
+   set the defaultfolder to oDefault
+   return copiedView
+end library_CreateComponent

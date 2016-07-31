@@ -1,0 +1,7 @@
+function hkey_FolderName hKey
+   put item 1 of hKey into hName
+   put item 2 of hKey into hType
+   if hType = "o" then put "c" into hType -- as "on" and "command" are functionally equivalent
+   put hName & "_" & tolower (hType) into folderName
+   return folderName
+end hkey_FolderName

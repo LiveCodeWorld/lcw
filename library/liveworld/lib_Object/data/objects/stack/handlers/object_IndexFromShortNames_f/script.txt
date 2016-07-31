@@ -1,0 +1,10 @@
+function object_IndexFromShortNames nameIndex, objectOutline_Array, pathStem
+   put empty into objectIndex
+   repeat for each line objectName in nameIndex
+      put pathStem & objectName into someKey
+      put objectOutline_Array[someKey] into someObject
+      put someObject & return after objectIndex
+   end repeat
+   delete last char of objectIndex
+   return objectIndex
+end object_IndexFromShortNames

@@ -1,0 +1,15 @@
+function digitalocean_FetchArecordArray oceanDomainName
+   put digitalocean_FetchDomainRecordArray (oceanDomainName) into oceanDomainRecordArray
+   put oceanDomainRecordArray ["domain_records"] into domainArray
+   repeat for each key recordNum in domainArray
+      if domainArray [recordNum]["type"] is not "A" then next repeat
+      
+      put domainArray [recordNum]["name"] into subDomain
+      put domainArray [recordNum]["data"] into someIP
+      put domainArray [recordNum]["id"] into recordID
+      
+      put someIP into aRecordArray [subDomain]["ip_address"]
+      put recordID into aRecordArray [subDomain]["id"]
+   end repeat
+   return aRecordArray
+end digitalocean_FetchArecordArray

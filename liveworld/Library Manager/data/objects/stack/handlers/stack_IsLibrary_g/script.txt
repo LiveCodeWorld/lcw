@@ -1,0 +1,7 @@
+getprop stack_IsLibrary [pSetName]
+   put the stack_Object of the target into stackObject
+   put the name of stackObject into stackObject
+   put library_ListUsedStacks (pSetName) into usedLibraries
+   put stackObject is among the lines of usedLibraries into someBoolean
+   return someBoolean
+end stack_IsLibrary

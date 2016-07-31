@@ -1,0 +1,15 @@
+on menu_ReExportGlobalMenus
+   -- need to do it twice
+   put the cardids of stack "libOPN_Menus" into mCardIDs
+   repeat for each line mCardID in mCardIDs
+      set the cursor to busy
+      put the long id of card id mCardID of stack "libOPN_Menus" into mController
+      set the exported_Script of mController to the script of mController
+   end repeat
+   
+   repeat for each line mCardID in mCardIDs
+      set the cursor to busy
+      put the long id of card id mCardID of stack "libOPN_Menus" into mController
+      set the exported_Script of mController to the script of mController
+   end repeat
+end menu_ReExportGlobalMenus

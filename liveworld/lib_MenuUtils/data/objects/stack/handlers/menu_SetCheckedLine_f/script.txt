@@ -1,0 +1,24 @@
+function menu_SetCheckedLine lineNum, someMenuText, someBoolean
+   -- replace (return & "!c") with (return & "!n") in 
+   
+   put line lineNum of someMenuText into menuLine
+   if someBoolean is true then 
+      put "c" into checkValue
+   else 
+      put "n" into checkValue
+   end if
+   
+   if char 1 of word 1 of menuLine is "!" then
+      if char 2 of word 1 of menuLine is "n" then
+         put checkValue into char 2 of word 1 of menuLine 
+      else if char 2 of word 1 of menuLine is "c" then
+         put checkValue into char 2 of word 1 of menuLine 
+      else
+         -- put checkValue into char 2 of word 1 of menuLine -- not sure
+      end if
+   else
+      put "!" & checkValue before of word 1 menuLine 
+   end if    
+   put menuLine into line lineNum of someMenuText
+   return someMenuText
+end menu_SetCheckedLine

@@ -1,0 +1,25 @@
+command library_StoreHandlerHelp shortHkey, someHelp, pAskSave
+   put library_HandlerFile (shortHkey, "help.html", false) into someFile
+   put url ("binfile:" & someFile) into oldHelp
+   if oldHelp = "<p></p>" then put empty into oldHelp
+   if word 1 to -1 of oldHelp = word 1 to -1 of someHelp then return empty
+   
+   if oldHelp = someHelp then
+      return empty
+   end if
+   
+   if pAskSave is not false then
+      -- opn_Notify someHelp
+      put merge ("Are you sure you want to save the new help for [[shortHkey]]?") into someQuestion
+      answer someQuestion with "Cancel" or "OK"
+      if it is "Cancel" then return empty
+   end if
+   
+   if someHelp is empty or someHelp is "<p></p>" then
+      delete file someFile
+      return empty
+   else
+      put someHelp into url ("binfile:" & someFile)
+      return someFile
+   end if
+end library_StoreHandlerHelp

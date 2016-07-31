@@ -1,0 +1,84 @@
+command mouse_ResizeObject someObject
+   put mouse_WithinBorder(someObject) into mouseCorner
+   
+   put the rect of someObject into newRect
+   switch mouseCorner
+      case "T"
+         put item 2 the mouseLoc - item 2 of newRect into vClickOffset
+         repeat while the mouse is "Down"
+            put item 2 the mouseLoc into item 2 of newRect
+            subtract vClickOffset from item 2 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      case "B"
+         put item 2 the mouseLoc - item 4 of newRect into vClickOffset	# will be negative
+         repeat while the mouse is "Down"
+            put item 2 the mouseLoc into item 4 of newRect
+            subtract vClickOffset from item 4 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      case "L"
+         put item 1 the mouseLoc - item 1 of newRect into hClickOffset
+         repeat while the mouse is "Down"
+            put item 1 the mouseLoc into item 1 of newRect
+            subtract hClickOffset from item 1 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      case "R"
+         put item 1 the mouseLoc - item 3 of newRect into hClickOffset	# will be negative
+         repeat while the mouse is "Down"
+            put item 1 the mouseLoc into item 3 of newRect
+            subtract hClickOffset from item 3 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      case "TL"
+         put item 1 the mouseLoc - item 1 of newRect into hClickOffset
+         put item 2 the mouseLoc - item 2 of newRect into vClickOffset
+         repeat while the mouse is "Down"
+            put the mouseLoc into item 1 to 2 of newRect
+            subtract hClickOffset from item 1 of newRect
+            subtract vClickOffset from item 2 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      case "TR"
+         put item 1 the mouseLoc - item 3 of newRect into hClickOffset	# will be negative
+         put item 2 the mouseLoc - item 2 of newRect into vClickOffset
+         repeat while the mouse is "Down"
+            put item 1 of the mouseLoc into item 3 of newRect
+            put item 2 of the mouseLoc into item 2 of newRect
+            subtract vClickOffset from item 2 of newRect
+            subtract hClickOffset from item 3 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      case "BL"
+         put item 1 the mouseLoc - item 1 of newRect into hClickOffset
+         put item 2 the mouseLoc - item 4 of newRect into vClickOffset	# will be negative
+         repeat while the mouse is "Down"
+            put item 1 of the mouseLoc into item 1 of newRect
+            put item 2 of the mouseLoc into item 4 of newRect
+            subtract vClickOffset from item 4 of newRect
+            subtract hClickOffset from item 1 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      case "BR"
+         put item 1 the mouseLoc - item 3 of newRect into hClickOffset	# will be negative
+         put item 2 the mouseLoc - item 4 of newRect into vClickOffset	# will be negative
+         repeat while the mouse is "Down"
+            put item 1 of the mouseLoc into item 3 of newRect
+            put item 2 of the mouseLoc into item 4 of newRect
+            subtract hClickOffset from item 3 of newRect
+            subtract vClickOffset from item 4 of newRect
+            set the rect of someObject to newRect
+         end repeat
+         break
+      default
+         grab someObject
+   end switch
+end mouse_ResizeObject

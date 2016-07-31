@@ -1,0 +1,31 @@
+getprop view_MatchInside [vNames]
+   -- a recursive function
+   -- a strict match where if the target is matched by the top vName
+   -- then it looks for a match for the next vName in the index among the top controls (one level down)
+   -- and continues for all lines of vNames
+   -- any mismatch and it returns false (stem matches are allowed)
+   -- calling this property on a control which has no view_Name or the wrong view_Name returns empty
+   
+   put the long id of the target into targetObject
+   replace "/" with CR in vNames
+   put line 1 of vNames into viewNameOrStem
+   
+   -- first lets check the top level object
+   put the view_Name of targetObject into vName
+   if vName is empty then return empty
+   if strictViewNameMatch(viewNameOrStem, vName) is true then
+      -- found a match
+      delete line 1 of vNames
+      if vNames is empty then
+         -- no more vNames to search so lets return the found object
+         return targetObject
+      else
+         put the object_TopControls of targetObject into topControls
+         repeat for each line testControl in topControls
+            put the view_MatchInside [vNames] of testControl into foundView
+            if exists(foundView) then return foundView
+         end repeat
+         return empty
+      end if
+   end if
+end view_MatchInside

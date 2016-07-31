@@ -1,0 +1,9 @@
+private function swapEndianness pString, pSize
+   if pSize is empty then put 2 into pSize
+   repeat with n = 1 to length(pString) step pSize
+      repeat with s = pSize - 1 down to 0
+         put byte n + s of pString  after nString
+      end repeat
+   end repeat
+   return nString
+end swapEndianness

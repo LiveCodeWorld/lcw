@@ -1,0 +1,12 @@
+function scriptEditor_HandlerListBehavior
+   -- behavior_IdeHandlerListField
+   if exists (stack "behavior_IdeHandlerListField") then
+      put the name of stack "behavior_IdeHandlerListField" into someObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put scriptEditor_GetBehaviorButton ("Livecode Handler List Field") into someObject
+   end if
+   if exists(someObject) is false then return empty
+   return revRuggedID (someObject)
+end scriptEditor_HandlerListBehavior

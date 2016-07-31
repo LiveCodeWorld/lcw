@@ -1,0 +1,21 @@
+getprop image_GuessFileName [someFolder]
+    put the long id of the target into imageObject
+     
+    get the short name of imageObject
+    file_Deconstruct it, someRoot, shortName, fileExtension
+    if fileExtension is empty then
+        put tolower(it) & ".png" into shortFile
+        replace space with "_" in shortFile
+    else
+        put it into shortFile
+    end if
+    put the short id of imageObject & "_" before shortFile
+    
+    if someFolder is empty then
+        return shortFile
+    else
+        folder_Format someFolder
+        put someFolder & shortFile into someFile
+        return someFile
+    end if
+end image_GuessFileName

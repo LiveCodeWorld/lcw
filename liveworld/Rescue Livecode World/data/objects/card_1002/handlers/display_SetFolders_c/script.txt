@@ -1,0 +1,8 @@
+command display_SetFolders setArray
+   put setArray ["metadata"] into metadataArray
+   repeat for each key lcwFolderName in metadataArray
+      if lcwFolderName = "library_SetName" then next repeat
+      put metadataArray [lcwFolderName]["folder"] into someFolder
+      set the index_Folder of group lcwFolderName to someFolder
+   end repeat
+end display_SetFolders

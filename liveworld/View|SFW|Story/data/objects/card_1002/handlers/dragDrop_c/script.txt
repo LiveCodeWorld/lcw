@@ -1,0 +1,35 @@
+on dragDrop
+   put the long id of group 1 of me into dgView
+   
+   /*
+   get the dragsource
+   put the keys of the dragdata
+   put the dragData ["files"] into someFiles
+   put the dragData ["image"] into someImage
+   get the dragData ["unicode"]
+   get the dragData ["styles"]
+   -- <p><a href="https://fr.wikipedia.org/wiki/Ch%C3%A2teau_de_Millemont#Galerie"><u><font face="Times Roman" size="12" color="#0000E9">2 Galerie</font></u></a></p>
+   */
+   put the dragData ["html"] into someHtml
+   put the dragData ["text"] into someText
+   
+   set the itemdelimiter to ":"
+   if item 1 of someText is among the items of "http:https" then
+      put someText into someUrl
+   else  
+      /*
+      put char 4 to -5 of someHtml into linkLine
+      html_DeconstructRefLink linkLine, someText, someUrl
+      put html_ExtractAllLinks (linkLine) into someUrl
+      put html_ExtractLinks (linkLine) into someUrl
+      put html_ExtractLink (linkLine) into someUrl
+      */
+      put html_ExtractHREF (someHtml) into someUrl
+      if item 1 of someUrl is not among the items of "http:https" then
+         pass dragDrop
+      end if
+   end if
+   -- set the dropped_URL of dgView to someUrl
+   fedwiki_ParseDroppedUrl someURL
+   -- pass dragDrop
+end dragDrop

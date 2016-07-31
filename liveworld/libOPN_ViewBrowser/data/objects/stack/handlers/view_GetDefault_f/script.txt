@@ -1,0 +1,11 @@
+function view_GetDefault viewName
+   put the mvc_Library of me into modelObject
+   
+   view_NormalizeName viewName
+   put view_GetDefaults() into viewDefaults
+   set the wholematches to true
+   set the itemdelimiter to "|"
+   if viewName is not among the lines of viewDefaults then delete item -1 of viewName
+   get model_GetValue(viewName, modelObject, "DefaultView", "array")
+   return it
+end view_GetDefault

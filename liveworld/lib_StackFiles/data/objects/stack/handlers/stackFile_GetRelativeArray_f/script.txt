@@ -1,0 +1,6 @@
+function stackFile_GetRelativeArray stackName
+   put the stackfiles of stack stackName into stackFileTable
+   put stackFile_ToArray (stackFileTable) into stackNameDictionary
+   put array_Reverse (stackNameDictionary) into relativeFileDictionary
+   return relativeFileDictionary
+end stackFile_GetRelativeArray

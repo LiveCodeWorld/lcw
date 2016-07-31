@@ -1,0 +1,5 @@
+command fossil_DeconstructSettingLine someLine, @someKey, @someValue, @isGlobal
+   put word 1 of someLine into someKey
+   put word 2 of someLine = "(global)" into isGlobal
+   put word 3 to -1 of someLine into someValue
+end fossil_DeconstructSettingLine

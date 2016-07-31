@@ -1,0 +1,9 @@
+on menu_DeleteTemplate textDisplayView, templateName
+   put merge ("Are you sure you want to delete the script template '[[templateName]]'. This cannot be undone!") into someWarning
+   answer warning someWarning with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   script_DeleteTemplate templateName
+   put the result into deletedFile
+   answer merge ("Deleted stored template script '[[templateName]]'!")
+end menu_DeleteTemplate

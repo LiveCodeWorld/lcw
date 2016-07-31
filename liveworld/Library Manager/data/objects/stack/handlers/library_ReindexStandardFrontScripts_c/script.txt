@@ -1,0 +1,7 @@
+command library_ReindexStandardFrontScripts
+   put library_ListStandardFrontScripts() into someObjects
+   repeat for each line scriptObject in someObjects
+      object_AddToGlobalArray scriptObject
+   end repeat
+   return someObjects
+end library_ReindexStandardFrontScripts

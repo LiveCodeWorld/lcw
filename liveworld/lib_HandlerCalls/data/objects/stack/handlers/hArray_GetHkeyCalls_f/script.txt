@@ -1,0 +1,36 @@
+function hArray_GetHkeyCalls hKey
+   -- ugly, use hkey_Calls, or hKey_GetCalls, or hKey_FetchCalls
+   
+   put hArray_GetHkeyDataArray (hKey) into handlerArray
+   put handlerArray ["sha1"] into handlerHash
+   
+   if handlerHash is empty then
+      -- maybe the index is old?
+      -- could check scripts sha1?
+      put item 3 of hKey into hObject
+      object_AddToGlobalArray hObject 
+      put hArray_GetHandlerHash (hKey) into handlerHash
+      if handlerHash is empty then
+         -- it's not there
+         return empty
+      end if
+   end if
+   
+   put library_FetchHandler (hKey) into someHandler
+   if someHandler is empty then
+      -- handler has not been exported
+      put hArray_GetHandler (hKey) into someHandler
+      put handler_ExtractCalls (someHandler) into hkeyCalls
+      hkey_StoreCallsAndHandler hkey, someHandler, hKeyCalls
+      return hkeyCalls
+   else if sha1_Hash (someHandler) = handlerHash then
+      return hkey_FetchShortCalls (hKey)
+   else
+      -- the exported handler is different
+      -- let's return a value derived from the actual handler
+      -- but not export
+      put hArray_GetHandler (hKey) into someHandler
+      put handler_ExtractCalls (someHandler) into hkeyCalls
+      return hkeyCalls
+   end if
+end harray_GetHkeyCalls

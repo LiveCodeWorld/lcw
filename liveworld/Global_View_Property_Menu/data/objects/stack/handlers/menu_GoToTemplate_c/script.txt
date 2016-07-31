@@ -1,0 +1,4 @@
+on menu_GoToTemplate someView
+   put the template_Object of someView into tObject
+   object_GoTo tObject
+end menu_GoToTemplate

@@ -1,0 +1,10 @@
+getprop indexGroup_LongStackFiles
+   put the child_Views ["View|Index|Simple"] of the target into indexViews
+   repeat for each line indexView in indexViews
+      put the indexView_LongStackFiles of indexView into indexViewLongStackFiles
+      put indexViewLongStackFiles & CR after longStackFiles
+   end repeat
+   delete char -1 of longStackFiles
+   sort longStackFiles
+   return word 1 to -1 of longStackFiles
+end indexGroup_LongStackFiles

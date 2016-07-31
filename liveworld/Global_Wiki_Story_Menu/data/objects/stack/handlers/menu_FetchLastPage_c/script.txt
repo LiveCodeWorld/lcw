@@ -1,0 +1,15 @@
+on menu_FetchLastPage dgView
+   put the browser_Url of dgView into someUrl
+   
+   -- url_Deconstruct someUrl, someProtocol, fedwikiDomain, urlPath, shortName, fileExtension, uName, pWord
+   set the itemdelimiter to "/"
+   put item 3 of someUrl into fedwikiDomain
+   put item 4 to -1 of someUrl into urlPath
+   
+   put fedwiki_ExtractPageSlugsFromPath (urlPath) into pageSlugs
+   put line -1 of pageSlugs into pageSlug
+   put fedwiki_FetchPageJson (fedwikiDomain, pageSlug) into someJSON
+   put json_ToArray (someJSON) into someArray
+   
+   display_Array someArray, "fedwiki_FetchPageJson"
+end menu_FetchLastPage

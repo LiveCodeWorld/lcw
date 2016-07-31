@@ -1,0 +1,12 @@
+getprop field_AutoScrollBar
+   put the long ID of the target into someField
+   if word 1 of someField is not "field" then return "Error: target is not a field"
+   
+   if the formattedHeight of someField > the height of someField then
+      set the vScrollbar of someField to true
+      return true
+   else
+      set the vScrollbar of someField to false
+      return false
+   end if
+end field_AutoScrollBar

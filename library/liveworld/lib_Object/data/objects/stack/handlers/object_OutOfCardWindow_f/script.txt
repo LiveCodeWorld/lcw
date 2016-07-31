@@ -1,0 +1,9 @@
+function object_OutOfCardWindow pObj,pCard
+   -- OutOfCardWindow returns is an object is out of the card window:
+   
+   if the left of pObj > the right of pCard then return true
+   if the right of pObj < 0 then return true
+   if the bottom of pObj < 0 then return true
+   if the top of pObj > the bottom of pCard then return true
+   return false
+end object_OutOfCardWindow

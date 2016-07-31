@@ -1,0 +1,21 @@
+on menu_MoveFile
+   answer file "Select a repo file..."
+   put it into someFile
+   if someFile is empty then return empty
+   
+   answer folder "Select a folder to move to..."
+   put it into someFolder
+   if someFolder is empty then return empty
+   
+   set the itemdelimiter to "/"
+   put item -1 of someFile into shortFile
+   
+   put someFolder & "/" & shortFile into newFile
+   
+   git_RenameFile someFile, newFile
+   if the result is not empty then
+      opn_Notify the result, true
+   else
+      git_RefreshDisplay
+   end if
+end menu_MoveFile

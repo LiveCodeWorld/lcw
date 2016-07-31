@@ -1,0 +1,8 @@
+command project_AddStack stackNames
+   put project_FetchValue ("openStacks") into oldProjectStackNames
+   put stackNames & CR & oldProjectStackNames into newProjectStackNames
+   sort newProjectStackNames
+   put word 1 to -1 of newProjectStackNames into newProjectStackNames
+   project_SaveValue "openStacks", newProjectStackNames
+   return newProjectStackNames
+end project_AddStack

@@ -1,0 +1,4 @@
+function loc_DistanceBetween startLocation, endLocation
+   get ((item 1 of endLocation - item 1 of startLocation)^2 + (item 2 of endLocation - item 2 of startLocation)^2) ^ 0.5
+   return it
+end loc_DistanceBetween

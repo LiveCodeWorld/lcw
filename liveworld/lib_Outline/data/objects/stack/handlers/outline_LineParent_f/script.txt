@@ -1,0 +1,14 @@
+function outline_LineParent osLineNum, someOutline, @parentLineNum
+    put outline_TabLevel(someTitle) into lastTabLevel
+    repeat with parentLineNum = osLineNum down to 1
+        put line parentLineNum of someOutline into someTitle
+        put outline_TabLevel(someTitle) into someTabLevel
+        if someTabLevel is 0 then
+            return someTitle
+        else if someTabLevel < lastTabLevel then
+            return someTitle
+        end if
+    end repeat
+    put 0 into parentLineNum
+    return empty
+end outline_LineParent

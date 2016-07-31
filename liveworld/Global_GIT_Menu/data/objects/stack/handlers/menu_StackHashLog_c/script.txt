@@ -1,0 +1,9 @@
+on menu_StackHashLog treeField
+   -- a log of all the previous commits of a version specified by commitHash
+   put the tree_SelectedLink of treeField into commitHash
+   put the displayed_Object of treeField into stackObject
+   
+   put the git_StackHashLog [commitHash] of stackObject into logText
+   
+   display_Lines logText, ("the git_ObjectHashLog [" & commitHash & "] of" && stackObject)
+end menu_StackHashLog

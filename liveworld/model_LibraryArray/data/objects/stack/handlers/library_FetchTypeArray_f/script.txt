@@ -1,0 +1,5 @@
+function library_FetchTypeArray libType, pSetName
+   put library_FetchSetArray (pSetName) into libArray
+   put libArray ["data"][libType] into ruggedArray
+   return ruggedArray
+end library_FetchTypeArray

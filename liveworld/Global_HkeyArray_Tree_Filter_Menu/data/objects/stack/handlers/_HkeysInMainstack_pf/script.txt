@@ -1,0 +1,7 @@
+private function _HkeysInMainstack treeView
+   put the displayed_MainStackWalkArray of treeView into mainStackWalkArray
+   put mainStackWalkArray ["hKeyArray"] into hKeyArray
+   put array_AllNodes (hKeyArray) into hKeys
+   sort hKeys by item 1 of each
+   return hKeys
+end _HkeysInMainstack

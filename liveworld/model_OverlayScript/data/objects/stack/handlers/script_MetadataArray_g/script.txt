@@ -1,0 +1,6 @@
+getprop script_MetadataArray [pOverlayName]
+   put the long id of the target into scriptObject
+   put the script_OverlayArray [pOverlayName] of scriptObject into overlayArray
+   put overlayArray ["metadata"] into metadataArray
+   return metadataArray
+end script_MetadataArray

@@ -1,0 +1,11 @@
+on menu_Reindex mTarget, scriptMenuTitle
+   put rev_ScriptObject() into mController
+   
+   if scriptMenuTitle is "All" then
+      opn_Answer "Are you sure you want to update all stored menu tables?"
+      script_UpdateMenuTables mController
+   else
+      menu_UpateMenuTable mTitle, mController
+   end if
+   put mTable
+end menu_Reindex

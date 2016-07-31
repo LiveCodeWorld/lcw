@@ -1,0 +1,5 @@
+function gist_ShortFileFromObject scriptObject
+   replace quote with "'" in scriptObject
+   put "script," & word 1 to -1 of scriptObject into shortGistFile
+   return shortGistFile
+end gist_ShortFileFromObject

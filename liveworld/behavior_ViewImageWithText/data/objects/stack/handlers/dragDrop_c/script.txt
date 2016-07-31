@@ -1,0 +1,16 @@
+on dragDrop
+   put the dragData ["files"] into someFiles
+   put line 1 of someFiles into someFile
+   put file_GetType (someFile) into fType
+   switch fType
+      case "image"
+         set the image_File of me to someFile
+         break
+      case "text"
+         put url ("file:" & someFile) into someText
+         set the image_Description of me to someText
+         break
+      default
+         opn_Notify fType
+   end switch
+end dragDrop

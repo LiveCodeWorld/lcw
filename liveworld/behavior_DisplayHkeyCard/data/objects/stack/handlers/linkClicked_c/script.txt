@@ -1,0 +1,20 @@
+on linkClicked someLink
+   put the clicktext into cText
+   switch
+      case someLink= cText
+         put the displayed_Hkey of me into hKey
+         put item 1 of hKey into hName
+         put item 2 of hKey into hType
+         put (word 1 of someLink = hName) and (hType is among the items of "c,m") into isCommand
+         if word 1 of someLink is among the items of "get,put,answer,ask" or isCommand then
+            replace "¥" with CR in someLink
+            do someLink
+         else
+            link_DictionaryLink someLink
+         end if
+         break
+      default
+         do someLink
+   end switch
+   pass linkClicked
+end linkClicked

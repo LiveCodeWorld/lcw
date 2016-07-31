@@ -1,0 +1,6 @@
+on xml_AddHeaderLine @someXml, pXmlVersion, pXmlEncoding
+    if pXmlVersion is empty then put "1.0" into pXmlVersion
+    if pXmlEncoding is empty then put "UTF-8" into pXmlEncoding
+    -- put format("<?xml version=\"1.0\" encoding=\"%s\"?>%s", pXmlEncoding, theXML) into theXML
+    put "<?xml version=" & kwote(pXmlVersion) && "encoding=" & kwote(pXmlEncoding) & "?>" & CR before someXml
+end xml_AddHeaderLine

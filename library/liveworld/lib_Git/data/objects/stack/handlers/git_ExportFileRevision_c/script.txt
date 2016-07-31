@@ -1,0 +1,15 @@
+command git_ExportFileRevision relativePath, commitHash, pToFile
+   if pToFile is empty then
+      set the itemdelimiter to "/"
+      put the tempName & "/" into someFolder
+      folder_CreateNested someFolder
+      put someFolder & item -1 of relativePath into pToFile
+   end if
+   
+   put kwote(relativePath) into relativePath
+   put merge("git show [[commitHash]]:[[relativePath]]") into someShell
+   put space & ">" && kwote(pToFile) after someShell
+   
+   put git_ExecuteShellCommand(someShell) into shellResult 
+   return pToFile
+end git_ExportFileRevision

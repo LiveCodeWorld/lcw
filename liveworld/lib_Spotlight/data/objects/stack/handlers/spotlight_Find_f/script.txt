@@ -1,0 +1,23 @@
+function spotlight_Find someText, inFolder
+   /*
+   Usage: mdfind [-live] [-onlyin directory] query
+   query can be an expression or a sequence of words
+   
+   -live             Query should stay active
+   -onlyin <dir>     Search only within given directory
+   
+   mdfind "kMDItemAuthors == 'John Scofield' && kMDItemContentTypeTree == 'public.audio'"
+   mdfind "kind:pdf Calculus"
+   */
+   
+   text_StripSurroundingQuotes someText
+   put kwote(someText) into someText
+   
+   put "mdfind" && someText into someShell
+   
+   if inFolder is not empty then
+      shell_BashParamEscape inFolder
+      put space & "-onlyin" && inFolder after someShell
+   end if
+   return shell(someShell)
+end spotlight_Find

@@ -1,0 +1,13 @@
+function googleEarth_ExtractTree someFolder, treeID
+    local someNodes
+     
+    line_Insert someFolder, someNodes
+    
+    put revXMLChildNames(treeID, someFolder, CR, "Folder", true) into subFolderNames
+    repeat for each line subFolderName in subFolderNames
+        put someFolder & "/" & subFolderName into folderNode	# 
+        put googleEarth_ExtractTree(folderNode, treeID) into newNodes
+        line_Insert newNodes, someNodes
+    end repeat
+    return someNodes
+end googleEarth_ExtractTree

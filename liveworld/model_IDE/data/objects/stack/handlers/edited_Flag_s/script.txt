@@ -1,0 +1,8 @@
+setprop edited_Flag someBoolean
+   put the stack_Name of the target into stackName
+   if someBoolean is true then
+      rev_MarkStackEdited stackName
+   else
+      rev_MarkStackSaved stackName
+   end if
+end edited_Flag

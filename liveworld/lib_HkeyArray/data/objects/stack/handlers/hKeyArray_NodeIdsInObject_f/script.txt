@@ -1,0 +1,23 @@
+function hKeyArray_NodeIdsInObject someObject, hIdArray
+   -- was "hKeyArray_NodeIdsInObject"
+   if exists(someObject) then
+      put the long id of someObject into objectTest
+   else
+      put someObject into objectTest
+   end if
+   repeat for each key hId in hIdArray
+      put hIdArray [hID] into hKey
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      if exists(scriptObject) then
+         put the long id of scriptObject into scriptTest
+      else
+         put scriptObject into scriptTest
+      end if
+      put scriptTest = objectTest into insideObject
+      if insideObject is true then
+         put hID & CR after hIDs
+      end if
+   end repeat
+   delete char -1 of hIDs
+   return hIDs
+end hKeyArray_NodeIdsInObject

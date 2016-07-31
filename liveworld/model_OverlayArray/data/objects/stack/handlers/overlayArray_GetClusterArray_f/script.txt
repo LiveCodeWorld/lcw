@@ -1,0 +1,5 @@
+function overlayArray_GetClusterArray overlayArray
+   put overlayArray ["data"] into dotDataArray
+   put dotDataArray ["dot_ClusterArray"] into dotClusterArray
+   return dotClusterArray
+end overlayArray_GetClusterArray

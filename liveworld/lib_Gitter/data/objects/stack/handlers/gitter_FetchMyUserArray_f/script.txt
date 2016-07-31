@@ -1,0 +1,5 @@
+function gitter_FetchMyUserArray
+   -- curl -i -H "Accept: application/json" -H "Authorization: Bearer 6de5229ab216b137776afd3f0e0da393400f4481" "https://api.gitter.im/v1/user"  
+   put gitter_RestfulGet ("user") into jsonResult
+   return jsonResult
+end gitter_FetchMyUserArray

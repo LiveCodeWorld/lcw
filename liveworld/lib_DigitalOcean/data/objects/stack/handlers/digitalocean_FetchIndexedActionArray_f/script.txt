@@ -1,0 +1,5 @@
+function digitalocean_FetchIndexedActionArray
+   -- curl -X GET "https://api.digitalocean.com/v2/actions" -H "Authorization: Bearer $TOKEN" 
+   put digitalocean_FetchJsonArray ("actions") into indexedActionArray
+   return indexedDropletArray
+end digitalocean_FetchIndexedActionArray

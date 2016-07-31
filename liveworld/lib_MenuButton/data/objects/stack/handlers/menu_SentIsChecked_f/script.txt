@@ -1,0 +1,7 @@
+function menu_SentIsChecked
+   put menu_GetActiveText() into mText
+   put menu_GetSentPath() into sentPath
+   put menu_LineNumFromPath (sentPath, mText) into lineNum
+   put menu_GetCheckedLine (lineNum, mText) into isChecked
+   return isChecked
+end menu_SentIsChecked

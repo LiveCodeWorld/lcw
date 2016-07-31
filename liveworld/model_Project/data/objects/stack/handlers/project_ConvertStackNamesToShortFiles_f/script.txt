@@ -1,0 +1,9 @@
+function project_ConvertStackNamesToShortFiles stackNames
+   set the itemdelimiter to slash
+   repeat for each line stackName in stackNames
+      put the filename of stack stackName into longFile
+      put item -1 of longFile into shortFile
+      put shortFile & CR after shortFiles
+   end repeat
+   return shortFiles
+end project_ConvertStackNamesToShortFiles

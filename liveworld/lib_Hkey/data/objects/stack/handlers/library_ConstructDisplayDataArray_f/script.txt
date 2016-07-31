@@ -1,0 +1,22 @@
+function library_ConstructDisplayDataArray hKeys
+   put library_FetchHandlerDatabaseArray() into hKeyData
+   
+   put hKeys into hKeyDeps
+   put line 1 of hKeys into hKey
+   delete line 1 of hKeyDeps
+   
+   put 1 into indexNum
+   put library_HkeyToPublicShortHkey (hKey) into shortHkey
+   put shortHkey into dgArray [indexNum]["hKey"]
+   put hKeyData [shortHkey] into dgArray [indexNum]["handlerLibraryArray"]
+   put true into dgArray [indexNum]["isExpanded"]
+   
+   repeat for each line hKeyDep in hKeyDeps
+      add 1 to indexNum
+      put library_HkeyToPublicShortHkey (hKeyDep) into shortHkey
+      put shortHkey into dgArray [indexNum]["hKey"]
+      put false into dgArray [indexNum]["isExpanded"]
+      put hKeyData [shortHkey] into dgArray [indexNum]["handlerLibraryArray"]
+   end repeat
+   return dgArray
+end library_ConstructDisplayDataArray

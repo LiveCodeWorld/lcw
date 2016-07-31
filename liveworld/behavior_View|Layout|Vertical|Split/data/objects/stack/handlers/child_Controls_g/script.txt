@@ -1,0 +1,10 @@
+getprop child_Controls
+   put the childcontrolids of me into topControlIDs
+   put the number of lines of topControlIDs into numberOfChildren
+   repeat with cNum = 1 to numberOfChildren    
+      put line cNum of topControlIDs into topControlID
+      put the long id of control id topControlID & CR after childViews
+   end repeat
+   delete char -1 of childViews
+   return childViews
+end child_Controls

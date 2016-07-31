@@ -1,0 +1,10 @@
+command menu_SetDataArray mController, mTitleTableArray
+   if mTitleTableArray is empty then return empty
+   
+   -- here we start creating a new global array model for menu tables
+   menu_SetTitleTableArrayGlobal mController, mTitleTableArray
+   
+   -- if it is a script-only stack then these changes won't stick
+   set the customproperties ["menu_Table"] of mController to mTitleTableArray
+   return mTitleTableArray
+end menu_SetDataArray

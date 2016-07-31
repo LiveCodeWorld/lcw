@@ -1,0 +1,12 @@
+function wikicommons_FetchImageSandboxArray shortImageFile 
+   if not (shortImageFile begins with "File:") then put "File:" before shortImageFile
+   put wikimedia_GetApiRoot() into pApiStem
+   
+   put "/w/api.php?action=query&format=json&prop=imageinfo" into sandBoxFragment
+   put "&titles=" & shortImageFile after sandBoxFragment
+   put "&iiprop=" & "comment|url|dimensions|size|sha1|metadata|extmetadata|thumbmime" after sandBoxFragment
+   put "&iiurlwidth=420" after sandBoxFragment
+   
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   return sandboxArray
+end wikicommons_FetchImageSandboxArray

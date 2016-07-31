@@ -1,0 +1,42 @@
+function server_FileInfoArray someFile
+   put server_GetURL() into remoteDomain
+   put server_GetSshUser() into sshUser
+   
+   put someFile into bashFile
+   shell_BashParamEscape bashFile
+   put "ls -la" && bashFile into remoteShell
+   shell_RemoteExecute sshUser, remoteDomain, remoteShell
+   put the result into lsResult
+   
+   put lsResult into fileArray ["ls_la_Result"]
+   switch
+      case word 1 of lsResult = "total"
+         -- it's a folder
+         put someFile into fileArray ["file"]
+         put char 1 of line 2 of of lsResult = "d" into fileArray ["isFolder"]
+         return fileArray
+      case lsResult ends with ": No such file or directory"
+         -- file or folder is missing
+         return fileArray
+      default
+         put shell_ConstructLSArray (lsResult, true) into lsArray
+         put lsArray ["file"] into filesArray
+         put line 1 of keys (filesArray) into filePath
+         put filesArray [filePath] into fileArray
+         
+         put filePath into fileArray ["file"]
+         put remoteDomain into fileArray ["domain"]
+         
+         set the itemdelimiter to "/"
+         put item -1 of filePath into shortFile
+         put shortFile into fileArray ["shortFile"]
+         
+         if shortFile contains "." then
+            set the itemdelimiter to "."
+            put item -1 of shortFile into fileArray ["fileExtension"]
+         else
+            put empty into fileArray ["fileExtension"]
+         end if
+         return fileArray
+   end switch
+end server_FileInfoArray

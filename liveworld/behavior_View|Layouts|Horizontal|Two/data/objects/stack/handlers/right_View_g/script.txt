@@ -1,0 +1,4 @@
+getprop right_View
+   if exists (RightView) is false then view_IndexChildren
+   return RightView
+end right_View

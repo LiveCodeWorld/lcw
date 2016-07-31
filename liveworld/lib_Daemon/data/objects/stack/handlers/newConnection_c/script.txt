@@ -1,0 +1,11 @@
+on newConnection pSocketID
+   /*
+   This handler is the first step of a new connection. It will start processing the connections and pipeing the control to the handler called "proccessRequest"
+   
+   pDropDelay is the number of seconds that a connection that never completed is kept around in SocketData before it is purged. 
+   In this case, I assume that if we don't get a fully formed set of data within 10 minutes of the initial connection, it's not going to happen.
+   */
+   put the long id of target into SocketData [pSocketId]["theTarget"]
+   put the seconds + DropDelay into SocketData [pSocketId]["theSeconds"]
+   read from socket pSocketID until CRLF with message "readRequest"
+end newConnection

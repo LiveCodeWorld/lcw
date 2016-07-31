@@ -1,0 +1,4 @@
+command library_DeleteHandlerFolder shortHkey
+   put library_HkeyFolder (shortHkey) into hkeyFolder
+   revDeleteFolder hkeyFolder
+end library_DeleteHandlerFolder

@@ -1,0 +1,96 @@
+--> Metadata
+-
+license: GPLv3
+name: LCW
+type: home
+version: 0.1
+
+/*
+This is the Livecode Wolrd Home stack.
+
+Here we experiment with a minimal script-only definition of a general project home stack.
+It should do everything that is needed to get the project up and running, but nothing more.
+It should:
+
+-  have no dependencies
+-  not depend on script introspection
+-  use robust file naming concentions
+-  human readable and easy to parse in any language
+-  a simple text stack that plays well with revision control
+
+This is a new beginning.
+*/
+
+
+--> Initialise
+-
+/*
+When initialising we use "me" not "the target".
+These are not library functions. To be robust they should only work in the context of this stack.
+These handlers are private as we want to control how this stack is used to keep everything simple.
+
+-- see related "project_StartEnvironment" and "project_StopEnvironment"
+*/
+
+[[ _FetchHandler (_StartEnvironment,pc) ]]
+
+[[ _FetchHandler (_LoadAfterUsingLibraries,pc) ]]
+
+[[ _FetchHandler (loadGlobals,c) ]]
+
+
+--> Currently Working On
+-
+[[ _FetchHandler (_CreateMenuButton,pc) ]]
+
+[[ _FetchHandler (lcw_IndexGlobalMenus,c) ]]
+
+[[ _FetchHandler (_LoadMenus,c) ]]
+
+[[ _FetchHandler (lcw_IndexAllScripts,c) ]]
+
+[[ _FetchHandler (standard_IndexAllScripts,c) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (preOpenStack,c) ]]
+
+[[ _FetchHandler (libraryStack,c) ]]
+
+
+--> Props
+-
+[[ _FetchHandler (project_HomeStack,g) ]]
+
+[[ _FetchHandler (menu_Button,g) ]]
+
+[[ _FetchHandler (project_Folder,g) ]]
+
+[[ _FetchHandler (project_Folders,g) ]]
+
+[[ _FetchHandler (project_StackPaths,g) ]]
+
+[[ _FetchHandler (home_StackFileArray,g) ]]
+
+[[ _FetchHandler (home_StackFileArray,s) ]]
+
+
+--> Initialise | Deps
+-
+[[ _FetchHandler (bash_AddSystemPathsToPATH,c) ]]
+
+[[ _FetchHandler (_KnowStacks,pc) ]]
+
+[[ _FetchHandler (_LoadGlobals,pc) ]]
+
+[[ _FetchHandler (_StartUsed,pc) ]]
+
+
+--> Handlers
+-
+[[ _FetchHandler (lcw_ListFolders,f) ]]
+
+[[ _FetchHandler (folder_ConstructStackNameArray,f) ]]
+
+[[ _FetchHandler (folder_ListStackPaths,f) ]]

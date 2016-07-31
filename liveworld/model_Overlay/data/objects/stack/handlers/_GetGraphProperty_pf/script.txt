@@ -1,0 +1,11 @@
+private function _GetGraphProperty propName, pOverlayName
+   if pOverlayName is empty then put the overlay_Name of the target into pOverlayName
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   put overlayArray_GetGraphProperty (overlayArray, propName) into propValue
+   return propValue
+   
+   if pOverlayName is empty then put the overlay_Name of the target into pOverlayName
+   put the overlay_Folder of the target into overlayFolder
+   put overlay_GetGraphValue (overlayFolder, propName, pOverlayName) into propValue
+   return propValue
+end _GetGraphProperty

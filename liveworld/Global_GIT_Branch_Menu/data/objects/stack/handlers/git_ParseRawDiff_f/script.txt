@@ -1,0 +1,34 @@
+function git_ParseRawDiff rawDiff
+   set the itemdelimiter to tab
+   put 1 into lineNum
+   repeat for each line someLine in rawDiff
+      if char 1 of someLine = ":" then
+         delete char 1 of someLine
+      else
+         opn_Notify someLine, true
+         next repeat
+      end if
+      
+      put item 1 of someLine into firstBit
+      put item 2 of someLine into srcPath
+      put item 3 of someLine into dstPath
+      
+      put word 1 of firstBit into srcMode
+      put word 2 of firstBit into dstMode
+      
+      put word 3 of firstBit into srcHash
+      put word 4 of firstBit into dstHash
+      put word 5 of firstBit into status
+      
+      put srcMode into dataArray [lineNum]["srcMode"]
+      put dstMode into dataArray [lineNum]["dstMode"]
+      put srcHash into dataArray [lineNum]["srcHash"]
+      put dstHash into dataArray [lineNum]["dstHash"]
+      put srcPath into dataArray [lineNum]["srcPath"]
+      put dstPath into dataArray [lineNum]["dstPath"]
+      put status into dataArray [lineNum]["status"]
+      
+      add 1 to lineNum
+   end repeat
+   return dataArray
+end git_ParseRawDiff

@@ -1,0 +1,33 @@
+command margin_Normalize @someMargin, @leftM, @topM, @rightM, @bottomM
+   if the number of items of someMargin < 4 then
+      put item 1 of someMargin into defaultMargin
+      put defaultMargin into leftM
+      
+      put item 2 of someMargin into actualMargin
+      if actualMargin is empty then
+         put leftM into topM
+      else
+         put actualMargin into topM
+      end if
+      
+      put item 3 of someMargin into actualMargin
+      if actualMargin is empty then
+         put leftM into rightM
+      else
+         put actualMargin into rightM
+      end if
+      
+      put item 4 of someMargin into actualMargin
+      if actualMargin is empty then
+         put topM into bottomM
+      else
+         put actualMargin into bottomM
+      end if
+   else
+      put item 1 of someMargin into leftM
+      put item 2 of someMargin into topM
+      put item 3 of someMargin into rightM
+      put item 4 of someMargin into bottomM
+   end if
+   put leftM,topM,rightM,bottomM into someMargin
+end margin_Normalize

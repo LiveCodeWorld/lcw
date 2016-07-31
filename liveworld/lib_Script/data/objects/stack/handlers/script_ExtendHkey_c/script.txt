@@ -1,0 +1,5 @@
+command script_ExtendHkey @hKey, scriptObject, handlerNum
+   if handlerNum is empty then put 1 into hKey
+   hkey_Deconstruct hKey, handlerName, hType, scriptObject, handlerNum
+   put hkey_Construct(handlerName, hType, scriptObject, handlerNum) into hKey
+end script_ExtendHkey

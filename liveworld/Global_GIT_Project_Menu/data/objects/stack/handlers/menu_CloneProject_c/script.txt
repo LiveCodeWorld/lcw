@@ -1,0 +1,4 @@
+on menu_CloneProject
+   put opn_Ask ("Enter a remote url to clone...", "https://github.com/opn/lcVCS.git") into gitURL
+   git_CloneAndFetch gitURL
+end menu_CloneProject

@@ -1,0 +1,11 @@
+function imageMagick_FetchIdentityArray imageURL
+   -- put merge ("wget -O - [[imageURL]] | identify -") into someShell
+   put the tempname into imagePath
+   put url imageURL into url ("binfile:" & imagePath)
+   
+   put imagePath into gpsArray ["imagePath"]
+   put "identify" && imagePath into someShell
+   put shell (someShell) into identityInfo
+   put identityInfo into gpsArray ["identify"]
+   return gpsArray
+end imageMagick_FetchIdentityArray

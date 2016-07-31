@@ -1,0 +1,4 @@
+getprop disabled_DisplayPreference
+   global gPrefs_Array
+   return keys (gPrefs_Array) is empty
+end disabled_DisplayPreference

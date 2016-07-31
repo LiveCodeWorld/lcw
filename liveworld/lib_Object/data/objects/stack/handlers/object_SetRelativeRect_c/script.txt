@@ -1,0 +1,5 @@
+command object_SetRelativeRect referenceObject, objectToSet, relativeRect
+   put the topLeft of referenceObject into topLeftLoc
+   rect_AddVector relativeRect, topLeftLoc
+   set the rect of objectToSet to relativeRect
+end object_SetRelativeRect

@@ -1,0 +1,14 @@
+on menu_FetchServerStack serverStackFile
+   breakpoint
+   put the hap_StackFolder of me into hapStackFolder
+   set the itemdelimiter to "."
+   put rig_FetchStack (serverStackFile) into scriptOnlyStack
+   put hapStackFolder & serverStackFile into newStackFilePath
+   put word 1 of scriptOnlyStack = "﻿script" into isScriptOnly
+   if isScriptOnly is true then
+      put scriptOnlyStack into url ("file:" & newStackFilePath)
+   else
+      put scriptOnlyStack into url ("binfile:" & newStackFilePath)
+   end if
+   set the stack_IsKnow of stack newStackFilePath to true
+end menu_FetchServerStack

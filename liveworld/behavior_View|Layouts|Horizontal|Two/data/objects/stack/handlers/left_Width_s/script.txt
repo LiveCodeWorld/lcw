@@ -1,0 +1,8 @@
+setprop left_Width someWidth
+   lock screen
+   put the the rect of me into oRect
+   set the fixed_View of me to "left"
+   set the width of the left_View of me to someWidth
+   LayoutControl oRect
+   unlock screen
+end left_Width

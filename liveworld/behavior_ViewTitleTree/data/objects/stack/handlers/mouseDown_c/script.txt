@@ -1,0 +1,22 @@
+on mouseDown pMouseBtnNum
+   put the long id of of the target into targetObject
+   put the icon_Button of me into iconButton
+   put title_Button() into titleButton
+   
+   if the title_IsStackDragger of the target is true then
+      stack_Drag
+   else
+      put the long owner of me into titleOwner
+      put the menu_ToolOrTitle of me into mTitle
+      if targetObject = iconButton then
+         put the bottomleft of iconButton into pLocation
+         add 4 to item 1 of pLocation
+         menu_PullDown mTitle, pLocation, titleOwner
+      else if targetObject = titleButton then
+         if the visible of iconButton is false then
+            put the bottomleft of me into pLocation
+            menu_PullDown mTitle, pLocation, titleOwner
+         end if
+      end if
+   end if
+end mouseDown

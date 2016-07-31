@@ -1,0 +1,7 @@
+on menu_DisplayControllerGraph scriptObject
+   put the project_MetadataFolder of scriptObject & CR after folderInfo
+   
+   put folderInfo
+   
+   -- put overlay_GetImageFile (overlayFolder, "HAP")
+end menu_DisplayControllerGraph

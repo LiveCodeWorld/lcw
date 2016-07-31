@@ -1,0 +1,78 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_ViewUpdate
+type: script library
+version: 0.8
+
+
+--> Control
+-
+[[ _FetchHandler (control_IsTop,g) ]]
+
+[[ _FetchHandler (child_ControlTypes,g) ]]
+
+[[ _FetchHandler (child_ControlTypes,s) ]]
+
+[[ _FetchHandler (control_Type,g) ]]
+
+[[ _FetchHandler (control_Type,s) ]]
+
+[[ _FetchHandler (control_Types,g) ]]
+
+[[ _FetchHandler (control_Types,s) ]]
+
+[[ _FetchHandler (view_Replacement,s) ]]
+
+--> Bottome | Controls
+-
+[[ _FetchHandler (bottom_ControlName,g) ]]
+
+[[ _FetchHandler (bottom_ControlName,s) ]]
+
+
+--> Top | Controls
+-
+[[ _FetchHandler (top_ControlName,g) ]]
+
+[[ _FetchHandler (top_ControlName,s) ]]
+
+[[ _FetchHandler (top_Control,g) ]]
+
+[[ _FetchHandler (top_ControlNames,g) ]]
+
+[[ _FetchHandler (top_ControlNames,s) ]]
+
+[[ _FetchHandler (top_Controls,g) ]]
+
+
+--> Handlers
+-
+[[ _FetchHandler (widget_Names,g) ]]
+
+[[ _FetchHandler (control_ConstructCreateDoScript,f) ]]
+
+[[ _FetchHandler (widget_ConstructCreateDoScript,f) ]]
+
+[[ _FetchHandler (object_Delete,c) ]]
+
+
+--> View | Update
+-
+[[ _FetchHandler (view_Update,c) ]]
+
+
+--> View | Update | Props
+-
+[[ _FetchHandler (view_Swap,s) ]]
+
+
+--> View | Insert
+-
+[[ _FetchHandler (view_Insert,s) ]]
+
+[[ _FetchHandler (view_InsertFromPath,c) ]]
+
+[[ _FetchHandler (view_InsertObject,c) ]]
+
+[[ _FetchHandler (object_Replacement,s) ]]

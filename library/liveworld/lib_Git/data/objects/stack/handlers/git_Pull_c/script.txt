@@ -1,0 +1,13 @@
+command git_Pull
+   -- TO PULL A new BRANCH FROM A REMOTE REPOSITORY
+   -- put merge("git pull origin [[remoteBranch]]:[[newLocalBranch]]") into someShell
+   -- put "git pull" into someShell
+   -- put "git pull origin master" into someShell
+   put git_CurrentBranchName() into currentBranchName
+   put "git pull origin" && kwote (currentBranchName) into someShell
+   
+   put git_ExecuteShellCommand (someShell) into shellResult
+   display_Lines shellResult, someShell
+   put the result into displayView
+   set the menu_Title of displayView to "Global | Git | Pull | Menu"
+end git_Pull

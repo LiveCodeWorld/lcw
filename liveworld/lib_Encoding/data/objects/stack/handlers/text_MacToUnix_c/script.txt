@@ -1,0 +1,5 @@
+command text_MacToUnix @someText
+    -- was called "text_MacToUnix"
+    -- rev does this automatically by itself (but may need for CGI's or returning data from a unix server)
+    replace numtochar(10) with numtochar(13) in someText
+end text_MacToUnix

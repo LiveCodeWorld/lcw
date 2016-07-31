@@ -1,0 +1,26 @@
+function script_ConstructNodeFromHkey hKey
+    if the number of items of hKey = 4 then
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        if exists(scriptObject) then
+            set the itemdelimiter to "|"
+            put the object_IDPath of scriptObject into objectRef
+            delete item 1 of objectRef
+        else
+            put scriptObject into objectRef
+            replace quote with empty in objectRef
+        end if
+        put handlerName,handlerType,objectRef into someNode
+    else
+        put hKey into scriptObject
+        if exists(scriptObject) then
+            put the object_IDPath of scriptObject into someNode
+            set the itemdelimiter to "|"
+            delete item 1 of someNode
+        else
+            put scriptObject into someNode
+            replace quote with empty in someNode
+        end if
+    end if
+    
+    return kwote(someNode)
+end script_ConstructNodeFromHkey

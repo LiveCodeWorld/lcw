@@ -1,0 +1,4 @@
+on menu_FetchMainStackManifestArray scriptObject
+   put the mainStack_ManifestArray of scriptObject into someArray
+   display_Array someArray, "the mainStack_ManifestArray"
+end menu_FetchMainStackManifestArray

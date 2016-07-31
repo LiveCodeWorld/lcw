@@ -1,0 +1,10 @@
+on preOpenCard
+   set the label of this stack to the short name of this card
+   put the title_View of this cd into titleView
+   if exists (titleView) then
+      put the plusMinus_View of of cd 4 into plusMinusView
+      put the chapter_Title of plusMinusView into chapterTitle
+      set the title_Text of titleView to chapterTitle
+   end if
+   pass preOpenCard
+end preOpenCard

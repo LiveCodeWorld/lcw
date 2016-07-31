@@ -1,0 +1,10 @@
+function fedwiki_GetBinaryFile shortFile
+   put fedwiki_GetFile (shortFile) into someFile
+   if there is not a file someFile then
+      fedwiki_Log ("File does not exist:" && shortFile)
+      return empty
+   end if
+   put "binfile:" & someFile into someUrl
+   put url someUrl into someData
+   return someData
+end fedwiki_GetBinaryFile

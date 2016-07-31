@@ -1,0 +1,5 @@
+function log_GetLatestLine pLogName
+   put log_Get (pLogName) into fullLogIndex
+   put line 1 of fullLogIndex into latestEntry
+   return latestEntry
+end log_GetLatestLine

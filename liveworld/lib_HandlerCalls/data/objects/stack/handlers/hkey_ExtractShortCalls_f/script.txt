@@ -1,0 +1,5 @@
+function hkey_ExtractShortCalls hKey
+   put hArray_GetHandler (hKey) into callHandler
+   put handler_ExtractCalls (callHandler) into shortCalls
+   return shortCalls
+end hkey_ExtractShortCalls

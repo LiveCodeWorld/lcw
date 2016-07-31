@@ -1,0 +1,29 @@
+function rect_GetRectBoundary rectIndex
+    if the number of lines of rectIndex = 1 then
+        repeat with paramNum = 1 to the paramcount
+            put param(paramNum) into someRect
+             
+            put item 1 of someRect & "," after rectList_1
+            put item 2 of someRect & "," after rectList_2
+            put item 3 of someRect & "," after rectList_3
+            put item 4 of someRect & "," after rectList_4
+        end repeat
+    else
+        repeat for each line someRect in rectIndex
+            put item 1 of someRect & "," after rectList_1
+            put item 2 of someRect & "," after rectList_2
+            put item 3 of someRect & "," after rectList_3
+            put item 4 of someRect & "," after rectList_4
+        end repeat
+    end if
+    delete last char of rectList_1
+    delete last char of rectList_2
+    delete last char of rectList_3
+    delete last char of rectList_4
+    
+    put min(rectList_1) into item 1 of outsideRect
+    put min(rectList_2) into item 2 of outsideRect
+    put max(rectList_3) into item 3 of outsideRect
+    put max(rectList_4) into item 4 of outsideRect
+    return outsideRect
+end rect_GetRectBoundary

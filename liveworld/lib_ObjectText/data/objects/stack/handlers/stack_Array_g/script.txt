@@ -1,0 +1,8 @@
+getprop stack_Array [pLinkToViews]
+   put the stack_Object of the target into stackObject
+   
+   local stackArray, stackPropertyArray, hArray, pExportHandlers, pDontDiff, pForceIndexHandlerCalls
+   stack_GetPropertArrays stackObject, stackArray, hArray, pLinkToViews, pExportHandlers, pDontDiff, true, pForceIndexHandlerCalls
+   put the stack_Object of the target into stackObject
+   return stackArray
+end stack_Array

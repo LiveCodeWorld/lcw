@@ -1,0 +1,5 @@
+function youtube_FetchVideoThumbPageJSON videoID, pPageTitle, pNextPageToken, pDontLinkTitle
+   put youtube_FetchVideoThumbPageArray (videoID, pPageTitle, pNextPageToken, pDontLinkTitle) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end youtube_FetchVideoThumbPageJSON

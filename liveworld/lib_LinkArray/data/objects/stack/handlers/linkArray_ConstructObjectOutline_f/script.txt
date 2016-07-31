@@ -1,0 +1,7 @@
+function linkArray_ConstructObjectOutline hIdArray, hLinkArray
+   if keys(hLinkArray) is not empty then put linkarray_FilterIdArray (hIdArray, hLinkArray) into hIdArray
+   put hKeyArray_ConstructObjectIdArray(hIdArray) into objectIdArray
+   put hKeyArray_ObjectOutline(hIdArray, hLinkArray) into objectOutline
+   put object_ConstructPropertiesOutline (objectOutline, objectIdArray, hIdArray) into objectOutline
+   return objectOutline
+end linkArray_ConstructObjectOutline

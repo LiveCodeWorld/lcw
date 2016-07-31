@@ -1,0 +1,5 @@
+function dot_RandomColour
+   put colour_GetRandom() into rColour
+   put colour_RgbToHex (rColour) into hColour
+   return hColour
+end dot_RandomColour

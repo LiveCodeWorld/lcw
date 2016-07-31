@@ -1,0 +1,6 @@
+command rect_SetMinimumWidth @someRect, someWidth
+    put item 1 of someRect into someLeft
+    if item 3 of someRect - someLeft < someWidth then
+        put someLeft + someWidth into item 3 of someRect
+    end if
+end rect_SetMinimumWidth 

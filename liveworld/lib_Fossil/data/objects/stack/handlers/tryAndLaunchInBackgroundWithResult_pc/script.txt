@@ -1,0 +1,19 @@
+private command tryAndLaunchInBackgroundWithResult shellFile
+   set the itemdelimiter to "/"
+   put item -1 of shellFile into shortFile
+   put shellFile into shellFolder
+   delete item -1 of shellFolder
+   put "/" after shellFolder
+   
+   finder_Reveal shellFolder
+   
+   put "./" & shortFile into doShellScript
+   -- fossil_ExecuteShell doShellScript, shellFolder
+   put the result into shellResult
+   
+   put the defaultfolder into oFolder
+   set the defaultfolder to shellFolder
+   put shell (doShellScript) into shellResult
+   set the defaultfolder to oFolder
+   return shellResult
+end tryAndLaunchInBackgroundWithResult

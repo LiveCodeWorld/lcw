@@ -1,0 +1,72 @@
+on menu_CreateAnimatedGif mTarget, gifSize
+   if gifSize is empty then put the gif_Size of me into gifSize
+   put get_VideoFileName() into someVideoFile
+   file_Deconstruct someVideoFile, someRoot, shortName, fileExtension
+   
+   put the tempname into someTempFolder
+   create folder someTempFolder
+   folder_Format someTempFolder
+   
+   put someTempFolder & shortName & "." & fileExtension into exportFileName
+   put exportFileName into exportedVideoPath
+   
+   revCopyFile someVideoFile, someTempFolder
+   put it into someResult
+   
+   put the defaultFolder into oFolder
+   set the defaultFolder to someTempFolder
+   
+   put shortName & "." & fileExtension into shortVideoFile
+   put "recording-%03d.png" into shortExportFile
+   put shortName & ".gif" into shortAnimatedGif
+   put specialFolderPath ("Desktop") & "/" & shortAnimatedGif into deskTopVideoFile
+   put someTempFolder & shortAnimatedGif into shortAnimatedGifFile
+   
+   shell_BashParamEscape someVideoFile
+   shell_BashParamEscape exportFileName
+   shell_BashParamEscape shortVideoFile
+   shell_BashParamEscape shortExportFile
+   shell_BashParamEscape shortAnimatedGif
+   
+   opn_Notify "Converting video to scaled PNG's"
+   
+   put "ffmpeg -i" && shortVideoFile into someShell
+   put space & "-r 24" after someShell
+   
+   put space & "-vf scale=" & gifSize & ":-1" after someShell
+   
+   put space & shortExportFile after someShell
+   
+   set the cursor to watch
+   put shell (someShell) into shellResult
+   
+   if word 1 to 2 of shellResult is not "ffmpeg version" then
+      -- /bin/sh: line 1: ffmpeg: command not found
+      put shellResult
+      exit to top
+   end if
+   
+   opn_Notify "Exported to PNG's"
+   set the cursor to watch
+   
+   put "convert recording-001.png palette.gif" into someShell
+   put shell (someShell) into shellResult
+   
+   opn_Notify "Created palette.gif"
+   set the cursor to watch
+   
+   put "convert -dither none -remap palette.gif recording-*.png recording-uncompressed.gif" into someShell
+   put shell (someShell) into shellResult
+   
+   opn_Notify "Created recording-uncompressed.gif"
+   set the cursor to watch
+   
+   put "gifsicle --optimize=3 --delay=4 < recording-uncompressed.gif >" && shortAnimatedGif into someShell
+   put shell (someShell) into shellResult
+   
+   opn_Notify ("Created - copying file to Desktop" && shortAnimatedGif)
+   revCopyFile shortAnimatedGifFile, deskTopVideoFile
+   
+   finder_Reveal someTempFolder
+   set the defaultFolder to oFolder
+end menu_CreateAnimatedGif

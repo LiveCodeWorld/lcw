@@ -1,0 +1,12 @@
+function lcw_ReverseDictionary
+   local mapDictionary
+   
+   dictionary_ReverseMap mapDictionary, "Model Stacks", "Model"
+   dictionary_ReverseMap mapDictionary, "Views", "View"
+   dictionary_ReverseMap mapDictionary, "Menus", "Controller"
+   dictionary_ReverseMap mapDictionary, "Named Behaviors", "Behavior"
+   dictionary_ReverseMap mapDictionary, "Script Only Libs", "Library"
+   dictionary_ReverseMap mapDictionary, "Library Stacks", "Livecode Library Stacks"
+   
+   return mapDictionary
+end lcw_ReverseDictionary

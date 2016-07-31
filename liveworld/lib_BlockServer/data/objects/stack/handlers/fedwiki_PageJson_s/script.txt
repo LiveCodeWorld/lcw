@@ -1,0 +1,6 @@
+setprop fedwiki_PageJson [pageSlug] pageJSON
+   breakpoint
+   put empty into fedwikiDomain
+   fedwiki_SetLocalPageJson pageSlug, fedwikiDomain, pageJSON
+   return the result
+end fedwiki_PageJson

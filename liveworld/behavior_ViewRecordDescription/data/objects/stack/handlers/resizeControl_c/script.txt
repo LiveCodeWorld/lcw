@@ -1,0 +1,4 @@
+on resizeControl
+    put the rect of me into someRect
+    LayoutControl someRect
+end resizeControl

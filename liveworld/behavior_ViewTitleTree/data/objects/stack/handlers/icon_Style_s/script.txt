@@ -1,0 +1,5 @@
+setprop icon_Style iconStyle
+   if the long id of the target is not the long id of me then pass icon_Style
+   put the icon_Button of me into iconView
+   set the icon_Style of iconView to iconStyle
+end icon_Style

@@ -1,0 +1,38 @@
+function outline_ToNestedArray tabbedText, pTabChar, pTabsPerLevel
+   local outlineArray, keyArray
+   if pTabChar is empty then put tab into pTabChar
+   if pTabsPerLevel is empty then put 1 into pTabsPerLevel
+   
+   set the itemdelimiter to pTabChar
+   repeat for each line someLine in tabbedText
+      put someLine into someKey
+      put 0 into tabNum
+      repeat the number of chars of someKey
+         if char 1 of someKey = pTabChar then
+            add 1 to tabNum
+            delete char 1 of someKey
+         else
+            exit repeat
+         end if
+      end repeat
+      put 1 + trunc(tabNum/pTabsPerLevel) into pathLevel
+      
+      put someKey into keyArray [pathLevel]
+      
+      -- trim any tail off the array
+      put the number of lines of the keys of keyArray into maxNum
+      repeat with keyNum = (pathLevel + 1) to maxNum
+         delete local keyArray [keyNum]
+      end repeat
+      
+      put keyArray into aboveKeyArray
+      delete local aboveKeyArray [pathLevel]
+      
+      put outlineArray [aboveKeyArray] into aboveValue
+      put empty into outlineArray [keyArray]
+      if aboveValue is not empty then
+         put aboveValue into outlineArray [aboveKeyArray]["@"]
+      end if
+   end repeat
+   return outlineArray
+end outline_ToNestedArray

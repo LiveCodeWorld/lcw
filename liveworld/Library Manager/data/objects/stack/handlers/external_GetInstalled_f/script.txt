@@ -1,0 +1,4 @@
+function external_GetInstalled xName
+   put pref_GetValue ("installedArray") into installedArray
+   return installedArray [xName] is true
+end external_GetInstalled

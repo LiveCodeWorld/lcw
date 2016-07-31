@@ -1,0 +1,9 @@
+on menu_ServiceProgress
+   put "gc-FzjbdAwYFR4kcvynK" into serviceToken
+   put dreamhost_ApiKey() into apiKey
+   put merge("https://api.dreamhost.com/?key=[[apiKey]]&cmd=services-progress&token=[[serviceToken]]") into someUrl
+   put url someUrl into someResult
+   
+   put dreamHost_ParseResult (someResult) into tableArray
+   display_Array tableArray, "services-progress"
+end menu_ServiceProgress

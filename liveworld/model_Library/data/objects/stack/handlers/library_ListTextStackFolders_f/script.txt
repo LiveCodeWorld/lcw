@@ -1,0 +1,5 @@
+function library_ListTextStackFolders
+   put library_GetTextStackFolder() into someFolder
+   put folder_FoldersInside (someFolder) into textStackFolders
+   return textStackFolders
+end library_ListTextStackFolders

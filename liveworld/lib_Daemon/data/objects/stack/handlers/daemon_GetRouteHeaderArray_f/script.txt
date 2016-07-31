@@ -1,0 +1,5 @@
+function daemon_GetRouteHeaderArray someRoute
+   put "/headers" after someRoute
+   put daemon_GetRouteValue (someRoute) into headerArray
+   return headerArray
+end daemon_GetRouteHeaderArray

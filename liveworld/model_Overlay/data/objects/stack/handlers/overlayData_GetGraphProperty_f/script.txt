@@ -1,0 +1,5 @@
+function overlayData_GetGraphProperty overlayData, propName, pOverlayName
+   put overlayData_GetArray (overlayData, pOverlayName) into overlayArray
+   put overlayArray_GetGraphProperty (overlayArray, propName) into propValue
+   return propValue
+end overlayData_GetGraphProperty

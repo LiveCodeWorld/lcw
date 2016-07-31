@@ -1,0 +1,5 @@
+on menu_KnowEverything indexView
+   put stack_GetAllKnown() into stackFileArray
+   set the stackfile_Array of this stack to stackFileArray
+   set the stackfile_Array of stack "Library Manager" to stackFileArray
+end menu_KnowEverything

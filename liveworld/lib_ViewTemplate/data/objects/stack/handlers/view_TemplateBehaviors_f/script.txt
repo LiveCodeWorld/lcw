@@ -1,0 +1,38 @@
+function view_TemplateBehaviors pObjectFormat
+   put view_TemplateFiles() into viewFiles
+   
+   put the mainstacks into oMainStacks
+   set the wholematches to true
+   repeat for each line someFile in viewFiles
+      set the cursor to busy
+      if exists (control 1 of card 1 of stack someFile) then
+         put the long id of control 1 of card 1 of stack someFile into viewObject
+         put the behavior of viewObject into libraryObject
+         if exists (libraryObject) is false then next repeat
+         
+         switch pObjectFormat
+            case "mobile_Name"
+               put the long name of libraryObject into libraryObject
+               object_SetShortStackName libraryObject, mainStackStart, mainStackEnd
+               put libraryObject & CR after libraryObjects
+               break
+            case "mobile_ID"
+               object_SetShortStackName libraryObject, mainStackStart, mainStackEnd
+               put libraryObject & CR after libraryObjects
+               break
+            case "long id"
+               put libraryObject & CR after libraryObjects
+               break
+            default -- case "rugged_ID"
+               put the rugged_ID of libraryObject & CR after libraryObjects
+         end switch
+         
+         if the short name of stack someFile is not among the lines of oMainStacks then
+            -- re-release previously unloaded stack from memory
+            delete stack someFile
+         end if
+      end if
+   end repeat
+   delete last char of libraryObjects
+   return libraryObjects
+end view_TemplateBehaviors

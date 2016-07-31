@@ -1,0 +1,19 @@
+getprop child_Views [testViewName]
+   put the childcontrolids of me into topControlIDs
+   put the number of lines of topControlIDs into numberOfChildren
+   repeat with cNum = 1 to numberOfChildren    
+      put line cNum of topControlIDs into topControlID
+      put the long id of control id topControlID into cControl
+      put the view_Name of cControl into viewName
+      
+      if testViewName is empty then
+         if vName is not empty then
+            put cControl & CR after childViews
+         end if
+      else if viewName begins with testViewName then
+         put cControl & CR after childViews
+      end if
+   end repeat
+   delete char -1 of childViews
+   return childViews
+end child_Views

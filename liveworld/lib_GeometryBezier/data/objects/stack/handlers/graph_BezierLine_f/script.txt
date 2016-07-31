@@ -1,0 +1,27 @@
+function graph_BezierLine listOfPoints
+   put item 1 of  listOfPoints into x1
+   put item 2 of  listOfPoints into y1
+   put item 3 of  listOfPoints into xa
+   put item 4 of  listOfPoints into ya
+   put item 5 of  listOfPoints into xb
+   put item 6 of  listOfPoints into yb
+   put item 7 of  listOfPoints into x2
+   put item 8 of  listOfPoints into y2
+   put 0 into v1
+   
+   -- put cd fld bezierResolution into zdt
+   put 32 into zdt
+   repeat with i = 1 TO zdt -- zdt is a integer number like 32
+      put i * 1/zdt into v1
+      put 1 - v1 into v2
+      put (x1 * (v2 * v2 * v2) + (3 * xa * v1 * v2 * v2) + (3 * xb * v1 * v1 * v2) + (x2 * (v1 ^ 3))) into x
+      put (y1 * (v2 * v2 * v2) + (3 * ya * v1 * v2 * v2) + (3 * yb * v1 * v1 * v2) + (y2 * (v1 ^ 3))) into y
+      if (x div 1 & "," & y div 1) <> last line of variablezxc then put (x div 1 & "," & y div 1) & CR after variablezxc
+   end repeat
+   
+   --  if x1,y1 <> first line of variablezxc then put x1,y1 & return before variablezxc
+   if x2,y2 <> last line of variablezxc then put x2,y2 & CR after variablezxc
+   put x1,y1 & CR before variablezxc
+   -- put x2,y2 & CR after variablezxc
+   return variablezxc
+end graph_BezierLine

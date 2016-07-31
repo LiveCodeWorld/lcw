@@ -1,0 +1,11 @@
+on menu_DisplayProject mTarget
+   put the index_View of mTarget into indexView
+   if exists (indexView) is false then
+      display_ProjectStacks
+      exit to top
+   end if
+   
+   put project_FetchValue ("openStacks") into stackNames
+   sort stackNames
+   set the view_Index of indexView to stackNames
+end menu_DisplayProject

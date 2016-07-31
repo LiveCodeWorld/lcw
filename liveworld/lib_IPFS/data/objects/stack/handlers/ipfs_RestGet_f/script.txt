@@ -1,0 +1,5 @@
+function ipfs_RestGet ipfsPath, someArg
+   put ipfs_ConstructUrl (ipfsPath, someArg) into someUrl
+   put url someUrl into someJSON
+   return someJSON
+end ipfs_RestGet

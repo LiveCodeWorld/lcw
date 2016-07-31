@@ -1,0 +1,149 @@
+--> MetaData
+-
+license: GPLv3
+name: model_ScriptSuite
+type: model
+version: 1.0
+
+/*
+This library stores reerences to all Global script suites
+
+It also includes wrappers that extract arrays for different types of scrupt suite.
+These should be changed to store them in different nested arrays,
+but for now this is one single flat array.
+*/
+
+
+--> Script | Suit | Props
+-
+[[ _FetchHandler (script_GlobalTitles,g) ]]
+
+[[ _FetchHandler (script_SuiteTitles,g) ]]
+
+[[ _FetchHandler (script_SortedSuite,g) ]]
+
+[[ _FetchHandler (script_Suite,s) ]]
+
+[[ _FetchHandler (script_SuiteOutline,g) ]]
+
+[[ _FetchHandler (script_ObjectSuiteOutline,g) ]]
+
+[[ _FetchHandler (script_NestedSuiteOutline,g) ]]
+
+
+--> Script | Suites
+-
+[[ _FetchHandler (script_GetSuite,f) ]]
+
+[[ _FetchHandler (script_GetSuiteHandlers,f) ]]
+
+[[ _FetchHandler (script_GetSuiteContents,f) ]]
+
+[[ _FetchHandler (script_GetSuiteTitles,f) ]]
+
+[[ _FetchHandler (script_DeleteSuite,f) ]]
+ 
+[[ _FetchHandler (script_ReplaceSuite,f) ]]
+
+[[ _FetchHandler (script_SetSuiteOffsets,c) ]]
+
+
+--> Script | Menus
+-
+[[ _FetchHandler (script_ExtractMenuSuiteTitles,f) ]]
+
+
+--> Script  | Suite
+-
+[[ _FetchHandler (script_GetGlobalMenuArray,f) ]]
+
+[[ _FetchHandler (script_GetGlobalControllerArray,f) ]]
+
+[[ _FetchHandler (script_GetGlobalModelNames,f) ]]
+
+
+--> Script  | Suite | Titles
+-
+[[ _FetchHandler (script_ExtractGlobalTitles,f) ]]
+
+[[ _FetchHandler (script_GetGlobalSuiteTitles,f) ]]
+
+[[ _FetchHandler (script_GetGlobalSuiteObjects,f) ]]
+
+
+--> Script  | Suite | Model
+-
+[[ _FetchHandler (script_GetGlobalModelArray,f) ]]
+
+
+--> Script  | Suite | Model (extract)
+-
+[[ _FetchHandler (script_GetGlobalModelObject,f) ]]
+
+[[ _FetchHandler (script_ExtractGlobalSuiteArray,f) ]]
+
+
+--> Script  | Suite | Model
+-
+[[ _FetchHandler (script_GetGlobalObject,f) ]]
+
+[[ _FetchHandler (script_SetGlobalObject,c) ]]
+
+[[ _FetchHandler (script_GetGlobalSuiteArray,f) ]]
+
+[[ _FetchHandler (script_SetGlobalSuiteArray,c) ]]
+
+
+--> From libOPN_ScriptExtras
+-
+[[ _FetchHandler (script_SplitIntoSuites,f) ]]
+
+[[ _FetchHandler (script_ConstructSuite,f) ]]
+
+[[ _FetchHandler (script_ConstructSuiteHeader,f) ]]
+
+function script_GetSuiteTitles someScript
+   filter someScript with "-->*"
+   replace "--> " with empty in someScript
+   replace "-->" with empty in someScript
+   return word 1 to -1 of someScript
+end script_GetSuiteTitles
+
+[[ _FetchHandler (script_GetSuiteHelp,f) ]]
+
+[[ _FetchHandler (stripHandlersFromSuite,f) ]]
+
+
+--> Script | Suite | Outline
+-
+[[ _FetchHandler (script_ConstructNestedSuiteOutline,f) ]]
+
+[[ _FetchHandler (script_SuiteNameLinkOutline,f) ]]
+
+[[ _FetchHandler (script_SuiteNameToPath,f) ]]
+
+[[ _FetchHandler (script_ExtractObjectSuiteOutline,f) ]]
+
+[[ _FetchHandler (script_GetSuiteOutline,f) ]]
+
+[[ _FetchHandler (script_GetSuiteOrderedHandlerNames,f) ]]
+
+[[ _FetchHandler (script_TrimNonSuiteHandlers,c) ]]
+
+
+-->Private
+-
+-- function script_AddHandlerToSuite suiteTitle, someScript, newHandler
+-- not finished (tricky one)
+    put word 1 to -1 of newHandler into newHandler
+    put line 1 of newHandler into handlerLine
+    handler_Deconstruct handlerLine, handlerName, hType, privateBit
+    script_SetHandlerOffsets startFirstFunction, endFirstFunction, ".+", "function", someScript
+     
+    put script_GetSuite(suiteTitle, someScript) into oldSuite
+    text_AddParagraph newHandler, someScript
+end script_AddHandlerToSuite
+
+[[ _FetchHandler (addSuiteScripts,pf) ]]
+
+[[ _FetchHandler (addHandlersToSuite,f) ]]

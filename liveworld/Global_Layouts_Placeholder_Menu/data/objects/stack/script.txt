@@ -1,0 +1,118 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Layouts_Placeholder_Menu
+type: controller
+version: 0.5
+
+
+
+--> Menu | Props
+-
+/*
+menu_Target is defined in the view. Can override by placing a getprop menu_Target handler here.
+*/
+
+local LocalArray
+
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (view_GetIndexMenu,f) ]]
+
+[[ _FetchHandler (view_LoadBigIndex,c) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Layout | Placeholder | Menu
+-
+[[ _FetchHandler (menu_UpdatePlaceholder,c) ]]
+
+[[ _FetchHandler (menu_UpdateLayoutPlaceholders,c) ]]
+
+[[ _FetchHandler (menu_Owner,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReplaceWithPlaceholder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReplaceWithWidget,c) ]]
+
+[[ _FetchHandler (menu_ReplaceWithControl,c) ]]
+
+[[ _FetchHandler (menu_ReplaceWithView,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DeleteMe,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ChangeName,c) ]]
+
+[[ _FetchHandler (menu_ChangeLabel,c) ]]
+
+[[ _FetchHandler (menu_ChangeColour,c) ]]
+
+[[ _FetchHandler (menu_IsTransparent,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Layout | Placeholder | Menu | Props
+-
+[[ _FetchHandler (rev_ControlNames,g) ]]
+
+[[ _FetchHandler (is_Transparent,g) ]]
+
+-- getprop public_Props
+put menu_GetTargetObject() into targetObject
+put the view_Object of targetObject into someView
+delete word 1 to 4 of someView
+if exists(someView) is false then return empty
+return the view_PropertyMenu of someView
+end public_Props
+
+[[ _FetchHandler (some_Views,g) ]]
+
+[[ _FetchHandler (view_PathFragments,g) ]]
+
+
+--> Global | Layout | Placeholder | Menu | Disabled
+-
+[[ _FetchHandler (disabled_UpdatePlaceholder,g) ]]
+
+[[ _FetchHandler (disabled_UpdateElements,g) ]]
+
+[[ _FetchHandler (disabled_Owner,g) ]]
+
+[[ _FetchHandler (owner_MenuItems,g) ]]
+
+[[ _FetchHandler (menu_CheckRecursion,f) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_TestTarget,c) ]]
+
+[[ _FetchHandler (menu_ChangeWidth,c) ]]
+
+[[ _FetchHandler (menu_GoToPlaceholderTemplate,c) ]]
+
+[[ _FetchHandler (menu_UpdateElements,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Placeholder,c) ]]
+
+[[ _FetchHandler (submenu_Script,c) ]]

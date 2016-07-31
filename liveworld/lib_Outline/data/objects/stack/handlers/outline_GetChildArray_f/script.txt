@@ -1,0 +1,28 @@
+function outline_GetChildArray startOsLineNum, tabbedOutline
+    if startOsLineNum = 0 then
+        repeat with lineNum = 1 to the number of lines of tabbedOutline
+            get line lineNum of tabbedOutline
+            if char 1 of it is not tab then
+                put it into lineNumKeyArray[lineNum]
+            end if
+        end repeat
+    else
+        put line startOsLineNum of tabbedOutline into startOsLine
+        put outline_TabLevel(startOsLine) into baseTabLevel
+         
+        put empty into nextLevelTitles
+        repeat with osLineNum = (startOsLineNum + 1) to the number of lines of tabbedOutline
+            put line osLineNum of tabbedOutline into someOsLine
+            put outline_TabLevel(someOsLine) into someTabLevel
+            
+            if someTabLevel = (baseTabLevel + 1) then
+                -- a child node
+                put someOsLine into lineNumKeyArray[osLineNum]
+            else if someTabLevel <= baseTabLevel then
+                -- end of section
+                exit repeat
+            end if
+        end repeat
+    end if
+    return lineNumKeyArray
+end outline_GetChildArray

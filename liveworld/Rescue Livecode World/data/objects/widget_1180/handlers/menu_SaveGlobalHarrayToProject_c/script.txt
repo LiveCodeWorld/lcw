@@ -1,0 +1,4 @@
+on menu_SaveGlobalHarrayToProject mTarget, projectName
+   global gHkey_Array
+   project_SaveHarray gHkey_Array, pProjectName
+end menu_SaveGlobalHarrayToProject

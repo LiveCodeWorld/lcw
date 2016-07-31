@@ -1,0 +1,23 @@
+function object_IndexArray objectIndex
+   repeat for each line someObject in objectIndex
+      if exists(someObject) is false then
+         array_InsertLine someObject, "__BadObjectKey", objectArray
+      else
+         array_InsertLine someObject, "__GoodObjectKey", objectArray
+         
+         get the short name of someObject
+         put wiki_ConstructID(it) into safeName
+         put someObject into objectArray[safeName]
+         array_InsertLine it, "__ShortNameKey", objectArray
+         
+         get the long name of someObject
+         array_InsertLine it, "__LongNameKey", objectArray
+         
+         get the name of someObject
+         put wiki_ConstructID(it) into safeName
+         put someObject into objectArray[safeName]
+         array_InsertLine it, "__NameKey", objectArray
+      end if
+   end repeat
+   return objectArray
+end object_IndexArray

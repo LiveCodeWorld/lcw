@@ -1,0 +1,9 @@
+getprop index_Views
+   -- could be made intelligent to nest or nto nest depending if there is an index group
+   put the child_Views ["View|Index|Group"] of me into indexGroups
+   repeat for each line indexGroup in indexGroups
+      put the child_Views ["View|Index|Simple"] of indexGroup & CR after indexViews
+   end repeat
+   delete char -1 of indexViews
+   return indexViews
+end index_Views

@@ -1,0 +1,23 @@
+function spotlight_FindStack fileBit, inFolder
+   /*
+   http://blog.clawpaws.net/post/2007/02/11/Making-OS-X-Fat-Binaries-with-Traditional-Tools
+   http://developer.apple.com/documentation/Carbon/Conceptual/SpotlightQuery/Concepts/QueryFormat.html
+   */
+   
+   put "(kMDItemKind = 'Revolution Stack')" into queryExpression
+   
+   if fileBit is not empty then
+      replace (quote & "'") with empty in fileBit
+      get merge("(kMDItemDisplayName = '[[fileBit]]')")
+      put space & "&&" && it after queryExpression
+   end if
+   
+   put "mdfind" && kwote(queryExpression) into someShell
+   -- put someShell
+   
+   if inFolder is not empty then
+      shell_BashParamEscape inFolder
+      put space & "-onlyin" && inFolder after someShell
+   end if
+   return shell(someShell)
+end spotlight_FindStack

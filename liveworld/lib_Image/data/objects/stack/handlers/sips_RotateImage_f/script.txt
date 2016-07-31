@@ -1,0 +1,11 @@
+function sips_RotateImage tInput, tDegrees, tOutput
+    -- was "ijwAPLIB_SIPSRotateImage"
+    if tDegrees = 0 then return true
+    put shell_MakeOSXShellPath(tInput) into tShellInput
+    put "sips -r" && tDegrees && tShellInput into tScript
+    if tOutput is not empty then
+        put shell_MakeOSXShellPath(tOutput) into tShellOutput
+        put space & tShellOutput after tScript
+    end if
+    return shell(tScript)
+end sips_RotateImage

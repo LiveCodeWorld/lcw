@@ -1,0 +1,5 @@
+on menu_TestJson mTarget
+   put url "http://livecode.viral.academy/svg.json?random=079fed55" into someJSON
+   put json_ToArray (someJSON) into someArray
+   display_Array someArray
+end menu_TestJson

@@ -1,0 +1,8 @@
+command hArray_RemoveObjectFromArray rObject, @hArray, pUripArray
+   delete variable hArray ["scriptArray"][rObject]
+   hArray_RemoveObjectFromHandlerArray rObject, hArray
+   hArray_RemoveObjectFromTypeArray rObject, hArray
+   if pUripArray is an array then
+      hArray_RemoveSameNameTypeObjects rObject, hArray, pUripArray
+   end if
+end hArray_RemoveObjectFromArray

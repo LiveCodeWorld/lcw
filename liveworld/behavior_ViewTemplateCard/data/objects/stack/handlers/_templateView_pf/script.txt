@@ -1,0 +1,8 @@
+private function _templateView 
+   if exists (control 1 of me) then
+      put the long id of control 1 of me into templateObject
+      return templateObject
+   else
+      return empty
+   end if
+end _templateView

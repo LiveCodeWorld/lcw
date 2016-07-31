@@ -1,0 +1,17 @@
+command osx_Notify someMessage, pTitle
+   switch
+      case version_IsEarlier (the systemversion, "10.9")
+         put someMessage
+         return "Old OSX system with growl not installed."
+      default
+         -- it's Mavericks or above
+         -- osascript -e 'display notification "Lorem ipsum dolor sit amet" with title "Title"'
+         replace quote with empty in someMessage
+         if pTitle is empty then put "LiveWorld Notification" into pTitle
+         put "osascript -e" && "'" & "display notification" && kwote (someMessage) into someShell
+         put "with title" && kwote (pTitle) after someShell
+         put "'" after someShell
+         put shell (someShell) into shellResult
+         return shellResult
+   end switch
+end osx_Notify

@@ -1,0 +1,21 @@
+function xml_ConstructTreeArray someXML
+    -- see also "xml_ConstructTreePathArray"
+    local countArray
+    repeat 100  -- just to be safe repeat 100!
+        xml_FirstTagOffsets tagContents, tagName, startTag, endTag, someTag, tagContents
+        put countArray [tagName] + 1 into countArray [tagName]
+        if someTag is empty then
+            return treeArray
+        else
+            delete char 1 to endTag of tagContents
+            
+            put countArray [tagName] into tagNumber
+            put tagContents into treeArray ["_tree"][tagName][tagNumber]
+             
+            put xml_TagAttributeArray(tagName, someXml) into attributeArray
+            put attributeArray into treeArray ["_attribute"][tagName][tagNumber]
+        end if
+    end repeat
+    beep 3
+    return treeArray
+end xml_ConstructTreeArray

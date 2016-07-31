@@ -1,0 +1,5 @@
+on menu_DisplayHashHistory treeField
+   put the tree_SelectedLink of treeField into gitHash
+   put git_GetRevisionHistory (gitHash) into logText
+   display_Lines logText
+end menu_DisplayHashHistory

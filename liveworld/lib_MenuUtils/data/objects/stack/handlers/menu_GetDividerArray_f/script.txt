@@ -1,0 +1,27 @@
+function menu_GetDividerArray someMenu
+    set the wholematches to true
+    put empty into dividerIndex
+    put 0 into skipLines
+    repeat
+        get lineoffset("-", someMenu, skipLines)
+        if it = 0 then exit repeat
+        put it + skipLines into lineNum
+        
+        put lineNum & return after dividerIndex
+        put lineNum into skipLines
+    end repeat
+    put the number of lines of someMenu + 1 into lastLineNum
+    put lastLineNum after dividerIndex
+    
+    put 1 into startSectionNum
+    repeat with lineNum = 1 to the number of lines of dividerIndex
+        put line lineNum of dividerIndex into endSectionNum
+        
+        put line startSectionNum of someMenu into dividerTitle
+        put line startSectionNum to (endSectionNum - 1) of someMenu into dividerText
+        put startSectionNum && endSectionNum & return & dividerText into dividerTitleArray[dividerTitle]
+         
+        put endSectionNum + 1 into startSectionNum
+    end repeat
+    return dividerTitleArray
+end menu_GetDividerArray

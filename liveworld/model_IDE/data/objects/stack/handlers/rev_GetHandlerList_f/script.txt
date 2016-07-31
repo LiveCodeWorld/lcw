@@ -1,0 +1,7 @@
+function rev_GetHandlerList
+   # Description
+   #   Returns the handler list for the current object, in the same format as the revAvailableHandlers.
+   put rev_ScriptEditorGroup() into revScriptEditorGroup
+   dispatch "revSEGetHandlerList" to revScriptEditorGroup
+   return the result
+end rev_GethandlerList

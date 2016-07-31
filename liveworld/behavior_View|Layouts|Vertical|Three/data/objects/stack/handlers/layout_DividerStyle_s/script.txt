@@ -1,0 +1,10 @@
+setprop layout_DividerStyle someStyle
+   lock messages
+   set the layout_DividerStyle of me to someStyle
+   unlock messages
+   
+   lock screen
+   set the divider_Style of the header_Divider of me to someStyle
+   set the divider_Style of the footer_Divider of me to someStyle
+   unlock screen
+end layout_DividerStyle

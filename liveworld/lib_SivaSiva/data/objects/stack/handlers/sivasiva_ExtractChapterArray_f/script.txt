@@ -1,0 +1,72 @@
+function sivasiva_ExtractChapterArray xmlID, tableID
+   put revXMLRootNode (xmlID) into pStartNode
+   put revXMLMatchingNode (xmlID, pStartNode, "table", "id", tableID, -1) into tableNode
+   put revXMLText (xmlID, tableNode, true) into chapterArray ["tableXML"]
+   put revXMLParent (xmlID, tableNode) into tableDivNode
+   
+   put table_ConstructArrayFromTree (xmlID, tableNode) into tableArray
+   put tableArray into chapterArray ["tableArray"]
+   
+   put tableDivNode into chapterTitleNode
+   xml_FindNextSibling xmlID, chapterTitleNode, "class", "Trait-Heading", "/p"
+   put the result into titleParaNode  
+   get revXMLNodeContents (xmlID, titleParaNode)
+   put word 2 to -1 of it into chapterArray ["chapterTitle"]
+   
+   put revXMLNextSibling (xmlID, chapterTitleNode) into traitNode
+   put revXMLText (xmlID, traitNode, true) into chapterArray ["descriptionXML"]
+   
+   put revXMLFirstChild (xmlID, traitNode, true) into traitDefinitionNode
+   put revXMLNodeContents (xmlID, traitDefinitionNode) into traitDefinition
+   if traitDefinition is empty then
+      put revXMLText (xmlID, traitDefinitionNode, true) into traitDefinition
+      delete line 1 of traitDefinition
+      delete line -1 of traitDefinition
+   end if
+   text_DecodeUTF8 traitDefinition
+   put word 1 to -1 of traitDefinition into chapterArray ["traitDefinition"]
+   
+   put revXMLNumberOfChildren (xmlID, traitNode, "p", 1) into maxChildNum
+   put revXMLChildNames (xmlID, traitNode, CR, "p", true) into childNames
+   repeat with lineNum = 2 to maxChildNum
+      put traitNode & "/" & line lineNum of childNames into childNode
+      get revXMLNodeContents (xmlID, childNode)
+      put it & CR after quoteText
+   end repeat
+   delete char -1 of quoteText
+   text_DecodeUTF8 quoteText
+   put word 1 to -1 of quoteText into chapterArray ["quoteText"]
+   
+   put traitNode into photoNode
+   xml_FindNextSibling xmlID, photoNode, "class", "Photo-frame-for-trait", "/div"
+   put the result into imageDivNode  
+   put imageDivNode & "/img" into imageNode
+   put revXMLAttribute (xmlID, imageNode, "src") into traitImageSource
+   if item 1 of traitImageSource = "xmlerr" then
+      put revXMLText (xmlID, photoNode, true) into chapterArray ["traitImageXML"]
+      get revXMLChildContents (xmlID, photoNode, empty, slash, false, -1)
+      put photoNode & "/" & line 1 of it into imageNode
+      put revXMLAttribute (xmlID, imageNode, "src") into traitImageSource
+   end if
+   put traitImageSource into chapterArray ["traitImageSource"]
+   
+   put photoNode into assignmentNode
+   xml_FindNextSibling xmlID, assignmentNode, "class", "Assignment-line", "/p"
+   put revXMLText (xmlID, assignmentNode, true) into assignmentXML
+   put assignmentXML into chapterArray ["assignmentXML"]
+   delete line 1 of assignmentXML
+   delete line -1 of assignmentXML
+   put word 1 to -1 of line 1 of assignmentXML into chapterArray ["assignment"]["assignmentLine"]
+   put word 1 to -1 of line 2 of assignmentXML into chapterArray ["assignment"]["assignmentText"]
+   put word 1 to -1 of line 4of assignmentXML into chapterArray ["assignment"]["assignmentThoughts"]
+   
+   put assignmentNode into storyNode
+   xml_FindNextSibling xmlID, storyNode, "class", "Story-synopsis-text-white-text", "/p"
+   get revXMLText (xmlID, storyNode, true) 
+   delete line 1 of it
+   delete line -1 of it
+   put word 1 to -1 of it into storyXML
+   put storyXML into chapterArray ["storyHTML"]
+   
+   return chapterArray
+end sivasiva_ExtractChapterArray

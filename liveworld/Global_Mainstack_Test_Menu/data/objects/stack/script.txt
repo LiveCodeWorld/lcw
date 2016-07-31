@@ -1,0 +1,88 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Mainstack_Test_Menu
+type: controller
+version: 0.1
+
+/*
+Changed this menu to be a general hKey menu. 
+The menu_Init code has been removed so it can be placed in the local mController that calls the hkey menu.
+See the behavior "Livecode Script History Button"
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | Mainstack | Test | Menu
+-
+[[ _FetchHandler (menu_ExportProjectFilesAndCreateHarray,c) ]]
+
+[[ _FetchHandler (menu_CreateDependencyArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayProjectDependencyGraph,c) ]]
+
+[[ _FetchHandler (menu_CreateProjectDependencyGraph,c) ]]
+
+[[ _FetchHandler (menu_DrawWithoutSubGraphs,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayMainStackHkeyWalkArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayMainStackHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayMainStackHarray,c) ]]
+
+[[ _FetchHandler (menu_DisplayProjectManifest,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RevealProjectMetadataFolder,c) ]]
+
+[[ _FetchHandler (menu_RevealTextStackFolder,c) ]]
+
+
+--> Global | Mainstack | Test | Menu | Props
+-
+[[ _FetchHandler (graph_Styles,g) ]]
+
+[[ _FetchHandler (dot_AllGraphStyles,f) ]]
+
+
+--> Global | Mainstack | Test | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DisplayProjectDependencyGraph,g) ]]
+
+[[ _FetchHandler (disabled_CreateDependencyArray,g) ]]
+
+[[ _FetchHandler (disabled_ExportProjectFilesAndCreateHarray,g) ]]
+
+[[ _FetchHandler (disabled_DisplayMainStackHarray,g) ]]
+
+getprop disabled_DisplayMainStackHarray
+   put LocalArray ["walkArrayFile"] into walkArrayFile
+   if there is a file walkArrayFile then
+      return false
+   else
+      return true
+   end if
+end disabled_DisplayMainStackHarray
+
+[[ _FetchHandler (disabled_DisplayProjectManifest,g) ]]
+
+[[ _FetchHandler (disabled_DisplayMainStackHkeyArray,g) ]]
+
+[[ _FetchHandler (disabled_DisplayMainStackHkeyWalkArray,g) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_CheckTarget,g) ]]

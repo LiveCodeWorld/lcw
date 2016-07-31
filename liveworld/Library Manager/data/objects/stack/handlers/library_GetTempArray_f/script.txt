@@ -1,0 +1,5 @@
+function library_GetTempArray
+   put library_GetTempArrayFile() into tempArrayFile
+   put array_Fetch (tempArrayFile) into tempArray
+   return tempArray
+end library_GetTempArray

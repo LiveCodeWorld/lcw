@@ -1,0 +1,6 @@
+private function _getValue pathItems
+   put the displayed_Array of me into someArray
+   split pathItems with comma
+   put someArray [pathItems] into someValue
+   return someValue
+end _getValue

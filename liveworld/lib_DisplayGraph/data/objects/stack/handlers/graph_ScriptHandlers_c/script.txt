@@ -1,0 +1,7 @@
+command graph_ScriptHandlers scriptObject, pGraphStyle, pGraphSize, pImageView, pResizeStyle
+   put scriptObject into pOverlayName
+   put the object_Folder of scriptObject into dotFolder
+   display_Overlay dotFolder, pGraphStyle, pImageView, pOverlayName, pResizeStyle, pStackLabel
+   put the result into pImageView
+   return pImageView
+end graph_ScriptHandlers

@@ -1,0 +1,11 @@
+on menu_CreateMenuStack
+   put "Choose a name for your script only menu stack...." into pQuestion
+   put the clipboarddata ["text"] into maybeMenuTitle
+   if word -1 of maybeMenuTitle = "Menu" then
+      replace " | " with "_" in maybeMenuTitle
+      put maybeMenuTitle into suggestedAnswer
+   else
+      put "Global_Example_Menu" into suggestedAnswer
+   end if
+   lcw_CreateLibrary "controller", pQuestion, suggestedAnswer
+end menu_CreateMenuStack

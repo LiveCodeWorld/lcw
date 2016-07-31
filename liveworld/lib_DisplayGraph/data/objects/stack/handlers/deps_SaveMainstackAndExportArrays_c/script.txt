@@ -1,0 +1,20 @@
+command deps_SaveMainstackAndExportArrays scriptObject, pForceCreate
+   put the main_Stack of scriptObject into mainStackObject
+   save mainStackObject
+   
+   put the mainStack_Hash of mainStackObject into stackHash
+   put the mainStack_ManifestArray of mainStackObject into manifestArray
+   put manifestArray ["sha1"] into storedHash
+   if stackHash = storedHash and pForceCreate is not true then
+      put the mainstack_WalkArray of mainStackObject into mainStackHkeyWalkArray
+      return mainStackHkeyWalkArray
+   end if
+   
+   put true into pHashArrayBoolean
+   put true into pUseCustomFolders
+   put true into pExportHandlers
+   
+   mainStack_ExportAsFiles mainStackObject, pHashArrayBoolean, pExportHandlers, pUseCustomFolders, pForceCreate
+   put the result into mainStackMetaArray
+   return mainStackMetaArray
+end deps_SaveMainstackAndExportArrays

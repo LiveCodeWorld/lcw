@@ -1,0 +1,4 @@
+function javascript_ConstructInternalLink pageTitle
+   put merge ("wiki.doInternalLink('[[pageTitle]]')") into someJavascript
+   return someJavascript
+end javascript_ConstructInternalLink

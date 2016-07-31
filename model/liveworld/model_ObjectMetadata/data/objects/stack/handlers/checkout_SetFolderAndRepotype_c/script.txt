@@ -1,0 +1,58 @@
+command checkout_SetFolderAndRepotype objectFile, @repoType
+   -- ignoreCall: fossil_FindCheckoutFolder,f
+   -- ignoreCall: git_GetCheckoutFolder,f
+   
+   switch repoType
+      case "fossil"
+         try
+            put fossil_FindCheckoutFolder (objectFile) into checkoutFolder
+            put "fossil" into repoType
+            return checkoutFolder
+         catch e
+            return empty 
+         end try
+      case "git"
+         try
+            put git_GetCheckoutFolder (objectFile) into checkoutFolder
+            put "git" into repoType
+            return checkoutFolder
+         catch e
+            return empty 
+         end try
+      default
+         -- let's try to see if there is a repo
+         try
+            put git_GetCheckoutFolder (objectFile) into gitCheckoutFolder
+         catch e
+            put empty into gitCheckoutFolder
+         end try
+         
+         try
+            put fossil_FindCheckoutFolder (objectFile) into fossilCheckoutFolder
+         catch e
+            put empty into fossilCheckoutFolder
+         end try
+         
+         switch
+            case gitCheckoutFolder is empty and fossilCheckoutFolder is empty
+               put "" into repoType
+               return empty
+            case gitCheckoutFolder is empty and fossilCheckoutFolder is not empty
+               put "fossil" into repoType
+               return fossilCheckoutFolder
+            case gitCheckoutFolder is not empty and fossilCheckoutFolder is empty
+               put "git" into repoType
+               return gitCheckoutFolder
+            default -- case objectFile begins with gitCheckoutFolder and objectFile begins with fossilCheckoutFolder
+               -- it's both ?
+               -- let's just return the longest (usually the closest folder above objectFile)
+               if the number of chars of gitCheckoutFolder > the number of chars of fossilCheckoutFolder then
+                  put "git" into repoType
+                  return gitCheckoutFolder
+               else
+                  put "fossil" into repoType
+                  return fossilCheckoutFolder
+               end if
+         end switch
+   end switch
+end checkout_SetFolderAndRepotype

@@ -1,0 +1,7 @@
+command script_UpdateUrip scriptObject, someScript
+   -- careful with script only stacks as these changes will not be stored
+   put script_GetMetadataArray (someScript) into uRIPArray
+   delete local uRIPArray ["date"]
+   set the object_UripArray of scriptObject to uRipArray
+   return uRipArray
+end script_UpdateUrip

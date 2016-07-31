@@ -1,0 +1,9 @@
+on menu_SaveLoadedSet
+   put project_GetCurrentName() into setName
+   library_StoreGlobalPrefs setName, false
+   hArray_StoreGlobal
+   library_StoreSet setName
+   
+   put merge ("Stored, prefs, hArray global, and library set '[[setName]]'...") into someComment
+   opn_Notify someComment
+end menu_SaveLoadedSet

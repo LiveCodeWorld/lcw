@@ -1,0 +1,4 @@
+function file_IsWithinOpn someFile
+   put library_PluginFolder() into rootFolder
+   return someFile contains rootFolder
+end file_IsWithinOpn

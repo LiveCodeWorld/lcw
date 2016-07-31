@@ -1,0 +1,49 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Wireframe
+type: library
+version: 0.1
+
+
+--> Display
+-
+[[ _FetchHandler (display_Wireframe,c) ]]
+
+
+--> Wireframe
+-
+[[ _FetchHandler (wireframe_SnapAndExport,c) ]]
+
+[[ _FetchHandler (wireframe_GetSnapPng,f) ]]
+
+
+--> Wireframe | Props
+-
+[[ _FetchHandler (wireframe_Snap,g) ]]
+
+[[ _FetchHandler (wireframe_StackSnap,g) ]]
+
+[[ _FetchHandler (wireframe_LocalhostURL,g) ]]
+
+[[ _FetchHandler (wireframe_RemoteURL,g) ]]
+
+[[ _FetchHandler (wireframe_ImageFile,g) ]]
+
+[[ _FetchHandler (wireframe_ImageShortFile,g) ]]
+
+
+--> LCW
+-
+[[ _FetchHandler (lcw_ConstructImageURL,f) ]]
+
+
+--> localhost
+-
+[[ _FetchHandler (localhost_SavePng,c) ]]
+
+[[ _FetchHandler (localhost_ConstructImagePath,f) ]]
+
+[[ _FetchHandler (localhost_GetImageFolder,f) ]]
+
+[[ _FetchHandler (localhost_ConstructImageUrl,f) ]]

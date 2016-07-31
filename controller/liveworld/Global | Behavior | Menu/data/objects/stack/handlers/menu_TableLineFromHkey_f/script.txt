@@ -1,0 +1,27 @@
+function menu_TableLineFromHkey hKey
+   put "hKey" into mItemType
+   put empty into mTitle
+   
+   hkey_Deconstruct hKey, handlerName, handlerType, mController, handlerNum
+   set the itemdelimiter to "_"
+   put item 1 of handlerName into handlerPrefix
+   put item 2 of handlerName into handlerSuffix
+   
+   put hkey_ExtractHandlerFromObject (hKey) into someHandler
+   put line 1 of someHandler into mLine
+   put token 2 of mLine into firstParam
+   
+   -- only add disabled_Prop if it exists in the menu_Controller (optional)
+   put "disabled_" & handlerSuffix into mFormatProp
+   if the script_GetProp [mFormatProp] of mController is empty then put empty into mFormatProp
+   
+   put text_SplitCaps (handlerSuffix) into mLine
+   if firstParam is empty or param_IsObject (firstParam) then
+      put handlerName && "mTarget" into pigeon
+      put menu_ConstructTableLine(mController, pigeon, mTitle, mLine, mFormatProp, mItemType) into mTableLine
+   else
+      put mCommand && "subMenuPath," && mTarget into pigeon
+      put menu_ConstructTableLine(mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp) into mTableLine
+   end if
+   return mTableLine
+end menu_TableLineFromHkey

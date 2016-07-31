@@ -1,0 +1,16 @@
+command library_AddToStackFiles newStackName, newFile
+   -- was "opn_AddToStackFiles"
+   put library_StackFileStack() into stackFileStack
+   put the stackfile_Array of stackFileStack into stackFileArray  
+   --
+   put the filename of stackFileStack into rootFile
+   put folder_Above (rootFile) into baseFolder
+   put file_GetRelativePath (newFile, baseFolder, commonPath) into newRelativeFile
+   put newRelativeFile into stackFileArray [newStackName]
+   --
+   set the stackfile_Array of stackFileStack to stackFileArray  
+   lock messages
+   save stack rootFile
+   unlock messages
+   return newRelativeFile
+end library_AddToStackFiles

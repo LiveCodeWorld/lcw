@@ -1,0 +1,4 @@
+on menu_DisplayColourPalette swatchName
+   put colour_GetSwatchArray (swatchName) into swatchArray
+   display_Array swatchArray
+end menu_DisplayColourPalette

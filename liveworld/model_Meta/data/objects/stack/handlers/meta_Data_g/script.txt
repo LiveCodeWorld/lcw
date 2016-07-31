@@ -1,0 +1,6 @@
+getprop meta_Data
+   put the meta_ScriptMetaDataFile of the target into scriptMetaDataFile
+   put url ("binfile:" & scriptMetaDataFile) into encodedArray
+   put arraydecode (encodedArray) into scriptMetaDataArray
+   return scriptMetaDataArray
+end meta_Data

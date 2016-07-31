@@ -1,0 +1,9 @@
+command html_DeconstructRefLink someLine, @someText, @someLink
+    -- <a href="/Users/david/Movies/crossingTheBridge.mp4">Crossing The Bridge</a>
+    
+    put "<a href=" & quote & "([^>]*)" & quote & ">([^<]*)</a>" into someReg
+    if matchtext(someLine, someReg, someLink, someText) is false then
+        put someLine into someText
+        put empty into someLink
+    end if
+end html_DeconstructRefLink

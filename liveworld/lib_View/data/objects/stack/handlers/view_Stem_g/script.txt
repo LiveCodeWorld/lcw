@@ -1,0 +1,15 @@
+getprop view_Stem
+   put the view_Object of the target into someView
+   -- put the long id of the target into someView
+   if exists(someView) is false then return empty
+   
+   put the uOPN ["view_Stem"] of someView into viewStem
+   if viewStem is not empty then
+      return viewStem
+   else
+      put the uRIP ["name"] of someView into viewName
+      put view_StemFromName(viewName) into viewStem 
+      set the view_Stem of someView to viewStem
+      return viewStem
+   end if
+end view_Stem

@@ -1,0 +1,9 @@
+function hap_ConstructRefinementList
+   -- Desktop authoring only
+   put the script of stack "lib_HAP" into someScript
+   put script_GetFunction ("hap_RefinementToMediaTypes", someScript) into someHandler
+   put script_ExtractCaseConditions (someHandler) into caseConditions
+   sort caseConditions
+   replace CR with comma in caseConditions
+   return caseConditions
+end hap_ConstructRefinementList

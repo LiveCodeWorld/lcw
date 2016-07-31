@@ -1,0 +1,16 @@
+on menu_DisplayChapter plusMinusView, chapterName
+   put sivasiva_GetChapterNum (chapterName) into chapterNum
+   set the chapter_Num of plusMinusView to chapterNum
+   put the chapter_Array of plusMinusView into chapterArray
+   
+   set the displayed_SquareText of plusMinusView to the trait_Quote of plusMinusView
+   set the displayed_PositiveLabel of plusMinusView to the positive_Label of plusMinusView
+   set the displayed_NegativeLabel of plusMinusView to the negative_Label of plusMinusView
+   
+   put trait_GetSituation (chapterArray, situationNum) into traitSituation
+   put trait_GetPositiveResponse (chapterArray, situationNum) into positiveResponse
+   put trait_GetNegativeResponse (chapterArray, situationNum) into negativeResponse
+   put trait_GetAssignment (chapterArray) into traitAssignment
+   put trait_GetThoughtLabel (chapterArray) into thoughtLabel
+   
+end menu_DisplayChapter

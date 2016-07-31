@@ -1,0 +1,46 @@
+function unicode_UnEscape pString
+   put false into inEsc
+   repeat for each char c in pString
+      add 1 to count
+      put c after buffer
+      
+      if count < 2 then next repeat
+      
+      if buffer is "\u" then put true into inEscape
+      
+      if inEscape then 
+         if length(buffer) < 6 then 
+            next repeat 
+         else 
+            -- TO DEAL WITH DIACRITICS : 
+            -- TKD (26-07-2012): The output of this should be UTF-8. 
+            -- The original code returned platform specific encoding. On Windows
+            -- this worked fine as the code is the same as UTF-8. On Mac this is
+            -- not correct. The code did not take into account integers > 255.
+            --            if platform() is "MacOS" then 
+            --               put isotomac(numtochar(baseconvert(char 3 to 6 of buffer, 16, 10))) into buffer 
+            --            else 
+            --               put numtochar(baseconvert(char 3 to 6 of buffer, 16, 10)) into buffer 
+            --            end if 
+            set the useUnicode to true
+            try
+               # might not be a valid conversion (think C:\Users\...)
+               put unidecode(numToChar(baseconvert(char 3 to 6 of buffer, 16, 10)), "utf8") into buffer
+            catch e
+            end try
+            set the useUnicode to false
+            
+            put buffer after nString
+            put empty into buffer
+            put false into inEscape
+            put 0 into count
+         end if 
+      else 
+         put char 1 of buffer after nString 
+         delete char 1 of buffer 
+      end if 
+      
+   end repeat
+   put buffer after nString
+   return nString
+end unicode_UnEscape

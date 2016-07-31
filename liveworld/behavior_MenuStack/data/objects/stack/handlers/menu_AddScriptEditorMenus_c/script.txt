@@ -1,0 +1,8 @@
+on menu_AddScriptEditorMenus treeView, setName
+   put the main_Name of rev_ScriptEditorField() into revScriptEditorField
+   put the main_Name of rev_HandlerTreeField() into revHandlerTree
+   put menu_ConstructPluginRecord ("Global | Script | Editor | Menu", false) into menuArray ["control"]["main_Name"][revScriptEditorField][1]
+   put menu_ConstructPluginRecord ("Global | Handler | Menu", false) into menuArray ["control"]["main_Name"][revHandlerTree][1]
+   
+   library_StoreMenuArray menuArray, setName
+end menu_AddScriptEditorMenus

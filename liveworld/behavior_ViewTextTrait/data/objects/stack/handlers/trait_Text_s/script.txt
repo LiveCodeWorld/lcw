@@ -1,0 +1,5 @@
+setprop trait_Text someText
+   put _textLabelField() into fieldControl
+   set the text of fieldControl to someText 
+   return fieldControl
+end trait_Text

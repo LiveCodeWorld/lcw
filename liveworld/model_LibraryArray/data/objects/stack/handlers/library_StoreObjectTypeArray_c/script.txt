@@ -1,0 +1,5 @@
+command library_StoreObjectTypeArray libType, setName, libTypeArray
+   put library_FetchSetData() into setData
+   put libTypeArray into setData [setName]["data"][libType]
+   library_StoreSetData setData
+end library_StoreObjectTypeArray

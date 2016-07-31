@@ -1,0 +1,10 @@
+command firefox_PositionWindow someRect, windowName
+    -- relative to top left corner
+    if windowName is empty then
+        put 1 into windowName
+    else if windowName is not a number then
+        put kwote(windowName) into windowName
+    end if
+    put merge("set the bounds of window [[windowName]] to {[[someRect]]}") into appleScriptLine
+    return appleScript_DoLine(appleScriptLine, "firefox-bin")	
+end firefox_PositionWindow

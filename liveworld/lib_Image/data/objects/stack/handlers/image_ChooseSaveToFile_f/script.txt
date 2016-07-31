@@ -1,0 +1,7 @@
+function image_ChooseSaveToFile
+    put merge("Export this image to...") into someComment
+    ask file someComment
+    put it into pSaveToFile
+    if pSaveToFile is empty then exit to top
+    return pSaveToFile
+end image_ChooseSaveToFile

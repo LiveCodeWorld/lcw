@@ -1,0 +1,10 @@
+setprop index_Width someWidth
+   switch
+      case someWidth is a number
+         put someWidth into LocalArray ["indexWidth"]
+         break
+      default
+         put 250 into someWidth
+   end switch
+   LayoutControl
+end index_Width

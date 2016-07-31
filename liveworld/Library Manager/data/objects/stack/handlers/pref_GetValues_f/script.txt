@@ -1,0 +1,6 @@
+function pref_GetValues pSetName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put pref_FetchData() into dataArray
+   get dataArray [pSetName]
+   return keys(it)
+end pref_GetValues

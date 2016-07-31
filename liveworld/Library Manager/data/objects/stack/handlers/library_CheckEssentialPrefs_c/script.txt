@@ -1,0 +1,9 @@
+command library_CheckEssentialPrefs pSetName
+   -- things like git, and fossil?
+   
+   pref_SetShellRoot "git", "gitPath"
+   -- put pref_GetValue ("gitPath") into gitPath
+   
+   pref_SetShellRoot "fossil", "fossilPath"
+   pref_SetShellRoot "dot", "dotPath"
+end library_CheckEssentialPrefs

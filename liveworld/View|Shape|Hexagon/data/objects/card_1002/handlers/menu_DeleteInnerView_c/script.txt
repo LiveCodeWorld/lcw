@@ -1,0 +1,4 @@
+on menu_DeleteInnerView sHexagon
+   put the inner_View of sHexagon into innerView
+   send "delete innerView" to sHexagon in 0 ticks
+end menu_DeleteInnerView

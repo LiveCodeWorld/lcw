@@ -1,0 +1,5 @@
+function hkey_IsInLibrary hKey
+   put library_HandlerFile (hKey, "script.txt", true) into someFile
+   put there is a file someFile into fileExists
+   return fileExists
+end hkey_IsInLibrary

@@ -1,0 +1,9 @@
+function hArray_GetFoundHkeyArray hKey, pHArray
+   put item 1 to 2 of hKey into shortHkey
+   if pHArray is an array then
+      return pHArray ["handlerArray"][shortHkey]
+   else
+      global gHkey_Array
+      return gHkey_Array ["handlerArray"][shortHkey]
+   end if
+end hArray_GetFoundHkeyArray

@@ -1,0 +1,35 @@
+function hKeyArray_InsideAndOut hKeyLinkArray, withinObject
+   put the long id of withinObject into withinObject
+   repeat for each key hKey in hKeyLinkArray
+      hkey_Deconstruct hKey, handlerName, handlerType, keyObject, handlerNum
+      if exists(keyObject) is false then
+         put empty into insideOutArray ["missing"][hKey]
+      else
+         put the long id of keyObject into keyObject
+         if keyObject contains withinObject then
+            put empty into insideOutArray ["inside"][hKey]
+         else
+            put empty into insideOutArray ["outside"][hKey]
+         end if
+      end if
+      
+      -- lets work out new links
+      put empty into newKeyLinks
+      put hKeyLinkArray [hKey] into keyLinks
+      repeat for each line keyLink in keyLinks
+         hkey_Deconstruct keyLink, handlerName, handlerType, keyLinkObject, handlerNum
+         if exists(keyLinkObject) is false then 
+            put empty into insideOutArray ["missing"][keyLink]
+            next repeat
+         end if
+         
+         put the long id of keyLinkObject into keyLinkObject
+         if keyLinkObject contains withinObject then
+            put empty into insideOutArray ["inside"][keyLink]
+         else
+            put empty into insideOutArray ["outside"][keyLink]
+         end if
+      end repeat
+   end repeat
+   return insideOutArray
+end hKeyArray_InsideAndOut

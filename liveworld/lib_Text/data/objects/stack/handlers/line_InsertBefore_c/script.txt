@@ -1,0 +1,9 @@
+command line_InsertBefore someLine, @someIndex
+    -- does not work for index with blank line at end
+    -- put the number of lines of someIndex into maxLine
+    if someIndex is empty then
+        put someLine into someIndex
+    else if someLine is not empty then
+        put someLine & return before someIndex
+    end if
+end line_InsertBefore

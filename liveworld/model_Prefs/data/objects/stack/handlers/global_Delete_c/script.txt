@@ -1,0 +1,4 @@
+command global_Delete gName
+   put "global" && gName & CR & "delete variable" && gName into doScript
+   do doScript
+end global_Delete

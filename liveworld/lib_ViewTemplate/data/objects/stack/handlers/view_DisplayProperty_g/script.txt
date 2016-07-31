@@ -1,0 +1,16 @@
+getprop view_DisplayProperty [someProp]
+   put the long id of the target into someView
+   repeat
+      put the view_Object of someView into someView
+      if exists (someView) is false then return empty
+      
+      put the customproperties of someView into displayArray
+      if someProp is among the lines of the keys of displayArray then -- allows returning empty if key is present
+         return displayArray [someProp]
+      end if
+      
+      delete word 1 to 4 of someView
+      if word 1 of someView is among the items of "card,stack" then return empty -- recursion problem if someView = "card..." as a bg view will keep getting called
+      if exists (someView) is false then return empty
+   end repeat
+end view_DisplayProperty

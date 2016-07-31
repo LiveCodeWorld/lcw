@@ -1,0 +1,9 @@
+command xml_SetTagContents tagName, @someXml, newContents
+   xml_TagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+   if the result is true then
+      put newContents into char startTag to endTag of someXml
+      return true
+   else
+      return false
+   end if
+end xml_SetTagContents

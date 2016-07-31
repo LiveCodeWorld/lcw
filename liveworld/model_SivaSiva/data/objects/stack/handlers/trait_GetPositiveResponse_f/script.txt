@@ -1,0 +1,5 @@
+function trait_GetPositiveResponse chapterArray, pSituationNum
+   if pSituationNum is empty then put 1 into pSituationNum
+   put chapterArray ["tableArray"]["tbody"][pSituationNum][2] into positiveResponse
+   return positiveResponse
+end trait_GetPositiveResponse

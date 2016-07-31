@@ -1,0 +1,5 @@
+function library_ConstructMenuSetArray
+   put library_FetchSetArray ("Default") into setArray
+   put empty into setArray ["data"]["used"]
+   return setArray
+end library_ConstructMenuSetArray

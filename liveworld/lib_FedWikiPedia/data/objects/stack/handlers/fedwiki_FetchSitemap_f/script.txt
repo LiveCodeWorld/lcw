@@ -1,0 +1,8 @@
+function fedwiki_FetchSitemap fedwikiUrl
+   -- http://david.narrative.world/view/welcome-visitors/view/currently-working-on/view/fedwiki-tools
+   -- put script_GetCommentAboveMe() into fedwikiUrl
+   
+   put fedwiki_JsonSiteMapUrl (fedwikiUrl) into sitemapURL
+   put url sitemapURL into sitemapJSON
+   return sitemapJSON
+end fedwiki_FetchSitemap

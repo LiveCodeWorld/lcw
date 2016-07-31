@@ -1,0 +1,24 @@
+function menu_ConstructHtmlOutline mText
+    repeat for each line someLine in mText
+        if char -2 of word -1 of someLine is "/" then
+            put "" into char -2 to -1 of someLine
+        end if
+        
+        if char 1 of word 1 of someLine is "(" then
+            delete char 1 of word 1 of someLine
+            menu_ConvertMarksToHtml someLine
+            put xml_Tag(someLine, "i") into someLine
+        else
+            menu_ConvertMarksToHtml someLine
+        end if
+         
+        if matchchunk(someLine, ".*(&.).*", startChar, endChar) then
+            -- answer char startChar to endChar of someLine
+            put "</u>" after char endChar of someLine
+            put "<u>" into char startChar to startChar of someLine
+        end if
+        
+        put someLine & CR after newHtmlOutline
+    end repeat
+    return word 1 to -1 of newHtmlOutline
+end menu_ConstructHtmlOutline

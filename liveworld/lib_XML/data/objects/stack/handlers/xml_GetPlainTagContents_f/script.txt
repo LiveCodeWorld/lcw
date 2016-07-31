@@ -1,0 +1,9 @@
+function xml_GetPlainTagContents tagName, someXml
+    -- this version is for constructed tags without white space, or parameters, or nesting
+    put merge("(?Usmi)<[[tagName]]>(.*)</[[tagName]]>") into someReg
+    if matchtext(someXML, someReg, tagContent) is false then
+        return empty
+    else
+        return word 1 to -1 of tagContent
+    end if
+end xml_GetPlainTagContents

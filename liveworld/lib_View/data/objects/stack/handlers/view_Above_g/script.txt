@@ -1,0 +1,7 @@
+getprop view_Above
+    put the long id of the target into someObject
+    delete word 1 to 4 of someObject
+    if exists(someObject) is false then return empty
+    put the view_Object of someObject into someView
+    return someView
+end view_Above

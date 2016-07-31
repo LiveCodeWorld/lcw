@@ -1,0 +1,9 @@
+command model_SetFileArray modelName, modelArray
+   put library_ArrayFolder (modelName) into someFile
+   if keys (modelArray) is empty then
+      file_Delete someFile
+   else
+      put arrayencode (modelArray) into url ("binfile:" & someFile)
+   end if
+   return someFile
+end model_SetFileArray

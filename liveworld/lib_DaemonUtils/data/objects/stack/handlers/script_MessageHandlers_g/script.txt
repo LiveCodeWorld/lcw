@@ -1,0 +1,20 @@
+getprop script_MessageHandlers
+   local mHandlerNames
+   put the script of the target into someScript
+   put the revAvailableHandlers of the target into handlerTable
+   repeat for each line tableLine in handlerTable
+      if word 1 of tableLine = "M" then
+         put word 3 of tableLine into startLineNum
+         get line startLineNum of someScript
+         if word 1 of it = "on" then
+            put word 2 of tableLine into mHandlerName
+            put mHandlerName & CR after mHandlerNames
+         end if
+      else
+         delete char -1 of mHandlerNames
+         return mHandlerNames
+      end if
+   end repeat
+   delete char -1 of mHandlerNames
+   return mHandlerNames
+end script_MessageHandlers

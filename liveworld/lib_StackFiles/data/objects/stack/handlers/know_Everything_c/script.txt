@@ -1,0 +1,6 @@
+command know_Everything
+   put known_GetStackFileArray() into stackFileArray
+   set the stackfile_Array of this stack to stackFileArray
+   set the stackfile_Array of stack "Library Manager" to stackFileArray
+   start using this stack
+end know_Everything

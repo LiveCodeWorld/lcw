@@ -1,0 +1,15 @@
+command overlay_SetLinkArray overlayFolder, hKeyArray, pOverlayName, pGraphStyle, pMainstackHash, pImageFormat
+   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
+   if pGraphStyle is empty or hKeyArray is not an array then
+      put overlayArray_GetHeaderArray (overlayArray) into dotHeaderArray
+      put overlayArray_GetGraphPropertyArray (overlayArray) into graphPropertyArray
+      put overlayArray_FromLinkArray (hkeyArray, dotHeaderArray, graphPropertyArray) into overlayArray
+      -- overlayArray_SetLinkArray overlayArray, hKeyArray
+      overlay_SetArray overlayFolder, overlayArray, pOverlayName, pMainstackHash
+   else
+      local pDotCluster
+      overlay_CreateGraph overlayFolder, hKeyArray, pOverlayName, pOverlayOf, pGraphStyle, pDotCluster, pMainstackHash, pImageFormat
+      put the result into overlayArray
+   end if
+   return overlayArray
+end overlay_SetLinkArray

@@ -1,0 +1,10 @@
+function library_ListGlobalMenuObjects
+   global gHkey_Array
+   put gHkey_Array ["Global Menus"] into menuArray
+   repeat for each key mTitle in menuArray
+      put menuArray [mTitle]["mController"] into mController
+      put mController & CR after mControllers
+   end repeat
+   delete char -1 of mControllers
+   return mControllers
+end library_ListGlobalMenuObjects

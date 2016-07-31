@@ -1,0 +1,6 @@
+function pref_FetchValue prefName, pSetName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put pref_FetchArray (pSetName) into prefArray
+   put prefArray [prefName] into someValue
+   return someValue
+end pref_FetchValue

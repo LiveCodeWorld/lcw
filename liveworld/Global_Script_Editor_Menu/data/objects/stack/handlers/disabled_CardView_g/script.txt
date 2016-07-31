@@ -1,0 +1,11 @@
+getprop disabled_CardView [mTarget]
+   put the card_Object of mTarget into cardObject
+   if exists(cardObject) is false then return "delete"
+   put the view_NameArray of cardObject into nameArray
+   put keys(nameArray) into ViewNames
+   if ViewNames is empty then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_CardView

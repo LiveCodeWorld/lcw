@@ -1,0 +1,30 @@
+command digitalocean_CreateDomain someDomain, someIP
+   /*
+   -- v2
+   -- https://developers.digitalocean.com/documentation/v2/#create-a-new-domain
+   
+   To create a new domain, send a POST request to /v2/domains. 
+   Set the "name" attribute to the domain name you are adding. 
+   Set the "ip_address" attribute to the IP address you want to point the domain to.
+   
+   -- curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer $TOKEN'
+   -- -d '{"name":"digitaloceanisthebombdiggity.com","ip_address":"1.2.3.4"}' 
+   -- "https://api.digitalocean.com/v2/domains"
+   
+   -d '{"name":"digitaloceanisthebombdiggity.com","ip_address":"1.2.3.4"}' 
+   "https://api.digitalocean.com/v2/domains"
+   
+   {
+   "name": "digitaloceanisthebombdiggity.com",
+   "ip_address": "1.2.3.4"
+   }
+   */
+   
+   -- dns_AddDotToDomain someDomain
+   put merge ("{'name':'[[someDomain]]','ip_address':'[[someIP]]'}") into someJSON
+   replace "'" with quote in someJSON
+   
+   digitalocean_RestPost "domains", someJson
+   put the result into jsonResult
+   return jsonResult
+end digitalocean_CreateDomain

@@ -1,0 +1,5 @@
+function overlay_ListNames overlayFolder
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_ListNames (overlayData) into overlayNames
+   return overlayNames
+end overlay_ListNames

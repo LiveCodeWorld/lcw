@@ -1,0 +1,4 @@
+on menu_EditThisMenu
+   put menu_GetGlobalController ("Global | Index | Simple | Menu") into mController
+   edit the script of mController
+end menu_EditThisMenu

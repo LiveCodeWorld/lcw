@@ -1,0 +1,5 @@
+command wikipedia_SetUserAgent
+   -- https://www.mediawiki.org/wiki/API:Main_page#Identifying_your_client
+   put "User-Agent: WikiApp/0.1 (http://livecode.viral.academy/wikiapp.html; david@viral.academy) MacOS Livecode/7.06" into userHeader
+   set the httpheaders to userHeader
+end wikipedia_SetUserAgent

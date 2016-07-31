@@ -1,0 +1,6 @@
+function object_FetchMetadataArray objectFolder
+   -- object_ConstructMetadataFolder is missing / renamed?
+   put object_ConstructMetadataFolder (objectFolder) into metaFolder
+   put array_FromFolder (metaFolder) into metadataArray
+   return metadataArray
+end object_FetchMetadataArray

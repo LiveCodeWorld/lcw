@@ -1,0 +1,4 @@
+getprop model_ArrayKeys [modelName]
+   put the long id of the target into modelObject
+   return model_GetArrayKeys(modelName, modelObject)
+end model_ArrayKeys

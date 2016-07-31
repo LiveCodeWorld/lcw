@@ -1,0 +1,10 @@
+function daemon_ConstructDefaultHeader
+   put "text/html" into headerArray ["Content-Type"] 
+   put "*" into headerArray ["Access-Control-Allow-Origin"]
+   put "Close" into headerArray ["Connection"]
+   -- put the date & the time into headerArray ["Date"]
+   put the internet date into headerArray ["Date"]
+   -- _addCacheHeader someHeader
+   -- put "public, max-age=0" into headerArray ["Cache-Control"] after someHeader
+   return headerArray
+end daemon_ConstructDefaultHeader

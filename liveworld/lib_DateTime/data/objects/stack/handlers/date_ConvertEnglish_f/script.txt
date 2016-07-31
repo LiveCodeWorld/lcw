@@ -1,0 +1,10 @@
+function date_ConvertEnglish someDate, itemNum
+    -- was "englishDate"
+    if itemNum is empty then put 3 into itemNum
+    convert someDate to short date
+    set the itemdelimiter to "/"
+    put someDate into englishDate
+    put item 1 of someDate into item 2 of englishDate
+    put item 2 of someDate into item 1 of englishDate
+    return item 1 to itemNum of englishDate
+end date_ConvertEnglish

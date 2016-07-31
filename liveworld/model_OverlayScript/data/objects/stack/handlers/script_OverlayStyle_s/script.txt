@@ -1,0 +1,6 @@
+setprop script_OverlayStyle [pOverlayName] graphStyle
+   put the script_GraphPropertyArray [pOverlayName] of the target into propertyArray
+   put graphStyle into propertyArray ["overlay_Style"]
+   set the script_GraphPropertyArray [pOverlayName] of the target to propertyArray
+   return the result
+end script_OverlayStyle

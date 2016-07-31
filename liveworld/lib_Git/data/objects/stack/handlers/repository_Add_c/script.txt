@@ -1,0 +1,17 @@
+command repository_Add someFile, fileIsNew, pCommitComment
+   -- file has been created or updated
+   switch repository_GetType()
+      case "svn"
+         if fileIsNew is true then svn_Add someFile
+         break
+      case "git"
+         if pCommitComment is empty then put "opn auto-commit" into pCommitComment
+         
+         -- if fileIsNew is true then git_AddFile someFile
+         git_CommitFile someFile, pCommitComment
+         -- opn_Notify pCommitComment, true
+         -- git_CommitChanges pCommitComment
+         -- send "git_RefreshDisplay" to the target in 2 ticks
+         break
+   end switch
+end repository_Add

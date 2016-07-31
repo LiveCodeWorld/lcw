@@ -1,0 +1,10 @@
+command fossil_Commit pFolder, pComment
+   if pComment is empty then put opn_Ask ("Enter a comment for this commit...") into pComment
+   replace quote with "'" in pComment
+   
+   put "fossil commit -m" into someShell
+   put space & kwote (pComment) after someShell
+   fossil_ExecuteShell someShell, pFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Commit

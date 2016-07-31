@@ -1,0 +1,5 @@
+on menu_CheckExportedLibraryScripts
+   -- put library_FetchObjects ("used", "all") into someObjects
+   put library_FetchEveryObject() into someObjects
+   _DisplayFoundDifferences someObjects, "Could not find any errors in the exported library scripts!"
+end menu_CheckExportedlibraryScripts

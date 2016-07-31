@@ -1,0 +1,4 @@
+getprop disabled_TrashStack [stackObject]
+   put the substacks of stackObject into subStackNames
+   return subStackNames is not empty
+end disabled_TrashStack

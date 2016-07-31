@@ -1,0 +1,4 @@
+on menu_ExportScript scriptObject
+   put the script of scriptObject into someScript
+   set the exported_Script of scriptObject to someScript
+end menu_ExportScript

@@ -1,0 +1,6 @@
+function project_GetFolder someName, projectName
+   put library_FetchSetArray (projectName) into setArray
+   put setArray ["metadata"][someName]["folder"] into someFolder
+   if char -1 of someFolder is not slash then put slash after someFolder
+   return someFolder
+end project_GetFolder

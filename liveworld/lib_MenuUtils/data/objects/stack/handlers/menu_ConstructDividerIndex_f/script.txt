@@ -1,0 +1,15 @@
+function menu_ConstructDividerIndex someMenu
+    set the wholematches to true
+    put empty into dividerIndex
+    put 0 into skipLines
+    repeat
+        get lineoffset("-", someMenu, skipLines)
+        if it = 0 then exit repeat
+         
+        put it + skipLines into lineNum
+        put lineNum & return after dividerIndex
+        put lineNum into skipLines
+    end repeat
+    delete last char of dividerIndex
+    return dividerIndex
+end menu_ConstructDividerIndex

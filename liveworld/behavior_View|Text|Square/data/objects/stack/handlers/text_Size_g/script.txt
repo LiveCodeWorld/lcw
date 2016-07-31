@@ -1,0 +1,5 @@
+getprop text_Size
+   put _textField() into textField
+   put the textsize of textField into someSize
+   return someSize
+end text_Size

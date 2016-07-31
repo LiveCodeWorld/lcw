@@ -1,0 +1,58 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_GeometryBezier
+type: library
+version: 0.1
+
+
+--> Hexagon
+-
+[[ _FetchHandler (hexagon_Points,s) ]]
+
+[[ _FetchHandler (hexagon_GetPoint,f) ]]
+
+
+--> Geometry | Bezier
+-
+[[ _FetchHandler (graphic_BezierPoints,g) ]]
+
+[[ _FetchHandler (graph_BezierLine,f) ]]
+
+[[ _FetchHandler (graph_QuadraticLine,f) ]]
+
+
+--> Geometry | EPS
+-
+/*
+Adobe Ilustrator EPS vector Importer. Version 0.3p
+by Alejandro Tejada (capellan2000@yahoo.com) 2002
+
+-- Scripts of button "Import"
+-- Uses text fields: "BezierResolution",fld "EpsVectorGrafic",fld "path for images"
+-- Uses text fields: fld "workarea1"
+-- Uses checkbox buttons: "flipgrc", "groupgrc", "lockscreen", "relpath"
+-- globals a,b,c,d,q,w,variablezxc,localvariable2,IdsAllgrcCreated
+-- local variables created on the fly: adobe, localvariable1, vGraphicLineWeight
+-- vgfc, mnbvcxz, bezierOperators, renderObject, qwerty
+-- hgfdsa, zxc, vGraphicColor, vGraphicLine
+-- vGraphicLineWeight, ihftg, xwtv,
+*/
+
+[[ _FetchHandler (graph_ImportEps,c) ]]
+
+[[ _FetchHandler (flipAllgraphics,c) ]]
+
+[[ _FetchHandler (CMYKtoRGB,f) ]]
+
+[[ _FetchHandler (DecimaltoRGB,f) ]]
+
+[[ _FetchHandler (flipG,c) ]]
+
+[[ _FetchHandler (flipG2,c) ]]
+
+[[ _FetchHandler (linerect,c) ]]
+
+[[ _FetchHandler (bezier,c) ]]
+
+

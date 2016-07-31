@@ -1,0 +1,6 @@
+on menu_StoreGlobalHarray
+   hArray_StoreGlobal
+   
+   put merge ("Stored global hArray database to disk!") into someComment
+   opn_Notify someComment
+end menu_StoreGlobalHarray

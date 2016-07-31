@@ -1,0 +1,8 @@
+setprop displayed_Project setName
+   -- menuhistory does not refresh if it is already showing
+   put _setMenuButton() into setMenuButton
+   put the text of setMenuButton into someMenu
+   put lineOffset (setName, someMenu) into mNum
+   set the menuHistory of setMenuButton to mNum
+   return someMenu
+end displayed_Project

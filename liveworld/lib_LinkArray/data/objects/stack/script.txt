@@ -1,0 +1,139 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_LinkArray
+type: script library
+version: 0.1
+
+
+--> Dot | MetaData | Array | Deps
+-
+[[ _FetchHandler (linkArray_ConstructDataArray,f) ]]
+
+[[ _FetchHandler (linkArray_DeconstructDataArray,c) ]]
+
+
+--> LinkArray | Filter
+-
+[[ _FetchHandler (linkArray_ConstructObjectOutline,f) ]]
+
+
+--> LinkArray | Filter
+-
+[[ _FetchHandler (linkarray_HkeysFromIDs,f) ]]
+
+[[ _FetchHandler (linkarray_FilterIdArray,f) ]]
+
+[[ _FetchHandler (linkArray_RemoveSelfLinks,c) ]]
+
+[[ _FetchHandler (linkArray_IsNested,f) ]]
+
+[[ _FetchHandler (linkArray_Reduce,f) ]]
+
+[[ _FetchHandler (linkArray_ConstructSkipArray,f) ]]
+
+
+--> LinkArray | Display
+-
+
+-- command display_LinkArray linkArray, pGraphPropertyArray, pDotPropertyArray, pImageView, pGraphController
+local graphPropertyModel, pGraphSize, dotFile
+linkArray_RedrawOverlayMap linkArray, dotFile, graphPropertyModel, pGraphController, pImageView, pGraphStyle, pGraphSize, pOverlayName
+return pImageView
+
+overlay_SetImage imageView, linkArray, idLinkArray, idArray, geometryArray, imageFile, dotFile, xdotFile, cmapFile 
+return imageView
+
+put view_GetTemplateObject ("View|Image|OPN Image") into pImageView
+dot_DrawDependencyGraph hIdLinkArray, hIdArray, pImageView, pGraphController, dotFile, pGraphStyle, pGraphSize
+object_GoTo pImageView
+
+-- linkArray_DrawGraph linkArray, pImageView, pGraphController, pGraphStyle, pOverlayName
+put the result into pImageView
+return pImageView
+end display_LinkArray
+
+
+--> LinkArray | DotText
+-
+[[ _FetchHandler (linkArray_ConstructDot,f) ]]
+
+[[ _FetchHandler (linkArray_ConstructLinkSection,f) ]]
+
+[[ _FetchHandler (linkArray_ConstructClusterDefs,f) ]]
+
+[[ _FetchHandler (linkArray_RecurseClusters,c) ]]
+
+
+--> LinkArray | DotText | Node Links
+-
+[[ _FetchHandler (linkArray_DotNodeLinks,f) ]]
+
+function linkArray_DotNodeLinks linkArray, pNodeIDs
+   -- without translating ids
+   if pNodeIDs is empty then put keys(linkArray) into pNodeIDs
+   repeat for each line someKey in pNodeIDs
+      put linkArray [someKey] into someLinks
+      repeat for each line someLink in someLinks
+         put someKey && "->" && someLink & ";" & CR after linkSection
+      end repeat
+   end repeat
+   delete char -1 of linkSection
+   return linkSection
+end linkArray_DotNodeLinks
+
+[[ _FetchHandler (linkArray_NodeIdsToHkeys,f) ]]
+
+
+--> LinkArray | Recursion
+-
+[[ _FetchHandler (linkArray_DeleteNode,c) ]]
+
+[[ _FetchHandler (linkArray_ExtractTreeArray,f) ]]
+
+[[ _FetchHandler (linkArray_WalkKeys,c) ]]
+
+
+--> LinkArray | Simple IDs
+-
+[[ _FetchHandler (linkArray_ConstructIdArray,c) ]]
+
+[[ _FetchHandler (linkArray_IdConstruct,c) ]]
+
+[[ _FetchHandler (linkArray_Add,pc) ]]
+
+[[ _FetchHandler (linkArray_Keys,f) ]]
+
+[[ _FetchHandler (linkArray_ConstructSimpleKey,pc) ]]
+
+
+--> LinkArray| Model | Convertion
+-
+[[ _FetchHandler (linkArray_ConstructOutline,f) ]]
+            
+[[ _FetchHandler (linkArray_IdRevert,f) ]]
+
+[[ _FetchHandler (linkArray_HashConstruct,c) ]]
+
+[[ _FetchHandler (linkArray_HashRevert,f) ]]
+
+
+--> LinkArray | Recursion | Experiments
+-
+[[ _FetchHandler (outline_RecurseToLinkArray,c) ]]
+
+[[ _FetchHandler (linkArray_Xml,f) ]]
+
+[[ _FetchHandler (linkArray_ConstructXml,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_ConstructPropertyArray,pc) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (xml_NormalizeTagName,c) ]]
+
+[[ _FetchHandler (xml_UnNormalizeTagName,c) ]]

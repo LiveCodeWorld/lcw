@@ -1,0 +1,4 @@
+getprop disabled_RevealTextStackFolder [scriptObject]
+   put the textStack_Folder of scriptObject into someFolder
+   return there is not a folder someFolder
+end disabled_RevealTextStackFolder

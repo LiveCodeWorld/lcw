@@ -1,0 +1,100 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_HkeyArray_Graph_Create_Menu
+type: controller
+version: 0.3
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | HkeyArray | Graph | Create | Menu
+-
+[[ _FetchHandler (menu_CreateSvgGraph,c) ]]
+
+[[ _FetchHandler (menu_CreateAndDisplaySvg,c) ]]
+
+[[ _FetchHandler (menu_DisplayProcessedHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_DisplaySvg,c) ]]
+
+[[ _FetchHandler (menu_DisplayProjectMetadataFolder,c) ]]
+
+[[ _FetchHandler (disabled_DisplaySvg,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Menu | Props
+-
+/*
+This menu is designed to be the title menu of a tree or similar widget that presents an hkeyArray.
+it should allow export to the appropriate place on disk, as it can take a long time to process these arrays,
+and they may want to be examined before they are saved!
+*/
+
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (_GetOverlayFolder,f) ]]
+
+[[ _FetchHandler (deconstructLocalArray,c) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Dev | Menu
+-
+/*
+This section looks like a well structured old menu for manipulating hkeyArray grpah data.
+needs testing.
+*/
+
+[[ _FetchHandler (menu_CreateNewGraphFromTree,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreateTemporaryObjectGraphFromTree,c) ]]
+
+[[ _FetchHandler (menu_CreateTemporaryHkeyGraphFromTree,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CreateLibraryHkeyDependencyGraph,c) ]]
+
+[[ _FetchHandler (menu_CreateLibraryObjectHkeyDependencyGraph,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayHkeyOverlayGraph,c) ]]
+
+[[ _FetchHandler (menu_DisplayExternalMainStackHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_RevealHkeyGraphFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayOverlayGraph,c) ]]
+
+
+--> HkeyArray | Graph | Create | Menu | Props
+-
+[[ _FetchHandler (graph_Styles,g) ]]
+
+[[ _FetchHandler (overlay_Names,g) ]]
+
+
+--> HkeyArray | Graph | Create | Menu | Disabled
+-
+
+--> Deps
+-
+[[ _FetchHandler (dot_AllGraphStyles,f) ]]

@@ -1,0 +1,6 @@
+setprop menu_GlobalTitle globalMenuTitles
+   put the long id of the target into scriptObject
+   repeat for each line globalMenuTitle in globalMenuTitles
+      menu_SetGlobalController globalMenuTitle, scriptObject
+   end repeat
+end menu_GlobalTitle

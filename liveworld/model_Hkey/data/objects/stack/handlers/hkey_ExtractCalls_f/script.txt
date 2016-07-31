@@ -1,0 +1,27 @@
+function hkey_ExtractCalls hKey, pSetName
+   breakPoint -- old
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   if exists (hObject) is false then return empty
+   
+   put the script_Handler [hKey] of hObject into someHandler
+   put handler_ExtractCalls (someHandler) into shortCalls
+   put hkey_ShortToLongCalls (shortCalls, hObject, pSetName) into longHkeyCalls
+   return longHkeyCalls
+   
+   -- old "hkey_ExtractCalls hKey, pIncludePass, pEnvironmentFilter"
+   put the hkey_SearchHierarchy of hObject into scriptHierarchy
+   put script_ParseHandlerForCalls (someHandler, scriptHierarchy, hObject) into handlerCalls
+   
+   if pIncludePass is not true then return handlerCalls
+   
+   -- now lets look for message passing
+   if script_HandlerContainsPass (hName, someHandler) is true then
+      put the hkey_SearchHierarchy [pEnvironmentFilter] of hObject into passHierarchy
+      put hkey_SearchObjectHierarchy (hKey, passHierarchy) into foundHierarchy
+      
+      put line -1 of foundHierarchy into passObject
+      put hkey_Construct (hName, hType, passObject) into pKey
+      line_Insert pKey, handlerCalls
+   end if
+   return handlerCalls
+end hkey_ExtractCalls

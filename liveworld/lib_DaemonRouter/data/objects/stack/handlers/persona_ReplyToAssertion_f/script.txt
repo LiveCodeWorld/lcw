@@ -1,0 +1,21 @@
+function persona_ReplyToAssertion someAssertion
+   /*
+   The call returns a JSON structure containing a status element, which may be either "okay" or "failure". Depending on the value of status, the structure contains additional elements listed below.
+   "okay"
+   The assertion is valid.
+   In this case the JSON structure contains the following additional elements:
+   "email"	The address contained in the assertion, for the intended person being logged in.
+   "audience"	The audience value contained in the assertion. Expected to be your own website URL.
+   "expires"	The date the assertion expires, expressed as theprimitive value of a Date object: that is, the number of milliseconds since midnight 01 January, 1970 UTC.
+   "issuer"	The hostname of the identity provider that issued the assertion.
+   */
+   
+   put "okay" into replyArray ["status"]
+   put "david.bovill@gmail.com" into replyArray ["email"]
+   put "http://localhost:8082" into replyArray ["audience"]
+   put the milliseconds + (1000 * 60 * 60 * 24 * 31) into replyArray ["expires"]
+   put "localhost:8082/test" into replyArray ["issuer"]
+   -- put "https://verifier.login.persona.org/verify" into replyArray ["issuer"]
+   put json_FromArray (replyArray) into someJSON
+   return someJSON
+end persona_ReplyToAssertion

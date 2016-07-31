@@ -1,0 +1,25 @@
+function hkey_SearchDatabase hKey, pAskKwords
+   -- was "script_SearchDatabase"
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum 
+   set the itemdelimiter to "_"
+   if the number of items of handlerName > 1 and item 1 of handlerName is not empty then
+      put item 1 of handlerName into primaryKeyWord
+      
+      put item 2 to -1 of handlerName into secondPart
+      put hkey_ConstructKeyWords (secondPart) into secondPartWords
+      sort descending numeric lines of secondPartWords by the number of chars of each
+      put primaryKeyWord & CR & secondPartWords into kWords
+   else
+      put hkey_ConstructKeyWords (handlerName) into kWords
+   end if
+   set the itemdelimiter to comma
+   
+   if pAskKwords is true then
+      replace CR with comma in kWords
+      put opn_Ask ("Which keywords woul you like to search for?", kWords) into kWords
+      replace comma with CR in kWords
+   end if
+   
+   put hkey_ConstructIntersectArray (kWords) into intersectArray
+   return intersectArray
+end hkey_SearchDatabase

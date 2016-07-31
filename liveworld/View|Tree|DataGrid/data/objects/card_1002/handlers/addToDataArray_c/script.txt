@@ -1,0 +1,16 @@
+command addToDataArray someFiles, @dgArray
+   put keys (dgArray) into indexNums
+   put the number of lines of indexNums + 1 into nextNum
+   
+   set the itemDelimiter to "/"
+   repeat for each line someFile in someFiles
+      put item -1 of someFile into shortFile
+      
+      put shortFile into dgArray [nextNum]["title"]
+      put someFile into dgArray [nextNum]["movieFile"]
+      put "Hello world!" into dgArray [nextNum]["description"]
+      put false into dgArray [nextNum]["isExpanded"]
+      
+      add 1 to nextNum
+   end repeat
+end addToDataArray

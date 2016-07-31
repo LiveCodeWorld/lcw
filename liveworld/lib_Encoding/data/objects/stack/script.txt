@@ -1,0 +1,72 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Encoding
+type: script library
+version: 0.3
+
+/*
+This library is a collection of handlers that encode and decode strings.
+In particular we focus on getting into and out of utf8 for XML and JSON.
+
+This all needs sorting and researching and organising, with some good documentation written.
+*/
+
+--> Encoding
+-
+[[ _FetchHandler (sitemap_EntityEscape,c) ]]
+
+
+--> UTF8
+-
+[[ _FetchHandler (json_Utf8Encode,f) ]]
+
+[[ _FetchHandler (json.decode,pf) ]]
+
+[[ _FetchHandler (unicodeEscapes,pf) ]]
+
+[[ _FetchHandler (json.encodeValue,pf) ]]
+
+[[ _FetchHandler (json.encodeString,pf) ]]
+
+[[ _FetchHandler (json.toUtf8,pf) ]]
+
+[[ _FetchHandler (swapEndianness,pf) ]]
+
+[[ _FetchHandler (utf8encode,pf) ]]
+
+[[ _FetchHandler (utf8decode,pf) ]]
+
+
+--> Xml | Escape
+-
+[[ _FetchHandler (xml_Escape,c) ]]
+
+[[ _FetchHandler (xml_UnEscape,c) ]]
+
+[[ _FetchHandler (xml_SetTagSafe,c) ]]
+
+[[ _FetchHandler (xml_SafeEncodeNodeContents,c) ]]
+
+[[ _FetchHandler (xml_EncodeString,f) ]]
+
+
+[[ _FetchHandler (text_UnixToMac,c) ]]
+
+[[ _FetchHandler (text_MacToUnix,c) ]]
+
+[[ _FetchHandler (text_PListEscape,c) ]]
+
+[[ _FetchHandler (text_SwapEOL,f) ]]
+
+
+--> Text | Utf8
+-
+[[ _FetchHandler (utf8_Encode,f) ]]
+
+[[ _FetchHandler (text_Utf8Decode,c) ]]
+
+[[ _FetchHandler (text_Utf8Encode,c) ]]
+
+[[ _FetchHandler (text_Utf8ToHtml,f) ]]

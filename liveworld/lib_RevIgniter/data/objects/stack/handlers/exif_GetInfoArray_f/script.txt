@@ -1,0 +1,16 @@
+function exif_GetInfoArray imagePath   
+   put "exiv2 -ptxi" && kwote (imagePath) into someShell
+   put "exiv2 -pa" && kwote (imagePath) into someShell
+   put shell (someShell) into identityInfo
+   
+   repeat for each line someLine in identityInfo
+      put token 1 of someLine into exifName
+      put token 2 of someLine into exifType
+      put token 3 of someLine into exifNum
+      put token 4 to -1 of someLine into exifValue
+      
+      split exifName with "."
+      put exifValue into infoArray [exifName]
+   end repeat
+   return infoArray
+end exif_GetInfoArray

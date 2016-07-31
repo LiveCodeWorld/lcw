@@ -1,0 +1,32 @@
+function dot_ConvertDrawRect drawPoints, gHeight, @pointNum, @revRect
+    -- was "graphViz_ConvertDrawRect"
+    local revPoints
+    if word 1 of drawPoints is "P" then
+        put word 2 of drawPoints into pointNum
+        put word 3 to -1 of drawPoints into drawPoints
+        repeat pointNum
+            put word 1 of drawPoints into nodeX
+            put word 2 of drawPoints into nodeY
+             
+            put gHeight - nodeY into reflectedY
+            
+            dot_ConvertToPngPixels nodeX
+            add 7 to nodeX
+            dot_ConvertToPngPixels reflectedY
+            add 7 to reflectedY
+            put nodeX,reflectedY into reflectedLoc
+            
+            put reflectedLoc & CR after revPoints
+            delete word 1 to 2 of drawPoints
+        end repeat
+    end if
+    -- delete last char of revPoints
+    put line 1 of revPoints after revPoints
+    
+    if pointNum = 4 then
+        put line 2 of revPoints & "," & line 4 of revPoints into revRect
+    else
+        put empty into revRect
+    end if
+    return revPoints
+end dot_ConvertDrawRect

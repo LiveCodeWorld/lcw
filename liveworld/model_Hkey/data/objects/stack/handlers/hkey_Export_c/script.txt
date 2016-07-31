@@ -1,0 +1,16 @@
+command hkey_Export hKey, pHandler
+   -- exports basic info (the handler and the short hKey calls) from an objects script
+   if pHandler is empty then
+      put item 3 of hKey into hObject
+      if exists (hObject) is false then
+         put library_FetchHandler (hKey) into pHandler
+      else
+         put the script_Handler [hKey] of hObject into pHandler
+      end if
+   end if
+   if pHandler is empty then return empty
+   
+   library_AddHkey hKey, pHandler
+   put the result into hKeyData
+   return hKeyData
+end hkey_Export

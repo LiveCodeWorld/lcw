@@ -1,0 +1,24 @@
+function dot_RectFromSize graphSize
+   switch graphSize
+      case empty
+         return empty
+      case "full"
+         put "0,0,3000,3000" into someRect
+         return someRect
+      case "screen"
+         put dot_BboxSize (the screenrect) into someRect
+         return someRect
+      case "image"
+         put view_GetTemplateObject ("View|Image|OPN Image") into imageView
+         put the rect of imageView into graphRect
+         put dot_BboxSize (graphRect) into someRect
+         return someRect
+      default -- "none"
+         if graphSize is a rect then
+            put dot_BboxSize (graphSize) into someRect
+            return someRect
+         else
+            return empty
+         end if
+   end switch 
+end dot_RectFromSize

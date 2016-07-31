@@ -1,0 +1,14 @@
+on menu_ReplaceSquare plusMinusView, vName
+   put the square_View of plusMinusView into squareView
+   switch vName
+      case "Trait"
+         set the control_Type of squareView to "View|SivaSiva|Trait|PlusMinus"
+         break
+      case "Text"
+         set the control_Type of squareView to "View|Text|Square"
+         break
+      case "Grid"
+         set the control_Type of squareView to "View|Grid|Square"
+         break
+   end switch
+end menu_ReplaceSquare

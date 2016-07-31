@@ -1,0 +1,6 @@
+function project_GetUsedStacks pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_GetObjectTypeArray ("used", pProjectName) into objectArray
+   put keys(objectArray) into stackObjects
+   return stackObjects
+end project_GetUsedStacks

@@ -1,0 +1,5 @@
+getprop record_ViewName
+   put the record_View of me into templateObject
+   if exists (templateObject) is false then return empty
+   return the view_Name of templateObject
+end record_ViewName

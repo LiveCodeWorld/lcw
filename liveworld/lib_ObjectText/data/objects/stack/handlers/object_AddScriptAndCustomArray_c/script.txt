@@ -1,0 +1,23 @@
+command object_AddScriptAndCustomArray @objectPropArray, targetObject, @hArray, pExportHandlers, pDontExport, pForceIndexHandlerCalls
+   -- ignoreCall:  object_AddToArray,c
+   put the custom_PropertyArray of targetObject into customArray
+   if customArray is an array then put customArray into objectPropArray ["custom"]
+   put the script of targetObject into someScript
+   if someScript is not empty then
+      put someScript into objectPropArray ["script"]
+      
+      -- here we can also add object to the hArray (only if there is a script)
+      if pref_GetValue ("Add object to hArray on stack export") is true then
+         -- this can be slow (so turned off by default)
+         put pref_GetValue ("Construct hashArray on stack export") into pCreateHashArray
+         try
+            -- a cheap way of allowing for "object_AddToArray" to be missing without the handler failing
+            object_AddToArray hArray, targetObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
+         catch sError
+            -- and so allowing for the whole comple hArtray handling set up to be in a separate (non-required) library.
+            -- this should fail gracefully
+            -- returning the object array (objectPropArray) without the hArray metadata
+         end try
+      end if
+   end if
+end object_AddScriptAndCustomArray

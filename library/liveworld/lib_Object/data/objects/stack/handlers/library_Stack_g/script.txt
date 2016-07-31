@@ -1,0 +1,11 @@
+getprop library_Stack
+   -- could do clever stuff to fetch linked stacks
+   -- but for now
+   
+   put the stack_Object of the target into libraryStack
+   if the object_IsLibrary of libraryStack is true then
+      return libraryStack
+   else
+      return empty
+   end if
+end library_Stack

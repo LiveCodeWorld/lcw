@@ -1,0 +1,13 @@
+command fossil_SetSetting someSetting, someValue, pCheckoutFolder, pSetGlobal
+   put "fossil setting" && someSetting into someShell
+   put space & someValue after someShell
+   
+   if pCheckoutFolder is empty or pSetGlobal is true then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_SetSetting

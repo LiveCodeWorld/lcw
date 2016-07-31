@@ -1,0 +1,20 @@
+getprop top_Control [topName]
+   -- finds or returns the top control
+   put the childcontrolids of me into topIDs
+   if topIDs is empty then return empty
+   if topName is empty then
+      put line 1 of topIDs into topID
+      put the long id of control id topID into topControl
+      return topControl
+   end if
+   
+   -- let's find a top control with the name "topName"
+   repeat for each line someID in topIDs
+      put the long id of control id someID into someControl
+      put the short name of someControl into testName
+      if testName = topName then
+         return someControl
+      end if
+   end repeat
+   return empty
+end top_Control

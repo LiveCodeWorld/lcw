@@ -1,0 +1,12 @@
+function image_FileWidth imageFile
+   switch the platform
+      case "MacOS"
+         put spotlight_GetFileInfo (imageFile) into spotlightFileInfo
+         put spotlight_ExtractAttribute (spotlightFileInfo, "kMDItemPixelWidth") into pixelWidth
+         return pixelWidth
+         break
+      default
+         breakPoint
+         return empty
+   end switch
+end image_FileWidth

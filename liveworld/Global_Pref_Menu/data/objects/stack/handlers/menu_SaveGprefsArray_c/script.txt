@@ -1,0 +1,7 @@
+on menu_SaveGprefsArray mTarget, setName
+   put merge ("Are you sure you want to store the current global preferences with the set '[[setName]]'?") into someQuestion
+   opn_Answer someQuestion
+   
+   library_StoreGlobalPrefs setName, false
+   opn_Notify merge ("Current user preferences saved to disk with the set '[[setName]]'")
+end menu_SaveGprefsArray

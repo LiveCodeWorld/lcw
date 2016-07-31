@@ -1,0 +1,5 @@
+function scrape_ContentHeadings someHTML, pHeaderLevel
+   put xpath_ConstructHeadingPath (pHeaderLevel, "content") into someXPath
+   put scrape_WithXPath (someHtml, someXPath) into contentSection
+   return contentSection
+end scrape_ContentHeadings

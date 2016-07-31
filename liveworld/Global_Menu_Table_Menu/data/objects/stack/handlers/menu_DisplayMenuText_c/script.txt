@@ -1,0 +1,5 @@
+on menu_DisplayMenuText mTarget, scriptMenuTitle
+   put rev_ScriptObject() into scriptObject
+   put the menu_Text [scriptMenuTitle] of scriptObject into someOutline
+   display_Outline someOutline
+end menu_DisplayMenuText

@@ -1,0 +1,4 @@
+on menu_Test displayView
+   put the view_HtmlText of displayView into someHTML
+   set the view_Utf8 of displayView to someHTML
+end menu_Test

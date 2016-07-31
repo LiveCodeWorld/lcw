@@ -1,0 +1,4 @@
+function git_ListStashes
+   put git_StashArray() into stashArray
+   return keys(stashArray)
+end git_ListStashes

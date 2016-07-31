@@ -1,0 +1,7 @@
+private command svg_DeleteXmlTree
+   put LocalArray ["svgXmlTreeID"] into svgXmlTreeID
+   if svgXmlTreeID is not a number then return svgXmlTreeID
+   revDeleteXMLTree svgXmlTreeID
+   delete variable LocalArray ["svgXmlTreeID"]
+   return svgXmlTreeID
+end svg_DeleteXmlTree

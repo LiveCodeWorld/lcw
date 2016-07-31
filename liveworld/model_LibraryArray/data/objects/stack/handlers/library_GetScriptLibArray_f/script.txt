@@ -1,0 +1,7 @@
+function library_GetScriptLibArray
+   put "script library" into objectType
+   -- put library_FetchTypeArray (objectType, pSetName) into scriptLibs -- from stored set
+   -- put library_ListNames (objectType, pSetName) into scriptLibs -- from stored set
+   put hArray_GetObjectTypeArray (objectType) into typeArray -- from global gHkey_Array
+   return typeArray
+end library_GetScriptLibArray

@@ -1,0 +1,35 @@
+private function layout_GetLeftViewWidth newLayoutWidth, leftView, rightView, verticalDividerView
+   put the fixed_View of me into fixedView
+   switch fixedView
+      case "right"
+         put the width of rightView into rightViewWidth
+         put the width of verticalDividerView into leftViewWidth
+         
+         put the margins of me into someMargin
+         margin_Normalize someMargin, left_Margin, top_Margin, right_Margin, bottom_Margin
+         put right_Margin + left_Margin into extraBit
+         if the showborder of me is true then
+            add 2 * the borderwidth of me to extraBit
+         end if
+         
+         return newLayoutWidth - rightViewWidth - leftViewWidth - extraBit
+      case "formatted"
+         put the formatted_Width of leftView into leftViewWidth
+         put the width of me into totalWidth
+         put leftViewWidth / totalWidth into widthProportion
+         return round(newLayoutWidth * widthProportion)
+      case "half"
+         return round(newLayoutWidth / 2)
+      case "proportional"	# free
+         put LocalArray ["lastLeft"] into lastLeft
+         if lastLeft is empty then put the width of leftView into lastLeft
+         put LocalArray ["lastTotalWidth"] into lastTotalWidth
+         if lastTotalWidth is empty then put the width of me into lastTotalWidth
+         
+         put lastLeft / lastTotalWidth into widthProportion
+         put round(newLayoutWidth * widthProportion) into newLeftWidth
+         return newLeftWidth
+      default -- case "left"
+         return the width of leftView
+   end switch
+end layout_GetLeftViewWidth

@@ -1,0 +1,5 @@
+setprop script_SuiteEdit suiteTitle
+   put the long id of the target into someObject
+   put script_ConstructSuiteHeader(suiteTitle) into suiteHeader
+   script_Edit someObject, suiteHeader
+end script_SuiteEdit

@@ -1,0 +1,55 @@
+command url_Deconstruct someUrl, @someProtocol, @urlDomain, @urlPath, @shortName, @fileExtension, @uName, @pWord
+   /*
+   -- from http://regexlib.com/REDetails.aspx?regexp_id=628
+   -- put "(?:(?<protocol>http(?:s?)|ftp)(?:\:\/\/)) (?:(?<usrpwd>\w+\:\w+)(?:\@))? (?<domain>[^/\r\n\:]+)? (?<port>\:\d+)? (?<path>(?:\/.*)*\/)? (?<filename>.*?\.(?<ext>\w{2,4}))? (?<qrystr>\??(?:\w+\=[^\#]+)(?:\&?\w+\=\w+)*)* (?<bkmrk>\#.*)?" into someReg
+   */
+   
+   set the itemdelimiter to ":"
+   put item 1 of someUrl into someProtocol
+   if someProtocol is among the items of "file:binFile:ftp:http:https" then
+      put someUrl into someFile
+      delete item 1 of someFile
+      if char 1 to 2 of someFile = "//" then delete char 1 to 2 of someFile
+      
+      -- just in case it has a ? param at the end
+      -- strip it for now
+      set the itemdelimiter to "?"
+      put item 1 of someFile into someFile
+      set the itemdelimiter to ":"
+      
+      get offset("@", someFile)
+      if it = 0 then
+         put empty into uName
+         put empty into pWord
+      else
+         put char 1 to (it - 1) of someFile into authBit
+         repeat while char 1 of authBit is "/"
+            delete char 1 of authBit
+         end repeat
+         if the number of items of authBit = 2 then
+            put item 1 of authBit into uName
+            put item 2 of authBit into pWord
+            delete char 1 to it of someFile
+         else
+            -- "@" must be in url ignore
+            put empty into uName
+            put empty into pWord
+         end if
+      end if
+      file_Deconstruct someFile, someRoot, shortName, fileExtension
+      
+      set the itemdelimiter to "/"
+      put item 1 of someRoot into UrlDomain
+      put item 2 to -1 of someRoot into urlPath
+      return true
+   else
+      put empty into someProtocol
+      put empty into UrlDomain
+      put empty into urlPath
+      put empty into shortName
+      put empty into fileExtension
+      put empty into uName
+      put empty into pWord
+      return false
+   end if
+end url_Deconstruct

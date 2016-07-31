@@ -1,0 +1,9 @@
+function library_ListKnownStackNames
+   -- was "opn_GetStackNameIndex"
+   put library_GetStackFiles() into knownStackFiles
+   set the columndelimiter to comma
+   split knownStackFiles by column
+   put knownStackFiles [1] into knownStackNames
+   sort knownStackNames
+   return word 1 to -1 of knownStackNames
+end library_ListKnownStackNames

@@ -1,0 +1,11 @@
+setprop script_GraphPropertyArray [pOverlayName] propertyArray
+   put the long id of the target into scriptObject
+   put the script_MetadataArray [pOverlayName] of scriptObject into metadataArray 
+   if propertyArray is an array then
+      put propertyArray into metadataArray ["graph_PropertyArray"]
+   else
+      delete local metadataArray ["graph_PropertyArray"]
+   end if
+   set the script_MetadataArray [pOverlayName] of scriptObject to metadataArray
+   return metadataArray
+end script_GraphPropertyArray

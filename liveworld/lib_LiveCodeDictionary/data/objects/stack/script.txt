@@ -1,0 +1,70 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_LiveCodeDictionary
+type: script library
+version: 0.2
+
+
+--> Handlers
+-
+[[ _FetchHandler (script_DictionaryTerm,f) ]]
+
+[[ _FetchHandler (rev_DictionaryTerms,f) ]]
+
+
+--> Livecode | Dictionary
+-
+/*
+These are handlers have been created to integrate with the > v8.0 Dictionary API.
+*/
+
+[[ _FetchHandler (ide_ListScriptLibraries,f) ]]
+
+[[ _FetchHandler (ide_LivecodeScriptFolder,f) ]]
+
+[[ _FetchHandler (ide_GetDictionaryTerms,f) ]]
+
+[[ _FetchHandler (_parseDictionary,pc) ]]
+
+
+--> Revolution | Dictionary
+-
+/*
+These are older handlers for the pre-8.0 dictionary.
+*/
+
+[[ _FetchHandler (rev_ExportMessageNamesFromDictionary,c) ]]
+
+[[ _FetchHandler (rev_ExportDocumentationTokensFromDictionary,c) ]]
+
+[[ _FetchHandler (rev_DocumentationTokens,f) ]]
+
+function rev_DictionaryTerms
+   switch
+      case rev_VersionIsLaterOrEqual (8.0)
+         put ide_GetDictionaryTerms() into dictionaryTerms
+         return dictionaryTerms
+      case rev_VersionIsLater (3.99)
+         put revDocumentationDictionaryIndex() into dataArray
+         repeat for each key indexNum in dataArray
+            put dataArray [indexNum]["keyword"] into dictTerm
+            put dictTerm & CR after dictionaryTerms
+         end repeat
+         delete char -1 of dictionaryTerms
+         return dictionaryTerms
+      default
+         return empty
+   end switch
+end rev_DictionaryTerms
+
+[[ _FetchHandler (rev_MessageNames,f) ]]
+
+[[ _FetchHandler (rev_MessageTable,f) ]]
+   
+[[ _FetchHandler (rev_DocumentationTable,f) ]]
+
+[[ _FetchHandler (rev_FilterDocumentationTable,f) ]]
+
+[[ _FetchHandler (rev_LookUpDictionary,c) ]]

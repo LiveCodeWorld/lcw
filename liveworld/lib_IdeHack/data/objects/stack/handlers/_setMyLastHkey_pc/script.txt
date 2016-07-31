@@ -1,0 +1,6 @@
+private command _setMyLastHkey hKey
+   put the behavior of me into reallyMe
+   set lockmessages to true
+   set the displayed_Hkey of reallyMe to hKey
+   set lockmessages to false
+end _setMyLastHkey

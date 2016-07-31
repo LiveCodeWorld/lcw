@@ -1,0 +1,7 @@
+command library_AddObjectToSessionArray scriptObject
+   put revRuggedID (scriptObject) into scriptObject
+   put library_GetTempArray ("session_ObjectArray") into librarySessionArray
+   put the ticks into librarySessionArray ["objects"][scriptObject]
+   library_SetTempArray "session_ObjectArray", librarySessionArray
+   return keys (librarySessionArray ["objects"])
+end library_AddObjectToSessionArray

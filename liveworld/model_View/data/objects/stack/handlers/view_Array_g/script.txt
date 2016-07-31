@@ -1,0 +1,12 @@
+getprop view_Array [pUseCard]
+   if pUseCard is not false then return the view_CardArray of the target
+   
+   put the view_Object of the target into viewObject
+   if exists(viewObject) is empty then return empty
+   
+   lock messages
+   put the view_Array of viewObject into viewArray
+   unlock messages
+   
+   return viewArray
+end view_Array

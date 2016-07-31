@@ -1,0 +1,11 @@
+getprop disabled_CreateDependencyArray [scriptObject]   
+   put the mainStack_Hash of scriptObject into stackHash
+   put the mainStack_ManifestArray of scriptObject into manifestArray
+   put manifestArray ["sha1"] into storedHash
+   
+   if stackHash = storedHash then
+      return true
+   else
+      return false
+   end if
+end disabled_CreateDependencyArray

@@ -1,0 +1,6 @@
+command deconstructLocalArray @overlayFolder, @hKey, @stackLabel, @scriptObject
+   put LocalArray ["overlayFolder"] into overlayFolder
+   put LocalArray ["hKey"] into hKey
+   put LocalArray ["stackLabel"] into stackLabel
+   put LocalArray ["scriptObject"] into scriptObject
+end deconstructLocalArray

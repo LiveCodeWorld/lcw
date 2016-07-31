@@ -1,0 +1,6 @@
+command dameon_AddToMiddlewareArray requestArray
+   put the number of lines of the keys of MiddlewareArray + 1 into newIndexNum
+   put the milliseconds into requestArray ["milliseconds"]
+   put requestArray into MiddlewareArray [newIndexNum]
+   -- daemon_Log ("Got something and added it to: MiddlewareArray [" && someLabel & "]")
+end dameon_AddToMiddlewareArray

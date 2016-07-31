@@ -1,0 +1,8 @@
+function spotlight_ExtractFixedMovieInfo movieFile
+    get "DurationSeconds,FSSize,TotalBitRate,Kind,Codecs"
+    repeat for each item someItem in it
+        put someItem & ":" && spotlight_GetAttribute(movieFile, someItem) & CR after fixedMovieInfo
+    end repeat
+    delete char -1 of fixedMovieInfo
+    return fixedMovieInfo
+end spotlight_ExtractFixedMovieInfo

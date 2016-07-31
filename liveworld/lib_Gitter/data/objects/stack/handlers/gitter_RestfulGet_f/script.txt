@@ -1,0 +1,7 @@
+function gitter_RestfulGet someCommand
+   put GitterApiStem & someCommand into someUrl
+   gitter_SetAuthHeaders
+   put url someUrl into userJson
+   put json_ToArray (userJson) into userArray
+   return userArray
+end gitter_RestfulGet

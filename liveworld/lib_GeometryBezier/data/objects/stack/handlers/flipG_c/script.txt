@@ -1,0 +1,29 @@
+on flipG direction,grcId
+   lock screen
+   put the points of grcId into nju
+   put the loc of grcID into mnue
+   if direction is V
+   then
+      repeat with i = 1 to the number of lines of nju
+         put item 2 of line i of nju & comma after lmn
+      end repeat
+      delete last char of lmn
+      put max(lmn) into klu
+      repeat with i = 1 to the number of lines of nju
+         put abs(klu - item 2 of line i of nju) into item 2 of line i of nju
+      end repeat
+      set the points of grcId to nju
+      set the loc of grcId to mnue
+   else -- if direction is H
+      repeat with i = 1 to the number of lines of nju
+         put item 1 of line i of nju & comma after lmn
+      end repeat
+      delete last char of lmn
+      put max(lmn) into klu
+      repeat with i = 1 to the number of lines of nju
+         put abs(klu - item 1 of line i of nju) into item 1 of line i of nju
+      end repeat
+      set the points of grcId to nju
+      set the loc of grcId to mnue
+   end if
+end flipG

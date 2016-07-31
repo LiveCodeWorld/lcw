@@ -1,0 +1,8 @@
+private function _defaultVerticalSpacing
+   put LocalArray ["default_Height"] into defaultHeight
+   if defaultHeight is empty then
+      return 12
+   else
+      return defaultHeight
+   end if
+end _defaultVerticalSpacing

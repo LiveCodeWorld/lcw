@@ -1,0 +1,48 @@
+command stackFile_AddToArray @stackFileArray, someFiles, baseFolder
+   lock messages
+   put the mainstacks into oMainStacks
+   set the wholematches to true
+   repeat for each line newFile in someFiles
+      if there is not a stack newFile then next repeat
+      
+      put the short name of stack newFile into newStackName
+      if newStackName contains comma then
+         next repeat -- need another way of dealing with this
+      end if
+      
+      put stackFileArray [newStackName] into oldRelativeFile
+      if oldRelativeFile is empty then
+         put empty into oldFile
+      else
+         put baseFolder & oldRelativeFile into oldFile
+      end if
+      
+      put file_GetRelativePath (newFile, baseFolder, commonPath) into newRelativeFile
+      switch
+         case oldRelativeFile = newRelativeFile and there is a stack oldFile
+            -- do nothing, but continue and close stack if it is newly loaded
+            break
+         case oldFile = empty
+            -- lets add it
+            put newRelativeFile into stackFileArray [newStackName]
+            break
+         case there is not a stack oldFile
+            -- it was there but must have moved / been deleted
+            -- lets add it
+            put newRelativeFile into stackFileArray [newStackName]
+            break
+         default
+            -- more than one stack with the same name
+            -- let's not add it to stackfile, but store info in resultArray
+            put empty into resultArray ["duplicateFileArray"][newStackName][newFile]
+      end switch 
+      
+      put the mainstack of stack newStackName into mainStackName
+      if mainStackName is not among the lines of oMainStacks then
+         -- close stack as it is newly loaded
+         delete stack mainStackName
+      end if
+   end repeat
+   unlock messages
+   return resultArray
+end stackFile_AddToArray

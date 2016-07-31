@@ -1,0 +1,5 @@
+function _setMenuButton
+   put _setDisplayGroup() into setDisplayGroup
+   put the long id of button "Choose Library Set" of setDisplayGroup into setChooseMenu
+   return setChooseMenu
+end _setMenuButton

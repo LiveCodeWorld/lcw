@@ -1,0 +1,9 @@
+command global_DisplayValue gName
+   put global_GetValue (gName) into gValue
+   if gValue is an array then
+      put "Global:" && gName into someTitle
+      display_Array gValue, someTitle, "Global | Pref | Menu"
+   else
+      put gValue
+   end if
+end global_DisplayValue

@@ -1,0 +1,7 @@
+command rect_SubtractMargins @someRect, pMargin
+   margin_Normalize pMargin, leftM, topM, rightM, bottomM   
+   add leftM to item 1 of someRect
+   add topM to item 2 of someRect
+   subtract rightM from item 3 of someRect
+   subtract bottomM from item 4 of someRect
+end rect_SubtractMargins

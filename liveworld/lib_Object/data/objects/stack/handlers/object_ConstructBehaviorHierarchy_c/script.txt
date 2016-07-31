@@ -1,0 +1,24 @@
+command object_ConstructBehaviorHierarchy targetObject, @behaviorObjectMenu, @longObjects, @shortObjects, @shortNames, @dictionaryArray
+   put the long name of targetObject into someObject
+   
+   set the wholeMatches to true
+   put 0 into skipNum
+   repeat
+      put wordOffset("of", someObject, skipNum) into wordNum
+      if wordNum = 0 then exit repeat
+      
+      put word (1 + skipNum) to -1 of someObject into longObject
+      addObjectToBehaviorHeirarchy longObject, dictionaryArray, longObjects, shortObjects, shortNames, behaviorObjectMenu
+      
+      add wordNum to skipNum
+   end repeat
+   
+   -- do the last one?
+   put word (1 + skipNum) to -1 of someObject into longObject
+   addObjectToBehaviorHeirarchy longObject, dictionaryArray, longObjects, shortObjects, shortNames, behaviorObjectMenu
+   
+   put word 1 to -1 of longObjects into longObjects
+   put word 1 to -1 of shortObjects into shortObjects
+   put word 1 to -1 of shortNames into shortNames
+   delete char 1 of behaviorObjectMenu
+end object_ConstructBehaviorHierarchy

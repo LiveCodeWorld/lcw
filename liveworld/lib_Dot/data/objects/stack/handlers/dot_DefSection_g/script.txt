@@ -1,0 +1,6 @@
+getprop dot_DefSection [pOverlayName]
+   -- a default value, which you can override locally
+   put the overlay_Array of the target into overlayArray
+   put dot_DefSectionFromArray (overlayArray, pOverlayName) into defSection
+   return defSection
+end dot_DefSection

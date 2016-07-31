@@ -1,0 +1,23 @@
+function outline_ToPathIndex someOutline, pathDelim, pathStem
+    if pathDelim is empty then put "/" into pathDelim
+    put empty into pathIndex
+    put empty into pathString
+    repeat for each line osLine in someOutline
+        if pathStem is not empty then put pathStem & pathDelim after pathIndex
+        put outline_TabLevel(osLine) into tabLevel
+        if tabLevel = 0 then
+            put osLine into mainTitle
+            put mainTitle into pathString
+            put mainTitle & CR after pathIndex
+        else
+            set the itemdelimiter to tab
+            put item (tabLevel+1) of osLine into subTitle
+            set the itemdelimiter to pathDelim
+            put subTitle into item (tabLevel+1) of pathString
+            put item 1 to (tabLevel+1) of pathString into subPath
+            put subPath & CR after pathIndex
+        end if
+    end repeat
+    delete char -1 of pathIndex
+    return pathIndex
+end outline_ToPathIndex

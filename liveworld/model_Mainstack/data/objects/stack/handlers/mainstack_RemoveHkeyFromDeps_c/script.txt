@@ -1,0 +1,5 @@
+command mainstack_RemoveHkeyFromDeps hKeys, mainStackFolder
+   put mainstack_FetchDepHkeys (mainStackFolder) into depHkeys
+   line_Delete hKeys, depHkeys
+   mainstack_StoreDepHkeys mainStackFolder, depHkeys
+end mainstack_RemoveHkeyFromDeps

@@ -1,0 +1,10 @@
+on menu_CreateAndDisplaySvg scriptObject, projectName
+   local pGraphStyle, pProcessObject, pForceCreate
+   
+   display_IndexScriptAndDisplaySVG scriptObject, projectName, pGraphStyle, pProcessObject, false
+   put the result into imageFile
+   
+   put the project_ProcessedHkeyArray of scriptObject into processedHkeyArray
+   display_HkeyArray processedHkeyArray, scriptObject
+   display_ObjectHkeyArray processedHkeyArray, scriptObject
+end menu_CreateAndDisplaySvg

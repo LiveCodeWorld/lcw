@@ -1,0 +1,4 @@
+setprop view_Colour someColour
+   if someColour is "random" then put colour_GetRandom() into someColour
+   set the backgroundcolor of the placeHolder_Button of me to someColour
+end view_Colour

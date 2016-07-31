@@ -1,0 +1,12 @@
+function library_PluginFolder pSubFolder, pDontCreate
+   put revEnvironmentUserPluginsPath() & "/" into opnRootFolder
+   put opnRootFolder & "opn_Plugins/" into someFolder
+   
+   if pSubFolder is not empty then
+      folder_Format pSubFolder   
+      put pSubFolder after someFolder
+   end if
+   
+   if pDontCreate is not true then folder_CreateNested someFolder
+   return someFolder
+end library_PluginFolder

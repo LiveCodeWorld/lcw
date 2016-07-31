@@ -1,0 +1,8 @@
+getprop disabled_DisplayProjectManifest
+   put LocalArray ["manifestFile"] into manifestFile
+   if there is a file manifestFile then
+      return false
+   else
+      return true
+   end if
+end disabled_DisplayProjectManifest

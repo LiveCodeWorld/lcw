@@ -1,0 +1,8 @@
+on menu_ColourHexagons sHexagon, someColour
+   if someColour = "none" then put empty into someColour
+   
+   put the hexagon_Views of sHexagon into hexagonViews
+   repeat for each line hexagonView in hexagonViews
+      set the backgroundcolor of hexagonView to someColour
+   end repeat
+end menu_ColourHexagons

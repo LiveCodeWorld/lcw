@@ -1,0 +1,9 @@
+command menu_InitialiseMouseDownGlobals @pMenuTopTitle, @pTargetObject, @mTopController
+   menu_ClearTargetGlobals -- disable for easier debugging
+   
+   if exists(pTargetObject) is false then put the long id of the target into pTargetObject
+   menu_SetTargetObject pTargetObject
+   
+   menu_InitialiseTopTitle pMenuTopTitle, pTargetObject
+   menu_InitialiseTopController mTopController, pMenuTopTitle, pTargetObject
+end menu_InitialiseMouseDownGlobals

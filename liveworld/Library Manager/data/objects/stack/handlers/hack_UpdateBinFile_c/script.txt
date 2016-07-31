@@ -1,0 +1,7 @@
+command hack_UpdateBinFile @someData, someFile
+   if someData contains numtochar (13) then
+      -- old "file" export
+      replace numtochar (13) with CR in someData
+      put someData into url ("binfile:" & someFile)
+   end if
+end hack_UpdateBinFile

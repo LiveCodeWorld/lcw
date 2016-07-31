@@ -1,0 +1,13 @@
+setprop field_Text [charOffsets] someText
+   put the long ID of the target into someField
+   
+   if charOffsets is eempty then
+      put "set the text of someField to someHtml" into doScript
+   else
+      put item 1 of charOffsets into startChar
+      put item 2 of charOffsets into endChar
+      put merge("put someText into char [[startChar]] to [[endChar]] of [[someField]]") into doScript
+   end if
+   do doScript
+   return the result
+end field_Text

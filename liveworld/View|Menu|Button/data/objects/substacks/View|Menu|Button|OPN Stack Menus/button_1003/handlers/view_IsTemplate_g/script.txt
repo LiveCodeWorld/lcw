@@ -1,0 +1,9 @@
+getprop view_IsTemplate [vName]
+   put the long id of the target into targetObject
+   if vName is empty then
+      put the view_Template of targetObject into templateObject
+   else
+      put view_GetTemplateObject (vName) templateObject
+   end if
+   return templateObject = targetObject
+end view_IsTemplate

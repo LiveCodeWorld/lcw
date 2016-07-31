@@ -1,0 +1,12 @@
+function log_GetFile pLogName
+   global gOPN
+
+   if pLogName is empty then put the log_Name of me into pLogName
+   put gOPN ["log_ErrorFile"][pLogName] into logFile
+   if logFile is empty then
+      -- let's initialize a temporary file
+      log_SetTemporaryLogFile pLogName
+      put the result into logFile
+   end if
+   return logFile
+end log_GetFile

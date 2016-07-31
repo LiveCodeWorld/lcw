@@ -1,0 +1,6 @@
+function stackFile_GetStackNameIndex stackName
+   -- was "getLinked_StackNames"
+   put the stackfiles of stack stackName into stackFileTable
+   put stackFile_ToArray (stackFileTable) into stackNameDictionary
+   return keys (stackNameDictionary)
+end stackFile_GetStackNameIndex

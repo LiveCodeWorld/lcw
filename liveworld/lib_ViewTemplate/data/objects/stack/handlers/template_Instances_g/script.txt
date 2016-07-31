@@ -1,0 +1,5 @@
+getprop template_Instances
+   put the view_Name of the target into vName
+   put view_GetInstances (vName) into vNames
+   return vNames
+end template_Instances

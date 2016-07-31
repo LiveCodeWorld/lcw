@@ -1,0 +1,7 @@
+getprop tree_BodyViewName [mTarget]
+   get the name of mTarget
+   put the body_View of mTarget into bodyView
+   if exists (bodyView) is false then return empty
+   put the view_Name of bodyView into vName
+   return vName
+end tree_BodyViewName

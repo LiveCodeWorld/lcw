@@ -1,0 +1,6 @@
+function library_GetStackFile stackName
+   -- was "opn_GetStackFile"
+   put library_GetStackFileArray() into stackFileArray
+   put stackFileArray [stackName] into relativeFile
+   return relativeFile
+end library_GetStackFile

@@ -1,0 +1,18 @@
+function stack_Exists someName
+    -- will not add stack to memory
+    
+    set lockmessages to true
+    put the mainstacks into stacksInMemory
+    put empty into shortStackName
+    if exists(stack someName) then
+        put true into safeExistence
+        put not(shortStackName is among the lines of stacksInMemory) into needToClose
+        if needToClose then
+            stack_RemoveFromMemory someFile
+        end if
+    else
+        put false into safeExistence
+    end if
+    set lockmessages to false
+    return safeExistence
+end stack_Exists

@@ -1,0 +1,8 @@
+command overlay_SetArray overlayFolder, overlayArray, pOverlayName, pMainstackHash
+   -- empty = "delete"
+   if pMainstackHash is not empty then overlayArray_SetMainStackHash overlayArray, pMainstackHash
+   put overlay_GetData (overlayFolder) into overlayData
+   overlayData_SetArray overlayData, overlayArray, pOverlayName
+   overlay_SetData overlayFolder, overlayData
+   return overlayData
+end overlay_SetArray

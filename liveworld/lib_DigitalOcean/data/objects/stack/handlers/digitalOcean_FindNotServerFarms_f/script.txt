@@ -1,0 +1,5 @@
+function digitalOcean_FindNotServerFarms pDomainInfoArray
+   local allDomainNames, serverFarms, notServerFarms
+   digitalocean_SplitIntoFarms allDomainNames, serverFarms, notServerFarms, pDomainInfoArray
+   return notServerFarms
+end digitalOcean_FindNotServerFarms

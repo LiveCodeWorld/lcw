@@ -1,0 +1,6 @@
+command library_StoreHandlerMetadata hKey, handlerMetadata
+   put item 1 to 2 of hKey into shortHkey
+   put library_FetchHandlerDatabaseArray() into hKeyData
+   put handlerMetadata into hKeyData [shortHkey]
+   library_StoreHandlerDatabaseArray hkeyData
+end library_StoreHandlerMetadata

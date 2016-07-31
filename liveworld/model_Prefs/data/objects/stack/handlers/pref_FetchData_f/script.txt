@@ -1,0 +1,5 @@
+function pref_FetchData
+   put pref_File() into someFile
+   put array_Fetch (someFile) into dataArray
+   return dataArray
+end pref_FetchData

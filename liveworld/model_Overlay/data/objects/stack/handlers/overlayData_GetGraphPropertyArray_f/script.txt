@@ -1,0 +1,5 @@
+function overlayData_GetGraphPropertyArray overlayData, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   put overlayData [pOverlayName]["metadata"]["graph_PropertyArray"] into graphPropertyArray
+   return graphPropertyArray
+end overlayData_GetGraphPropertyArray

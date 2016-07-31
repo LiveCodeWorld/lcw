@@ -1,0 +1,11 @@
+function project_ConvertStackObjectsToShortFiles stackObjects
+   set the itemdelimiter to slash
+   repeat for each line stackObject in stackObjects
+      if exists (stackObject) is false then next repeat
+      
+      put the filename of stackObject into longFile
+      put item -1 of longFile into shortFile
+      put shortFile & CR after shortFiles
+   end repeat
+   return shortFiles
+end project_ConvertStackObjectsToShortFiles

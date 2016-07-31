@@ -1,0 +1,14 @@
+getprop object_TopGroupIDs
+   put the long ID of the target into someContainer
+   
+   local topGroupIDs
+   repeat with controlNum = 1 to the number of controls in someContainer
+      put the long ID of control controlNum of someContainer into someObject
+      if word 1 of someObject is "group" then
+         add the number of layers in someObject to controlNum
+         put the short ID of someObject & comma after topGroupIDs
+      end if
+   end repeat
+   delete last char of topGroupIDs
+   return topGroupIDs
+end object_TopGroupIDs

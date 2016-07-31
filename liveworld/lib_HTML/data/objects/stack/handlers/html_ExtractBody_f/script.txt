@@ -1,0 +1,4 @@
+function html_ExtractBody someHTML
+   put html_ExtractNode ("html/body", someHTML) into bodyXML
+   return bodyXML
+end html_ExtractBody

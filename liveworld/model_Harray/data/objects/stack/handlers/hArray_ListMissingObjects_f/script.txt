@@ -1,0 +1,10 @@
+function hArray_ListMissingObjects
+   put hArray_GetObjectArray() into scriptArray
+   repeat for each key rObject in scriptArray
+      if exists (rObject) is false then
+         put rObject & CR after missingObjects
+      end if
+   end repeat
+   delete char -1 of missingObjects
+   return missingObjects
+end hArray_ListMissingObjects

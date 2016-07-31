@@ -1,0 +1,3 @@
+command text_ReplaceMultipleSpaces @someText
+    put replacetext(someText, "(?m) +", space) into someText
+end text_ReplaceMultipleSpaces

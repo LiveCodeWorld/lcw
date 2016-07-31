@@ -1,0 +1,14 @@
+on FillInData pDataArray, pRecordView
+   put the long id of the target into recordView
+   
+   put pDataArray ["mPath"] into mPath
+   put pDataArray ["description"] into someHtml
+   put pDataArray ["isExpanded"] is true into isExpanded
+   
+   set the record_Name of recordView to mPath
+   set the record_HelpHtml of recordView to someHtml
+   set the record_IsExpanded of recordView to isExpanded
+   
+   -- set the menu_Title of recordView to "Tree | Field | Menu"
+   -- set the menu_ToolTitle of recordView to "Global | Record | View Info | Menu"
+end FillInData

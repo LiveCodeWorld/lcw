@@ -1,0 +1,13 @@
+getprop object_Views
+   put the long id of the target into someGroup
+   
+   put object_SearchGroup (someGroup, "object_IsView") into objectArray
+   put empty into viewObjects
+   repeat for each key someObject in objectArray
+      if objectArray [someObject] is true then
+         put someObject & CR after viewObjects
+      end if
+   end repeat
+   delete last char of viewObjects
+   return viewObjects
+end object_Views

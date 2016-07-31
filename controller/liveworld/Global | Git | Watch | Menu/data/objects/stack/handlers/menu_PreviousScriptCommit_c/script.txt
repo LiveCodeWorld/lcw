@@ -1,0 +1,12 @@
+on menu_PreviousScriptCommit scriptObject, previousNum
+   put the script_RelativeFile of scriptObject into relativeFile
+   
+   -- put "HEAD:" & relativeFile into treeish
+   -- put "HEAD^:" & relativeFile into treeish
+   put "HEAD@{" & previousNum & "}:" & relativeFile into treeish
+   
+   put git_Show (treeish) into previousScript
+   put git_GetCommitFileHash (relativeFile, previousNum) into commitHash
+   
+   script_CreateAndEditHashCard previousScript
+end menu_PreviousScriptCommit

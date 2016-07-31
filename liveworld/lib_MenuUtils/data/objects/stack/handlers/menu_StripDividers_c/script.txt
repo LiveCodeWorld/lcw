@@ -1,0 +1,8 @@
+command menu_StripDividers @mText
+   -- filter mText without "*-"
+   repeat with lineNum = the number of lines of mText down to 1
+      if word 1 to -1 of line lineNum of mText = "-" then
+         delete line lineNum of mText
+      end if
+   end repeat
+end menu_StripDividers

@@ -1,0 +1,5 @@
+getprop overlay_DefaultName
+   put the overlay_Folder of the target into overlayFolder
+   put overlay_GetDefaultName (overlayFolder) into overlayName
+   return overlayName
+end overlay_DefaultName

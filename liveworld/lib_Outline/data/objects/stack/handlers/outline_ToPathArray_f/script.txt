@@ -1,0 +1,15 @@
+function outline_ToPathArray tabbedOutline
+    -- not finished yet 
+    repeat with lineNum = 1 to the number of lines of tabbedOutline
+        put line lineNum of tabbedOutline into toplevelTitle
+        if char 1 of toplevelTitle is tab then next repeat
+        
+        -- put outline_PathFromLineNum(lineNum, tabbedOutline, "/") into somePath
+        put outline_GetChildren(lineNum, tabbedOutline) into osSection
+        put osSection into outlineArray [toplevelTitle]
+        
+        put the number of lines of osSection into skipNum
+        add skipNum to lineNum
+    end repeat
+    return outlineArray
+end outline_ToPathArray

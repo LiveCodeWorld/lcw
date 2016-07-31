@@ -1,0 +1,10 @@
+command script_JustCompiled scriptObject
+   -- opn_Notify the params, true
+   object_AddToGlobalArray scriptObject
+   
+   put the script of scriptObject into someScript
+   set the exported_Script of scriptObject to someScript
+   
+   put the stack_Name of scriptObject into stackName
+   rev_MarkStackEdited stackName
+end script_JustCompiled

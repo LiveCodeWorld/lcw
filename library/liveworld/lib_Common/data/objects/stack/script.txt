@@ -1,0 +1,580 @@
+--> MetaData
+-
+author: David Bovill
+copyright: David Bovill
+name: Menu Tools Library Deps
+type: deps
+
+
+--> Deps | actionCompile,c
+-
+[[ _FetchHandler (meta_Script,s) ]]
+
+[[ _FetchHandler (object_UripArray,s) ]]
+
+[[ _FetchHandler (rev_MarkStackEdited,c) ]]
+
+[[ _FetchHandler (rev_ScriptEditorField,f) ]]
+
+[[ _FetchHandler (rev_ScriptObject,f) ]]
+
+
+--> Deps | From mainstacks
+-
+[[ _FetchHandler (target_IsView,f) ]]
+
+[[ _FetchHandler (target_IsReference,f) ]]
+
+-- command menu_TidyText @mText
+   put word 1 to -1 of mText into mText
+   
+   -- remove double dividers
+   replace (CR & "-" & CR & "-" & CR) with (CR & "-" & CR) in mText
+   
+   -- removes things like blank missing menu spaces
+   repeat while (word 1 to -1 of line 1 of mText = "-")
+      delete line 1 of mText
+   end repeat
+   repeat while (word 1 to -1 of line -1 of mText = "-")
+      delete line -1 of mText
+   end repeat
+end menu_TidyText
+
+[[ _FetchHandler (menu_TitleFromViewName,f) ]]
+
+[[ _FetchHandler (menu_TitlePathFromPath,f) ]]
+
+[[ _FetchHandler (object_IsMenuButton,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (addThenReturn,f) ]]
+
+-- command addToMenuActiveArray mPath, mTitlePath, pigeon, mController, mView, mItemType, pMenuTarget
+   if mPath is empty then return empty -- an insert?
+   global gTemp_ActiveMenuArray
+   
+   if mItemType is among the items of "insert" then
+      -- may need to disable a submenu, and need gTemp_ActiveMenuArray to work out mTarget
+      return empty
+   end if
+   if pMenuTarget is not empty then
+      menu_SetItemTargetOveride mPath, pMenuTarget
+   end if
+   
+   -- lets set work in progress mPath, mTitlePath so that submenus etc can use them to automatically gather context
+   menu_SetTitlePath mTitlePath
+   menu_SetSentPath mPath
+   
+   put pigeon into gTemp_ActiveMenuArray ["mPath"][mPath]["pigeon"]
+   put mController into gTemp_ActiveMenuArray ["mPath"][mPath]["mController"]
+   put mItemType into gTemp_ActiveMenuArray ["mPath"][mPath]["mItemType"]
+   put mTitlePath into gTemp_ActiveMenuArray ["mPath"][mPath]["mTitlePath"]
+   
+   put mController into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mController"]
+   return empty
+   
+   put gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mPath"] into mPaths
+   line_Insert mPath, mPaths
+   put mPaths into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mPath"]
+   
+   put gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["pigeon"] into menuCommands
+   line_Insert pigeon, menuCommands
+   put menuCommands into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["pigeon"]
+end addToMenuActiveArray
+
+[[ _FetchHandler (error_mTopController,f) ]]
+
+
+--> Deps | Private
+-
+[[ _FetchHandler (_GetDefaultMenuTarget,f) ]]
+
+
+--> Utilities | rev_ScriptObject
+-
+/*
+These handlers are useful to hack menus into the rev IDE's script editor.
+They allow the menu_Target to refer to the owner of the script displayed in the script editor,
+rather than the field the script is displayed in in the Script Editor.
+*/
+
+function rev_ScriptObject
+   -- ignoreCall: revSEGetCurrentObject,c
+   put rev_TopScriptEditor() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
+end rev_ScriptObject
+
+[[ _FetchHandler (rev_TopScriptEditor,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (array_Fetch,f) ]]
+
+[[ _FetchHandler (checkout_ConstructDefaultFolder,f) ]]
+
+-- function checkout_FindRoot objectFile, repoType
+checkout_SetFolderAndRepotype objectFile, repoType
+put the result into checkoutFolder
+return checkoutFolder
+end checkout_FindRoot
+
+-- command checkout_SetFolderAndRepotype objectFile, @repoType
+-- ignoreCall: fossil_FindCheckoutFolder,f
+-- ignoreCall: git_GetCheckoutFolder,f
+
+switch repoType
+   case "fossil"
+      try
+         put fossil_FindCheckoutFolder (objectFile) into checkoutFolder
+         put "fossil" into repoType
+         return checkoutFolder
+      catch e
+         return empty 
+      end try
+   case "git"
+      try
+         put git_GetCheckoutFolder (objectFile) into checkoutFolder
+         put "git" into repoType
+         return checkoutFolder
+      catch e
+         return empty 
+      end try
+   default
+      -- let's try to see if there is a repo
+      try
+         put git_GetCheckoutFolder (objectFile) into gitCheckoutFolder
+      catch e
+         put empty into gitCheckoutFolder
+      end try
+      
+      try
+         put fossil_FindCheckoutFolder (objectFile) into fossilCheckoutFolder
+      catch e
+         put empty into fossilCheckoutFolder
+      end try
+      
+      switch
+         case gitCheckoutFolder is empty and fossilCheckoutFolder is empty
+            put "" into repoType
+            return empty
+         case gitCheckoutFolder is empty and fossilCheckoutFolder is not empty
+            put "fossil" into repoType
+            return fossilCheckoutFolder
+         case gitCheckoutFolder is not empty and fossilCheckoutFolder is empty
+            put "git" into repoType
+            return gitCheckoutFolder
+         default -- case objectFile begins with gitCheckoutFolder and objectFile begins with fossilCheckoutFolder
+            -- it's both ?
+            -- let's just return the longest (usually the closest folder above objectFile)
+            if the number of chars of gitCheckoutFolder > the number of chars of fossilCheckoutFolder then
+               put "git" into repoType
+               return gitCheckoutFolder
+            else
+               put "fossil" into repoType
+               return fossilCheckoutFolder
+            end if
+      end switch
+end switch
+end checkout_SetFolderAndRepotype
+
+[[ _FetchHandler (custom_DeleteProperty,c) ]]
+
+[[ _FetchHandler (custom_DeleteSet,c) ]]
+
+-- command extractInsertedTitle mCommand, mController, someScript, @insertedMenuTitle, @customControllerParam, @dynamicTitleProp, @mLine, @pigeon, mItemType
+-- ignoreCall: mCommand,c
+
+if mItemType = "insert" then -- inserted version
+   -- this is a single menu script item!
+   -- should be the same structure as an mvc controller
+   -- "Global | Library | Menu,menu_StartupLibrary sillyChoice, mTarget"
+   -- with the first item refering to the controller object (or named shortcut), and the second the command
+   
+   try
+      send mCommand to mController
+      put the result into insertedInfo
+   catch someError -- often a compile error
+      return empty
+   end try
+   
+   put item 1 of insertedInfo into insertedMenuTitle
+   put item 2 to -1 of insertedInfo into pigeon
+   put menu_CommandToText (word 1 of pigeon) into mLine
+   
+   put empty into customControllerParam
+   put empty into dynamicTitleProp
+else if mItemType = "submenu" then -- submenu version
+   
+   put empty into mLine
+   put script_GetCommand (mCommand, someScript) into menuHandler
+   
+   set the wholematches to true
+   put wordoffset ("menu_DoSub", menuHandler) into wordNum
+   if wordNum = 0 then
+      -- now lets try the return technique used by "insert"
+      try
+         send mCommand to mController
+         put the result into insertedInfo
+         put item 1 of insertedInfo into insertedMenuTitle
+         put item 2 of insertedInfo into customControllerParam
+      catch someError -- often a compile error
+         put empty into insertedMenuTitle
+         put empty into customControllerParam
+         return empty
+      end try
+   else
+      delete word 1 to wordNum of menuHandler
+      put token 1 of line 1 of menuHandler into insertedMenuTitle
+      put token 3 of line 1 of menuHandler into customControllerParam
+   end if
+   
+   -- no longer stores pigeon to send, but calculates from subMenuTitle + scriptObject
+   -- put mCommand && "subMenuPath, mTarget" into pigeon
+   put empty into pigeon
+   put empty into dynamicTitleProp
+end if
+end extractInsertedTitle
+
+[[ _FetchHandler (file_SetHomeRelative,c) ]]
+
+[[ _FetchHandler (folder_AddObjectBit,c) ]]
+
+[[ _FetchHandler (folder_AddStackBit,f) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+[[ _FetchHandler (folder_Format,c) ]]
+
+[[ _FetchHandler (handler_AddToCallArray,c) ]]
+
+[[ _FetchHandler (handler_ConstructCallArray,f) ]]
+
+[[ _FetchHandler (hArray_AddHandlerHash,c) ]]
+
+[[ _FetchHandler (hArray_GetHandlerHash,f) ]]
+
+[[ _FetchHandler (hArray_GetHkeyDataArray,f) ]]
+
+[[ _FetchHandler (hArray_GetNamedObjectType,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectData,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeData,f) ]]
+
+[[ _FetchHandler (hArray_GetUripArray,f) ]]
+
+[[ _FetchHandler (hArray_GetViewTemplate,f) ]]
+
+[[ _FetchHandler (hArray_RemoveObject,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromHandlerArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromTypeArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveSameNameTypeObjects,c) ]]
+
+[[ _FetchHandler (hkey_AddToKeyWordArray,c) ]]
+
+[[ _FetchHandler (hkey_Construct,f) ]]
+
+[[ _FetchHandler (hkey_Deconstruct,c) ]]
+
+[[ _FetchHandler (hkey_ConstructKeywords,f) ]]
+
+[[ _FetchHandler (hkey_EditFoundHandler,c) ]]
+
+[[ _FetchHandler (script_HandlerTableOffsets,c) ]]
+
+[[ _FetchHandler (hkey_NormalizeType,c) ]]
+
+[[ _FetchHandler (kwote,f) ]]
+
+[[ _FetchHandler (library_ArrayFile,f) ]]
+
+[[ _FetchHandler (library_ArrayFolder,f) ]]
+
+[[ _FetchHandler (library_FetchArray,f) ]]
+
+[[ _FetchHandler (library_FetchForgetArray,f) ]]
+
+[[ _FetchHandler (library_FetchHandlerDatabaseArray,f) ]]
+
+[[ _FetchHandler (library_GetHandlerDatabaseMetadata,f) ]]
+
+[[ _FetchHandler (library_ListForgetHkeys,f) ]]
+
+[[ _FetchHandler (library_PluginFolder,f) ]]
+
+[[ _FetchHandler (library_ScriptTemplateFolder,f) ]]
+
+[[ _FetchHandler (line_Add,c) ]]
+
+[[ _FetchHandler (line_Delete,c) ]]
+
+[[ _FetchHandler (line_Insert,c) ]]
+
+[[ _FetchHandler (main_Stack,g) ]]
+
+[[ _FetchHandler (mainstack_File,g) ]]
+
+[[ _FetchHandler (mobile_Name,g) ]]
+
+[[ _FetchHandler (object_AddToGlobalArray,c) ]]
+
+[[ _FetchHandler (object_AddToArray,c) ]]
+
+[[ _FetchHandler (object_ExportScript,c) ]]
+
+[[ _FetchHandler (object_ExtractStack,f) ]]
+
+[[ _FetchHandler (object_FromScriptFolder,f) ]]
+
+[[ _FetchHandler (object_SetShortStackName,c) ]]
+
+[[ _FetchHandler (object_StackNameOffsets,c) ]]
+
+[[ _FetchHandler (objectFolder_HandlerFolder,f) ]]
+
+[[ _FetchHandler (objectFolder_ScriptFile,f) ]]
+
+-- command opn_Notify
+
+end opn_Notify
+
+[[ _FetchHandler (outline_DecreaseIndent,f) ]]
+
+[[ _FetchHandler (outline_IncreaseIndent,f) ]]
+
+[[ _FetchHandler (param_IsBoolean,f) ]]
+
+[[ _FetchHandler (param_IsObject,f) ]]
+
+[[ _FetchHandler (rev_ActivateScriptEditorTab,c) ]]
+
+[[ _FetchHandler (rev_ApplicationFolder,f) ]]
+
+[[ _FetchHandler (rev_ConstructHkeyTitle,f) ]]
+
+[[ _FetchHandler (rev_DictionaryTerms,f) ]]
+
+[[ _FetchHandler (rev_GetCachedScript,f) ]]
+
+[[ _FetchHandler (rev_GetIcon,f) ]]
+
+[[ _FetchHandler (rev_GetPluginFolder,f) ]]
+
+-- function rev_GetSelectedHandlerTreeLineNum pHkey
+put rev_HandlerTreeField() into handlerField
+
+if pHkey is not empty then
+   put the htmltext of rev_HandlerTreeField() into someHtml
+   put rev_ConstructHkeyTitle (pHkey) into htmlTitle
+   set the wholematches to true
+   put lineOffset (htmlTitle, someHtml) into lineNum
+else
+   put the hilitedLine of handlerField into lineNum
+end if
+return lineNum
+end rev_GetSelectedHandlerTreeLineNum
+
+[[ _FetchHandler (rev_HandlerTreeField,f) ]]
+
+[[ _FetchHandler (rev_ListTabScriptObjects,f) ]]
+
+[[ _FetchHandler (rev_OpenScriptEditorNames,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorGroup,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorIsOpen,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorStack,f) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorField,c) ]]
+
+[[ _FetchHandler (rev_SetSelectedHandlerTreeLineNum,c) ]]
+
+function rev_TopScriptEditor
+   put the stack_Name of the target into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else 
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      -- opn_Notify stackNames, true
+      if stackNames is empty then return empty
+      put line 1 of stackNames into stackName
+      if exists(stack stackName) is false then
+         put the stack_Name of the target into stackName
+      end if
+      return the long id of stack stackName
+   end if
+end rev_TopScriptEditor
+
+[[ _FetchHandler (rev_VersionIsLater,f) ]]
+
+[[ _FetchHandler (rugged_ID,g) ]]
+
+[[ _FetchHandler (script_DeconstructMetaDataSuite,c) ]]
+
+[[ _FetchHandler (script_DictionaryTerm,f) ]]
+
+[[ _FetchHandler (script_ExportHandlersAndCalls,c) ]]
+
+[[ _FetchHandler (script_ExtractCaseConditions,f) ]]
+
+[[ _FetchHandler (script_ExtractFunctionCalls,f) ]]
+
+[[ _FetchHandler (script_ExtractMenuSuiteTitles,f) ]]
+
+[[ _FetchHandler (script_ExtractSwitchSection,f) ]]
+
+[[ _FetchHandler (script_GetCommand,f) ]]
+
+[[ _FetchHandler (script_GetGetProp,f) ]]
+
+[[ _FetchHandler (script_GetMetadataArray,f) ]]
+
+-- function script_GetSuite suiteTitle, someScript
+   script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
+   if the result is true then
+      put line startLineNum to endLineNum of someScript into suiteScript
+      return word 1 to -1 of suiteScript
+   else
+      return empty
+   end if
+end script_GetSuite
+
+-- function script_GetSuiteTitles someScript
+   filter someScript with "-->*"
+   replace "--> " with empty in someScript
+   replace "-->" with empty in someScript
+   return word 1 to -1 of someScript
+end script_GetSuiteTitles
+
+[[ _FetchHandler (script_Handler,g) ]]
+
+[[ _FetchHandler (hkey_ExtractHandlerFromObject,f) ]]
+
+[[ _FetchHandler (script_HandlerFromTableOffsets,c) ]]
+
+[[ _FetchHandler (script_MatchEnd,f) ]]
+
+[[ _FetchHandler (script_MenuTitleArrayFromSuiteTitles,f) ]]
+
+[[ _FetchHandler (script_MenuToolModeArray,f) ]]
+
+[[ _FetchHandler (script_OrderedMenuTitles,f) ]]
+
+[[ _FetchHandler (script_ParamToHandlerName,f) ]]
+
+[[ _FetchHandler (script_SetHandlerOffsets,c) ]]
+
+[[ _FetchHandler (script_SetPrivateHandlerOffsets,c) ]]
+
+-- command script_SetSuiteOffsets suiteTitle, someScript, @startLineNum, @endLineNum
+   set wholematches to true
+   put 0 into startLineNum
+   put 0 into endLineNum
+   put lineoffset("-->" &&  suiteTitle, someScript) into startLineNum
+   if startLineNum is zero then
+      put lineoffset("-->" &  suiteTitle, someScript) into startLineNum
+   end if
+   if startLineNum is zero then return false
+   
+   put someScript into suiteTitleLines
+   filter suiteTitleLines with "-->*"
+   put lineoffset("-->" &&  suiteTitle, suiteTitleLines) into titleLineNum
+   put line titleLineNum + 1 of suiteTitleLines into nextTitleLine
+   if nextTitleLine is empty then
+      put the number of lines in someScript into endLineNum
+   else
+      put lineoffset(nextTitleLine, someScript, startLineNum) into afterStartlineNum
+      
+      if afterStartlineNum is zero then
+         put the number of lines in someScript into endLineNum
+      else
+         put startLineNum + afterStartlineNum - 1 into endLineNum
+      end if
+   end if
+   return true
+end script_SetSuiteOffsets
+
+[[ _FetchHandler (sha1_Hash,f) ]]
+
+[[ _FetchHandler (stack_CreateSubStack,c) ]]
+
+[[ _FetchHandler (stack_Name,g) ]]
+
+[[ _FetchHandler (stack_Object,g) ]]
+
+-- getprop stack_Object
+put the long ID of the target into targetObject
+get object_ExtractStack (targetObject)
+return it
+end stack_Object
+
+[[ _FetchHandler (stack_SubName,g) ]]
+
+[[ _FetchHandler (stackDataObjects_Folder,g) ]]
+
+[[ _FetchHandler (text_EscapeRegularExpression,c) ]]
+
+[[ _FetchHandler (text_ExtractQuoted,f) ]]
+
+[[ _FetchHandler (text_InitialCaps,f) ]]
+
+[[ _FetchHandler (text_OffsetAfter,f) ]]
+
+[[ _FetchHandler (text_OffsetBefore,f) ]]
+
+[[ _FetchHandler (text_RepeatString,f) ]]
+
+[[ _FetchHandler (text_SetOffsets,c) ]]
+
+[[ _FetchHandler (text_SplitCaps,f) ]]
+
+[[ _FetchHandler (text_SplitIntoWords,f) ]]
+
+[[ _FetchHandler (text_StartsWithCaps,f) ]]
+
+[[ _FetchHandler (text_StripQuoted,f) ]]
+
+[[ _FetchHandler (text_TokenOffset,f) ]]
+
+[[ _FetchHandler (textStack_FindRoot,f) ]]
+
+[[ _FetchHandler (view_ConstructHierarchy,f) ]]
+
+-- function view_GetTemplateObject vName
+   view_NormalizeName vName
+   -- slow due to loops through every template in the array
+   -- consider creating a reverse array cache
+   return hArray_GetViewTemplate (vName)
+end view_GetTemplateObject
+
+[[ _FetchHandler (view_Hierarchy,g) ]]
+
+[[ _FetchHandler (view_IsTemplate,g) ]]
+
+[[ _FetchHandler (view_Name,g) ]]
+
+[[ _FetchHandler (view_NormalizeName,c) ]]
+
+-- getprop view_Template
+-- in lib_ViewTemplate
+put the view_Name of the target into vName
+put view_GetTemplateObject (vName) into templateObject
+return templateObject
+end view_Template

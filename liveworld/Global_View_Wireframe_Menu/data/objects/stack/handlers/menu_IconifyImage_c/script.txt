@@ -1,0 +1,20 @@
+on menu_IconifyImage templateView
+   breakpoint
+   put menu_GetTargetObject() into targetObject
+   put the info_Group of targetObject into infoGroup
+   put the image_View of infoGroup into iconView
+   
+   put the view_IconFile of templateView into imageFile
+   put url ("binfile:" & imageFile) into someImage
+   -- put the image_Contents ["file"] of iconView into someImage
+   
+   set the resized_Image ["60,60"] of iconView to someImage
+   put the result into resizedImage
+   put resizedImage into url ("binfile:" & imageFile)
+   try
+      -- magick_FloodFill imageFile, floodedFile, "white", 40
+   catch someError
+      -- no library or imagemagick installed?
+   end try
+   set the image_File of iconView to imageFile
+end menu_IconifyImage

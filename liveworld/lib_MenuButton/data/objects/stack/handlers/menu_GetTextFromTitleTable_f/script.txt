@@ -1,0 +1,57 @@
+function menu_GetTextFromTitleTable mTitleTable, targetObject, pMenuTarget
+   -- repeats over mTitles in table
+   -- called by "menu_PullDown" etc to dynamically create and "set the menu_Text of pTargetObject"
+   local mText, pTitlePath, mTopController, mTopTitle
+   
+   replace comma with tab in mTitleTable
+   set the itemdelimiter to tab
+   repeat for each line mTitleLine in mTitleTable
+      put item 1 of mTitleLine into mTitle
+      put item 2 of mTitleLine into mType
+      put item 3 of mTitleLine into pTextPath
+      
+      if mTitleLine = "-" then
+         put "-" & CR after mText
+         next repeat
+      end if
+      
+      global gTemp_ActiveMenuArray
+      if gTemp_ActiveMenuArray ["recursion check"][mTitle][targetObject] is true then -- recursion check
+         opn_Notify merge ("Recursion in 'menu_GetTextFromTitleTable' for menu '[[mTitle]]'"), true
+         -- would be nice to disable or indicate more clearly where the recursion is?
+         return empty
+      else
+         put true into gTemp_ActiveMenuArray ["recursion check"][mTitle][targetObject]
+      end if
+      
+      put the menu_Table [mTitle] of targetObject into mTable
+      
+      switch 
+         case mType = "submenu"  
+            if pTextPath is empty then put menu_MenuTextFromTitle (mTitle) into pTextPath -- old ?? Why not use "put mType into pTitlePath"
+            
+            put menu_ConvertTable (mTable, targetObject, pTitlePath, pTextPath, pMenuTarget) into moreMenuText
+            if moreMenuText is empty then
+               -- submenu is empty
+            else
+               put pTextPath  & CR after mText
+               put outline_IncreaseIndent (moreMenuText) & CR after mText
+            end if
+            break
+         case mType is not empty
+            put mType into pTitlePath
+            put menu_ConvertTable (mTable, targetObject, pTitlePath, pTextPath, pMenuTarget) into moreMenuText
+            if moreMenuText is not empty then
+               put moreMenuText & CR after mText
+            end if
+            break
+         default
+            put menu_ConvertTable (mTable, targetObject, pTitlePath, pTextPath, pMenuTarget) into moreMenuText
+            if moreMenuText is not empty then
+               put moreMenuText & CR after mText
+            end if
+      end switch
+   end repeat
+   delete char -1 of mText
+   return mText
+end menu_GetTextFromTitleTable

@@ -1,0 +1,4 @@
+on menu_FetchManifestArrayForStack scriptObject, stackObject
+   put the meta_ManifestArray of stackObject into someArray
+   display_Array someArray, "the meta_ManifestArray"
+end menu_FetchManifestArrayForStack

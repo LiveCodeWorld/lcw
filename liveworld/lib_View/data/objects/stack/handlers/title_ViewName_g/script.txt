@@ -1,0 +1,5 @@
+getprop title_ViewName
+   put the title_View of the target into titleView
+   put the view_Name of titleView into vName
+   return vName
+end title_ViewName

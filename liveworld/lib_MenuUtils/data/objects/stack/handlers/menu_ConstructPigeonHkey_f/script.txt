@@ -1,0 +1,17 @@
+function menu_ConstructPigeonHkey mPath, pigeon, mController, subTitlePath
+   -- a recursive function
+   global gTemp_ActiveMenuArray
+   
+   menu_DeconstructPath mPath, foundPath, foundParam, pigeon, mController, mTitlePath, mItemType
+   -- menu_DeconstructPath subPath, subPigeon, subController, subTitlePath, subSubType
+   put word 1 of subPigeon into subHandlerName
+   if subSubType = "submenu" then
+      return menu_ConstructPigeonHkey (mPath, subPigeon, subController, subTitlePath)
+   else
+      set the itemdelimiter to "/"
+      put item -1 of subTitlePath into mTitle
+      put the menu_Controller [mTitle] of mController into subController
+   end if
+   put hkey_Construct(subHandlerName, "c", subController) into hKey
+   return hKey
+end menu_ConstructPigeonHkey

@@ -1,0 +1,6 @@
+function text_ContainsItem someText, itemList
+    repeat for each item testItem in itemList
+        if someText contains testItem then return true
+    end repeat
+    return false
+end text_ContainsItem

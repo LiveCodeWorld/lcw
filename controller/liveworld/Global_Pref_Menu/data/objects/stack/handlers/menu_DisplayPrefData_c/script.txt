@@ -1,0 +1,4 @@
+on menu_DisplayPrefData scriptObject
+   put pref_FetchData() into prefData
+   display_Array prefData, "pref_FetchData()"
+end menu_DisplayPrefData

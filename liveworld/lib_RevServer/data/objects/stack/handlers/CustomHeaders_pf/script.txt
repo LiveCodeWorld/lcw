@@ -1,0 +1,8 @@
+private function CustomHeaders @pData, pType, pMesg
+   -- Function that generates custom headers, like redirections and errors. Helper function to generate custom httpd headers.
+   local tRetVal
+   put "HTTP/1.1" && pType && pMesg & crlf into tRetVal
+   put "Content-Type: text/html" & crlf after tRetVal
+   put "Content-Length: " & length(pData)  after tRetVal
+   return tRetVal
+end CustomHeaders

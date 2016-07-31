@@ -1,0 +1,13 @@
+function xml_ConstructOpeningTag tagName, attributeName, attributeValue
+    -- was "construct_SimpleTag" before "encloseInTag"
+    put "<" & tagName into taggedText
+    put (the paramcount - 1)/2  into attributeCount
+    repeat with attributeNum = 1 to attributeCount
+        put param(2*attributeNum) into attributeName
+        put param(2*attributeNum + 1) into attributeValue
+        put space & attributeName & "=" & kwote(attributeValue) after taggedText
+        add 1 to attributNum
+    end repeat
+    put ">" after taggedText
+    return taggedText
+end xml_ConstructOpeningTag

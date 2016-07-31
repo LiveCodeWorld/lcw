@@ -1,0 +1,6 @@
+command display_StandardShortIndexFiles indexView
+   set the cursor to watch
+   put the lcw_FolderName of indexView into folderName
+   put lcw_ListShortStackFiles (folderName) into shortStackFiles
+   set the view_Index of indexView to shortStackFiles
+end display_StandardShortIndexFiles

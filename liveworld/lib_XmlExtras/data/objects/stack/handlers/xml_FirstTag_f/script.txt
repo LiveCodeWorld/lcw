@@ -1,0 +1,50 @@
+function xml_FirstTag someXML
+   -- won't work with nested tags of same name
+   -- but should work well with single and double tags sread over any number of lines
+   
+   xml_FirstTagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+   if the result is false then
+      return empty
+   else
+      return someTag
+   end if
+   
+   put xml_FirstTagName(someXML) into tagName
+   if tagName is empty then
+      return empty
+   else 
+      put "(?im)(<\s*" & tagName & "\s+[^>]*\s*>)" into openingReg
+      if matchchunk(someXML, openingReg, startTag, endOpening) is false then
+         -- something seriously wrong
+         breakpoint
+         return empty
+      else
+         repeat with charNum = (endOpening-1) down to 1
+            get char charNum of someXML
+            if it is "/" then
+               -- its a single tag
+               put char startTag to endOpening of someXML into someTag
+               return someTag
+            else if it is space then
+               next repeat
+            else
+               exit repeat
+            end if
+         end repeat
+         
+         put someXML into testXML
+         delete char 1 to endOpening of testXML
+         put "(?im)(<\s*/" & tagName & "\s*>)" into closingReg
+         
+         if matchchunk(testXML, closingReg, startClosing, endClippedTag) is false then
+            -- something seriously wrong
+            breakpoint
+            return empty
+         else
+            put endClippedTag + endOpening + 0 into endTag
+            put char startTag to endTag of someXML into someTag
+            return someTag
+         end if
+      end if
+   end if
+end xml_FirstTag

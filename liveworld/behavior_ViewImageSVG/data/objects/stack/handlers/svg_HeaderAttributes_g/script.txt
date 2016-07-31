@@ -1,0 +1,6 @@
+getprop svg_HeaderAttributes
+   put svg_CreateXmlTree() into treeID
+   put revXMLAttributes (treeID, "/svg", tab, CR) into attributeTable
+   svg_DeleteXmlTree
+   return attributeTable
+end svg_HeaderAttributes

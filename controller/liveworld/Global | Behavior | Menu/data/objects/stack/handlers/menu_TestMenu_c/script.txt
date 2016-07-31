@@ -1,0 +1,5 @@
+on menu_TestMenu mTarget
+   put "mTarget =" && mTarget & CR into test
+   put "mTopController =" && menu_GetTopController() & CR after test
+   put test
+end menu_TestMenu

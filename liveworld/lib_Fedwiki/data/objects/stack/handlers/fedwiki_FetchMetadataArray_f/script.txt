@@ -1,0 +1,19 @@
+function fedwiki_FetchMetadataArray someURL
+   set the itemdelimiter to "."
+   if item -1 of someURL = "html" then
+      put "json" into item -1 of someURL
+   else
+      set the itemdelimiter to "/"
+      put item -1 of someURL into pageSlug
+      put item 1 to 3 of someURL into rootURL
+      put rootURL & "/" & pageSlug & ".json" into someURL
+   end if
+   put url someURL into someJSON
+   
+   put json_ToArray (someJSON) into fedwikiPageArray
+   put fedwikiPageArray  ["title"] into someTitle
+   if someTitle is empty then return empty
+   put fedwikiPageArray ["metadata"] into metadataArray
+   put someTitle into metadataArray ["pageTitle"]
+   return metadataArray
+end fedwiki_FetchMetadataArray

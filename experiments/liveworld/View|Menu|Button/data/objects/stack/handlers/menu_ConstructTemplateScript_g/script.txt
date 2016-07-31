@@ -1,0 +1,18 @@
+getprop menu_ConstructTemplateScript
+   put the long id of the target into targetObject
+   
+   put the menu_Title of targetObject into mTitle
+   if mTitle is empty then
+      put the menu_DefaultTitle of targetObject into mTitle
+      menu_SearchViewHierarchy targetObject, mTitle, mController
+      if mTitle is empty then put "Menu" into mTitle
+   end if
+   put script_ConstructCommandHandler ("menu_Test", "diplay_Lines the params") into suiteScript
+   put script_ConstructSuite (mTitle, suiteScript) & CR & CR after someScript
+   
+   put the menu_ToolTitle of targetObject into mTitle
+   put script_ConstructCommandHandler ("menu_ToolTest", "diplay_Lines the params") into suiteScript
+   put script_ConstructSuite (mTitle, suiteScript) & CR & CR after someScript
+   
+   return someScript
+end menu_ConstructTemplateScript

@@ -1,0 +1,27 @@
+command overlayArray_StripDefaultProps @overlayArray, defaultArray
+   -- was "hkey_StripDefaultProps"
+   
+   put defaultArray ["metadata"] into defaultMetadataArray
+   
+   put defaultMetadataArray ["dot_HeaderArray"] into dotHeaderArray
+   repeat for each key dotHeaderKey in dotHeaderArray
+      delete local overlayArray ["metadata"]["dot_HeaderArray"][dotHeaderKey]
+   end repeat
+   put overlayArray ["metadata"]["dot_HeaderArray"] into fileDotHeaderArray
+   if keys (fileDotHeaderArray) is empty then delete local overlayArray ["metadata"]["dot_HeaderArray"]
+   
+   put defaultMetadataArray ["graph_PropertyArray"] into graphPropertyArray
+   repeat for each key graphPropertyKey in graphPropertyArray
+      delete local overlayArray ["metadata"]["graph_PropertyArray"][graphPropertyKey]
+   end repeat
+   put overlayArray ["metadata"]["graph_PropertyArray"] into fileGraphPropertyArray
+   if keys (fileGraphPropertyArray) is empty then delete local overlayArray ["metadata"]["graph_PropertyArray"]
+   
+   put overlayArray ["metadata"] into metadataArray
+   put metadataArray ["dot_GroupStyleArray"] into dotGroupStyleArray
+   repeat for each key styleKey in dotGroupStyleArray
+      delete local overlayArray ["metadata"]["dot_GroupStyleArray"][styleKey]["node_StyleArray"]
+   end repeat
+   put overlayArray ["metadata"]["dot_GroupStyleArray"] into dotGroupStyleArray
+   if keys (dotGroupStyleArray) is empty then delete local overlayArray ["metadata"]["dot_GroupStyleArray"]
+end overlayArray_StripDefaultProps

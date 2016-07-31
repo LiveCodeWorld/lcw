@@ -1,0 +1,11 @@
+command xml_UnEscape @someText
+   -- do tabs as well?
+   replace "&#9;" with tab in someText
+   
+   replace "&amp;" with "&" in someText
+   replace "&lt;" with "<" in someText
+   replace "&gt;" with ">" in someText
+   
+   replace "&apos;" with "'" in someText
+   replace "&quot;" with quote in sometext
+end xml_UnEscape

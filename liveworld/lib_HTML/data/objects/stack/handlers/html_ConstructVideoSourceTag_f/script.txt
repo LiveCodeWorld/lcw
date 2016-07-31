@@ -1,0 +1,15 @@
+function html_ConstructVideoSourceTag videoURL, pMediaType
+   -- multiple source video tag
+   -- should enhance to extract pMediaType from file extension
+   put "<source src=" & quote & videoURL & quote into someHTML
+   switch pMediaType
+      case "webm"
+         put space & "type='video/webm" after someHTML
+         break
+      case "mp4"
+         put  space & "type='video/mp4" after someHTML
+   end switch
+   -- maybe add codecs?
+   put ">" after someHTML
+   return someHTML
+end html_ConstructVideoSourceTag

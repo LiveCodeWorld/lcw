@@ -1,0 +1,7 @@
+function hour_GetPeriod startDate, someDate
+    -- was "hoursBetween"
+    convert startDate to seconds
+    convert someDate to seconds
+    put (someDate - startDate)/(60*60) into someHours
+    return someHours
+end hour_GetPeriod

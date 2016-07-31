@@ -1,0 +1,5 @@
+getprop some_Things [svgView]
+   put the svg_HeaderArray of svgView into svgHeaderArray
+   return keys (svgHeaderArray)
+   return "1,2,3"
+end some_Things

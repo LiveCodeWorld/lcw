@@ -1,0 +1,8 @@
+getprop menu_SubStackCard [mTitle]
+   put the stack_SubName ["OPN Stack Menus"] of the target into subStackName
+   if exists (card mTitle of stack subStackName) then
+      return the long id of card mTitle of stack subStackName
+   else
+      return empty
+   end if
+end menu_SubStackCard

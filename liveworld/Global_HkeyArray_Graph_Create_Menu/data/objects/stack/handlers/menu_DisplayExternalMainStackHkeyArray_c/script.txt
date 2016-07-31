@@ -1,0 +1,28 @@
+on menu_DisplayExternalMainStackHkeyArray treeView
+   deconstructLocalArray overlayFolder, hKey, stackLabel, scriptObject
+   put item 3 of hKey into hObject
+   put the mainstack_WalkArray of hObject into mainStackHkeyWalkArray
+   put mainStackHkeyWalkArray ["external"] into externalArray
+   
+   local hKeyArray
+   repeat for each key shortCall in externalArray
+      put externalArray [shortCall] into leafArray
+      put line 1 of keys (leafArray) into leafkey
+      put leafArray [leafkey] into externalKey
+      
+      get hkey_DependencyArrayFromObjects (externalKey)
+      if it is not an array then
+         put empty into it [externalKey]
+      end if
+      union hKeyArray with it
+      
+      /*
+      put hArray_GetShortCalls (externalKey) into shortCalls
+      repeat for each line shortCall in shortCalls
+         hArray_DependencyWalk shortCall, externalKey, hKeyWalkArray
+      end repeat
+      */
+   end repeat
+   
+   display_Array hKeyArray, hkey
+end menu_DisplayExternalMainStackHkeyArray

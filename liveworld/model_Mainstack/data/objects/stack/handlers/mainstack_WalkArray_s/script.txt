@@ -1,0 +1,6 @@
+setprop mainstack_WalkArray mainstackWalkArray
+   put the textStack_Folder of the target into mainStackFolder
+   mainstack_StoreWalkArray mainStackFolder, mainstackWalkArray
+   put the result into someFile
+   return someFile
+end mainstack_WalkArray

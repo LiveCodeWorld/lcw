@@ -1,0 +1,22 @@
+function outline_ToDatagridArray tabbedText, pFieldNameArray
+   local dgArray
+   put pFieldNameArray ["title"] into titleFieldName
+   if titleFieldName is empty then put "title" into titleFieldName
+   
+   put pFieldNameArray ["link"] into linkFieldName
+   if linkFieldName is empty then put "link" into linkFieldName
+   
+   put pFieldNameArray ["tabLevel"] into tablevelFieldName
+   if tablevelFieldName is empty then put "tabLevel" into tablevelFieldName
+   
+   set the itemdelimiter to tab
+   repeat with lineNum = 1 to the number of lines of tabbedText
+      put line lineNum of tabbedText into someLine
+      get item -1 of someLine
+      html_DeconstructNameLink it, someTitle, someLink
+      put someTitle into dgArray [lineNum][titleFieldName]
+      put someLink into dgArray [lineNum][linkFieldName]
+      put outline_TabLevel(someLine) into dgArray [lineNum][tablevelFieldName]
+   end repeat
+   return dgArray
+end outline_ToDatagridArray

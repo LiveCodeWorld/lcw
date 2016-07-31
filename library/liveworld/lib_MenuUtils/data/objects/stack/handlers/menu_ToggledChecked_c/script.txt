@@ -1,0 +1,10 @@
+on menu_ToggledChecked someMenuItem, someObject
+    -- was a function "menu_ReturnToggledChecked"
+    -- works for main and one indented menu
+    if someObject is empty then put the long id of the target into someObject
+    
+    put the menu_Text of someObject into someMenu
+    put menu_GetToggleChecked(someMenuItem, someMenu, isChecked) into newMenu
+    set the menu_Text of someObject to newMenu
+    return isChecked
+end menu_ToggledChecked

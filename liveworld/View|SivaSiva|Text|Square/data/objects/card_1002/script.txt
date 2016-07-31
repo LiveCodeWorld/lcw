@@ -1,0 +1,33 @@
+--> Metadata
+-
+-- getprop inner_Margin
+   return 4
+end inner_Margin
+
+/*
+on mouseUp
+   shrinkText the shiftKey is "Down"
+end mouseUp
+
+on mouseStillDown
+   shrinkText the shiftKey is "Down"
+end mouseStillDown
+
+command shrinkText someBoolean
+   put the view_Template of me into viewTemplate
+   put the text_Size of viewTemplate into tSize
+   if someboolean is true then
+      set the text_Size of viewTemplate to (tSize - 1)
+   else
+      set the text_Size of viewTemplate to (tSize + 1)
+   end if 
+end shrinkText
+*/
+
+
+--> Global | Text | Square | Menu
+-
+[[ _FetchHandler (menu_TestFirstText,c) ]]
+
+[[ _FetchHandler (menu_TestSecondText,c) ]]
+

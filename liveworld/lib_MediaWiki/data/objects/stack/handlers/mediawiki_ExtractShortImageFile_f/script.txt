@@ -1,0 +1,11 @@
+function mediawiki_ExtractShortImageFile someUrl
+   -- no testing
+   set the itemdelimiter to "/"
+   put item -1 of someURL into shortImageFile
+   set the itemdelimiter to "#"
+   put item 1 of shortImageFile into shortImageFile
+   if char 1 to 5 of shortImageFile = "File:" then
+      delete char 1 to 5 of shortImageFile
+   end if
+   return shortImageFile
+end mediawiki_ExtractShortImageFile

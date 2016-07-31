@@ -1,0 +1,8 @@
+function rigElementsList pArray
+   --| Summary: Returns a list of array elements, each on a seperate line.
+   repeat for each element thisElement in pArray
+      put thisElement & return after tElementsList
+   end repeat
+   delete char -1 of tElementsList
+   return tElementsList
+end rigElementsList

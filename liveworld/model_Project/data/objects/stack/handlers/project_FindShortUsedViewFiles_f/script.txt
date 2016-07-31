@@ -1,0 +1,5 @@
+function project_FindShortUsedViewFiles pProjectName
+   put project_FindUsedViewStacks (pProjectName) into stackObjects
+   put project_ConvertStackObjectsToShortFiles (stackObjects) into usedShortViewStackFiles
+   return usedShortViewStackFiles
+end project_FindShortUsedViewFiles

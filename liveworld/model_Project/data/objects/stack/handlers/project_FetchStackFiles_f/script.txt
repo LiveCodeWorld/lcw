@@ -1,0 +1,5 @@
+function project_FetchStackFiles pProjectName
+   put project_FetchArray (pProjectName) into projectArray
+   put projectArray ["data"]["stackfiles"] into stackFileTable
+   return stackFileTable
+end project_FetchStackFiles

@@ -1,0 +1,9 @@
+getprop template_Array
+   -- a structural mirror of "view_Array"
+   put the template_Model of the target into templateModel
+   if exists (templateModel) is false then return empty
+   lock messages -- so as not to trigger custom prop
+   put the view_Array of templateModel into templateArray
+   unlock messages
+   return templateArray
+end template_Array

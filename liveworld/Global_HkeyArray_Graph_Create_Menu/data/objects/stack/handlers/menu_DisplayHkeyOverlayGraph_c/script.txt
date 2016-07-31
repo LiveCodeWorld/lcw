@@ -1,0 +1,8 @@
+on menu_DisplayHkeyOverlayGraph treeView, hkeyOverlayName
+   set the cursor to watch
+   deconstructLocalArray overlayFolder, hKey, stackLabel, scriptObject
+   put item 3 of hKey into hObject
+   put the overlay_Folder of hObject into overlayFolder
+   
+   display_Overlay overlayFolder, hkeyOverlayName
+end menu_DisplayHkeyOverlayGraph

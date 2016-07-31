@@ -1,0 +1,6 @@
+setprop displayed_FolderName folderGroupName
+   put _stackLibraryTabMenu() into tabMenu
+   put the text of tabMenu into someMenu
+   put lineOffset (folderGroupName, someMenu) into mNum
+   set the menuHistory of tabMenu to mNum
+end displayed_FolderName

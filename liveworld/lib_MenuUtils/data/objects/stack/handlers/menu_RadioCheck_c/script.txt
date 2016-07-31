@@ -1,0 +1,24 @@
+on menu_RadioCheck someMenuPath, someObject
+    -- way slower than needed!
+    
+    if someObject is empty then put the long id of the target into someObject
+    put the text of someObject into someMenu
+     
+    put menu_CleanMarks(someMenu) into cleanMenu
+    put outline_PathOffset(someMenuPath, cleanMenu, "|") into chosenLineNum
+    if chosenLineNum = 0 then return empty
+    
+    if menu_GetCheckedLine(chosenLineNum, someMenu) is false then
+        put outline_LineParent(chosenLineNum, cleanMenu, startSection) into parentTitle
+        put outline_NextSameLevel(startSection, cleanMenu) into endSection
+        repeat with osLineNum = (startSection + 1) to (endSection- 1)
+            if osLineNum is chosenLineNum then
+                put menu_SetCheckedLine(chosenLineNum, someMenu, true) into someMenu
+            else
+                put menu_SetCheckedLine(osLineNum, someMenu, false) into someMenu
+            end if
+        end repeat
+        set the menu_Text of someObject to someMenu
+        -- put someMenu
+    end if
+end menu_RadioCheck

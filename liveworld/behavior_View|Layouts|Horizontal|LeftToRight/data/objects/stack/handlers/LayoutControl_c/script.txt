@@ -1,0 +1,67 @@
+on LayoutControl pRect
+   if the long id of the target is not the long id of me then return empty -- this is important for nested datagrids at the moment.
+   if pRect is empty then put the rect of me into pRect
+   
+   put the inner_Rect [pRect] of me into innerRect
+   
+   put the record_LabelWidth of me into recordLabelWidth
+   add recordLabelWidth to item 1 of innerRect
+   
+   put the record_Height of me into recordHeight
+   if recordHeight is a number then put item 2 of innerRect + recordHeight into item 4 of innerRect
+   
+   put the layout_Elements of me into layoutElements
+   put the layout_Style of me into layoutStyle
+   put the view_Spacing [innerRect] of me into viewSpacing
+   
+   switch layoutStyle
+      case "centred"
+         put rect_GetCentre (innerRect) into myCentre
+         put the layout_TotalElementWidth of me into totalWidth
+         put item 1 of myCentre - trunc(totalWidth/2) into myLeft
+         put myLeft into newLeft
+         repeat with lineNum = the number of lines of layoutElements down to 1
+            put line lineNum of layoutElements into layoutElement
+            
+            put the layout_ElementWidth [layoutStyle] of layoutElement into someWidth
+            
+            put innerRect into elementRect
+            put newLeft into item 1 of elementRect
+            put newLeft + someWidth into elementRight
+            put elementRight into item 3 of elementRect
+            set the view_Rect of layoutElement to elementRect
+            if the test_Layout of me is true then rect_CreateMask elementRect, layoutElement
+            put elementRight + viewSpacing into newLeft
+         end repeat
+         break
+      case "right to left"
+         put item 3 of innerRect into newRight
+         repeat with lineNum = the number of lines of layoutElements down to 1
+            put line lineNum of layoutElements into layoutElement
+            
+            put the layout_ElementWidth [layoutStyle] of layoutElement into someWidth
+            
+            put innerRect into elementRect
+            put newRight into item 3 of elementRect
+            put newRight - someWidth into elementLeft
+            put elementLeft into item 1 of elementRect
+            set the view_Rect of layoutElement to elementRect
+            if the test_Layout of me is true then rect_CreateMask elementRect, layoutElement
+            put elementLeft - viewSpacing into newRight
+         end repeat
+         break
+      default
+         put item 1 of innerRect into newLeft
+         if layoutStyle is among the items of "distributed,fixed" then add viewSpacing to newLeft
+         repeat for each line layoutElement in layoutElements
+            put the layout_ElementWidth [layoutStyle] of layoutElement into someWidth
+            put innerRect into elementRect
+            put newLeft into item 1 of elementRect
+            put newLeft + someWidth into elementRight
+            put elementRight into item 3 of elementRect
+            set the view_Rect of layoutElement to elementRect
+            if the test_Layout of me is true then rect_CreateMask elementRect, layoutElement
+            put elementRight + viewSpacing into newLeft
+         end repeat
+   end switch
+end LayoutControl

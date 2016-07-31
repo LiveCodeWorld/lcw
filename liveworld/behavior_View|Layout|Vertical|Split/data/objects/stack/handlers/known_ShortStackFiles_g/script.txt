@@ -1,0 +1,16 @@
+getprop known_ShortStackFiles
+   put the index_LongStackFiles of the target into longStackFiles
+   set the itemdelimiter to slash
+   repeat for each line longStackFile in longStackFiles
+      if exists (stack longStackFile) is false then next repeat
+      
+      put the short name of stack longStackFile into shortStackName
+      if exists (stack shortStackName) is false then next repeat
+      
+      -- ok alll is good
+      put item -1 of longStackFile into knownShortStackFile
+      put knownShortStackFile & CR after knownShortStackFiles
+   end repeat
+   delete char -1 of knownShortStackFiles
+   return knownShortStackFiles
+end known_ShortStackFiles

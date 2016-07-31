@@ -1,0 +1,30 @@
+function outline_LeafIndex someOutline, pDelim, pStem
+   if pDelim is empty then put "/" into pDelim
+   put empty into pathIndex
+   put empty into pathString
+   repeat with osLineNum = 1 to the number of lines of someOutline
+      put outline_IsLeaf (osLineNum, someOutline) into isLeaf
+      
+      put line osLineNum of someOutline into osLine
+      if pStem is not empty then put pStem & pDelim after pathIndex
+      put outline_TabLevel(osLine) into tabLevel
+      if tabLevel = 0 then
+         put osLine into mainTitle
+         put mainTitle into pathString
+         if isLeaf is true then 
+            put mainTitle & CR after pathIndex
+         end if
+      else
+         set the itemdelimiter to tab
+         put item (tabLevel+1) of osLine into subTitle
+         set the itemdelimiter to pDelim
+         put subTitle into item (tabLevel+1) of pathString
+         put item 1 to (tabLevel+1) of pathString into subPath
+         if isLeaf is true then 
+            put subPath & CR after pathIndex
+         end if
+      end if
+   end repeat
+   delete char -1 of pathIndex
+   return pathIndex
+end outline_LeafIndex

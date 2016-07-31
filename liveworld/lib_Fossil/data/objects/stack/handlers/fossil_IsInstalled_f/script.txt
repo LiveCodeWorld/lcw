@@ -1,0 +1,7 @@
+function fossil_IsInstalled
+   put fossil_GetExecutablePath() into fossilPath
+   if there is not a file fossilPath then return false -- could be installed but just not referenced right in the prefs
+   put fossil_Version (fossilPath) into fossilVersion
+   put word 1 to 4 of fossilVersion = "This is fossil version" into isInstalled
+   return isInstalled
+end fossil_IsInstalled

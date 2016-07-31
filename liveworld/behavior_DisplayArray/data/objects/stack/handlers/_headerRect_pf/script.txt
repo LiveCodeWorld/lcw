@@ -1,0 +1,4 @@
+private function _headerRect stackRect
+   put item 2 of stackRect + _headerHeight() into item 4 of stackRect
+   return stackRect
+end _headerRect

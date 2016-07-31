@@ -1,0 +1,11 @@
+getprop view_Props [fetchLive]
+   put the template_MetaData ["view_Props"] of the target into cachedProps
+   if cachedProps is empty or fetchLive is true then
+      local liveMenu, publicProps
+      put the long id of the target into targetObject
+      extractViewPropertyMenu targetObject, liveMenu, publicProps
+      return publicProps
+   else
+      return cachedProps
+   end if
+end view_Props

@@ -1,0 +1,5 @@
+getprop view_Text
+    put title_Button() into labelButton
+    put the label of labelButton into someTitle
+    return someTitle
+end view_Text

@@ -1,0 +1,6 @@
+getprop textStackOverlay_Folder [pDontCreate]
+   put the textStack_Folder [pDontCreate] of the target into metadataFolder
+   put metadataFolder & "metadata/project/overlay/" into overlayFolder
+   if pDontCreate is false then folder_CreateNested overlayFolder
+   return overlayFolder
+end textStackOverlay_Folder

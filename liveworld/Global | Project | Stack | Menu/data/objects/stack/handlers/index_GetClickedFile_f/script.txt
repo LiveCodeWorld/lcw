@@ -1,0 +1,12 @@
+function index_GetClickedFile pLineNum
+   put the long id of the target into fieldObject
+   if pLineNum is empty then
+      put word 2 of the clickline into pLineNum
+   end if
+   put the index_Folder of fieldObject into indexFolder
+   put the view_Index of fieldObject into shortFiles
+   
+   put line pLineNum of shortFiles into shortFile
+   put indexFolder & shortFile into longStackFile
+   return longStackFile
+end index_GetClickedFile

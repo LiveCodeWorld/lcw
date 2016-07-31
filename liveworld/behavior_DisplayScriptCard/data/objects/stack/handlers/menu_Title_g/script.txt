@@ -1,0 +1,14 @@
+getprop menu_Title
+   put the short name of the target into someName
+   switch someName
+      case "Right Icon"
+         return "Script | Record | Menu" -- the default and in the substack
+         return "Global | Script | Process | Menu"
+         return "Global | Script | Processing | Menu"
+      case "Title"
+         return "Script | Title | Menu" -- in the substack
+         return "Global | Script | Menu" -- in the substack
+      default
+         pass menu_Title
+   end switch
+end menu_Title

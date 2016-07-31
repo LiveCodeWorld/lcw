@@ -1,0 +1,23 @@
+function colour_TranslateName colourName, pOpenObject
+   -- only works when the object is among the openstacks, not mainstacks or if used
+   -- works even if object is not visible
+   if pOpenObject is empty then
+      -- put opn_MenuButton() into pOpenObject -- so lets use the opn_MenuButton
+      put the long id of me into pOpenObject
+   end if
+   
+   lock screen
+   put the backcolor of pOpenObject into oColorName
+   put the backpixel of pOpenObject into oBackPixel
+   
+   set the backcolor of pOpenObject to colourName
+   get the effective backpixel of pOpenObject
+   set the backcolor of pOpenObject to empty
+   set the backpixel of pOpenObject to it
+   put the backcolor of pOpenObject into tRGB
+   
+   -- set the backpixel of me to oBackPixel
+   set the backcolor of pOpenObject to oColorName
+   unlock screen
+   return tRGB
+end colour_TranslateName

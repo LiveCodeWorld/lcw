@@ -1,0 +1,5 @@
+on menu_UpdatePackedView imageObject
+   put the layout_View of imageObject into packedView
+   set the view_Swap of packedView to "View|Layout|Placeholder"
+   set the view_Swap of packedView to "View|Layouts|Resize|Packed"
+end menu_UpdatePackedView

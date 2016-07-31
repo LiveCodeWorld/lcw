@@ -1,0 +1,14 @@
+getprop index_LongStackFiles
+   switch
+      case the long id of the target = the long id of me
+         return the verticalLayout_LongStackFiles of me
+      case the view_Name of the target = "View|Index|Group"
+         return the indexGroup_LongStackFiles of the target
+      case the view_Name of the target = "View|Index|Simple"
+         return the indexView_LongStackFiles of the target
+      default
+         -- could be a nested layout?
+         breakpoint
+         return empty
+   end switch
+end index_LongStackFiles

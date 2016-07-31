@@ -1,0 +1,4 @@
+on menu_EditImageMenu imageObject, imageMenuTitle
+   put menu_GetGlobalController (imageMenuTitle) into mController
+   menu_EditScript imageMenuTitle
+end menu_EditImageMenu

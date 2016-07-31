@@ -1,0 +1,5 @@
+command hkey_NormalizeType @hType
+   -- standardize revAvailableHandlers hType for hKeys
+   replace "M" with "c" in hType
+   put tolower (hType) into hType
+end hkey_NormalizeType

@@ -1,0 +1,24 @@
+on menu_SaveDisplayedOverlayArray treeView, graphStyle
+   put the displayed_Object of treeView into scriptObject
+   
+   put the title_Text of treeView into hKey
+   put the displayed_Array of treeView into hKeyArray
+   
+   -- put the displayed_OverlayFolder of treeView into overlayFolder
+   put library_HkeyFolder (hKey) into overlayFolder
+   
+   -- put the displayed_OverlayName of treeView into overlayName
+   put opn_Ask ("What name would you like to give this overlay?", graphStyle) into overlayName
+   
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_GetGraphPropertyArray (overlayData, overlayName) into graphPropertyArray
+   put overlayData_GetHeaderArray (overlayData, overlayName) into dotHeaderArray
+   
+   put overlayArray_FromLinkArray (hKeyArray, dotHeaderArray, graphPropertyArray) into overlayArray
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", graphStyle
+   
+   overlay_SetArray overlayFolder, overlayArray, overlayName
+   
+   opn_Notify "Saved array, but not created graph files for this new array!", true
+   display_OverlayData overlayFolder, hKey
+end menu_SaveDisplayedOverlayArray

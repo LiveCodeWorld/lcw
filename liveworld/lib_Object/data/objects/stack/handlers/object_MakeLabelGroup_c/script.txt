@@ -1,0 +1,22 @@
+command object_MakeLabelGroup
+   -- called by newGroup
+   put the long ID of the target into someGroup
+   set the margins of someGroup to 0
+   repeat with fieldNum = 1 to the number of fields of someGroup
+      put the long ID of field fieldNum of someGroup into someField
+      if char 1 of the short name of someField is "_" then
+         -- assume it is a label
+         put the text of someField into groupName
+         replace ":" with empty in groupName
+         put word 1 to -1 of groupName into groupName
+         
+         ask "What name would you like to give this new lable group?" with groupName
+         if it is empty then exit to top
+         put it into groupName
+         
+         set the name of someGroup to groupName
+         -- put merge("Set the name of this group to '[[groupName]]'")
+         exit repeat
+      end if
+   end repeat
+end object_MakeLabelGroup

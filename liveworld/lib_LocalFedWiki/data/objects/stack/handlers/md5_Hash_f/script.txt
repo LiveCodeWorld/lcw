@@ -1,0 +1,6 @@
+function md5_Hash someText
+   local hexDigest
+   put md5digest (someText) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end md5_Hash

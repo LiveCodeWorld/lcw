@@ -1,0 +1,5 @@
+setprop object_FileArray [pModelName] dataArray
+   put the model_File [pModelName] of the target into someFile
+   array_Save someFile, dataArray
+   return someFile
+end object_FileArray

@@ -1,0 +1,23 @@
+command stack_DeleteFile stackObject
+   put the filename of stackObject into someFile
+   if there is a file someFile then
+      go to stackObject 
+      answer merge("Are you sure you want to delete the file [[someFile]]?") with "OK" or "Cancel" as sheet
+      try
+         set the stack_IsKnown of stackObject to false
+         set the stack_IsLibrary ["All"] of stackObject to false
+         stack_ClearFrontAndBackLibraries stackObject
+         stack_DeleteScriptFolder stackObject
+         -- hdb_DeleteStackKeys stackObject, true
+         
+         delete stackObject
+         file_Delete someFile
+      catch e
+         opn_Notify e
+         answer warning merge("There was a problem deleting [[stackObject]] or file!")
+      end try
+   else
+      opn_Notify merge("File [[someFile]] does not exist")
+      put someFile
+   end if
+end stack_DeleteFile

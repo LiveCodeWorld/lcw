@@ -1,0 +1,20 @@
+function hkeyArray_ExtractCalls hkeyArray, hKeys
+    -- do the hKey nodes that are in the object   (delete from array when done)
+    put empty into hKeyCalls
+    repeat for each line hKey in hKeys
+        put hkeyArray [hKey] into firstHkeyCalls
+        line_Delete hKeys, firstHkeyCalls
+        line_Add firstHkeyCalls, hKeyCalls
+        delete local hkeyArray [hKey] 
+    end repeat
+     
+    -- now do the hKey nodes that were not in the object 
+    repeat for each key hKey in hkeyArray
+        line_Add hKey, hKeyCalls
+         
+        put hkeyArray [hKey] into firstHkeyCalls
+        line_Delete hKeys, firstHkeyCalls
+        line_Add firstHkeyCalls, hKeyCalls
+    end repeat
+    return hKeyCalls
+end hkeyArray_ExtractCalls

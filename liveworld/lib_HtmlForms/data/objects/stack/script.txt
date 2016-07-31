@@ -1,0 +1,39 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_HtmlForms
+type: script library
+version: 0.1
+
+
+--> Form
+-
+/*
+Useful stuff for making and then posting form data from revolution.
+*/
+
+[[ _FetchHandler (html_ConstructFormEncoded,f) ]]
+
+
+--> HTML | Form | To Sort
+-
+[[ _FetchHandler (html_ExtractForm,f) ]]
+
+[[ _FetchHandler (html_ExtractFormInputTags,f) ]]
+
+[[ _FetchHandler (html_ExtractFormInputTag,f) ]]
+
+[[ _FetchHandler (html_GetInputTagArray,f) ]]
+
+
+--> Form | Work In Prgress
+-
+[[ _FetchHandler (html_RegExpExtractForm,f) ]]
+
+
+--> Form
+-
+[[ _FetchHandler (form_AddToPostData,c) ]]
+
+

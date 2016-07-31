@@ -1,0 +1,5 @@
+setprop body_Height someHeight
+   put someHeight into LocalArray ["body_Height"]
+   dispatch "LayoutControl" to me -- resets the target
+   return the result
+end body_Height

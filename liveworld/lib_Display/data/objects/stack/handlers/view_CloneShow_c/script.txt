@@ -1,0 +1,16 @@
+command view_CloneShow cloneStackName, pDisplayTitle, pStackLabel, pDisplayView
+   set the label of stack cloneStackName to pStackLabel
+   
+   -- set the display
+   if pDisplayTitle is not empty then
+      if pDisplayView is empty then
+         put view_GetTemplateControl (cloneStackName) into pDisplayView
+      end if
+      set the title_Text of pDisplayView to pDisplayTitle
+   end if
+   
+   -- show and go
+   show stack cloneStackName
+   go to stack cloneStackName
+   return the result
+end view_CloneShow

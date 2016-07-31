@@ -1,0 +1,8 @@
+on selectionChanged pHilitedIndex, pPreviouslyHilitedIndex
+   if pHilitedIndex is empty then
+      pass selectionChanged -- for non-datagrid selectionChanged messages
+   else
+      click_Handler pHilitedIndex, pPreviouslyHilitedIndex
+   end if
+   pass selectionChanged
+end selectionChanged

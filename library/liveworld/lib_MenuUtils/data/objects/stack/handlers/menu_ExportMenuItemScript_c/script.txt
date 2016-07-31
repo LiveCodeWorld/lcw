@@ -1,0 +1,5 @@
+command menu_ExportMenuItemScript pigeon, mController
+   put word 1 of pigeon into handlerName
+   put hkey_Construct (handlerName, "c", mController) into hKey
+   -- hkey_CreateTest hKey
+end menu_ExportMenuItemScript

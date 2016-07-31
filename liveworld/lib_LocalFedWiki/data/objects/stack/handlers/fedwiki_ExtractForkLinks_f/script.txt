@@ -1,0 +1,28 @@
+function fedwiki_ExtractForkLinks pageArray, fromSlug, fromDomain
+   if fromDomain is empty then
+      breakpoint
+   end if
+   put fromDomain & "/" & fromSlug into fromLink
+   put pageArray ["journal"] into journalArray
+   put item 2 of the extents of journalArray into maxNum
+   put 1 into forkNum
+   repeat with nodeNum = 1 to maxNum
+      put journalArray [nodeNum] into nodeArray
+      put nodeArray ["type"] into nodeType
+      if nodeType = "fork" then
+         put nodeArray ["site"] into toDomain
+         
+         if toDomain is fromDomain or toDomain is empty then
+            -- going to assume it's a self-fork
+            put fromDomain into toDomain
+            next repeat -- not bothering storing this information (it's sort of useful for bugs?)
+         end if
+         
+         -- a bit archaic (should use nested arrays I think)
+         put toDomain & "/" & fromSlug into toLink -- a fork has the same slug
+         put nodeArray into linkArray [forkNum][fromLink][toLink]
+         add 1 to forkNum
+      end if
+   end repeat
+   return linkArray
+end fedwiki_ExtractForkLinks

@@ -1,0 +1,26 @@
+command stackArray_SearchNestedBackground groupID, stackObject, @propertyArray, containerKey
+   local objectArray  
+   
+   put the object_PropertyArray of group id groupID of stackObject into objectResult
+   put objectResult into propertyArray [containerKey]
+   put empty into objectArray [containerKey]
+   
+   repeat with controlNum = 1 to the number of controls in group id groupID of stackObject -- look at contents
+      put the short id of control controlNum of group id groupID of stackObject into subID
+      put the abbreviated id of control controlNum of group id groupID of stackObject into subKey
+      
+      if word 1 of subKey = "group" then
+         -- recurse
+         stackArray_SearchNestedBackground subID, stackObject, propertyArray, subKey
+         put the result into subArray -- will be a nested array
+         put subArray [subKey] into objectArray [containerKey][subKey]
+         add the number of layers in group id subID of stackObject to controlNum
+      else
+         -- add plain
+         put the object_PropertyArray of control id subID of stackObject into subResult
+         put subResult into propertyArray [subKey]
+         put empty into objectArray [containerKey][subKey]
+      end if
+   end repeat
+   return objectArray
+end stackArray_SearchNestedBackground

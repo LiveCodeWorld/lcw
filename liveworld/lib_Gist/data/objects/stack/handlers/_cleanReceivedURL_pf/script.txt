@@ -1,0 +1,6 @@
+private function _cleanReceivedURL someURL
+   put word 1 of someURL into someURL
+   if char 1 of someURL = "<" then delete char 1 of someURL
+   if char -1 of someURL = ">" then delete char -1 of someURL
+   return someURL
+end _cleanReceivedURL

@@ -1,0 +1,5 @@
+private function _wikiView
+   if exists (group 1 of me) is false then return empty
+   put the long id of group 1 of me into wikiView
+   return wikiView
+end _wikiView

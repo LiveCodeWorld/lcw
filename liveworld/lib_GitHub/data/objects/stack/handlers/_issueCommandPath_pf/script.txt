@@ -1,0 +1,4 @@
+private function _issueCommandPath repoOwner, someRepo, issueString
+   put "/repos/" & repoOwner & "/" & someRepo & "/" & issueString into restPath
+   return restPath
+end _issueCommandPath

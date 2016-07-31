@@ -1,0 +1,17 @@
+getprop search_LongStackFile [stackName]
+   put the index_View of the target into indexView
+   if exists (indexView) is false then return empty
+   
+   put the index_Folder of indexView into indexFolder
+   put the view_Index of indexView into shortStackFiles
+   repeat for each line shortStackFile in shortStackFiles
+      put indexFolder & shortStackFile into longStackFile
+      if exists (stack longStackFile) is empty then next repeat
+      
+      put the short name of stack longStackFile into testStackname
+      if stackName = testStackname then 
+         return longStackFile
+      end if
+   end repeat
+   return empty
+end search_LongStackFile

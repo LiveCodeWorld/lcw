@@ -1,0 +1,22 @@
+function ide_GetDictionaryTerms
+   /* 
+   Note: this does not return abbreviations and synonyms.
+   
+   Fetch the data for all entries in the LiveCode script dictionary
+   
+   Returns:
+   A numerically keyed array, each element of which is the array
+   of data 
+   pertaining to an entry in the LiveCode script dictionary.
+   */
+   local dictionaryTerms
+   
+   put ideDocsFetchLCSEntries() into scriptDictionaryArray
+   
+   -- some missing things from library (should get all synonyms)
+   put "char" & CR after dictionaryTerms
+   put "chars" & CR after dictionaryTerms
+   
+   _parseDictionary scriptDictionaryArray, dictionaryTerms, dicArray
+   return dictionaryTerms
+end ide_GetDictionaryTerms

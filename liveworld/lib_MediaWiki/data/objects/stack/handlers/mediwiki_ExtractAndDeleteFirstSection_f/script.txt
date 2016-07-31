@@ -1,0 +1,9 @@
+function mediwiki_ExtractAndDeleteFirstSection @wikiText
+   put offset (CR & CR & "==", wikiText) into charNum
+   if charNum = 0 then return empty
+   
+   put char 1 to charNum of wikiText into firstSection
+   add 1 to charNum
+   delete char 1 to charNum of wikiText
+   return firstSection
+end mediwiki_ExtractAndDeleteFirstSection

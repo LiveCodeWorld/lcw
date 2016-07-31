@@ -1,0 +1,11 @@
+function translate_ToGerman someText
+   put urlencode (someText) into qText
+   put google_GetSimpleBrowserApiKey() into apiKey
+   
+   put "https://www.googleapis.com/language/translate/v2?q=" & qText into someURL
+   put "&target=de&source=en" after someURL
+   put "&key=" & apiKey after someURL
+   
+   put url someURL into someJson
+   return someJson
+end translate_ToGerman

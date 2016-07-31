@@ -1,0 +1,19 @@
+command daemon_LogUnRouted requestArray, pLogLine
+   switch
+      case requestArray = "delete"
+         daemon_DeleteLogArray
+         break
+      case requestArray = "start"
+         daemon_DeleteLogArray
+         break
+      case requestArray = "stop"
+         daemon_DisplayLogArray
+         break
+      case requestArray is an array
+         daemon_AddRequestToLogArray requestArray
+         if  pLogLine is not empty then
+            daemon_Log pLogLine
+         end if
+         break
+   end switch
+end daemon_LogUnRouted

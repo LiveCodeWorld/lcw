@@ -1,0 +1,30 @@
+function mouse_WithinCorner someObject
+   put 14 into someWidth
+   put the rect of someObject into objectRect
+   
+   -- BR (3,4)
+   put objectRect into resizeRect
+   put item 3 of resizeRect - someWidth into item 1 of resizeRect
+   put item 4 of resizeRect - someWidth into item 2 of resizeRect
+   if loc_WithinRect(the mouseLoc, resizeRect) then return "BR"
+   
+   -- TL (1,2)
+   put objectRect into resizeRect
+   put item 1 of resizeRect + someWidth into item 3 of resizeRect
+   put item 2 of resizeRect + someWidth into item 4 of resizeRect
+   if loc_WithinRect(the mouseLoc, resizeRect) then return "TL"
+   
+   -- TR (3,2)
+   put objectRect into resizeRect
+   put item 3 of resizeRect - someWidth into item 1 of resizeRect
+   put item 2 of resizeRect + someWidth into item 4 of resizeRect
+   if loc_WithinRect(the mouseLoc, resizeRect) then return "TR"
+   
+   -- BL (1,4)
+   put objectRect into resizeRect
+   put item 1 of resizeRect + someWidth into item 3 of resizeRect
+   put item 4 of resizeRect - someWidth into item 2 of resizeRect
+   if loc_WithinRect(the mouseLoc, resizeRect) then return "BL"
+   
+   return empty
+end mouse_WithinCorner

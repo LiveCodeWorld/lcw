@@ -1,0 +1,22 @@
+on menu_DuplicatesInScript scriptObject
+   put the script_BreakdownArray of scriptObject into breakdownArray
+   put breakdownArray ["uniqueKeys"] into uniqueKeys
+   put breakdownArray ["duplicateArray"] into duplicateArray
+   put breakdownArray ["scriptArray"] into scriptArray
+   
+   if duplicateArray is not an array then
+      answer "No duplicates found!"
+   else
+      sort uniqueKeys
+      display_Outline uniqueKeys, "Unique Hkeys"
+      
+      local depScript, missingHkeys
+      script_FetchFromHkeys uniqueKeys, depScript, missingHkeys
+      put script_ConstructSuite ("Deps", depScript) into depSuite
+      
+      display_Array duplicateArray, "Duplicate Handlers", "Global | Script | Duplicates | Menu", "Global | Script | Duplicates | Line | Menu"
+      
+      put "Dep suite for" && the mobile_Name of scriptObject into someTitle
+      display_Text depSuite, someTitle
+   end if
+end menu_DuplicatesInScript

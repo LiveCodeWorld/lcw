@@ -1,0 +1,58 @@
+private command process_TextCGI
+   try
+      --> Run CGI code
+      -- ~~~~ Brazilian Mad Technology Below ~~~~
+      -- To make Text CGI Files work we do a simple thing.
+      -- First, we create an empty stack and set the script of that stack
+      -- to the contents of the text file.
+      -- then we send "startup" to that stack!
+      -- if we did our job right, it just works.
+      --
+      -- ~~~~ Things to be aware ~~~~
+      --  * NO STDIN so if your CGI makes use of custom libraries that try to read from standard input then
+      -- you're on your on. We recommend using or libCGI or EasyCGI libraries since we trap for them below
+      -- and change the code so it does not need STDIN.
+      --
+      --
+      -- ~~~~ Conclusions ~~~~~
+      -- This routines for using Text CGIs were just created, there are probably lots of places for bugs
+      -- and I'll welcome help. Again this is a server created to aid in the development process and not to be
+      -- used for real world serving.
+      --
+      put it into tCGISource
+      
+      -- let us avoid problems with EasyCGI libraries...
+      -- get lineoffset("EasyCGI.rev", tCGISource)
+      -- put "#" before line it of tCGISource
+      -- put " -- comment added by RevHTTP. Only on the running copy, disk stack is intact." & cr after line it of tCGISource
+      
+      --  ^^^ the above item comments the line that puts EasyCGI core library in use.
+      -- so if the CGI calls any EasyCGI core function then it is handled by RevHTTP EasyCGI compatibility functions.
+      
+      -- We also need to set the default folder so that CGIs can find their stuff.
+      
+      set the revmessageboxredirect to the long ID of btn "http" of cd 1 of stack "http"
+      
+      set the itemdel to "/"
+      get item 1 to -2 of tFile
+      set the defaultFolder to it
+      -- We need to set the gDataA variable because it is used by EasyCGI.
+      put empty into gDataA -- no garbage in my globals!
+      repeat for each line tKey in the keys of gRequestA
+         put gRequestA[tKey] into gDataA[tKey] -- we're copying arrays around...
+      end repeat
+      put "script" into tTempStackName
+      create stack tTempStackName
+      set the script of stack tTempStackName to tCGISource -- this line will only work in the IDE since standalones are crippled by the scriptLimits function.
+      send "startup" to stack tTempStackName -- In this line we see how the magic is done!
+      put empty into gDataA -- clear the global.
+      set the destroyStack of stack tTempStackName to true
+      close stack tTempStackName -- and then, the temporary stack is gone!
+   catch n
+   finally
+      cgiRawOutput lBuffer
+      put empty into gDataA
+      put empty into gRequestA  
+      set the revmessageboxredirect to empty
+   end try
+end process_TextCGI

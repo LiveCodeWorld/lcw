@@ -1,0 +1,29 @@
+on googleEarth_DeconstructView googleView, @latitude, @longitude, @someHeight, @someTilt, @someRotation
+    if char 1 of googleView is "{" then delete char 1 of googleView
+    if char -1 of googleView is "}" then delete char -1 of googleView
+    
+    set the itemdelimiter to ","
+    get item 1 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into latitude
+     
+    set the itemdelimiter to ","
+    get item 2 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into longitude
+    
+    set the itemdelimiter to ","
+    get item 3 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into someHeight
+    
+    set the itemdelimiter to ","
+    get item 4 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into someTilt
+    
+    set the itemdelimiter to ","
+    get item 5 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into someRotation
+end googleEarth_DeconstructView

@@ -1,0 +1,7 @@
+function lcw_ListStackNames newFolderName
+   local pProjectName
+   lcw_OldName newFolderName
+   put project_GetFolder (newFolderName, pProjectName) into someFolder 
+   put folder_ListStackNames (someFolder) into stackNames
+   return stackNames
+end lcw_ListStackNames

@@ -1,0 +1,11 @@
+getprop hKeyArray_ConstructNodeSection [hKey]
+   put the long id of the target into graphController
+   
+   put hkey_GetOverlayData (hKey) into graphData
+   linkArray_DeconstructDataArray graphData, hLinkArray, hIdLinkArray, hIdArray, reversedIdArray
+   put graphData ["geometry"] into geometryArray
+   
+   put the node_TypeArray of graphController into nodeTypeArray
+   put hKeyArray_ConstructNodeSection (hIdArray, hLinkArray, graphController, nodeTypeArray) into nodeSection
+   return nodeSection
+end hKeyArray_ConstructNodeSection

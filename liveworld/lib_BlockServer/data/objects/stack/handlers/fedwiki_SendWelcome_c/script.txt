@@ -1,0 +1,6 @@
+command fedwiki_SendWelcome socketID
+   -- http://localhost:3000/view/welcome-visitors/view/local-site
+   put fedwiki_GetWelcomeJSON() into someJSON
+   daemon_SendText socketID, someJSON
+   return the result
+end fedwiki_SendWelcome

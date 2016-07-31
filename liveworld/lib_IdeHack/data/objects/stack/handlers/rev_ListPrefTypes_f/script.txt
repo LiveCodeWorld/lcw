@@ -1,0 +1,9 @@
+function rev_ListPrefTypes
+   put rev_ListPrefs() into someTable
+   repeat for each line someLine in someTable
+      put item 2 of someLine into prefArray [item 1 of someLine]
+   end repeat
+   put keys (prefArray) into prefTypes
+   sort prefTypes
+   return prefTypes
+end rev_ListPrefTypes

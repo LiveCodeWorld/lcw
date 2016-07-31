@@ -1,0 +1,8 @@
+function view_GetTemplateControl viewName
+   -- see older "view_GetTemplateObject"
+   
+   if exists (stack viewName) is false then return empty
+   if exists (control 1 of card 1 of stack viewName) is false then return empty
+   put the long id of control 1 of card 1 of stack viewName into templateControl
+   return templateControl
+end view_GetTemplateControl

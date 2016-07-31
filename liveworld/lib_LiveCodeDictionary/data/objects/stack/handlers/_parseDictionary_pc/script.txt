@@ -1,0 +1,12 @@
+private command _parseDictionary scriptDictionaryArray, @dictionaryTerms, @dicArray   
+   repeat for each key indexNum in scriptDictionaryArray
+      put scriptDictionaryArray [indexNum]["type"] into entryType 
+      put scriptDictionaryArray [indexNum]["display name"] into dictionaryTerm
+      if entryType is not among the items of "glossary,library" then
+         put dictionaryTerm & CR after dictionaryTerms
+      end if
+      put indexNum into dicArray [entryType][dictionaryTerm]
+   end repeat
+   delete char -1 of dictionaryTerms
+   sort dictionaryTerms
+end _parseDictionary

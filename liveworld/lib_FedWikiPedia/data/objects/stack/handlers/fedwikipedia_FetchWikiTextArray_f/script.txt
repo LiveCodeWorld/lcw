@@ -1,0 +1,5 @@
+function fedwikipedia_FetchWikiTextArray pageTitle, pApiStem
+   put sandbox_ConstructWikiTextFragment (pageTitle) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   return sandboxArray
+end fedwikipedia_FetchWikiTextArray

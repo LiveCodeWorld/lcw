@@ -1,0 +1,10 @@
+function behavior_GetHierarchy targetObject
+   repeat
+      put the behavior of targetObject into bObject
+      if exists(bObject) is false then exit repeat
+      put bObject & CR after bObjects
+      put bObject into targetObject
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_GetHierarchy

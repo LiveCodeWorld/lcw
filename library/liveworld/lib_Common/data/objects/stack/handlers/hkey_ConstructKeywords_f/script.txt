@@ -1,0 +1,6 @@
+function hkey_ConstructKeywords hKeyOrName
+   put word 1 to -1 of item 1 of hKeyOrName into hName
+   put text_SplitIntoWords (hName) into kWords
+   put toLower (kWords) into kWords
+   return kWords
+end hkey_ConstructKeywords

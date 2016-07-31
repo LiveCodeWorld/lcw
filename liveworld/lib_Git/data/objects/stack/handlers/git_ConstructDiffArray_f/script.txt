@@ -1,0 +1,38 @@
+function git_ConstructDiffArray unifiedDiff
+   local diffArray, headerA, parentNum, oStartNum, oEndNum, nStartNum, nEndNum, pBitNum
+   /*
+   Chunk header format is modified to prevent people from accidentally feeding it to patch -p1. Combined diff format was created for review of merge commit changes, and was not meant for apply. The
+   change is similar to the change in the extended index header:
+   
+   @@@ <from-file-range> <from-file-range> <to-file-range> @@@
+   There are (number of parents + 1) @ characters in the chunk header for combined diff format.
+   Unlike the traditional unified diff format, which shows two files A and B with a single column that has - (minus -- appears in A but removed in B), + (plus -- missing in A but added to B), or " " (space
+   -- unchanged) prefix, this format compares two or more files file1, file2,... with one file X, and shows how X differs from each of fileN. One column for each of fileN is prepended to the output line to
+   note how X's line is different from it.
+   */
+   
+   -- @@ -1,16 +1,36 @@
+   git_StripDiffHeader unifiedDiff, headerA
+   put headerA into diffArray ["header"]
+   repeat for each line someLine in unifiedDiff
+      git_DeconstructAtLine someLine, parentNum, oStartNum, oEndNum, nStartNum, nEndNum
+      if the result is true then
+         if pBitNum is not empty then
+            put patchChunk into diffArray ["data"][pBitNum]["patchChunk"]
+            put empty into patchChunk
+         end if
+         add 1 to pBitNum
+         put parentNum into diffArray ["data"][pBitNum]["parentNum"]
+         put oStartNum into diffArray ["data"][pBitNum]["oStartNum"]
+         put oEndNum into diffArray ["data"][pBitNum]["oEndNum"]
+         put nStartNum into diffArray ["data"][pBitNum]["nStartNum"]
+         put nEndNum into diffArray ["data"][pBitNum]["nEndNum"]
+         -- put someLine & CR after patchChunk
+      else
+         put someLine & CR after patchChunk
+      end if
+   end repeat
+   put patchChunk into diffArray ["data"][pBitNum]["patchChunk"]
+   
+   return diffArray
+end git_ConstructDiffArray

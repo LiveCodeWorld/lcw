@@ -1,0 +1,21 @@
+getprop missing_HkeyArray
+   put the rugged_ID of the target into rObject
+   
+   put the mainstack_HkeyArray of rObject into hkeyArray
+   put the missing_ExternalHkeys of rObject into externalToObjectHkeys
+   
+   put hkeyArray_ConstructObjectArray (hkeyArray) into objectArray
+   put objectArray [rObject] into internalHkeys
+   delete variable objectArray [rObject]
+   put keys (objectArray) into depObjects
+   -- line_Delete rObject, depObjects
+   
+   put depObjects into missingArray ["depObjects"]
+   put objectArray into missingArray ["externalToObjectArray"]
+   put externalToObjectHkeys into missingArray ["externalToObjectHkeys"]
+   
+   -- could also look for hKeys that can;t be found and get them from the library
+   -- and for depObjects that are not stacks / libraries
+   
+   return missingArray
+end missing_HkeyArray

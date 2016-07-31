@@ -1,0 +1,8 @@
+getprop some_Names [mTarget]
+   put the openstacks into stackNames
+   -- filter stackNames without "rev*"
+   sort stackNames
+   return stackNames
+   
+   return someNames & ",-," & "LiveCode Dictionary,All open stacks"
+end some_Names

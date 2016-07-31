@@ -1,0 +1,10 @@
+function stack_LoadedPaths
+   put the mainstacks into stackNames
+   repeat for each line stackName in stackNames
+      put the filename of stack stackName into theFilePath
+      if theFilePath is empty then put stackName into theFilePath
+      put theFilePath & CR after stackNamePaths
+   end repeat
+   delete char -1 of stackNamePaths
+   return stackNamePaths
+end stack_LoadedPaths

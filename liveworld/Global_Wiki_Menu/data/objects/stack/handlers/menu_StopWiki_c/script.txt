@@ -1,0 +1,8 @@
+on menu_StopWiki
+   if the platform = "MacOS" then
+      kill process wiki
+   else
+      close process wiki
+   end if
+   -- put the openprocesses
+end menu_StopWiki

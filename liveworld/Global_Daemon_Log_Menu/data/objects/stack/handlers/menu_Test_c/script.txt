@@ -1,0 +1,5 @@
+on menu_Test treeView
+   put the tree_Field of treeView into treeField
+   put the tree_Array of treeView into treeArray
+   put json_FromArray (treeArray)
+end menu_Test

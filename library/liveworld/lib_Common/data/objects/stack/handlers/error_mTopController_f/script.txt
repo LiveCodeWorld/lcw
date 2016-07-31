@@ -1,0 +1,11 @@
+function error_mTopController mTopController, mTopTitle, menuRecord
+   if exists(mTopController) is false then
+      put "No controller exists for menu" && mTopTitle & CR after someError
+      put "-->" && mTopTitle & CR & "-" & CR after someError
+      put "menuRecord:" && menuRecord & CR after someError
+      -- log_Error someError, ("mouseDown error: mController does not exist for" && mTopTitle), true
+      return true
+   else
+      return false
+   end if
+end error_mTopController

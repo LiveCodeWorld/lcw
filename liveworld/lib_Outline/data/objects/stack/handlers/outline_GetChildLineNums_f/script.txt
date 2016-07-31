@@ -1,0 +1,4 @@
+function outline_GetChildLineNums startOsLineNum, tabbedOutline
+    put outline_GetChildArray(startOsLineNum, tabbedOutline) into lineNumKeyArray
+    return keys(lineNumKeyArray)
+end outline_GetChildLineNums

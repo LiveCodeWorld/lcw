@@ -1,0 +1,18 @@
+private command add_SnippetToThumbPageArray @pageArray, snippetArray, pVideoID
+   deconstruct_VideoSnippetArray snippetArray, videoTitle, videoDescription, videoID, thumbNailURL, publishedAt, episodeNum, tagArray, thumbNailWidth
+   if pVideoID is not empty then put pVideoID into videoID
+   put word 1 to 3 of item 2 of publishedAt into publishedAt  -- from internet date
+   
+   put youtube_ConstructWatchUrl (videoID) into youtubeURL
+   
+   -- put "100%" into thumbNailWidth
+   thumbnail_SetSmall snippetArray, thumbNailURL, thumbNailWidth
+   
+   put fedwiki_ConstructLink (videoTitle) & ". Broadcast on" && publishedAt & "." into videoCaption 
+   put fedwiki_ConstructImageHtml (thumbNailURL, videoCaption, youtubeURL, "- youtube", thumbNailWidth) into imageHTML 
+   fedwiki_AddHtmlToPageArray pageArray, imageHTML
+   
+   -- put fedwiki_ConstructImageArray (someImage, imageType, plainCaption) into imageArray
+   -- fedwiki_PageArrayAddToEnd imageArray, pageArray
+   return videoTitle
+end add_SnippetToThumbPageArray

@@ -1,0 +1,6 @@
+function graph_ConstructCluster idArray, linkArray
+   -- seem to be the hack for nested
+   put empty into pGraphNodeType
+   put overlayArray_DotNestedObjectClusters (idArray, linkArray, pGraphNodeType) into clusterSection
+   return clusterSection
+end graph_ConstructCluster

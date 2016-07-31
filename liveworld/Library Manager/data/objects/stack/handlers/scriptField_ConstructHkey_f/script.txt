@@ -1,0 +1,53 @@
+function scriptField_ConstructHkey selText, someScript, lastCharNum
+   put char 1 to lastCharNum of someScript into testScript
+   put the number of lines of testScript into lineNum
+   put line lineNum of someScript into scriptLine
+   put line lineNum of testScript into testScriptLine
+   
+   scriptField_SetTokenInfo scriptLine, testScriptLine, thisTokenNum, nextTokenNum, prevTokenNum, thisToken, nextToken, previousToken
+   switch
+      case previousToken is among the items of "then,else"
+         delete token 1 to prevTokenNum of scriptLine
+         delete token 1 to prevTokenNum of testScriptLine
+         scriptField_SetTokenInfo scriptLine, testScriptLine, thisTokenNum, nextTokenNum, prevTokenNum, thisToken, nextToken, previousToken
+         break
+   end switch
+   
+   -- put selText into hName
+   put thisToken into hName
+   switch
+      case script_DictionaryTerm (thisToken) is true
+         return empty
+      case thisTokenNum = 1
+         -- maybe complete / incomplete command
+         put "c" into hType
+         break
+      case nextToken = "("
+         put "f" into hType
+         break
+      case previousToken = "the"
+         put token (thisTokenNum - 2) of line lineNum of someScript into setOrGetToken
+         if setOrGetToken = "set" then 
+            put "s" into hType
+         else
+            put "g" into hType
+         end if
+         break
+      case previousToken = "put"
+         -- an unfinished function
+         put "f" into hType
+         break
+      case previousToken is among the items of "call,send,dispatch"
+         put token 1 of thisToken into hName
+         put "c" into hType
+         break 
+      case the number of words of thisToken > 1
+         -- it was a quoted string
+         return empty
+      default
+         return empty
+   end switch
+   
+   put hName,hType into shortHKey
+   return shortHKey
+end scriptField_ConstructHkey

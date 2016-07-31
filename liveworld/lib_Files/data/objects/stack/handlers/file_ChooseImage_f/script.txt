@@ -1,0 +1,22 @@
+function file_ChooseImage preferredFolder, anyFile, someType, comment
+    -- was "ask_ImageFile" (param order changed)
+    
+    if comment is empty then put "Select an image..." into comment
+     
+    if anyFile is true then
+        put file_ChooseAny(preferredFolder, comment) into imageFile
+        -- now could do a check to see if it is an image?
+    else if the platform is "MacOs" then
+        put _askMacImage(someType, preferredFolder, comment) into imageFile
+    else if the platform is "Linux" then
+        put _askLinuxImage(someType, preferredFolder, comment) into imageFile
+    else
+        put _askWindowsImage(someType, preferredFolder, comment) into imageFile
+    end if
+     
+    if imageFile is empty then
+        exit to top
+    else
+        return imageFile
+    end if
+end file_ChooseImage

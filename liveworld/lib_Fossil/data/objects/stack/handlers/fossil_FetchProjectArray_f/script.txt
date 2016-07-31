@@ -1,0 +1,4 @@
+function fossil_FetchProjectArray fossilFile
+   put library_FetchArray ("Fossil") into fossilArray
+   return fossilArray [fossilFile]
+end fossil_FetchProjectArray

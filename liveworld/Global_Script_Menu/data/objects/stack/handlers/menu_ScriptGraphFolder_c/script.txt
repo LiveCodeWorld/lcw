@@ -1,0 +1,4 @@
+on menu_ScriptGraphFolder scriptObject
+   put the overlay_Folder of scriptObject into overlayFolder
+   finder_Reveal overlayFolder
+end menu_ScriptGraphFolder

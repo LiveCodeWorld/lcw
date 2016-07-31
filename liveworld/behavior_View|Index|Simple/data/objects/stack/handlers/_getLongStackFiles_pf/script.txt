@@ -1,0 +1,17 @@
+private function _getLongStackFiles shortStackFiles
+   put the index_Folder of me into indexFolder  
+   if indexFolder is empty then
+      -- let's assume the stacks are known
+      put stackFile_PathsFromShortFiles (shortStackFiles) into stackPaths
+      return stackPaths
+   else 
+      repeat for each line shortStackFile in shortStackFiles
+         put indexFolder & shortStackFile into longStackFile
+         if exists (stack longStackFile) then 
+            put longStackFile & CR after longStackFiles
+         end if
+      end repeat
+      delete char -1 of longStackFiles
+      return longStackFiles
+   end if
+end _getLongStackFiles

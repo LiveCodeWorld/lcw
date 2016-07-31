@@ -1,0 +1,5 @@
+function dot_NodeColourOptions
+   put colour_BaseColourOutline() into colourOutline
+   get outline_ConstructBranchSections(colourOutline, true)
+   return "Ask,-," & it
+end dot_NodeColourOptions

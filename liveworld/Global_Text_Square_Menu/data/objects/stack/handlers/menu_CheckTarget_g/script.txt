@@ -1,0 +1,4 @@
+getprop menu_CheckTarget [mTarget]
+   put the sivaSquareText_View of mTarget into sivaTraitView
+   return exists (sivaTraitView)
+end menu_CheckTarget

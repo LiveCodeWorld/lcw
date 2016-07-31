@@ -1,0 +1,30 @@
+command date_Wc3Datetime @revisionDate
+   -- https://www.w3.org/TR/NOTE-datetime
+   
+   replace "T" with return in revisionDate
+   put line 1 of revisionDate into someDate
+   put line 2 of revisionDate into someTime
+   
+   replace "-" with comma in someDate
+   
+   set the itemdelimiter to "+"
+   put item 1 of someTime into colonTime
+   put item 2 of someTime into colonTimeDifference
+   replace ":" with empty in colonTimeDifference
+   put format("%04d", colonTimeDifference) into timeDifference
+   -- put ":" after char 2 of timeDifference
+   
+   replace ":" with comma in colonTime
+   
+   set the itemdelimiter to comma
+   put someDate into someDateItems
+   put colonTime into item 4 of someDateItems
+   
+   put 0 into item 7 of someDateItems
+   
+   convert someDateItems to internet date
+   put timeDifference into char -4 to -1 of someDateItems
+   -- replace space with empty in someDateItems
+   
+   put someDateItems into revisionDate
+end date_Wc3Datetime

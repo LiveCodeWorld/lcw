@@ -1,0 +1,4 @@
+function finder_GetFrontApplication
+    -- more useful to get all the application names
+    return appleScript_DoLine("system Events", "set myApp to name of first application process whose frontmost is true")	
+end finder_GetFrontApplication

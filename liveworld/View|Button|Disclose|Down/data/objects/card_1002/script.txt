@@ -1,0 +1,54 @@
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+-- getprop menu_Target [mTitlePath]
+   switch
+      case mTitlePath contains "Some|Path|To|Menu"
+         break
+      default
+         pass menu_Target
+   end switch
+end menu_Target
+
+-- getprop menu_CheckTarget [mTarget]
+   return true
+end menu_CheckTarget
+
+
+--> Global | Button | Disclose | Down | Menu
+-
+[[ _FetchHandler (menu_IsOpaque,c) ]]
+
+[[ _FetchHandler (is_Opaque,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Button,c) ]]
+
+[[ _FetchHandler (submenu_View,c) ]]
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Development,c) ]]
+
+
+--> Global | Button | Disclose | Down | Menu | Props
+-
+[[ _FetchHandler (some_Prop,g) ]]
+
+[[ _FetchHandler (some_Props,g) ]]
+
+
+--> Global | Button | Disclose | Down | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Test,g) ]]
+
+
+--> Development | Menu
+-
+[[ _FetchHandler (menu_Dev,c) ]]

@@ -1,0 +1,10 @@
+function margins_Add someMargins, anotherMargins
+   margin_Normalize someMargins, leftT, topT, rightT, bottomT  
+   margin_Normalize anotherMargins, leftM, topM, rightM, bottomM   
+   add leftM to leftT
+   add topM to topT
+   add rightM to rightT
+   add bottomM to bottomT
+   
+   return leftT,topT,rightT,bottomT  
+end margins_Add

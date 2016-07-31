@@ -1,0 +1,8 @@
+function linkArray_ConstructDataArray linkArray, idLinkArray, idArray
+   put linkArray into dataArray ["linkArray"]
+   put idLinkArray into dataArray ["idLinkArray"]
+   put idArray into dataArray ["idArray"]
+   put array_ConstructReverseDictionary (idArray) into reversedIdArray
+   put reversedIdArray into dataArray ["reverseIdArray"]
+   return dataArray
+end linkArray_ConstructDataArray

@@ -1,0 +1,5 @@
+command project_StoreHandler hKey, someHandler
+   put project_HandlerFile (hKey, false) into someFile
+   if someFile is empty then return empty
+   put someHandler into url ("binfile:" & someFile)
+end project_StoreHandler

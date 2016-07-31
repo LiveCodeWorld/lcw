@@ -1,0 +1,9 @@
+setprop record_ViewName vName
+   put the rev_DataGrid of me into revDataGrid
+   
+   put view_GetTemplateObject (vName) into templateObject
+   if exists(templateObject) is false then return empty
+   put the long id of templateObject into templateObject
+   set the dgProps ["row template"] of revDataGrid to templateObject
+   return templateObject
+end record_ViewName

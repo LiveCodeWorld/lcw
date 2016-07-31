@@ -1,0 +1,12 @@
+command linkArray_WalkKeys linkArray, someKey, @subLinkArray
+   if someKey is among the keys of subLinkArray then
+      return empty -- lets not recurse!
+   end if
+   
+   put linkArray [someKey] into subKeys
+   put subKeys into subLinkArray [someKey]
+   
+   repeat for each line subKey in subKeys
+      linkArray_WalkKeys linkArray, subKey, subLinkArray
+   end repeat  
+end linkArray_WalkKeys

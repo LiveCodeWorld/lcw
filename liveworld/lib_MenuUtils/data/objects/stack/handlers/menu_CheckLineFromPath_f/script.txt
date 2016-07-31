@@ -1,0 +1,8 @@
+function menu_CheckLineFromPath mPath, someMenu, someBoolean, pathDelim
+   if pathDelim is empty then put "|" into pathDelim
+   put outline_PathOffset (mPath, someMenu, pathDelim)into lineNum
+   if lineNum = 0 then return someMenu
+   
+   put menu_SetCheckedLine(lineNum, someMenu, someBoolean) into newMenu
+   return newMenu
+end menu_CheckLineFromPath

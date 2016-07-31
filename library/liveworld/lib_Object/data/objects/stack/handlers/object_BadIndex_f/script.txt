@@ -1,0 +1,9 @@
+function object_BadIndex objectIndex
+   repeat for each line someObject in objectIndex
+      if exists(someObject) is false then
+         put someObject & CR after badObjects
+      end if
+   end repeat
+   delete char -1 of badObjects
+   return badObjects
+end object_BadIndex

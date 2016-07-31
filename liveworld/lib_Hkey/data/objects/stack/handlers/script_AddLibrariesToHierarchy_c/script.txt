@@ -1,0 +1,5 @@
+command script_AddLibrariesToHierarchy @objectIndex, frontObjects, usedStacks, backObjects 
+   if usedStacks is not empty then put usedStacks & CR before objectIndex
+   if backObjects is not empty then put backObjects & CR before objectIndex
+   if frontObjects is not empty then put CR & frontObjects after objectIndex
+end script_AddLibrariesToHierarchy

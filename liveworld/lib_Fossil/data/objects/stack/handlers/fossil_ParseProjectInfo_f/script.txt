@@ -1,0 +1,13 @@
+function fossil_ParseProjectInfo projectInfo
+   -- get colon_ToArray (projectInfo) -- equivalent to "fossil_ParseProjectInfo"? 
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in projectInfo
+      put item 1 of someLine into someKey
+      if someKey is among the items of fossil_GoodKeys() then
+         put word 1 to -1 of item 2 to -1 of someLine into someValue
+         put someValue into projectArray [someKey]
+      end if
+   end repeat
+   return projectArray
+end fossil_ParseProjectInfo

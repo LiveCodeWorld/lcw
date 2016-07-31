@@ -1,0 +1,13 @@
+private command _loadUsefulStuffAfterUsingLibraries projectName
+   -- the code beow requires the above libraries to be used
+   -- should be stored as arrays in the projects folder
+   -- hack for now (we use "default")
+   
+   /*
+   project_LoadGlobalPrefs projectName
+   project_LoadGlobalHarray projectName -- this clobbers any previously loaded hArray
+   project_LoadGlobalArray projectName
+   */
+   
+   lcw_IndexAllScripts -- this adds to any previously loaded hArray (as in above)
+end _loadUsefulStuffAfterUsingLibraries

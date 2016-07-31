@@ -1,0 +1,8 @@
+function library_StandardBehaviorFolder pShortFileBit
+   put library_PluginFolder ("opn_Behaviors/", true) into standardFolder
+   if there is a folder standardFolder then
+      return standardFolder & pShortFileBit
+   else
+      return empty
+   end if
+end library_StandardBehaviorFolder

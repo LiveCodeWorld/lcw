@@ -1,0 +1,15 @@
+function script_MatchEnd handlerName, startHandler, someScript
+   put CR after someScript -- in case handler is at end
+   put "(?mi)^\s*(" & "end" & " +" & handlerName & ")\W" into regExp
+   
+   -- this will fail if the end has a space before it (can happen)
+   -- put "(?mi)^(" & "end" & " +" & handlerName & ")\W" into regExp
+   
+   delete char 1 to startHandler of someScript
+   if matchchunk(someScript, regExp, startEndHandlerLine, endH) is true then
+      put startHandler + endH - 0 into endHandler
+      return endHandler
+   else
+      return empty
+   end if
+end script_MatchEnd

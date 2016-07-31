@@ -1,0 +1,27 @@
+function table_ConstructArrayFromTree xmlID, tableNode
+   local tableArray
+   
+   -- parse the table header
+   put tableNode & "/thead" into theadNode
+   table_ParseSection tableArray, xmlID, theadNode, "theader"
+   
+   
+   -- parse the table body
+   put tableNode & "/tbody" into tbodyNode
+   table_ParseSection tableArray, xmlID, tbodyNode, "tbody"
+   
+   /*
+   put revXMLChildNames (xmlID, tbodyNode, CR, "tr", true) into childNames
+   put the number of lines of childNames into maxChildNum
+   repeat with lineNum = 1 to maxChildNum
+      put tbodyNode & "/" & line lineNum of childNames into childNode
+      put "/td/p" after childNode
+      get revXMLNodeContents (xmlID, childNode)
+      put it into tableArray ["tbody"][lineNum]
+   end repeat
+   */
+   
+   -- should do footer as well
+   
+   return tableArray
+end table_ConstructArrayFromTree

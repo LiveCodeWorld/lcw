@@ -1,0 +1,5 @@
+function hkeyArray_ExtractSubArray hKey, hkeyArray
+   local subArray
+   hkeyArray_ConstructSubArray hKey, hkeyArray, subArray
+   return subArray
+end hkeyArray_ExtractSubArray

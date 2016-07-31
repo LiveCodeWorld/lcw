@@ -1,0 +1,23 @@
+command fedwiki_ActionAdd pageSlug, actionArray, pFedwikiDomain, pLocalWikiFolder
+   local pageArray
+   
+   put fedwiki_FetchLocalOrDefaultArray (pageSlug) into pageArray
+   
+   put actionArray ["id"] into itemID
+   put actionArray ["after"] into afterID
+   put actionArray ["item"]["type"] into itemType
+   
+   switch itemType
+      case "factory"
+         -- fedwiki_AddFactoryToPageArray pageArray, itemID
+         put fedwiki_ConstructFactoryArray (itemID) into itemArray
+         fedwiki_PageArrayAddToEnd itemArray, pageArray
+         break
+      default
+         display_Array actionArray, ("Add undefined" && itemType)
+   end switch
+   
+   put json_FromArray (pageArray) into pageJSON  
+   fedwiki_SetLocalPageJson pageSlug, pageJSON, pFedwikiDomain, pLocalWikiFolder
+   return pageArray
+end fedwiki_ActionAdd

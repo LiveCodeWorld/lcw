@@ -1,0 +1,40 @@
+setprop field_Style fieldStyle
+   put the field_Object of the target into fieldObject
+   if exists(fieldObject) is false then return empty
+   
+   set the uOPN ["field_Style"] of fieldObject to fieldStyle
+   
+   switch fieldStyle
+      case "Transparent"
+         set the style of fieldObject to "transparent"
+         break
+      case "Scrolling"
+         lock screen
+         put the rect of fieldObject into oRect
+         set the listBehavior of fieldObject to false
+         set the dontWrap of fieldObject to false
+         if the style of fieldObject is "scrolling" then
+            set the style of fieldObject to "plain"
+         else
+            set the style of fieldObject to "scrolling"
+         end if
+         set the view_Rect of fieldObject to oRect
+         unlock screen
+         break
+      case "Index"
+         set the dontWrap of fieldObject to true
+         if the listBehavior of fieldObject is true then
+            set the listBehavior of fieldObject to false
+         else
+            set the listBehavior of fieldObject to true
+         end if
+         break
+      case "Wide margins"
+         set the wideMargins of fieldObject to not the wideMargins of fieldObject 
+         break
+      case "Small scrollbar"
+         get the scrollbarWidth of fieldObject
+         opn_Notify it
+         break
+   end switch
+end field_Style

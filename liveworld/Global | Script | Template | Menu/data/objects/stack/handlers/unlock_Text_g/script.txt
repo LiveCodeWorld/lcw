@@ -1,0 +1,4 @@
+getprop unlock_Text [textDisplayView]
+   put the lock_Text of textDisplayView into someBoolean
+   return someBoolean is false
+end unlock_Text

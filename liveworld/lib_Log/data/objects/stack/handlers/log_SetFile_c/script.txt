@@ -1,0 +1,6 @@
+command log_SetFile logFile, pLogName
+   global gOPN
+
+   if pLogName is empty then put the log_Name of me into pLogName
+   put logFile into gOPN ["log_ErrorFile"][pLogName]
+end log_SetFile

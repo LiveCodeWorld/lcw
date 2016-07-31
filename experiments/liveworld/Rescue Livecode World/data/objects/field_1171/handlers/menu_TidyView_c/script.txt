@@ -1,0 +1,6 @@
+on menu_TidyView selectedViewStackObject
+   set the behavior of cd 1 of selectedViewStackObject to the name of stack "behavior_ViewTemplateCard"
+   put the template_View of cd 1 of selectedViewStackObject into templateView   
+   set the urip_Type of templateView to "view template"
+   edit the script of templateView
+end menu_TidyView

@@ -1,0 +1,5 @@
+function fedwiki_GetWelcomeJSON
+   put fedwiki_GetLocalPageJson ("welcome-visitors") into someJSON
+   if someJSON is empty then put daemon_GetRouteData ("welcome-visitors.json") into someJSON -- get the default
+   return someJSON
+end fedwiki_GetWelcomeJSON

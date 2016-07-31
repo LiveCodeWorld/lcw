@@ -1,0 +1,18 @@
+on menu_ReplaceFooter mTarget
+   put the wiki_View of mTarget into wikiView
+   put the footer_View of mTarget into footerView
+   
+   put the footer_Array of me into footerArray
+   put footerArray ["itemArray"] into footerItemArray
+   
+   lock screen   
+   set the control_Type of footerView to "navbar"  
+   
+   set the itemArray of footerView to footerItemArray
+   set the backgroundcolor of footerView to "white"
+   set the showborder of footerView to false
+   set the itemstyle of footerView to "icons"
+   unlock screen
+   
+   put the script of footerView
+end menu_ReplaceFooter

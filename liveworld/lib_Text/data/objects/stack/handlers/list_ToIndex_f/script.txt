@@ -1,0 +1,7 @@
+function list_ToIndex someList
+   repeat for each item someItem in someList
+      put word 1 to -1 of someItem & CR after someIndex
+   end repeat
+   delete char -1 of someIndex
+   return someIndex
+end list_ToIndex

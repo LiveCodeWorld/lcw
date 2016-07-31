@@ -1,0 +1,10 @@
+command object_DeconstructPropertyArray objectPropArray, @revPropertyArray, @someScript, @objectText, @objectHtml, @customArray, @someImage
+   -- object_DeconstructPropertyArray objectPropArray, revPropText, someScript, objectText, objectHtml, metadataArray, customArray, someImage
+   
+   put objectPropArray ["rev"] into revPropertyArray
+   put objectPropArray ["text"] into objectText
+   put objectPropArray ["htmlText"] into objectHtml   
+   put objectPropArray ["script"] into someScript
+   put objectPropArray ["image"] into someImage
+   put objectPropArray ["custom"] into customArray
+end object_DeconstructPropertyArray

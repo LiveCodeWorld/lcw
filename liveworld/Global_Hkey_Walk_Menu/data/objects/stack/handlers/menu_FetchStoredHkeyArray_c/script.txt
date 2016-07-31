@@ -1,0 +1,5 @@
+on menu_FetchStoredHkeyArray hKey
+   put LocalArray ["project_FetchHkeyArray"] into hKeyArray
+   -- put project_FetchHkeyArray (hKey) into hKeyArray
+   display_HKeyArray hKeyArray, hkey
+end menu_FetchStoredHkeyArray

@@ -1,0 +1,13 @@
+command object_EditProperty someObjects
+   -- send "revBuildPropertyPalette someObject" to stack "revTemplatePalette"
+   dispatch "revBuildPropertyPalette" to stack "revTemplatePalette" with someObjects
+   return the result
+   
+   -- this is what the LiveCode IDE uses...
+   put the long id of fld "Controls" of cd "Cards and Controls" of stack "revApplicationOverview" into controlField
+   if value ("revCardOpen()", controlField) is true then
+      send "revBuildPropertyPalette" to stack "revTemplatePalette"
+   else
+      dispatch "revBuildPropertyPalette" to stack "revTemplatePalette" with someObjects
+   end if
+end object_EditProperty

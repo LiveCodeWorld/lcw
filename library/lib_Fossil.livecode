@@ -1,0 +1,1638 @@
+﻿script "lib_Fossil"
+--> MetaData
+-
+license: GPLv3
+name: lib_Fossil
+type: script library
+version: 0.6
+
+/*
+A stack for interfacing with the fossil cli.
+*/
+
+
+--> Fossil | File | History
+-
+getprop fossil_StackHistory [pNotBrief]
+   put the mainstack_File of the target into someFile
+   return fossil_FileHistory (someFile, pNotBrief)
+end fossil_StackHistory
+
+getprop fossil_ScriptHistory [pNotBrief]
+   put the script_File of the target into someFile
+   return fossil_FileHistory (someFile, pNotBrief)
+end fossil_ScriptHistory
+
+getprop fossil_StackHistoryArray
+   put the mainstack_File of the target into someFile
+   put fossil_FileHistory (someFile, true) into historyTable
+   put fossil_ParseFileHistory (historyTable) into dataArray
+   return dataArray
+end fossil_StackHistoryArray
+
+getprop fossil_ScriptHistoryArray
+   put the script_File of the target into someFile
+   put fossil_FileHistory (someFile, true) into historyTable
+   put fossil_ParseFileHistory (historyTable) into dataArray
+   return dataArray
+end fossil_ScriptHistoryArray
+
+function fossil_FileHistory fileOrRelativeFile, pNotBrief, pFossilCheckoutFolder
+   /*
+   fossil finfo {?-l|--log? / -s|--status / --p|--print} FILENAME
+   
+   Print the complete change history for a single file going backwards
+   in time.  The default is -l.
+   
+   For the -l|--log option: If "-b|--brief" is specified one line per revision
+   is printed, otherwise the full comment is printed.  The "--limit N"
+   and "--offset P" options limits the output to the first N changes
+   after skipping P changes.
+   
+   In the -s form prints the status as <status> <revision>.  This is
+   a quick status and does not check for up-to-date-ness of the file.
+   
+   The -p form, there's an optional flag "-r|--revision REVISION".  The
+   specified version (or the latest checked out version) is printed to
+   stdout.
+   */
+   
+   put "fossil finfo" into someshell
+   put " --log" after someshell
+   if pNotBrief is not true then put " --brief" after someshell
+   -- put " --status" after someshell
+   
+   local relativeFile
+   fossil_SetFileParams fileOrRelativeFile, pFossilCheckoutFolder, relativeFile
+   shell_BashParamEscape relativeFile
+   put space & relativeFile after someShell
+   
+   fossil_ExecuteShell someShell, pFossilCheckoutFolder
+   put the result into historyTable
+   if pNotBrief is true then replace (CR & "           ") with space in historyTable
+   return historyTable
+end fossil_FileHistory
+
+function fossil_FileVersion fileOrRelativeFile, pRevisionOrArtifactHash, pFossilCheckoutFolder
+   /*
+   fossil finfo {?-l|--log? / -s|--status / --p|--print} FILENAME
+   
+   Print the complete change history for a single file going backwards
+   in time.  The default is -l.
+   
+   For the -l|--log option: If "-b|--brief" is specified one line per revision
+   is printed, otherwise the full comment is printed.  The "--limit N"
+   and "--offset P" options limits the output to the first N changes
+   after skipping P changes.
+   
+   In the -s form prints the status as <status> <revision>.  This is
+   a quick status and does not check for up-to-date-ness of the file.
+   
+   The -p form, there's an optional flag "-r|--revision REVISION".  The
+   specified version (or the latest checked out version) is printed to
+   stdout.
+   */
+   
+   put "fossil finfo" into someshell
+   put " --print" after someshell
+   
+   if pRevisionOrArtifactHash is not empty then
+      put space & "--revision" && pRevisionOrArtifactHash after someShell
+   end if
+   
+   local relativeFile
+   fossil_SetFileParams fileOrRelativeFile, pFossilCheckoutFolder, relativeFile
+   shell_BashParamEscape relativeFile
+   put space & relativeFile after someShell
+   
+   fossil_ExecuteShell someShell, pFossilCheckoutFolder
+   return the result
+end fossil_FileVersion
+
+function fossil_ParseFileHistory historyTable
+   /*
+   History of opn_TextStacks/Fossil Project Inspector/objects/substacks/Fossil File Status/objects/card_1002/script.txt
+   2011-10-20 [cece332909] Work on script creation of fossil projects. (user: david, artifact: [072a35a0d3])
+   */
+   
+   set the itemdelimiter to ":"
+   if item 2 of historyTable contains "no history for file" then return empty
+   
+   if word 1 to 2 of historyTable = "History of" then delete line 1 of historyTable
+   put 1 into indexNum
+   repeat for each line someLine in historyTable
+      put word 1 of someLine into commitDate
+      replace "-" with comma in commitDate
+      put ",1,1,1,1" after commitDate
+      convert commitDate from dateitems to long english date
+      put commitDate into indexArray [indexNum]["commitDate"]
+      put token 2 of word 2 of someLine into indexArray [indexNum]["commitHash"]
+      put token 2 of word -1 of someLine into indexArray [indexNum]["artifactHash"]
+      put token 1 of word -3 of someLine into indexArray [indexNum]["userName"]
+      put word 3 to -5 of someLine into indexArray [indexNum]["commitComment"]
+      
+      add 1 to indexNum
+   end repeat
+   return indexArray
+end fossil_ParseFileHistory
+
+
+--> Fossil | Diff
+-
+/*
+Usage: fossil diff|gdiff ?OPTIONS? ?FILE1? ?FILE2 ...?
+
+Show the difference between the current version of each of the FILEs
+specified (as they exist on disk) and that same file as it was checked
+out.  Or if the FILE arguments are omitted, show the unsaved changed
+currently in the working check-out.
+
+If the "--from VERSION" or "-r VERSION" option is used it specifies
+the source check-in for the diff operation.  If not specified, the 
+source check-in is the base check-in for the current check-out.
+
+If the "--to VERSION" option appears, it specifies the check-in from
+which the second version of the file or files is taken.  If there is
+no "--to" option then the (possibly edited) files in the current check-out
+are used.
+
+The "-i" command-line option forces the use of the internal diff logic
+rather than any external diff program that might be configured using
+the "setting" command.  If no external diff program is configured,
+then the "-i" option is a no-op.  The "-i" option converts "gdiff" into "diff".
+
+The "-N" or "--new-file" option causes the complete text of added or
+deleted files to be displayed.
+
+Options:
+--context|-c N      Use N lines of context 
+--from|-r VERSION   select VERSION as source for the diff
+--new-file|-N       output complete text of added or deleted files
+-i                  use internal diff logic
+--to VERSION        select VERSION as target for the diff
+--side-by-side|-y   side-by-side diff
+--width|-W N        Width of lines in side-by-side diff
+*/
+
+function fossil_CompareWithFileOnBranch fileOrRelativeFile, branchName, pFossilCheckoutFolder, pToCurrent, pSideBySide
+   local relativeFile
+   fossil_SetFileParams fileOrRelativeFile, pFossilCheckoutFolder, relativeFile
+   shell_BashParamEscape relativeFile
+   put space & relativeFile after someShell
+   
+   put "fossil diff" into someShell
+   if pSideBySide is not false then put space & "--side-by-side" after someShell
+   
+   put space & "--from" && kwote (branchName) after someShell
+   if pToCurrent is true then put space & "--to current" after someShell
+   put space & relativeFile after someShell
+   
+   fossil_ExecuteShell someShell, pFossilCheckoutFolder
+   return the result
+end fossil_CompareWithFileOnBranch
+
+function fossil_FileDiff fileOrRelativeFile, pSideBySide, pToCurrent
+   -- by default this compares the exported file with the previous commit.
+   put "fossil diff" into someShell
+   if pSideBySide is not false then put space & "--side-by-side" after someShell
+   if pToCurrent is true then put space & "--from previous --to current" after someShell
+   
+   local relativeFile, fossilCheckoutFolder
+   fossil_SetFileParams fileOrRelativeFile, fossilCheckoutFolder, relativeFile
+   shell_BashParamEscape relativeFile
+   put space & relativeFile after someShell
+   
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   return the result
+end fossil_FileDiff
+
+function fossil_DiffBranch fromBranchName, fossilCheckoutFolder, pSideBySide
+   return fossil_Diff (fossilCheckoutFolder, fromBranchName, empty, pSideBySide)
+   
+   put "fossil diff" into someShell
+   if pSideBySide is not false then put space & "--side-by-side" after someShell
+   put space & "--from" && kwote (fromBranchName) after someShell
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   return the result
+end fossil_DiffBranch
+
+function fossil_Diff fossilCheckoutFolder, pFromBranchName, pToBranchName, pSideBySide
+   put "fossil diff" into someShell
+   if pSideBySide is not false then put space & "--side-by-side" after someShell
+   if pFromBranchName is not empty then
+      put space & "--from" && kwote (pFromBranchName) after someShell
+      if pToBranchName is not empty then
+         put space & "--to" && kwote (pToBranchName) after someShell
+      end if
+   end if
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   return the result
+end fossil_Diff
+
+command fossil_SetFileParams fileOrRelativeFile, @fossilCheckoutFolder, @relativeFile
+   if fossilCheckoutFolder is empty then
+      put fileOrRelativeFile into someFile
+      if there is not a file someFile then return empty
+      
+      -- put fossil_InfoArray (someFile) into fossilStatusArray
+      -- put fossilStatusArray ["local-root"] into fossilCheckoutFolder
+      put fossil_FindCheckoutFolder (someFile) into fossilCheckoutFolder
+      if fossilCheckoutFolder is empty then return empty
+      
+      if someFile begins with fossilCheckoutFolder then -- a safety check
+         folder_Format fossilCheckoutFolder
+         put fileOrRelativeFile into relativeFile
+         delete char 1 to (the number of chars of fossilCheckoutFolder) of relativeFile
+      else
+         breakpoint -- a strange result?
+         return empty
+      end if
+   else
+      put fileOrRelativeFile into relativeFile
+   end if
+end fossil_SetFileParams
+
+
+--> Fossil | Parse
+-
+function fossil_InfoArray fossilFileOrCheckoutFolder
+   put fossil_Info (fossilFileOrCheckoutFolder) into projectInfo
+   -- put fossil_ProjectInfo (fossilFileOrCheckoutFolder) into projectInfo
+   
+   set the itemdelimiter to ":"
+   switch
+      case projectInfo = empty
+         return empty
+      case item 2 of line 1 of projectInfo contains "repository does not exist or is in an unreadable directory"
+         -- /Users/...commandLine/fossil: repository does not exist or is in an unreadable directory: /Users/.../Chat.fossil
+         return empty
+      case item 2 of line 1 of projectInfo contains "not within an open checkout"
+         return empty
+      default
+         put fossil_ParseInfo (projectInfo) into projectArray
+         return projectArray
+   end switch
+end fossil_InfoArray
+
+function fossil_ParseInfo someInfo
+   # aims to be a general function for parsing info returned by several commands
+   # openInfo contains a series of lines of checked out file paths at the beginning (so not included)
+   # comments etc can be over several lines
+   # each line starts with 14 chars, whcih may or may not contain a new key: 
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in someInfo
+      put char 1 to 14 of someLine into maybeKey
+      put char 15 to -1 of someLine into someValue
+      put word 1 to -1 of item 1 of maybeKey into testKey
+      
+      switch testKey
+         case empty
+            put projectArray [someKey] into oldValue
+            put oldValue & CR & someValue into newValue
+            put newValue into projectArray [someKey]
+            break
+         case "project-code"
+            put "project-id" into someKey
+            put someValue into projectArray [someKey]
+            break
+         case "server-code"
+            put "server-id" into someKey
+            put someValue into projectArray [someKey]
+            break
+         default
+            put testKey into someKey
+            put someValue into projectArray [someKey]
+      end switch
+   end repeat
+   return projectArray
+end fossil_ParseInfo
+
+function fossil_ParseProjectInfo projectInfo
+   -- get colon_ToArray (projectInfo) -- equivalent to "fossil_ParseProjectInfo"? 
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in projectInfo
+      put item 1 of someLine into someKey
+      if someKey is among the items of fossil_GoodKeys() then
+         put word 1 to -1 of item 2 to -1 of someLine into someValue
+         put someValue into projectArray [someKey]
+      end if
+   end repeat
+   return projectArray
+end fossil_ParseProjectInfo
+
+function fossil_ParseOpenInfo openInfo
+   put fossil_GoodKeys() into goodKeys
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in openInfo
+      put item 1 of someLine into someKey
+      switch someKey
+         case "project-code"
+            put "project-id" into someKey
+            break
+         case "server-code"
+            put "server-id" into someKey
+            break
+      end switch
+      
+      if someKey is among the items of goodKeys then
+         put word 1 to -1 of item 2 to -1 of someLine into someValue
+         put someValue into projectArray [someKey]
+      else
+         put someLine & CR after checkedOutFiles
+      end if
+   end repeat
+   delete char -1 of checkedOutFiles
+   put checkedOutFiles into projectArray ["files"]
+   return projectArray
+end fossil_ParseOpenInfo
+
+function fossil_GoodKeys
+   return "project-name:repository:local-root:project-code:server-code:checkout:parent:tags:comment:admin-user:project-id:server-id" 
+end fossil_GoodKeys
+
+
+--> Fossil | Configuration
+-
+function fossil_GetProjectName fossilFile
+   put fossil_InfoArray (fossilFile) into infoArray
+   return infoArray ["project-name"]
+end fossil_GetProjectName
+
+command fossil_ImportConfiguration fossilFile, pConfigFile
+   -- fossil configuration export project project.txt -R Teamster\ Intro.fossil
+   if pConfigFile is empty then
+      put fossil_GetDefaultRepoFolder() & "config.txt" into pConfigFile
+      -- put the tempname & ".txt" into pConfigFile
+   end if
+   
+   shell_BashParamEscape pConfigFile
+   shell_BashParamEscape fossilFile
+   put merge ("fossil configuration import [[pConfigFile]] --repository [[fossilFile]]") into someShell
+   -- put someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_ImportConfiguration
+
+command fossil_ExportConfiguration fossilFile, pConfigFile, pWhichConfig
+   if pWhichConfig is empty then put "project" into pWhichConfig
+   if pConfigFile is empty then
+      put fossil_GetDefaultRepoFolder() & "config.txt" into pConfigFile
+      -- put the tempname & ".txt" into pConfigFile
+   end if
+   
+   shell_BashParamEscape pConfigFile
+   shell_BashParamEscape fossilFile
+   put merge ("fossil configuration export [[pWhichConfig]] [[pConfigFile]] --repository [[fossilFile]]") into someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_ExportConfiguration
+
+command fossil_SetProjectName fossilFile, projectName, pProjectDescription
+   put projectName into paramArray ["ProjectName"]
+   put pProjectDescription into paramArray ["ProjectDescription"]
+   
+   put fossil_ConstructConfiguration (paramArray, fossilFile) into fossilConfig
+   
+   put fossil_GetDefaultRepoFolder() & "config.txt" into tempConfigFile
+   -- put the tempname & ".txt" into tempConfigFile
+   put fossilConfig into url ("binfile:" & tempConfigFile)
+   
+   fossil_ImportConfiguration fossilFile, tempConfigFile
+   put the result into shellResult
+   return shellResult
+end fossil_SetProjectName
+
+function fossil_ConstructConfiguration paramArray, fossilFile
+   local fossilConfig
+   put "-- The 'project' configuration exported from" & CR after fossilConfig
+   put "-- repository '[[fossilFile]]'" & CR after fossilConfig
+   put "-- on 2011-10-18 19:51:48" & CR after fossilConfig
+   replace "'" with quote in fossilConfig
+   
+   put paramArray ["ProjectSkin"] into ProjectSkin
+   if ProjectSkin is not empty then put "REPLACE INTO config VALUES('header','[[ProjectSkin]]');" & CR after fossilConfig
+   
+   put paramArray ["ProjectName"] into ProjectName
+   if ProjectName is not empty then put "REPLACE INTO config VALUES('project-name','[[ProjectName]]');" & CR after fossilConfig
+   
+   put paramArray ["ProjectDescription"] into ProjectDescription
+   if ProjectDescription is not empty then put "REPLACE INTO config VALUES('project-description','[[ProjectDescription]]');" & CR after fossilConfig
+   
+   put paramArray ["ProjectTickets"] into ProjectTickets
+   if ProjectTickets is not empty then put "INSERT INTO _xfer_reportfmt(title,cols,sqlcode) VALUES('All Tickets','[[ProjectTickets]]');" & CR after fossilConfig
+   
+   put paramArray ["Users"] into userArray
+   if userArray is an array then put fossil_ConstructUserConfiguration (userArray) & CR after fossilConfig
+   
+   put merge (fossilConfig) into fossilConfig
+   delete char -1 of fossilConfig
+   return fossilConfig
+end fossil_ConstructConfiguration
+
+function fossil_ConstructUserConfiguration userArray
+   /*
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('david',NULL,'s','',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('anonymous',NULL,'ghmncz','Anon',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('nobody',NULL,'jor','Nobody',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('developer',NULL,'dei','Dev',NULL);
+   INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('reader',NULL,'kptw','Reader',NULL);
+   */
+   
+   repeat for each key userName in userArray
+      put userArray ["userPerms"] into userPerms
+      put userArray ["contactName"] into contactName
+      put merge ("INSERT INTO _xfer_user(login,pw,cap,info,photo) VALUES('[[userName]]',NULL,'[[userPerms]]','[[contactName]]',NULL);") & CR after userConfig
+   end repeat
+   delete char -1 of userConfig
+   return userConfig
+end fossil_ConstructUserConfiguration
+
+
+--> Fossil | Installation
+-
+function fossil_IsInstalled
+   put fossil_GetExecutablePath() into fossilPath
+   if there is not a file fossilPath then return false -- could be installed but just not referenced right in the prefs
+   put fossil_Version (fossilPath) into fossilVersion
+   put word 1 to 4 of fossilVersion = "This is fossil version" into isInstalled
+   return isInstalled
+end fossil_IsInstalled
+
+function fossil_Version pFossilPath
+   -- fossil_ExecuteShell someShell, pFossilPath -- don't use so as to control which fossil executable we use
+   if pFossilPath is not empty then
+      shell_BashParamEscape pFossilPath
+      put pFossilPath && "version" into someShell
+   else
+      put "fossil version" into someShell
+   end if
+   put shell (someShell) into shellResult
+   
+   put word 1 to -1 of shellResult into versionInfo
+   return versionInfo
+end fossil_Version
+
+
+--> Fosssil | Install
+-
+command fossil_DownloadAndInstall installationFolder
+   put fossil_FetchBinary() into binData
+   
+   folder_Format installationFolder
+   put installationFolder & "fossil" into installationPath
+   fossil_InstallBinary binData, installationPath
+   
+   put the fossilPreference_Card of me into fossilPreferenceCard
+   set the displayed_FossilPath of fossilPreferenceCard to installationPath
+   
+   put the fossilNotInstalled_View of me into notInstalledView
+   hide notInstalledView
+end fossil_DownloadAndInstall
+
+command fossil_InstallBinary binData, installationPath
+   put "binfile:" & installationPath into someUrl
+   put binData into url someUrl
+   put the result into someError
+   if someError is not empty then
+      # Handle error here
+      opn_Notify someError, true
+      exit to top
+   else
+      return someUrl
+   end if
+end fossil_InstallBinary
+
+function fossil_FetchBinary
+   -- stub for now
+   put "binfile:" & "/Users/david/Desktop/fossil" into someUrl
+   put url someUrl into binData
+   return binData
+end fossil_FetchBinary
+
+command fossil_Rebuild checkoutFolderOrRepositoryFile
+   put "fossil rebuild" into someShell
+   if there is a folder checkoutFolderOrRepositoryFile then
+      put checkoutFolderOrRepositoryFile into checkoutFolder
+      fossil_ExecuteShell someShell, checkoutFolder
+   else
+      put checkoutFolderOrRepositoryFile into repoFile
+      shell_BashParamEscape repoFile
+      put space & repoFile after someShell
+      fossil_ExecuteShell someShell
+   end if
+   put the result into shellResult
+   return shellResult
+end fossil_Rebuild
+
+
+--> Fossil | Files
+-
+function fossil_GetDefaultRepoFolder
+   put pref_GetValue ("fossil_GetDefaultRepoFolder") into defaultRepoFolder
+   if there is a folder defaultRepoFolder then return defaultRepoFolder
+   
+   put rev_PluginsFolder() & "Fossils/" into defaultRepoFolder
+   folder_CreateNested defaultRepoFolder
+   pref_SetValue "fossil_GetDefaultRepoFolder", defaultRepoFolder
+   return defaultRepoFolder
+end fossil_GetDefaultRepoFolder
+
+command fossil_SetDefaultRepoFolder someFolder
+   pref_SetValue "fossil_GetDefaultRepoFolder", someFolder
+   
+   put folder_FilesInside (someFolder, "*.fossil") into fossilFiles
+   repeat for each line fossilFile in fossilFiles
+      put fossil_InfoArray (fossilFile) into infoArray
+   end repeat
+   display_FossilRepositories
+end fossil_SetDefaultRepoFolder
+
+getprop fossil_RepositoryFile
+   put the mainstack_File of the target into objectFile
+   put fossil_InfoArray (objectFile) into fossilStatusArray
+   return fossilStatusArray ["repository"]
+end fossil_RepositoryFile
+
+function fossil_GetExecutablePath
+   put pref_GetValue ("Fossil executable path") into somePath
+   return somePath
+end fossil_GetExecutablePath
+
+command fossil_SetExecutablePath somePath
+   pref_SetValue "Fossil executable path", somePath
+end fossil_SetExecutablePath
+
+function fossil_FolderWithExecutable
+   put fossil_GetExecutablePath() into pathToCommandLine
+   
+   set the itemdelimiter to "/"
+   put empty into item -1 of pathToCommandLine
+   return pathToCommandLine
+end fossil_FolderWithExecutable
+
+
+--> Fossil | Ftp
+-
+function fossil_ListFtpProjectFiles
+   put fossil_FtpDirectory () into ftpDirectory
+   libURLSetFTPListCommand "NLST"
+   put url ftpDirectory into ftpResult
+   return word 1 to -1 of ftpResult
+end fossil_ListFtpProjectFiles
+
+function fossil_FtpDirectory
+   put "ftp://fortyfoxes:b05m3g@vaudevillecourt.tv/code.livecode.tv/fossils/" into ftpURL
+   return ftpURL
+end fossil_FtpDirectory
+
+
+--> Fossil | Wiki
+-
+command fossil_CreateWikiPage pageTitle, someContent, pFolder
+   put "fossil wiki create" && kwote(pageTitle) into someShell
+   if someContent is not empty then
+      put the tempname & ".txt" into tempFile
+      put someContent into url ("binfile:" & tempFile)
+      shell_BashParamEscape tempFile
+      put space & tempFile after someShell
+   end if
+   fossil_ExecuteShell someShell, pFolder
+   return the result
+end fossil_CreateWikiPage
+
+command fossil_UpdateWikiPage pageTitle, newContent, pFolder
+   if newContent is not empty then return empty
+   
+   put "fossil wiki commit" && kwote(pageTitle) into someShell
+   put the tempname & ".txt" into tempFile
+   put newContent into url ("binfile:" & tempFile)
+   shell_BashParamEscape tempFile
+   put space & tempFile after someShell
+   
+   fossil_ExecuteShell someShell, pFolder
+   return the result
+end fossil_UpdateWikiPage
+
+function fossil_GetWikiText pageTitle, pFolder
+   put "fossil wiki export" && kwote(pageTitle) into someShell
+   fossil_ExecuteShell someShell, pFolder
+   return the result
+end fossil_GetWikiText
+
+function fossil_ListWikiPages pFolder
+   fossil_ExecuteShell "fossil wiki list", pFolder
+   return the result
+end fossil_ListWikiPages
+
+
+--> Fossil | Branch
+-
+command fossil_CreateBranch fossilCheckoutFolder, branchName, pColour
+   -- fossil branch new BRANCH-NAME BASIS ?-bgcolor COLOR? 
+   -- put "fossil branch new" && kwote (branchName) into someShell
+   
+   -- fossil commit -f --branch Minimal
+   put "fossil commit -f --branch" && kwote (branchName) into someShell
+   
+   if pColour is not empty then
+      colour_HexNormalise pColour
+      put space & "-bgcolor" & kwote (pColour) after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_CreateBranch
+
+function fossil_ListBranchNames pCheckoutFolderOrRepositoryFile
+   put "fossil branch list" into someShell
+   
+   set the itemdelimiter to "."
+   if there is a file pCheckoutFolderOrRepositoryFile and item -1 of pCheckoutFolderOrRepositoryFile = "fossil" then
+      shell_BashParamEscape pCheckoutFolderOrRepositoryFile
+      put space & "--repository" && pCheckoutFolderOrRepositoryFile after someShell
+      fossil_ExecuteShell someShell
+   else
+      fossil_ExecuteShell someShell, pCheckoutFolderOrRepositoryFile
+   end if
+   put the result into shellResult
+   return shellResult
+end fossil_ListBranchNames
+
+
+--> Fossil | Pocess
+-
+function fossil_ConstructLaunchScript folderOrProjectName
+   local someShell
+   put fossil_FolderWithExecutable() into fossilPath
+   shell_BashParamEscape fossilPath
+   put fossilPath into someShell
+   put "fossil ui" after someShell
+   
+   put fossil_GetProjectFile (folderOrProjectName) into dbFile
+   shell_BashParamEscape dbFile
+   put space & dbFile after someShell
+   -- put space & "2>&1 &" after someShell
+   
+   return someShell
+end fossil_ConstructLaunchScript
+
+
+--> Fossil | Settings
+-
+function fossil_GetBrowserEcho pCheckoutFolder, pGetGlobal
+   put fossil_GetBrowserShellCommand (pCheckoutFolder, pGetGlobal) into browserShellCommand
+   put pCheckoutFolder is empty or pGetGlobal is true into pGetGlobal
+   switch
+      case browserShellCommand = "echo"
+         return true
+      case browserShellCommand is empty and pGetGlobal is true
+         return browserShellCommand = "echo"
+      case browserShellCommand is empty and pGetGlobal is false
+         return empty
+      default
+         return false
+   end switch
+end fossil_GetBrowserEcho
+
+command fossil_SetBrowserEcho someBoolean, pFossilCheckoutFolder, pSetGlobal
+   if someBoolean is true then
+      fossil_SetBrowserShellCommand "echo", pFossilCheckoutFolder, pSetGlobal
+   else if someBoolean is false then
+      fossil_DeleteSetting "web-browser", pFossilCheckoutFolder
+   end if
+   return the result
+end fossil_SetBrowserEcho
+
+function fossil_GetBrowserShellCommand pCheckoutFolder, pGetGlobal
+   -- web-browser          (local)  echo
+   put fossil_GetSetting ("web-browser", pCheckoutFolder, pGetGlobal) into someValue
+   return someValue
+end fossil_GetBrowserShellCommand
+
+command fossil_SetBrowserShellCommand someValue, pCheckoutFolder, pSetGlobal
+   fossil_SetSetting "web-browser", someValue, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetBrowserShellCommand
+
+function fossil_GetHttpPort pCheckoutFolder, pGetGlobal
+   put fossil_GetSetting ("http-port", pCheckoutFolder, pGetGlobal) into someValue
+   return someValue
+end fossil_GetHttpPort
+
+command fossil_SetHttpPort someValue, pCheckoutFolder, pSetGlobal
+   fossil_SetSetting "http-port", someValue, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetHttpPort
+
+function fossil_GetAutoSync pCheckoutFolder, pGetGlobal
+   put fossil_GetSetting ("autosync", pCheckoutFolder, pGetGlobal) into someValue
+   return someValue
+end fossil_GetAutoSync
+
+command fossil_SetAutoSync someValue, pCheckoutFolder, pSetGlobal
+   fossil_SetSetting "autosync", someValue, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetAutoSync
+
+function fossil_GetAutoCaptcha pCheckoutFolder, pGetGlobal
+   put fossil_GetSetting ("auto-captcha", pCheckoutFolder, pGetGlobal) into someValue
+   if someValue is "off" then
+      return false
+   else if someValue is "on" then
+      return true
+   else
+      return empty
+   end if
+end fossil_GetAutoCaptcha
+
+command fossil_SetAutoCaptcha someBoolean, pCheckoutFolder, pSetGlobal
+   if someBoolean is false then
+      put "off" into someValue
+   else
+      put "on" into someValue
+   end if
+   fossil_SetSetting "auto-captcha", someValue, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetAutoCaptcha
+
+function fossil_GetClearSign pCheckoutFolder, pGetGlobal
+   /*
+   When enabled, fossil will attempt to sign all commits
+   with gpg.  When disabled (the default), commits will
+   be unsigned.  Default: off
+   */
+   
+   put fossil_GetSetting ("clearsign", pCheckoutFolder, pGetGlobal) into someValue
+   put pCheckoutFolder is empty or pGetGlobal is true into pGetGlobal
+   switch
+      case someValue is "off"
+         return false
+      case someValue is "on"
+         return true
+      case pGetGlobal is true
+         -- Default: off
+         return false
+      case pGetGlobal is false
+         return empty
+   end switch
+end fossil_GetClearSign
+
+command fossil_SetClearSign someBoolean, pCheckoutFolder, pSetGlobal
+   -- fossil settings clearsign off
+   if someBoolean is false then
+      put "off" into someValue
+   else
+      put "on" into someValue
+   end if
+   fossil_SetSetting "clearsign", someValue, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetClearSign
+
+function fossil_GetDiffCommand pCheckoutFolder, pGetGlobal
+   /*
+   External command to run when performing a diff.
+   If undefined, the internal text diff will be used.
+   */
+   put fossil_GetSetting ("diff-command", pCheckoutFolder, pGetGlobal) into diffCommand
+   return diffCommand
+end fossil_GetDiffCommand
+
+command fossil_SetDiffCommand diffCommand, pCheckoutFolder, pGetGlobal
+   /*
+   External command to run when performing a diff.
+   If undefined, the internal text diff will be used.
+   */
+   fossil_SetSetting "diff-command", diffCommand, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetDiffCommand
+
+function fossil_GetSetting someSetting, pCheckoutFolder, pGetGlobal
+   put "fossil setting" && someSetting into someShell
+   
+   put pCheckoutFolder is empty or pGetGlobal is true into pGetGlobal
+   if pGetGlobal then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   put the result into someLine
+   fossil_DeconstructSettingLine someLine, someKey, someValue, isGlobal
+   if pGetGlobal is false and isGlobal is true then
+      -- the result is for a global value because the local value is empty
+      -- let's return the actual empty local value
+      return empty
+   end if
+   return someValue
+end fossil_GetSetting
+
+command fossil_SetSetting someSetting, someValue, pCheckoutFolder, pSetGlobal
+   put "fossil setting" && someSetting into someShell
+   put space & someValue after someShell
+   
+   if pCheckoutFolder is empty or pSetGlobal is true then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_SetSetting
+
+command fossil_DeleteSetting someSetting, pCheckoutFolder
+   put "fossil unset" && someSetting into someShell
+   
+   if pCheckoutFolder is empty then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   return the result
+end fossil_DeleteSetting
+
+function fossil_ConstructSettingsArray checkoutFolder, pListGlobal
+   local someKey, someValue, isGlobal
+   put fossil_ListSettings (checkoutFolder, pListGlobal) into fossilSettings
+   repeat for each line someLine in fossilSettings
+      fossil_DeconstructSettingLine someLine, someKey, someValue, isGlobal
+      put someValue into settingsArray [someKey]
+      -- put someValue into settingsArray [someKey]["value"]
+      -- put isGlobal into settingsArray [someKey]["isGlobal"]
+   end repeat
+   return settingsArray
+end fossil_ConstructSettingsArray
+
+command fossil_DeconstructSettingLine someLine, @someKey, @someValue, @isGlobal
+   put word 1 of someLine into someKey
+   put word 2 of someLine = "(global)" into isGlobal
+   put word 3 to -1 of someLine into someValue
+end fossil_DeconstructSettingLine
+
+function fossil_ListSettings checkoutFolder, pListGlobal
+   put "fossil settings"  into someShell
+   if pCheckoutFolder is empty then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   else if pListGlobal is true then
+      put space & "-global" after someShell
+   end if
+   fossil_ExecuteShell someShell, checkoutFolder
+   return word 1 to -1 of the result
+end fossil_ListSettings
+
+
+--> Fossil | Tags
+-
+function fossil_ListAllTags pFolder
+   -- fossil tag list ?--raw? ?CHECK-IN?
+   put "fossil tag list" into someShell
+   fossil_ExecuteShell someShell, projectFolder
+   put the result into shellResult
+   return shellResult
+end fossil_ListAllTags
+
+
+--> Fossil | Commit
+-
+command fossil_Checkout fossilCheckoutFolder, pVersion
+   /*
+   Usage: fossil checkout ?VERSION | --latest? ?OPTIONS?
+   or: fossil co ?VERSION | --latest? ?OPTIONS?
+   
+   Check out a version specified on the command-line.  This command
+   will abort if there are edited files in the current checkout unless
+   the --force option appears on the command-line.  The --keep option
+   leaves files on disk unchanged, except the manifest and manifest.uuid
+   files.
+   
+   The --latest flag can be used in place of VERSION to checkout the
+   latest version in the repository.
+   
+   Options:
+   --force   Ignore edited files in the current checkout
+   --keep    Only update the manifest and manifest.uuid files
+   */
+   
+   put "fossil checkout" into someShell
+   if pVersion is not empty then put space & kwote (pVersion) after someShell
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Checkout
+
+command fossil_Update fossilCheckoutFolder, pVersion, pFiles
+   put "fossil update" into someShell
+   if pVersion is not empty then put space & kwote (pVersion) after someShell
+   if pFiles is not empty then put space & kwote (pFiles) after someShell
+   
+   /*
+   Usage: /Users/david/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_CommandLine/fossil update ?VERSION? ?FILES...?
+   
+   Change the version of the current checkout to VERSION.  Any uncommitted
+   changes are retained and applied to the new checkout.
+   
+   The VERSION argument can be a specific version or tag or branch name.
+   If the VERSION argument is omitted, then the leaf of the subtree
+   that begins at the current version is used, if there is only a single
+   leaf.  VERSION can also be "current" to select the leaf of the current
+   version or "latest" to select the most recent check-in.
+   
+   If one or more FILES are listed after the VERSION then only the
+   named files are candidates to be updated.  If FILES is omitted, all
+   files in the current checkout are subject to be updated.  Using
+   a directory name for one of the FILES arguments is the same as
+   using every subdirectory and file beneath that directory.
+   
+   The -n or --nochange option causes this command to do a "dry run".  It
+   prints out what would have happened but does not actually make any
+   changes to the current checkout or the repository.
+   
+   The -v or --verbose option prints status information about unchanged
+   files in addition to those file that actually do change.
+   */
+   
+   fossil_ExecuteShell someShell, fossilCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Update
+
+command fossil_Commit pFolder, pComment
+   if pComment is empty then put opn_Ask ("Enter a comment for this commit...") into pComment
+   replace quote with "'" in pComment
+   
+   put "fossil commit -m" into someShell
+   put space & kwote (pComment) after someShell
+   fossil_ExecuteShell someShell, pFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Commit
+
+command fossil_CommitFile pFolder, someFile, pComment
+   if pComment is empty then put opn_Ask ("Enter a comment for this commit...") into pComment
+   replace quote with "'" in pComment
+   
+   put "fossil commit -m" into someShell
+   put space & kwote(pComment) after someShell
+   
+   shell_BashParamEscape someFile
+   put space & someFile after someShell
+   
+   fossil_ExecuteShell someShell, projectFolder
+   put the result into shellResult
+   return shellResult
+end fossil_CommitFile
+
+function fossil_Extra pFolder
+   put "fossil extra" into someShell
+   fossil_ExecuteShell someShell, pFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Extra
+
+function fossil_Info fossilFileOrCheckoutFolder
+   set the itemdelimiter to "."
+   switch
+      case there is a file fossilFileOrCheckoutFolder and item -1 of fossilFileOrCheckoutFolder = "fossil"
+         -- case fossilFileOrCheckoutFolder is among the lines of fossil_ListAllRepositories() -- slower
+         return fossil_ProjectInfo (fossilFileOrCheckoutFolder)
+      case there is a file fossilFileOrCheckoutFolder
+         return fossil_CheckoutFileInfo (fossilFileOrCheckoutFolder)
+      default
+         return fossil_CheckoutInfo (fossilFileOrCheckoutFolder)
+   end switch
+end fossil_Info
+
+function fossil_CheckoutFileInfo someFile, pNotBrief
+   -- think we need ARTIFACT-ID here
+   switch
+      case there is a file someFile
+         put fossil_FindCheckoutFolder (someFile) into fossilCheckoutFolder
+         if fossilCheckoutFolder is empty then return empty
+         put someFile into relativeFile
+         file_SetRelativePath relativeFile, fossilCheckoutFolder
+         
+         put fossil_FileHistory (relativeFile, false, fossilCheckoutFolder) into fileHistory
+         put word 1 of fileHistory into artifactID
+         
+         put "fossil info" into someShell
+         put space && artifactID after someShell
+         fossil_ExecuteShell someShell, fossilCheckoutFolder
+         put the result into shellResult
+         return shellResult
+      default
+         return empty
+   end switch
+end fossil_CheckoutFileInfo
+
+function fossil_CheckoutInfo checkoutFileOrFolder
+   put "fossil info" into someShell
+   
+   switch
+      case there is a folder checkoutFileOrFolder
+         fossil_ExecuteShell someShell, checkoutFileOrFolder
+         break
+      case there is a file checkoutFileOrFolder
+         put checkoutFileOrFolder into someFolder
+         set the itemdelimiter to "/"
+         delete item -1 of someFolder
+         fossil_ExecuteShell someShell, someFolder
+         break
+      default
+         return empty
+   end switch
+   put the result into shellResult
+   return shellResult
+end fossil_CheckoutInfo
+
+function fossil_ProjectInfo fossilFile
+   put "fossil info" into someShell
+   
+   shell_BashParamEscape fossilFile
+   put space && fossilFile after someShell
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_ProjectInfo
+
+
+--> Fossil | New, open and close
+-
+command fossil_AskCreateProject pFolder, pProjectName, pShortFile, pDontAsk, pCommitComment
+   if pCommitComment is empty then put "Initial commit"  into pCommitComment
+   
+   if there is a folder pFolder then
+      put pFolder into newFolder
+   else
+      answer folder "Select a folder for your new project..." with pFolder
+      if the result is "Cancel" then exit to top
+      put it into newFolder
+   end if
+   
+   if pProjectName is empty then
+      set the itemdelimiter to "/"
+      put item -1 of newFolder into pProjectName
+      put opn_Ask ("Give this new project a name...", pProjectName) into pProjectName
+   end if
+   
+   if pShortFile is empty then put pProjectName into pShortFile
+   put fossil_GetDefaultRepoFolder() into someRoot
+   put someRoot & pShortFile & ".fossil" into testFile
+   if pDontAsk is true then
+      put testFile into fossilFile
+   else
+      ask file "Select a file to create a new Fossil repository in..." with testFile
+      put it into fossilFile
+      if fossilFile is empty then return empty
+   end if
+   
+   fossil_New newFolder, fossilFile, pProjectName
+   put the result into projectArray
+   put projectArray ["repository"] into fossilFile
+   
+   fossil_Open fossilFile, newFolder
+   put the result into checkoutArray
+   
+   fossil_Add newFolder
+   put the result into addResult
+   
+   fossil_Commit newFolder, pCommitComment
+   put the result into commitResult
+   
+   return projectArray
+end fossil_AskCreateProject
+
+command fossil_New projectFolder, fossilFile, pProjectName, pProjectDescription
+   put "fossil new" into someShell
+   put fossilFile into bashFile
+   shell_BashParamEscape bashFile
+   put space & bashFile after someShell
+   
+   fossil_ExecuteShell someShell, projectFolder
+   put the result into projectInfo
+   
+   -- put fossil_ParseProjectInfo (projectInfo) into projectArray
+   put fossil_ParseInfo (projectInfo) into projectArray
+   
+   -- is this needed?
+   -- put rev_PluginRelativePath (fossilFile) into projectArray ["repository"]
+   put fossilFile into projectArray ["repository"]
+   if pProjectName is not empty then
+      put pProjectName into projectArray ["project-name"]
+      fossil_SetProjectName fossilFile, pProjectName, pProjectDescription
+   end if
+   
+   fossil_SaveProjectArray fossilFile, projectArray   
+   return projectArray
+end fossil_New
+
+command fossil_Clone someUrl, fossilFile, pAdminUser
+   if there is a file projectFile then
+      delete file projectFile
+   end if
+   put "fossil clone" into someShell
+   if pAdminUser is not empty then put space & "--admin-user" && pAdminUser after someShell
+   put space & someUrl after someShell
+   shell_BashParamEscape projectFile
+   put space & fossilFile after someShell
+   fossil_ExecuteShell someShell
+   put the result into projectInfo 
+   
+   -- put fossil_ParseProjectInfo (projectInfo) into projectArray
+   put fossil_ParseInfo (projectInfo) into projectArray
+   
+   -- add built in project info?
+   put fossil_InfoArray (fossilFile) into infoArray
+   put rev_PluginRelativePath (fossilFile) into infoArray ["repository"]
+   union infoArray with projectArray
+   
+   fossil_SaveProjectArray fossilFile, projectArray
+   return projectArray
+end fossil_Clone
+
+command fossil_Open fossilFile, checkoutFolder
+   put "fossil open" into someShell
+   put fossilFile into bashFile
+   shell_BashParamEscape bashFile
+   put space & bashFile after someShell
+   
+   put the defaultFolder into oFolder
+   set the defaultFolder to checkOutFolder
+   fossil_ExecuteShell someShell, checkOutFolder
+   put the result into openInfo
+   set the defaultFolder to oFolder
+   
+   if openInfo is empty then
+      -- Repository does not contain any files! Usually because we are opening a new empty repository.
+      breakpoint
+      put fossil_InfoArray (checkoutFolder) into checkoutArray
+      fossil_StoreCheckoutArray checkoutFolder, checkoutArray
+   else
+      put fossil_ParseOpenInfo (openInfo) into checkoutArray
+      put true into checkoutArray ["isExpanded"]
+      fossil_StoreCheckoutArray fossilFile, checkoutArray
+   end if
+   return checkoutArray
+end fossil_Open
+
+command fossil_Close checkoutFolder
+   put "fossil close" into someShell
+   fossil_ExecuteShell someShell, checkoutFolder
+   put the result into openInfo
+   
+   fossil_DeleteCheckoutArray checkoutFolder
+   put the result into fossilCheckoutArray
+   return fossilCheckoutArray
+end fossil_Close
+
+command fossil_CloseUsingProjectFile fossilFile
+   put "fossil close" into someShell
+   
+   shell_BashParamEscape fossilFile
+   put space & fossilFile after someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into openInfo
+   return openInfo
+end fossil_CloseUsingProjectFile
+
+
+--> Fosssil | Add and Remove
+-
+command fossil_AddRemove pCheckoutFolder
+   -- fossil addremove ?--dotfiles? ?--ignore GLOBPATTERN? ?--test?
+   put "fossil addremove" into someShell
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   put the result into shellResult
+   return shellResult
+end fossil_AddRemove
+
+command fossil_Remove someFile
+   put "fossil rm" into someShell
+   
+   put someFile into bashFile
+   shell_BashParamEscape bashFile
+   put space & bashFile after someShell
+   
+   set the itemdelimiter to "/"
+   put item 1 to -2 of someFile into someFolder
+   put "/" after someFolder
+   
+   fossil_ExecuteShell someShell, someFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Remove
+
+command fossil_Add checkoutFileOrFolder
+   put "fossil add" into someShell
+   if there is a file checkoutFileOrFolder then
+      put checkoutFileOrFolder into someFile
+      put someFile into bashFile
+      shell_BashParamEscape bashFile
+      put space & bashFile after someShell
+      
+      set the itemdelimiter to "/"
+      put item 1 to -2 of someFile into someFolder
+      put "/" after someFolder
+   else
+      put checkoutFileOrFolder into someFolder
+      put someFolder into bashFolder
+      shell_BashParamEscape bashFolder
+      put space & bashFolder after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, someFolder
+   put the result into shellResult
+   return shellResult
+end fossil_Add
+
+command fossil_Sync pFossilFileOrCheckout, pUrl
+   /*
+   Usage: fossil sync ?URL? ?options?
+   
+   Synchronize the local repository with a remote repository.  This is
+   the equivalent of running both "push" and "pull" at the same time.
+   Use the "-R REPO" or "--repository REPO" command-line options
+   to specify an alternative repository file.
+   
+   If a user-id and password are required, specify them as follows:
+   
+   http://userid:password@www.domain.com:1234/path
+   
+   If the URL is not specified, then the URL from the most recent successful
+   clone, push, pull, remote-url, or sync command is used.
+   
+   The URL specified normally becomes the new "remote-url" used for
+   subsequent push, pull, and sync operations.  However, the "--once" command-line
+   option makes the URL a one-time-use URL that is not saved.
+   */
+   
+   put "fossil sync" into someShell
+   if pUrl is not empty then put space & kwote (pUrl) after someShell
+   switch
+      case pFossilFileOrCheckout is empty
+         fossil_ExecuteShell someShell
+         break
+      case there is a file pFossilFileOrCheckout
+         shell_BashParamEscape pFossilFileOrCheckout
+         put space & "--repository" && pFossilFileOrCheckout after someShell
+         fossil_ExecuteShell someShell
+         break
+      case there is a folder pFossilFileOrCheckout
+         fossil_ExecuteShell someShell, pFossilFileOrCheckout
+         break
+      default
+         breakpoint -- a param error
+   end switch
+   return the result
+end fossil_Sync
+
+
+--> Fosssil | Extra
+-
+function fossil_Help pFossilCommand
+   put "fossil help" into someShell
+   if pFossilCommand is not empty then put space & pFossilCommand after someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_Help
+
+function fossil_ListCommands
+   get fossil_Help()
+   delete line 1 to 2 of it
+   put line -1 of it into versionLine
+   delete line -1 of it
+   
+   repeat for each word someCommand in it
+      put someCommand & CR after someCommands
+   end repeat
+   delete char -1 of someCommands
+   sort someCommands
+   return someCommands
+end fossil_ListCommands
+
+
+--> Fossil | Shell
+-
+command fossil_ExecuteShell someShell, pExecuteWhere
+   -- called every time with object_Folder in "object_AddToArray"
+   if pExecuteWhere is empty then put "~" into pExecuteWhere
+   put fossil_FolderWithExecutable() into fossilPath
+   shell_BashParamEscape fossilPath
+   put fossilPath before someShell
+   -- if pExecuteWhere is empty then put fossil_GetDefaultRepoFolder() into pExecuteWhere
+   
+   put the defaultfolder into oFolder
+   set the defaultfolder to pExecuteWhere
+   put shell (someShell) into shellResult
+   set the defaultfolder to oFolder
+   
+   return word 1 to -1 of shellResult
+end fossil_ExecuteShell
+
+
+--> Fossil | Hosted
+-
+function fossil_FetchHostedNames
+   put url "http://code.livecode.tv/cgi-bin/list_repos.cgi" into hostedFossilNames
+   return word 1 to -1 of hostedFossilNames
+end fossil_FetchHostedNames
+
+
+--> Fossil | Model | Built In
+-
+function fossil_FindRepositoryFile projectName
+   put fossil_ConstructProjectArray() into fossilFileArray
+   repeat for each key fossilFile in fossilFileArray
+      put fossilFileArray [fossilFile]["project-name"] into testName
+      if testName = projectName then return fossilFile
+   end repeat
+   return empty
+end fossil_FindRepositoryFile
+
+function fossil_ConstructProjectArray
+   put fossil_ListAllRepositories() into fossilFiles
+   repeat for each line fossilFile in fossilFiles
+      put fossil_InfoArray (fossilFile) into infoArray
+      put fossilFile into infoArray ["repository"]
+      put infoArray into fossilArray [fossilFile]
+   end repeat
+   return fossilArray
+end fossil_ConstructProjectArray
+
+
+--> Fossil | Remote URL
+-
+function fossil_GetDefaultRemoteUrl fossilFileOrCheckoutFolder
+   put fossil_GetRawRemoteUrl (fossilFileOrCheckoutFolder) into shellResult
+   
+   set the itemdelimiter to ":"
+   if word 1 to -1 of item 2 of line 1 of shellResult = "incorrect repository schema version" then
+      -- need to rebuild
+      put empty into shellResult
+   end if
+   return word 1 to -1 of shellResult
+end fossil_GetDefaultRemoteUrl
+
+private function fossil_GetRawRemoteUrl fossilFileOrCheckoutFolder
+   -- allows seeing if schema needs updating
+   if there is a folder fossilFileOrCheckoutFolder then
+      put fossilFileOrCheckoutFolder into checkoutFolder -- or any folder within
+      put "fossil remote-url" into someShell
+      fossil_ExecuteShell someShell, checkoutFolder
+      put the result into shellResult
+   else
+      put fossilFileOrCheckoutFolder into fossilFile
+      put "fossil remote-url --repository" into someShell
+      
+      shell_BashParamEscape fossilFile
+      put space & fossilFile after someShell
+      
+      put fossil_FolderWithExecutable() into fossilPath
+      shell_BashParamEscape fossilPath
+      put fossilPath before someShell
+      
+      put shell (someShell) into shellResult
+   end if
+   return shellResult
+end fossil_GetRawRemoteUrl
+
+command fossil_SetDefaultRemoteUrl fossilFileOrCheckoutFolder, someUrl
+   /*
+   Usage: fossil remote-url ?URL|off?
+   
+   Query and/or change the default server URL used by the "pull", "push",
+   and "sync" commands.
+   
+   The remote-url is set automatically by a "clone" command or by any
+   "sync", "push", or "pull" command that specifies an explicit URL.
+   The default remote-url is used by auto-syncing and by "sync", "push",
+   "pull" that omit the server URL.
+   */
+   
+   if someUrl is empty then put "off" into someUrl
+   put "fossil remote-url" into someShell
+   put space & kwote (someUrl) after someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_SetDefaultRemoteUrl
+
+
+--> Fossil | Repository | Live
+-
+function fossil_FetchAndCheckProjectDataArray
+   put fossil_ConstructLiveProjectData() into liveProjectData
+   put library_FetchArray ("Fossil") into storedFossilData
+   
+   repeat for each key liveIndexNum in liveProjectData
+      put liveProjectData [liveIndexNum] into liveProjectArray
+      put liveProjectArray ["project-id"] into liveID
+      
+      repeat for each key storedIndexNum in storedFossilData
+         put storedFossilData [storedIndexNum] into storedProjectArray
+         put storedProjectArray ["project-id"] into storedID
+         if storedID = liveID then
+            union liveProjectArray with storedProjectArray
+            put liveProjectArray into liveProjectData [liveIndexNum]
+            exit repeat
+         end if
+      end repeat
+   end repeat
+   return liveProjectData
+end fossil_FetchAndCheckProjectDataArray
+
+function fossil_ConstructLiveProjectData
+   put fossil_ListAllRepositories() into fossilPaths
+   put 1 into indexNum
+   set the itemdelimiter to ":"
+   repeat for each line fossilFile in fossilPaths
+      put fossil_InfoArray (fossilFile) into dataArray [indexNum]
+      put fossilFile into dataArray [indexNum]["repository"]
+      
+      -- put fossil_GetDefaultRemoteUrl (fossilFile) into into dataArray [indexNum]["remote-url"]
+      put fossil_GetRawRemoteUrl (fossilFile) into shellResult
+      if word 1 to -1 of item 2 of line 1 of shellResult = "incorrect repository schema version" then
+         -- need to rebuild
+         repeat for each line someLine in word 1 to -1 of shellResult
+            delete item 1 of someLine
+            put word 1 to -1 of someLine & CR after schemaStatus
+         end repeat
+         delete char -1 of schemaStatus
+         
+         put empty into dataArray [indexNum]["remote-url"]
+         put schemaStatus into dataArray [indexNum]["schema-status"]
+      else
+         put word 1 to -1 of line 1 of shellResult into dataArray [indexNum]["remote-url"]
+      end if
+      
+      put false into dataArray [indexNum]["isExpanded"]
+      add 1 to indexNum
+   end repeat
+   return dataArray
+end fossil_ConstructLiveProjectData
+
+function fossil_ListAllRepositories
+   -- lists all fossil repo files
+   put "fossil all list" into someShell
+   fossil_ExecuteShell someShell
+   put the result into fossilNames
+   return fossilNames
+end fossil_ListAllRepositories
+
+function fossil_ListProjectFiles pFolder
+   -- lists all files in a fossil repo
+   put fossil_ListShortFiles (pFolder) into shortFiles
+   
+   folder_Format pFolder
+   repeat for each line shortFile in shortFiles
+      put pFolder & shortFile & CR after someFiles
+   end repeat
+   delete char -1 of someFiles
+   return someFiles
+end fossil_ListProjectFiles
+
+function fossil_ListShortFiles pFolder, pMoreInfo
+   -- lists all files in a fossil repo
+   put "fossil ls" into someShell
+   if pMoreInfo is true then put space & "-l" after someShell
+   fossil_ExecuteShell someShell, pFolder
+   put the result into shortFiles
+   return shortFiles
+end fossil_ListShortFiles
+
+function fossil_ListProjectNames
+   put fossil_ConstructProjectPathArray() into pathArray
+   return keys(pathArray)
+end fossil_ListProjectNames
+
+function fossil_ConstructProjectPathArray
+   put fossil_ListAllRepositories() into fossilPaths
+   set the itemdelimiter to "/"
+   repeat for each line fossilPath in fossilPaths
+      put item -1 of fossilPath into shortPath
+      put fossilPath into pathArray [shortPath]
+   end repeat
+   return pathArray
+end fossil_ConstructProjectPathArray
+
+
+--> Fossil | Model | Projects
+-
+/*
+Here we save the project-folder, project-id, server-id, admin-user )and initial password) for a fossil project. 
+*/
+
+-- command fossil_AddProjectArray fossilFile, projectArray
+   -- creates a union with stored project array, then saves to disk
+   put library_FetchArray ("Fossil") into fossilArray
+   put fossilArray [fossilFile] into oldProjectArray
+   union oldProjectArray with projectArray
+   put oldProjectArray into fossilArray [fossilFile]
+   library_StoreArray "Fossil", fossilArray
+end fossil_AddProjectArray
+
+function fossil_ConstructStoredPathArray
+   put library_FetchArray ("Fossil") into fossilArray
+   return constructPathArray (fossilArray)
+end fossil_ConstructStoredPathArray
+
+function fossil_FetchProjectData
+   put library_FetchArray ("Fossil") into fossilData
+   return fossilData
+end fossil_FetchProjectData
+
+command fossil_StoreProjectData fossilData
+   library_StoreArray "Fossil", fossilData
+end fossil_StoreProjectData
+
+command fossil_DeleteProjectData
+   library_StoreArray "Fossil", fossilData
+end fossil_DeleteProjectData
+
+function fossil_FetchProjectArray fossilFile
+   put library_FetchArray ("Fossil") into fossilArray
+   return fossilArray [fossilFile]
+end fossil_FetchProjectArray
+
+command fossil_SaveProjectArray fossilFile, projectArray
+   put library_FetchArray ("Fossil") into fossilArray
+   if projectArray is an array then
+      put projectArray into fossilArray [fossilFile]
+   else
+      delete variable fossilArray [fossilFile]
+   end if
+   library_StoreArray "Fossil", fossilArray
+   return fossilArray
+end fossil_SaveProjectArray
+
+command fossil_DeleteProjectArray fossilFile
+   put library_FetchArray ("Fossil") into fossilArray
+   delete variable fossilArray [fossilFile]
+   if fossilArray is not an array then
+      delete variable fossilArray
+   end if
+   library_StoreArray "Fossil", fossilArray
+   return fossilArray
+end fossil_DeleteProjectArray
+   
+
+--> Fossil | Projects
+-
+command fossil_DeleteProject fossilFile
+   put fossil_ListProjectCheckouts (fossilFile) into checkoutFolders
+   
+   delete file fossilFile
+   fossil_DeleteProjectArray fossilFile
+   
+   repeat for each line checkoutFolder in checkoutFolders
+      fossil_Close checkoutFolder
+      fossil_CloseServer checkoutFolder
+   end repeat
+end fossil_DeleteProject
+
+
+--> Private
+-
+private function constructPathArray fossilArray
+   set the itemdelimiter to "/"
+   repeat for each key fossilPath in fossilArray
+      put item -1 of fossilPath into shortPath
+      put fossilPath into pathArray [shortPath]
+   end repeat
+   return pathArray
+end constructPathArray
+
+private command tryAndLaunchInBackgroundWithResult shellFile
+   set the itemdelimiter to "/"
+   put item -1 of shellFile into shortFile
+   put shellFile into shellFolder
+   delete item -1 of shellFolder
+   put "/" after shellFolder
+   
+   finder_Reveal shellFolder
+   
+   put "./" & shortFile into doShellScript
+   -- fossil_ExecuteShell doShellScript, shellFolder
+   put the result into shellResult
+   
+   put the defaultfolder into oFolder
+   set the defaultfolder to shellFolder
+   put shell (doShellScript) into shellResult
+   set the defaultfolder to oFolder
+   return shellResult
+end tryAndLaunchInBackgroundWithResult
+

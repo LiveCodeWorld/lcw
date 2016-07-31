@@ -1,0 +1,10 @@
+setprop daemon_Router someControl
+   -- as messages are dispatched to "the daemon_Router of me" by the 'processRequest" handler
+   -- dispatch "daemon_RouteRequest" to routerObject with requestArray
+   -- we can change it here
+   -- this handler is nto needed as the custom property has the same name
+   
+   if exists (someControl) is false then put empty into someControl
+   set the daemon_Router of me to someControl
+   return someControl
+end daemon_Router

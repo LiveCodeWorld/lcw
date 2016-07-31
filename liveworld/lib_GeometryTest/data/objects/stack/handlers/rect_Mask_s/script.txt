@@ -1,0 +1,27 @@
+setprop rect_Mask [someRect] someColour
+   put the long id of the target into targetObject
+   if someRect is empty then put the rect of targetObject into someRect
+   put the short name of targetObject && someColour into someName
+   
+   switch
+      case exists (btn someName)
+         put the long id of btn someName into placeholderButton
+         
+         if someRect is a rect then
+            set the rect of placeholderButton to someRect
+         end if
+         
+         switch someColour
+            case empty
+            case "random"
+               put colour_GetRandom() into someColour
+            default
+               set the backgroundcolor of placeholderButton to someColour
+         end switch
+         return placeholderButton
+      default
+         create_Placeholder someName, pRect, pGroupID, someColour
+         put the result into placeholderButton
+         return placeholderButton
+   end switch
+end rect_Mask

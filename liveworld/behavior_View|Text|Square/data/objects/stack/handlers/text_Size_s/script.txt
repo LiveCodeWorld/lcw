@@ -1,0 +1,8 @@
+setprop text_Size someSize
+   put _textField() into textField
+   lock screen
+   set the textsize of textField to someSize
+   LayoutControl
+   unlock screen
+   return textField
+end text_Size

@@ -1,0 +1,12 @@
+function fedwiki_ExtractFirstStoryItem pageArray, itemType
+   put pageArray ["story"] into storyArray
+   put item 2 of the extents of storyArray into lastItemNum
+   repeat with itemNum = 1 to lastItemNum
+      put storyArray [itemNum] into itemArray
+      if itemArray ["type"] = itemType then
+         put itemArray ["text"] into someData
+         return someData
+      end if
+   end repeat
+   return empty
+end fedwiki_ExtractFirstStoryItem

@@ -1,0 +1,5 @@
+command fedwiki_StripJournalToCreate @pageArray
+   put pageArray ["journal"][1] into createEntryArray
+   delete variable pageArray ["journal"]
+   put createEntryArray into pageArray ["journal"][1]
+end fedwiki_StripJournalToCreate

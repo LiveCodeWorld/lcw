@@ -1,0 +1,14 @@
+function browser_GetFromRegister IdOrObject
+   global gOPN_BrowserArray
+   if IdOrObject is a number then
+      put IdOrObject into browserID
+      put dictionary_GetReverseValue (gOPN_BrowserArray, browserID) into browserID
+      return browserID
+   else if exists(IdOrObject) then
+      put revRuggedID (IdOrObject) into tObject
+      put dictionary_GetValue (gOPN_BrowserArray, tObject) into browserID
+      return browserID
+   else
+      return empty
+   end if
+end browser_GetFromRegister

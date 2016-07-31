@@ -1,0 +1,36 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_revIgniter_Remote_Menu
+type: controller
+version: 0.1
+
+
+--> Global | revIgniter | Remote | Menu
+-
+[[ _FetchHandler (menu_TestLocalTransporter,c) ]]
+
+[[ _FetchHandler (menu_TestRemoteTransport,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_GraphTransporter,c) ]]
+
+
+--> Fedwiki | Utils
+-
+[[ _FetchHandler (fedwiki_GetDroppedUrl,f) ]]
+   
+[[ _FetchHandler (fedwiki_PostJSON,c) ]]
+
+[[ _FetchHandler (fedwiki_ConstructDroppedJSON,f) ]]
+
+
+--> LiveWorld
+-
+[[ _FetchHandler (liveworld_ConstructControllerUrl,f) ]]
+
+[[ _FetchHandler (liveworld_SaveHTML,c) ]]
+
+[[ _FetchHandler (liveworld_FetchTemplate,f) ]]

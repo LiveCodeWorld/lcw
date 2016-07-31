@@ -1,0 +1,7 @@
+command text_EditFile someFile
+   launch someFile with "Atom"
+   return the result
+   
+   put "edit" && kwote(someFile) into someShell
+   put shell (someShell) into shellResult
+end text_EditFile

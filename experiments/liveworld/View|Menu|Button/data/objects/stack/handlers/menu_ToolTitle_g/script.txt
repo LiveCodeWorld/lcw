@@ -1,0 +1,5 @@
+getprop menu_ToolTitle
+   put the long id of the target into targetObject
+   put menu_GetToolTitle (targetObject) into mToolTitle
+   return mToolTitle
+end menu_ToolTitle

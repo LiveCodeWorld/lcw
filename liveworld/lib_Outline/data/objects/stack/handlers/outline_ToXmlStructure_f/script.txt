@@ -1,0 +1,20 @@
+function outline_ToXmlStructure tabbedOutline
+   put outline_Simplify (tabbedOutline, idArray, keyArray) into simpleOutline
+   put outline_ToXML (simpleOutline) into someXml
+   put xml_Nodes (someXml) into allNodes
+   
+   put revCreateXMLTree (someXml, true, true, false) into treeID
+   set the itemdelimiter to "/"
+   repeat for each line someNode in allNodes
+      revAddXMLNode treeID, someNode, "contents", "", "before"
+      put the result into createdNode
+      
+      set the itemdelimiter to "/"
+      put item -1 of someNode into attributeValue
+      revSetXMLAttribute treeID, createdNode, "nodeID", attributeValue
+   end repeat
+   put revXMLText (treeID, "", true) into someXml
+   revDeleteXMLTree treeID
+   xml_TidySpace someXML
+   return someXml
+end outline_ToXmlStructure

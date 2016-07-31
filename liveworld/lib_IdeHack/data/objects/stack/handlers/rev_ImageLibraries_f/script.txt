@@ -1,0 +1,7 @@
+function rev_ImageLibraries
+    put the mainstacks into allLoaded
+    filter allLoaded with "revLib*"
+    line_Delete "revLibrary", allLoaded
+    -- line_Delete "revLibStandardButtons", allLoaded
+    return allLoaded
+end rev_ImageLibraries

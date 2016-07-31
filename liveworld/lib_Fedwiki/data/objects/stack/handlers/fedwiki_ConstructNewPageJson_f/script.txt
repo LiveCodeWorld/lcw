@@ -1,0 +1,5 @@
+function fedwiki_ConstructNewPageJson pageTitle, pSomeText
+   put fedwiki_ConstructNewPageArray (pageTitle, pSomeText) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end fedwiki_ConstructNewPageJson

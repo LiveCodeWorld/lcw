@@ -1,0 +1,32 @@
+setprop field_ScriptScheme [startAndEnd] someScheme
+   -- sets the colourisation to that of the users preference setting
+   -- someScheme is not currently working.
+   
+   if someScheme is not among the lines of rev_ListColourizationSchemes() then return empty
+   
+   -- put the stack_IsKnown of stack "revNewScriptEditor" -- it is not known - but it is open :)
+   -- dispatch "revSEColorize" to stack "revNewScriptEditor" with pScript,pScheme -- can't get this working???
+   
+   put rev_GetColourizationScheme() into oScheme
+   rev_SetColourizationScheme someScheme
+   
+   put the long id of the target into pField
+   if startAndEnd is empty then
+      put the text of pField into someScript
+      put the number of chars of someScript into pEnd
+      put 1 into pStart
+   else
+      put item 1 of startAndEnd into pStart
+      put item 2 of startAndEnd into pEnd
+   end if
+   
+   dispatch "revSEColorizeField" to stack "revNewScriptEditor" with pField,pStart,pEnd
+   put the result into someScheme
+   switch it
+      case "handled"
+         -- great
+   end switch
+   
+   rev_SetColourizationScheme oScheme
+   return someScheme
+end field_ScriptScheme

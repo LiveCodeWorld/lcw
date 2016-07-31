@@ -1,0 +1,4 @@
+getprop fedwiki_SiteMap
+   put fedwiki_LocalSiteMapJson() into sitemapJSON
+   return sitemapJSON
+end fedwiki_SiteMap

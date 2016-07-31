@@ -1,0 +1,19 @@
+command wireframe_SnapAndExport pSomeControl, pDisplaySnapShot
+   if pSomeControl is empty then put the selObj into selObj
+   if exists (pSomeControl) is false then
+      put the topstack into stackName
+      answer "Not done yet!"
+      exit to top
+      return empty
+   else
+      put the wireframe_ImageShortFile of pSomeControl into shortFile
+      put the wireframe_Snap of pSomeControl into somePNG
+      localhost_SavePng somePNG, shortFile
+      put the result into imageFile
+   end if
+   
+   if pDisplaySnapShot is true then
+      display_Wireframe shortFile
+   end if
+   return imageFile
+end wireframe_SnapAndExport

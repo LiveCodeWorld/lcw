@@ -1,0 +1,5 @@
+function spotlight_GetFileComment someFile
+    applescript_ConvertPath someFile  
+    put merge("comment of the file [[someFile]]") into appleScriptLine
+    return appleScript_DoLine(appleScriptLine, "Finder" , false)
+end spotlight_GetFileComment

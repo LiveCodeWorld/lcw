@@ -1,0 +1,5 @@
+getprop git_StackHashLog [commitHash]
+   put the stack_RelativeFile of the target into relativeFile
+   put git_StackHashLog (relativeFile, commitHash) into gitLog
+   return gitLog
+end git_StackHashLog

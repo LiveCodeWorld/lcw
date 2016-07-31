@@ -1,0 +1,6 @@
+command view_DeleteHelpText vName
+   view_NormalizeName vName
+   put library_TextFile ("help.html", vName, "view", true) into someFile
+   delete file someFile
+   return someFile
+end view_DeleteHelpText

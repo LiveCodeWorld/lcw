@@ -1,0 +1,8 @@
+function hkey_ConstructNameLinks hKeys
+   repeat for each line hkey in hKeys
+      put item 1 of hKey into handlerName
+      put html_ConstructNameLink (handlerName, hKey) & CR after htmlLines
+   end repeat
+   delete char -1 of htmlLines
+   return htmlLines
+end hkey_ConstructNameLinks

@@ -1,0 +1,36 @@
+function script_FileToObject someFiles
+   -- this is ntot working
+   repeat for each line someFile in someFiles
+      set the cursor to busy
+      set the itemdelimiter to "/"
+      put item -2 of someFile into objectFolder
+      put item -4 of someFile into stackName
+      if item -5 of someFile = "object" then
+         put stackName into mainstackName
+      else -- substacks
+         -- /opn_Text/rev/object/Library Manager/objects/substacks/Library Manager|OPN Stack Menus/objects/card_1007/script.txt
+         put stackName into subStackName
+         put item -7 of someFile into mainstackName
+      end if
+      
+      set the itemdelimiter to "_"
+      put item 1 of objectFolder into objectType
+      switch objectType
+         case "stack"
+            if subStackName is empty then
+               put "stack" && kwote (mainstackName) into someObject
+            else
+               put "stack" && kwote (subStackName) && "of stack" && kwote (mainstackName) into someObject
+            end if
+            break
+         default
+            put item 2 of objectFolder into shortID
+            put objectType && "id" && shortID into someObject
+            if subStackName is not empty then put space & "of" && "stack" && kwote (subStackName) after someObject
+            put space & "of" && "stack" && kwote (mainstackName) after someObject
+      end switch
+      put someObject & CR after someObjects
+   end repeat
+   delete char -1 of someObjects
+   return someObjects
+end script_FileToObject

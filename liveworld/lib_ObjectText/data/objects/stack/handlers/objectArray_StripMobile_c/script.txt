@@ -1,0 +1,5 @@
+command objectArray_StripMobile @objectPropArray
+   put objectPropArray ["rev"] into revPropertyArray
+   propertyArray_StripMobile revPropertyArray
+   put revPropertyArray into objectPropArray ["rev"]
+end objectArray_StripMobile

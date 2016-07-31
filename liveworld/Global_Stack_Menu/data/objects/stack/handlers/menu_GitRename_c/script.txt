@@ -1,0 +1,19 @@
+on menu_GitRename scriptObject, someBoolean
+   put the stack_Object of scriptObject into stackObject
+   put the short name of stackObject into oldName
+   
+   set the itemdelimiter to "/"
+   put the filename of stack oldName into oldFile
+   put item -1 of oldFile into oldShortFile
+  
+   put oldFile into newFile
+   put oldName & ".rev" into newShortFile
+   
+   put merge("What do you want to rename this stack '[[oldShortFile]]' to?") into someQuestion
+   put opn_Ask (someQuestion, newShortFile) into newShortFile
+   put newShortFile into item -1 of newFile
+    
+   git_RenameFile oldFile, newFile
+   -- rename file fromFile to toFile
+   return newFile
+end menu_GitRename

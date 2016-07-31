@@ -1,0 +1,13 @@
+command libCGI_Response pContent, pContentType
+   -- Handler that sends output back to the browser. the second parameter is the mime type, if missing it
+   -- defaults to "text/html"
+   
+   if pContentType is empty then put "text/html" into pContentType
+   if gCookieA["name"] is not empty then
+      write OKHeaders(pContent, pContentType) & "Set-Cookie:" && gCookieA["name"] & "=" & gCookieA["value"] & ";" &  crlf & crlf & pContent to socket gRequestA["socketID"]
+      close socket gRequestA["socketID"]
+   else
+      write OKHeaders(pContent, pContentType) & crlf & crlf & pContent to socket gRequestA["socketID"]
+      close socket gRequestA["socketID"]
+   end if
+end libCGI_Response

@@ -1,0 +1,9 @@
+command display_LoadedStacks
+   put revLoadedStacks ("application") into stackNames
+   sort stackNames
+   display_Index stackNames, "Project", "Global | Project | Menu", "Global | Project | Line | Menu", empty, "project_GoToStack"
+   put the result into displayView
+   
+   put project_FetchValue ("openStacks") into stackNames
+   set the selected_Index of displayView to stackNames
+end display_LoadedStacks

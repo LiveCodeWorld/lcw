@@ -1,0 +1,5 @@
+function hkey_GetLinkArray hKey, pOverlayName
+   put hkey_GetOverlayArray (hKey, pOverlayName) into overlayArray
+   put overlayArray ["data"]["linkArray"] into hkeyArray
+   return hkeyArray
+end hkey_GetLinkArray

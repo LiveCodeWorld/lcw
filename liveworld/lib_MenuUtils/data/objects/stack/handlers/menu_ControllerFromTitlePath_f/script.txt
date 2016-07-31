@@ -1,0 +1,5 @@
+function menu_ControllerFromTitlePath mTitlePath
+   global gTemp_ActiveMenuArray
+   put gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mController"] into mController
+   return mController
+end menu_ControllerFromTitlePath

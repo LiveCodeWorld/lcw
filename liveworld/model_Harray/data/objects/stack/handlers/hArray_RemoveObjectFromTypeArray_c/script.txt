@@ -1,0 +1,10 @@
+command hArray_RemoveObjectFromTypeArray rObject, @hArray
+   put hArray ["objectType"] into objectTypeArray
+   repeat for each key objectType in objectTypeArray
+      -- remove the object from every object type
+      delete variable hArray ["objectType"][objectType][rObject]
+      if objectTypeArray [typePath] is not an array then
+         delete variable hArray ["objectType"][typePath]
+      end if
+   end repeat
+end hArray_RemoveObjectFromTypeArray

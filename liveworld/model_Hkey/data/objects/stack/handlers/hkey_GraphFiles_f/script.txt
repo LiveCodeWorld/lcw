@@ -1,0 +1,7 @@
+function hkey_GraphFiles hKey, pOverlayName, pVersionName
+   put library_HandlerFile (hKey, empty, true) into dotFolder
+   overlay_Files dotFolder, dotFile, imageFile, cmapFile, xdotFile, dotArrayFile, pOverlayName
+   put dotFile,imageFile,cmapFile,xdotFile,dotArrayFile,pOverlayName into someFiles
+   replace comma with  CR in someFiles
+   return someFiles
+end hkey_GraphFiles

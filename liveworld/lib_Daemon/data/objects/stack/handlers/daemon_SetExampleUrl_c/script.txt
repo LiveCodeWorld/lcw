@@ -1,0 +1,5 @@
+command daemon_SetExampleUrl someRoute, someUrl
+   put "/example url" after someRoute
+   daemon_SetRouteValue someRoute, someUrl
+   return the result
+end daemon_SetExampleUrl

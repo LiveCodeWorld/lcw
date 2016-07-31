@@ -1,0 +1,15 @@
+function shell_Tidy someHTML, pOptions
+   -- https://en.wikipedia.org/wiki/HTML_Tidy
+   -- put "<html> <head> <title>Hello David!</title> </head> <body> <h1>Hello World!</h1> </body> </html>" into $LIVECODEVAR
+   
+   put someHTML into $TEMPLIVECODEVAR
+   put "echo $TEMPLIVECODEVAR | tidy" into someShell
+   if pOptions is not empty then put space & pOptions after someShell
+   
+   put shell (someShell) into tidyResult
+   set the wholematches to true
+   put lineoffset (empty, tidyResult) into emptyLineNum
+   put line 1 to emptyLineNum of tidyResult into someInfo
+   delete line 1 to emptyLineNum of tidyResult
+   return tidyResult
+end shell_Tidy

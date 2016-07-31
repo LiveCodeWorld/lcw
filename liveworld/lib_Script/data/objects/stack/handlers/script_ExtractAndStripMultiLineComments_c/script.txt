@@ -1,0 +1,20 @@
+command script_ExtractAndStripMultiLineComments @someScript, @mulitLineComment
+   put empty into mulitLineComment
+   repeat
+      script_MultiLineCommentOffsets someScript, startChar, endChar
+      put the result into nextComment
+      if nextComment is empty then
+         exit repeat
+      else
+         put startChar,endChar & CR after commentOffsets
+         delete char 1 to 2 of nextComment
+         delete char -2 to -1 of nextComment
+         put word 1 to -1 of nextComment into nextComment
+         delete char startChar to (endChar + 1) of someScript   
+         
+         put nextComment & CR & CR after mulitLineComment
+      end if
+   end repeat
+   delete char -1 of commentOffsets
+   return commentOffsets
+end script_ExtractAndStripMultiLineComments

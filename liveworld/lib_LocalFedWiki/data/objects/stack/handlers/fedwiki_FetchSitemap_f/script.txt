@@ -1,0 +1,5 @@
+function fedwiki_FetchSitemap fedwikiDomain
+   put fedwiki_JsonSiteMapUrl (fedwikiDomain) into someUrl
+   put url someUrl into sitemapJSON
+   return sitemapJSON
+end fedwiki_FetchSitemap

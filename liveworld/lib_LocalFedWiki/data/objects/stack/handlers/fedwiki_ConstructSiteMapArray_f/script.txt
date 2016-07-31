@@ -1,0 +1,10 @@
+function fedwiki_ConstructSiteMapArray pageTitle, pageSynopsis, pDateInMilliseconds, pPageSlug
+   if pPageSlug is empty then put fedwiki_ConstructSlug (pageTitle) into pPageSlug
+   if pDateInMilliseconds is empty then put the milliseconds into pDateInMilliseconds
+   
+   put pDateInMilliseconds into mapArray ["date"] 
+   put pPageSlug into mapArray ["slug"]
+   put pageSynopsis into mapArray ["synopsis"] 
+   put pageTitle into mapArray ["title"]    
+   return mapArray
+end fedwiki_ConstructSiteMapArray

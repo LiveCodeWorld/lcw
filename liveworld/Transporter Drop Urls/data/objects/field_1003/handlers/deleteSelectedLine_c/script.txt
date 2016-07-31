@@ -1,0 +1,5 @@
+command deleteSelectedLine
+   put the hilitedline of me into lineNum
+   delete line lineNum of me
+   set the hilitedline of me to lineNum
+end deleteSelectedLine

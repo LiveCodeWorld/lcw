@@ -1,0 +1,10 @@
+setprop template_Array templateArray
+   -- a structural mirror of "view_Array"
+   put the template_Model of the target into templateModel
+   
+   lock messages -- so as not to trigger custom prop
+   set the view_Array of templateModel to templateArray
+   unlock messages
+   
+   return templateModel
+end template_Array

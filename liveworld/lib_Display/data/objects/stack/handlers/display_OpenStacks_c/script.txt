@@ -1,0 +1,7 @@
+on display_OpenStacks
+   put the openstacks into stackNames
+   display_Index stackNames, "Project", "Global | Project | Menu", "Global | Project | Line | Menu", empty, "project_GoToStack"
+   put the result into displayView
+   set the multiple_Hilites of displayView to false
+   return displayView
+end display_OpenStacks

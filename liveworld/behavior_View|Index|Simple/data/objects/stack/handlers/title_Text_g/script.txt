@@ -1,0 +1,5 @@
+getprop title_Text
+   -- put the label of _titleView() into someTitle
+   put the short name of _titleView() into someTitle
+   return someTitle
+end title_Text

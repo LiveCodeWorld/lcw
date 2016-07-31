@@ -1,0 +1,4 @@
+on menu_RevealFolder hKey
+   put project_HandlerMetadataFolder (hKey) into overlayFolder
+   finder_Reveal overlayFolder
+end menu_RevealFolder

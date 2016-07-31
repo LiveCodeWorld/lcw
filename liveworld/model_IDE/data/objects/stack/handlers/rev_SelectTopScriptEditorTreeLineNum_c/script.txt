@@ -1,0 +1,12 @@
+command rev_SelectTopScriptEditorTreeLineNum hHkeyOrLineNum
+   put rev_HandlerTreeField() into handlerField
+   if hHkeyOrLineNum is a number then
+      put hHkeyOrLineNum into hLineNum
+   else
+      put hHkeyOrLineNum into hKey
+      
+   end if
+   
+   set the hilitedline of handlerField to hLineNum
+   dispatch "closeAccept" to handlerField
+end rev_SelectTopScriptEditorTreeLineNum

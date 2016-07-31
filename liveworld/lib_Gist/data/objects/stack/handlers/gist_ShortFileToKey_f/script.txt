@@ -1,0 +1,6 @@
+function gist_ShortFileToKey shortController, gistType, pShortServer
+   -- was "rig_ShortFileToGist"
+   put gist_ConstructTypeFilter (gistType, pShortServer) into serverBit
+   put serverBit & shortController into shortGistFile
+   return shortGistFile
+end gist_ShortFileToKey

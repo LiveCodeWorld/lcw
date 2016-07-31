@@ -1,0 +1,9 @@
+function image_AverageBlockColour megaX, megaY, imageObject, dimensionX, dimensionY
+  put image_ConstructPixelArray(imageObject, dimensionX, dimensionY) into someArray
+  
+  put megaX && megaY into someKey
+  put someArray[someKey] into someMegaPixel
+  put image_AveragePixel(someMegaPixel) into avColour
+   
+  return avColour
+end image_AverageBlockColour

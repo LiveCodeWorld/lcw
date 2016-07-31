@@ -1,0 +1,12 @@
+function youtube_FetchPlayListPageArray playlistID, pPageTitle, pMaxResults, pDontLinkTitle, pNextPageToken
+   local orderedSnippetArray
+   set_PlayListPageTitle pPageTitle, playlistID
+   
+   put youtube_FetchPlayListArray (playlistID, pMaxResults, pNextPageToken) into playlistArray
+   put playlistArray ["nextPageToken"] into nextPageToken
+   put playlistArray ["prevPageToken"] into prevPageToken
+   
+   put playlistArray ["items"] into orderedSnippetArray
+   put construct_AllVideoPageArray (orderedSnippetArray, pPageTitle, nextPageToken, pDontLinkTitle) into pageArray
+   return pageArray
+end youtube_FetchPlayListPageArray

@@ -1,0 +1,5 @@
+command git_RemoveProject gitRootFolder
+   put git_GetProjectArray() into gitProjectArray
+   delete variable gitProjectArray [gitRootFolder]
+   return keys(gitProjectArray)
+end git_RemoveProject

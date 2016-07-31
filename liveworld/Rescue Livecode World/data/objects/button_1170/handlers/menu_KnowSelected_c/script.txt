@@ -1,0 +1,8 @@
+on menu_KnowSelected indexView
+   answer warning "Add all selected stacks to the stackfiles of the 'Rescue Livecode World' stack?" with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   put the selected_LongStackFiles of indexView into stackPaths
+   put the name of stack "Rescue Livecode World" into projectHomeStack
+   set the stackFile_ExtraPaths of projectHomeStack to stackPaths
+end menu_KnowSelected

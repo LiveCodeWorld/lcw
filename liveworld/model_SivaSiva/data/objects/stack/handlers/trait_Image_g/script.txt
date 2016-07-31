@@ -1,0 +1,7 @@
+getprop trait_Image
+   put the chapter_Array of plusMinusView into chapterArray
+   put chapterArray ["traitImageSource"] into imagePath
+   
+   put the project_Folder of the target into projectFolder
+   return projectFolder & imagePath
+end trait_Image

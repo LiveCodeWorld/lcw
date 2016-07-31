@@ -1,0 +1,5 @@
+function mainstack_FetchText mainStackFolder, shortFile
+   put mainstack_MetadataFolder (mainStackFolder, empty, pDontCreate) & shortFile into someFile
+   put url ("binfile:" & someFile) into someData
+   return someData
+end mainstack_FetchText

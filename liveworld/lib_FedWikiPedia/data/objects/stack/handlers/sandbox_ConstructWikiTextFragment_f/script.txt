@@ -1,0 +1,11 @@
+function sandbox_ConstructWikiTextFragment pageTitle
+   -- use parse like "sandbox_ConstructSectionFragment" instead?
+   --action=query&format=json&prop=revisions&titles=Pliocene&rvprop=content&rvexpandtemplates=1&rvsection=0
+   
+   put "/w/api.php?action=query&format=json&prop=revisions&titles=" into sandBoxFragment
+   put urlencode (pageTitle) after sandBoxFragment
+   put "&rvprop=content&rvexpandtemplates=1"after sandBoxFragment
+   -- put "&rvsection=0" after sandBoxFragment
+   put "&redirects" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructWikiTextFragment

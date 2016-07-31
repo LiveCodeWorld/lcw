@@ -1,0 +1,8 @@
+on menu_FindSites mTarget
+   put "tigrutigru" into nameStem
+   put "https://www.google.se/?gfe_rd=cr&ei=ihuFVb6rFaar8wfVj4GoBA" into someURL
+   put merge ("&gws_rd=ssl#q=%22Welcome+visitors%22+%22site+owned+by+[[nameStem]]%22") after someURL
+   
+   put the browser_Widget of mTarget into browserWidget
+   set the url of browserWidget to someURL
+end menu_FindSites

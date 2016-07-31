@@ -1,0 +1,5 @@
+function wikicommons_ConstructVideoCaption pageTitle, descriptionURL   
+   put "<br></br>" into someHTML
+   put html_ConstructRefLink (pageTitle, descriptionURL, "_blank") after someHTML 
+   return someHTML
+end wikicommons_ConstructVideoCaption

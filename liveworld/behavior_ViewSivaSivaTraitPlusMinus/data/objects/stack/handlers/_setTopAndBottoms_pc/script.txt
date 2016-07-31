@@ -1,0 +1,11 @@
+private command _setTopAndBottoms innerTop, innerBottom, extraInnerMargin, traitHeight, arrowGap, @pTop, @pBottom, @nTop, @nBottom, @aTop, @aBottom
+   -- here we set all the important vertical geometry
+   put innerTop + extraInnerMargin into pTop
+   put pTop + traitHeight into pBottom
+   
+   put innerBottom - extraInnerMargin into nBottom
+   put nBottom - traitHeight into nTop
+   
+   put pBottom + arrowGap into aTop
+   put nTop - arrowGap into aBottom
+end _setTopAndBottoms

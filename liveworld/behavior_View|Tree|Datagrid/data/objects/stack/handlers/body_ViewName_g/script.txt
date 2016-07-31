@@ -1,0 +1,5 @@
+getprop body_ViewName
+   put the body_View of me into bodyView
+   put the view_Name of bodyView into vName
+   return vName
+end body_ViewName

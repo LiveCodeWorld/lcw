@@ -1,0 +1,11 @@
+command fossil_DeleteSetting someSetting, pCheckoutFolder
+   put "fossil unset" && someSetting into someShell
+   
+   if pCheckoutFolder is empty then
+      put fossil_GetDefaultRepoFolder() into pCheckoutFolder
+      put space & "-global" after someShell
+   end if
+   
+   fossil_ExecuteShell someShell, pCheckoutFolder
+   return the result
+end fossil_DeleteSetting

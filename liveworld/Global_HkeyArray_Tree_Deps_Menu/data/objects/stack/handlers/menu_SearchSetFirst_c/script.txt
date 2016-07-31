@@ -1,0 +1,6 @@
+on menu_SearchSetFirst scriptObject, setName
+   lock messages
+   set the set_Name of me to setName
+   unlock messages
+   return setName
+end menu_SearchSetFirst

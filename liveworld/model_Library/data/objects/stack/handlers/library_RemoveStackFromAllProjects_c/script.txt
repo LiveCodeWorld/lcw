@@ -1,0 +1,12 @@
+command library_RemoveStackFromAllProjects stackObjects
+   put library_ListSetNames() into projectNames
+   repeat for each line projectName in projectNames
+      if projectName is among the items of "All,None" then next repeat
+      
+      repeat for each line stackObject in stackObjects
+         library_DeleteUsedStack stackObject, projectName
+         library_DeleteBackObject stackObject, projectName
+         library_DeleteFrontObject stackObject, projectName
+      end repeat
+   end repeat
+end library_RemoveStackFromAllProjects

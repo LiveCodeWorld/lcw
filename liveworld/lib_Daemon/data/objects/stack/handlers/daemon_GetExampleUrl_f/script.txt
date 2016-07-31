@@ -1,0 +1,5 @@
+function daemon_GetExampleUrl someRoute
+   put "/example url" after someRoute
+   put daemon_GetRouteValue (someRoute) into routeData
+   return routeData
+end daemon_GetExampleUrl

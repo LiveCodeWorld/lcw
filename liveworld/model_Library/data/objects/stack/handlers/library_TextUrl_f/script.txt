@@ -1,0 +1,6 @@
+function library_TextUrl shortName, folderName, folderOwnerName, pDontCreate
+   -- here we could also switch to online mode and fetch from an http url
+   put library_TextFile (shortName, folderName, folderOwnerName, pDontCreate) into localFile
+   if localFile is empty then return empty
+   return "binfile:" & localFile
+end library_TextUrl

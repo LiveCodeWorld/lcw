@@ -1,0 +1,5 @@
+function html_BasicToRev someHtml
+    put html_BoldSpanToRev(someHtml) into someHtml
+    put html_ColourSpanToRev(someHtml) into someHtml
+    return someHtml
+end html_BasicToRev

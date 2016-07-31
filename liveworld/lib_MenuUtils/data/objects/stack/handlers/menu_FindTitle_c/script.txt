@@ -1,0 +1,14 @@
+command menu_FindTitle mTitle, targetObject, @mController, pWhichHierarchy
+   -- put the view_Hierarchy of the target into testControllers
+   if pWhichHierarchy is empty then put "stack" into pWhichHierarchy -- or maybe use "development" as default ?
+   put the hkey_SearchHierarchy [pWhichHierarchy] of targetObject into testControllers
+   
+   set the itemdelimiter to "|"
+   set the wholematches to true
+   repeat for each line mController in testControllers
+      put menu_CheckTitleController (mTitle, mController) into isThere
+      if isThere is true then return true
+   end repeat
+   put empty into mController
+   return false
+end menu_FindTitle

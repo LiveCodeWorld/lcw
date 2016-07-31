@@ -1,0 +1,4 @@
+function hkey_FindInHierarchy shortHKey, tObject, pProjectName
+   put hkey_FoundArray (shortHKey, tObject, pProjectName) into foundArray 
+   return foundArray ["foundHkey"]
+end hkey_FindInHierarchy

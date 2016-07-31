@@ -1,0 +1,6 @@
+command menu_SetGlobalController globalMenuTitle, scriptObject
+   put menu_GetGlobalArray() into gMenuHkeyArray
+   put the rugged_ID of scriptObject into gMenuHkeyArray [globalMenuTitle]["mController"]
+   menu_SetGlobalArray gMenuHkeyArray
+   return the result
+end menu_SetGlobalController

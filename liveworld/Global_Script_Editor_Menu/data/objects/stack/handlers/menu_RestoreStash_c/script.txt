@@ -1,0 +1,12 @@
+on menu_RestoreStash scriptObject
+   global gTemp_Stash
+   
+   put revRuggedID (scriptObject) into scriptObject
+   put gTemp_Stash ["scripts"][scriptObject]["stashFile"] into stashFile
+   put url ("binfile:" & stashFile) into someScript
+   
+   put someScript
+   
+   -- set the script of scriptObject to someScript
+   -- edit the script of scriptObject
+end menu_RestoreStash

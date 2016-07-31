@@ -1,0 +1,3 @@
+function hkey_HandlerFile hKey, pDontCreate
+   return hkey_Folder (hKey, pDontCreate) & "script.txt"
+end hkey_HandlerFile

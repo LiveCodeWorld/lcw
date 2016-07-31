@@ -1,0 +1,18 @@
+command rev_ActivateScriptEditorTab someObject, pSetScript
+   put revRuggedId (someObject) into someObject
+   put rev_ListTabScriptObjects() into ruggedIDs
+   set the wholematches to true
+   if someObject is not among the lines of ruggedIDs then return false
+   
+   put rev_ScriptEditorGroup() into revScriptEditorGroup
+   dispatch "revSESetCurrentObject" to revScriptEditorGroup with someObject
+   
+   if pSetScript is not empty then
+      put rev_GetCachedScript (someObject) into oldCachedScript
+      rev_SetScriptEditorField pSetScript
+      set the clipboarddata to oldCachedScript
+      return oldCachedScript
+   else
+      return true
+   end if
+end rev_ActivateScriptEditorTab

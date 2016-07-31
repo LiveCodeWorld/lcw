@@ -1,0 +1,7 @@
+command rescue_DisplayedShortFiles folderGroupName
+   lock screen
+   put rescue_GetFiles (folderGroupName) into  shortFiles  
+   set the displayed_Libraries of me to shortFiles
+   hilite_Displayed
+   unlock screen
+end rescue_DisplayedShortFiles

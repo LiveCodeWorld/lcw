@@ -1,0 +1,12 @@
+getprop vb_Names [scriptObject]
+   put object_ListLables ("view behavior") into someMenu
+   replace "View|" with empty in someMenu
+   sort someMenu
+   
+   if someMenu is empty then
+      return "Clear"
+   else
+      put CR & "-" & CR & "Clear" after someMenu
+      return someMenu
+   end if
+end vb_Names

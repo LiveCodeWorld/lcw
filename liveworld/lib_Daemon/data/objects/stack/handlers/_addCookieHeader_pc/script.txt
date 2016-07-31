@@ -1,0 +1,4 @@
+private command _addCookieHeader @someHeader, cookieName, cookieValue
+   put cookieName & "=" & cookieValue & ";" into cookieString
+   put CRLF & "Set-Cookie:" && cookieString  after someHeader
+end _addCookieHeader

@@ -1,0 +1,34 @@
+command fedwiki_ParseDropUrl dropJSON
+   put json_ToArray (dropJSON) into dropArray
+   put dropArray ["text"] into droppedText
+   put dropArray ["html"] into droppedHtml
+   
+   set the itemdelimiter to "/"
+   switch
+   case item -1 of droppedText begins with "File:" -- only one needed
+   fedwiki_ParseDroppedWikipediaImage droppedText
+   break
+   case droppedText is empty and droppedHtml contains "https://upload.wikimedia.org/wikipedia/commons/thumb/"  -- a thumbnail
+   fedwiki_ParseWikipediaThumbNail droppedHtml
+   break
+   case droppedText is empty  -- a Fedwiki flag, or Twins, or a Neighbour
+   fedwiki_ParseFlag droppedHtml
+   break
+   case matchText (droppedText, "^https:\/\/(..)\.wikipedia.org\/w\/index.php\?title=(.+)&action=edit&section=(.+)$", someLang, sectionTitle, sectionNum)
+   -- section edit link
+   set the itemdelimiter to "&"
+   put item 1 of sectionNum into sectionNum
+   fedwiki_ParseWikipediaEditLink sectionTitle, sectionNum, droppedText, someLang
+   break
+   case droppedHtml is empty -- an external url like Wikipedia
+   fedwiki_ParseExternalUrl droppedText
+   break
+   case char -5 to -1 of droppedText = ".html" -- test to see if it is a fedwiki standalone link?
+   fedwiki_ParseFedwikiLink droppedText, dropJSON
+   break
+   default
+   put "Not a link that I can parse." & CR & CR & dropJSON into someInfo
+   put fedwiki_ConstructErrorJSON (someInfo) into someJSON -- "maybe a standalone fedwiki link"
+   fedwiki_ReturnJSON someJSON
+end switch
+end fedwiki_ParseDropUrl

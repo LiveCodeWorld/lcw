@@ -1,0 +1,11 @@
+function text_LineEndingPlatform someText
+   if someText contains CRLF then
+      return "Windows"
+   else if someText contains LF then
+      return "Unix"
+   else if someText contains CR then
+      return "Mac"
+   else
+      return empty
+   end if
+end text_LineEndingPlatform

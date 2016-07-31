@@ -1,0 +1,13 @@
+private command process_LivecodeStack
+   -- it is a stack
+   put RevHTTPFolder() & "/stacks" & gRequestA ["Requested URL"] into someFile
+   if there is a file someFile then
+      -- Two steps for libCGI compatiblity, start using the stack, send the command to it.
+      try
+         library someFile
+         send gRequestA ["cmd"] to stack someFile
+      catch someError
+         libCGI_Response "Error (usually wrong cmd):" && someError
+      end try
+   end if
+end process_LivecodeStack

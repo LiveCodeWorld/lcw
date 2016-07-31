@@ -1,0 +1,8 @@
+command hArray_SetKeywordArray keywordArray, pKWord
+   global gHkey_Array
+   if kWord is empty then
+      put keywordArray into gHkey_Array ["keywordArray"]
+   else
+      put keywordArray into gHkey_Array ["keywordArray"][pKWord]
+   end if
+end hArray_SetKeywordArray

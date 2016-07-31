@@ -1,0 +1,10 @@
+function array_Difference someArray, anotherArray
+    put someArray into tempArray
+    intersect tempArray with anotherArray
+    repeat for each line someKey in (the keys of tempArray)
+        delete local someArray [someKey]
+        delete local anotherArray [someKey]
+    end repeat
+    union someArray with anotherArray
+    return anotherArray
+end array_Difference

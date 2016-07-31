@@ -1,0 +1,24 @@
+command object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport
+   -- simply export the objects script to the right place (see also "exported_Script")
+   -- note use of binFile to avoid translating of LF to CR on Macs by Revolution (which causes difficulties for git)
+   if there is not a folder objectFolder then
+       folder_CreateNested objectFolder
+   end if
+   
+   put objectFolder_ScriptFile (objectFolder) into someFile
+   if pDontExport is true then return someFile
+   
+   if pExportHandlers is not false then
+      script_ExportHandlersAndCalls someScript, objectFolder
+      put the result into someFile
+   else
+      if someScript is empty then
+         -- not really needed as everything is deleted before re-exporting
+         delete file someFile
+         put empty into someFile
+      else
+         put someScript into url ("binfile:" & someFile)
+      end if
+   end if
+   return someFile
+end object_ExportScript

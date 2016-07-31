@@ -1,0 +1,9 @@
+command file_CreateText someText, pFile
+   if pFile is empty then
+      put the tempname into pFile
+   end if
+   put folder_Above (pFile) into someFolder
+   folder_CreateNested someFolder
+   put someText into url ("file:" & pFile)
+   return pFile
+end file_CreateText

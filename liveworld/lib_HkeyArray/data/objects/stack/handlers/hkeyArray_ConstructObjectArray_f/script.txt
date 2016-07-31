@@ -1,0 +1,15 @@
+function hkeyArray_ConstructObjectArray hkeyArray, pPretty
+   put array_AllNodes (hkeyArray) into allCalls
+   
+   repeat for each line hKey in allCalls
+      put item 3 of hKey into someObject
+      if pPretty is not false then
+         if exists (someObject) then put the mobile_Name of someObject into someObject
+      end if
+      
+      put objectArray [someObject] into hKeys
+      line_Add hKey, hKeys
+      put hKeys into objectArray [someObject]
+   end repeat
+   return objectArray
+end hkeyArray_ConstructObjectArray

@@ -1,0 +1,8 @@
+getprop git_StackTreeish [commitHash]
+   put the stack_RelativeFile of the target into relativePath
+   if commitHash is empty then
+      return relativePath
+   else
+      return commitHash & ":" & relativePath
+   end if
+end git_StackTreeish

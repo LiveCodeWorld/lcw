@@ -1,0 +1,8 @@
+getprop browser_Type
+   put the browser_Type of me into browserType
+   if browserType = "safari" then
+      return "safari"
+   else
+      return "chrome"
+   end if
+end browser_Type

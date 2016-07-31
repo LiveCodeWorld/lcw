@@ -1,0 +1,25 @@
+function rig_GetSystemFolder pFolder
+   -- quick hack
+   -- this depends on the site specific configuration
+   -- ie is it configured to have multiple sites
+   
+   if the environment = "server" then
+      put gAPPPATH into rigSystemFolder
+   else
+      put server_RigApplicationFolder() into rigSystemFolder
+   end if
+   
+   -- here is the hack :)
+   set the itemdelimiter to "/"
+   if server_GetURL() = "livecode.world" then
+      delete item -1 of rigSystemFolder
+   else
+      delete item -2 to -1 of rigSystemFolder
+   end if
+   
+   text_AddTrailing rigSystemFolder, "/"
+   if pFolder is not empty then
+      put pFolder & "/" after rigSystemFolder
+   end if
+   return rigSystemFolder
+end rig_GetSystemFolder

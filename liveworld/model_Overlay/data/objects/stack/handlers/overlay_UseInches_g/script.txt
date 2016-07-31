@@ -1,0 +1,5 @@
+getprop overlay_UseInches [pOverlayName]
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   put overlayArray_GetGraphProperty (overlayArray, word 1 of the params) into someValue
+   return someValue
+end overlay_UseInches

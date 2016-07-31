@@ -1,0 +1,10 @@
+on menu_MergeScriptTemplate textDisplayView
+   put the view_Text of textDisplayView into mergeScript
+   put the displayed_File of textDisplayView into scriptFile
+   
+   put script_MergeHandlers (scriptFile, mergeScript) into someScript
+   set the clipboarddata ["text"] to someScript
+   put someScript
+   
+   answer "Copied merged script to the clipboard."
+end menu_MergeScriptTemplate

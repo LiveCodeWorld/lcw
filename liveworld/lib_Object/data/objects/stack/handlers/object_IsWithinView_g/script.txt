@@ -1,0 +1,12 @@
+getprop object_IsWithinView
+   -- a view which is a shared background would intercept view_object
+   -- this script then tests if it is actually within the view and not just on message path of "view_Object
+   
+   put the long ID of the target into targetObject
+   put the view_Object of targetObject into viewObject
+   if exists(viewObject) then
+      return targetObject contains the long ID of viewObject
+   else
+      return false
+   end if
+end object_IsWithinView

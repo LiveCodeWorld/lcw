@@ -1,0 +1,18 @@
+command hkey_SetOverlayData hKey, overlayData
+   put hkey_ArrayFile (hKey) into someFile
+   
+   if overlayData is an array then
+      put arrayencode (overlayData) into encodedArray
+      put encodedArray into url ("binfile:" & someFile)
+      return someFile
+   else if overlayData is empty then
+      put hkey_Files (hKey, pVersionName) into someFiles
+      set the itemdelimiter to "/"
+      repeat for each line someFile in someFiles
+         put item -1 of someFile into shortFile
+         if shortFile is among the items of "handler.txt/help.html" then next repeat
+         delete file someFile
+      end repeat
+      return empty
+   end if
+end hkey_SetOverlayData

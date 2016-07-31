@@ -1,0 +1,11 @@
+function git_FileLog someFile, pHowMany, pAllBranches, pLogFormat
+   put "git log" into someShell
+   if pAllBranches is not false then put space & "--all" after someShell
+   if pLogFormat is empty then put "oneline" into pLogFormat
+   if pLogFormat is not empty then put space & "--pretty=" & pLogFormat after someShell
+   if pHowMany is not empty then put space & "-n" & pHowMany after someShell
+   if someFile is not empty then put space & "--" && kwote(someFile, "'") after someShell
+   
+   put git_ExecuteShellCommand (someShell) into simpleLog
+   return simpleLog
+end git_FileLog

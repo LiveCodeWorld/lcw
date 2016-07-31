@@ -1,0 +1,63 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: behavior_View|Text|Square|Arrows|Horizontal
+type: behavior
+version: 0.3
+
+
+local LocalArray
+
+
+--> Controls
+-
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (horizontalArrow_View,g) ]]
+
+[[ _FetchHandler (sivaSquareText_View,g) ]]
+
+
+--> Children
+-
+[[ _FetchHandler (square_View,g) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (arrow_HeightFactor,g) ]]
+
+[[ _FetchHandler (arrow_Scale,g) ]]
+
+[[ _FetchHandler (arrow_Scale,s) ]]
+
+[[ _FetchHandler (arrow_Margin,g) ]]
+
+[[ _FetchHandler (arrow_Margin,s) ]]
+
+
+--> Geometry | Fixed
+-
+[[ _FetchHandler (_arrowWidth,f) ]]
+
+[[ _FetchHandler (default_ArrowMargin,pf) ]]
+
+
+
+--> Events
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (calculate_SquareRect,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_squareView,pf) ]]
+
+[[ _FetchHandler (_leftArrow,pf) ]]
+
+[[ _FetchHandler (_rightArrow,pf) ]]

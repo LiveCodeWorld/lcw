@@ -1,0 +1,13 @@
+command hArray_RemoveObject someObject
+   global gHkey_Array
+   if exists (someObject) then
+      put revRuggedID (someObject) into rObject
+      put the object_Metadata of rObject into uRipArray
+   else
+      put someObject into rObject -- assume it is in the right format (won't do anythign if it is not)
+      put empty into uRipArray -- won;t strip same name / type objects
+   end if
+   
+   global gHkey_Array
+   hArray_RemoveObjectFromArray rObject, gHkey_Array, uRipArray
+end hArray_RemoveObject

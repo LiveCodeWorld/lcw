@@ -1,0 +1,4 @@
+function wiki_GetSiteFolder
+   put $HOME & "/.wiki/" into wikiSiteFolder
+   return wikiSiteFolder
+end wiki_GetSiteFolder

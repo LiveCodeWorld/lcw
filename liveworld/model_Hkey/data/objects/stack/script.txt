@@ -1,0 +1,255 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Hkey
+type: model
+version: 0.8
+
+
+/*
+A model for indexing handlers.
+*/
+
+
+--> Hkey
+-
+[[ _FetchHandler (hkey_Construct,f) ]]
+
+[[ _FetchHandler (hkey_Deconstruct,c) ]]
+
+
+--> Script | scriptLine
+-
+[[ _FetchHandler (hkey_GetScriptLine,f) ]]
+
+[[ _FetchHandler (hkey_ScriptLineNum,f) ]]
+
+[[ _FetchHandler (hkey_ScriptLine,f) ]]
+
+[[ _FetchHandler (hkey_FindScriptLine,c) ]]
+
+
+--> Hkey | Files
+-
+[[ _FetchHandler (hkey_HandlerFile,f) ]]
+
+[[ _FetchHandler (hkey_CallsFile,f) ]]
+
+[[ _FetchHandler (hkey_ArrayFile,f) ]]
+
+[[ _FetchHandler (hkey_DotFile,f) ]]
+
+[[ _FetchHandler (hkey_CmapxFile,f) ]]
+
+[[ _FetchHandler (hkey_ImageFile,f) ]]
+
+[[ _FetchHandler (hkey_HelpFile,f) ]]
+
+
+--> Hkey | Folders
+-
+/*
+These handlers refer to the permanent fixed shared location of the files in hkey handler database.
+*/
+
+[[ _FetchHandler (hkey_Folder,f) ]]
+
+[[ _FetchHandler (hkey_DeconstructFolder,c) ]]
+
+[[ _FetchHandler (hkey_FromFolder,f) ]]
+
+[[ _FetchHandler (hkey_FromShortFolder,f) ]]
+
+[[ _FetchHandler (hkey_FolderName,f) ]]
+
+
+--> Hkey | Files
+-
+[[ _FetchHandler (hkey_Files,f) ]]
+
+[[ _FetchHandler (hkey_ImageMapPngs,f) ]]
+
+[[ _FetchHandler (hkey_GraphFiles,f) ]]
+
+
+--> Hkey | Files | Delete
+-
+[[ _FetchHandler (hkey_DeleteArrayFile,c) ]]
+
+[[ _FetchHandler (hkey_DeleteDotFile,c) ]]
+
+[[ _FetchHandler (hkey_DeleteImageMapPngs,c) ]]
+
+[[ _FetchHandler (hkey_DeleteImageFile,c) ]]
+
+[[ _FetchHandler (hkey_DeleteHandlerFile,c) ]]
+
+[[ _FetchHandler (hkey_DeleteHelpFile,c) ]]
+
+
+--> Hkey | Data
+-
+[[ _FetchHandler (hkey_ListShortFolders,f) ]]
+
+[[ _FetchHandler (hkey_ListShortVersionFolders,f) ]]
+
+[[ _FetchHandler (hkey_ListVersionNames,f) ]]
+
+
+--> Hkey | Handler
+-
+[[ _FetchHandler (library_FetchHandler,f) ]]
+
+[[ _FetchHandler (hkey_StoreHandler,c) ]]
+
+
+--> hkey | Handler | Export and Import
+-
+[[ _FetchHandler (hkey_Export,c) ]]
+
+
+--> Handler | Is
+-
+[[ _FetchHandler (handler_IsComponent,f) ]]
+
+
+--> Hkey | MetaData | DotText
+-
+[[ _FetchHandler (hkey_GetDotText,f) ]]
+
+[[ _FetchHandler (hkey_SetDotText,c) ]]
+
+
+--> Hkey | MetaData | Image
+-
+[[ _FetchHandler (hkey_GetImage,f) ]]
+
+[[ _FetchHandler (hkey_SetImage,c) ]]
+
+
+--> Hkey | Help
+-
+[[ _FetchHandler (hkey_FetchHelp,f) ]]
+
+[[ _FetchHandler (hkey_StoreHelp,c) ]]
+
+
+--> Handler | Calls | Old
+-
+[[ _FetchHandler (hkey_ExtractCalls,f) ]]
+
+/*
+Old and dodgy handlers that try to follow getprop and setprop references to objects (not used anymore?)
+*/
+
+[[ _FetchHandler (hkey_ConstructPropertyCall,f) ]]
+
+-- getprop hkey_Calls [hKey]
+put the long id of the target into scriptObject
+put hkey_FindAndExtractCalls (hKey, scriptObject) into handlerCalls
+return handlerCalls
+end hkey_Calls
+
+[[ _FetchHandler (script_ParseHandlerForCalls,f) ]]
+
+[[ _FetchHandler (script_AddToExtractCalls,c) ]]
+
+[[ _FetchHandler (script_ExtractFunctionCalls,f) ]]
+
+
+--> Overlay | Hkey | Links
+-
+/*
+These handler extract links (calls) from the general link array used in graphing.
+Don't use unless for graphing.
+*/
+
+
+[[ _FetchHandler (overlay_GetHkeyLinks,f) ]]
+
+[[ _FetchHandler (overlay_SetHkeyLinks,c) ]]
+
+
+--> hkey | Model | BackLinks
+-
+/*
+Probably better done with a live database, rather than this cache approach.
+*/
+
+[[ _FetchHandler (hkey_AddBackLink,c) ]]
+
+[[ _FetchHandler (hkey_GetBackLinks,f) ]]
+
+[[ _FetchHandler (hkey_SetBackLinks,c) ]]
+
+[[ _FetchHandler (hkey_AddToBackLinks,c) ]]
+
+[[ _FetchHandler (hkey_CheckBackLinks,c) ]]
+
+
+--> hkey | Model | Deps
+-
+[[ _FetchHandler (hkey_FetchDeps,f) ]]
+
+-- function hkey_FetchFilteredDeps shortHKey
+   return library_HkeyDeps (shortHKey)
+   
+   -- fetches all deps from link text files
+   local hKeyArray
+   hkey_RecurseCallArray shortHKey, hkeyArray, "filtered"
+   put array_AllNodes (hKeyArray) into allShortDeps
+   put item 1 to 2 of shortHKey into shortKey
+   line_Delete shortKey, allShortDeps
+   return allShortDeps
+end hkey_FetchFilteredDeps
+
+[[ _FetchHandler (hkey_FetchDepsFromLinkArray,f) ]]
+
+[[ _FetchHandler (script_FetchDepsFromScriptArray,f) ]]
+
+[[ _FetchHandler (deps_FromHkeyArray,f) ]]
+
+[[ _FetchHandler (hkeyArray_ShortNodes,f) ]]
+
+[[ _FetchHandler (hkey_ExternalHkeysFromArray,f) ]]
+
+[[ _FetchHandler (hArray_FetchHkeyDeps,f) ]]
+
+[[ _FetchHandler (hkey_FetchLinkArray,f) ]]
+
+
+--> hkey | Model | Global
+-
+/*
+A LinkArray is used to graph arrays. To do this LinkArrays provide a suite of tools that take complex keys and convert them into simple IDs,
+and dictionaries to translate from these IDS to the orginal keys.
+*/
+
+[[ _FetchHandler (hkey_GetLinkArray,f) ]]
+
+[[ _FetchHandler (hkey_SetLinkArray,c) ]]
+
+[[ _FetchHandler (hkey_GetGeometryArray,f) ]]
+
+[[ _FetchHandler (hkey_SetGeometryArray,c) ]]
+
+[[ _FetchHandler (hkey_StripDefaultDotArray,c) ]]
+
+[[ _FetchHandler (hkey_StripDefaultProps,c) ]]
+
+[[ _FetchHandler (hkey_NormalizeGraphName,c) ]]
+
+[[ _FetchHandler (hkey_GetDefaultGraphName,f) ]]
+
+[[ _FetchHandler (hkey_GetOverlayArray,f) ]]
+
+[[ _FetchHandler (hkey_SetOverlayArray,c) ]]
+
+[[ _FetchHandler (hkey_GetOverlayData,f) ]]
+
+[[ _FetchHandler (hkey_SetOverlayData,c) ]]
+
+
+--> Hkey | Wrappers
+-
+[[ _FetchHandler (hKey_DeconstructStoredArray,c) ]]

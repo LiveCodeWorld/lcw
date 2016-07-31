@@ -1,0 +1,11 @@
+command fossil_CreateWikiPage pageTitle, someContent, pFolder
+   put "fossil wiki create" && kwote(pageTitle) into someShell
+   if someContent is not empty then
+      put the tempname & ".txt" into tempFile
+      put someContent into url ("binfile:" & tempFile)
+      shell_BashParamEscape tempFile
+      put space & tempFile after someShell
+   end if
+   fossil_ExecuteShell someShell, pFolder
+   return the result
+end fossil_CreateWikiPage

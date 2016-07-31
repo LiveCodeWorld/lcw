@@ -1,0 +1,4 @@
+command menu_SetItemTargetOveride mItemToMatch, mTarget
+   global gTemp_ActiveMenuArray
+   put mTarget into gTemp_ActiveMenuArray ["overide"]["mItem"][mItemToMatch]["mTarget"]
+end menu_SetItemTargetOveride

@@ -1,0 +1,11 @@
+getprop arrow_Margin [arrowWidth]
+    -- shifts the arrow left or right a bit
+   put LocalArray ["arrow_Margin"] into arrowMargin
+   if arrowMargin is a number then return arrowMargin
+   
+   put the arrow_Margin [arrowWidth] of the owner of me into arrowMargin
+   if arrowMargin is a number then return arrowMargin
+   
+   put default_ArrowMargin (arrowWidth) into arrowMargin
+   return arrowMargin
+end arrow_Margin

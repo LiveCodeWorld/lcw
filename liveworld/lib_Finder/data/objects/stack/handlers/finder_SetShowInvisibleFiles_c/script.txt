@@ -1,0 +1,7 @@
+command finder_SetShowInvisibleFiles someBoolean
+   if someBoolean is true then
+      put shell ("defaults write com.apple.finder AppleShowAllFiles YES") into shellResult
+   else
+      put shell ("defaults write com.apple.finder AppleShowAllFiles NO") into shellResult
+   end if
+end finder_SetShowInvisibleFiles

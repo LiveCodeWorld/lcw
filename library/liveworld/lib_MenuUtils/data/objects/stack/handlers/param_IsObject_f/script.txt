@@ -1,0 +1,15 @@
+function param_IsObject someParam
+   if char -4 to -1 of someParam = "View" then return true
+   if char -5 to -1 of someParam = "Field" then return true
+   if char -6 to -1 of someParam is among the items of "Object,Target,Button" then return true
+   return false
+   
+   get "targetObject,treeField,treeView,mTarget,menuTarget,someView,someObject,someField,someButton,menuButton,cardObject,stackObject"
+   set the wholematches to true
+   return someParam is among the items of it
+   
+   repeat for each item testString in "object,target,view,field,button,card,stack"
+      if someParam contains testString then return true
+   end repeat
+   return false
+end param_IsObject

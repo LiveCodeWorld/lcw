@@ -1,0 +1,11 @@
+function menu_GetTitleSuites mTitle, someScript
+   put script_GetSuiteTitles (someScript) into suiteTitles
+   filter suiteTitles with (mTitle & "*")
+   sort suiteTitles
+   repeat for each line suiteTitle in suiteTitles
+      put script_GetSuite (mTitle, someScript) into scriptSuite
+      if scriptSuite is not empty then put scriptSuite & CR & CR after scriptSuites
+   end repeat
+   delete char -2 to -1 of scriptSuites
+   return scriptSuites
+end menu_GetTitleSuites

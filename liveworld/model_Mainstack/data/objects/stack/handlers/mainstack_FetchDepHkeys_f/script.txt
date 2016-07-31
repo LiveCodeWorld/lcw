@@ -1,0 +1,4 @@
+function mainstack_FetchDepHkeys mainStackFolder
+   put mainstack_FetchText (mainStackFolder, "short_hkey_deps.txt") into shortHkeys
+   return shortHkeys
+end mainstack_FetchDepHkeys

@@ -1,0 +1,6 @@
+getprop fedwiki_Files
+   -- put myPath & "Welcome Visitors.html" into indexFile
+   put fedwiki_GetWelcomeFolder() into indexFileFolder
+   put folder_ShortFiles (indexFileFolder) into shortFiles
+   return shortFiles
+end fedwiki_Files

@@ -1,0 +1,13 @@
+function server_FetchFile pathToFetch, serverAddress, sshUser
+   if char 1 of pathToFetch is "/" then
+      put pathToFetch into fullPath
+   else
+      put "~/" & pathToFetch into fullPath
+   end if
+   shell_BashParamEscape fullPath
+   
+   put shell_FetchFile (sshUser, serverAddress, fullPath) into someData
+   set the itemdelimiter to ":"
+   if (item 1 of someData = "cat" and item -1 of someData = " No such file or directory") then return empty
+   return someData
+end server_FetchFile

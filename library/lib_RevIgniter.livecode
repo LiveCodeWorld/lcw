@@ -1,0 +1,1071 @@
+﻿script "lib_RevIgniter"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_RevIgniter
+type: script library
+version: 0.4
+
+
+/*
+This library contains all the revIgniter specific code for teh Himalayan Academy project.
+*/
+
+
+--> Exif
+-
+function exif_GetInfoArray imagePath   
+   put "exiv2 -ptxi" && kwote (imagePath) into someShell
+   put "exiv2 -pa" && kwote (imagePath) into someShell
+   put shell (someShell) into identityInfo
+   
+   repeat for each line someLine in identityInfo
+      put token 1 of someLine into exifName
+      put token 2 of someLine into exifType
+      put token 3 of someLine into exifNum
+      put token 4 to -1 of someLine into exifValue
+      
+      split exifName with "."
+      put exifValue into infoArray [exifName]
+   end repeat
+   return infoArray
+end exif_GetInfoArray
+
+command exif_ExtractLatLong exifArray, @mapLat, @mapLong
+   -- put resultArray ["exifArray"] into exifArray
+   put exifArray ["exif"]["GPSInfo"] into gpsArray
+   put gpsArray ["GPSLatitude"] into latInfo
+   put gpsArray ["GPSLongitude"] into longInfo
+   
+   if latInfo is empty or longInfo is empty then
+      put empty into mapLat
+      put empty into mapLong
+      return false
+   end if
+   
+   put exif_GpsToDegrees (latInfo) into mapLat
+   put exif_GpsToDegrees (longInfo) into mapLong
+   
+   if gpsArray ["GPSLongitudeRef"] = "West" then
+      put -1 * mapLong into mapLong
+   end if
+   if gpsArray ["GPSLatitudeRef"] = "South" then
+      put -1 * mapLat into mapLat
+   end if
+   return true
+end exif_ExtractLatLong
+
+function exif_GpsToDegrees gpsInfo
+   /*
+   According to the exif standard, there are three "rational" fields for each, containing degrees, minutes, and seconds. 
+   exiftool normalizes imporoper decimal degrees into D,M,S while assigning these values, 
+   (exiftool -GPSLongitude="0.5 90 63.12345" junk.jpg" -> GPS Longitude: 2 deg 1' 3.12" W") 
+   So if you need decimal degrees, you do dd=x0+x1/60.+x2/3600. and could ignore the non-normalization.
+   
+   $d = $deg + ((($min/60) + ($sec/3600))/100);
+   $d = $deg + (($min/60) + ($sec/3600));
+   
+   GPSLatitude = 57 38 56.83 (57/1 38/1 5683/100)
+   GPSLongitude = 10 24 26.79 (10/1 24/1 2679/100)
+   
+   GPS Latitude                    : 57 deg 38' 56.83" N
+   GPS Longitude                   : 10 deg 24' 26.79" E
+   
+   GPS Longitude                   : 10.40744
+   GPS Position                    : 57.64911 10.40744
+   
+   */
+   
+   switch
+      case word 1 of gpsInfo ends with "deg"
+         -- 2deg 55' 54.240
+         -- 2deg 55' 17.040"
+         replace "deg" with empty in gpsInfo
+         put word 1 of gpsInfo into someDegrees
+         put word 2 of gpsInfo into someMinutes
+         if char -1 of someMinutes = "'" then delete char -1 of someMinutes
+         put word 3 of gpsInfo into someSeconds
+         if char -2 to -1 of someSeconds = "''" then delete char -2 to -1 of someSeconds
+         break
+      default
+         -- imageMagick exif results 
+         -- 2/1, 55/1, 5424/100
+         -- 10/1 24/1 2679/100 => 10 deg 24' 26.79" E => 10.40744
+         
+         put item 1 of gpsInfo into degreeInfo
+         put item 2 of gpsInfo into minuteInfo
+         put item 3 of gpsInfo into secondInfo
+         
+         set the itemdelimiter to slash
+         put item 1 of degreeInfo / item 2 of degreeInfo into someDegrees
+         put item 1 of minuteInfo / item 2 of minuteInfo into someMinutes
+         put item 1 of secondInfo / item 2 of secondInfo into someSeconds
+   end switch
+   
+   put someDegrees + someMinutes / 60 + someSeconds / 3600 into decValue
+   return decValue
+end exif_GpsToDegrees
+
+
+--> Working On
+-
+function rig_FetchStackFolder
+   put pref_FetchValue ("rigStackFolder") into rigStackFolder
+   return rigStackFolder
+end rig_FetchStackFolder
+
+command rig_StoreStackFolder rigStackFolder
+   pref_SaveValue "rigStackFolder", rigStackFolder
+   put the result into  dataArray
+   return dataArray
+end rig_StoreStackFolder
+
+
+--> rig | Controller | Folder
+-
+function rig_FetchControllerFolder
+   put pref_FetchValue ("rigControllerFolder") into rigControllerFolder
+   return rigControllerFolder
+end rig_FetchControllerFolder
+
+command rig_StoreControllerFolder rigControllerFolder
+   pref_SaveValue "rigControllerFolder", rigControllerFolder
+   put the result into  dataArray
+   return dataArray
+end rig_StoreControllerFolder
+
+
+--> rig | Fetch
+-
+command rig_DownloadScriptAndCreateStack shortController, controllerFolder
+   put controllerFolder & shortController into controllerFile
+   
+   put rig_FetchController (shortController) into rigScript
+   put rigScript into url ("file:" & controllerFile)
+   
+   set the itemdelimiter to slash
+   put item 1 to -2 of controllerFolder & "/stacks/" into stackFolder
+   set the itemdelimiter to "."
+   put stackFolder & shortController into scriptStackFile
+   put "livecodescript" into item -1 of scriptStackFile
+   
+   put rig_CreateContainerScript (rigScript) into someScript
+   if exists (stack scriptStackFile) then
+      set the script of stack scriptStackFile to someScript
+   else
+      create script only stack shortController
+      set the script of stack shortController to someScript
+      set the filename of stack shortController to scriptStackFile
+      save stack shortController
+   end if
+   return scriptStackFile
+end rig_DownloadScriptAndCreateStack
+
+function rig_CreateContainerScript rigScript
+   put word 1 to -1 of rigScript into rigScript
+   
+   -- set the wholematches to false
+   put lineoffset ("command index", rigScript) into lineNum
+   if lineNum = 0 then
+      put lineoffset ("on index", rigScript) into lineNum
+   end if
+   delete line 1 to (lineNum-1) of rigScript
+   -- put "on mouseUp" into line 1 of rigScript
+   -- replace "end index" with "end mouseUp" in rigScript
+   
+   delete line -1 of rigScript
+   put lineoffset ("command startUsingLibraries", rigScript) into startLineNum
+   put lineoffset ("end startUsingLibraries", rigScript) into endLineNum
+   delete line startLineNum to endLineNum of rigScript
+   
+   put word 1 to -1 of rigScript into rigScript
+   repeat with lineNum = 1 to the number of lines of rigScript
+      put line lineNum of rigScript into scriptLine
+      switch
+         case word 1 of scriptLine is among the items of "on,command,function,end"
+            put word 1 to -1 of scriptLine into line lineNum of rigScript
+            break
+         default
+            put "   " & word 1 to -1 of scriptLine into line lineNum of rigScript
+      end switch
+   end repeat
+   return rigScript
+end rig_CreateContainerScript
+
+
+--> rig | Assets
+-
+command rig_AssetFetchAndSaveImage imageURL, pUseCurl
+   set the itemdelimiter to slash
+   put item -1 of imageURL into shortFile
+   put rig_AssetImageFolder() into imageAssetFolder
+   put imageAssetFolder & shortFile into imagePath
+   
+   put shortFile into resultArray ["shortFile"]
+   put there is a file imagePath into resultArray ["file exists"]
+   put imageAssetFolder into resultArray ["imageAssetFolder"]
+   put imagePath into resultArray ["imagePath"]
+   put "https://livecode.world/assets/img/" & shortFile into assetURL
+   put assetURL into resultArray ["assetURL"]
+   
+   set the defaultfolder to imageAssetFolder
+   if pUseCurl is true then
+      put "curl -O" && kwote (imageURL) into someShell
+      put shell (SomeShell) into fetchResult
+      put shellResult into resultArray ["shellResult"]
+   else
+      put url imageURL into url ("binfile:" & imagePath)
+      if the result is not empty then
+         put the result into resultArray ["shellResult"]
+      end if
+   end if
+   
+   put exif_GetInfoArray (imagePath) into exifArray
+   put exifArray into resultArray ["exifArray"]
+   
+   return resultArray
+end rig_AssetFetchAndSaveImage
+
+function rig_AssetImageFile shortFile
+   put rig_AssetImageFolder() & shortFile into imageFile
+   return imageFile
+end rig_AssetImageFile
+
+function rig_AssetImageFolder
+   switch the platform
+      case "MacOS"
+         return "/Users/BabyBlue/Pictures/OSCEDays Bilbao/"
+      default
+         put the defaultfolder & "/assets/img/" into imageFolder
+         return imageFolder
+   end switch
+end rig_AssetImageFolder
+
+
+--> rig | rigScript
+-
+getprop rig_ControllerHandlers   
+   put the script of the target into someScript
+   put the revAvailableHandlers of the target into handlerTable -- revAvailableHandlers only return first handler
+   put rig_ExtractControllerHandlers (handlerTable, someScript) into controllerHandlers
+   return controllerHandlers
+end rig_ControllerHandlers
+
+getprop rig_ControllerHandlerArray
+   put the script of the target into someScript
+   put the revAvailableHandlers of the target into handlerTable -- revAvailableHandlers only return first handler
+   
+   put rig_ExtractControllerHandlers (handlerTable, someScript) into controllerHandlers
+   put rig_ExtractPublicHandlers (someScript) into controllerScript
+   
+   return controllerHandlers
+end rig_ControllerHandlerArray
+
+getprop rig_Script [pShortControllerFile]
+   /*
+   Here we want to be able to get the revIgniter script of any object. 
+   Specificall of script-only stacks that are libraries or proxies for Livecode server (.lc) scripts.
+   
+   Typically you will want to do something like:
+   
+   put the script_Container of the target into scriptContainer
+   put the displayed_ShortControllerFile of me into pShortControllerFile
+   put the rig_Script [pShortControllerFile] of scriptContainer into rigScript
+   
+   pShortControllerFile is important as it is used to generate the name for the initialisation handler.
+   If you do not pass a value the script will take the short name of the stack as a guess,
+   this default behavior works well for scrip-only stack versions of controllers.
+   
+   These stack based versions of controller scripts use the following convention for a controller named "test_controller.lc":
+   
+   - a script-only stack is created named the same as the controller ("test_controller.lc")
+   - the script of ths stack is set to the handlers of the controller,
+   along with any comments, but with the "<lc... ?lc> tags removed using the 
+   
+   */
+   
+   put the long id of the target into scriptObject
+   put rig_ConstructControllerScript (scriptObject, pShortControllerFile) into rigScript
+   return rigScript
+end rig_Script
+
+function rig_ConstructControllerScript scriptObject, shortControllerFile
+   put the script_Markdown of scriptObject into scriptDescription
+   put the project_DependencyStacks of scriptObject into dependencyLibs
+   
+   put the script of scriptObject into someScript
+   put the revAvailableHandlers of scriptObject into handlerTable
+   put rig_ExtractControllerHandlers (handlerTable, someScript) into controllerHandlers
+   
+   put rig_ExtractPublicHandlers (someScript) into controllerScript
+   text_Indent controllerScript
+   text_Indent scriptDescription
+   put rig_ConstructControllerFromScript (controllerScript, shortControllerFile, controllerHandlers, scriptDescription, dependencyLibs) into rigScript
+   return rigScript
+end rig_ConstructControllerScript
+
+function rig_ConstructControllerFromScript buttonScript, shortControllerFile, controllerHandlerList, scriptDescription, pDependencyLibs
+   replace CR with comma in controllerHandlerList
+   put script_GetTemplate ("revIgniter Controller Template") into scriptTemplate
+   put script_GetTemplate ("revIgniter Dependency Section")  into dependencyTemplate
+   
+   set the itemdelimiter to "."
+   put item 1 of shortControllerFile into shortControllerName
+   if shortControllerName is not among the items of controllerHandlerList then
+      if controllerHandlerList is empty then
+         put shortControllerName into controllerHandlerList
+      else
+         put comma & shortControllerName after controllerHandlerList
+      end if
+   end if
+   
+   put shortControllerFile into pathToController
+   put rig_ConstructInitScriptLines (pDependencyLibs, "   ") into initScriptLines
+   text_Indent initScriptLines, "      "
+   
+   put rig_ExtractPublicHandlers (buttonScript) into publicHandlers
+   put rig_ExtractDependencies (buttonScript) into handlerDependencies
+   
+   put merge (scriptTemplate) into rigScript
+   
+   if handlerDependencies is not empty then
+      put merge (dependencyTemplate) into dependencySection
+      text_Indent dependencySection, "   "
+      put CR & CR after rigScript
+      put dependencySection after rigScript
+   end if
+   
+   put "<?lc" & CR before rigScript
+   put CR & CR & "?>" after rigScript
+   return rigScript
+end rig_ConstructControllerFromScript
+
+function rig_ExtractControllerHandlers handlerTable, someScript
+   put script_HkeysFromAvailable (handlerTable, someScript, "name") into controllerHandlers
+   replace "mouseUp" with "index" in controllerHandlers
+   replace CR with comma in controllerHandlers
+   return controllerHandlers
+end rig_ExtractControllerHandlers
+
+function rig_ExtractPublicHandlers buttonScript
+   put word 1 to -1 of buttonScript into buttonScript
+   replace "on mouseUp" with "on index" in buttonScript
+   replace "end mouseUp" with "end index" in buttonScript
+   return buttonScript
+end rig_ExtractPublichandlers
+
+function rig_ExtractDependencies buttonScript
+   return empty
+end rig_ExtractDependencies
+
+
+--> Revigniter | Controllers | Create
+-
+function rig_ConstructInitScriptLines stackObjects
+   replace CR with comma in stackObjects
+   repeat for each item stackObject in stackObjects
+      -- get the short file of the library stack
+      set the itemdelimiter to slash
+      get the filename of stackObject
+      put item -1 of it into shortLibraryFile
+      set the itemdelimiter to comma
+      
+      -- start using stack (gAPPPATH & "stacks/lib_Audioboom.livecode")
+      put "stacks/" & shortLibraryFile into relPath
+      put "start using stack (gAPPPATH &" && kwote (relPath) & ")" into scriptLine
+      
+      put CR & scriptLine after scriptLines
+   end repeat
+   delete char 1 of scriptLines
+   return scriptLines
+   
+   -- old version that took the short files of scripts (shortLibPaths) as an input
+   replace CR with comma in shortLibPaths
+   repeat for each item shortLibPath in shortLibPaths
+      -- could do more checking that it is a valid stack here
+      if "." is not in shortLibPath then -- consider removing this hack
+         put ".livecode" after shortLibPath -- a crappy guess in case we've passed short pretty names
+      end if
+      
+      -- start using stack (gAPPPATH & "stacks/lib_Audioboom.livecode")
+      put "stacks/" & shortLibPath into relPath
+      put "start using stack (gAPPPATH &" && kwote (relPath) & ")" into scriptLine
+      
+      put CR & scriptLine after scriptLines
+   end repeat
+   delete char 1 of scriptLines
+   return scriptLines
+end rig_ConstructInitScriptLines
+
+
+--> revIgniter
+-
+function rig_ConstructRouteArray
+   -- this code is taken directly from routes.lc
+   -- maybe it should use introspection on get access to global gRoute on server
+   -- is there a revIgnitor function for this?
+   
+   put "api/bookget/$1" into gRoute[8]["api/book/get/(:any)"]
+   put "api/bookupdate/$1" into gRoute[9]["api/book/update/(:any)"]
+   put "api/bookinsert/$1" into gRoute[10]["api/book/new/(:any)"]
+   put "api/savecover/$1" into gRoute[11]["api/book/setcover/(:any)"]
+   put "books/sender/$1/$2" into gRoute[12]["books/(:any)/web/(:any)"]
+   put "listen/index/$1/mp3" into gRoute[13]["listen/(:any)"]
+   put "listen/index/$1/$2" into gRoute[14]["listen/(:any)/(:any)"]
+   put "bodhinatha" into gRoute[29]["bodhinatha/:any"]
+   put "manager" into gRoute[15]["manager/:any"]
+   put "info" into gRoute[15]["info/:any"]
+   put "monastery" into gRoute[16]["monastery/:any"]
+   put "readlearn" into gRoute[17]["readlearn/:any"]
+   put "looklisten" into gRoute[18]["looklisten/:any"]
+   put "donations/student-donate" into gRoute[26]["livespiritually/become-student/donate"]
+   put "livespiritually" into gRoute[19]["livespiritually/:any"]
+   put "visit" into gRoute[27]["visit/:any"]
+   put "donations" into gRoute[20]["donations/:any"]
+   put "site/viewmedia/$1" into gRoute[21]["view/(:any)"]
+   put "site/downloadfile/$1" into gRoute[22]["download/(:any)"]
+   put "cloudreader/readbook/$1" into gRoute[23]["readbook/(:any)"]
+   put "site/reviews/$1" into gRoute[24]["reviews/(:any)"]
+   put "cloudreader/simplereader/$1" into gRoute[25]["book/(:any)"]
+   put "cloudreader/simplereader/$1/$2" into gRoute[26]["book/(:any)/(:any)"]
+   # put "cloudreader/simplereader/$1/$2" into gRoute[27]["media/books/(:any)/web/ops/xhtml/(:any)"]
+   put "cloudreader/bookPageToSpineNo/$1/$2" into gRoute[27]["media/books/(:any)/web/ops/xhtml/(:any)"]
+   put "site/viewmedia/$1" into gRoute[28]["apps/(:any)"]
+   
+   return gRoute
+end rig_ConstructRouteArray
+
+
+--> revIgniter | Wiki
+-
+function rig_ConstructFedwikiPageArray headerPageArray
+   local lookUpArray, markdownTOC, pVersionNum
+   
+   put headerPageArray [1] into topSectionArray
+   put topSectionArray ["@attributes"]["title"] into pageTitle
+   put topSectionArray ["@content"] into rigPageContentArray
+   put pageTitle into fedwikiPageArray ["title"]
+   rig_AddContentToFedwikiPageArray fedwikiPageArray, rigPageContentArray
+   
+   -- make a TOC
+   rig_ConstructMarkdownToc topSectionArray, 1, lookUpArray, markdownTOC
+   put "# TOC" & CR before markdownTOC
+   fedwiki_AddMarkdownToPageArray fedwikiPageArray, markdownTOC
+   
+   put rig_ConstructSourceArray (pageTitle, sourceUrl, lookUpArray, pVersionNum) into sourceArray
+   put fedwiki_ConstructJournalArray (pageTitle, sourceArray) into fedwikiPageArray ["journal"]
+   
+   return fedwikiPageArray
+end rig_ConstructFedwikiPageArray
+   
+private function rig_ConstructSourceArray pageTitle, sourceUrl, lookUpArray, pVersionNum
+   put "https://livecode.world/revIgniter/transportAgain" into transportURL
+   put "https://github.com/LiveCodeWorld/revIgniter,lc" into repoURL
+   put the milliseconds into dateTransported
+   
+   put fedwiki_ConstructCreateSourceArray (transportURL, sourceUrl, dateTransported, repoURL, pVersionNum) into pSourceArray
+   put pageTitle into pSourceArray ["pageTitle"]
+   if lookUpArray is an array then
+      put lookUpArray into pSourceArray ["link_dictionary"]
+   end if
+   return pSourceArray
+end rig_ConstructSourceArray
+   
+private command rig_ConstructMarkdownToc sectionArray, sectionPath, @lookUpArray, @markdownTOC
+   put (the number of lines of the keys of sectionArray) - 2 into subSectionNum
+   repeat with sectionNum = subSectionNum down to 1
+      put sectionArray [sectionNum] into subSectionArray
+      put subSectionArray ["@attributes"] into attributeArray
+      put attributeArray ["title"] into sectionTitle
+      put attributeArray ["level"] into sectionLevel
+      
+      put sectionPath & comma & sectionNum into subSectionPath
+      put subSectionPath into lookUpArray [sectionTitle]["sectionPath"]
+      put sectionLevel into lookUpArray [sectionTitle]["sectionLevel"]
+      put sectionNum into lookUpArray [sectionTitle]["sectionNum"]
+      
+      -- don't really need this as the idea is to fetch it with sectionPath and sourceURL
+      put subSectionArray ["@content"] into lookUpArray [sectionTitle]["@content"]
+      
+      put "* [[" & sectionTitle & "]]" & CR before markdownTOC
+   end repeat
+   delete char -1 of markdownTOC
+end rig_ConstructMarkdownToc
+   
+command rig_AddContentToFedwikiPageArray @fedwikiPageArray, sectionContentArray
+   repeat for each key itemNum in sectionContentArray
+      put sectionContentArray [itemNum] into someHTML
+      
+      -- here we can tidy and process each section
+      switch
+         default
+            fedwiki_AddHtmlToPageArray fedwikiPageArray, someHTML
+      end switch
+   end repeat
+end rig_AddContentToFedwikiPageArray
+
+command rig_ScrapeHeadings someHtml, @pageTitle, @handlerNames, @handerTitleNodes
+   -- revXMLDeleteAllTrees
+   
+   if pTidyIsTrue then html_Tidy someHtml
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   --
+   put scrapeID_GetDiv (treeID, "id", "content") into contentsDiv
+   put xpath_ConstructHeadingPath (1, "content") into someXPath
+   put word 1 to -1 of line 1 of revXMLDataFromXPathQuery (treeID, someXPath) into pageTitle
+   -- 
+   put xpath_ConstructHeadingPath (3, "content") into someXPath
+   put word 1 to -1 of revXMLEvaluateXPath (treeID, someXPath) into handerTitleNodes
+   put revXMLDataFromXPathQuery (treeID, someXPath) into handlerNames
+   rig_CleanHandlerNames handlerNames
+   
+   put scrapeID_ConstructHeaderPageArray (treeID) into headerPageArray
+   --
+   revDeleteXMLTree treeID
+   return headerPageArray
+end rig_ScrapeHeadings
+
+command rig_CleanHandlerNames @someContent
+   put "[^\)]*" into notaBracket
+   put "\(" & notaBracket & "\)" into someReg
+   put "\n" after someReg
+   put word 1 to -1 of replaceText (someContent, someReg, empty) into someContent
+end rig_CleanHandlerNames
+
+
+--> Rig | List
+-
+function rig_ListHelperFiles
+   put rig_GetFolder ("helpers") into someFolder
+   put rig_ListFiles (someFolder) into shortFiles
+   return shortFiles
+end rig_ListHelperFiles
+
+function rig_ListControllerFiles
+   put rig_GetFolder ("controllers") into someFolder
+   put rig_ListFiles (someFolder) into shortFiles
+   return shortFiles
+end rig_ListControllerFiles
+
+function rig_ListStackFiles
+   put rig_GetFolder ("stacks") into someFolder
+   put rig_ListFiles (someFolder) into shortFiles
+   return shortFiles
+end rig_ListStackFiles
+
+function rig_ListSystemHelperFiles
+   put rig_GetSystemFolder ("helpers") into someFolder
+   put rig_ListFiles (someFolder) into shortFiles
+   return shortFiles
+end rig_ListSystemHelperFiles
+
+function rig_ListFiles someFolder
+   if the environment = "server" then
+      put rig_ListServerFiles (someFolder) into shortFiles
+   else
+      put rig_FetchPathArray (someFolder) into fileArray
+      put rig_SortAndFilterCodeFiles (fileArray) into shortFiles
+   end if
+   return shortFiles
+end rig_ListFiles
+
+function rig_ListServerFiles someFolder
+   put rigGetFileNames (someFolder) into shortFiles
+   set the columndelimiter to CR
+   combine shortFiles by column
+   sort shortFiles
+   return shortFiles
+end rig_ListServerFiles
+
+
+--> revIgniter | Fetch
+-
+function rig_FetchController shortFile, pServerURL
+   put rig_GetFolder ("controllers") & shortFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchController
+
+function rig_FetchStack shortFile, pServerURL
+   put rig_GetFolder ("stacks") & shortFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchStack
+
+function rig_FetchSystemHelper shortFile, pServerURL
+   put rig_GetFolder ("helpers") & shortFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchSystemHelper
+
+function rig_FetchProjectFile shortFile, shortFolder, pServerURL  
+   put rig_GetFolder ("helpers") & shortFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchProjectFile
+
+function rig_FetchSystemFile shortStackFile, shortFolder, pServerURL  
+   put rig_GetSystemFolder (shortFolder) & shortStackFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchSystemFile
+
+function rig_FetchFile somePath, pServerURL  
+   if pServerURL is not empty then
+      put server_GetURL() into oServerURL
+      server_LoadDetails pServerURL
+   end if
+   
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   put server_FetchFile (somePath, serverAddress, sshUser) into stackOrScript
+   if pServerURL is not empty then
+      server_LoadDetails oServerURL
+   end if
+   return stackOrScript
+end rig_FetchFile
+
+
+--> revIgniter | Store
+-
+command rig_StoreController shortFile, rigScript
+   put rig_ApplicationPath ("controllers/" & shortFile) into somePath
+   rig_StoreData rigScript, somePath
+   put the result into shellResult
+   return shellResult
+end rig_StoreController
+
+command rig_StoreStacks stackNames
+   repeat for each line stackName in stackNames
+      set the cursor to busy
+      rig_StoreStack stackName
+   end repeat
+end rig_StoreStacks
+
+command rig_StoreStack stackName
+   if exists (stack stackName) is false then
+      return merge ("error, stack '[[stackName]]' does not exist")
+   end if
+   
+   put the name of stack stackName into stackObject
+   save stackObject
+   
+   put the filename of stack stackName into localFile
+   set the itemdelimiter to slash
+   put item -1 of localFile into shortFile
+   put rig_GetFolder ("stacks") & shortFile into somePath
+   
+   rig_UploadLocalFile localFile, somePath
+   return the result
+end rig_StoreStack
+
+command rig_StoreStackData shortFile, stackData
+   put rig_ApplicationPath ("stacks/" & shortFile) into somePath
+   put rig_GetFolder ("stacks") & shortFile into somePath
+   rig_StoreData stackData, somePath
+   return the result
+end rig_StoreStackData
+
+command rig_UploadLocalFile localFile, pathToStore
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   server_StoreFile localFile, pathToStore, serverAddress, sshUser
+   put the result into someResult
+   return someResult
+end rig_UploadLocalFile
+
+command rig_StoreData someData, somePath
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   server_StoreData someData, somePath, serverAddress, sshUser
+   put the result into someResult
+   return someResult
+end rig_StoreData
+
+command rig_DeleteStack shortStackFile, pDontNotify
+   -- should really do this checking on the shortStackFile first
+   
+   put rig_GetFolder ("stacks") & shortStackFile into stackPath
+   
+   put server_GetURL() into remoteDomain
+   put server_GetSshUser() into sshUser
+   
+   -- should do some checks to make sure it is a stack and not a folder?
+   put server_FileInfoArray (stackPath) into fileArray
+   switch
+      case fileArray ["isFolder"] is true
+         put merge ("Did not delete folder from [[remoteDomain]]. rig_DeleteStack does not allow deletion of folders.") into someComment
+         if pDontNotify is not true then opn_Notify someComment
+         return someComment
+      case fileArray ["file"] is empty
+         put merge ("Did not delete file [[shortStackFile]] from [[remoteDomain]]. It does not exist.") into someComment
+         if pDontNotify is not true then opn_Notify someComment
+         return someComment
+      case fileArray ["fileExtension"] is not among the items of "lc,livecode,rev,livecodescript"
+         put merge ("Did not delete file [[shortStackFile]] from [[remoteDomain]]. It was not a stack.") into someComment
+         if pDontNotify is not true then opn_Notify someComment
+         return someComment
+      default
+         -- it's a livecode file
+   end switch
+   
+   shell_DeleteFile sshUser, remoteDomain, stackPath
+   put the result into someResult
+   
+   if pDontNotify is not true then
+      put merge ("Deleted stack [[shortStackFile]] from [[remoteDomain]]!") into someComment
+      opn_Notify someComment
+   end if
+   return someResult
+end rig_DeleteStack
+
+
+--> revIgniter | Path | Array
+-
+function rig_FetchControllerPathArray
+   put rig_ControllerFolder () into controllerFolder
+   put rig_FetchPathArray (controllerFolder) into fileArray
+   return fileArray
+end rig_FetchControllerPathArray
+
+function rig_FetchStackPathArray
+   put rig_StackFolder () into controllerFolder
+   put rig_FetchPathArray (controllerFolder) into fileArray
+   return fileArray
+end rig_FetchStackPathArray
+
+function rig_FetchPathArray someFolder
+   put server_GetURL() into serverURL
+   put server_GetSshUser() into sshUser
+   put server_GetSshKeyPath() into sshKeyPath
+   
+   put server_FetchFileArray (serverURL, sshUser, someFolder, sshKeyPath) into fileAndFolderArray
+   return fileAndFolderArray ["file"]
+end rig_FetchPathArray
+
+function rig_SortAndFilterCodeFiles fileArray
+   put keys (fileArray) into shortFiles
+   line_Delete "index.html", shortFiles
+   line_Delete "welcome.lc", shortFiles
+   sort shortFiles
+   return shortFiles
+end rig_SortAndFilterCodeFiles
+
+
+--> Rig | Files
+-
+function rig_StackPath shortPath
+   put rig_GetApplicationFolder() into someFolder
+   put someFolder & shortPath into serverStackPath
+   return serverStackPath
+end rig_StackPath
+
+function rig_ControllerPath pShortControllerFile
+   put rig_ApplicationPath ("controllers/" & pShortControllerFile) into somePath
+   return somePath
+end rig_ControllerPath
+
+
+--> Rig | Folders
+-
+function rig_HelperFolder
+   put rig_GetFolder ("helpers") into someFolder
+   return someFolder
+end rig_HelperFolder
+
+function rig_StackFolder
+   put rig_GetApplicationFolder() into someFolder
+   put "stacks/" after someFolder
+   return someFolder
+end rig_StackFolder
+
+function rig_GetFolder shortFolder
+   put rig_GetApplicationFolder() into someFolder
+   put shortFolder & "/" after someFolder
+   return someFolder
+end rig_GetFolder
+
+function rig_ControllerFolder
+   if the environment = "server" then
+      return gAPPPATH & "controllers/"
+   else
+      put server_RigApplicationFolder() into rigApplicationFolder
+      text_AddTrailing rigApplicationFolder, "/"
+      put "controllers/" after rigApplicationFolder
+      return rigApplicationFolder
+   end if
+end rig_ControllerFolder
+
+function rig_RoutingScript
+   -- was "rig_RoutingScript"
+   put rig_ApplicationPath() & "/config/routes.lc" into somePath
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   put server_FetchFile (somePath, serverAddress, sshUser) into rigScript
+   return rigScript
+end rig_RoutingScript
+
+function rig_ApplicationPath pShortpath
+   -- was "revigniter_ApplicationPath"
+   put rig_GetApplicationFolder() into rigApplicationPath
+   if pShortpath is not empty then put pShortpath after rigApplicationPath
+   return rigApplicationPath
+end rig_ApplicationPath
+
+function rig_GetSystemFolder pFolder
+   -- quick hack
+   -- this depends on the site specific configuration
+   -- ie is it configured to have multiple sites
+   
+   if the environment = "server" then
+      put gAPPPATH into rigSystemFolder
+   else
+      put server_RigApplicationFolder() into rigSystemFolder
+   end if
+   
+   -- here is the hack :)
+   set the itemdelimiter to "/"
+   if server_GetURL() = "livecode.world" then
+      delete item -1 of rigSystemFolder
+   else
+      delete item -2 to -1 of rigSystemFolder
+   end if
+   
+   text_AddTrailing rigSystemFolder, "/"
+   if pFolder is not empty then
+      put pFolder & "/" after rigSystemFolder
+   end if
+   return rigSystemFolder
+end rig_GetSystemFolder
+
+function rig_GetApplicationFolder
+   if the environment = "server" then
+      put gAPPPATH into rigApplicationFolder
+   else
+      put server_RigApplicationFolder() into rigApplicationFolder
+   end if
+   text_AddTrailing rigApplicationFolder, "/"
+   return rigApplicationFolder
+end rig_GetApplicationFolder
+
+
+--> Private | revIgniter
+-
+private function _setControllerHelp mergeHelp, shortServer
+   if mergeHelp is not empty then return mergeHelp
+   switch shortServer
+      case "livecode.world"
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller for the www.livecode.world web site." into mergeHelp
+         break
+      case "himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller for the Himalayan Academy web site." into mergeHelp
+         break
+      case "dev.himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller for the Himalayan Academy developer web site." into mergeHelp
+         break
+      default
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller." into mergeHelp
+   end switch
+   return mergeHelp
+end _setControllerHelp
+
+private command _setScriptStackGistHelp @mergeHelp, shortServer
+   if mergeHelp is not empty then return mergeHelp
+   switch shortServer
+      case "livecode.world"
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack for the www.livecode.world web site." into mergeHelp
+         break
+      case "himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack for the Himalayan Academy web site." into mergeHelp
+         break
+      case "dev.himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack for the Himalayan Academy developer web site." into mergeHelp
+         break
+      default
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack." into mergeHelp
+   end switch
+   return mergeHelp
+end _setScriptStackGistHelp
+
+
+--> Deps
+-
+function script_HkeysFromAvailable handlerTable, someScript, pReturnHow
+   repeat for each line someLine in handlerTable
+      put word 1 of someLine into handlerType
+      if handlerType is not "M" then next repeat
+      
+      put word 3 of someLine into startLineNum
+      -- put word 4 of someLine into endLineNum
+      put line startLineNum of someScript into startLine
+      if word 1 of startLine is not "on" then next repeat
+      
+      put word 2 of someLine into hName
+      switch pReturnHow
+         case "hKey"
+            put hName,hType,tObject,1 & CR after hKeys
+            break
+         case "name"
+            put hName & CR after hKeys
+            break
+         default
+            put hName,hType & CR after hKeys
+      end switch
+   end repeat
+   delete char -1 of hKeys
+   return hKeys
+end script_HkeysFromAvailable
+
+command text_Indent @someText, pIndentChars
+   if pIndentChars is empty then put "   " into pIndentChars
+   repeat for each line someLine in someText
+      put pIndentChars & someLine & CR after newText
+   end repeat
+   delete char -1 of newText
+   put newText into someText
+end text_Indent
+
+command opn_Notify someMessage, isSticky, paramArray
+   -- see "http://osx.c0de.academy/view/notifications-in-osx"
+   replace "'" with quote in someMessage
+   if paramArray is an array then put text_Merge (someMessage, paramArray) into someMessage
+   switch the platform
+      case "MacOS"
+         osx_Notify someMessage, isSticky
+         break
+      default
+         put someMessage
+   end switch
+end opn_Notify
+
+command osx_Notify someMessage, pTitle
+   switch
+      case version_IsEarlier (the systemversion, "10.9")
+         put someMessage
+         return "Old OSX system with growl not installed."
+      default
+         -- it's Mavericks or above
+         -- osascript -e 'display notification "Lorem ipsum dolor sit amet" with title "Title"'
+         replace quote with empty in someMessage
+         if pTitle is empty then put "LiveWorld Notification" into pTitle
+         put "osascript -e" && "'" & "display notification" && kwote (someMessage) into someShell
+         put "with title" && kwote (pTitle) after someShell
+         put "'" after someShell
+         put shell (someShell) into shellResult
+         return shellResult
+   end switch
+end osx_Notify
+
+function array_Fetch someFile
+   put url ("binfile:" & someFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   return modelArray
+end array_Fetch
+
+command folder_CreateNested @someFolder
+   text_AddTrailing someFolder, slash
+   if there is a folder someFolder then return empty
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of someFolder
+      put item 1 to itemNum of someFolder & "/" into testFolder
+      if there is a folder testFolder then next repeat
+      create folder testFolder
+   end repeat
+end folder_CreateNested
+
+function kwote someText
+   put quote & someText & quote into quotedText
+   return quotedText
+end kwote
+
+command text_AddTrailing @someText, someChar
+   if char -1 of someText is not someChar then
+      put someChar after someText
+   end if
+end text_AddTrailing
+
+function version_IsEarlier testVersion, refVersion
+   get _convertVersionToNumber (refVersion)
+   put it  > _convertVersionToNumber (testVersion) into isEarlier
+   return isEarlier
+end version_IsEarlier
+
+function _convertVersionToNumber someVersion
+   -- assumes a version of the format ###.###.###
+   -- to be safe each number can be up to 3 digits (they are usually 2)
+   set the itemdelimiter to "."
+   set the numberformat to "000"
+   put (item 1 of someVersion + 0) & (item 2 of someVersion + 0) & (item 3 of someVersion + 0) into someNum
+   return someNum
+end _convertVersionToNumber
+
+function text_Merge mergeText, paramArray
+   -- was "text_Merge"
+   repeat for each key someKey in paramArray
+      put paramArray [someKey] into someValue
+      put "put someValue into" && someKey into doScript
+      do doScript
+   end repeat
+   put merge (mergeText) into translatedText
+   return translatedText
+end text_Merge
+
+getprop stack_Object
+    return the defaultstack
+end stack_Object
+
+function file_DetailedInfo filePath
+   if filePath is empty then return empty
+   put filePath into someDirectory
+   if there is a file filePath then
+      set the itemdelimiter to "/"
+      put last item of filePath into shortFileName
+      delete last item of someDirectory
+      
+      put the directory into oDirectory
+      set the directory to someDirectory
+      put the detailed files into detailedFileTable     
+      set the directory to oDirectory
+      
+      put urlencode(shortFileName) into shortFileName -- seems to need it again???
+      filter detailedFileTable with (shortFileName & ",*")
+      return detailedFileTable
+   else if there is a folder filePath then
+      put the directory into oDirectory
+      set the directory to someDirectory
+      put the detailed files into detailedFileTable     
+      set the directory to oDirectory
+      return detailedFileTable
+   else
+      return empty
+   end if
+end file_DetailedInfo
+
+function file_GetSize filePath
+   get file_DetailedInfo (filePath)
+   return item 2 of it
+end file_GetSize
+
+command html_Tidy @someHtml
+   put the tempname & ".html" into inputFile 
+   put someHtml into url ("file:" & inputFile)
+   
+   put "tidy --force-output true --char-encoding utf8 --input-encoding utf8 --output-encoding utf8 --output-xml true -asxml -m" && inputFile into someShell
+   put shell (someShell) into shellResult   
+   put url ("file:" & inputFile) into someHtml
+end html_Tidy
+
+command line_Delete someLines, @fromContainer, partLine, skipLines
+   set the wholematches to (partLine is empty)
+   repeat with ii = 1 to the number of lines of someLines
+      put line ii of someLines into someLine
+      get lineoffset(someLine, fromContainer, skipLines)
+      if it is not 0 then
+         put it + skipLines into lineNum
+         delete line lineNum of fromContainer
+      end if 
+   end repeat
+   return the number of lines of someIndex
+end line_Delete

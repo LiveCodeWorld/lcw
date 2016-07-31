@@ -1,0 +1,6 @@
+setprop exported_Script [pExportHandlers] someScript
+   put the long id of the target into scriptObject
+   script_UpdateAndExport scriptObject
+   put the result into someFile
+   return someFile
+end exported_Script

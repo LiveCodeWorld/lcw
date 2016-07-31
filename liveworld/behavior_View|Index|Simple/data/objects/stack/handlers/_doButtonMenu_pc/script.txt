@@ -1,0 +1,13 @@
+private command _doButtonMenu
+   put the title_Menu of me into mTitle
+   switch
+      case the controlkey is "Down"
+         menu_PullDown "Global | Index | Simple | Menu"
+         break
+      case mTitle is not empty
+         menu_PullDown mTitle
+         break
+      default
+         menu_PullDown "Title | Menu"
+   end switch
+end _doButtonMenu

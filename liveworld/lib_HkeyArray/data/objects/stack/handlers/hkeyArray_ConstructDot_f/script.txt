@@ -1,0 +1,27 @@
+function hkeyArray_ConstructDot hkeyArray, graphName, graphStyle, graphSize
+    local graphDirection, graphOrder, defaultShape
+    
+    set the cursor to watch
+     
+    if the filter_System of me is true then hKeyArray_FilterSystemMessages hkeyArray
+    if the fllter_CustomMissing of me  is true then hKeyArray_FilterCustomMissing hkeyArray
+    if graphSize is empty then
+        put the dot_GraphSize of me into graphSize
+        put dot_RectFromSize(graphSize) into graphRect
+    end if
+    
+    put the overlay_Overlap of me into overlap
+    put the concentrate_Graph of me into concentrate
+    put true into splines
+    if graphstyle = "clusters" then
+        put true into clusterGraph
+    else
+        put false into clusterGraph
+    end if
+    
+    dot_ConstructHeaderArray dotPropertyArray, overlap, concentrate, true
+    put dot_ConstructHeader (graphRect, dotPropertyArray) into graphHeader
+    put dot_NestedSubgraphsFromhkeyArray (hkeyArray, clusterGraph, graphName, graphHeader) into dotText
+    
+    return dotText
+end hkeyArray_ConstructDot

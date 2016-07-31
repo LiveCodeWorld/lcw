@@ -1,0 +1,9 @@
+getprop index_Controls
+   -- returns other things not just index_Views to 2 levels down.
+   put the child_Groups of me into indexGroups
+   repeat for each line indexGroup in indexGroups
+      put the child_Controls of indexGroup & CR after indexViews
+   end repeat
+   delete char -1 of indexViews
+   return indexViews
+end index_Controls

@@ -1,0 +1,5 @@
+command overlayArray_SetMainStackHash @overlayArray, mainstackHash
+   put overlayArray_GetMetadataArray (overlayArray) into metadataArray
+   put mainstackHash into metadataArray ["mainstack_Hash"]
+   overlayArray_SetMetadataArray overlayArray, metadataArray
+end overlayArray_SetMainStackHash

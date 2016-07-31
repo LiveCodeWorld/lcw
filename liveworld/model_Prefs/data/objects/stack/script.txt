@@ -1,0 +1,104 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Prefs
+type: model
+version: 0.1
+
+
+--> Currently Working On
+-
+/*
+These utility handlers are for manipulating global variables when you only have there name,
+and this is passed to you in a script. Otherwise you can simply decalre the global in your script and do not need to use "do".
+*/
+
+[[ _FetchHandler (pref_FetchServerArray,f) ]]
+
+[[ _FetchHandler (pref_StoreServerArray,c) ]]
+
+[[ _FetchHandler (global_DisplayValue,c) ]]
+
+[[ _FetchHandler (global_GetValue,f) ]]
+
+[[ _FetchHandler (global_SetValue,c) ]]
+
+[[ _FetchHandler (global_Delete,c) ]]
+
+
+--> Pref | Shell
+-
+[[ _FetchHandler (pref_SetShellRoot,c) ]]
+
+
+--> Pref
+-
+[[ _FetchHandler (pref_GetValue,f) ]]
+
+[[ _FetchHandler (pref_SetValue,c) ]]
+
+[[ _FetchHandler (pref_DeleteValue,c) ]]
+
+[[ _FetchHandler (pref_ListValues,f) ]]
+
+
+--> Pref | Global | Model
+-
+[[ _FetchHandler (pref_ListStoredValues,f) ]]
+
+[[ _FetchHandler (pref_FetchGlobal,f) ]]
+
+[[ _FetchHandler (pref_StoreGlobal,c) ]]
+
+
+--> Pref | Fetch
+-
+[[ _FetchHandler (pref_FetchValue,f) ]]
+
+[[ _FetchHandler (pref_SaveValue,c) ]]
+
+[[ _FetchHandler (pref_RemoveValue,c) ]]
+
+
+--> Pref | Sets
+-
+[[ _FetchHandler (pref_ListSetNames,f) ]]
+
+[[ _FetchHandler (pref_DeleteSet,c) ]]
+
+[[ _FetchHandler (pref_FetchArray,f) ]]
+
+
+--> Pref | Array
+-
+function pref_FetchArray pProjectName
+   -- contains all the preference globals int the set with the keys as global names
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchData() into dataArray
+   return dataArray [pProjectName]
+end pref_FetchArray
+
+[[ _FetchHandler (pref_StoreArray,c) ]]
+
+
+--> Pref | Data
+-
+[[ _FetchHandler (pref_FetchData,f) ]]
+
+[[ _FetchHandler (pref_StoreData,c) ]]
+
+
+--> Pref | Files and Folders
+-
+[[ _FetchHandler (pref_File,f) ]]
+
+[[ _FetchHandler (library_PrefFolder,f) ]]
+
+[[ _FetchHandler (pref_Folder,f) ]]
+
+[[ _FetchHandler (pref_WindowsFolder,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (project_GetCurrentName,f) ]]

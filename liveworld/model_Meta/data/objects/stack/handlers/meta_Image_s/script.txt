@@ -1,0 +1,5 @@
+setprop meta_Image someImage
+   put the object_Folder of the target into objectFolder
+   object_ExportMetaImage objectFolder, someImage
+   return the result
+end meta_Image

@@ -1,0 +1,8 @@
+function outline_LineOffset osTitle, someOutline
+   -- was "whichOsLine"
+   replace tab with empty in someOutline
+   replace tab with empty in osTitle
+   set the wholematches to true
+   put lineoffset (osTitle, someOutline) into lineNum
+   return lineNum
+end outline_LineOffset

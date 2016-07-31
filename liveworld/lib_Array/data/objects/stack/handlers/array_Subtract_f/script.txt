@@ -1,0 +1,8 @@
+function array_Subtract someArray, fromThisArray
+    put fromThisArray into tempArray
+    intersect tempArray with someArray
+    repeat for each line someKey in (the keys of tempArray)
+        delete local fromThisArray [someKey]
+    end repeat
+    return fromThisArray
+end array_Subtract

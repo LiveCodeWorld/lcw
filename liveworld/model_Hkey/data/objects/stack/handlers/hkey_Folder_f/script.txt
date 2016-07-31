@@ -1,0 +1,10 @@
+function hkey_Folder hKey, pDontCreate
+   if the number of items of hKey = 4 and item 3 of hKey is not "Missing" then
+      put item 3 of hKey into hObject
+      put the object_Folder of hObject into objectFolder
+      put objectFolder_HandlerFolder (hKey, objectFolder, pDontCreate) into hkeyFolder
+   else
+      put library_HkeyFolder (hKey, pDontCreate) into hkeyFolder
+   end if
+   return hkeyFolder
+end hkey_Folder

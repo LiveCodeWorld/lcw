@@ -1,0 +1,7 @@
+function menu_CleanMarks someMenu  
+   replace "!c" with empty in someMenu
+   replace "!n" with empty in someMenu
+   -- replace "(" with empty in someMenu	# only at start!
+   put replacetext(someMenu, "(?m)^\(", empty) into someMenu
+   put replacetext(someMenu, "/.*", empty) into someMenu
+end menu_CleanMarks

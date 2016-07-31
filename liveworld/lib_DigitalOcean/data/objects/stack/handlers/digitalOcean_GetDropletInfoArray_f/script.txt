@@ -1,0 +1,4 @@
+function digitalOcean_GetDropletInfoArray
+   put the droplet_InfoArray of stack "libOPN_DigitalOcean" into dropletInfoArray
+   return dropletInfoArray
+end digitalOcean_GetDropletInfoArray

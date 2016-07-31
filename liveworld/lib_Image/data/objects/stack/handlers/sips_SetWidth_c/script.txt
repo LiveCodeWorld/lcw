@@ -1,0 +1,10 @@
+command sips_SetWidth imageFile, someWidth
+   /*
+   --resampleWidth pixelsW
+   Resample image to specified width.
+   */
+   put shell_MakeOSXShellPath (imageFile) into imageFile
+   put "sips --resampleWidth" && someWidth && imageFile into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end sips_SetWidth

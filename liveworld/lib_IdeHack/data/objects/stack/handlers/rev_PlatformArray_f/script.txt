@@ -1,0 +1,17 @@
+function rev_PlatformArray
+   put "windows (any version post-3.1)" into platformArray ["Win32"]
+   put "Mac OS, OS X, or Darwin system" into platformArray ["MacOS"]
+   put "Linux for Intel or PowerPC architecture" into platformArray ["Linux"]
+   
+   put "BSD UNIX (BSDI, FreeBSD)" into platformArray ["BSD"]
+   put "HP-UX" into platformArray ["HP-9000/700"]
+   put "Silicon Graphics IRIX" into platformArray ["SGI IRIS"]
+   put "Silicon Graphics IRIX" into platformArray ["SGI IRIS"]
+   put "AIX" into platformArray ["IBM RS/6000"]
+   put "SCO open DeskTop" into platformArray ["Intel SCO"]
+   put "Solaris for x86 architecture" into platformArray ["Intel SVR4"]
+   put "SPARC SunOS" into platformArray ["SPARC"]
+   put "SPARC Solaris" into platformArray ["SPARC Solaris"]
+   
+   return platformArray
+end rev_PlatformArray

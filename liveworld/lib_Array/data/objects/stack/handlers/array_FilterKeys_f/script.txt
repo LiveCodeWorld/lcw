@@ -1,0 +1,7 @@
+function array_FilterKeys someArray, includeKeyList
+    -- could use "intersect" ???
+    repeat for each item someKey in includeKeyList
+        put someArray [someKey] into filteredArray [someKey]
+    end repeat
+    return filteredArray
+end array_FilterKeys

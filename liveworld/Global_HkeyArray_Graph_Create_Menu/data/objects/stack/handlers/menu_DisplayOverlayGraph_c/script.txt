@@ -1,0 +1,7 @@
+on menu_DisplayOverlayGraph treeView, overlayName
+   set the cursor to watch
+   deconstructLocalArray overlayFolder, hKey, stackLabel, scriptObject
+   
+   local pImageView, pResizeStyle
+   display_Overlay overlayFolder, overlayName, pImageView, pResizeStyle, stackLabel
+end menu_DisplayOverlayGraph

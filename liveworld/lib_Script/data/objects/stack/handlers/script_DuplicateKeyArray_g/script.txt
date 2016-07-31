@@ -1,0 +1,17 @@
+getprop script_DuplicateKeyArray
+   put the script_Array of the target into scriptArray
+   repeat for each key indexNum in scriptArray
+      put scriptArray [indexNum] into handerArray
+      put handerArray ["hKey"] into hKey
+      if hKey is empty then
+         put hKey & CR after uniqueKeys
+      else
+         hkey_Deconstruct hKey, handlerName, hType, scriptObject, handlerNum
+         if handlerNum > 1 then
+            put handerArray into duplicateArray [hKey]         
+         end if
+      end if
+   end repeat
+   delete char - 1 of uniqueKeys
+   return duplicateArray
+end script_DuplicateKeyArray

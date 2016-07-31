@@ -1,0 +1,16 @@
+function hArray_WalkHkeyDeps hKeys, pSearchOutSideMainStack
+   -- uses global hArray
+   local walkArray, pSetName, pTestExceptions, pOriginalHkey
+   repeat for each line hKey in hKeys
+      set the cursor to busy
+      put empty into walkArray ["hKeyArray"][hKey]
+      put hArray_GetShortCalls (hKey) into shortCalls
+      repeat for each line shortCall in shortCalls
+         hArray_DependencyWalk shortCall, hKey, walkArray, pSearchOutSideMainStack, pSetName, pTestExceptions, pOriginalHkey
+      end repeat
+   end repeat
+   put walkArray ["hKeyArray"] into mainStackHkeyArray
+   array_StripDeeperLevels mainStackHkeyArray
+   put mainStackHkeyArray into walkArray ["hKeyArray"]
+   return walkArray
+end hArray_WalkHkeyDeps

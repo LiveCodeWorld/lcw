@@ -1,0 +1,8 @@
+setprop svg_IsFluid someBoolean
+   if someBoolean is true then
+      set the svg_Dimensions of me to "100%,100%"
+   else
+      put the svg_ViewBoxDimensions of me into originalDimensions
+      set the svg_Dimensions of me to originalDimensions
+   end if
+end svg_IsFluid

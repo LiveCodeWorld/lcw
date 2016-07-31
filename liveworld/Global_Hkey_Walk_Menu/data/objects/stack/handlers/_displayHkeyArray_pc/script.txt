@@ -1,0 +1,6 @@
+private command _displayHkeyArray hkey, hKeyArray
+   put item 1 of hkey into hName
+   put item 3 of hkey into hObject
+   display_HKeyArray hKeyArray, hkey, hObject
+   put the result into treeView
+end _displayHkeyArray

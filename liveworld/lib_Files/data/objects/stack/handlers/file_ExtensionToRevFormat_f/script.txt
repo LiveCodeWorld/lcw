@@ -1,0 +1,12 @@
+function file_ExtensionToRevFormat someExtension
+    switch someExtension
+        case "rtf"
+            return "rtfText"
+        case "htm"
+            return "htmlText"
+        case "html"
+            return "htmlText"
+        default
+            return "text"
+    end switch
+end file_ExtensionToRevFormat

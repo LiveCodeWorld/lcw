@@ -1,0 +1,18 @@
+command error_CheckDisabled mController, mTarget, mTitlePath, mTableLine, someError
+   put the mobile_Name of mController into mobileController
+   if exists(mTarget) then put the mobile_Name of mTarget into mTarget
+   
+   put mFormatProp & "[" & mTarget & "]" into mobileFormatProperty
+   put "disabled menu format Error:" && mobileFormatProperty & CR after errorComment
+   put "of mController:" && mobileController & CR after errorComment
+   
+   -- put "for mTitle:" && kwote(mTitle) & CR after errorComment
+   put "for mTitlePath:" && kwote (mTitlePath) & CR after errorComment
+   put CR after errorComment
+   
+   put mTableLine & CR after errorComment
+   put CR after errorComment
+   
+   put someError & CR after errorComment
+   log_Error errorComment, "menu_ConvertTable", true
+end error_CheckDisabled

@@ -1,0 +1,8 @@
+command project_GuessHomeStack @projectHomeStack
+   if projectHomeStack is empty then
+      put the project_HomeStack of the target into projectHomeStack
+      if projectHomeStack is empty then
+         put the stack_Object of the target into projectHomeStack
+      end if
+   end if
+end project_GuessHomeStack

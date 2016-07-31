@@ -1,0 +1,9 @@
+setprop log_View pControl
+   if exists (pControl) then
+      put pControl into LogView
+      return LogView
+   else
+      put empty into LogView
+      return empty
+   end if
+end log_View

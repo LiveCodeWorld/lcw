@@ -1,0 +1,185 @@
+--> MetaData
+-
+license: GPLv3
+name: model_ObjectMetadata
+type: model
+version: 0.8
+
+/*
+Combines both the uRip value of the object and the script metadata of the object
+
+Prioritises the script value over the objects script metadata
+Sets both the uRip value of the object and the script of the object
+*/
+
+
+--> Currently Working On
+-
+
+--> Object | Metadata | Wrappers
+-
+/*
+Difficult naming this well - setting an "object_Type" seems like setting a control_Type - ie swithching form a field to a button etc
+Changing back to urip for the name of stuff in the script of custom property.
+*/
+
+[[ _FetchHandler (urip_Type,g) ]]
+
+[[ _FetchHandler (urip_Type,s) ]]
+
+[[ _FetchHandler (urip_Version,g) ]]
+
+[[ _FetchHandler (urip_Version,s) ]]
+
+
+--> Object | Metadata
+-
+/*
+See also "script_MetaData"
+*/
+
+[[ _FetchHandler (object_MetaData,g) ]]
+
+[[ _FetchHandler (object_MetaData,s) ]]
+
+[[ _FetchHandler (object_MetaDataTable,g) ]]
+ 
+
+
+--> Object | Folder
+-
+[[ _FetchHandler (object_Folder,g) ]]
+
+getprop object_Folder [pDontCreate]
+   put the long id of the target into someObject
+   
+   put the stack_Folder [pDontCreate] of someObject into objectFolder
+   put "objects/" after objectFolder
+   folder_AddObjectBit objectFolder, someObject
+   
+   if pDontCreate is not true then folder_CreateNested objectFolder
+   return objectFolder
+end object_Folder
+
+getprop object_Folder [pDontCreate]
+   put the long id of the target into someObject
+   put the stackDataObjects_Folder [pDontCreate] of someObject into objectFolder
+   folder_AddObjectBit objectFolder, someObject
+   if pDontCreate is false then folder_CreateNested objectFolder
+   return objectFolder
+end object_Folder
+
+[[ _FetchHandler (object_MetaDataFolder,g) ]]
+
+getprop object_MetaDataFolder [pDontCreate]
+   -- metadata/objects/stack/
+   -- metadata/objects/button_1006/
+   -- this is badly named as it indicates the metadata folder
+   -- should be script_MetadataFolder or "object_MetadataFolder"
+   
+   put the long id of the target into tObject
+   put the textStack_Folder of tObject into textStackFolder
+   put folder_AddStackBit ("metadata", textStackFolder, tObject) into metadataFolder
+   folder_AddObjectBit metadataFolder, tObject
+   if pDontCreate is false then folder_CreateNested metadataFolder
+   return metadataFolder
+end object_MetaDataFolder
+
+
+--> TextStack | Folder
+-
+[[ _FetchHandler (textStack_Folder,g) ]]
+
+getprop textStack_Folder [pDontCreate]
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   
+   put the textStack_Root [repoType] of the target into textStackRoot
+   
+   put textStackRoot & mainStackName & "/data/" into stackFolder
+   if pDontCreate is false then folder_CreateNested stackFolder
+   return stackFolder
+end textStack_Folder
+
+[[ _FetchHandler (textStack_Root,g) ]]
+
+
+--> Stack | Folder
+-
+[[ _FetchHandler (stack_Folder,g) ]]
+
+[[ _FetchHandler (stackData_Folder,g) ]]
+
+[[ _FetchHandler (stackDataObjects_Folder,g) ]]
+
+
+--> Checkout | Folder
+-
+[[ _FetchHandler (checkout_Folder,g) ]]
+
+
+--> Object | Props
+-
+getprop object_MetaData [uRipKey]
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   put script_GetMetadataArray (someScript) into scriptMetaDataArray
+   put the customproperties ["uRIP"] of scriptObject into uRipArray
+   
+   union scriptMetaDataArray with uRipArray
+   if uRipKey is empty then
+      return scriptMetaDataArray
+   else
+      return scriptMetaDataArray [uRipKey]
+   end if
+end object_MetaData
+
+[[ _FetchHandler (stack_RelativeFile,g) ]]
+
+
+--> Object | Urip
+-
+[[ _FetchHandler (object_UripArray,g) ]]
+
+[[ _FetchHandler (object_UripArray,s) ]]
+
+[[ _FetchHandler (object_AddUripArray,s) ]]
+
+
+--> Checkout | Folders
+-
+[[ _FetchHandler (textStack_FindRoot,f) ]]
+
+[[ _FetchHandler (checkout_SetFolderAndRepotype,c) ]]
+
+[[ _FetchHandler (script_OrderedMenuTitles,f) ]]
+
+[[ _FetchHandler (script_MenuToolModeArray,f) ]]
+
+[[ _FetchHandler (checkout_ConstructDefaultFolder,f) ]]
+
+-- function checkout_ConstructDefaultFolder objectFile
+put objectFile into checkoutFolder
+set the itemdelimiter to "/"
+put "opn_TextStacks/" into item -1 of checkoutFolder
+return checkoutFolder
+end checkout_ConstructDefaultFolder
+
+[[ _FetchHandler (checkout_FindRoot,f) ]]
+
+[[ _FetchHandler (metadata_ConstructUripArray,f) ]]
+
+[[ _FetchHandler (urip_AddDefaults,c) ]]
+
+
+--> Mainstack and Objects | To Sort
+-
+[[ _FetchHandler (mainstack_MetadataFolder,f) ]]
+
+[[ _FetchHandler (project_GetObjectFolder,f) ]]
+
+[[ _FetchHandler (stackData_GetFolder,f) ]]
+
+[[ _FetchHandler (folder_AddStackBit,f) ]]
+
+[[ _FetchHandler (folder_AddObjectBit,c) ]]

@@ -1,0 +1,14 @@
+function spotlight_FindExecutable pShortFileName
+   -- mdfind 'kMDItemFSName = fossil kMDItemKind = "Unix Executable File"'
+   put "mdfind '" into someShell
+   if pShortFileName is not empty then
+       -- bug:  only in home directory (permissions?). Use "spotlight_FindExecutable()" and then filter executable paths.
+      put "kMDItemFSName" && "==" && kwote (pShortFileName) & space after someShell
+   end if
+   put "kMDItemKind" && "==" && kwote("Unix Executable File") & space after someShell 
+   delete char -1 of someShell
+   put "'" after someShell
+   
+   put shell (someShell) into shellResult
+   return shellResult
+end spotlight_FindExecutable

@@ -1,0 +1,4 @@
+function library_ScriptOnlyModelFolder shortFileBit, pDontCreate
+   -- script only stacks
+   return library_PluginFolder ("opn_Model/", pDontCreate) & shortFileBit
+end library_ScriptOnlyModelFolder

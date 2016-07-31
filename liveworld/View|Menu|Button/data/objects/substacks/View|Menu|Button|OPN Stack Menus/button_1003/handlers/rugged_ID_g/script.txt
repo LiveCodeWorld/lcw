@@ -1,0 +1,6 @@
+getprop rugged_ID
+   -- could also be called "rugged_Object"
+   put the long id of the target into pObject
+   put revRuggedId (pObject) into ruggedObject
+   return ruggedObject
+end rugged_ID

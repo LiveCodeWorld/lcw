@@ -1,0 +1,10 @@
+command ipfs_ShellAddFile someFile
+   /*
+   ipfs add <path>... - Add an object to ipfs.
+   ipfs add /ipfs/QmPXME1oRtoT627YKaDPDQ3PwA8tdP9rWuAAweLzqSwAWT/readme
+   */
+   ipfs_AddToPATH
+   put "ipfs add" && kwote(someFile) into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end ipfs_ShellAddFile

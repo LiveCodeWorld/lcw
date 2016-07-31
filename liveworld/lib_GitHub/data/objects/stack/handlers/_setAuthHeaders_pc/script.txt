@@ -1,0 +1,8 @@
+private command _setAuthHeaders
+   -- put pref_FetchValue ("GitHubApiToken", "Default") into gitHubApiToken
+   put github_GetApiToken() into gitHubApiToken
+   put "Accept: application/vnd.github.v3+json" into someHeader
+   put CR & "Authorization: token" && gitHubApiToken after someHeader
+   put CR & "User-Agent: OPN" after someHeader
+   set the httpheaders to someHeader
+end _setAuthHeaders

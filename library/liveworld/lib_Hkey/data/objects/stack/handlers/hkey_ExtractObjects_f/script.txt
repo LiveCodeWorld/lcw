@@ -1,0 +1,7 @@
+function hkey_ExtractObjects hkeys
+   repeat for each line hkey in hkeys
+      hkey_Deconstruct hkey, handlerName, handlerType, scriptObject, handlerNum
+      put hKey into dumpArray [scriptObject]
+   end repeat
+   return keys (dumpArray)
+end hkey_ExtractObjects

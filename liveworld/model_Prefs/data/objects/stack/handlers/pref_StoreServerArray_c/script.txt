@@ -1,0 +1,6 @@
+command pref_StoreServerArray serverArray, pName
+   if pName is empty then put project_GetCurrentName() into pName
+   pref_SaveValue "server_Array", serverArray, pName
+   put the result into dataArray
+   return dataArray
+end pref_StoreServerArray

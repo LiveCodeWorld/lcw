@@ -1,0 +1,15 @@
+setprop view_Array [pUseCard] viewArray
+   if pUseCard is not false then
+      set the view_CardArray of the target to viewArray
+      return the result
+   end if
+   
+   put the view_Object of the target into viewObject
+   if exists(viewObject) is empty then return empty
+   
+   lock messages
+   set the view_Array of viewObject to viewArray
+   unlock messages
+   
+   return viewObject
+end view_Array

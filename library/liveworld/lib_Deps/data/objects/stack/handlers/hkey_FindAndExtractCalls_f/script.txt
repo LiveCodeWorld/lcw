@@ -1,0 +1,31 @@
+function hkey_FindAndExtractCalls hKey, pEnvironmentFilter, pHkeyArray, pScriptObject
+   -- maybe should use "hkey_SearchHierarchy" instead of "script_Hierarchy"???
+   local foundHKey, foundHandler
+   
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   if pScriptObject is empty then put hObject into pScriptObject
+   
+   put the script_Hierarchy [pEnvironmentFilter] of pScriptObject into scriptHierarchy
+   hkey_FindHandlerInHierarchy hName, hType, pScriptObject, scriptHierarchy, foundHKey, foundHandler
+   hkey_Deconstruct foundHkey, foundName, foundType, foundObject, foundNum
+   
+   -- save unecessary indexing work
+   if foundHkey is among the lines of keys (pHkeyArray) then
+      opn_Notify merge ("Already indexed '[[hkey]]'. Lets not index it again please :)")
+      return empty
+   end if
+   
+   -- get handler calls
+   -- this should be short calls for simplicity and speed of recursion
+   
+   put library_FetchHandler (foundHkey) into storedHandler
+   if foundHandler = storedHandler and pForceSearch is not true then
+      -- already stored, faster to fetch stored calls
+      put hkey_GetCalls (foundHkey) into handlerCalls
+   else
+      put the script_Hierarchy [pEnvironmentFilter] of foundObject into foundHierarchy
+      put script_ParseHandlerForCalls (foundHandler, foundHierarchy, foundObject) into handlerCalls
+      hkey_StoreCallsAndHandler foundHkey, foundHandler, handlerCalls
+   end if
+   return handlerCalls
+end hkey_FindAndExtractCalls

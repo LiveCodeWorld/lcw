@@ -1,0 +1,27 @@
+function handler_ConstructMenuHkeyIndex
+   -- lets index all global menu scripts (without menu handlers?)
+   local allKeys
+   
+   put menu_GlobalControllers() into globalMenuControllers
+   repeat for each line someObject in globalMenuControllers
+      set the cursor to busy
+      if word 1 of someObject = "stack" then next repeat
+      if exists(someObject) is false then
+         opn_Notify "Problem with a global menu_Controller", true
+         next repeat
+      end if
+      
+      put the script_Hkeys of someObject into hKeys      
+      put hKeys & CR after allKeys
+   end repeat
+   delete last char of allKeys
+   
+   filter allkeys without "-"
+   filter allkeys without "menu_*"
+   filter allkeys without "disabled_*"
+   filter allkeys without "*,g,"
+   filter allkeys without "*,s,"
+   
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructMenuHkeyIndex

@@ -1,0 +1,7 @@
+function youtube_FetchChannelUploadPlayListArray channelID
+   put youtube_FetchChannelArray (channelID) into channelArray   
+   deconstruct_ChannelArray channelArray, channelTitle, channelDescription, thumbnailURL, uploadsPlaylistID   
+   put youtube_FetchAllPlayListArray (uploadsPlaylistID) into orderedSnippetArray
+   -- put youtube_FetchPlayListArray (uploadsPlaylistID, pMaxResults, pNextPageToken) into playlistArray
+   return orderedSnippetArray
+end youtube_FetchChannelUploadPlayListArray

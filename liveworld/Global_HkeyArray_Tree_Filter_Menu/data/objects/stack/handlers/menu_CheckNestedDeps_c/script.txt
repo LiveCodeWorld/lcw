@@ -1,0 +1,16 @@
+on menu_CheckNestedDeps treeView
+   put the displayed_DependencyWalkArray of treeView into dependencyWalkArray
+   
+   put array_AllNodes (dependencyWalkArray) into allDeps
+   put hkey_ConstructShortKeyArray (allDeps) into depShortHkeyArray
+   
+   put _HkeysInMainstack (treeView) into mainStackHkeys
+   put hkey_ConstructShortKeyArray (mainStackHkeys) into mainstackShortHkeyArray
+   
+   array_Compare depShortHkeyArray, mainstackShortHkeyArray, commonArray, depsWithoutMainStackArray, mainStackWithoutDepsArray
+   
+   -- display_Array depShortHkeyArray, "depShortHkeyArray"
+   display_Array mainstackShortHkeyArray, "mainstackShortHkeyArray"
+   display_Array commonArray, "commonArray"
+   display_Array depsWithoutMainStackArray, "depsWithoutMainStackArray"
+end menu_CheckNestedDeps

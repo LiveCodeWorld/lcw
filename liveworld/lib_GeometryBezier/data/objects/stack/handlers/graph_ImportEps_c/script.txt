@@ -1,0 +1,458 @@
+on graph_ImportEps
+   global a,b,c,d,q,w,variablezxc,localvariable2,IdsAllgrcCreated
+   set the backcolor of me to green
+   set the cursor to busy
+   put empty into variablezxc
+   put empty into IdsAllgrcCreated
+   put empty into localvariable2
+   put empty into fld "workarea1"
+   
+   -- part 1
+   put empty into fld "EpsVectorGrafic"
+   answer file "Please select an Adobe Ilustrator file"
+   if it is empty then exit graph_ImportEps
+   put it into adobe
+   ## put adobe into fld "path for file"
+   open file adobe for read
+   read from file adobe until eof
+   put it into fld "EpsVectorGrafic"
+   close file adobe
+   put the ticks into qwerty
+   set the cursor to busy
+   
+   -- Resizing the stack to fit the graphics
+   
+   # if lineoffset("TileBox",fld "EpsVectorGrafic") <> 0
+   # then
+   # put line lineoffset("TileBox",fld "EpsVectorGrafic") of fld "EpsVectorGrafic" into localvariable1
+   # set the rect of this stack to word -4 of localvariable1,word -3 of localvariable1, word -2 of localvariable1,word -1 of localvariable1
+   # else
+   put line lineoffset("ArtSize",fld "EpsVectorGrafic") of fld "EpsVectorGrafic" into localvariable1
+   set the rect of this stack to 0,0, word -2 of localvariable1,word -1 of localvariable1
+   # end if
+   
+   # Other option is using the BoundingBox, something like: %%BoundingBox: 49 142 788 628
+   -- put line lineoffset("BoundingBox",fld "EpsVectorGrafic") of fld "EpsVectorGrafic" into localvariable1
+   -- set the rect of this stack to 0,0, word -2 of localvariable1,word -1 of localvariable1
+   # tilebox is used only on Mac files , BoundingBox not always contains all the artwork
+   
+   -- end of resize the stack
+   
+   set the lockscreen to the hilite of btn "lockscreen"
+   
+   -- put last word of line lineoffset("NumLayers",fld "EpsVectorGrafic") of fld "EpsVectorGrafic" into NumLayers
+   
+   if wordoffset("freehand",fld "EpsVectorGrafic") <> 0 then put "1" into freehandfile
+   -- Freehand files exported as Illustrator files draw the first graphics
+   -- with white lines and fills
+   
+   -- deleting setup of file
+   put lineoffset("%%EndSetup",fld "EpsVectorGrafic") into vgfc
+   select line 1 to vgfc of fld "EpsVectorGrafic"
+   delete the selectedtext
+   -- end of deleting setup of file
+   
+   -- getting the line weight
+   put word 5 of line lineoffset(" w ",fld "EpsVectorGrafic") of fld "EpsVectorGrafic" & " w" into line lineoffset(" w ",fld "EpsVectorGrafic") of fld "EpsVectorGrafic"
+   -- end of getting the line weight
+   
+   -- deleting imported image data
+   
+   put lineoffset("BeginData",fld "EpsVectorGrafic") into wdv
+   put lineoffset("EndData",fld "EpsVectorGrafic") into mht
+   
+   if wdv <> 0 and mht <> 0
+   then
+      repeat until wdv = 0
+         select line wdv to mht of fld "EpsVectorGrafic"
+         delete the selectedtext
+         put lineoffset("BeginData",fld "EpsVectorGrafic") into wdv
+         put lineoffset("EndData",fld "EpsVectorGrafic") into mht
+      end repeat
+   end if
+   -- end of deleting imported image data
+   
+   if the hilite of btn "nocolors" is true
+   then
+      put "m,c,l,y,v,L,C,w" into bezierOperators
+   else
+      if the hilite of btn "noimages" is true
+      then put "m,c,l,y,v,L,C,w,k,K,g,G,XA,xa,N,n,B,b,F,f,S,s" into bezierOperators
+      else put "m,c,l,y,v,L,C,w,k,K,g,G,XA,xa,XG,Xh,N,n,B,b,F,f,S,s" into bezierOperators
+   end if
+   
+   -- added k for cmyk colors, g for grayscale
+   -- added xg and xh for linked images
+   -- XA and xa for rgb colors
+   
+   -- getting the useful lines for import
+   
+   put fld "EpsVectorGrafic" into mnbvcxz
+   repeat until mnbvcxz is empty
+      if itemoffset(last word of line 1 of mnbvcxz,bezieroperators) <> 0 -- and first character of line 1 of mnbvcxz <> "%"
+      then
+         put line 1 of mnbvcxz & return after renderObject
+         delete line 1 of mnbvcxz
+      else
+         if line 1 of mnbvcxz contains "BeginPlace"
+         then
+            repeat with i = 1 to 4
+               put line i of mnbvcxz & return after renderObject
+            end repeat
+         end if
+         delete line 1 of mnbvcxz
+      end if
+   end repeat
+   
+   -- put renderobject into fld "EpsVectorGrafic" --
+   -- exit mouseup
+   
+   if lineoffset("get",renderobject) <> 0
+   then
+      put lineoffset("get",renderobject) into hgfdsa
+      select line hgfdsa to (the number of lines of renderobject) of renderobject
+      delete the selectedtext
+   end if
+   
+   -- put renderobject into fld "EpsVectorGrafic"
+   -- exit mouseup
+   
+   -- case of placed png and eps
+   
+   if lineoffset("BeginPlace",renderobject) <> 0
+   then
+      answer "This file contains a PNG or EPS placed image that couldn't be placed or sized with precision. Do you still want to import this image with the size and location of your choice ? (Choose YES) or Stop all the import? (Choose NO)" with "No" or "Yes"
+      if it = "Yes"
+      then
+         # -- case special for png or eps "placed" images -- experimental, report any incompatibilities, please
+         put lineoffset("BeginPlace",renderobject) into bjp
+         put " 0 XG" into last char of line bjp + 3 of renderobject
+         put line bjp + 3 of renderobject into line bjp + 1 of renderobject
+         delete word -3 of line bjp + 2 of renderobject
+         delete word -4 of line bjp + 2 of renderobject
+         if fld "myh" is a number
+         then put fld "myh" into word -2 of line bjp + 2 of renderobject
+         else put "100" into word -2 of line bjp + 2 of renderobject
+         if fld "myw" is a number
+         then put fld "myw" into word -1 of line bjp + 2 of renderobject
+         else put "100" into word -1 of line bjp + 2 of renderobject
+         if fld "myL" is a point
+         then
+            put item 2 of fld "myL" into word -3 of line bjp + 2 of renderobject
+            put item 1 of fld "myL" into word -4 of line bjp + 2 of renderobject
+         else
+            put item 1 of the screenloc into word -4 of line bjp + 2 of renderobject
+            put item 2 of the screenloc into word -3 of line bjp + 2 of renderobject
+         end if
+         put " 0 Xh" after line bjp + 2 of renderobject
+         delete line bjp + 3 of renderobject
+      else -- you choose NO
+         exit graph_ImportEps
+      end if
+   end if
+   
+   put renderobject into zxc
+   
+   -- put round((the ticks - qwerty) / 60) && "seconds for importing this file"
+   -- exit mouseup
+   
+   -- Now convert the real numbers to integers
+   
+   put "k,K,g,G,XA,xa,Xh" into ColorInformation
+   repeat with kp = 1 to the number of lines of zxc
+      if last word of line kp of zxc is among the items of ColorInformation
+      then -- do nothing
+      else
+         repeat with kl = 1 to the number of words of line kp of zxc
+            if isnumber(word kl of line kp of zxc)
+            then put round(word kl of line kp of zxc) into word kl of line kp of zxc
+            else
+            end if
+         end repeat
+      end if
+   end repeat
+   
+   -- put zxc into fld "EpsVectorGrafic"
+   -- exit mouseup
+   
+   set the cursor to busy
+   
+   -- extra cleanup of the data
+   set the casesensitive to true
+   repeat with i = the number of lines of zxc down to 1
+      -- if the first word of line i
+      if the last word of line i of zxc = "XH" then delete line i of zxc
+      if the first char of line i of zxc = "%" then delete line i of zxc
+      if the last word of line i of zxc = "M" then delete line i of zxc
+      if the second word of line i of zxc = "A" then delete line i of zxc
+      if the first word of line i of zxc = "w" then delete line i of zxc
+      if the first word of line i of zxc = "W" then delete line i of zxc
+      if the first word of line i of zxc = "h" then delete line i of zxc
+      if the last word of line i of zxc = "m"
+      then
+         put the last word of line i + 1 of zxc into ftyhg
+         if ftyhg is among the items of "L,l,C,c,y,v,Y,V"
+         then -- do nothing
+         else delete line i of zxc
+      end if
+   end repeat
+   
+   if freehandfile = 1
+   then
+      put "0 0 0 0 K" into line lineoffset("0 0 0 1 K",zxc) of zxc
+      delete line lineoffset("0 0 0 1 k",zxc) of zxc -- white fill
+   end if
+   
+   set the casesensitive to false
+   -- end of extra cleanup of the data
+   
+   put zxc into fld "EpsVectorGrafic"
+   
+   -- ####################################################################
+   -- prepare the graphic template
+   
+   set the style of the templategraphic to polygon
+   set filled of templategraphic to false
+   
+   repeat with i = 1 to the number of lines of fld "EpsVectorGrafic"
+      
+      -- beginning of placing images
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "XG" -- path to imagefile
+      then -- check if the paths are absolute or relative
+         if the hilite of btn "relpath" = true
+         then
+            replace ")" with comma in line i of fld "EpsVectorGrafic"
+            replace ":" with comma in line i of fld "EpsVectorGrafic"
+            replace "\" with comma in line i of fld "EpsVectorGrafic"
+            put item -2 of line i of fld "EpsVectorGrafic" into imgfilename
+            put fld "path for images" into wsxcde
+            if last word of line i + 1 of fld "EpsVectorGrafic" = "Xh"
+            then
+               put line i + 1 of fld "EpsVectorGrafic" into kgqw
+               delete first char of kgqw
+               delete line i + 1 of fld "EpsVectorGrafic"
+            end if
+            create image
+            put word 1 to 3 of it & return after IdsAllgrcCreated
+            set the filename of it to wsxcde & "/" & imgfilename
+            set the width of it to abs(round(word 1 of kgqw * word -4 of kgqw))
+            set the height of it to abs(round(word 4 of kgqw * word -3 of kgqw))
+            set the topleft of it to round(word 5 of kgqw),round(word 6 of kgqw)
+            put abs(round(word 1 of kgqw * word -4 of kgqw)) & return after imgwidths
+            put abs(round(word 4 of kgqw * word -3 of kgqw)) & return after imgheights
+            put round(word 5 of kgqw),round(word 6 of kgqw) & return after imglocations
+            put imgfilename & return after qscgu
+            -- put qscgu & return & imgwidths & return & imgheights & return & imglocations
+         else -- USE THE PATHS FROM ILLUSTRATOR FILE
+            if last word of line i + 1 of fld "EpsVectorGrafic" = "Xh"
+            then
+               put line i + 1 of fld "EpsVectorGrafic" into kgqw
+               delete first char of kgqw
+               delete line i + 1 of fld "EpsVectorGrafic"
+            end if
+            replace "\" with "/" in line i of fld "EpsVectorGrafic"
+            replace ":" with "/" in line i of fld "EpsVectorGrafic"
+            -- replace ")" with comma in line i of fld "EpsVectorGrafic"
+            replace "(" with "/" in line i of fld "EpsVectorGrafic"
+            delete word -2 of line i of fld "EpsVectorGrafic"
+            delete word -1 of line i of fld "EpsVectorGrafic"
+            delete last char of line i of fld "EpsVectorGrafic" -- the ")" char"
+            put line i of fld "EpsVectorGrafic" into imgfilename
+            create image
+            put word 1 to 3 of it & return after IdsAllgrcCreated
+            set the topleft of it to round(word 5 of kgqw),round(word 6 of kgqw)
+            set the width of it to abs(round(word 1 of kgqw * word -4 of kgqw))
+            set the height of it to abs(round(word 4 of kgqw * word -3 of kgqw))
+            put abs(round(word 1 of kgqw * word -4 of kgqw)) & return after imgwidths
+            put abs(round(word 4 of kgqw * word -3 of kgqw)) & return after imgheights
+            set the filename of it to imgfilename
+            
+            put round(word 5 of kgqw),round(word 6 of kgqw) & return after imglocations
+            put imgfilename & return after qscgu
+            -- put qscgu & return & imgwidths & return & imgheights & return & imglocations
+         end if
+      end if
+      -- end of placing images
+      
+      -- beginning of adding color
+      set the caseSensitive to true
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "Xa" -- rgb color fill
+      then
+         put DecimaltoRGB(word -4 to -2 of line i of fld "EpsVectorGrafic") into vGraphicColor
+         next repeat
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "XA" -- rgb color line
+      then
+         put DecimaltoRGB(word -4 to -2 of line i of fld "EpsVectorGrafic") into vGraphicLine
+         next repeat
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "k" -- flat color fill
+      then
+         put CMYKtoRGB(word 1 to 4 of line i of fld "EpsVectorGrafic") into vGraphicColor
+         next repeat
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "K"  -- color border
+      then
+         put CMYKtoRGB(word 1 to 4 of line i of fld "EpsVectorGrafic") into vGraphicLine
+         next repeat
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "g" -- grayscale fill
+      then
+         put round(first word of line i of fld "EpsVectorGrafic" * 255) into R
+         put round(first word of line i of fld "EpsVectorGrafic" * 255) into G
+         put round(first word of line i of fld "EpsVectorGrafic" * 255) into B
+         put R & "," & G & "," & B into vGraphicColor
+         -- put vGraphicColor
+         next repeat
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "G" -- grayscale line
+      then
+         put round(first word of line i of fld "EpsVectorGrafic" * 255) into R
+         put round(first word of line i of fld "EpsVectorGrafic" * 255) into G
+         put round(first word of line i of fld "EpsVectorGrafic" * 255) into B
+         put R & "," & G & "," & B into vGraphicLine
+         -- put vGraphicLine
+         next repeat
+      end if
+      
+      set the caseSensitive to false
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "w" -- lineweight
+      then
+         put round(first word of line i of fld "EpsVectorGrafic") into vGraphicLineWeight -- function in this button
+         if the hilite of btn "nocolors" is true and vGraphicLineWeight = 0 then put 1 into vGraphicLineWeight
+         next repeat
+      end if
+      
+      -- now the operators that draw the graphics
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "m" and the number of words of line i of fld "EpsVectorGrafic" = 3
+      then
+         create graphic
+         put word 1 to 3 of it & return after IdsAllgrcCreated
+         -- put IdsAllgrcCreated -- only for debug
+         put empty into variablezxc
+         put word -3 of line i of fld "EpsVectorGrafic",word -2 of line i of fld "EpsVectorGrafic" & return into variablezxc
+      end if
+      
+      -- the id of the graphic is in the local variable it
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "C"
+      then
+         put word -3 of line i-1 of fld "EpsVectorGrafic",word -2 of line i-1 of fld "EpsVectorGrafic" into a
+         put word 5 of line i of fld "EpsVectorGrafic",word 6 of line i of fld "EpsVectorGrafic" into d
+         put word 1 of line i of fld "EpsVectorGrafic",word 2 of line i of fld "EpsVectorGrafic" into b
+         put word 3 of line i of fld "EpsVectorGrafic",word 4 of line i of fld "EpsVectorGrafic" into c
+         bezier -- the handler bezier put the resulting points in the global variable variablezxc
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "y"
+      then
+         put word -3 of line i-1 of fld "EpsVectorGrafic",word -2 of line i-1 of fld "EpsVectorGrafic" into a
+         put word 3 of line i of fld "EpsVectorGrafic",word 4 of line i of fld "EpsVectorGrafic" into d
+         put word 1 of line i of fld "EpsVectorGrafic",word 2 of line i of fld "EpsVectorGrafic" into b
+         put word 3 of line i of fld "EpsVectorGrafic",word 4 of line i of fld "EpsVectorGrafic" into c
+         bezier -- the handler bezier put the resulting points after the global variable variablezxc
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "v"
+      then
+         put word -3 of line i-1 of fld "EpsVectorGrafic",word -2 of line i-1 of fld "EpsVectorGrafic" into a
+         put word 3 of line i of fld "EpsVectorGrafic",word 4 of line i of fld "EpsVectorGrafic" into d
+         put word -3 of line i of fld "EpsVectorGrafic",word -2 of line i of fld "EpsVectorGrafic" into b
+         put word 1 of line i of fld "EpsVectorGrafic",word 2 of line i-1 of fld "EpsVectorGrafic" into c
+         bezier -- the handler bezier put the resulting points after the global variable variablezxc
+      end if
+      
+      if the last word of line i of fld "EpsVectorGrafic" is "L" or the last word of line i of fld "EpsVectorGrafic" is "l"
+      then put word 1 of line i of fld "EpsVectorGrafic",word 2 of line i of fld "EpsVectorGrafic" & return after variablezxc
+      
+      -- put variablezxc -- only for debug
+      
+      if "graphic" is among the words of it
+      then set the points of it to variablezxc -- *** it contains the id of the graphic
+      
+      -- Now color graphic objects
+      if the last word of line i of fld "EpsVectorGrafic" is "b" or the last word of line i of fld "EpsVectorGrafic" is "B"
+      then
+         if vGraphicColor is not empty
+         then
+            set the filled of it to true
+            set the backgroundColor of it to vGraphicColor
+         end if
+         -- if vGraphicLine is not empty then set the foreColor of it to vGraphicLine
+         -- if vGraphicLineWeight is not empty then set the linesize of it to vGraphicLineWeight
+         if vGraphicLine is not empty
+         then
+            set the linesize of it to vGraphicLineWeight
+            set the foreColor of it to vGraphicLine
+         else
+            set the linesize of it to "0"
+         end if
+      end if
+      if the last word of line i of fld "EpsVectorGrafic" is "N" or the last word of line i of fld "EpsVectorGrafic" is "n"
+      then
+         set the filled of it to false
+         set the linesize of it to "0"
+      end if
+      if the last word of line i of fld "EpsVectorGrafic" is "S" or the last word of line i of fld "EpsVectorGrafic" is "s"
+      then
+         set the filled of it to false
+         if vGraphicLine is not empty
+         then
+            set the linesize of it to vGraphicLineWeight
+            set the foreColor of it to vGraphicLine
+         end if
+      end if
+      if the last word of line i of fld "EpsVectorGrafic" is "F" or the last word of line i of fld "EpsVectorGrafic" is "f"
+      then
+         if vGraphicColor is not empty
+         then
+            set the filled of it to true
+            set the backgroundColor of it to vGraphicColor
+            -- if vGraphicLine is not empty then set the foreColor of it to vGraphicLine
+            -- if vGraphicLineWeight is not empty then set the linesize of it to vGraphicLineWeight
+            set the linesize of it to "0"
+         end if
+      end if
+   end repeat
+   
+   -- Now flip all
+   
+   if the hilite of btn "flipgrc" is true then flipAllgraphics
+   
+   if the hilite of btn "groupgrc" is true
+   then
+      repeat with i = 1 to the number of lines of IdsAllgrcCreated
+         put line i of IdsAllgrcCreated & space & "and" & space after xwtv
+      end repeat
+      delete last word of xwtv
+      
+      put "group" && xwtv into fld "workarea1"
+      do fld "workarea1"
+      
+   end if
+   
+   unlock screen -- the following code don't work unless the screen is unlocked!
+   
+   set the itemdelimiter to "/"
+   repeat with i = 1 to the number of lines of qscgu
+      set the width of img last item of line i of qscgu to line i of imgwidths
+      set the height of img last item of line i of qscgu to line i of imgheights
+      set the topleft of img last item of line i of qscgu to line i of imglocations
+      set the locklocation of img last item of line i of qscgu to true
+   end repeat
+   
+   set the itemdelimiter to comma
+   
+   choose browser tool
+   set the backcolor of me to red
+   put round((the ticks - qwerty) / 60) && "seconds for importing this file"
+end graph_ImportEps

@@ -1,0 +1,5 @@
+function script_CallingObject
+   get the executioncontexts
+   put item 1 of line -3 of it into callingObject
+   return callingObject
+end script_CallingObject

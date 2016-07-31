@@ -1,0 +1,23 @@
+function url_Construct someProtocol, urlDomain, urlPath, shortName, fileExtension, userName, pissWord
+    put someProtocol & "://" into someUrl
+    if userName is not empty then
+        put userName & ":" & pissWord & "@" after someUrl
+    end if
+    put urlDomain after someUrl
+    if urlPath is not empty then
+        folder_Format someUrl
+        if char 1 of urlPath is "/" then delete char 1 of urlPath
+        put urlPath after someUrl
+    end if
+    if shortName is empty then
+        -- put "/" after someUrl -- not always a directory can be a web application path / wiki
+    else
+        folder_Format someUrl
+        put shortName after someUrl
+         
+        if fileExtension is not empty then
+            put "." & fileExtension after someUrl
+        end if
+    end if
+    return someUrl
+end url_Construct

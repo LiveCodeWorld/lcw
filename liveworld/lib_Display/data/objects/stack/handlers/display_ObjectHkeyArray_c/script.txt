@@ -1,0 +1,8 @@
+command display_ObjectHkeyArray hkeyArray, hkeyOrObject
+   put hkeyArray_ConstructObjectArray (hkeyArray) into objectHKeyArray
+   put hkeyArray_ConstructObjectTreeArray (objectHKeyArray) into objectTreeArray
+   
+   display_HkeyTreeArray objectTreeArray, hkeyOrObject
+   put the result into treeView
+   return treeview
+end display_ObjectHkeyArray

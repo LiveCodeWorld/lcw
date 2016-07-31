@@ -1,0 +1,6 @@
+command project_SaveGlobalHarray pProjectName
+   global gHkey_Array
+   project_SaveHarray gHkey_Array, pProjectName
+   put the result into arrayFile
+   return arrayFile
+end project_SaveGlobalHarray

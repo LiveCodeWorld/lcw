@@ -1,0 +1,9 @@
+on menu_TestGistIsSame shortController  
+   put rig_FetchController (shortController) into serverRigScript
+   put rig_FetchGistController (shortController) into gistRigScript
+   if serverRigScript = gistRigScript then
+      answer "Gist is the same as the servers controller."
+   else
+      answer "Gist differs from the servers controller."
+   end if
+end menu_TestGistIsSame

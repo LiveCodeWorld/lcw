@@ -1,0 +1,11 @@
+function html_ConstructRefLink someText, someLink, pTarget
+   if someLink is empty then return someText
+   replace quote with "&quot;" in someLink
+   put "<a href=" & quote & someLink & quote  into someLink
+   if pTarget is not empty then
+      -- "_blank" -- for opening in a new window
+      put space & "target=" &quote& pTarget &quote after someLink
+   end if
+   put ">" & someText & "</a>" after someLink
+   return someLink
+end html_ConstructRefLink

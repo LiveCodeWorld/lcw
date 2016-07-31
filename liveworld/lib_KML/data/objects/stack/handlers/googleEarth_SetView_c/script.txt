@@ -1,0 +1,24 @@
+on googleEarth_SetView latitude, longitude, someHeight, someTilt, someRotation, someSpeed
+    if someTilt is empty then put "0.0" into someTilt
+    if someRotation is empty then put "-150" into someRotation
+    if someSpeed is empty then put the googleEarth_Speed of me into someSpeed
+     
+    if char 1 to 6 of latitude is "xmlerr" then
+        opn_Notify latitude
+        exit to top
+    end if
+    set the numberformat to "#.000000000000"
+    put (latitude + 0) & empty into latitude
+    put (longitude + 0)  & empty into longitude
+    put (someHeight + 0)  & empty into someHeight
+    put (someTilt + 0 ) & empty into someTilt
+    put (someRotation + 0 ) & empty into someRotation
+     
+    put googleEarth_SetViewAppleScript(latitude, longitude, someHeight, someTilt, someRotation, someSpeed) into doScript
+    do doScript as AppleScript
+    put the result into someResult
+    if someResult contains "error" then
+        opn_Notify someResult
+    end if
+    return someResult
+end googleEarth_SetView

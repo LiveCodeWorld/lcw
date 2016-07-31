@@ -1,0 +1,21 @@
+on button_Up
+   put the script_Footer of me into scriptFooter
+   put the icon_Name of the target into someName
+   put the scriptLibrary_Tree of me into dataTreeView
+   switch someName
+      case "xchat"
+         set the view_Swap of scriptFooter to "Field|HyperText"
+         break
+      case "icon_logout"
+         -- set the view_Swap of scriptFooter to "Layouts|Placeholder"
+         set the view_Swap of dataTreeView to "Tree|Datagrid"
+         put the result into dataTreeView
+         set the record_ViewName of dataTreeView to "Record|Handler"
+         break
+      case "icon_settings"
+         set the view_Swap of scriptFooter to "Layouts|Placeholder"
+         set the view_Swap of dataTreeView to "Layouts|Placeholder"
+         break
+      default
+   end switch
+end button_Up

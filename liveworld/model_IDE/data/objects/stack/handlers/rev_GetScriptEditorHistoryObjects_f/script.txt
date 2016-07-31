@@ -1,0 +1,5 @@
+function rev_GetScriptEditorHistoryObjects pEditorNum
+   put rev_HistoryButton (pEditorNum) into historyButton
+   put value ("seHistoryGet()", historyButton) into someObjects
+   return someObjects
+end rev_GetScriptEditorHistoryObjects

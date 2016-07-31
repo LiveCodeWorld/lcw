@@ -1,0 +1,4 @@
+on menu_ShowStackLog mTarget, someName
+   put menu_GetGlobalController("Global | Git | Stack | Menu") into mController
+   dispatch "menu_StackLog" to mController with (the name of stack someName)
+end menu_ShowStackLog

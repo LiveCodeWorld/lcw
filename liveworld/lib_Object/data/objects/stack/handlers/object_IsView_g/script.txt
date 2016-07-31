@@ -1,0 +1,17 @@
+getprop object_IsView
+   put the long ID of the target into targetObject
+   
+   -- chould use custom property (but easy to have errors can't see?)
+   -- put the uRIP ["type"] of targetObject
+   
+   -- so lets use the fact that the script contains getprop view_Object handler
+   put the script of targetObject into someScript
+   put the parentscript of targetObject into parentScriptObject
+   if exists(parentScriptObject) then
+      put CR & CR & the script of parentScriptObject after someScript
+   end if
+   put script_ExtractGetPropHandlers(someScript) into getPropHandlerIndex
+   
+   set the wholeMatches to true
+   return "view_Object" is among the lines of getPropHandlerIndex
+end object_IsView

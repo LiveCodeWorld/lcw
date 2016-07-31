@@ -1,0 +1,19 @@
+function script_ConstructDefs hKeys
+    local nodeDefs
+    repeat for each line hKey in hKeys
+        set the cursor to busy
+        if the number of items of hKey = 4 then
+            hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+            if handlerName is "_" then next repeat
+            put script_ConstructNodeFromHkey(hKey) into someNode
+            put script_GetNodeDef(someNode, handlerName, handlerType, scriptObject) & CR after nodeDefs
+        else
+            -- put hKey into scriptObject
+            put script_ConstructNodeFromHkey(hKey) into someNode
+            put someNode & CR after nodeDefs
+        end if
+         
+    end repeat
+    delete last char of nodeDefs
+    return nodeDefs
+end script_ConstructDefs

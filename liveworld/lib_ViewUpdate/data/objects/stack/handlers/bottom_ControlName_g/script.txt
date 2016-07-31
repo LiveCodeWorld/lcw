@@ -1,0 +1,10 @@
+getprop bottom_ControlName
+   put the long id of the target into targetObject
+   
+   put the childcontrolids of targetObject into topIDs
+   if topIDs is empty then return empty
+   
+   put line -1 of topIDs into bottomID
+   put the short name of control id bottomID into bottomName
+   return bottomName
+end bottom_ControlName

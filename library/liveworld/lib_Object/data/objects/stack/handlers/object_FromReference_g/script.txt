@@ -1,0 +1,4 @@
+getprop object_FromReference [someReference]
+   put the long ID of the target into targetObject
+   return object_ReferenceToControl(someReference, targetObject)
+end object_FromReference

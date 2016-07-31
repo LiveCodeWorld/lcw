@@ -1,0 +1,11 @@
+command log_Set fullLogText, pLogName
+   put log_GetFile (pLogName) into logErrorFile
+   if fullLogText is empty then
+      delete file logErrorFile
+      return empty
+   else
+      put "file:" & logErrorFile into logUrl
+      put fullLogText into url logUrl
+      return logUrl
+   end if
+end log_Set

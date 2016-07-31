@@ -1,0 +1,53 @@
+function git_GetLastRevision relativePath, gitHashOrNum
+   /*
+   drdave: Ò is shell substitution operator. Shell runs the command inside and pastes its stdout over it and then runs the whole command.
+   <drdave>	k
+   <Ilari>	drdave: And that first one had one ' where there should have been `
+   <drdave>	I'm going to need to pass an actual path somewhere - can you give us an example with a path in it?
+   <Ilari>	drdave: For instance 'echo foo`echo bar`baz' prints 'foobarbaz'.
+   <Ilari>	drdave: git show `git rev-list -1 HEAD -- builtin-mv.c`^:builtin-mv.c
+   <drdave>	thanks.... will wrap my head round it :) Not quite got logic of shell substitution operator yet :)
+   <Ilari>	drdave: There's also another substitution operator: '$()'. That one can also be nested (and presumably has some other differences as well).
+   <drdave>	k
+   <drdave>	How would git show `git rev-list -1 HEAD -- builtin-mv.c`^:builtin-mv.c be written long hand then
+   <Ilari>	Quite useful to have nested substitutions when playing with commit-tree...
+   <drdave>	true
+   <drdave>	ah... think I'm getting it - its a sort of merge
+   <wshimmy>	arg
+   
+   <Ilari>	drdave: On my git.git copy (bit out of date), the rev-list resolves to 5aed3c6ab834367292bd7a9b0894177a07afd910, 
+   so the shell runs 'git show 5aed3c6ab834367292bd7a9b0894177a07afd910^:builtin-mv.c', 
+   which is equivalent to 'git show c8ba6b1b199bf00f227e8fdad4adb5a2147c8160:builtin-mv.c', 
+   which resolves to 'git show bce9959293e30925c4b16c40ac33a3f2e0474e30'
+   
+   <Gitbot>	[git 5aed3c6ab]: http://tinyurl.com/q8ac93 -- builtin-mv.c: check for unversionned files before looking at the destination.
+   <drdave>	everything between `xxxxxx` gets run and subsitituted - then the outer shell command is run - something like that ?
+   <Ilari>	drdave: Yes.
+   */
+   
+   git_SetRelativePath relativePath
+   
+   if gitHashOrNum is empty then put 0 into gitHashOrNum
+   if gitHashOrNum = 0 then
+      put merge("git show HEAD:[[relativePath]]") into someShell
+   else if gitHashOrNum = 1 then
+      -- put git_GetLastCommitHash(relativePath) into lastCommitHash -- seems really slow
+      put merge("git show `git rev-list -1 HEAD -- [[relativePath]]`^:[[relativePath]]") into someShell
+   else if gitHashOrNum is a number and gitHashOrNum < 99 then
+      put git_GetCommitFileHash (relativePath, gitHashOrNum) into someHash
+      put merge("git show [[someHash]]:[[relativePath]]") into someShell
+   else
+      -- assume it is a hash
+      put merge("git show [[gitHashOrNum]]:[[relativePath]]") into someShell
+   end if
+   
+   /*
+   put "git show" into someShell
+   put space & "HEAD~" & pBackNum & ":" & kwote(relativePath) after someShell
+   */
+   
+   -- display_Lines someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   -- text_UnixToMac shellResult
+   return shellResult
+end git_GetLastRevision

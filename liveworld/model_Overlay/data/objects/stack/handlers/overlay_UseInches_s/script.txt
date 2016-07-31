@@ -1,0 +1,5 @@
+setprop overlay_UseInches [pOverlayName] someBoolean
+   put the overlay_Folder of the target into overlayFolder
+   overlay_SetGraphValue overlayFolder, "overlay_UseInches", someBoolean, pOverlayName
+   return the result
+end overlay_UseInches

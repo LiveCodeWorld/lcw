@@ -1,0 +1,17 @@
+function menu_GetTitleTableArrayGlobal mController
+   global gHkey_Array
+   
+   put the rugged_ID of mController into mController
+   
+   -- a temp hack
+   put gHkey_Array ["scriptArray"][mController]["data"]["menuDataArray"] into oldTitleTableArray
+   if oldTitleTableArray is an array then
+      -- update it
+      delete variable gHkey_Array ["scriptArray"][mController]["data"]["menuDataArray"]
+      menu_SetTitleTableArrayGlobal mController, oldTitleTableArray
+      return oldTitleTableArray
+   end if
+   
+   put gHkey_Array ["scriptArray"][mController]["data"]["mTitleTableArray"] into mTitleTableArray
+   return mTitleTableArray
+end menu_GetTitleTableArrayGlobal

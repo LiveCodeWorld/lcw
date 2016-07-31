@@ -1,0 +1,9 @@
+setprop displayed_SquareText squareText
+   put the sivaSquareText_View of me into sivaSquareTextView
+   if exists (sivaSquareTextView) is false then return empty
+   
+   set the view_Text of sivaSquareTextView to squareText
+   -- set the view_UTF8 of sivaSquareTextView to squareText
+   put the result into textField
+   return textField
+end displayed_SquareText

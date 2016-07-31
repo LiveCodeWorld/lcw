@@ -1,0 +1,6 @@
+private function _squareView
+   put the top_Control ["innerSquare"] of me into innerSquareView
+   if exists (control "innerSquare" of me) is false then return empty
+   put the long id of control "innerSquare" of me into innerSquareView
+   return innerSquareView
+end _squareView

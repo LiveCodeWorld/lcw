@@ -1,0 +1,5 @@
+function library_HkeyImageFile hKey, pOverlayName, pDontCreate
+   hkey_NormalizeGraphName pOverlayName
+   put pOverlayName & "." & "png" into shortFile
+   return library_HkeyFolder (hKey, pDontCreate) & shortFile
+end library_HkeyImageFile

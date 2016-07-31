@@ -1,0 +1,11 @@
+command dot_AddGraphMargin @dotText, xMargin, yMargin, useInches
+   /*
+   For graphs, this sets x and y margins of canvas, in inches. if the margin is a single double, both margins are set equal to the given value.
+   */
+   
+   if yMargin is empty then put xMargin into yMargin
+   put xMargin,yMargin into graphMargin
+   if useInches is not true then dot_ConvertToInches graphMargin, (8*12)
+   
+   dot_AddGraphHeaderLine dotText, "margin", graphMargin, true
+end dot_AddGraphMargin

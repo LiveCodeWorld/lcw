@@ -1,0 +1,10 @@
+function colour_NameToRgb colourName, pObject
+   put colourName into revColourName
+   replace space with empty in revColourName
+   -- put revColorToNumber (revColourName) into rgbColour -- no longer present in revLibrary / renamed
+   
+   if colour_IsRgb (colourName) is true then return colourName
+   colour_ConvertEnglishName colourName
+   put colour_TranslateName (colourName, pObject) into rgbColour
+   return rgbColour
+end colour_NameToRgb

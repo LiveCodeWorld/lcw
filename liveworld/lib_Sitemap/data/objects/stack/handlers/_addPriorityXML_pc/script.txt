@@ -1,0 +1,6 @@
+private command _addPriorityXML @urlXML, pPriority
+   if pPriority is a number then
+      put xml_Enclose (pPriority, "priority", false) after urlXML
+      put CR after urlXML
+   end if
+end _addPriorityXML

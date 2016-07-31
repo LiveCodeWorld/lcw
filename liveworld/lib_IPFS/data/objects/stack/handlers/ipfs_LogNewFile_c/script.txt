@@ -1,0 +1,3 @@
+command ipfs_LogNewFile someHash, shortFileName
+   dispatch "display_IpfsLog" to cd 1 of me with someHash,shortFileName
+end ipfs_LogNewFile

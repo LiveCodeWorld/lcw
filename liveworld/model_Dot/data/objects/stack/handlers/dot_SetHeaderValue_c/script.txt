@@ -1,0 +1,11 @@
+command dot_SetHeaderValue targetObject, someKey, someValue
+   put the displayed_OverlayName of targetObject into pOverlayName
+   put the overlay_Array [pOverlayName] of targetObject into overlayArray
+   
+   put overlayArray_GetHeaderArray (overlayArray) into headerArray
+   put someValue into headerArray [someKey]
+   overlayArray_SetHeaderArray overlayArray, headerArray
+   
+   set the overlay_Array [pOverlayName] of targetObject to overlayArray
+   return headerArray
+end dot_SetHeaderValue

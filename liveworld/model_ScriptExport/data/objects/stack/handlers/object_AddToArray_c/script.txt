@@ -1,0 +1,191 @@
+command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
+   -- bug:  this means that fetching the object_Array also exports the script
+   if pCreateHashArray is not true then
+      delete variable hArray ["handlerHashArray"]
+   end if
+   
+   put the stack_Object of someObject into stackObject
+   put the mainstack of stackObject into mainStackName
+   put the name of stack mainStackName into ruggedMainStack
+   put the filename of stack mainStackName into stackFile
+   file_SetHomeRelative stackFile
+   
+   put the rugged_ID of someObject into ruggedObject
+   
+   put the object_Folder [pDontExport] of someObject into objectFolder
+   object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport  -- here we can export the script
+   put the result into scriptFile
+   file_SetHomeRelative scriptFile
+   
+   put the ticks into indexTime
+   put sha1_Hash (someScript) into scriptHash
+   
+   put script_GetMetadataArray (someScript) into objectMetaData
+   put the customproperties ["uRIP"] of someObject into uRipArray
+   union objectMetaData with uRipArray
+   
+   -- first let's delete any old entries for this object
+   hArray_RemoveObjectFromArray ruggedObject, hArray, uRipArray
+   delete variable hArray ["scriptArray"][ruggedObject]
+   
+   -- now let's index object types
+   put objectMetaData ["type"] into uRipType
+   if uRipType is not empty then
+      put objectMetaData ["name"] into uRipName
+      -- with the info below you can get rugged_IDs fast, and hkeys in them pretty fast
+      -- after this you can use the hKey to get handler info from the "handlerArray" below
+      if uRipType = "view" and the view_IsTemplate of someObject is true then
+         put "view template" into uRipType
+      end if
+      put scriptHash into hArray ["objectType"][uRipType][ruggedObject]["scriptHash"] 
+      put objectMetaData ["name"] into hArray ["objectType"][uRipType][ruggedObject]["uRipName"] 
+   end if
+   
+   -- Add script details to object metadata
+   put scriptHash into hArray ["scriptArray"][ruggedObject]["metadata"]["sha1"]
+   
+   put objectMetaData into hArray ["scriptArray"][ruggedObject]["metadata"]["uripArray"]
+   put scriptFile into hArray ["scriptArray"][ruggedObject]["metadata"]["scriptFile"]
+   put stackFile into hArray ["scriptArray"][ruggedObject]["metadata"]["stackFile"]
+   put ruggedMainStack into hArray ["scriptArray"][ruggedObject]["metadata"]["main stack object"]
+   put indexTime into hArray ["scriptArray"][ruggedObject]["metadata"]["indexTime"]
+   
+   -- index any behaviors
+   put the behavior of someObject into behaviorObject
+   if behaviorObject is not empty then
+      put scriptHash into hArray ["behaviorArray"][behaviorObject]["data"]["object"][ruggedObject]["scriptHash"]
+   end if
+   
+   -- fast and simple (to get comments and metadata will need to process later
+   put false into pIsExpanded
+   local suiteTitle
+   put 1 into indexNum
+   put 1 into lineNum
+   
+   -- same logic as "the script_Array"
+   put false into commentBlock
+   repeat with lineNum = 1 to the number of lines of someScript
+      put line lineNum of someScript into scriptLine
+      switch
+         case word 1 of scriptLine = "/*"
+            put true into commentBlock
+            break
+         case commentBlock is true
+            -- keep looping till end of block
+            if word -1 of scriptLine = "*/" then
+               -- could put this commented out section in the index?
+               put false into commentBlock
+            end if
+            break
+         case word 1 of scriptLine = "-->" 
+            put word 2 to -1 of scriptLine into suiteTitle
+            
+            put "t" into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["lineType"]
+            put lineNum into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["startLineNum"]
+            put suiteTitle into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["scriptLine"]
+            put pIsExpanded into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["isExpanded"]
+            
+            add 1 to indexNum
+            break    
+         case word 1 of scriptLine is among the items of "command,on,function,getprop,setprop,private"
+            put true into indexingHandler
+            
+            if word 1 of scriptLine is "private" then
+               put "p" into pBit
+               delete word 1 of scriptLine
+            else
+               put empty into pBit
+            end if
+            
+            get char 1 of scriptLine
+            if it = "o" then
+               put true into isOnMessage
+               put pBit & "c" into lineType
+            else
+               put false into isOnMessage
+               put pBit & it into lineType
+            end if
+            
+            put word 2 of scriptLine into hName
+            
+            put countArray [hName][lineType] into hNum
+            add 1 to hNum
+            put hNum into countArray [hName][lineType]
+            
+            put hName,lineType into shortHKey
+            put shortHKey,ruggedObject,hNum into hKey
+            put lineNum into startLineNum
+            
+            put hKey into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["hKey"]
+            put lineType into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["lineType"]
+            put suiteTitle into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["suiteTitle"]
+            put pIsExpanded is true into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["isExpanded"]
+            put startLineNum into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["startLineNum"]
+            
+            put scriptLine into startScriptLine
+            put startScriptLine into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["handlerLine"]
+            
+            break
+         case word 1 of scriptLine = "end" and word 2 of scriptLine = hName and indexingHandler is true
+            put false into indexingHandler
+            put lineNum into endLineNum
+            
+            put endLineNum into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["endLineNum"]
+            
+            put line startLineNum to endLineNum of someScript into someHandler
+            put sha1_Hash (someHandler) into handlerHash
+            put handlerHash into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["sha1"]
+            
+            
+            -- here we check to see if the handlerHash already exists for that mainstack object
+            -- this only happens if hArray ["handlerHashArray"] is added to hArray before walking
+            -- this can be initialised by adding a previously stored handlerHashArray from disk
+            -- or simply doing something like 'put empty into hArray ['"handlerHashArray"]["new"]'
+            if pCreateHashArray is true then
+               hArray_AddHandlerHash hArray, hKey, someHandler, handlerHash, indexTime, pForceIndexHandlerCalls
+               put empty into hArray ["handlerHashArray"]["actual"][handlerHash]
+            end if
+            
+            
+            -- now index unique global suites
+            -- if word 1 of suiteTitle = "Global" and word 2 of suiteTitle = "|" and word -2 of suiteTitle = "|" then
+            if word -1 of suiteTitle = "Menu" and word -2 of suiteTitle = "|" then
+               -- it's a menu
+               _addMenuToHarray hArray, suiteTitle, ruggedObject, ruggedMainStack, isOnMessage, lineType, handlerHash, scriptHash, shortkeySuiteArray, thisScriptsMenuArray
+            end if
+            
+            -- now index first (not last!) hKeys of object
+            if hArray ["scriptArray"][ruggedObject]["data"]["firstHKeyArray"][shortHKey]["sha1"] is empty then
+               -- only index first handler with this array
+               put handlerHash into hArray ["scriptArray"][ruggedObject]["data"]["firstHKeyArray"][shortHKey]["sha1"]
+               
+               -- only firstHkeys can ever get called so only these go in handlerArray
+               put startScriptLine into hArray ["handlerArray"][shortHKey][hKey]["scriptLine"]
+               put handlerHash into hArray ["handlerArray"][shortHKey][hkey]["handlerHash"]
+               put startLineNum into hArray ["handlerArray"][shortHKey][hKey]["startLineNum"]
+               put endLineNum into hArray ["handlerArray"][shortHKey][hkey]["endLineNum"]
+               
+               -- now let's extract keywords and index shortHkey against each (no point doing it for non first Hkeys
+               -- hkey_AddToKeyWordArray hArray, hKey, handlerHash -- could index twice with same hash in different places
+            end if
+            
+            add 1 to indexNum
+            break
+         case token 1 of scriptLine is empty
+            -- it's a comment or some junk
+            -- however script suites are also comments (so put at end of tests)!
+            -- not actually needed
+            break
+         default
+            /*
+            should modify to collect stuff here, and add to metadata outside of handlers
+            */
+      end switch
+   end repeat
+   
+   -- having gone through every line of the script we can do something like
+   -- put the script_MenuTitleTableArray of stackObject into mTitleTableArray
+   -- menu_SetTitleTableArrayGlobal stackObject, mTitleTableArray
+   
+   return scriptFile
+end object_AddToArray

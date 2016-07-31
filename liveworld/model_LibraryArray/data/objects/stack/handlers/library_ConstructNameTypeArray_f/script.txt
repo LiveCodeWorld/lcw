@@ -1,0 +1,13 @@
+function library_ConstructNameTypeArray libType, pSetName
+   if pSetName is empty then
+      put library_GetTypeArray (libType) into ruggedArray
+   else
+      put library_FetchTypeArray (libType, pSetName) into ruggedArray
+   end if
+   repeat for each key rObject in ruggedArray
+      put hArray_GetUripArray (rObject, "name") into vName
+      if vName is empty then next repeat -- should not be
+      put empty into nameArray [vName]
+   end repeat
+   return nameArray
+end library_ConstructNameTypeArray

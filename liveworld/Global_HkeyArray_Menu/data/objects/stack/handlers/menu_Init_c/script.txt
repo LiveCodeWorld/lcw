@@ -1,0 +1,22 @@
+on menu_Init targetObject, mPath, mTitlePath
+   put the tree_View of targetObject into treeView
+   
+   put the displayed_Object of treeView into scriptObject
+   if exists (scriptObject) is true then
+      put empty into hKey
+      put the mobile_Name of scriptObject into stackLabel
+      put the overlay_Folder of scriptObject into overlayFolder 
+   else
+      put the displayed_Hkey of treeView into hKey
+      -- put the title_Text of treeView into hKey
+      put hKey into stackLabel
+      put library_HkeyFolder (hKey) into overlayFolder
+   end if
+   
+   put treeView into LocalArray ["treeView"]
+   put targetObject into LocalArray ["targetObject"]
+   put overlayFolder into LocalArray ["overlayFolder"]
+   put hKey into LocalArray ["hKey"]
+   put stackLabel into LocalArray ["stackLabel"]
+   put scriptObject into LocalArray ["scriptObject"]
+end menu_Init

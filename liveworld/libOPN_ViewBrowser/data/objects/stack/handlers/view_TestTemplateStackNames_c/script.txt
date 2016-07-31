@@ -1,0 +1,15 @@
+on view_TestTemplateStackNames @stackNames, @badFileNameArray
+   put view_ListStandardLongFiles() into someFiles
+   repeat for each line someFile in someFiles
+      set the cursor to busy
+      put stack_GetShortName(someFile) into shortStackName
+      put view_FileToPath(someFile, true) into shouldBeStackName
+      if shortStackName = shouldBeStackName then
+         put shortStackName & CR after stackNames
+      else
+         put shortStackName into badFileNameArray [shouldBeStackName]
+      end if
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end view_TestTemplateStackNames

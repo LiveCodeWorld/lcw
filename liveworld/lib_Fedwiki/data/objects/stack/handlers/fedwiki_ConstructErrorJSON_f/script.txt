@@ -1,0 +1,5 @@
+function fedwiki_ConstructErrorJSON errorText, pErrorTitle
+   put fedwiki_ConstructNewPageArray (pErrorTitle, errorText) into someArray
+   put json_FromArray (someArray) into someJSON
+   return someJSON
+end fedwiki_ConstructErrorJSON

@@ -1,0 +1,12 @@
+command project_ReloadCheckoutGlobals pSetName
+   -- was "library_ReloadCheckoutGlobals"
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   
+   put library_FetchCheckoutGlobal (pSetName) into checkoutArray
+   repeat for each key gName in checkoutArray
+      put checkoutArray [gName] into globalValue
+      put "global" && gName & CR & "put globalValue into" && gName into doScript
+      do doScript
+   end repeat
+   return checkoutArray
+end project_ReloadCheckoutGlobals

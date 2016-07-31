@@ -1,0 +1,4 @@
+function graph_GetTemplate templateName
+    put "graphHeader_" & templateName into propName
+    return the uOPN [propName] of me
+end graph_GetTemplate

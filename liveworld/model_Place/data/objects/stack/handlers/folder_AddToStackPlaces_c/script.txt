@@ -1,0 +1,5 @@
+command folder_AddToStackPlaces someFolder
+    set the itemdelimiter to "/"
+    put item -1 of someFolder into placeName
+    folder_SetPlaceFolder placeName, someFolder
+end folder_AddToStackPlaces

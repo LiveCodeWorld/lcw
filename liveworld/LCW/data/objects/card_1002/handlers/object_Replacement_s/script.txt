@@ -1,0 +1,33 @@
+setprop object_Replacement [sendReplace] anotherView
+   put the long id of the target into viewToReplace
+   put the long id of anotherView into anotherView
+   if anotherView = viewToReplace then 
+      log_Error "Cannot replace a view with itself!", the params, true
+      return empty
+   else if word 1 of viewToReplace is "stack" then
+      log_Error merge("Cannot replace a [[viewToReplace]] with the script 'view_Replace'!"), the params, true
+      return empty
+   end if
+   
+   put viewToReplace into viewOwner
+   delete word 1 to 4 of viewOwner
+   
+   put the rect of viewToReplace into oRect
+   put the short name of viewToReplace into oName
+   
+   lock screen
+   copy anotherView to viewOwner
+   put it into copiedView
+   
+   if sendReplace is true then
+      send "delete viewToReplace" to viewToReplace in 2 ticks
+   else
+      delete viewToReplace
+   end if	# but this is prettier!
+   
+   set the rect of copiedView to oRect
+   set the name of copiedView to oName
+   unlock screen
+   
+   return copiedView
+end object_Replacement

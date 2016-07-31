@@ -1,0 +1,11 @@
+function dot_RGBToHex rgbColour
+    -- was "graphViz_RGBToHex"
+    if rgbColour is empty or rgbColour is "none" then
+        return empty
+    else if rgbColour is among the lines of the colornames then
+        return rgbColour
+    else
+        put quote & colour_RgbToHex (rgbColour) & quote into webColour
+        return webColour
+    end if
+end dot_RGBToHex

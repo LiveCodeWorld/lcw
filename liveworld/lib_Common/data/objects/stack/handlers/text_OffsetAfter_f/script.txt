@@ -1,0 +1,8 @@
+function text_OffsetAfter string, someText, startChar
+   -- version 9.0
+   if startChar < 0 then put 0 into startChar
+   delete char 1 to startChar of someText
+   get offset(string, someText)
+   if it is 0 then return 0
+   else return it + startChar
+end text_OffsetAfter

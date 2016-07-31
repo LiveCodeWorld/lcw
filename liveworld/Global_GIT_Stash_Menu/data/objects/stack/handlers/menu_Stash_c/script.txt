@@ -1,0 +1,4 @@
+on menu_Stash
+   git_ExecuteShell "git stash"
+   git_RefreshDisplay
+end menu_Stash

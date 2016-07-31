@@ -1,0 +1,5 @@
+setprop colour_Palette colourPaletteArray
+   put the title_View of me into titleView
+   if the long id of the target = titleView then pass colour_Palette
+   set the colour_Palette of titleView to colourPaletteArray
+end colour_Palette

@@ -1,0 +1,4 @@
+function menu_GlobalController globalMenuTitle
+   global gHkey_Array
+   return gHkey_Array ["Global Menus"][globalMenuTitle]["mController"]
+end menu_GlobalController

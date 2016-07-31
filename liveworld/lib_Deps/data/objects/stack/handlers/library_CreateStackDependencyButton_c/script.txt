@@ -1,0 +1,12 @@
+command library_CreateStackDependencyButton pObject
+   if pObject is empty then put the long id of the target into pObject
+   put the stack_BehaviorButton ["Stack Handler Deps"] of pObject into libraryDepButton
+   if exists (libraryDepButton) then return libraryDepButton
+   
+   put the main_Stack of pObject into mainStackObject
+   put the uRIP ["name"] of mainStackObject into libraryName
+   put libraryName && "Deps" into uripName
+   behavior_CreateStackButton mainStackObject, "Stack Handler Deps", uripName, "deps"
+   put the result into libraryDepButton
+   return libraryDepButton
+end library_CreateStackDependencyButton

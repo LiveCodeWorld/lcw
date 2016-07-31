@@ -1,0 +1,38 @@
+on menu_AddClass sHexagon, cNum
+   put "Teacher" into classArray [1]["person_Type"]
+   put "N" into classArray [2]["person_Type"]
+   put "S" into classArray [3]["person_Type"]
+   put "S" into classArray [4]["person_Type"]
+   put "P" into classArray [5]["person_Type"]
+   
+   switch cNum
+      case 5
+         break
+      case 6
+         put "E" into classArray [6]["person_Type"]
+         break
+      case 7
+         put "E" into classArray [6]["person_Type"]
+         put "E" into classArray [7]["person_Type"]
+         break
+      case 8
+         put "E" into classArray [6]["person_Type"]
+         put "E" into classArray [7]["person_Type"]
+         put "E" into classArray [8]["person_Type"]
+         break
+      case 9
+         put "E" into classArray [6]["person_Type"]
+         put "E" into classArray [7]["person_Type"]
+         put "E" into classArray [8]["person_Type"]
+         put "E" into classArray [9]["person_Type"]
+         break
+      case 10
+         put "E" into classArray [6]["person_Type"]
+         put "E" into classArray [7]["person_Type"]
+         put "E" into classArray [8]["person_Type"]
+         put "E" into classArray [9]["person_Type"]
+         put "E" into classArray [10]["person_Type"]
+         break
+   end switch
+   set the class_Array [true] of sHexagon to classArray
+end menu_AddClass

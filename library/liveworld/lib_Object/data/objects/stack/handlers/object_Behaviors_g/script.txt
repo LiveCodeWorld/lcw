@@ -1,0 +1,16 @@
+getprop object_Behaviors
+   local objectBehaviors
+   put the long id of the target into targetObject
+   
+   put the behavior of targetObject into someBehavior
+   if someBehavior is not empty then put someBehavior & CR after objectBehaviors
+   
+   repeat with cNum = 1 to the number of controls of targetObject
+      put the behavior of control cNum of targetObject into someBehavior
+      if someBehavior is not empty then
+         put someBehavior & CR after objectBehaviors
+      end if
+   end repeat
+   delete char -1 of objectBehaviors
+   return objectBehaviors
+end object_Behaviors

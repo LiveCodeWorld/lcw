@@ -1,0 +1,5 @@
+getprop fossil_RepositoryFile
+   put the mainstack_File of the target into objectFile
+   put fossil_InfoArray (objectFile) into fossilStatusArray
+   return fossilStatusArray ["repository"]
+end fossil_RepositoryFile

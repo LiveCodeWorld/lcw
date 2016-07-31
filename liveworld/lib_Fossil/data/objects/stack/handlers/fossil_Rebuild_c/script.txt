@@ -1,0 +1,14 @@
+command fossil_Rebuild checkoutFolderOrRepositoryFile
+   put "fossil rebuild" into someShell
+   if there is a folder checkoutFolderOrRepositoryFile then
+      put checkoutFolderOrRepositoryFile into checkoutFolder
+      fossil_ExecuteShell someShell, checkoutFolder
+   else
+      put checkoutFolderOrRepositoryFile into repoFile
+      shell_BashParamEscape repoFile
+      put space & repoFile after someShell
+      fossil_ExecuteShell someShell
+   end if
+   put the result into shellResult
+   return shellResult
+end fossil_Rebuild

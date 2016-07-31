@@ -1,0 +1,10 @@
+setprop overlay_PropertyArray [pOverlayName] propertyArray
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   if propertyArray is an array then
+      put propertyArray into overlayArray ["graph_PropertyArray"]
+   else
+      delete local overlayArray ["graph_PropertyArray"]
+   end if
+   set the overlay_Array [pOverlayName] of the target to overlayArray
+   return overlayArray
+end overlay_PropertyArray

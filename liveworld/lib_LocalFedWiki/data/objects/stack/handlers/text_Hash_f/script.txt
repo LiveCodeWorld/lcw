@@ -1,0 +1,7 @@
+function text_Hash someData, pWhichDigest
+   if pWhichDigest = "sha1" then
+      return sha1_Hash (someData)
+   else
+      return md5_Hash (someData)
+   end if
+end text_Hash

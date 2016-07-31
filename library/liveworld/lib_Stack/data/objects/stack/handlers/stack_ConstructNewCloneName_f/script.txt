@@ -1,0 +1,19 @@
+function stack_ConstructNewCloneName stackName
+   put stack_ClonedStackNames(stackName) into stackNames
+   sort numeric descending stackNames by last word of each
+   put line 1 of stackNames into realStackName
+   put word -1 of realStackName into cloneNumber
+   if cloneNumber is a number then
+      add 1 to cloneNumber
+    else
+      put 1 into cloneNumber
+   end if
+   
+   put (stackName && cloneNumber) into newClonedName
+   if exists(stack newClonedName) is false then
+      return newClonedName
+   else
+      breakpoint
+      return empty
+   end if
+end stack_ConstructNewCloneName

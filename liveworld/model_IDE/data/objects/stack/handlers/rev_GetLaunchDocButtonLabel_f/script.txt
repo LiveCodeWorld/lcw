@@ -1,0 +1,6 @@
+function rev_GetLaunchDocButtonLabel pEditorNum
+   put rev_LaunchDocsButton (pEditorNum) into launchDocsButton
+   put the label of launchDocsButton into someLabel
+   if someLabel is "Launch Documentation" then return empty
+   return someLabel
+end rev_GetLaunchDocButtonLabel

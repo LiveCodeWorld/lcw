@@ -1,0 +1,16 @@
+command view_InsertFromPath viewPath, groupOrCard, someRect
+   if word 1 of groupOrCard is not among the items of "group,background,card" then
+      get merge("Error: trying to insert view into wrong type of object [[name of the target]]!")
+      return the script_Error [it] of me
+   end if
+   
+   put view_NameToFile (viewPath) into viewFile
+   put view_GetTemplateObject (viewPath) into libraryView
+   if exists(libraryView) is false then
+      get merge("Cannot find library object '[[viewPath]]'")
+      return the script_Error [it] of me
+   end if
+   view_InsertObject libraryView, groupOrCard, someRect
+   put the result into createdView
+   return createdView
+end view_InsertFromPath

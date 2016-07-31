@@ -1,0 +1,7 @@
+command graph_SetNodeTypeStyle @dotGroupStyleArray, nodeType, someColour, someFillcolor
+   put someColour into dotGroupStyleArray [nodeType]["node_StyleArray"]["color"]
+   if someFillcolor is not empty then
+      put "filled" into dotGroupStyleArray [nodeType]["node_StyleArray"]["style"]
+      put someFillcolor into dotGroupStyleArray [nodeType]["node_StyleArray"]["fillcolor"]
+   end if
+end graph_SetNodeTypeStyle

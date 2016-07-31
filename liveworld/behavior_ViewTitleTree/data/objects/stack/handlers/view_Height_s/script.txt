@@ -1,0 +1,13 @@
+setprop view_Height someHeight
+    put the long id of me into titleView
+    put titleView into viewAbove
+    delete word 1 to 4 of viewAbove
+    
+    lock screen
+    put the rect of me into newRect
+    put item 2 of newRect + someHeight into item 4 of newRect
+    set the view_Rect of me to newRect
+    
+    get the view_Refresh of viewAbove
+    unlock screen
+end view_Height

@@ -1,0 +1,7 @@
+command overlayArray_ResetData @overlayArray, linkArray
+   put overlayArray ["data"] into dataArray
+   overlayArray_ConstructDataArray dataArray, linkArray
+   put dataArray into overlayArray ["data"]
+   put overlay_GetDefaultArray() into dotDefaultArray
+   overlayArray_AddDefaultUnion overlayArray, dotDefaultArray
+end overlayArray_ResetData

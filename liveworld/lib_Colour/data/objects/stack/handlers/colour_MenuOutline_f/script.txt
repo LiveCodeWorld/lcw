@@ -1,0 +1,21 @@
+function colour_MenuOutline
+   -- a quick hack (number of words does not correspond to level)
+   put colour_BaseNames() into colourWords
+   repeat for each line colourName in colourWords
+      put the number of words of colourName - 1 into thisIndentLevel
+      if thisIndentLevel = 0 then
+         put colourName & CR after colourOutline
+      else
+         -- is the lastLine one level below?
+         if thisIndentLevel > lastIndentLevel then
+            put line -1 of colourOutline into lastline
+            put tab & lastLine & CR after colourOutline
+         end if
+         put text_RepeatString(tab, thisIndentLevel) & colourName & CR after colourOutline
+      end if
+      put thisIndentLevel into lastIndentLevel
+   end repeat
+   -- delete last char of colourOutline
+   put word 1 to -1 of colourOutline into colourOutline
+   return "Ask,-,None" & CR & colourOutline
+end colour_MenuOutline

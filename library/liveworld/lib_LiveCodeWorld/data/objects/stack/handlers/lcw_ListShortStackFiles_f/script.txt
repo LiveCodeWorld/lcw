@@ -1,0 +1,7 @@
+function lcw_ListShortStackFiles folderName
+   local pProjectName
+   lcw_OldName folderName
+   put project_GetFolder (folderName, pProjectName) into someFolder 
+   put folder_ListShortStackFiles (someFolder) into shortFiles
+   return shortFiles
+end lcw_ListShortStackFiles

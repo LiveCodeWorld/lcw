@@ -1,0 +1,6 @@
+function rev_HandlerTreeField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (field "handlers" of group "Left Bar" of cd "Main" of editorStack) is false then return empty
+   put the long id of field "handlers" of group "Left Bar" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_HandlerTreeField

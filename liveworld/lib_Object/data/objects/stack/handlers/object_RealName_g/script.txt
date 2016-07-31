@@ -1,0 +1,17 @@
+getprop object_RealName [fixedName]
+   -- authoring version
+   put the long ID of the target into someView
+   
+   put the uOPN_ObjectNameArray [fixedName] of someView into realName
+   if realName is empty then
+      -- assume it is first time
+      if exists(control fixedName of someView) then
+         -- guess that is what we want and initate
+         set the uOPN_ObjectNameArray [fixedName] of someView to fixedName
+         return fixedName
+      else
+         return empty
+      end if
+   end if
+   return realName
+end object_RealName

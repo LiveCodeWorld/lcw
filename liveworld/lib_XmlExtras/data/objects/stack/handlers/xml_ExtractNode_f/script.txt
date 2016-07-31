@@ -1,0 +1,7 @@
+function xml_ExtractNode someNode, someXML
+   if someXML is empty then return empty
+   put revXMLCreateTree (someXML, true, true, false) into treeID
+   put revXMLText (treeID, someNode) into nodeXml
+   revDeleteXMLTree treeID
+   return nodeXml
+end xml_ExtractNode

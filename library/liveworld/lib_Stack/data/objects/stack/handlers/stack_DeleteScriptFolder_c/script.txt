@@ -1,0 +1,5 @@
+command stack_DeleteScriptFolder stackObject
+   -- used when deleting a stack
+   put the object_Folder of stackObject into scriptFolder
+   folder_Delete scriptFolder, true
+end stack_DeleteScriptFolder

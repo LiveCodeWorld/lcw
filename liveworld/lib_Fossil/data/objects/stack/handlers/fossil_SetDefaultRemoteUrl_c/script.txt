@@ -1,0 +1,21 @@
+command fossil_SetDefaultRemoteUrl fossilFileOrCheckoutFolder, someUrl
+   /*
+   Usage: fossil remote-url ?URL|off?
+   
+   Query and/or change the default server URL used by the "pull", "push",
+   and "sync" commands.
+   
+   The remote-url is set automatically by a "clone" command or by any
+   "sync", "push", or "pull" command that specifies an explicit URL.
+   The default remote-url is used by auto-syncing and by "sync", "push",
+   "pull" that omit the server URL.
+   */
+   
+   if someUrl is empty then put "off" into someUrl
+   put "fossil remote-url" into someShell
+   put space & kwote (someUrl) after someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_SetDefaultRemoteUrl

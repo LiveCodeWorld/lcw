@@ -1,0 +1,7 @@
+getprop dot_NodeStyleNames
+   put the displayed_OverlayName of the target into pOverlayName
+   put the overlay_Array of the target into overlayArray
+   put overlayArray_GetGroupStyleArray (overlayArray, pOverlayName) into dotGroupStyleArray
+   put keys(dotGroupStyleArray) into nodeStyleNames
+   return nodeStyleNames
+end dot_NodeStyleNames

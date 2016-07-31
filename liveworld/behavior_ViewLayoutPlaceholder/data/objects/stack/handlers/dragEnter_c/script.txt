@@ -1,0 +1,22 @@
+on dragEnter   
+   put the dragdata ["private"] into privateFlag
+   put privateFlag
+   switch
+      case privateFlag is empty
+         break
+      case privateFlag = "behavior"
+         break
+      case privateFlag contains "|"
+         put privateFlag into viewName
+         put view_GetTemplateObject (viewName) into libraryObject
+         if libraryObject is empty then
+            opn_Notify merge("Not a view being dropped, [[viewName]] has no library object!"), true
+            beep
+         else
+            set the drag_Hilite of me to true
+         end if
+         break
+      default
+   end switch
+   pass dragEnter
+end dragEnter

@@ -1,0 +1,12 @@
+on menu_IndexAllObjects
+   put true into pExportHandlers
+   put false into pDontExport
+   
+   repeat with controlNum = 1 to the number of controls of this card
+      set the cursor to busy
+      put the long id of control controlNum of this card into someControl
+      put the name of someControl
+      object_AddToGlobalArray someControl, pExportHandlers, pDontExport
+      script_UpdateMenuTables someControl
+   end repeat
+end menu_IndexAllObjects

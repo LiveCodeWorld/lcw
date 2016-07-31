@@ -1,0 +1,5 @@
+command iChat_PositionWindow someRect, windowName
+    if windowName is empty then put 2 into windowName
+    finder_PositionWindow "iChat", someRect, windowName
+    return the result	
+end iChat_PositionWindow

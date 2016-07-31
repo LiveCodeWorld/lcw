@@ -1,0 +1,11 @@
+command menu_SetTitleTableArrayGlobal mController, mTitleTableArray
+   /*
+   mTitleTableArray is a simple array with keys corresponding to mTitles, and values corresponding to mControllers
+   */
+   global gHkey_Array
+   if mTitleTableArray is not an array then return gHkey_Array
+   
+   put the rugged_ID of mController into mController
+   put mTitleTableArray into gHkey_Array ["scriptArray"][mController]["data"]["mTitleTableArray"]
+   return gHkey_Array
+end menu_SetTitleTableArrayGlobal

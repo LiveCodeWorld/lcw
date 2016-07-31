@@ -1,0 +1,41 @@
+function overlayArray_ConstructClusterSection overlayArray, pFlatCluster
+   -- general function to construct a cluster section from a overlayArray
+   -- start with non-recursive
+   overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdLinkArray, dotClusterArray
+   
+   if pFlatCluster is not true then
+      put overlayArray_DotNestedObjectClusters (idArray, linkArray, graphNodeType) into clusterSection
+      return clusterSection
+   else
+      put 1 into clusterNum
+      repeat for each key someObject in dotClusterArray -- clusterNames are objects
+         put overlayArray_ConstructFlatSubCluster (dotClusterArray, someObject, idArray) into nodeSection
+         
+         if pNotIfEmpty is not false and nodeSection is empty then next repeat
+         
+         put "" into someRank
+         put "" into someStyle
+         if clusterNum is even then
+            put "grey60" into someColour
+            put "grey60" into fillColour
+         else
+            put "grey60" into someColour
+            put "grey90" into fillColour
+         end if
+         
+         if exists(someObject) then
+            put the name of someObject into subGraphName
+            -- put the short name of someObject into subGraphName
+         else
+            put someObject into subGraphName
+         end if
+         
+         get dot_ConstructCluster (subGraphName, clusterNum, nodeSection, someRank, someStyle, someColour, fillColour)
+         put it & CR after clusterSection
+         
+         add 1 to clusterNum
+      end repeat
+      delete char -1 of clusterSection
+      return clusterSection
+   end if
+end overlayArray_ConstructClusterSection

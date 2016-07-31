@@ -1,0 +1,8 @@
+function text_InitialCaps someText
+    repeat with wordNum = 1 to the number of words of someText
+        put tolower(word wordNum of someText) into someWord
+        put toupper(char 1 of someWord ) into char 1 of someWord
+        put someWord into word wordNum of someText
+    end repeat
+    return someText
+end text_InitialCaps

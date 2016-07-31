@@ -1,0 +1,6 @@
+function pref_FetchGlobal pGlobalName, pSetName
+   if pGlobalName is empty then put "gPrefs_Array" into pGlobalName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put pref_FetchData() into dataArray
+   return dataArray [pSetName][pGlobalName]
+end pref_FetchGlobal

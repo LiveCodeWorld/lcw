@@ -1,0 +1,8 @@
+getprop script_HkeyArrayFromExportedCalls [pSetName]
+   local hkeyArray
+   put the script_Hkeys of the target into hKeys
+   repeat for each line hKey in hKeys
+      hkey_RecurseLongCallArrayFromExported hKey, hkeyArray, pSetName
+   end repeat
+   return hkeyArray
+end script_HkeyArrayFromExportedCalls

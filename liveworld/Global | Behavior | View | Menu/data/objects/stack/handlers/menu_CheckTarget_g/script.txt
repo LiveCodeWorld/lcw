@@ -1,0 +1,10 @@
+getprop menu_CheckTarget [scriptObject]
+   -- menu_Target is not set in "menu_Init"
+   -- so check it here
+   put the object_MetaData ["type"] of scriptObject into mObectType
+   put mObectType contains "view" into viewOrViewBehavior
+   
+   put mObectType into LocalArray ["mObectType"]
+   put viewOrViewBehavior into LocalArray ["viewOrViewBehavior"]
+   return viewOrViewBehavior is true
+end menu_CheckTarget

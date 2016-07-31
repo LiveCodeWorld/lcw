@@ -1,0 +1,9 @@
+command overlay_ShortFiles overlayName, @shortDotFile, @shortImageFile, @shortCmapxFile, @shortXdotFile, @shortDotArrayFile, pImageFormat
+   if pImageFormat is empty then put "png" into pImageFormat
+   put "overlayData.array" into shortDotArrayFile
+   
+   put overlayName & ".dot" into shortDotFile
+   put overlayName & "." & pImageFormat into shortImageFile
+   put overlayName & ".cmapx" into shortCmapxFile
+   put overlayName & ".xdot" into shortXdotFile
+end overlay_ShortFiles

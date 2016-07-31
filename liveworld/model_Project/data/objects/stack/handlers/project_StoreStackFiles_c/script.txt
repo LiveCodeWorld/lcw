@@ -1,0 +1,5 @@
+command project_StoreStackFiles stackFileTable, pProjectName
+   put project_FetchArray (pProjectName) into setArray
+   put stackFileTable into setArray ["data"]["stackfiles"]
+   project_SaveArray setArray, pProjectName
+end project_StoreStackFiles

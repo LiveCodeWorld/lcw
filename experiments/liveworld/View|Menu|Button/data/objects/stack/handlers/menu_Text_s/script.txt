@@ -1,0 +1,10 @@
+setprop menu_Text menuText
+   put the long id of the target into targetObject
+   put the menu_Button of targetObject into mButton
+   if mButton is empty then return empty
+   if the object_IsMenuButton of mButton is false then return  empty
+   
+   get the name of mButton
+   set the text of mButton to menuText
+   return mButton
+end menu_Text

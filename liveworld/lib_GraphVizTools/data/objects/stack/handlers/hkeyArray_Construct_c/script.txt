@@ -1,0 +1,10 @@
+command hkeyArray_Construct hKey, @hKeyLinkArray
+   put hkey_GetCalls (hKey) into hKeyCalls -- this extracts from file
+   -- if hkeyCalls is empty then put hkey_HandlerCalls (hKey) into hKeyCalls -- maybe it just has not been indexed
+   repeat for each line hKeyCall in hKeyCalls
+      if hKeyCall is among the keys of hKeyLinkArray then next repeat
+      
+      put hKeyCall into hKeyLinkArray [hKey]
+      hkeyArray_Construct hKeyCall, hKeyLinkArray
+   end repeat
+end hkeyArray_Construct

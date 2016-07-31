@@ -1,0 +1,12 @@
+getprop menu_BarGroups
+   put the card_Object of the target into cardObject
+   put the groupids of cardObject into someIDs
+   repeat for each line someID in someIDs
+      put the long id of group id someID of cardObject into someGroup
+      if the object_IsMenuBar of someGroup is true then
+         put someGroup & CR after menuGroups
+      end if
+   end repeat
+   delete char -1 of menuGroups
+   return menuGroups
+end menu_BarGroups

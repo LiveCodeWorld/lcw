@@ -1,0 +1,13 @@
+function digitalocean_FetchWikiFolders dropletName, pListAll
+   -- requires public ssh key to be installed on server
+   put digitalOcean_GetDropletIP (dropletName) into dropletIP
+   if http_CheckIP (dropletIP) is false then return "error, fetching ip address for droplet" && dropletName
+   
+   if pListAll is true then
+      put "ssh root@" & dropletIP && "ls -la .wiki/" into someShell
+   else
+      put "ssh root@" & dropletIP && "ls .wiki/" into someShell
+   end if
+   put word 1 to -1 of shell (someShell) into wikiFolders
+   return wikiFolders
+end digitalocean_FetchWikiFolders

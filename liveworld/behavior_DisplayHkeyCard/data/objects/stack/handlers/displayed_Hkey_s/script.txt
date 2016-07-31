@@ -1,0 +1,6 @@
+setprop displayed_Hkey hKey
+   put item 1 of hKey into hName
+   put hName & CR & hKey into someTitle
+   set the displayed_DescriptionTitle of me to hKey
+   set the displayed_Title of me to someTitle
+end displayed_Hkey

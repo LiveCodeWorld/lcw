@@ -1,0 +1,9 @@
+function stack_ListObjects pWhichNames
+   put stack_ListNames (pWhichNames) into stackNames
+   repeat for each line stackName in stackNames
+      put the name of stack stackName into stackObject
+      put stackObject & CR after stackObjects
+   end repeat
+   delete char -1 of stackObjects
+   return stackObjects
+end stack_ListObjects

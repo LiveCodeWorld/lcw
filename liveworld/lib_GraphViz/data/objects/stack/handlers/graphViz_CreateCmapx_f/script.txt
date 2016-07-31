@@ -1,0 +1,10 @@
+function graphViz_CreateCmapx dotText
+    -- dot foo.dot -Nhref=\\N -Tcmpax -o foo.map -Tpng -o foo.png
+    file_CreateText dotText
+    put the result into someFile
+     
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & "dot -Nhref=\\N -Tcmapx" && quote & someFile & quote into someShell
+    get shell(someShell)
+    return it
+end graphViz_CreateCmapx

@@ -1,0 +1,29 @@
+getprop view_ChildToolMenus
+   global gTemp_ActiveMenuArray
+   put the long id of the target into targetObject
+   put the mobile_Name of targetObject into targetObject
+   
+   put menu_GetSentPath() into oTextPath
+   put menu_GetSentTitlePath() into oTitlePath
+   
+   set the itemdelimiter to tab
+   put the view_Children of targetObject into viewChildren
+   repeat for each line viewChild in viewChildren
+      put the mobile_Name of viewChild into viewChild
+      put the menu_ToolTitle of viewChild into mTitle
+      
+      put menu_MenuTextFromTitle (mTitle) into subPathBit
+      put oTextPath & "/" & subPathBit into mTextPath
+      put oTitlePath into mTitlePath
+      
+      put the menu_Table [mTitle] of viewChild into mTable
+      put menu_ConvertTable (mTable, viewChild, mTitlePath, mTextPath, viewChild) into mText
+      
+      put subPathBit & CR & outline_IncreaseIndent (mText) into mText
+      
+      put mText & CR & "-" & CR after someMenu
+   end repeat
+   delete line -2 to -1 of someMenu
+   put word 1 to -1 of someMenu into someMenu
+   return someMenu
+end view_ChildToolMenus

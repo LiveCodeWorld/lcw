@@ -1,0 +1,5 @@
+function fedwikipedia_ConstructSectionTOC tocArray, pSectionTitle
+   local lookUpArray, sectionTOC
+   fedwikipedia_ExtractTocLookupArray tocArray, lookUpArray, sectionTOC, pSectionTitle
+   return sectionTOC
+end fedwikipedia_ConstructSectionTOC

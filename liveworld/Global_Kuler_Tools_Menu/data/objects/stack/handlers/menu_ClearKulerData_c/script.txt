@@ -1,0 +1,8 @@
+on menu_ClearKulerData mTarget
+   put the dgControl of mTarget into dgView
+   if exists(dgView) then
+      set the dgData of dgView  to empty
+   else
+      beep
+   end if
+end menu_ClearKulerData

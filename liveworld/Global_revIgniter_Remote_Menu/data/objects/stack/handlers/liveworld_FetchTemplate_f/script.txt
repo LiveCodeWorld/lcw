@@ -1,0 +1,5 @@
+function liveworld_FetchTemplate pTemplateName
+   -- but here we override it
+   put url "https://www.livecode.world/index_template.html" into someTemplate
+   return someTemplate
+end liveworld_FetchTemplate

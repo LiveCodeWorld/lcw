@@ -1,0 +1,42 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_SivaSiva_Tool_Menu
+type: controller
+version: 0.1
+
+
+--> Global | SivaSiva | Tool | Menu
+-
+[[ _FetchHandler (menu_SetChapter,c) ]]
+
+[[ _FetchHandler (menu_ChapterImage,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReplaceSquare,c) ]]
+
+[[ _FetchHandler (menu_ReplaceWithViews,c) ]]
+
+[[ _FetchHandler (menu_ViewProperty,c) ]]
+
+[[ _FetchHandler (menu_EditBehavior,c) ]]
+
+[[ _FetchHandler (menu_TestChapterNum,c) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Global | Action | Menu | Props
+-
+[[ _FetchHandler (v_Names,g) ]]
+
+[[ _FetchHandler (view_Props,g) ]]
+
+[[ _FetchHandler (c_Name,g) ]]
+
+[[ _FetchHandler (c_Names,g) ]]

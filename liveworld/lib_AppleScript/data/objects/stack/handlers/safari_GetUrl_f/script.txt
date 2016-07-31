@@ -1,0 +1,4 @@
+function safari_GetUrl
+    -- see "http://www.macosxhints.com/article.php?story=20060325015454467"
+    return appleScript_DoLine("Safari", "set myURL to URL of document 1")	
+end safari_GetUrl

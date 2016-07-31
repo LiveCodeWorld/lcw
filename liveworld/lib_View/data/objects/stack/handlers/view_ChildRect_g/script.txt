@@ -1,0 +1,15 @@
+getprop view_ChildRect [shortID]
+    -- a default
+    -- can override at card level for specific viewNames
+    -- also just use "card_Margin"
+    -- viewResize sent to the card so the target is usually the card
+    put the long id of the target into cardObject
+    
+    -- could return different rects for different views
+    -- put the long id of control id shortID into childView
+     
+    -- can use the card_margin
+    put the card_Margin [shortID] of cardObject into someMargin
+    put the rect of cardObject into someRect
+    return rect_SubtractMargin(someMargin, someRect)
+end view_ChildRect

@@ -1,0 +1,5 @@
+command view_SetTested vName, someBoolean
+   put view_GetFileMetaArray() into metaDataArray
+   put someBoolean into metaDataArray [vName]["isTested"]
+   view_SetFileMetaArray metaDataArray
+end view_SetTested

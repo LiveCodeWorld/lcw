@@ -1,0 +1,7 @@
+function text_RepeatString someString, repeatNum
+    -- was "text_GetRepeatString"
+    repeat repeatNum
+        put someString after repeatString
+    end repeat
+    return repeatString
+end text_RepeatString

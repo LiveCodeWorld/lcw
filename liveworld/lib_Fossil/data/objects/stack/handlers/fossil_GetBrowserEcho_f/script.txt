@@ -1,0 +1,14 @@
+function fossil_GetBrowserEcho pCheckoutFolder, pGetGlobal
+   put fossil_GetBrowserShellCommand (pCheckoutFolder, pGetGlobal) into browserShellCommand
+   put pCheckoutFolder is empty or pGetGlobal is true into pGetGlobal
+   switch
+      case browserShellCommand = "echo"
+         return true
+      case browserShellCommand is empty and pGetGlobal is true
+         return browserShellCommand = "echo"
+      case browserShellCommand is empty and pGetGlobal is false
+         return empty
+      default
+         return false
+   end switch
+end fossil_GetBrowserEcho

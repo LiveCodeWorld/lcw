@@ -1,0 +1,26 @@
+function linkArray_DotNodeLinks linkArray, pNodeIDs
+   if pNodeIDs is not empty then
+      breakpoint -- not done
+   end if
+   
+   -- this version uses nested array values
+   repeat for each key someKey in linkArray
+      put linkArray [someKey] into someLinkArray
+      if the number of words of someKey > 1 then put kwote(someKey) into someKey
+      
+      if someLinkArray is an array then
+         repeat for each key someLink in someLinkArray
+            if the number of words of someLink > 1 then put kwote(someLink) into someLink
+            put someKey && "->" && someLink & ";" & CR after linkSection
+         end repeat
+      else
+         put someLinkArray into someLinks
+         repeat for each line someLink in someLinks
+            if the number of words of someLink > 1 then put kwote(someLink) into someLink
+            put someKey && "->" && someLink & ";" & CR after linkSection
+         end repeat
+      end if
+   end repeat
+   delete char -1 of linkSection
+   return linkSection
+end linkArray_DotNodeLinks

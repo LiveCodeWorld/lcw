@@ -1,0 +1,23 @@
+command hilite_LibDisplayField usedStacks
+   put the displayed_Libraries of me into shortFiles
+   
+   set the itemdelimiter to slash
+   repeat for each line stackObject in usedStacks
+      if exists (stackObject) is false then
+         put stackObject & CR after badStacks
+         next repeat
+      end if
+      
+      put item -1 of the filename of stackObject into shortFile
+      put lineOffset (shortFile, shortFiles) into lineNum
+      if lineNum > 0 then
+         put lineNum & comma after lineNums
+      end if
+   end repeat
+   delete char -1 of badStacks
+   delete char -1 of lineNums
+   
+   set the hilitedlines of _tabDisplayField() to lineNums
+   
+   return badStacks
+end hilite_LibDisplayField

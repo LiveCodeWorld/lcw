@@ -1,0 +1,15 @@
+getprop model_RefreshDisplays [modelName]
+   local updatedViews
+   
+   put the long id of me into linkedViewModelObject
+   put the model_ViewLinks [modelName] of linkedViewModelObject into linkedViews
+   repeat for each line linkedView in linkedViews
+      if exists(linkedView) then
+         get the view_Refresh [modelName] of linkedView
+         if it is true then
+            put linkedView & CR after updatedViews
+         end if
+      end if
+   end repeat
+   return updatedViews
+end model_RefreshDisplays

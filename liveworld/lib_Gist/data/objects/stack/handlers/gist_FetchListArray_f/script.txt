@@ -1,0 +1,7 @@
+function gist_FetchListArray pNextURL
+   -- put  "/users/:username/gists"
+   -- put url "GET /users/:username/gists"
+   put gist_FetchListJson (pNextURL) into someJSON
+   put json_ToArray (someJSON) into gistReplyArray
+   return gistReplyArray
+end gist_FetchListArray

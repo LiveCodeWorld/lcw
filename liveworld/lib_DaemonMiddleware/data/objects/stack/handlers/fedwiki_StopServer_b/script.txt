@@ -1,0 +1,10 @@
+before fedwiki_StopServer
+   daemon_Log ("Server stopped. Closed port:" && the daemon_Port of me)
+   get the opensockets
+   if it is empty then
+      daemon_Log ("Great, there are no sockets open!")
+   else
+      replace CR with ", " in it
+      daemon_Log ("Open sockets:" && it)
+   end if
+end fedwiki_StopServer

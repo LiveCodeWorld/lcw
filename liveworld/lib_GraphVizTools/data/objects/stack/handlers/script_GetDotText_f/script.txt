@@ -1,0 +1,56 @@
+function script_GetDotText graphName, someScript, whichLinks, cluster, graphHeader, drawOrphans
+    local linkSection, defSection, inNodeDefs, exNodeDefs, inMissingDefs, exMissingDefs
+    
+    put script_GetLinkKeys (someScript, whichLinks, allKeys) into linkKeys
+    script_SetDefsAndLinks linkKeys, someScript, inNodeDefs, exNodeDefs, linkSection
+     
+    if drawOrphans is true then
+        -- now work out orphans
+        put allKeys into remainingLinks
+        line_Delete linkKeys, remainingLinks
+        script_SetDefsAndLinks remainingLinks, someScript, inMissingDefs, exMissingDefs, linkSection
+    end if
+    
+    if cluster is true then
+        put empty into someColour
+        if drawOrphans is true then
+            if inNodeDefs is not empty then
+                put dot_ConstructCluster("Internal", 1, inNodeDefs, "", "filled", someColour) into inCluster
+                put inCluster & CR after defSection
+            end if
+            if inMissingDefs is not empty then
+                put dot_ConstructCluster("Missing Internal", 2, inMissingDefs, "", "filled", someColour) into missingInCluster
+                put missingInCluster & CR after defSection
+            end if
+            if exNodeDefs is not empty then
+                put dot_ConstructCluster("External", 3, exNodeDefs, "", "filled", someColour) into exCluster
+                put exCluster & CR after defSection
+            end if
+            if exMissingDefs is not empty then
+                put dot_ConstructCluster("Missing External", 4, exMissingDefs, "", "filled", someColour) into missingExCluster
+                put missingExCluster & CR after defSection
+            end if
+            delete last char of defSection
+        else
+            put dot_ConstructCluster("Internal", 1, inNodeDefs, "", "filled", someColour) into inCluster
+            put dot_ConstructCluster("External", 2, exNodeDefs, "", "filled", someColour) into exCluster
+            put inCluster & CR & exCluster into defSection
+        end if
+    else
+        if drawOrphans is true then
+            put inNodeDefs into defSection
+            line_Add inMissingDefs, defSection
+            line_Add exNodeDefs, defSection
+            line_Add exMissingDefs, defSection
+        else
+            put inNodeDefs into defSection
+            line_Add exNodeDefs, defSection
+        end if
+    end if
+    
+    put defSection & CR & CR & linkSection into nodeSection
+     
+    -- put script_NodeSectionFromLinkKeys(linkKeys, allKeys, someScript, cluster, drawOrphans) into nodeSection
+    put dot_Construct (graphName, nodeSection, graphHeader) into dotText
+    return dotText
+end script_GetDotText

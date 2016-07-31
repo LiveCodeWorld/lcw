@@ -1,0 +1,5 @@
+getprop owner_Rect
+    put the long id of me into myOwner
+    delete word 1 to 4 of myOwner
+    return the inner_Rect of myOwner
+end owner_Rect

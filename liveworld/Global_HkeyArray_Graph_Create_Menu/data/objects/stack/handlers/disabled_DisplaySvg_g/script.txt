@@ -1,0 +1,14 @@
+getprop disabled_DisplaySvg [treeView]
+   -- should be a simpler way
+   put the displayed_Object of treeView into scriptObject
+   put the project_OverlayFolder of scriptObject into projectMetaDataFolder
+   put empty into pOverlayName
+   put overlay_GetArray (projectMetaDataFolder, pOverlayName) into overlayArray
+   put overlayArray_GetImageFile (overlayArray, projectMetaDataFolder) into svgFile
+   put svgFile into LocalArray ["svgFile"]
+   if svgFile is empty then
+      return true
+   else
+      return false
+   end if
+end disabled_DisplaySvg

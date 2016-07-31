@@ -1,0 +1,7 @@
+getprop menu_CheckTarget [mTarget]
+   if exists (mTarget) is false then return false
+   put the tree_View of mTarget into treeView
+   if exists (treeView) is false then return false
+   put the long id of treeView = the long id of mTarget into someBoolean
+   return someBoolean
+end menu_CheckTarget

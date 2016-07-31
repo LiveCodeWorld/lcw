@@ -1,0 +1,29 @@
+command script_SetPrivateHandlerOffsets @startHandler, @endHandler, handlerName, onWord, someScript
+   local startH, endHandlerName, startEndHandlerLine, endH
+   
+   put word 1 of handlerName into handlerName
+   text_EscapeRegularExpression handlerName  
+   
+   if onword is among the items of "command,on" then put "(command|on)" into onWord
+   put "(?mi)^(private +" & onWord & " +" & handlerName & ")\W" into regExp
+   
+   put CR & someScript & CR into someScript
+   if matchchunk (someScript, regExp, startHandler, endHandlerName, startEnd, endEnd) is true then
+      put script_MatchEnd (handlerName, startHandler, someScript) into endHandler
+      if endHandler is empty then
+         put 0 into startHandler
+         put 0 into endHandler
+         return empty
+      else
+         -- because of CR insertion around someScript
+         put char startHandler to endHandler of someScript into someHandler
+         subtract 1 from startHandler
+         subtract 1 from endHandler
+         return someHandler
+      end if
+   else
+      put 0 into startHandler
+      put 0 into endHandler
+      return empty
+   end if
+end script_SetPrivateHandlerOffsets

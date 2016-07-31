@@ -1,0 +1,59 @@
+command hkey_FastFindHandlerAndKey hName, hType, hObject, @foundHkey, @foundHandler, pSetName
+   put the hkey_SearchHierarchy [pSetName] of hObject into scriptHierarchy
+   hkey_AddDevelopmentHierarchy scriptHierarchy
+   
+   if exists (hObject) is false then
+      put hObject && "does not exist! Exiting..." into someMessage
+      opn_Notify someMessage, true
+      return empty
+   end if
+   
+   put hName,hType into shortHKey
+   
+   repeat with lineNum = (the number of lines of scriptHierarchy) down to 1
+      set the cursor to busy
+      put line lineNum of scriptHierarchy into testObject
+      -- put testObject
+      
+      if exists (testObject) is false then
+         put testObject && "does not exist! Skipping..." into someMessage
+         opn_Notify someMessage, true
+         next repeat
+      end if
+      
+      switch the hArray_IsCurrent of testObject 
+         case empty
+            put testObject && "is locked... skipping..." into someMessage
+            opn_Notify someMessage
+            next repeat
+         case false 
+            object_AddToGlobalArray testObject
+            break
+         default -- case true
+            -- keep on trucking
+      end switch
+      
+      if the long id of testObject = the long id of hObject then
+         -- allow private handlers (as it is where the shortHkey is called from )
+         
+         if the hArray_HkeyPresent [shortHKey] of testObject is false then next repeat
+         
+         put hkey_Construct (hName, hType, testObject) into foundHkey
+         put library_FetchHandler (foundHkey) into foundHandler
+         return hKey
+      else
+         -- Don't allow private handlers (not where the shortHkey is called from)
+         
+         if the hArray_PublicKeyPresent [shortHKey] of testObject is false then next repeat
+         
+         put hkey_Construct (hName, hType, testObject) into foundHkey
+         put library_FetchHandler (foundHkey) into foundHandler
+         return hKey 
+      end if
+   end repeat
+   
+   -- gone through every object in hierarchy
+   put empty into foundHkey
+   put empty into foundHandler
+   return empty 
+end hkey_FastFindHandlerAndKey

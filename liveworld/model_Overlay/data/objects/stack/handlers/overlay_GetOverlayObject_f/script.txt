@@ -1,0 +1,8 @@
+function overlay_GetOverlayObject overlayFolder, pOverlayName
+   put overlay_GetData (overlayFolder) into overlayData
+   if pOverlayName is empty then put overlayData_GetDefaultName (overlayData) into pOverlayName
+   
+   put overlayData [pOverlayName] into overlayArray
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Of") into scriptObject
+   return scriptObject
+end overlay_GetOverlayObject

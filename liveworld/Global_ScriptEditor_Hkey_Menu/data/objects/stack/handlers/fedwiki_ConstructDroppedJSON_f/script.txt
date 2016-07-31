@@ -1,0 +1,9 @@
+function fedwiki_ConstructDroppedJSON droppedURL
+   /*
+   ¥	{"text":"https://media.ccc.de/v/32c3-7403-a_new_kid_on_the_block#video","html":""}
+   */
+   put droppedURL into dropArray ["text"]
+   put empty into dropArray ["html"]
+   put json_FromArray (dropArray) into someJSON
+   return someJSON
+end fedwiki_ConstructDroppedJSON

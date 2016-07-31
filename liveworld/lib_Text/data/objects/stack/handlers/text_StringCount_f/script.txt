@@ -1,0 +1,13 @@
+function text_StringCount charOrString, someText
+    put 0 into startSearchHere
+    put 0 into charCount
+    repeat
+        put text_OffsetAfter(charOrString, someText, startSearchHere) into startSearchHere
+        if startSearchHere is 0 then
+            exit repeat
+        else
+            add 1 to charCount
+        end if
+    end repeat
+    return charCount
+end text_StringCount

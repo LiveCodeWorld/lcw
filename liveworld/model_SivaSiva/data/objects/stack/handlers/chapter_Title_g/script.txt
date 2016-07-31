@@ -1,0 +1,5 @@
+getprop chapter_Title
+   put the chapter_Array of the target into chapterArray
+   put chapterArray ["chapterTitle"] into chapterTitle
+   return chapterTitle
+end chapter_Title

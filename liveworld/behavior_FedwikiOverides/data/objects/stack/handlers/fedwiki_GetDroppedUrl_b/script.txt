@@ -1,0 +1,7 @@
+before fedwiki_GetDroppedUrl
+   -- this would normally parse $_POST_RAW
+   -- but here we override it
+   put the fedwiki_DroppedURL of stack "Transporter Drop Urls" into droppedURL
+   put fedwiki_ConstructDroppedJSON (droppedURL) into $_POST_RAW
+   return droppedURL
+end fedwiki_GetDroppedUrl

@@ -1,0 +1,4 @@
+function daemon_GetPostData requestArray
+   -- put SocketData [socketID]["theData"] into theData
+   return requestArray ["theData"]
+end daemon_GetPostData

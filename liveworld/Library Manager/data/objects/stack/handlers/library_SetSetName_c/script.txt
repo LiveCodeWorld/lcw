@@ -1,0 +1,5 @@
+command library_SetSetName pSetName
+   global gLibrarySet_Array
+   if pSetName is empty then put "Default" into pSetName
+   put pSetName into gLibrarySet_Array ["metadata"]["library_SetName"]
+end library_SetSetName

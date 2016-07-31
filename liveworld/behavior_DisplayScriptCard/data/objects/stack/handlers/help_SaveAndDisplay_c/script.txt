@@ -1,0 +1,6 @@
+command help_SaveAndDisplay scriptObject, pOverlayName
+   script_SaveDisplayedHelp
+   put the script_Help of scriptObject into scriptHelp
+   set the displayed_Description [pOverlayName] of me to scriptHelp
+   return scriptHelp
+end help_SaveAndDisplay

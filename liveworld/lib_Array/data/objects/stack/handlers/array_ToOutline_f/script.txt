@@ -1,0 +1,31 @@
+function array_ToOutline someArray, pSortKeys
+    -- recursive version for nested arrays
+    local someOutline
+    
+    if pSortKeys is empty then
+        -- faster
+        repeat for each key someKey in someArray
+            put someKey & CR after someOutline
+            get someArray [someKey]
+            if it is an array then get array_ToOutline(it)
+            if it is not empty then
+                put outline_IncreaseIndent(it, 1) & CR after someOutline
+            end if
+        end repeat
+        delete last char of someOutline
+        return someOutline
+    else
+        put keys(someArray) into someKeys
+        sort someKeys
+        repeat for each line someKey in someKeys
+            put someKey & CR after someOutline
+            get someArray [someKey]
+            if it is an array then get array_ToOutline (it, pSortKeys)
+            if it is not empty then
+                put outline_IncreaseIndent (it) & CR after someOutline
+            end if
+        end repeat
+        delete last char of someOutline
+        return someOutline
+    end if
+end array_ToOutline

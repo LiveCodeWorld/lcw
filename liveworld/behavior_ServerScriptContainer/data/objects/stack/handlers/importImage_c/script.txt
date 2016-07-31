@@ -1,0 +1,6 @@
+on importImage
+   put fedwiki_GetDroppedUrl ($_POST_RAW) into droppedURL
+   put mediwiki_ExtractImageFileFromUrl (droppedURL) into shortImageFile
+   put fedwiki_FetchWikipediaImagePageJson (shortImageFile) into someJSON
+   fedwiki_ReturnJSON someJSON
+end importImage

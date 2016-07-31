@@ -1,0 +1,4 @@
+function graph_ConstructSub subGraphName, nodeIndex, onlyLinked
+    put graph_ConstructNodeSection(nodeIndex, onlyLinked) into nodeSection
+    return graph_ConstructSubraph(subGraphName, nodeSection)
+end graph_ConstructSub

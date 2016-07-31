@@ -1,0 +1,8 @@
+command finder_Open someFile, pUsingAppleScriptAppPath, pStripQuotes, pDisplayScript
+   -- tell application "Finder" to open file "Macintosh HD:Users:david:Documents:My Revolution Enterprise:Plugins:opn_Plugins:opn_Text:rev:handlers:card_Object_g:hierarchical_dot.png"
+   applescript_ConvertPath someFile
+   put "open file" && someFile into aLine
+   if pUsingAppleScriptAppPath is not empty then put space & "using" && kwote(pUsingAppleScriptAppPath) after aLine
+   put appleScript_DoLine (aLine, "Finder", pStripQuotes, pDisplayScript) into someResult
+   return someResult
+end finder_Open

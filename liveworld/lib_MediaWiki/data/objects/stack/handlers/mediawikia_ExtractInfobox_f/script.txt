@@ -1,0 +1,4 @@
+function mediawikia_ExtractInfobox wikiText
+   put mediawikia_ExtractTemplate ("Infobox", wikiText) into foundTemplate
+   return foundTemplate
+end mediawikia_ExtractInfobox

@@ -1,0 +1,8 @@
+setprop trait_Hilite someBoolean
+   put someBoolean is true into LocalArray ["trait_Hilite"]
+   set the visible of _frameGraphic() to someBoolean
+   
+   if someBoolean is true then
+   else
+   end if
+end trait_Hilite

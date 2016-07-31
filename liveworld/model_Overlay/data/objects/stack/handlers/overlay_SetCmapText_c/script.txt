@@ -1,0 +1,5 @@
+command overlay_SetCmapText overlayFolder, cmapText, pOverlayName
+   put overlay_ConstructFile ("dot", overlayFolder, pOverlayName) into someFile
+   put cmapText into url ("file:" & someFile)
+   return someFile
+end overlay_SetCmapText

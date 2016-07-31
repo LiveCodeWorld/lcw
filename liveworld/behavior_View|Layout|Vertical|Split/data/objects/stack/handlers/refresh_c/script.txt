@@ -1,0 +1,14 @@
+on refresh pFetchStandardLcwFiles
+   set the cursor to watch
+   put the index_View of the target into indexView
+   
+   switch pFetchStandardLcwFiles
+      case true
+         put the lcw_ShortFiles of indexView into newIndex
+         break
+      default
+         put the index_Folder of indexView into indexFolder
+         put folder_ListShortStackFiles (indexFolder) into newIndex
+   end switch
+   set the view_Index of indexView to newIndex
+end refresh

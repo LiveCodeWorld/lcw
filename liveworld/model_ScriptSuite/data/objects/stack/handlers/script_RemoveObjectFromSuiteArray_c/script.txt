@@ -1,0 +1,16 @@
+on script_RemoveObjectFromSuiteArray scriptObject
+   if exists(scriptObject) is false then
+      put merge("Error: cannot find object: [[scriptObject]]") into someError
+      return the script_Error [someError] of me
+   end if
+   
+   put script_GetGlobalSuiteArray() into dataArray
+   repeat for each key suiteTitle in dataArray
+      put dataArray [suiteTitle] into testObject
+      if exists(testObject) is false or the long id of testObject is the long id of scriptObject then
+         delete local dataArray [suiteTitle]
+      end if
+   end repeat
+   script_SetGlobalSuiteArray dataArray
+   return empty
+end script_RemoveObjectFromSuiteArray

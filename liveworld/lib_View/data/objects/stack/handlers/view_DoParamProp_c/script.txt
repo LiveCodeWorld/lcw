@@ -1,0 +1,9 @@
+command view_DoParamProp someView, publicProp, publicParam
+   put publicProp & "[" & publicParam & "]" into cProp
+   put the cProp of someView into oldValue
+   
+   put "Change public property" && cProp & "?" into someQuestion
+   put view_AskPublicValue (cProp, someView, someQuestion) into publicValue
+   
+   set the cProp of someView to publicValue
+end view_DoParamProp

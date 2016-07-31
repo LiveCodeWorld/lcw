@@ -1,0 +1,35 @@
+command view_CreateIcon libraryView, pIconView
+   if exists(libraryView) is false then
+      beep
+      opn_Notify "Library (mTarget) view does not exist!"
+      exit to top
+   end if
+   
+   get the mobile_Name of libraryView
+   put the rect of libraryView into someRect
+   put rect_SubtractMargin (-2, someRect) into someRect
+   
+   put the view_IconFile [false] of libraryView into imageFile
+   
+   set the wholeMatches to true
+   put the stack_Name of libraryView into stackName
+   put stackName is among the lines of the openstacks into stackOpen
+   if stackOpen is false then object_GoTo libraryView
+   
+   switch pIconView
+      case empty
+         put the windowid of stack stackName into someWindowID
+         export snapshot from rect someRect of window someWindowID to file imageFile as PNG
+         break
+      default
+         put the width of pIconView & comma & the height of pIconView into iconDimensions
+         export snapshot from libraryView at size iconDimensions to iconImage as PNG
+         if iconImage is not empty then
+            put iconImage into url ("binfile:" & imageFile)
+            set the image_File of pIconView to imageFile
+         end if
+   end switch
+   
+   if stackOpen is false then close stack stackName
+   return imageFile
+end view_CreateIcon

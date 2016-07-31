@@ -1,0 +1,8 @@
+getprop meta_MainStackArray [pLinkToViews]
+   -- reconstruct if from maniest and folders
+   local stackArray, hArray
+   put the textStack_Folder [true] of the target into mainStackFolder
+   if there is not a folder mainStackFolder then return empty
+   put stackArray_FetchFromFolder (mainStackFolder) into mainStackArray
+   return mainStackArray
+end meta_MainStackArray

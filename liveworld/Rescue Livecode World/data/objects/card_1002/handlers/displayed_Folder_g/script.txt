@@ -1,0 +1,5 @@
+getprop displayed_Folder
+   put the displayed_FolderName of me into folderGroupName
+   put rescue_GetLibraryFolder (folderGroupName) into someFolder
+   return someFolder
+end displayed_Folder

@@ -1,0 +1,4 @@
+on menu_Clone mTarget
+   put the stack_Name of mTarget into stackNameToClone
+   stack_Clone stackNameToClone
+end menu_Clone

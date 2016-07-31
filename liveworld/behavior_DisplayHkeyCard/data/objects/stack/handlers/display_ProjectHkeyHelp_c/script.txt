@@ -1,0 +1,28 @@
+command display_ProjectHkeyHelp hKey, pDisplayedHelpHKey
+   lock screen
+   --
+   put the long id of me into displayCard
+   if pDisplayedHelpHKey is empty then put the displayed_HelpHkey of displayCard into pDisplayedHelpHKey
+   
+   if pDisplayedHelpHKey is not empty then  -- save any displayed help  
+      put the displayed_HelpHtmltext of displayCard into displayedHandlerHelp
+      project_StoreHandlerHelp pDisplayedHelpHKey, displayedHandlerHelp
+   end if
+   
+   put project_FetchHandlerHelp (hkey) into handlerHelp
+   -- for project help, we can take the library help for a handler if it is in the library!
+   if handlerHelp is empty then
+      put library_FetchHandlerHelp (hkey) into handlerHelp
+   end if
+   set the displayed_HelpHtmltext of displayCard to handlerHelp
+   
+   put the help_Field of me into helpField
+   lock messages
+   set the displayed_HelpHkey of helpField to hKey
+   unlock messages
+   
+   put the hkey_ImageView of me into hkeyImageView
+   put the overlay_View of hkeyImageView into overlayView
+   set the selected_Hkeys of overlayView to hKey
+   unlock screen
+end display_ProjectHkeyHelp

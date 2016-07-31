@@ -1,0 +1,7 @@
+command git_SetRelativePath @fileOrFolder
+   if char 1 of fileOrFolder is not "/" then return false
+   put git_GetRootFolder() into baseFolder
+   file_SetRelativePath fileOrFolder, baseFolder
+   shell_BashParamEscape fileOrFolder
+   return true
+end git_SetRelativePath

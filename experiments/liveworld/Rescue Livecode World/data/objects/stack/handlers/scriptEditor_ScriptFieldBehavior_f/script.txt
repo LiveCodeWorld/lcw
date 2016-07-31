@@ -1,0 +1,10 @@
+function scriptEditor_ScriptFieldBehavior
+   if exists (stack "behavior_IdeScriptEditorField") then
+      put the name of stack "behavior_IdeScriptEditorField" into bObject
+      return bObject
+   else
+      put scriptEditor_GetBehaviorButton ("LiveCode Script Editor Field") into someObject
+      if exists(someObject) is false then return empty
+      return revRuggedID (someObject)
+   end if
+end scriptEditor_ScriptFieldBehavior

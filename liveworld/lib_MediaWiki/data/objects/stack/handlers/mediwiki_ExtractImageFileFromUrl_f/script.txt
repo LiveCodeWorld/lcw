@@ -1,0 +1,35 @@
+function mediwiki_ExtractImageFileFromUrl someUrl
+   -- https://en.wikipedia.org/wiki/Alexanderplatz#/media/File:Alexanderplatz_in_Berlin_-_Panorama.jpg
+   -- https://commons.wikimedia.org/wiki/File:Alexanderplatz_in_Berlin_-_Panorama.jpg#file
+   -- https://en.wikipedia.org/wiki/File:Asger_Jorn_(1963)_by_Erling_Mandelmann.jpg
+   -- https://en.wikipedia.org/wiki/Alexanderplatz#/media/File:Alexanderplatz_in_Berlin_-_Panorama.jpg
+   -- https://en.wikipedia.org/wiki/Cat#/media/File:AfricanWildCat.jpg
+   
+   set the itemdelimiter to "/"
+   put item -1 of someURL into fileItem
+   put item -2 of someURL into mediaItem
+   
+   switch
+      case item -1 of someURL begins with "File:"
+         -- think this deals with all cases
+         put mediawiki_ExtractShortImageFile (someUrl) into shortImageFile
+         return shortImageFile
+      case someURL begins with "https://commons.wikimedia.org/wiki/File:"
+         put mediawiki_ExtractShortImageFile (someUrl) into shortImageFile
+         return shortImageFile
+      case mediaItem = "media" and someURL contains ".wikipedia.org/wiki/"
+         put mediawiki_ExtractShortImageFile (someUrl) into shortImageFile
+         return shortImageFile
+      default
+         -- too complicated and not needed?
+         url_Deconstruct someUrl, someProtocol, urlDomain, urlPath, shortName, fileExtension, uName, pWord
+         if urlDomain ends with ".wikipedia.org" is false then return empty
+         
+         if item -1 of urlPath is not among the items of "media/wiki" then return empty
+         set the itemdelimiter to ":"
+         if item 1 of shortName is not "File" then return empty
+         
+         put item 2 of shortName & "." & fileExtension into shortFile
+         return shortFile
+   end switch
+end mediwiki_ExtractImageFileFromUrl

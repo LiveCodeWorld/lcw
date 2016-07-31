@@ -1,0 +1,10 @@
+on menu_AddStacksToProject scriptObject
+   put the stack_Name of scriptObject into projectStackName
+   put project_FetchValue ("openStacks") into stackNames
+   put projectStackName & CR & stackNames into newProjectStackNames
+   sort newProjectStackNames
+   put word 1 to -1 of newProjectStackNames into newProjectStackNames
+   project_SaveValue "openStacks", newProjectStackNames
+   
+   opn_Notify merge("Added stack '[[projectStackName]]' to the project array.")
+end menu_AddStacksToProject

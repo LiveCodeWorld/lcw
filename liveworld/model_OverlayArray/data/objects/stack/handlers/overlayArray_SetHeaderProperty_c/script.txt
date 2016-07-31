@@ -1,0 +1,7 @@
+command overlayArray_SetHeaderProperty @overlayArray, propName, propValue
+   if propValue is empty then
+      delete local overlayArray ["metadata"]["dot_HeaderArray"][propName]
+   else
+      put propValue into overlayArray ["metadata"]["dot_HeaderArray"][propName]
+   end if
+end overlayArray_SetHeaderProperty

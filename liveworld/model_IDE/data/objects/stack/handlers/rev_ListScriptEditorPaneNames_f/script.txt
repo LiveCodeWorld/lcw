@@ -1,0 +1,4 @@
+function rev_ListScriptEditorPaneNames pEditorNum
+   put rev_ScriptEditorPanesGroup (pEditorNum) into scriptEditorPanesGroup
+   return value ("seAvailablePanes()", scriptEditorPanesGroup)
+end rev_ListScriptEditorPaneNames

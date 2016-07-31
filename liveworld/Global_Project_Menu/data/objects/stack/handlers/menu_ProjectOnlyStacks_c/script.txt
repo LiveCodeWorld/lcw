@@ -1,0 +1,6 @@
+on menu_ProjectOnlyStacks mTarget
+   put project_FetchValue ("openStacks") into stackNames
+   sort stackNames
+   set the view_Index of mTarget to stackNames
+   set the multiple_Hilites of mTarget to false
+end menu_ProjectOnlyStacks

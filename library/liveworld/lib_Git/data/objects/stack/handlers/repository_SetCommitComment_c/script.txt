@@ -1,0 +1,10 @@
+command repository_SetCommitComment @someComment
+   if someComment is empty then
+      ask "Give a comment to this commit..." with "auto opn commit"
+      if it is empty then
+         -- opn_Notify "Sorry, I did not commit these changes as the comment was empty!"
+         exit to top
+      end if
+      put it into someComment
+   end if
+end repository_SetCommitComment

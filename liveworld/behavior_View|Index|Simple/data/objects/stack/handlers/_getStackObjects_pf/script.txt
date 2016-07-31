@@ -1,0 +1,17 @@
+private function _getStackObjects shortStackFiles
+   put the index_Folder of me into indexFolder 
+   if indexFolder is empty then
+      -- let's assume the stacks are known
+      put known_StackObjects (shortStackFiles) into stackObjects
+   else 
+      repeat for each line shortStackFile in shortStackFiles
+         put indexFolder & shortStackFile into longStackFile
+         if exists (stack longStackFile) then
+            put the name of stack longStackFile into stackObject
+            put stackObject & CR after stackObjects
+         end if
+      end repeat
+      delete char -1 of stackObjects
+   end if
+   return stackObjects
+end _getStackObjects

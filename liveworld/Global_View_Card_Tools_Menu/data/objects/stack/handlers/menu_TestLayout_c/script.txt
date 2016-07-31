@@ -1,0 +1,12 @@
+on menu_TestLayout someView
+   put the card_Object of someView into cardControl
+   put the template_CardRect of cardControl into cardRect
+   
+   repeat 6
+      set the cursor to busy
+      dispatch "LayoutControl" to someView with cardRect
+   end repeat
+   
+   put merge ("Dispatched 'LayoutControl' to [[the name of someView]] 6 times") into someComment
+   opn_Notify someComment
+end menu_TestLayout

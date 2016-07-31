@@ -1,0 +1,11 @@
+function library_FetchAllObjects libType
+   --should add any additional objects not stored in standard folders but listed in other sets
+   switch libType
+      case "back"
+         return library_ListStandardBackScripts()
+      case "front"
+         return library_ListStandardFrontScripts()
+      case "used"
+         return library_ListStandardUsedStacks()
+   end switch
+end library_FetchAllObjects

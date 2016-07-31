@@ -1,0 +1,5 @@
+on menu_DeleteArrow plusMinusView
+   put the arrow_View of plusMinusView into arrowView
+   delete arrowView
+   put the top_ControlNames of plusMinusView
+end menu_DeleteArrow

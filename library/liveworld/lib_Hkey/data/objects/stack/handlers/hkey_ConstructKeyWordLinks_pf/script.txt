@@ -1,0 +1,10 @@
+private function hkey_ConstructKeyWordLinks linkedHkeys, handlerIndexArray
+   repeat for each line linkedHkey in linkedHkeys
+      hkey_Deconstruct linkedHkey, linkedName, linkedType, linkedObject, linkedNum
+      put handlerIndexArray [linkedName] into hKeys
+      put line 1 of hKeys into hKey
+      put html_ConstructNameLink (linkedName, hKey) & CR after linkedNames
+   end repeat
+   delete char -1 of linkedNames
+   return linkedNames
+end hkey_ConstructKeyWordLinks

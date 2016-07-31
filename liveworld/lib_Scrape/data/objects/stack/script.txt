@@ -1,0 +1,48 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Scrape
+type: script library
+version: 0.2
+
+
+--> Scrape
+-
+[[ _FetchHandler (scrape_ContentSection,f) ]]
+ 
+[[ _FetchHandler (scrape_ContentHeadings,f) ]]
+
+[[ _FetchHandler (scrape_Headings,f) ]]
+
+[[ _FetchHandler (scrape_EvaluateContentHeadings,f) ]]
+
+[[ _FetchHandler (scrape_EvaluateXPath,f) ]]
+
+[[ _FetchHandler (scrape_WithXPath,f) ]]
+
+[[ _FetchHandler (scrape_GetDiv,f) ]]
+
+
+--> ScrapeID
+-
+[[ _FetchHandler (scrapeID_GetDiv,f) ]]
+
+[[ _FetchHandler (scrapeID_GetContentSectionPath,f) ]]
+
+[[ _FetchHandler (scrapeID_ConstructHeaderPageArray,f) ]]
+
+[[ _FetchHandler (scrape_TidyTitle,pf) ]]
+
+[[ _FetchHandler (scrape_IncrementNumKeyList,pc) ]]
+
+[[ _FetchHandler (scrape_ConstructNumKeyArray,pf) ]]
+
+
+--> XPath
+-
+/*
+Handlers that construct XPath queries
+*/
+
+[[ _FetchHandler (xpath_ConstructHeadingPath,f) ]]
+

@@ -1,0 +1,5 @@
+getprop view_PathFragments
+   put the shiftKey is "Down" into forceUpdate
+   put view_GetIndexMenu (forceUpdate) into viewMenu
+   return viewMenu
+end view_PathFragments

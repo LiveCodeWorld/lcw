@@ -1,0 +1,12 @@
+on menu_TestXml
+   put sivasiva_GetXML() into someXml
+   -- put sivasiva_GetTestXML() into someXml
+   
+   /*
+   put xml_ToArray (someXML, empty, empty, true, false) into bookArray
+   display_Array bookArray
+   */
+   
+   put sivasiva_ExtractDivs (someXml) into contentArray
+   display_Array contentArray, "SivaSiva"
+end menu_TestXml

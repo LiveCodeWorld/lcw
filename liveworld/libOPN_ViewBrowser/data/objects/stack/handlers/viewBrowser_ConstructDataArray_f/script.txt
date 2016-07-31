@@ -1,0 +1,19 @@
+function viewBrowser_ConstructDataArray displayPaths, pIsExpanded, pViewFilter, pExpandedViewNames
+   local vNames
+   replace comma with CR in displayPaths
+   repeat for each line pFilterName in displayPaths
+      switch pFilterName
+         case "All"
+            put empty into pFilterName
+            break
+         default
+            view_NormalizeName pFilterName
+      end switch
+      put view_FilteredPaths (pFilterName, true) & CR after vNames
+   end repeat
+   delete char -1 of vNames
+   
+   if pViewFilter is empty then put the view_Filter of me into pViewFilter
+   put viewBrowser_ConstructArrayFromViewNames (vNames, pViewFilter, pExpandedViewNames) into dgArray
+   return dgArray
+end viewBrowser_ConstructDataArray

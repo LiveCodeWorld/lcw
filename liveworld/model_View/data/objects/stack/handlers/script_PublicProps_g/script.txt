@@ -1,0 +1,8 @@
+getprop script_PublicProps
+   local propMenu, publicProps
+   put the long id of the target into scriptObject
+   
+   extractViewPropertyMenu scriptObject, propMenu, publicProps
+   sort publicProps
+   return publicProps
+end script_PublicProps

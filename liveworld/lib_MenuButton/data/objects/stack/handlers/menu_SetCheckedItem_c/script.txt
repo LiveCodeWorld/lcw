@@ -1,0 +1,7 @@
+command menu_SetCheckedItem someMenuItem, @someMenu, someBoolean
+    put someBoolean is not false into someBoolean
+    put menu_GetLineNum (someMenuItem, someMenu) into lineNum
+    if lineNum = 0 then return someMenu
+     
+    put menu_SetCheckedLine(lineNum, someMenu, someBoolean) into someMenu
+end menu_SetCheckedItem

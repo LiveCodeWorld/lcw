@@ -1,0 +1,62 @@
+on dragEnd
+   put the dragdata ["private"] into viewName
+   put the dragDestination into targetObject
+   if exists (targetObject) is false then return false
+   put the dropped_TargetName of targetObject into targetView
+   if exists (targetView) is false then return false
+   
+   put the stack_Name of targetView into stackName
+   if stackName = "opn_ViewOutline" then
+      put the tree_SelectedLink of targetView into linkedView
+      if exists(linkedView) is false then
+         opn_Notify "Dropped dragEnd - but no link text to find object?", true
+      else
+         set the view_Swap of linkedView to viewName
+         dispatch "viewOutline_RefreshDisplay" to targetView
+      end if
+      pass dragEnd
+   end if
+   
+   put the dgControl of targetObject into revDataGrid
+   put the form_View of targetObject into formView
+   if exists(revDataGrid) and (exists(targetView) is false or revDataGrid ends with targetView) then
+      -- a datagrid   
+      answer "You are dropping a view on a datagrid. Do you want to replace the datagrid or the row template?" with "Cancel" or "Replace" or "Set template"
+      switch word 1 of it 
+         case "Set"
+            -- lets set the row template
+            set the record_ViewName of revDataGrid to viewName
+            put the result into newTemplateObject
+            get merge("Set the dg_ViewName of [[the mobile_Name of newTemplateObject]] to the mobile_Name of [[newTemplateObject]]")
+            opn_Notify it
+            return viewName
+         case "Cancel"
+            return empty
+         case "Replace"
+            -- lets replace the datagrid
+            set the view_Swap of revDataGrid to viewName
+            dispatch "viewOutline_RefreshDisplay" to stack "opn_ViewOutline"
+            return viewName
+      end switch
+   else if exists (formView) then
+      -- a datagrid   
+      answer "You are dropping a view on a form_View. Do you want to replace the record or insert one?" with "Cancel" or "Replace" or "Insert"
+      switch it 
+         case "Replace"
+            set the view_Swap of targetView to viewName
+            dispatch "viewOutline_RefreshDisplay" to stack "opn_ViewOutline"
+            break
+         case "Insert"
+            set the form_InsertView [false] of formView to viewName
+            break
+         default
+            return viewName
+      end switch
+   else
+      -- not a datagrid   
+      -- set the view_Swap of targetView to viewName
+      set the control_Type of targetView to viewName
+      -- dispatch "viewOutline_RefreshDisplay" to stack "opn_ViewOutline"
+      return viewName
+   end if
+end dragEnd

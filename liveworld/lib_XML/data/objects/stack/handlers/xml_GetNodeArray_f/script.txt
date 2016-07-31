@@ -1,0 +1,11 @@
+function xml_GetNodeArray someXml, startNode, includeChildCount
+    local nodeArray
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    if nodeIndex is empty then put xml_TreeNodes(treeID, startNode, includeChildCount) into nodeIndex
+    repeat for each line someNode in nodeIndex
+        put revXMLNodeContents(treeID, someNode) into nodeContents
+        put nodeContents into nodeArray [someNode]
+    end repeat
+    revDeleteXMLTree treeID
+    return nodeArray
+end xml_GetNodeArray

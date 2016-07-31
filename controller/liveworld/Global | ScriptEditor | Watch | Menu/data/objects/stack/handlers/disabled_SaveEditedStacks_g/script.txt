@@ -1,0 +1,4 @@
+getprop disabled_SaveEditedStacks
+   put LocalArray ["editedStacks"] into editedStacks
+   return editedStacks is empty
+end disabled_SaveEditedStacks

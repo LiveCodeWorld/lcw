@@ -1,0 +1,5 @@
+function youtube_FetchChannelUploadPageJson channelID, pMaxResults, pDontLinkTitle, pNextPageToken
+   put youtube_FetchChannelUploadPageArray (channelID, pMaxResults, pDontLinkTitle, pNextPageToken) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end youtube_FetchChannelUploadPageJson

@@ -1,0 +1,9 @@
+getprop rig_ControllerHandlerArray
+   put the script of the target into someScript
+   put the revAvailableHandlers of the target into handlerTable -- revAvailableHandlers only return first handler
+   
+   put rig_ExtractControllerHandlers (handlerTable, someScript) into controllerHandlers
+   put rig_ExtractPublicHandlers (someScript) into controllerScript
+   
+   return controllerHandlers
+end rig_ControllerHandlerArray

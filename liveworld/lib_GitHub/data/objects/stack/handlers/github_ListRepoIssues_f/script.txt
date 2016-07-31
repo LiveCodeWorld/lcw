@@ -1,0 +1,8 @@
+function github_ListRepoIssues repoOwner, someRepo
+   -- help: https://developer.github.com/v3/issues/#list-issues
+   -- GET /repos/:owner/:repo/issues
+   
+   put _issueCommandPath (repoOwner, someRepo, "issues") into restPath
+   put github_RestGet (restPath) into someJSON
+   return someJSON
+end github_ListRepoIssues

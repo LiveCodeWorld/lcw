@@ -1,0 +1,6 @@
+function mediawiki_GetRestJSON restURL
+   wikipedia_SetUserAgent
+   set the httpheaders to "Accept: application/json"
+   put url restURL into someJSON
+   return someJSON
+end mediawiki_GetRestJSON

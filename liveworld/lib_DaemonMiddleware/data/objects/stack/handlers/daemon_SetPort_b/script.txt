@@ -1,0 +1,4 @@
+before daemon_SetPort
+   daemon_Log ("User changed server port to:" && pNewPort)
+   daemon_Log "Stopping server..."
+end daemon_SetPort

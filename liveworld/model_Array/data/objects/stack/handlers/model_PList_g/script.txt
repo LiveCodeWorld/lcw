@@ -1,0 +1,14 @@
+getprop model_PList [modelName]
+   put the mobile_Name of the target into modelObject
+   put model_GetArray(modelName, modelObject, "array") into modelArray
+   
+   put plist_DictFromArray(modelArray) into dictXML
+   
+   put modelName into pListArray ["Name"]
+   put modelObject into pListArray ["Object"]
+   put dictXML into pListArray ["Model"]
+   
+   put plist_DictFromArray(pListArray) into baseDict
+   put xml_Tag(baseDict, "plist", "version", "1.0") after someXML
+   return someXML
+end model_PList

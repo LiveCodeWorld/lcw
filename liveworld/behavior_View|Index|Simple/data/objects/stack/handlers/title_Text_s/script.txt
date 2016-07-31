@@ -1,0 +1,8 @@
+setprop title_Text [someColour] someTitle
+   lock screen
+   set the name of me to someTitle
+   if someColour is not empty then
+      set the title_Colour of me to someColour
+   end if
+   unlock screen
+end title_Text

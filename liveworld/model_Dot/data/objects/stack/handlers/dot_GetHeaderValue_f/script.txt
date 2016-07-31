@@ -1,0 +1,8 @@
+function dot_GetHeaderValue targetObject, someKey
+   put the displayed_OverlayName of targetObject into pOverlayName
+   put the overlay_Array [pOverlayName] of targetObject into overlayArray
+   
+   put overlayArray_GetHeaderArray (overlayArray) into headerArray
+   put headerArray [someKey] into someValue
+   return someValue
+end dot_GetHeaderValue

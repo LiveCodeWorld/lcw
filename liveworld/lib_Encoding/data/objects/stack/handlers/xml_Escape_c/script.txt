@@ -1,0 +1,30 @@
+command xml_Escape @someText
+    -- was "text_XmlEscape", "xmlSafeText"
+    
+    -- chardata regExp:  [^<&]* - ([^<&]* ']]>' [^<&]*)
+    /*
+    The ampersand character (&) and the left angle bracket (<) MUST NOT appear in their literal form,
+    except when used as markup delimiters, or within a comment, a processing instruction, or a CDATA section.
+    if they are needed elsewhere, they MUST be escaped using either numeric character references
+    or the strings "&amp;" and "&lt;" respectively. 
+    The right angle bracket (>) may be represented using the string "&gt;", 
+    and MUST, for compatibility, be escaped using either "&gt;" or a character reference
+    when it appears in the string "]]>" in content, when that string is not marking the end of a CDATA section.
+    */
+    
+    replace "&" with "&amp;" in someText
+    replace "<" with "&lt;" in someText
+    replace ">" with "&gt;" in someText
+    
+    /*
+    To allow attribute values to contain both single and double quotes, 
+    the apostrophe or single-quote character (') may be represented as
+    "&apos;", and the double-quote character (") as "&quot;".
+    */
+    
+    replace "'" with "&apos;" in someText
+    replace quote with "&quot;" in sometext
+    
+    -- do tabs as well?
+    replace tab with "&#9;" in someText
+end xml_Escape

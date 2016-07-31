@@ -1,0 +1,12 @@
+getprop model_XML [modelName]
+   put the mobile_Name of the target into modelObject
+   put model_GetArray(modelName, modelObject, "array") into modelArray
+   
+   local someXML
+   repeat for each key tagName in modelArray
+      put modelArray [tagName] into someContents
+      put xml_Tag(someContents, tagName) after someXML
+   end repeat
+   put xml_Tag(someXML, modelName) after someXML
+   return someXML
+end model_XML

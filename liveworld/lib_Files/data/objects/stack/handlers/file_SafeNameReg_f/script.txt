@@ -1,0 +1,10 @@
+function file_SafeNameReg
+    put "[:/?<>/|/*" & quote into someReg
+    
+    -- how do you escape "\" ???
+    -- put "\" after someReg
+    -- put "/\" after someReg
+    
+    put "]" after someReg
+    return someReg
+end file_SafeNameReg

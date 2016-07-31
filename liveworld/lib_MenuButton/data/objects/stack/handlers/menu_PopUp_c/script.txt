@@ -1,0 +1,17 @@
+command menu_PopUp pMenuTitle, pLocation, pTargetObject
+   if pTargetObject is empty then put the long id of the target into pTargetObject
+   if pMenuTitle is empty then put the menu_Title of pTargetObject into pMenuTitle
+   if pMenuTitle is empty then put "Menu" into pMenuTitle
+   
+   set the menu_TextFromTitle of pTargetObject to pMenuTitle
+   put the result into mText
+   if mText is empty then return "false"
+   
+   put the menu_Button of pTargetObject into mButton
+   if pLocation is not a point then
+      popup mButton
+   else
+      popup mButton at pLocation
+   end if
+   return true
+end menu_PopUp

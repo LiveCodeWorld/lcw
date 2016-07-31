@@ -1,0 +1,4 @@
+on menu_DisplayKnownStacks
+   put the stackfiles of stack "OPN" into opnStackfiles
+   display_Lines opnStackfiles
+end menu_DisplayKnownStacks

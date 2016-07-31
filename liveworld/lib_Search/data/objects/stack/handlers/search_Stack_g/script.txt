@@ -1,0 +1,10 @@
+getprop search_Stack [colonValue]
+    set the itemdelimiter to ":"
+    put item 1 of colonValue into someProperty
+    put item 2 of colonValue into someValue
+    put item 3 of colonValue into controllerObject
+    put the stack_Object of the target into stackObject
+    
+    put search_StackForValue (stackObject, someProperty, someValue, controllerObject) into searchResult
+    return searchResult
+end search_Stack

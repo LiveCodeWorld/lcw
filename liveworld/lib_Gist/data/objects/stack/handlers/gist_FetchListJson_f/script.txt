@@ -1,0 +1,17 @@
+function gist_FetchListJson pNextURL
+   /*
+   -- put  "/users/:username/gists"
+   -- put url "GET /users/:username/gists"
+   -- &per_page=100
+   */
+   
+   if pNextURL is empty then
+      put "/gists" into restPath
+      put "?per_page=100" after restpath
+      -- put "&page=3" after restpath
+      put github_RestGet (restPath) into someJSON
+   else
+      put github_RestGetFromUrl (pNextURL) into someJSON
+   end if
+   return someJSON
+end gist_FetchListJson

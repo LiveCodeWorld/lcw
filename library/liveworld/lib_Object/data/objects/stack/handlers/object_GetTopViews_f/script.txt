@@ -1,0 +1,11 @@
+function object_GetTopViews groupOrCard
+   put the object_TopControls of groupOrCard into topControls
+   put empty into topViews
+   repeat for each line someObject in topControls
+      if the object_IsView of someObject is true then
+         put someObject & CR after topViews
+      end if
+   end repeat
+   delete last char of topViews
+   return topViews
+end object_GetTopViews

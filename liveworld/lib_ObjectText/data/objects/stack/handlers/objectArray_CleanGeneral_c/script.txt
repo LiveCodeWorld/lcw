@@ -1,0 +1,19 @@
+command objectArray_CleanGeneral @customArray
+   objectArray_TempClean customArray
+   
+   delete local customArray ["cREVGeneral"]["bookmarks"]
+   delete local customArray ["cREVGeneral"]["handlerList"]
+   delete local customArray ["cREVGeneral"]["scriptSelection"]
+   delete local customArray ["cREVGeneral"]["prevHandler"]
+   delete local customArray ["cREVGeneral"]["tempScript"]
+   delete local customArray ["cREVGeneral"]["script"]
+   delete local customArray ["cREVGeneral"]["scriptCheckSum"]
+   
+   delete local customArray ["cREVGeneral"]["breakpointconditions"]
+   delete local customArray ["cREVGeneral"]["breakpoints"]
+   delete local customArray ["cREVGeneral"]["breakpointstates"]
+   delete local customArray ["cREVGeneral"]["stackfileversion"]
+   
+   delete local customArray ["cREVGeneral"]["scripteditorselection"]
+   delete local customArray ["cREVGeneral"]["scripteditorvscroll"]
+end objectArray_CleanGeneral

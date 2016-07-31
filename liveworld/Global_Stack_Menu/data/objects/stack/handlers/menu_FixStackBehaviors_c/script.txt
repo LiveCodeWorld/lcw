@@ -1,0 +1,29 @@
+on menu_FixStackBehaviors mTarget
+   local searchArray
+   put the stack_Name of mTarget into stackName
+   search_Stack stackName, "behavior", searchArray
+   put keys(searchArray) into foundBehaviors
+   repeat for each line foundBehavior in foundBehaviors
+      put searchArray [foundBehavior] into objectsWithBehavior
+      repeat for each line someObject in objectsWithBehavior
+         set the cursor to busy
+         if exists(someObject) is false then
+            -- should not be possible
+            breakpoint
+            put searchArray [foundBehavior] into displayArray ["impossible error"][foundBehavior]
+            next repeat
+         end if
+         
+         if exists (foundBehavior) is false then
+            -- probably not in stackfiles
+            put searchArray [foundBehavior] into displayArray ["behavior does not exist"][foundBehavior]
+            next repeat
+         end if
+         
+         set the behavior of someObject to foundBehavior
+         put searchArray [foundBehavior] into displayArray ["good behavior"][foundBehavior]
+      end repeat
+   end repeat
+   
+   display_Array displayArray, ("Behaviors of stack" && kwote(stackName))
+end menu_FixStackBehaviors

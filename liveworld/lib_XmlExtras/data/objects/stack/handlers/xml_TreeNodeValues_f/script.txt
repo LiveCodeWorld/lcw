@@ -1,0 +1,8 @@
+function xml_TreeNodeValues treeID, nodeIndex, pDelim
+    if pDelim is empty then put CR into pDelim
+    repeat for each line someNode in nodeIndex
+        put revXMLText(treeID, someNode) & pDelim after nodeValues
+        -- put revXMLNodeContents(treeID, someNode) & pDelim after nodeValues
+    end repeat
+    delete char -1 of nodeValues
+end xml_TreeNodeValues

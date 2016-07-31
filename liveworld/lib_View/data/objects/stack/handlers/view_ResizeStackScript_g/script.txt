@@ -1,0 +1,6 @@
+getprop view_ResizeStackScript [viewName]
+    if viewName is empty then put "default" into viewName
+    put the uOPN["ViewResizeStack_Script"] of me into templateScript
+    put merge(templateScript) into newScript
+    return newScript
+end view_ResizeStackScript

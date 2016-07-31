@@ -1,0 +1,14 @@
+on menu_DeletePluginRecord toolMode, pObjectTestProp, objectRefValue
+   global gOPN_MenuArray
+   if pObjectTestProp is empty then put "object_ShortID" into pObjectTestProp
+   
+   put gOPN_MenuArray [toolMode] into propertyArray
+   put propertyArray [pObjectTestProp] into recordArray
+   
+   delete local recordArray [objectRefValue]
+   
+   put recordArray into propertyArray [pObjectTestProp]
+   put propertyArray into gOPN_MenuArray [toolMode]
+   
+   return keys (gOPN_MenuArray)
+end menu_DeletePluginRecord

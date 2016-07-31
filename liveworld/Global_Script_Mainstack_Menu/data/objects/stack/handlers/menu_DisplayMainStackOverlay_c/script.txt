@@ -1,0 +1,10 @@
+on menu_DisplayMainStackOverlay scriptObject
+   set the cursor to watch
+   put "Mainstack Structure" into overlayName
+   put the textStackOverlay_Folder [true] of scriptObject into overlayFolder
+   if there is not a folder overlayFolder then
+      return empty
+   end if
+   display_Overlay overlayFolder, overlayName
+   return the result
+end menu_DisplayMainStackOverlay

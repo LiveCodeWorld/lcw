@@ -1,0 +1,6 @@
+setprop wiki_Javascript someJavascript
+   -- put "wiki.doInternalLink('Federateed Wiki')" into someJavascript
+   put the browser_Widget of me into browserWidget
+   do someJavascript in browserWidget
+   return the result
+end wiki_Javascript

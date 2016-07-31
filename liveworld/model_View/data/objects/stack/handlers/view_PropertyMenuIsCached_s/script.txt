@@ -1,0 +1,16 @@
+setprop view_PropertyMenuIsCached someBoolean
+   set the cursor to watch -- this can take a long time
+   put the long id of the target into targetObject
+   if someBoolean is true then
+      local liveMenu, publicProps
+      extractViewPropertyMenu targetObject, liveMenu, publicProps
+      set the view_Props of the target to publicProps
+      set the template_MetaData ["view_PropertyMenu"] of targetObject to liveMenu
+      return liveMenu
+   else
+      -- set the view_PropertyMenu of targetObject to empty
+      set the template_MetaData ["view_PropertyMenu"] of targetObject to empty
+      set the view_Props of the target to empty
+      return empty
+   end if
+end view_PropertyMenuIsCached

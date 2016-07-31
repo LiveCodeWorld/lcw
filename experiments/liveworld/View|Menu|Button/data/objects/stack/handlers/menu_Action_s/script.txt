@@ -1,0 +1,8 @@
+setprop menu_Action someAction
+   put the long id of the target into mButton
+   set the uOPN ["menu_Action"] of mButton to someAction
+   if someAction is not empty then
+      -- put someAction
+      -- put the mobile_Name of mButton
+   end if
+end menu_Action

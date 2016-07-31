@@ -1,0 +1,5 @@
+command hkey_NormalizeGraphName @pOverlayName
+   if pOverlayName is empty then
+      put hkey_GetDefaultGraphName() into pOverlayName
+   end if
+end hkey_NormalizeGraphName

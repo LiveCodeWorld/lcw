@@ -1,0 +1,13 @@
+function hArray_GetHashedHandler hKey, handlerHash
+   put hArray_GetFoundHkeyArray (hKey) into hkeyArray
+   repeat for each key hKey in hkeyArray
+      if hkeyArray [hKey]["handlerHash"] = handlerHash then
+         put hkeyArray [hKey]["startLineNum"] into startLineNum
+         put hkeyArray [hKey]["endLineNum"] into endLineNum
+         put item 3 of hKey into hObject
+         put line startLineNum to endLineNum of the script of hObject into someHandler
+         return someHandler
+      end if
+   end repeat
+   return empty
+end hArray_GetHashedHandler

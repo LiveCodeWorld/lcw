@@ -1,0 +1,14 @@
+on mouseDown pMouseBtnNum
+   clearLocals
+   if pMouseBtnNum = 3 then
+      put the menu_ToolTitle of me into mTitle
+      menu_PopUp mTitle
+   else if the shiftkey is "Down" then
+      put the menu_Title of me into mTitle
+      menu_PopUp mTitle
+   else
+      put true into localMouseIsDown
+      initialise_Move
+      pass mouseDown
+   end if
+end mouseDown

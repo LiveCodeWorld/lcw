@@ -1,0 +1,6 @@
+getprop script_File [pDontCreate]
+   put pDontCreate is not false into pDontCreate
+   put the object_Folder [pDontCreate] of the target into objectFolder
+   put objectFolder & "script.txt" into someFile
+   return someFile
+end script_File

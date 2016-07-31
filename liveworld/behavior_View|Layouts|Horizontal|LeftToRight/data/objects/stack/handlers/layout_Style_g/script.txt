@@ -1,0 +1,5 @@
+getprop layout_Style
+   put the uOPN ["layout_Style"] of me into layoutStyle
+   if layoutStyle is empty then return "distributed"
+   return layoutStyle
+end layout_Style

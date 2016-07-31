@@ -1,0 +1,7 @@
+on model_MoveArrays modelNames, controllerObject, modelReference, oldModelReference, modelType
+   repeat for each item modelName in modelNames
+      put model_GetArray(modelName, controllerObject, oldModelReference)
+      model_SetArray modelName, controllerObject, dataArray, modelReference
+      model_DeleteArray modelName, controllerObject, oldModelReference
+   end repeat
+end model_MoveArrays

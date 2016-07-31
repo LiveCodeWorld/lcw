@@ -1,0 +1,6 @@
+function dot_NameFromImageFile imageFile
+   file_Deconstruct imageFile, someRoot, shortName, fileExtension
+   set the itemdelimiter to "."
+   put item 1 of shortName into graphName
+   return graphName
+end dot_NameFromImageFile

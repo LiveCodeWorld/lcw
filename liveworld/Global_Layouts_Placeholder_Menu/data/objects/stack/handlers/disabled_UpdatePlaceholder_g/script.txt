@@ -1,0 +1,11 @@
+getprop disabled_UpdatePlaceholder
+   put menu_GetTargetObject() into targetObject
+   put the placeHolder_Button of targetObject into placeHolderView
+   if exists(placeHolderView) then
+      put the view_IsOld of placeHolderView into isOld
+      -- put isOld
+      return isOld is not true
+   else
+      return true
+   end if
+end disabled_UpdatePlaceholder

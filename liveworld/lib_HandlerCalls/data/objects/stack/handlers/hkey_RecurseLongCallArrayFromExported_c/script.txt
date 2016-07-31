@@ -1,0 +1,20 @@
+command hkey_RecurseLongCallArrayFromExported hKey, @hkeyArray, pSetName
+   -- fetch from "links.txt" file recursively
+   local foundHkey, foundHandler
+   if hKey is among the keys of hkeyArray then return "Already indexed! Skipping to avoid recursion."
+   
+   put item 3 of hKey into hObject
+   put hkey_GetCalls (hKey) into shortCalls
+   repeat for each line shortCall in shortCalls
+      put item 1 of shortCall into cName
+      put item 2 of shortCall into cType
+      put hkey_FindAndIndex (cName, cType, hObject, pSetName) into foundHkey
+      put foundHkey & CR after longCalls
+   end repeat
+   delete char -1 of longCalls
+   put longCalls into hkeyArray [hKey]
+   
+   repeat for each line longCall in longCalls
+      -- hkey_RecurseShortCallArrayFromExported longCall, hkeyArray, pSetName
+   end repeat
+end hkey_RecurseLongCallArrayFromExported

@@ -1,0 +1,2333 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 998 10220.08 998 10220.08 0 ",
+		bb="0,0,10220,998",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph pf {
+		n99		 [URL="construct_SummarySourceArray%2Cpf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#000000 e 5154 552 126.53 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5154 547.8 0 184.28 28 -construct_SummarySourceArray ",
+			height=0.5,
+			label=construct_SummarySourceArray,
+			pos="5154,552",
+			width=3.5143];
+		n105		 [URL="_lastNestedBracket%2Cpf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#000000 e 2094 480 78.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2094 475.8 0 108.85 18 -_lastNestedBracket ",
+			height=0.5,
+			label=_lastNestedBracket,
+			pos="2094,480",
+			width=2.1907];
+		n18		 [URL="xml_EncodeString%2Cpf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#000000 e 6591 480 76.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6591 475.8 0 104.99 16 -xml_EncodeString ",
+			height=0.5,
+			label=xml_EncodeString,
+			pos="6591,480",
+			width=2.1229];
+		n17		 [URL="xml_ConvertXMLNodeToArray%2Cpf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#000000 e 6591 552 125.33 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6591 547.8 0 182.54 25 -xml_ConvertXMLNodeToArray ",
+			height=0.5,
+			label=xml_ConvertXMLNodeToArray,
+			pos="6591,552",
+			width=3.4837];
+		n32		 [URL="_letsFindNestedStartBracketNum%2Cpf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#000000 e 2320 480 129.44 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2320 475.8 0 188.97 30 -_letsFindNestedStartBracketNum ",
+			height=0.5,
+			label=_letsFindNestedStartBracketNum,
+			pos="2320,480",
+			width=3.5964];
+	}
+	subgraph pc {
+		n8		 [URL="toc_LookupArrayFromSectionTitle%2Cpc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#000000 e 4650 480 135.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4650 475.8 0 198.58 31 -toc_LookupArrayFromSectionTitle ",
+			height=0.5,
+			label=toc_LookupArrayFromSectionTitle,
+			pos="4650,480",
+			width=3.7652];
+		n38		 [URL="toc_LookupArrayFromDotNum%2Cpc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#000000 e 4702 406 123.66 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4702 401.8 0 179.64 25 -toc_LookupArrayFromDotNum ",
+			height=0.5,
+			label=toc_LookupArrayFromDotNum,
+			pos="4702,406",
+			width=3.4328];
+		n7		 [URL="toc_LookupArray%2Cpc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#000000 e 4911 332 73.43 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4911 327.8 0 100.3 15 -toc_LookupArray ",
+			height=0.5,
+			label=toc_LookupArray,
+			pos="4911,332",
+			width=2.0407];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n29		 [URL="fedwiki_AddToEndOfIndexArray%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 7918 178 130.13 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7918 173.8 0 190.3 28 -fedwiki_AddToEndOfIndexArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_AddToEndOfIndexArray,
+			pos="7918,178",
+			style=filled,
+			width=3.6198];
+		n133		 [URL="fedwikipedia_StripAllTemplates%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3648 332 125.32 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3648 327.8 0 182.53 30 -fedwikipedia_StripAllTemplates ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_StripAllTemplates,
+			pos="3648,332",
+			style=filled,
+			width=3.4836];
+		n115		 [URL="fedwikipedia_CleanSeeAlso%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4147 332 110.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4147 327.8 0 159.4 25 -fedwikipedia_CleanSeeAlso ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_CleanSeeAlso,
+			pos="4147,332",
+			style=filled,
+			width=3.0777];
+		n30		 [URL="fedwiki_AddToJournalArray%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 7918 250 112.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7918 245.8 0 162.31 25 -fedwiki_AddToJournalArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_AddToJournalArray,
+			pos="7918,250",
+			style=filled,
+			width=3.1288];
+		n9		 [URL="fedwiki_ParseWikipediaEditLink%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5987 798 128.74 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5987 793.8 0 187.62 30 -fedwiki_ParseWikipediaEditLink ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ParseWikipediaEditLink,
+			pos="5987,798",
+			style=filled,
+			width=3.5728];
+		n104		 [URL="mediawiki_SetTemplateOffsets%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2310 552 121.14 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2310 547.8 0 176.06 28 -mediawiki_SetTemplateOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=mediawiki_SetTemplateOffsets,
+			pos="2310,552",
+			style=filled,
+			width=3.37];
+		n125		 [URL="fedwiki_StoryInsertItem%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 7455 178 97.09 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7455 173.8 0 137.63 23 -fedwiki_StoryInsertItem ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_StoryInsertItem,
+			pos="7455,178",
+			style=filled,
+			width=2.6958];
+		n79		 [URL="fedwikipedia_CleanReferences%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4699 332 120.7 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4699 327.8 0 174.92 28 -fedwikipedia_CleanReferences ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_CleanReferences,
+			pos="4699,332",
+			style=filled,
+			width=3.35];
+		n106		 [URL="importPage%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5197 942 50.76 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5197 937.8 0 64.54 10 -importPage ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=importPage,
+			pos="5197,942",
+			style=filled,
+			width=1.4133];
+		n123		 [URL="fedwiki_StoryDeleteItem%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 7670 178 99.98 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7670 173.8 0 142.29 23 -fedwiki_StoryDeleteItem ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_StoryDeleteItem,
+			pos="7670,178",
+			style=filled,
+			width=2.7774];
+		n19		 [URL="listImages%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5449 942 46.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5449 937.8 0 57.54 10 -listImages ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=listImages,
+			pos="5449,942",
+			style=filled,
+			width=1.2905];
+		n59		 [URL="fedwiki_ParseFlag%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5222 798 76.34 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5222 793.8 0 104.98 17 -fedwiki_ParseFlag ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ParseFlag,
+			pos="5222,798",
+			style=filled,
+			width=2.1228];
+		n6		 [URL="fedwikipedia_ExtractTocLookupArray%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4495 552 147.48 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4495 547.8 0 217.49 34 -fedwikipedia_ExtractTocLookupArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_ExtractTocLookupArray,
+			pos="4495,552",
+			style=filled,
+			width=4.097];
+		n60		 [URL="fedwiki_ParseWikipediaThumbNail%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6272 798 137.91 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6272 793.8 0 202.39 31 -fedwiki_ParseWikipediaThumbNail ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ParseWikipediaThumbNail,
+			pos="6272,798",
+			style=filled,
+			width=3.832];
+		n58		 [URL="fedwiki_ParseExternalUrl%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5419 798 102.38 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5419 793.8 0 146.17 24 -fedwiki_ParseExternalUrl ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ParseExternalUrl,
+			pos="5419,798",
+			style=filled,
+			width=2.8456];
+		n21		 [URL="importImages%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5325 942 59.45 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5325 937.8 0 77.76 12 -importImages ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=importImages,
+			pos="5325,942",
+			style=filled,
+			width=1.6451];
+		n39		 [URL="xml_ExtractEncoding%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6024 552 87.92 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6024 547.8 0 122.86 19 -xml_ExtractEncoding ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=xml_ExtractEncoding,
+			pos="6024,552",
+			style=filled,
+			width=2.4364];
+		n61		 [URL="fedwiki_ReturnJSON%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 9783 178 86.99 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9783 173.8 0 121.32 18 -fedwiki_ReturnJSON ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ReturnJSON,
+			pos="9783,178",
+			style=filled,
+			width=2.4096];
+		n96		 [URL="importSection%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5703 942 60.43 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5703 937.8 0 79.32 13 -importSection ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=importSection,
+			pos="5703,942",
+			style=filled,
+			width=1.6726];
+		n120		 [URL="wikicommons_AddImageToPageArray%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6289 480 148.97 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6289 475.8 0 219.86 31 -wikicommons_AddImageToPageArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=wikicommons_AddImageToPageArray,
+			pos="6289,480",
+			style=filled,
+			width=4.1385];
+		n66		 [URL="transportAgain%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6577 942 63.31 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6577 937.8 0 83.98 14 -transportAgain ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=transportAgain,
+			pos="6577,942",
+			style=filled,
+			width=1.7543];
+		n37		 [URL="mediawiki_FetchPageQueryInfo%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1495 552 125.56 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1495 547.8 0 182.72 28 -mediawiki_FetchPageQueryInfo ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=mediawiki_FetchPageQueryInfo,
+			pos="1495,552",
+			style=filled,
+			width=3.4869];
+		n90		 [URL="importSummary%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6266 942 68.15 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6266 937.8 0 91.77 13 -importSummary ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=importSummary,
+			pos="6266,942",
+			style=filled,
+			width=1.891];
+		n36		 [URL="mediawiki_FetchPageParseInfo%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2048 552 122.67 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2048 547.8 0 178.06 28 -mediawiki_FetchPageParseInfo ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=mediawiki_FetchPageParseInfo,
+			pos="2048,552",
+			style=filled,
+			width=3.4051];
+		n64		 [URL="file_Deconstruct%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1028 406 68.61 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1028 401.8 0 92.53 16 -file_Deconstruct ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=file_Deconstruct,
+			pos="1028,406",
+			style=filled,
+			width=1.9044];
+		n65		 [URL="index%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5987 942 29.51 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5987 937.8 0 31.1 5 -index ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=index,
+			pos="5987,942",
+			style=filled,
+			width=0.8265];
+		n77		 [URL="fedwiki_AddParagraphToPageArray%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 7747 406 139.78 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7747 401.8 0 205.06 31 -fedwiki_AddParagraphToPageArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_AddParagraphToPageArray,
+			pos="7747,406",
+			style=filled,
+			width=3.8789];
+		n53		 [URL="wikipedia_SetUserAgent%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2448 332 99.02 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2448 327.8 0 140.75 22 -wikipedia_SetUserAgent ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=wikipedia_SetUserAgent,
+			pos="2448,332",
+			style=filled,
+			width=2.7503];
+		n109		 [URL="fedwiki_AddMarkdownToPageArray%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 7447 406 142.7 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7447 401.8 0 209.75 30 -fedwiki_AddMarkdownToPageArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_AddMarkdownToPageArray,
+			pos="7447,406",
+			style=filled,
+			width=3.9611];
+		n108		 [URL="fedwiki_AddWikipediaSectionToPageArray%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5300 480 166.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5300 475.8 0 248.06 38 -fedwiki_AddWikipediaSectionToPageArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_AddWikipediaSectionToPageArray,
+			pos="5300,480",
+			style=filled,
+			width=4.6334];
+		n55		 [URL="fedwiki_ParseDropUrl%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5987 870 90.82 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5987 865.8 0 127.52 20 -fedwiki_ParseDropUrl ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ParseDropUrl,
+			pos="5987,870",
+			style=filled,
+			width=2.5184];
+		n80		 [URL="fedwikipedia_MakeTextParagraphFirst%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6230 406 148.47 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6230 401.8 0 219.06 35 -fedwikipedia_MakeTextParagraphFirst ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_MakeTextParagraphFirst,
+			pos="6230,406",
+			style=filled,
+			width=4.1246];
+		n81		 [URL="fedwiki_MoveStoryItem%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 7562 250 97.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7562 245.8 0 138.42 21 -fedwiki_MoveStoryItem ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_MoveStoryItem,
+			pos="7562,250",
+			style=filled,
+			width=2.7096];
+		n110		 [URL="fedwikipedia_CleanInternalLinks%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4120 406 128.92 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4120 401.8 0 188.16 31 -fedwikipedia_CleanInternalLinks ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_CleanInternalLinks,
+			pos="4120,406",
+			style=filled,
+			width=3.5823];
+		n57		 [URL="fedwiki_ParseDroppedWikipediaImage%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5690 798 150.44 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5690 793.8 0 221.81 34 -fedwiki_ParseDroppedWikipediaImage ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ParseDroppedWikipediaImage,
+			pos="5690,798",
+			style=filled,
+			width=4.1728];
+		n127		 [URL="fedwikipedia_ConstructSectionTocArray%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5763 552 155.23 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5763 547.8 0 229.95 37 -fedwikipedia_ConstructSectionTocArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_ConstructSectionTocArray,
+			pos="5763,552",
+			style=filled,
+			width=4.3156];
+		n111		 [URL="fedwikipedia_CleanLine%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4373 406 97.55 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4373 401.8 0 138.39 22 -fedwikipedia_CleanLine ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_CleanLine,
+			pos="4373,406",
+			style=filled,
+			width=2.7091];
+		n83		 [URL="fedwiki_AddFactoryToPageArray%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 9454 34 130.61 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9454 29.8 0 191.08 29 -fedwiki_AddFactoryToPageArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_AddFactoryToPageArray,
+			pos="9454,34",
+			style=filled,
+			width=3.6335];
+		n112		 [URL="mediawiki_ConvertSectionTitle%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3308 552 123.03 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3308 547.8 0 179.14 29 -mediawiki_ConvertSectionTitle ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=mediawiki_ConvertSectionTitle,
+			pos="3308,552",
+			style=filled,
+			width=3.4241];
+		n113		 [URL="mediawiki_DeconstructImageWikiText%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3017 552 149.71 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3017 547.8 0 220.83 34 -mediawiki_DeconstructImageWikiText ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=mediawiki_DeconstructImageWikiText,
+			pos="3017,552",
+			style=filled,
+			width=4.1556];
+		n95		 [URL="url_Deconstruct%2Cc%2Cstack+%22lib_HTTP%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3432 716 67.16 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3432 711.8 0 90.19 15 -url_Deconstruct ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=url_Deconstruct,
+			pos="3432,716",
+			style=filled,
+			width=1.8633];
+		n63		 [URL="url_Deconstruct%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 918 480 67.16 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 918 475.8 0 90.19 15 -url_Deconstruct ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=url_Deconstruct,
+			pos="918,480",
+			style=filled,
+			width=1.8633];
+		n94		 [URL="html_FetchScraped%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5430 716 78.75 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5430 711.8 0 108.86 17 -html_FetchScraped ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=html_FetchScraped,
+			pos="5430,716",
+			style=filled,
+			width=2.1909];
+		n73		 [URL="sandbox_DeconstructSectionArray%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4245 716 133.76 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4245 711.8 0 195.95 31 -sandbox_DeconstructSectionArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=sandbox_DeconstructSectionArray,
+			pos="4245,716",
+			style=filled,
+			width=3.7189];
+		n45		 [URL="fedwiki_SetID%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 8172 178 62.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8172 173.8 0 82.43 13 -fedwiki_SetID ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_SetID,
+			pos="8172,178",
+			style=filled,
+			width=1.7271];
+		n15		 [URL="fedwiki_ParseFedwikiLink%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6534 798 106.28 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6534 793.8 0 152.42 24 -fedwiki_ParseFedwikiLink ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ParseFedwikiLink,
+			pos="6534,798",
+			style=filled,
+			width=2.9552];
+		n88		 [URL="fedwiki_ReturnError%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 9622 332 84.04 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9622 327.8 0 117.41 19 -fedwiki_ReturnError ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ReturnError,
+			pos="9622,332",
+			style=filled,
+			width=2.3408];
+		n46		 [URL="mediawiki_CleanPageDescription%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1542 480 130.87 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1542 475.8 0 191.28 30 -mediawiki_CleanPageDescription ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=mediawiki_CleanPageDescription,
+			pos="1542,480",
+			style=filled,
+			width=3.6371];
+		n72		 [URL="mediawiki_FetchSectionQueryInfo%2Cc%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1773 552 134.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1773 547.8 0 197.5 31 -mediawiki_FetchSectionQueryInfo ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=mediawiki_FetchSectionQueryInfo,
+			pos="1773,552",
+			style=filled,
+			width=3.7463];
+		n136		 [URL="importImage%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5569 942 55.57 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5569 937.8 0 72.31 11 -importImage ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=importImage,
+			pos="5569,942",
+			style=filled,
+			width=1.5495];
+		n71		 [URL="fedwiki_ExitAndReturnError%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 9622 250 114.48 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9622 245.8 0 164.85 26 -fedwiki_ExitAndReturnError ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_ExitAndReturnError,
+			pos="9622,250",
+			style=filled,
+			width=3.1733];
+		n48		 [URL="wikicommons_FetchAndAddTwoImages%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4959 480 155.75 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4959 475.8 0 230.77 32 -wikicommons_FetchAndAddTwoImages ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=wikicommons_FetchAndAddTwoImages,
+			pos="4959,480",
+			style=filled,
+			width=4.3299];
+		n34		 [URL="fedwiki_CleanJournalArray%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 9101 406 108.65 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9101 401.8 0 156.28 25 -fedwiki_CleanJournalArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_CleanJournalArray,
+			pos="9101,406",
+			style=filled,
+			width=3.023];
+		n134		 [URL="fedwikipedia_CleanCitations%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3905 332 113.02 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3905 327.8 0 163.3 27 -fedwikipedia_CleanCitations ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_CleanCitations,
+			pos="3905,332",
+			style=filled,
+			width=3.146];
+		n49		 [URL="fedwiki_AddHtmlToPageArray%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 8027 406 121.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8027 401.8 0 177.09 26 -fedwiki_AddHtmlToPageArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_AddHtmlToPageArray,
+			pos="8027,406",
+			style=filled,
+			width=3.3881];
+		n51		 [URL="sandbox_ArrayDeconstructImage%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5171 406 129.4 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5171 401.8 0 188.93 29 -sandbox_ArrayDeconstructImage ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=sandbox_ArrayDeconstructImage,
+			pos="5171,406",
+			style=filled,
+			width=3.5958];
+		n135		 [URL="fedwikipedia_CleanConvertTemplate%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4418 332 142.67 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4418 327.8 0 209.73 33 -fedwikipedia_CleanConvertTemplate ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikipedia_CleanConvertTemplate,
+			pos="4418,332",
+			style=filled,
+			width=3.9607];
+		n28		 [URL="fedwiki_PageArrayAddToEnd%2Cc%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 8027 332 118.08 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8027 327.8 0 170.86 25 -fedwiki_PageArrayAddToEnd ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwiki_PageArrayAddToEnd,
+			pos="8027,332",
+			style=filled,
+			width=3.2788];
+		n85		 [URL="sandbox_DeconstructPageArray%2Cc%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3969 716 124.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3969 711.8 0 181.17 28 -sandbox_DeconstructPageArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=sandbox_DeconstructPageArray,
+			pos="3969,716",
+			style=filled,
+			width=3.4596];
+		n13		 [URL="fedwikiLink%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6560 870 53.65 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6560 865.8 0 69.21 11 -fedwikiLink ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=fedwikiLink,
+			pos="6560,870",
+			style=filled,
+			width=1.4951];
+	}
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n69		 [URL="wikicommons_FetchBasicTwoImagePageArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6611 716 179.37 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6611 711.8 0 268.06 39 -wikicommons_FetchBasicTwoImagePageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_FetchBasicTwoImagePageArray,
+			pos="6611,716",
+			style=filled,
+			width=4.9844];
+		n86		 [URL="fedwikipedia_FetchSectionSummaryPageArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5154 634 179.14 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5154 629.8 0 267.48 41 -fedwikipedia_FetchSectionSummaryPageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwikipedia_FetchSectionSummaryPageArray,
+			pos="5154,634",
+			style=filled,
+			width=4.9742];
+		n116		 [URL="wikimedia_GetApiRoot%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2754 552 95.18 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2754 547.8 0 134.54 20 -wikimedia_GetApiRoot ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikimedia_GetApiRoot,
+			pos="2754,552",
+			style=filled,
+			width=2.6414];
+		n98		 [URL="html_FetchTidy%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9295 406 66.57 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9295 401.8 0 89.73 14 -html_FetchTidy ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=html_FetchTidy,
+			pos="9295,406",
+			style=filled,
+			width=1.8552];
+		n126		 [URL="fedwiki_ConstructSectionWikipediaPageArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6062 634 176.51 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6062 629.8 0 263.82 42 -fedwiki_ConstructSectionWikipediaPageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructSectionWikipediaPageArray,
+			pos="6062,634",
+			style=filled,
+			width=4.9099];
+		n107		 [URL="fedwiki_FetchCoolWikipediaPageJson%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 328 250 147.58 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 328 245.8 0 217.96 34 -fedwiki_FetchCoolWikipediaPageJson ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchCoolWikipediaPageJson,
+			pos="328,250",
+			style=filled,
+			width=4.1053];
+		n124		 [URL="fedwiki_StoryExtractorderedIDArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 7197 178 143.4 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7197 173.8 0 210.7 34 -fedwiki_StoryExtractorderedIDArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_StoryExtractorderedIDArray,
+			pos="7197,178",
+			style=filled,
+			width=3.9778];
+		n78		 [URL="fedwiki_ConstructStoryParagraphArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 7739 332 151.64 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7739 327.8 0 223.95 36 -fedwiki_ConstructStoryParagraphArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructStoryParagraphArray,
+			pos="7739,332",
+			style=filled,
+			width=4.2102];
+		n4		 [URL="json_ToArray%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 603 480 59.2 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 603 475.8 0 77.56 12 -json_ToArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=json_ToArray,
+			pos="603,480",
+			style=filled,
+			width=1.6417];
+		n40		 [URL="mediawiki_ExtractFirstInterestingImage%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1844 480 153.55 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1844 475.8 0 227.04 38 -mediawiki_ExtractFirstInterestingImage ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_ExtractFirstInterestingImage,
+			pos="1844,480",
+			style=filled,
+			width=4.2646];
+		n101		 [URL="mediawikia_ExtractTemplate%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1334 332 114.18 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1334 327.8 0 164.62 26 -mediawikia_ExtractTemplate ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawikia_ExtractTemplate,
+			pos="1334,332",
+			style=filled,
+			width=3.1692];
+		n5		 [URL="mediawiki_GetSandboxJSON%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 409 480 116.92 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 409 475.8 0 168.77 24 -mediawiki_GetSandboxJSON ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_GetSandboxJSON,
+			pos="409,480",
+			style=filled,
+			width=3.242];
+		n41		 [URL="mediawiki_ListBuiltInImages%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2579 406 116.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2579 401.8 0 167.97 27 -mediawiki_ListBuiltInImages ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_ListBuiltInImages,
+			pos="2579,406",
+			style=filled,
+			width=3.2281];
+		n122		 [URL="fedwiki_ConstructStoryMarkdownArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 7415 332 154.55 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7415 327.8 0 228.63 35 -fedwiki_ConstructStoryMarkdownArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructStoryMarkdownArray,
+			pos="7415,332",
+			style=filled,
+			width=4.2924];
+		n138		 [URL="mediwiki_ExtractImageFileFromUrl%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 918 552 140.04 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 918 547.8 0 206.06 32 -mediwiki_ExtractImageFileFromUrl ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediwiki_ExtractImageFileFromUrl,
+			pos="918,552",
+			style=filled,
+			width=3.8964];
+		n42		 [URL="wikicommons_ConstructImageHtml%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6250 332 139.11 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6250 327.8 0 204.53 30 -wikicommons_ConstructImageHtml ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_ConstructImageHtml,
+			pos="6250,332",
+			style=filled,
+			width=3.8696];
+		n121		 [URL="wikicommons_ConstructTwoImagePageArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4835 552 174.56 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4835 547.8 0 260.3 38 -wikicommons_ConstructTwoImagePageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_ConstructTwoImagePageArray,
+			pos="4835,552",
+			style=filled,
+			width=4.8481];
+		n139		 [URL="text_InitialCaps%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2545 480 66.69 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2545 475.8 0 89.43 16 -text_InitialCaps ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_InitialCaps,
+			pos="2545,480",
+			style=filled,
+			width=1.8499];
+		n43		 [URL="fedwiki_ConstructImageHtml%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 7170 406 116.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 7170 401.8 0 167.97 26 -fedwiki_ConstructImageHtml ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructImageHtml,
+			pos="7170,406",
+			style=filled,
+			width=3.228];
+		n118		 [URL="fedwiki_ConstructCreateArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 8569 332 119.76 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8569 327.8 0 173.39 28 -fedwiki_ConstructCreateArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructCreateArray,
+			pos="8569,332",
+			style=filled,
+			width=3.3231];
+		n44		 [URL="fedwiki_ConstructStoryItemArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 8445 250 131.85 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8445 245.8 0 192.85 31 -fedwiki_ConstructStoryItemArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructStoryItemArray,
+			pos="8445,250",
+			style=filled,
+			width=3.6646];
+		n91		 [URL="mediwiki_ExtractPageSlugFromUrl%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1214 552 137.66 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1214 547.8 0 202.19 31 -mediwiki_ExtractPageSlugFromUrl ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediwiki_ExtractPageSlugFromUrl,
+			pos="1214,552",
+			style=filled,
+			width=3.8285];
+		n119		 [URL="fedwiki_FetchSitemapArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6919 716 110.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6919 711.8 0 159.4 25 -fedwiki_FetchSitemapArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchSitemapArray,
+			pos="6919,716",
+			style=filled,
+			width=3.0777];
+		n67		 [URL="fedwikipedia_FetchSectionSummaryPageJson%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5159 716 174.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5159 711.8 0 259.73 40 -fedwikipedia_FetchSectionSummaryPageJson ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwikipedia_FetchSectionSummaryPageJson,
+			pos="5159,716",
+			style=filled,
+			width=4.8381];
+		n93		 [URL="mediawiki_GetRestJSON%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 409 406 101.46 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 409 401.8 0 144.66 21 -mediawiki_GetRestJSON ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_GetRestJSON,
+			pos="409,406",
+			style=filled,
+			width=2.8189];
+		n35		 [URL="fedwikipedia_ConstructTocArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4199 552 128.67 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4199 547.8 0 187.96 30 -fedwikipedia_ConstructTocArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwikipedia_ConstructTocArray,
+			pos="4199,552",
+			style=filled,
+			width=3.5788];
+		n92		 [URL="mediawiki_ConstructSandboxURL%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 663 406 134.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 663 401.8 0 197.54 29 -mediawiki_ConstructSandboxURL ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_ConstructSandboxURL,
+			pos="663,406",
+			style=filled,
+			width=3.7469];
+		n76		 [URL="mediawikia_ExtractInfobox%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1334 406 109.13 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1334 401.8 0 157.06 25 -mediawikia_ExtractInfobox ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawikia_ExtractInfobox,
+			pos="1334,406",
+			style=filled,
+			width=3.0365];
+		n50		 [URL="fedwiki_ConstructImageArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 8286 406 118.8 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8286 401.8 0 171.83 27 -fedwiki_ConstructImageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructImageArray,
+			pos="8286,406",
+			style=filled,
+			width=3.2959];
+		n75		 [URL="mediawiki_ConvertInfoBox%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1571 406 109.65 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1571 401.8 0 157.86 24 -mediawiki_ConvertInfoBox ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_ConvertInfoBox,
+			pos="1571,406",
+			style=filled,
+			width=3.0507];
+		n74		 [URL="sandbox_FetchSectionArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4508 716 110.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4508 711.8 0 159.41 25 -sandbox_FetchSectionArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=sandbox_FetchSectionArray,
+			pos="4508,716",
+			style=filled,
+			width=3.0778];
+		n12		 [URL="html_ReplaceEntities%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5089 332 86.48 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5089 327.8 0 120.52 20 -html_ReplaceEntities ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=html_ReplaceEntities,
+			pos="5089,332",
+			style=filled,
+			width=2.3955];
+		n52		 [URL="wikicommons_FetchImageSandboxArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3797 406 157.92 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3797 401.8 0 234.06 34 -wikicommons_FetchImageSandboxArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_FetchImageSandboxArray,
+			pos="3797,406",
+			style=filled,
+			width=4.3877];
+		n87		 [URL="xml_ArrayFromID%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5483 634 77.31 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5483 629.8 0 106.54 15 -xml_ArrayFromID ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=xml_ArrayFromID,
+			pos="5483,634",
+			style=filled,
+			width=2.1501];
+		n130		 [URL="fedwiki_ConstructStoryHtmlArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 8297 332 133.8 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8297 327.8 0 195.97 31 -fedwiki_ConstructStoryHtmlArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructStoryHtmlArray,
+			pos="8297,332",
+			style=filled,
+			width=3.7194];
+		n129		 [URL="wikipedia_ConstructUrl%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2545 552 95.66 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2545 547.8 0 135.31 22 -wikipedia_ConstructUrl ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikipedia_ConstructUrl,
+			pos="2545,552",
+			style=filled,
+			width=2.655];
+		n117		 [URL="fedwiki_ConstructJournalArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 8545 406 122.68 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8545 401.8 0 178.07 29 -fedwiki_ConstructJournalArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructJournalArray,
+			pos="8545,406",
+			style=filled,
+			width=3.4052];
+		n131		 [URL="html_EntityCharNums%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5176 250 90.86 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5176 245.8 0 127.55 19 -html_EntityCharNums ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=html_EntityCharNums,
+			pos="5176,250",
+			style=filled,
+			width=2.5188];
+		n54		 [URL="md5_Hash%2Cf%2Cstack+%22lib_LocalFedWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9942 332 48.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9942 327.8 0 60.66 8 -md5_Hash ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=md5_Hash,
+			pos="9942,332",
+			style=filled,
+			width=1.3452];
+		n128		 [URL="fedwikipedia_SplitSectionDescription%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5444 552 145.38 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5444 547.8 0 213.85 36 -fedwikipedia_SplitSectionDescription ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwikipedia_SplitSectionDescription,
+			pos="5444,552",
+			style=filled,
+			width=4.0331];
+		n26		 [URL="fedwikipedia_ExtractShortImageFile%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6272 716 141.49 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6272 711.8 0 207.6 34 -fedwikipedia_ExtractShortImageFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwikipedia_ExtractShortImageFile,
+			pos="6272,716",
+			style=filled,
+			width=3.9234];
+		n82		 [URL="fedwiki_ConstructNewPageArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9454 106 130.39 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9454 101.8 0 190.5 29 -fedwiki_ConstructNewPageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructNewPageArray,
+			pos="9454,106",
+			style=filled,
+			width=3.6234];
+		n27		 [URL="xml_ToArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6315 634 58.23 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6315 629.8 0 76 11 -xml_ToArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=xml_ToArray,
+			pos="6315,634",
+			style=filled,
+			width=1.6143];
+		n56		 [URL="fedwiki_ConstructErrorJSON%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9563 178 115.95 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9563 173.8 0 167.2 26 -fedwiki_ConstructErrorJSON ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructErrorJSON,
+			pos="9563,178",
+			style=filled,
+			width=3.2145];
+		n24		 [URL="wikicommons_FetchImagePageArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5723 634 144.39 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5723 629.8 0 212.28 31 -wikicommons_FetchImagePageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_FetchImagePageArray,
+			pos="5723,634",
+			style=filled,
+			width=4.0055];
+		n25		 [URL="wikicommons_ConstructImagePageArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6289 552 158.88 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6289 547.8 0 235.61 35 -wikicommons_ConstructImagePageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_ConstructImagePageArray,
+			pos="6289,552",
+			style=filled,
+			width=4.415];
+		n22		 [URL="fedwiki_FetchWikipediaImagesPageJson%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 650 250 156.26 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 650 245.8 0 231.16 36 -fedwiki_FetchWikipediaImagesPageJson ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchWikipediaImagesPageJson,
+			pos="650,250",
+			style=filled,
+			width=4.3369];
+		n62		 [URL="json_ToArray%2Cf%2Cstack+%22libOPN_JSON%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 10036 634 59.2 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 10036 629.8 0 77.56 12 -json_ToArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=json_ToArray,
+			pos="10036,634",
+			style=filled,
+			width=1.6417];
+		n100		 [URL="fedwiki_ConstructCreateSourceArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 8830 406 144.38 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8830 401.8 0 212.26 34 -fedwiki_ConstructCreateSourceArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructCreateSourceArray,
+			pos="8830,406",
+			style=filled,
+			width=4.0052];
+		n23		 [URL="fedwiki_GetWikipediaPageSlug%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1272 250 124.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1272 245.8 0 180.63 28 -fedwiki_GetWikipediaPageSlug ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_GetWikipediaPageSlug,
+			pos="1272,250",
+			style=filled,
+			width=3.4501];
+		n140		 [URL="mediawiki_ExtractShortImageFile%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1135 480 132.32 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1135 475.8 0 193.61 31 -mediawiki_ExtractShortImageFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_ExtractShortImageFile,
+			pos="1135,480",
+			style=filled,
+			width=3.678];
+		n103		 [URL="fedwiki_JsonSiteMapUrl%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6851 552 99.05 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6851 547.8 0 140.77 22 -fedwiki_JsonSiteMapUrl ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_JsonSiteMapUrl,
+			pos="6851,552",
+			style=filled,
+			width=2.7507];
+		n20		 [URL="mediawiki_ListPageImages%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 651 552 108.19 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 651 547.8 0 155.52 24 -mediawiki_ListPageImages ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_ListPageImages,
+			pos="651,552",
+			style=filled,
+			width=3.0095];
+		n97		 [URL="wikicommons_FetchImagePageJson%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5666 716 139.1 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5666 711.8 0 204.52 30 -wikicommons_FetchImagePageJson ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_FetchImagePageJson,
+			pos="5666,716",
+			style=filled,
+			width=3.8694];
+		n102		 [URL="fedwiki_FetchSitemap%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6875 634 90.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6875 629.8 0 126.75 20 -fedwiki_FetchSitemap ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchSitemap,
+			pos="6875,634",
+			style=filled,
+			width=2.5048];
+		n1		 [URL="fedwiki_FetchWikipediaSummaryPageJson%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4802 716 164.96 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4802 711.8 0 245.18 37 -fedwiki_FetchWikipediaSummaryPageJson ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchWikipediaSummaryPageJson,
+			pos="4802,716",
+			style=filled,
+			width=4.5828];
+		n14		 [URL="fedwiki_GetDroppedUrl%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9773 406 97.09 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9773 401.8 0 137.63 21 -fedwiki_GetDroppedUrl ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_GetDroppedUrl,
+			pos="9773,406",
+			style=filled,
+			width=2.6956];
+		n2		 [URL="fedwiki_FetchWikipediaSummaryPageArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4199 634 169.75 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4199 629.8 0 252.93 38 -fedwiki_FetchWikipediaSummaryPageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchWikipediaSummaryPageArray,
+			pos="4199,634",
+			style=filled,
+			width=4.7188];
+		n89		 [URL="json_ToArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9783 332 59.2 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9783 327.8 0 77.56 12 -json_ToArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=json_ToArray,
+			pos="9783,332",
+			style=filled,
+			width=1.6417];
+		n3		 [URL="mediawiki_GetSandboxArray%2Cf%2Cstack+%22lib_MediaWiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 408 552 116.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 408 547.8 0 167.96 25 -mediawiki_GetSandboxArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=mediawiki_GetSandboxArray,
+			pos="408,552",
+			style=filled,
+			width=3.2278];
+		n47		 [URL="sandbox_ConstructSectionFragment%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3859 634 138.62 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3859 629.8 0 203.75 32 -sandbox_ConstructSectionFragment ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=sandbox_ConstructSectionFragment,
+			pos="3859,634",
+			style=filled,
+			width=3.8559];
+		n137		 [URL="fedwiki_FetchWikipediaImagePageJson%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 977 250 152.87 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 977 245.8 0 225.72 35 -fedwiki_FetchWikipediaImagePageJson ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchWikipediaImagePageJson,
+			pos="977,250",
+			style=filled,
+			width=4.2413];
+		n70		 [URL="fedwiki_ConstructSimplePageArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9519 406 138.61 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9519 401.8 0 203.74 32 -fedwiki_ConstructSimplePageArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructSimplePageArray,
+			pos="9519,406",
+			style=filled,
+			width=3.8557];
+		n16		 [URL="json_FromArray%2Cf%2Cstack+%22libOPN_JSON%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9872 634 69.12 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9872 629.8 0 93.32 14 -json_FromArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=json_FromArray,
+			pos="9872,634",
+			style=filled,
+			width=1.9183];
+		n33		 [URL="char%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1441 250 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1441 245.8 0 24.09 4 -char ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=char,
+			pos="1441,250",
+			style=filled,
+			width=0.75];
+		n11		 [URL="html_StripTags%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4959 406 64.53 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4959 401.8 0 86.13 14 -html_StripTags ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=html_StripTags,
+			pos="4959,406",
+			style=filled,
+			width=1.7921];
+		n84		 [URL="sandbox_ConstructPageQueryFragment%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3675 716 151.65 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3675 711.8 0 223.96 34 -sandbox_ConstructPageQueryFragment ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=sandbox_ConstructPageQueryFragment,
+			pos="3675,716",
+			style=filled,
+			width=4.2105];
+		n10		 [URL="fedwiki_FetchWikipediaSectionArray%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5968 716 144.65 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5968 711.8 0 213.27 34 -fedwiki_FetchWikipediaSectionArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_FetchWikipediaSectionArray,
+			pos="5968,716",
+			style=filled,
+			width=4.0229];
+		n68		 [URL="json_FromArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 9672 106 69.12 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9672 101.8 0 93.32 14 -json_FromArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=json_FromArray,
+			pos="9672,106",
+			style=filled,
+			width=1.9183];
+		n132		 [URL="html_EntityList%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5001 250 66.23 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5001 245.8 0 88.67 15 -html_EntityList ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=html_EntityList,
+			pos="5001,250",
+			style=filled,
+			width=1.8366];
+		n114		 [URL="wikicommons_FetchImageHtml%2Cf%2Cstack+%22lib_FedWikiPedia%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5774 406 124.62 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5774 401.8 0 181.19 26 -wikicommons_FetchImageHtml ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=wikicommons_FetchImageHtml,
+			pos="5774,406",
+			style=filled,
+			width=3.4601];
+		n31		 [URL="fedwiki_ConstructFactoryArray%2Cf%2Cstack+%22lib_Fedwiki%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 8172 250 123.64 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8172 245.8 0 179.62 29 -fedwiki_ConstructFactoryArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fedwiki_ConstructFactoryArray,
+			pos="8172,250",
+			style=filled,
+			width=3.4325];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#ff0000 C 7 -#ffa500 P 4 172 224 172 298 1476 298 1476 224 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 824 282.8 0 45.12 7 -Missing ",
+			bb="172,224,1476,298",
+			color=red,
+			fillcolor=orange,
+			label=Missing,
+			lheight=0.19,
+			lp="824,287",
+			lwidth=0.63,
+			style=filled
+		];
+		n107;
+		n22;
+		n23;
+		n137;
+		n33;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 5138 772 5138 990 6648 990 6648 772 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5893 974.8 0 224.86 38 -stack \"behavior_ServerScriptContainer\" ",
+			bb="5138,772,6648,990",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"behavior_ServerScriptContainer\"",
+			lheight=0.19,
+			lp="5893,979",
+			lwidth=3.12,
+			style=filled
+		];
+		n9;
+		n106;
+		n19;
+		n59;
+		n60;
+		n58;
+		n21;
+		n96;
+		n66;
+		n90;
+		n65;
+		n55;
+		n65 -> n55		 [_draw_="c 7 -#000000 B 4 5987 923.7 5987 915.98 5987 906.71 5987 898.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5990.5 898.1 5987 888.1 5983.5 898.1 ",
+			pos="e,5987,888.1 5987,923.7 5987,915.98 5987,906.71 5987,898.11"];
+		n55 -> n9		 [_draw_="c 7 -#000000 B 4 5987 851.7 5987 843.98 5987 834.71 5987 826.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5990.5 826.1 5987 816.1 5983.5 826.1 ",
+			pos="e,5987,816.1 5987,851.7 5987,843.98 5987,834.71 5987,826.11"];
+		n55 -> n59		 [_draw_="c 7 -#000000 B 7 5899.02 865.43 5769.23 859.42 5519 844.99 5308 816 5300.95 815.03 5293.61 813.85 5286.32 812.57 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5286.9 809.11 5276.43 810.76 5285.64 816 ",
+			pos="e,5276.4,810.76 5899,865.43 5769.2,859.42 5519,844.99 5308,816 5301,815.03 5293.6,813.85 5286.3,812.57"];
+		n55 -> n60		 [_draw_="c 7 -#000000 B 4 6041.61 855.59 6086.75 844.5 6151.19 828.67 6200.44 816.58 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6201.52 819.91 6210.4 814.13 6199.85 813.12 ",
+			pos="e,6210.4,814.13 6041.6,855.59 6086.8,844.5 6151.2,828.67 6200.4,816.58"];
+		n55 -> n58		 [_draw_="c 7 -#000000 B 7 5909.03 860.78 5818.16 851 5663.51 833.75 5531 816 5521.81 814.77 5512.21 813.42 5502.66 812.03 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5503.15 808.56 5492.75 810.57 5502.13 815.49 ",
+			pos="e,5492.7,810.57 5909,860.78 5818.2,851 5663.5,833.75 5531,816 5521.8,814.77 5512.2,813.42 5502.7,812.03"];
+		n57;
+		n55 -> n57		 [_draw_="c 7 -#000000 B 4 5930.79 855.75 5883.71 844.65 5816.12 828.73 5764.53 816.57 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5765.3 813.15 5754.77 814.26 5763.7 819.97 ",
+			pos="e,5754.8,814.26 5930.8,855.75 5883.7,844.65 5816.1,828.73 5764.5,816.57"];
+		n15;
+		n55 -> n15		 [_draw_="c 7 -#000000 B 7 6063.16 860.23 6149.52 850.16 6294.51 832.84 6419 816 6428.28 814.75 6437.97 813.39 6447.62 812 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6448.24 815.45 6457.64 810.56 6447.24 808.52 ",
+			pos="e,6457.6,810.56 6063.2,860.23 6149.5,850.16 6294.5,832.84 6419,816 6428.3,814.75 6438,813.39 6447.6,812"];
+		n136;
+		n13;
+		n13 -> n15		 [_draw_="c 7 -#000000 B 4 6553.71 852.05 6550.78 844.18 6547.23 834.62 6543.95 825.79 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6547.18 824.43 6540.42 816.28 6540.62 826.87 ",
+			pos="e,6540.4,816.28 6553.7,852.05 6550.8,844.18 6547.2,834.62 6544,825.79"];
+	}
+	subgraph cluster3 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 7046 8 7046 454 9878 454 9878 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 8462 438.8 0 111.36 19 -stack \"lib_Fedwiki\" ",
+			bb="7046,8,9878,454",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Fedwiki\"",
+			lheight=0.19,
+			lp="8462,443",
+			lwidth=1.55,
+			style=filled
+		];
+		n29;
+		n30;
+		n30 -> n29		 [_draw_="c 7 -#000000 B 4 7918 231.7 7918 223.98 7918 214.71 7918 206.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7921.5 206.1 7918 196.1 7914.5 206.1 ",
+			pos="e,7918,196.1 7918,231.7 7918,223.98 7918,214.71 7918,206.11"];
+		n125;
+		n123;
+		n61;
+		n77;
+		n78;
+		n77 -> n78		 [_draw_="c 7 -#000000 B 4 7745.1 387.94 7744.19 379.72 7743.07 369.66 7742.05 360.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7745.52 359.99 7740.94 350.44 7738.56 360.77 ",
+			pos="e,7740.9,350.44 7745.1,387.94 7744.2,379.72 7743.1,369.66 7742,360.41"];
+		n109;
+		n122;
+		n109 -> n122		 [_draw_="c 7 -#000000 B 4 7439.42 387.94 7435.69 379.54 7431.1 369.23 7426.92 359.81 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7430.01 358.16 7422.75 350.44 7423.61 361 ",
+			pos="e,7422.8,350.44 7439.4,387.94 7435.7,379.54 7431.1,369.23 7426.9,359.81"];
+		n81;
+		n81 -> n29		 [_draw_="c 7 -#000000 B 4 7626.06 236.4 7684.96 224.82 7772.59 207.59 7836.47 195.03 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7837.37 198.42 7846.51 193.06 7836.02 191.55 ",
+			pos="e,7846.5,193.06 7626.1,236.4 7685,224.82 7772.6,207.59 7836.5,195.03"];
+		n81 -> n125		 [_draw_="c 7 -#000000 B 4 7536.91 232.59 7522.66 223.26 7504.62 211.46 7489.1 201.31 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7490.58 198.1 7480.3 195.55 7486.75 203.96 ",
+			pos="e,7480.3,195.55 7536.9,232.59 7522.7,223.26 7504.6,211.46 7489.1,201.31"];
+		n81 -> n123		 [_draw_="c 7 -#000000 B 4 7587.32 232.59 7601.84 223.18 7620.26 211.24 7636.02 201.02 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7637.98 203.93 7644.46 195.55 7634.17 198.05 ",
+			pos="e,7644.5,195.55 7587.3,232.59 7601.8,223.18 7620.3,211.24 7636,201.02"];
+		n45;
+		n81 -> n45		 [_draw_="c 7 -#000000 B 7 7644.1 240.23 7783.48 225.34 8051.93 196.65 8057 196 8073.66 193.88 8091.65 191.34 8108.33 188.88 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8109.15 192.29 8118.53 187.36 8108.12 185.37 ",
+			pos="e,8118.5,187.36 7644.1,240.23 7783.5,225.34 8051.9,196.65 8057,196 8073.7,193.88 8091.6,191.34 8108.3,188.88"];
+		n124;
+		n81 -> n124		 [_draw_="c 7 -#000000 B 4 7496.75 236.49 7436.77 224.98 7347.5 207.86 7281.98 195.3 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7282.56 191.85 7272.08 193.4 7281.24 198.72 ",
+			pos="e,7272.1,193.4 7496.7,236.49 7436.8,224.98 7347.5,207.86 7282,195.3"];
+		n83;
+		n88;
+		n71;
+		n88 -> n71		 [_draw_="c 7 -#000000 B 4 9622 313.64 9622 303.3 9622 289.94 9622 278.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9625.5 278.05 9622 268.05 9618.5 278.05 ",
+			pos="e,9622,268.05 9622,313.64 9622,303.3 9622,289.94 9622,278.22"];
+		n71 -> n61		 [_draw_="c 7 -#000000 B 4 9658.94 232.94 9682.48 222.7 9713.14 209.37 9738.09 198.53 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9739.57 201.7 9747.34 194.5 9736.78 195.28 ",
+			pos="e,9747.3,194.5 9658.9,232.94 9682.5,222.7 9713.1,209.37 9738.1,198.53"];
+		n56;
+		n71 -> n56		 [_draw_="c 7 -#000000 B 4 9607.72 232.05 9600.65 223.67 9591.97 213.38 9584.15 204.1 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9586.68 201.67 9577.56 196.28 9581.33 206.18 ",
+			pos="e,9577.6,196.28 9607.7,232.05 9600.6,223.67 9592,213.38 9584.2,204.1"];
+		n34;
+		n49;
+		n28;
+		n49 -> n28		 [_draw_="c 7 -#000000 B 4 8027 387.94 8027 379.81 8027 369.88 8027 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8030.5 360.44 8027 350.44 8023.5 360.44 ",
+			pos="e,8027,350.44 8027,387.94 8027,379.81 8027,369.88 8027,360.7"];
+		n130;
+		n49 -> n130		 [_draw_="c 7 -#000000 B 7 8102.23 391.78 8119.34 388.34 8137.37 384.35 8154 380 8183.95 372.16 8216.8 361.52 8243.45 352.34 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8244.68 355.62 8252.97 349.03 8242.38 349 ",
+			pos="e,8253,349.03 8102.2,391.78 8119.3,388.34 8137.4,384.35 8154,380 8183.9,372.16 8216.8,361.52 8243.5,352.34"];
+		n28 -> n29		 [_draw_="c 7 -#000000 B 13 7962.96 316.87 7942.89 312.85 7920.6 308.81 7900 306 7888.52 304.43 7803.87 306.5 7796 298 7773.65 273.87 7777.19 \
+250.98 7796 224 7804.44 211.89 7816.54 203.03 7829.86 196.55 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7831.5 199.65 7839.26 192.43 7828.69 193.24 ",
+			pos="e,7839.3,192.43 7963,316.87 7942.9,312.85 7920.6,308.81 7900,306 7888.5,304.43 7803.9,306.5 7796,298 7773.7,273.87 7777.2,250.98 \
+7796,224 7804.4,211.89 7816.5,203.03 7829.9,196.55"];
+		n28 -> n30		 [_draw_="c 7 -#000000 B 4 8004.15 314.23 7988.16 302.5 7966.62 286.68 7949.07 273.8 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7950.95 270.84 7940.82 267.75 7946.81 276.49 ",
+			pos="e,7940.8,267.75 8004.2,314.23 7988.2,302.5 7966.6,286.68 7949.1,273.8"];
+		n31;
+		n28 -> n31		 [_draw_="c 7 -#000000 B 4 8057.04 314.42 8079.11 302.25 8109.28 285.6 8133.17 272.42 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8134.93 275.45 8141.99 267.55 8131.55 269.32 ",
+			pos="e,8142,267.55 8057,314.42 8079.1,302.25 8109.3,285.6 8133.2,272.42"];
+		n98;
+		n43;
+		n118;
+		n44;
+		n44 -> n45		 [_draw_="c 7 -#000000 B 4 8385.76 233.81 8338.57 221.71 8273.01 204.9 8226.98 193.1 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8227.73 189.68 8217.17 190.58 8225.99 196.46 ",
+			pos="e,8217.2,190.58 8385.8,233.81 8338.6,221.71 8273,204.9 8227,193.1"];
+		n50;
+		n130 -> n44		 [_draw_="c 7 -#000000 B 4 8327.67 314.42 8350.19 302.25 8380.98 285.6 8405.37 272.42 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8407.24 275.39 8414.37 267.55 8403.91 269.23 ",
+			pos="e,8414.4,267.55 8327.7,314.42 8350.2,302.25 8381,285.6 8405.4,272.42"];
+		n117;
+		n117 -> n118		 [_draw_="c 7 -#000000 B 4 8550.69 387.94 8553.46 379.63 8556.85 369.44 8559.96 360.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8563.34 361.03 8563.19 350.44 8556.7 358.82 ",
+			pos="e,8563.2,350.44 8550.7,387.94 8553.5,379.63 8556.9,369.44 8560,360.11"];
+		n82;
+		n82 -> n83		 [_draw_="c 7 -#000000 B 4 9454 87.7 9454 79.98 9454 70.71 9454 62.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9457.5 62.1 9454 52.1 9450.5 62.1 ",
+			pos="e,9454,52.104 9454,87.697 9454,79.983 9454,70.712 9454,62.112"];
+		n56 -> n82		 [_draw_="c 7 -#000000 B 4 9537.17 160.41 9522.61 151.06 9504.25 139.27 9488.48 129.14 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9490.33 126.17 9480.02 123.71 9486.55 132.06 ",
+			pos="e,9480,123.71 9537.2,160.41 9522.6,151.06 9504.2,139.27 9488.5,129.14"];
+		n68;
+		n56 -> n68		 [_draw_="c 7 -#000000 B 4 9588.83 160.41 9603.7 150.86 9622.56 138.75 9638.56 128.48 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9640.58 131.34 9647.1 122.99 9636.8 125.45 ",
+			pos="e,9647.1,122.99 9588.8,160.41 9603.7,150.86 9622.6,138.75 9638.6,128.48"];
+		n100;
+		n14;
+		n14 -> n88		 [_draw_="c 7 -#000000 B 7 9735.72 389.33 9728.8 386.31 9721.65 383.11 9715 380 9697.33 371.74 9678.04 362.09 9661.64 353.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9662.84 350.38 9652.35 348.93 9659.64 356.61 ",
+			pos="e,9652.3,348.93 9735.7,389.33 9728.8,386.31 9721.7,383.11 9715,380 9697.3,371.74 9678,362.09 9661.6,353.7"];
+		n89;
+		n14 -> n89		 [_draw_="c 7 -#000000 B 4 9775.37 387.94 9776.51 379.72 9777.91 369.66 9779.19 360.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9782.67 360.83 9780.58 350.44 9775.74 359.86 ",
+			pos="e,9780.6,350.44 9775.4,387.94 9776.5,379.72 9777.9,369.66 9779.2,360.41"];
+		n89 -> n89		 [_draw_="c 7 -#000000 B 7 9822.67 345.47 9842.45 347.33 9860.1 342.84 9860.1 332 9860.1 323.11 9848.23 318.49 9833.04 318.15 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9832.53 314.66 9822.67 318.53 9832.79 321.66 ",
+			pos="e,9822.7,318.53 9822.7,345.47 9842.5,347.33 9860.1,342.84 9860.1,332 9860.1,323.11 9848.2,318.49 9833,318.15"];
+		n70;
+		n68 -> n68		 [_draw_="c 7 -#000000 B 7 9719.02 119.26 9740.44 120.62 9759.06 116.2 9759.06 106 9759.06 97.48 9746.05 92.99 9729.26 92.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9728.95 89.04 9719.02 92.74 9729.08 96.04 ",
+			pos="e,9719,92.738 9719,119.26 9740.4,120.62 9759.1,116.2 9759.1,106 9759.1,97.477 9746,92.99 9729.3,92.538"];
+		n31 -> n45		 [_draw_="c 7 -#000000 B 4 8172 231.7 8172 223.98 8172 214.71 8172 206.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8175.5 206.1 8172 196.1 8168.5 206.1 ",
+			pos="e,8172,196.1 8172,231.7 8172,223.98 8172,214.71 8172,206.11"];
+	}
+	subgraph cluster4 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 3515 224 3515 764 7038 764 7038 224 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5276.5 748.8 0 145.02 24 -stack \"lib_FedWikiPedia\" ",
+			bb="3515,224,7038,764",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_FedWikiPedia\"",
+			lheight=0.19,
+			lp="5276.5,753",
+			lwidth=2.01,
+			style=filled
+		];
+		n99;
+		n18;
+		n17;
+		n17 -> n18		 [_draw_="c 7 -#000000 B 4 6591 533.7 6591 525.98 6591 516.71 6591 508.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6594.5 508.1 6591 498.1 6587.5 508.1 ",
+			pos="e,6591,498.1 6591,533.7 6591,525.98 6591,516.71 6591,508.11"];
+		n17 -> n17		 [_draw_="c 7 -#000000 B 7 6674.61 565.44 6707.23 566.08 6734.41 561.6 6734.41 552 6734.41 543.41 6712.66 538.92 6684.72 538.53 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6684.6 535.03 6674.61 538.56 6684.62 542.03 ",
+			pos="e,6674.6,538.56 6674.6,565.44 6707.2,566.08 6734.4,561.6 6734.4,552 6734.4,543.41 6712.7,538.92 6684.7,538.53"];
+		n8;
+		n38;
+		n8 -> n38		 [_draw_="c 7 -#000000 B 4 4662.32 461.94 4668.73 453.06 4676.7 442.04 4683.8 432.2 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4686.75 434.1 4689.77 423.94 4681.07 430 ",
+			pos="e,4689.8,423.94 4662.3,461.94 4668.7,453.06 4676.7,442.04 4683.8,432.2"];
+		n7;
+		n38 -> n7		 [_draw_="c 7 -#000000 B 7 4785.41 392.63 4800.16 389.3 4815.21 385.15 4829 380 4846.31 373.53 4864.26 363.66 4878.94 354.63 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4881.03 357.45 4887.62 349.15 4877.29 351.53 ",
+			pos="e,4887.6,349.15 4785.4,392.63 4800.2,389.3 4815.2,385.15 4829,380 4846.3,373.53 4864.3,363.66 4878.9,354.63"];
+		n133;
+		n115;
+		n79;
+		n6;
+		n6 -> n8		 [_draw_="c 7 -#000000 B 4 4531.73 534.41 4553.53 524.57 4581.34 512.01 4604.51 501.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4606.13 504.65 4613.8 497.35 4603.24 498.28 ",
+			pos="e,4613.8,497.35 4531.7,534.41 4553.5,524.57 4581.3,512.01 4604.5,501.54"];
+		n6 -> n7		 [_draw_="c 7 -#000000 B 13 4493.99 533.83 4493.55 515.32 4494.78 485.36 4505 462 4522.43 422.16 4529.74 406.69 4569 388 4595.1 375.58 4801.19 \
+387.87 4829 380 4847.31 374.82 4865.85 364.7 4880.66 355.16 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4882.99 357.82 4889.36 349.35 4879.1 351.99 ",
+			pos="e,4889.4,349.35 4494,533.83 4493.5,515.32 4494.8,485.36 4505,462 4522.4,422.16 4529.7,406.69 4569,388 4595.1,375.58 4801.2,387.87 \
+4829,380 4847.3,374.82 4865.8,364.7 4880.7,355.16"];
+		n39;
+		n120;
+		n108;
+		n80;
+		n108 -> n80		 [_draw_="c 7 -#000000 B 7 5464.49 476.85 5587 474.13 5758.24 467.97 5908 454 5986.36 446.69 6074.78 433.42 6139.11 422.84 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6139.93 426.25 6149.22 421.17 6138.79 419.35 ",
+			pos="e,6149.2,421.17 5464.5,476.85 5587,474.13 5758.2,467.97 5908,454 5986.4,446.69 6074.8,433.42 6139.1,422.84"];
+		n110;
+		n108 -> n110		 [_draw_="c 7 -#000000 B 10 5187.44 466.66 5166.38 464.77 5144.54 463.09 5124 462 5028.8 456.97 4360.11 469.23 4266 454 4232.73 448.62 4196.66 \
+437.07 4168.71 426.76 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4169.76 423.42 4159.17 423.18 4167.3 429.98 ",
+			pos="e,4159.2,423.18 5187.4,466.66 5166.4,464.77 5144.5,463.09 5124,462 5028.8,456.97 4360.1,469.23 4266,454 4232.7,448.62 4196.7,437.07 \
+4168.7,426.76"];
+		n111;
+		n108 -> n111		 [_draw_="c 7 -#000000 B 10 5186.96 466.7 5166.05 464.82 5144.38 463.13 5124 462 5000.84 455.18 4691.39 469.36 4569 454 4521.99 448.1 4469.88 \
+435.29 4431.21 424.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4431.76 421.05 4421.18 421.71 4429.86 427.79 ",
+			pos="e,4421.2,421.71 5187,466.7 5166.1,464.82 5144.4,463.13 5124,462 5000.8,455.18 4691.4,469.36 4569,454 4522,448.1 4469.9,435.29 4431.2,\
+424.54"];
+		n114;
+		n108 -> n114		 [_draw_="c 7 -#000000 B 4 5392.24 464.99 5475.7 452.31 5597.99 433.74 5681.53 421.05 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5682.16 424.49 5691.52 419.53 5681.1 417.57 ",
+			pos="e,5691.5,419.53 5392.2,464.99 5475.7,452.31 5598,433.74 5681.5,421.05"];
+		n127;
+		n111 -> n133		 [_draw_="c 7 -#000000 B 10 4303.84 393.29 4288.77 391.16 4272.88 389.22 4258 388 4205.39 383.69 3834.97 389.24 3783 380 3752.56 374.59 3719.77 \
+363.31 3694.14 353.16 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3695.26 349.84 3684.68 349.34 3692.64 356.33 ",
+			pos="e,3684.7,349.34 4303.8,393.29 4288.8,391.16 4272.9,389.22 4258,388 4205.4,383.69 3835,389.24 3783,380 3752.6,374.59 3719.8,363.31 \
+3694.1,353.16"];
+		n111 -> n115		 [_draw_="c 7 -#000000 B 7 4310.91 392.12 4296.08 388.6 4280.38 384.49 4266 380 4241.44 372.33 4214.73 361.97 4192.86 352.93 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4194.06 349.64 4183.49 349.02 4191.37 356.1 ",
+			pos="e,4183.5,349.02 4310.9,392.12 4296.1,388.6 4280.4,384.49 4266,380 4241.4,372.33 4214.7,361.97 4192.9,352.93"];
+		n111 -> n79		 [_draw_="c 7 -#000000 B 10 4445.64 393.93 4460.31 391.84 4475.64 389.76 4490 388 4525.47 383.65 4535.16 387.96 4570 380 4598.21 373.56 4628.67 \
+362.66 4652.9 352.98 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4654.26 356.2 4662.21 349.2 4651.62 349.72 ",
+			pos="e,4662.2,349.2 4445.6,393.93 4460.3,391.84 4475.6,389.76 4490,388 4525.5,383.65 4535.2,387.96 4570,380 4598.2,373.56 4628.7,362.66 \
+4652.9,352.98"];
+		n134;
+		n111 -> n134		 [_draw_="c 7 -#000000 B 10 4303.21 393.4 4288.33 391.29 4272.67 389.33 4258 388 4206.85 383.35 4077.33 390.26 4027 380 3999.76 374.44 3970.65 \
+363.44 3947.7 353.48 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3948.83 350.15 3938.27 349.29 3945.99 356.55 ",
+			pos="e,3938.3,349.29 4303.2,393.4 4288.3,391.29 4272.7,389.33 4258,388 4206.8,383.35 4077.3,390.26 4027,380 3999.8,374.44 3970.6,363.44 \
+3947.7,353.48"];
+		n135;
+		n111 -> n135		 [_draw_="c 7 -#000000 B 4 4383.66 387.94 4389.08 379.28 4395.77 368.57 4401.8 358.92 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4404.77 360.78 4407.1 350.44 4398.83 357.07 ",
+			pos="e,4407.1,350.44 4383.7,387.94 4389.1,379.28 4395.8,368.57 4401.8,358.92"];
+		n94;
+		n94 -> n39		 [_draw_="c 7 -#000000 B 13 5408.51 698.5 5403.84 693.73 5399.54 688.14 5397 682 5384.41 651.61 5373.92 631.43 5397 608 5407.33 597.51 5912.67 \
+603.4 5927 600 5948.86 594.81 5971.55 584.15 5989.49 574.29 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5991.43 577.21 5998.4 569.24 5987.98 571.12 ",
+			pos="e,5998.4,569.24 5408.5,698.5 5403.8,693.73 5399.5,688.14 5397,682 5384.4,651.61 5373.9,631.43 5397,608 5407.3,597.51 5912.7,603.4 \
+5927,600 5948.9,594.81 5971.6,584.15 5989.5,574.29"];
+		n87;
+		n94 -> n87		 [_draw_="c 7 -#000000 B 4 5441.24 698.03 5448.48 687.11 5458.02 672.71 5466.15 660.43 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5469.17 662.21 5471.78 651.94 5463.34 658.34 ",
+			pos="e,5471.8,651.94 5441.2,698.03 5448.5,687.11 5458,672.71 5466.2,660.43"];
+		n73;
+		n48;
+		n51;
+		n48 -> n51		 [_draw_="c 7 -#000000 B 7 5007.17 462.75 5015.77 459.84 5024.65 456.83 5033 454 5059.87 444.88 5089.68 434.74 5114.69 426.21 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5116.04 429.45 5124.38 422.91 5113.78 422.82 ",
+			pos="e,5124.4,422.91 5007.2,462.75 5015.8,459.84 5024.7,456.83 5033,454 5059.9,444.88 5089.7,434.74 5114.7,426.21"];
+		n52;
+		n48 -> n52		 [_draw_="c 7 -#000000 B 10 4854.13 466.66 4834.51 464.77 4814.15 463.08 4795 462 4704.81 456.89 4071.58 465.65 3982 454 3939.5 448.47 3892.72 \
+436.53 3856.83 426.07 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3857.6 422.65 3847.01 423.17 3855.61 429.36 ",
+			pos="e,3847,423.17 4854.1,466.66 4834.5,464.77 4814.1,463.08 4795,462 4704.8,456.89 4071.6,465.65 3982,454 3939.5,448.47 3892.7,436.53 \
+3856.8,426.07"];
+		n11;
+		n48 -> n11		 [_draw_="c 7 -#000000 B 4 4959 461.94 4959 453.81 4959 443.88 4959 434.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4962.5 434.44 4959 424.44 4955.5 434.44 ",
+			pos="e,4959,424.44 4959,461.94 4959,453.81 4959,443.88 4959,434.7"];
+		n85;
+		n69;
+		n86;
+		n86 -> n99		 [_draw_="c 7 -#000000 B 4 5154 615.64 5154 605.3 5154 591.94 5154 580.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5157.5 580.05 5154 570.05 5150.5 580.05 ",
+			pos="e,5154,570.05 5154,615.64 5154,605.3 5154,591.94 5154,580.22"];
+		n86 -> n6		 [_draw_="c 7 -#000000 B 7 4977.05 631.19 4880.11 627.74 4758.21 619.41 4651 600 4616.37 593.73 4578.54 582.45 4548.82 572.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4549.65 569.1 4539.06 569.2 4547.41 575.73 ",
+			pos="e,4539.1,569.2 4977.1,631.19 4880.1,627.74 4758.2,619.41 4651,600 4616.4,593.73 4578.5,582.45 4548.8,572.51"];
+		n86 -> n127		 [_draw_="c 7 -#000000 B 10 5261.72 619.57 5299.68 615.27 5342.68 610.88 5382 608 5477.81 600.98 5503.12 615.05 5598 600 5635.19 594.1 5675.89 \
+582.57 5707.56 572.4 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5708.66 575.72 5717.08 569.3 5706.49 569.07 ",
+			pos="e,5717.1,569.3 5261.7,619.57 5299.7,615.27 5342.7,610.88 5382,608 5477.8,600.98 5503.1,615.05 5598,600 5635.2,594.1 5675.9,582.57 \
+5707.6,572.4"];
+		n121;
+		n86 -> n121		 [_draw_="c 7 -#000000 B 7 5088.24 617.23 5065.93 611.83 5040.87 605.71 5018 600 4980.92 590.74 4939.69 580.18 4905.77 571.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4906.51 567.99 4895.95 568.87 4904.75 574.76 ",
+			pos="e,4895.9,568.87 5088.2,617.23 5065.9,611.83 5040.9,605.71 5018,600 4980.9,590.74 4939.7,580.18 4905.8,571.41"];
+		n128;
+		n86 -> n128		 [_draw_="c 7 -#000000 B 7 5221.99 617.32 5243.78 612.08 5267.97 606.03 5290 600 5321.35 591.42 5356 580.94 5384.48 572.05 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5385.78 575.31 5394.28 568.98 5383.69 568.63 ",
+			pos="e,5394.3,568.98 5222,617.32 5243.8,612.08 5268,606.03 5290,600 5321.4,591.42 5356,580.94 5384.5,572.05"];
+		n126;
+		n42;
+		n121 -> n108		 [_draw_="c 7 -#000000 B 4 4929.1 536.83 5006.85 525.13 5117.06 508.54 5197.13 496.49 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5197.86 499.91 5207.23 494.97 5196.82 492.99 ",
+			pos="e,5207.2,494.97 4929.1,536.83 5006.8,525.13 5117.1,508.54 5197.1,496.49"];
+		n121 -> n48		 [_draw_="c 7 -#000000 B 4 4864.7 534.23 4881.3 524.86 4902.18 513.08 4920.07 502.98 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4922.12 505.84 4929.11 497.87 4918.68 499.74 ",
+			pos="e,4929.1,497.87 4864.7,534.23 4881.3,524.86 4902.2,513.08 4920.1,502.98"];
+		n119;
+		n102;
+		n119 -> n102		 [_draw_="c 7 -#000000 B 4 6909.67 698.03 6903.72 687.22 6895.89 672.99 6889.18 660.79 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6892.2 659.02 6884.32 651.94 6886.07 662.39 ",
+			pos="e,6884.3,651.94 6909.7,698.03 6903.7,687.22 6895.9,672.99 6889.2,660.79"];
+		n67;
+		n67 -> n86		 [_draw_="c 7 -#000000 B 4 5157.92 697.64 5157.27 687.3 5156.43 673.94 5155.7 662.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5159.18 661.81 5155.07 652.05 5152.2 662.25 ",
+			pos="e,5155.1,652.05 5157.9,697.64 5157.3,687.3 5156.4,673.94 5155.7,662.22"];
+		n35;
+		n74;
+		n47;
+		n74 -> n47		 [_draw_="c 7 -#000000 B 10 4449.76 700.62 4430.25 696.41 4408.3 692.32 4388 690 4306.73 680.73 4100.84 694.46 4020 682 3983.39 676.36 3943.4 \
+664.72 3912.43 654.43 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3913.31 651.03 3902.71 651.15 3911.07 657.66 ",
+			pos="e,3902.7,651.15 4449.8,700.62 4430.2,696.41 4408.3,692.32 4388,690 4306.7,680.73 4100.8,694.46 4020,682 3983.4,676.36 3943.4,664.72 \
+3912.4,654.43"];
+		n12;
+		n131;
+		n12 -> n131		 [_draw_="c 7 -#000000 B 4 5107.45 314.03 5119.88 302.61 5136.44 287.38 5150.17 274.75 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5152.88 277.01 5157.87 267.67 5148.14 271.86 ",
+			pos="e,5157.9,267.67 5107.5,314.03 5119.9,302.61 5136.4,287.38 5150.2,274.75"];
+		n132;
+		n12 -> n132		 [_draw_="c 7 -#000000 B 4 5070.34 314.03 5057.57 302.42 5040.48 286.89 5026.46 274.14 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5028.79 271.53 5019.03 267.39 5024.08 276.71 ",
+			pos="e,5019,267.39 5070.3,314.03 5057.6,302.42 5040.5,286.89 5026.5,274.14"];
+		n87 -> n39		 [_draw_="c 7 -#000000 B 10 5524.55 618.7 5538.79 614.44 5554.93 610.29 5570 608 5648.45 596.05 5849.86 618.62 5927 600 5948.69 594.77 5971.21 \
+584.21 5989.09 574.43 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5990.99 577.38 5997.99 569.42 5987.56 571.28 ",
+			pos="e,5998,569.42 5524.6,618.7 5538.8,614.44 5554.9,610.29 5570,608 5648.4,596.05 5849.9,618.62 5927,600 5948.7,594.77 5971.2,584.21 \
+5989.1,574.43"];
+		n26;
+		n27;
+		n26 -> n27		 [_draw_="c 7 -#000000 B 4 6281.12 698.03 6286.93 687.22 6294.58 672.99 6301.14 660.79 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6304.24 662.41 6305.89 651.94 6298.08 659.09 ",
+			pos="e,6305.9,651.94 6281.1,698.03 6286.9,687.22 6294.6,672.99 6301.1,660.79"];
+		n27 -> n17		 [_draw_="c 7 -#000000 B 7 6362.02 623.42 6389.84 617.42 6425.65 609.11 6457 600 6484.59 591.98 6514.82 581.53 6539.58 572.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6540.95 575.74 6549.13 569.01 6538.54 569.17 ",
+			pos="e,6549.1,569.01 6362,623.42 6389.8,617.42 6425.6,609.11 6457,600 6484.6,591.98 6514.8,581.53 6539.6,572.51"];
+		n27 -> n39		 [_draw_="c 7 -#000000 B 10 6282.86 618.82 6271.99 614.62 6259.66 610.48 6248 608 6192.69 596.21 6175.7 614.38 6121 600 6099.58 594.37 6077.23 \
+583.9 6059.39 574.26 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6060.94 571.12 6050.5 569.33 6057.55 577.25 ",
+			pos="e,6050.5,569.33 6282.9,618.82 6272,614.62 6259.7,610.48 6248,608 6192.7,596.21 6175.7,614.38 6121,600 6099.6,594.37 6077.2,583.9 \
+6059.4,574.26"];
+		n24;
+		n25;
+		n24 -> n25		 [_draw_="c 7 -#000000 B 10 5798.62 618.66 5823.21 614.52 5850.69 610.47 5876 608 5984.43 597.42 6013.32 616.57 6121 600 6158.98 594.15 6200.58 \
+582.56 6232.88 572.35 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6234.14 575.62 6242.59 569.23 6232 568.95 ",
+			pos="e,6242.6,569.23 5798.6,618.66 5823.2,614.52 5850.7,610.47 5876,608 5984.4,597.42 6013.3,616.57 6121,600 6159,594.15 6200.6,582.56 \
+6232.9,572.35"];
+		n25 -> n120		 [_draw_="c 7 -#000000 B 4 6289 533.7 6289 525.98 6289 516.71 6289 508.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6292.5 508.1 6289 498.1 6285.5 508.1 ",
+			pos="e,6289,498.1 6289,533.7 6289,525.98 6289,516.71 6289,508.11"];
+		n103;
+		n97;
+		n97 -> n24		 [_draw_="c 7 -#000000 B 4 5678.09 698.03 5685.87 687.11 5696.13 672.71 5704.88 660.43 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5707.98 662.12 5710.93 651.94 5702.28 658.05 ",
+			pos="e,5710.9,651.94 5678.1,698.03 5685.9,687.11 5696.1,672.71 5704.9,660.43"];
+		n102 -> n103		 [_draw_="c 7 -#000000 B 4 6869.79 615.64 6866.66 605.19 6862.6 591.67 6859.06 579.86 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6862.34 578.62 6856.12 570.05 6855.64 580.63 ",
+			pos="e,6856.1,570.05 6869.8,615.64 6866.7,605.19 6862.6,591.67 6859.1,579.86"];
+		n1;
+		n2;
+		n1 -> n2		 [_draw_="c 7 -#000000 B 7 4707.67 701.18 4681.85 697.47 4653.86 693.51 4628 690 4522.08 675.6 4401.29 660.21 4314.93 649.38 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4315.2 645.89 4304.84 648.11 4314.33 652.83 ",
+			pos="e,4304.8,648.11 4707.7,701.18 4681.8,697.47 4653.9,693.51 4628,690 4522.1,675.6 4401.3,660.21 4314.9,649.38"];
+		n2 -> n35		 [_draw_="c 7 -#000000 B 4 4199 615.64 4199 605.3 4199 591.94 4199 580.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4202.5 580.05 4199 570.05 4195.5 580.05 ",
+			pos="e,4199,570.05 4199,615.64 4199,605.3 4199,591.94 4199,580.22"];
+		n11 -> n12		 [_draw_="c 7 -#000000 B 4 4986.89 389.55 5005.61 379.19 5030.5 365.4 5051.02 354.04 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5052.75 357.08 5059.81 349.17 5049.36 350.95 ",
+			pos="e,5059.8,349.17 4986.9,389.55 5005.6,379.19 5030.5,365.4 5051,354.04"];
+		n84;
+		n10;
+		n10 -> n126		 [_draw_="c 7 -#000000 B 4 5987.93 698.03 6001.39 686.58 6019.35 671.3 6034.21 658.66 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6036.75 661.09 6042.09 651.94 6032.21 655.76 ",
+			pos="e,6042.1,651.94 5987.9,698.03 6001.4,686.58 6019.3,671.3 6034.2,658.66"];
+		n114 -> n42		 [_draw_="c 7 -#000000 B 4 5856.64 392.5 5939.18 380.01 6066.01 360.83 6153.21 347.64 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6153.75 351.1 6163.11 346.14 6152.7 344.18 ",
+			pos="e,6163.1,346.14 5856.6,392.5 5939.2,380.01 6066,360.83 6153.2,347.64"];
+	}
+	subgraph cluster5 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 3357 690 3357 764 3507 764 3507 690 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3432 748.8 0 100.47 16 -stack \"lib_HTTP\" ",
+			bb="3357,690,3507,764",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_HTTP\"",
+			lheight=0.19,
+			lp="3432,753",
+			lwidth=1.40,
+			style=filled
+		];
+		n95;
+	}
+	subgraph cluster6 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 9886 306 9886 380 10047 380 10047 306 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9966.5 364.8 0 145.78 24 -stack \"lib_LocalFedWiki\" ",
+			bb="9886,306,10047,380",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_LocalFedWiki\"",
+			lheight=0.19,
+			lp="9966.5,369",
+			lwidth=2.02,
+			style=filled
+		];
+		n54;
+	}
+	subgraph cluster7 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 284 306 284 600 3439 600 3439 306 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1861.5 584.8 0 128.68 21 -stack \"lib_MediaWiki\" ",
+			bb="284,306,3439,600",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_MediaWiki\"",
+			lheight=0.19,
+			lp="1861.5,589",
+			lwidth=1.79,
+			style=filled
+		];
+		n105;
+		n32;
+		n104;
+		n104 -> n105		 [_draw_="c 7 -#000000 B 4 2262.06 535.46 2227.98 524.42 2182.2 509.58 2147.02 498.18 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2147.99 494.82 2137.4 495.07 2145.84 501.48 ",
+			pos="e,2137.4,495.07 2262.1,535.46 2228,524.42 2182.2,509.58 2147,498.18"];
+		n104 -> n32		 [_draw_="c 7 -#000000 B 4 2312.47 533.7 2313.57 525.98 2314.9 516.71 2316.13 508.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2319.61 508.5 2317.56 498.1 2312.68 507.51 ",
+			pos="e,2317.6,498.1 2312.5,533.7 2313.6,525.98 2314.9,516.71 2316.1,508.11"];
+		n37;
+		n36;
+		n46;
+		n36 -> n46		 [_draw_="c 7 -#000000 B 4 1962.16 539.13 1873.2 526.82 1734.33 507.61 1640.85 494.67 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1641.2 491.19 1630.81 493.29 1640.24 498.12 ",
+			pos="e,1630.8,493.29 1962.2,539.13 1873.2,526.82 1734.3,507.61 1640.8,494.67"];
+		n64;
+		n53;
+		n112;
+		n113;
+		n63;
+		n63 -> n64		 [_draw_="c 7 -#000000 B 4 942.14 463.2 957.65 453.05 978 439.73 995 428.6 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 997.09 431.42 1003.54 423.01 993.25 425.56 ",
+			pos="e,1003.5,423.01 942.14,463.2 957.65,453.05 978,439.73 995,428.6"];
+		n76;
+		n46 -> n76		 [_draw_="c 7 -#000000 B 7 1483.62 463.78 1473.04 460.73 1462.14 457.42 1452 454 1428.06 445.93 1401.92 435.68 1380.34 426.8 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1381.66 423.56 1371.08 422.97 1378.98 430.03 ",
+			pos="e,1371.1,422.97 1483.6,463.78 1473,460.73 1462.1,457.42 1452,454 1428.1,445.93 1401.9,435.68 1380.3,426.8"];
+		n75;
+		n46 -> n75		 [_draw_="c 7 -#000000 B 4 1548.87 461.94 1552.25 453.54 1556.41 443.23 1560.2 433.81 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1563.49 435.02 1563.98 424.44 1556.99 432.41 ",
+			pos="e,1564,424.44 1548.9,461.94 1552.3,453.54 1556.4,443.23 1560.2,433.81"];
+		n72;
+		n40;
+		n72 -> n40		 [_draw_="c 7 -#000000 B 4 1790.19 534.05 1798.87 525.5 1809.56 514.96 1819.11 505.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1821.81 507.79 1826.48 498.28 1816.9 502.8 ",
+			pos="e,1826.5,498.28 1790.2,534.05 1798.9,525.5 1809.6,514.96 1819.1,505.54"];
+		n116;
+		n4;
+		n4 -> n4		 [_draw_="c 7 -#000000 B 7 643.46 493.17 662.92 494.8 680.1 490.41 680.1 480 680.1 471.46 668.54 466.98 653.64 466.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 653.35 463.04 643.46 466.83 653.56 470.04 ",
+			pos="e,643.46,466.83 643.46,493.17 662.92,494.8 680.1,490.41 680.1,480 680.1,471.46 668.54,466.98 653.64,466.54"];
+		n41;
+		n40 -> n41		 [_draw_="c 7 -#000000 B 7 1953.79 467.35 1971.25 465.53 1989.12 463.7 2006 462 2168.52 445.67 2357.08 427.78 2472.19 416.97 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2472.78 420.43 2482.41 416.01 2472.12 413.46 ",
+			pos="e,2482.4,416.01 1953.8,467.35 1971.2,465.53 1989.1,463.7 2006,462 2168.5,445.67 2357.1,427.78 2472.2,416.97"];
+		n101;
+		n5;
+		n93;
+		n5 -> n93		 [_draw_="c 7 -#000000 B 4 409 461.94 409 453.81 409 443.88 409 434.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 412.5 434.44 409 424.44 405.5 434.44 ",
+			pos="e,409,424.44 409,461.94 409,453.81 409,443.88 409,434.7"];
+		n92;
+		n5 -> n92		 [_draw_="c 7 -#000000 B 7 474.68 465.11 489.33 461.73 504.75 457.94 519 454 548.69 445.8 581.35 435.27 608.05 426.25 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 609.26 429.54 617.6 423 607.01 422.91 ",
+			pos="e,617.6,423 474.68,465.11 489.33,461.73 504.75,457.94 519,454 548.69,445.8 581.35,435.27 608.05,426.25"];
+		n138;
+		n138 -> n63		 [_draw_="c 7 -#000000 B 4 918 533.7 918 525.98 918 516.71 918 508.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 921.5 508.1 918 498.1 914.5 508.1 ",
+			pos="e,918,498.1 918,533.7 918,525.98 918,516.71 918,508.11"];
+		n140;
+		n138 -> n140		 [_draw_="c 7 -#000000 B 4 967.24 535.12 999.56 524.69 1042.01 511 1076.12 500 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1077.51 503.22 1085.95 496.82 1075.36 496.56 ",
+			pos="e,1086,496.82 967.24,535.12 999.56,524.69 1042,511 1076.1,500"];
+		n139;
+		n91;
+		n93 -> n53		 [_draw_="c 7 -#000000 B 10 478.06 392.76 491.59 390.81 505.71 389.08 519 388 622.88 379.57 1352.81 382.91 1457 380 1781.49 370.92 2165.31 \
+349.74 2345.24 339.19 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2345.7 342.67 2355.48 338.59 2345.29 335.68 ",
+			pos="e,2355.5,338.59 478.06,392.76 491.59,390.81 505.71,389.08 519,388 622.88,379.57 1352.8,382.91 1457,380 1781.5,370.92 2165.3,349.74 \
+2345.2,339.19"];
+		n76 -> n101		 [_draw_="c 7 -#000000 B 4 1334 387.94 1334 379.81 1334 369.88 1334 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1337.5 360.44 1334 350.44 1330.5 360.44 ",
+			pos="e,1334,350.44 1334,387.94 1334,379.81 1334,369.88 1334,360.7"];
+		n129;
+		n129 -> n139		 [_draw_="c 7 -#000000 B 4 2545 533.7 2545 525.98 2545 516.71 2545 508.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2548.5 508.1 2545 498.1 2541.5 508.1 ",
+			pos="e,2545,498.1 2545,533.7 2545,525.98 2545,516.71 2545,508.11"];
+		n20;
+		n3;
+		n3 -> n4		 [_draw_="c 7 -#000000 B 4 451.76 535.29 483 524.08 524.95 509.02 556.74 497.61 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 558.03 500.86 566.26 494.19 555.66 494.27 ",
+			pos="e,566.26,494.19 451.76,535.29 483,524.08 524.95,509.02 556.74,497.61"];
+		n3 -> n5		 [_draw_="c 7 -#000000 B 4 408.25 533.7 408.36 525.98 408.49 516.71 408.61 508.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 412.11 508.15 408.76 498.1 405.11 508.05 ",
+			pos="e,408.76,498.1 408.25,533.7 408.36,525.98 408.49,516.71 408.61,508.11"];
+	}
+	subgraph cluster8 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 9795 608 9795 682 10121 682 10121 608 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 9958 666.8 0 126.94 19 -stack \"libOPN_JSON\" ",
+			bb="9795,608,10121,682",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"libOPN_JSON\"",
+			lheight=0.19,
+			lp="9958,671",
+			lwidth=1.76,
+			style=filled
+		];
+		n62;
+		n62 -> n62		 [_draw_="c 7 -#000000 B 7 10071.69 648.41 10093.02 651.62 10113.1 646.81 10113.1 634 10113.1 623.29 10099.07 618.17 10082 618.66 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 10081.33 615.2 10071.69 619.59 10081.96 622.17 ",
+			pos="e,10072,619.59 10072,648.41 10093,651.62 10113,646.81 10113,634 10113,623.29 10099,618.17 10082,618.66"];
+		n16;
+		n16 -> n16		 [_draw_="c 7 -#000000 B 7 9913.2 648.53 9936.95 651.5 9959.06 646.65 9959.06 634 9959.06 623.18 9942.88 618.07 9923.33 618.67 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9922.9 615.2 9913.2 619.47 9923.44 622.18 ",
+			pos="e,9913.2,619.47 9913.2,648.53 9936.9,651.5 9959.1,646.65 9959.1,634 9959.1,623.18 9942.9,618.07 9923.3,618.67"];
+	}
+	n99 -> n100	 [_draw_="c 7 -#000000 B 16 5240.57 538.86 5256.96 536.94 5273.98 535.19 5290 534 5942.16 485.38 6110.29 563.28 6761 498 6852.17 488.85 6872.74 \
+470.24 6964 462 7058.78 453.44 8582.92 468.35 8677 454 8711.8 448.69 8749.62 437.13 8778.96 426.8 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8780.33 430.03 8788.56 423.36 8777.97 423.44 ",
+		pos="e,8788.6,423.36 5240.6,538.86 5257,536.94 5274,535.19 5290,534 5942.2,485.38 6110.3,563.28 6761,498 6852.2,488.85 6872.7,470.24 \
+6964,462 7058.8,453.44 8582.9,468.35 8677,454 8711.8,448.69 8749.6,437.13 8779,426.8"];
+	n32 -> n33	 [_draw_="c 7 -#000000 B 19 2232.54 466.64 2215.8 464.73 2198.38 463.04 2182 462 2168.95 461.17 308.23 463.27 299 454 278.3 433.21 279.21 \
+409.65 299 388 367.65 312.91 1109.48 312.65 1211 306 1232.53 304.59 1385.86 307.95 1405 298 1414.34 293.15 1421.97 284.65 1427.76 \
+276.21 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1430.82 277.92 1433.13 267.58 1424.87 274.23 ",
+		pos="e,1433.1,267.58 2232.5,466.64 2215.8,464.73 2198.4,463.04 2182,462 2168.9,461.17 308.23,463.27 299,454 278.3,433.21 279.21,409.65 \
+299,388 367.65,312.91 1109.5,312.65 1211,306 1232.5,304.59 1385.9,307.95 1405,298 1414.3,293.15 1422,284.65 1427.8,276.21"];
+	n133 -> n104	 [_draw_="c 7 -#000000 B 7 3588.6 347.87 3547.8 357.77 3492.33 370.64 3443 380 3243.2 417.92 2639.83 504.35 2404.98 537.61 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2404.17 534.19 2394.76 539.06 2405.15 541.12 ",
+		pos="e,2394.8,539.06 3588.6,347.87 3547.8,357.77 3492.3,370.64 3443,380 3243.2,417.92 2639.8,504.35 2405,537.61"];
+	n133 -> n33	 [_draw_="c 7 -#000000 B 7 3574.7 317.37 3548.11 312.96 3517.79 308.56 3490 306 3077.55 268 1720.92 253.63 1478.31 251.34 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1478.26 247.84 1468.23 251.24 1478.2 254.84 ",
+		pos="e,1468.2,251.24 3574.7,317.37 3548.1,312.96 3517.8,308.56 3490,306 3077.5,268 1720.9,253.63 1478.3,251.34"];
+	n115 -> n33	 [_draw_="c 7 -#000000 B 10 4089.07 316.61 4069.48 312.37 4047.41 308.26 4027 306 3913.02 293.36 3625.66 300.19 3511 298 2688.75 282.29 1682.93 \
+257.12 1478.34 251.95 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1478.22 248.44 1468.13 251.69 1478.04 255.44 ",
+		pos="e,1468.1,251.69 4089.1,316.61 4069.5,312.37 4047.4,308.26 4027,306 3913,293.36 3625.7,300.19 3511,298 2688.8,282.29 1682.9,257.12 \
+1478.3,251.95"];
+	n9 -> n10	 [_draw_="c 7 -#000000 B 4 5982.88 779.64 5980.4 769.19 5977.18 755.67 5974.38 743.86 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5977.77 742.97 5972.05 734.05 5970.95 744.59 ",
+		pos="e,5972,734.05 5982.9,779.64 5980.4,769.19 5977.2,755.67 5974.4,743.86"];
+	n79 -> n33	 [_draw_="c 7 -#000000 B 10 4636.68 316.53 4615.63 312.28 4591.91 308.19 4570 306 4452.91 294.31 3628.66 299.78 3511 298 2688.7 285.56 1682.92 \
+257.82 1478.34 252.06 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1478.23 248.55 1468.13 251.77 1478.03 255.55 ",
+		pos="e,1468.1,251.77 4636.7,316.53 4615.6,312.28 4591.9,308.19 4570,306 4452.9,294.31 3628.7,299.78 3511,298 2688.7,285.56 1682.9,257.82 \
+1478.3,252.06"];
+	n106 -> n107	 [_draw_="c 7 -#000000 B 16 5145.97 940.8 4615.16 938.63 121.33 919.37 62 888 19.38 865.47 0 847.21 0 799 0 799 0 799 0 405 0 357.87 1.83 \
+336.21 38 306 63.3 284.87 136.4 271.09 202.88 262.6 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 203.57 266.05 213.06 261.34 202.7 259.1 ",
+		pos="e,213.06,261.34 5146,940.8 4615.2,938.63 121.33,919.37 62,888 19.382,865.47 0,847.21 0,799 0,799 0,799 0,405 0,357.87 1.8277,336.21 \
+38,306 63.298,284.87 136.4,271.09 202.88,262.6"];
+	n19 -> n20	 [_draw_="c 7 -#000000 B 16 5415.9 929.25 5408.46 927.09 5400.53 925.15 5393 924 4920.02 851.77 1563.4 932.33 1087 888 890.08 869.67 651 996.77 \
+651 799 651 799 651 799 651 715 651 667.7 651 612.64 651 580.42 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 654.5 580.03 651 570.03 647.5 580.03 ",
+		pos="e,651,570.03 5415.9,929.25 5408.5,927.09 5400.5,925.15 5393,924 4920,851.77 1563.4,932.33 1087,888 890.08,869.67 651,996.77 651,\
+799 651,799 651,799 651,715 651,667.7 651,612.64 651,580.42"];
+	n59 -> n61	 [_draw_="c 7 -#000000 B 22 5145.62 796.83 4679.8 795.73 2230.18 788.8 1897 764 1396.68 726.77 1279.2 646.76 779 608 765.18 606.93 291.32 \
+608.01 280 600 221.57 558.65 180.64 368.45 168 298 162.19 265.63 144.78 247.29 168 224 191.34 200.59 9655.08 198.97 9688 196 9696.4 \
+195.24 9705.16 194.13 9713.83 192.82 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9714.6 196.24 9723.92 191.21 9713.5 189.33 ",
+		pos="e,9723.9,191.21 5145.6,796.83 4679.8,795.73 2230.2,788.8 1897,764 1396.7,726.77 1279.2,646.76 779,608 765.18,606.93 291.32,608.01 \
+280,600 221.57,558.65 180.64,368.45 168,298 162.19,265.63 144.78,247.29 168,224 191.34,200.59 9655.1,198.97 9688,196 9696.4,195.24 \
+9705.2,194.13 9713.8,192.82"];
+	n59 -> n56	 [_draw_="c 7 -#000000 B 25 5145.44 796.92 4567.7 796.22 913.87 790.79 865 764 830.62 745.15 848.52 713.31 817 690 806.59 682.3 799.41 689.7 \
+789 682 757.48 658.69 775.29 626.99 741 608 716.99 594.7 270.2 614.66 247 600 95.31 504.16 -26.66 351.09 100 224 119.96 203.97 8214.73 \
+196.23 8243 196 8682.5 192.41 9204.28 184.66 9438.43 181 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9438.73 184.49 9448.68 180.84 9438.62 177.49 ",
+		pos="e,9448.7,180.84 5145.4,796.92 4567.7,796.22 913.87,790.79 865,764 830.62,745.15 848.52,713.31 817,690 806.59,682.3 799.41,689.7 \
+789,682 757.48,658.69 775.29,626.99 741,608 716.99,594.7 270.2,614.66 247,600 95.312,504.16 -26.657,351.09 100,224 119.96,203.97 \
+8214.7,196.23 8243,196 8682.5,192.41 9204.3,184.66 9438.4,181"];
+	n60 -> n69	 [_draw_="c 7 -#000000 B 7 6340.41 782.36 6366.04 776.77 6395.39 770.23 6422 764 6460.67 754.94 6503.64 744.3 6538.83 735.44 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6539.69 738.83 6548.53 732.99 6537.98 732.04 ",
+		pos="e,6548.5,732.99 6340.4,782.36 6366,776.77 6395.4,770.23 6422,764 6460.7,754.94 6503.6,744.3 6538.8,735.44"];
+	n60 -> n26	 [_draw_="c 7 -#000000 B 4 6272 779.64 6272 769.3 6272 755.94 6272 744.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6275.5 744.05 6272 734.05 6268.5 744.05 ",
+		pos="e,6272,734.05 6272,779.64 6272,769.3 6272,755.94 6272,744.22"];
+	n58 -> n95	 [_draw_="c 7 -#000000 B 10 5365.56 782.61 5347.15 778.32 5326.3 774.17 5307 772 5257.42 766.42 3559.07 777.33 3511 764 3493.04 759.02 3475.03 \
+748.8 3460.75 739.17 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3462.57 736.17 3452.38 733.29 3458.55 741.9 ",
+		pos="e,3452.4,733.29 5365.6,782.61 5347.1,778.32 5326.3,774.17 5307,772 5257.4,766.42 3559.1,777.33 3511,764 3493,759.02 3475,748.8 3460.8,\
+739.17"];
+	n58 -> n94	 [_draw_="c 7 -#000000 B 4 5421.39 779.64 5422.81 769.3 5424.65 755.94 5426.26 744.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5429.76 744.43 5427.66 734.05 5422.83 743.48 ",
+		pos="e,5427.7,734.05 5421.4,779.64 5422.8,769.3 5424.6,755.94 5426.3,744.22"];
+	n58 -> n91	 [_draw_="c 7 -#000000 B 13 5365.56 782.61 5347.15 778.31 5326.3 774.17 5307 772 5199.12 759.88 3461.46 768.68 3353 764 2465.05 725.71 2231.62 \
+773.76 1360 600 1327.76 593.57 1292.67 582.42 1264.97 572.58 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1266.09 569.27 1255.49 569.17 1263.71 575.85 ",
+		pos="e,1255.5,569.17 5365.6,782.61 5347.1,778.31 5326.3,774.17 5307,772 5199.1,759.88 3461.5,768.68 3353,764 2465.1,725.71 2231.6,773.76 \
+1360,600 1327.8,593.57 1292.7,582.42 1265,572.58"];
+	n58 -> n1	 [_draw_="c 7 -#000000 B 10 5364.97 782.7 5346.69 778.47 5326.08 774.34 5307 772 5160.94 754.11 5121.63 785.12 4976 764 4936.54 758.28 4893.25 \
+746.61 4859.73 736.33 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4860.69 732.96 4850.1 733.33 4858.61 739.65 ",
+		pos="e,4850.1,733.33 5365,782.7 5346.7,778.47 5326.1,774.34 5307,772 5160.9,754.11 5121.6,785.12 4976,764 4936.5,758.28 4893.3,746.61 \
+4859.7,736.33"];
+	n21 -> n22	 [_draw_="c 7 -#000000 B 22 5283.57 929.08 5274.86 927.02 5265.68 925.17 5257 924 5222.97 919.43 348.3 817.43 314 816 191.21 810.88 38 921.9 \
+38 799 38 799 38 799 38 405 38 323.63 114.25 329.99 192 306 223.12 296.4 452.81 302.94 485 298 522.35 292.26 563.21 280.67 594.92 \
+270.43 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 596.04 273.75 604.46 267.31 593.86 267.09 ",
+		pos="e,604.46,267.31 5283.6,929.08 5274.9,927.02 5265.7,925.17 5257,924 5223,919.43 348.3,817.43 314,816 191.21,810.88 38,921.9 38,799 \
+38,799 38,799 38,405 38,323.63 114.25,329.99 192,306 223.12,296.4 452.81,302.94 485,298 522.35,292.26 563.21,280.67 594.92,270.43"];
+	n21 -> n23	 [_draw_="c 7 -#000000 B 28 5282.78 929.33 5274.3 927.3 5265.4 925.39 5257 924 5047.56 889.25 3496.7 920.28 3353 764 3330.74 739.79 3340.41 \
+720.39 3353 690 3374.65 637.74 3421.35 652.26 3443 600 3466.47 543.34 3486.31 505.42 3443 462 3427.49 446.45 295.51 469.55 280 454 \
+233.55 407.43 233.71 352.73 280 306 288.4 297.52 1127.25 300.07 1139 298 1169.15 292.68 1201.58 281.35 1226.86 271.14 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1228.27 274.35 1236.18 267.3 1225.6 267.88 ",
+		pos="e,1236.2,267.3 5282.8,929.33 5274.3,927.3 5265.4,925.39 5257,924 5047.6,889.25 3496.7,920.28 3353,764 3330.7,739.79 3340.4,720.39 \
+3353,690 3374.6,637.74 3421.4,652.26 3443,600 3466.5,543.34 3486.3,505.42 3443,462 3427.5,446.45 295.51,469.55 280,454 233.55,407.43 \
+233.71,352.73 280,306 288.4,297.52 1127.3,300.07 1139,298 1169.2,292.68 1201.6,281.35 1226.9,271.14"];
+	n96 -> n67	 [_draw_="c 7 -#000000 B 10 5660.55 929.23 5651.83 927.18 5642.66 925.3 5634 924 5563.12 913.38 5039.24 940.07 4990 888 4937.89 832.89 5044.89 \
+769.87 5111.39 737.92 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5112.94 741.06 5120.48 733.63 5109.95 734.74 ",
+		pos="e,5120.5,733.63 5660.6,929.23 5651.8,927.18 5642.7,925.3 5634,924 5563.1,913.38 5039.2,940.07 4990,888 4937.9,832.89 5044.9,769.87 \
+5111.4,737.92"];
+	n96 -> n14	 [_draw_="c 7 -#000000 B 16 5658.5 929.85 5650.36 927.86 5641.93 925.84 5634 924 5408.98 871.84 4974.01 935.68 5137 772 5146.33 762.63 7028.8 \
+764.8 7042 764 7078.64 761.77 9631.59 463.7 9667 454 9689.86 447.74 9714.11 437.29 9733.64 427.84 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9735.41 430.87 9742.82 423.3 9732.31 424.59 ",
+		pos="e,9742.8,423.3 5658.5,929.85 5650.4,927.86 5641.9,925.84 5634,924 5409,871.84 4974,935.68 5137,772 5146.3,762.63 7028.8,764.8 7042,\
+764 7078.6,761.77 9631.6,463.7 9667,454 9689.9,447.74 9714.1,437.29 9733.6,427.84"];
+	n66 -> n61	 [_draw_="c 7 -#000000 B 16 6640.12 940.72 7093.26 938.62 9837.93 924.44 10009 888 10107.35 867.05 10217 899.55 10217 799 10217 799 10217 \
+799 10217 331 10217 282.26 10229.33 256.49 10193 224 10169.88 203.32 9990.23 190.02 9876.54 183.58 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9876.61 180.08 9866.43 183.02 9876.22 187.07 ",
+		pos="e,9866.4,183.02 6640.1,940.72 7093.3,938.62 9837.9,924.44 10009,888 10107,867.05 10217,899.55 10217,799 10217,799 10217,799 10217,\
+331 10217,282.26 10229,256.49 10193,224 10170,203.32 9990.2,190.02 9876.5,183.58"];
+	n66 -> n67	 [_draw_="c 7 -#000000 B 10 6594.53 924.55 6627.78 891.46 6692.95 816.22 6649 772 6636.2 759.12 5360 766.33 5342 764 5300.07 758.57 5253.98 \
+746.7 5218.54 736.24 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5219.42 732.85 5208.84 733.34 5217.42 739.56 ",
+		pos="e,5208.8,733.34 6594.5,924.55 6627.8,891.46 6693,816.22 6649,772 6636.2,759.12 5360,766.33 5342,764 5300.1,758.57 5254,746.7 5218.5,\
+736.24"];
+	n66 -> n56	 [_draw_="c 7 -#000000 B 16 6640.36 941.09 7068.67 941.56 9533.25 941.89 9862 888 9990.44 866.95 10141 929.16 10141 799 10141 799 10141 799 \
+10141 405 10141 182.87 9907.23 224.98 9687 196 9677.04 194.69 9666.64 193.3 9656.27 191.9 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9656.74 188.43 9646.36 190.55 9655.8 195.37 ",
+		pos="e,9646.4,190.55 6640.4,941.09 7068.7,941.56 9533.2,941.89 9862,888 9990.4,866.95 10141,929.16 10141,799 10141,799 10141,799 10141,\
+405 10141,182.87 9907.2,224.98 9687,196 9677,194.69 9666.6,193.3 9656.3,191.9"];
+	n66 -> n62	 [_draw_="c 7 -#000000 B 7 6640.2 940.69 7086.31 938.38 9745.34 923.17 9820 888 9923.26 839.36 9995.82 715.03 10023.54 660.87 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 10026.68 662.41 10028.04 651.91 10020.43 659.27 ",
+		pos="e,10028,651.91 6640.2,940.69 7086.3,938.38 9745.3,923.17 9820,888 9923.3,839.36 9995.8,715.03 10024,660.87"];
+	n66 -> n1	 [_draw_="c 7 -#000000 B 10 6516.68 936.52 6372.07 925.74 6008.64 898.51 5887 888 5553.38 859.18 5465.74 879.74 5137 816 5036.34 796.48 4922.52 \
+759.56 4856.83 736.74 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4857.7 733.34 4847.1 733.34 4855.39 739.95 ",
+		pos="e,4847.1,733.34 6516.7,936.52 6372.1,925.74 6008.6,898.51 5887,888 5553.4,859.18 5465.7,879.74 5137,816 5036.3,796.48 4922.5,759.56 \
+4856.8,736.74"];
+	n66 -> n16	 [_draw_="c 7 -#000000 B 7 6640.12 940.97 7084.22 940.62 9723.22 936.48 9789 888 9861.41 834.63 9871.7 716.21 9872.46 662.47 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9875.96 662.35 9872.5 652.33 9868.96 662.32 ",
+		pos="e,9872.5,652.33 6640.1,940.97 7084.2,940.62 9723.2,936.48 9789,888 9861.4,834.63 9871.7,716.21 9872.5,662.47"];
+	n37 -> n85	 [_draw_="c 7 -#000000 B 16 1531.09 569.33 1557.58 580.4 1594.75 594.05 1629 600 1696.82 611.77 2799.26 604.4 2868 608 3203.38 625.55 3284.93 \
+659.33 3620 682 3715.85 688.48 3740.53 679.32 3836 690 3854.7 692.09 3874.72 695.32 3893.41 698.77 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3892.86 702.23 3903.33 700.65 3894.16 695.36 ",
+		pos="e,3903.3,700.65 1531.1,569.33 1557.6,580.4 1594.8,594.05 1629,600 1696.8,611.77 2799.3,604.4 2868,608 3203.4,625.55 3284.9,659.33 \
+3620,682 3715.8,688.48 3740.5,679.32 3836,690 3854.7,692.09 3874.7,695.32 3893.4,698.77"];
+	n37 -> n84	 [_draw_="c 7 -#000000 B 13 1531.1 569.27 1557.59 580.31 1594.77 593.96 1629 600 1701.33 612.77 2216.61 605.09 2290 608 2833.46 629.52 2970.35 \
+630.74 3511 690 3533.94 692.51 3558.59 695.9 3581.64 699.38 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3581.33 702.87 3591.75 700.92 3582.39 695.95 ",
+		pos="e,3591.7,700.92 1531.1,569.27 1557.6,580.31 1594.8,593.96 1629,600 1701.3,612.77 2216.6,605.09 2290,608 2833.5,629.52 2970.3,630.74 \
+3511,690 3533.9,692.51 3558.6,695.9 3581.6,699.38"];
+	n90 -> n61	 [_draw_="c 7 -#000000 B 25 6329.6 935.44 6377.72 931.49 6445.46 926.46 6505 924 6678.64 916.83 9466.25 936.98 9633 888 9704.46 867.01 9775 \
+873.48 9775 799 9775 799 9775 799 9775 715 9775 666.92 9764.88 648.37 9791 608 9887.06 459.56 10010.41 521.06 10117 380 10160.02 \
+323.07 10202.33 277.4 10155 224 10136.76 203.42 9980.27 190.39 9876.15 183.92 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9876.13 180.41 9865.93 183.29 9875.7 187.4 ",
+		pos="e,9865.9,183.29 6329.6,935.44 6377.7,931.49 6445.5,926.46 6505,924 6678.6,916.83 9466.3,936.98 9633,888 9704.5,867.01 9775,873.48 \
+9775,799 9775,799 9775,799 9775,715 9775,666.92 9764.9,648.37 9791,608 9887.1,459.56 10010,521.06 10117,380 10160,323.07 10202,277.4 \
+10155,224 10137,203.42 9980.3,190.39 9876.2,183.92"];
+	n90 -> n91	 [_draw_="c 7 -#000000 B 16 6201.86 935.82 6153.55 932.08 6085.65 927.14 6026 924 5563.25 899.63 5447.06 905.3 4984 888 3611.85 836.74 3262.26 \
+910.62 1897 764 1687.47 741.5 1627.51 755.46 1430 682 1358.68 655.47 1284.39 605.31 1244.21 575.96 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1246.06 572.97 1235.93 569.86 1241.9 578.61 ",
+		pos="e,1235.9,569.86 6201.9,935.82 6153.5,932.08 6085.6,927.14 6026,924 5563.3,899.63 5447.1,905.3 4984,888 3611.9,836.74 3262.3,910.62 \
+1897,764 1687.5,741.5 1627.5,755.46 1430,682 1358.7,655.47 1284.4,605.31 1244.2,575.96"];
+	n90 -> n1	 [_draw_="c 7 -#000000 B 10 6201.86 935.88 6153.54 932.16 6085.65 927.23 6026 924 5919.41 918.23 5167.78 920.17 5066 888 4968.7 857.25 4872.78 \
+780.28 4828.07 740.95 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4830.13 738.09 4820.33 734.06 4825.48 743.32 ",
+		pos="e,4820.3,734.06 6201.9,935.88 6153.5,932.16 6085.6,927.23 6026,924 5919.4,918.23 5167.8,920.17 5066,888 4968.7,857.25 4872.8,780.28 \
+4828.1,740.95"];
+	n90 -> n14	 [_draw_="c 7 -#000000 B 16 6329.6 935.45 6377.72 931.5 6445.46 926.47 6505 924 6674.64 916.97 9398.41 936.92 9561 888 9630.89 866.97 9699 \
+871.98 9699 799 9699 799 9699 799 9699 551 9699 505.15 9729.05 459.26 9750.85 432 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9753.65 434.11 9757.31 424.16 9748.25 429.65 ",
+		pos="e,9757.3,424.16 6329.6,935.45 6377.7,931.5 6445.5,926.47 6505,924 6674.6,916.97 9398.4,936.92 9561,888 9630.9,866.97 9699,871.98 \
+9699,799 9699,799 9699,799 9699,551 9699,505.15 9729,459.26 9750.8,432"];
+	n36 -> n47	 [_draw_="c 7 -#000000 B 10 2083.53 569.34 2109.6 580.42 2146.22 594.07 2180 600 2263.45 614.64 3620.57 600.97 3705 608 3728.04 609.92 3752.84 \
+613.34 3775.66 617.04 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3775.22 620.52 3785.65 618.7 3776.36 613.61 ",
+		pos="e,3785.7,618.7 2083.5,569.34 2109.6,580.42 2146.2,594.07 2180,600 2263.4,614.64 3620.6,600.97 3705,608 3728,609.92 3752.8,613.34 \
+3775.7,617.04"];
+	n108 -> n77	 [_draw_="c 7 -#000000 B 10 5460.46 475 5627.82 471 5897.79 465.02 6131 462 6171.77 461.47 7558.72 460.35 7599 454 7632.59 448.7 7669 437.21 \
+7697.31 426.92 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7698.81 430.1 7706.97 423.35 7696.37 423.54 ",
+		pos="e,7707,423.35 5460.5,475 5627.8,471 5897.8,465.02 6131,462 6171.8,461.47 7558.7,460.35 7599,454 7632.6,448.7 7669,437.21 7697.3,\
+426.92"];
+	n108 -> n109	 [_draw_="c 7 -#000000 B 10 5460.46 475.07 5627.82 471.13 5897.8 465.19 6131 462 6195.66 461.12 7231.09 463.88 7295 454 7329.58 448.65 7367.16 \
+437.09 7396.3 426.77 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7397.62 430.01 7405.84 423.33 7395.25 423.43 ",
+		pos="e,7405.8,423.33 5460.5,475.07 5627.8,471.13 5897.8,465.19 6131,462 6195.7,461.12 7231.1,463.88 7295,454 7329.6,448.65 7367.2,437.09 \
+7396.3,426.77"];
+	n108 -> n112	 [_draw_="c 7 -#000000 B 10 5186.49 493.21 5165.72 495.09 5144.22 496.8 5124 498 4408.19 540.5 4227.06 496.06 3511 534 3480.78 535.6 3448.08 \
+538.03 3417.93 540.56 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3417.48 537.08 3407.81 541.42 3418.07 544.06 ",
+		pos="e,3407.8,541.42 5186.5,493.21 5165.7,495.09 5144.2,496.8 5124,498 4408.2,540.5 4227.1,496.06 3511,534 3480.8,535.6 3448.1,538.03 \
+3417.9,540.56"];
+	n108 -> n113	 [_draw_="c 7 -#000000 B 10 5186.49 493.27 5165.72 495.15 5144.23 496.84 5124 498 4259.5 547.66 4040.24 479.92 3176 534 3160.77 534.95 3144.75 \
+536.28 3128.99 537.78 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3128.29 534.33 3118.67 538.78 3128.97 541.3 ",
+		pos="e,3118.7,538.78 5186.5,493.27 5165.7,495.15 5144.2,496.84 5124,498 4259.5,547.66 4040.2,479.92 3176,534 3160.8,534.95 3144.8,536.28 \
+3129,537.78"];
+	n55 -> n61	 [_draw_="c 7 -#000000 B 19 5896.8 867.95 5229.43 860.06 1077.22 809.29 817 764 602.66 726.69 566.45 650.14 353 608 339.67 605.37 241.71 608.35 \
+231 600 96.43 495.03 32.5 344.86 153 224 176.38 200.55 9655.03 198.98 9688 196 9696.4 195.24 9705.16 194.13 9713.83 192.82 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9714.6 196.24 9723.92 191.21 9713.5 189.33 ",
+		pos="e,9723.9,191.21 5896.8,867.95 5229.4,860.06 1077.2,809.29 817,764 602.66,726.69 566.45,650.14 353,608 339.67,605.37 241.71,608.35 \
+231,600 96.426,495.03 32.496,344.86 153,224 176.38,200.55 9655,198.98 9688,196 9696.4,195.24 9705.2,194.13 9713.8,192.82"];
+	n55 -> n56	 [_draw_="c 7 -#000000 B 25 6075.38 865.78 6621.09 845.82 9509 739.17 9509 717 9509 717 9509 717 9509 633 9509 450.32 9716.12 536.71 9879 \
+454 9934.67 425.73 9943.88 408.06 10003 388 10023.48 381.05 10037.02 396.5 10051 380 10072.26 354.91 10071.02 332.09 10051 306 9965.29 \
+194.3 9881.35 259.12 9745 224 9707.99 214.47 9666.65 204.21 9632.73 195.9 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9633.46 192.48 9622.91 193.5 9631.79 199.28 ",
+		pos="e,9622.9,193.5 6075.4,865.78 6621.1,845.82 9509,739.17 9509,717 9509,717 9509,717 9509,633 9509,450.32 9716.1,536.71 9879,454 9934.7,\
+425.73 9943.9,408.06 10003,388 10023,381.05 10037,396.5 10051,380 10072,354.91 10071,332.09 10051,306 9965.3,194.3 9881.3,259.12 \
+9745,224 9708,214.47 9666.6,204.21 9632.7,195.9"];
+	n55 -> n62	 [_draw_="c 7 -#000000 B 13 6074.98 865.49 6176.61 861.58 6348.87 855.35 6497 852 6833.16 844.4 9190.64 866.98 9523 816 9535.76 814.04 9956.37 \
+687.6 9968 682 9981.94 675.29 9996.2 665.89 10008.04 657.26 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 10010.28 659.96 10016.19 651.17 10006.09 654.35 ",
+		pos="e,10016,651.17 6075,865.49 6176.6,861.58 6348.9,855.35 6497,852 6833.2,844.4 9190.6,866.98 9523,816 9535.8,814.04 9956.4,687.6 9968,\
+682 9981.9,675.29 9996.2,665.89 10008,657.26"];
+	n80 -> n81	 [_draw_="c 7 -#000000 B 4 6333.41 393.04 6586.35 363.8 7232.96 289.04 7471.68 261.44 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7472.18 264.91 7481.71 260.28 7471.37 257.95 ",
+		pos="e,7481.7,260.28 6333.4,393.04 6586.3,363.8 7233,289.04 7471.7,261.44"];
+	n110 -> n33	 [_draw_="c 7 -#000000 B 13 4026.9 393.46 4006.23 391.28 3984.39 389.29 3964 388 3939.05 386.42 3536.91 390.01 3514 380 3472.23 361.75 3484.68 \
+324.45 3443 306 3349.76 264.72 1745.82 252.91 1478.6 251.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1478.29 247.72 1468.26 251.16 1478.24 254.72 ",
+		pos="e,1468.3,251.16 4026.9,393.46 4006.2,391.28 3984.4,389.29 3964,388 3939,386.42 3536.9,390.01 3514,380 3472.2,361.75 3484.7,324.45 \
+3443,306 3349.8,264.72 1745.8,252.91 1478.6,251.22"];
+	n57 -> n97	 [_draw_="c 7 -#000000 B 4 5684.79 779.64 5681.66 769.19 5677.6 755.67 5674.06 743.86 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5677.34 742.62 5671.12 734.05 5670.64 744.63 ",
+		pos="e,5671.1,734.05 5684.8,779.64 5681.7,769.19 5677.6,755.67 5674.1,743.86"];
+	n95 -> n64	 [_draw_="c 7 -#000000 B 10 3442.82 698.19 3470.57 652.81 3537.58 526.91 3472 462 3460.86 450.98 1231.55 455.94 1216 454 1168.81 448.11 1116.41 \
+434.39 1078.94 423.29 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1079.85 419.91 1069.27 420.38 1077.84 426.61 ",
+		pos="e,1069.3,420.38 3442.8,698.19 3470.6,652.81 3537.6,526.91 3472,462 3460.9,450.98 1231.5,455.94 1216,454 1168.8,448.11 1116.4,434.39 \
+1078.9,423.29"];
+	n94 -> n98	 [_draw_="c 7 -#000000 B 16 5471.58 700.69 5486.08 696.37 5502.59 692.19 5518 690 5538.02 687.16 6955.73 690.66 6974 682 7088.67 627.65 7041.28 \
+516.25 7156 462 7181.9 449.75 9191.45 461.89 9219 454 9236.25 449.06 9253.43 438.99 9267.08 429.43 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9269.48 432.01 9275.5 423.29 9265.36 426.35 ",
+		pos="e,9275.5,423.29 5471.6,700.69 5486.1,696.37 5502.6,692.19 5518,690 5538,687.16 6955.7,690.66 6974,682 7088.7,627.65 7041.3,516.25 \
+7156,462 7181.9,449.75 9191.5,461.89 9219,454 9236.3,449.06 9253.4,438.99 9267.1,429.43"];
+	n15 -> n119	 [_draw_="c 7 -#000000 B 7 6631.37 790.72 6681.94 786 6744.4 777.86 6799 764 6825 757.4 6852.96 746.68 6875.35 737.14 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6876.79 740.32 6884.58 733.14 6874.01 733.9 ",
+		pos="e,6884.6,733.14 6631.4,790.72 6681.9,786 6744.4,777.86 6799,764 6825,757.4 6853,746.68 6875.3,737.14"];
+	n72 -> n73	 [_draw_="c 7 -#000000 B 16 1811.63 569.35 1839.94 580.43 1879.63 594.09 1916 600 1939.36 603.8 3598.79 597.5 3620 608 3657.21 626.41 3639.92 \
+663.32 3677 682 3698.14 692.65 4079.44 687.72 4103 690 4123.45 691.98 4145.38 695.26 4165.74 698.8 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4165.14 702.25 4175.6 700.56 4166.37 695.36 ",
+		pos="e,4175.6,700.56 1811.6,569.35 1839.9,580.43 1879.6,594.09 1916,600 1939.4,603.8 3598.8,597.5 3620,608 3657.2,626.41 3639.9,663.32 \
+3677,682 3698.1,692.65 4079.4,687.72 4103,690 4123.4,691.98 4145.4,695.26 4165.7,698.8"];
+	n72 -> n74	 [_draw_="c 7 -#000000 B 16 1811.63 569.35 1839.94 580.43 1879.63 594.09 1916 600 1939.95 603.89 3641.71 596.37 3663 608 3697.4 626.79 3676.66 \
+663.08 3711 682 3727.47 691.08 4369.3 687.96 4388 690 4405.07 691.86 4423.29 695.03 4440.25 698.5 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4439.57 701.93 4450.07 700.57 4441.01 695.08 ",
+		pos="e,4450.1,700.57 1811.6,569.35 1839.9,580.43 1879.6,594.09 1916,600 1940,603.89 3641.7,596.37 3663,608 3697.4,626.79 3676.7,663.08 \
+3711,682 3727.5,691.08 4369.3,687.96 4388,690 4405.1,691.86 4423.3,695.03 4440.3,698.5"];
+	n136 -> n61	 [_draw_="c 7 -#000000 B 25 5608.24 929.2 5616.66 927.1 5625.57 925.2 5634 924 6064.91 862.53 9156.85 1002.8 9550 816 9699.44 745 9663.65 \
+637.16 9793 534 9846.47 491.36 9865.81 488.17 9929 462 9940.17 457.37 9944.41 459.83 9955 454 9994.48 432.25 9991.43 407.63 10032 \
+388 10048.71 379.91 10061.2 394.33 10073 380 10146.65 290.59 9953.27 223.6 9847.16 194.69 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9848.05 191.31 9837.49 192.09 9846.24 198.07 ",
+		pos="e,9837.5,192.09 5608.2,929.2 5616.7,927.1 5625.6,925.2 5634,924 6064.9,862.53 9156.8,1002.8 9550,816 9699.4,745 9663.7,637.16 9793,\
+534 9846.5,491.36 9865.8,488.17 9929,462 9940.2,457.37 9944.4,459.83 9955,454 9994.5,432.25 9991.4,407.63 10032,388 10049,379.91 \
+10061,394.33 10073,380 10147,290.59 9953.3,223.6 9847.2,194.69"];
+	n136 -> n138	 [_draw_="c 7 -#000000 B 13 5529.77 929.19 5521.34 927.09 5512.43 925.2 5504 924 5371.53 905.21 689 932.8 689 799 689 799 689 799 689 715 \
+689 636.9 778.86 593.08 846 571.24 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 847.24 574.52 855.73 568.17 845.14 567.84 ",
+		pos="e,855.73,568.17 5529.8,929.19 5521.3,927.09 5512.4,925.2 5504,924 5371.5,905.21 689,932.8 689,799 689,799 689,799 689,715 689,636.9 \
+778.86,593.08 846,571.24"];
+	n136 -> n137	 [_draw_="c 7 -#000000 B 19 5529.78 929.08 5521.35 926.98 5512.44 925.12 5504 924 5017.47 859.41 1575.69 933.43 1087 888 656.58 847.99 398.83 \
+958.98 158 600 88.38 496.23 183.75 364.64 280 306 292.69 298.27 800.3 300.2 815 298 851.72 292.5 891.8 280.92 922.91 270.63 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 924.31 273.85 932.68 267.35 922.08 267.22 ",
+		pos="e,932.68,267.35 5529.8,929.08 5521.4,926.98 5512.4,925.12 5504,924 5017.5,859.41 1575.7,933.43 1087,888 656.58,847.99 398.83,958.98 \
+158,600 88.384,496.23 183.75,364.64 280,306 292.69,298.27 800.3,300.2 815,298 851.72,292.5 891.8,280.92 922.91,270.63"];
+	n48 -> n53	 [_draw_="c 7 -#000000 B 10 4854.13 466.61 4834.51 464.72 4814.15 463.06 4795 462 4536.5 447.75 3888.51 468.09 3630 454 3218.76 431.59 2730.03 \
+370.54 2534.81 344.75 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2535.27 341.28 2524.9 343.44 2534.35 348.22 ",
+		pos="e,2524.9,343.44 4854.1,466.61 4834.5,464.72 4814.1,463.06 4795,462 4536.5,447.75 3888.5,468.09 3630,454 3218.8,431.59 2730,370.54 \
+2534.8,344.75"];
+	n48 -> n49	 [_draw_="c 7 -#000000 B 10 5063.62 466.63 5083.64 464.72 5104.44 463.03 5124 462 5200.89 457.94 7820.16 467.31 7896 454 7925.73 448.78 7957.64 \
+437.47 7982.52 427.25 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7984.17 430.35 7992.03 423.25 7981.46 423.89 ",
+		pos="e,7992,423.25 5063.6,466.63 5083.6,464.72 5104.4,463.03 5124,462 5200.9,457.94 7820.2,467.31 7896,454 7925.7,448.78 7957.6,437.47 \
+7982.5,427.25"];
+	n48 -> n41	 [_draw_="c 7 -#000000 B 10 4854.13 466.6 4834.51 464.71 4814.15 463.05 4795 462 4510.09 446.38 3796.22 462.08 3511 454 3216.31 445.66 2869.66 \
+425.43 2693.81 414.42 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2693.97 410.93 2683.77 413.79 2693.53 417.91 ",
+		pos="e,2683.8,413.79 4854.1,466.6 4834.5,464.71 4814.1,463.05 4795,462 4510.1,446.38 3796.2,462.08 3511,454 3216.3,445.66 2869.7,425.43 \
+2693.8,414.42"];
+	n48 -> n43	 [_draw_="c 7 -#000000 B 10 5063.62 466.65 5083.64 464.74 5104.45 463.05 5124 462 5177.2 459.16 6989.56 463.44 7042 454 7071.1 448.76 7102.28 \
+437.45 7126.58 427.23 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7128.07 430.4 7135.87 423.24 7125.3 423.97 ",
+		pos="e,7135.9,423.24 5063.6,466.65 5083.6,464.74 5104.4,463.05 5124,462 5177.2,459.16 6989.6,463.44 7042,454 7071.1,448.76 7102.3,437.45 \
+7126.6,427.23"];
+	n48 -> n50	 [_draw_="c 7 -#000000 B 10 5063.62 466.63 5083.64 464.71 5104.44 463.03 5124 462 5208.16 457.56 8075.04 468.86 8158 454 8187.11 448.79 8218.29 \
+437.47 8242.58 427.25 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8244.07 430.42 8251.88 423.25 8241.31 423.99 ",
+		pos="e,8251.9,423.25 5063.6,466.63 5083.6,464.71 5104.4,463.03 5124,462 5208.2,457.56 8075,468.86 8158,454 8187.1,448.79 8218.3,437.47 \
+8242.6,427.25"];
+	n13 -> n14	 [_draw_="c 7 -#000000 B 13 6613.76 868.94 7009.99 868.43 9463.95 863.31 9523 816 9558.33 787.69 9547 762.27 9547 717 9547 717 9547 717 9547 \
+551 9547 529.27 9667.35 462.57 9732.4 428.11 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9734.37 431.03 9741.58 423.27 9731.1 424.84 ",
+		pos="e,9741.6,423.27 6613.8,868.94 7010,868.43 9463.9,863.31 9523,816 9558.3,787.69 9547,762.27 9547,717 9547,717 9547,717 9547,551 9547,\
+529.27 9667.3,462.57 9732.4,428.11"];
+	n69 -> n34	 [_draw_="c 7 -#000000 B 16 6704.99 700.58 6734.97 696.5 6768.31 692.49 6799 690 6813.9 688.79 7055.78 690.61 7068 682 7153.81 621.52 7067.43 \
+521.39 7154 462 7174.95 447.63 8958.06 458.84 8983 454 9009.71 448.82 9038.08 437.71 9060.31 427.6 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9061.85 430.74 9069.44 423.35 9058.89 424.4 ",
+		pos="e,9069.4,423.35 6705,700.58 6735,696.5 6768.3,692.49 6799,690 6813.9,688.79 7055.8,690.61 7068,682 7153.8,621.52 7067.4,521.39 7154,\
+462 7174.9,447.63 8958.1,458.84 8983,454 9009.7,448.82 9038.1,437.71 9060.3,427.6"];
+	n69 -> n70	 [_draw_="c 7 -#000000 B 16 6704.51 700.58 6734.6 696.47 6768.15 692.45 6799 690 6815.84 688.66 7089.12 691.63 7103 682 7189.67 621.89 7104.65 \
+521.12 7192 462 7204.53 453.52 9356.05 456.34 9371 454 9404.71 448.71 9441.27 437.16 9469.61 426.84 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9471.12 430.01 9479.28 423.25 9468.69 423.45 ",
+		pos="e,9479.3,423.25 6704.5,700.58 6734.6,696.47 6768.1,692.45 6799,690 6815.8,688.66 7089.1,691.63 7103,682 7189.7,621.89 7104.7,521.12 \
+7192,462 7204.5,453.52 9356.1,456.34 9371,454 9404.7,448.71 9441.3,437.16 9469.6,426.84"];
+	n86 -> n72	 [_draw_="c 7 -#000000 B 10 4991.66 626.4 4834.68 620.35 4590.1 611.76 4378 608 4309.62 606.79 1983.51 610.92 1916 600 1883.6 594.76 1848.58 \
+583.35 1821.3 573.09 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1822.21 569.69 1811.62 569.37 1819.71 576.22 ",
+		pos="e,1811.6,569.37 4991.7,626.4 4834.7,620.35 4590.1,611.76 4378,608 4309.6,606.79 1983.5,610.92 1916,600 1883.6,594.76 1848.6,583.35 \
+1821.3,573.09"];
+	n86 -> n34	 [_draw_="c 7 -#000000 B 16 5262.09 619.6 5304.13 614.98 5352.75 610.38 5397 608 5408.06 607.4 6982.99 606.44 6992 600 7044.83 562.24 6987.15 \
+499.74 7040 462 7050.98 454.16 8969.75 456.57 8983 454 9009.71 448.82 9038.08 437.72 9060.31 427.6 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9061.85 430.74 9069.44 423.35 9058.89 424.4 ",
+		pos="e,9069.4,423.35 5262.1,619.6 5304.1,614.98 5352.7,610.38 5397,608 5408.1,607.4 6983,606.44 6992,600 7044.8,562.24 6987.2,499.74 \
+7040,462 7051,454.16 8969.8,456.57 8983,454 9009.7,448.82 9038.1,437.72 9060.3,427.6"];
+	n86 -> n129	 [_draw_="c 7 -#000000 B 10 4991.28 626.45 4834.29 620.44 4589.92 611.9 4378 608 4330.01 607.12 2696.92 610.14 2650 600 2626.24 594.87 2601.33 \
+583.99 2581.75 573.99 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2583.35 570.88 2572.87 569.33 2580.1 577.08 ",
+		pos="e,2572.9,569.33 4991.3,626.45 4834.3,620.44 4589.9,611.9 4378,608 4330,607.12 2696.9,610.14 2650,600 2626.2,594.87 2601.3,583.99 \
+2581.7,573.99"];
+	n42 -> n43	 [_draw_="c 7 -#000000 B 7 6377.43 339.38 6534.11 347.8 6808.02 364.36 7042 388 7053.5 389.16 7065.56 390.55 7077.49 392.01 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 7077.1 395.49 7087.46 393.26 7077.98 388.55 ",
+		pos="e,7087.5,393.26 6377.4,339.38 6534.1,347.8 6808,364.36 7042,388 7053.5,389.16 7065.6,390.55 7077.5,392.01"];
+	n121 -> n117	 [_draw_="c 7 -#000000 B 16 4953.53 538.75 4974.97 536.89 4997.13 535.19 5018 534 5201.96 523.47 6495.83 536.62 6676 498 6716.12 489.4 6720.81 \
+470.26 6761 462 6850.95 443.51 8323.56 469.96 8414 454 8443.62 448.77 8475.41 437.52 8500.25 427.33 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 8501.89 430.44 8509.76 423.35 8499.18 423.99 ",
+		pos="e,8509.8,423.35 4953.5,538.75 4975,536.89 4997.1,535.19 5018,534 5202,523.47 6495.8,536.62 6676,498 6716.1,489.4 6720.8,470.26 6761,\
+462 6851,443.51 8323.6,469.96 8414,454 8443.6,448.77 8475.4,437.52 8500.3,427.33"];
+	n119 -> n62	 [_draw_="c 7 -#000000 B 7 7029.52 714.02 7574.48 709.16 9950.14 687.68 9968 682 9983.56 677.05 9998.71 667.22 10010.76 657.83 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 10013.03 660.49 10018.56 651.46 10008.6 655.07 ",
+		pos="e,10019,651.46 7029.5,714.02 7574.5,709.16 9950.1,687.68 9968,682 9983.6,677.05 9998.7,667.22 10011,657.83"];
+	n67 -> n16	 [_draw_="c 7 -#000000 B 10 5248.11 700.44 5277.88 696.22 5311.29 692.16 5342 690 5436.21 683.37 6947.56 683.01 7042 682 8132.88 670.38 9460.1 \
+643.56 9793.28 636.65 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9793.39 640.15 9803.32 636.44 9793.25 633.15 ",
+		pos="e,9803.3,636.44 5248.1,700.44 5277.9,696.22 5311.3,692.16 5342,690 5436.2,683.37 6947.6,683.01 7042,682 8132.9,670.38 9460.1,643.56 \
+9793.3,636.65"];
+	n50 -> n54	 [_draw_="c 7 -#000000 B 10 8366.12 392.7 8381.64 390.76 8397.8 389.05 8413 388 8453.71 385.18 9843.46 393.41 9882 380 9895.94 375.15 9909.13 \
+365.6 9919.57 356.37 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9922.06 358.83 9926.98 349.45 9917.28 353.71 ",
+		pos="e,9927,349.45 8366.1,392.7 8381.6,390.76 8397.8,389.05 8413,388 8453.7,385.18 9843.5,393.41 9882,380 9895.9,375.15 9909.1,365.6 \
+9919.6,356.37"];
+	n52 -> n116	 [_draw_="c 7 -#000000 B 10 3767.57 423.82 3727.99 445.48 3654.72 482.21 3587 498 3271.08 571.68 3180.58 499.78 2858 534 2848.98 534.96 2839.56 \
+536.18 2830.22 537.53 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2829.52 534.1 2820.15 539.04 2830.56 541.02 ",
+		pos="e,2820.1,539.04 3767.6,423.82 3728,445.48 3654.7,482.21 3587,498 3271.1,571.68 3180.6,499.78 2858,534 2849,534.96 2839.6,536.18 \
+2830.2,537.53"];
+	n52 -> n3	 [_draw_="c 7 -#000000 B 13 3707.38 420.88 3635.95 431.46 3533.28 445.6 3443 454 3078.72 487.88 2986.63 485.07 2621 498 1693.89 530.8 1459.04 \
+463.86 534 534 522.22 534.89 509.86 536.16 497.68 537.59 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 497 534.15 487.5 538.84 497.85 541.1 ",
+		pos="e,487.5,538.84 3707.4,420.88 3635.9,431.46 3533.3,445.6 3443,454 3078.7,487.88 2986.6,485.07 2621,498 1693.9,530.8 1459,463.86 534,\
+534 522.22,534.89 509.86,536.16 497.68,537.59"];
+	n2 -> n37	 [_draw_="c 7 -#000000 B 10 4107.92 618.75 4076.08 614.41 4040.04 610.2 4007 608 3941.09 603.62 1694.1 611.2 1629 600 1598.62 594.77 1565.96 \
+583.44 1540.48 573.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1541.67 569.92 1531.09 569.36 1539.01 576.4 ",
+		pos="e,1531.1,569.36 4107.9,618.75 4076.1,614.41 4040,610.2 4007,608 3941.1,603.62 1694.1,611.2 1629,600 1598.6,594.77 1566,583.44 1540.5,\
+573.22"];
+	n2 -> n36	 [_draw_="c 7 -#000000 B 10 4107.91 618.77 4076.07 614.43 4040.04 610.21 4007 608 3956.36 604.61 2229.99 608.75 2180 600 2150.04 594.76 2117.86 \
+583.43 2092.77 573.2 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2094.1 569.96 2083.53 569.35 2091.41 576.43 ",
+		pos="e,2083.5,569.35 4107.9,618.77 4076.1,614.43 4040,610.21 4007,608 3956.4,604.61 2230,608.75 2180,600 2150,594.76 2117.9,583.43 2092.8,\
+573.2"];
+	n2 -> n34	 [_draw_="c 7 -#000000 B 16 4354.32 626.64 4509.23 620.59 4754.03 611.88 4966 608 4979.84 607.75 6947.58 607.83 6959 600 7013.32 562.76 6958.68 \
+499.24 7013 462 7024.28 454.26 8969.57 456.6 8983 454 9009.71 448.82 9038.08 437.72 9060.31 427.6 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9061.85 430.75 9069.44 423.35 9058.89 424.4 ",
+		pos="e,9069.4,423.35 4354.3,626.64 4509.2,620.59 4754,611.88 4966,608 4979.8,607.75 6947.6,607.83 6959,600 7013.3,562.76 6958.7,499.24 \
+7013,462 7024.3,454.26 8969.6,456.6 8983,454 9009.7,448.82 9038.1,437.72 9060.3,427.6"];
+	n10 -> n34	 [_draw_="c 7 -#000000 B 16 6042.91 700.5 6067.96 696.28 6096.09 692.21 6122 690 6145.58 687.99 6953.22 693.32 6974 682 7076.84 625.99 7016.02 \
+517.75 7119 462 7141.77 449.68 8957.58 458.93 8983 454 9009.71 448.82 9038.08 437.71 9060.31 427.6 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 9061.85 430.74 9069.44 423.35 9058.89 424.4 ",
+		pos="e,9069.4,423.35 6042.9,700.5 6068,696.28 6096.1,692.21 6122,690 6145.6,687.99 6953.2,693.32 6974,682 7076.8,625.99 7016,517.75 7119,\
+462 7141.8,449.68 8957.6,458.93 8983,454 9009.7,448.82 9038.1,437.71 9060.3,427.6"];
+}

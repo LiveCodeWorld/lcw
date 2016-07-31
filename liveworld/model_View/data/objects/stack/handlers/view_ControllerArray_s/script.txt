@@ -1,0 +1,8 @@
+setprop view_ControllerArray [pUseCard] controllerArray
+   -- contains information about the controllers associated with a single view
+   put the long id of the target into someView 
+   put the view_Array [pUseCard] of someView into viewArray
+   put controllerArray into viewArray ["controllers"]
+   set the view_Array [pUseCard] of someView to viewArray
+   return viewArray
+end view_ControllerArray

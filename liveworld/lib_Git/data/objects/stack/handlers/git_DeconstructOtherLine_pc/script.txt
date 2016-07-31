@@ -1,0 +1,19 @@
+private command git_DeconstructOtherLine @someLine, @diffArray
+   switch char 1 of someLine
+      case "+"
+         -- an added line
+         delete char 1 of someLine
+         put someLine into diffArray ["added"]
+         break
+      case "-"
+         -- an deleted line
+         delete char 1 of someLine
+         put someLine into diffArray ["deleted"]
+         break
+      case " "
+         -- line not changed
+         delete char 1 of someLine
+         put someLine into diffArray ["unchanged"]
+         break
+   end switch
+end git_DeconstructOtherLine

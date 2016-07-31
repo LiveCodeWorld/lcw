@@ -1,0 +1,21 @@
+command fedwiki_ActionMove pageSlug, actionArray, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_FetchLocalOrDefaultArray (pageSlug) into pageArray
+   put pageArray ["story"] into storyArray
+   
+   put actionArray ["order"] into orderArray
+   repeat for each key orderNum in orderArray
+      put orderArray [orderNum] into itemID
+      put fedwiki_FindStoryItemID (pageArray, itemID) into oldStoryItemNum
+      put storyArray [oldStoryItemNum] into newPageArray [orderNum]
+   end repeat
+   put newPageArray into pageArray ["story"]
+   
+   -- now add a "move" to the journal
+   put pageArray ["journal"] into journalArray
+   fedwiki_AddToJournalArray journalArray, actionArray, "move"
+   put journalArray into pageArray ["journal"]
+   
+   put actionArray ["date"] into pCreateMilliSeconds
+   fedwiki_SetLocalPageArray pageSlug, pageArray, pFedwikiDomain, pLocalWikiFolder, pCreateMilliSeconds
+   return the result
+end fedwiki_ActionMove

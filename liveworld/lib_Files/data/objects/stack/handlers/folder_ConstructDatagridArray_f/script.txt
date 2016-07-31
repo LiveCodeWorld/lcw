@@ -1,0 +1,33 @@
+function folder_ConstructDatagridArray someFolder, pIsExpanded
+   local dgArray
+   folder_Format someFolder
+   put the directory into oDirectory
+   set the directory to someFolder
+   
+   put the folders into newShortFolders
+   if includeInvisible is not false then filter newShortFolders without ".*"
+   -- what else needs escaping?
+   replace "/" with ":" in newShortFolders
+   
+   repeat with lineNum = 1 to the number of lines of newShortFolders
+      put pIsExpanded is true into dgArray [lineNum]["isExpanded"]
+      put line lineNum of newShortFolders into shortFolder
+      put shortFolder into dgArray [lineNum]["title"]
+      
+      put someFolder & shortFolder & "/" into nestedFolder
+      put nestedFolder into dgArray [lineNum]["folder"]
+      
+      set the directory to nestedFolder
+      put the files into shortFiles
+      if includeInvisible is not false then filter shortFiles without ".*"
+      repeat for each line shortFile in shortFiles
+         put nestedFolder & shortFile into filePath
+         
+         put dgArray [lineNum]["files"] into fileIndex
+         line_Insert shortFile, fileIndex
+         put fileIndex into dgArray [lineNum]["files"]
+      end repeat
+   end repeat
+   set the directory to someFolder
+   return dgArray
+end folder_ConstructDatagridArray

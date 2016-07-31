@@ -1,0 +1,7 @@
+command daemon_SendSimple someHeader, contentToSend, socketID
+   -- always adds "Content-Length:" header
+   _addContentLengthHeader someHeader, contentToSend
+   
+   daemon_SendRaw someHeader, contentToSend, socketID
+   return the result
+end daemon_SendSimple

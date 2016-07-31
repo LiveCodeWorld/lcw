@@ -1,0 +1,5 @@
+function file_CreatorAndType filePath
+    -- only useful on MacOS
+    get file_DetailedInfo(filePath)
+    return item 11 of it
+end file_CreatorAndType

@@ -1,0 +1,29 @@
+function script_Contains someToken, someScript, pHandlerType
+   switch char 1 of pHandlerType
+      case "h"
+         put script_ExtractHandler (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "c"
+         put script_GetCommand (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "f"
+         put script_GetFunction (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "g"
+         put script_GetGetProp(someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "s"
+         put script_GetSetProp (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      default
+         if someScript contains someToken then
+            return true
+         end if
+   end switch
+   return false
+end script_Contains

@@ -1,0 +1,9 @@
+command display_GitStatus
+   set the cursor to watch
+   git_RefreshDisplay "Git Status"
+   
+   put the git_TreeField of me into displayView
+   object_GoTo displayView
+   set the displayed_File of displayView to empty
+   set the displayed_Object of displayView to empty
+end display_GitStatus

@@ -1,0 +1,18 @@
+function git_StackHashLog pRelativeFile, pCommitHash, pLogFormat, pHowMany
+   if pLogFormat is empty then put "oneline" into pLogFormat
+   
+   put "git log" into someShell
+   put space & "--pretty=" & pLogFormat after someShell
+   
+   -- if pHowMany is empty then put "1" into pHowMany
+   if pHowMany is not empty then put space &  "-n" & pHowMany after someShell
+   
+   if pCommitHash is not empty then put space & pCommitHash after someShell
+   if pRelativeFile is not empty then
+      shell_BashParamEscape pRelativeFile
+      put space & "--" && pRelativeFile after someShell
+   end if
+   
+   put git_ExecuteShellCommand (someShell) into logText
+   return logText
+end git_StackHashLog

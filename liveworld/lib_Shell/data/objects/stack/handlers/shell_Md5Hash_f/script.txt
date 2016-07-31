@@ -1,0 +1,10 @@
+function shell_Md5Hash someFile
+  -- On Linux you can use the "md5sum" utility, 
+  -- on OSX the "md5" command 
+  -- On Win you may need to build your own utility 
+  -- but there are many very simple, single file sources available, with no library dependencies, 
+  -- so you could build and distribute your own executable for Win32.
+  -- (Or you could download the Microsoft utility to do this - fciv - from http://support.microsoft.com/?kbid=841290 )
+  put "md5 -q" && shell_EscapeFile(someFile) into someShell
+  return shell(someShell)
+end shell_Md5Hash

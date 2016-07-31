@@ -1,0 +1,22 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Colour_Palette_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Colour | Palette | Menu
+-
+[[ _FetchHandler (menu_DisplayMyColours,c) ]]
+
+[[ _FetchHandler (menu_DisplayColourPalette,c) ]]
+
+[[ _FetchHandler (menu_NewColourPalette,c) ]]
+
+[[ _FetchHandler (menu_DeleteColourPalette,c) ]]
+
+
+--> Global | Colour | Palette | Menu | Props
+-
+[[ _FetchHandler (swatch_Names,g) ]]

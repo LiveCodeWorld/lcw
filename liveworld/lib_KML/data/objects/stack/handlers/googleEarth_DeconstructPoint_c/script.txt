@@ -1,0 +1,8 @@
+on googleEarth_DeconstructPoint threeLoc, @threeLat, @threeLong, @threeDist
+    if char 1 of threeLoc is "{" then delete char 1 of threeLoc
+    if char -1 of threeLoc is "}" then delete char -1 of threeLoc
+    
+    put item 1 of threeLoc into threeLat
+    put item 2 of threeLoc into threeLong
+    put item 3 of threeLoc into threeDist
+end googleEarth_DeconstructPoint

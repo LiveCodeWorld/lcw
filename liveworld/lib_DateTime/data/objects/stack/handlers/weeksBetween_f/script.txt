@@ -1,0 +1,6 @@
+function weeksBetween startDate, someDate
+  convert startDate to seconds
+  convert someDate to seconds
+  put (someDate - startDate)/(7*60*60*24) into weekNum
+  return weekNum
+end weeksBetween

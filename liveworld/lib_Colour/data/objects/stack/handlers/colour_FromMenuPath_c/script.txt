@@ -1,0 +1,13 @@
+on colour_FromMenuPath @someColour, pStripSpaces
+   if pStripSpaces is true then replace space with empty in someColour
+   
+   set the itemdelimiter to "|"
+   put item -1 of someColour into someColour
+   
+   if someColour is "ask" then
+      answer color
+      put it into someColour
+   else if someColour is "none" then
+      put empty into someColour
+   end if
+end colour_FromMenuPath

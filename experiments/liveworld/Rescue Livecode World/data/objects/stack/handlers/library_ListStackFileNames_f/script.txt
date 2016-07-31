@@ -1,0 +1,6 @@
+function library_ListStackFileNames folderGroupName, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_GetFolder (folderGroupName, pProjectName) into someFolder 
+   put folder_ListStackFileNames (someFolder) into stackFileNames
+   return stackFileNames
+end library_ListStackFileNames

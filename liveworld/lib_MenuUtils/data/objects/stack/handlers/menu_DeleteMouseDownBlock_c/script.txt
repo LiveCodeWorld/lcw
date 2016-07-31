@@ -1,0 +1,9 @@
+command menu_DeleteMouseDownBlock someObject
+   global gOPN_MenuArray
+   
+   put gOPN_MenuArray ["mouseDownBlocks"] into mouseDownBlocks
+   get the mobile_Name of someObject
+   line_Delete it, mouseDownBlocks
+   put mouseDownBlocks into gOPN_MenuArray ["mouseDownBlocks"]
+   return gOPN_MenuArray ["mouseDownBlocks"]
+end menu_DeleteMouseDownBlock

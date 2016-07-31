@@ -1,0 +1,5 @@
+setprop project_ProcessedHkeyArray rigHkeyArray
+   put the project_ProcessedHkeyArrayFile of the target into someFile
+   array_Save someFile, rigHkeyArray
+   return someFile
+end project_ProcessedHkeyArray

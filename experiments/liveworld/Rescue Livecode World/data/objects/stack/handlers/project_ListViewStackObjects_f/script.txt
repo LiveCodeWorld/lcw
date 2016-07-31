@@ -1,0 +1,7 @@
+function project_ListViewStackObjects pProjectName
+   if pProjectName is empty then put "Default" into pProjectName
+   put project_GetFolder ("Views", pProjectName) into viewFolder 
+   put folder_ListShortStackFiles (viewFolder) into shortViewFiles
+   put project_ConvertShortFilesToStackObjects (shortViewFiles, viewFolder) into viewStacks
+   return viewStacks
+end project_ListViewStackObjects

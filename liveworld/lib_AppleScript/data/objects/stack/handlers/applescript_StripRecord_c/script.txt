@@ -1,0 +1,4 @@
+command applescript_StripRecord @someValue
+    delete char 1 of someValue
+    delete char -1 of someValue
+end applescript_StripRecord

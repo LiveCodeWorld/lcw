@@ -1,0 +1,4 @@
+function library_GetRevHackStatus
+   global gLibrarySet_Array
+   return gLibrarySet_Array ["data"]["rev_AddBehaviorHacks"] is true
+end library_GetRevHackStatus

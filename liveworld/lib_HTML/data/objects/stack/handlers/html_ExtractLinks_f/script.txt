@@ -1,0 +1,16 @@
+function html_ExtractLinks someHtml
+    -- Not all links have "http://"
+    
+    replace CR with empty in someHtml -- text is now one line
+    replace "href=" with "href=" & CR in someHtml
+    replace "</a" with "</a" & CR in someHtml
+    filter someHtml with "*http://*"
+    
+    set the itemdel to ">"
+    put empty into newLinkList
+    repeat for each line linkLine in someHtml
+        put item 1 of linkLine & CR after newLinkList
+    end repeat
+    delete last char of newLinkList
+    return newLinkList
+end html_ExtractLinks

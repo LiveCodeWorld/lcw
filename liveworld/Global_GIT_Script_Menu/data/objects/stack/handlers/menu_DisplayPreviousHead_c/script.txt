@@ -1,0 +1,5 @@
+on menu_DisplayPreviousHead treeField
+   put the displayed_File of treeField into relativeFile
+   put "HEAD^:" & relativeFile into treeish
+   put git_Show (treeish)
+end menu_DisplayPreviousHead

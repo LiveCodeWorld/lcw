@@ -1,0 +1,5 @@
+function fedwiki_FetchSitemapArray fedwikiDomain
+   put fedwiki_FetchSitemap (fedwikiDomain) into someJson
+   put json_ToArray (someJson) into sitemapArray
+   return sitemapArray
+end fedwiki_FetchSitemapArray

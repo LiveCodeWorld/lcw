@@ -1,0 +1,9 @@
+function overlayArray_ConstructFlatSubCluster dotClusterArray, someObject, idArray
+   put dotClusterArray [someObject] into nodeIds
+   repeat for each line nodeID in nodeIds
+      put dot_ConstructDefaultDefLine (nodeID, idArray) into nodeDefLine
+      put nodeDefLine & CR after nodeSection
+   end repeat
+   delete char -1 of nodeSection
+   return nodeSection
+end overlayArray_ConstructFlatSubCluster

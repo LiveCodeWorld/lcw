@@ -1,0 +1,34 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Kuler_Menu
+type: controller
+version: 0.1
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Global | Kuler | Menu
+-
+[[ _FetchHandler (submenu_MyColours,c) ]]
+
+[[ _FetchHandler (submenu_Colours,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CoolestColours,c) ]]
+
+[[ _FetchHandler (menu_SearchForColours,c) ]]
+        
+on _
+end _
+
+[[ _FetchHandler (submenu_Tools,c) ]]
+
+
+--> Global | Record | Kuler | Menu | Props
+-

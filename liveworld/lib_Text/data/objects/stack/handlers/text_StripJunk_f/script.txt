@@ -1,0 +1,10 @@
+function text_StripJunk someString
+    -- was "makeNeat"
+    put "\" & tab & quote & "\[\]|*.?()" into specialChars
+    -- put empty into specialChars
+    put "[" && specialChars & ";/{}=#&_!,-]" into regEx
+    -- put someString
+    -- put regEx
+    put replacetext(someString, regEx, empty) into cleanText
+    return cleanText
+end text_StripJunk

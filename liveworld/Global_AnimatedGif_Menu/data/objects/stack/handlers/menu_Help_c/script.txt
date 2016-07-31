@@ -1,0 +1,6 @@
+on menu_Help
+   -- http://livecode.viral.academy/view/welcome-visitors/view/animated-gif-tool
+   put the short name of this stack into stackName
+   put "http://livecode.viral.academy/view/welcome-visitors/view/" & fedwiki_Slugify (stackName) into someURL
+   launch url someURL
+end menu_Help

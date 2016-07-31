@@ -1,0 +1,9 @@
+function git_ConstructFileRevision objectFile, pGitHash, pBeforeTipNum
+   if pGitHash is not empty then
+      return pGitHash & ":" & kwote(objectFile)
+   else if pBeforeTipNum is a number then
+      return kwote(objectFile) & "~" & pBeforeTipNum
+   else
+      return "master:" & kwote(objectFile)
+   end if
+end git_ConstructFileRevision

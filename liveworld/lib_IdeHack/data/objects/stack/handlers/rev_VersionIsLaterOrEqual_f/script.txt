@@ -1,0 +1,22 @@
+function rev_VersionIsLaterOrEqual someVersion
+   -- ie this RunRev engine version > someVersion?
+   -- 3.5.0-dp-2
+   put the version into thisVersion
+   
+   set the itemdelimiter to "-"
+   put item 1 of thisVersion into thisNumber
+   put item 1 of someVersion into someNumber
+   
+   set the itemdelimiter to "."
+   repeat with itemNum = 1 to 3
+      put item itemNum of thisNumber into testThis
+      if testThis is empty then put 0 into testThis
+      put item itemNum of someNumber into testSome
+      if testSome is empty then put 0 into testSome
+      
+      if testThis >= testSome then
+         return true
+      end if
+   end repeat
+   return false
+end rev_VersionIsLaterOrEqual

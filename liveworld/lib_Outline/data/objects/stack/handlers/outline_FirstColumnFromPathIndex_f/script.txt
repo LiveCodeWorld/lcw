@@ -1,0 +1,12 @@
+function outline_FirstColumnFromPathIndex pathIndex, pDelim, pDontSort
+   if pDelim is not empty then set the itemDelimiter to pDelim
+   repeat for each line someLine in pathIndex
+      put item 1 of someLine into newRoot
+      if newRoot is not among the lines of rootIndex then
+         put newRoot & CR after rootIndex
+      end if
+   end repeat
+   delete char -1 of rootIndex
+   if pDontSort is not true then sort rootIndex
+   return rootIndex
+end outline_FirstColumnFromPathIndex

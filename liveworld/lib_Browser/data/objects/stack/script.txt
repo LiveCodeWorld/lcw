@@ -1,0 +1,84 @@
+--> MetaData
+-
+name: lib_Browser
+type: behavior
+version: 0.9
+copyright: David Bovill
+licence:  GPLv3
+
+
+--> Events
+-
+[[ _FetchHandler (dragEnter,c) ]]
+
+[[ _FetchHandler (dragDrop,c) ]]
+
+[[ _FetchHandler (deleteGroup,c) ]]
+
+
+--> View | Object
+-
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (browser_View,g) ]]
+
+
+--> Browser | Props
+-
+[[ _FetchHandler (browser_Type,g) ]]
+
+[[ _FetchHandler (browser_Type,s) ]]
+
+[[ _FetchHandler (browser_Types,g) ]]
+
+[[ _FetchHandler (browser_URL,g) ]]
+
+[[ _FetchHandler (browser_URL,s) ]]
+
+[[ _FetchHandler (browser_ID,g) ]]
+
+[[ _FetchHandler (browser_ID,s) ]]
+
+[[ _FetchHandler (browser_Exists,f) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (browser_Rect,g) ]]
+
+[[ _FetchHandler (browser_Rect,s) ]]
+
+
+--> Browser | Utils
+-
+[[ _FetchHandler (browser_GetID,f) ]]
+
+[[ _FetchHandler (browser_Close,c) ]]
+
+
+--> Browser | ID
+-
+/*
+This dictionary stuff is probably a bit more complex than we need. Simplify.
+*/
+
+[[ _FetchHandler (browser_GetFromRegister,f) ]]
+
+[[ _FetchHandler (browser_AddToRegister,c) ]]
+
+[[ _FetchHandler (browser_DeleteFromRegister,c) ]]
+
+[[ _FetchHandler (dictionary_GetValue,f) ]]
+
+[[ _FetchHandler (dictionary_GetReverseValue,f) ]]
+
+[[ _FetchHandler (dictionary_Set,c) ]]
+
+[[ _FetchHandler (dictionary_Delete,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (object_ExtractStack,f) ]]

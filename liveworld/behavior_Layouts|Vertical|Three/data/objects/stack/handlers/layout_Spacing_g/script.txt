@@ -1,0 +1,5 @@
+getprop layout_Spacing
+   -- ugly hack
+   put the margins of me into myMargins
+   return item 1 of myMargins
+end layout_Spacing

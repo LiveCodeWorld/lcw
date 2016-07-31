@@ -1,0 +1,6 @@
+on menu_StoreSelectedStacks scriptObject
+   put the stack_Name of scriptObject into projectStackName
+   project_SaveValue "openStacks", projectStackName
+   
+   opn_Notify "Stored the selected project stack names, to the project array."
+end menu_StoreSelectedStacks

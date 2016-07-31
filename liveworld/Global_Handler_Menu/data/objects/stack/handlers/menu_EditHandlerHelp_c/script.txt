@@ -1,0 +1,5 @@
+on menu_EditHandlerHelp hKey
+   put hkey_FetchHelp (hKey) into helpText
+   put opn_Ask ("Edit the help text...", helpText) into helpText
+   hkey_StoreHelp hKey, helpText
+end menu_EditHandlerHelp

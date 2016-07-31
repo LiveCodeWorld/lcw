@@ -1,0 +1,5 @@
+function rev_GetScriptEditorDocumentationLock pEditorNum
+   put rev_ScriptEditorDocField (pEditorNum) into scriptEditorDocField
+   put the locktext of scriptEditorDocField into someBoolean
+   return someBoolean
+end rev_GetScriptEditorDocumentationLock

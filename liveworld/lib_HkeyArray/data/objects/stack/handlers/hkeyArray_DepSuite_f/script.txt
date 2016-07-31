@@ -1,0 +1,4 @@
+function hkeyArray_DepSuite hkeyArray, scriptObject, pStripProps, pStripObjects, pNotifyMissing
+   hkeyArray_ConstructDependencySuite hkeyArray, scriptObject, depSuite, pStripObjects, pStripProps, pNotifyMissing
+   return depSuite
+end hkeyArray_DepSuite

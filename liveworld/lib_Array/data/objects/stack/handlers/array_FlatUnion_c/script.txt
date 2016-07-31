@@ -1,0 +1,9 @@
+command array_FlatUnion newArray, @someArray, keyStem
+   repeat for each key someKey in newArray
+      put newArray [someKey] into someValue
+      if someValue is not empty then
+         put keyStem & someKey into flatKey
+         put someValue into someArray [flatKey]
+      end if
+   end repeat
+end array_FlatUnion

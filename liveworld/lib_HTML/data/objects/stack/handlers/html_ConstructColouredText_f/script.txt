@@ -1,0 +1,14 @@
+function html_ConstructColouredText someText, someColour
+   -- creates or changes coloured html
+   if someColour is empty then return someText
+   colour_HexNormalise someColour
+   
+   -- put "<font color=" & quote & "(.+)" & quote & ">"  into someReg
+   put "<font color=" & quote & "([^\>]+)" & quote & ">"  into someReg
+   if matchchunk(someText, someReg, startNum, endNum) is true then
+      put someColour into char startNum to endNum of someText
+      return someText
+   else
+      return "<font color=" & kwote(someColour) & ">" & someText & "</font>"
+   end if
+end html_ConstructColouredText

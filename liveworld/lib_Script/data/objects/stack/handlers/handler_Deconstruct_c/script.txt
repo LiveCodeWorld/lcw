@@ -1,0 +1,10 @@
+command handler_Deconstruct handlerLine, @handlerName, @hType, @privateBit
+   if token 1 of handlerLine = "private" then
+      put "p" into privateBit
+      put token 3 of handlerLine into handlerName
+   else
+      put empty into privateBit
+      put token 2 of handlerLine into handlerName
+   end if
+   put handler_GetType (handlerLine) into hType
+end handler_Deconstruct

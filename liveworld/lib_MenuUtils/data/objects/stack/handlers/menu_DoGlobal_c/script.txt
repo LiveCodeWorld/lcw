@@ -1,0 +1,30 @@
+command menu_DoGlobal mPath, globalMenuTitle, targetObject
+   -- try not to use???
+   global gTemp_ActiveMenuArray
+   
+   if exists(targetObject) is false then
+      put menu_GetTargetObject() into targetObject
+      if exists(targetObject) is false then
+         breakpoint
+         put the long id of the target into targetObject
+      end if
+   else
+      menu_SetTargetObject targetObject
+   end if
+   
+   try
+      -- a crude way to load global gTemp_ActiveMenuArray 
+      put menu_MatchGlobalController (globalMenuTitle) into mTopController
+      
+      -- get menu_GetText (globalMenuTitle, targetObject, mTopController)
+      put menu_GetTable (globalMenuTitle, mTopController) into mTable
+      local pTitlePath, pTextPath, pMenuTarget
+      put menu_ConvertTable (mTable, targetObject, pTitlePath, pTextPath, pMenuTarget) into insertedMenu
+      
+      menu_SendMessage mPath
+      return the result
+   catch someError
+      put CR & the params after someError
+      log_Error someError, "menu_DoGlobal", true
+   end try
+end menu_DoGlobal

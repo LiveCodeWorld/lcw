@@ -1,0 +1,5 @@
+command display_ScriptArray scriptObject
+   put the mobile_Name of scriptObject into pTitle
+   put the script_OverlayData of scriptObject into graphData
+   display_DotArray graphData, pTitle
+end display_ScriptArray

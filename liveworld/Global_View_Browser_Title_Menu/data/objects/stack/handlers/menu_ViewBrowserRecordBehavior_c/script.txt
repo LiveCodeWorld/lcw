@@ -1,0 +1,11 @@
+on menu_ViewBrowserRecordBehavior treeView
+   put menu_GetTargetObject() into targetObject
+   put the dgDataControl of targetObject into recordView
+   put the behavior of recordView into recordBehavior
+   if exists(recordBehavior) then
+      edit the script of recordBehavior
+   else
+      edit the script of recordView
+      opn_Notify "This view does not have a behavior!", true
+   end if
+end menu_ViewBrowserRecordBehavior

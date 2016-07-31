@@ -1,0 +1,11 @@
+command objects_MakeFriendly someObjects, @orderedFriendlyObjects, @friendlyArray
+   -- used to make nice freindly menus for instance
+   repeat for each line someObject in someObjects
+      if exists (someObject) is false then next repeat
+      put the long id of someObject into longIDObject
+      put object_MakeFriendly (longIDObject) into friendlyObject
+      put longIDObject into friendlyArray [friendlyObject]
+      put friendlyObject & CR after orderedFriendlyObjects
+   end repeat
+   delete the last char of orderedFriendlyObjects
+end objects_MakeFriendly

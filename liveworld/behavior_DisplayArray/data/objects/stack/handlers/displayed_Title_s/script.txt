@@ -1,0 +1,4 @@
+setprop displayed_Title displayTitle
+   if displayTitle is empty then put "Array" into displayTitle
+   set the label of headerWidget() to displayTitle
+end displayed_Title

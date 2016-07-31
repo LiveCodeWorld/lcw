@@ -1,0 +1,5 @@
+function script_OrderedMenuTitles someScript
+   put script_MenuToolModeArray(someScript) into menuToolModeArray
+   put menuToolModeArray ["OrderedMenuTitles"] into menuTitles
+   return menuTitles
+end script_OrderedMenuTitles

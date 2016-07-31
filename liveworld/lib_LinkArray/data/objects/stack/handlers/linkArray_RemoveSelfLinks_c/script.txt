@@ -1,0 +1,17 @@
+command linkArray_RemoveSelfLinks @linkArray, pIsNested
+   if pIsNested is empty then
+      put linkArray_IsNested (linkArray) into pIsNested
+   end if
+   
+   if pIsNested is not true then
+      repeat for each key someKey in linkArray
+         put linkArray [someKey] into someLinks
+         line_Delete someKey, someLinks
+         put someLinks into linkArray [someKey]
+      end repeat
+   else
+      repeat for each key someKey in linkArray
+         delete variable linkArray [someKey][someKey]
+      end repeat
+   end if
+end linkArray_RemoveSelfLinks

@@ -1,0 +1,23 @@
+command menu_PullDown pMenuTitle, pLocation, pTargetObject
+   if pTargetObject is empty then put the long id of the target into pTargetObject
+   if pMenuTitle is empty then put the menu_ToolOrTitle of pTargetObject into pMenuTitle
+   if pMenuTitle is empty then put "Menu" into pMenuTitle
+   
+   set the menu_TextFromTitle of pTargetObject to pMenuTitle
+   put the result into mText
+   if mText is empty then
+      -- opn_Notify pMenuTitle -- often useful, but also annoying :)
+      return "false"
+   end if
+   
+   put the menu_Button of pTargetObject into mButton
+   if exists (mButton) is false then return false
+   
+   get the text of mButton
+   if pLocation is not a point then
+      put the bottomleft of pTargetObject into pLocation
+      add 3 to item 2 of pLocation
+   end if
+   popup mButton at pLocation
+   return true
+end menu_PullDown

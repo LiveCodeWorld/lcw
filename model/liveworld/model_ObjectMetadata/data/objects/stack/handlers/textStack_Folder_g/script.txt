@@ -1,0 +1,11 @@
+getprop textStack_Folder [pDontCreate]
+   put the mainstack_File of the target into objectFile
+   put textStack_FindRoot (objectFile) into textStackRoot
+   
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   
+   put textStackRoot & mainStackName & "/" into stackFolder
+   if pDontCreate is false then folder_CreateNested stackFolder
+   return stackFolder
+end textStack_Folder

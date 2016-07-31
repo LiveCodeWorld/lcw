@@ -1,0 +1,13 @@
+on menu_AddTag
+   put opn_Ask ("What do you want to call this tag...") into tagName
+   put opn_Ask ("Describe this tag...") into tagMessage
+   
+   put "git tag -a" && kwote(tagName) into someShell
+   put space & "-m" && kwote(tagMessage) after someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   
+   if shellResult is not empty then
+      beep
+      opn_Notify shellResult
+   end if
+end menu_AddTag

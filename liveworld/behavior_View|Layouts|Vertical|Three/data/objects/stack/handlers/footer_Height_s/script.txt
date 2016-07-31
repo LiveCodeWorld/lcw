@@ -1,0 +1,5 @@
+setprop footer_Height someHeight
+   put someHeight into LocalArray ["footer_Height"]
+   dispatch "LayoutControl" to me -- resets the target
+   return the result
+end footer_Height

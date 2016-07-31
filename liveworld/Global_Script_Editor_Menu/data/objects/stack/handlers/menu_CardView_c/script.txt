@@ -1,0 +1,14 @@
+on menu_CardView mTarget, viewThing
+   put view_GetTemplateObject (viewThing) into someView
+   if exists(someView) is false then
+      beep
+      exit to top
+   end if
+   
+   put the behavior of someView into someBehavior
+   if exists(someBehavior) then
+      edit the script of someBehavior
+   else
+      edit the script of someView
+   end if
+end menu_CardView

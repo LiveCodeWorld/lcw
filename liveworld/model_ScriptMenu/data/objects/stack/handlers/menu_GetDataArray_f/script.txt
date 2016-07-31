@@ -1,0 +1,13 @@
+function menu_GetDataArray mController
+   -- we look at custom props first
+   -- then check the hArray
+   
+   put the customproperties ["menu_Table"] of mController into mTitleTableArray
+   if mTitleTableArray is empty then
+      put menu_GetTitleTableArrayGlobal (mController) into mTitleTableArray
+   else
+      -- here we could add it to hArray 
+   end if   
+   menu_SetTitleTableArrayGlobal mController, mTitleTableArray
+   return mTitleTableArray
+end menu_GetDataArray

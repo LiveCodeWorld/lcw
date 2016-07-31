@@ -1,0 +1,10 @@
+function git_CurrentBranchName
+   -- was "current_BranchName"
+   put git_ExecuteShellCommand("git branch") into shellResult
+   repeat for each line someLine in shellResult
+      if word 1 of someLine = "*" then
+         return word 2 to -1 of someLine
+      end if
+   end repeat
+   return empty
+end git_CurrentBranchName

@@ -1,0 +1,8 @@
+function json_FromArray pArray, pForceRootType, pPretty
+   repeat for each key tKey in pArray
+      if pArray[tKey] is an array then
+         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
+      end if
+   end repeat
+   return(mergJSONEncode("pArray",pForceRootType,pPretty))
+end json_FromArray

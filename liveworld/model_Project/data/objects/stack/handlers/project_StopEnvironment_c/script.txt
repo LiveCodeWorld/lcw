@@ -1,0 +1,13 @@
+command project_StopEnvironment
+   put project_GetCurrentName() into projectName
+   
+   ide_AddBehaviorHacks false
+   put "Removed the Livecode hacks from the environment!" into someComment
+   opn_Notify someComment
+   
+   project_StopFront projectName
+   project_StopBack projectName
+   project_StopUsed projectName
+   
+   -- project_StoreGlobals -- too dangerous (do manually)
+end project_StopEnvironment

@@ -1,0 +1,7 @@
+function rig_FetchGistController shortController, pServerURL
+   put gist_ShortFileToKey (shortController, "controller", pServerURL) into shortGistFile
+   
+   put gist_FindInListArray (shortGistFile) into gistID
+   put gist_FetchContent (gistID) into rigScript
+   return rigScript
+end rig_FetchGistController

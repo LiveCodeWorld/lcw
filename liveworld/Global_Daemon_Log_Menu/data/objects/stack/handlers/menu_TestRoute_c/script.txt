@@ -1,0 +1,5 @@
+on menu_TestRoute treeField
+   put the selected_ArrayValue of treeField into requestArray
+   put the daemon_RouterLibrary of me & CR & the daemon_Server of me -- into
+   -- display_Array requestArray
+end menu_TestRoute

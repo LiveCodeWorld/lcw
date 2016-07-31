@@ -1,0 +1,19 @@
+command menu_SetSubmenuFixedProp mItemType, comLine, mTitle, scriptObject, fixedSubMenu, paramProp
+   -- ignoreCall: submenu_Fixed,s
+   switch mItemType
+      case empty
+         break
+      case "submenu"
+         break
+      case "fixed"
+         put token 1 of comLine into mCommand
+         put menu_GetDefaultController (mTitle, scriptObject, true) into mController
+         set the submenu_Fixed [mCommand] of mController to fixedSubMenu
+         break
+      default
+         if paramProp is not empty then
+            put menu_GetDefaultController (mTitle, scriptObject, true) into mController
+            custom_DeleteProperty paramProp, mController, "submenu_Fixed"	# lets clear it to be tidy ?
+         end if
+   end switch
+end menu_SetSubmenuFixedProp

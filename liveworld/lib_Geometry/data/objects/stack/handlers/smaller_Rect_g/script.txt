@@ -1,0 +1,6 @@
+getprop smaller_Rect [someMargin]
+   if someMargin is empty then put 8 into someMargin
+   put the rect of the target into someRect
+   rect_SubtractMargins someRect, someMargin
+   return someRect
+end smaller_Rect

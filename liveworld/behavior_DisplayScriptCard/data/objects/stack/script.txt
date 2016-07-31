@@ -1,0 +1,122 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_DisplayScriptCard
+type: behavior
+version: 0.3
+
+
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_Title,g) ]]
+
+-- getprop menu_ToolTitle
+return "Global | Title | Controller | Menu"
+end menu_ToolTitle
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (selectionChanged,c) ]]
+
+[[ _FetchHandler (closeField,c) ]]
+
+[[ _FetchHandler (help_SaveAndDisplay,c) ]]
+
+[[ _FetchHandler (script_SaveDisplayedHelp,c) ]]
+
+
+--> Events | Custom
+-
+[[ _FetchHandler (button_Up,c) ]]
+
+
+--> Datagrid
+-
+[[ _FetchHandler (numbers_On,g) ]]
+
+[[ _FetchHandler (numbers_On,s) ]]
+
+-- on disclose_Handler someBoolean
+   put the long id of the target into recordView
+   -- put the record_Array of recordView into 
+   put the record_Title of recordView into hKey
+   if someBoolean is true then
+      -- put the record_Handler of the target
+      put hkey_FetchHelp (hKey) into helpText
+      set the displayed_Description of recordView to helpText
+   else
+      put the displayed_Object of me into scriptObject
+      put the script_Help of scriptObject into scriptHelp
+      -- script_SaveDisplayedHelp
+      set the displayed_Description [scriptObject] of me to scriptHelp
+   end if
+end disclose_Handler
+
+[[ _FetchHandler (_constructSuiteTitle,pf) ]]
+
+[[ _FetchHandler (dg_FillInData,c) ]]
+
+
+--> Display
+-
+local LocalArray
+
+[[ _FetchHandler (vertical_Spacing,g) ]]
+
+[[ _FetchHandler (display_UpdateDatagrid,pc) ]]
+
+[[ _FetchHandler (display_ScriptArray,pc) ]]
+
+[[ _FetchHandler (_displayScriptObject,pc) ]]
+
+[[ _FetchHandler (displayed_ScriptArray,g) ]]
+
+[[ _FetchHandler (displayed_ScriptArray,s) ]]
+
+[[ _FetchHandler (displayed_lineNumbers,g) ]]
+
+[[ _FetchHandler (displayed_lineNumbers,s) ]]
+
+
+--> Displayed
+-
+[[ _FetchHandler (displayed_Script,g) ]]
+
+[[ _FetchHandler (displayed_Script,s) ]]
+
+[[ _FetchHandler (displayed_Object,g) ]]
+
+[[ _FetchHandler (displayed_Object,s) ]]
+
+
+--> Field | HyperText | Menu
+-
+[[ _FetchHandler (menu_Link,c) ]]
+
+
+--> Display | Basic Props
+-
+/*
+From these properties everything else is derived.
+*/
+
+[[ _FetchHandler (displayed_OverlayFolder,g) ]]
+
+
+--> Displayed | Overlay
+-
+/*
+These basic properties are all that are needed for overlay libraries and tools to operate.
+*/
+
+[[ _FetchHandler (displayed_OverlayArray,g) ]]
+
+[[ _FetchHandler (displayed_OverlayArray,s) ]]

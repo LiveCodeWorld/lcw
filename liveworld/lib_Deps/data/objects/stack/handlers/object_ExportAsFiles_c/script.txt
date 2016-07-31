@@ -1,0 +1,8 @@
+command object_ExportAsFiles scriptObject, pUseCustomFolders, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   local objectPropArray, hArray
+   object_GetPropertyArrays scriptObject, objectPropArray, hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   
+   put the checkout_Folder of scriptObject into objectFolder
+   objectArray_ExportAsFiles objectPropArray, objectFolder, pUseCustomFolders, pExportHandlers, pDontExport
+   return objectFolder
+end object_ExportAsFiles

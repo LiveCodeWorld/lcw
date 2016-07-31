@@ -1,0 +1,6 @@
+function object_NameIndex objectIndex, @badObjects, shortOrLong
+   put object_IndexArray(objectIndex) into objectArray
+   put objectArray ["__BadObjectKey"]  into badObjects
+   put "__" & shortOrLong & "NameKey" into someKey
+   return objectArray [someKey]
+end object_NameIndex

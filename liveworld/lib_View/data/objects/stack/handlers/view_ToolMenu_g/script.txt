@@ -1,0 +1,9 @@
+getprop view_ToolMenu [pItems]
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   put the menu_ToolTitle of targetObject into mTitle -- searches so more danger of recursion   
+   put menu_GetTextFromTitleTable (mTitle, targetObject) into mText
+   return mText
+end view_ToolMenu

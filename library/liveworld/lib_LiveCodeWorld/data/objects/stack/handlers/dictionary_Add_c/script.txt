@@ -1,0 +1,4 @@
+command dictionary_Add @twoWayDictionary, firstTerm, secondTerm
+   put firstTerm into twoWayDictionary [secondTerm]
+   put secondTerm into twoWayDictionary [firstTerm]
+end dictionary_Add

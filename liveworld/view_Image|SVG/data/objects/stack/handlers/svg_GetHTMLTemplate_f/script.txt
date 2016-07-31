@@ -1,0 +1,15 @@
+function svg_GetHTMLTemplate
+   /*
+   <!DOCTYPE html>
+   <html>
+   <head>
+   <title>[[svgTitle]]</title>
+   </head>
+   <body>
+   [[svgXML]]
+   </body>
+   </html>
+   */
+   put script_GetCommentAboveMe() into htmlTemplate
+   return htmlTemplate
+end svg_GetHTMLTemplate

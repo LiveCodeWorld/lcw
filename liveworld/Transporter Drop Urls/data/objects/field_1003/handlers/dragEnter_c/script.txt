@@ -1,0 +1,5 @@
+on dragEnter -- show a green outline around the drop target
+   -- set the borderColor of the target to "green"
+   set the allowableDragActions to "link"
+   set the dragAction to "Link"
+end dragEnter

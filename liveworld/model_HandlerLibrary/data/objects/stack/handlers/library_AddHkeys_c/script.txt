@@ -1,0 +1,16 @@
+command library_AddHkeys hKeys, pDontNotify, pForceAdd
+   repeat for each line hKey in hKeys
+      set the cursor to busy
+      library_AddHkey hKey, empty, pForceAdd
+      if the result is false then
+         put item 1 to 2 of hKey into shortHkey
+         put merge ("Handler '[[shortHkey]]' was already in the handler library!") into someComment
+      else
+         put item 1 to 2 of hKey into shortHkey
+         put merge ("Added handler '[[shortHkey]]' to the handler library!") into someComment
+      end if
+      if pDontNotify is not true then
+         opn_Notify someComment
+      end if
+   end repeat   
+end library_AddHkeys

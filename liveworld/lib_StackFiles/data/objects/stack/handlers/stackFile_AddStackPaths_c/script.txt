@@ -1,0 +1,12 @@
+command stackFile_AddStackPaths someFiles, toStackObject
+   put the stackfile_Array of toStackObject into stackFileArray
+   
+   put the filename of toStackObject into rootFile
+   put folder_Above (rootFile) into baseFolder
+   stackFile_AddToArray stackFileArray, someFiles, baseFolder
+   put stackFile_FromArray (stackFileArray) into stackFileTable
+   
+   sort stackFileTable by item 1 of each
+   set the stackfiles of toStackObject to stackFileTable
+   return stackFileTable
+end stackFile_AddStackPaths

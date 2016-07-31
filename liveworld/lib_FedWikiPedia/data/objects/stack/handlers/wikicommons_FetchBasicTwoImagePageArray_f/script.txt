@@ -1,0 +1,14 @@
+function wikicommons_FetchBasicTwoImagePageArray shortImageFile, pPageTitle, pSomeText
+   if pPageTitle is empty then put "Wikimedia Image" into pPageTitle
+   if pSomeText is empty then put "Drag these images to your source page..." into pSomeText
+   
+   put fedwiki_ConstructSimplePageArray (pPageTitle, pSomeText) into fedwikiPageArray   
+   set the itemdelimiter to "."
+   if item -1 of shortImageFile is "webm" then
+      put wikicommons_ConstructVideoPageArray (pPageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   else
+      wikicommons_FetchAndAddTwoImages fedwikiPageArray, shortImageFile
+   end if
+   fedwiki_CleanJournalArray fedwikiPageArray
+   return fedwikiPageArray
+end wikicommons_FetchBasicTwoImagePageArray

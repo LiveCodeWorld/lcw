@@ -1,0 +1,4 @@
+function gist_ShortFileFromKey shortGistFile
+   gist_DeconstructKey shortGistFile, shortController, serverURL
+   return shortController
+end gist_ShortFileFromKey

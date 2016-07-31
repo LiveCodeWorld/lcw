@@ -1,0 +1,8 @@
+function github_ListOrgIssues someOrg
+   -- help: https://developer.github.com/v3/issues/#list-issues
+   -- put "co-operating-systems" into someOrg
+   
+   put "/orgs/" & someOrg & "/issues" into orgBit
+   put github_RestGet (orgBit) into someJSON
+   return someJSON
+end github_ListOrgIssues

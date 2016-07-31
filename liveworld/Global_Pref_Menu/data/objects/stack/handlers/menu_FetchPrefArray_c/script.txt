@@ -1,0 +1,5 @@
+on menu_FetchPrefArray scriptObject, fullSetName
+   put pref_FetchArray (fullSetName) into prefArray
+   put merge ("put pref_FetchArray ('[[fullSetName]]')") into someTitle
+   display_Array prefArray, someTitle, "Global | Prefs | Edit | Menu", "Global | Prefs | Edit | Line | Menu"
+end menu_FetchPrefArray

@@ -1,0 +1,4 @@
+function rev_MessageNames
+   put opn_GetIndex ("rev_Messages") into scriptTokens
+   return scriptTokens
+end rev_MessageNames

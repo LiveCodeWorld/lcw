@@ -1,0 +1,19 @@
+command trait_SetNegative pSituationNum
+   if pSituationNum is empty then put 1 into pSituationNum
+   put the long id of card "Negative" into negativeCard
+   put the plusMinus_View of negativeCard into plusMinusView
+   
+   lock screen
+   put the sivaSquareText_View of plusMinusView into sivaSquareTextView
+   
+   put the negative_Response [pSituationNum] of plusMinusView into negativeResponse
+   -- set the displayed_SquareText of plusMinusView to negativeResponse
+   -- set the view_Text of sivaSquareTextView to squareText
+   set the view_UTF8 of sivaSquareTextView to negativeResponse
+   
+   set the displayed_PositiveLabel of plusMinusView to the positive_Label of plusMinusView
+   set the displayed_NegativeLabel of plusMinusView to the negative_Label of plusMinusView
+   set the show_TraitLabels of plusMinusView to true
+   set the trait_Hilite of plusMinusView to "negative"
+   unlock screen
+end trait_SetNegative

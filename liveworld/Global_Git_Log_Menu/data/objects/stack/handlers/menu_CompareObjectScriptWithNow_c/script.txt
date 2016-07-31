@@ -1,0 +1,11 @@
+on menu_CompareObjectScriptWithNow treeField
+   put the displayed_Object of treeField into someObject
+   put the script_File of someObject into relativeFile
+   
+   put the tree_SelectedLink of treeField into cHash
+   
+   put the exported_Script of someObject into nowScript
+   put git_HashRevision (relativeFile, cHash) into oldScript
+   
+   terminal_Diff nowScript, oldScript, "exported_Script", (char -6 to -1 of cHash & "_Script")
+end menu_CompareObjectScriptWithNow

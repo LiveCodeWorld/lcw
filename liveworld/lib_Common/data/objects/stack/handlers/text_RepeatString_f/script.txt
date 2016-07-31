@@ -1,0 +1,14 @@
+function text_RepeatString someString, repeatNum
+   -- was "opn_GetRepeatString"
+   
+   put empty into repeatString
+   if repeatNum < 0 then
+      answer "Repeating forever! text_RepeatString repeatNum =" && repeatNum
+      edit the script of me
+      exit to top
+   end if
+   repeat repeatNum
+      put someString after repeatString
+   end repeat
+   return repeatString
+end text_RepeatString

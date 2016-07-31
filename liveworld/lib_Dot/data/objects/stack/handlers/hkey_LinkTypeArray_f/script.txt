@@ -1,0 +1,9 @@
+function hkey_LinkTypeArray idArray
+   -- this is what splits the nodes into types
+   repeat for each key nodeID in idArray
+      put idArray [nodeID] into hKey
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      array_AddToIndex nodeID, handlerType, IdTypeArray
+   end repeat
+   return IdTypeArray
+end hkey_LinkTypeArray

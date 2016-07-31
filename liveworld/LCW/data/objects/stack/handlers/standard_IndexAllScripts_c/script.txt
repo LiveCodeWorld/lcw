@@ -1,0 +1,65 @@
+command standard_IndexAllScripts homeFolder, pExportHandlers
+   -- has lot's of dependencies 
+   -- but wrapped in "try"
+   
+   put lcw_ListFolders (homeFolder) into standardFolders
+   set the itemdelimiter to slash
+   repeat for each line standardFolder in standardFolders
+      put folder_ListStackPaths (standardFolder) into stackPaths
+      repeat for each line stackPath in stackPaths
+         set the cursor to busy
+         put the long id of stack stackPath into stackObject
+         
+         switch item -1 of standardFolder
+            case "view"
+               -- let's just index the views script (so we can add it to hArray)
+               -- the assumption is teh view is the toplevel (ie control 1) of teh first card in the stack)
+               -- this is of course usually a group
+               if exists (control 1 of cd 1 of stackObject) then
+                  try
+                     put the long id of cd 1 of stackObject into viewTemplateCard
+                     if pExportHandlers is true then
+                        set the script_IsIndexed of viewTemplateCard to true -- may have a global menu on it
+                     else
+                        script_UpdateAndExport viewTemplateCard
+                     end if
+                     
+                     -- let's add the view to the index of views available
+                     put the long id of control 1 of viewTemplateCard into viewTemplate
+                     if pExportHandlers is true then
+                        set the script_IsIndexed of viewTemplate to true
+                     else
+                        script_UpdateAndExport viewTemplate
+                     end if
+                  catch e
+                     put viewTemplateCard
+                     -- answer "Error with view"
+                     breakpoint
+                     put viewTemplateCard & CR after stackPathProblems
+                  end try
+               end if
+               break
+            default
+               -- index the stack script
+               -- we should index all scripts for non-script only stacks
+               
+               try
+                  if pExportHandlers is true then
+                     set the script_IsIndexed of stackObject to true
+                  else
+                     script_UpdateAndExport stackObject
+                  end if
+               catch e
+                  -- put stackObject
+                  -- put the name of stackObject into stackObject
+                  -- answer warning merge ("Error with [[stackObject]]")
+                  breakpoint
+                  script_UpdateAndExport stackObject
+                  
+                  put stackPath & CR after stackPathProblems
+               end try
+         end switch
+      end repeat
+   end repeat
+   return stackPathProblems
+end standard_IndexAllScripts

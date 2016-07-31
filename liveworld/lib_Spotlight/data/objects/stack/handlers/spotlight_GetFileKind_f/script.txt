@@ -1,0 +1,5 @@
+function spotlight_GetFileKind someFile
+   get spotlight_GetAttribute (someFile, "kMDItemKind")
+   replace quote with empty in it
+   return word 1 to -1 of it
+end spotlight_GetFileKind

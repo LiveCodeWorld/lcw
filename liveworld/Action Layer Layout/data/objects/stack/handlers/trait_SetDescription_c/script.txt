@@ -1,0 +1,8 @@
+command trait_SetDescription
+   put the long id of card "Description" into descriptionCard
+   put the plusMinus_View of descriptionCard into plusMinusView
+   
+   put the trait_Description of plusMinusView into traitDescription
+   set the displayed_SquareText of plusMinusView to traitDescription
+   set the show_TraitLabels of plusMinusView to false
+end trait_SetDescription

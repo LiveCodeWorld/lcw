@@ -1,0 +1,17 @@
+function stack_GetIsLoaded stackObject
+   if there is a stackObject then
+      return true
+   else
+      return false
+   end if
+   if stackObject is empty then return false
+   
+   put stack_LoadedPaths() into stackNamePaths
+   put word -1 of stackObject into theStackPath
+   replace quote with empty in theStackPath
+   if theStackPath is among the lines of stackNamePaths then
+      return true
+   else
+      return false
+   end if
+end stack_GetIsLoaded

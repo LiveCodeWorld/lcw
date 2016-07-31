@@ -1,0 +1,13 @@
+command menu_InsertFixed @mText, mLine, pigeon, mController, paramProp, topMenuTarget, mItemType
+   -- it's OK for there to be no submenu_Fixed getprop present and just get the objects custom property
+   -- ignoreCall:  submenu_Fixed,g
+   
+   put mLine & CR after mText
+   put word 1 of pigeon into mCommand
+   put the submenu_Fixed [mCommand] of mController into subMenu
+   if subMenu is not empty then
+      menu_CheckSub subMenu, paramProp, mController, topMenuTarget, mItemType
+      put outline_IncreaseIndent(subMenu) into subMenu
+      put subMenu & CR after mText
+   end if
+end menu_InsertFixed

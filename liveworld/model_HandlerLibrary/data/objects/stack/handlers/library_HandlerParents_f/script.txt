@@ -1,0 +1,15 @@
+function library_HandlerParents shortHkey
+   put library_FetchHandlerDatabaseArray() into wholeLibraryArray
+   
+   repeat for each key testShortHkey in wholeLibraryArray
+      put wholeLibraryArray [testShortHkey]["hKeyCalls"] into hKeyCalls
+      repeat for each line hKeyCall in hKeyCalls
+         set the cursor to busy
+         if item 1 to 2 of hKeyCall = item 1 to 2 of shortHkey then
+            put testShortHkey & CR after parentHkeys
+         end if
+      end repeat
+   end repeat
+   delete char -1 of parentHkeys
+   return parentHkeys
+end library_HandlerParents

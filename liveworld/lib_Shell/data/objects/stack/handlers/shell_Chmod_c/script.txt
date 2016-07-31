@@ -1,0 +1,6 @@
+command shell_Chmod plusStuff, someFile
+   shell_BashParamEscape someFile
+   put "chmod" && plusStuff && someFile into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end shell_Chmod

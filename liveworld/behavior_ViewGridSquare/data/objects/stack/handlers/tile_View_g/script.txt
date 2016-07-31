@@ -1,0 +1,5 @@
+getprop tile_View [gridNum]
+   put _getGridControl (gridNum) into gridControl
+   put the view_Name of gridControl into vName
+   return vName
+end tile_View

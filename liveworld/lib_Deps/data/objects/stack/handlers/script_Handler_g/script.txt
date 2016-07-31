@@ -1,0 +1,6 @@
+getprop script_Handler [shortHKey]
+   if shortHKey is empty then return empty
+   put the long id of the target into tObject
+   put hkey_ExtractHandlerFromObject (hKey) into foundHandler
+   return foundHandler
+end script_Handler

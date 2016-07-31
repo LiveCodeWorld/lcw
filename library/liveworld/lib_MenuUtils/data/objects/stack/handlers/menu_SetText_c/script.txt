@@ -1,0 +1,15 @@
+command menu_SetText pMenuTitle, pClearMenuGlobal
+   -- a simple utility (not same as old "menu_SetText")
+   -- to allow changing "menu_PopUp pMenuTitle" to "menu_SetText pMenuTitle" in option buttons
+   -- replace ",-," with CR in pMenuTitle -- so multiple titles can be put on one line
+   replace comma with CR in pMenuTitle -- so multiple titles can be put on one line
+   
+   put the long id of the target into pTargetObject
+   if pMenuTitle is empty then put the menu_ToolOrTitle of pTargetObject into pMenuTitle
+   if pMenuTitle is empty then put "Menu" into pMenuTitle
+   
+   set the menu_TextFromTitle of pTargetObject to pMenuTitle
+   put the result into mText
+   if pClearMenuGlobal is true then menu_ClearTargetGlobals
+   return mText
+end menu_SetText

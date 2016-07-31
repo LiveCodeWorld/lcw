@@ -1,0 +1,6 @@
+on menu_RevealHkeyOverlayFolder svgView
+   put the displayed_Hkey of svgView into hKey
+   put project_HandlerMetadataFolder (hKey, true) into hkeyMetadataFolder
+   put "put project_HandlerMetadataFolder (hKey):" && hkeyMetadataFolder
+   finder_Reveal hkeyMetadataFolder
+end menu_RevealHkeyOverlayFolder

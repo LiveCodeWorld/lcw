@@ -1,0 +1,5 @@
+function rev_GetCachedScript pObject
+   -- ignoreCall: scriptGet,c
+   send "scriptGet pObject" to rev_ScriptEditorGroup()
+   return the result
+end rev_GetCachedScript

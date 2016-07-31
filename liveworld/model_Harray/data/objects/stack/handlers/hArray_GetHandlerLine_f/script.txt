@@ -1,0 +1,5 @@
+function hArray_GetHandlerLine hKey, pHArray
+   put hArray_GetHkeyDataArray (hKey, pHArray) into handlerArray
+   put handlerArray ["handlerLine"] into handlerLine
+   return handlerLine
+end hArray_GetHandlerLine

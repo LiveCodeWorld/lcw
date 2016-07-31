@@ -1,0 +1,11 @@
+command hkey_CreateDependencyGraph hKey, pGraphStyle, pOverlayName
+   -- direct object walk
+   local dotHeaderArray, graphPropertyArray
+   if pGraphStyle is empty then put "hierarchical" into pGraphStyle
+   
+   put library_HkeyFolder (hkey) into overlayFolder
+   -- put hkey_ScriptDependencyArray (hkey) into hKeyArray
+   put hkey_DependencyArrayFromObjects (hkey) into hKeyArray
+   overlayArray_ReconstructAndCreateFiles hKeyArray, pOverlayName, overlayFolder, pGraphStyle, dotHeaderArray, graphPropertyArray
+   put the result into overlayArray
+end hkey_CreateDependencyGraph

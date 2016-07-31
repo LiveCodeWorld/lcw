@@ -1,0 +1,6 @@
+setprop script_IDArray [pOverlayName] idArray
+   put the long id of the target into scriptObject
+   put the script_DataArray [pOverlayName] of scriptObject into dataArray
+   put idArray into dataArray ["idArray"]
+   set the script_DataArray [pOverlayName] of scriptObject to dataArray
+end script_IDArray

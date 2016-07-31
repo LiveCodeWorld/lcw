@@ -1,0 +1,10 @@
+function dot_MakeRadialImage dotFile
+    -- twopi /Users/david/.Trash/dot.dot -Tepdf
+    shell_BashParamEscape dotFile
+    put merge("twopi [[dotFile]] -Tpng") into someShell
+    
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & someShell into someShell
+    put shell(someShell) into gvResult
+    return dot_CheckResult(gvResult)
+end dot_MakeRadialImage

@@ -1,0 +1,12 @@
+command outline_AddTitleSection osTitle, osSection, @someOutline, pIndentLevel
+   if osSection is not empty then
+      if pIndentLevel is empty then
+         put osTitle & CR after someOutline
+         put outline_IncreaseIndent (osSection) & CR after someOutline
+      else
+         put pIndentLevel - 1 into titleLevel
+         put outline_IncreaseIndent (osTitle, titleLevel) & CR after someOutline
+         put outline_IncreaseIndent (osSection, pIndentLevel) & CR after someOutline
+      end if
+   end if
+end outline_AddTitleSection

@@ -1,0 +1,52 @@
+getprop script_Hierarchy [pEnvironmentFilter]
+   # old
+   -- see newer "getprop hkey_SearchHierarchy"
+   /*
+   Creates an index of objects representing the message path for the target object
+   Starts at bottom (with frontscripts), and works up through the hierarchy to the backscripts
+   */
+   local frontObjects, usedNames, backObjects
+   put the long id of the target into targetObject
+   
+   put the object_Hierarchy of targetObject into scriptHierarchy
+   
+   if pEnvironmentFilter is empty then put script_GetEnvironmentFilter() into pEnvironmentFilter
+   switch pEnvironmentFilter
+      case "full"
+         put the frontscripts into frontObjects
+         object_AddBehaviors frontObjects
+         put the backscripts into backObjects
+         object_AddBehaviors frontObjects
+         
+         put the stacksinuse into usedNames
+         put stack_NamesToObjects (usedNames) into usedStacks
+         object_AddBehaviors usedStacks
+         break
+      case "development"
+         put object_FilterRev (the frontscripts) into frontObjects
+         object_AddBehaviors frontObjects
+         put object_FilterRev (the backscripts) into backObjects
+         object_AddBehaviors backObjects
+         
+         put the stacksinuse into usedNames
+         filter usedNames without ("rev*")
+         put stack_NamesToObjects (usedNames) into usedStacks
+         object_AddBehaviors usedStacks
+         break
+      case "application"
+         put object_FilterRev (the backscripts) into backObjects
+         object_AddBehaviors backObjects
+         
+         put the stacksinuse into usedNames
+         filter usedNames without ("rev*")
+         put stack_NamesToObjects (usedNames) into usedStacks
+         object_AddBehaviors usedStacks
+         break
+      case "stack"
+         -- don't add anything
+         break
+   end switch
+   
+   script_AddLibrariesToHierarchy scriptHierarchy, frontObjects, usedStacks, backObjects
+   return scriptHierarchy
+end script_Hierarchy

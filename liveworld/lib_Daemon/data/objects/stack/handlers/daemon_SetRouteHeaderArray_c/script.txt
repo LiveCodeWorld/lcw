@@ -1,0 +1,5 @@
+command daemon_SetRouteHeaderArray someRoute, headerArray
+   put "/headers" after someRoute
+   daemon_SetRouteValue someRoute, headerArray
+   return the result
+end daemon_SetRouteHeaderArray

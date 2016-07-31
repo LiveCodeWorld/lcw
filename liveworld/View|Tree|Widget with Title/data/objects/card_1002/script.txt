@@ -1,0 +1,37 @@
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Tree | Widget with Title | Menu
+-
+[[ _FetchHandler (menu_Test,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Tree,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Tree | Widget with Title | Menu | Props
+-
+[[ _FetchHandler (some_Prop,g) ]]
+
+[[ _FetchHandler (some_Props,g) ]]
+
+
+--> Global | Tree | Widget with Title | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Test,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_Dev,c) ]]

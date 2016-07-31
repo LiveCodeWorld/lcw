@@ -1,0 +1,11 @@
+function outline_AddSection newOs, someOutline
+    -- was "addOutlineSection"
+     
+    put line 1 of newOs into newOsTitle
+    if line_FindInIndex(newOsTitle, someOutline) is 0 then
+        line_Insert newOs, someOutline
+        return someOutline -- line_InsertIntoIndex(newOs, someOutline)
+    else
+        return outline_ReplaceSection(newOsTitle, someOutline, newOs)
+    end if
+end outline_AddSection

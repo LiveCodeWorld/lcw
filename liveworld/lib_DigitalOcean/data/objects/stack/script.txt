@@ -1,0 +1,216 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_DigitalOcean
+type: script library
+version: 0.9
+
+/*
+A library for interfacing with the DigitalOcean hosting service - http://digitalocean.com
+
+The model needs fixing.
+*/
+
+constant OceanApiKey = "58b6b325cc98f23094dd8d87e401a003b14c5db58d195f0ec5bed0e7f3a28db3"
+constant OceanApiRoot = "https://api.digitalocean.com/v2/"
+local OceanDropletID = "4066257"
+
+
+--> SSH
+-
+[[ _FetchHandler (ssh_DoRemoteShell,c) ]]
+
+
+--> DigitalOcean | Wiki
+-
+[[ _FetchHandler (digitalocean_FetchWikiFolders,f) ]]
+
+[[ _FetchHandler (digitalocean_FetchWikiFiles,f) ]]
+
+
+--> DigitalOcean | Model
+-
+/*
+This model should use stored array and not custom properties of a random stack.
+*/
+
+[[ _FetchHandler (digitalOcean_GetDropletInfoArray,f) ]]
+
+[[ _FetchHandler (digitalOcean_SetDropletInfoArray,c) ]]
+
+[[ _FetchHandler (digitalocean_GetDomainInfoArray,f) ]]
+
+[[ _FetchHandler (digitalocean_SetDomainInfoArray,c) ]]
+
+[[ _FetchHandler (digitalOcean_GetIndexedActionArray,f) ]]
+
+[[ _FetchHandler (digitalOcean_SetIndexedActionArray,c) ]]
+
+
+--> DigitalOcean | Shell
+-
+-- function digitalocean_ShellFetchListFiles ipOrDomainName, userName, somePath, pListAll, pKeyPath
+-- renamed "server_FetchFileArray"
+put "ssh" into someShell
+if pKeyPath is not empty then
+   shell_BashParamEscape pKeyPath
+   put space & "-i " && pKeyPath after someShell
+end if
+
+put space & userName & "@" & ipOrDomainname && "ls" after someShell
+if pListAll is true then put space &  "-la" after someShell
+
+shell_BashParamEscape somePath
+put space & somePath after someShell
+
+put word 1 to -1 of shell (someShell) into fileListing
+return fileListing   
+end digitalocean_ShellFetchListFiles
+
+[[ _FetchHandler (digitalOcean_FetchFile,f) ]]
+
+[[ _FetchHandler (digitalOcean_FetchFileFromIP,f) ]]
+
+[[ _FetchHandler (digitalOcean_StoreData,c) ]]
+ 
+[[ _FetchHandler (digitalOcean_StoreText,c) ]]
+
+[[ _FetchHandler (digitalOcean_StoreFile,c) ]]
+
+[[ _FetchHandler (digitalocean_DeleteFile,c) ]]
+
+[[ _FetchHandler (digitalocean_DeleteFolder,c) ]]
+
+
+--> DigitalOcean
+-
+[[ _FetchHandler (digitalocean_FetchDropletName,f) ]]
+
+[[ _FetchHandler (digitalocean_ExtractIpAddessFrom,f) ]]
+
+[[ _FetchHandler (digitalocean_TranslateIP,f) ]]
+
+[[ _FetchHandler (digitalocean_FetchJsonArray,f) ]]
+
+[[ _FetchHandler (digitalocean_RestDelete,c) ]]
+
+[[ _FetchHandler (digitalocean_RestPut,c) ]]
+ 
+[[ _FetchHandler (digitalocean_RestPost,c) ]]
+
+[[ _FetchHandler (digitalocean_SetAuthHeaders,c) ]]
+
+
+--> DigitalOcean | Actions
+-
+[[ _FetchHandler (digitalocean_FetchIndexedActionArray,f) ]]
+
+
+--> DigitalOcean | Droplets
+-
+[[ _FetchHandler (digitalocean_FetchDropletInfoArray,f) ]]
+
+[[ _FetchHandler (digitalOcean_GetDropletNames,f) ]]
+
+[[ _FetchHandler (digitalocean_DeconstructDropletDictionary,c) ]]
+
+[[ _FetchHandler (digitalocean_ConstructDropletDictionary,f) ]]
+
+[[ _FetchHandler (digitalOcean_GetDropletIP,f) ]]
+
+
+--> DigitalOcean | NS Record
+-
+[[ _FetchHandler (digitalocean_CreateNameServerRecord,c) ]]
+
+[[ _FetchHandler (digitalocean_DeleteNameServerRecord,c) ]]
+
+[[ _FetchHandler (digitalocean_FetchNSrecordID,f) ]]
+
+[[ _FetchHandler (digitalocean_GetNSrecordID,f) ]]
+
+
+--> DigitalOcean | A Record
+-
+[[ _FetchHandler (digitalocean_FetchArecordNames,f) ]]
+
+[[ _FetchHandler (digitalocean_FetchArecordArray,f) ]]
+
+[[ _FetchHandler (digitalocean_GetArecordID,f) ]]
+
+[[ _FetchHandler (digitalocean_CreateARecord,c) ]]
+
+[[ _FetchHandler (digitalocean_SetArecords,c) ]]
+
+[[ _FetchHandler (digitalocean_UpdateARecordIP,c) ]]
+
+[[ _FetchHandler (digitalocean_FetchArecordID,f) ]]
+
+[[ _FetchHandler (digitalocean_DeleteArecord,c) ]]
+
+
+--> DigitalOcean | Domain Records
+-
+[[ _FetchHandler (digitalocean_FetchDomainRecordArray,f) ]]
+
+-- function digitalocean_GetDomainRecord oceanDomainName, recordID
+-- see also "digitalocean_RetrieveDomainRecord"
+end digitalocean_GetDomainRecord
+
+[[ _FetchHandler (digitalocean_RetrieveDomainRecord,f) ]]
+
+[[ _FetchHandler (digitalocean_UpdateDomainRecord,c) ]]
+
+[[ _FetchHandler (digitalocean_CreateNewDomainRecord,c) ]]
+
+[[ _FetchHandler (digitalocean_DeleteDomainRecord,c) ]]
+
+
+--> DigitalOcean | Domains
+-
+[[ _FetchHandler (digitalocean_CreateDomain,c) ]]
+
+[[ _FetchHandler (digitalocean_FetchDomainArray,f) ]]
+
+[[ _FetchHandler (digitalocean_FetchDomainInfoArray,f) ]]
+
+
+--> DigitalOcean | Model | Wrappers
+-
+[[ _FetchHandler (digitalocean_GetIndexedDomainArray,f) ]]
+
+[[ _FetchHandler (digitalocean_GetDomainArray,f) ]]
+
+[[ _FetchHandler (digitalocean_GetDomainNames,f) ]]
+
+[[ _FetchHandler (digitalOcean_FindDropletIP,f) ]]
+
+[[ _FetchHandler (digitalOcean_GetDnsDictionary,f) ]]
+
+[[ _FetchHandler (digitalOcean_ListTopLevelDomains,f) ]]
+
+[[ _FetchHandler (digitalOcean_ListAllDomainNames,f) ]]
+
+[[ _FetchHandler (digitalOcean_FindServerFarms,f) ]]
+
+[[ _FetchHandler (digitalOcean_FindNotServerFarms,f) ]]
+
+[[ _FetchHandler (digitalocean_SplitIntoFarms,c) ]]
+
+[[ _FetchHandler (digitalocean_GetDomainNameArray,f) ]]
+
+[[ _FetchHandler (digitalocean_ConstructDomainNameArray,f) ]]
+
+[[ _FetchHandler (digitalocean_ConstructNameArrays,c) ]]
+
+[[ _FetchHandler (digitalOcean_GetDropletArray,f) ]]
+
+
+--> DigitalOcean | Model | Update
+-
+[[ _FetchHandler (digitalocean_UpdateDomainInfoArray,c) ]]
+
+[[ _FetchHandler (digitalocean_UpdateDropletInfoArray,c) ]]
+
+[[ _FetchHandler (digitalOcean_FetchAndSetDropletArrays,c) ]]

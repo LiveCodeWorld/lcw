@@ -1,0 +1,41 @@
+getprop mainStack_MetaArray [pHashArrayBoolean]
+   local pLinkToViews, pExportHandlers, pDontDiff
+   
+   put the main_Stack of the target into mainStackObject
+   
+   if pHashArrayBoolean is empty then
+      put pref_GetValue ("add object to hArray on export") is not false into createHarray
+      put pref_GetValue ("Construct hashArray on stack export") is true into pHashArrayBoolean
+   else
+      put pHashArrayBoolean is true into pHashArrayBoolean
+      pref_SetValue "Construct hashArray on stack export", pHashArrayBoolean
+      if pHashArrayBoolean is true then
+         pref_SetValue "Add object to hArray on stack export", true
+         put true into createHarray
+      else
+         put pref_GetValue ("Add object to hArray on export") is not false into createHarray
+      end if
+   end if
+   
+   if createHarray and pHashArrayBoolean then
+      -- only give option of constructing hkeyCalls handlerHashArray if we are also indexing a basic hArray
+      put the textStack_Folder of the target into mainStackFolder
+      put mainstack_FetchHandlerHashArray (mainStackFolder) into handlerHashArray
+      if handlerHashArray is not an array then
+         -- in cases where there is no previous index
+         -- forces indexing of all hKeys in a new script
+         put empty into hArray ["handlerHashArray"]["new"]
+      else
+         delete variable handlerHashArray ["actual"]
+         delete variable handlerHashArray ["new"]
+         put handlerHashArray into hArray ["handlerHashArray"]
+      end if
+   else
+      put empty into hArray -- no "handlerHashArray" indexing of hKey calls, let's recreate the rest of hArray
+   end if
+   
+   put true into pDontExport
+   put false into pForceIndexHandlerCalls
+   put mainstack_ConstructMetaArray (mainStackObject, hArray, pLinkToViews, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls) into metaArray
+   return metaArray
+end mainStack_MetaArray

@@ -1,0 +1,6 @@
+private function RevHTTPFolder
+   -- Silly function to find the revHTTP folder.
+   set the itemDelimiter to "/"
+   get item 1 to -2 of the effective filename of this stack
+   return it
+end RevHTTPFolder

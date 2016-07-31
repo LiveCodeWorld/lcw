@@ -1,0 +1,485 @@
+﻿script "lib_HTTP"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_HTTP
+type: script library
+version: 0.1
+
+
+--> CURL
+-
+function curl_GetUrl someUrl, followRedirects, showHeaders
+    /*
+    All HTTP replies contain a set of headers that are normally hidden,
+    use curl's -i option to display them as well as the rest of the document. 
+    You can also ask the remote server for ONLY the ,
+    by using the -I option (which will make curl issue a HEAD request).
+    
+    Curl does not follow Location: headers by default,
+    but will simply display such pages in the same manner it display all HTTP replies.
+    It does however feature an option that will make it attempt to follow the Location: pointers.
+    To tell curl to follow a Location:
+    curl -L www.sitethatredirects.com
+    if you use curl to post to a site that immediately redirects you to another page,
+    you can safely use -L and -d/-F together.
+    Curl will only use post in the first request, and then revert to get in the following operations.
+    */
+    
+    put "curl" into someShell
+    if followRedirects is not false then put space & "-L" after someShell
+    if showHeaders is true then put space & "-i" after someShell
+    put space & "-b cookies.txt -c newcookies.txt" after someShell
+     
+    put space & someUrl after someShell
+    
+    put someShell
+    
+    put opn_TempFolder() into someRoot
+    put shell_ExecuteAtRoot(someShell, someRoot) into curlResponse
+    -- put line 1 to 3 of  into curlHeader
+    delete line 1 to 3 of curlResponse
+    return curlResponse
+end curl_GetUrl
+
+
+--> HTTP
+-
+function http_CheckIP dropletIP
+   -- rough check for now. Improve please!
+   -- this checks to see if it is a valid IP adresss
+   set the itemdelimiter to "."
+   if the number of items of dropletIP is not 4 then return false
+   repeat for each item testItem in dropletIP
+      if testItem is not a number then return false
+   end repeat
+   return true
+end http_CheckIP
+
+-- function http_GetHostIpCountry ipAddress, latAndLong
+    -- 208.113.152.59
+    -- http://api.hostip.info/?ip=12.215.42.19
+    put "http://api.hostip.info/country.php" into someUrl
+    
+end http_GetHostIpCountry
+
+function http_GetHostIpInfo ipAddress
+    -- 208.113.152.59
+    -- http://api.hostip.info/?ip=12.215.42.19
+    put "http://api.hostip.info/?" & ipAddress into someUrl
+    put someUrl
+    put url someUrl into someXML
+    return someXML
+end http_GetHostIpInfo
+
+--> HTTP | Authentication
+-
+on http_SetBasicAuthentication someUser, somePassWord, moreHeaders
+    put someUser & ":" & somePassWord into tToken
+    put format("Authorization: Basic %s", base64encode(tToken)) into tAuthToken
+    line_Insert moreHeaders, tAuthToken
+    set the httpheaders to tAuthToken
+end http_SetBasicAuthentication
+
+function http_GetLastModificationDate pServer, pResource
+    return http_GetHeader(pServer, pResource, "Last-Modified")
+end http_GetLastModificationDate
+
+function http_GetType pServer, pResource
+    return http_GetHeader(pServer, pResource, "Content-type")
+end http_GetType
+
+function http_GetLength pServer, pResource
+    return http_GetHeader(pServer, pResource, "Content-length")
+end http_GetLength
+
+function http_ResponseCode pLastHeaders
+   -- HTTP/1.1 200 OK
+   if pLastHeaders is empty then put libURLLastRHHeaders() into pLastHeaders
+   put word 2 of pLastHeaders into httpResponseCode
+   return httpResponseCode
+end http_ResponseCode
+
+function http_GetReceivedHeader headerKey
+    put http_GetReceivedHeaderArray() into receivedHeaderArray
+    if the keys of receivedHeaderArray is empty then
+        return receivedHeaderArray
+    else
+        return receivedHeaderArray[headerKey]
+    end if
+end http_GetReceivedHeader
+
+function http_GetReceivedHeaderArray
+   -- does not work with repeated values like 2 or more "cookie:"
+   put libUrlLastRHHeaders() into tResp
+   
+   put line 1 of tResp into statusLine
+   switch
+      case 503 is among the words of statusLine
+         put "Error, service unavailable" into someError
+         return someError
+      case 200 is among the words of statusLine
+         replace ": " with numtochar(4) in tResp
+         delete line 1 of tResp
+         split tResp by CR and numtochar(4)
+         return tResp
+      default
+         return "Error," && word 2 to -1 of statusLine
+   end switch
+end http_GetReceivedHeaderArray
+
+function http_GetHeader pServer, pResource, pHeader
+    put http_GetHeaders(pServer, pResource) into tTempA
+    if the keys of tTempA is empty then
+        return tTempA
+    else
+        return tTempA[pHeader]
+    end if
+end http_GetHeader
+
+function http_GetHeaders pServer, pResource
+    put format("HEAD %s HTTP/1.1\nHost: %s\nUser-agent: Revolution", pResource, pServer) into tHeaders
+    libUrlSetCustomHTTPHeaders tHeaders
+    get URL ("http://" & pServer)
+    return http_GetReceivedHeaderArray()
+end http_GetHeaders
+
+function http_ConstructCookieArray someCookie
+   -- does not work with multiple cookies
+   replace "; " with numtochar(4) in someCookie
+   split someCookie by numtochar(4) and "="
+   return someCookie
+end http_ConstructCookieArray
+
+function http_GetRecievedCookies
+   put libUrlLastRHHeaders() into tResp
+   
+   put line 1 of tResp into statusLine
+   switch
+      case 503 is among the words of statusLine
+         put "Error, service unavailable" into someError
+         return empty
+      case 200 is among the words of statusLine
+         -- replace ": " with numtochar(4) in tResp
+         delete line 1 of tResp
+         put http_ExtractSetCookie() into cookies
+         return cookies
+      default
+         put  "Error," && word 2 to -1 of statusLine into someError
+         return empty
+   end switch
+   
+   -- get http_GetReceivedHeader("Set-Cookie")
+   return it
+end http_GetRecievedCookies
+
+function http_ExtractSetCookie pHeader
+   if pHeader is empty then put libUrlLastRHHeaders() into pHeader
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in pHeader
+      if item 1 of someLine = "Set-Cookie" then
+         put word 1 to -1 of item 2 of someLine into cookieLine
+         put cookieLine & CR after cookies
+      end if
+   end repeat
+   delete char -1 of cookies
+   return cookies
+end http_ExtractSetCookie
+
+function http_ConstructCookieArray cookieName, cookieValue, expires, cookiePath, comment, maxAge, cookieDomain, cookieVersion
+    put cookieName into cookieArray["Name"]   -- required
+    put cookieValue into cookieArray["Value"] -- required
+    
+    if expires is not empty then put expires into cookieArray ["Expires"]  -- expiry date
+    if cookiePath is not empty then put cookiePath into cookieArray ["Path"]  -- cookie path
+    if comment is not empty then put comment into cookieArray ["Comment"]
+    if maxAge is not empty then put maxAge into cookieArray ["Max-Age"]  -- max age in seconds
+    if cookieDomain is not empty then put cookieDomain into cookieArray ["Domain"]
+    if cookieVersion is not empty then put cookieVersion into cookieArray ["Version"]
+    
+    return cookieArray
+end http_ConstructCookieArray
+
+command http_DeconstructCookieLine cookieLine, @cookieName, @cookieValue, @cookieDomain, @expires, @comment, @maxAge, @cookieVersion
+   set the linedelimiter to ";"
+   set the itemdelimiter to "="
+   put line 1 of cookieLine into nameValue
+   put item 1 of nameValue into cookieName
+   put item 2 of nameValue into cookieValue
+   delete line 1 of cookieLine
+   
+   split cookieLine by ";" and "="
+   
+   put cookieArray ["Domain"] into cookieDomain
+   put cookieArray ["Expires"] into expires
+   put cookieArray ["Comment"] into comment
+   put cookieArray ["Max-Age"] into maxAge -- max age in seconds
+   put cookieArray ["Version"] into cookieVersion
+end http_DeconstructCookieLine
+
+function http_ConstructCookieHeaders pSetCookies, pDomain
+   repeat for each line cookieLine in pSetCookies
+      http_DeconstructCookieLine cookieLine, cookieName, cookieValue, cookieDomain, expires, comment, maxAge, cookieVersion
+      -- if blah blah then next repeat
+      put merge("Cookie: [[cookieName]]=[[cookieValue]]") & "; " after cookieHeaders
+   end repeat
+   delete char -2 to -1 of cookieHeaders
+   return cookieHeaders
+end http_ConstructCookieHeaders
+
+-- function http_SetCookie
+   put "Set-Cookie: " into tBuffer
+   repeat for each item tCookie in params()
+      put tCookie["name"] & "=" &quote& tCookie["value"] &quote& ";" after tBuffer
+      repeat for each line tLine in keys(tCookie)
+         if tLine <> "name" and tLine <> "value" then
+            put tLine & "=" &quote& tCookie[tLine] &quote& ";" after tBuffer
+         end if
+      end repeat
+      put "," into char -1 of tBuffer
+   end repeat
+   delete the last char of tBuffer
+   put tBuffer & cr
+end http_SetCookie
+
+
+--> HTTPD
+-
+function httpd_RecentLog
+    get shell("tail /var/log/system.log")
+    return it
+end httpd_RecentLog
+
+
+--> URL
+-
+function is_Url testUrl
+    -- quick hack
+    set the itemdelimiter to ":"
+    put item 1 of testUrl into urlProtocol
+    set the itemdelimiter to ","
+    if urlProtocol is among the items of "file,http,https,ftp" then
+        return true
+    else
+        return false
+    end if
+end is_Url
+
+command url_EmptyCache
+    repeat for each line someURL in the cachedurls 
+        unload url someURL 
+    end repeat
+end url_EmptyCache
+
+function url_Construct someProtocol, urlDomain, urlPath, shortName, fileExtension, userName, pissWord
+    put someProtocol & "://" into someUrl
+    if userName is not empty then
+        put userName & ":" & pissWord & "@" after someUrl
+    end if
+    put urlDomain after someUrl
+    if urlPath is not empty then
+        folder_Format someUrl
+        if char 1 of urlPath is "/" then delete char 1 of urlPath
+        put urlPath after someUrl
+    end if
+    if shortName is empty then
+        -- put "/" after someUrl -- not always a directory can be a web application path / wiki
+    else
+        folder_Format someUrl
+        put shortName after someUrl
+         
+        if fileExtension is not empty then
+            put "." & fileExtension after someUrl
+        end if
+    end if
+    return someUrl
+end url_Construct
+
+function url_ConstructParamArray someUrl
+   set the itemdelimiter to "?"
+   put item 1 of someUrl into urlRoot
+   put item 2 to -1 of someUrl into postData
+   put url_ConstructPostArray (postData) into paramArray
+   return paramArray
+end url_ConstructParamArray
+
+function url_ConstructPostArray postData
+   split postData by "&" and "="
+   repeat for each line postKey in the keys of postData
+      put postData [postKey] into postValue
+      put urldecode(postValue) into paramArray [postKey]
+   end repeat
+   return paramArray
+end url_ConstructPostArray
+
+function url_ExtractFileExtension someUrl
+    -- should use regExpression to match only 3 digit extension?
+    set the itemdelimiter to "."
+    return last item of someUrl
+end url_ExtractFileExtension
+
+function url_StripProtocol someUrl
+    set the itemdelimiter to ":"
+    delete item 1 of someUrl
+    return someUrl
+end url_StripProtocol
+ 
+function url_ConstructBaseUrl baseUrl
+    -- was "object_BaseUrlGuess"
+    -- create a folder if it does not exist!
+    switch baseUrl
+    case "local"
+        put folder_Above(the filename of this stack) into baseFolder
+        put "wiki/" after baseFolder
+        if there is not a folder baseFolder then
+            folder_CreateNested baseFolder
+        end if
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    case empty
+        put the short name of this card into wikiTitle
+        if word 1 to 2 of wikiTitle is "card id" then
+            put the short name of this stack into wikiTitle
+        end if
+        put wiki_GetFolder(wikiTitle) into baseFolder
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    default -- leave as is
+        return baseUrl
+    end switch
+end url_ConstructBaseUrl
+
+function url_EncodePath somePath
+    set the itemdelimiter to "/"
+    repeat for each item someItem in somePath
+        replace space with "%20" in someItem
+        -- put urlencode(someItem) into someItem
+        put someItem & "/" after encodedPath
+    end repeat
+    delete char -1 of encodedPath
+    return encodedPath
+end url_EncodePath
+
+on url_Deconstruct someUrl, @someProtocol, @urlDomain, @urlPath, @shortName, @fileExtension, @userName, @pissWord
+    set the itemDelimiter to ":"
+    put item 1 of someUrl into someProtocol
+    if someProtocol is among the items of "file:binFile:ftp:http:https" then
+        put someUrl into someFile
+        delete item 1 of someFile
+        if char 1 to 2 of someFile = "//" then delete char 1 to 2 of someFile
+        
+        get offset("@", someFile)
+        if it = 0 then
+            put empty into userName
+            put empty into pissWord
+        else
+            put char 1 to (it - 1) of someFile into authBit
+            repeat while char 1 of authBit is "/"
+                delete char 1 of authBit
+            end repeat
+            delete char 1 to it of someFile
+            put item 1 of authBit into userName
+            put item 2 of authBit into pissWord
+        end if
+        file_Deconstruct someFile, someRoot, shortName, fileExtension
+        
+        set the itemDelimiter to "/"
+        put item 1 of someRoot into urlDomain
+        put item 2 to -1 of someRoot into urlPath
+        return true
+    else
+        put empty into someProtocol
+        put empty into urlDomain
+        put empty into urlPath
+        put empty into shortName
+        put empty into fileExtension
+        return false
+    end if
+end url_Deconstruct
+
+function url_Construct someProtocol, urlDomain, urlPath, shortName, fileExtension, userName, pissWord
+    put someProtocol & "://" into someUrl
+    if userName is not empty then
+        put userName & ":" & pissWord & "@" after someUrl
+    end if
+    put urlDomain after someUrl
+    if urlPath is not empty then
+        folder_Format someUrl
+        if char 1 of urlPath is "/" then delete char 1 of urlPath
+        put urlPath after someUrl
+    end if
+    if shortName is empty then
+        -- put "/" after someUrl -- not always a directory can be a web application path / wiki
+    else
+        folder_Format someUrl
+        put shortName after someUrl
+         
+        if fileExtension is not empty then
+            put "." & fileExtension after someUrl
+        end if
+    end if
+    return someUrl
+end url_Construct
+
+function url_ExtractFileExtension someUrl
+    -- should use regExpression to match only 3 digit extension?
+    set the itemdelimiter to "."
+    return last item of someUrl
+end url_ExtractFileExtension
+
+function url_StripProtocol someUrl
+    set the itemDelimiter to ":"
+    delete item 1 of someUrl
+    return someUrl
+end url_StripProtocol
+ 
+function url_ConstructBaseUrl baseUrl
+    -- was "object_BaseUrlGuess"
+    -- create a folder if it does not exist!
+    switch baseUrl
+    case "local"
+        put folder_AboveFile(the fileName of this stack) into baseFolder
+        put "wiki/" after baseFolder
+        if there is not a folder baseFolder then
+            folder_CreateNested baseFolder
+        end if
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    case empty
+        put the short name of this card into wikiTitle
+        if word 1 to 2 of wikiTitle is "card id" then
+            put the short name of this stack into wikiTitle
+        end if
+        put wiki_GetFolder(wikiTitle) into baseFolder
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    default -- leave as is
+        return baseUrl
+    end switch
+end url_ConstructBaseUrl
+
+
+--> Sockets
+-
+function socket_GetLocalIPAddress tCheckAddress
+    if tCheckAddress is empty then put "255.255.255.255:6000" into tCheckAddress
+    open datagram socket to tCheckAddress
+    put the hostaddress of tCheckAddress into tMyIP
+    close socket tCheckAddress
+    return tMyIP
+end socket_GetLocalIPAddress
+
+on socket_ClosePending
+    repeat for each line pendingInfo in the pendingmessages
+        put item 1 of pendingInfo into messageID
+        cancel messageID
+    end repeat
+end socket_ClosePending
+
+on socket_CloseOpen
+    repeat for each line someSocket in the opensockets
+        close socket someSocket
+    end repeat
+end socket_CloseOpen

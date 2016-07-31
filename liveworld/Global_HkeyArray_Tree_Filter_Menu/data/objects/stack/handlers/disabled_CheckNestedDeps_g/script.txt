@@ -1,0 +1,8 @@
+getprop disabled_CheckNestedDeps [treeView]
+   put the displayed_DependencyWalkArray of treeView into dependencyWalkArray
+   if dependencyWalkArray is an array then
+      return false
+   else
+      return true
+   end if
+end disabled_CheckNestedDeps

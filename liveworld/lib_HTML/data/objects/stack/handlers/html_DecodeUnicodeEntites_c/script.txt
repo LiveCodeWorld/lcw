@@ -1,0 +1,35 @@
+command html_DecodeUnicodeEntites @someHtml
+   put unicode_UnEscape (someHtml) into someHtml
+   
+   --  put "(\\[bfnrtv0])" into someReg
+   replace "\b" with numToChar(8) in someHtml
+   replace "\f" with formfeed in someHtml
+   replace "\n"  with linefeed in someHtml
+   replace "\r"  with CR in someHtml
+   replace "\t"  with tab in someHtml
+   replace "\v"  with numToChar(11) in someHtml
+   -- replace "\0"  with numToChar(0) in someHtml -- (only if the next character is not a decimal digit; else it’s an octal escape sequence)
+   
+   replace "\/" with "/" in someHtml
+   replace ("\" & quote) with quote in someHtml
+   xml_UnEscape someHtml
+   
+   return empty
+   
+   -- this was my earlier hack :) 
+   -- Now using Mark Smith and Trevor's library
+   put "(\\u[a-fA-F0-9]{4})" into someReg
+   repeat
+      if matchchunk (someHtml, someReg, startNum, endNum) is false then
+         return empty
+      else
+         put char startNum to endNum of someHtml into someEscape
+         put char 3 to 4 of someEscape into highNums
+         put char 5 to 6 of someEscape into lowNums
+         
+         put unicode_SurrogatePairToCodePoint (highNums, lowNums) into toReplace
+         
+         put toReplace into char startNum to endNum of someHtml
+      end if
+   end repeat
+end html_DecodeUnicodeEntites

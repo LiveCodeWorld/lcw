@@ -1,0 +1,9 @@
+command script_UpdateMenuTables scriptObject
+   -- pretty well saem as "menu_CreateAndStoreTables"
+   
+   -- menu_ClearTargetGlobals
+   -- menu_DeleteTables mController   
+   
+   put the script_MenuTitleTableArray of scriptObject into mTitleTableArray      
+   menu_SetDataArray mController, mTitleTableArray
+end script_UpdateMenuTables

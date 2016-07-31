@@ -1,0 +1,5 @@
+command fedwiki_AddToCreateArray @fedwikiPageArray, someArray
+   put fedwikiPageArray ["journal"]["source"] into sourceArray
+   union sourceArray with someArray
+   put sourceArray into fedwikiPageArray ["journal"]["source"]
+end fedwiki_AddToCreateArray

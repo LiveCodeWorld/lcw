@@ -1,0 +1,19 @@
+function fedwiki_ConstructCreateSourceArray transportURL, sourceURL, pDateTransported, pRepo, pRevisionID
+   /*
+   url = "https://en.wikipedia.org/wiki/Hypertext"
+   date = 1458105780000
+   rev = "v128.397"
+   transport = "http://localhost:4020/proxy"
+   repo = "https://github.com/ward/transport-proxy"
+   */
+   if pDateTransported is empty then put the milliseconds into pDateTransported
+   
+   put sourceURL into createSourceArray ["url"]
+   put transportURL into createSourceArray ["transport"]
+   put pDateTransported into createSourceArray ["date"]
+   
+   if pRepo is not empty then put pRepo into createSourceArray ["repo"]
+   if pRevisionID is not empty then put pRevisionID into createSourceArray ["rev"]
+   
+   return createSourceArray
+end fedwiki_ConstructCreateSourceArray

@@ -1,0 +1,14 @@
+function xml_ExtractDivFromID xmlID, divID, pStartNode
+    if pStartNode is empty then
+        -- could use body
+        put revXMLRootNode(xmlID) into pStartNode
+    end if
+    put revXMLMatchingNode (xmlID, pStartNode, "div", "id", divID, -1) into foundNode
+    if foundNode is empty then
+        put empty into someXML
+    else
+        put revXMLText (xmlID, foundNode, true) into someXML
+    end if
+    revDeleteXmlTree xmlID
+    return someXML
+end xml_ExtractDivFromID

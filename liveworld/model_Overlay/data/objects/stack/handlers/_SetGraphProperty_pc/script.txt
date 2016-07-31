@@ -1,0 +1,11 @@
+private command _SetGraphProperty propName, propValue, pOverlayName, pRecreateDot
+   if pOverlayName is empty then put the overlay_Name of the target into pOverlayName
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   overlayArray_SetGraphProperty overlayArray, propName, propValue
+   
+   ## Recreate files
+   if pRecreateDot is not false  then overlayArray_CreateFilesAndSetGeometry overlayArray
+   
+   set the overlay_Array [pOverlayName] of the target to overlayArray
+   return the result
+end _SetGraphProperty

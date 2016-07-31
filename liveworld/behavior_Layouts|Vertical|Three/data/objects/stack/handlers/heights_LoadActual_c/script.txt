@@ -1,0 +1,5 @@
+command heights_LoadActual
+   put the height of the header_View of me into LocalArray ["header_Height"]
+   put the height of the body_View of me into LocalArray ["body_Height"]
+   put the height of the footer_View of me into LocalArray ["footer_Height"]
+end heights_LoadActual

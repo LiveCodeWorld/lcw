@@ -1,0 +1,13 @@
+command stack_Clone stackNameToClone, pDestroyBoolean, pCloneName
+   if exists (stack stackNameToClone) is false then return empty
+   if pCloneName is empty then put stackNameToClone into pCloneName
+   
+   put stack_ConstructNewCloneName (pCloneName) into newStackName
+   clone stack stackNameToClone as newStackName
+   put it into clonedStack
+   if pDestroyBoolean is not false then
+      set the destroyStack of clonedStack to true
+      set the destroyWindow of clonedStack to true
+   end if
+   return clonedStack
+end stack_Clone

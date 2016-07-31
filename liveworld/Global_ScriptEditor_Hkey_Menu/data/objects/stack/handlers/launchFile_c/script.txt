@@ -1,0 +1,11 @@
+command launchFile treeWidget, shortPath
+   put the search_Folder of treeWidget into findInsideFolder
+   put the search_Text of treeWidget into textToFind
+   
+   text_AddTrailing findInsideFolder
+   put findInsideFolder & shortPath into somePath
+   set the itemdelimiter to "/"
+   put item 1 of shortPath into shortHandlerFolder
+   -- put hkey_FromShortFolder (shortHandlerFolder)
+   put somePath
+end launchFile

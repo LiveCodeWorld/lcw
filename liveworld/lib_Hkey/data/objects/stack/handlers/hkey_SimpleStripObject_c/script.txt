@@ -1,0 +1,7 @@
+command hkey_SimpleStripObject @hkeys, scriptObject
+   put the rugged_ID of scriptObject into scriptObject
+   put hkeys into strippedKeys
+   filter strippedKeys with ("*," & scriptObject & ",*")
+   filter hkeys without ("*," & scriptObject & ",*")
+   return strippedKeys
+end hkey_SimpleStripObject

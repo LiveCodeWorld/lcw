@@ -1,0 +1,16 @@
+command http_DeconstructCookieLine cookieLine, @cookieName, @cookieValue, @cookieDomain, @expires, @comment, @maxAge, @cookieVersion
+   set the linedelimiter to ";"
+   set the itemdelimiter to "="
+   put line 1 of cookieLine into nameValue
+   put item 1 of nameValue into cookieName
+   put item 2 of nameValue into cookieValue
+   delete line 1 of cookieLine
+   
+   split cookieLine by ";" and "="
+   
+   put cookieArray ["Domain"] into cookieDomain
+   put cookieArray ["Expires"] into expires
+   put cookieArray ["Comment"] into comment
+   put cookieArray ["Max-Age"] into maxAge -- max age in seconds
+   put cookieArray ["Version"] into cookieVersion
+end http_DeconstructCookieLine

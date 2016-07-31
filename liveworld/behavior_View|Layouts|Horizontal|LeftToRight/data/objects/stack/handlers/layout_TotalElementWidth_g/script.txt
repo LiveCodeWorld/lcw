@@ -1,0 +1,11 @@
+getprop layout_TotalElementWidth
+   put the layout_Elements of me into layoutElements
+   put the view_Spacing of me into viewSpacing
+   put 0 into layoutElementWidth
+   repeat for each line layoutElement in layoutElements
+      add the layout_ElementWidth of layoutElement to layoutElementWidth
+      add viewSpacing to layoutElementWidth
+   end repeat
+   subtract viewSpacing from layoutElementWidth
+   return layoutElementWidth
+end layout_TotalElementWidth

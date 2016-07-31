@@ -1,0 +1,10 @@
+setprop card_ViewValue [propName] propValue
+   put the view_DataArray [true] of the target into viewDataArray
+   if propValue is empty then
+      delete local viewDataArray [propName]
+   else
+      put propValue into viewDataArray [propName]
+   end if
+   set the view_DataArray [true] of the target to viewDataArray
+   return viewDataArray
+end card_ViewValue

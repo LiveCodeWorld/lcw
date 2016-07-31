@@ -1,0 +1,15 @@
+getprop menu_ToolTitle
+   put the long id of me into viewObject
+   put menu_GetToolTitle (viewObject) into myToolTitle
+   
+   put the view_Object of the owner of me into titleOwner
+   if exists (titleOwner) is false or word 1 of titleOwner = "card" then return myToolTitle
+   
+   -- put menu_GetToolTitle (titleOwner) into ownerToolTitle
+   put the menu_ToolTitle of titleOwner into ownerToolTitle
+   if ownerToolTitle is empty then return myToolTitle
+      
+   put ownerToolTitle & CR into mToolTable
+   put myToolTitle & tab & "submenu" after mToolTable
+   return mToolTable
+end menu_ToolTitle

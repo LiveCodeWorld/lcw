@@ -1,0 +1,224 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Hkey
+type: script library
+version: 0.1
+
+/*
+A library for script analysis using hKeys.
+
+An hKey is a unique reference to a handler. It is constructed as follows:
+--    handlerName,scriptObject,handlerNum,handlerType
+
+The handlers in this library are gradually being moved over from the older script libraries,
+with the "script_" extension being replaces by "hkey_"
+*/
+
+--> Hkeys
+-
+[[ _FetchHandler (hkey_SimpleStripObject,c) ]]
+
+[[ _FetchHandler (hkey_StripGetProps,c) ]]
+
+[[ _FetchHandler (hkey_StripSetProps,c) ]]
+
+[[ _FetchHandler (library_CheckHandler,c) ]]
+
+[[ _FetchHandler (library_HkeyImageFile,f) ]]
+
+[[ _FetchHandler (library_ConstructHkeyDgArray,f) ]]
+
+[[ _FetchHandler (library_ConstructDisplayDataArray,f) ]]
+
+[[ _FetchHandler (hkey_ExportStatus,f) ]]
+
+[[ _FetchHandler (hkey_FetchHow,s) ]]
+
+[[ _FetchHandler (hkey_FetchHow,g) ]]
+
+[[ _FetchHandler (hkey_FetchHows,g) ]]
+
+
+--> Hkey | Tests
+-
+[[ _FetchHandler (is_Hkey,f) ]]
+
+
+--> Work in Progress
+-
+[[ _FetchHandler (object_Hkey,g) ]]
+
+[[ _FetchHandler (hkey_AddHandlerFromObject,c) ]]
+
+[[ _FetchHandler (script_HkeyLineNumber,f) ]]
+
+[[ _FetchHandler (hkey_StripDuplicates,c) ]]
+
+[[ _FetchHandler (hkey_ConstructCompareArray,f) ]]
+
+[[ _FetchHandler (hkey_DontRecurse,f) ]]
+
+[[ _FetchHandler (hkey_StoreCallsAndHandler,c) ]]
+
+[[ _FetchHandler (script_IsGlobal,g) ]]
+
+[[ _FetchHandler (hkey_RedrawDependencyGraph,c) ]]
+
+
+--> Script
+-
+[[ _FetchHandler (script_AndBehavior,g) ]]
+
+[[ _FetchHandler (script_ExtractHandlerType,f) ]]
+
+[[ _FetchHandler (script_ExtractHandler,pf) ]]
+
+[[ _FetchHandler (hKey_GetHandlerAndCallsFromObject,c) ]]
+
+[[ _FetchHandler (object_FastStripIndex,c) ]]
+
+[[ _FetchHandler (object_StripIndex,c) ]]
+
+[[ _FetchHandler (stack_NamesToObjects,f) ]]
+
+[[ _FetchHandler (hkey_ExtractHandlerFromObject,f) ]]
+
+[[ _FetchHandler (hkey_SetOffsets,c) ]]
+
+[[ _FetchHandler (script_ExtractPublicHandler,f) ]]
+
+[[ _FetchHandler (script_ExtractPrivateHandler,f) ]]
+
+
+--> hKey
+-
+/*
+In order to make the library smaller a lot of "script" handlers should be renamed "hKey".
+*/
+
+[[ _FetchHandler (menu_PickConditions,g) ]]
+
+[[ _FetchHandler (hkey_CaseConditions,g) ]]
+
+[[ _FetchHandler (hkey_GetCaseConditions,f) ]]
+
+[[ _FetchHandler (hkey_ExtractObjects,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractObjects,f) ]]
+
+
+--> Hkey | Search
+-
+[[ _FetchHandler (hkey_Find,g) ]]
+
+[[ _FetchHandler (hkey_Search,f) ]]
+
+[[ _FetchHandler (hArray_SimpleSearch,f) ]]
+
+
+--> hdb | Search | Edit
+-
+[[ _FetchHandler (hArray_SearchHierarchyAndEdit,c) ]]
+
+[[ _FetchHandler (hArray_SearchAndEdit,c) ]]
+
+[[ _FetchHandler (hkey_FindInFullHierarchy,g) ]]
+
+[[ _FetchHandler (hkey_FindAndIndex,f) ]]
+
+[[ _FetchHandler (hkey_FastFindHandlerAndKey,c) ]]
+
+[[ _FetchHandler (hkey_Edit,c) ]]
+
+[[ _FetchHandler (hkey_EditFoundHandler,c) ]]
+
+[[ _FetchHandler (script_MessageHandlers,g) ]]
+
+[[ _FetchHandler (script_HkeysFromAvailable,f) ]]
+
+[[ _FetchHandler (script_HandlerTableOffsets,c) ]]
+
+[[ _FetchHandler (hkey_EditAndSelectLines,c) ]]
+
+[[ _FetchHandler (script_EditAndSelectLines,c) ]]
+
+[[ _FetchHandler (hKey_IsHandler,f) ]]
+
+[[ _FetchHandler (hKey_IsMissingProperty,f) ]]
+
+[[ _FetchHandler (script_AddLibrariesToHierarchy,c) ]]
+
+[[ _FetchHandler (hkey_SearchDatabase,f) ]]
+
+[[ _FetchHandler (hkey_ConstructIntersectArray,f) ]]
+
+[[ _FetchHandler (hkey_ConstructNameLinks,f) ]]
+
+[[ _FetchHandler (hkey_ConstructAndArray,c) ]]
+
+[[ _FetchHandler (hkey_ConstructAndTitle,f) ]]
+
+[[ _FetchHandler (hkey_ConstructKeyWordLinks,pf) ]]
+
+[[ _FetchHandler (hkey_PopularKeyWordOutline,f) ]]
+
+[[ _FetchHandler (hkey_KeyWordOutline,f) ]]
+
+
+--> Handler Index
+-
+[[ _FetchHandler (handler_HkeyFromName,f) ]]
+
+[[ _FetchHandler (handler_StemOutline,f) ]]
+
+[[ _FetchHandler (handler_PopularStemOutline,f) ]]
+
+[[ _FetchHandler (handler_ConstructBehaviorHkeyIndex,f) ]]
+
+[[ _FetchHandler (script_DictionaryHkeys,g) ]]
+
+[[ _FetchHandler (script_ExtractDictionaryHkeys,f) ]]
+
+[[ _FetchHandler (handler_ConstructUsedHkeyIndex,f) ]]
+
+[[ _FetchHandler (handler_ConstructBackHkeyIndex,f) ]]
+
+[[ _FetchHandler (handler_ConstructFrontHkeyIndex,f) ]]
+
+[[ _FetchHandler (handler_ConstructMenuHkeyIndex,f) ]]
+
+[[ _FetchHandler (handler_ConstructHkeyIndex,f) ]]
+
+[[ _FetchHandler (handler_ConstructIndexArray,f) ]]
+
+[[ _FetchHandler (handler_ConstructIndexOutline,f) ]]
+
+[[ _FetchHandler (handler_GetIndex,f) ]]
+
+[[ _FetchHandler (handler_StemIndex,f) ]]
+
+
+--> Handler Index | Model
+-
+[[ _FetchHandler (handler_model,g) ]]
+
+-- function handler_GetIndexArray
+put the handler_model of me into modelObject
+put model_GetArray("uOPN_UniqueHandlers", modelObject) into handlerIndexArray
+return handlerIndexArray
+end handler_GetIndexArray
+
+-- on handler_SetIndexArray handlerIndexArray
+put the handler_model of me into modelObject
+model_SetArray "uOPN_UniqueHandlers", modelObject, handlerIndexArray
+end handler_SetIndexArray
+
+
+--> Hkey | Keywords
+-
+[[ _FetchHandler (hkey_ConstructKeywords,f) ]]
+
+[[ _FetchHandler (text_SplitIntoWords,f) ]]
+
+[[ _FetchHandler (hkey_InStackHierarchy,f) ]]

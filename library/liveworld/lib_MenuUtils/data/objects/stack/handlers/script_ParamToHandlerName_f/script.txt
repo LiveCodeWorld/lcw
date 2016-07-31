@@ -1,0 +1,12 @@
+function script_ParamToHandlerName customParam
+   put word 1 of customParam into customParam
+   put tolower(char 1 of customParam) into char 1 of customParam
+   
+   repeat with charNum = 1 to the number of chars of customParam
+      if text_StartsWithCaps(char charNum of customParam) is true then
+         put "_" before char charNum of customParam
+         return customParam
+      end if
+   end repeat
+   return customParam
+end script_ParamToHandlerName

@@ -1,0 +1,5 @@
+command fedwiki_SetRouteData someRoute, someData
+   fedwiki_NormlizeRoute someRoute
+   daemon_SetRouteData someRoute, someData
+   return the result
+end fedwiki_SetRouteData

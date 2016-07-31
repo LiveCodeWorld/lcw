@@ -1,0 +1,16 @@
+function date_PadTwoZeros someNum
+    return format("%02d", someNum)
+    
+    /*
+    set the numberformat to "00.######"
+    put item 1 of someNum + 0 into padedNum
+    set the numberformat to "0.######"
+    return padedNum
+    */
+    
+    if the number of chars of someNum = 1 then
+        return "0" & someNum
+    else
+        return someNum
+    end if
+end date_PadTwoZeros

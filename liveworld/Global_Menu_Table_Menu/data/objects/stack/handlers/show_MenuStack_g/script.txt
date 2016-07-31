@@ -1,0 +1,9 @@
+getprop show_MenuStack
+   put rev_ScriptObject() into mController
+   put the menu_SubStack of mController into subStackObject
+   if exists(subStackObject) then
+      return the visible of subStackObject 
+   else
+      return empty
+   end if
+end show_MenuStack

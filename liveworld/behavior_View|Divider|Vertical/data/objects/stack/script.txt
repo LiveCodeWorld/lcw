@@ -1,0 +1,75 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Divider|Vertical
+type: behavior
+version: 0.1
+
+
+--> MetaData
+-
+author: David Bovill
+copyright: David Bovill
+name: View|Divider|Vertical
+type: view behavior
+
+/*
+This is a bit of a mess. Fix it up.
+
+The geometry of this view is not stable 
+It can get trapped in a situation where the geometry needs resetting as the local variables are no cleared,
+as a mouseUp or mouseLeave event is not sent and so clear_move is never called.
+
+Resizing the view should fix this as a short term hack, but the code needs fixing to make it more robust.
+This layout allows you to resize two horzontally divided panes.
+It should be updated to use one LocalArray, and maybe dispatch?
+*/
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (vertical_Divider,g) ]]
+
+
+--> Local Variables
+-
+local localStartH, localStartV, localOriginalRect, localMouseIsDown, localLeftView, localRightView, localOwnerRect
+
+[[ _FetchHandler (clearLocals,pc) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (mouseEnter,c) ]]
+
+[[ _FetchHandler (mouseLeave,c) ]]
+
+[[ _FetchHandler (mouseMove,c) ]]
+
+[[ _FetchHandler (mouseUp,c) ]]
+
+[[ _FetchHandler (mouseRelease,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Drag Helpers
+-
+[[ _FetchHandler (initialise_Move,c) ]]
+
+[[ _FetchHandler (clear_Move,c) ]]
+
+
+--> Divider
+-
+[[ _FetchHandler (divider_Style,g) ]]
+
+[[ _FetchHandler (divider_Style,s) ]]
+
+[[ _FetchHandler (divider_Styles,g) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (view_Rect,s) ]]

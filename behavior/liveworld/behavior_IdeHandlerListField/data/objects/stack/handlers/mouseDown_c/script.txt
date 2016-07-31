@@ -1,0 +1,11 @@
+on mouseDown pMenuButton
+   -- put the params
+   if pMenuButton = 3 then
+      menu_PopUp "Global | ScriptEditor | Hkey | Menu"
+   else if the optionKey is "Down" then
+      put rev_GetFirstScriptEditorSelectedHkey() into hKey
+      display_Hkey hKey
+   else
+      pass mouseDown
+   end if
+end mouseDown

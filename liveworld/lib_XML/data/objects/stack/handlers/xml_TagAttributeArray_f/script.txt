@@ -1,0 +1,24 @@
+function xml_TagAttributeArray tagName, someXml
+   -- Note: if there are no attributes AND no space the regExpression will fail to match
+   -- but thats OK for this function
+   
+   put "(?im)<" & tagName & "\s+([^>]*)\s*/\s*>" into singleReg
+   put "(?im)<" & tagName & "\s+([^>]*)\s*>" into doubleReg
+   
+   -- not sure why this has problems
+   -- put singleReg & "|" & doubleReg into someReg
+   -- but this is OK
+   put doubleReg & "|" & singleReg into someReg
+
+   if matchtext(someXML, doubleReg, tagContent) is false then
+      return empty
+   else
+      replace CR with empty in tagContent
+      replace space with CR in tagContent
+      replace quote with empty in tagContent
+      replace "'" with empty in tagContent
+      
+      split tagContent with CR and "="
+      return tagContent
+   end if
+end xml_TagAttributeArray

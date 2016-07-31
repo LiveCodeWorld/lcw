@@ -1,0 +1,6 @@
+command hkey_SetMetadataArray hKey, metadataArray
+   put hkey_GetOverlayData (hKey) into overlayData
+   put metadataArray into overlayData ["metadata"]
+   hkey_SetOverlayData hKey, overlayData
+   return overlayData
+end hkey_SetMetadataArray

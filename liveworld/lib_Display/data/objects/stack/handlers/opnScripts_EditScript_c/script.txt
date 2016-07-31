@@ -1,0 +1,4 @@
+command opnScripts_EditScript targetObject, globalMenuCardName
+   put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Scripts.rev" into longStackFile
+   edit the script of card globalMenuCardName of stack "libOPN_Scripts|OPN Stack Menus" of stack longStackFile
+end opnScripts_EditScript

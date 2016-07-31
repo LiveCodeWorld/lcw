@@ -1,0 +1,29 @@
+function object_ConstructPropertiesOutline objectOutline, objectIdArray, hIdArray
+   repeat with lineNum = 1 to the number of lines of objectOutline
+      put empty into htmlLines
+      put object_FromOutlineLineNum(lineNum, objectOutline) into someObject
+      
+      put line lineNum of objectOutline into objectLine
+      put outline_TabLevel(objectLine) into tabLevel
+      put objectLine & CR after objectPropertyOutline
+      
+      if exists(someObject) then
+         put the mobile_Name of someObject into someObject
+      end if
+      
+      put objectIdArray [someObject] into nodeIDs
+      if nodeIDs is not empty then
+         repeat for each line nodeID in nodeIDs
+            put hIdArray [nodeID] into hKey
+            hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+            put html_ConstructNameLink(handlerName, hKey) & CR after htmlLines
+         end repeat
+         delete char -1 of htmlLines
+         sort htmlLines
+         get outline_IncreaseIndent(htmlLines, (tabLevel+1))
+         put it & CR after objectPropertyOutline
+      end if
+   end repeat
+   delete char -1 of objectPropertyOutline
+   return objectPropertyOutline
+end object_ConstructPropertiesOutline

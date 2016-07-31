@@ -1,0 +1,12 @@
+function wikipedia_ExtractSummary someTitles, pApiRoot, pFormat
+   -- same as "wikipedia_FetchPageExtract"
+   -- does not work for old mediawikis
+   -- /w/api.php?action=query&prop=extracts&format=json&exintro=&explaintext=&exsectionformat=wiki&titles=North%20Africa&uselang=de
+   if pFormat is empty then put "json" into pFormat
+   
+   put wikipedia_GetApiRoot (pApiRoot) & "?action=query&prop=extracts&exintro=&titles=" into apiStem
+   put apiStem & urlEncode(someTitles) into someURL
+   put "&format=" & pFormat after someURL
+   put url someURL into someValue
+   return someValue
+end wikipedia_ExtractSummary

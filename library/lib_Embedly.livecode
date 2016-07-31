@@ -1,0 +1,71 @@
+﻿script "lib_Embedly"
+--> MetaData
+-
+name: lib_Embedly
+type: script library
+version: 0.3
+copyright: David Bovill
+licence:  GPLv3
+deps: none
+
+
+/*
+A library for interfacing with MediaWiki instances.
+*/
+
+--> SOX
+-
+command sox_NormalizeAudio audioFile, normalizedFile
+   shell_BashParamEscape audioFile
+   shell_BashParamEscape normalizedFile
+   put "sox --norm" &&  audioFile && normalizedFile into someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end sox_NormalizeAudio
+
+
+--> Embedly
+-
+function embedly_FetchArray someUrl, pWidth
+   local EmbedlyApiKey = "593b77f67742450bb7396b1c12427af5"
+   if pWidth is empty then put 420 into pWidth
+   
+   put urlEncode (someUrl) into encodedUrl
+   put merge ("http://api.embed.ly/1/oembed?key=[[EmbedlyApiKey]]&url=[[encodedUrl]]") into someURL
+   if mWidth is not empty then put "&maxwidth=" & pWidth after someURL
+   put url someURL into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end embedly_FetchArray
+
+function cloud_FetchEvernoteFolderContentsArray folderPath
+   put cloud_FetchEvernoteFolderContents (folderPath) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end cloud_FetchEvernoteFolderContentsArray
+
+function cloud_FetchEvernoteFolderContents folderPath
+   put "folders/contents?path="& urlencode (folderPath) into shortApiPath
+   put cloud_RestGet (shortApiPath) into someJSON
+   return someJSON
+end cloud_FetchEvernoteFolderContents
+
+function cloud_FetchEvernoteFile fileID
+   -- https://console.cloud-elements.com:443/elements/api-v2/hubs/documents
+   -- /files/b7aa7c4a-4716-4426-813e-0eff8233b19a
+   -- put "files/?path=" & urlencode (fPath) into shortApiPath
+   -- put "files/" & urlencode (fPath) into shortApiPath
+   put "files/" & fileID into shortApiPath
+   -- put shortApiPath
+   put cloud_RestGet (shortApiPath) into someJSON
+   return someJSON
+end cloud_FetchEvernoteFile
+
+function cloud_FetchEvernoteFileLink fPath
+   -- https://console.cloud-elements.com:443/elements/api-v2/hubs/documents/
+   -- files/links?path=%2FWork%2F655904a6-ed41-4837-9d21-c672ae81330e
+   
+   put "files/links?path=" & urlencode (fPath) into shortApiPath
+   put cloud_RestGet (shortApiPath) into someJSON
+   return someJSON
+end cloud_FetchEvernoteFileLink

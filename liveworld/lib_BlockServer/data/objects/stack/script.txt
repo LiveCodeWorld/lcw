@@ -1,0 +1,110 @@
+--> MetaData
+-
+name: lib_BlockServer
+type: behavior
+version: 1.0
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+This behavior is designed to extend, the basic Livecode Server Daemon, to serve Fedwiki Files.
+This behavior inherits the Livecode Daemon behavior script.
+*/
+
+--> Objects and Files
+-
+/*
+These handlers fix the the behaviors of the server to use a given root to serve files
+and define the stack / control used for the server, and the router.
+
+In this case the server and router are the same control (usually a stack).
+Set the behavior of a stack to this script-only-stack and we are good to go. 
+*/
+
+--> FedWiki | Page | Action
+-
+[[ _FetchHandler (fedwiki_DoAction,c) ]]
+
+[[ _FetchHandler (fedwiki_ActionRemove,c) ]]
+
+[[ _FetchHandler (fedwiki_ActionMove,c) ]]
+
+[[ _FetchHandler (fedwiki_ActionAdd,c) ]]
+
+[[ _FetchHandler (fedwiki_ActionEdit,c) ]]
+
+[[ _FetchHandler (fedwiki_ActionCreate,c) ]]
+
+[[ _FetchHandler (fedwiki_ActionFork,c) ]]
+
+
+--> Fedwiki | Route
+-
+[[ _FetchHandler (fedwiki_SendWelcome,c) ]]
+
+[[ _FetchHandler (fedwiki_SendPageJSON,c) ]]
+
+
+--> Fedwiki | Route | Props
+-
+[[ _FetchHandler (fedwiki_WelcomeHtml,g) ]]
+
+[[ _FetchHandler (fedwiki_ListSlugs,g) ]]
+
+[[ _FetchHandler (fedwiki_ListPages,g) ]]
+
+[[ _FetchHandler (fedwiki_SiteMap,g) ]]
+
+[[ _FetchHandler (fedwiki_SiteMap,s) ]]
+
+[[ _FetchHandler (fedwiki_Favicon,g) ]]
+
+[[ _FetchHandler (fedwiki_Favicon,s) ]]
+
+[[ _FetchHandler (fedwiki_PageJson,g) ]]
+
+[[ _FetchHandler (fedwiki_PageJson,s) ]]
+
+
+--> Fedwiki | Files
+-
+[[ _FetchHandler (fedwiki_GetWelcomeJSON,f) ]]
+
+[[ _FetchHandler (fedwiki_GetLocalOrDefaultPageJson,f) ]]
+
+[[ _FetchHandler (fedwiki_SendSiteMap,c) ]]
+
+command fedwiki_SendWelcome socketID
+   put the fedwiki_WelcomeHtml of me into someHtml
+   daemon_SendText socketID, someHtml
+   return "Returned welcome-visitors.html"
+end fedwiki_SendWelcome
+
+[[ _FetchHandler (fedwiki_SendHTML,c) ]]
+
+      
+--> Fedwiki | Not Needed As Custom Props?
+-
+[[ _FetchHandler (fedwiki_SendPNG,c) ]]
+
+[[ _FetchHandler (fedwiki_SendOriginFavicon,c) ]]
+
+[[ _FetchHandler (fedwiki_SendCSS,c) ]]
+
+[[ _FetchHandler (fedwiki_SendJS,c) ]]
+
+
+--> Deps | Fedwiki
+-
+[[ _FetchHandler (fedwiki_FetchLocalOrDefaultArray,f) ]]
+
+[[ _FetchHandler (fedwiki_PageArrayEdit,c) ]]
+
+[[ _FetchHandler (fedwiki_FindStoryItemID,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (url_DecodePath,f) ]]
+
+[[ _FetchHandler (url_EncodePath,f) ]]

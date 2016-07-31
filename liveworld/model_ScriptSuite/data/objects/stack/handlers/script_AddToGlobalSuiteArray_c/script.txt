@@ -1,0 +1,10 @@
+command script_AddToGlobalSuiteArray newArray, modelObject
+   -- this should be updated to take advantage of the new script_Array metadata
+   if keys(newArray) is empty then return empty
+   
+   put script_GetGlobalSuiteArray() into dataArray
+   array_AddNew newArray, dataArray
+   -- union dataArray with newArray
+   script_SetGlobalSuiteArray dataArray   
+   return the result
+end script_AddToGlobalSuiteArray

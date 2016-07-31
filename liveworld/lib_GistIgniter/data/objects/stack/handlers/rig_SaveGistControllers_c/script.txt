@@ -1,0 +1,23 @@
+command rig_SaveGistControllers shortServer, mergeHelp
+   put _setControllerHelp (mergeHelp, shortServer) into mergeHelp
+   put rig_ListControllerFiles() into shortControllerFiles
+   put gist_FetchListArray() into pGistListArray
+   
+   repeat for each line shortController in shortControllerFiles
+      set the cursor to busy
+      put rig_FetchController (shortController) into rigScript
+      
+      put gist_ShortFileToKey (shortController, "controller", shortServer) into shortGistFile
+      put merge (mergeHelp) into mergeHelp
+      gist_SaveOrUpdate rigScript, shortGistFile, mergeHelp, false, pGistListArray
+      put the result into someArray
+      
+      opn_Notify merge ("Saved [[shortGistFile]] as gist.")
+      -- display_Array someArray, shortGistFile
+      
+      put "* [[" & shortController & "]]" & CR after markdownSection
+   end repeat
+   
+   delete char -1 of markdownSection
+   return markdownSection
+end rig_SaveGistControllers

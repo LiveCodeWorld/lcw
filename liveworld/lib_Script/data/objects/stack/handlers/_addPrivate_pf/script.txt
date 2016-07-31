@@ -1,0 +1,4 @@
+private function _addPrivate hType, isPrivate
+   if isPrivate is true then put "p" before hType
+   return hType
+end _addPrivate

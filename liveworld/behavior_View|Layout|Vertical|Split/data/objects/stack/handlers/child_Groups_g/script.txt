@@ -1,0 +1,13 @@
+getprop child_Groups
+   put the childcontrolids of me into topControlIDs
+   put the number of lines of topControlIDs into numberOfChildren
+   repeat with cNum = 1 to numberOfChildren    
+      put line cNum of topControlIDs into topControlID
+      put the long id of control id topControlID of me into childControl
+      if word 1 of childControl = "group" then
+         put childControl & CR after childControls
+      end if
+   end repeat
+   delete char -1 of childControls
+   return childControls
+end child_Groups

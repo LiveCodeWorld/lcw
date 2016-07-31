@@ -1,0 +1,16 @@
+command library_StopEnvironment pSetName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   
+   library_StoreGlobals pSetName
+   
+   library_StopFront pSetName
+   library_StopBack pSetName
+   library_StopUsed pSetName
+   
+   global gOPN_MenuActiveArray
+   delete variable gOPN_MenuActiveArray
+   
+   rev_AddBehaviorHacks false
+   
+   dispatch "display_LibraryStatus" to cd 1 of me
+end library_StopEnvironment

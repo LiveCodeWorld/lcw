@@ -1,0 +1,13 @@
+getprop mobile_ID
+   put the long name of the target into targetObject
+   put the short ID of targetObject into someID
+   
+   if word 1 of targetObject is "stack" then
+      put targetObject into longStackObject
+   else
+      put object_ExtractStack(targetObject) into stackObject
+      put word 1 of targetObject && "id" && someID && "of" && stackObject into longStackObject
+   end if
+   object_SetShortStackName longStackObject, mainStackStart, mainStackEnd
+   return longStackObject
+end mobile_ID

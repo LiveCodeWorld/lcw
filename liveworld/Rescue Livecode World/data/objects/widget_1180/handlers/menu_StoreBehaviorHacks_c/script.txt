@@ -1,0 +1,5 @@
+on menu_StoreBehaviorHacks mTarget, someBoolean
+   put the displayed_Project of me into projectName  
+   project_SetRevHackStatus someBoolean, projectName
+   display_ProjectArray mTarget
+end menu_StoreBehaviorHacks

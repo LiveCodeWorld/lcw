@@ -1,0 +1,9 @@
+setprop dgHilite someBoolean
+   -- opn_Notify (someBoolean,the short id of me), true
+   put the dgControl of me into dgView
+   put _ColourMe (someBoolean) into mainColour
+   put colour_Darken (mainColour, 5) into darkColour
+   
+   set the backgroundcolor of graphic_Background() to mainColour
+   set the backgroundcolor of the info_Group of me to darkColour
+end dgHilite

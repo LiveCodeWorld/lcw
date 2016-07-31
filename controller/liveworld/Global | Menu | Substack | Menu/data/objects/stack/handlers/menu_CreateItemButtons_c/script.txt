@@ -1,0 +1,42 @@
+on menu_CreateItemButtons scriptObject, mCard
+   -- ignoreCall: form_Records
+   put the menu_SubStack of scriptObject into subStackObject
+   if exists(card mCard of subStackObject) is true then
+      put the long id of card mCard of subStackObject into mCardObject
+      go to mCardObject
+   else
+      menu_CreateSubStack scriptObject
+      put the result into subStackObject
+      set the behavior_Name of subStackObject to "Stack Menus"
+      
+      go to subStackObject
+      create card mCard
+      put the long id of card mCard of subStackObject into mCardObject
+   end if
+   
+   if exists(group "Menu Items" of mCardObject) is true then
+      put the long id of group "Menu Items" of mCardObject into menuItemGroup
+   else
+      set the view_Insert of mCardObject to "View|Form|Simple"
+      put the result into menuItemGroup
+   end if
+   set the form_Records of menuItemGroup to empty
+   
+   put the menu_Table [mCard] of scriptObject into mTable
+   display_Lines mTable
+   
+   repeat for each line mTableLine in mTable
+      menu_DeconstructTableLine mTableLine, mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp, mSendLine
+      create button mLine in menuItemGroup
+      put it into createdButton
+      if mLine is "-" then next repeat
+      if exists (mController) is false then next repeat
+      put token 1 of pigeon into handlerName
+      put menu_GetItemScript (handlerName, mController) into menuItemScript
+      set the script of createdButton to menuItemScript
+   end repeat
+   
+   put the rect of mCardObject into someRect
+   put rect_SubtractMargin (24, someRect) into someRect
+   set the rect of menuItemGroup to someRect
+end menu_CreateItemButtons

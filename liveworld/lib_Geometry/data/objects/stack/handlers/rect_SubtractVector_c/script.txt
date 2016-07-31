@@ -1,0 +1,5 @@
+on rect_SubtractVector @someRect, pointVector
+   put -1 * (item 1 of pointVector) into xVector
+   put  -1 * (item 2 of pointVector) into yVector
+   rect_Translate someRect, xVector, yVector
+end rect_SubtractVector

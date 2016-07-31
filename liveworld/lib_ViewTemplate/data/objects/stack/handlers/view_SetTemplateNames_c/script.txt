@@ -1,0 +1,18 @@
+command view_SetTemplateNames vName
+   -- utility to set the relevant names in a view stack
+   put view_GetTemplateObject (vName) into templateView
+   if exists(templateView) is false then return empty
+   
+   -- set the view_Name
+   set the view_Name of templateView to vName
+   
+   -- check the behavior
+   put the behavior of templateView into templateBehavior
+   if exists (templateBehavior) is false then return false
+   if the stack_Object of templateView = the stack_Object of templateBehavior then
+      set the view_Name of templateBehavior to vName
+   else
+      -- it is a linked behavior so keep the original name of the behavior
+      answer warning "Have reset the views view_Name. However this view uses a linked behavior, sot the behaviors view_Name has not been set!"
+   end if
+end view_SetTemplateNames

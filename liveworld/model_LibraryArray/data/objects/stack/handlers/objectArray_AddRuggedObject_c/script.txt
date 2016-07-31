@@ -1,0 +1,8 @@
+command objectArray_AddRuggedObject someObjects, @rObjectArray
+   repeat for each line someObject in someObjects
+      if exists(someObject) then
+         put revRuggedID (someObject) into rObject
+         put empty into rObjectArray [rObject]
+      end if
+   end repeat
+end objectArray_AddRuggedObject

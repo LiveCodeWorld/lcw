@@ -1,0 +1,14 @@
+private command _doFieldClick
+   put the mouse_UpEvent of me into mouseUpEvent
+   if mouseUpEvent is empty then return empty
+   
+   put the clickText into someLine
+   put the long id of me into targetControl
+   put the event_Target of me into eventTarget
+   if exists (eventTarget) is true then
+      dispatch mouseUpEvent to eventTarget with targetControl,someLine
+   else
+      dispatch mouseUpEvent to me with targetControl,someLine
+   end if
+   return mouseUpEvent
+end _doFieldClick

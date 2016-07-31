@@ -1,0 +1,82 @@
+command view_RenameTemplate oldViewName, newViewName
+   view_NormalizeName oldViewName
+   view_NormalizeName newViewName
+   
+   put view_GetTemplateObject (oldViewName) into templateObject
+   if exists (templateObject) is false then return "error, cannot locate view tempate for stack" && kwote (oldViewName)
+   
+   put there is a stack oldViewName and oldViewName begins with "View|" into oldViewStack
+   if oldViewStack is false then
+      -- lets not rename the stack - but just update the view metadata
+      set the view_NewName of templateObject to newViewName
+   else
+      put the filename of stack oldViewName into oldFile
+      
+      if there is a stack newViewName then return "error, there is already a stack" && kwote (newViewName)
+      put view_NameToFile (newViewName) into newFile
+      
+      put the short id of templateObject into newTemplateID
+      put "control id" && newTemplateID && "of stack" && kwote (newViewName) into newTemplateObject
+      put the stack_SubName ["OPN Stack Menus"] of templateObject into subStackName
+      
+      set the object_IsIndexed of templateObject to false
+      
+      put the behavior of templateObject into templateBehavior
+      if exists (templateBehavior) then
+         set the object_IsIndexed of templateBehavior to false
+         
+         put the stack_Name of templateBehavior into templateStackName
+         put the short id of templateBehavior into newBehaviorID
+         switch templateStackName
+            case oldViewName
+               -- it is in the stack of the view being renamed
+               put "control id" && newBehaviorID && "of stack" && kwote (newViewName) into newTemplateBehavior
+               break
+            case subStackName
+               -- it is in the sub-stack of the view being renamed
+               put newViewName & "|" & "OPN Stack Menus" into newSubStackName
+               put "control id" && newBehaviorID && "of stack" && kwote (newSubStackName) into newTemplateBehavior
+               break
+            default
+               -- it is a linked behavior in a stack that is not being renamed
+               put templateBehavior into newTemplateBehavior
+         end switch
+      else
+         put empty into newTemplateBehavior
+      end if
+      
+      if exists (stack subStackName) then
+         -- lets rename the substack first
+         -- first a quick safety check
+         put newViewName & "|" & "OPN Stack Menus" into newSubStackName
+         if there is a stack newSubStackName then
+            -- should not be let's exit
+            return "error, for some strange reason there is already a sub-stack" && kwote (newSubStackName)
+         end if
+         
+         -- now rename the substack
+         
+         set the object_IsIndexed of stack newSubStackName to false
+         set the stack_IsKnown of stack subStackName to false
+         set the name of stack subStackName to newSubStackName
+      end if
+      
+      -- now rename the mainstack, it's file on disk (keeping it in the same folder), and set the new mainstacks fileName
+      set the object_IsIndexed of stack oldViewName to false
+      set the stack_IsKnown of stack oldViewName to false
+      set the name of stack oldViewName to newViewName
+      set the filename of stack newViewName to newFile
+      -- file_Rename oldFile, newFile
+      rename file oldFile to newFile
+      set the stack_IsKnown of stack newViewName to true
+      set the object_IsIndexed of stack newViewName to true
+      
+      if exists (stack newSubStackName) then
+         set the stack_IsKnown of stack newSubStackName to true
+         set the object_IsIndexed of stack newSubStackName to true
+      end if
+      
+      -- done renaming, lets fix the uRip properties, and update hArray
+      set the view_NewName of newTemplateObject to newViewName
+   end if
+end view_RenameTemplate

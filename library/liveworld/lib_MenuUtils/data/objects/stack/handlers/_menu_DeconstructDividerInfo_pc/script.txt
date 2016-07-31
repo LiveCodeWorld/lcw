@@ -1,0 +1,8 @@
+private command _menu_DeconstructDividerInfo dividerInfo, @startLineNum, @endLineNum, @dividerMenuText
+    put line 1 of dividerInfo into lineNumInfo
+    put word 1 of lineNumInfo into startLineNum
+    put word 2 of lineNumInfo into endLineNum
+    
+    put dividerInfo into dividerMenuText
+    delete line 1 of dividerMenuText
+end _menu_DeconstructDividerInfo

@@ -1,0 +1,5 @@
+function url_ExtractFileExtension someUrl
+    -- should use regExpression to match only 3 digit extension?
+    set the itemdelimiter to "."
+    return last item of someUrl
+end url_ExtractFileExtension

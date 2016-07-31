@@ -1,0 +1,5 @@
+function overlay_GetImageFile overlayFolder, pOverlayName
+   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
+   put overlayArray_GetImageFile (overlayArray, overlayFolder) into imageFile
+   return imageFile
+end overlay_GetImageFile

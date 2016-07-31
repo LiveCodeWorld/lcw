@@ -1,0 +1,5 @@
+on menu_EditStandardBehavior scriptObject, standardBehaviorStackName
+   if bName is "Clear" then return false
+   put name of stack standardBehaviorStackName into bObject
+   edit the script of bObject
+end menu_EditStandardBehavior

@@ -1,0 +1,11 @@
+on menu_CompareWith treeView
+   set the cursor to watch
+   put the displayed_Array of treeView into hKeyArray
+   put array_AllNodes (hkeyArray) into theseHkeys
+   
+   put the script_Hkeys of stack "View|Menu|Button" into thoseHkeys
+   put hkey_ConstructCompareArray (theseHkeys, thoseHkeys) into compareArray
+   
+   set the cursor to watch
+   display_Array compareArray
+end menu_CompareWith

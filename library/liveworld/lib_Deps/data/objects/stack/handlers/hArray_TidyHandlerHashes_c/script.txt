@@ -1,0 +1,63 @@
+command hArray_TidyHandlerHashes scriptObject, pDontNotify
+   -- just in case things get out of sync
+   put the object_HandlerHashArray of scriptObject into objectHandlerHashArray
+   -- put the script_Array of scriptObject into scriptArray -- this is broken due to 2 different formats being returned
+   put the hArray_ScriptData of scriptObject into scriptData
+   repeat for each key indexNum in scriptData
+      put scriptData [indexNum]["hKey"] into hKey
+      if hKey is empty then next repeat
+      put scriptData [indexNum]["sha1"] into handlerHash
+      -- put scriptArray [indexNum]["handler"] into someHandler
+      -- put sha1_Hash (someHandler) into handlerHash
+      
+      if objectHandlerHashArray [handlerHash] is an array then
+         delete variable objectHandlerHashArray [handlerHash]
+      else
+         put scriptData [indexNum] into newKeys [hKey]
+      end if
+   end repeat
+   
+   put true into isTidy
+   
+   if objectHandlerHashArray is an array then
+      repeat for each key oldHash in objectHandlerHashArray
+         put objectHandlerHashArray [oldHash]["hkey"] into hKeyArray
+         put keys (hKeyArray) & CR after oldHkeys
+      end repeat
+      delete char -1 of oldHkeys
+      
+      if pDontNotify is not true then
+         /*
+         put "The following old handlers are still in the index:" into someComment
+         put CR & outline_IncreaseIndent (oldHkeys, 4, space) after someComment
+         opn_Notify someComment, true -- too large sometimes
+         */
+         
+         put the mobile_Name of scriptObject into mObject
+         put "Old handlers for" && kwote (mObject) into someTitle
+         display_Outline oldHkeys, someTitle
+      end if
+      put false into isTidy
+   end if
+   
+   put keys (newKeys) into newHkeys
+   if newHkeys is not empty then
+      if pDontNotify is not true then
+         /*
+         put "The following new handlers have been added to the index:" into someComment
+         put CR & outline_IncreaseIndent (newHkeys, 4, space) after someComment
+         opn_Notify someComment, true
+         */
+         
+         put the mobile_Name of scriptObject into mObject
+         put "New handlers for" && kwote (mObject) into someTitle
+         display_Outline newHkeys, someTitle
+      end if
+      put false into isTidy
+   end if
+   
+   put isTidy into resultArray ["isTidy"]
+   put objectHandlerHashArray into resultArray ["oldHandlerHashArray"]
+   put newHkeys into resultArray ["newHkeys"]
+   return resultArray
+end hArray_TidyHandlerHashes

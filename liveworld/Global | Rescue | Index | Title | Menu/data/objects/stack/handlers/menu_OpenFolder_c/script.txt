@@ -1,0 +1,4 @@
+on menu_OpenFolder indexView
+   put the index_Folder of indexView into indexFolder
+   finder_Reveal indexFolder
+end menu_OpenFolder

@@ -1,0 +1,6 @@
+function overlay_GetNode overlayFolder, pOverlayName
+   -- so not to depend of the name of the overlay folder 
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_GetGraphProperty (overlayData, "overlay_Node", pOverlayName) into overlayNode
+   return overlayNode
+end overlay_GetNode

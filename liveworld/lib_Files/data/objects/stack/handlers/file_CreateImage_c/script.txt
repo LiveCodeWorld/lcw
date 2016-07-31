@@ -1,0 +1,5 @@
+command file_CreateImage someImage, imageFile
+    put image_FileTypeFromPath(imageFile) into someFileType
+    file_CreateBinary someImage, imageFile, someFileType
+    return the result
+end file_CreateImage

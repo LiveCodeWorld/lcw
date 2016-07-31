@@ -1,0 +1,35 @@
+on mouseMove newMouseH, newMouseV
+   if the mouse is "Down" then
+      if LocalArray ["StartV"] is empty then initialise_Move
+      
+      if LocalArray ["ViewAboveRect"] is not empty then
+         -- work out the geometry
+         put newMouseV - LocalArray ["StartV"] into movedV
+         
+         put LocalArray ["ViewAboveRect"] into newAboveRect
+         put item 4 of LocalArray ["ViewAboveRect"] + movedV into newAboveBottom
+         put newAboveBottom into item 4 of newAboveRect
+         
+         put LocalArray ["ViewBelowRect"] into newBelowRect
+         put item 2 of LocalArray ["ViewBelowRect"] + movedV into newBelowTop
+         put newBelowTop into item 2 of newBelowRect
+         
+         put LocalArray ["ViewAboveRect"] into newSpacerRect
+         put newAboveBottom into item 2 of newSpacerRect
+         put newBelowTop into item 4 of newSpacerRect
+         
+         if newAboveBottom < item 2 of LocalArray ["ViewAboveRect"] then return false
+         if newBelowTop > item 4 of LocalArray ["ViewBelowRect"] then return false
+         
+         put LocalArray ["ViewAbove"] into viewAbove
+         put LocalArray ["ViewBelow"] into viewBelow
+         
+         -- set the rects
+         set the rect of me to newSpacerRect
+         if exists (viewAbove) then set the rect of viewAbove to newAboveRect 
+         if exists (viewAbove) then set the rect of viewBelow to newBelowRect
+         return true
+      end if
+   end if
+   pass mouseMove
+end mouseMove

@@ -1,0 +1,9 @@
+on menu_TestJavascript mTarget
+   -- put "$('.header H1 > a').click(function() { alert('done') });" into someJavascript
+   put "wiki.neighborhood" into someJavascript
+   put the browser_Widget of mTarget into browserWidget
+   do someJavascript in browserWidget
+   
+   put it into someThing
+   put the result
+end menu_TestJavascript

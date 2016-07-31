@@ -1,0 +1,6 @@
+function rect_SetCentre someRect, toLoc
+   put rect_GetCentre(someRect) into fromLoc
+   put loc_TranslationVector (fromLoc, toLoc, xVector, yVector) into someVector
+   put rect_TranslateByVector(someRect, xVector, yVector) into newRect
+   return newRect
+end rect_SetCentre

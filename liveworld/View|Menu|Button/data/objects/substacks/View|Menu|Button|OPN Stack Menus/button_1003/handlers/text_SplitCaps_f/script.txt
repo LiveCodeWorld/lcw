@@ -1,0 +1,15 @@
+function text_SplitCaps someWord
+   -- was "capsSplit"
+   put 1 into charNum
+   repeat the number of chars of someWord
+      put char charNum of someWord into someChar
+      if text_StartsWithCaps(someChar) is true then
+         put space before char charNum of someWord
+         add 2 to charNum
+      else
+         add 1 to charNum
+      end if
+   end repeat
+   put text_InitialCaps(word 1 of someWord) into word 1 of someWord
+   return word 1 to -1 of someWord
+end text_SplitCaps

@@ -1,0 +1,6 @@
+command daemon_SendRaw someHeader, contentToSend, socketID
+   -- everything should use this to send (so it can be trapped by middleware for logging etc)
+   put someHeader & CRLF & CRLF & contentToSend into headersAndContent
+   write headersAndContent to socket socketID
+   return headersAndContent
+end daemon_SendRaw

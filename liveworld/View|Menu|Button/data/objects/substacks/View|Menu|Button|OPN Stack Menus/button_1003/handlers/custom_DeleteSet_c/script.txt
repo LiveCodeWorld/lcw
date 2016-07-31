@@ -1,0 +1,7 @@
+command custom_DeleteSet setName, someObject
+   -- was "array_DeleteStored"
+   put the custompropertysets of someObject into setNames
+   line_Delete setName, setNames
+   set the custompropertysets of someObject to setNames
+   return setNames
+end custom_DeleteSet

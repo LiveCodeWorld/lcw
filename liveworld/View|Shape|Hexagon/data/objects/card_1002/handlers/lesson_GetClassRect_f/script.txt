@@ -1,0 +1,68 @@
+function lesson_GetClassRect gNum, oRect
+   put 0 into someMargin
+   switch gNum
+      case 0
+         put the loc of this card into someLoc
+         -- put 50 into someWidth
+         put item 3 of oRect - item 1 of oRect into someWidth
+         put rect_LocWidthHeight (someLoc, someWidth, someWidth) into newRect
+         break
+      case 1
+         put item 1 of oRect into someLeft
+         put item 2 of oRect + someMargin into someTop
+         put item 3 of oRect - someLeft into someWidth
+         
+         put someLeft into item 1 of newRect
+         put someTop into item 4 of newRect
+         put someLeft + someWidth into item 3 of newRect
+         put someTop - someWidth into item 2 of newRect
+         break
+      case 2
+         put rect_GetCentre (oRect) into oLoc
+         put item 3 of oRect - item 1 of oRect into someWidth
+         put round(someWidth/2) into halfWidth
+         
+         put item 1 of oLoc + halfWidth into item 1 of newLoc
+         put item 2 of oLoc - halfWidth into item 2 of newLoc
+         put rect_LocWidthHeight (newLoc, someWidth, someWidth) into newRect
+         break
+      case 3
+         put rect_GetCentre (oRect) into oLoc
+         put item 3 of oRect - item 1 of oRect into someWidth
+         put round(someWidth/2) into halfWidth
+         
+         put item 1 of oLoc + halfWidth into item 1 of newLoc
+         put item 2 of oLoc + halfWidth into item 2 of newLoc
+         put rect_LocWidthHeight (newLoc, someWidth, someWidth) into newRect
+         break
+      case 4
+         put item 1 of oRect into someLeft
+         put item 4 of oRect - someMargin into someBottom
+         put item 3 of oRect - someLeft into someWidth
+         
+         put someLeft into item 1 of newRect
+         put someBottom into item 2 of newRect
+         put someLeft + someWidth into item 3 of newRect
+         put someBottom + someWidth into item 4 of newRect
+         break
+      case 5
+         put rect_GetCentre (oRect) into oLoc
+         put item 3 of oRect - item 1 of oRect into someWidth
+         put round(someWidth/2) into halfWidth
+         
+         put item 1 of oLoc - halfWidth into item 1 of newLoc
+         put item 2 of oLoc + halfWidth into item 2 of newLoc
+         put rect_LocWidthHeight (newLoc, someWidth, someWidth) into newRect
+         break
+      case 6
+         put rect_GetCentre (oRect) into oLoc
+         put item 3 of oRect - item 1 of oRect into someWidth
+         put round(someWidth/2) into halfWidth
+         
+         put item 1 of oLoc - halfWidth into item 1 of newLoc
+         put item 2 of oLoc - halfWidth into item 2 of newLoc
+         put rect_LocWidthHeight (newLoc, someWidth, someWidth) into newRect
+         break
+   end switch
+   return newRect
+end lesson_GetClassRect

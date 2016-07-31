@@ -1,0 +1,7 @@
+getprop card_Margin
+   put the card_Object of the target into cardObject
+   if exists(cardObject) is false then return empty
+   
+   put the uOPN ["card_Margin"] of cardObject into cardMargin
+   return cardMargin
+end card_Margin

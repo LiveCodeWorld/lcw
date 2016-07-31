@@ -1,0 +1,5 @@
+function hkey_GetImage hKey, pGraphStyle
+   put hkey_ImageFile (hKey, pGraphStyle) into someFile
+   get url ("binfile:" & someFile)
+   return it
+end hkey_GetImage

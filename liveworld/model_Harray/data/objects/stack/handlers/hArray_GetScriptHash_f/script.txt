@@ -1,0 +1,6 @@
+function hArray_GetScriptHash rObject
+   put item 3 of hKey into rObject
+   put hArray_GetObjectArray (rObject) into objectArray
+   put objectArray ["metadata"]["sha1"] into scriptHash
+   return scriptHash
+end hArray_GetScriptHash

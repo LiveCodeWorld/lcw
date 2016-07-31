@@ -1,0 +1,5 @@
+function menu_TextFromHkeys hKeys, mView
+   put menu_TableFromHkeys (hKeys) into mTable
+   put menu_ConvertTable(mTable, mView) into mText
+   return mText
+end menu_TextFromHkeys

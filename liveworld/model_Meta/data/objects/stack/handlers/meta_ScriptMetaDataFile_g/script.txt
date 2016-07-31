@@ -1,0 +1,5 @@
+getprop meta_ScriptMetaDataFile
+   put the object_Folder of the target into objectFolder
+   put meta_ScriptMetaDataFile (objectFolder) into someFile
+   return someFile
+end meta_ScriptMetaDataFile

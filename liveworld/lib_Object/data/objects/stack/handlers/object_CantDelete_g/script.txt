@@ -1,0 +1,8 @@
+getprop object_CantDelete
+   put the long ID of the target into someObject
+   if word 1 of someObject is among the items of "group,card,stack" then
+      return the cantDelete of someObject
+   else
+      return false
+   end if
+end object_CantDelete

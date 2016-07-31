@@ -1,0 +1,5 @@
+getprop plist_Outline
+    put the tree_XML of the target into someXML
+    put plist_ConvertToNamedOutline(someXML) into someOutline
+    return someOutline
+end plist_Outline

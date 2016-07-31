@@ -1,0 +1,21 @@
+command hilite_ImportantStacks usedStacks
+   put the displayed_ImportantStacks of me into shortNames
+   
+   repeat for each line stackObject in usedStacks
+      if exists (stackObject) is false then
+         put stackObject & CR after badStacks
+         next repeat
+      end if
+      
+      put the short name of stackObject into shortName
+      put lineOffset (shortName, shortNames) into lineNum
+      if lineNum > 0 then
+         put lineNum & comma after lineNums
+      end if
+   end repeat
+   delete char -1 of lineNums
+   delete char -1 of badStacks
+   
+   set the hilitedlines of _importantStackField() to lineNums
+   return badStacks
+end hilite_ImportantStacks

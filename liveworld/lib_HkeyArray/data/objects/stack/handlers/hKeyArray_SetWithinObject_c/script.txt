@@ -1,0 +1,36 @@
+command hKeyArray_SetWithinObject @hKeyLinkArray, withinObject
+   put the long id of withinObject into withinObject
+   put "handlers" into withinObjectKey
+   
+   repeat for each key hKey in hKeyLinkArray
+      put hKeyLinkArray [hKey] into keyLinks
+      hkey_Deconstruct hKey, handlerName, handlerType, keyObject, handlerNum
+      if exists(keyObject) is true then put the long id of keyObject into keyObject
+      
+      if keyObject contains withinObject then
+         put withinObjectKey into fromKey -- keyObject is within withinObject
+      else
+         put hKey into fromKey
+      end if
+      
+      -- lets work out new links
+      put empty into newKeyLinks
+      repeat for each line keyLink in keyLinks
+         hkey_Deconstruct keyLink, handlerName, handlerType, keyLinkObject, handlerNum
+         if exists(keyLinkObject) is true then put the long id of keyLinkObject into keyLinkObject
+         
+         if keyLinkObject contains withinObject then
+            -- line_Add withinObjectKey, newKeyLinks
+            -- put CR after newKeyLinks
+         else
+            put keyLink & CR after newKeyLinks
+         end if
+      end repeat
+      put word 1 to -1 of newKeyLinks into newKeyLinks
+      
+      put newLinkArray [fromKey] into oldLinks
+      line_Add oldLinks, newKeyLinks
+      put newKeyLinks into newLinkArray [fromKey]
+   end repeat
+   put newLinkArray into hKeyLinkArray
+end hKeyArray_SetWithinObject

@@ -1,0 +1,34 @@
+function html_StripTags pHtml
+   -- returns the meaningful text from a web page
+   local tRegex,tPrevText
+   -----
+   replace return with space in pHtml
+   replace numtochar(13) with empty in pHtml
+   replace tab with empty in pHtml
+   -----
+   put replacetext(pHtml,"(?Usi)<SCRIPT.*</SCRIPT>","") into pHtml
+   put replacetext(pHtml,"(?Usi)<STYLE>.*</STYLE>","") into pHtml
+   put replacetext(pHtml,"(?Usi)<\?.*\?>","") into pHtml
+   -----
+   replace "&nbsp;" with space in pHtml
+   replace "<BR>" with return in pHtml
+   replace "<p>" with return in pHtml
+   -----
+   put  "<[^><]*>" into tRegex
+   put replacetext(pHtml,tRegex,"") into pHtml
+   put replacetext(pHtml,tRegex,"") into pHtml
+   -----
+   repeat until tPrevText is pHtml
+      put pHtml into tPrevText
+      put replacetext(pHtml," +",space) into pHtml
+      put replacetext(pHtml,"^ ","") into pHtml
+   end repeat
+   -----
+   replace (space & return) with return in pHtml
+   replace (return & space) with return in pHtml
+   filter pHtml without empty
+   -----
+   put html_ReplaceEntities(pHtml) into pHtml
+   -----
+   return pHtml
+end html_StripTags

@@ -1,0 +1,6 @@
+setprop view_DisplayArray [pUseCard] displayArray
+   put the long id of the target into someView 
+   put the view_Array [pUseCard] of someView into viewArray
+   put displayArray into viewArray ["display"]
+   set the view_Array [pUseCard] of someView to viewArray
+end view_DisplayArray

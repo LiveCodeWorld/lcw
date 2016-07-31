@@ -1,0 +1,15 @@
+function script_ExtractDictionaryHkeys someScript, someObject
+   put script_DeleteSuite ("Geometry", someScript) into someScript
+   put script_DeleteSuite ("Metadata", someScript) into someScript
+   -- put script_DeleteSuite ("View", someScript) into someScript
+   put script_ExtractHkeys(someScript, someObject) into hKeys
+   filter hKeys without "view_*"
+   repeat for each item handlerName in "FillinData,LayoutControl,card_View"
+      filter hKeys without (handlerName & ",*")
+   end repeat
+   repeat for each line handlerName in rev_MessageNames()
+      filter hKeys without (handlerName & ",*")
+   end repeat
+   sort hKeys
+   return word 1 to -1 of hKeys
+end script_ExtractDictionaryHkeys

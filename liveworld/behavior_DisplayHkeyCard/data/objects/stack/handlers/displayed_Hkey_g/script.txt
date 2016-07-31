@@ -1,0 +1,5 @@
+getprop displayed_Hkey
+   put the displayed_Title of me into someTitle
+   put line 2 of someTitle into hKey
+   return hKey
+end displayed_Hkey

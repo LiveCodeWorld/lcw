@@ -1,0 +1,6 @@
+function shell_EscapeFile someFile
+    replace space with "\ " in someFile
+    replace "(" with "\(" in someFile
+    replace ")" with "\)" in someFile
+    return someFile
+end shell_EscapeFile

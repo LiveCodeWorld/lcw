@@ -1,0 +1,5 @@
+function hArray_GetViewTemplate viewName
+   view_NormalizeName viewName
+   put hArray_GetNamedObjectType (viewName, "view template") into viewTempate
+   return viewTempate
+end hArray_GetViewTemplate

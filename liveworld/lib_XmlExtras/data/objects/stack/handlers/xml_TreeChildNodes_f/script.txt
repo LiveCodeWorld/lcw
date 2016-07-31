@@ -1,0 +1,16 @@
+function xml_TreeChildNodes treeID, startNode, pChildName, pIncludeChildCount
+    -- use of this handler often implies repeating loop twice, which is naturally slower
+    -- but it is convenient for scripting
+    -- to speed up just copy code into function
+    
+    if char -1 of startNode is "/" then delete char -1 of startNode
+    put revXMLChildNames(treeID, startNode, CR, pChildName, pIncludeChildCount) into childNames
+    if item 1 of childNames = "xmlerr" then return empty
+     
+    repeat for each line childName in childNames
+        put startNode & "/" & childName & CR after childNodes
+        -- could get clever and do a callback function here
+    end repeat
+    delete char -1 of childNodes
+    return childNodes
+end xml_TreeChildNodes

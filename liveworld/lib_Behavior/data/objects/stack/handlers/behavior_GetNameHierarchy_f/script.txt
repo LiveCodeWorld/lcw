@@ -1,0 +1,14 @@
+function behavior_GetNameHierarchy targetObject
+   repeat
+      put the behavior of targetObject into bObject
+      if exists(bObject) is false then exit repeat
+      
+      put behavior_GetName (bObject) into bName
+      if bName is empty then exit repeat
+      
+      put bName & CR after bNames
+      put bObject into targetObject
+   end repeat
+   delete char -1 of bNames
+   return bNames
+end behavior_GetNameHierarchy

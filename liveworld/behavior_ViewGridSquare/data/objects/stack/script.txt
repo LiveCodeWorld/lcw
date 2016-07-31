@@ -1,0 +1,76 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_ViewGridSquare
+type: behavior
+version: 0.1
+
+--> Variables
+-
+local LocalArray
+
+
+--> Props
+-
+[[ _FetchHandler (grid_OuterMargin,g) ]]
+
+[[ _FetchHandler (grid_OuterMargin,s) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (grid_View,g) ]]
+
+[[ _FetchHandler (layout_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> Children
+-
+[[ _FetchHandler (grid_Control,g) ]]
+
+
+--> Props
+-
+[[ _FetchHandler (tile_View,g) ]]
+
+[[ _FetchHandler (tile_View,s) ]]
+
+[[ _FetchHandler (tiles_Across,g) ]]
+
+[[ _FetchHandler (tiles_Across,s) ]]
+
+[[ _FetchHandler (grid_Num,g) ]]
+
+[[ _FetchHandler (grid_Num,s) ]]
+
+[[ _FetchHandler (_setGridNum,c) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (grid_ConstructRectArray,f) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (rect_GetSquare,f) ]]
+
+[[ _FetchHandler (calculate_SquareRect,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_defaultTilesAcross,pf) ]]
+
+[[ _FetchHandler (_getGridControl,pf) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (group_InnerRect,g) ]]

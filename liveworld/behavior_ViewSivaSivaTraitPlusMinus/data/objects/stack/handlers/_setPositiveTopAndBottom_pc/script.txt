@@ -1,0 +1,4 @@
+private command _setPositiveTopAndBottom innerTop, extraInnerMargin, traitHeight, @positiveTop, @positiveTraitBottom
+   put innerTop + extraInnerMargin into positiveTop
+   put positiveTop + traitHeight into positiveTraitBottom
+end _setPositiveTopAndBottom

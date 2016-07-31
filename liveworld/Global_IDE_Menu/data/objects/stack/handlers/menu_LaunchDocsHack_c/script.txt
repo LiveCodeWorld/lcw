@@ -1,0 +1,7 @@
+on menu_LaunchDocsHack
+   put scriptEditor_LaunchDocsBehavior() into launchDocsBehavior
+   put rev_LaunchDocsButton (someNum) into scriptEditorLaunchDocsButton
+   
+   edit the script of launchDocsBehavior
+   edit the script of scriptEditorLaunchDocsButton
+end menu_LaunchDocsHack

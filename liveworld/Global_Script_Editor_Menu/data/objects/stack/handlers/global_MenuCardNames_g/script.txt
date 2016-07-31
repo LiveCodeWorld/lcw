@@ -1,0 +1,5 @@
+getprop global_MenuCardNames
+   put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Menus.rev" into longStackFile
+   put the cardnames of stack longStackFile into globalMenuCardNames
+   return globalMenuCardNames
+end global_MenuCardNames

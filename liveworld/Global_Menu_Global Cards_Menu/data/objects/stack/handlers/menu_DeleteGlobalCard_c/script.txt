@@ -1,0 +1,5 @@
+on menu_DeleteGlobalCard scriptObject, cardName
+   opn_Answer "Are you sure you want to delete this Global Menu card?"
+   delete card cardName of stack "libOPN_Menus"
+   display_Menus
+end menu_DeleteGlobalCard

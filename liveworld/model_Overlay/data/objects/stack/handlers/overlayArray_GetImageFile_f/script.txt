@@ -1,0 +1,7 @@
+function overlayArray_GetImageFile overlayArray, overlayFolder
+   put overlayArray_GetGraphProperty (overlayArray, "image_File") into shortImageFile
+   if shortImageFile is empty then return empty
+   text_AddTrailing overlayFolder, slash
+   put overlayFolder & shortImageFile into imageFile
+   return imageFile
+end overlayArray_GetImageFile

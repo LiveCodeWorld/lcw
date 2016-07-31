@@ -1,0 +1,18 @@
+function folder_GetDocuments
+    if the platform is "MacOS" then
+        if the systemversion >=10 then
+            return specialfolderpath("docs") & "/"
+        else
+            return specialfolderpath("Desktop") & "/"	# somewhere better?
+        end if
+    else if the platform is "Win32" then
+        /*
+        CSIDL_MYDOCUMENTS (0x000c)
+        version 6.0. The virtual folder representing the My Documents desktop item.
+        return specialfolderpath(baseconvert("0x000c",16,10))
+        */
+        return specialfolderpath("Documents") & "/"
+    else
+        return $HOME & "/Documents/"	# somewhere better?
+    end if
+end folder_GetDocuments

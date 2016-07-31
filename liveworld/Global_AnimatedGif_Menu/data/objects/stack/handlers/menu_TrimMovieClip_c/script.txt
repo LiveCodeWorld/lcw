@@ -1,0 +1,17 @@
+on menu_TrimMovieClip
+   -- The timestamps need to be in HH:MM:SS.xxx format or in seconds. 
+   put get_VideoFileName() into someVideoFile
+   put false into useHMSF
+   put the clip_StartTime [useHMSF] of player 1 into sTime
+   put the clip_Duration [useHMSF] of player 1 into cDuration
+   -- put item 1 to 3 of the clip_StartTime [true] of player 1 into sTime
+   -- put item 1 to 3 of the clip_Duration [true] of player 1 into cDuration
+   
+   ffmpeg_TrimVideo someVideoFile, sTime, cDuration
+   put the result into exportedVideoPath
+   if exportedVideoPath is empty then
+      answer warning "Exported file already exists!. Move, trash or rename old file before proceding?"
+   else
+      set the filename of player 1 to exportedVideoPath
+   end if
+end menu_TrimMovieClip

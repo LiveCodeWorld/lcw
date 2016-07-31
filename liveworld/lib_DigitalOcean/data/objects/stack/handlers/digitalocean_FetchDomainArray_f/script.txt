@@ -1,0 +1,12 @@
+function digitalocean_FetchDomainArray oceanDomainName
+   -- see "digitalocean_GetDomainArray" 
+   -- which gets same (cached) information without being wrapped in "domain" key
+   
+   -- constant ApiStem = "https://api.digitalocean.com/v2/domains/"
+   -- put ApiStem & oceanDomainName into apiUrl
+   -- curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer [[apiToken]]' "[[apiUrl]]"
+   
+   put "domains/" & oceanDomainName into domainPath
+   put digitalocean_FetchJsonArray (domainPath) into domainInfoArray
+   return domainInfoArray
+end digitalocean_FetchDomainArray

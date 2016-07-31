@@ -1,0 +1,10 @@
+on menu_RevealFolder scriptObject, folderProp
+   /*
+   switch folderProp
+      case "object_Folder"
+   end switch
+   */
+   
+   put the folderProp of scriptObject into someFolder
+   finder_Reveal someFolder
+end menu_RevealFolder

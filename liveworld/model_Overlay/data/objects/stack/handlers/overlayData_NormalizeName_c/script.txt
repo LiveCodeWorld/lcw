@@ -1,0 +1,7 @@
+command overlayData_NormalizeName @overlayName, overlayData
+   if overlayName is empty then
+      if overlayData is an array then
+         put overlayData_GetDefaultName (overlayData) into overlayName
+      end if
+   end if
+end overlayData_NormalizeName

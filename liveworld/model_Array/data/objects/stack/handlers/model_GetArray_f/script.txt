@@ -1,0 +1,14 @@
+function model_GetArray modelName, modelObject, pModelType
+   switch pModelType
+      case "database"
+         put the object_DataBaseArray [modelName] of modelObject into tArray
+         break
+      case "file" -- an array stored as an arrayEncoded binary file
+         put the object_FileArray [modelName] of modelObject into tArray
+         break
+      default -- case "array" 
+         -- It is an array stored in a control
+         put the customproperties [modelName] of modelObject into tArray
+   end switch
+   return tArray
+end model_GetArray

@@ -1,0 +1,7 @@
+function script_ExtractHandlerType handlerName, someScript, handlerType, notPrivate
+   local startHandler, endHandler
+   put handlerName,handlerType into shortHkey
+   hkey_SetOffsets shortHkey, startHandler, endHandler, someScript, notPrivate
+   put the result into someHandler
+   return someHandler
+end script_ExtractHandlerType

@@ -1,0 +1,35 @@
+--> Metadata
+-
+/*
+This menu contains the code for the menu of the button "Title".
+You should customise it to suit your local needs.
+*/
+
+local LocalArray
+
+
+--> Title | Menu
+-
+[[ _FetchHandler (menu_UseAll,c) ]]
+
+[[ _FetchHandler (menu_KnowAll,c) ]]
+
+[[ _FetchHandler (menu_KnowSelected,c) ]]
+
+[[ _FetchHandler (menu_IsLcwFolder,c) ]]
+
+[[ _FetchHandler (disabled_IsLcwFolder,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Tools,c) ]]
+
+
+--> Title | Menu | Props
+-
+--> Title | Menu | Disabled
+-
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]

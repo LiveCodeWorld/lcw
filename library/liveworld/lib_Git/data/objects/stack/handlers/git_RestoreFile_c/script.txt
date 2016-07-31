@@ -1,0 +1,14 @@
+command git_RestoreFile relativePath
+   /*
+   $ git checkout HEAD^ path/to/file
+   replaces path/to/file by the contents it had in the commit HEAD^, 
+   and also updates the index to match. It does not change branches.
+   */
+   
+   put "git checkout HEAD^" && kwote(relativePath) into someShell
+   
+   git_SetFull
+   put git_GetCheckoutFolder (someFile) into pGitRootFolder
+   put git_ExecuteShellCommand (someShell, pGitRootFolder) into shellResult
+   return shellResult
+end git_RestoreFile

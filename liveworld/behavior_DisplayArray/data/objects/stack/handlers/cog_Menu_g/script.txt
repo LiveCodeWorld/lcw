@@ -1,0 +1,5 @@
+getprop cog_Menu
+   put LocalArray ["cog_Menu"] into cogMenuName
+   if cogMenuName is empty then put "Global | Array | Menu" into cogMenuName
+   return cogMenuName
+end cog_Menu

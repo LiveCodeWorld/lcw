@@ -1,0 +1,12 @@
+getprop view_Library
+   -- a default library stack associated with a view
+   put the view_Name of the target into viewName
+   set the itemdelimiter to "|"
+   repeat with itemNum = the number of items of viewName down to 2
+      put "libOPN_" & item itemNum of viewName into stackName
+      if exists(stack stackName) then
+         return the name of stack stackName
+      end if
+   end repeat
+   return empty
+end view_Library

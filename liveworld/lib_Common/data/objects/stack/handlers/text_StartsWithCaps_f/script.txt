@@ -1,0 +1,10 @@
+function text_StartsWithCaps someText
+   -- was "startsWithCaps"
+   put char 1 of sometext into testChar
+   put chartonum(testChar) into someCharNum
+   if someCharNum >= 97 and someCharNum <= 122 then
+      return false
+   else
+      return true
+   end if
+end text_StartsWithCaps

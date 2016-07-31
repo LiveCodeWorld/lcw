@@ -1,0 +1,6 @@
+command pref_DeleteSet pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchData() into dataArray
+   delete variable dataArray [pProjectName]
+   pref_StoreData dataArray
+end pref_DeleteSet

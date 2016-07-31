@@ -1,0 +1,11 @@
+function dot_StyleArrayToParams styleArray
+   repeat for each key someParam in styleArray
+      put styleArray [someParam] into someValue
+      if someValue is not empty then
+         put someParam & "=" & kwote(someValue) after styleParams
+         put ", " after styleParams
+      end if
+   end repeat
+   delete char -2 to -1 of styleParams
+   return styleParams
+end dot_StyleArrayToParams

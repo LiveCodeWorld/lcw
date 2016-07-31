@@ -1,0 +1,5 @@
+function repository_GetSaveNowCount
+   put the uOPN ["repository_SaveNowCount"] of me into someNum
+   if someNum is not a number then put 3 into someNum
+   return someNum
+end repository_GetSaveNowCount

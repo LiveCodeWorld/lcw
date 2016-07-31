@@ -1,0 +1,6 @@
+getprop layout_Style
+   set lockmessages to true
+   put the layout_Style of me into someStyle 
+   set lockmessages to false
+   return someStyle
+end layout_Style

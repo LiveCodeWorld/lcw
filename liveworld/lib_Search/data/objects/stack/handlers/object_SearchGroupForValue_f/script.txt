@@ -1,0 +1,32 @@
+function object_SearchGroupForValue containerObject, someProperty, useTargetProperty
+    local objectArray
+    put the long id of the target into targetObject
+     
+    if useTargetProperty is true then
+        put containerObject into propertyObject
+        put someProperty into searchProperty
+    else
+        put targetObject into propertyObject
+        put someProperty & "[" & containerObject & "]" into searchProperty
+    end if
+     
+    put the searchProperty of propertyObject into objectResult
+    put objectResult into objectArray [containerObject]
+     
+    repeat with controlNum = 1 to the number of controls in containerObject
+        put the long id of control controlNum of containerObject into someObject
+         
+        if useTargetProperty is true then
+            put someObject into propertyObject
+            put someProperty into searchProperty
+        else
+            put targetObject into propertyObject
+            put someProperty & "[" & someObject & "]" into searchProperty
+        end if
+        put the searchProperty of propertyObject into objectResult
+        
+        put objectResult into objectArray [someObject]
+    end repeat
+     
+    return objectArray
+end object_SearchGroupForValue

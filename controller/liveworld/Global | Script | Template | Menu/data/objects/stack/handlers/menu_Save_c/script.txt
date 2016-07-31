@@ -1,0 +1,12 @@
+on menu_Save textDisplayView   
+   put the title_Text of textDisplayView into templateName
+   put the view_Text of textDisplayView into someScript
+   
+   -- put the displayed_Url of textDisplayView into someUrl
+   -- put someScript into url someUrl
+   
+   script_SetTemplate templateName, someScript
+   put the result into savedFile
+   
+   answer merge ("Stored template script as '[[templateName]]'")
+end menu_Save

@@ -1,0 +1,5 @@
+function rig_FetchSystemHelper shortFile, pServerURL
+   put rig_GetFolder ("helpers") & shortFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchSystemHelper

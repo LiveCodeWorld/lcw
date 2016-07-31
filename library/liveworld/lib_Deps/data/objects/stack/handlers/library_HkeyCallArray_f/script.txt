@@ -1,0 +1,6 @@
+function library_HkeyCallArray hKey, pAllcalls
+   local hKeyLinkArray
+   library_HandlerWalk hKey, empty, hKeyLinkArray, pAllcalls
+   array_StripDeeperLevels hKeyLinkArray
+   return hKeyLinkArray
+end library_HkeyCallArray

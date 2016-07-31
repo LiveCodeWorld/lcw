@@ -1,0 +1,61 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_HkeyArray_Hkey_Menu
+type: controller
+version: 0.1
+
+/*
+For trees displaying HkeyArrays of object scripts.
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | HkeyArray | Hkey | Menu
+-
+[[ _FetchHandler (menu_DisplayObjectArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditHkey,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddAllHandlerToLibrary,c) ]]
+
+[[ _FetchHandler (menu_CreateAndExportHkeyGraphs,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | HkeyArray | Object | Hkey | Props
+-
+--> Global | HkeyArray | Object | Hkey | Disabled
+-
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayHkeyArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayProjectHkey,c) ]]
+
+[[ _FetchHandler (menu_DisplayLibraryHkey,c) ]]
+

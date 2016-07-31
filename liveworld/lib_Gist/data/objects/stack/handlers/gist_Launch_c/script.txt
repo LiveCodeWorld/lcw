@@ -1,0 +1,9 @@
+command gist_Launch which
+   switch which
+      case "API"
+         launch url "https://developer.github.com/v3/gists/"
+         break
+      default
+         launch url "https://gist.github.com/opn"
+   end switch
+end gist_Launch

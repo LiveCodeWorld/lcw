@@ -1,0 +1,10 @@
+function date_NextFinancialYear someDate
+    convert someDate to dateItems
+    put item 1 of someDate into someYear
+    if item 2 of someDate < 4 then
+        return "4/1/" & someYear
+    else
+        add 1 to someYear
+        return "4/1/" & someYear
+    end if
+end date_NextFinancialYear

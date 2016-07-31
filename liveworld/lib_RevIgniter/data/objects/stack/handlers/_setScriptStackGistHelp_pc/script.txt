@@ -1,0 +1,17 @@
+private command _setScriptStackGistHelp @mergeHelp, shortServer
+   if mergeHelp is not empty then return mergeHelp
+   switch shortServer
+      case "livecode.world"
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack for the www.livecode.world web site." into mergeHelp
+         break
+      case "himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack for the Himalayan Academy web site." into mergeHelp
+         break
+      case "dev.himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack for the Himalayan Academy developer web site." into mergeHelp
+         break
+      default
+         if mergeHelp is empty then put "[[shortStack]] is a revIgniter script-only stack." into mergeHelp
+   end switch
+   return mergeHelp
+end _setScriptStackGistHelp

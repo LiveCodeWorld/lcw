@@ -1,0 +1,7 @@
+function menu_ConstructHkey mItemName, mName, pMenuController
+   if pMenuController is empty then
+      put menu_GetGlobalController (mName) into pMenuController
+   end if
+   put hkey_Construct (mItemName, "c", pMenuController, 1) into hKey
+   return hKey
+end menu_ConstructHkey

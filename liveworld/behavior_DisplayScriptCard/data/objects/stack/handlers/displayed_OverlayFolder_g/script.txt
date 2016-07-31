@@ -1,0 +1,5 @@
+getprop displayed_OverlayFolder
+   put the displayed_Object of me into scriptObject
+   put the overlay_Folder of scriptObject into overlayFolder
+   return overlayFolder
+end displayed_OverlayFolder

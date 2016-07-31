@@ -1,0 +1,12 @@
+function spotlight_ListStacks pInsideFolder
+   put "(kMDItemKind = 'LiveCode Stack')" into queryExpression
+   put "mdfind" && kwote(queryExpression) into someShell
+   
+   if pInsideFolder is not empty then
+      shell_BashParamEscape pInsideFolder
+      put space & "-onlyin" && pInsideFolder after someShell
+   end if
+   
+   put shell (someShell) into shellResult
+   return shellResult
+end spotlight_ListStacks

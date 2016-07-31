@@ -1,0 +1,9 @@
+command hArray_FilterHkeys @hKeys, pHarray
+   repeat for each line hKey in hKeys
+      if hkey_IsAuthored (hKey, pHarray) is true then
+         put hKey & CR after goodHkeys
+      end if
+   end repeat
+   delete char -1 of goodHkeys
+   put goodHkeys into hKeys
+end hArray_FilterHkeys

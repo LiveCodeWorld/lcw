@@ -1,0 +1,173 @@
+--> MetaData
+-
+name: lib_LocalFedwiki
+type: script library
+version: 1.0
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+A library for interfacing with Federated Wiki.
+*/
+
+--> Fedwiki | Model | Wrappers
+-
+[[ _FetchHandler (utopia_StoreFile,c) ]]
+
+[[ _FetchHandler (atopia_StoreFile,c) ]]
+
+
+--> Node
+-
+[[ _FetchHandler (fedwiki_OpenModulesFolder,c) ]]
+
+[[ _FetchHandler (fedwiki_GetModulesFolder,f) ]]
+
+[[ _FetchHandler (node_OpenModulesFolder,c) ]]
+
+[[ _FetchHandler (node_GetModulesFolder,f) ]]
+
+[[ _FetchHandler (node_GetNodeBinaryPath,f) ]]
+
+
+--> Fedwiki | Sitemap
+-
+[[ _FetchHandler (fedwiki_SitemapIndex,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructSiteMapArray,f) ]]
+
+[[ _FetchHandler (fedwiki_AddToSitemapArray,c) ]]
+
+[[ _FetchHandler (fedwiki_UpdateLocalSiteMap,c) ]]
+
+
+--> Fedwiki | Roster
+-
+-- function fedwiki_ExtractReferences pageJSON
+   -- david.bovill.me/davids-sites
+   put word 2 to -1 of someLine into someRef
+   put item 1 of someRef into fedwikiDomain
+   put item 2 of someRef into pageSlug
+   put fedwiki_FetchPageJson ("david.bovill.me", "davids-sites") into pageJson
+   
+end fedwiki_ExtractReferences
+
+[[ _FetchHandler (fedwiki_ExtractRosterSites,f) ]]
+
+[[ _FetchHandler (fedwiki_ExtractRoster,f) ]]
+
+
+--> Fedwiki | Export and Import
+-
+[[ _FetchHandler (fedwiki_DownloadDomainToFolder,c) ]]
+
+
+--> Fedwiki | PageArray | Process 
+-
+[[ _FetchHandler (fedwiki_ExtractReferenceLinks,f) ]]
+
+[[ _FetchHandler (fedwiki_ExtractForkLinks,f) ]]
+
+
+--> Fedwiki | Data
+-
+[[ _FetchHandler (fedwiki_FetchFavicon,f) ]]
+
+[[ _FetchHandler (fedwiki_FetchSiteExport,f) ]]
+
+[[ _FetchHandler (fedwiki_FetchPageJson,f) ]]
+
+
+--> Fedwiki | URL
+-
+[[ _FetchHandler (fedwiki_OpenBrowser,c) ]]
+
+-- command fedwiki_Launch fedwikiDomain, fedwikiTitle
+put fedwiki_ConstructSlug (fedwikiTitle) into pageSlug
+put "http://" & fedwikiDomain & "/view/welcome-visitors/view/" & pageSlug into someURL
+launch url someURL
+end fedwiki_Launch
+
+[[ _FetchHandler (fedwiki_PageUrl,f) ]]
+
+[[ _FetchHandler (fedwiki_UrlPathToSlug,f) ]]
+
+[[ _FetchHandler (fedwiki_PageJsonUrl,f) ]]
+
+[[ _FetchHandler (fedwiki_FaviconURL,f) ]]
+
+[[ _FetchHandler (fedwiki_ExtractPageSlugsFromPath,f) ]]
+
+[[ _FetchHandler (fedwiki_FetchSitemap,f) ]]
+
+[[ _FetchHandler (fedwiki_JsonSiteMapUrl,f) ]]
+
+[[ _FetchHandler (fedwiki_JsonSiteExportUrl,f) ]]
+
+
+--> Fedwiki | Local | JSON
+-
+[[ _FetchHandler (fedwiki_GetLocalPageArray,f) ]]
+
+[[ _FetchHandler (fedwiki_SetLocalPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_GetLocalPageJson,f) ]]
+
+[[ _FetchHandler (fedwiki_SetLocalPageJson,c) ]]
+
+
+--> Fedwiki | Favicon
+-
+[[ _FetchHandler (fedwiki_GetLocalFavicon,f) ]]
+
+[[ _FetchHandler (fedwiki_SetLocalFavicon,c) ]]
+
+
+--> Fedwiki | Local | Page Json | Files
+-
+/*
+JSON page files and favicons are all stored in a standard place within a ".wiki" folder as they are on the remote Node server.
+This local folder is named "wiki" without the first "." (as it would be on the remote Node server) so that it is visible.
+
+You can customise this location by using a getprop 
+*/
+
+[[ _FetchHandler (fedwiki_LocalFaviconFile,f) ]]
+
+[[ _FetchHandler (fedwiki_LocalPageSlugs,f) ]]
+
+[[ _FetchHandler (fedwiki_LocalPageJsonFile,f) ]]
+
+[[ _FetchHandler (fedwiki_LocalSiteMapJson,f) ]]
+
+[[ _FetchHandler (fedwiki_GetLocalSitemapJson,f) ]]
+
+[[ _FetchHandler (fedwiki_SetLocalSitemapJson,c) ]]
+
+[[ _FetchHandler (fedwiki_LocalSiteMapFile,f) ]]
+
+[[ _FetchHandler (fedwiki_JsonSiteMapPathBit,f) ]]
+
+
+--> FedWiki | Local | Folders
+-
+[[ _FetchHandler (fedwiki_LocalPagesFolder,f) ]]
+
+[[ _FetchHandler (fedwiki_LocalStatusFolder,f) ]]
+
+[[ _FetchHandler (fedwiki_GetLocalWikiFolder,f) ]]
+
+[[ _FetchHandler (fedwiki_GetLocalWikiRoot,f) ]]
+
+[[ _FetchHandler (fedwiki_GetLocalFolders,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (line_Delete,c) ]]
+
+[[ _FetchHandler (folder_ShortFiles,f) ]]
+
+[[ _FetchHandler (folder_Format,c) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]

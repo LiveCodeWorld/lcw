@@ -1,0 +1,5 @@
+function dot_ParamsToStyleArray styleParams
+   replace ", " with comma in styleParams
+   split styleParams with comma and "="
+   return styleParams
+end dot_ParamsToStyleArray

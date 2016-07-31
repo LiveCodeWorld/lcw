@@ -1,0 +1,23 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Fossil_Watch_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Fossil | Watch | Menu
+-
+[[ _FetchHandler (insert_FossilCommon,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (insert_Fossil,c) ]]
+
+
+--> Global | Fossil | Watch | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DisplayLocalChanges,g) ]]
+
+

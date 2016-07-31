@@ -1,0 +1,5 @@
+getprop stack_SetName [scriptObject]
+   put the stack_Object of scriptObject into stackObject
+   put the library_Sets ["used"] of stackObject into setNames
+   return setNames
+end stack_SetName

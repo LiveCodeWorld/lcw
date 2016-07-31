@@ -1,0 +1,5 @@
+setprop displayed_Libraries shortFiles
+   put _tabDisplayField() into displayField
+   set the text of displayField to shortFiles
+   return displayField
+end displayed_Libraries

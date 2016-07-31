@@ -1,0 +1,5 @@
+function loc_GetTranslation fromPoint, toPoint, @x, @y
+   put item 1 of toPoint - item 1 of fromPoint into x
+   put item 2 of toPoint - item 2 of fromPoint into y
+   return x,y
+end loc_GetTranslation

@@ -1,0 +1,4 @@
+on rawKeydown
+   send "LayoutControl" to me in 2 ticks
+   pass rawKeydown
+end rawKeydown

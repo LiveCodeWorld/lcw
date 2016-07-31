@@ -1,0 +1,10 @@
+function dot_StripLeastConected dotFile, minConnected
+    if minConnected is empty then put 1 into minConnected
+    shell_BashParamEscape dotFile
+    
+    put merge("gvpr -i 'N[$.degree > [[minConnected]]]'") && dotFile into someShell
+    
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & someShell into someShell
+    return shell(someShell)
+end dot_StripLeastConected

@@ -1,0 +1,5 @@
+command rig_StoreStackFolder rigStackFolder
+   pref_SaveValue "rigStackFolder", rigStackFolder
+   put the result into  dataArray
+   return dataArray
+end rig_StoreStackFolder

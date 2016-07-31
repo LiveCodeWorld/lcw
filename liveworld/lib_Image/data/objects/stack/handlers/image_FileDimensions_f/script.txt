@@ -1,0 +1,14 @@
+function image_FileDimensions imageFile
+   switch the platform
+      case "MacOS"
+         -- should check for OSX
+         put spotlight_GetFileInfo (imageFile) into spotlightFileInfo
+         put spotlight_ExtractAttribute (spotlightFileInfo, "kMDItemPixelWidth") into pixelWidth
+         put spotlight_ExtractAttribute (spotlightFileInfo, "kMDItemPixelHeight") into pixelHeight
+         return pixelWidth,pixelHeight
+         break
+      default
+         breakPoint
+         return empty
+   end switch
+end image_FileDimensions

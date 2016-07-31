@@ -1,0 +1,21 @@
+function dreamHost_ParseTableResult someResult
+   local tableArray
+   if line 1 of someResult is not "success" then
+      display_Lines someResult, "dreamHost_ParseResult"
+      return empty
+   end if
+   
+   set the itemdelimiter to tab
+   put line 2 of someResult into keyLine
+   delete line 1 to 2 of of someResult
+   
+   repeat with lineNum = 1 to the number of lines of someResult
+      put line lineNum of someResult into someLine
+      repeat with itemNum = 1 to the number of items of someLine
+         put item itemNum of keyLine into someKey
+         put item itemNum of someLine into someValue
+         put someValue into tableArray [lineNum][someKey]
+      end repeat
+   end repeat
+   return tableArray
+end dreamHost_ParseTableResult

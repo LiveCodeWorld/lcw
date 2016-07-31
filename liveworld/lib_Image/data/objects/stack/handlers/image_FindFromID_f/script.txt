@@ -1,0 +1,19 @@
+function image_FindFromID imageID, someStacks
+    if someStacks is empty then put the mainstacks into someStacks
+    repeat for each line stackName in someStacks
+        set the cursor to busy
+        if exists(image id imageID of stack stackName) then
+            put the long id of image id imageID of stack stackName into imageObject
+            put imageObject & CR after imageObjects
+        end if
+         
+        repeat for each line subStackName in the substacks of stack stackName
+            if exists(image id imageID of stack subStackName of stack stackName) then
+                put the long id of image id imageID of stack stackName into imageObject
+                put imageObject & CR after imageObjects
+            end if
+        end repeat
+    end repeat
+    delete last char of imageObjects
+    return imageObjects
+end image_FindFromID

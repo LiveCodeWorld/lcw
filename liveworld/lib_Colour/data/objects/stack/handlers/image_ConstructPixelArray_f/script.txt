@@ -1,0 +1,21 @@
+function image_ConstructPixelArray imageObject, dimensionX, dimensionY
+    -- was "makeImageBlockArray"
+    put the imagedata of imageObject into binaryData
+    put the width of imageObject into imagePixelWidth
+    put the height of imageObject into imagePixelHeight
+    repeat with pixelY = 1 to imagePixelHeight
+        repeat with pixelX = 1 to imagePixelWidth
+            -- set the cursor to busy
+            put char 1 to 4 of binaryData into binaryPixel
+            if binaryPixel is empty then
+                answer rowNum
+                return imageArray
+            end if
+            put image_PixelToRGB(binaryPixel) into rgbPixel
+            -- put rgbPixel
+            image_AddToPixelArray rgbPixel, pixelX, pixelY, dimensionX, dimensionY, imagePixelWidth, imagePixelHeight, imageArray
+            delete char 1 to 4 of binaryData
+        end repeat
+    end repeat
+    return imageArray
+end image_ConstructPixelArray

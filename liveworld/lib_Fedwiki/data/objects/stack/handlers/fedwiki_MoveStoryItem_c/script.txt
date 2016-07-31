@@ -1,0 +1,49 @@
+command fedwiki_MoveStoryItem @fedwikiPageArray, fromItemNum, toItemNum
+   /*
+   {
+   "type": "move",
+   "order": [
+   "6b1ba5af044ea0e3",
+   "356858282d59dea1",
+   "ee7ec529a199beea",
+   "f9c392af4c8f542b",
+   "94d049cf1fd90fc5",
+   "a4eb8b77d082c7ef",
+   "e8415143e138a510",
+   "e9b027eaabbea8d8",
+   "ccd0372b0fd27d6e",
+   "fe7b17c7de97c049",
+   "85015e39e3c5ed2f",
+   "8633d7f8e7d89df6",
+   "9e65ab7c58d8edd0",
+   "2e8287f6c7461c55",
+   "7f552aa6a1a735cf",
+   "ca4edfba68461f3f"
+   ],
+   "id": "ca4edfba68461f3f",
+   "date": 1455619718778
+   }
+   */
+   
+   put fedwikiPageArray ["story"] into storyArray
+   --
+   fedwiki_StoryDeleteItem storyArray, fromItemNum
+   put the result into itemArray
+   fedwiki_StoryInsertItem storyArray, toItemNum, itemArray
+   --
+   put storyArray into fedwikiPageArray ["story"]
+   
+   put fedwiki_StoryExtractorderedIDArray (storyArray) into oderedIDArray
+   put the milliseconds into pMilliseconds
+  fedwiki_SetID pID
+   
+   put fedwikiPageArray ["journal"] into journalArray
+   --  
+   put "move" into journalEntryArray ["type"]
+   put pMilliseconds into journalEntryArray ["date"]
+   put pID into journalEntryArray ["id"]
+   put oderedIDArray into journalEntryArray ["order"]
+   fedwiki_AddToEndOfIndexArray journalEntryArray, journalArray
+   --
+   put journalArray into fedwikiPageArray ["journal"]
+end fedwiki_MoveStoryItem

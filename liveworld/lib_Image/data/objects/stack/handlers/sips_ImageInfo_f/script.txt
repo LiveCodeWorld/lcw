@@ -1,0 +1,10 @@
+function sips_ImageInfo tPath, tInfo
+    -- was "ijwAPLIB_SIPSImageInfo"
+    put shell_MakeOSXShellPath(tPath) into tPath
+    put "sips -g" && tInfo into tScript
+    put space & tPath after tScript
+    get shell(tScript)
+    put last word of it into tResult
+    if tResult = "<nil>" then return empty
+    return tResult
+end sips_ImageInfo

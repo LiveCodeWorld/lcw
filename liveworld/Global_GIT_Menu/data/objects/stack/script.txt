@@ -1,0 +1,104 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Menu
+type: controller
+version: 0.1
+
+
+--> Global | GIT | Menu
+-
+[[ _FetchHandler (menu_ShowStackLog,c) ]]
+
+[[ _FetchHandler (menu_StackHistory,c) ]]
+
+[[ _FetchHandler (menu_OpenRevision,c) ]]
+
+[[ _FetchHandler (back_Nums,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Gitk,c) ]]
+
+[[ _FetchHandler (menu_ResetHard,c) ]]
+
+[[ _FetchHandler (menu_SaveAndCompactMemoryStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Search,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ThrowAwayUncommittedChanges,c) ]]
+
+[[ _FetchHandler (menu_RevertCommit,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Menu | Props
+-
+--> Global | GIT | Menu | Props
+-
+[[ _FetchHandler (some_Names,g) ]]
+
+[[ _FetchHandler (search_Term,g) ]]
+
+[[ _FetchHandler (search_Term,s) ]]
+
+
+--> Dev | Menu
+-
+/*
+was "Global | Git | Line | Stack | Log | Menu"
+*/
+
+[[ _FetchHandler (menu_CloneRevertedStack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DiffStackBinaries,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RevertStack,c) ]]
+
+[[ _FetchHandler (menu_StackData,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayCommitInfo,c) ]]
+
+[[ _FetchHandler (menu_ListCommitInfo,c) ]]
+
+[[ _FetchHandler (menu_StackHashLog,c) ]]
+
+
+--> Dev | menu | Props
+-
+/*
+Global | Git | Line | Stack | Log | Menu | Props
+*/
+
+[[ _FetchHandler (stack_Hashs,g) ]]
+
+[[ _FetchHandler (back_Hashs,g) ]]
+
+getprop back_Nums
+   return "0,-,1,2,3,4,5,6,7,8,9"
+end back_Nums
+
+
+--> Sketches
+-
+[[ _FetchHandler (display_GitFile,c) ]]

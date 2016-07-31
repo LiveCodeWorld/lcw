@@ -1,0 +1,5 @@
+command xml_CreateTree rootNode, @treeID
+   put xml_Tag (empty, rootNode) into someXml
+   put revCreateXMLTree (someXml, true, true, false) into treeID
+   return treeID
+end xml_CreateTree

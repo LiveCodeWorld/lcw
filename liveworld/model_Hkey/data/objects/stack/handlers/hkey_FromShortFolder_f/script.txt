@@ -1,0 +1,11 @@
+function hkey_FromShortFolder shortFolder
+   put word 1 of shortFolder into handlerInfo
+   
+   set the itemdelimiter to "_"
+   put item -1 of handlerInfo into handlerType
+   put item 1 to -2 of handlerInfo into handlerName
+   
+   set the itemdelimiter to comma
+   if handlerType is not among the items of "g,s,c,f,m,pg,ps,pc,pf" then return empty
+   return handlerName,handlerType
+end hkey_FromShortFolder

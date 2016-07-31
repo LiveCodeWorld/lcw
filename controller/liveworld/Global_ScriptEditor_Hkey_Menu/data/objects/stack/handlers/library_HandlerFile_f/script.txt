@@ -1,0 +1,8 @@
+function library_HandlerFile hKey, pShortFileBit, pDontCreate
+   -- returns empty if there is no folder, but the filename if there is
+   if pDontCreate is empty then put true into pDontCreate
+   put library_HkeyFolder (hKey, pDontCreate) into hkeyFolder
+   if there is not a folder hkeyFolder then return empty
+   put pShortFileBit after hkeyFolder
+   return hkeyFolder
+end library_HandlerFile

@@ -1,0 +1,6 @@
+command object_SetRelativeGroup @someObject, someGroup
+   put " of " before someGroup
+   put offset(someGroup, someObject) into startCharNum
+   delete char startCharNum to -1 of someObject
+   return someObject
+end object_SetRelativeGroup

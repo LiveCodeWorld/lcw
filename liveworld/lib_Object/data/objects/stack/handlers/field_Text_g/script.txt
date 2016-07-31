@@ -1,0 +1,17 @@
+getprop field_Text [charOffsets]
+   put the long ID of the target into someField
+   
+   if charOffsets is empty then
+      put "get the text of someField" into doScript
+   else
+      put item 1 of charOffsets into startChar
+      put item 2 of charOffsets into endChar
+      
+      -- put "get char startChar to endChar of someField" into doScript	# does not work
+      -- put "get the text of char startChar to endChar of" && someField into doScript	# does not work
+      put "get char startChar to endChar of" && someField into doScript
+      -- put merge("get char [[startChar]] to [[endChar]] of [[someField]]") into doScript
+   end if
+   do doScript
+   return it
+end field_Text

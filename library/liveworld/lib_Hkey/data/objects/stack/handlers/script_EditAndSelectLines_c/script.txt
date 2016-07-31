@@ -1,0 +1,16 @@
+command script_EditAndSelectLines scriptObject, startLineNum, endLineNum
+   put rev_ScriptEditorIsOpen() into wasAlreadyOpen
+   
+   edit the script of scriptObject
+   put rev_ScriptEditorField() into someField
+   
+   if wasAlreadyOpen is false then
+      -- without send in time, the editor is not open early enough and the script fails to scroll
+      wait 2 ticks
+   end if
+   
+   field_ScrollToLine startLineNum, someField
+   select line startLineNum to endLineNum of someField
+   -- field_SelectLines startLineNum, endLineNum, someField
+   return someField
+end script_EditAndSelectLines

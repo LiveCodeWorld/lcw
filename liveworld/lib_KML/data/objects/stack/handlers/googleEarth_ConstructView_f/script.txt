@@ -1,0 +1,3 @@
+function googleEarth_ConstructView latitude, longitude, someHeight, someTilt, someRotation
+    return merge("{latitude:[[latitude]], longitude:[[longitude]], distance:[[someHeight]], tilt:[[someTilt]], azimuth:[[someRotation]]}")
+end googleEarth_ConstructView

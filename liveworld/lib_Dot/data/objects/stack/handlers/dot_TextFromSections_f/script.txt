@@ -1,0 +1,12 @@
+function dot_TextFromSections dotHeader, defSection, clusterSection, linkSection, pOverlayName
+   put dotHeader into dotSection
+   text_InsertParagraph defSection, dotSection
+   text_InsertParagraph clusterSection, dotSection
+   text_InsertParagraph linkSection, dotSection
+   
+   put "digraph" into dotText
+   if pOverlayName is not empty then put space & kwote(pOverlayName) after dotText
+   put space & "{" & CR & outline_IncreaseIndent (dotSection) & CR & "}" after dotText
+   
+   return dotText
+end dot_TextFromSections

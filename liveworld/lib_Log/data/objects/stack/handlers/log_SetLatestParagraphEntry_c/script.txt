@@ -1,0 +1,6 @@
+command log_SetLatestParagraphEntry someValue, pTitle, pLogName
+   put log_ConstructEntry (someLine, pLineTitle, false) into logEntry
+   log_SetLatestLine logEntry, pLogName
+   put the result into fullLogIndex
+   return fullLogIndex
+end log_SetLatestParagraphEntry

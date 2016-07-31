@@ -1,0 +1,43 @@
+command deps_CreateMainStackOverlay scriptObject, graphStyle, pImageView, pDotCluster, pForceCreate
+   set the cursor to watch
+   put the mainStack_Hash of scriptObject into mainStackHash
+   put the mainStack_ManifestArray of scriptObject into manifestArray
+   put manifestArray ["sha1"] into storedHash
+   if mainStackHash is not storedHash or pForceCreate is true then 
+      deps_SaveMainstackAndExportArrays scriptObject, true
+      put the result into mainStackMetaArray
+      
+      deps_ConstructDependencyArray scriptObject, true
+      put the result into walkArray
+      put walkArray ["hKeyArray"] into hKeyArray
+   else
+      put the mainstack_WalkArray of scriptObject into walkArray
+      put walkArray ["hkeyArray"] into hkeyArray
+   end if
+   
+   if hkeyArray is not an array then
+      breakpoint
+   end if
+   
+   put "Mainstack Structure" into overlayName
+   put the textStackOverlay_Folder [false] of scriptObject into overlayFolder
+   
+   overlay_CreateGraph overlayFolder, hKeyArray, overlayName, scriptObject, graphStyle, pDotCluster
+   put the result into overlayArrayOrError
+   
+   if overlayArrayOrError is not an array then  
+      opn_Notify "Problem creating overlay!", true
+      put overlayArrayOrError
+      return empty
+   else
+      put overlayArrayOrError into overlayArray
+   end if
+   
+   if pImageView is empty then return overlayArray
+   
+   if exists (pImageView) is false then put empty into pImageView
+   put the main_Stack of scriptObject into stackLabel
+   display_Overlay overlayFolder, overlayName, pImageView, stackLabel
+   put the result into displayView
+   return displayView
+end deps_CreateMainStackOverlay

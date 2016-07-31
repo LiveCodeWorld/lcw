@@ -1,0 +1,14 @@
+on importSection
+   put fedwiki_GetDroppedUrl ($_POST_RAW) into droppedURL
+   put "^https:\/\/(..)\.wikipedia.org\/w\/index.php\?title=(.+)&action=edit&section=(.+)$" into someReg
+   if matchText (droppedURL, someReg, someLang, pageTitle, sectionNum) is true then
+   set the itemdelimiter to "&"
+   put item 1 of sectionNum into sectionNum
+   
+   put fedwikipedia_FetchSectionSummaryPageJson (pageTitle, sectionNum) into pageJSON
+   fedwiki_ReturnJSON pageJSON
+   else
+   put fedwiki_ConstructErrorJSON ("Not a Wikipedia edit link!") into pageJSON
+   fedwiki_ReturnJSON pageJSON
+end if
+end importSection

@@ -1,0 +1,5 @@
+on dragMove
+   if (line 1 of the dragData["private"] is "DGH_ReorderLines") then -- Acceptance only of a row
+      set the dragaction to "copy"
+   end if
+end dragMove

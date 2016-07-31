@@ -1,0 +1,6 @@
+on menu_AddStacksToProject indexView
+   put the selected_Index of indexView into projectStackNames
+   project_AddStack projectStackNames
+   replace CR with comma in projectStackNames
+   opn_Notify merge ("Added stacks '[[projectStackNames]]' to the project array.")
+end menu_AddStacksToProject

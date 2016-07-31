@@ -1,0 +1,8 @@
+command digitalOcean_StoreFile dropletName, pathToStore, localFile, sshUserName
+   put digitalOcean_GetDropletIP (dropletName) into serverAddress
+   if http_CheckIP (serverAddress) is false then return "error, fetching ip address for droplet" && dropletName
+   
+   server_StoreFile localFile, pathToStore, serverAddress, sshUserName
+   put the result into someResult
+   return someResult
+end digitalOcean_StoreFile

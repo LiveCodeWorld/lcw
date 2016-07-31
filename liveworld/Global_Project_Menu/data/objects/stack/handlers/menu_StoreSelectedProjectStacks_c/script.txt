@@ -1,0 +1,6 @@
+on menu_StoreSelectedProjectStacks indexView
+   put the selected_Index of indexView into projectStackNames
+   project_SaveValue "openStacks", projectStackNames
+   
+   opn_Notify "Stored the selected project stack names, to the project array."
+end menu_StoreSelectedProjectStacks

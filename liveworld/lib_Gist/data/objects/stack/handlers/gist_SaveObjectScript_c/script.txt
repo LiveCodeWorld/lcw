@@ -1,0 +1,16 @@
+command gist_SaveObjectScript @scriptObject, pGistHelp, pIsPublic, pGistListArray
+   if exists (scriptObject) is false then return ("error, object" && scriptObject && "does not exist!")
+   put the mobile_Name of scriptObject into scriptObject
+   
+   if pGistHelp is empty then
+      put _FetchAndAskForScriptHelp (scriptObject) into pGistHelp
+   end if
+   put json_Utf8Encode (pGistHelp) into pGistHelp
+   
+   put the script of scriptObject into someScript
+   put gist_ShortFileFromObject (scriptObject) into shortGistFile
+   
+   gist_SaveOrUpdate someScript, shortGistFile, pGistHelp, pIsPublic, pGistListArray
+   put the result into someArray
+   return someArray
+end gist_SaveObjectScript

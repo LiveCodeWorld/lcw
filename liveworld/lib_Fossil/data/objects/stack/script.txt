@@ -1,0 +1,354 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Fossil
+type: script library
+version: 0.6
+
+/*
+A stack for interfacing with the fossil cli.
+*/
+
+
+--> Fossil | File | History
+-
+[[ _FetchHandler (fossil_StackHistory,g) ]]
+
+[[ _FetchHandler (fossil_ScriptHistory,g) ]]
+
+[[ _FetchHandler (fossil_StackHistoryArray,g) ]]
+
+[[ _FetchHandler (fossil_ScriptHistoryArray,g) ]]
+
+[[ _FetchHandler (fossil_FileHistory,f) ]]
+
+[[ _FetchHandler (fossil_FileVersion,f) ]]
+
+[[ _FetchHandler (fossil_ParseFileHistory,f) ]]
+
+
+--> Fossil | Diff
+-
+/*
+Usage: fossil diff|gdiff ?OPTIONS? ?FILE1? ?FILE2 ...?
+
+Show the difference between the current version of each of the FILEs
+specified (as they exist on disk) and that same file as it was checked
+out.  Or if the FILE arguments are omitted, show the unsaved changed
+currently in the working check-out.
+
+If the "--from VERSION" or "-r VERSION" option is used it specifies
+the source check-in for the diff operation.  If not specified, the 
+source check-in is the base check-in for the current check-out.
+
+If the "--to VERSION" option appears, it specifies the check-in from
+which the second version of the file or files is taken.  If there is
+no "--to" option then the (possibly edited) files in the current check-out
+are used.
+
+The "-i" command-line option forces the use of the internal diff logic
+rather than any external diff program that might be configured using
+the "setting" command.  If no external diff program is configured,
+then the "-i" option is a no-op.  The "-i" option converts "gdiff" into "diff".
+
+The "-N" or "--new-file" option causes the complete text of added or
+deleted files to be displayed.
+
+Options:
+--context|-c N      Use N lines of context 
+--from|-r VERSION   select VERSION as source for the diff
+--new-file|-N       output complete text of added or deleted files
+-i                  use internal diff logic
+--to VERSION        select VERSION as target for the diff
+--side-by-side|-y   side-by-side diff
+--width|-W N        Width of lines in side-by-side diff
+*/
+
+[[ _FetchHandler (fossil_CompareWithFileOnBranch,f) ]]
+
+[[ _FetchHandler (fossil_FileDiff,f) ]]
+
+[[ _FetchHandler (fossil_DiffBranch,f) ]]
+
+[[ _FetchHandler (fossil_Diff,f) ]]
+
+[[ _FetchHandler (fossil_SetFileParams,c) ]]
+
+
+--> Fossil | Parse
+-
+[[ _FetchHandler (fossil_InfoArray,f) ]]
+
+[[ _FetchHandler (fossil_ParseInfo,f) ]]
+
+[[ _FetchHandler (fossil_ParseProjectInfo,f) ]]
+
+[[ _FetchHandler (fossil_ParseOpenInfo,f) ]]
+
+[[ _FetchHandler (fossil_GoodKeys,f) ]]
+
+
+--> Fossil | Configuration
+-
+[[ _FetchHandler (fossil_GetProjectName,f) ]]
+
+[[ _FetchHandler (fossil_ImportConfiguration,c) ]]
+
+[[ _FetchHandler (fossil_ExportConfiguration,c) ]]
+
+[[ _FetchHandler (fossil_SetProjectName,c) ]]
+
+[[ _FetchHandler (fossil_ConstructConfiguration,f) ]]
+
+[[ _FetchHandler (fossil_ConstructUserConfiguration,f) ]]
+
+
+--> Fossil | Installation
+-
+[[ _FetchHandler (fossil_IsInstalled,f) ]]
+
+[[ _FetchHandler (fossil_Version,f) ]]
+
+
+--> Fosssil | Install
+-
+[[ _FetchHandler (fossil_DownloadAndInstall,c) ]]
+
+[[ _FetchHandler (fossil_InstallBinary,c) ]]
+
+[[ _FetchHandler (fossil_FetchBinary,f) ]]
+
+[[ _FetchHandler (fossil_Rebuild,c) ]]
+
+
+--> Fossil | Files
+-
+[[ _FetchHandler (fossil_GetDefaultRepoFolder,f) ]]
+
+[[ _FetchHandler (fossil_SetDefaultRepoFolder,c) ]]
+
+[[ _FetchHandler (fossil_RepositoryFile,g) ]]
+
+[[ _FetchHandler (fossil_GetExecutablePath,f) ]]
+
+[[ _FetchHandler (fossil_SetExecutablePath,c) ]]
+
+[[ _FetchHandler (fossil_FolderWithExecutable,f) ]]
+
+
+--> Fossil | Ftp
+-
+[[ _FetchHandler (fossil_ListFtpProjectFiles,f) ]]
+
+[[ _FetchHandler (fossil_FtpDirectory,f) ]]
+
+
+--> Fossil | Wiki
+-
+[[ _FetchHandler (fossil_CreateWikiPage,c) ]]
+
+[[ _FetchHandler (fossil_UpdateWikiPage,c) ]]
+
+[[ _FetchHandler (fossil_GetWikiText,f) ]]
+
+[[ _FetchHandler (fossil_ListWikiPages,f) ]]
+
+
+--> Fossil | Branch
+-
+[[ _FetchHandler (fossil_CreateBranch,c) ]]
+
+[[ _FetchHandler (fossil_ListBranchNames,f) ]]
+
+
+--> Fossil | Pocess
+-
+[[ _FetchHandler (fossil_ConstructLaunchScript,f) ]]
+
+
+--> Fossil | Settings
+-
+[[ _FetchHandler (fossil_GetBrowserEcho,f) ]]
+
+[[ _FetchHandler (fossil_SetBrowserEcho,c) ]]
+
+[[ _FetchHandler (fossil_GetBrowserShellCommand,f) ]]
+
+[[ _FetchHandler (fossil_SetBrowserShellCommand,c) ]]
+
+[[ _FetchHandler (fossil_GetHttpPort,f) ]]
+
+[[ _FetchHandler (fossil_SetHttpPort,c) ]]
+
+[[ _FetchHandler (fossil_GetAutoSync,f) ]]
+
+[[ _FetchHandler (fossil_SetAutoSync,c) ]]
+
+[[ _FetchHandler (fossil_GetAutoCaptcha,f) ]]
+
+[[ _FetchHandler (fossil_SetAutoCaptcha,c) ]]
+
+[[ _FetchHandler (fossil_GetClearSign,f) ]]
+
+[[ _FetchHandler (fossil_SetClearSign,c) ]]
+
+[[ _FetchHandler (fossil_GetDiffCommand,f) ]]
+
+[[ _FetchHandler (fossil_SetDiffCommand,c) ]]
+
+[[ _FetchHandler (fossil_GetSetting,f) ]]
+
+[[ _FetchHandler (fossil_SetSetting,c) ]]
+
+[[ _FetchHandler (fossil_DeleteSetting,c) ]]
+
+[[ _FetchHandler (fossil_ConstructSettingsArray,f) ]]
+
+[[ _FetchHandler (fossil_DeconstructSettingLine,c) ]]
+
+[[ _FetchHandler (fossil_ListSettings,f) ]]
+
+
+--> Fossil | Tags
+-
+[[ _FetchHandler (fossil_ListAllTags,f) ]]
+
+
+--> Fossil | Commit
+-
+[[ _FetchHandler (fossil_Checkout,c) ]]
+
+[[ _FetchHandler (fossil_Update,c) ]]
+
+[[ _FetchHandler (fossil_Commit,c) ]]
+
+[[ _FetchHandler (fossil_CommitFile,c) ]]
+
+[[ _FetchHandler (fossil_Extra,f) ]]
+
+[[ _FetchHandler (fossil_Info,f) ]]
+
+[[ _FetchHandler (fossil_CheckoutFileInfo,f) ]]
+
+[[ _FetchHandler (fossil_CheckoutInfo,f) ]]
+
+[[ _FetchHandler (fossil_ProjectInfo,f) ]]
+
+
+--> Fossil | New, open and close
+-
+[[ _FetchHandler (fossil_AskCreateProject,c) ]]
+
+[[ _FetchHandler (fossil_New,c) ]]
+
+[[ _FetchHandler (fossil_Clone,c) ]]
+
+[[ _FetchHandler (fossil_Open,c) ]]
+
+[[ _FetchHandler (fossil_Close,c) ]]
+
+[[ _FetchHandler (fossil_CloseUsingProjectFile,c) ]]
+
+
+--> Fosssil | Add and Remove
+-
+[[ _FetchHandler (fossil_AddRemove,c) ]]
+
+[[ _FetchHandler (fossil_Remove,c) ]]
+
+[[ _FetchHandler (fossil_Add,c) ]]
+
+[[ _FetchHandler (fossil_Sync,c) ]]
+
+
+--> Fosssil | Extra
+-
+[[ _FetchHandler (fossil_Help,f) ]]
+
+[[ _FetchHandler (fossil_ListCommands,f) ]]
+
+
+--> Fossil | Shell
+-
+[[ _FetchHandler (fossil_ExecuteShell,c) ]]
+
+
+--> Fossil | Hosted
+-
+[[ _FetchHandler (fossil_FetchHostedNames,f) ]]
+
+
+--> Fossil | Model | Built In
+-
+[[ _FetchHandler (fossil_FindRepositoryFile,f) ]]
+
+[[ _FetchHandler (fossil_ConstructProjectArray,f) ]]
+
+
+--> Fossil | Remote URL
+-
+[[ _FetchHandler (fossil_GetDefaultRemoteUrl,f) ]]
+
+[[ _FetchHandler (fossil_GetRawRemoteUrl,pf) ]]
+
+[[ _FetchHandler (fossil_SetDefaultRemoteUrl,c) ]]
+
+
+--> Fossil | Repository | Live
+-
+[[ _FetchHandler (fossil_FetchAndCheckProjectDataArray,f) ]]
+
+[[ _FetchHandler (fossil_ConstructLiveProjectData,f) ]]
+
+[[ _FetchHandler (fossil_ListAllRepositories,f) ]]
+
+[[ _FetchHandler (fossil_ListProjectFiles,f) ]]
+
+[[ _FetchHandler (fossil_ListShortFiles,f) ]]
+
+[[ _FetchHandler (fossil_ListProjectNames,f) ]]
+
+[[ _FetchHandler (fossil_ConstructProjectPathArray,f) ]]
+
+
+--> Fossil | Model | Projects
+-
+/*
+Here we save the project-folder, project-id, server-id, admin-user )and initial password) for a fossil project. 
+*/
+
+-- command fossil_AddProjectArray fossilFile, projectArray
+   -- creates a union with stored project array, then saves to disk
+   put library_FetchArray ("Fossil") into fossilArray
+   put fossilArray [fossilFile] into oldProjectArray
+   union oldProjectArray with projectArray
+   put oldProjectArray into fossilArray [fossilFile]
+   library_StoreArray "Fossil", fossilArray
+end fossil_AddProjectArray
+
+[[ _FetchHandler (fossil_ConstructStoredPathArray,f) ]]
+
+[[ _FetchHandler (fossil_FetchProjectData,f) ]]
+
+[[ _FetchHandler (fossil_StoreProjectData,c) ]]
+
+[[ _FetchHandler (fossil_DeleteProjectData,c) ]]
+
+[[ _FetchHandler (fossil_FetchProjectArray,f) ]]
+
+[[ _FetchHandler (fossil_SaveProjectArray,c) ]]
+
+[[ _FetchHandler (fossil_DeleteProjectArray,c) ]]
+   
+
+--> Fossil | Projects
+-
+[[ _FetchHandler (fossil_DeleteProject,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (constructPathArray,pf) ]]
+
+[[ _FetchHandler (tryAndLaunchInBackgroundWithResult,pc) ]]
+

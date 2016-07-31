@@ -1,0 +1,4 @@
+on menu_DisplayIpfsArray
+   put ipfs_FetchArray() into ipfsArray
+   display_Array ipfsArray
+end menu_DisplayIpfsArray

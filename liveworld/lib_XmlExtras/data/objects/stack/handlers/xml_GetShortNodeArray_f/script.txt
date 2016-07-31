@@ -1,0 +1,8 @@
+function xml_GetShortNodeArray someXml, startNode, depth, includeChildCount
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    if startNode is empty then put revXMLRootNode(treeID) into startNode
+    put revXMLChildContents(treeID, startNode, tab, CR, includeChildCount, depth) into nodeArray
+    split nodeArray with CR and tab
+    revDeleteXMLTree treeID
+    return nodeArray
+end xml_GetShortNodeArray

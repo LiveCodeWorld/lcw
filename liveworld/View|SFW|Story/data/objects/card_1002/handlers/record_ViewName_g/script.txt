@@ -1,0 +1,6 @@
+getprop record_ViewName
+   put the rev_DataGrid of me into revDataGrid
+   put the dgProps ["row template"] of revDataGrid into someView
+   if exists(someView) is false then return empty
+   return the view_Name of someView
+end record_ViewName

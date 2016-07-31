@@ -1,0 +1,12 @@
+function object_GroupShortIds someObject, visibleOnly
+   -- was "object_GroupIDs"
+   local idIndex
+   put visibleOnly is true into visibleOnly
+   repeat with groupNum = 1 to the number of groups in someObject
+      if the visible of group groupNum of someObject is false and visibleOnly is true then next repeat
+      put the short ID of group groupNum of someObject into someID
+      put someID & CR after idIndex
+   end repeat
+   delete last char of idIndex
+   return idIndex
+end object_GroupShortIds

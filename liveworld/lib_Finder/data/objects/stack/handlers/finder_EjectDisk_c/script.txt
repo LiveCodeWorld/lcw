@@ -1,0 +1,8 @@
+command finder_EjectDisk diskName
+    put "tell application" && kwote("Finder") into someAppleScript
+    put return & "eject disk" && kwote(diskName) && "of application" && kwote("Finder") after someAppleScript
+    put return & "end tell" after someAppleScript
+    
+    do someAppleScript as AppleScript
+    return the result
+end finder_EjectDisk

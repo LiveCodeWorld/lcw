@@ -1,0 +1,7 @@
+getprop library_DeletedSets [libType]
+   put the rugged_ID of the target into ruggedObject
+   put library_FetchSetsContaining (ruggedObject, libType) into setNames
+   put library_ListSetNames() into deletedSetNames
+   line_Delete setNames, deletedSetNames
+   return deletedSetNames
+end library_DeletedSets

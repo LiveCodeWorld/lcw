@@ -1,0 +1,20 @@
+private command handler_AddToCallArray @tempArray, shortHKey, handlerArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, pForgetHkeys  
+   put empty into tempArray ["hkeyCalls"][shortHKey]
+   put handlerArray ["addCall"] into tempArray ["hkeyCalls"][shortHKey]
+   
+   if handlerArray ["component"] is true then return false
+   
+   -- don't index rev handler calls (assume they are IDE handlers)
+   put item 1 of shortHKey into hName
+   if char 1 to 3 of hName = "rev" and char 4 of hName is not "_" then return false
+   
+   put handlerArray ["ignoreCall"] into ignoreCalls
+   if shortHkey is among the lines of ignoreCalls then return false
+   
+   set the wholematches to true
+   if shortHkey is among the lines of pForgetHkeys then return false
+   
+   -- if hkey_TestShortDeps (shortHKey, someHandler, pSkipHkeyComponents, pSkipHkeyProps) is false then return false
+   
+   put empty into tempArray ["filteredCalls"][shortHKey]
+end handler_AddToCallArray

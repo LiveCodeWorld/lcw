@@ -1,0 +1,43 @@
+function opn_ObjectSearch booleanProperty, pIsTrue, pFormat
+   put library_ListBackObjects ("all") into objectIndex
+   put object_SearchForProperty (objectIndex, booleanProperty, pIsTrue) into foundObjects
+   put object_ConstructMobileIndex(foundObjects, false) into foundBackObjects
+   
+   put library_ListFrontObjects ("all") into objectIndex
+   put object_SearchForProperty (objectIndex, booleanProperty, pIsTrue) into foundObjects
+   put object_ConstructMobileIndex(foundObjects, false) into foundFrontObjects
+   
+   put library_ListUsedStacks ("all") into objectIndex
+   put object_SearchForProperty (objectIndex, booleanProperty, pIsTrue) into foundUsedObjects
+   
+   put view_TemplateObjects() into objectIndex
+   put object_SearchForProperty (objectIndex, booleanProperty, pIsTrue) into foundObjects
+   put object_ConstructMobileIndex(foundObjects, false) into foundViewObjects
+   
+   put behavior_Objects() into objectIndex
+   put object_SearchForProperty (objectIndex, booleanProperty, pIsTrue) into foundObjects
+   put object_ConstructMobileIndex(foundObjects, false) into foundBehaviorObjects
+   
+   put menu_GlobalControllers() into objectIndex
+   put object_SearchForProperty (objectIndex, booleanProperty, pIsTrue) into foundMenuObjects
+   
+   switch pFormat
+      case "Index"
+         if foundBackObjects is not empty then put foundBackObjects & CR after foundOutline
+         if foundFrontObjects is not empty then put foundFrontObjects & CR after foundOutline
+         if foundUsedObjects is not empty then put foundUsedObjects & CR after foundOutline
+         if foundViewObjects is not empty then put foundViewObjects & CR after foundOutline
+         if foundBehaviorObjects is not empty then put foundBehaviorObjects & CR after foundOutline
+         if foundMenuObjects is not empty then put foundMenuObjects & CR after foundOutline
+         break
+      default -- "outline"
+         if foundBackObjects is not empty then put "Back Libraries" & CR & outline_IncreaseIndent(foundBackObjects) & CR after foundOutline
+         if foundFrontObjects is not empty then put "Front Libraries" & CR & outline_IncreaseIndent(foundFrontObjects) & CR after foundOutline
+         if foundUsedObjects is not empty then put "Used Libraries" & CR & outline_IncreaseIndent(foundUsedObjects) & CR after foundOutline
+         if foundViewObjects is not empty then put "Views" & CR & outline_IncreaseIndent(foundViewObjects) & CR after foundOutline
+         if foundBehaviorObjects is not empty then put "Behaviors" & CR & outline_IncreaseIndent(foundBehaviorObjects) & CR after foundOutline
+         if foundMenuObjects is not empty then put "Global Menus" & CR & outline_IncreaseIndent(foundMenuObjects) & CR after foundOutline
+   end switch
+   
+   return foundOutline
+end opn_ObjectSearch

@@ -1,0 +1,14 @@
+command sitemap_EntityEscape @someURL
+   -- see http://www.sitemaps.org/protocol.html#escaping
+   
+   text_Utf8Encode someURL
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of someURL
+      put urlencode (item itemNum of someURL) into item itemNum of someURL
+   end repeat
+   -- maybe some others need escaping, maybe none of these are actually needed
+   replace "%3A" with ":" in someURL
+   replace "%26" with "&" in someURL
+   replace "%3D" with "=" in someURL
+   xml_Escape someURL
+end sitemap_EntityEscape

@@ -1,0 +1,5 @@
+command overlayArray_DeconstructGroupStyleArray @nodeIds, @nodeStyleArrayOrName, dotGroupStyleArray
+   put dotGroupStyleArray ["nodeIds"] into nodeIds
+   -- replace comma with ", " in nodeIds
+   put dotGroupStyleArray ["node_StyleArray"] into nodeStyleArrayOrName
+end overlayArray_DeconstructGroupStyleArray

@@ -1,0 +1,6 @@
+on layout_DeleteElements
+   put the object_TopControls of me into topControls
+   repeat for each line someObject in topControls
+      delete someObject
+   end repeat
+end layout_DeleteElements

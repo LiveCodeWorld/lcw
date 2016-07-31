@@ -1,0 +1,4 @@
+command rev_SetScriptEditorDocumentationLock someBoolean, pEditorNum
+   put rev_ScriptEditorDocField (pEditorNum) into scriptEditorDocField
+   set the locktext of scriptEditorDocField to someBoolean
+end rev_SetScriptEditorDocumentationLock

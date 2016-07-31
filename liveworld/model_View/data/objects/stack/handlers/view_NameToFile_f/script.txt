@@ -1,0 +1,5 @@
+function view_NameToFile viewPath, pFileExt
+   put view_PathToShortFile (viewPath, pFileExt) into shortFile
+   put library_ViewFolder (shortFile) into viewFile
+   return viewFile
+end view_NameToFile

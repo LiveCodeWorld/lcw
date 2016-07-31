@@ -1,0 +1,7 @@
+private command linkArray_Add newLinkArray, someNode, @hLinkArray, @hIdArray, @backArray
+   -- modified to work with nested newLinkArray
+   put array_ConstructSimpleKeys (someNode, hIdArray, backArray) into nodeID
+   put array_ConstructSimpleKeys (newLinkArray, hIdArray, backArray) into linkIDs   
+   array_AddToIndex linkIDs, nodeID, hLinkArray
+   return the result
+end linkArray_Add

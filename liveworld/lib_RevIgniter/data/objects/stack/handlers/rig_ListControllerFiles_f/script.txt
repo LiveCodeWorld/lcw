@@ -1,0 +1,5 @@
+function rig_ListControllerFiles
+   put rig_GetFolder ("controllers") into someFolder
+   put rig_ListFiles (someFolder) into shortFiles
+   return shortFiles
+end rig_ListControllerFiles

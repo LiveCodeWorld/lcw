@@ -1,0 +1,12 @@
+on initialise_Move
+   put the mouseh into localStartH
+   put the mousev into localStartV
+   put the rect of me into localOriginalRect
+   
+   put the long id of me into myOwner
+   delete word 1 to 4 of myOwner
+   put the rect of myOwner into localOwnerRect
+   
+   put the left_View of me into localLeftView
+   put the right_View of me into localRightView
+end initialise_Move

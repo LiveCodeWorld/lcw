@@ -1,0 +1,6 @@
+on menu_DisplayProjectPrefs scriptObject, projectName
+   put project_FetchPrefs (projectName) into projectPrefsArray
+   
+   put merge ("project_FetchPrefs ('[[projectName]]')") into someTitle
+   display_Array projectPrefsArray, someTitle
+end menu_DisplayProjectPrefs

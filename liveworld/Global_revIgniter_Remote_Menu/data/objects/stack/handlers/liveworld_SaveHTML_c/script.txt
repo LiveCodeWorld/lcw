@@ -1,0 +1,8 @@
+command liveworld_SaveHTML someHTML
+   -- but here we override it
+   put the tempname & ".html" into someFile
+   put ("file:" & someFile) into someUrl
+   put someHTML into url someUrl
+   launch url someUrl
+   return someUrl
+end liveworld_SaveHTML

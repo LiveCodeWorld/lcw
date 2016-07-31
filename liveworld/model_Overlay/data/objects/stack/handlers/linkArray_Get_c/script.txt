@@ -1,0 +1,4 @@
+on linkArray_Get modelObject, @idLinkArray, @idArray, pModelName
+   put the model_IdArray [pModelName] of modelObject into idArray
+   put the model_IdLinkArray [pModelName] of modelObject into idLinkArray
+end linkArray_Get

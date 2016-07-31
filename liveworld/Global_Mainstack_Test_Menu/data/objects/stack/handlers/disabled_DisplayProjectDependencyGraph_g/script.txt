@@ -1,0 +1,9 @@
+getprop disabled_DisplayProjectDependencyGraph [scriptObject]
+   put the project_MetaDataFolder of scriptObject into projectMetaDataFolder
+   put overlay_ImageFile (projectMetaDataFolder, "Mainstack Structure") into imageFile
+   if there is a file imageFile then
+      return false
+   else
+      return true
+   end if
+end disabled_DisplayProjectDependencyGraph

@@ -1,0 +1,5 @@
+function dot_ConstructCluster someLabel, clusterNum, nodeSection, someRank, someStyle, someColour, fillColour
+    put "cluster" & clusterNum into subGraphName
+    return dot_ConstructSubgraph(subGraphName, nodeSection, someRank, someStyle, someColour, someLabel, fillColour)
+    return merge(subGraph)
+end dot_ConstructCluster

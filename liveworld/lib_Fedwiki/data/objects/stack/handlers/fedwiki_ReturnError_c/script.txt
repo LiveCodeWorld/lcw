@@ -1,0 +1,5 @@
+command fedwiki_ReturnError someValue, errorText
+   if someValue is empty then
+      fedwiki_ExitAndReturnError errorText, pErrorTitle
+   end if
+end fedwiki_ReturnError

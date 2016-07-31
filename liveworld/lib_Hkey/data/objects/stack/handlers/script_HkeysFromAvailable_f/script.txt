@@ -1,0 +1,25 @@
+function script_HkeysFromAvailable handlerTable, someScript, pReturnHow
+   repeat for each line someLine in handlerTable
+      put word 1 of someLine into handlerType
+      if handlerType is not "M" then next repeat
+      
+      put word 3 of someLine into startLineNum
+      -- put word 4 of someLine into endLineNum
+      put line startLineNum of someScript into startLine
+      if word 1 of startLine is not "on" then next repeat
+      
+      put word 2 of someLine into hName
+      switch pReturnHow
+         case "hKey"
+            put hName,hType,tObject,1 & CR after hKeys
+            break
+         case "name"
+            put hName & CR after hKeys
+            break
+         default
+            put hName,hType & CR after hKeys
+      end switch
+   end repeat
+   delete char -1 of hKeys
+   return hKeys
+end script_HkeysFromAvailable

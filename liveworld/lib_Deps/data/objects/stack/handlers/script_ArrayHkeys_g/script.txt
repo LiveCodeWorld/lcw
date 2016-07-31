@@ -1,0 +1,15 @@
+getprop script_ArrayHkeys
+   try
+      put the script_Array of the target into scriptArray
+      repeat for each key indexNum in scriptArray
+         put scriptArray [indexNum]["hKey"] into hKey
+         if hKey is not empty then
+            put hKey & CR after hKeys
+         end if
+      end repeat
+      delete char -1 of hKeys
+      return hKeys
+   catch someError
+      return empty -- a locked stack
+   end try
+end script_ArrayHkeys

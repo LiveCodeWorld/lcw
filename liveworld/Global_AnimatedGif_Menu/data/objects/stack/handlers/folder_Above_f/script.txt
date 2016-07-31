@@ -1,0 +1,10 @@
+function folder_Above fileOrFolder
+    set the itemdelimiter to "/"
+    if char -1 of fileOrFolder is "/" then delete char -1 of fileOrFolder
+    delete last item of fileOrFolder
+    if fileOrFolder is empty then 
+        return "."
+    else
+        return fileOrFolder & "/"
+    end if
+end folder_Above

@@ -1,0 +1,5 @@
+before daemon_SendNotFound socketID
+   put daemon_GetSocketData() into SocketData
+   put SocketData [socketID] into socketArray
+   dameon_AddToMiddlewareArray socketArray, "Not Found"
+end daemon_SendNotFound

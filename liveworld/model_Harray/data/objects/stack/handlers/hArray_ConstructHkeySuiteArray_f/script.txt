@@ -1,0 +1,17 @@
+function hArray_ConstructHkeySuiteArray mainstackHarray
+   local scriptObjectSuiteArray
+   put mainstackHarray ["scriptArray"] into rObjectArray
+   repeat for each key rObject in rObjectArray
+      put rObjectArray [rObject]["data"]["script_DataArray"] into scriptDataArray
+      
+      repeat for each key indexNum in scriptDataArray
+         put scriptDataArray [indexNum]["hkey"] into hKey
+         if hKey is empty then next repeat
+         put scriptDataArray [indexNum]["suiteTitle"] into suiteTitle
+         if suiteTitle is empty then put "No Suite Title" into suiteTitle
+         put item 2 of extents (scriptObjectSuiteArray [rObject]["suite"][suiteTitle]["data"]) + 1 into handlerInSuiteNum
+         put empty into scriptObjectSuiteArray [rObject]["suite"][suiteTitle]["data"][handlerInSuiteNum][hKey]
+      end repeat
+   end repeat
+   return scriptObjectSuiteArray
+end hArray_ConstructHkeySuiteArray

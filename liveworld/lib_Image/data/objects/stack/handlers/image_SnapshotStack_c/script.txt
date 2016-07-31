@@ -1,0 +1,32 @@
+on image_SnapshotStack stackObject, someFile, imageFileType
+    if someFile is empty then
+        put merge("Export this image as a [[imageFileType]]...") into someComment
+        ask file someComment
+        put it into someFile
+        if somefile is empty then exit to top
+    end if
+    if imageFileType is empty then
+        -- guess from file extension
+        file_Deconstruct someFile, someRoot, shortName, imageExtension
+        if imageExtension is empty then put "png" into imageExtension
+        put image_GetFileType(imageExtension) into imageFileType
+    end if
+    
+    put the windowid of stackObject into someWindowID
+    put the rect of stackObject into stackRect
+    put the rect of card 1 of stackObject into cardRect
+    
+    put the filetype into oFileType
+    set the filetype to imageFileType
+     
+    put merge("export snapshot from rect '[[cardRect]]' of window [[someWindowID]] to file '[[someFile]]' as [[imageFormat]]") into doScript
+    -- put merge("export snapshot from rect '[[stackRect]]' to file '[[someFile]]' as [[imageFormat]]") into doScript
+     
+    replace "'" with quote in doScript
+    put doScript
+    breakpoint
+    do doScript
+     
+    set the filetype to oFileType
+    return someFile
+end image_SnapshotStack

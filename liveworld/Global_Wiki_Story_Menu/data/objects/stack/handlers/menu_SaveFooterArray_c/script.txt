@@ -1,0 +1,8 @@
+on menu_SaveFooterArray mTarget
+   put the wiki_View of mTarget into wikiView
+   put the footer_View of mTarget into footerView
+   put the itemArray of footerView into oArray
+   
+   put oArray into footerArray ["itemArray"]
+   set the footer_Array of me to footerArray
+end menu_SaveFooterArray

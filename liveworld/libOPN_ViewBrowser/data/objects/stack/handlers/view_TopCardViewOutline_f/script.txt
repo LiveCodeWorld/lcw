@@ -1,0 +1,9 @@
+function view_TopCardViewOutline cardObject, pDisplayType
+   put the card_TopViews of cardObject into cardTopViews
+   if pDisplayType is empty then put the display_Type of me into pDisplayType
+   repeat for each line topView in cardTopViews
+      put the view_Outline [pDisplayType] of topView & CR after someOutline
+   end repeat
+   put word 1 to -1 of someOutline into someOutline
+   return someOutline
+end view_TopCardViewOutline

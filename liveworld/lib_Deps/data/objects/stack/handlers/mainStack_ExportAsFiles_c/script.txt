@@ -1,0 +1,127 @@
+command mainStack_ExportAsFiles mainStackObject, pHashArrayBoolean, pExportHandlers, pUseCustomFolders, pForceCreate 
+   -- seems like mainStackObject can be any object
+   if exists (mainStackObject) is false then return empty
+   if char 1 to 3 of the short name of mainStackObject = "rev" then return empty -- don't index rev stack???
+   
+   ------ put the mainStack_MetaArray [pHashArrayBoolean] of mainStackObject into mainStackMetaArray
+   put true into pDontExport
+   put true into pLinkToViews
+   put false into pForceIndexHandlerCalls
+   put empty into pDontDiff
+   put true into pDontExport -- as it is exported later in the handler?
+   
+   if pHashArrayBoolean is empty then
+      put pref_GetValue ("add object to hArray on export") is not false into createHarray
+      put pref_GetValue ("Construct hashArray on stack export") is true into pHashArrayBoolean
+   else
+      put pHashArrayBoolean is true into pHashArrayBoolean
+      pref_SetValue "Construct hashArray on stack export", pHashArrayBoolean
+      if pHashArrayBoolean is true then
+         pref_SetValue "Add object to hArray on stack export", true
+         put true into createHarray
+      else
+         put pref_GetValue ("Add object to hArray on export") is not false into createHarray
+      end if
+   end if
+   
+   if createHarray and pHashArrayBoolean then -- only give option of constructing hkeyCalls handlerHashArray if we are also indexing a basic hArray
+      put the textStack_Folder of mainStackObject into mainStackFolder
+      put mainstack_FetchHandlerHashArray (mainStackFolder) into handlerHashArray
+      if handlerHashArray is not an array then
+         put empty into hArray ["handlerHashArray"]["new"] -- forces indexing of all hKeys in a new script
+      else
+         delete variable handlerHashArray ["actual"]
+         delete variable handlerHashArray ["new"]
+         put handlerHashArray into hArray ["handlerHashArray"]
+      end if
+   else
+      put empty into hArray -- no "handlerHashArray" indexing of hKey calls, let's recreate the rest of hArray
+   end if
+   
+   put mainstack_ConstructMetaArray (mainStackObject, hArray, pLinkToViews, pExportHandlers, pDontDiff, pDontExport, pForceCreate) into mainStackMetaArray
+   ------ end mainStack_MetaArray
+   
+   mainstack_AddArrayToGlobal mainStackMetaArray
+   
+   put mainStackMetaArray ["mainstackArray"]["manifest"] into manifestArray
+   put the mainStack_Hash of mainStackObject into mainStackHash
+   put manifestArray ["sha1"] into storedHash
+   
+   /* this is not working reliably
+   if mainStackHash = storedHash and pForceCreate is not true then
+      put the mainstack_WalkArray of scriptObject into mainStackHkeyWalkArray
+      return mainStackHkeyWalkArray
+   end if
+   */
+   
+   -- safety check to delete any hashed handlers in old object that are not in actual object
+   put mainStackMetaArray ["hArray"]["handlerHashArray"] into handlerHashArray
+   put handlerHashArray ["actual"] into actualHashArray
+   put handlerHashArray ["cached"] into cachedHashArray
+   delete variable mainStackMetaArray ["hArray"]["handlerHashArray"]["actual"]
+   delete variable mainStackMetaArray ["hArray"]["handlerHashArray"]["new"]
+   intersect cachedHashArray with actualHashArray
+   put cachedHashArray into mainStackMetaArray ["hArray"]["handlerHashArray"]["cached"]
+   
+   put mainStackMetaArray ["hArray"] into hArray
+   -- delete variable hArray ["handlerHashArray"]
+   put the textStack_Folder of mainStackObject into textStackFolder
+   mainstack_StoreHarray hArray, textStackFolder
+   
+   --here we delete the object folder and re-export
+   stackArray_DeleteObjectFolder textStackFolder
+   put the result into objectsFolder
+   
+   put mainStackMetaArray ["mainStackArray"] into mainStackArray
+   put mainStackArray ["objects"] into objectArray
+   put mainStackArray ["manifest"] into manifestArray
+   
+   -- put manifestArray ["object"] into stackObject
+   put manifestArray ["name"] into stackName   
+   if char 1 to 3 of stackName = "rev" then return empty -- don't allow accidental export of rev stacks
+   
+   put objectArray ["substacks"] into substackData
+   delete variable objectArray ["substacks"]
+   
+   put empty into subStackName
+   repeat for each key objectBit in objectArray
+      set the cursor to busy
+      put stackArray_ConstructObjectFolder (textStackFolder, objectBit, subStackName) into objectFolder
+      put objectArray [objectBit] into objectPropArray
+      
+      if objectBit = "stack" then
+         stackArray_ExportStackFiles objectFolder, objectPropArray
+         stackArray_ExportVideoClips objectFolder, objectPropArray
+         stackArray_ExportAudioClips objectFolder, objectPropArray
+      end if
+      
+      objectArray_ExportAsFiles objectPropArray, objectFolder, pUseCustomFolders, pExportHandlers, pDontExport  -- folder_CreateNested objectFolder
+   end repeat
+   
+   repeat for each key subStackName in substackData
+      if char 1 to 3 of subStackName = "rev" then return empty -- don't allow accidental export of rev stacks
+      put substackData [subStackName] into subStackArray
+      
+      put subStackArray ["objects"] into objectArray
+      put mainStackMetaArray ["mainstackArray"]["manifest"]["substacks"][subStackName] into subManifestArray
+      put subManifestArray into manifestArray ["substacks"][subStackName]
+      
+      repeat for each key objectBit in objectArray
+         set the cursor to busy
+         put stackArray_ConstructObjectFolder (textStackFolder, objectBit, subStackName) into objectFolder
+         put objectArray [objectBit] into objectPropArray
+         
+         if objectBit = "stack" then
+            stackArray_ExportStackFiles objectFolder, objectPropArray
+            stackArray_ExportVideoClips objectFolder, objectPropArray
+            stackArray_ExportAudioClips objectFolder, objectPropArray
+         end if
+         
+         objectArray_ExportAsFiles objectPropArray, objectFolder, pUseCustomFolders, pExportHandlers, pDontExport  -- folder_CreateNested objectFolder
+      end repeat
+   end repeat
+   
+   mainStack_StoreManifestArray textStackFolder, manifestArray
+   
+   return mainStackMetaArray
+end mainStack_ExportAsFiles

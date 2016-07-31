@@ -1,0 +1,16 @@
+on menu_ObjectExists mTarget, objectName
+   switch objectName
+      case "Clock"
+         if exists(group objectName of mTarget) then
+            delete group objectName of mTarget
+         else
+            
+         end if
+         break
+      case "Hexagon Slice"
+         put exists( control objectName of mTarget) is false into notThere
+         set the clock_Exists of mTarget to notThere
+         break
+      default
+   end switch
+end menu_ObjectExists

@@ -1,0 +1,10 @@
+command folder_DeleteFromStackPlaces placeNameOrFolder
+    if placeNameOrFolder contains "/" then
+        set the itemdelimiter to "/"
+        put item -1 of someFolder into placeName
+    else
+        put placeNameOrFolder into placeName
+    end if
+    
+    folder_SetPlaceFolder placeName, empty
+end folder_DeleteFromStackPlaces

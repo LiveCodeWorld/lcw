@@ -1,0 +1,7 @@
+on googleEarth_SaveAndFlyKML someKML
+    put the tempname into tempFile
+    put "file:" & tempFile into tempUrl
+    put someKML into url tempUrl
+    
+    googleEarth_FlyToKmlFile tempFile
+end googleEarth_SaveAndFlyKML

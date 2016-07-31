@@ -1,0 +1,14 @@
+private command _DisplayStackSave stackName, pDisplayObject
+   if exists(stack stackName) is false then
+      opn_Notify merge("Cannot find stack '[[stackName]]'!"), true
+      return empty
+   else
+      put the name of stack stackName into stackObject
+      if exists (pDisplayObject) then
+         dispatch "display_StackSave stackObject" to pDisplayObject 
+      else
+         opn_Notify merge("Saved stack '[[stackName]]'!"), false
+      end if
+   end if
+   return stackObject
+end _DisplayStackSave

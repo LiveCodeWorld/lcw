@@ -1,0 +1,5 @@
+on menu_AddPreferenceToStackfiles
+    put library_PrefFolder ("opn_Preferences.rev") into newFile
+    library_AddToStackFiles "opn_Preferences", newFile
+    opn_Notify the result
+end menu_AddPreferenceToStackfiles

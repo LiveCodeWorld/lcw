@@ -1,0 +1,27 @@
+function menu_DeleteSection sectionList, someMenu
+    -- put someMenu
+    put menu_ConstructDividerIndex(someMenu) into dividerIndex
+    if dividerIndex is empty then return someMenu
+     
+    put 0 into lessDeleted
+    repeat with itemNum = the number of items of sectionList down to 1
+        put item itemNum of sectionList into sectionNum
+        if sectionNum = 1 then
+            put 1 into start_DeleteLineNum
+        else
+            put line (sectionNum - 1) of dividerIndex into start_DividerLineNum
+            put start_DividerLineNum + 1 - lessDeleted into start_DeleteLineNum
+        end if
+         
+        put line sectionNum of dividerIndex into end_DividerLineNum
+        if end_DividerLineNum = empty then
+            put the number of lines of someMenu - lessDeleted into end_DeleteLineNum
+        else
+            put line sectionNum of dividerIndex into end_DividerLineNum
+            put end_DividerLineNum - lessDeleted into end_DeleteLineNum
+        end if
+         
+        delete line start_DeleteLineNum to end_DeleteLineNum of someMenu
+    end repeat
+    return someMenu
+end menu_DeleteSection

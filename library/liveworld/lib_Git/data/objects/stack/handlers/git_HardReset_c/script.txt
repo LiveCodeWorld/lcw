@@ -1,0 +1,5 @@
+command git_HardReset
+   put "git reset --hard HEAD" into someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   return shellResult
+end git_HardReset

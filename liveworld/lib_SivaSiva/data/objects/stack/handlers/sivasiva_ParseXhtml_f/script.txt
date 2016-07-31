@@ -1,0 +1,14 @@
+function sivasiva_ParseXhtml xHtml
+   revXmlDeleteAllTrees
+   put revCreateXMLTree (xHtml, true, true, false) into xmlID
+   --
+   put revXMLNodeContents (xmlID, "/html/head/title") into bookArray ["bookTitle"]
+   repeat with chapterNum = 1 to 64
+      put format ("table%03d", chapterNum) into tableID
+      put sivasiva_ExtractChapterArray (xmlID, tableID) into chapterArray
+      put chapterArray into bookArray [chapterNum]
+   end repeat
+   --
+   revDeleteXmlTree xmlID
+   return bookArray
+end sivasiva_ParseXhtml

@@ -1,0 +1,10 @@
+private command display_UpdateDatagrid
+   put the scriptLibrary_Tree of me into dataTreeView
+   if the view_Name of dataTreeView = "View|Tree|Datagrid" then
+      set the view_Swap of dataTreeView to "Layouts|Placeholder"
+   else
+      set the view_Swap of dataTreeView to "Tree|Datagrid"
+      put the result into dataTreeView
+      set the record_ViewName of dataTreeView to "Record|Handler"
+   end if
+end display_UpdateDatagrid

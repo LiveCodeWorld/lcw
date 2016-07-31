@@ -1,0 +1,10 @@
+function folder_ShortNameAboveFile filePath
+    -- was "extract_ShortFolder"
+     
+    if filePath is empty then
+        put the effective filename of this stack into filePath
+    end if
+    set the itemdelimiter to "/"
+    delete last item of filePath
+    return last item of filePath
+end folder_ShortNameAboveFile

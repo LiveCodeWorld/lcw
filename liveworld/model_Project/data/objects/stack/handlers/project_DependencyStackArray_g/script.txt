@@ -1,0 +1,5 @@
+getprop project_DependencyStackArray
+   put the project_ProcessedHkeyArray of the target into processedHkeyArray  
+   put hkeyArray_ConstructObjectArray (processedHkeyArray) into objectArray
+   return objectArray
+end project_DependencyStackArray

@@ -1,0 +1,6 @@
+getprop inner_Rect [groupRect]
+   put the long id of the target into someGroup
+   if groupRect is empty then put the rect of someGroup into groupRect
+   put rect_GetInner (groupRect, someGroup) into innerRect
+   return innerRect
+end inner_Rect

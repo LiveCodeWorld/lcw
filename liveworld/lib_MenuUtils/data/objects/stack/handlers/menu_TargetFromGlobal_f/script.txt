@@ -1,0 +1,31 @@
+function menu_TargetFromGlobal mPath
+   put menu_TitlePathFromPath (mPath) into mTitlePath
+   
+   -- used by "menu_ConvertTable" and "menu_SendMessage"
+   -- this is the logic for getting the menu_Target
+   -- first the override, then the mController (card) then the view, finally a sensible default
+   -- this means a card script will override the views script (which is an unusual but useful message hierarchy)
+   
+   -- first lets see if there is an overide by using pMenuTarget
+   put menu_GetTargetOveride (mTitlePath, mPath) into mTargetOveride
+   -- if exists (mTargetOveride) then return addThenReturn (mTargetOveride)
+   if mTargetOveride is not empty or mTargetOveride is an array then return addThenReturn (mTargetOveride)
+   
+   -- then check the mTopController (often the card with the menu)
+   put menu_GetTopController() into mTopController
+   
+   try
+      put the menu_Target [mTitlePath] of mTopController into mTarget
+   catch mTargetError
+      -- bug: mTopController is empty on first call ????
+      -- breakPoint
+   end try
+   if mTarget is not empty or mTarget is an array then
+      return addThenReturn (mTarget)
+   end if
+   
+   -- so go get a default!
+   put menu_GetTargetObject() into targetObject
+   put _GetDefaultMenuTarget (mPath, mTitlePath, targetObject) into mTarget
+   return addThenReturn (mTarget)
+end menu_TargetFromGlobal

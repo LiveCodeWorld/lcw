@@ -1,0 +1,16 @@
+command stack_Create stackName, viewName, pCardMargin, pStackRect, pCardScript, pHidden, pStackStyle
+   view_CreateHiddenStack viewName, stackName, pCardMargin, pStackStyle, pCardScript
+   put the result into createdObject
+   
+   put the stack_Object of createdObject into stackObject
+   if pStackRect is empty then
+      put the width of createdObject into sWidth
+      put the height of createdObject into sHeight
+      stack_SetDimensions stackObject, sWidth, sHeight, pCardMargin
+   else
+      set the rect of stackObject to pStackRect
+   end if
+   
+   if pHidden is not true then set the visible of stackObject to true
+   return createdObject
+end stack_Create

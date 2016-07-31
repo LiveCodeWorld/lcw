@@ -1,0 +1,47 @@
+function galaxy_DocumentationTokensOld
+    -- from original galaxy function "glxGetTokens"
+    global gDictionaryTerms, gDictionaryTermsWithTypes
+     
+    put empty into gDictionaryTermsWithTypes
+    if length(gDictionaryTermsWithTypes) is 0 then
+        put glx2GetDocsPath() into theDocsFolder
+         
+        put theDocsFolder & slash & "dict.index" into theDictFile
+        put URL ("file:" & theDictFile) into theDictionaryIndex
+        replace "&lt;" with "<" in theDictionaryIndex
+        replace "&gt;" with ">" in theDictionaryIndex
+         
+        set the itemdel to tab
+        repeat for each line theEntry in theDictionaryIndex
+            put item 2 of theEntry into theToken
+            put item 3 of theEntry into theType
+             
+            put 1 into gDictionaryTerms[theToken]
+            put 1 into gDictionaryTermsWithTypes[theToken & tab & theType]
+             
+            if theType is "keyword" or theType is "object" then
+                put item 5 of theEntry into theAbbrToken
+                replace "    " with tab in theAbbrToken
+                repeat for each item theWord in theAbbrToken
+                    put word 1 to -1 of theWord into theWord
+                    if theWord is not empty then
+                        put 1 into gDictionaryTerms[theWord]
+                        put 1 into gDictionaryTermsWithTypes[theWord & tab & theType]
+                    end if
+                end repeat
+            end if
+        end repeat
+         
+        put the keys of gDictionaryTerms into gDictionaryTerms
+        sort gDictionaryTerms
+         
+        put the keys of gDictionaryTermsWithTypes into gDictionaryTermsWithTypes
+        sort gDictionaryTermsWithTypes
+    end if
+     
+    if pIncludeTokenType then
+        return gDictionaryTermsWithTypes
+    else
+        return gDictionaryTerms
+    end if
+end galaxy_DocumentationTokensOld

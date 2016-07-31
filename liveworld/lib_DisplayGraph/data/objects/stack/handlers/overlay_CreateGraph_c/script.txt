@@ -1,0 +1,35 @@
+command overlay_CreateGraph overlayFolder, hKeyArray, pOverlayName, pOverlayOf, pGraphStyle, pDotCluster, pMainstackHash, pImageFormat
+   file_ReplaceHome overlayFolder
+   if hKeyArray is not an array then
+      overlay_Delete overlayFolder, pOverlayName
+      return empty
+   end if
+   
+   # Recreate graph with old values if not passed directly
+   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
+   if pOverlayOf is empty then put overlayArray_GetGraphProperty (overlayArray, "overlay_Of")  into pOverlayOf
+   if pGraphStyle is empty then put overlayArray_GetGraphProperty (overlayArray, "overlay_Style")  into pGraphStyle
+   
+   put overlayArray_FromLinkArray (hKeyArray) into overlayArray
+   
+   if pDotCluster is not empty then overlayArray_SetHeaderProperty overlayArray, "dot_ClusterRank", pDotCluster
+   -- if pOverlayHash is not empty then overlayArray_SetGraphProperty overlayArray, "overlay_Hash", pOverlayHash
+   
+   file_ReplaceHome overlayFolder
+   overlayArray_SetGraphProperty overlayArray, "overlay_Folder", overlayFolder
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", pGraphStyle
+   overlayArray_SetGraphProperty overlayArray, "overlay_Name", pOverlayName
+   overlayArray_SetGraphProperty overlayArray, "overlay_Of", pOverlayOf
+   
+   overlayArray_CreateFilesAndSetGeometry overlayArray, pMainstackHash, pImageFormat
+   if token 1 of the result = "error" then return the result
+   
+   put overlayArray_GetGraphProperty (overlayArray, "image_File") into shortImageFile
+   folder_Format overlayFolder
+   put overlayFolder & shortImageFile into imageFile
+   put file_Hash (imageFile) into pOverlayHash
+   overlayArray_SetGraphProperty overlayArray, "overlay_Hash", pOverlayHash
+   
+   overlay_SetArray overlayFolder, overlayArray, pOverlayName
+   return overlayArray
+end overlay_CreateGraph

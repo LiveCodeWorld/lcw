@@ -1,0 +1,4 @@
+on menu_LoadPrefArray scriptObject, fullSetName
+   project_RestoreGlobalPrefs fullSetName
+   opn_Notify merge ("User preferences loaded from the stored set '[[fullSetName]]'. This is done automatically whenever a new set is loaded!")
+end menu_LoadPrefArray

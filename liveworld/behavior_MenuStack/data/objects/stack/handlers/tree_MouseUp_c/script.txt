@@ -1,0 +1,10 @@
+on tree_MouseUp treeField
+   put the title_Text of treeField into titleText
+   switch titleText
+      case "Global Menu Paths"
+         put the tree_SelectedIndex of treeField into mPath
+         put menu_GetController (mPath)
+         break
+   end switch
+   pass tree_MouseUp
+end tree_MouseUp

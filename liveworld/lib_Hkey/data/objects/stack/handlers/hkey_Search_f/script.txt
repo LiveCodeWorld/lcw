@@ -1,0 +1,32 @@
+function hkey_Search hKey, pSearchHow 
+   local pSetName
+   
+   switch pSearchHow
+      case "not hdb"
+         hkey_Deconstruct hKey, hName, hType, hObject, hNum
+         put hkey_FindAndIndex (hName, hType, hObject, pSetName) into foundHkey
+         return foundHkey
+      case "not hierarchy"
+         put hArray_SimpleSearch (hKey) into foundHkey
+         return foundHkey
+      default
+         put item 1 to 2 of hKey into shortHKey
+         put item 3 of hKey into pScriptObject
+         if exists (pScriptObject) is false then
+            put hArray_FindHkey (shortHkey) into foundHkey
+            
+            if foundHkey is empty then
+               -- should use rev search
+               hkey_Deconstruct hKey, hName, hType, hObject, hNum
+               put the long id of the target into hObject -- hack
+               put hkey_FindAndIndex (hName, hType, hObject, pSetName) into foundHkey
+               return foundHkey
+            else
+               return foundHkey
+            end if
+         else
+            put hArray_FindHkeyInHierarchy (shortHKey, pScriptObject) into foundHkey
+            return foundHkey
+         end if
+   end switch
+end hkey_Search

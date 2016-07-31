@@ -1,0 +1,10 @@
+command linkArray_IdConstruct linkArray, @nodeLinkArray, @nodeIdArray
+   -- usefull to create simple arrays from complex data.
+   -- that is it creates simple numbered nodes 1, 2 etc and stores references to these in arrays.
+   local nodeBackArray
+   repeat for each key someKey in linkArray
+      put linkArray [someKey] into frontLinkArray
+      linkArray_Add frontLinkArray, someKey, nodeLinkArray, nodeIdArray, nodeBackArray
+   end repeat
+   return allLinks
+end linkArray_IdConstruct

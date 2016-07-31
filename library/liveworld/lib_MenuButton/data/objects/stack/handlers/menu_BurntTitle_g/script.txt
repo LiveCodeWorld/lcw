@@ -1,0 +1,12 @@
+getprop menu_BurntTitle
+   -- put the view_Value ["menu_Title"] of the target into mTitle
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   get the name of someView
+   lock messages
+   put the menu_Title of someView into mTitle
+   unlock messages
+   return mTitle
+end menu_BurntTitle

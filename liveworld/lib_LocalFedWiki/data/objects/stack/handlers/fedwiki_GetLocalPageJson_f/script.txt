@@ -1,0 +1,9 @@
+function fedwiki_GetLocalPageJson pageSlug, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_LocalPageJsonFile (pageSlug, pFedwikiDomain, false, pLocalWikiFolder) into someFile
+   if there is a file someFile then
+      put url ("file:" & someFile) into pageJSON
+      return pageJSON
+   else
+      return empty
+   end if
+end fedwiki_GetLocalPageJson

@@ -1,0 +1,6 @@
+function youtube_FetchUserChannelID userName
+   put youtube_FetchUserChannelJson (userName) into someJSON
+   put json_ToArray (someJSON) into someArray
+   put someArray ["items"][1]["id"] into channelID
+   return channelID
+end youtube_FetchUserChannelID

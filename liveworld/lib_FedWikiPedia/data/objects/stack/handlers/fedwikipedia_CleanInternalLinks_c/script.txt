@@ -1,0 +1,19 @@
+command fedwikipedia_CleanInternalLinks @wikiSectionLine
+   -- strips out image files as well (carefull)
+   -- some starting text [[Machtergreifung|came to power]] something [[Real Link|well a second one]] at end
+   -- Berlin was devastated by [[Bombing of Berlin in World War II|bombing raids]], fires and street battles during 
+   -- put script_GetCommentAboveMe() into wikiSectionLine
+   
+   put "\[\[([^\]]+)\|([^\]]+)\]\]" into someReg
+   put "(?m)" before someReg -- multiline search
+   repeat
+      if matchchunk (wikiSectionLine, someReg, wikiLinkStart, wikiLinkEnd, linktextStart, linktextEnd) is true then
+         put char wikiLinkStart to wikiLinkEnd of wikiSectionLine into wikiLink
+         put char linktextStart to linktextEnd of wikiSectionLine into wikiLinkText
+         put wikiLinkText && "([[" & wikiLink & "]])" into cleanedLink
+         put cleanedLink into char (wikiLinkStart - 2) to (linktextEnd + 2) of wikiSectionLine
+      else
+         exit repeat
+      end if
+   end repeat
+end fedwikipedia_CleanInternalLinks

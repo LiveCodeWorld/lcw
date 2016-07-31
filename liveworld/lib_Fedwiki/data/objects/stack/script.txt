@@ -1,0 +1,192 @@
+--> MetaData
+-
+name: lib_Fedwiki
+type: script library
+version: 1.3
+copyright: David Bovill
+licence:  GPLv3
+deps: externals
+externals:  mergJSONEncode
+
+
+/*
+This script is designed to be a behavior for a Fedwiki server.
+*/
+
+--> Working On
+-
+/*
+What is a good way to switch handler version, depending on the project?
+And how do we store different versions of the same handler simply (without relying on git).
+*/
+
+--> Fedwiki | Drop
+-
+[[ _FetchHandler (fedwiki_GetDroppedUrl,f) ]]
+
+[[ _FetchHandler (fedwiki_ReturnError,c) ]]
+
+[[ _FetchHandler (fedwiki_ReturnJSON,c) ]]
+
+
+--> Fedwiki | Links
+-
+[[ _FetchHandler (fedwiki_ConstructLink,f) ]]
+
+
+--> Fedwiki | Metadata
+-
+[[ _FetchHandler (fedwiki_DeconstructCreateArray,c) ]]
+   
+[[ _FetchHandler (fedwiki_FetchMetadataArray,f) ]]
+
+[[ _FetchHandler (fedwiki_FetchTitle,f) ]]
+
+[[ _FetchHandler (fedwiki_IsWiki,f) ]]
+
+
+--> Fedwiki | Page | Clean
+-
+[[ _FetchHandler (fedwiki_CleanLastLineUpJournal,f) ]]
+
+[[ _FetchHandler (fedwiki_FetchLastLineUpArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ExtractFirstStoryItem,f) ]]
+
+[[ _FetchHandler (fedwiki_GetLineUpJson,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructUrlArray,f) ]]
+
+
+--> Fedwiki | Errors
+-
+[[ _FetchHandler (fedwiki_ConstructErrorJSON,f) ]]
+
+[[ _FetchHandler (fedwiki_ExitAndReturnError,c) ]]
+
+
+--> Fedwiki | Parse and Return
+-
+[[ _FetchHandler (fedwiki_DeconstructDroppedURL,c) ]]
+
+[[ _FetchHandler (fedwiki_ReturnPageArray,c) ]]
+
+
+--> Fedwiki | Image
+-
+[[ _FetchHandler (fedwiki_ConstructImageHtml,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructImageDiv,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructImageArray,f) ]]
+
+
+--> Fedwiki | PageArray | Construct
+-
+[[ _FetchHandler (fedwiki_ConstructOpenStreetMapDescription,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructSlug,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructNewPageJson,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructNewPageArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructSimplePageArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructCodePageArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructNewImagePageArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructFactoryArray,f) ]]
+
+[[ _FetchHandler (fedwiki_AddFactoryToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddParagraphToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddHtmlToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddMarkdownToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddVideoToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddCodeToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddAudioToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddMapToPageArray,c) ]]
+
+[[ _FetchHandler (fedwiki_MoveStoryItem,c) ]]
+
+[[ _FetchHandler (fedwiki_StoryExtractorderedIDArray,f) ]]
+
+[[ _FetchHandler (fedwiki_StoryDeleteItem,c) ]]
+ 
+[[ _FetchHandler (fedwiki_StoryInsertItem,c) ]]
+
+[[ _FetchHandler (fedwiki_PageArrayAddToEnd,c) ]]
+
+[[ _FetchHandler (fedwiki_ConstructJournalArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructCreateArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructCreateSourceArray,f) ]]
+
+[[ _FetchHandler (fedwiki_AddToCreateArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddToJournalArray,c) ]]
+
+[[ _FetchHandler (fedwiki_AddToEndOfIndexArray,c) ]]
+
+[[ _FetchHandler (fedwiki_ConstructStoryMapArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructStoryCodeArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructVideoCodeArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructStoryAudioArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructStoryHtmlArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructStoryMarkdownArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructStoryParagraphArray,f) ]]
+
+[[ _FetchHandler (fedwiki_ConstructStoryItemArray,f) ]]
+
+[[ _FetchHandler (fedwiki_CleanJournalArray,c) ]]
+
+[[ _FetchHandler (fedwiki_StripJournalToCreate,c) ]]
+
+[[ _FetchHandler (fedwiki_SetID,c) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_stripEndHashFromSlug,pc) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (json_FromArray,f) ]]
+
+[[ _FetchHandler (json_ToArray,f) ]]
+
+[[ _FetchHandler (xml_BlankError,c) ]]
+
+[[ _FetchHandler (html_FetchTidy,f) ]]
+
+[[ _FetchHandler (html_ConstructRefLink,f) ]]
+
+[[ _FetchHandler (html_ConstructVideoTag,f) ]]
+
+[[ _FetchHandler (html_ConstructOpenVideoTag,f) ]]
+
+[[ _FetchHandler (html_ConstructVideoSourceTag,f) ]]
+
+[[ _FetchHandler (text_StripAllTags,f) ]]
+
+[[ _FetchHandler (url_Deconstruct,c) ]]
+
+[[ _FetchHandler (file_Deconstruct,c) ]]
+
+[[ _FetchHandler (kwote,f) ]]

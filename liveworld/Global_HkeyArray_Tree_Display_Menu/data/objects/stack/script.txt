@@ -1,0 +1,46 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_HkeyArray_Tree_Display_Menu
+type: controller
+version: 0.1
+
+/*
+This menu is for checking, comparing and filtering hKeyArrays
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | HkeyArray | Tree | Display | Menu
+-
+[[ _FetchHandler (menu_EditMenuCard,c) ]]
+
+[[ _FetchHandler (menu_DisplayStyle,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayDependencies,c) ]]
+
+[[ _FetchHandler (menu_ConstructMainStackSuiteArray,c) ]]
+
+
+--> HkeyArray | Tree | Display | Menu | Props
+-
+[[ _FetchHandler (m_Cards,g) ]]
+
+[[ _FetchHandler (display_Style,g) ]]
+
+[[ _FetchHandler (display_Style,s) ]]
+
+[[ _FetchHandler (display_Styles,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (display_ObjectOutline,c) ]]
+
+[[ _FetchHandler (_DisplayArray,pc) ]]

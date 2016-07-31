@@ -1,0 +1,5 @@
+function youtube_FetchUserUploadPageJson userName, pMaxResults, pDontLinkTitle
+   put youtube_FetchUserUploadPageArray (userName, pMaxResults, pDontLinkTitle) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end youtube_FetchUserUploadPageJson

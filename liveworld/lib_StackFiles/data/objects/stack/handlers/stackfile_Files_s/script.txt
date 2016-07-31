@@ -1,0 +1,6 @@
+setprop stackfile_Files [pAskAdd] stackPaths
+   put the stack_Object of the target into libraryStackFileStack
+   stackFile_AddStackPaths stackPaths, libraryStackFileStack, pAskAdd
+   put the result into resultArray
+   return resultArray
+end stackfile_Files

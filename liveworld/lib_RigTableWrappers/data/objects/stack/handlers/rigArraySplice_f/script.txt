@@ -1,0 +1,30 @@
+function rigArraySplice pArray pOffset, pLength
+   --| Summary: Retrieve a portion of an array. Works with numbered arrays only.
+   --| Parameters: array <pArray>, integer <pOffset>, integer <pLength>
+   
+   if (pLength is not an integer) or (pLength < 1) or (pOffset is not an integer) then
+      return pArray
+   end if
+   
+   put the number of lines in the keys of pArray into tKeysNum
+   put the keys of pArray into tKeysList
+   
+   put 1 + pOffset into tStartLine
+   put (tStartLine + pLength) -1 into tEndLine
+   
+   sort lines of tKeysList numeric
+   
+   put line tStartLine to tEndLine of tKeysList into tNewKeysList
+   
+   put 0 into tCounter
+   repeat for each line thisLine in tNewKeysList
+      add 1 to tCounter
+      if tCounter <= tKeysNum then
+         put pArray[thisLine] into tNewArray[tCounter]
+      else
+         exit repeat
+      end if
+   end repeat
+   
+   return tNewArray
+end rigArraySplice

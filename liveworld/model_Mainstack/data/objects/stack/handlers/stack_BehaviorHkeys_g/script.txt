@@ -1,0 +1,7 @@
+getprop stack_BehaviorHkeys [returnShort]
+   put the stack_BehaviorButton of the target into depButton
+   if exists (depButton) is false then return empty
+   put the script_FirstHkeys [returnShort] of depButton into stackHkeyDeps
+   sort stackHkeyDeps by item 1 of each
+   return stackHkeyDeps
+end stack_BehaviorHkeys

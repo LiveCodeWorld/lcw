@@ -1,0 +1,8 @@
+function dot_ConstructEdgeDefParams edgeColour, edgeStyle, arrowhead, edgeWidth
+    local nodeLine
+    dot_AddParamToNodeDef "style", edgeStyle, nodeLine, false
+    dot_AddParamToNodeDef "color", edgeColour, nodeLine, false
+    dot_AddParamToNodeDef "arrowhead", arrowhead, nodeLine, false
+    dot_AddParamToNodeDef "width", edgeWidth, nodeLine, false
+    return nodeLine
+end dot_ConstructEdgeDefParams

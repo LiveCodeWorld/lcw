@@ -1,0 +1,89 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Script_Mainstack_Menu
+type: controller
+version: 0.1
+
+/*
+This is the menu called by the Script Editor and other tools that work on scriptObjects.
+It create and manipulates mainstack metadata for the "script object" referenced.
+
+The menu_target for these handlers is the scriptObject that owns the script currently presented by the Script Editor.
+These menu tools should therefore work equally well on any LiveCode object,
+and in particular either along side any of the more specific version control tools for GIT or Fossil.
+*/
+
+
+--> Global | Script | Mainstack | Menu
+-
+[[ _FetchHandler (menu_DisplayMainStackOverlay,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DependencyArrayFromObjects,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SaveMainstackAndExportArrays,c) ]]
+
+[[ _FetchHandler (menu_ReindexMainstackHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_CreateMainstackGraph,c) ]]
+
+[[ _FetchHandler (menu_CreatePlainMainstackGraph,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayExternalDependencies,c) ]]
+
+[[ _FetchHandler (menu_DisplayMainstackMissing,c) ]]
+
+[[ _FetchHandler (menu_DisplayMainstackHarray,c) ]]
+
+[[ _FetchHandler (menu_DisplayMainstackHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayMainstackWalkArray,c) ]]
+
+[[ _FetchHandler (menu_DisplayMainstackManifestArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddMainstackHandlersToLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_ProjectOverlay,c) ]]
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Script | Mainstack | Menu | Props
+-
+[[ _FetchHandler (project_Names,g) ]]
+
+[[ _FetchHandler (graph_Styles,g) ]]
+
+[[ _FetchHandler (dot_AllGraphStyles,f) ]]
+
+
+--> Global | Script | Mainstack | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DisplayMainStackOverlay,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_ForceReindexAllArrays,c) ]]
+
+
+--> Deps
+-
+function dot_AllGraphStyles
+   return "radial,spring,circular,-,hierarchical,-,undirected spring,fast undirected spring" 
+end dot_AllGraphStyles

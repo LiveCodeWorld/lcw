@@ -1,0 +1,12 @@
+command component_SetName tObject, uripName, pComponentType
+   if pComponentType is empty then put "view" into pComponentType
+   
+   put the script of tObject into someScript
+   
+   put the script_MetaData of tObject into uRipArray
+   put uripName into uRipArray ["name"]
+   put pComponentType into uRipArray ["type"]
+   set the script_MetaData of tObject to uRipArray
+   put the result into someScript
+   return someScript
+end component_SetName

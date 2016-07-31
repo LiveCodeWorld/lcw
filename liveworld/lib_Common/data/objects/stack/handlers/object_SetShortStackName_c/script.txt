@@ -1,0 +1,14 @@
+command object_SetShortStackName @someObject, @mainStackStart, @mainStackEnd
+   -- was "set_ShortStackBit"
+   object_StackNameOffsets someObject, mainStackStart, mainStackEnd, substackStart, substackEnd
+   put char mainStackStart to mainStackEnd of someObject into longStackName
+   
+   if exists(stack longStackName) is false then
+      return empty
+   else
+      put the short name of stack longStackName into shortStackName
+      put char mainStackStart to mainStackEnd of someObject into stackPath
+      put shortStackName into char mainStackStart to mainStackEnd of someObject
+      return stackPath
+   end if
+end object_SetShortStackName

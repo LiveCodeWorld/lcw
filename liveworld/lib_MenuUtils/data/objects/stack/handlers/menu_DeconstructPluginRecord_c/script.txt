@@ -1,0 +1,8 @@
+command menu_DeconstructPluginRecord menuRecord, @menuController, @mTitle, @beforeLineNum, @passMouseDown
+   -- was "menu_DeconstructNamedRecord"
+   set the itemdelimiter to tab
+   put item 1 of menuRecord into mTitle
+   put item 2 of menuRecord into mController
+   put item 3 of menuRecord into beforeLineNum
+   put item 4 of menuRecord into passMouseDown
+end menu_DeconstructPluginRecord

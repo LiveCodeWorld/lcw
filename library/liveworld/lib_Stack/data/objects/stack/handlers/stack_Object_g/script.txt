@@ -1,0 +1,7 @@
+getprop stack_Object
+    return the defaultstack
+    
+    -- old version
+    put the long id of the target into targetObject
+    return object_ExtractStack(targetObject)
+end stack_Object

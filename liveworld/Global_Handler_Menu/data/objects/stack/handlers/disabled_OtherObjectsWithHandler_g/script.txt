@@ -1,0 +1,18 @@
+getprop disabled_OtherObjectsWithHandler [hKey]
+   put hArray_GetOtherPlaces (hKey) into otherObjects
+   put item 3 of hKey into scriptObject
+   line_Delete scriptObject, otherObjects
+   
+   if otherObjects is empty then
+      delete variable LocalArray ["orderedFriendlyObjects"]
+      delete variable LocalArray ["friendlyArray"]
+      
+      return "delete"
+   else
+      objects_MakeFriendly otherObjects, orderedFriendlyObjects, friendlyArray
+      put orderedFriendlyObjects into LocalArray ["orderedFriendlyObjects"]
+      put friendlyArray into LocalArray ["friendlyArray"]
+      
+      return false
+   end if
+end disabled_OtherObjectsWithHandler

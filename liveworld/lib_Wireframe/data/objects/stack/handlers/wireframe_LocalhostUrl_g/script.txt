@@ -1,0 +1,5 @@
+getprop wireframe_LocalhostURL
+   put the wireframe_ImageShortFile of the target into shortFile
+   put localhost_ConstructImageUrl (shortFile) into localhostURL
+   return localhostURL
+end wireframe_LocalhostURL

@@ -1,0 +1,31 @@
+function rev_GetIcon hType
+   -- ignoreCall: uIconMap,g
+   
+   local tTag
+   put "handler" into tTag
+   
+   if char 1 of hType = "p" then
+      put "Private" after tTag
+      delete char 1 of hType
+   end if
+   
+   switch hType
+      case "c"
+         put "Command" after tTag
+         break
+      case "m"
+         put "Message" after tTag
+         break
+      case "f"
+         put "Function" after tTag
+         break
+      case "g"
+         put "Getprop" after tTag
+         break
+      case "s"
+         put "Setprop" after tTag
+         break
+   end switch
+   put the uIconMap [tTag] of stack "revSETemplate" into someIcon
+   return someIcon
+end rev_GetIcon

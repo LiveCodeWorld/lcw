@@ -1,0 +1,7 @@
+private command mouse_SetResizedRect hClickOffset, vClickOffset, @newRect
+   put item 1 of the mouseLoc into item 1 of newRect
+   put item 2 of the mouseLoc into item 4 of newRect
+   subtract vClickOffset from item 2 of newRect
+   subtract hClickOffset from item 3 of newRect
+   set the rect of the target to newRect
+end mouse_SetResizedRect

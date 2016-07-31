@@ -1,0 +1,16 @@
+command display_Behaviors
+   put behavior_ListNames() into bNames
+   put hArray_ListViewBehaviorNames() into vbNames
+   put vbNames & CR & "-" & CR & bNames into bIndex
+   
+   put "doDrag" into dragCommand
+   put empty into upCommand
+   put empty into doubleUpCommand
+   
+   put "Global | Behavior | Display | Menu" into titleMenu
+   put "Global | Behavior | Display | Line | Menu" into lineMenu
+   
+   display_Index bIndex, "Behaviors", titleMenu, lineMenu, upCommand, doubleUpCommand, dragCommand
+   put the result into displayView
+   set the multiple_Hilites of displayView to false
+end display_Behaviors

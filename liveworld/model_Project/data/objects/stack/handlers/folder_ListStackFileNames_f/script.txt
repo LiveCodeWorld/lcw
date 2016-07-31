@@ -1,0 +1,14 @@
+function folder_ListStackFileNames someFolder
+   if char -1 of someFolder is not slash then put slash after someFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   repeat for each line shortFile in shortFiles
+      if there is a stack shortFile then
+         put someFolder & shortFile & CR after stackFileNames
+      end if
+   end repeat
+   delete char -1 of stackFileNames
+   set the defaultfolder to oFolder
+   return stackFileNames
+end folder_ListStackFileNames

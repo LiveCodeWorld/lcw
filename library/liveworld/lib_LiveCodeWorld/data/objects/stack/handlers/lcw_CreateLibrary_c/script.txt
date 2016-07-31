@@ -1,0 +1,41 @@
+command lcw_CreateLibrary libType, pQuestion, pExample, pAddToUsed
+   -- this handler creates a script only stack in the corresponding folder of the Livecode World Library
+   
+   if pQuestion is empty then put "Give your library a name" into pQuestion
+   if pExample is empty then put "lib_Example" into pExample
+   
+   put opn_Ask (pQuestion, pExample) into libName
+   if there is a stack libName then
+      go to stack libName
+      answer warning "Already a stack with that name!"
+      exit to top
+   end if
+   
+   put _constructScriptOnlyMenuFileName (libName) into shortFile
+   put lcw_GetFolder (libType) into lcwFolder
+   if lcwFolder is empty then
+      -- safety check
+      answer warning "Cannot locate Livecode World standard model folder!"
+      exit to top
+   end if
+   
+   put lcwFolder & shortFile into lcwLibraryFile
+   
+   -- revIDENewScriptOnlyStackWithScript pName, pScript
+   create script only stack libName
+   show stack libName
+   set the filename of stack libName to lcwLibraryFile
+   
+   put metadata_ConstructUripArray (libName, libType) into uRipArray
+   set the script_MetaData of stack libName to uRipArray
+   
+   save stack libName
+   set the stack_IsKnown of stack libName to true
+   if pAddToUsed is true then
+      set the stack_IsLibrary of stack libName to true
+   end if
+   
+   edit the script of stack libName
+   opn_Notify ("Stack" && kwote (libName) && "is now known and used!")
+   return libName
+end lcw_CreateLibrary

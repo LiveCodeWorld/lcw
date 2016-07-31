@@ -1,0 +1,5 @@
+on menu_TestTables
+   put sivasiva_GetXML() into someXml
+   put sivasiva_ExtractTables (someXml) into tableContentArray
+   display_Array tableContentArray, "sivasiva_ExtractTables (someXml)"
+end menu_TestTables

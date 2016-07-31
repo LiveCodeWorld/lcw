@@ -1,0 +1,6 @@
+on menu_UpdateMenuTable treeField
+   put the tree_SelectedIndex of treeField into mTitle
+   put menu_GetGlobalController(mTitle) into mController
+   script_UpdateMenuTables mController
+   opn_Notify the result
+end menu_UpdateMenuTable

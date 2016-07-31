@@ -1,0 +1,15 @@
+command display_ObjectScript treeField
+   put the tree_SelectedDepth of treeField into tabLevel
+   switch tabLevel
+      case 1
+         pass display_ObjectScript
+      case 2
+         put the selected_ArrayValue of treeField into selectedArray
+         put line 1 of keys (selectedArray) into rObject
+         edit the script of rObject
+         pass display_ObjectScript
+      case 3
+         put the selected_Index of treeField into rObject
+         edit the script of rObject
+   end switch
+end display_ObjectScript

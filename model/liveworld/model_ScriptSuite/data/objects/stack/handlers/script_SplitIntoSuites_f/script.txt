@@ -1,0 +1,51 @@
+function script_SplitIntoSuites someScript
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray
+   put handlerArray ["handlerLines"] into handlerLines
+   sort handlerLines by word 2 of each
+   
+   put line 1 of handlerLines into nextHandlerLine
+   handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
+   put handlerPrefix into oHandlerPrefix
+   
+   put empty into bigScript
+   put empty into suiteScript
+   repeat
+      set the cursor to busy
+      put line 1 of handlerLines into nextHandlerLine
+      handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
+      
+      if handlerPrefix = oHandlerPrefix then
+         put false into newSection
+         
+         script_AddNewHandler handlerType, handlerName, someScript, suiteScript
+      else
+         put true into newSection
+         
+         -- a new section, so first construct old suite and add it to end of bigScript
+         put toupper(char 1 of oHandlerPrefix) into char 1 of oHandlerPrefix
+         get script_ConstructSuite(oHandlerPrefix, suiteScript)
+         text_AddParagraph (it & CR), bigScript, CR
+         
+         -- now clear suiteScript and start new section by adding new handler to suiteScript
+         put handlerPrefix into oHandlerPrefix
+         put empty into suiteScript
+         script_AddNewHandler handlerType, handlerName, someScript, suiteScript
+      end if
+      
+      delete line 1 of handlerLines
+      if handlerLines is empty then exit repeat
+   end repeat
+   
+   if newSection is true then
+      -- suiteScript needs adding to end with a header
+      
+      put toupper(char 1 of oHandlerPrefix) into char 1 of oHandlerPrefix
+      get script_ConstructSuite(oHandlerPrefix, suiteScript)
+      text_AddParagraph (it & CR), bigScript, CR
+   else
+      -- suiteScript needs adding to end (no header)
+      
+      text_AddParagraph (suiteScript & CR), bigScript
+   end if
+   return word 1 to -1 of bigScript
+end script_SplitIntoSuites

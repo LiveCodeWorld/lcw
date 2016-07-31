@@ -1,0 +1,7 @@
+setprop view_DeleteProperty [pUseCard] someProp
+   put the view_DisplayArray [pUseCard] of the target into displayArray
+   put displayArray [someProp] into oldValue
+   delete local displayArray [someProp]
+   set the view_DisplayArray [pUseCard] of the target to displayArray
+   return oldValue
+end view_DeleteProperty

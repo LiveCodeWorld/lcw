@@ -1,0 +1,6 @@
+command library_AddFrontObject scriptObject, pSetName
+   put revRuggedId (scriptObject) into ruggedObject
+   library_AddObject ruggedObject, "front", pSetName
+   put the result into libName
+   return libName
+end library_AddFrontObject

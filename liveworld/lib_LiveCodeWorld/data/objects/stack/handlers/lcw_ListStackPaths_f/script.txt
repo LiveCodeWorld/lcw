@@ -1,0 +1,5 @@
+function lcw_ListStackPaths folderName
+   put lcw_GetFolder (folderName) into someFolder 
+   put folder_ListStackPaths (someFolder) into longStackFiles
+   return longStackFiles
+end lcw_ListStackPaths

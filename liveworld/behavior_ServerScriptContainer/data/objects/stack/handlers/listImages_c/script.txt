@@ -1,0 +1,13 @@
+on listImages
+   -- put mediwiki_ExtractImageFileFromUrl (droppedURL) into shortImageFile
+   put fedwiki_GetWikipediaPageSlug ($_POST_RAW) into pageTitle
+   put mediawiki_ListPageImages (pageTitle) into pageImages
+   put pageTitle && "Images" into imagePageTitle
+   
+   put imagePageTitle into pageArray ["title"]
+   put fedwiki_ConstructStoryItemArray (pageImages, "markdown") into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+   put json_FromArray (pageArray) into pageJSON
+   
+   fedwiki_ReturnJSON pageJSON
+end listImages

@@ -1,0 +1,24 @@
+command display_AddSelectedShortFilesToUsed indexView, pShortFiles
+   if pShortFiles is empty then
+      put the selected_Index of indexView into pShortFiles
+   end if
+   
+   put the displayed_Project of indexView into projectName
+   put the index_Folder of indexView into indexFolder
+   
+   repeat for each line shortFile in pShortFiles
+      set the cursor to busy
+      put indexFolder & shortFile into longStackFile
+      
+      try
+         put the name of stack longStackFile into stackObject
+         start using stackObject 
+         library_AddUsedStack stackObject, projectName
+      catch e
+         put stackObject
+         breakpoint 
+      end try
+   end repeat
+   
+   dispatch "refresh" to indexView
+end display_AddSelectedShortFilesToUsed

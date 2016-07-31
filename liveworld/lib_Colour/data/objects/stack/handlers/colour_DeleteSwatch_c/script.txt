@@ -1,0 +1,6 @@
+on colour_DeleteSwatch swatchName
+   put opn_SwatchFolder(swatchName) into someFile
+   if there is a file someFile then
+      file_Delete someFile
+   end if
+end colour_DeleteSwatch  

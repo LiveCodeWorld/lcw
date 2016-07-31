@@ -1,0 +1,5 @@
+setprop model_LinkArray [modelName] linkArray
+   put the long id of the target into modelObject
+   if modelName is empty then put "model_LinkArray" into modelName
+   model_SetArray modelName, modelObject, linkArray, "file"
+end model_LinkArray

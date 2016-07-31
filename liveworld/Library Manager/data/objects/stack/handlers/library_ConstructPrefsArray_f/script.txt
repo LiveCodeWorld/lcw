@@ -1,0 +1,13 @@
+function library_ConstructPrefsArray pRemoveWhenSaved
+   put the globals into gNames
+   replace comma with CR in gNames
+   filter gNames with "gPrefs_*"
+   repeat for each line gName in gNames  
+      put "global" && gName & CR & "get" && gName into doScript
+      if pRemoveWhenSaved is true then put CR & "delete variable" && gName after doScript
+      
+      do doScript
+      put it into prefsArray [gName]
+   end repeat
+   return prefsArray
+end library_ConstructPrefsArray

@@ -1,0 +1,7 @@
+function ccc_ConstructDateHtml dateDisplay, pLinkText
+   put ccc_NumFromYear (dateDisplay) into cccNum
+   if pLinkText is empty then put "#" & cccNum & "c3" into pLinkText
+   put "https://media.ccc.de/c/" & cccNum & "c3" into dateLink
+   put html_ConstructRefLink (pLinkText, dateLink, "_blank") into someHTML
+   return someHTML
+end ccc_ConstructDateHtml

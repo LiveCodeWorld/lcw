@@ -1,0 +1,18 @@
+function library_ListHkeysFromFolders
+   put the defaultfolder into oFolder
+   put library_HandlerFolder() into someFolder
+   set the defaultfolder to someFolder
+   put the folders into shortFolders
+   set the defaultfolder to oFolder
+   
+   set the itemdelimiter to "_"
+   repeat for each line shortFolder in shortFolders
+      if char 1 of shortFolder = "." then next repeat
+      put item -1 of shortFolder into hType
+      put item 1 to -2 of shortFolder into hName
+      put hName,hType & CR after shortHkeys
+   end repeat
+   delete char -1 of shortHkeys
+   
+   return shortHkeys
+end library_ListHkeysFromFolders

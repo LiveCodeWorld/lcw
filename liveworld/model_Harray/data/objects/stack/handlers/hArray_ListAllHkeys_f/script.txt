@@ -1,0 +1,8 @@
+function hArray_ListAllHkeys
+   -- timer_Start
+   put hArray_ConstructHkeyArray() into bigHKeyArray
+   put keys (bigHKeyArray) into hKeys
+   sort hKeys by item 1 of each
+   -- timer_Stop
+   return hKeys
+end hArray_ListAllHkeys

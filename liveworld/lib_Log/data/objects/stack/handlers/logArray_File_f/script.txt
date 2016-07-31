@@ -1,0 +1,10 @@
+function logArray_File
+   put the daemon_RootFolder of me into rootFolder
+   if rootFolder is empty then
+      set the itemdelimiter to "/"
+      put the filename of me into rootFolder
+      put empty into item -1 of rootFolder
+   end if
+   put rootFolder & "log.array" into someFile
+   return someFile
+end logArray_File

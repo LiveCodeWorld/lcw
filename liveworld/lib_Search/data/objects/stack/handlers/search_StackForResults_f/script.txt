@@ -1,0 +1,5 @@
+function search_StackForResults stackObject, someProperty, pControllerObject
+   local objectArray
+   search_StackAndSubstacks objectArray, stackObject, someProperty, pControllerObject
+   return objectArray
+end search_StackForResults

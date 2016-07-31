@@ -1,0 +1,25 @@
+command opml_ConvertToOutline someOPML, @treeTitle, @tabbedOutline
+    put empty into treeTitle
+    put empty into tabbedOutline
+     
+    put revCreateXMLTree(someOPML, false, true, false) into treeID
+    put revXMLRootNode(treeID) into rootNode
+    if rootNode is not "opml" then
+        opn_Notify "Not a valid OPML file!", true
+    else
+        put "opml/head/" into headRoot
+        put headRoot & "title" into someNode
+        put revXMLNodeContents(treeID, someNode) into treeTitle
+         
+       try
+            put opml_RecurseOutlineNodes(treeID) into tabbedOutline
+            revDeleteXMLTree treeID
+            return true
+        catch someError
+            opn_Notify someError
+        end try
+    end if
+     
+    revDeleteXMLTree treeID
+    return false
+end opml_ConvertToOutline

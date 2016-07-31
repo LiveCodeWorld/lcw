@@ -1,0 +1,4 @@
+function fossil_GetHttpPort pCheckoutFolder, pGetGlobal
+   put fossil_GetSetting ("http-port", pCheckoutFolder, pGetGlobal) into someValue
+   return someValue
+end fossil_GetHttpPort

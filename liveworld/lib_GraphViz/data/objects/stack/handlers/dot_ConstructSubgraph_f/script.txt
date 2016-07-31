@@ -1,0 +1,8 @@
+function dot_ConstructSubgraph subGraphName, nodeSection, someRank, someStyle, someColour, someLabel, fillColour
+    put "subgraph" into subGraph
+    if subGraphName is not empty then put space & subGraphName after subGraph
+    put space & "{" & CR after subGraph
+    put dot_SubGraphContents (someLabel, nodeSection, someRank, someStyle, someColour, fillColour) after subGraph
+    put CR & "}" after subGraph
+    return subGraph
+end dot_ConstructSubgraph

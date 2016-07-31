@@ -1,0 +1,5 @@
+function opn_ModelFolder pDontCreate
+   -- a default place to store models until they are moved to their final destination
+   put library_PluginFolder ("opn_Model", pDontCreate) into modelFolder
+   return modelFolder
+end opn_ModelFolder

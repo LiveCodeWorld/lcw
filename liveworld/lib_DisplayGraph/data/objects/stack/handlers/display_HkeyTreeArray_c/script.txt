@@ -1,0 +1,34 @@
+command display_HkeyTreeArray treeArray, hkeyOrObject, pDoubleUpCommand
+   -- _setObjectTitleHkey hkeyOrObject, hKey, hObject, displayTitle
+   switch
+      case exists (hkeyOrObject)
+         put "script" into hName
+         put hkeyOrObject into hObject
+         put empty into hKey
+         put hName,hObject into displayTitle
+         break
+      case the number of items of hkeyOrObject = 4
+         put hkeyOrObject into hKey
+         put item 1 of hKey into hName
+         put item 3 of hKey into hObject
+         put hName,hObject into displayTitle
+         break
+      default
+         put "hKeyArray" into displayTitle
+         put empty into hKey
+         put empty into hObject
+   end switch
+   
+   if pDoubleUpCommand is empty then put "display_HkeyArrayHandler" into pDoubleUpCommand
+   put "Global | HkeyArray | Menu"into treeMenu
+   put "Global | HkeyArray | Line | Menu" into lineMenu
+   -- may want to use "Global | HkeyArray | Tree | Filter | Menu"
+   put empty into mUpCommand
+   
+   display_Array treeArray, displayTitle, treeMenu, lineMenu, mUpCommand, pDoubleUpCommand
+   put the result into treeView
+   
+   set the displayed_Object of treeView to hObject
+   set the displayed_Hkey of treeView to hKey
+   return treeview
+end display_HkeyTreeArray

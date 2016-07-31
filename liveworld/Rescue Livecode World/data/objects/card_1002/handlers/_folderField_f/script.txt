@@ -1,0 +1,5 @@
+function _folderField folderGroupName
+   put _libraryFolderGroup (folderGroupName) into folderGroup
+   put the long id of fld 1 of folderGroup into folderField
+   return folderField
+end _folderField

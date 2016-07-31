@@ -1,0 +1,11 @@
+function menu_ReplaceSection sectionNameList, oldMenu, newSubMenu
+    if newSubMenu is empty then return oldMenu
+     
+    repeat for each item sectionName in sectionNameList
+        put outline_LineOffset(sectionName, oldMenu) into lineNum
+        put sectionName & return & outline_IncreaseIndent(newSubMenu, 1) into newMenuSection
+        put outline_ReplaceSection(lineNum, oldMenu, newMenuSection, oldOsLength) into newMenu
+        put newMenu into oldMenu
+    end repeat
+    return newMenu
+end menu_ReplaceSection

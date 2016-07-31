@@ -1,0 +1,8 @@
+on menu_SetChecked someMenuItem, someBoolean, someObject
+    -- works for main and one indented menu
+    if someObject is empty then put the long id of the target into someObject
+    put the menu_Text of someObject into someMenu
+    menu_SetCheckedItem someMenuItem, someMenu, someBoolean
+    set the menu_Text of someObject to someMenu
+    return someMenu
+end menu_SetChecked

@@ -1,0 +1,9 @@
+command script_CreateAndEditHashCard someScript, pUniqueCardName
+   if pUniqueCardName is empty then
+      put text_Hash (someScript, "sha1") into pUniqueCardName
+   end if
+   script_CreateHashCard pUniqueCardName, someScript
+   put the result into cardObject
+   edit the script of cardObject
+   return cardObject
+end script_CreateAndEditHashCard

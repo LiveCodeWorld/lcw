@@ -1,0 +1,16 @@
+getprop rview_Name [dgView]
+   put rview_GetName (dgView) into vName
+   if vName is empty then
+      put the dgProps ["row template"] of dgView into templateObject
+      get the long id of group "Row Template" of card id 1005 of stack "Data Grid Templates 1430422692515" of stack "View|SFW|Story"
+      if it = the long id of templateObject then
+         return "stack"
+      else
+         return empty
+      end if
+   else
+      set the itemdelimiter to "|"
+      delete item 1 of vName
+      return vName
+   end if
+end rview_Name

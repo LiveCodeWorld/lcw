@@ -1,0 +1,21 @@
+function file_FastHashGuess filePath
+    -- for now just uses short file
+    -- thought is that if you name the file "hash_SomeHash"
+    -- then can use fileName except for the first time
+    -- when you need to run md5 command line tool over it.
+     
+    deconstruct_File filePath, someFolder, shortName, someExtension
+    return shortName
+    put extract_ShortFile(filePath) into shortFile
+    return shortFile
+     
+    -- get binaryEncode("H*", someBinaryData, tHexDigest)
+    put the number of chars of shortFile into howLong
+    if howLong > 20 then
+        return shortFile
+    else
+        put file_Md5Hash(filePath) into hashFile
+        -- rename file?
+        return hashFile
+    end if
+end file_FastHashGuess

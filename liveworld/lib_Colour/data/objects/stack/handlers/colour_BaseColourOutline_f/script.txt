@@ -1,0 +1,10 @@
+function colour_BaseColourOutline
+   put colour_BaseNames() into colourWords
+   repeat for each line colourName in colourWords
+      put the number of words of colourName - 1 into indentLevel
+      put text_RepeatString(tab, indentLevel) & colourName & CR after colourOutline
+   end repeat
+   -- delete last char of colourOutline
+   put word 1 to -1 of colourOutline into colourOutline
+   return colourOutline
+end colour_BaseColourOutline

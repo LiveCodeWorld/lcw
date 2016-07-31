@@ -1,0 +1,7 @@
+function meta_ImageFile objectFolder, pExtension, pDontCreate
+   folder_Format objectFolder
+   put objectFolder & "image" into someFile
+   if pExtension is not empty then put "." & pExtension after someFile
+   if pDontCreate is false then folder_CreateNested objectFolder
+   return someFile
+end meta_ImageFile

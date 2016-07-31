@@ -1,0 +1,54 @@
+function stack_ConstructNameOutline someFolder, @infoArray, excludeFolderList, includeInvisible, tabBit
+    local shortFileOutline
+     
+    set the cursor to busy
+     
+    put infoArray["FolderIndex"] into folderIndex
+    put infoArray["FileIndex"] into fileIndex 
+    line_Insert someFolder, folderIndex
+    put folderIndex into infoArray["FolderIndex"]
+     
+    put the directory into oDirectory
+    set the directory to someFolder
+    put the files into shortFiles
+    if includeInvisible is not false then filter shortFiles without ".*"
+     
+    put the mainstacks into stacksInMemory
+    repeat for each line shortFile in shortFiles
+        put someFolder & shortFile into someFile
+        
+        line_Insert someFile, fileIndex
+        try
+            put the short name of stack someFile into stackName
+            if stackName is not among the lines of stacksInMemory then stack_RemoveFromMemory stackName
+            put tabBit & stackName into osTilte
+            line_Insert osTilte, shortFileOutline
+        catch tError
+            -- opn_Notify someFile
+        end try
+    end repeat
+    put fileIndex into infoArray["FileIndex"]
+     
+    put the folders into newShortFolders
+    if includeInvisible is not false then filter newShortFolders without ".*"
+    
+    repeat for each line shortFolder in newShortFolders
+        if shortFolder is among the items of excludeFolderList then next repeat
+        put someFolder & shortFolder & "/" into nestedFolder
+         
+        put tabBit & tab into nextTabBit
+        put stack_ConstructNameOutline(nestedFolder, infoArray, excludeFolderList, includeInvisible, nextTabBit) into nestedOutline
+         
+        put tabBit & shortFolder into osTilte
+        if nestedOutline is empty then
+            -- don't bother if there are no stacks there.
+            -- line_Insert osTilte, shortFileOutline
+        else
+            line_Insert osTilte, shortFileOutline
+            put return & nestedOutline after shortFileOutline
+        end if
+    end repeat
+     
+    set the directory to oDirectory
+    return shortFileOutline
+end stack_ConstructNameOutline

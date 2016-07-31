@@ -1,0 +1,5 @@
+getprop dropped_TargetName
+   put the long id of the target into targetObject
+   put drag_GetDroppedTargetView (targetObject) into targetView
+   return targetView
+end dropped_TargetName

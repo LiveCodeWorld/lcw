@@ -1,0 +1,29 @@
+command display_HkeyLibraryHelp hKey, pDisplayedHelpHKey
+   lock screen
+   --
+   put the long id of me into displayCard
+   if pDisplayedHelpHKey is empty then put the displayed_HelpHkey of displayCard into pDisplayedHelpHKey
+   -- opn_Notify (hKey & CR & pDisplayedHelpHKey & CR & displayProjectHandlers), true
+   put the display_ProjectHandlers of displayCard into displayProjectHandlers 
+   
+   if pDisplayedHelpHKey is not empty then  -- save any displayed help  
+      put the displayed_HelpHtmltext of displayCard into displayedHandlerHelp
+      -- hkey_StoreHelp pDisplayedHelpHKey, displayedHandlerHelp
+      library_StoreHandlerHelp pDisplayedHelpHKey, displayedHandlerHelp
+   end if
+   
+   -- if hKey is not pDisplayedHelpHKey then  -- only display when different (prevents displaying empty help when newly creating)
+   put library_FetchHandlerHelp (hkey) into handlerHelp
+   set the displayed_HelpHtmltext of displayCard to handlerHelp
+   -- end if
+   
+   put the help_Field of me into helpField
+   -- lock messages
+   set the displayed_HelpHkey of helpField to hKey
+   -- unlock messages
+   -- put hKey into LocalArray ["displayed_HelpHkey"]
+   
+   put the hkey_OverlayView of me into overlayView
+   if exists (overlayView) then set the selected_Hkeys of overlayView to hKey
+   unlock screen
+end display_HkeyLibraryHelp

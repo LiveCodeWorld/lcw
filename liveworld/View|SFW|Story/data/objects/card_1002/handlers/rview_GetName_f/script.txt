@@ -1,0 +1,4 @@
+function rview_GetName dgView
+   put the record_ViewName of dgView into vName
+   return vName
+end rview_GetName

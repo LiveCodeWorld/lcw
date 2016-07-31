@@ -1,0 +1,5 @@
+command fedwiki_OpenBrowser fedwikiDomain, pTitleOrSlug
+   put fedwiki_ConstructSlug (pTitleOrSlug) into pageSlug
+   put fedwiki_PageUrl (fedwikiDomain, pageSlug) into someUrl
+   launch url someUrl
+end fedwiki_OpenBrowser

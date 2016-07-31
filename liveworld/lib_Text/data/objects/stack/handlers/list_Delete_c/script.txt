@@ -1,0 +1,12 @@
+command list_Delete someItems, @someList, pPartLine, pSkipLines
+   set the wholematches to (pPartLine is empty)
+   repeat for each item someItem in someItems
+      if someItem is empty then next repeat
+      put itemoffset (someItem, someList, pSkipLines) into itemNum
+      if it is not 0 then
+         add pSkipLines to itemNum
+         delete item itemNum of someList
+      end if 
+   end repeat
+   return the number of items of someList
+end list_Delete

@@ -1,0 +1,8 @@
+on menu_HeaderHeight someView, someHeight
+   if someHeight = "ask" then
+      put the header_Height of someView into oHeight 
+      put opn_Ask ("What height would you like to set the header?", oHeight) into someHeight
+   end if
+   
+   set the header_Height of someView to someHeight
+end menu_HeaderHeight

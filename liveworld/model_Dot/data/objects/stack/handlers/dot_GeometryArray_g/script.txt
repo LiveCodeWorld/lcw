@@ -1,0 +1,4 @@
+getprop dot_GeometryArray [pOverlayName]
+   put the dot_DataArray [pOverlayName] of the target into dataArray
+   return dataArray ["geometry"]
+end dot_GeometryArray

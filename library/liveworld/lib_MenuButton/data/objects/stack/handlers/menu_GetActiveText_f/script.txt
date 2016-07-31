@@ -1,0 +1,4 @@
+function menu_GetActiveText
+   global gTemp_ActiveMenuArray
+   return gTemp_ActiveMenuArray ["menu"]["text"]
+end menu_GetActiveText

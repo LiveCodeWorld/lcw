@@ -1,0 +1,5 @@
+command rect_CentreWidthAndHeight @someRect, someWidth, someHeight, pMargin
+   rect_SetWidth someRect, someWidth, false
+   rect_SetHeight someRect, someHeight, false
+   rect_SubtractMargins someRect, pMargin
+end rect_CentreWidthAndHeight

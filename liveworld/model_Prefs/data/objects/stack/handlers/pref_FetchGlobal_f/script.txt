@@ -1,0 +1,6 @@
+function pref_FetchGlobal pGlobalName, pProjectName
+   if pGlobalName is empty then put "gPrefs_Array" into pGlobalName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchData() into dataArray
+   return dataArray [pProjectName][pGlobalName]
+end pref_FetchGlobal

@@ -1,0 +1,9 @@
+function wikicommons_ConstructVideoHtml pageArray, pImageCaption, pWikimediaLink
+   wikicommons_DeconstructPageArray pageArray, pageTitle, webmURL, descriptionURL, pImageCaption
+   
+   -- put "MP4 (HD),mp4,WEBM (HD),webm" into videoTypes
+   put empty into pPosterImageFile -- could get thubnail
+   put html_ConstructVideoTag (webmURL, "webm", 420, true, pPosterImageFile) into someHTML
+   put wikicommons_ConstructVideoCaption (pageTitle, descriptionURL) after someHTML
+   return someHTML
+end wikicommons_ConstructVideoHtml

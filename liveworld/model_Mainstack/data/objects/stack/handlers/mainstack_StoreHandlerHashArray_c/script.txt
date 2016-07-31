@@ -1,0 +1,7 @@
+command mainstack_StoreHandlerHashArray mainStackFolder, handlerHashArray
+   put mainstack_FetchHarray (mainStackFolder) into hArray
+   hArray_SetHandlerHashArray hArray, handlerHashArray
+   mainstack_StoreHarray hArray, mainStackFolder
+   put the result into someFile
+   return someFile
+end mainstack_StoreHandlerHashArray

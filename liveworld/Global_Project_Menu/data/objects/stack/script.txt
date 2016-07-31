@@ -1,0 +1,94 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Project_Menu
+type: controller
+version: 0.3
+
+
+--> Global | Project | Menu
+-
+[[ _FetchHandler (menu_DisplayProject,c) ]]
+
+[[ _FetchHandler (menu_GoToStack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SelectProjectStacks,c) ]]
+
+[[ _FetchHandler (menu_AddStacksToProject,c) ]]
+
+[[ _FetchHandler (menu_StoreSelectedProjectStacks,c) ]]
+
+[[ _FetchHandler (menu_ProjectOnlyStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayOpenStacks,c) ]]
+
+[[ _FetchHandler (menu_DisplayLoadedStacks,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayGlobalMenu,c) ]]
+
+[[ _FetchHandler (menu_DisplayBehaviors,c) ]]
+
+[[ _FetchHandler (menu_DisplayScriptMenus,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Project | Menu | Props
+-
+[[ _FetchHandler (project_StackNames,g) ]]
+
+
+--> Global | Project | Menu | Props
+-
+[[ _FetchHandler (disabled_GoToStack,g) ]]
+
+
+--> Global | Project | Line | Menu
+-
+[[ _FetchHandler (menu_TestProjectLine,c) ]]
+
+[[ _FetchHandler (menu_MultipleHilites,c) ]]
+
+--> Global | Project | Line | Menu | Props
+-
+[[ _FetchHandler (multiple_Hilites,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (_safeGoProjectStack,pc) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_OpenAllProjectStacks,c) ]]
+
+[[ _FetchHandler (menu_SetMultipleHilites,c) ]]
+
+[[ _FetchHandler (menu_TopLevel,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditBehavior,c) ]]
+
+[[ _FetchHandler (menu_SaveStack,c) ]]
+
+
+--> Dev | Menu | Props
+-
+[[ _FetchHandler (set_MultipleHilites,g) ]]
+
+[[ _FetchHandler (top_Level,g) ]]

@@ -1,0 +1,7 @@
+on menu_DisplayCurrentlyLoadedLibraryArray
+   put library_GetSetArray() into setArray
+   
+   put library_GetSetName() into currentSetName
+   put merge("library_GetSetArray('[[currentSetName]]')") into someTitle
+   display_Array setArray, someTitle
+end menu_DisplayCurrentlyLoadedLibraryArray

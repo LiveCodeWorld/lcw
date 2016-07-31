@@ -1,0 +1,10 @@
+function xml_GetSimpleTagContents  tagName, someXml
+    -- simple non-whitespace version
+    put xml_GetSimpleTag (tagName, someXml, 0) into someTag
+    if someTag is empty then return empty
+    
+    get the number of chars of tagName
+    put it + 3 into startChar
+    put it + 4 into backChar
+    return char startChar to - backChar of someTag
+end xml_GetSimpleTagContents

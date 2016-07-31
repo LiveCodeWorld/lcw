@@ -1,0 +1,15 @@
+command fedwiki_ActionEdit pageSlug, actionArray, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_GetLocalOrDefaultPageJson (pageSlug) into pageJSON
+   put json_ToArray (pageJSON) into pageArray
+   
+   --this does any type of edit specified by actionArray?
+   fedwiki_PageArrayEdit pageArray, actionArray
+   put the result into someError
+   
+   -- now we sould update the JSON file and possibly the site map
+   put actionArray ["date"] into pCreateMilliSeconds
+   fedwiki_SetLocalPageArray pageSlug, pageArray, pFedwikiDomain, pLocalWikiFolder, pCreateMilliSeconds
+   
+   -- and maybe the site map
+   return pageArray
+end fedwiki_ActionEdit

@@ -1,0 +1,4 @@
+function rig_ControllerPath pShortControllerFile
+   put rig_ApplicationPath ("controllers/" & pShortControllerFile) into somePath
+   return somePath
+end rig_ControllerPath

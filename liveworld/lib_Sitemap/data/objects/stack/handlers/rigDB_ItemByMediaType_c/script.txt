@@ -1,0 +1,7 @@
+command rigDB_ItemByMediaType mTypeList
+   rigDbFrom "item"
+   repeat for each item mType in mTypeList
+      rigDbOrWhere "media_type", mType
+   end repeat
+   rigDbWhere "approved_for_public", "YES"
+end rigDB_ItemByMediaType

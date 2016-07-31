@@ -1,0 +1,5 @@
+function sivasiva_ParseDescriptionDiv
+    put descriptionDiv into descriptionHTML
+   delete line 1 of descriptionHTML
+   delete line -1 of descriptionHTML
+end sivasiva_ParseDescriptionDiv

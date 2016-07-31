@@ -1,0 +1,10 @@
+getprop object_MetaDataTable [keysToRemove]
+   breakpoint
+    put the long id of the target into scriptObject
+    put the object_MetaData of scriptObject into metaDataArray
+    repeat for each item someKey in keysToRemove
+        delete local metaDataArray [someKey]
+    end repeat
+    combine metaDataArray with CR and tab
+    return metaDataArray
+end object_MetaDataTable

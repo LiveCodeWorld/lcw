@@ -1,0 +1,10 @@
+command object_SetIndexArray objectIndex, @shortNameArray, @shortNames
+   repeat for each line someObject in objectIndex
+      if exists(someObject) then
+         put the short name of someObject into shortName
+         put someObject into shortNameArray [shortName]
+         put shortName & CR after shortNames
+      end if
+   end repeat
+   delete char -1 of shortNames 
+end object_SetIndexArray

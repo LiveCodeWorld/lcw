@@ -1,0 +1,5 @@
+command script_DeleteTemplate templateName
+    put library_ScriptTemplateFolder (templateName) into someFile
+    file_Delete someFile
+    return someFile
+end script_DeleteTemplate

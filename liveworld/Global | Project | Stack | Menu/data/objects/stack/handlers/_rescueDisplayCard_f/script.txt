@@ -1,0 +1,8 @@
+function _rescueDisplayCard
+   if there is a stack "Rescue livecode World" then
+      put the long id of card 1 of stack "Rescue livecode World" into displayCard
+      return displayCard
+   else
+      return empty
+   end if
+end _rescueDisplayCard

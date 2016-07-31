@@ -1,0 +1,32 @@
+getprop template_ObjectDefScript
+   local defScript
+   put the long id of the target into scriptObject
+   
+   repeat with cNum = 1 to the number of controls of scriptObject
+      put the long id of control cNum of scriptObject into someObject
+      put word 1 of someObject into objectType
+      put the short name of someObject into someName
+      put the view_Name of someObject into vName
+      
+      put text_InitialCaps (someName) into hName
+      replace space with empty in hName
+      put tolower (char 1 of hName) into char 1 of hName
+      
+      if word 1 someObject = "group" then
+         put "_View" after hName
+         put "return the long id of group" && kwote(someName) && "of me" into scriptLine
+         put script_ConstructGetPropHandler (hName, scriptLine) & CR & CR after defScript
+      else if vName is not empty then
+         put "_View" after hName
+         put "return the long id of" && objectType && kwote(someName) && "of me" into scriptLine
+         put script_ConstructGetPropHandler (hName, scriptLine) & CR & CR after defScript
+      else
+         put "Object" after hName
+         put "return the long id of" && objectType && kwote(someName) && "of me" into scriptLine
+         put "private" && script_ConstructFunctionHandler (hName, scriptLine) & CR & CR after defScript
+      end if
+   end repeat
+   
+   delete char -2 to -1 of defScript
+   return defScript
+end template_ObjectDefScript

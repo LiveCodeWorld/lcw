@@ -1,0 +1,22 @@
+on menu_AnimateStudent sHexagon
+   put random (6) into nodeNum
+   put the class_Array of sHexagon into classArray
+   put classArray [nodeNum]["rect"] into destRect
+   put classArray [nodeNum]["rugged_ID"] into destinationView
+   
+   rect_CreateMask destRect
+   
+   put the loc of destinationView into destLoc
+   -- hide destinationView
+   -- put the rect of destinationView into destRect
+   
+   put view_GetTemplateObject ("Image|Masked") into templateObject
+   lock screen
+   copy templateObject to me
+   put it into personView
+   set the loc of personView to "-200,-200"
+   unlock screen
+   
+   -- aeMoveTo personView, destLoc, 1000, "inOut"
+   aeChangeRect personView, destRect, 1000, "inOut"
+end menu_AnimateStudent

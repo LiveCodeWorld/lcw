@@ -1,0 +1,12 @@
+command digitalocean_DeleteFile wikiPageSlug, fedwikiDomain, pDropletName, pSshUserName  
+   put digitalOcean_GetDropletIP (pDropletName) into dropletIP
+   if http_CheckIP (dropletIP) is false then return "error, fetching ip address for droplet" && dropletName
+   
+   put fedwiki_ConstructPath (fedwikiDomain, wikiPageSlug) into wikiPagePath
+   put wikiPagePath into mergeArray ["wikiPagePath"]
+   opn_Answer "Are you sure you want to delete this file '[[wikiPagePath]]' from the server it can't be undone?", mergeArray
+   
+   shell_DeleteFile pSshUserName, dropletIP, wikiPagePath
+   put the result into shellResult
+   return shellResult
+end digitalocean_DeleteFile

@@ -1,0 +1,6 @@
+getprop view_PropertyMenuIsCached
+   put the template_MetaData of the target into metaArray
+   put keys(metaArray) into metaKeys
+   set the wholematches to true
+   return "view_PropertyMenu" is among the lines of metaKeys
+end view_PropertyMenuIsCached

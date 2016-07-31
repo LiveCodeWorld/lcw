@@ -1,0 +1,5 @@
+command browser_AddToRegister browserID, browserView
+   global gOPN_BrowserArray
+   put revRuggedID (browserView) into browserView
+   dictionary_Set gOPN_BrowserArray, browserID, browserView
+end browser_AddToRegister

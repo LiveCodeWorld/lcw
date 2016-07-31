@@ -1,0 +1,6 @@
+function hArray_GetOtherPlaces hKey
+   put hArray_ListHkeyObjects (hKey) into otherObjects
+   put item 3 of hKey into hObject
+   line_Delete hObject, otherObjects
+   return word 1 to -1 of otherObjects
+end hArray_GetOtherPlaces

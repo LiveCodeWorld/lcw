@@ -1,0 +1,111 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_SivaSiva_Trait_PlusMinus_Menu
+type: controller
+version: 0.1
+
+
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: Global | SivaSiva | Trait | PlusMinus | Menu
+type: controller
+version: 0.3
+
+local LocalArray
+
+
+--> Global | SivaSiva | Trait | PlusMinus | Menu | Props
+-
+[[ _FetchHandler (fit_ToStackWidth,g) ]]
+
+
+--> Global | SivaSiva | Trait | PlusMinus | Menu
+-
+[[ _FetchHandler (submenu_Tools,c) ]]
+
+[[ _FetchHandler (submenu_Trait,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetStackRect,c) ]]
+
+[[ _FetchHandler (menu_ResizeStack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayChapter,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_SetPositiveLabel,c) ]]
+
+[[ _FetchHandler (menu_SetNegativeLabel,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FitToStackWidth,c) ]]
+
+[[ _FetchHandler (menu_ReplaceWithViews,c) ]]
+
+[[ _FetchHandler (menu_ReplaceWithPlaceholders,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReplacePositiveTrait,c) ]]
+
+[[ _FetchHandler (menu_ReplaceNegativeTrait,c) ]]
+
+[[ _FetchHandler (menu_ReplaceSquareWithText,c) ]]
+
+[[ _FetchHandler (menu_ReplaceSquareWithArrows,c) ]]
+
+on _
+end _
+
+on submenu_Tools
+   return "Global | View | Card | Tools | Menu"
+end submenu_Tools
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | SivaSiva | Trait | PlusMinus | Menu | Props
+-
+[[ _FetchHandler (resize_Stack,g) ]]
+
+[[ _FetchHandler (chapter_Names,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_ParseAndSaveBook,c) ]]
+
+[[ _FetchHandler (menu_DisplayChapterSeventeen,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ResetPositiveTrait,c) ]]
+
+[[ _FetchHandler (menu_ResetNegativeTrait,c) ]]
+
+[[ _FetchHandler (menu_ResetInnerSquare,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DeletePositiveTrait,c) ]]
+
+[[ _FetchHandler (menu_DeleteNegativeTrait,c) ]]
+
+[[ _FetchHandler (menu_DeleteInnerSquare,c) ]]
+
+[[ _FetchHandler (menu_DeleteArrow,c) ]]

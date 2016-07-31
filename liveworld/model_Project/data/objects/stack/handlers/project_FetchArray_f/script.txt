@@ -1,0 +1,6 @@
+function project_FetchArray pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchSetData() into librarySetData
+   put librarySetData [pProjectName] into projectArray
+   return projectArray
+end project_FetchArray

@@ -1,0 +1,10 @@
+on _LoadGlobals
+   -- here we load only the new and essential globals
+   global gLCW
+   
+   -- let's mirror the folder structure
+   put "Default" into gLCW ["projectName"]
+   put the lcw_PrefArray of me into gLCW ["global"]["pref"] -- better name ???
+   put the lcw_ControllerArray of me into gLCW ["global"]["controller"] -- for menus to work
+   put the lcw_HandlerArray of me into gLCW ["global"]["handler"] -- for assisted script editing to work
+end _LoadGlobals

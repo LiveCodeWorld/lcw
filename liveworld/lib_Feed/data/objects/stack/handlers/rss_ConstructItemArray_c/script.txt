@@ -1,0 +1,20 @@
+on rss_ConstructItemArray @itemArray, treeID, itemNum, itemNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey
+   put empty into categoryList
+   put revXMLChildNames(treeID, itemNode, CR, "", true) into itemElementNames
+   repeat for each line itemElementName in itemElementNames
+      put itemNode & "/" & itemElementName into itemElementNode
+      put revXMLNodeContents(treeID, itemElementNode) into itemElementNodeContents
+      
+      put token 1 of itemElementName into elementKey
+      -- could make this generic to something already there, and make a snumerically indexed sub array
+      if elementKey = "category" then
+         put itemElementNodeContents & comma after categoryList
+      else
+         put itemElementNodeContents into itemArray [itemNum][elementKey]
+      end if
+   end repeat
+   delete char -1 of categoryList
+   
+   put categoryList into itemArray [itemNum]["category list"]
+   return itemArray
+end rss_ConstructItemArray

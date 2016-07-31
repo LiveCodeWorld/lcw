@@ -1,0 +1,4 @@
+function fossil_GetExecutablePath
+   put pref_GetValue ("Fossil executable path") into somePath
+   return somePath
+end fossil_GetExecutablePath

@@ -1,0 +1,77 @@
+--> MetaData
+-
+license: GPLv3
+name: View|Index|Simple
+type: view
+version: 0.2
+
+/*
+This menu contains the code for events and menus for the list field. 
+You should customise it to suit the local purpose
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> List | Menu
+-
+[[ _FetchHandler (menu_DisplayViewTemplate,c) ]]
+
+-- on menu_TidyView selectedViewStackObject
+   set the behavior of cd 1 of selectedViewStackObject to the name of stack "behavior_ViewTemplateCard"
+   put the template_View of cd 1 of selectedViewStackObject into templateView   
+   set the urip_Type of templateView to "view template"
+   edit the script of templateView
+end menu_TidyView
+
+[[ _FetchHandler (menu_IsTemplateView,c) ]]
+
+[[ _FetchHandler (menu_SetBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TestTemplate,c) ]]
+
+-- on submenu_Stack
+   return "Global | Project | Stack | Menu"
+end submenu_Stack
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditMyScript,c) ]]
+
+
+--> List | Menu | Props
+-
+[[ _FetchHandler (is_TemplateView,g) ]]
+
+[[ _FetchHandler (disabled_IsTemplateView,g) ]]
+
+[[ _FetchHandler (disabled_TidyView,g) ]]
+
+[[ _FetchHandler (disabled_SetBehavior,g) ]]
+
+
+--> Deps
+-
+
+
+--> Events
+-
+[[ _FetchHandler (mouseUp,c) ]]
+
+[[ _FetchHandler (viewGoAndEditBehavior,c) ]]
+
+
+--> Menu
+-
+[[ _FetchHandler (menu_Init,c) ]]
+
+-- getprop menu_Target
+   put the selected_StackObject of me into selectedStackObject
+   return selectedStackObject
+end menu_Target

@@ -1,0 +1,7 @@
+getprop menu_Burn [mTitle]
+   put the long id of the target into targetObject
+   
+   put the menu_MetaDataArray [mTitle] of targetObject into metaArray
+   put metaArray ["burnt"] is true into someBoolean
+   return someBoolean
+end menu_Burn

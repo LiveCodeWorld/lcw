@@ -1,0 +1,5 @@
+function youtube_FetchSearchArray channelTitle
+   put youtube_FetchSearchJson (channelTitle) into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end youtube_FetchSearchArray

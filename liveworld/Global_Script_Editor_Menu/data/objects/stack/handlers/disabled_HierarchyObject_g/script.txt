@@ -1,0 +1,14 @@
+getprop disabled_HierarchyObject [mTarget]
+   local longObjects, shortObjects, shortNames
+   put the object_BehaviorHierarchyArray of mTarget into hierarchyArray
+   
+   put hierarchyArray ["longObjects"] into longObjects 
+   put hierarchyArray ["menu"] into BehaviorObjectMenu
+   put hierarchyArray ["dictionary"] into ObjectDictionary
+   
+   if longObjects is empty then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_HierarchyObject

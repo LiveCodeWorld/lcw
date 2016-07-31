@@ -1,0 +1,25 @@
+on bezier
+   global variablezxc,a,b,c,d
+   put the first item of a into x1
+   put the first item of d into x2
+   put the first item of b into xa
+   put the first item of c into xb
+   put the second item of a into y1
+   put the second item of d into y2
+   put the second item of b into ya
+   put the second item of c into yb
+   put 0 into v1
+   
+   if there is a fld "BezierResolution" then put fld "BezierResolution" into cde
+   if cde is not a number then put "32" into cde
+   
+   Repeat with i = 1 to cde -- a number from 16 to 800
+      put i * ( 1 / cde ) into v1
+      put 1 - v1 into v2
+      put (x1 * (v2 ^ 3) + (3 * xa * v1 * v2 * v2) + (3 * xb * v1 * v1 * v2) + (x2 * (v1 ^ 3))) into x
+      put (y1 * (v2 ^ 3) + (3 * ya * v1 * v2 * v2) + (3 * yb * v1 * v1 * v2) + (y2 * (v1 ^ 3))) into y
+      if variablezxc is not empty then put last line of variablezxc into mlpokn
+      -- if x div 1,y div 1 is not in variablezxc then put x div 1,y div 1 & return after variablezxc
+      if x div 1,y div 1 <> mlpokn then put x div 1,y div 1 & return after variablezxc
+   end repeat
+end bezier

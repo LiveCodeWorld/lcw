@@ -1,0 +1,7 @@
+setprop latest_LogLine [pLineTitle] someLine
+   -- was "log_AddEntry"
+   put the log_Name of me into pLogName
+   put log_ConstructEntry (someLine, pLineTitle, true) into logLine
+   log_SetLatestLine logLine, pLogName
+   return the result
+end latest_LogLine

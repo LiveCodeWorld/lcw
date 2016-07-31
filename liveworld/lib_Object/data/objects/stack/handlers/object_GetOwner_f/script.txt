@@ -1,0 +1,18 @@
+function object_GetOwner tObject
+   put the long id of tObject into tOwner
+   switch
+      case word 1 of tOwner = "stack"
+         put the main_Stack of tObject into mainStackObject
+         if mainStackObject = tObject then
+            return empty
+         else
+            return mainStackObject
+         end if
+      case word 1 of tObject = "group" and the backgroundbehavior of tObject is true
+         -- easy to get recursion, so let's return the owner of the background group which is the stack
+         return the stack_Object of tOwner 
+      default
+         delete word 1 to 4 of tOwner
+         return tOwner
+   end switch
+end object_GetOwner

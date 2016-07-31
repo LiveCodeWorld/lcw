@@ -1,0 +1,16 @@
+command digitalocean_CreateNewDomainRecord oceanDomainName, someJSON
+   /*
+   To create a new record to a domain, send a POST request to /v2/domains/$DOMAIN_NAME/records. 
+   The request must include all of the required fields for the domain record type being added. 
+   The required attributes per domain record type:
+   
+   -- https://api.digitalocean.com/v2/domains/digitaloceanisthebombdiggity.com/records
+   -- someJSON = {"type":"A","name":"customdomainrecord.com","data":"162.10.66.0","priority":null,"port":null,"weight":null}
+   curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer [[$TOKEN]]' -d '[[someJSON]]' "[[apiURL]]"
+   */
+   
+   put "domains/" & oceanDomainName & "/records" into domainPath
+   digitalocean_RestPost domainPath, someJSON
+   put the result into someResult
+   return someResult
+end digitalocean_CreateNewDomainRecord

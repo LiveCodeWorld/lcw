@@ -1,0 +1,13 @@
+function shell_XmlTidy someXML
+    -- to check and indent the text (returns formatted text or a list of errors)
+    put "tidy -iq -xml" into someShell
+     
+    put the tempname & ".xml" into someFile
+    put someXML into url ("file:" & someFile)
+     
+    shell_AddBashParam someShell, someFile
+    put shell(someShell) into someXML
+    
+    delete file someFile
+    return someXML
+end shell_XmlTidy

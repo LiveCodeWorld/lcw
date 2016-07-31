@@ -1,0 +1,13 @@
+function menu_CleanLine mLine  
+   if char 1 to 2 of mLine is among the items of "!c,!n" then delete char 1 to 2 of mLine
+   if char 1 of mLine = "(" then delete char 1 of mLine
+   -- replace "(" with empty in someMenu	# only at start!
+   -- put replacetext (mLine, "/.*", empty) into mLine
+   
+   -- accelerator keys
+   set the itemdelimiter to "/"
+   put item 1 of mLine into mSendLine
+   
+   if mLine is not mSendLine then breakpoint
+   return mSendLine
+end menu_CleanLine

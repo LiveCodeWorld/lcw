@@ -1,0 +1,13 @@
+on menu_SetIndexFolder indexView
+   put the index_Folder of indexView into defaultPath
+   put merge ("Where is the [[groupName]] folder?") into someComment
+   answer folder someComment with defaultPath
+   if it is empty then exit to top
+   put it into someFolder
+   text_AddTrailing someFolder, slash
+   
+   set the index_Folder of indexView to someFolder
+   -- put folder_ListShortStackFiles (someFolder) into shortStackFiles
+   put folder_ListShortLivecodeFiles (someFolder) into shortStackFiles
+   set the view_Index of indexView to shortStackFiles
+end menu_SetIndexFolder

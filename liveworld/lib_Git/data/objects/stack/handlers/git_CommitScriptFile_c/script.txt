@@ -1,0 +1,9 @@
+command git_CommitScriptFile scriptObject
+   put the script of scriptObject into someScript
+   put autoCommitComment (scriptObject) into pCommitComment
+   if the optionkey is "Down" then
+      put opn_Ask ("Describe your changes...", pCommitComment, false) into pCommitComment
+   end if
+   file_CreateBinary someScript, scriptFile
+   return scriptFile
+end git_CommitScriptfile

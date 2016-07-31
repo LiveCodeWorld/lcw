@@ -1,0 +1,13 @@
+command view_IndexChildren
+   put the childcontrolids of me into topIDs
+   
+   put the vertical_Divider of me into verticalDivider
+   put the short id of verticalDivider into verticalDividerID
+   set the wholematches to true
+   put lineOffset (verticalDividerID, topIDs) into lineNum
+   delete line lineNum of topIDs
+   
+   put the long id of control id (line 1 of topIDs) into TopView
+   put the long id of control id (line 2 of topIDs) into BottomView
+   return TopView & CR & BottomView
+end view_IndexChildren

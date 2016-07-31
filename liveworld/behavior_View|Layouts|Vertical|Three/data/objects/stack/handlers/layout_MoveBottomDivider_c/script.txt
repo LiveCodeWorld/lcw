@@ -1,0 +1,9 @@
+command layout_MoveBottomDivider newBodyHeight, newFooterHeight
+   put newBodyHeight into LocalArray ["body_Height"]
+   put newFooterHeight into LocalArray ["footer_Height"]
+   
+   # moved back to local variable for this dynamic property
+   -- set the view_DisplayProperty ["body_Height"] of me to newBodyHeight
+   -- set the view_DisplayProperty ["footer_Height"] of me to newFooterHeight
+   LayoutControl
+end layout_MoveBottomDivider

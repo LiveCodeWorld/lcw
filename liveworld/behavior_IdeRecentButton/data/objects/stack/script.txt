@@ -1,0 +1,29 @@
+--> MetaData
+-
+author: David Bovill
+copyright: David Bovill
+name: behavior_IdeRecentButton
+type: behavior
+
+/*
+This behavior alters the menu of the Livecode history Button menu in the revScriptEditor.
+*/
+
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+
+--> Menu | Props
+-
+
+
+--> Blah | Menu
+-
+/* Cannot get local menus to work here???
+*/
+
+[[ _FetchHandler (menu_ThisDoesNotWork,c) ]]

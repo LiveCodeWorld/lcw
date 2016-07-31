@@ -1,0 +1,11 @@
+on menu_EditMenuItem pigeon, foundPath, subMenuPath, mController, sentMenuTarget
+   -- this is the default which can be overridden in the menu.
+   put "What would you like to do with the script of this menu item?" into someQuestion
+   answer someQuestion with "Cancel" or "Export" or "Edit"
+   if it = "Edit" then
+      menu_EditMenuItemScript pigeon, mController, sentMenuTarget
+   else if it = "Export" then
+      menu_ExportMenuItemScript pigeon, mController
+   end if
+   return the result
+end menu_EditMenuItem

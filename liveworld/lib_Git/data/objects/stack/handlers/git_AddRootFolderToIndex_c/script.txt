@@ -1,0 +1,13 @@
+command git_AddRootFolderToIndex gitRootFolder, pProjectName
+   put git_GetCheckoutFolder (gitRootFolder) into gitRootFolder
+   if gitRootFolder is empty then return "Error:  folder is not within a git repository"
+   
+   if pProjectName is empty then
+      set the itemdelimiter to "/"
+      put item -1 of gitRootFolder into pProjectName
+   end if
+   put git_GetProjectArray() into gitProjectArray
+   put pProjectName into gitProjectArray [gitRootFolder]["project name"]
+   git_SetProjectArray gitProjectArray
+   return empty
+end git_AddRootFolderToIndex

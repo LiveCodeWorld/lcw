@@ -1,0 +1,9 @@
+function DecimaltoRGB rgbtriplet
+   replace space with comma in rgbtriplet
+   repeat 3
+      put round(item 1 of rgbtriplet * 255) & "," after RGBVar2
+      delete item 1 of rgbtriplet
+   end repeat
+   delete last char of RGBvar2 -- a comma
+   return RGBvar2
+end DecimaltoRGB

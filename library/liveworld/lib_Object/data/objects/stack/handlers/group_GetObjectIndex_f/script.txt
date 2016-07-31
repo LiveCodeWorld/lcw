@@ -1,0 +1,15 @@
+function group_GetObjectIndex containerObject, setShort, visibleOnly
+   -- was "object_GetGroupIndex"
+   put empty into objectIndex
+   
+   if setShort is not false then object_SetShortStackName containerObject, stackNameStart, stackNameEnd
+   put containerObject & return after objectIndex
+   
+   get object_ControlsInside(containerObject, setShort, visibleOnly)
+   if it is empty then
+      delete last char of objectIndex
+   else
+      put it after objectIndex
+   end if
+   return objectIndex
+end group_GetObjectIndex

@@ -1,0 +1,8 @@
+function text_GetPlural someText
+   if char -1 of someText is "y" then
+      put "ies" into char -1 of someText
+   else
+      put "s" after someText
+   end if
+   return someText
+end text_GetPlural

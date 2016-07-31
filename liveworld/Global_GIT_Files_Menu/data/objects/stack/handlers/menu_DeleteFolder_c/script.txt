@@ -1,0 +1,14 @@
+on menu_DeleteFolder
+   answer folder "Choose a folder to delete..."
+   put it into someFolder
+   if someFolder is empty then return false 
+   
+   put false into pForce
+   -- put "/" after someFolder
+   git_DeleteFolder someFolder, pForce
+   put the result into someResult
+   if someResult is not empty then
+      put someResult
+   end if
+   git_RefreshDisplay
+end menu_DeleteFolder

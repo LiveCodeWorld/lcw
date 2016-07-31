@@ -1,0 +1,85 @@
+--> MetaData
+-
+name: lib_DaemonRouter
+type: behavior
+version: 0.8
+copyright: David Bovill
+licence:  GPLv3
+
+local AvoidLoopingHack
+
+
+/*
+This script is designed to be a behavior for a Live Daemon server.
+
+It should be a default behavior, which allowsa single server script to do all the routing it needs in a few lines.
+At the moment it's kind of vague and more of a "script templet" you can fork, and use as a basis to create your own router.
+
+In this version we keep it simple and use the hierarchy and getprop / setprop handlers
+Invent your own complex routing by combining scripts and routing objects 
+Simply replace this routing library with one you role yourself
+*/
+
+-- getprop daemon_Router
+return the long id of me
+end daemon_Router
+
+
+--> Route | Logic
+-
+[[ _FetchHandler (daemon_RouteRequest,c) ]]
+
+
+--> Process | GET
+-
+[[ _FetchHandler (process_GET,c) ]]
+
+[[ _FetchHandler (convertCSS,c) ]]
+
+[[ _FetchHandler (process_UnGot,c) ]]
+
+
+--> Process | PUT
+-
+[[ _FetchHandler (process_PUT,c) ]]
+
+-- function fedwiki_ConstructCreateJSON pageTitle, pCreateMilliSeconds
+breakpoint
+if pCreateSeconds is empty then put the seconds into pCreateSeconds
+
+put daemon_GetRouteData ("/create-a-page.json")  into pageArray
+put the milliseconds into pageArray ["journal"]["1"]["date"]
+-- custom bit
+-- put "Hello World!" into someText
+-- fedwiki_AddParagraphToPageArray pageArray, someText
+
+put json_FromArray (pageArray) into pageJSON
+return pageJSON
+end fedwiki_ConstructCreateJSON
+
+
+--> Process | POST
+-
+[[ _FetchHandler (process_POST,c) ]]
+
+[[ _FetchHandler (process_DELETE,c) ]]
+
+
+--> Daemon | Routing | Utils
+-
+[[ _FetchHandler (daemon_GetServerETagArray,f) ]]
+
+[[ _FetchHandler (request_DeconstructArray,c) ]]
+
+[[ _FetchHandler (request_ConstructHeaderArray,f) ]]
+
+
+--> Experiments
+-
+[[ _FetchHandler (persona_ReplyToAssertion,f) ]]
+
+[[ _FetchHandler (persona_CheckAssertion,c) ]]
+
+[[ _FetchHandler (persona_ConstructAssertionCheck,f) ]]
+
+[[ _FetchHandler (persona_SendToVerifierService,f) ]]

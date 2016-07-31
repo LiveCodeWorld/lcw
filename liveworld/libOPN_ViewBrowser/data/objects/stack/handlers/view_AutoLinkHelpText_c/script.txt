@@ -1,0 +1,15 @@
+command view_AutoLinkHelpText @someHtml
+   -- put matchtext ("(?im)/s.+/s)", someHtml, someword)
+   repeat with wordNum = 1 to the number of words of someHtml
+      put word wordNum of someHtml into someWord
+      if someWord contains "|" then
+         if char 1 to 3 of someWord = "<a>" then
+            -- assume it is already linked.
+         else
+            put "<a>" before someword
+            put "</a>" after someword
+            put someWord into word wordNum of someHtml
+         end if
+      end if
+   end repeat
+end view_AutoLinkHelpText

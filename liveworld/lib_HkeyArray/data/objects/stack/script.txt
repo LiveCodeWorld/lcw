@@ -1,0 +1,161 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_HkeyArray
+type: script library
+version: 0.1
+
+
+/* libOPN_Hkey
+A library for script analysis using hKeys.
+
+An hKey is a unique reference to a handler. It is constructed as follows:
+--    handlerName,scriptObject,handlerNum,handlerType
+
+The handlers in this library are gradually being moved over from the older script libraries,
+with the "script_" extension being replaces by "hkey_"
+*/
+
+--> Currently Working On
+-
+
+
+--> HkeyArray | Objects
+-
+[[ _FetchHandler (hkeyArray_ConstructTreeArray,f) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructObjectTreeArray,f) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructObjectArray,f) ]]
+
+
+--> HkeyArray | Props
+-
+[[ _FetchHandler (hKeyArray_ConstructNodeSection,g) ]]
+
+[[ _FetchHandler (hkey_LinkTypeArray,f) ]]
+
+
+--> HkeyArray
+-
+[[ _FetchHandler (hkeyArray_DepSuite,f) ]]
+
+
+--> HkeyArray | Convert
+-
+[[ _FetchHandler (hkeyArray_ConstructLongArray,f) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructLongSubArray,c) ]]
+
+[[ _FetchHandler (hkey_ShortToLongCalls,f) ]]
+
+
+--> HkeyArray | children
+-
+[[ _FetchHandler (hkeyArray_ExtractParentKeys,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractSubArray,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractParentHkeys,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractParentsAndChildrenArray,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractParentArray,f) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructParentArray,c) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructSubArray,c) ]]
+
+
+--> HkeyArray | Objects
+-
+[[ _FetchHandler (hKeyArray_ExtractObjectArray,f) ]]
+
+[[ _FetchHandler (hKeyArray_ObjectArray,f) ]]
+
+[[ _FetchHandler (hKeyArray_ObjectAndParentArray,f) ]]
+
+
+--> hkeyArray | Object | Delete
+-
+[[ _FetchHandler (hkeyArray_RemoveObjectLinks,c) ]]
+
+[[ _FetchHandler (hkeyArray_RemoveObjectLinksBit,pc) ]]
+
+[[ _FetchHandler (hkeyArray_DeleteObject,f) ]]
+
+
+--> hkeyArray | Object | Replace
+-
+[[ _FetchHandler (hkeyArray_HandlerLinkToObjectLink,f) ]]
+
+[[ _FetchHandler (hkeyArray_ReplaceWithObject,c) ]]
+
+
+--> hkeyArray | Object | Filter
+-
+[[ _FetchHandler (hkeyArray_FilterOutExternalObjects,c) ]]
+
+[[ _FetchHandler (recurse_FilterOutExternalObjects,pc) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractObjects,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractObject,f) ]]
+
+[[ _FetchHandler (hKeyArray_SetWithinObject,c) ]]
+
+[[ _FetchHandler (hKeyArray_InsideAndOut,f) ]]
+
+[[ _FetchHandler (hKeyArray_NodeIdsInObject,f) ]]
+
+
+--> hKeyArray | Filter
+-
+[[ _FetchHandler (hKeyArray_DeleteHandler,c) ]]
+
+[[ _FetchHandler (hKeyArray_FilterSystemMessages,c) ]]
+
+[[ _FetchHandler (hKeyArray_FilterCustomMissing,c) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructDependencySuite,c) ]]
+
+[[ _FetchHandler (hKeyArray_DotNodeLinks,f) ]]
+
+
+--> Hkey | Array | Not Tested
+-
+[[ _FetchHandler (hKeyArray_ConstructNodeSection,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractEventKeys,f) ]]
+
+[[ _FetchHandler (hkeyArray_StripNonLinked,c) ]]
+
+[[ _FetchHandler (hkeyArray_InternalLinks,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExternalLinks,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractCalls,f) ]]
+
+[[ _FetchHandler (hkeyArray_GetFiltered,f) ]]
+
+[[ _FetchHandler (hkeyArray_SetFiltered,c) ]]
+
+[[ _FetchHandler (hkeyArray_ConstructDot,f) ]]
+
+
+--> Hkey | Array | Extract
+-
+[[ _FetchHandler (hkeyArray_ExtractHandlers,f) ]]
+
+[[ _FetchHandler (hkeyArray_ExtractMissingArray,f) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_addToDepKeyArray,pc) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (array_AllNodes,f) ]]
+

@@ -1,0 +1,124 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Mainstack
+type: model
+version: 0.1
+
+
+--> Rename
+-
+[[ _FetchHandler (missing_ExternalHkeys,g) ]]
+
+[[ _FetchHandler (dependency_Objects,g) ]]
+
+[[ _FetchHandler (missing_HkeyArray,g) ]]
+
+
+--> Stack
+-
+[[ _FetchHandler (stack_BehaviorHkeys,g) ]]
+
+[[ _FetchHandler (stack_FetchManifestArray,f) ]]
+
+
+--> Mainstack | Props
+-
+[[ _FetchHandler (mainstack_Deps,g) ]]
+
+[[ _FetchHandler (mainstack_Deps,s) ]]
+
+[[ _FetchHandler (mainstack_DependencySuite,g) ]]
+
+[[ _FetchHandler (mainstack_ManifestArrayFile,g) ]]
+
+[[ _FetchHandler (mainStack_ManifestArray,g) ]]
+
+[[ _FetchHandler (mainstack_HkeyArray,g) ]]
+
+[[ _FetchHandler (mainstack_HkeyArray,s) ]]
+
+[[ _FetchHandler (mainstack_Harray,g) ]]
+
+[[ _FetchHandler (mainstack_Harray,s) ]]
+
+[[ _FetchHandler (mainstack_MissingArray,g) ]]
+
+[[ _FetchHandler (mainstack_MissingArray,s) ]]
+
+[[ _FetchHandler (mainstack_WalkArray,g) ]]
+
+[[ _FetchHandler (mainstack_WalkArray,s) ]]
+
+[[ _FetchHandler (mainstack_WalkArrayFile,g) ]]
+
+
+--> Mainstack | Sub Arrays
+-
+[[ _FetchHandler (mainstack_ExternalParents,g) ]]
+
+
+--> Metadata | Hash
+-
+[[ _FetchHandler (mainstack_HandlerHashArray,g) ]]
+
+[[ _FetchHandler (mainstack_HandlerHashArray,s) ]]
+
+[[ _FetchHandler (mainstack_Hash,g) ]]
+
+
+--> Project | Functions and Commands
+-
+[[ _FetchHandler (mainstack_GetManifestArrayFile,f) ]]
+
+[[ _FetchHandler (mainstack_FetchHandlerHashArray,f) ]]
+
+[[ _FetchHandler (mainStack_StoreManifestArray,c) ]]
+
+[[ _FetchHandler (mainstack_StoreHandlerHashArray,c) ]]
+
+[[ _FetchHandler (mainstack_ExtractExternalParentHkeys,f) ]]
+
+/*
+Part of mainstack_WalkArray.
+*/
+
+[[ _FetchHandler (mainstack_FetchHarray,f) ]]
+
+[[ _FetchHandler (mainstack_StoreHarray,c) ]]
+
+[[ _FetchHandler (mainstack_FetchHkeyArray,f) ]]
+
+[[ _FetchHandler (mainstack_StoreHkeyArray,c) ]]
+
+[[ _FetchHandler (mainstack_ConstructDependencySuite,f) ]]
+
+[[ _FetchHandler (mainstack_AddHkeyToDeps,c) ]]
+
+[[ _FetchHandler (mainstack_RemoveHkeyFromDeps,c) ]]
+
+[[ _FetchHandler (mainstack_FetchDepHkeys,f) ]]
+
+[[ _FetchHandler (mainstack_StoreDepHkeys,c) ]]
+
+
+--> Mainstack | WalkArray
+-
+[[ _FetchHandler (mainstack_FetchText,f) ]]
+
+[[ _FetchHandler (mainstack_StoreText,c) ]]
+
+[[ _FetchHandler (mainstack_FetchSomeArray,f) ]]
+
+[[ _FetchHandler (mainstack_StoreSomeArray,c) ]]
+
+[[ _FetchHandler (mainstack_FetchWalkArray,f) ]]
+
+[[ _FetchHandler (mainstack_StoreWalkArray,c) ]]
+
+[[ _FetchHandler (mainstack_GetWalkArrayFile,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (object_RuggedDeconstruct,c) ]]

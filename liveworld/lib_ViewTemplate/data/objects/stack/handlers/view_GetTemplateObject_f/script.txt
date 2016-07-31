@@ -1,0 +1,13 @@
+function view_GetTemplateObject vName
+   view_NormalizeName vName
+   if exists (control 1 of card 1 of stack vName) then
+      put the long id of control 1 of card 1 of stack vName into templateObject
+      return templateObject
+   end if
+   return empty
+   
+   -- slow due to loops through every template in the array
+   -- consider creating a reverse array cache
+   -- put hArray_GetViewTemplate (vName) into templateObject
+   -- return templateObject
+end view_GetTemplateObject

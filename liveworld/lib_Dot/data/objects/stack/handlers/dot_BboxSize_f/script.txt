@@ -1,0 +1,6 @@
+function dot_BboxSize someRect
+   put item 3 of someRect - item 1 of someRect into someWidth
+   put item 4 of someRect - item 2 of someRect into someHeight
+   put 0,0,someWidth,someHeight into someRect
+   return someRect
+end dot_BboxSize

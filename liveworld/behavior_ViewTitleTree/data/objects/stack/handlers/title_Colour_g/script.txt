@@ -1,0 +1,10 @@
+getprop title_Colour
+   put title_Button() into titleButton
+   put background_Button() into iconBackground
+   
+   if the visible of iconBackground is true then
+      return empty
+   else
+      return the backgroundcolor of titleButton
+   end if
+end title_Colour

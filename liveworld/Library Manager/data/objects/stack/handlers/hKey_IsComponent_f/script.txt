@@ -1,0 +1,5 @@
+function hKey_IsComponent hKey, pHarray
+   put hArray_GetHandler (hKey, pHarray, true) into someHandler
+   put handler_IsComponent (someHandler) into someBoolean
+   return someBoolean
+end hKey_IsComponent

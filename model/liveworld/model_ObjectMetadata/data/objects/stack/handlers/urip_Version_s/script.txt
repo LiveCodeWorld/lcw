@@ -1,0 +1,6 @@
+setprop urip_Version someVersion
+   -- was "object_Version"
+   set the object_MetaData ["version"] of the target to objectType
+   put the result into uRipArray
+   return uRipArray
+end urip_Version

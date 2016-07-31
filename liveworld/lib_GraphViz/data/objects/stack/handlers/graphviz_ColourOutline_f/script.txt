@@ -1,0 +1,14 @@
+function graphviz_ColourOutline
+   /*
+   Can be used to create a (sub)menu.
+   
+   Displays all X11 colours,
+   or or at least the colours that rev and Graphviz understands
+   */
+   
+   put colour_BaseColourOutline() into graphvizColours
+   put "Light Green,Dark Magenta" into dodgyColours
+   replace comma with CR in dodgyColours
+   line_Delete dodgyColours, graphvizColours
+   return graphvizColours
+end graphviz_ColourOutline

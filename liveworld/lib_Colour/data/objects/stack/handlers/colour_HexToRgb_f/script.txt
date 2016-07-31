@@ -1,0 +1,12 @@
+function colour_HexToRgb hexColour
+   if char 1 of hexColour is not "#" then
+      return empty
+   else -- if the number of chars of hexColour = 7 then
+      put baseconvert(char 2 to 3 of hexColour,16,10) into r
+      put baseconvert(char 4 to 5 of hexColour,16,10) into g
+      put baseconvert(char 6 to 7 of hexColour,16,10) into b
+      return r,g,b
+   else
+      return empty
+   end if
+end colour_HexToRgb

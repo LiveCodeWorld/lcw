@@ -1,0 +1,10 @@
+command field_SetSelected scriptField, @textSelected, @someLine, @lineNum, @someScript, @startChar, @endChar
+   put the selectedText into textSelected   
+   put the selectedchunk into chunkSelected
+   put word 2 of the selectedLine into lineNum
+   
+   put word 2 of chunkSelected into startChar
+   put word 4 of chunkSelected into endChar
+   put the text of scriptField into someScript
+   put line lineNum of someScript into someLine
+end field_SetSelected

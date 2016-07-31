@@ -1,0 +1,26 @@
+function fossil_ConstructConfiguration paramArray, fossilFile
+   local fossilConfig
+   put "-- The 'project' configuration exported from" & CR after fossilConfig
+   put "-- repository '[[fossilFile]]'" & CR after fossilConfig
+   put "-- on 2011-10-18 19:51:48" & CR after fossilConfig
+   replace "'" with quote in fossilConfig
+   
+   put paramArray ["ProjectSkin"] into ProjectSkin
+   if ProjectSkin is not empty then put "REPLACE INTO config VALUES('header','[[ProjectSkin]]');" & CR after fossilConfig
+   
+   put paramArray ["ProjectName"] into ProjectName
+   if ProjectName is not empty then put "REPLACE INTO config VALUES('project-name','[[ProjectName]]');" & CR after fossilConfig
+   
+   put paramArray ["ProjectDescription"] into ProjectDescription
+   if ProjectDescription is not empty then put "REPLACE INTO config VALUES('project-description','[[ProjectDescription]]');" & CR after fossilConfig
+   
+   put paramArray ["ProjectTickets"] into ProjectTickets
+   if ProjectTickets is not empty then put "INSERT INTO _xfer_reportfmt(title,cols,sqlcode) VALUES('All Tickets','[[ProjectTickets]]');" & CR after fossilConfig
+   
+   put paramArray ["Users"] into userArray
+   if userArray is an array then put fossil_ConstructUserConfiguration (userArray) & CR after fossilConfig
+   
+   put merge (fossilConfig) into fossilConfig
+   delete char -1 of fossilConfig
+   return fossilConfig
+end fossil_ConstructConfiguration

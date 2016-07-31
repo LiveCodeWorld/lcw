@@ -1,0 +1,5 @@
+function hap_GetImageFolder recordArray
+   -- this uses the revIgniter handler, so it can be used on the server as well.
+   put folderForArt (recordArray) into imageFolder
+   return imageFolder
+end hap_GetImageFolder

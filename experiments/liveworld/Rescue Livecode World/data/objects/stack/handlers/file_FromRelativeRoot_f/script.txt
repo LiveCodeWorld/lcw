@@ -1,0 +1,12 @@
+function file_FromRelativeRoot relativeFile, relativeRoot
+    -- was "getFile_FromRelativeRoot"
+    if last char of relativeRoot is "/" then delete last char of relativeRoot -- it is :)
+    put the itemdelimiter into oDelim
+    set the itemdelimiter to "/"
+    repeat while item 1 of relativeFile is ".."
+        delete item 1 of relativeFile
+        delete last item of relativeRoot
+    end repeat
+    set the itemdelimiter to oDelim
+    return relativeRoot & "/" & relativeFile
+end file_FromRelativeRoot

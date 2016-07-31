@@ -1,0 +1,4 @@
+command fedwiki_AddHtmlToPageArray @pageArray, someHtml, pID
+   put fedwiki_ConstructStoryHtmlArray (someHtml, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddHtmlToPageArray

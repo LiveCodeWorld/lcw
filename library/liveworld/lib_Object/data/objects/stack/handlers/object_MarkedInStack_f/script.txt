@@ -1,0 +1,45 @@
+function object_MarkedInStack someMark, stackObject, @object_Array, setShort
+   -- version latest,5/2/03
+   
+   if exists(stackObject) is false then
+      safeAnswer "Can't find" && stackObject
+      return empty
+   else
+      put the someMark of stackObject into markValue
+      put empty into objectIndex
+      
+      if markValue is not empty then
+         if setShort is not false then object_SetShortStackName stackObject, stackNameStart, stackNameEnd
+         put markValue into object_Array[stackObject]
+         put line_InsertIntoIndex(stackObject, objectIndex) into objectIndex
+      else
+         -- put empty into object_Array
+      end if
+      
+      -- get the objects in the backgrounds
+      repeat for each line someId in the backgroundIDs of stackObject
+         set the cursor to busy
+         if the controlKey is "Down" then exit repeat
+         put the long ID of background ID someId of stackObject into containerObject
+         get object_MarkedInContainer(someMark, containerObject, object_Array, setShort)
+         put line_InsertIntoIndex(it, objectIndex) into objectIndex
+      end repeat
+      
+      -- get the card only objects of the cards
+      -- plus commanddown exit
+      put  the cardIDs of stackObject into limitedCardIDs
+      repeat for each line cardID in limitedCardIDs
+         set the cursor to busy
+         if the controlKey is "Down" then exit repeat
+         put the long ID of card ID cardId of stackObject into cardObject
+         get object_MarkedOnCard(someMark, cardObject, object_Array, setShort)
+         put line_InsertIntoIndex(it, objectIndex) into objectIndex
+      end repeat
+   end if
+   -- delete last char of objectIndex
+   
+   -- local objects
+   return objectIndex
+   -- not accumulated results
+   -- return keys(object_Array)
+end object_MarkedInStack

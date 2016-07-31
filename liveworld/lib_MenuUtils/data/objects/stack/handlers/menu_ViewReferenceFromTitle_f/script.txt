@@ -1,0 +1,17 @@
+function menu_ViewReferenceFromTitle mTitle
+   put menu_ViewNameFromTitle(mTitle) into viewName
+   put view_GetTemplateObject (viewName) into libraryObject
+   if exists(libraryObject) is true then return libraryObject
+   
+   put menu_FindAssociatedViewNames(mTitle) into viewNames
+   repeat for each line viewName in viewNames
+      put view_GetTemplateObject (viewName) into libraryObject
+      if exists(libraryObject) is true then
+         put the view_Reference of libraryObject into viewReference
+         if viewReference is not empty then
+            return viewReference
+         end if
+      end if
+   end repeat
+   return empty
+end menu_ViewReferenceFromTitle

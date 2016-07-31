@@ -1,0 +1,28 @@
+function hkeyArray_ExtractObject someObject, hkeyArray
+    local filteredHkeys
+    
+    set the wholematches to true
+    repeat for each key hKey in hkeyArray
+        set the cursor to busy
+        
+        script_DeconstructHkey hKey, handlerName, handlerType, handlerNum, scriptObject
+        if exists(scriptObject) is false then
+            -- skip "missing"
+            next repeat
+        else if the long id of someObject is the long id of scriptObject then
+            line_Add hKey, filteredHkeys
+        else
+            put hkeyArray [hKey] into handlerCalls
+            repeat for each line callKey in handlerCalls
+                script_DeconstructHkey callKey, handlerName, handlerType, handlerNum, callObject
+                if exists(callObject) is false then
+                    -- skip Missing
+                    next repeat
+                else if the long id of someObject = the long id of callObject then
+                    line_Add callKey, filteredHkeys
+                end if
+            end repeat
+        end if
+    end repeat
+    return filteredHkeys
+end hkeyArray_ExtractObject

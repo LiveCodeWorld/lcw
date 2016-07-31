@@ -1,0 +1,5 @@
+on menu_TestMashed mTarget
+   opn_Notify the mobile_Name of mTarget, true
+   put the view_Props of mTarget into viewProps
+   display_Text (the view_MashedProperties of mTarget), the name of mTarget
+end menu_TestMashed

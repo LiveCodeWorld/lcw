@@ -1,0 +1,7 @@
+getprop card_Names
+   -- can simply return too many for menu draw limits
+   put the cardnames of stack "libOPN_Menus" into globalMenuCardNames
+   sort globalMenuCardNames
+   -- display_Lines globalMenuCardNames
+   return globalMenuCardNames
+end card_Names

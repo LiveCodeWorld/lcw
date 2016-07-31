@@ -1,0 +1,11 @@
+getprop field_Style
+   put _fieldView() into fieldView
+   switch
+      case the dontwrap of fieldView = false
+         return "text"
+      case the multiple_Hilites of fieldView = false
+         return "scrolling"
+      default
+         return "multiselect"
+   end switch
+end field_Style

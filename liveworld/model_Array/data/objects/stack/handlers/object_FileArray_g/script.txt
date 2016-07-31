@@ -1,0 +1,5 @@
+getprop object_FileArray [pModelName]
+   put the model_File [pModelName] of the target into someFile
+   put array_Fetch (someFile) into tArray
+   return tArray
+end object_FileArray

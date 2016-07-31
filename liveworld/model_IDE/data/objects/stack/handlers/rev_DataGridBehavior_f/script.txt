@@ -1,0 +1,6 @@
+function rev_DataGridBehavior
+    -- can simply get the beahvior of a datagrid
+    -- however if one is ot around...
+    put rev_DataGridStack() into dataGridStack
+    return the long id of of btn "Data Grid" of group "Behaviors" of cd 1 of dataGridStack
+end rev_DataGridBehavior

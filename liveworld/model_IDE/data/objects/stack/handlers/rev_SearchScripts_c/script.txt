@@ -1,0 +1,20 @@
+command rev_SearchScripts pQuery, pTarget, pCallback, pCallbackTarget
+   # Parameters
+   #   pQuery : the string to search for
+   #   pIsRegExp : whether or not pQuery is a regular expression
+   #   pUseWildCards : whether or not to treat *s as wildcards
+   #   pIgnoreCase : whether to do a case sensitive search or not
+   #   pTarget : whether to search in all tabs or just the current tab
+   #   pCallback : optional. The name of a command to send with a message saying what state the search is in
+   # Description
+   #   Searches for all matches for the specified search and displays them in the "Search Results" pane.
+   
+   put false into pIsRegExp
+   put false into pUseWildCards
+   
+   put true into pWholeMatches
+   put true into pIgnoreCase
+   
+   put rev_ScriptEditorGroup() into revScriptEditorGroup
+   dispatch "revSEFindAll" to revScriptEditorGroup with pQuery,pIsRegExp,pUseWildCards,pWholeMatches,pIgnoreCase,pTarget,pCallback,pCallbackTarget
+end rev_SearchScripts

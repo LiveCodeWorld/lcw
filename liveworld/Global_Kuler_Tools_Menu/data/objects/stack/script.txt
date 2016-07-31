@@ -1,0 +1,29 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Kuler_Tools_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Kuler | Tools | Menu
+-
+[[ _FetchHandler (menu_ItemsPerPage,c) ]]
+
+[[ _FetchHandler (menu_ClearKulerData,c) ]]
+
+[[ _FetchHandler (menu_KulerDocumentation,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Datagrid,c) ]]
+
+[[ _FetchHandler (menu_SetDataGridRecord,c) ]]
+
+[[ _FetchHandler (menu_EditScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_View,c) ]]

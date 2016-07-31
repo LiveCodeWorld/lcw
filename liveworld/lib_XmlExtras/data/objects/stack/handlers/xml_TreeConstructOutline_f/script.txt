@@ -1,0 +1,9 @@
+function xml_TreeConstructOutline treeID
+    put revXMLRootNode(treeID) into myStartNode
+    if myStartNode is empty then
+        -- revXMLTree crashes with empty start nodes caused by parsing bad xml
+        exit to top
+    end if
+    put revXMLTree(treeID, myStartNode, return, tab, true, -1) into tabbedText
+    return tabbedText
+end xml_TreeConstructOutline

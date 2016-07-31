@@ -1,0 +1,12 @@
+function stack_SubStackOutline stackNames
+    put empty into stackNameOutline
+    repeat for each line stackName in stackNames
+        put the substacks of stack stackname into subStackNames
+        put stackName & return after stackNameOutline
+        if subStackNames is not empty then
+            put outline_IncreaseIndent(subStackNames, 1) & return after stackNameOutline
+        end if
+    end repeat
+    delete last char of stackNameOutline
+    return stackNameOutline
+end stack_SubStackOutline

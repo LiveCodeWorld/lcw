@@ -1,0 +1,8 @@
+command library_StoreGlobalPrefs pSetName, pRemoveWhenSaved
+   -- Modified to save a certain type of global in the projects checkout folder
+   -- any global beginning with gPrefs_* is automatically stored in the users preference folder
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put library_ConstructPrefsArray (pRemoveWhenSaved) into prefsArray
+   pref_StoreArray prefsArray, pSetName
+   return prefsArray
+end library_StoreGlobalPrefs

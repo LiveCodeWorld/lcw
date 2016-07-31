@@ -1,0 +1,8 @@
+getprop view_VeryLazyMatchInside [vNames]
+   repeat the number of lines of vNames
+      put the view_LazyMatchInside [vNames] of the target into lazyMatch
+      if exists(lazyMatch) then return lazyMatch
+      delete line -1 of vNames
+   end repeat
+   return empty
+end view_VeryLazyMatchInside

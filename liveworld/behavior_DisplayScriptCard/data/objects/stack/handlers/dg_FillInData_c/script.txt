@@ -1,0 +1,41 @@
+on dg_FillInData recordArray, recordView
+    -- for script title sections
+   lock screen
+   put recordArray ["startLineNum"] into startLineNum
+   put recordArray ["lineType"] into lineType
+   put recordArray ["isExpanded"] into isExpanded
+   put recordArray ["scriptLine"] into someTitle
+   
+   -- handlers also have these sections
+   put recordArray ["endLineNum"] into endLineNum
+   put recordArray ["handler"] into handler
+   put recordArray ["hKey"] into hKey
+   
+   -- set the background_Colour of recordView to orange
+   
+   switch
+      case handler is empty and isExpanded is true -- an opened suite
+         put _constructSuiteTitle (someTitle) into suitTitle
+         set the record_HtmlText of recordView to suitTitle
+         break
+      case handler is empty and isExpanded is false -- a closed suite
+         put _constructSuiteTitle (someTitle) into suitTitle
+         set the title_HtmlText of recordView to suitTitle
+         break
+      case handler is not empty and isExpanded is true -- an opened handler
+         set the record_Handler [startLineNum] of recordView to handler
+         break
+      case handler is not empty and isExpanded is false -- a closed handler
+         set the hkey_Title of recordView to hKey
+         break
+   end switch
+   
+   set the record_IsExpanded of recordView to isExpanded
+   if the displayed_lineNumbers of me is true then
+      set the lineNumbers_Visible of recordView to true
+      set the lineNumbers_Start of recordView to startLineNum
+   else
+      set the lineNumbers_Visible of recordView to false
+   end if
+   unlock screen
+end dg_FillInData

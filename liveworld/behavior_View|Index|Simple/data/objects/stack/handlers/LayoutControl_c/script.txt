@@ -1,0 +1,14 @@
+command LayoutControl pRect
+   lock screen
+   if pRect is empty then put the rect of me into pRect
+   
+   if the showborder of me is true then
+      put the borderwidth of me into bWidth
+      rect_SubtractMargins pRect, bWidth
+   end if
+   rect_SubtractMargins pRect, the margins of me
+   
+   set the rect of _titleView() to _headerRect (pRect)
+   set the rect of _fieldView() to _fieldRect (pRect)
+   unlock screen
+end LayoutControl

@@ -1,0 +1,9 @@
+on menu_IsLcwFolder indexView, someBoolean   
+   if someBoolean is true then
+      put the lcw_Folder of indexView into newIndexFolder
+   else
+      put library_StandardViewFolder() into newIndexFolder
+   end if
+   set the index_Folder of indexView to newIndexFolder
+   dispatch "refresh" to indexView
+end menu_IsLcwFolder

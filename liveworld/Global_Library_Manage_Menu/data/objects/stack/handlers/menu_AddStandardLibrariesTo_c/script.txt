@@ -1,0 +1,14 @@
+on menu_AddStandardLibrariesTo ideScriptObject, setName
+   put library_FetchSetArray (setName) into setArray
+   repeat for each item libType in "back,used,front,script only"
+      put library_ConstructAllObjectTypeArray (libType) into allObjectArray
+      put setArray ["data"][libType] into setObjectArray
+      union setObjectArray with allObjectArray
+      put setObjectArray into setArray ["data"][libType]
+   end repeat
+   library_StoreSetArray setArray, setName
+   
+   put merge ("Added standard libraries to the stored library set '[[setName]]'!") into someComment
+   opn_Notify someComment
+   menu_DisplayLibraryArray ideScriptObject, setName
+end menu_AddStandardLibrariesTo

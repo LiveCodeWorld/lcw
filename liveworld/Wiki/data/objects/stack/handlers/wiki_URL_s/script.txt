@@ -1,0 +1,5 @@
+setprop wiki_URL someURL
+   put _browserWidget()into browserWidget
+   set the url of browserWidget to someURL
+   return browserWidget
+end wiki_URL

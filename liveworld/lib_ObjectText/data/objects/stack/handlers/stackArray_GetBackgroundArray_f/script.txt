@@ -1,0 +1,6 @@
+function stackArray_GetBackgroundArray aBackground, stackArray
+   repeat for each element bgArray in stackArray ["manifest"]["backgrounds"]
+      if aBackground = bgArray ["object"] then return bgArray
+   end repeat
+   return empty
+end stackArray_GetBackgroundArray

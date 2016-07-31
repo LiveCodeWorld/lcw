@@ -1,0 +1,15 @@
+function hKeyArray_ConstructStackIdArray idArray
+    repeat for each key nodeID in idArray
+        put idArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        
+        if exists(scriptObject) then
+            put the stack_Object of scriptObject into stackObject
+            put the name of stackObject into stackObject
+        else
+            put scriptObject into stackObject
+        end if
+        array_AddToIndex nodeID, stackObject, stackIdArray
+    end repeat
+    return stackIdArray
+end hKeyArray_ConstructStackIdArray

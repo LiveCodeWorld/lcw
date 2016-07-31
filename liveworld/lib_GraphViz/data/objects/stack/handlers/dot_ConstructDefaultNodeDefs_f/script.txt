@@ -1,0 +1,5 @@
+function dot_ConstructDefaultNodeDefs nodeShape, nodeStyle, nodeColour, nodeFillColour, nodeUrl, nodeToolTip
+    --   node [URL="http://wiki.architex.tv/\N", shape=box, fontsize=22, fontname=arial, style=filled];
+    get dot_ConstructDefLine(empty, nodeShape, nodeStyle, nodeColour, nodeFillColour, "", nodeUrl, nodeToolTip, "")
+    return "node [" & it & "];"
+end dot_ConstructDefaultNodeDefs

@@ -1,0 +1,5 @@
+on menu_RevertToFileImage imageObject  
+   put the image_OriginalFile of imageObject into imageFile
+   set the filename of imageObject to imageFile
+   opn_Notify the filename of imageObject -- into someFile
+end menu_RevertToFileImage

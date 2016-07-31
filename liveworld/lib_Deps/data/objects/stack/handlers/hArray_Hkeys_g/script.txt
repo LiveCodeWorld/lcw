@@ -1,0 +1,11 @@
+getprop hArray_Hkeys
+   put the hArray_ScriptData of the target into scriptArray
+   repeat for each key indexNum in scriptArray
+      put scriptArray [indexNum]["hKey"] into hKey
+      if hKey is not empty then
+         put hKey & CR after hKeys
+      end if
+   end repeat
+   delete char -1 of hKeys
+   return hKeys
+end hArray_Hkeys

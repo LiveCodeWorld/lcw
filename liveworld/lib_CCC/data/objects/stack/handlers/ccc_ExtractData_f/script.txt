@@ -1,0 +1,92 @@
+function ccc_ExtractData someHTML
+   /*
+   This code should be replaced by Xpath based code.
+   
+   Here we list classes of divs:
+   div[3] = container-fluid
+   div[3]/div = tab-content
+   div[3]/div/div[3] = download
+   */
+   
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   
+   -- put html_ExtractNodeContents ("html/body/div[3]/h1[1]", tidyXML) into pageTitle
+   put revXMLNodeContents (treeID, "html/body/div[3]/h1[1]") into pageTitle
+   put pageTitle into cccArray ["pageTitle"]
+   
+   -- put html_ExtractNodeContents ("html/body/div[3]/h2[1]", tidyXML) into pageSubTitle
+   put revXMLNodeContents (treeID, "html/body/div[3]/h2[1]") into pageSubTitle
+   xml_BlankError pageSubTitle
+   put pageSubTitle into cccArray ["pageSubTitle"]
+   
+   -- put html_ExtractNodeContents ("html/body/div[3]/p[3]", tidyXML) into someDescription
+   put revXMLNodeContents (treeID, "html/body/div[3]/p[3]") into someDescription
+   put revXMLText (treeID, "html/body/div[3]/p[3]") into someDescription
+   put someDescription into cccArray ["description"]
+   
+   put revXMLNodeContents (treeID, "/html/body/div[3]/ul[2]/li[2]/span") into someDate
+   put someDate into cccArray ["date"]
+   
+   /*
+   -- put revXMLText (treeID, "html/body/div[3]/div/div[3]/ul[1]") into downLoadListNode
+   -- //*[@id="download"]/ul/li[1]/a[1]
+   -- //*[@id="download"]/ul/li[1]/span[1]
+   put "//*[@id='download']" into downLoadXpath
+   put revXMLDataFromXPathQuery (treeID, downLoadXpath) into tBooks
+   put word 1 to -1 of revXMLEvaluateXPath (treeID, downLoadXpath) into downLoadNode
+   put revXMLText (treeID, downLoadNode) into sfda
+   -- "/bookstore/book/[price<30]/title"
+   put "/h3[1]" after downLoadNode
+   put revXMLDataFromXPathQuery (treeID, downLoadNode) into tBooks
+   put revXMLEvaluateXPath (treeID, "//*[@id='download']") into downLoadNode
+   
+   put  "//*[@id='download']/h3[1]" into someXPath
+   put revXMLEvaluateXPath (treeID, someXPath) into downLoadNode
+   put revXMLEvaluateXPath (treeID, "//*[@id='download']/*") into downLoadNode
+   */
+   
+   put revXMLMatchingNode (treeID, "html/body", "div", "id", "download", -1) into downLoadNode
+   put downLoadNode & "/ul[1]/" into downLoadListNode
+   
+   -- put "html/body/div[3]/div/div[3]/ul[1]/" into downLoadListNode
+   put revXMLChildNames (treeID, downLoadListNode, CR, "li", true) into tNames
+   repeat for each line tName in tNames
+      put downLoadListNode & tName into tNode
+      put tNode & "/span[1]" into firstSpanNode
+      put revXMLNodeContents (treeID, firstSpanNode) into mediaName
+      put tNode & "/span[2]" into secondSpanNode
+      put revXMLNodeContents (treeID, secondSpanNode) into mediaLanguage
+      
+      put tNode & "/a[1]" into hRefNode
+      put revXMLAttribute (treeID, hRefNode, "href") into mediaUrl
+      
+      put mediaUrl into cccArray ["media"][mediaLanguage][mediaName]
+   end repeat
+   
+   -- put html_ExtractAttribute ("href", "html/body/div[3]/div/div[3]/ul[1]/li[3]/a[1]", tidyXML) into webmUrl
+   -- put revXMLAttribute (treeID, "html/body/div[3]/div/div[3]/ul[1]/li[3]/a[1]", "href") into webmUrl
+   -- put webmUrl into cccArray ["webmUrl"]
+   
+   put "html/body/div[3]/" into fluidNode
+   put revXMLChildNames (treeID, fluidNode, CR, "a", true) into tNames
+   repeat for each line tName in tNames
+      put fluidNode & tName into tNode
+      put revXMLNodeContents (treeID, tNode) into someTag
+      put revXMLAttribute (treeID, tNode, "href") into relTagLink
+      put relTagLink into cccArray ["tags"][someTag]
+   end repeat
+   
+   put "html/body/div[3]/p[1]/span" into personNode
+   put revXMLChildNames (treeID, personNode, CR, empty, true) into tNames
+   repeat for each line tName in tNames
+      put personNode & "/" & tName into tNode
+      
+      -- put revXMLNodeContents ("html/body/div[3]/p[1]/span/a[1]", tidyXML) into personName
+      put revXMLNodeContents (treeID, tNode) into personName
+      -- put html_ExtractAttribute ("href", "html/body/div[3]/p[1]/span/a[1]", tidyXML) into relPersonLink
+      put revXMLAttribute (treeID, tNode, "href") into relPersonLink
+      put relPersonLink into cccArray ["authors"][personName]
+   end repeat
+   revDeleteXMLTree treeID
+   return cccArray
+end ccc_ExtractData

@@ -1,0 +1,6 @@
+on socket_ClosePending
+    repeat for each line pendingInfo in the pendingmessages
+        put item 1 of pendingInfo into messageID
+        cancel messageID
+    end repeat
+end socket_ClosePending

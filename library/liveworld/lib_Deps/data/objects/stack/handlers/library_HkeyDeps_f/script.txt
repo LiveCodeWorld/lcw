@@ -1,0 +1,8 @@
+function library_HkeyDeps hKey, pAllcalls
+   put library_HkeyCallArray (hKey, pAllcalls) into hKeyLinkArray
+   put array_AllNodes (hKeyLinkArray) into hkeyDeps
+   put item 1 to 2 of hKey into shortHkey
+   line_Delete shortHkey, hkeyDeps
+   sort hkeyDeps by item 1 of each
+   return hkeyDeps
+end library_HkeyDeps

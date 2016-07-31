@@ -1,0 +1,5 @@
+getprop remote_BranchNames
+   git_DeconstructBranchNames localBranchNames, remoteBranches, remoteNames, remoteBranchNames, remoteMappings
+   -- replace "/" with "\/" in remoteBranchNames
+   return remoteNames
+end remote_BranchNames

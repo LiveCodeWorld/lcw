@@ -1,0 +1,36 @@
+on menu_MoveToNewFolder indexView
+   put the lcw_FolderName of indexView into folderName -- new name
+   put lcw_GetFolder (folderName) into lcwFolder
+   if lcwModelFolder is empty then
+      answer warning "LCW folder does not exist!"
+      breakpoint
+      exit to top
+   end if
+   
+   put the index_LongStackFiles of indexView into longStackFiles
+   
+   set the itemdelimiter to slash
+   repeat for each line longStackFile in longStackFiles
+      set the cursor to busy
+      if exists (stack longStackFile) is false then next repeat
+      
+      put the short name of stack longStackFile into stackName
+      
+      put item -1 of longStackFile into shortFile
+      put lcwFolder & shortFile into newFile
+      
+      set the wholematches to true
+      put stackName is among the lines of the stacksinuse into isUsed
+      
+      -- if isUsed is true then stop using stack stackName
+      -- delete stack stackName
+      -- set the stack_IsKnown of stack longStackFile to false
+      rename file longStackFile to newFile
+      -- set the stack_IsKnown of stack newFile to true
+      -- if isUsed is true then start using stack stackName
+   end repeat
+   
+   dispatch "refresh" to indexView
+   answer "Moved everything!"
+   finder_Reveal lcwFolder
+end menu_MoveToNewFolder

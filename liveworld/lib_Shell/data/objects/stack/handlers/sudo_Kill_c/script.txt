@@ -1,0 +1,6 @@
+on sudo_Kill
+    put "#!/bin/sh" & cr into tScript
+    put "pw="&tPassword & cr after tScript
+    put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
+    return shell(tScript)
+end sudo_Kill

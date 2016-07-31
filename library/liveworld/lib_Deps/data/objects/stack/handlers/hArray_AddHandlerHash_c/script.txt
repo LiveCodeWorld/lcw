@@ -1,0 +1,42 @@
+command hArray_AddHandlerHash @hArray, hKey, someHandler, handlerHash, indexTime, pForceindex
+   -- we could add to an hKeyArray here? But can't use hArray to find calls in hierarchy as it is in progress of being built
+   
+   put hArray ["handlerHashArray"]["cached"][handlerHash]["hashTime"] is not empty into alreadyIndexed
+   
+   -- let's get the old handler hash and delete the old entry
+   put hArray_GetHandlerHash (hKey, hArray) into oldHandlerHash
+   if oldHandlerHash is not handlerHash then
+      delete variable hArray ["handlerHashArray"]["cached"][oldHandlerHash]
+      delete variable hArray ["handlerHashArray"]["new"][oldHandlerHash]
+   end if
+   
+   -- add hKey to list of hkeys with same handler(hash)
+   put empty into hArray ["handlerHashArray"]["cached"][handlerHash]["hKey"][hKey]
+   
+   if alreadyIndexed is false or pForceindex is true then
+      -- if new (handlerHash) entry extract calls and add to index
+      put indexTime into hArray ["handlerHashArray"]["cached"][handlerHash]["hashTime"]
+      
+      -- now let's extract keywords and index shortHkey against each (no point doing it for non first Hkeys
+      hkey_AddToKeyWordArray hArray, hKey, handlerHash
+      
+      -- but don't clear hkey list
+      put handler_ConstructCallArray (someHandler) into metadataArray
+      put metadataArray ["filteredCalls"] into shortCalls
+      
+      put shortCalls into hArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"]
+      put metadataArray ["hkeyCalls"] into hArray ["handlerHashArray"]["cached"][handlerHash]["allShortCalls"]
+      -- put handler_ExtractCalls (someHandler) into hArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"]
+      
+      put "Indexed" && kwote (hKey) into someComment
+      if shortCalls is not empty then
+         put CR & CR & "With the following calls to other handlers:" after someComment
+         put CR & outline_IncreaseIndent (shortCalls, 4, space) after someComment
+      end if
+      opn_Notify someComment
+      
+      -- put someHandler into hArray ["handlerHashArray"]["cached"][handlerHash]["handler"]
+   else
+      -- put "Already Indexed" && kwote (hKey) into someComment
+   end if
+end hArray_AddHandlerHash

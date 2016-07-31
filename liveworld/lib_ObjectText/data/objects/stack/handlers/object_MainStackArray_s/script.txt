@@ -1,0 +1,16 @@
+setprop object_MainStackArray [pRename] mainStackArray
+   -- was "mainStack_Array"
+   put the stack_Name of the target into mainStackName
+   
+   set the stack_Array [pRename] of the target to mainStackArray
+   
+   put mainStackArray ["objects"]["substacks"] into sArray
+   repeat for each key subStackName in sArray
+      put sArray [subStackName] into subStackArray
+      put mainStackArray ["manifest"]["substacks"][subStackName] into subStackArray ["manifest"]
+      
+      create invisible stack subStackName in stack mainStackName
+      set the stack_Array [pRename] of stack subStackName of stack mainStackName to subStackArray
+   end repeat
+   return mainStackArray
+end object_MainStackArray

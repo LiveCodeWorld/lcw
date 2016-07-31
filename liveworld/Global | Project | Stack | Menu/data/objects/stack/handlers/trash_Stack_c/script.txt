@@ -1,0 +1,10 @@
+command trash_Stack stackObject
+   library_RemoveStackFromAllProjects stackObject
+   put the filename of stackObject into longStackFile
+   stop using stackObject
+   -- set the stack_IsUsed of stack longStackFile to false
+   set the stack_IsKnow of stack longStackFile to false
+   
+   delete stackObject
+   delete file longStackFile
+end trash_Stack

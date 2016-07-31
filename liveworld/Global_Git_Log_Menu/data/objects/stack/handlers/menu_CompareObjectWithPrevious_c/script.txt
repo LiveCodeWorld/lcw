@@ -1,0 +1,20 @@
+on menu_CompareObjectWithPrevious treeField
+   put the displayed_Object of treeField into someObject
+   put the script_File of someObject into relativeFile
+   put the tree_SelectedLink of treeField into cHash
+   
+   -- Or between a particular version and 2 versions ago:
+   -- $ git diff SHA1_HASH "master~2"
+   
+   put the tree_VisLineNum of treeField into vLineNum
+   put (vLineNum - 1) into previousLineNum
+   put the tree_SelectedLink [previousLineNum] of treeField into previousGitHash
+   
+   -- put the git_RevisionScript [gitHash] of someObject into oldScript
+   -- put the git_RevisionScript [previousGitHash] of someObject into previousScript
+   
+   put git_HashRevision (relativeFile, cHash) into oldScript
+   put git_HashRevision (relativeFile, previousGitHash) into previousScript
+   
+   terminal_Diff oldScript, previousScript, (cHash & "_script"), (previousGitHash & "_script")
+end menu_CompareObjectWithPrevious

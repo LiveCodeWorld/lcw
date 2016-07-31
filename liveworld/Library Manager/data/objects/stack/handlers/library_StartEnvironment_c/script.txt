@@ -1,0 +1,35 @@
+command library_StartEnvironment pSetName, pDontStop
+   set the cursor to watch
+   put library_GetSetName() into currentSetName
+   if currentSetName is not empty and pDontStop is not true then
+      library_StopEnvironment currentSetName
+   end if
+   
+   -- if it is a default set "none" then stop everything but don't load anything
+   if pSetName = "none" then return empty
+   
+   library_LoadWorkingStackFiles pSetName -- could be made part of "library_LoadSet"
+   
+   shell_AddBashProfileToPath
+   
+   library_SetSetName pSetName -- just in case it has been messed up
+   library_StartBack pSetName
+   library_StartUsed pSetName
+   -- if library_GetUseFrontScripts() is true then
+   library_StartFront pSetName
+   -- end if
+   
+   libary_RestoreGlobalPrefs pSetName -- load prefs
+   
+   library_CheckEssentialPrefs -- double check critical prefs like git path
+   
+   library_ReloadCheckoutGlobals pSetName  -- load non user globals
+   
+   hArray_LoadGlobal
+   library_LoadSet pSetName
+   
+   put library_GetRevHackStatus() into someBoolean
+   rev_AddBehaviorHacks someBoolean, true  -- should change to customizable hKey call?
+   
+   dispatch "display_LibraryStatus" to cd 1 of me
+end library_StartEnvironment

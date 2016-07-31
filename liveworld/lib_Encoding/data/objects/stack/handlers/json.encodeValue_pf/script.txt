@@ -1,0 +1,23 @@
+private function json.encodeValue pString
+   switch pString
+      case true
+         return "true"
+         break
+      case false
+         return "false"
+         break
+      case "null"
+         return "null"
+         break
+      case empty
+         return quote & quote
+         break
+      default
+         if pString is not a number OR pString contains NULL OR the last char of word 1 to -1 of pString is "." then #TKD Things like "3." or unicode ". " (period followed by NULL) need to be encoded by LiveCode says it is a number
+            return kwote (json.encodeString(pString))
+         else
+            return pString
+         end if
+         break
+   end switch
+end json.encodeValue

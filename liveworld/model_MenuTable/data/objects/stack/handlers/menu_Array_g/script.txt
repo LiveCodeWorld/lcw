@@ -1,0 +1,7 @@
+getprop menu_Array
+   put the long id of the target into mController
+   lock messages
+   put the menu_Array of mController into mArray
+   unlock messages
+   return mArray
+end menu_Array

@@ -1,0 +1,4 @@
+function hkey_GetCallsFromObject hKey, pSetName, pAllCalls
+   put project_GetHkeyDeps (hKey, true, pSetName, pAllCalls) into hkeyCalls
+   return hkeyCalls
+end hkey_GetCallsFromObject

@@ -1,0 +1,6 @@
+function view_LongFiles
+   put library_StandardViewFolder() into someFolder
+   put folder_ShortFiles (someFolder) into shortFiles
+   file_ShortToLong shortFiles, someFolder
+   return shortFiles
+end view_LongFiles

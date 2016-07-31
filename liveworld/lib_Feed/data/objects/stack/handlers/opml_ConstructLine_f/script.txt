@@ -1,0 +1,9 @@
+function opml_ConstructLine someText, linkType, someUrl, dateCreated
+    xml_Escape someText
+    put "<outline text=" && kwote(someText) into opmlLine
+    if linkType is not empty then put space & "type=" & kwote(linkType) after opmlLine
+    if someUrl is not empty then put space & "url=" & kwote(someUrl) after opmlLine
+    if dateCreated is not empty then put space & "dateCreated=" & kwote(dateCreated) after opmlLine
+    put "/>" after opmlLine
+    return opmlLine
+end opml_ConstructLine

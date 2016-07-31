@@ -1,0 +1,10 @@
+getprop menu_CheckTarget [titleView]
+   return true
+   if exists(the title_View of titleView) is true then
+      return true
+   else
+      put the mobile_Name of titleView into titleView
+      -- display_Lines titleView
+      return false
+   end if
+end menu_CheckTarget

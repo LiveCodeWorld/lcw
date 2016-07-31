@@ -1,0 +1,54 @@
+function hkeyArray_ConstructFromScript scriptObject, projectName, pProcessObject, pForceCreate
+   /* -- was "script_ConstructHkeyArray"
+   This handler first fetches or creates an internal hKey array from the mainstack.
+   It then looks at all "missing" that is exteranl hKeys, and slowly crawls the hierarchy to find them.
+   I believe it indexes these hierarchy stacks as it goes.
+   
+   -- see "lib_HkeyArray"
+   */
+   
+   put true into pAllCalls
+   put empty into pDepObject
+   
+   deps_SaveMainstackAndExportArrays scriptObject, pForceCreate
+   put the result into mainStackMetaArray
+   -- deps_ConstructDependencyArray scriptObject, pForceCreate, projectName
+   -- put the result into hKeyWalkArray
+   put mainStackMetaArray ["hArray"] into hArray
+   put project_ConstructWalkArray (hArray, pDepObject, projectName) into hKeyWalkArray
+   set the mainstack_WalkArray of scriptObject to hKeyWalkArray
+   
+   put hKeyWalkArray ["missing"] into missingArray
+   put hKeyWalkArray ["external"] into externalArray
+   union missingArray with externalArray recursively
+   
+   put empty into missingHkeyLinkArray
+   repeat for each key shortCall in missingArray
+      put missingArray [shortCall] into hKeyInfoArray
+      put keys (hKeyInfoArray) into hkeysThatCallMissing
+      put line 1 of hkeysThatCallMissing into hKey -- just pick one
+      hkey_ObjectWalk shortCall, hKey, missingHkeyLinkArray, projectName, pAllCalls
+   end repeat
+   
+   put hKeyWalkArray ["hkeyArray"] into stackHkeyArray -- only lists internal calls
+   union missingHkeyLinkArray with stackHkeyArray recursively
+   
+   repeat for each key someKey in missingHkeyLinkArray
+      put word 1 to -1 of missingHkeyLinkArray [someKey] into someKeyCalls
+      put empty into processedCalls
+      repeat for each line someKeyCall in someKeyCalls
+         if exists (pProcessObject) is false then
+            put someKeyCall & CR after processedCalls
+         else
+            dispatch "hkeyArray_AddToFiltered" to pProcessObject with processedCalls,someKeyCall
+            if it is "unhandled" then
+               put someKeyCall & CR after processedCalls
+            end if
+         end if
+      end repeat
+      sort processedCalls
+      put word 1 to -1 of processedCalls into processedCalls
+      put processedCalls into processedHkeyArray [someKey]
+   end repeat
+   return processedHkeyArray
+end hkeyArray_ConstructFromScript

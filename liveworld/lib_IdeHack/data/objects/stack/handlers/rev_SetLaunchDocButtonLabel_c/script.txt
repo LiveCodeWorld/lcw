@@ -1,0 +1,5 @@
+command rev_SetLaunchDocButtonLabel someLabel, pEditorNum
+   if someLabel is empty then put "Launch Documentation" into someLabel
+   put rev_LaunchDocsButton (pEditorNum) into launchDocsButton
+   set the label of launchDocsButton to someLabel
+end rev_SetLaunchDocButtonLabel

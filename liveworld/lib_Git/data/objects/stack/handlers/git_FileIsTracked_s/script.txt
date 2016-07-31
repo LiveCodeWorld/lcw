@@ -1,0 +1,8 @@
+setprop git_FileIsTracked someBoolean
+   put the script_File of the target into someFile
+   if someBoolean is true then
+      git_AddFile someFile
+   else
+      -- can't undo it?
+   end if
+end git_FileIsTracked

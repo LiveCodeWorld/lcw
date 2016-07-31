@@ -1,0 +1,12 @@
+getprop view_Alternatives [viewName]
+   -- a default in cases whem it is not intercepted by the view
+   if viewName is empty then
+      put the view_Name of the target into viewName
+      if viewName is empty then return empty
+      set the itemdelimiter to "|"
+      delete item -1 of viewName
+   end if
+   
+   put view_FilteredPaths (viewName) into viewNames
+   return viewNames
+end view_Alternatives

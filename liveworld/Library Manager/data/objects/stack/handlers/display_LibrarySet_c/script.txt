@@ -1,0 +1,18 @@
+command display_LibrarySet pSetName
+   -- display but dont actually load ibraries into memory or change default set name
+   put the setName_Grid of cd 1 of me into nameGrid
+   put the setContents_Grid of cd 1 of me into contentsGrid
+   
+   put library_FetchSetData() into modelArray
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put modelArray [pSetName] into setArray
+   -- put pSetName is not empty into isLoaded
+   
+   put library_ConstructDescriptionArray (modelArray) into dataArray
+   set the dgdata of nameGrid to dataArray
+   set the dgdata of contentsGrid to library_ConstructSetArray (setArray)
+   
+   dispatch "FindIndex" to nameGrid with "Title", pSetName
+   put the result into indexNum
+   set the dgHilitedIndex of nameGrid to indexNum
+end display_LibrarySet

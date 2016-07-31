@@ -1,0 +1,14 @@
+function fossil_ConstructLaunchScript folderOrProjectName
+   local someShell
+   put fossil_FolderWithExecutable() into fossilPath
+   shell_BashParamEscape fossilPath
+   put fossilPath into someShell
+   put "fossil ui" after someShell
+   
+   put fossil_GetProjectFile (folderOrProjectName) into dbFile
+   shell_BashParamEscape dbFile
+   put space & dbFile after someShell
+   -- put space & "2>&1 &" after someShell
+   
+   return someShell
+end fossil_ConstructLaunchScript

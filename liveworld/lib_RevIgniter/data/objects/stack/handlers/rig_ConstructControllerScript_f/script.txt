@@ -1,0 +1,14 @@
+function rig_ConstructControllerScript scriptObject, shortControllerFile
+   put the script_Markdown of scriptObject into scriptDescription
+   put the project_DependencyStacks of scriptObject into dependencyLibs
+   
+   put the script of scriptObject into someScript
+   put the revAvailableHandlers of scriptObject into handlerTable
+   put rig_ExtractControllerHandlers (handlerTable, someScript) into controllerHandlers
+   
+   put rig_ExtractPublicHandlers (someScript) into controllerScript
+   text_Indent controllerScript
+   text_Indent scriptDescription
+   put rig_ConstructControllerFromScript (controllerScript, shortControllerFile, controllerHandlers, scriptDescription, dependencyLibs) into rigScript
+   return rigScript
+end rig_ConstructControllerScript

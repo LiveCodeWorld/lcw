@@ -1,0 +1,24 @@
+command fedwiki_PageArrayAddToEnd storyItemArray, @fedwikiPageArray
+   -- this add a factory to the journal and a itemArray to the journal and story
+   -- all with the same id
+   put fedwikiPageArray ["story"] into storyArray
+   put fedwikiPageArray ["journal"] into journalArray
+   put storyItemArray ["id"] into itemID
+   
+   -- add the item to the end of the story
+   fedwiki_AddToEndOfIndexArray storyItemArray, storyArray
+   -- figure out what we just added it after
+   -- this can be empty if it is the first entry
+   put the result into afterID
+   put storyArray into fedwikiPageArray ["story"]
+   
+   -- 3) Now let's add the edit or add to the journal
+   -- make the factory have the same id as the item we will add to the story
+   put fedwiki_ConstructFactoryArray (itemID) into factoryArray
+   -- now add a journal entry for adding after the id of the end paragraph
+   fedwiki_AddToJournalArray journalArray, factoryArray, "add", afterID
+   
+   -- finally add the journal entry for editing the factory
+   fedwiki_AddToJournalArray journalArray, storyItemArray, "edit"
+   put journalArray into fedwikiPageArray ["journal"]
+end fedwiki_PageArrayAddToEnd

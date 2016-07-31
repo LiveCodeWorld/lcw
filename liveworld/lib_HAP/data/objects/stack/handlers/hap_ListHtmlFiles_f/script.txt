@@ -1,0 +1,8 @@
+function hap_ListHtmlFiles
+   put "/home/himalayan/public_html/html/" into tTopFolder -- server version
+   put empty into tTopFolder
+   put shell_GetGoodNestedFiles (tTopFolder) into foundHtmlFiles
+   put _FilterFoundFiles (foundHtmlFiles, tTopFolder) into shortFoundHtmlFiles
+   _AddInfoFiles shortFoundHtmlFiles, tTopFolder
+   return shortFoundHtmlFiles
+end hap_ListHtmlFiles

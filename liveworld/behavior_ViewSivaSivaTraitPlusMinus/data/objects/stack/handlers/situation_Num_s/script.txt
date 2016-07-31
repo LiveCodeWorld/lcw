@@ -1,0 +1,6 @@
+setprop situation_Num situationNum
+   put situationNum into LocalArray ["situation_Num"]
+   
+   put the trait_Situation [situationNum] of me into traitSituation
+   set the displayed_SquareText of me to traitSituation
+end situation_Num

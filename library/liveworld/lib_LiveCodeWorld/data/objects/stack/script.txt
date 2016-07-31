@@ -1,0 +1,104 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_LiveCodeWorld
+type: script library
+version: 0.4
+
+/*
+This library is for organising, creating, versioing and processing all script only library files in the LiveCode World project.
+*/
+
+
+--> Currently Working On | Library | Folders
+-
+[[ _FetchHandler (lcw_GetControllerFolder,f) ]]
+
+[[ _FetchHandler (lcw_GetProjectFolder,f) ]]
+
+[[ _FetchHandler (lcw_GetFolder,f) ]]
+
+
+--> Library | Folders | Repo
+-
+/*
+Here we store all new script -only code for the Liveworld Environment.
+The aim is to gradually move over to this repository, or use git-subtree to move code here.
+*/
+
+[[ _FetchHandler (lcw_GetRepoFolder,f) ]]
+
+[[ _FetchHandler (lcw_SetRepoFolder,c) ]]
+
+
+--> LiveCode World
+-
+[[ _FetchHandler (lcw_CreateLibrary,c) ]]
+
+
+--> Library | Folders | To Move
+-
+[[ _FetchHandler (library_ScriptOnlyModelFolder,f) ]]
+
+[[ _FetchHandler (library_ScriptOnlyBehaviorFolder,f) ]]
+
+[[ _FetchHandler (library_ScriptOnlyFolder,f) ]]
+
+
+-- > Livecode World | Model | Folders
+-
+[[ _FetchHandler (lcw_CheckStacks,c) ]]
+
+
+--> Livecode World | List
+-
+[[ _FetchHandler (lcw_ListProjects,f) ]]
+
+[[ _FetchHandler (lcw_ListStackNames,f) ]]
+
+[[ _FetchHandler (lcw_ListStacks,f) ]]
+
+[[ _FetchHandler (lcw_ListStackPaths,f) ]]
+
+[[ _FetchHandler (lcw_ListShortStackFiles,f) ]]
+
+
+-- > LCW | Hack
+-
+[[ _FetchHandler (lcw_NewName,c) ]]
+
+[[ _FetchHandler (lcw_OldName,c) ]]
+
+
+-- > LCW | Dictionary
+-
+[[ _FetchHandler (lcw_MapDictionary,f) ]]
+
+[[ _FetchHandler (lcw_ReverseDictionary,f) ]]
+
+
+-- > Dictionary
+-
+[[ _FetchHandler (dictionary_Map,c) ]]
+
+[[ _FetchHandler (dictionary_ReverseMap,c) ]]
+
+[[ _FetchHandler (dictionary_Add,c) ]]
+
+
+-- > Folder | Stacks
+-
+[[ _FetchHandler (folder_CheckStacks,c) ]]
+
+[[ _FetchHandler (folder_ListStackNames,f) ]]
+
+[[ _FetchHandler (folder_ListStacks,f) ]]
+
+[[ _FetchHandler (folder_ListStackPaths,f) ]]
+
+[[ _FetchHandler (folder_ListShortStackFiles,f) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_constructScriptOnlyMenuFileName,pf) ]]

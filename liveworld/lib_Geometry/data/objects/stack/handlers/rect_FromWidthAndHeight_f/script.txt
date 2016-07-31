@@ -1,0 +1,5 @@
+function rect_FromWidthAndHeight someRect, someWidth, someHeight
+   if someWidth is not empty then put item 1 of someRect + someWidth into item 3 of someRect
+   if someHeight is not empty then put item 2 of someRect + someHeight into item 4 of someRect
+   return someRect
+end rect_FromWidthAndHeight

@@ -1,0 +1,25 @@
+function shell_ConstructLSArray lsResult, pShowInvisible
+   if word 1 of lsResult = "total" then
+      put word 2 of lsResult into totalEntries
+      delete line 1 of lsResult
+   end if
+   
+   repeat for each line someLine in lsResult
+      shell_DeconstructLS someLine, shortFileName, filePermissions, ownerName, groupName, fSize, lastModified, lsType, numberOfLinks
+      put the result into typeExplanation
+      
+      if shortFileName is among the items of ".,.." then next repeat
+      if pShowInvisible is not true then
+         if char 1 of shortFileName = "." then next repeat
+      end if
+      
+      put filePermissions into lsArray [typeExplanation][shortFileName]["filePermissions"]
+      put ownerName into lsArray [typeExplanation][shortFileName]["ownerName"]
+      put groupName into lsArray [typeExplanation][shortFileName]["groupName"]
+      put fSize into lsArray [typeExplanation][shortFileName]["fileSize"]
+      put lastModified into lsArray [typeExplanation][shortFileName]["lastModified"]
+      put lsType into lsArray [typeExplanation][shortFileName]["lsType"]
+      put numberOfLinks into lsArray [typeExplanation][shortFileName]["numberOfLinks"]
+   end repeat
+   return lsArray
+end shell_ConstructLSArray

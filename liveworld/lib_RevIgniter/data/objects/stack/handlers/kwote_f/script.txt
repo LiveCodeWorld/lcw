@@ -1,0 +1,4 @@
+function kwote someText
+   put quote & someText & quote into quotedText
+   return quotedText
+end kwote

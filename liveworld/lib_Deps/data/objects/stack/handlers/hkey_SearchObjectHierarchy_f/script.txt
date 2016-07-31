@@ -1,0 +1,14 @@
+function hkey_SearchObjectHierarchy hKey, scriptHierarchy
+   -- was "script_SearchObjectHierarchy"
+   /*
+   This script finds where a handler call is in the hierarchy.
+   It returns multiple objects if the handler is passed and also intercepted further up the hierarchy.
+   
+   It does not use any caching at the moment but looks directly at the script.
+   */
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+   hkey_FindHandlerInHierarchy handlerName, handlerType, scriptObject, scriptHierarchy, foundHKey, callHandler
+   
+   hkey_Deconstruct foundHKey, foundHandlerName, foundHandlerType, foundScriptObject, handlerNum
+   return foundScriptObject
+end hkey_SearchObjectHierarchy

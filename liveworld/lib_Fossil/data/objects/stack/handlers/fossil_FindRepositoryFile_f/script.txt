@@ -1,0 +1,8 @@
+function fossil_FindRepositoryFile projectName
+   put fossil_ConstructProjectArray() into fossilFileArray
+   repeat for each key fossilFile in fossilFileArray
+      put fossilFileArray [fossilFile]["project-name"] into testName
+      if testName = projectName then return fossilFile
+   end repeat
+   return empty
+end fossil_FindRepositoryFile

@@ -1,0 +1,15 @@
+private function OKHeaders @pData, tType
+   local tRetVal
+   --- this function is courtesy of Mr Dave Cragg
+   --  Generates the HTTPd Header with a 200 OK response. (200 OK = Yes it succeded!)
+   put "HTTP/1.1 200 OK" & crlf into tRetVal
+   put "Content-Type: " & tType & crlf after tRetVal
+   put "Connection: Close " & crlf after tRetVal
+   put "Date: " & the date & the time & crlf after tRetVal
+   put "Content-Length: " & length(pData)  after tRetVal
+   if gRequestA ["RevHTTP Cache settings"] is not empty then -- binds with NoCache handler.
+      put gRequestA ["RevHTTP Cache settings"] after tRetVal
+      put empty into  gRequestA ["RevHTTP Cache settings"] 
+   end if
+   return tRetVal
+end OKHeaders

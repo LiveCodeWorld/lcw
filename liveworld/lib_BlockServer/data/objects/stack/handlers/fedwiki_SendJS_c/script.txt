@@ -1,0 +1,5 @@
+command fedwiki_SendJS shortFile, socketID
+   put server_GetTextFile (shortFile) into someJSON
+   daemon_SendJSON socketID, someJSON
+   return "Sent JSON. Socket still open."
+end fedwiki_SendJS

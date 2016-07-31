@@ -1,0 +1,9 @@
+command hkey_StoreHelp hKey, helpText
+   put hkey_HelpFile (hKey, false) into someFile
+   if helptext is empty then
+      delete file someFile
+   else
+      put helpText into url ("binfile:" & someFile)
+   end if
+   return someFile
+end hkey_StoreHelp

@@ -1,0 +1,4 @@
+command fedwiki_AddMapToPageArray @pageArray, mapLat, mapLong, mapText, mapZoom, pID
+   put fedwiki_ConstructStoryMapArray (mapLat, mapLong, mapText, mapZoom, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddMapToPageArray

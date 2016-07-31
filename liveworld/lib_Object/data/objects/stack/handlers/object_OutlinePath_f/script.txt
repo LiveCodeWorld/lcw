@@ -1,0 +1,6 @@
+function object_OutlinePath someObject, someDelim
+   object_SetHierarchy someObject, shortObjects, longObjects, objectOutline, namePath
+   if someDelim is empty then put numToChar(28) into someDelim
+   replace CR with someDelim in shortObjects
+   return shortObjects
+end object_OutlinePath

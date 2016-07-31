@@ -1,0 +1,7 @@
+command overlayArray_SetGraphPropertyArray @overlayArray, graphPropertyArray
+   if graphPropertyArray is not an array then
+      delete local overlayArray ["metadata"]["graph_PropertyArray"]
+   else
+      put graphPropertyArray into overlayArray ["metadata"]["graph_PropertyArray"]
+   end if
+end overlayArray_SetGraphPropertyArray

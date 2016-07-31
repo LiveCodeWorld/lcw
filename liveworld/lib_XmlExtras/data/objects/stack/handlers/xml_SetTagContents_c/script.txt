@@ -1,0 +1,8 @@
+on xml_SetTagContents tagName, @someXml, newContents
+    if xml_TagOffsets(tagName, someXml, startTag, endTag) is true then
+        put newContents into char startTag to endTag of someXml
+        return true
+    else
+        return false
+    end if
+end xml_SetTagContents

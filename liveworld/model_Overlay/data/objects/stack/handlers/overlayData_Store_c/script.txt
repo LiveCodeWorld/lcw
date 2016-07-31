@@ -1,0 +1,12 @@
+command overlayData_Store dotArrayFile, overlayData
+   if overlayData is not an array then return empty
+   put arrayencode (overlayData) into encodedArray
+   
+   put dotArrayFile into overlayFolder
+   set the itemdelimiter to "/"
+   delete item -1 of overlayFolder
+   folder_CreateNested overlayFolder
+   
+   put encodedArray into url ("binfile:" & dotArrayFile)
+   return encodedArray
+end overlayData_Store

@@ -1,0 +1,4 @@
+on menu_AlreadyKnown scriptObject, someBoolean
+   put the stack_Object of scriptObject into stackObject
+   set the stack_IsKnown of stackObject to someBoolean
+end menu_AlreadyKnown

@@ -1,0 +1,14 @@
+on menu_ViewBranches menuChoice
+   switch menuChoice
+      case "Local branches"
+         put "git branch" into someShell
+         break
+      case "Local and remote brances"
+         put "git branch -a" into someShell
+         break
+   end switch
+   
+   opn_Notify someShell, true
+   put git_ExecuteShellCommand(someShell) into shellResult
+   display_Lines shellResult
+end menu_ViewBranches

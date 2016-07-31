@@ -1,0 +1,15 @@
+private function _FetchAndAskForScriptHelp scriptObject
+   put the script_Help of scriptObject into pDescription
+   _tidyGistHelp pDescription
+   
+   put the mobile_Name of scriptObject into scriptObject
+   put merge ("Give a description for the script of [[scriptObject]]...") into someQuestion
+   put opn_Ask (someQuestion, pDescription) into pDescription
+   if the shiftkey is "down" or the optionkey is "Down" then
+      answer "Do you want to store this new script description?" with "Cancel" or "OK"
+      if it is "OK" then
+         set the script_Help of scriptObject to pDescription
+      end if
+   end if
+   return pDescription
+end _FetchAndAskForScriptHelp

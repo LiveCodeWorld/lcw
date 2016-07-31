@@ -1,0 +1,6 @@
+function gist_FetchJson gistID
+   -- GET /gists/:id
+   put "/gists/" & gistID into restPath
+   put github_RestGet (restPath) into someJSON
+   return someJSON
+end gist_FetchJson

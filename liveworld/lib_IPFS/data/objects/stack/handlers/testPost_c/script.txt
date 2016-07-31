@@ -1,0 +1,24 @@
+command testPost
+   ipfs_AddFile
+   put the result into someArray
+   -- display_Array someArray
+   put someArray ["Hash"] into someHash
+   put someArray ["Name"] into shortFileName
+   
+   set the itemdelimiter to "."
+   put item -1 of shortFileName into fType
+   set the itemdelimiter to comma
+   
+   switch
+      case fType is among the items of "livecode,rev"
+         put ipfs_Cat (someHash) into stackData
+         -- could save it to a file
+         go to stack stackData
+         put the result
+         break
+      case fType is among the items of "jpg,png,gif,html"
+         ipfs_LaunchBrowserUrl someHash
+      default
+         put ipfs_Cat (someHash) -- into someData
+   end switch
+end testPost

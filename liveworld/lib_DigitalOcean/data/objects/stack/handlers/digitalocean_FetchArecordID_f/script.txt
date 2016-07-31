@@ -1,0 +1,8 @@
+function digitalocean_FetchArecordID oceanDomainName, subDomain
+   put digitalocean_FetchDomainRecordArray (oceanDomainName) into oceanDomainRecordArray
+   put digitalocean_GetARecordID (oceanDomainName, subDomain, oceanDomainRecordArray) into recordID
+   if recordID is empty then
+      return "Error, no A record found for" && subDomain && "in" && oceanDomainName
+   end if
+   return recordID
+end digitalocean_FetchArecordID

@@ -1,0 +1,6 @@
+function javascript_ConstructFooterHeight pSomeHeight
+   -- if pSomeHeight is empty then put 18 into pSomeHeight
+   if pSomeHeight is empty then put 60 into pSomeHeight
+   put merge ("document.querySelector('section.main').style.bottom='[[pSomeHeight]]px'") into someJavascript
+   return someJavascript
+end javascript_ConstructFooterHeight

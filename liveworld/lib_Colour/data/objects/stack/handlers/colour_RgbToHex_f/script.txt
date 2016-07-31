@@ -1,0 +1,18 @@
+function colour_RgbToHex rgbColour
+    -- was "colour_ConvertToWeb"
+    
+    put "#" into theWebColor -- leading "#"
+    repeat for each item myItem in rgbColour -- numeric triplet -  R,G,B
+        put format("%02X",myItem) after theWebColor
+    end repeat
+    return theWebColor
+    
+    -- alternative technique
+    put "#" into theWebColor -- leading "#"
+    repeat for each item myItem in rgbColour -- numeric triplet - R,G,B
+        get baseconvert(myItem,10,16)
+        if the length of it is 1 then put zero before it  -- each component must be 2-digit
+        put it after theWebColor
+    end repeat
+    return theWebColor
+end colour_RgbToHex

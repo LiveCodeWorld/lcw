@@ -1,0 +1,21 @@
+function wikicommons_ConstructImagePageArray sandboxArray, pPageTitle, pPageComment
+   if pPageTitle is empty then put "Wikpedia Image Import" into pageTitle
+   if pPageComment is empty then put "Here is an image from Wikipedia ready to drag onto your page..." into pPageComment
+   put fedwiki_ConstructNewPageArray (pageTitle, pPageComment) into fedwikiPageArray
+   
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID
+   put pagesArray [pageID] into pageArray
+   
+   put pageArray ["imageinfo"]["1"]["mime"] into someMime
+   set the itemdelimiter to slash
+   switch item 1 of someMime
+      case "video"
+         wikicommons_AddVideoToPageArray fedwikiPageArray, pageArray
+         break
+      default
+         wikicommons_AddImageToPageArray fedwikiPageArray, pageArray
+   end switch
+   
+   return fedwikiPageArray
+end wikicommons_ConstructImagePageArray

@@ -1,0 +1,4 @@
+getprop event_Target
+   put LocalArray ["event"]["eventTarget"] into eventTarget
+   return eventTarget
+end event_Target

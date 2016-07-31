@@ -1,0 +1,10 @@
+command svg_SetDimensions @svgXML, svgWidth, svgHeight
+   put svg_CreateXmlTree (svgXML) into treeID
+   revXMLSetAttribute treeID, "/svg","width", svgWidth
+   revXMLSetAttribute treeID, "/svg","height", svgHeight
+   put revXMLText (treeID, empty, true) into svgXML
+   svg_DeleteXmlTree
+   
+   delete line 1 of svgXML -- the xml header
+   put word 1 to -1 of svgXML into svgXML
+end svg_SetDimensions

@@ -1,0 +1,9 @@
+getprop disabled_FetchStoredHkeyArray [hKey]
+   put project_FetchHkeyArray (hKey) into hKeyArray
+   if hKeyArray is an array then
+      put hKeyArray into LocalArray ["project_FetchHkeyArray"]
+      return false
+   else
+      return true
+   end if
+end disabled_FetchStoredHkeyArray

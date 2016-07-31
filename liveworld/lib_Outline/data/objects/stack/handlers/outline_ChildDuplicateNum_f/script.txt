@@ -1,0 +1,11 @@
+function outline_ChildDuplicateNum childLineNum, outlineChildren
+    put 0 into repeatNum
+    put line childLineNum of outlineChildren into chosenChild
+    repeat with lineNum = 1 to childLineNum
+        put line lineNum of outlineChildren into someChild
+        if someChild = chosenChild then
+            add 1 to repeatNum
+        end if
+    end repeat
+    return repeatNum
+end outline_ChildDuplicateNum

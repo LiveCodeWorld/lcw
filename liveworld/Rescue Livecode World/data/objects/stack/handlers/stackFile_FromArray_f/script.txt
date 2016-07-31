@@ -1,0 +1,5 @@
+function stackFile_FromArray stackFileArray
+   combine stackFileArray using CR and comma
+   sort stackFileArray
+   return stackFileArray
+end stackFile_FromArray

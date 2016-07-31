@@ -1,0 +1,8 @@
+private function constructPathArray fossilArray
+   set the itemdelimiter to "/"
+   repeat for each key fossilPath in fossilArray
+      put item -1 of fossilPath into shortPath
+      put fossilPath into pathArray [shortPath]
+   end repeat
+   return pathArray
+end constructPathArray

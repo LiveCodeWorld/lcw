@@ -1,0 +1,96 @@
+command LayoutControl pRect
+   if pRect is empty then put the rect of me into pRect
+   
+   -- what controls are we talking about
+   put _squareView() into squareView
+   put _positiveView() into positiveView
+   put _negativeView() into negativeView
+   put _verticalArrow() into verticalArrow
+   
+   -- let's make sure the objects are there (optional safety feature)
+   -- could be done during preOpenControl (being careful for now)
+   _createNestedViews squareView, positiveView, negativeView, verticalArrow
+   
+   put the group_InnerRect [pRect] of me into innerRect
+   put rect_GetCentre (innerRect) into squareCentre
+   
+   put item 1 of someMargins into someMargin
+   put item 1 of squareCentre into centreX
+   put item 2 of squareCentre into centreY
+   
+   put item 2 of innerRect into innerTop
+   put item 4 of innerRect into innerBottom
+   put  item 3 of innerRect -  item 1 of innerRect into innerWidth
+   put  item 4 of innerRect -  item 2 of innerRect into innerHeight
+   
+   -- work out key scaleable proportions for the view   
+   put the arrow_Length [innerHeight] of me into arrowLengthGuess
+   put the arrow_Gap [innerHeight] of me into arrowGap
+   put the arrow_LineWidth [innerHeight] of me into arrowWidth
+   put the trait_Margin [innerWidth] of me into extraInnerMargin
+   
+   put the trait_Height [innerHeight] of positiveView into traitHeight
+   
+   put innerTop + extraInnerMargin into pTop
+   put pTop + traitHeight into pBottom
+   put innerBottom - extraInnerMargin into nBottom
+   put nBottom - traitHeight into nTop
+   put pBottom + arrowGap into aTop
+   put nTop - arrowGap into aBottom
+   
+   
+   -- work out inner square   
+   put aTop + arrowLengthGuess into innerSquareTop
+   put aBottom - arrowLengthGuess into innerSquareBottom
+   if the keep_Square of me is true then
+      put _innerSquareRect (innerWidth, centreX, innerTop, innerBottom, centreY, innerHeight, traitHeight, arrowLengthGuess) into innerSquareRect
+      -- put _innerSquareRect (innerWidth, centreX, innerSquareTop, innerSquareBottom) into innerSquareRect
+   else
+      put _innerRectangle (innerWidth, centreX, innerSquareTop, innerSquareBottom) into innerSquareRect
+   end if
+   
+   -- now let's centre the traits in the available space
+   put item 2 of innerSquareRect into squareTop
+   put squareTop - innerTop into availableHeight
+   put round (availableHeight / 2) into halfAvailableHeight
+   
+   put the arrow_Factor of me into arrowFactor
+   put round (arrowFactor * halfAvailableHeight) into halfAvailableHeight
+   put 1 * traitHeight into minGap
+   put max (halfAvailableHeight, minGap) into halfAvailableHeight
+   
+   -- work out trait rects
+   put squareTop - halfAvailableHeight into pTraitY
+   put item 3 of innerSquareRect - item 1 of innerSquareRect into squareWidth
+   put _traitWidth (squareWidth) into traitWidth
+   put centreX,pTraitY into pLoc
+   
+   put rect_LocWidthHeight (pLoc, traitWidth, traitHeight) into positiveTraitRect
+   
+   put item 4 of innerSquareRect into squareBottom
+   put squareBottom + halfAvailableHeight into nTraitY
+   put centreX,nTraitY into nLoc
+   put rect_LocWidthHeight (nLoc, traitWidth, traitHeight) into negativeTraitRect
+   
+   -- put _positiveTraitRect (centreX, traitWidth, pTop, pBottom) into positiveTraitRect
+   -- put _negativeTraitRect (centreX, traitWidth, nTop, nBottom) into negativeTraitRect
+   
+   -- work out arrow points
+   put item 4 of positiveTraitRect into aTop
+   put item 2 of negativeTraitRect into aBottom
+   put _arrowPoints (aTop, aBottom, centreX, innerSquareRect) into arrowPoints
+   
+   -- set the rects
+   lock screen
+   --  
+   set the rect of squareView to innerSquareRect
+   
+   -- test_Rect positiveTraitRect, "positiveTraitRect", "pink"
+   set the rect of positiveView to positiveTraitRect
+   
+   set the rect of negativeView to negativeTraitRect
+   set the points of verticalArrow to arrowPoints
+   set the linesize of verticalArrow to arrowWidth
+   --
+   unlock screen
+end LayoutControl

@@ -1,0 +1,12 @@
+function appleScript_DoLine appleScriptLine, appName, pStripQuotes, pDisplayScript
+   -- ignoreCall:  display_Text,c
+   get "tell application" && kwote(appName) && "to" && appleScriptLine
+   if pDisplayScript is true then display_Text it
+   do it as AppleScript
+   put the result into someText
+   if pStripQuotes is not false then
+      if char 1 of someText is quote then delete char 1 of someText
+      if char -1 of someText is quote then delete char -1 of someText
+   end if
+   return someText	
+end appleScript_DoLine

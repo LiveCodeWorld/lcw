@@ -1,0 +1,9 @@
+function hap_ListFiles relFolderPath 
+   put hap_GetFileNameArray (relFolderPath) into fileNameArray
+   repeat for each key tKey in fileNameArray
+      put tFileNamesArray [tKey] & CR after fileNamesList
+   end repeat
+   delete byte -1 of fileNamesList
+   sort lines of fileNamesList ascending text by item -1 of each
+   return fileNamesList
+end hap_ListFiles

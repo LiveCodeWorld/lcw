@@ -1,0 +1,19 @@
+function hkey_ExportStatus hKey, pHandlerScript
+   put hkey_ExtractHandlerFromObject (hKey) into objectHandler
+   if pHandlerScript is empty then
+      put library_FetchHandler (hKey) into fileHandler
+   else
+      put script_ExtractHandler (hKey, pHandlerScript) into fileHandler
+   end if
+   
+   switch
+      case objectHandler = fileHandler
+         return "ok"
+      case objectHandler is not empty and fileHandler is not empty
+         return "different"
+      case fileHandler = empty
+         return "no file"
+      case objectHandler = empty
+         return "no object script"
+   end switch
+end hkey_ExportStatus

@@ -1,0 +1,10 @@
+private function convert_SnippetToThumbPageArray snippetArray, pVideoID, pPageTitle, pDontLinkTitle, pSourceArray
+   local pageArray
+   add_SnippetToThumbPageArray pageArray, snippetArray, pVideoID, true, pDontLinkTitle
+   put the result into videoTitle
+   
+   if pPageTitle is empty then put videoTitle into pPageTitle
+   put pPageTitle into pageArray ["title"]
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into pageArray ["journal"]  -- strip journal to minimum
+   return pageArray
+end convert_SnippetToThumbPageArray

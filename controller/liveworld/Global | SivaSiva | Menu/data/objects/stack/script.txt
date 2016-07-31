@@ -1,0 +1,135 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | SivaSiva | Menu
+type: controller
+version: 0.1
+
+
+--> Global | SivaSiva | Menu
+-
+[[ _FetchHandler (menu_ParseDiv,c) ]]
+
+
+
+-->Deps
+-
+/**
+* Handlers for converting XML to LiveCode arrays and vice versa. 
+*
+* Provided by Trevor DeVore of Blue Mango Learning Systems.
+*/
+
+/**
+* \brief Escapes the predefined XML entities in a string.
+*
+* \param pStr The string to escape the characters in.
+*
+* \return String
+*/
+[[ _FetchHandler (EscapePredefinedXMLEntities,f) ]]
+
+
+/**
+* \brief Unescapes predefined xml entities in a string.
+*
+* \param pStr The strin to unescape the characters in.
+*
+* \return String
+*/
+[[ _FetchHandler (UnescapePredefinedXMLEntities,f) ]]
+
+
+/**
+* \brief Helper function for sorting keys of an array based on order in the XML document the array was created from.
+*
+* \param pKeys List of keys or array whose keys you want to sort.
+* \param pStripMetaKeys By default any meta keys (keys starting with "@") will be stripped. Pass in false to bypass this behavior.
+*
+* LiveCode array keys are never guaranteed to be in order you created them in 
+* so we must come up with some other way of maintaining proper sequence. 
+* For arrays representing XML, the XML syntax is used (i.e. node[1], node[2], etc.). 
+* This handler will sort keys that use this syntax for representing sequence.
+*
+* \return String
+*/
+[[ _FetchHandler (SortArrayKeysWithXMLOrdering,f) ]]
+
+
+/**
+* \brief Converts an XML tree into a LiveCode multi-dimensional array.
+*
+* \param pXML The xml to convert.
+* \param pStoreEncodedAs Encoding to use. Must be a value that can be passed to uniDecode. Default is "utf8".
+* \param pUseValueKey  By default node values are stored in a key named after the node. This means you can't have a node with attributes and a node value. Pass in true if you want to store node values in a '@value' key. This will allow a key to have both attributes (in @attributes key) and a value (in @value key).
+* \param pForceNumberIndexForNodes A comma delimited list of node names that should always have numbered indexes (NODE[index]) added to them. This makes it easier to loop over results that may have 1 or more results.
+*
+* A nodes attributes will be stored as an array of it's "@attributes" key.
+* Node names will retain the sequence information (i.e. node[1], node[2], etc.).
+* This information is necessary to determine order that keys should be processed in. Example:
+* set the itemDelimiter to "["
+* put the keys of theArray into theKeys
+* sort theKeys numeric by the last item of each
+*
+* \return Array
+*/
+[[ _FetchHandler (ConvertXMLToArray,f) ]]
+
+
+/**
+* \brief Converts and revXML created XML Tree to an array.
+*
+* \param pXMLTree The xml tree id.
+* \param pStoreEncodedAs See docs for ConvertXMLToArray.
+* \param pUseValueKey See docs for ConvertXMLToArray.
+* \param pForceNumberIndexForNodes See docs for ConvertXMLToArray.
+*
+* See docs for ConvertXMLToArray.
+*
+* \return Array
+*/
+[[ _FetchHandler (ConvertXMLTreeToArray,f) ]]
+
+
+/**
+* \brief Converts a multi-dimensional array to an XML tree.
+*
+* \param pArray The array to convert.
+* \param pArrayEncoding Encoding used in the array. Must be a value that can be passed to uniEncode. Default is the current platform encoding.
+* \param pStoreEncodedAs Encoding to use. Must be a value that can be passed to uniDecode. Default is "utf8".
+*
+* The array should consist of one key in the 1st dimension. This key becomes the root node in the XML tree.
+* Attributes of a node should be stored as an array in an @attributes key. 
+* Sequence information for multiple nodes with the same name should be included in the node name using brackets (i.e. node[1], node[2], node[3]).
+*
+* \return XML Tree id (integer) or error message.
+*/
+[[ _FetchHandler (ConvertArrayToXML,f) ]]
+ 
+ 
+ /**
+* \brief Helper function for ConvertArrayToXML.
+*
+* Converts the multi-dimensional array pArray to nodes in pTreeID. Calls itself recursively.
+*
+* \return Error message.
+*/
+[[ _FetchHandler (ConvertArrayDimensionToXML,pc) ]]
+ 
+
+/**
+* \brief Helper function for ConvertXMLToArray.
+*
+* Converts an XML node to a multi-dimensional array. Calls itself recursively.
+*
+* \return Array
+*/
+[[ _FetchHandler (ConvertXMLNodeToArray,pf) ]]
+ 
+ 
+/**
+* \brief Helper function for converting the encoding of strings when converting to and from XML.
+*
+* \return String
+*/
+[[ _FetchHandler (EncodeString,pf) ]]

@@ -1,0 +1,14 @@
+command group_SetNameArray someGroup, @groupNameArray, @orderedNames, nested
+   -- was "object_SetGroupNameArray"
+   repeat with controlNum = 1 to the number of controls in someGroup
+      put the long ID of control controlNum of someGroup into controlObject
+      if nested is not true and word 1 of controlObject is "group" then
+         add the number of layers in controlObject to controlNum
+      end if
+      
+      put the short name of controlObject into objectName
+      put objectName & CR after orderedNames
+      put controlObject into groupNameArray [objectName]
+   end repeat
+   delete char -1 of orderedNames    
+end group_SetNameArray

@@ -1,0 +1,22 @@
+function opml_ConstructHeader someTitle, dateCreated, dateModified, ownerName, ownerEmail, expansionState, vertScrollState, someRect, indentBit
+    put "<title>[[someTitle]]</title>" into opmlHeader
+    if dateCreated is not empty then put indentBit & "<dateCreated>[[dateCreated]]</dateCreated>" after opmlHeader
+    if dateModified is not empty then put indentBit & "<dateModified>[[dateModified]]</dateModified>" after opmlHeader
+    if ownerName is not empty then put indentBit & "<ownerName>[[ownerName]]</ownerName>" after opmlHeader
+    if ownerEmail is not empty then put indentBit & "<ownerEmail>[[ownerEmail]]</ownerEmail>" after opmlHeader
+    if expansionState is not empty then put indentBit & "<expansionState>[[expansionState]]</expansionState>" after opmlHeader
+    if vertScrollState is not empty then put indentBit & "<vertScrollState>[[vertScrollState]]</vertScrollState>" after opmlHeader
+    
+    if someRect is not empty then 
+        put item 1 of someRect into windowLeft
+        put item 2 of someRect into windowTop
+        put item 3 of someRect into windowRight
+        put item 4 of someRect into windowBottom
+         
+        put indentBit & "<windowTop>[[windowTop]]</windowTop>" after opmlHeader
+        put indentBit & "<windowLeft>[[windowLeft]]</windowLeft>" after opmlHeader
+        put indentBit & "<windowBottom>[[windowBottom]]</windowBottom>" after opmlHeader
+        put indentBit & "<windowRight>[[windowRight]]</windowRight>" after opmlHeader
+    end if
+    return merge(opmlHeader)
+end opml_ConstructHeader

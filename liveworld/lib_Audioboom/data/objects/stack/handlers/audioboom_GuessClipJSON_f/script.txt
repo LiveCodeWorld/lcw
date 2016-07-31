@@ -1,0 +1,10 @@
+function audioboom_GuessClipJSON someURL
+   put audioboom_IDExtractFromURL (someURL) into audioClipID
+   if audioClipID is empty then return empty
+   put audioboom_FetchClipJSON (audioClipID) into someJSON
+   put json_ToArray (someJSON) into responseArray
+   put responseArray ["body"]["audio_clip"] into audioClipArray
+   put fedwiki_ConstructAudioBoomPageArray (audioClipArray) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end audioboom_GuessClipJSON

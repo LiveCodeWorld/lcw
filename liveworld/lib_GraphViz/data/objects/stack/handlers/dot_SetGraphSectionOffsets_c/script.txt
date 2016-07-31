@@ -1,0 +1,27 @@
+on dot_SetGraphSectionOffsets @dotText, @startChar, @endChar
+   --trims top and tail of dotText
+   put word 1 to -1 of dotText into dotText
+   put 0 into startChar
+   put 0 into endChar
+   
+   set the wholematches to true
+   put wordOffset("graph", dotText) into wordNum
+   if wordNum = 0 then return false
+   
+   put the number of chars of (word 1 to wordNum of dotText) - 4 into startChar
+   put offset ("];", dotText, startChar) into skipNum  -- could use a regular expression here
+   if wordNum = 0 then
+      put 0 into startChar
+      return false
+   end if
+   put startChar + skipNum + 1 into endChar
+   return true
+   
+   -- put "(?Umi)\W*(graph\W\[.*\];)" into someReg -- does not work for multiline's
+   -- put "(?Umi)\W(graph\W*\[.*)" into someReg
+   put "(?Uim)\W*(graph\W*\[" into someReg
+   put CR & ".*" after someReg
+   put "\];)" after someReg
+   put matchchunk (dotText, someReg, startChar, endChar) into foundGraphSection
+   return foundGraphSection
+end dot_SetGraphSectionOffsets

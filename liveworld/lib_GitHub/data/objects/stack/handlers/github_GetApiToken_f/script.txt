@@ -1,0 +1,4 @@
+function github_GetApiToken
+   put pref_GetValue ("GitHubApiToken") into gitHubApiToken
+   return gitHubApiToken
+end github_GetApiToken

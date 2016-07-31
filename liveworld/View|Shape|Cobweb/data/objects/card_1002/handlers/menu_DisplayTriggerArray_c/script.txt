@@ -1,0 +1,4 @@
+on menu_DisplayTriggerArray mTarget
+   put the clock_TriggerArray of mTarget into triggerArray
+   display_Array triggerArray, "the clock_TriggerArray"
+end menu_DisplayTriggerArray

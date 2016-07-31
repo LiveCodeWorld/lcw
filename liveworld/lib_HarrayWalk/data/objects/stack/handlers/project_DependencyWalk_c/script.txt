@@ -1,0 +1,70 @@
+command project_DependencyWalk shortCall, hKey, @walkArray
+   -- simplified to only walk inside an indexed project without any checks
+   put walkArray ["hArray"] into hArray
+   put item 3 of hKey into hObject
+   if exists(hObject) is false then
+      breakpoint
+      return empty
+   end if
+   
+   try
+      put hArray_FindHkeyInHierarchy (shortCall, hObject, hArray, pSetName) into foundCall
+   catch e
+      breakpoint
+   end try
+   
+   switch
+      case foundCall is among the keys of walkArray ["hKeyArray"]
+         # still need to add the hKey but we don't want to recurse
+         return empty
+      case foundCall is hKey
+         -- it's a recursive call, pass or get/setprop with lock messages?
+         put empty into walkArray ["hKeyArray"][hKey][foundCall] -- think we should add it ???
+         try
+            put hArray_GetHandler (hKey, hArray) into callHandler -- for a peak
+            put callHandler into walkArray ["recursive call"][hKey][shortCall]
+         catch e
+            breakpoint
+         end try
+         put merge ("Found a recursive call '[[hKey]]'. Skipping!") into someMessage
+         opn_Notify someMessage, true
+         return empty
+      case foundCall is empty
+         # an external or missing call 
+         try
+            put hArray_FindHkeyInHierarchy (shortCall, hObject) into foundCall -- could find from mainstack for external call?
+         catch e
+            breakpoint
+         end try
+         
+         if foundCall is empty then
+            put shortCall,"missing",1 into foundCall
+            put foundCall into walkArray ["missing"][shortCall][hKey]
+         else
+            put foundCall into walkArray ["external"][shortCall][hKey]
+         end if
+         put empty into walkArray ["hKeyArray"][hKey][foundCall] -- think we should add it ???
+         return empty
+      default
+         -- normal
+   end switch
+   
+   -- add it to the array
+   put empty into walkArray ["hKeyArray"][hKey][foundCall]
+   put merge ("Added [[foundCall]] to hKeyArray!") into someMessage
+   opn_Notify someMessage
+   
+   put item 3 of foundCall into foundObject
+   if exists (foundObject) is false then
+      breakpoint
+      put foundCall into walkArray ["missing objects"][foundObject]
+      return empty
+   end if
+   
+   put hArray_GetShortCalls (foundCall, hArray) into shortCalls
+   
+   repeat for each line shortCall in shortCalls
+      project_DependencyWalk shortCall, foundCall, walkArray
+   end repeat
+   return newlyExportedHkeyArray
+end project_DependencyWalk

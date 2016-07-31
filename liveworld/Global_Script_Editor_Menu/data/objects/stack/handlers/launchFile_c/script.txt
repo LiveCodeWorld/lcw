@@ -1,0 +1,12 @@
+command launchFile treeWidget, shortPath
+   -- for "display_Array" in "menu_FindLibraryHandler" and "menu_FindProjectHandler"
+   
+   put the search_Folder of treeWidget into findInsideFolder
+   put the search_Text of treeWidget into textToFind
+   
+   text_AddTrailing findInsideFolder
+   put findInsideFolder & shortPath into somePath
+   set the itemdelimiter to "/"
+   put item 1 of shortPath into shortHandlerFolder
+   put hkey_FromShortFolder (shortHandlerFolder)
+end launchFile

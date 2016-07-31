@@ -1,0 +1,5 @@
+setprop displayed_OverlayArray [pOverlayName] overlayArray
+   breakpoint
+   put the displayed_Object of me into scriptObject
+   set the overlay_Array [pOverlayName] of scriptObject to overlayArray
+end displayed_OverlayArray

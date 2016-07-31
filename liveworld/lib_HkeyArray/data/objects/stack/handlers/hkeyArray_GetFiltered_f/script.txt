@@ -1,0 +1,5 @@
+function hkeyArray_GetFiltered
+    put the linkArray_Model of me into modelObject
+    put model_GetArray("Filtered_hkeyArray", modelObject, "array") into hkeyArray
+    return hkeyArray
+end hkeyArray_GetFiltered

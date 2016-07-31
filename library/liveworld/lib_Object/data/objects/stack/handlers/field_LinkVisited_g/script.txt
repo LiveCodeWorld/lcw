@@ -1,0 +1,7 @@
+getprop field_LinkVisited [someWord]
+   put the short ID of the target into fieldID
+   
+   put wordOffset(someWord, the text of field ID fieldID) into wordNum
+   if wordnum = 0 then return false
+   return the visited of word wordNum of field ID fieldID
+end field_LinkVisited

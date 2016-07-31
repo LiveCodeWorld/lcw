@@ -1,0 +1,31 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_GistIgniter
+type: script library
+version: 0.4
+
+/*
+These handlers interface with a remote revIgniter server.
+They are used by the revIgniter Code Helper application to speed up coding controllers and libraries in revIgniter.
+
+These handlers are not (yet) for use on the server, but in the future they could be useful for server-to-server interactiong.
+*/
+
+
+--> Currently Working On
+-
+[[ _FetchHandler (rig_SaveControllerToLocalProject,c) ]]
+
+
+--> revIgniter | Gist
+-
+[[ _FetchHandler (rig_FetchGistController,f) ]]
+
+[[ _FetchHandler (rig_DeleteGistController,c) ]]
+
+[[ _FetchHandler (rig_DeleteGistControllers,c) ]]
+
+[[ _FetchHandler (rig_SaveGistControllers,c) ]]
+
+[[ _FetchHandler (rig_SaveGistStacks,c) ]]

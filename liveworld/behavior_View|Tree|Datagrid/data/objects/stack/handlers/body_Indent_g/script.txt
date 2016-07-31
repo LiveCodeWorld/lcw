@@ -1,0 +1,6 @@
+getprop body_Indent
+   put the customproperties of me into propArray
+   put propArray ["body_Indent"] into bodyIndent
+   if bodyIndent is empty then pass body_Indent
+   return bodyIndent
+end body_Indent

@@ -1,0 +1,5 @@
+getprop git_RevisionScript [gitHashOrNum]
+   put the script_RelativeFile of the target into objectFile
+   put git_GetRevisionScript (objectFile, gitHashOrNum) into someScript
+   return someScript
+end git_RevisionScript

@@ -1,0 +1,12 @@
+function gist_ConstructEditJSON shortGistFile, pSomeText, pDescription, pIsPublic
+   put pIsPublic is not false into pIsPublic
+   if pSomeText is not empty then put pSomeText into postArray ["content"]
+   put json_FromArray (postArray) into innerJSON
+   
+   if pDescription is not empty then put "{" & kwote("description") & ":" & kwote (pDescription) into postJSON
+   put comma & kwote ("public")  & ":" & pIsPublic after postJSON
+   put comma & kwote ("files")  & ":{" & kwote (shortGistFile) after postJSON
+   put ":" & innerJSON after postJSON
+   put "}}" after postJSON
+   return postJSON
+end gist_ConstructEditJSON

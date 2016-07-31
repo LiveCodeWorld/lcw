@@ -1,0 +1,15 @@
+function menu_ConstructSubmenuTableLine mLine, subMenuTitle, mTitle, targetObject, mController   
+   put menu_GetDefaultController (subMenuTitle, targetObject, true) into subMenuController
+   
+   put mLine into mSuffix
+   replace space with empty in mSuffix
+   put "disabled_" & mSuffix into disabledProp
+   
+   -- if script_GetGetProp (disabledProp, someScript) is empty then put empty into disabledProp
+   put disabledProp & comma & "g" into shortHKey
+   put the script_Handler [shortHKey] of subMenuController into disabledHandler
+   if disabledHandler is empty then put empty into disabledProp
+   
+   put menu_ConstructTableLine (mController, empty, mTitle, mLine, disabledProp, "submenu", subMenuTitle, subMenuController) into mTableLine
+   return mTableLine
+end menu_ConstructSubmenuTableLine

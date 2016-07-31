@@ -1,0 +1,11 @@
+on mouseUp
+   local tActionName
+   put the mouseAction of the target into tActionName
+   	
+   switch tActionName
+      case "cog"
+         doCogMenu
+      default
+         -- Execute script triggered by the given action
+   end switch
+end mouseUp

@@ -1,0 +1,10 @@
+setprop template_MetaData [pPropName] mData
+   put the template_Array of the target into templateArray
+   if pPropName is empty then
+      put mData into templateArray ["metadata"]
+   else
+      put mData into templateArray ["metadata"][pPropName]
+   end if
+   set the template_Array of the target to templateArray
+   return templateArray
+end template_MetaData

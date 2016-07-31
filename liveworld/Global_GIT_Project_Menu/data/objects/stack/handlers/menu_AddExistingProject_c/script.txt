@@ -1,0 +1,8 @@
+on menu_AddExistingProject
+   set the cursor to watch
+   git_AddAndSetGitFolder
+   put the result into longGitFolder
+   
+   git_RefreshDisplay true, "Git Status"
+   display_Lines longGitFolder, "GIT root folder"
+end menu_AddExistingProject

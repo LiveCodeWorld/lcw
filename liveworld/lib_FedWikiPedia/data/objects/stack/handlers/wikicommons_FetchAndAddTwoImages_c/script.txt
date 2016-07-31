@@ -1,0 +1,36 @@
+command wikicommons_FetchAndAddTwoImages @fedwikiPageArray, shortImageFile
+   put urlencode (word 1 to -1 of shortImageFile) into shortImageFile
+   if shortImageFile is among the items of mediawiki_ListBuiltInImages() then
+      return false
+   end if
+   
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   sandbox_ArrayDeconstructImage sandboxArray, imageTitle, imageURL, imageDescription, imageCaption, descriptionURL, imageCategoryIndex
+   
+   set the itemdelimiter to "."
+   switch 
+      case imageURL = empty
+         return false
+      case item -1 of imageURL = "webm"
+         -- should not be
+         return false
+         break
+      default
+         wikipedia_SetUserAgent
+         put url imageURL into someImage
+         if someImage is empty then return ("Error, image" && imageURL && "is empty")
+         
+         set the itemdelimiter to "."
+         put item -1 of imageURL into imageType -- bit of a hack
+         put html_StripTags (imageCaption) into plainCaption
+         put " - [" & descriptionURL && "wikimedia]" after plainCaption
+         
+         put fedwiki_ConstructImageHtml (imageURL, plainCaption, descriptionURL, "- wikimedia") into imageHTML
+         
+         fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
+         
+         put fedwiki_ConstructImageArray (someImage, imageType, plainCaption) into imageArray
+         fedwiki_PageArrayAddToEnd imageArray, fedwikiPageArray
+         return true
+   end switch
+end wikicommons_FetchAndAddTwoImages

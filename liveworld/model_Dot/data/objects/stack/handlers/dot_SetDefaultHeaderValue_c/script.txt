@@ -1,0 +1,11 @@
+command dot_SetDefaultHeaderValue targetObject, someKey, someValue
+   -- put the long id of the target into targetObject
+   put the overlay_DefaultArray of targetObject into overlayDefaultArray
+   
+   put overlayArray_GetHeaderArray (overlayDefaultArray) into headerArray
+   put someValue into headerArray [someKey]
+   overlayArray_SetHeaderArray overlayDefaultArray, headerArray
+   
+   set the overlay_DefaultArray of targetObject to overlayDefaultArray
+   return headerArray
+end dot_SetDefaultHeaderValue

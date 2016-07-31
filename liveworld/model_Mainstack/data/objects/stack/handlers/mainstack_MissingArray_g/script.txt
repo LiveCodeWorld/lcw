@@ -1,0 +1,4 @@
+getprop mainstack_MissingArray [pCheckHash]
+   put the mainstack_WalkArray [pCheckHash] of the target into walkArray
+   return walkArray ["missing"]
+end mainstack_MissingArray

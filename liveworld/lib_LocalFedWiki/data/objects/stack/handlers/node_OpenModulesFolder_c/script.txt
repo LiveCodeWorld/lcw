@@ -1,0 +1,7 @@
+command node_OpenModulesFolder
+   put node_GetModulesFolder() into someFolder
+   if someFolder is empty then return empty
+   
+   finder_Reveal someFolder
+   return someFolder
+end node_OpenModulesFolder

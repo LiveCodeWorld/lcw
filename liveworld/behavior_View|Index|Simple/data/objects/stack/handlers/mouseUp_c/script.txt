@@ -1,0 +1,9 @@
+on mouseUp
+   switch word 1 of the name of the target
+      case "button"
+         break
+      case "field"
+         _doFieldClick
+         break
+   end switch
+end mouseUp

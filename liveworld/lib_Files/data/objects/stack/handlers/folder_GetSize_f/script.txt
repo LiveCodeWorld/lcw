@@ -1,0 +1,6 @@
+function folder_GetSize folderPath
+   get folder_DetailedInfo (folderPath)
+   put item 2 of it into someSize
+   if someSize is empty then return 0
+   return someSize
+end folder_GetSize

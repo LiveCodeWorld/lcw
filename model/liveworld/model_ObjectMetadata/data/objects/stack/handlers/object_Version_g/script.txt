@@ -1,0 +1,4 @@
+getprop object_Version
+   put the object_MetaData ["version"] of the target into objectType
+   return objectType
+end object_Version

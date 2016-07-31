@@ -1,0 +1,29 @@
+function fossil_ConstructLiveProjectData
+   put fossil_ListAllRepositories() into fossilPaths
+   put 1 into indexNum
+   set the itemdelimiter to ":"
+   repeat for each line fossilFile in fossilPaths
+      put fossil_InfoArray (fossilFile) into dataArray [indexNum]
+      put fossilFile into dataArray [indexNum]["repository"]
+      
+      -- put fossil_GetDefaultRemoteUrl (fossilFile) into into dataArray [indexNum]["remote-url"]
+      put fossil_GetRawRemoteUrl (fossilFile) into shellResult
+      if word 1 to -1 of item 2 of line 1 of shellResult = "incorrect repository schema version" then
+         -- need to rebuild
+         repeat for each line someLine in word 1 to -1 of shellResult
+            delete item 1 of someLine
+            put word 1 to -1 of someLine & CR after schemaStatus
+         end repeat
+         delete char -1 of schemaStatus
+         
+         put empty into dataArray [indexNum]["remote-url"]
+         put schemaStatus into dataArray [indexNum]["schema-status"]
+      else
+         put word 1 to -1 of line 1 of shellResult into dataArray [indexNum]["remote-url"]
+      end if
+      
+      put false into dataArray [indexNum]["isExpanded"]
+      add 1 to indexNum
+   end repeat
+   return dataArray
+end fossil_ConstructLiveProjectData

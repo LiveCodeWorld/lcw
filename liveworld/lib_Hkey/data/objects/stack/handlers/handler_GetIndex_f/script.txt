@@ -1,0 +1,10 @@
+function handler_GetIndex scriptStem
+   put handler_GetIndexArray() into indexArray
+   put keys(indexArray) into handlerIndex
+   
+   if scriptStem is not among the items of "Library Handlers,display all" and scriptStem is not empty then
+      filter handlerIndex with scriptStem & "_*"
+   end if
+   sort handlerIndex
+   return word 1 to -1 of handlerIndex
+end handler_GetIndex

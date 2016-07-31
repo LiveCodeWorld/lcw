@@ -1,0 +1,9 @@
+function spotlight_ExtractAttribute spotlightFileInfo, attributeName
+    if char 1 to 7 of attributeName is not "kMDItem" then put "kMDItem" before attributeName
+    put "(?im)" &  attributeName & " += +(.*)" into someReg
+    if matchtext (spotlightFileInfo, someReg, someValue) is true then
+        return someValue
+    else
+        return empty
+    end if
+end spotlight_ExtractAttribute

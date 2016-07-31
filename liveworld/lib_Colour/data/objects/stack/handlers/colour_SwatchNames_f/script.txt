@@ -1,0 +1,5 @@
+function colour_SwatchNames
+   put opn_SwatchFolder() into someFolder
+   put folder_ShortFiles(someFolder) into swatchNames
+   return swatchNames
+end colour_SwatchNames

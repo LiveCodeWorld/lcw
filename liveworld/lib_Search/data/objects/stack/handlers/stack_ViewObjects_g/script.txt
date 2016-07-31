@@ -1,0 +1,9 @@
+getprop stack_ViewObjects
+   -- stack_Views in libOPN_ObjectText
+   put the stack_ViewArray of the target into objectArray
+   repeat for each key viewName in objectArray
+      put objectArray [viewName] & CR after viewObjects 
+   end repeat
+   delete char -1 of viewObjects
+   return viewObjects
+end stack_ViewObjects

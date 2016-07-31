@@ -1,0 +1,8 @@
+command fedwiki_StoryInsertItem @storyArray, itemNumToInsert, itemArray
+   put item 2 of the extents of storyArray into maxItem
+   repeat with itemNumToMove = maxItem down to itemNumToInsert
+      put itemNumToMove + 1 into itemNumDestination
+      put storyArray [itemNumToMove] into storyArray [itemNumDestination]
+   end repeat
+   put itemArray into storyArray [itemNumToInsert]
+end fedwiki_StoryInsertItem

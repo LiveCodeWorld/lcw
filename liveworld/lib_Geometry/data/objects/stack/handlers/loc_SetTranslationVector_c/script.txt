@@ -1,0 +1,4 @@
+on loc_SetTranslationVector fromPoint, toPoint, @xVector, @yVector
+   put item 1 of toPoint - item 1 of fromPoint into xVector
+   put item 2 of toPoint - item 2 of fromPoint into yVector
+end loc_SetTranslationVector

@@ -1,0 +1,5 @@
+getprop stack_Resizable [scriptObject]
+   put the stack_Object of scriptObject into stackObject
+   put the resizable of stackObject into someBoolean
+   return someBoolean
+end stack_Resizable

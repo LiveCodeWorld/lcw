@@ -1,0 +1,8 @@
+function script_GetGlobalSuiteObjects suiteType
+   local globalSuiteObjects
+   put script_ExtractGlobalSuiteArray (suiteType) into dataArray
+   repeat for each element someObject in dataArray
+      line_Add someObject, globalSuiteObjects
+   end repeat
+   return globalSuiteObjects
+end script_GetGlobalSuiteObjects

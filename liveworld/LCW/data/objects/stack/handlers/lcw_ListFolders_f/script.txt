@@ -1,0 +1,21 @@
+function lcw_ListFolders projectFolder
+   if char -1 of projectFolder is not slash then put slash after projectFolder
+   put the defaultfolder into oDefault
+   set the defaultfolder to projectFolder
+   put the folders into standardFolders
+   if pIncludeInvisible is true then return standardFolders
+   
+   repeat for each line someFolder in standardFolders
+      switch
+         case char 1 of someFolder = "."
+            next repeat
+         case someFolder = "livecodeworld"
+            -- a place to put metadata and complex stuff we don't need to run the project
+            next repeat
+         default
+            put projectFolder & someFolder & CR after filteredFolders
+      end switch
+   end repeat
+   delete char -1 of filteredFolders
+   return filteredFolders
+end lcw_ListFolders

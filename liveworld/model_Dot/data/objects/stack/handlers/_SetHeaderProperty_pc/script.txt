@@ -1,0 +1,13 @@
+private command _SetHeaderProperty propName, propValue, pOverlayName
+   --  _SetDotValue "overlap", someOverlap, "none", pOverlayName
+   
+   if pOverlayName is empty then put the displayed_OverlayName of the target into pOverlayName
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   overlayArray_SetHeaderProperty overlayArray, propName, propValue
+   
+   ## Recreate files
+   overlayArray_CreateFilesAndSetGeometry overlayArray
+   
+   set the overlay_Array [pOverlayName] of the target to overlayArray
+   return the result
+end _SetHeaderProperty

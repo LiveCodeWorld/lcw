@@ -1,0 +1,50 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Watch | Menu
+type: controller
+version: 0.2
+
+
+--> Global | Watch | Menu
+-
+/*
+This menu is for projects that are not in fossil or git repos.
+that is normal stacks :)
+*/
+
+[[ _FetchHandler (menu_DisplayLocalChanges,c) ]]
+
+[[ _FetchHandler (menu_RevealProjectFolder,c) ]]
+
+[[ _FetchHandler (submenu_FossilCommon,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_EditScripts,c) ]]
+
+[[ _FetchHandler (submenu_Teamster,c) ]]
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_CreateFossil,c) ]]
+
+[[ _FetchHandler (submenu_NewFossil,c) ]]
+
+on _
+end _
+
+on submenu_Script
+   return "Global | Script | Menu"
+end submenu_Script
+
+[[ _FetchHandler (submenu_Export,c) ]]
+
+
+--> Global | Watch | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DisplayLocalChanges,g) ]]

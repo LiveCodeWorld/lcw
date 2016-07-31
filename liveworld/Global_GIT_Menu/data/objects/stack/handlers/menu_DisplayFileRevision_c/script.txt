@@ -1,0 +1,16 @@
+on menu_DisplayFileRevision scriptObject
+   put the stack_RelativeFile of scriptObject into relativePath
+   ask "What file do you want to revert..." with relativePath
+   if it is empty then exit to top
+   put it into relativePath
+   
+   put git_GetCommitFileHash (relativePath, 1) into commitHash
+   if commitHash is empty then
+      answer warning "Cannot find commit hash for this stack!"
+      exit to top
+   end if
+   git_DisplayTempStackRevision scriptObject, commitHash
+   
+   -- ask file "Select a file to revert..."
+   -- put it into someFile
+end menu_DisplayFileRevision

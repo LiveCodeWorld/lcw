@@ -1,0 +1,14 @@
+private command _doFieldDoubleClick
+   put the mouse_DoubleUpEvent of me into mouseDoubleUpEvent
+   if mouseDoubleUpEvent is empty then return empty
+   
+   put the event_Target of me into eventTarget
+   if exists (eventTarget) is true then
+      put the long id of me into targetControl
+      put the clickText into someLine
+      dispatch mouseDoubleUpEvent to eventTarget with targetControl,someLine
+   else
+      do mouseDoubleUpEvent
+   end if
+   return mouseDoubleUpEvent
+end _doFieldDoubleClick

@@ -1,0 +1,21 @@
+function sitemap_Build fileIDs, pPageType, pPriority
+   -- was "sitemap_Construct"
+   local urlsetXML
+   put date_ConstructWc3Datetime (the seconds) into dateNow
+   _setPageMapXML pageMapXML, pPageType
+   
+   repeat for each line fileID in fileIDs
+      put sitemap_ConstructHapMediaUrl (fileID) into someUrl
+      put xml_Enclose (someUrl, "loc", false) & CR into urlXML
+      put xml_Enclose (dateNow, "lastmod", false) & CR after urlXML
+      
+      _addPriorityXML urlXML, pPriority
+      _addPageMapXML urlXML, pageMapXML
+      
+      put xml_Enclose (urlXML, "url", true) & CR after urlsetXML
+   end repeat
+   
+   put xml_Enclose (urlsetXML, "urlset", true, "xmlns", cXMLNS, "xmlns:content", cXMLNS_Content) into someXML
+   xml_AddHeaderLine someXml, "1.0", "UTF-8"
+   return someXML
+end sitemap_Build

@@ -1,0 +1,35 @@
+private function json.toUtf8 @pJson
+   local tNulls = "1111"
+   
+   repeat with n = 1 to 4
+      if (byte n of pJson is null) then put 0 into char n of tNulls
+   end repeat
+   
+   put (char 1 of (binaryencode("I",1)) is null) into bigEndian
+   
+   switch tNulls
+      case "1111"  -- UTF-8
+         return pJson
+         break
+      case "0101"  -- UTF-16BE
+         if bigEndian then
+            return utf8encode(pJson, true)
+         else
+            return utf8encode(swapEndianness(pJson), true)
+         end if
+         break
+      case "1010"  -- UTF-16LE
+         if not bigEndian then
+            return utf8encode(pJson, true)
+         else
+            return utf8encode(swapEndianness(pJson), true)
+         end if
+         break
+      case "0001"  -- UTF-32BE
+         return "libJson-error: 4 byte unicode, can't decode"
+         break
+      case "1000"  -- UTF-32LE
+         return "libJson-error: 4 byte unicode, can't decode"
+         break
+   end switch
+end json.toUtf8

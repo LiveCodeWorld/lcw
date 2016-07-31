@@ -1,0 +1,8 @@
+setprop menu_ActiveArray menuActiveArray
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   -- for non dynamic menus
+   set the uOPN_MenuActiveArray of someView to menuActiveArray
+end menu_ActiveArray

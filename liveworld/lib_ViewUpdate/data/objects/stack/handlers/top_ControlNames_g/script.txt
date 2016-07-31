@@ -1,0 +1,10 @@
+getprop top_ControlNames
+   put the long id of the target into targetObject
+   
+   put the childcontrolids of targetObject into topIDs
+   repeat for each line someID in topIDs
+      put the short name of control id someID & CR after topNames
+   end repeat
+   delete char -1 of topNames
+   return topNames
+end top_ControlNames

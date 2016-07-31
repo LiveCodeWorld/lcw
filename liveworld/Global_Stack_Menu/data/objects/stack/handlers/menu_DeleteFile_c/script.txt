@@ -1,0 +1,4 @@
+on menu_DeleteFile scriptObject
+   put the stack_Object of scriptObject into stackObject
+   stack_DeleteFile stackObject
+end menu_DeleteFile     

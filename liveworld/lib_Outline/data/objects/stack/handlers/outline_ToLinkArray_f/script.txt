@@ -1,0 +1,13 @@
+function outline_ToLinkArray tabbedOutline, pathDelim, noPath
+    local linkArray
+    
+    put outline_PathChildren(empty, tabbedOutline, pathDelim, false) into pathChildren
+    repeat for each line pathChild in pathChildren
+        if linkArray [pathChild] is empty then
+            outline_AddToLinkArray pathChild, tabbedOutline, linkArray, pathDelim, noPath
+        else
+            -- beep
+        end if
+    end repeat
+    return linkArray
+end outline_ToLinkArray

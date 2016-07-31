@@ -1,0 +1,10 @@
+getprop menu_TopBar
+   -- lets fetch the first (Rev)MenuBar on the card (if it exists)
+   put the card_Object of the target into someCard
+   
+   put the menu_BarTitles of someCard into revMenuBarTitles
+   put line 1 of revMenuBarTitles into firstMenuBarTitle
+   if firstMenuBarTitle is empty then return empty
+   
+   return the long id of group firstMenuBarTitle of someCard
+end menu_TopBar

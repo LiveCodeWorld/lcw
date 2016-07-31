@@ -1,0 +1,26 @@
+private function removePSocketId pSocketID, socketDataArray
+   /*
+   This deletes (removes) all data associated with pSocketID
+   Now we can just delete the subArray
+   
+   Culls request data out of the gSocketData array,
+   when that data is completely collected and now being processed.
+   This keeps gSocketData from retaining every last set of request data until it fills up all available memory
+   */
+   put the itemDelimiter into oDelim
+   set the itemDelimiter to comma
+   put empty into tempSocketData
+   put the keys of socketDataArray into theKeys
+   repeat with x = 1 to the number of lines in theKeys
+      put line x of theKeys into thisKey
+      switch
+         case item 1 of thisKey = pSocketId
+            break
+         default
+            put socketDataArray [thisKey] into tempSocketData [thisKey]
+            break
+      end switch
+   end repeat
+   set the itemDelimiter to oDelim
+   return tempSocketData
+end removePSocketId

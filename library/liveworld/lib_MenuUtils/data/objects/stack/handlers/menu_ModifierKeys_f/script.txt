@@ -1,0 +1,10 @@
+function menu_ModifierKeys toolModeKey
+    -- was "menu_ToolMode"
+    put toolModeKey & space into toolMode
+    if the optionkey is "Down" then put "option" & space after toolMode
+    if the shiftkey is "Down" then put "shift" & space after toolMode
+    if the commandkey is "Down" then put "command" & space after toolMode
+    if the controlkey is "Down" then put "control" & space after toolMode
+    put word 1 to -1 of toolMode into toolMode
+    return toolMode
+end menu_ModifierKeys

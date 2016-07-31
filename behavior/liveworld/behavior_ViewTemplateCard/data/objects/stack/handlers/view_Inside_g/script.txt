@@ -1,0 +1,16 @@
+getprop view_Inside [vNameOrStem]
+   -- works with any control or card
+   put the long id of the target into targetObject
+   
+   -- first lets check the target to see if there is a match
+   put the view_Name of targetObject into vName
+   if lazyViewNameMatch (vNameOrStem, vName) is true then return targetObject
+   
+   -- now lets recurse the children
+   put the object_TopControls of targetObject into topControls
+   repeat for each line topControl in topControls
+      put the view_Inside [vNameOrStem] of topControl into foundView
+      if exists(foundView) then return foundView
+   end repeat
+   return empty
+end view_Inside

@@ -1,0 +1,8 @@
+function digitalocean_FetchDomainInfoArray pRecordsPerPage
+   -- curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer $TOKEN' "https://api.digitalocean.com/v2/domains"
+   -- ?per_page=2
+   -- let's fetch up to 200 domains (but should paginate)
+   if pRecordsPerPage is empty then put 200 into pRecordsPerPage
+   put digitalocean_FetchJsonArray ("domains", pRecordsPerPage) into domainInfoArray
+   return domainInfoArray
+end digitalocean_FetchDomainInfoArray

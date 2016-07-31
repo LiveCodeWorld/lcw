@@ -1,0 +1,5 @@
+function mainstack_FetchHandlerHashArray mainStackFolder
+   put mainstack_FetchHarray (mainStackFolder) into hArray
+   put hArray_GetHandlerHashArray (hArray) into handlerHashArray
+   return handlerHashArray
+end mainstack_FetchHandlerHashArray

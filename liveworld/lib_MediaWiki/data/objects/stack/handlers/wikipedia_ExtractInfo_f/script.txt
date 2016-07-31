@@ -1,0 +1,11 @@
+function wikipedia_ExtractInfo someTitles
+   if pFormat is empty then put "json" into pFormat
+   
+   -- prop=info for basic page info 
+   put wikipedia_GetApiRoot() & "?action=query&prop=info&titles=" into apiStem
+   
+   put apiStem & urlEncode(someTitles) into someURL
+   put "&format=" & pFormat after someURL
+   put url someURL into someValue
+   return someValue
+end wikipedia_ExtractInfo

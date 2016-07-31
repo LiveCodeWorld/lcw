@@ -1,0 +1,5 @@
+function library_FetchForgetArray
+   put library_GetHandlerDatabaseMetadata() into dbMetaData
+   put dbMetaData ["allwaysFilterHkeyArray"] into allwaysFilterHkeyArray
+   return allwaysFilterHkeyArray
+end library_FetchForgetArray

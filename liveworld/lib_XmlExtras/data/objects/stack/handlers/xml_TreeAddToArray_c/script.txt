@@ -1,0 +1,13 @@
+on xml_TreeAddToArray someNode, treeID, @treeArray
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    if item 1 of nodeContents is not "xmlerr" then
+        put nodeContents into treeArray ["_tree"][someNode]
+    end if
+     
+    -- "revXMLAttributes" ignores "xmlns" attributes
+    put revXMLAttributes(treeID, someNode, tab, CR) into attributeArray
+    if item 1 of attributeArray is not "xmlerr" then
+        split attributeArray by CR and tab
+        put attributeArray into treeArray ["_attribute"][someNode]
+    end if
+end xml_TreeAddToArray

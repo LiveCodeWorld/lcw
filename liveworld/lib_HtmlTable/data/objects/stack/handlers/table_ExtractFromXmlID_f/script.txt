@@ -1,0 +1,13 @@
+function table_ExtractFromXmlID xmlID, pStartNode
+   if pStartNode is empty then put revXMLRootNode(xmlID) into pStartNode
+   
+   put revXMLChildNames (xmlID, pStartNode, CR, "table", true) into childNames
+   -- put revXMLMatchingNode (xmlID, pStartNode, "table", "border", "2", -1) into foundNode
+   if childNames is empty then
+      put empty into someXML
+   else
+      put pStartNode & "/" & line 1 of childNames into foundNode
+      put revXMLText (xmlID, foundNode, true) into someXML
+   end if
+   return someXML
+end table_ExtractFromXmlID

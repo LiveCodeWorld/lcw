@@ -1,0 +1,30 @@
+setprop view_Hilite someStyle
+   lock screen
+   put the child_Controls of me into indexViews
+   repeat for each line indexView in indexViews
+      switch someStyle
+         case "all"
+            set the multiple_Hilites of indexView to true
+            put the view_Index of indexView into shortFiles
+            break
+         case "known"
+            set the cursor to watch
+            put the known_ShortStackFiles of indexView into shortFiles
+            set the multiple_Hilites of indexView to true
+            break
+         case "used"
+            set the cursor to watch
+            put the used_ShortStackFiles of indexView into shortFiles
+            set the multiple_Hilites of indexView to true
+            break
+         default -- "none" or empty
+            put empty into shortFiles
+            set the multiple_Hilites of indexView to false
+      end switch
+      
+      put shortFiles & CR after allShortFiles
+      set the selected_Index of indexView to shortFiles
+   end repeat
+   unlock screen
+   return word 1 to -1 of allShortFiles
+end view_Hilite

@@ -1,0 +1,4 @@
+function handler_ExtractCalls someHandler, pSkipHkeyComponents, pSkipHkeyProps
+   put handler_ConstructCallArray (someHandler, pSkipHkeyComponents, pSkipHkeyProps) into metadataArray 
+   return metadataArray ["hkeyCalls"]
+end handler_ExtractCalls

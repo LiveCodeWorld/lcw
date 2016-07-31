@@ -1,0 +1,9 @@
+getprop stack_ViewArray
+   -- return a list of the views in a stack and all it's substacks
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mStackName
+   put the name of stack mStackName into mStack
+   
+   put search_StackForResults (mStack, "view_Name") into objectArray
+   return objectArray
+end stack_ViewArray

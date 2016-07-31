@@ -1,0 +1,32 @@
+command template_CreateInvisibleStack viewName   
+   if viewName is empty then
+      put opn_Ask ("Give this new control a view_Name...", "View|Something|Or Other") into viewName
+      template_StackAlreadyExists viewName
+   else
+      template_StackAlreadyExists viewName
+   end if
+   
+   create invisible stack viewName
+   put it into templateStackObject
+   set the destroystack of stack viewName to true
+   set the destroywindow of stack viewName to true
+   
+   put template_DefaultCardScript (viewName) into cardScript
+   set the script of card 1 of stack viewName to cardScript
+   set the behavior_Name of card 1 of stack viewName to "Card View Behavior"
+   put viewName into shortViewName
+   set the itemdelimiter to "|"
+   delete item 1 of shortViewName
+   set the itemdelimiter to comma
+   set the name of card 1 of stack viewName to shortViewName
+         
+   put view_NameToFile (viewName) into someFile
+   set the fileName of stack viewName to someFile
+   
+   set lockmessages to true
+   save stack viewName
+   set lockmessages to false
+   set the stack_IsKnown of stack viewName to true
+   
+   return the name of stack viewName
+end template_CreateInvisibleStack

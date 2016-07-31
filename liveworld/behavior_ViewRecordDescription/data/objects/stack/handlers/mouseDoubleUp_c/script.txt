@@ -1,0 +1,25 @@
+on mouseDoubleUp pMouseBtnNum
+   if pMouseBtnNum is 1 then
+      put the dgControl of me into dgView
+      if exists(dgView) is false then return false
+      
+      if the dgProps["allow editing"] of dgView then
+         put the long id of the target into targetObject
+         put the short name of targetObject into theKey
+         put the dgIndex of me into indexNum
+         
+         switch
+            case theKey is among the items of "help"
+               EditFieldText targetObject, indexNum, theKey
+               break
+            case word 1 of targetObject is "player"
+               -- display_Movie
+               break
+            default
+               put the linked_Template of me into templateView
+               object_GoTo templateView
+         end switch
+      end if
+   end if
+   pass mouseDoubleUp
+end mouseDoubleUp

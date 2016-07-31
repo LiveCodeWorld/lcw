@@ -1,0 +1,17 @@
+function linkArray_ConstructLinkSection linkArray, pNodeTypeArray, pClusterArray, pGraphController
+   -- all from arrays (with an optional script override in pGraphController)
+   -- cloned from "hKeyArray_ConstructNodeSection", see also "hKeyArray_DotNestedObjectClusters"
+   
+   -- node defs
+   if pNodeTypeArray is an array then put linkArray_ConstructDefSection (nodeTypeArray, pGraphController) into nodeDefs
+   if pClusterArray is an array then put linkArray_ConstructClusterDefs (clusterArray, pGraphController) into clusterDefs  -- specific (construct object clusters)
+   put nodeDefs & CR & CR & clusterDefs into defSection
+   
+   -- node links
+   put linkArray_DotNodeLinks (linkArray) into linkSection
+   if defSection is empty then
+      return linkSection
+   else
+      return defSection & CR & CR & linkSection
+   end if
+end linkArray_ConstructLinkSection

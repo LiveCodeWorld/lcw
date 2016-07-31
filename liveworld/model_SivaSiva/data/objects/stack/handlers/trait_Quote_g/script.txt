@@ -1,0 +1,5 @@
+getprop trait_Quote
+   put the chapter_Array of the target into chapterArray
+   put trait_GetQuote (chapterArray) into traitQuote
+   return traitQuote
+end trait_Quote

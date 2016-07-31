@@ -1,0 +1,30 @@
+function linkArray_Reduce linkArray, minLinkNum
+   -- updated to allow nested linkArray
+   put array_Reverse (linkArray) into backArray
+   repeat for each key someKeyWord in linkArray
+      put linkArray [someKeyWord] into frontLinks
+      if frontLinks is an array then put keys (frontLinks) into frontLinks
+      put backArray [someKeyWord] into backLinks
+      if backLinks is an array then put keys (backLinks) into backLinks
+      
+      if the number of lines of frontLinks > minLinkNum or the number of lines of backLinks > minLinkNum then
+         put someKeyWord & CR after goodKeys
+      end if
+   end repeat
+   delete char -1 of goodKeys
+   
+   repeat for each line goodKey in goodKeys
+      put empty into goodFrontLinks
+      put linkArray [goodKey] into testLinks
+      if testLinks is an array then put keys (testLinks) into testLinks
+      
+      repeat for each line testLink in testLinks
+         if testLink is among the lines of goodKeys then
+            put testLink & CR after goodFrontLinks
+         end if
+      end repeat 
+      delete char -1 of goodFrontLinks
+      put goodFrontLinks into reducedArray [goodKey]
+   end repeat
+   return reducedArray
+end linkArray_Reduce

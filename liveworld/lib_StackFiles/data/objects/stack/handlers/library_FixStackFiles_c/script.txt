@@ -1,0 +1,6 @@
+command library_FixStackFiles
+   put library_StackFileStack() into stackFileStack
+   stackFile_FixStackFiles stackFileStack
+   put the result into resultArray
+   return resultArray
+end library_FixStackFiles

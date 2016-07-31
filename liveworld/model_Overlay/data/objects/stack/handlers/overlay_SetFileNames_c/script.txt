@@ -1,0 +1,19 @@
+command overlay_SetFileNames overlayFolder, pOverlayNames
+   folder_Format overlayFolder
+   put overlay_GetData (overlayFolder) into overlayData
+   
+   if pOverlayNames is empty then put overlayData_ListNames (overlayData) into pOverlayNames
+   repeat for each line overlayName in pOverlayNames
+      put overlayData [overlayName] into overlayArray
+      put overlayFolder into safeOverlayFolder
+      file_ReplaceHome safeOverlayFolder
+      overlayArray_SetGraphProperty overlayArray, "overlay_Folder", safeOverlayFolder
+      
+      overlay_ShortFiles overlayName, shortDotFile, shortImageFile, shortCmapxFile, shortXdotFile, shortDotArrayFile
+      
+      overlayArray_SetGraphProperty overlayArray, "image_File", shortImageFile
+      overlayArray_SetGraphProperty overlayArray, "dot_File", shortDotFile
+      put overlayArray into overlayData [overlayName]
+   end repeat
+   overlay_SetData overlayFolder, overlayData
+end overlay_SetFileNames

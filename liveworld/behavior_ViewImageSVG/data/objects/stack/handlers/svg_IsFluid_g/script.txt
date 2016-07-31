@@ -1,0 +1,4 @@
+getprop svg_IsFluid
+   put the svg_Dimensions of me into myDimensions
+   return myDimensions = "100%,100%"
+end svg_IsFluid

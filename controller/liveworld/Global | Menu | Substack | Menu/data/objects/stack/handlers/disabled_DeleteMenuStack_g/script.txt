@@ -1,0 +1,9 @@
+getprop disabled_DeleteMenuStack
+   put rev_ScriptObject() into mController
+   put the menu_SubStack of mController into subStackObject
+   if exists(subStackObject) then
+      return false
+   else
+      return true
+   end if
+end disabled_DeleteMenuStack

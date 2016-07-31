@@ -1,0 +1,11 @@
+function text_ExtractQuoted someText
+    local quotedLines
+    put 0 into startAfterCharNum
+    repeat
+        text_SetOffsets quote, quote, someText, startChar, endChar, startAfterCharNum
+        if startChar = 0 or endChar = 0 then return quotedLines
+        put char (startChar + 1) to (endChar - 1) of someText into quotedText
+        line_Insert quotedText, quotedLines
+        put endChar into startAfterCharNum
+    end repeat
+end text_ExtractQuoted

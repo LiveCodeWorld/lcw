@@ -1,0 +1,12 @@
+command fedwiki_SendPageJSON pageSlug, socketID  
+   -- all the smarts are in the custom property handler
+   put fedwiki_GetLocalOrDefaultPageJson (pageSlug) into someJSON
+   if someJSON is empty then
+      daemon_SendNotFound socketID
+      return "Returned 404 page not found."
+   else
+      -- send the json file stored in the pages folder
+      daemon_SendJSON socketID, someJSON
+      return "Sent JSON. Socket still open."
+   end if
+end fedwiki_SendPageJSON

@@ -1,0 +1,7 @@
+command stack_SaveBinaryData stackData, someFile
+   put "binfile:" & someFile into stackUrl    
+   put the filetype into oFileType
+   set the filetype to "revoRSTK"
+   put stackData into url stackUrl
+   set the filetype to oFileType
+end stack_SaveBinaryData

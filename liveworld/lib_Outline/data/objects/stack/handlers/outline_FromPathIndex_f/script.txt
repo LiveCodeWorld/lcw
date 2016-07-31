@@ -1,0 +1,15 @@
+function outline_FromPathIndex pathIndex, pDelim, pUsePathLinks, pTitleAtEnd
+   local tabbedOutline, linkedOutline, beforeTag, afterTag
+   repeat for each line somePath in pathIndex
+      if pUsePathLinks is true then
+         outline_AddHtmlPathLinksPath somePath, tabbedOutline, linkedOutline, pDelim, beforeTag, afterTag, pTitleAtEnd
+      else
+         put outline_AddPath(somePath, tabbedOutline, pDelim, beforeTag, afterTag, pTitleAtEnd) into tabbedOutline
+      end if
+   end repeat
+   if pUsePathLinks is true then
+      return linkedOutline
+   else
+      return tabbedOutline
+   end if
+end outline_FromPathIndex

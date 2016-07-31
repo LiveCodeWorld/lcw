@@ -1,0 +1,6 @@
+function loc_TranslateByVector someLoc, xVector, yVector
+   -- was translateLoc
+   add xVector to item 1 of someLoc
+   add yVector to item 2 of someLoc
+   return someLoc
+end loc_TranslateByVector

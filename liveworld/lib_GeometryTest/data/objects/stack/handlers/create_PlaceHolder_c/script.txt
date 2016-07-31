@@ -1,0 +1,45 @@
+command create_PlaceHolder someName, pRect, pGroupID, pColour, pShowName
+   if someRect is a rect then
+      set the rect of the templateButton to someRect
+   end if
+   
+   switch pColour
+      case empty
+      case "random"
+         put colour_GetRandom() into pColour
+      default
+         set the backgroundcolor of the templateButton to pColour
+   end switch
+   
+   set the style of the templateButton to "rectangle"
+   set the autohilite of the templateButton to false
+   set the showfocusborder of the templateButton to false
+   set the traversalon of the templateButton to false
+   set the threed of the templateButton to false
+   set the showname of the templateButton to (pShowName is not false)
+   set the borderwidth of the templateButton to 1
+   
+   if the platform contains "Mac" then
+      set the ink of the templateButton to "blend"
+   else
+      set the ink of the templateButton to "srcAnd"
+   end if
+   
+   if exists (stack "behavior_ViewLayoutPlaceholder") then
+      put the name of stack "behavior_ViewLayoutPlaceholder" into stackObject
+      set the behavior of the templateButton to stackObject
+   else
+      put script_SelfDeleteScript() into someScript
+   end if
+   
+   if pGroupID is empty then
+      create button someName
+   else
+      create button someName in group id pGroupID
+   end if
+   put it into placeholderButton
+   
+   choose browse tool
+   reset the templateButton
+   return placeholderButton
+end create_PlaceHolder

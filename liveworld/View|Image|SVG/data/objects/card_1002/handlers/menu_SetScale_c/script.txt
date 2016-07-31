@@ -1,0 +1,5 @@
+on menu_SetScale svgView
+   put the svg_Scale of svgView into svgScale
+   put opn_Ask ("Change the scale of the svg view?", svgScale) into svgScale
+   set the svg_Scale of svgView to svgScale
+end menu_SetScale

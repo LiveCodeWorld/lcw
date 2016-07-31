@@ -1,0 +1,6 @@
+command display_SisterViews viewName
+   view_NormalizeName viewName
+   set the itemdelimiter to "|"
+   delete item -1 of viewName
+   display_Views viewName
+end display_SisterViews

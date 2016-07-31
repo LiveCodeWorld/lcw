@@ -1,0 +1,5 @@
+on menu_LiveMainStackArray scriptObject
+   put the object_MainStackArray of scriptObject into someArray
+   objectArray_StripScripts someArray
+   display_Array someArray, "the object_MainStackArray"
+end menu_LiveMainStackArray

@@ -1,0 +1,10 @@
+function html_FetchTidy someUrl
+   put url someUrl into someHtml
+   put the tempname & ".html" into inputFile 
+   put someHtml into url ("file:" & inputFile)
+   
+   put "tidy --force-output true --char-encoding utf8 --input-encoding utf8 --output-encoding utf8 --output-xml true -asxml -m" && inputFile into someShell
+   put shell (someShell) into shellResult   
+   put url ("file:" & inputFile) into tidyXML
+   return tidyXML
+end html_FetchTidy

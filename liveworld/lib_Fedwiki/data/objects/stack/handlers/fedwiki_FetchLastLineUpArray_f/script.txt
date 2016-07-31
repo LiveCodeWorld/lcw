@@ -1,0 +1,16 @@
+function fedwiki_FetchLastLineUpArray droppedURL, pNotTheseSlugs
+   if pNotTheseSlugs is empty then put "journal-cleaner-transport" into pNotTheseSlugs
+   
+   put fedwiki_ConstructUrlArray (droppedURL) into urlArray
+   if urlArray is false then return false
+   
+   put item 2 of the extents of urlArray into lineUpNum
+   put urlArray [lineUpNum]["pageSlug"] into pageSlug
+   if pageSlug is among the items of pNotTheseSlugs and lineUpNum is not 1 then
+      subtract 1 from lineUpNum
+   end if
+   
+   put fedwiki_GetLineUpJson (urlArray, lineUpNum) into someJSON
+   put json_ToArray (someJSON) into pageArray
+   return pageArray
+end fedwiki_FetchLastLineUpArray

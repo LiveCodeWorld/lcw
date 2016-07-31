@@ -1,0 +1,6 @@
+setprop hap_NavigationSettings navigationSettingsArray
+   put the hap_MetaDataArray of me into hapMetaDataArray
+   put navigationSettingsArray into hapMetaDataArray ["hap_NavigationSettings"]
+   set the hap_MetaDataArray of me to hapMetaDataArray
+   return hapMetaDataArray
+end hap_NavigationSettings

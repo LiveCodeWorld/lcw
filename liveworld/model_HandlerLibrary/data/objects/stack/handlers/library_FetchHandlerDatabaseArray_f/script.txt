@@ -1,0 +1,4 @@
+function library_FetchHandlerDatabaseArray
+   put library_FetchArray ("Hkey_Library") into handlerDatabaseArray
+   return handlerDatabaseArray
+end library_FetchHandlerDatabaseArray

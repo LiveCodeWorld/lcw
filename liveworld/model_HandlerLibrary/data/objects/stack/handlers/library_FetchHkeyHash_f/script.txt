@@ -1,0 +1,5 @@
+function library_FetchHkeyHash hKey
+   put library_FetchHandlerMetadata (hKey) into metadataArray
+   put metadataArray ["sha1"] into handlerHash
+   return handlerHash
+end library_FetchHkeyHash

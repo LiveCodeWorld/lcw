@@ -1,0 +1,9 @@
+function library_StandardFolder pShortFileBit
+   -- this is the old stack based library folder
+   put library_PluginFolder ("opn_Libraries/", true) into standardFolder
+   if there is a folder standardFolder then
+      return standardFolder & pShortFileBit
+   else
+      return empty
+   end if
+end library_StandardFolder

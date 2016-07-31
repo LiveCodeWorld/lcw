@@ -1,0 +1,14 @@
+private function _calculateTopFactor
+   put the top_View of me into layoutTopView
+   put the bottom_View of me into layoutBottomView
+   
+   put the inner_Rect of me into innerRect
+   put item 4 of innerRect - item 2 of innerRect into innerHeight
+   
+   put the vertical_Spacing of me into viewSpacing
+   
+   put innerHeight - viewSpacing into oldHeightTotal
+   put the height of layoutTopView into oldTopHeight
+   put oldTopHeight/oldHeightTotal into topFactor
+   return topFactor
+end _calculateTopFactor

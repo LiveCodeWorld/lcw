@@ -1,0 +1,11 @@
+command library_StoreGlobals pSetName
+   -- not doing now due to bug (store manually)
+   breakpoint
+   return false
+   
+   hArray_StoreGlobal
+   library_StoreSet pSetName
+   
+   library_StoreCheckoutGlobals pSetName, true
+   library_StoreGlobalPrefs pSetName, true
+end library_StoreGlobals

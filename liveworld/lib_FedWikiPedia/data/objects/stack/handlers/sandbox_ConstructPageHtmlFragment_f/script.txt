@@ -1,0 +1,7 @@
+function sandbox_ConstructPageHtmlFragment pageTitle
+   -- use parse like "sandbox_ConstructSectionFragment" instead?
+   put "/w/api.php?action=query&prop=extracts&format=json&titles=" into sandBoxFragment
+   put urlencode (pageTitle) after sandBoxFragment
+   put "&redirects" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructPageHtmlFragment

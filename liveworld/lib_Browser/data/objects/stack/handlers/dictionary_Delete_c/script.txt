@@ -1,0 +1,9 @@
+command dictionary_Delete @dataArray, someKey
+   put dataArray ["value"][someKey] into someValue
+   delete variable dataArray ["value"][someKey]
+   delete variable dataArray ["key"][someValue]
+   if dataArray ["value"] is not an array then
+      delete variable dataArray ["value"]
+      delete variable dataArray ["key"]
+   end if
+end dictionary_Delete

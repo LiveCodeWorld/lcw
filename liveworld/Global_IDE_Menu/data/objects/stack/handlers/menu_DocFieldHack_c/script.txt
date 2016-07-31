@@ -1,0 +1,7 @@
+on menu_DocFieldHack
+   put scriptEditor_DocumentationFieldBehavior() into documentationFieldBehavior
+   put rev_ScriptEditorDocField (someNum) into scriptEditorDocField
+   
+   edit the script of documentationFieldBehavior
+   edit the script of scriptEditorDocField
+end menu_DocFieldHack

@@ -1,0 +1,16 @@
+on menu_AllDepsFromObjects hKey
+   /*
+   Fetch the handlers directly from the objects
+   Extract the calls and store the handler and calls.
+   Recurse
+   */ 
+   local pSetName, pTestExceptions
+   
+   timer_Start "library_HkeyFolder"
+   --
+   put library_HkeyFolder (hKey, pSetName, pTestExceptions) into hKeyArray
+   --
+   timer_Stop "library_HkeyFolder", true
+   
+   display_HKeyArray hKeyArray, hkey
+end menu_AllDepsFromObjects

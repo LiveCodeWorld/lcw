@@ -1,0 +1,4 @@
+on menu_StartClockSections mTarget
+   set the clock_SectionEventsOn of mTarget to true
+   dispatch "clock_Start" to mTarget
+end menu_StartClockSections

@@ -1,0 +1,12 @@
+function localhost_GetImageFolder
+   put pref_FetchValue ("localhost_GetImageFolder") into imageFolder
+   if there is not a folder imageFolder then
+      answer folder "Select a folder for your snapshots..."
+      put it into imageFolder
+      if imageFolder is empty then exit to top
+      text_AddTrailing imageFolder, slash
+      pref_SaveValue "localhost_GetImageFolder", imageFolder
+   end if
+   text_AddTrailing imageFolder, slash
+   return imageFolder
+end localhost_GetImageFolder

@@ -1,0 +1,6 @@
+getprop git_CommitHash [pBackNum]
+   put the stack_RelativeFile of the target into relativePath
+   put git_GetCommitFileHash (relativePath, pBackNum) into commitHash
+   opn_Notify git_HashType (commitHash)
+   return commitHash
+end git_CommitHash

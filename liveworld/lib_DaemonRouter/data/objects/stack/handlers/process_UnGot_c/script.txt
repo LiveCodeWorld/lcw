@@ -1,0 +1,6 @@
+command process_UnGot socketID, someRoute, routeData, requestArray
+   -- here we come across new stuff for the first time
+   -- over ride with middleware for parasitic mode
+   -- dameon_AddToMiddlewareArray requestArray
+   daemon_SendNotFound socketID
+end process_UnGot

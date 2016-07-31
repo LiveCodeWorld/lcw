@@ -1,0 +1,12 @@
+command line_SetUnique @someIndex, pCaseSensitive
+   if pCaseSensitive is false then
+      split someIndex by CR and tab
+      put the keys of someIndex into uniqueIndex
+      return word 1 to -1 of uniqueIndex
+   else
+      repeat for each line someLine in someIndex
+         put empty into indexArray [someLine]
+      end repeat
+      return keys(indexArray)
+   end if
+end line_SetUnique

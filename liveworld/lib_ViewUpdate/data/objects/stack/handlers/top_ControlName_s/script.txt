@@ -1,0 +1,11 @@
+setprop top_ControlName topName
+   put the long id of the target into layoutView
+   
+   put the top_Control [topName] of layoutView into topControl
+   if exists (topControl) is false then return empty
+   
+   relayer topControl to back of layoutView
+   dispatch "LayoutControl" to layoutView
+   
+   return topControl
+end top_ControlName

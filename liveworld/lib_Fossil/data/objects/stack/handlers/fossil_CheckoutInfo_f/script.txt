@@ -1,0 +1,19 @@
+function fossil_CheckoutInfo checkoutFileOrFolder
+   put "fossil info" into someShell
+   
+   switch
+      case there is a folder checkoutFileOrFolder
+         fossil_ExecuteShell someShell, checkoutFileOrFolder
+         break
+      case there is a file checkoutFileOrFolder
+         put checkoutFileOrFolder into someFolder
+         set the itemdelimiter to "/"
+         delete item -1 of someFolder
+         fossil_ExecuteShell someShell, someFolder
+         break
+      default
+         return empty
+   end switch
+   put the result into shellResult
+   return shellResult
+end fossil_CheckoutInfo

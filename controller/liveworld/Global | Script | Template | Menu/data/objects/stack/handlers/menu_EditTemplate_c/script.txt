@@ -1,0 +1,5 @@
+on menu_EditTemplate mTarget, templateName
+   put library_ScriptTemplateFolder (templateName) into someFile
+   put "edit" && kwote(someFile) into someShell
+   put shell (someShell) into shellResult
+end menu_EditTemplate

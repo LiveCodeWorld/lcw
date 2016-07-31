@@ -1,0 +1,4 @@
+getprop stack_Hashs [mTarget]
+   put the stack_RelativeFile of mTarget into relativePath
+   return git_ReverseFileHashes (relativePath)
+end stack_Hashs

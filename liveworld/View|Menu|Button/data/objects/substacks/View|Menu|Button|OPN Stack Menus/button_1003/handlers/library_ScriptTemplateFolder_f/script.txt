@@ -1,0 +1,3 @@
+function library_ScriptTemplateFolder shortFileBit, pDontCreate
+   return library_PluginFolder ("opn_Text/rev/template/", pDontCreate) & shortFileBit
+end library_ScriptTemplateFolder

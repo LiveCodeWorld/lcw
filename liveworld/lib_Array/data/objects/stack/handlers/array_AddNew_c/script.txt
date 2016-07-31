@@ -1,0 +1,13 @@
+command array_AddNew newArray, @dataArray
+    put empty into addedKeys
+    repeat for each key someKey in newArray
+        put newArray [someKey] into newValue
+        put dataArray [someKey] into oldValue
+        if oldValue is not newValue then
+            put someKey & CR after addedKeys
+            put newValue into dataArray [someKey]
+        end if
+    end repeat
+    delete last char of addedKeys
+    return addedKeys
+end array_AddNew

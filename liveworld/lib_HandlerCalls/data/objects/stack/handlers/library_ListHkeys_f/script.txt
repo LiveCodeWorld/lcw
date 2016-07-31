@@ -1,0 +1,6 @@
+function library_ListHkeys
+   put library_FetchHandlerDatabaseArray() into handlerDatabaseArray
+   put keys (handlerDatabaseArray) into hkeys
+   sort hKeys by item 1 of each
+   return hKeys
+end library_ListHkeys

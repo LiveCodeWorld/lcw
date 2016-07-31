@@ -1,0 +1,6 @@
+command library_SetFilteredCalls hKey, filteredCalls
+   put library_FetchHandlerMetadata (hKey) into metadataArray
+   put filteredCalls into metadataArray ["filteredCalls"]
+   library_FetchHandlerMetadata hKey, metadataArray
+   return metadataArray
+end library_SetFilteredCalls

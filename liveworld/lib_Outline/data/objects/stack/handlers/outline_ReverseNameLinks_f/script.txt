@@ -1,0 +1,14 @@
+function outline_ReverseNameLinks someOutline
+    repeat for each line osLine in someOutline
+        put outline_TabLevel(osLine) into tabLevel
+        put word 1 to -1 of osLine into someLine
+        html_DeconstructNameLink someLine, someText, someLink
+        if someLink is empty then
+            put osLine & CR after newOutline
+        else
+            put html_ConstructNameLink(someLink, someText) into newLine
+            put outline_IncreaseIndent(newLine, tabLevel) & CR after newOutline
+        end if
+    end repeat
+    return word 1 to -1 of newOutline
+end outline_ReverseNameLinks

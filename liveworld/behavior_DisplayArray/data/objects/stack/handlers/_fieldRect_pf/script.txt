@@ -1,0 +1,5 @@
+private function _fieldRect stackRect
+   add _headerHeight() to item 2 of stackRect
+   subtract _footerHeight() from item 4 of stackRect
+   return stackRect
+end _fieldRect

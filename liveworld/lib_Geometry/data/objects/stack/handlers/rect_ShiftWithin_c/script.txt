@@ -1,0 +1,44 @@
+command rect_ShiftWithin @someRect, outsideRect
+   -- first let us check if it will fit at all within the rect
+   put item 3 of someRect - item 1 of someRect into someWidth
+   put item 3 of outsideRect - item 1 of outsideRect into outsideWidth
+   if someWidth > outsideWidth then return empty -- it is too wide to fit
+   
+   put item 4 of someRect - item 2 of someRect into someHeight
+   put item 4 of outsideRect - item 2 of outsideRect into outsideHeight
+   if someHeight > outsideHeight then return empty -- it is too high to fit
+   
+   put item 1 of someRect into someLeft
+   put item 1 of outsideRect into outsideLeft
+   put item 3  of someRect into someRight
+   put item 3 of outsideRect into outsideRight
+   
+   if someLeft < outsideLeft then
+      -- it is too far left shift it right
+      put outsideLeft - someLeft into shiftLeft
+      add shiftLeft to item 1 of someRect
+      add shiftLeft to item 3 of someRect
+   else if someRight > outsideRight then
+      -- it is too far right shift it left
+      put someRight - outsideRight into shiftRight
+      subtract shiftRight from item 1 of someRect
+      subtract shiftRight from item 3 of someRect
+   end if
+   
+   put item 2 of someRect into someTop
+   put item 2 of outsideRect into outsideTop
+   put item 4  of someRect into someBottom
+   put item 4 of outsideRect into outsideBottom
+   
+   if someTop < outsideTop then
+      -- it is too high shift it down
+      put outsideTop - someTop into shiftDown
+      add shiftDown to item 2 of someRect
+      add shiftDown to item 4 of someRect
+   else if someBottom > outsideBottom then
+      -- it is too low shift it up
+      put someBottom - outsideBottom into shiftUp
+      subtract shiftUp from item 2 of someRect
+      subtract shiftUp from item 4 of someRect
+   end if
+end rect_ShiftWithin

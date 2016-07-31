@@ -1,0 +1,13 @@
+function hArray_ListHkeys pShortHkey
+   if pShortHkey is not empty then
+      global gHkey_Array
+      put gHkey_Array ["handlerArray"] into handlerArray
+      put handlerArray [pShortHkey] into hKeyArray
+      put keys (hKeyArray) into hKeys
+   else
+      put hArray_ConstructHkeyArray() into bigHKeyArray
+      put keys (bigHKeyArray) into hKeys
+   end if
+   sort hKeys by item 1 of each
+   return hKeys
+end hArray_ListHkeys

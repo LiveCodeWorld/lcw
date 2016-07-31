@@ -1,0 +1,9 @@
+on hKeyArray_AddTographPropertyArray idArray, @graphPropertyArray
+    repeat for each key nodeID in idArray
+        put idArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        
+        put handlerName into nodeLabel
+        linkArray_SetGraphPropertyArray nodeID, "nodeLabel", nodeLabel, graphPropertyArray
+    end repeat
+end hKeyArray_AddTographPropertyArray

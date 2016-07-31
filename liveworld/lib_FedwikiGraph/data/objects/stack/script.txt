@@ -1,0 +1,65 @@
+--> MetaData
+-
+name: lib_FedwikiGraph
+type: library
+version: 0.9
+copyright: David Bovill
+
+/*
+A library for interfacing with Federated Wiki.
+*/
+
+--> Fedwiki | Graph
+-
+[[ _FetchHandler (graph_ConstructDotHeaderArray,f) ]]
+
+[[ _FetchHandler (graph_LinkArray,c) ]]
+
+[[ _FetchHandler (linkArray_RemoveSelfLinks,c) ]]
+
+[[ _FetchHandler (graph_CreateDotFiles,c) ]]
+
+
+--> Graph | Head
+-
+[[ _FetchHandler (graph_ConstructHeader,f) ]]
+
+
+--> Graph | Def
+-
+[[ _FetchHandler (graph_ConstructDefSection,f) ]]
+
+[[ _FetchHandler (dot_RandomColour,f) ]]
+
+[[ _FetchHandler (graph_ConstructGroupStyleArray,f) ]]
+
+[[ _FetchHandler (linkarray_ExtractRandomNodes,c) ]]
+
+[[ _FetchHandler (graph_AddToGroupStyleArray,c) ]]
+
+[[ _FetchHandler (graph_SetNodeLabel,c) ]]
+
+[[ _FetchHandler (graph_SetNodeTypeStyle,c) ]]
+
+[[ _FetchHandler (graph_SetGroupStyleArray,c) ]]
+
+[[ _FetchHandler (graph_GetGroupStyleArray,f) ]]
+
+
+--> Graph | Cluster
+-
+[[ _FetchHandler (graph_ConstructCluster,f) ]]
+
+-- function graph_ConstructDotClusters idArray, linkArray, pGraphNodeType
+-- overlayArray_ConstructDotClusters
+-- put overlayData_ConstructDotClusters (objectIDArray, idArray, pNotIfEmpty) -- seems to be a section
+
+
+-- put outline_ToXmlStructure (objectOutline) into structureXml
+-- put hKeyArray_XmlToClusters (structureXml, objectOutline, hIdArray, graphNodeType) into clusterDefs
+
+-- not nested
+-- put overlayArray_ConstructFlatSubCluster dotClusterArray, someObject, idArray
+end graph_ConstructDotClusters
+
+[[ _FetchHandler (dot_Flatten,c) ]]

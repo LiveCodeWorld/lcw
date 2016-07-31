@@ -1,0 +1,13 @@
+on menu_TestSecondText mTarget
+   /*
+   Patience means remaining composed when faced with delays, time constraints or other challenges that hinder expectations.
+   
+   I cultivate it by planning in advance and controlling the tendency to become frustrated or upset.
+   
+   The opposite is frustration.
+   */
+   put script_GetCommentAboveMe() into someText
+   
+   put the sivaSquareText_View of mTarget into sivaTraitView
+   set the view_Text of sivaTraitView to someText
+end menu_TestSecondText

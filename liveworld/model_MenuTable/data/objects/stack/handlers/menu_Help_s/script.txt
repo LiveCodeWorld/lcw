@@ -1,0 +1,6 @@
+setprop menu_Help [mTitle] someHtml
+   put the long id of the target into mController
+   put the menu_Array of mController into mArray
+   put someHtml into mArray [mTitle]["metadata"]["help"]["menu"]
+   set the menu_Array of mController to mArray
+end menu_Help

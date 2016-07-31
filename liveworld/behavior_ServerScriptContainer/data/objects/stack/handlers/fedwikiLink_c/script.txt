@@ -1,0 +1,4 @@
+on fedwikiLink
+   put fedwiki_GetDroppedUrl ($_POST_RAW) into droppedURL
+   fedwiki_ParseFedwikiLink droppedURL, $_POST_RAW
+end fedwikiLink

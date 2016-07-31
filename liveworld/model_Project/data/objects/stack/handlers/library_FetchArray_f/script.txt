@@ -1,0 +1,5 @@
+function library_FetchArray shortName
+   put library_ArrayFile (shortName) into someFile
+   put array_Fetch (someFile) into modelArray
+   return modelArray
+end library_FetchArray

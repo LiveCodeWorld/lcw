@@ -1,0 +1,7 @@
+command request_DeconstructArray requestArray, @socketID, @someMethod, @someRoute, @queryString, @requestUrl
+   put requestArray ["socketID"] into socketID
+   put requestArray ["Request Method"] into someMethod
+   put requestArray ["SCRIPT_NAME"] into someRoute
+   put requestArray ["QUERY_STRING"] into queryString
+   put requestArray ["Requested URL"] into requestUrl
+end request_DeconstructArray

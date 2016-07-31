@@ -1,0 +1,4 @@
+function project_HandlerFile hKey, pDontCreate
+   put project_GetHandlerFolder (hKey, pDontCreate) & "script.txt" into scriptFile
+   return scriptFile
+end project_HandlerFile

@@ -1,0 +1,5 @@
+getprop script_GeometryArrayFromCmap [pOverlayName]
+   put the script_CmapText [pOverlayName] of the target into cmapxText
+   put imagemap_ParseMap (cmapxText) into geometryArray
+   return geometryArray
+end script_GeometryArrayFromCmap

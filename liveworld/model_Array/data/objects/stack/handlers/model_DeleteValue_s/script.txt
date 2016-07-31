@@ -1,0 +1,6 @@
+setprop model_DeleteValue [somekey] someValue
+   put the long id of the target into modelObject
+   if someKey is empty then put "Default" into somekey
+   put cModelDefaultArrayName into modelName
+   model_DeleteFromIndex someValue, somekey, modelObject, modelName, "array"
+end model_DeleteValue

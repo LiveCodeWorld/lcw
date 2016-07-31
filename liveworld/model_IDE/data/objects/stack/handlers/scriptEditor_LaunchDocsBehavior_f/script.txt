@@ -1,0 +1,10 @@
+function scriptEditor_LaunchDocsBehavior
+   if exists (stack "behavior_IdeRecentButton") then
+      put the name of stack "behavior_IdeFindField" into bObject
+      return bObject
+   else
+      put scriptEditor_GetBehaviorButton ("LiveCode Launch Docs Button Behavior") into someObject
+      if exists(someObject) is false then return empty
+      return revRuggedID (someObject)
+   end if
+end scriptEditor_LaunchDocsBehavior

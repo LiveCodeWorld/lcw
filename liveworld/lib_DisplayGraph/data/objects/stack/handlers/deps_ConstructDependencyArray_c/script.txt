@@ -1,0 +1,10 @@
+command deps_ConstructDependencyArray scriptObject, pForceCreate, pSetName
+   put the mainStack_Hash of scriptObject into stackHash
+   put the mainstack_Harray of scriptObject into hArray
+     
+   put the stack_BehaviorButton of scriptObject into pDepObject
+   put empty into pDepObject
+   put project_ConstructWalkArray (hArray, pDepObject, pSetName) into walkArray
+   set the mainstack_WalkArray of scriptObject to walkArray
+   return walkArray
+end deps_ConstructDependencyArray

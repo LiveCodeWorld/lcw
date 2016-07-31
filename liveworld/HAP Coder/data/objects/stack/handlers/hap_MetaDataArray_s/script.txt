@@ -1,0 +1,7 @@
+setprop hap_MetaDataArray hapMetaDataArray
+   -- could store as a preference (but being lazy and storing as a custom property)
+   set the hap_MetaDataArray of me to hapMetaDataArray
+   
+   put the short name of me into stackName
+   save stack stackName
+end hap_MetaDataArray

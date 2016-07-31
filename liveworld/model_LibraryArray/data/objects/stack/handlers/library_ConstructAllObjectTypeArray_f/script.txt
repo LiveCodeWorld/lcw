@@ -1,0 +1,12 @@
+function library_ConstructAllObjectTypeArray libType
+   put library_FetchAllObjects (libType) into allObjects
+   repeat for each line someObject in allObjects
+      if exists(someObject) is false then
+         next repeat
+      end if
+      
+      put revRuggedID (someObject) into ruggedObject
+      put empty into libTypeArray [ruggedObject]
+   end repeat
+   return libTypeArray
+end library_ConstructAllObjectTypeArray

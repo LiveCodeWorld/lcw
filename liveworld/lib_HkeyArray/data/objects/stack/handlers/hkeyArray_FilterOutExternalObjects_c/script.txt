@@ -1,0 +1,14 @@
+command hkeyArray_FilterOutExternalObjects @hKeyArray, scriptObject, pIncludeSecondGen
+   -- does not work ???
+   -- think this may be as simple as only taking firstkeys! (ie no need to recurse and check :)
+   local filteredLinkArray
+   put keys (hKeyArray) into firstKeys
+   repeat for each line firstKey in firstKeys
+      hkey_Deconstruct firstKey, handlerName, firstType, firstScriptObject, firstNum
+      if exists(firstScriptObject) is not true then next repeat
+      if the long id of firstScriptObject = the long id of scriptObject then
+         recurse_FilterOutExternalObjects firstKey, hKeyArray, scriptObject, filteredLinkArray, pIncludeSecondGen
+      end if
+   end repeat
+   put filteredLinkArray into hKeyArray
+end hkeyArray_FilterOutExternalObjects

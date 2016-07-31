@@ -1,0 +1,10 @@
+function digitalocean_GetArecordID oceanDomainName, subDomain, oceanDomainRecordArray
+   if subDomain is empty or subDomain = oceanDomainName then put "@" into subDomain
+   put oceanDomainRecordArray ["domain_records"] into domainArray
+   repeat for each key recordNum in domainArray
+      if domainArray [recordNum]["type"] is not "A" then next repeat
+      if domainArray [recordNum]["name"] is not subDomain then next repeat
+      return domainArray [recordNum]["id"]
+   end repeat
+   return empty
+end digitalocean_GetArecordID

@@ -1,0 +1,4 @@
+function library_CallsFile hKey, pDontCreate
+   put library_HandlerFile (hKey, "links.txt", pDontCreate) into someFile
+   return someFile
+end library_CallsFile

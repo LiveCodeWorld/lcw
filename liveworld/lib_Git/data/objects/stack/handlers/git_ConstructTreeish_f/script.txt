@@ -1,0 +1,4 @@
+function git_ConstructTreeish relativePath, gitHashOrNum
+   put merge("git show [[gitHashOrNum]]:[[relativePath]]") into someShell
+   return someShell
+end git_ConstructTreeish

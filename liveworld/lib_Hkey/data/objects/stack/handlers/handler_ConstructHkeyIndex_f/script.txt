@@ -1,0 +1,13 @@
+function handler_ConstructHkeyIndex
+   -- Does not index private commands
+   
+   put handler_ConstructBehaviorHkeyIndex() & CR after allKeys
+   put handler_ConstructUsedHkeyIndex() & CR after allKeys
+   put handler_ConstructBackHkeyIndex() & CR after allKeys
+   put handler_ConstructFrontHkeyIndex() & CR after allKeys
+   put handler_ConstructMenuHkeyIndex() & CR after allKeys
+   
+   delete char -1 of allKeys
+   sort allKeys
+   return word 1 to -1 of allKeys
+end handler_ConstructHkeyIndex

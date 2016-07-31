@@ -1,0 +1,20 @@
+function object_SearchGroupForProperty someGroup, someProperty, someValue
+   if someGroup is empty then put the long id of the target into someGroup
+   local myControls
+   
+   -- search the group / object first
+   put the someProperty of someGroup into testValue
+   if testValue is someValue then
+      put someGroup & return after myControls
+   end if
+   
+   repeat with controlNum = 1 to the number of controls in someGroup
+      put the long id of control controlNum of someGroup into controlObject
+      put the someProperty of controlObject into testValue
+      if testValue is someValue then
+         put controlObject & return after myControls
+      end if
+   end repeat
+   delete last char of myControls
+   return myControls
+end object_SearchGroupForProperty

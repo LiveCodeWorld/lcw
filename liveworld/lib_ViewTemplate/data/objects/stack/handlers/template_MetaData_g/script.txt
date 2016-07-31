@@ -1,0 +1,9 @@
+getprop template_MetaData [pPropName]
+   put the template_Array of the target into templateArray
+   if pPropName is empty then
+      put templateArray ["metadata"] into mData
+   else
+      put templateArray ["metadata"][pPropName] into mData
+   end if
+   return mData
+end template_MetaData

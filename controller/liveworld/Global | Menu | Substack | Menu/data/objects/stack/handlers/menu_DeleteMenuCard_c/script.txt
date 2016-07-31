@@ -1,0 +1,6 @@
+on menu_DeleteMenuCard scriptObject, mCard
+   put the menu_SubStack of scriptObject into subStackObject
+   if exists(card mCard of subStackObject) then
+      delete card mCard of subStackObject
+   end if
+end menu_DeleteMenuCard

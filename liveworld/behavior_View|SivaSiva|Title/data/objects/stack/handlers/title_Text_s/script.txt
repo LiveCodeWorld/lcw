@@ -1,0 +1,5 @@
+setprop title_Text titleText
+   put _titleField() into titleField
+   set the text of titleField to titleText
+   return titleText
+end title_Text

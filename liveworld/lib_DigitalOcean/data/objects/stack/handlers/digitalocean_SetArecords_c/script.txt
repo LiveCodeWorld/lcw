@@ -1,0 +1,12 @@
+command digitalocean_SetArecords oceanDomainName, newIP
+   put digitalocean_FetchArecordArray (oceanDomainName) into aRecordArray
+   repeat for each key subDomain in aRecordArray
+      put aRecordArray [subDomain]["ip_address"] into testIP
+      put aRecordArray [subDomain]["id"] into recordID
+      
+      if testIP = newIP then next repeat
+      digitalocean_UpdateARecordIP newIP, oceanDomainName, subDomain
+      put the result into resultArray [subDomain]
+   end repeat
+   return resultArray
+end digitalocean_SetArecords

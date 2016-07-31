@@ -1,0 +1,5 @@
+getprop dep_Objects [treeView]
+   put the displayed_Array of treeView into hKeyArray
+   put hkeyArray_ConstructObjectArray (hkeyArray) into objectArray
+   return keys (objectArray)
+end dep_Objects

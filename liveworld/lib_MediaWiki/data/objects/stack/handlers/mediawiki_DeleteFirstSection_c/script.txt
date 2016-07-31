@@ -1,0 +1,8 @@
+command mediawiki_DeleteFirstSection @wikiText
+   put offset (CR & CR & "==", wikiText) into charNum
+   if charNum = 0 then return false
+   
+   add 1 to charNum
+   delete char 1 to charNum of wikiText
+   return true
+end mediawiki_DeleteFirstSection

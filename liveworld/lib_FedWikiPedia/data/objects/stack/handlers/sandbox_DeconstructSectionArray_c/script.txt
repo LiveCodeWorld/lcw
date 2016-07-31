@@ -1,0 +1,11 @@
+command sandbox_DeconstructSectionArray sandboxArray, @pageTitle, @sectionDescription, @imageArray, @sectionArray, @wikipediaRevisionID
+   -- display_Array sandboxArray, "sandbox_DeconstructSectionArray"
+   put sandboxArray ["parse"] into parseArray
+   put parseArray ["pageid"] into pageID
+   put parseArray ["title"] into pageTitle
+   put parseArray ["wikitext"]["*"] into sectionDescription
+   put parseArray ["images"] into imageArray
+   put parseArray ["sections"] into sectionArray
+   -- put parseArray ["text"]["*"] into sectionHTML
+   put parseArray ["revid"] into wikipediaRevisionID
+end sandbox_DeconstructSectionArray

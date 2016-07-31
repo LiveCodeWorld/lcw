@@ -1,0 +1,10 @@
+on menu_Init targetObject, mPath, mTitlePath
+   put rev_ScriptObject() into scriptObject
+   
+   put scriptObject into LocalArray ["scriptObject"]
+   put the script_File of scriptObject into LocalArray ["scriptFile"]
+   put the git_CheckoutFolder of scriptObject into LocalArray ["checkoutFolder"]
+   
+   put the overlay_Folder of scriptObject into overlayFolder
+   -- put overlay_ListNames (overlayFolder) into LocalArray ["overlayNames"]
+end menu_Init

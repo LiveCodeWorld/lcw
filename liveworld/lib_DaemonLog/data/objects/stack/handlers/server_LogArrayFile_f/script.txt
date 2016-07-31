@@ -1,0 +1,4 @@
+function server_LogArrayFile
+   put server_GetRootFolder() & "log.array" into someFile
+   return someFile
+end server_LogArrayFile

@@ -1,0 +1,13 @@
+command menu_SetPluginArray targetObject, mPluginArray, pToolMode, pObjectTestProp
+   global gOPN_MenuArray
+   if pObjectTestProp is empty then put "main_Name" into pObjectTestProp -- use main_Name as default as this is what is needed by revScriptEditor and faster to have only one prop to search
+   
+   if mPluginArray is not an array then
+      put the pObjectTestProp of targetObject into objectRefValue
+      menu_DeletePluginRecord pToolMode, pObjectTestProp, objectRefValue 
+   else
+      put the pObjectTestProp of targetObject into objectRefValue
+      put mPluginArray into gOPN_MenuArray [pToolMode][pObjectTestProp][objectRefValue]      
+      return gOPN_MenuArray
+   end if
+end menu_SetPluginArray

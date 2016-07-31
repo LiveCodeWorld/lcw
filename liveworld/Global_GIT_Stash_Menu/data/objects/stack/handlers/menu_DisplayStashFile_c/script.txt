@@ -1,0 +1,28 @@
+on menu_DisplayStashFile treeField
+   put the title_Text of treeField into stashName
+   set the tree_Delimiter of treeField to tab
+   set the itemdelimiter to tab
+   get the tree_SelectedPath of treeField
+   put item 1 of it into someTitle
+   put item 2 of it into relpath
+   shell_BashParamEscape relpath
+   
+   put merge("git show [[stashName]]:[[relpath]]") into someShell
+   git_ExecuteShell someShell
+   put the result into theResult
+   
+   if someTitle = "Text" then
+      display_Lines theResult
+   else
+      put git_GetRootFolder() into gitRootFolder
+      put gitRootFolder & relpath into someFile
+      
+      -- set the itemdelimiter to "."
+      if there is a stack someFile then
+         put the name of stack someFile into stackObject
+         git_DisplayTempStackRevision stackObject, stashName
+      else
+         breakPoint
+      end if
+   end if
+end menu_DisplayStashFile

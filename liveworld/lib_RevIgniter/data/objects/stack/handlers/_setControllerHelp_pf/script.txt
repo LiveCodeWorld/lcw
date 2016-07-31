@@ -1,0 +1,17 @@
+private function _setControllerHelp mergeHelp, shortServer
+   if mergeHelp is not empty then return mergeHelp
+   switch shortServer
+      case "livecode.world"
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller for the www.livecode.world web site." into mergeHelp
+         break
+      case "himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller for the Himalayan Academy web site." into mergeHelp
+         break
+      case "dev.himalayanacademy.com"
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller for the Himalayan Academy developer web site." into mergeHelp
+         break
+      default
+         if mergeHelp is empty then put "[[shortController]] is a revIgniter controller." into mergeHelp
+   end switch
+   return mergeHelp
+end _setControllerHelp

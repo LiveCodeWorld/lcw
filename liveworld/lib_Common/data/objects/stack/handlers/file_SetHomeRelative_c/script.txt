@@ -1,0 +1,7 @@
+command file_SetHomeRelative @longFile
+   put $HOME into myHome
+   put the number of chars of myHome into maxNum
+   if char 1 to maxNum of longFile is myHome then
+      put "~" into char 1 to maxNum of longFile
+   end if
+end file_SetHomeRelative

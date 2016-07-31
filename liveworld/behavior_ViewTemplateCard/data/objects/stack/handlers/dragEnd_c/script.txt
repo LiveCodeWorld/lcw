@@ -1,0 +1,19 @@
+on dragEnd
+   put the dragDestination into targetObject
+   if exists (targetObject) is false then pass dragEnd
+   
+   if the shiftKey is "Down" then
+      put the view_Above of targetObject into targetObject
+      if exists (targetObject) is false then pass dragEnd
+   end if
+   
+   -- put the dragdata ["private"] into sourceViewName
+   -- set the control_Type of targetObject to sourceViewName
+   put the dragSource into sourceCardObject
+   if exists (sourceCardObject) is false then pass dragEnd
+   
+   put the template_View of sourceCardObject into sourceView
+   if exists (sourceView) is false then pass dragEnd
+   
+   set the view_Replacement of targetObject to sourceView
+end dragEnd

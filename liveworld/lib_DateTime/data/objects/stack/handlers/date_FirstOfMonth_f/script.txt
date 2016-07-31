@@ -1,0 +1,5 @@
+function date_FirstOfMonth someDate
+    convert someDate to dateItems
+    put 1 into item 3 of someDate
+    return date_Round(someDate, "d")
+end date_FirstOfMonth

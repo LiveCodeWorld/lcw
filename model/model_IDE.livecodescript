@@ -1,0 +1,433 @@
+﻿script "model_IDE"
+--> Metadata
+-
+name: model_IDE
+type: model
+author: David Bovill
+copyright: David Bovill
+license: GPLv3
+version: 0.9
+
+/*
+This library is for customising the livecode IDE, through understandig it's structure.
+We can then attach and remove our own behaviors to the IDE, and the Script Editor in particular.
+This is not using the official API, so it's brittle but has proven remarkably stable over time.
+
+This model abstracts, both key controls within the Livecode IDE, and behaviors that we can attach to them.
+
+on setBehaviors
+   -- from stack "revSEStackbehavior"
+   set the behavior of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("editor")
+   set the behavior of group "Menubar" of me to the long id of stack revIDEScriptEditorBehavior("menubar")
+   set the behavior of group "Script Tabs" me to the long id of stack revIDEScriptEditorBehavior("scripttabs")
+   set the behavior of group "Toolbar" of me to the long id of stack revIDEScriptEditorBehavior("toolbar")
+   set the behavior of group "Handler List" of me to the long id of stack revIDEScriptEditorBehavior("handlerlist")
+   set the behavior of group "Left Bar" of me to the long id of stack revIDEScriptEditorBehavior("leftbar")
+   set the behavior of field "Filter" of group "Left Bar" of me to the long id of stack revIDEScriptEditorBehavior("filterfield")
+   set the behavior of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablespane")
+   set the behavior of group "Documentation" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("documentationpane")
+   set the behavior of field "Filter" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("filterfield")
+   set the behavior of button "Show Globals" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablescheckbox")
+   set the behavior of button "Show Environment Vars" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablescheckbox")
+   set the behavior of group "Gutter" of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("gutter")
+   set the behavior of group "Interactive Find" of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("interactive find")
+end setBehaviors
+*/
+
+
+--> Events
+-
+on libraryStack
+   put the short name of the target into targetStackName
+   put the short name of me into myName
+   if targetStackName is not myName then pass libraryStack
+   
+   ide_AddBehaviorHacks true
+end libraryStack
+
+
+--> IDE | Edited
+-
+/*
+Marks whether or not a stack has been edited. Very useful for deciding what needs saving.
+*/
+
+getprop edited_Flag
+   put the stack_Name of the target into stackName
+   put rev_ListEditedStackNames ("edited") into editedStackNames
+   return stackName is among the lines of editedStackNames
+end edited_Flag
+
+setprop edited_Flag someBoolean
+   put the stack_Name of the target into stackName
+   if someBoolean is true then
+      rev_MarkStackEdited stackName
+   else
+      rev_MarkStackSaved stackName
+   end if
+end edited_Flag
+
+command ide_SaveEditedStacks editedStackName
+   global gREVStackStatus
+   
+   if editedStackName = "Save All" then
+      put rev_ListEditedStackNames() into stackNames
+   else
+      put editedStackName into stackNames
+   end if
+   
+   repeat for each line stackName in stackNames
+      try
+         put the effective fileName of stack stackName into pFilePath
+         save stack stackName
+         delete global gREVStackStatus [stackName]
+         
+         opn_Notify merge ("Saved stack '[[stackName]]'!")
+      catch e
+         breakpoint
+         put stackName & CR after couldntSaveStackNames
+         answer warning merge ("Could not save stack '[[stackName]]'!")
+      end try
+   end repeat
+   
+   if couldntSaveStackNames is not empty then
+      put couldntSaveStackNames
+   else
+      opn_Notify "Saved all edited stacks!"
+   end if
+end ide_SaveEditedStacks
+
+command rev_MarkStackSaved stackName
+   global gREVStackStatus
+   
+   if stackName is empty then put the short name of this stack into stackName
+   delete global gREVStackStatus [stackName]
+end rev_MarkStackSaved
+
+command rev_MarkStackEdited stackName
+   global gREVStackStatus
+   
+   if stackName is empty then put the short name of this stack into stackName
+   if char 1 to 3 of stackName is not "rev" then
+      put "edited" into gREVStackStatus [stackName]
+   end if
+end rev_MarkStackEdited
+
+function rev_ListEditedStackNames pType
+   global gREVStackStatus
+   
+   repeat for each key stackName in gREVStackStatus
+      if exists (stack stackName) is false then next repeat
+      switch pType
+         case "saved"
+            if gREVStackStatus [stackName] = empty then
+               put "saved" into stackArray [stackName]
+            end if
+            break
+         default
+            if gREVStackStatus [stackName] = "edited" then
+               put "edited" into stackArray [stackName]
+            end if
+      end switch
+   end repeat
+   return keys (stackArray)
+end rev_ListEditedStackNames
+
+
+--> IDE
+-
+command ide_AddBehaviorHacks pBoolean
+   /*
+   -- was "rev_AddBehaviorHacks"
+   
+   This handler has no dependencies other than those in this stack ("model_IDE").
+   It turns on and off the behavior based IDE menu hacks.
+   */
+   put pBoolean is not false into someBoolean
+   
+   put scriptEditor_HandlerListBehavior() into handlerBehavior
+   put scriptEditor_ScriptFieldBehavior() into scriptFieldBehavior
+   put scriptEditor_HistoryButtonBehavior() into historyBehavior
+   put scriptEditor_FindFieldBehavior() into simpleFindBehavior
+   put scriptEditor_CompileButtonBehavior() into compileButtonBehavior
+   put scriptEditor_DocumentationFieldBehavior() into documentationFieldBehavior
+   put scriptEditor_LaunchDocsBehavior() into launchDocsBehavior
+   
+   put rev_OpenScriptEditorNames() into editorNames
+   repeat with someNum = 0 to the number of lines of editorNames
+      put rev_ScriptEditorField (someNum) into scriptField
+      if exists (scriptField) is false then next repeat
+      
+      put rev_HistoryButton (someNum) into historyButton
+      put rev_HandlerTreeField (someNum) into handlerTreeField
+      put rev_SimpleFindField (someNum) into simpleFindField
+      put rev_CompileButton (someNum) into compileButton
+      put rev_ScriptEditorDocField (someNum) into scriptEditorDocField
+      put rev_LaunchDocsButton (someNum) into launchDocsButton
+      
+      if someBoolean is true then
+         set the behavior of scriptField to scriptFieldBehavior
+         set the behavior of historyButton to historyBehavior
+         set the behavior of handlerTreeField to handlerBehavior
+         set the behavior of simpleFindField to simpleFindBehavior
+         set the behavior of compileButton to compileButtonBehavior
+         set the behavior of scriptEditorDocField to documentationFieldBehavior
+         set the behavior of launchDocsButton to launchDocsBehavior
+      else
+         set the behavior of scriptField to empty
+         set the behavior of historyButton to empty
+         set the behavior of handlerTreeField to empty
+         set the behavior of simpleFindField to empty
+         set the behavior of compileButton to empty
+         set the behavior of scriptEditorDocField to empty
+         set the behavior of launchDocsButton to empty
+      end if
+   end repeat
+end ide_AddBehaviorHacks
+
+
+--> IDE | Rev
+-
+function rev_GetModifiedObjects pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   dispatch "revSEGetModifiedObjects" to editorStack
+   return the result
+end rev_GetModifiedObjects
+
+function rev_GetScriptEditorHistoryObjects pEditorNum
+   put rev_HistoryButton (pEditorNum) into historyButton
+   put value ("seHistoryGet()", historyButton) into someObjects
+   return someObjects
+end rev_GetScriptEditorHistoryObjects
+
+function rev_ScriptEditorIsOpen
+   return rev_OpenScriptEditorNames() is not empty
+end rev_ScriptEditorIsOpen
+
+
+--> IDE | ScriptEditor | Rev
+-
+function rev_LaunchDocsButton pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (btn "LaunchDocs" of group "Documentation" of cd "Main" of editorStack) is false then return empty
+   put the long id of btn "LaunchDocs" of group "Documentation" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_LaunchDocsButton
+
+function rev_ScriptEditorStack pEditorNum
+   switch
+      case pEditorNum is empty
+         return rev_TopScriptEditor()
+      case pEditorNum = 0
+         put the long id of stack "revSETemplate" of stack "revNewScriptEditor" into stackObject
+         return revRuggedID (stackObject)
+      case pEditorNum is a number
+         put "revNewScriptEditor" && pEditorNum into stackName
+         if exists (stack stackName) is false then return empty
+         return the name stack stackName
+      default
+         return rev_TopScriptEditor()
+   end switch
+end rev_ScriptEditorStack
+
+function rev_TopScriptEditor
+   put the stack_Name of the target into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else 
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      if stackNames is empty then return empty
+      put line 1 of stackNames into stackName
+      if exists(stack stackName) is false then
+         put the stack_Name of the target into stackName
+      end if
+      return the long id of stack stackName
+   end if
+end rev_TopScriptEditor
+
+function rev_ScriptObject
+   put rev_TopScriptEditor() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
+end rev_ScriptObject
+
+function rev_OpenScriptEditorNames
+   put the openstacks into stackNames
+   -- filter stackNames with "revscripteditor *" -- old version ???
+   filter stackNames with "revNewScriptEditor *"
+   return stackNames
+end rev_OpenScriptEditorNames
+
+function rev_ScriptEditorField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (fld "Script" of group "Editor" of cd "Main" of editorStack) is false then return empty
+   put the long id of fld "Script" of group "Editor" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_ScriptEditorField
+
+function rev_HistoryButton pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (btn "history" of group "Script Tabs" of cd "Main" of editorStack) is false then return empty
+   put the long id of btn "history" of group "Script Tabs" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_HistoryButton
+
+function rev_HandlerTreeField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (field "handlers" of group "Left Bar" of cd "Main" of editorStack) is false then return empty
+   put the long id of field "handlers" of group "Left Bar" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_HandlerTreeField
+
+function rev_SimpleFindField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (btn "history" of group "Script Tabs" of cd "Main" of editorStack) is false then return empty
+   put the long id of fld "find" of group "Interactive Find" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_SimpleFindField
+
+function rev_CompileButton pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (btn "compile" of group "Toolbar" of cd "Main" of editorStack) is false then return empty
+   put the long id of btn "compile" of group "Toolbar" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_CompileButton
+
+function rev_ScriptEditorDocField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (field "View" of group "Documentation" of cd "Main" of editorStack) is false then return empty
+   put the long id of field "View" of group "Documentation" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_ScriptEditorDocField
+
+
+--> IDE | ScriptEditor | Rev | Pane
+-
+function rev_ListScriptEditorPaneNames pEditorNum
+   put rev_ScriptEditorPanesGroup (pEditorNum) into scriptEditorPanesGroup
+   return value ("seAvailablePanes()", scriptEditorPanesGroup)
+end rev_ListScriptEditorPaneNames
+
+function rev_ScriptEditorPaneTabsGroup pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (group "Pane Tabs" of cd "Main" of editorStack) is false then return empty
+   put the long id of group "Pane Tabs" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_ScriptEditorPaneTabsGroup
+
+function rev_ScriptEditorPanesGroup pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (group "Panes" of cd "Main" of editorStack) is false then return empty
+   put the long id of group "Panes" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_ScriptEditorPanesGroup
+
+
+--> IDE | Behavios
+-
+/*
+We need a model for this.
+*/
+
+function scriptEditor_HandlerListBehavior
+   -- behavior_IdeHandlerListField
+   if exists (stack "behavior_IdeHandlerListField") then
+      put the name of stack "behavior_IdeHandlerListField" into someObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put scriptEditor_GetBehaviorButton ("Livecode Handler List Field") into someObject
+   end if
+   if exists(someObject) is false then return empty
+   return revRuggedID (someObject)
+end scriptEditor_HandlerListBehavior
+
+function scriptEditor_ScriptFieldBehavior
+   if exists (stack "behavior_IdeScriptEditorField") then
+      put the name of stack "behavior_IdeScriptEditorField" into bObject
+      return bObject
+   else
+      put scriptEditor_GetBehaviorButton ("LiveCode Script Editor Field") into someObject
+      if exists(someObject) is false then return empty
+      return revRuggedID (someObject)
+   end if
+end scriptEditor_ScriptFieldBehavior
+
+function scriptEditor_HistoryButtonBehavior
+   if exists (stack "behavior_IdeRecentButton") then
+      put the name of stack "behavior_IdeRecentButton" into bObject
+      return bObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put scriptEditor_GetBehaviorButton ("Livecode Script History Button") into bObject
+      if exists(bObject) is false then return empty
+      return revRuggedID (bObject)
+   end if
+end scriptEditor_HistoryButtonBehavior
+
+function scriptEditor_FindFieldBehavior
+   if exists (stack "behavior_IdeFindField") then
+      put the name of stack "behavior_IdeFindField" into bObject
+      return bObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put scriptEditor_GetBehaviorButton ("Livecode Simple Find Field") into someObject
+      if exists(someObject) is false then return empty
+      return revRuggedID (someObject)
+   end if
+end scriptEditor_FindFieldBehavior
+
+function scriptEditor_CompileButtonBehavior
+   if exists (stack "behavior_IdeCompileButton") then
+      put the name of stack "behavior_IdeCompileButton" into bObject
+      return bObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put the long id of control id 1014 of stack "View|Menu|Button" into compileButtonBehavior
+      return revRuggedID (compileButtonBehavior)
+   end if
+end scriptEditor_CompileButtonBehavior
+
+function scriptEditor_DocumentationFieldBehavior
+   if exists (stack "behavior_IdeRecentButton") then
+      put the name of stack "behavior_IdeFindField" into bObject
+      return bObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put scriptEditor_GetBehaviorButton ("LiveCode Script Documentation Field Behavior") into someObject
+      if exists(someObject) is false then return empty
+      return revRuggedID (someObject)
+   end if
+end scriptEditor_DocumentationFieldBehavior
+
+function scriptEditor_LaunchDocsBehavior
+   if exists (stack "behavior_IdeRecentButton") then
+      put the name of stack "behavior_IdeFindField" into bObject
+      return bObject
+   else
+      put scriptEditor_GetBehaviorButton ("LiveCode Launch Docs Button Behavior") into someObject
+      if exists(someObject) is false then return empty
+      return revRuggedID (someObject)
+   end if
+end scriptEditor_LaunchDocsBehavior
+
+
+
+--> old hArray way of doing things (a bit brittle)
+-
+/*
+Not needed in this library except for compatability.
+It is a powerful and flexibe way of naming things though.
+*/
+
+function scriptEditor_GetBehaviorButton bName   
+   put hArray_GetNamedObjectType (bName, "behavior") into behaviorButton
+   return behaviorButton
+end scriptEditor_GetBehaviorButton

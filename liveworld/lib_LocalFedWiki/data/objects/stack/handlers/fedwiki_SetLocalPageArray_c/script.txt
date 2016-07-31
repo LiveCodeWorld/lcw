@@ -1,0 +1,7 @@
+command fedwiki_SetLocalPageArray pageSlug, pageArray, pFedwikiDomain, pLocalWikiFolder, pCreateMilliSeconds
+   -- stores the pageArray as local json and updates the local site map
+   put json_FromArray (pageArray) into pageJSON  
+   fedwiki_SetLocalPageJson pageSlug, pageJSON, pFedwikiDomain, pLocalWikiFolder
+   fedwiki_UpdateLocalSiteMap pageArray, pFedwikiDomain, pCreateMilliSeconds
+   return pageJSON
+end fedwiki_SetLocalPageArray

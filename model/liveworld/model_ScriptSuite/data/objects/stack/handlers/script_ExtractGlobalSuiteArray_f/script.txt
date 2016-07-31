@@ -1,0 +1,12 @@
+function script_ExtractGlobalSuiteArray suiteType
+    local newArray
+    put script_GetGlobalSuiteArray() into dataArray
+    
+    if suiteType is empty then return dataArray
+    repeat for each key suiteTitle in dataArray
+        if word -1 of suiteTitle is suiteType then
+            put dataArray [suiteTitle] into newArray [suiteTitle]
+        end if
+    end repeat
+    return newArray
+end script_ExtractGlobalSuiteArray

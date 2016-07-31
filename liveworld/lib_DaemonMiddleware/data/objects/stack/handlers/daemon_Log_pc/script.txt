@@ -1,0 +1,14 @@
+private command daemon_Log logLine, pDisplayNow, pLogName
+   -- do without if not needed by the scripts below
+   if pLogName is empty then put the live_Logging of me into displayLogNow
+   
+   put the log_View of me into logView
+   if exists (logView) is false then return empty
+   
+   log_SetTimeStampEntry logLine, pLogName
+   put the result into theResult
+   if displayLogNow is true then
+      dispatch "display_ServerLog" to logView
+   end if
+   return logView
+end daemon_Log

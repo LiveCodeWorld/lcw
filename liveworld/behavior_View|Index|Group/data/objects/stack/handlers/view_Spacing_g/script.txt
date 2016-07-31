@@ -1,0 +1,8 @@
+getprop view_Spacing
+   put LocalArray ["viewSpacing"] into someNum
+   if someNum is not a number then -- let's set a default
+      put 8 into someNum
+      put someNum into LocalArray ["viewSpacing"]
+   end if
+   return someNum
+end view_Spacing

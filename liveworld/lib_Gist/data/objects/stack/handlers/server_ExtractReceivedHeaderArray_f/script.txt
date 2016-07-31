@@ -1,0 +1,6 @@
+function server_ExtractReceivedHeaderArray
+   put libURLLastRHHeaders() into receivedHeaders
+   delete line 1 of receivedHeaders -- HTTP/1.1 200 OK
+   split receivedHeaders with CR and ":" 
+   return receivedHeaders
+end server_ExtractReceivedHeaderArray

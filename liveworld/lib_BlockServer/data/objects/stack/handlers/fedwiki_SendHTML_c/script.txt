@@ -1,0 +1,5 @@
+command fedwiki_SendHTML  shortFile, socketID
+   put server_GetTextFile (shortFile) into someText
+   daemon_SendText socketID, someText
+   return "Sent HTML. Socket still open."
+end fedwiki_SendHTML

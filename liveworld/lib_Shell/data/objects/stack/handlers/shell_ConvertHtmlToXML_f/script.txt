@@ -1,0 +1,3 @@
+function shell_ConvertHtmlToXML someHTML
+   return shell_Tidy (someHTML, "-asxml")
+end shell_ConvertHtmlToXML

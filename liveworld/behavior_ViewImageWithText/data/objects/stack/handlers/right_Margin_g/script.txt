@@ -1,0 +1,5 @@
+getprop right_Margin
+   put the margins of me into someMargin
+   margin_Normalize someMargin, lMargin, tMargin, rMargin, bMargin
+   return rMargin
+end right_Margin

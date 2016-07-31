@@ -1,0 +1,6 @@
+private function _horizontalArrowView
+   put the mainstack of this stack into stackName
+   if exists (control 1 of cd 1 of stack stackName) is false then return empty
+   put the long id of control 1 of cd 1 of stack stackName into horizontalArrowView
+   return horizontalArrowView
+end _horizontalArrowView

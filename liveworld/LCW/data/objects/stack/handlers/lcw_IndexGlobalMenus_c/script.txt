@@ -1,0 +1,11 @@
+command lcw_IndexGlobalMenus longStackFiles
+   -- does not export handlers
+   repeat for each line longStackFile in longStackFiles
+      put the name of stack longStackFile into stackObject
+      
+      -- this is available after model_ScriptMenu is loaded
+      -- this breaks the rule about no dependencies (factor it out)
+      script_UpdateAndExport stackObject
+      put the result into mTitleTableArray
+   end repeat
+end lcw_IndexGlobalMenus

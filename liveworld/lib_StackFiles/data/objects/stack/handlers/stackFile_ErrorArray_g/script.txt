@@ -1,0 +1,32 @@
+getprop stackFile_ErrorArray
+   put the stack_Object of the target into stackFileStack
+   
+   put the stackfile_Array of stackFileStack into stackFileArray  
+   put the filename of stackFileStack into someRoot
+   set the itemdelimiter to "/"
+   
+   lock messages
+   put the mainstacks into oMainStacks
+   set the wholematches to true
+   repeat for each key stackName in stackFileArray
+      put stackFileArray [stackName] into relativeFile
+      put someRoot into someFile
+      put relativeFile into item -1 of someFile
+      
+      if there is not a stack someFile then
+         -- if there is not a file someFile then -- not sure if non-stacks can be in the stackfiles ?
+         delete local stackFileArray [stackName]
+         put empty into badArray [stackName][someFile]
+      else
+         put the mainstack of stack someFile into mainStackName
+         if mainStackName is not among the lines of oMainStacks then
+            delete stack mainStackName
+         end if
+      end if
+   end repeat
+   unlock messages
+   
+   put stackFileArray into resultArray ["fixedStackFileArray"]
+   put badArray into resultArray ["badArray"]
+   return resultArray
+end stackFile_ErrorArray

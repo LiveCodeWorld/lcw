@@ -1,0 +1,5 @@
+private function _positiveView
+   if exists (control "Positive Trait" of me) is false then return empty
+   put the long id of control "Positive Trait" of me into positiveView
+   return positiveView
+end _positiveView

@@ -1,0 +1,26 @@
+function line_ConstructCompareArray leftLines, rightLines
+   put leftLines into onlyLeft
+   put rightLines into onlyRight
+   set the wholematches to true
+   repeat with leftLineLineNum = the number of lines of leftLines down to 1
+      put line leftLineLineNum of leftLines into someLine
+      put lineoffset (someLine, rightLines) into rightLineLineNum
+      if rightLineLineNum is not 0 then
+         put someLine & CR after commonIndex
+         
+         delete line leftLineLineNum of onlyLeft
+         delete line rightLineLineNum of onlyRight
+      end if
+      
+   end repeat
+   delete last char of commonIndex
+   
+   sort commonIndex
+   sort onlyLeft
+   sort onlyRight
+   
+   put commonIndex into compareArray ["common"]
+   put onlyLeft into compareArray ["onlyLeft"]
+   put onlyRight into compareArray ["onlyRight"]
+   return compareArray   
+end line_ConstructCompareArray

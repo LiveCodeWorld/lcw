@@ -1,0 +1,26 @@
+command display_StackHistory someObject
+   put the stack_Object of someObject into stackObject
+   put the filename of stackObject into stackFile
+   
+   -- should maybe do this built in with all git file related handlers?
+   put git_GetRootFolder() into oRoot
+   put the git_CheckoutFolder of someObject into tempRootFolder
+   git_SetRootFolder tempRootFolder
+   
+   put git_FileLogOutline (stackFile) into someOutline
+   
+   lock screen
+   put "Stack Log for:" && the name of stackObject into someTitle
+   put empty into pExpandLevel
+   
+   display_Outline someOutline, someTitle, "Global | Git | Stack | History | Menu", "Global | Git | Line | Stack | Log | Menu", pExpandLevel, false --, "toplevel"
+   put the result into treeView
+   put the tree_Field of treeView into treeField
+   
+   set the displayed_Object of treeField to stackObject
+   set the displayed_File of treeField to someFile
+   unlock screen
+   
+   git_SetRootFolder oRoot
+   return treeView
+end display_StackHistory

@@ -1,0 +1,11 @@
+private function _redirectionHeaders redirectURL
+   if pContentType is empty then put "text/html" into pContentType
+   
+   put "HTTP/1.1 307 redirect" into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   put CRLF & "Location:" && redirectURL after someHeader
+   _addConnectionHeader someHeader
+   _addCorsHeader someHeader
+   _addDateHeader someHeader
+   return someHeader
+end _redirectionHeaders

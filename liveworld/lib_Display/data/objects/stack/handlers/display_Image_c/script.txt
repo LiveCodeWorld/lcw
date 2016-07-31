@@ -1,0 +1,23 @@
+command display_Image urlOrFile, pResizeStyle, pStackStyle, pStackLabel, pBackgroundColour
+   put "View|Image|OPN Image" into viewName
+   
+   if pStackStyle is empty then put "palette" into pStackStyle
+   if pResizeStyle is empty then put "fit inside frame" into pResizeStyle
+   
+   stack_CloneInvisible viewName, "Image"
+   put the result into cloneStackName
+   put view_GetTemplateControl (cloneStackName) into imageView
+    
+   set the backing_Visible of imageView to false
+   set the background_Colour of imageView to pBackgroundColour
+   set the opaque of imageView to false
+   set the backgroundcolor of stack cloneStackName to pBackgroundColour
+   
+   set the resize_Style of imageView to pResizeStyle
+   set the image_File of imageView to urlOrFile
+   _ResizeStackToImage pStackRect, imageView, cloneStackName
+   
+   if pStackLabel is not empty then set the label of stack cloneStackName to pStackLabel
+   show stack cloneStackName
+   return imageView
+end display_Image

@@ -1,0 +1,7 @@
+command viewBrowser_ResetTitle
+   put the viewBrowser_DataGrid of me into dgView
+   put the viewBrowser_TitleView of me into titleView
+   
+   put the viewBrowser_Title of dgView into someTitle
+   set the title_Text of titleView to someTitle
+end viewBrowser_ResetTitle

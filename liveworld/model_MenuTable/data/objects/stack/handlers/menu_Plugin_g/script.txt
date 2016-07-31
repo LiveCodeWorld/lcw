@@ -1,0 +1,8 @@
+getprop menu_Plugin [pModifierKey]
+   if pModifierKey is empty then put "control" into pModifierKey
+   put the long id of the target into targetObject
+   
+   menu_AddPlugin targetObject, pModifierKey, gMenuTitle
+   put the menu_PluginTable [pModifierKey] of targetObject into prettyResult
+   return prettyResult
+end menu_Plugin

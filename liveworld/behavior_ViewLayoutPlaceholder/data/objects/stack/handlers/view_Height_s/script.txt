@@ -1,0 +1,10 @@
+setprop view_Height someHeight
+   if the height of me = someHeight then pass view_Height -- should we only do this when it has changed?
+   
+   lock screen
+   put the long owner of me into myOwner
+   put the rect of myOwner into oRect
+   set the height of me to someHeight 
+   dispatch "LayoutControl" to myOwner with oRect -- experimental  allows a container to resize itself
+   unlock screen
+end view_Height

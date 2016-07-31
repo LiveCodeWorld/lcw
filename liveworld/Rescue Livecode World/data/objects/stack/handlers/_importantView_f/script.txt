@@ -1,0 +1,5 @@
+function _importantView
+   if exists (group "Important Stacks" of cd 1 of stack "Rescue Livecode World") is false then return empty
+   put the long id of group "Important Stacks" of cd 1 of stack "Rescue Livecode World" into importantView
+   return importantView
+end _importantView

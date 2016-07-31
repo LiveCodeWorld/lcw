@@ -1,0 +1,24 @@
+command view_ResizeToCard pMargin, pName
+   if pName is empty then put 1 into pName
+   
+   put the card_Object of the target into cardObject
+   if pName is empty then put 1 into pName
+   if exists (control pName of cardObject) is false then
+      return empty -- could look for card_View
+   end if
+   
+   if pMargin is empty then
+      put the card_Margin of cardObject into pMargin
+   else
+      set the card_Margin of cardObject to pMargin
+      -- set the uOPN ["card_Margin"] of cardObject to pMargin -- only needed for authoring
+   end if
+   
+   put the rect of cardObject into someRect
+   if pMargin is not 0 then put rect_SubtractMargin (pMargin, someRect) into someRect
+   
+   put the long id of control pName of cardObject into someView
+   -- set the rect of someView to someRect
+   dispatch "LayoutControl" to someView with someRect
+   return someView
+end view_ResizeToCard

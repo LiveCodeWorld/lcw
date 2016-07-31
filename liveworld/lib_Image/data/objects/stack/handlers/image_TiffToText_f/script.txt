@@ -1,0 +1,22 @@
+function image_TiffToText someFile, pOutputName
+    set the cursor to watch
+    if pOutputName is empty then put "result" into pOutputName
+    
+    file_Deconstruct someFile, someRoot, shortName, fileExtension
+    set the itemdelimiter to "/"
+    put item -1 of someFile into shortFile
+    
+    shell_BashParamEscape shortFile
+    shell_BashParamEscape pOutputName
+    put merge("tesseract [[shortFile]] [[pOutputName]]") into someShell
+     
+    put shell_ExecuteAtRoot(someShell, someRoot) into shellResult
+    if word 1 of shellResult = "Tesseract" then
+        put file_Construct(someRoot, pOutputName, "txt") into textFile
+        opn_Notify textFile
+        return url ("file:" & textFile)
+    else
+        log_Error "Tesseract error", shellResult, true, true
+        return empty
+    end if
+end image_TiffToText

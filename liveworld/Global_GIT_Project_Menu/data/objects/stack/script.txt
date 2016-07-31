@@ -1,0 +1,43 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_GIT_Project_Menu
+type: controller
+version: 0.1
+
+
+--> Menu | Props
+-
+local localArray
+
+
+--> Global | GIT | Project | Menu
+-
+[[ _FetchHandler (menu_SwitchGitProject,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CloneProject,c) ]]
+
+[[ _FetchHandler (menu_InitialiseNewProject,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddExistingProject,c) ]]
+
+[[ _FetchHandler (menu_RemoveMissingProjects,c) ]]
+
+
+--> Global | GIT | Project | Menu | Props
+-
+[[ _FetchHandler (git_AddAndSetGitFolder,c) ]]
+
+[[ _FetchHandler (project_Name,g) ]]
+
+[[ _FetchHandler (project_Names,g) ]]
+
+
+--> Dev | Menu
+-

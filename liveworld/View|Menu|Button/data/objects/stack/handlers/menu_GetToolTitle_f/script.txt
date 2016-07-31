@@ -1,0 +1,17 @@
+function menu_GetToolTitle targetObject
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into viewObject
+   if exists(viewObject) is false then put targetObject into viewObject
+   
+   -- put the menu_BurntToolTitle of someView into mTitle
+   lock messages
+   put the menu_ToolTitle of viewObject into mTitle
+   -- put the menu_Title of viewObject into mTopTitle
+   unlock messages
+   if mTitle is not empty then return mTitle
+   
+   put the view_Name of viewObject into viewName
+   if viewName is empty then return empty
+   put "Global |" && menu_TitleFromViewName (viewName) into globalMenuTitle
+   return globalMenuTitle
+end menu_GetToolTitle

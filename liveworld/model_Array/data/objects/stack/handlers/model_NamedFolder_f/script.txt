@@ -1,0 +1,6 @@
+function model_NamedFolder modelName, pDontCreate
+   folder_Format modelName
+   put "opn_Model/" & modelName into relativeFolder
+   put library_PluginFolder (relativeFolder, pDontCreate) into modelFolder
+   return modelFolder
+end model_NamedFolder

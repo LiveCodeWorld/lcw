@@ -1,0 +1,34 @@
+function line_FindInIndex someLine, container, partLine, lineAfter
+    -- was "whichLine"
+     
+    if someLine is empty then return 0
+    if lineAfter is empty then put 0 into lineAfter
+    delete line 1 to lineAfter of container
+    if partLine is true then
+        put container into testContainer
+        put someLine into testLine
+    else if partLine contains "start" or partLine contains "whole" then
+        put return & container & return into testContainer
+        put return & someLine into testLine
+    else
+        put return & container & return into testContainer
+        put return & someLine & return into testLine
+    end if
+     
+    put offset(testLine, testContainer) into start
+    if start is 0 then
+        return 0
+    else
+        put the number of lines of char 1 to start of container into line_FindInIndexNum
+        if partLine contains "whole" then
+            put line line_FindInIndexNum of container into testLine
+            if whichWord(someLine, testLine) = 0 then
+                return 0
+            else
+                return (line_FindInIndexNum + lineAfter)
+            end if
+        else
+            return (line_FindInIndexNum + lineAfter)
+        end if
+    end if
+end line_FindInIndex

@@ -1,0 +1,4 @@
+on menu_SetOverlayObject treeView
+   put the displayed_Object of treeView into scriptObject
+   overlay_SetOverlayObject overlayFolder, scriptObject
+end menu_SetOverlayObject

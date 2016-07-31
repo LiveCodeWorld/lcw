@@ -1,0 +1,5 @@
+command rig_StoreControllerFolder rigControllerFolder
+   pref_SaveValue "rigControllerFolder", rigControllerFolder
+   put the result into  dataArray
+   return dataArray
+end rig_StoreControllerFolder

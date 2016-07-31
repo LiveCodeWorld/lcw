@@ -1,0 +1,22 @@
+function dot_FromLinkArray linkArray, graphPropertyModel, graphController, pOverlayName, pGraphStyle, pGraphSize
+   -- other properties of graph (not in the params) are taken from the dot_HeaderArray of graphController
+   global OPN_LinkArray
+   if pOverlayName is empty then put "hkey_RedrawDependencyGraph" into pOverlayName
+   
+   linkArray_IdConstruct linkArray, idLinkArray, idArray -- this should already be constructed and set in the global store
+   put linkArray_ConstructDataArray (linkArray, idLinkArray, idArray) into OPN_LinkArray
+   
+   put hkey_LinkTypeArray (idArray) into nodeTypeArray
+   
+   if exists(graphPropertyModel) then
+      if pGraphStyle is not empty then set the overlay_Style of graphPropertyModel to pGraphStyle
+      if pGraphSize is not empty then set the overlay_Size of graphPropertyModel to pGraphSize   
+      put the dot_Header of graphPropertyModel into graphHeader -- uses the overlay_Size, dot_HeaderArray, overlay_Style of graphController 
+   else
+      put empty into graphHeader
+   end if
+   
+   put hKeyArray_ConstructNodeSection (idArray, idLinkArray, graphController, nodeTypeArray) into nodeSection
+   put dot_Construct (pOverlayName, nodeSection, graphHeader) into dotText
+   return dotText
+end dot_FromLinkArray

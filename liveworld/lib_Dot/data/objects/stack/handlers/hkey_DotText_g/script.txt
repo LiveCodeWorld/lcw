@@ -1,0 +1,32 @@
+getprop hkey_DotText [hKey]
+   -- was "linkarray_ModelDotText", then "hkey_DotText"
+   put the long id of the target into pTargetObject
+   if hKey is empty then put the displayed_Hkey of pTargetObject into hKey
+   
+   put hkey_GetLinkArray (hKey) into hkeyArray
+   linkArray_IdConstruct hkeyArray, hLinkArray, hIdArray
+   
+   put the overlay_Name of pTargetObject into graphName
+   put the dot_ClusterType of pTargetObject into dotClusterType
+   switch dotClusterType
+      case "Object"
+         put the dot_Header of pTargetObject into graphHeader
+         put hKeyArray_ConstructObjectDot (hLinkArray, hIdArray, graphName, graphHeader, pTargetObject) into dotText
+         return dotText
+      case "Nested Trac Text"
+         put the linkarray_TracGraphHeader [defaultNodeUrl] of pTargetObject into graphHeader
+         put hKeyArray_ConstructNestedObjectDot (hLinkArray, hIdArray, graphName, graphHeader, pTargetObject) into dotText
+         
+         put "{{{" & CR after tracMacro
+         put "#!graphviz" & CR after tracMacro
+         put dotText & CR after tracMacro
+         put "}}}" & CR after tracMacro
+         
+         delete char -1 of tracMacro
+         return tracMacro
+      default -- case "Nested"
+         put the dot_Header of pTargetObject into graphHeader
+         put hKeyArray_ConstructNestedObjectDot (hLinkArray, hIdArray, graphName, graphHeader, pTargetObject) into dotText
+         return dotText
+   end switch
+end hkey_DotText

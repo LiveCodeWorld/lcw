@@ -1,0 +1,4 @@
+on menu_CheckExportedMenuScripts
+   put library_ListGlobalMenuObjects() into someObjects
+   _DisplayFoundDifferences someObjects, "Could not find any errors in the exported Global Menu scripts!"
+end menu_CheckExportedMenuScripts

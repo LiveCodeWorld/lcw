@@ -1,0 +1,15 @@
+function object_GetTopControl someGroup, pName
+   repeat with controlNum = 1 to the number of controls in someGroup
+      put the long ID of control controlNum of someGroup into controlObject
+      if controlNum = 1 and pName is empty then
+         return controlObject
+      else if the short name of controlObject = pName then
+         return controlObject
+      end if
+      
+      if word 1 of controlObject = "group" then
+         add the number of layers in controlObject to controlNum
+      end if
+   end repeat
+   return empty
+end object_GetTopControl

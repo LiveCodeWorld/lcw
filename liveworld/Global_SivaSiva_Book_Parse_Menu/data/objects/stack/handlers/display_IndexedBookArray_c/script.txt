@@ -1,0 +1,7 @@
+command display_IndexedBookArray someArray, bookTitle
+   put book_ParseDivArray (someArray) into indexedArray
+   
+   put "Global | SivaSiva | Book | Parse | Menu" into titleMenu
+   put "Global | SivaSiva | Book | Parse | Line | Menu" into titleLineMenu
+   display_Array indexedArray, bookTitle, titleMenu, titleLineMenu
+end display_IndexedBookArray

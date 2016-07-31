@@ -1,0 +1,8 @@
+function html_ConstructNameLink someText, someLink, pSomeColour
+   if someLink is empty then return someText
+   -- replace quote with "'" in someLink
+   replace quote with "&quot;" in someLink
+   put "<a name=" & kwote(someLink) & ">" & someText & "</a>" into someLink
+   if pSomeColour is not empty then return html_ConstructColouredText (someLink, pSomeColour)
+   return someLink
+end html_ConstructNameLink

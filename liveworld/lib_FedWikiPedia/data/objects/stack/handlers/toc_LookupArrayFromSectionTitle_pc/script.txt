@@ -1,0 +1,4 @@
+private command toc_LookupArrayFromSectionTitle tocArray, sectionTitle, @lookUpArray, @markdownTOC
+   put tocArray ["index"][sectionTitle]["dot_number"] into dotNum
+   toc_LookupArrayFromDotNum tocArray, dotNum, lookUpArray, markdownTOC
+end toc_LookupArrayFromSectionTitle

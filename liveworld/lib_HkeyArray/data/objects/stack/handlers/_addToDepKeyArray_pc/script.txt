@@ -1,0 +1,18 @@
+private command _addToDepKeyArray @treeArray, sortedHkey, hKeyArray
+   put hKeyArray [sortedHkey] into depHkeys
+   sort depHkeys by item 1 of each
+   put empty into depKeyArray
+   repeat for each line depHkey in depHkeys
+      -- put empty into parentHkey -- here we should dig into reversed array
+      put item 1 of depHkey into hName
+      put item 2 of depHkey into hType
+      put hName & "_" & hType into displayName
+      
+      put hName into depKeyArray [displayName]["hName"]
+      put hType into depKeyArray [displayName]["hType"]
+      put item 3 of depHkey into depKeyArray [displayName]["hObject"]
+      put item 4 of depHkey into depKeyArray [displayName]["hNum"]
+   end repeat
+   replace comma with slash in sortedHkey
+   put depKeyArray into treeArray [sortedHkey]
+end _addToDepKeyArray

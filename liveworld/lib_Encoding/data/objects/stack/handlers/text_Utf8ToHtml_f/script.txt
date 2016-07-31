@@ -1,0 +1,12 @@
+function text_Utf8ToHtml someUtf8, someField
+    lock screen
+    put the htmltext of someField into oHtml
+    put uniencode(someUtf8, "UTF8") into someU16
+    set the unicodetext of someField to someU16
+    put the htmltext of someField into someHtml
+    delete char 1 to 3 of someHtml
+    set the htmltext of someField to oHtml
+    unlock screen
+    delete char -4 to -1 of someHtml
+    return someHtml
+end text_Utf8ToHtml

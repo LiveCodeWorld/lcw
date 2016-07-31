@@ -1,0 +1,11 @@
+getprop displayed_Hkeys
+   put the dataGrid_View of me into dgView
+   put the dgIndexes of dgView into sIndex
+   
+   put the dgdata of dgView into dataArray
+   repeat for each item indexNum in sIndex
+      put dataArray [indexNum]["hKey"] & CR after displayedHKeys
+   end repeat
+   delete char -1 of displayedHKeys
+   return displayedHKeys
+end displayed_Hkeys

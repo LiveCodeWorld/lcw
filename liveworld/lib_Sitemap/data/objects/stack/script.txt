@@ -1,0 +1,137 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Sitemap
+type: script library
+version: 0.4
+
+/*
+This library is for creating Google sitemaps.
+*/
+
+
+--> Variables
+-
+constant cXMLNS = "http://www.sitemaps.org/schemas/sitemap/0.9"
+constant cXMLNS_Content = "http://www.google.com/schemas/sitemap-content/1.0"
+constant cXMLNS_Image ="http://www.google.com/schemas/sitemap-image/1.1"
+constant cHapRoot = "http://himalayanacademy.com"
+constant cHapDevRoot = "http://dev.himalayanacademy.com"
+
+
+--> Sitemap | rigDB
+-
+/*
+Some utitlity handlers for easily scripting the HA media database.
+*/
+
+[[ _FetchHandler (rigDB_ItemByMediaType,c) ]]
+
+
+--> Sitemap | Data
+-
+/*
+These handlers are designed to return encoded arrays. 
+They are used for Desktop based testing of more complex sitemap generation.
+
+For now we have reverted to simple list based sitemap generation,
+as we have got all the refinements working,
+by adding pagemaps toHTML page headers and fixing bugs.
+
+As we move forwards (in particular wwhen we have thumbnails and have decided to add "actions" to the search,
+we will need this code (and the Desktop array to sitempa XML code to generate the media specific (complex) sitemaps.
+*/
+
+[[ _FetchHandler (rigDB_GetVideoData,f) ]]
+   
+[[ _FetchHandler (rigDB_GetPhotoData,f) ]]
+    
+[[ _FetchHandler (rigDB_GetArtData,f) ]]
+
+[[ _FetchHandler (rigDB_ExtractFirstThing,f) ]]
+
+[[ _FetchHandler (rigDB_GetData,f) ]]
+
+
+--> Sitemap | Currently Working On
+-
+[[ _FetchHandler (sitemap_ConstructHapMediaUrl,f) ]]
+
+[[ _FetchHandler (sitemap_ConstructFilePath,f) ]]
+
+
+--> Sitemap | Fetch and Save
+-
+[[ _FetchHandler (sitemap_Fetch,f) ]]
+
+[[ _FetchHandler (sitemap_Save,c) ]]
+
+
+--> Sitemap | Index
+-
+[[ _FetchHandler (sitemap_ListIndexURLs,f) ]]
+
+[[ _FetchHandler (sitemap_ConstructShortFileName,f) ]]
+
+[[ _FetchHandler (sitemap_ConstructIndexXml,f) ]]
+
+
+--> Sitemap | Build
+-
+[[ _FetchHandler (sitemap_BuildImageSiteMap,f) ]]
+
+[[ _FetchHandler (sitemap_Build,f) ]]
+
+[[ _FetchHandler (sitemap_BuildFromUrls,f) ]]
+
+
+--> Sitemap | List | Files
+-
+[[ _FetchHandler (sitemap_ListFileIDs,f) ]]
+   
+[[ _FetchHandler (sitemap_FileIDsFromMediaType,f) ]]
+
+
+--> HAP | Refinements
+-
+[[ _FetchHandler (sitemap_HapRefinementToMediaTypes,f) ]]
+
+[[ _FetchHandler (sitemap_ListHapRefinementNames,f) ]]
+
+
+--> Sitemap | Encoding
+-
+[[ _FetchHandler (sitemap_EntityEscape,c) ]]
+
+[[ _FetchHandler (text_Utf8Encode,c) ]]
+
+[[ _FetchHandler (xml_Escape,c) ]]
+
+
+--> Private | Sitemap
+-
+[[ _FetchHandler (_addImageXML,pc) ]]
+
+[[ _FetchHandler (_addPageMapXML,pc) ]]
+
+[[ _FetchHandler (_addPriorityXML,pc) ]]
+
+[[ _FetchHandler (_setPageMapXML,pc) ]]
+   
+
+--> Deps
+-
+[[ _FetchHandler (url_Construct,f) ]]
+
+[[ _FetchHandler (text_TopAndTail,c) ]]
+
+[[ _FetchHandler (text_AddTrailing,c) ]]
+
+[[ _FetchHandler (date_ConstructWc3Datetime,f) ]]
+
+[[ _FetchHandler (date_Wc3Datetime,c) ]]
+
+[[ _FetchHandler (date_Construct8601,f) ]]
+
+[[ _FetchHandler (date_Convert8601,c) ]]

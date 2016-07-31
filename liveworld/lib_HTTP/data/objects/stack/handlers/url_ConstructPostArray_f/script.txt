@@ -1,0 +1,8 @@
+function url_ConstructPostArray postData
+   split postData by "&" and "="
+   repeat for each line postKey in the keys of postData
+      put postData [postKey] into postValue
+      put urldecode(postValue) into paramArray [postKey]
+   end repeat
+   return paramArray
+end url_ConstructPostArray

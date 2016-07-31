@@ -1,0 +1,12 @@
+setprop view_Behavior vbName
+   if vbName is empty then
+      set the behavior of the target to empty
+      return empty
+   end if
+   
+   -- put view_GeBehaviorObject (bName) into vbObject
+   put hArray_GetNamedObjectType (bName, "view behavior") into vbObject
+   if exists (vbObject) is false then return empty
+   set the behavior of the target to vbObject
+   return vbObject
+end view_Behavior

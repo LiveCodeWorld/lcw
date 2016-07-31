@@ -1,0 +1,22 @@
+on colour_SetObjectPalette targetObject, colourPaletteArray
+   -- here so we can create custom properties that set child view palettes
+   
+   lock screen
+   if word 1 of targetObject = "group" then
+      put targetObject into groupObject
+   else
+      put targetObject into groupObject
+      delete word 1 to 4 of groupObject
+   end if
+   put the group_Above of targetObject into groupAboveObject
+   
+   put the stack_Object of targetObject into stackObject
+   
+   set the foregroundcolor of targetObject to colourPaletteArray[1]
+   set the backgroundcolor of targetObject to colourPaletteArray[2]
+   if word 1 of groupObject = "group" then set the backgroundcolor of groupObject to colourPaletteArray[4]
+   
+   if word 1 of groupAboveObject is not "card" then set the backgroundcolor of groupAboveObject to colourPaletteArray[3]
+   set the linkcolor of stackObject to colourPaletteArray[5]
+   unlock screen
+end colour_SetObjectPalette

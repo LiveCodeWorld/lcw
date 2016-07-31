@@ -1,0 +1,49 @@
+function fedwikipedia_SplitSectionDescription pageTitle, shortImageFile, sectionDescription, sectionTocArray
+   -- strip the top bit including sectionTitle and intro image
+   
+   put sectionTocArray [1]["meta"]["title"] into firstSectionTitle
+   
+   if firstSectionTitle is empty then
+      put word 1 to -1 of sectionDescription into sectionIntro
+   else
+      put sectionTocArray [1]["meta"]["section_level"] into toclevel
+      repeat toclevel
+         put "=" after titleBit
+      end repeat
+      put titleBit & firstSectionTitle & titleBit into testLine
+      -- return testLine & CR & sectionDescription
+      
+      -- set the wholematches to true -- bug in server (seems not to match CR)
+      put lineOffset (testLine, sectionDescription) into lineNum
+      -- return lineNum
+      
+      if lineNum = 0 then
+         put sectionDescription into sectionIntro
+      else
+         put line 1 to (lineNum - 1) of sectionDescription into sectionIntro
+      end if
+   end if
+   
+   replace "_" with space in shortImageFile -- why is it encoded like this?
+   repeat -- let's just strip all templates and headers until we get normal text?
+      switch
+         case char 1 of sectionIntro is among the chars of "{="
+            delete line 1 of sectionIntro
+            break
+         case line 1 of sectionIntro begins with ("[[File:" & shortImageFile)
+            delete line 1 of sectionIntro
+            break
+         case sectionIntro is empty
+            put "No section text, so add your own here..." into sectionIntro
+            exit repeat
+            break
+         case line 1 of sectionIntro is empty
+            delete line 1 of sectionIntro
+            break
+         default
+            exit repeat
+      end switch
+   end repeat
+   
+   return sectionIntro
+end fedwikipedia_SplitSectionDescription

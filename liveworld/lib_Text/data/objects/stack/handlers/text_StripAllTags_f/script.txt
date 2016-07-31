@@ -1,0 +1,4 @@
+function text_StripAllTags someXml
+   put word 1 to -1 of replacetext (someXml, "(<(.|\n)+?>)", empty) into someText
+   return someText
+end text_StripAllTags

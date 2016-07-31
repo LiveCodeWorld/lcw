@@ -1,0 +1,11 @@
+command rev_SetSelectedHandlerTreeLineNum treeLineNum
+   -- ignoreCall:  closeAccept,c
+   put rev_HandlerTreeField() into handlerTreeField
+   try
+      set the hilitedLine of handlerTreeField to treeLineNum
+      dispatch "closeAccept" to handlerTreeField
+   catch e
+      opn_Notify (the params & CR & handlerTreeField), true
+   end try
+   return empty
+end rev_SetSelectedHandlerTreeLineNum

@@ -1,0 +1,11 @@
+function fedwiki_LocalFaviconFile fedwikiDomain, pCreateFolder, pLocalStatusFolder
+   if pLocalStatusFolder is empty then
+      put fedwiki_LocalStatusFolder (fedwikiDomain) into pLocalStatusFolder
+   end if
+   folder_Format pLocalStatusFolder
+   if pCreateFolder is true then
+      folder_CreateNested pLocalStatusFolder
+   end if
+   put pLocalStatusFolder & "favicon.png" into someFile
+   return someFile
+end fedwiki_LocalFaviconFile

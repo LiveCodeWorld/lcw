@@ -1,0 +1,15 @@
+function overlay_ImageFiles overlayFolder
+   folder_Format overlayFolder
+   put the directory into oDirectory
+   set the directory to overlayFolder
+   put the files into shortFiles
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      if item -1 of shortFile = "png" then
+         put overlayFolder & shortFile & CR after imageFiles
+      end if
+   end repeat
+   delete char -1 of imageFiles
+   set the directory to oDirectory
+   return imageFiles
+end overlay_ImageFiles

@@ -1,0 +1,16 @@
+getprop object_ViewNames
+   local objectViews
+   put the long id of the target into targetObject
+   
+   put the view_Name of targetObject into vName
+   if vName is not empty then put vName & CR after vNames
+   
+   repeat with cNum = 1 to the number of controls of targetObject
+      put the view_Name of control cNum of targetObject into vName
+      if vName is not empty then
+         put vName & CR after vNames
+      end if
+   end repeat
+   delete char -1 of vNames
+   return vNames
+end object_ViewNames

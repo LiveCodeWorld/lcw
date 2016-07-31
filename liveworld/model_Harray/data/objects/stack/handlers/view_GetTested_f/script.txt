@@ -1,0 +1,5 @@
+function view_GetTested vName
+   put view_GetFileMetaArray() into metaDataArray
+   put metaDataArray [vName]["isTested"] into someBoolean
+   return someBoolean is true
+end view_GetTested

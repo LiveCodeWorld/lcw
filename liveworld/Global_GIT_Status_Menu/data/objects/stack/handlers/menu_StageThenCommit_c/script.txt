@@ -1,0 +1,7 @@
+on menu_StageThenCommit
+   put the shiftKey is "Down" into shiftStatus
+   put opn_Ask("Comment on this change...") into someComment
+   git_CommitChanges someComment, true
+   opn_Notify the result, true
+   if shiftStatus is false then display_GitStatus
+end menu_StageThenCommit

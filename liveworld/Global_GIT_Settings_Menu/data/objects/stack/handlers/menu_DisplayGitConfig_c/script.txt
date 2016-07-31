@@ -1,0 +1,4 @@
+on menu_DisplayGitConfig
+   put git_ExecuteShellCommand("git config --list") into shellResult
+   display_Text shellResult, "git config --list"
+end menu_DisplayGitConfig

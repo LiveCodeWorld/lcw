@@ -1,0 +1,15 @@
+command menu_Option optionList, optionCommand
+   /*
+   used to show pop up menu on linked text clicked in hypermenu field"
+   */
+   
+   put the name of the target into targetObject
+   put the menu_Button of targetObject into mButton
+   
+   if optionCommand is empty then put "field_SetLinkedText" into optionCommand
+   
+   replace comma with CR in optionList
+   set the text of mButton to optionList
+   
+   set the menu_Action of mButton to optionCommand
+end menu_Option

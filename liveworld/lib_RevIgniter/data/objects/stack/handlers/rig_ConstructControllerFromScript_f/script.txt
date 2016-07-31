@@ -1,0 +1,35 @@
+function rig_ConstructControllerFromScript buttonScript, shortControllerFile, controllerHandlerList, scriptDescription, pDependencyLibs
+   replace CR with comma in controllerHandlerList
+   put script_GetTemplate ("revIgniter Controller Template") into scriptTemplate
+   put script_GetTemplate ("revIgniter Dependency Section")  into dependencyTemplate
+   
+   set the itemdelimiter to "."
+   put item 1 of shortControllerFile into shortControllerName
+   if shortControllerName is not among the items of controllerHandlerList then
+      if controllerHandlerList is empty then
+         put shortControllerName into controllerHandlerList
+      else
+         put comma & shortControllerName after controllerHandlerList
+      end if
+   end if
+   
+   put shortControllerFile into pathToController
+   put rig_ConstructInitScriptLines (pDependencyLibs, "   ") into initScriptLines
+   text_Indent initScriptLines, "      "
+   
+   put rig_ExtractPublicHandlers (buttonScript) into publicHandlers
+   put rig_ExtractDependencies (buttonScript) into handlerDependencies
+   
+   put merge (scriptTemplate) into rigScript
+   
+   if handlerDependencies is not empty then
+      put merge (dependencyTemplate) into dependencySection
+      text_Indent dependencySection, "   "
+      put CR & CR after rigScript
+      put dependencySection after rigScript
+   end if
+   
+   put "<?lc" & CR before rigScript
+   put CR & CR & "?>" after rigScript
+   return rigScript
+end rig_ConstructControllerFromScript

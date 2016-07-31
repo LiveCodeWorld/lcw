@@ -1,0 +1,7 @@
+function menu_ListGlobalNames
+   global gHkey_Array
+   
+   put keys (gHkey_Array ["Global Menus"]) into gMenuNames
+   sort gMenuNames
+   return gMenuNames
+end menu_ListGlobalNames

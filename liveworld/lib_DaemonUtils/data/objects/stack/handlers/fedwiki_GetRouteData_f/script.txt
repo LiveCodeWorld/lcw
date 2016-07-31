@@ -1,0 +1,5 @@
+function fedwiki_GetRouteData someRoute
+   fedwiki_NormlizeRoute someRoute
+   put daemon_GetRouteData (someRoute) into someData
+   return someData
+end fedwiki_GetRouteData

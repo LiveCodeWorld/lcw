@@ -1,0 +1,14 @@
+private function templateView pCardObject
+   if exists (pCardObject) is false then put the long id of me into pCardObject
+   
+   if the view_Name of pCardObject is empty then
+      if exists (control 1 of pCardObject) then
+         put the long id of control 1 of pCardObject into templateObject
+         return templateObject
+      else
+         return pCardObject
+      end if
+   else
+      return pCardObject
+   end if
+end templateView

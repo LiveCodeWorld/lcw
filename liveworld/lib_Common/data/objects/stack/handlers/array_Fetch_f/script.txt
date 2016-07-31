@@ -1,0 +1,6 @@
+function array_Fetch someFile
+   put url ("binfile:" & someFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   return modelArray
+end array_Fetch

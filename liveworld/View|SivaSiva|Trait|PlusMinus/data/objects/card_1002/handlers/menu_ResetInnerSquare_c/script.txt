@@ -1,0 +1,5 @@
+on menu_ResetInnerSquare plusMinusView
+   put the square_View of plusMinusView into squareView
+   set the control_Type of squareView to "placeholder"
+   put the top_ControlNames of plusMinusView
+end menu_ResetInnerSquare

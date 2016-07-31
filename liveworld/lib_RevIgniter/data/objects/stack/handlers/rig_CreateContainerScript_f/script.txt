@@ -1,0 +1,30 @@
+function rig_CreateContainerScript rigScript
+   put word 1 to -1 of rigScript into rigScript
+   
+   -- set the wholematches to false
+   put lineoffset ("command index", rigScript) into lineNum
+   if lineNum = 0 then
+      put lineoffset ("on index", rigScript) into lineNum
+   end if
+   delete line 1 to (lineNum-1) of rigScript
+   -- put "on mouseUp" into line 1 of rigScript
+   -- replace "end index" with "end mouseUp" in rigScript
+   
+   delete line -1 of rigScript
+   put lineoffset ("command startUsingLibraries", rigScript) into startLineNum
+   put lineoffset ("end startUsingLibraries", rigScript) into endLineNum
+   delete line startLineNum to endLineNum of rigScript
+   
+   put word 1 to -1 of rigScript into rigScript
+   repeat with lineNum = 1 to the number of lines of rigScript
+      put line lineNum of rigScript into scriptLine
+      switch
+         case word 1 of scriptLine is among the items of "on,command,function,end"
+            put word 1 to -1 of scriptLine into line lineNum of rigScript
+            break
+         default
+            put "   " & word 1 to -1 of scriptLine into line lineNum of rigScript
+      end switch
+   end repeat
+   return rigScript
+end rig_CreateContainerScript

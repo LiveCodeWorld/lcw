@@ -1,0 +1,8 @@
+function view_IsMemberOfClass viewName, classPath
+   view_NormalizeName classPath
+   set the itemdelimiter to "|"
+   if viewName is empty then return false
+   if char -1 of classPath = "|" then delete char -1 of classPath
+   get item 1 to (the number of items of classPath) of viewName -- no "|" on the end
+   return it = classPath
+end view_IsMemberOfClass

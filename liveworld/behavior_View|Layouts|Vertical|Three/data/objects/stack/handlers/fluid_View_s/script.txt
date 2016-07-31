@@ -1,0 +1,6 @@
+setprop fluid_View fluidView
+   set the back_Property ["fluid_View"] of me to fluidView
+   heights_LoadActual
+   LayoutControl
+   return the result
+end fluid_View

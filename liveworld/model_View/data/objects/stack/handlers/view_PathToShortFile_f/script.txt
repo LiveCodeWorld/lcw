@@ -1,0 +1,18 @@
+function view_PathToShortFile viewName, pFileExt
+   view_NormalizeName viewName
+   
+   set the itemdelimiter to "|"
+   if item 2 of viewName = "Compound" then
+      put ".html" into someExension
+   else if pFileExt is empty then
+      put ".livecode" into someExension
+      -- put ".rev" into someExension
+   else
+      put "." & pFileExt into someExension
+   end if
+   put rev_FixPath (viewName) into shortFile
+   delete item 1 of shortFile
+   replace "|" with "_" in shortFile
+   put someExension after shortFile
+   return shortFile
+end view_PathToShortFile

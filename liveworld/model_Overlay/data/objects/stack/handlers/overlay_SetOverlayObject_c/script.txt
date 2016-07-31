@@ -1,0 +1,18 @@
+command overlay_SetOverlayObject overlayFolder, scriptObject, pOverlayName
+   put overlay_GetData (overlayFolder) into overlayData
+   
+   if pOverlayName is empty then
+      repeat for each key pOverlayName in overlayData
+         put overlayData [pOverlayName] into overlayArray
+         overlayArray_SetGraphProperty overlayArray, "overlay_Of", scriptObject
+         put overlayArray into overlayData [pOverlayName]
+      end repeat
+   else
+      put overlayData [pOverlayName] into overlayArray
+      overlayArray_SetGraphProperty overlayArray, "overlay_Of", scriptObject
+      put overlayArray into overlayData [pOverlayName]
+   end if
+   
+   overlay_SetData overlayFolder, overlayData
+   return overlayData
+end overlay_SetOverlayObject

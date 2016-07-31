@@ -1,0 +1,9 @@
+getprop script_CmapFile [pOverlayName]
+   put the long id of the target into scriptObject
+   put the object_MetaDataFolder [true] of scriptObject into scriptFolder
+   
+   scriptObject_NormalizeGraphName pOverlayName, scriptFolder
+   put pOverlayName & ".cmapx" into shortFile
+   put scriptFolder & shortFile into someFile
+   return someFile
+end script_CmapFile

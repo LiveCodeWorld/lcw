@@ -1,0 +1,16 @@
+on display_DeleteDisplayed
+   put the test_View of me into displayedView
+   if exists(displayedView) then
+      if word 1 of displayedView is "group" then
+         set the backgroundbehavior of displayedView to false
+         set the cantdelete of displayedView to false
+      end if
+      delete displayedView
+      -- display_SetStoredPath empty
+      set the test_View of me to empty
+      return true
+   else
+      -- opn_Notify merge("I cannot find the displayed view:  [[displayedView]]")
+      return false
+   end if
+end display_DeleteDisplayed

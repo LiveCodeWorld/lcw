@@ -1,0 +1,6 @@
+function fedwiki_ConstructFactoryArray pID
+   fedwiki_SetID pID
+   put "factory" into factoryArray ["type"]
+   put pID into factoryArray ["id"]
+   return factoryArray
+end fedwiki_ConstructFactoryArray

@@ -1,0 +1,18 @@
+command test_Rect someRect, someName, pColour
+   -- this puts the button inside the group
+   put script_CallingObject() into callingObject
+   put the short id of callingObject into pGroupID
+   
+   switch
+      case exists (btn someName)
+         put the long id of btn someName into placeholderButton
+         if someRect is a rect then
+            set the rect of placeholderButton to someRect
+         end if
+         return placeholderButton
+      default
+         create_Placeholder someName, someRect, pGroupID, pColour
+         put the result into placeholderButton
+         return placeholderButton
+   end switch
+end test_Rect

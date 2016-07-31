@@ -1,0 +1,8 @@
+setprop node_Shape [groupNameOrNum] someShape
+   put the dot_GroupStyleArray of the target into dotGroupStyleArray
+   put someShape into dotGroupStyleArray [groupNameOrNum]["node_StyleArray"]["shape"]
+   set the dot_GroupStyleArray of the target to dotGroupStyleArray
+   
+   dispatch "dot_Reconstruct" to the target
+   return dotGroupStyleArray
+end node_Shape

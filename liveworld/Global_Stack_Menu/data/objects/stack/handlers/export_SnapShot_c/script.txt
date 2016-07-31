@@ -1,0 +1,18 @@
+command export_SnapShot
+   put LocalArray ["scriptObject"] into scriptObject
+   put LocalArray ["isRecoring"] into isRecoring
+   
+   if isRecoring is true then
+      -- wireframe_SnapAndExport scriptObject, false - card changes we still record the card
+      put the wireframe_StackSnap of scriptObject into somePNG
+      
+      set the text of image 1 of cd 1 of stack "Test Wireframe Image" to somePNG
+      /*
+      put the result into imageFile
+      set the filename of image 1 of cd 1 of stack "Test Wireframe Image" to imageFile
+      put filename
+      */
+      
+      send "export_SnapShot" to me in 2 seconds
+   end if
+end export_SnapShot

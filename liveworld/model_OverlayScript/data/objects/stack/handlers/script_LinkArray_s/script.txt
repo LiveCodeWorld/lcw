@@ -1,0 +1,12 @@
+setprop script_LinkArray [pOverlayName] linkArray
+   put the long id of the target into scriptObject
+   put the script_DataArray [pOverlayName] of scriptObject into dataArray
+   put linkArray into dataArray ["linkArray"]
+   
+   -- now update the other arrays
+   linkArray_IdConstruct linkArray, idLinkArray, idArray
+   put idLinkArray into dataArray ["idLinkArray"]
+   put idArray into dataArray ["idArray"]
+   
+   set the script_DataArray [pOverlayName] of scriptObject to dataArray
+end script_LinkArray

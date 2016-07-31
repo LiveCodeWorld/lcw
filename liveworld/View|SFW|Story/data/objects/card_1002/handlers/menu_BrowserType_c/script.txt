@@ -1,0 +1,9 @@
+on menu_BrowserType dgView, bType
+   put the browser_Type of dgView into oType
+   if oType is not bTyrpe then
+      put the browser_Url of dgView into oURL
+      set the browser_Type of dgView to bType
+      set the browser_Url of dgView to empty
+      set the browser_Url of dgView to oURL
+   end if
+end menu_BrowserType

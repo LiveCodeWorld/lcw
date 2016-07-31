@@ -1,0 +1,6 @@
+on menu_AddMainstackHandlersToLibrary scriptObject
+   put the mainstack_HkeyArray of scriptObject into mainStackHkeyArray
+   put keys (mainStackHkeyArray) into hKeys
+   sort hKeys
+   put hKeys
+end menu_AddMainstackHandlersToLibrary

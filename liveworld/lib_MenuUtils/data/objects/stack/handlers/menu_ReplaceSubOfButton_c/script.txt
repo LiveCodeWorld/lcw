@@ -1,0 +1,17 @@
+on menu_ReplaceSubOfButton sectionNameList, newSubMenu, btnName
+    /*
+    Given a list of section titles,
+    This command replaces a (sub) section of a buttons menu text.
+    */
+    
+    if btnName is empty then 
+        put the long id of the target into buttonMenu
+    else
+        put the long id of btn btnName into buttonMenu
+    end if
+    
+    put the text of buttonMenu into oldMenu
+    put makeContainer(newSubMenu) into newSubMenu
+    put menu_ReplaceSection(sectionNameList, oldMenu, newSubMenu) into newMenu
+    set the text of buttonMenu to newMenu
+end menu_ReplaceSubOfButton

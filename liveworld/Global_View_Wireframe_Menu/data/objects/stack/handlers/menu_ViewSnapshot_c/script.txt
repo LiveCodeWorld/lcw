@@ -1,0 +1,16 @@
+on menu_ViewSnapshot viewObject, viewHow
+   switch viewHow
+      case "local file"
+         put the wireframe_ImageFile of viewObject into imageFile
+         finder_Reveal imageFile
+         break
+      case "localhost"
+         put the wireframe_LocalhostURL of viewObject into localhostURL
+         launch url localhostURL
+         break
+      case "www.livecode.world"
+         put the wireframe_RemoteURL of viewObject into remoteURL
+         launch url remoteURL
+         break
+   end switch
+end menu_ViewSnapshot

@@ -1,0 +1,10 @@
+getprop templateStack_View
+   -- a behavior of a template stack
+   if the stack_IsTemplate of the target is false then return empty -- for now lets check
+   
+   -- a sensible default that can be overridden
+   put the stack_Name of the target into vName
+   if exists (control 1 of card 1 of stack vName) is false then return empty
+   put the long id of control 1 of card 1 of stack vName into templateObject
+   return templateObject
+end templateStack_View

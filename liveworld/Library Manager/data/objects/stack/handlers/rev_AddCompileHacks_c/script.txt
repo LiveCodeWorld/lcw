@@ -1,0 +1,16 @@
+command rev_AddCompileHacks someBoolean
+   put scriptEditor_CompileButtonBehavior() into compileButtonBehavior
+   
+   put rev_OpenScriptEditorNames() into editorNames
+   repeat with someNum = 0 to the number of lines of editorNames
+      put rev_ScriptEditorField (someNum) into scriptField
+      if exists(scriptField) is false then next repeat
+      
+      put rev_CompileButton (someNum) into compileButton
+      if someBoolean is true then
+         set the behavior of compileButton to compileButtonBehavior
+      else
+         set the behavior of compileButton to empty
+      end if
+   end repeat
+end rev_AddCompileHacks

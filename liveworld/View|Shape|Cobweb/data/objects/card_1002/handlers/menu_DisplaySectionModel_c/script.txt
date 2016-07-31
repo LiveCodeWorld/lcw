@@ -1,0 +1,4 @@
+on menu_DisplaySectionModel mTarget
+   put the clock_SectionModel of mTarget into clockSectionModel
+   display_Array clockSectionModel, "the clock_SectionModel"
+end menu_DisplaySectionModel

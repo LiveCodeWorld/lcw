@@ -1,0 +1,19 @@
+command field_ScrollToLine lineNum, fieldObject, pSelectLine
+   -- does not seem accurate for large line numbers (it's an underestimate) ???
+   
+   if lineNum = 0 then
+      put 0 into someScroll
+   else if lineNum is a number then
+      put the effective textHeight of fieldObject into lineHeight
+      put ((lineNum - 1) * lineHeight) - 0 * the height of fieldObject into someScroll
+   else -- any text = "bottom"
+      -- bit of a hack (but works :)
+      put the effective textHeight of fieldObject into lineHeight
+      put the number of lines of the text of fieldObject into lineNum
+      put ((lineNum - 1) * lineHeight) - 0 * the height of fieldObject into someScroll
+   end if
+   set the scroll of fieldObject to someScroll
+   if pSelectLine is not false then
+      select line lineNum of fieldObject
+   end if
+end field_ScrollToLine

@@ -1,0 +1,5 @@
+on menu_SetStandardBehavior indexView
+   put the view_BehaviorStackName of indexView into stackName
+   put the name of stack stackName into bObject
+   set the behavior of indexView to bObject
+end menu_SetStandardBehavior

@@ -1,0 +1,3 @@
+command html_AddTag @someText, tagName
+   put format ("<%s>%s</%s>", tagName, someText, tagName) into someText
+end html_AddTag

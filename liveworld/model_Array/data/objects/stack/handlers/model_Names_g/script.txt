@@ -1,0 +1,6 @@
+getprop model_Names [someFilter]
+   if someFilter is empty then put "u*" into someFilter
+   put the custompropertysets of the target into customSets
+   filter customSets with someFilter
+   return customSets
+end model_Names

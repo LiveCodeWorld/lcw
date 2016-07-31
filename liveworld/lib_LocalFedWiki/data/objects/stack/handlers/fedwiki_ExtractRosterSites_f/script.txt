@@ -1,0 +1,22 @@
+function fedwiki_ExtractRosterSites 
+   put url "http://david.bovill.me/welcome-visitors.json" into pageJSON
+   put fedwiki_ExtractRoster (pageJSON) into someRoster
+   
+   repeat for each line someLine in someRoster
+      put word 1 of someLine into firstWord
+      if matchtext (firstWord, "\b[A-Z]+\b", anyThing) is false then next repeat
+      
+      set the itemdelimiter to "/"
+      switch firstWord
+         case "REFERENCES"
+            -- david.bovill.me/davids-sites
+            put word 2 to -1 of someLine into someRef
+            put item 1 of someRef into fedwikiDomain
+            put item 2 of someRef into pageSlug
+            put fedwiki_FetchPageJson (fedwikiDomain, pageSlug) into pageJson
+            return pageJson
+            break
+         default
+      end switch
+   end repeat
+end fedwiki_ExtractRosterSites

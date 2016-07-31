@@ -1,0 +1,13 @@
+function field_GetLinkText lineNum, someField
+   -- also works with trees and selections that include tabs and spaces
+   if word 1 of someField is not "field" then return empty
+   
+   put the short ID of someField into fieldID
+   put the stack_Object of someField into stackObject
+   get the linkText of word 1 to -1 of line lineNum of field ID fieldID of stackObject
+   
+   -- in case quotes have been encoded
+   -- replace "'" with quote in it
+   replace "&quot;" with quote in it
+   return it
+end field_GetLinkText

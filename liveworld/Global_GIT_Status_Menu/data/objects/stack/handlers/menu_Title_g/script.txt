@@ -1,0 +1,45 @@
+getprop menu_Title
+   put the view_Name of the target into vName
+   -- if the controlkey is "Down" then
+   if vName = "View|Tree|Field" then
+      put the card_Tree of me into cardTree
+      put the title_Text of cardTree into treeTitle
+      set the itemdelimiter to ":"
+      switch
+         case item 1 of treeTitle = "Found Log"
+            return "GIT | Line | Found | Menu"
+         case treeTitle = "Files in Repository"
+            return "GIT | Line | Files | Menu"
+         case item 1 of treeTitle = "Stack Log for"
+            return "GIT | Line | Stack | Log | Menu"
+         case treeTitle = "Log"
+            return "GIT | Line | Log | Menu"
+         default
+            put the tree_Field of cardTree into treeField
+            if the tree_IsLeaf of treeField is true then
+               put the tree_ParentTitle of treeField into treeParentTitle
+               switch word 1 of treeParentTitle
+                  case "Changes"
+                     return "GIT | Line | Changes | Menu"
+                  case "Changed"
+                     return "GIT | Line | Changed | Menu"
+                  case "Untracked"
+                     return "GIT | Line | Untracked | Menu"
+                  default
+                     return "GIT | Line | Menu"
+               end switch
+            else
+               switch word 1 of the tree_SelectedIndex of treeField
+                  case "Changes"
+                     return "GIT | Line | Changes | Menu"
+                  case "Changed"
+                     return "GIT | Line | Changed | Menu"
+                  case "Untracked"
+                     return "GIT | Line | Untracked | Title | Menu"
+               end switch
+            end if
+      end switch
+   else
+      return "Global | GIT | Status | Menu"
+   end if
+end menu_Title

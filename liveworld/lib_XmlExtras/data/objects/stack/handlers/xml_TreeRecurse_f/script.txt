@@ -1,0 +1,18 @@
+function xml_TreeRecurse treeID, startNode, tabBit
+    -- was "xml_RecurseChildren
+    local titleOutline
+    
+    put revXMLAttribute(treeID, startNode, "text") into nodeTitle
+    if item 1 of nodeTitle is "xmlErr" then put "Body" into nodeTitle
+    put tabBit & nodeTitle into osTilte
+    line_Insert osTilte, titleOutline
+     
+    put revXMLChildNames(treeID, startNode, return, empty, true) into childNames
+    repeat for each line childName in childNames
+        put tab & tabBit into nextTabBit
+        put startNode & "/" & childName into someChild
+        put xml_TreeRecurse(treeID, someChild, nextTabBit) into nextOutlineBit
+        line_Insert nextOutlineBit, titleOutline
+    end repeat
+    return titleOutline
+end xml_TreeRecurse

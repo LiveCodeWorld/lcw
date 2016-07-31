@@ -1,0 +1,4 @@
+function script_ExtractMessageHandlers someScript, scriptObject
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   return handlerArray ["message"]
+end script_ExtractMessageHandlers

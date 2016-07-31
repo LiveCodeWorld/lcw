@@ -1,0 +1,42 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_ViewUpdate
+type: script library
+version: 0.8
+
+
+--> Control
+-
+[[ _FetchHandler (control_Type,s) ]]
+
+[[ _FetchHandler (widget_Names,g) ]]
+
+[[ _FetchHandler (control_ConstructCreateDoScript,f) ]]
+
+[[ _FetchHandler (widget_ConstructCreateDoScript,f) ]]
+
+[[ _FetchHandler (object_Delete,c) ]]
+
+
+--> View | Update
+-
+[[ _FetchHandler (view_Update,c) ]]
+
+
+--> View | Update | Props
+-
+[[ _FetchHandler (view_Swap,s) ]]
+
+[[ _FetchHandler (view_Replacement,s) ]]
+
+
+--> View | Insert
+-
+[[ _FetchHandler (view_Insert,s) ]]
+
+[[ _FetchHandler (view_InsertFromPath,c) ]]
+
+[[ _FetchHandler (view_InsertObject,c) ]]
+
+[[ _FetchHandler (object_Replacement,s) ]]

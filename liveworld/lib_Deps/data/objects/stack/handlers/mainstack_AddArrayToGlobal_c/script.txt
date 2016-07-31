@@ -1,0 +1,35 @@
+command mainstack_AddArrayToGlobal mainStackMetaArray
+   /*
+   Rescued from text export
+   Better to wait till full db replacement, and / or nested mainstack structure for global gHkey_Array.
+   */
+   
+   global gHkey_Array
+   
+   put mainStackMetaArray ["hArray"] into newHarray
+   put gHkey_Array ["hArray"] into gHarray
+   
+   put newHarray ["scriptArray"] into scriptArray
+   put gHarray ["scriptArray"] into gScriptArray
+   union scriptArray with gScriptArray
+   put scriptArray into gHarray ["scriptArray"]
+   
+   -- need to delete all mainstack entries for behaviorArray
+   put newHarray ["behaviorArray"] into behaviorArray
+   put gHarray ["behaviorArray"] into behaviorArray
+   
+   -- need to delete all Global Menus in mainstack other than new entries
+   put newHarray ["Global Menus"] into menuArray
+   put gHarray ["Global Menus"] into menuArray
+   
+   -- need to add all handlers in handlerArray and remove any old handlers in gHarray
+   put newHarray ["handlerArray"] into handlerArray
+   put gHarray ["handlerArray"] into handlerArray
+   
+   put newHarray ["keywordArray"] into keywordArray
+   put gHarray ["keywordArray"] into keywordArray
+   
+   put newHarray ["objectTypeArray"] into objectTypeArray
+   put gHarray ["objectTypeArray"] into objectTypeArray
+   
+end mainstack_AddArrayToGlobal

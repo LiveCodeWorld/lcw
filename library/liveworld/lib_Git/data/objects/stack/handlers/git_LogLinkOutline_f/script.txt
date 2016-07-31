@@ -1,0 +1,9 @@
+function git_LogLinkOutline simpleLog
+   repeat for each line someLine in simpleLog
+      put word 1 of someLine into someHash
+      put word 2 to -1 of someLine into firstCommentLine
+      put html_ConstructNameLink (firstCommentLine, someHash) & CR after someOutline
+   end repeat
+   delete char -1 of someOutline
+   return someOutline
+end git_LogLinkOutline

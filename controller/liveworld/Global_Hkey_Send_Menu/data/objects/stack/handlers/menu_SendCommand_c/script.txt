@@ -1,0 +1,15 @@
+on menu_SendCommand mTarget
+   put LocalArray ["hKey"] into hKey
+   put LocalArray ["someHandler"] into someHandler
+   put LocalArray ["scriptObject"] into hObject
+   
+   put line 1 of someHandler into handlerLine
+   put item 1 of hKey into hName
+   if word 1 of handlerLine is "function" then
+      -- get value("MyFunction()", the long id of button "Function Library")
+      put hName & "()" into someFunction
+      put value (someFunction, hObject)
+   else
+      dispatch hName to hObject
+   end if
+end menu_SendCommand

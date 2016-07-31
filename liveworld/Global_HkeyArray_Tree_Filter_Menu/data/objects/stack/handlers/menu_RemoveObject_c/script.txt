@@ -1,0 +1,21 @@
+on menu_RemoveObject treeView, depObject
+   put the displayed_Array of treeView into hKeyArray
+   deconstructLocalArray overlayFolder, hKey, stackLabel, scriptObject
+   
+   hkeyArray_RemoveObjectLinks hkeyArray, depObject
+   put hkeyArray_ConstructObjectArray (hkeyArray) into objectArray
+   
+   put merge ("Filtered hkeyArray") into someTitle
+   
+   if exists(scriptObject) then
+      display_ObjectHKeyArray hKeyArray, scriptObject
+   else
+      display_HKeyArray hKeyArray, hkey
+   end if
+   return empty
+   
+   lock screen
+   set the tree_Array [1] of the tree_Field of treeView to objectArray
+   set the title_Text of treeView to someTitle
+   unlock screen
+end menu_RemoveObject

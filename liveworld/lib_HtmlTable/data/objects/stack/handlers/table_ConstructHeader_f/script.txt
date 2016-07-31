@@ -1,0 +1,27 @@
+function table_ConstructHeader headerTable
+   put line 1 of headerTable into headerLine
+   put line 2 of headerTable into abbreviationLine
+   
+   put "<thead>" into tableHeader
+   put CR & tab & "<tr>" after tableHeader
+   --
+   set the itemdelimiter to tab
+   repeat with columnNum = 1 to the number of items of headerLine
+      put "col" & columnNum into columnLabel
+      put item columnNum of headerLine into someValue
+      put word 1 to -1 of someValue into someValue
+      
+      put item columnNum of abbreviationLine into columnAbbrev
+      put word 1 to -1 of columnAbbrev into columnAbbrev
+      if columnAbbrev is empty then
+         get xml_Tag(someValue, "th", "id", columnLabel)
+      else
+         get xml_Tag(someValue, "th", "id", columnLabel, "abbr", columnAbbrev)
+      end if
+      put CR & tab & tab & it after tableHeader
+   end repeat
+   --
+   put CR & tab & "</tr>" after tableHeader
+   put CR & "</thead>" after tableHeader
+   return tableHeader
+end table_ConstructHeader

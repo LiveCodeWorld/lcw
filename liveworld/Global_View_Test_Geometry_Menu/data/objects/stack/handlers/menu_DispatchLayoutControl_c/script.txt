@@ -1,0 +1,7 @@
+on menu_DispatchLayoutControl mTarget
+   put the card_Object of mTarget into cardControl
+   put the rect of cardControl into cardRect
+   
+   dispatch "LayoutControl" to mTarget with cardRect
+   opn_Notify the name of mTarget
+end menu_DispatchLayoutControl

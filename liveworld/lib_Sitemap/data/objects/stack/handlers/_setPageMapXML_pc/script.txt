@@ -1,0 +1,10 @@
+private command _setPageMapXML @pageMapXML, pPageType
+   if pPageType is empty then
+      put empty into pageMapXML
+   else
+      put "http://www.google.com/schemas/sitemap-pagemap/1.0" into pagemapNameSpace
+      put xml_Enclose (pageType, "Attribute", false, "name", "pagetype") into attributeXML
+      put xml_Enclose (attributeXML, "DataObject", true, "type", "document") into dataObjectXML
+      put xml_Enclose (dataObjectXML, "PageMap", true, "xmlns", pagemapNameSpace) into pageMapXML
+   end if
+end _setPageMapXML

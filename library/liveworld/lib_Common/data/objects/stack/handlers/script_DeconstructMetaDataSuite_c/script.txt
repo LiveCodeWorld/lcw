@@ -1,0 +1,37 @@
+command script_DeconstructMetaDataSuite metaDataSuite, @metadataBit, @commentBit, @handlerBit
+   put empty into metadataBit
+   put empty into commentBit
+   put empty into handlerBit
+   
+   -- lets trim of suite header
+   set the itemdelimiter to ":"
+   repeat while line 1 of metaDataSuite begins with "-"
+      delete line 1 of metaDataSuite
+   end repeat
+   
+   set the itemdelimiter to ":"
+   repeat with lineNum = 1 to the number of lines of metaDataSuite
+      put line lineNum of metaDataSuite into someLine
+      switch
+         case word 1 of scriptLine = "/*"
+            put true into commentBlock
+            put lineNum into startCommentLine
+            break
+         case commentBlock is true
+            -- keep looping till end of block
+            if word -1 of scriptLine = "*/" then
+               -- could put this commented out section in the index?
+               put lineNum into endCommentLine
+               put line (startCommentLine + 1) to (endCommentLine - 1) of metaDataSuite into commentBit
+               put false into commentBlock
+            end if
+            break
+         case token 1 of scriptLine is among the items of "on,command,function,getprop,setprop,private,local,constant,global"
+            put word 1 to -1 of line lineNum to -1 of metaDataSuite into handlerBit
+            break
+         case the number of items of someLine = 2
+            put someLine & CR after metadataBit
+      end switch
+   end repeat
+   delete char -1 of metadataBit
+end script_DeconstructMetaDataSuite

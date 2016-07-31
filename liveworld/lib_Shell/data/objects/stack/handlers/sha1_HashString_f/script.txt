@@ -1,0 +1,11 @@
+function sha1_HashString pText
+    -- Other hashes are available --> man pages sha1
+    -- Option to sign a file by adding a flag --> man pages sha1
+    -- Other services of openssl --> man pages openssl
+    
+    put the tempName&".tmp" into tPath
+    put pText into url ("file:"&tPath)
+    ## adapt time  according to rig (may be not necessary)
+    wait 0 with messages
+    return word -1 of shell("openssl dgst -sha1" &&tPath)
+end sha1_HashString

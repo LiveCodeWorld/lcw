@@ -1,0 +1,6 @@
+getprop overlay_Folder
+   -- for hkeys this is the same as "library_HandlerFile"
+   put the displayed_Hkey of me into hKey
+   put library_HkeyFolder (hKey) into overlayFolder
+   return overlayFolder
+end overlay_Folder

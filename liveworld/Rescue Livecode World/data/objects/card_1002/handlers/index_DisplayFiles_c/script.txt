@@ -1,0 +1,9 @@
+command index_DisplayFiles mTarget
+   put the index_Folder of mTarget into someFolder
+   if someFolder is empty then return empty
+   
+   put folder_ListShortStackFiles (someFolder) into someFiles
+   set the view_Index of mTarget to someFiles
+   display_ProjectArray
+   return someFiles
+end index_DisplayFiles

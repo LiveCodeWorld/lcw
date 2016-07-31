@@ -1,0 +1,21 @@
+function css_ConstructScaleLines hScale, pVerticalScale, pIndenText
+   -- this scales everything
+   if pVerticalScale is empty then
+      put hScale into vScale
+   else
+      put pVerticalScale into vScale
+   end if
+   
+   put pIndenText & "-moz-transform: scale([[hScale]], [[vScale]]);" into extraCSS
+   put CR & pIndenText & "-webkit-transform: scale([[hScale]], [[vScale]]);" after extraCSS
+   put CR & pIndenText & "-o-transform: scale([[hScale]], [[vScale]]);" after extraCSS
+   put CR & pIndenText & "-ms-transform: scale([[hScale]], [[vScale]]);" after extraCSS
+   put CR & pIndenText & "transform: scale([[hScale]], [[vScale]]);" after extraCSS
+   put CR & pIndenText & "-moz-transform-origin: top left;" after extraCSS
+   put CR & pIndenText & "-webkit-transform-origin: top left;" after extraCSS
+   put CR & pIndenText & "-o-transform-origin: top left;" after extraCSS
+   put CR & pIndenText & "-ms-transform-origin: top left;" after extraCSS
+   put CR & pIndenText & "transform-origin: top left;" after extraCSS
+   
+   return merge (extraCSS)
+end css_ConstructScaleLines

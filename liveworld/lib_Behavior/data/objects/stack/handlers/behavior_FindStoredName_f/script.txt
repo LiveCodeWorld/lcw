@@ -1,0 +1,18 @@
+function behavior_FindStoredName behaviorObject
+   return hArray_GetBehaviorName (behaviorObject) -- hack for updating to new hArray technique
+   
+   -- old model version
+   put the rugged_ID of behaviorObject into behaviorObject
+   put behaviorModel_GetArray() into behaviorArray
+   repeat for each key bName in behaviorArray
+      put behaviorArray [bName]["ruggedID"] into ruggedObject
+      if exists(ruggedObject) is false then
+         -- display_Lines ruggedObject, "Behavior does not exist!"
+         next repeat
+      end if
+      if ruggedObject = behaviorObject then
+         return bName
+      end if
+   end repeat
+   return empty
+end behavior_FindStoredName

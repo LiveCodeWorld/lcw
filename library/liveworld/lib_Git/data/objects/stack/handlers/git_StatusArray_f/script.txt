@@ -1,0 +1,5 @@
+function git_StatusArray
+   put git_StatusOutline() into someOutline
+   put array_FromOutline(someOutline) into someArray
+   return someArray
+end git_StatusArray

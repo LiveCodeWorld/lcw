@@ -1,0 +1,5 @@
+function object_FetchRevPropText objectFolder
+   put meta_PropTextFile (objectFolder) into someFile
+   put url ( "binfile:" & someFile) into revPropText
+   return revPropText
+end object_FetchRevPropText

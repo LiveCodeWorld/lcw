@@ -1,0 +1,252 @@
+--> MetaData
+-
+name: lib_Daemon
+type: behavior
+version: 0.9
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+A minimal library for creating simple HTTP and Restful servers using Livecode.
+It should contain only code that is absolutle necessary - and is optimised for speed.
+
+Another aim of this library is that it should be able to rund a server, without any additional code
+using only custom properties of an object
+that it is attached to as a behavior.
+
+All othere messages (if any are needed) would be dispatched and optional)
+Logging and similar functions are added using before/after middleware handlers.
+
+Not sure yet what to do as a default routing behavior.
+*/
+
+local SocketData   -- Array used to gather socket data from potentially multiple connections as they come in
+
+local DaemonServer
+local DropDelay = 60
+local SessionArray
+
+
+--> Objects
+-
+[[ _FetchHandler (daemon_Server,g) ]]
+
+
+--> Daemon | Start and Stop
+-
+[[ _FetchHandler (daemon_Start,c) ]]
+
+[[ _FetchHandler (daemon_Stop,c) ]]
+
+[[ _FetchHandler (daemon_GetSocketData,f) ]]
+
+[[ _FetchHandler (daemon_DeleteSocketData,c) ]]
+
+
+--> Daemon | Objects
+-
+/*
+Could be removed to utils for minimalism reasons.
+*/
+
+[[ _FetchHandler (daemon_Router,g) ]]
+
+[[ _FetchHandler (daemon_Router,s) ]]
+
+
+--> Daemon | Props
+-
+[[ _FetchHandler (daemon_IsRunning,g) ]]
+
+[[ _FetchHandler (daemon_IsRunning,s) ]]
+
+[[ _FetchHandler (daemon_Port,g) ]]
+
+[[ _FetchHandler (daemon_Port,s) ]]
+
+[[ _FetchHandler (daemon_SetPort,c) ]]
+
+
+--> Daemon | Connection
+-
+[[ _FetchHandler (newConnection,c) ]]
+
+[[ _FetchHandler (readRequest,c) ]]
+
+[[ _FetchHandler (readHeaders,c) ]]
+
+[[ _FetchHandler (processRequest,c) ]]
+
+
+--> Dameon | POST
+-
+[[ _FetchHandler (daemon_GetPostData,f) ]]
+
+
+--> Dameon | Send
+-
+[[ _FetchHandler (daemon_SendPNG,c) ]]
+
+[[ _FetchHandler (daemon_SendJSON,c) ]]
+
+[[ _FetchHandler (daemon_SendCSS,c) ]]
+
+[[ _FetchHandler (daemon_SendText,c) ]]
+
+[[ _FetchHandler (daemon_SendMovedTemporarily,c) ]]
+
+[[ _FetchHandler (daemon_SendNotFound,c) ]]
+
+[[ _FetchHandler (daemon_SendRedirect,c) ]]
+
+[[ _FetchHandler (daemon_SendHeaderArray,c) ]]
+
+[[ _FetchHandler (daemon_Send,c) ]]
+
+[[ _FetchHandler (daemon_SendCompressed,c) ]]
+
+[[ _FetchHandler (daemon_SendSimple,c) ]]
+
+[[ _FetchHandler (daemon_SendRaw,c) ]]
+
+
+--> Dameon | Send | And Close
+-
+[[ _FetchHandler (daemon_SendOK,c) ]]
+
+[[ _FetchHandler (daemon_SendAndCloseSocket,c) ]]
+
+[[ _FetchHandler (daemon_RawSendAndClose,c) ]]
+
+
+--> Daemon | RouteMetaArray | Model
+-
+/*
+Stores metadata, and raw data in a custom property.
+Altering the custom proerty handler can stor the data externally.
+
+All the data can be copied from Firefox pull down items in the webdeveloper tools
+Control-click on the network menu tab item for the relevant request and copy the url or curl command. 
+*/
+
+-- function daemon_GetCurlCommand someRoute  
+put "/curl" after someRoute
+put daemon_GetRouteValue (curlRoute) into someShell
+return someShell
+end daemon_GetCurlCommand
+
+-- command daemon_SetCurlCommand someRoute, someShell
+put "/curl" after someRoute
+daemon_SetRouteValue someRoute, someShell
+return the result
+end daemon_SetCurlCommand
+
+[[ _FetchHandler (daemon_GetExampleUrl,f) ]]
+
+[[ _FetchHandler (daemon_SetExampleUrl,c) ]]
+
+[[ _FetchHandler (daemon_GetRouteData,f) ]]
+
+[[ _FetchHandler (daemon_SetRouteData,c) ]]
+
+[[ _FetchHandler (daemon_GetRouteContentType,f) ]]
+
+[[ _FetchHandler (daemon_SetRouteContentType,c) ]]
+
+[[ _FetchHandler (daemon_GetRouteHeaderArray,f) ]]
+
+[[ _FetchHandler (daemon_SetRouteHeaderArray,c) ]]
+
+[[ _FetchHandler (daemon_RouteMetadata,c) ]]
+
+command daemon_SetRouteData someRoute, routeData
+   put "/data" after someRoute
+   daemon_SetRouteValue someRoute, routeData
+   return the result
+end daemon_SetRouteData
+
+[[ _FetchHandler (daemon_GetRouteValue,f) ]]
+
+[[ _FetchHandler (daemon_SetRouteValue,c) ]]
+
+[[ _FetchHandler (daemon_DeleteRouteArray,c) ]]
+
+[[ _FetchHandler (daemon_ConstructArrayKey,f) ]]
+
+[[ _FetchHandler (daemon_GuessContentType,f) ]]
+
+
+--> Dameon | Headers
+-
+[[ _FetchHandler (daemon_StripDefaultHeadersFromArray,c) ]]
+
+[[ _FetchHandler (daemon_ConstructDefaultHeader,f) ]]
+
+[[ _FetchHandler (daemon_DeconstructHeaderArray,f) ]]
+
+[[ _FetchHandler (daemon_ConstructHeaderArray,f) ]]
+
+[[ _FetchHandler (_redirectionHeaders,pf) ]]
+
+[[ _FetchHandler (_notFoundHeaders,pf) ]]
+
+[[ _FetchHandler (_movedTemporarilyHeaders,pf) ]]
+
+[[ _FetchHandler (_okHeaders,pf) ]]
+
+
+--> Dameon | HTTP | Header | Utitlities
+-
+/*
+These handlers help construct http headers.
+Handlers that begin with _Add assume a header is not empty
+ie there is is at least one line in an existing header, then they add to it
+*/
+
+[[ _FetchHandler (_customHeaders,pf) ]]
+
+[[ _FetchHandler (_addSessionCookie,pc) ]]
+
+[[ _FetchHandler (_addCookieHeader,pc) ]]
+
+
+[[ _FetchHandler (_addConnectionHeader,pc) ]]
+
+[[ _FetchHandler (_addDateHeader,pc) ]]
+
+[[ _FetchHandler (_addKeepAliveHeader,pc) ]]
+
+[[ _FetchHandler (_addCorsHeader,pc) ]]
+
+[[ _FetchHandler (_addCacheHeader,pc) ]]
+
+[[ _FetchHandler (_addContentTypeHeader,pc) ]]
+
+[[ _FetchHandler (_addContentLengthHeader,pc) ]]
+
+
+--> Dameon | Utilis
+-
+[[ _FetchHandler (_normalizeSocket,pf) ]]
+
+[[ _FetchHandler (_constructRequestArray,pf) ]]
+
+[[ _FetchHandler (_setEnvironmentalVariables,pc) ]]
+
+[[ _FetchHandler (_cleanSocketData,c) ]]
+
+
+--> Daemon | Session
+-
+/*
+Experimental session stuff.
+*/
+
+[[ _FetchHandler (daemon_SetSession,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (json_FromArray,f) ]]
+
+[[ _FetchHandler (json_ToArray,f) ]]

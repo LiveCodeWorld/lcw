@@ -1,0 +1,8 @@
+function display_GetSavedFrameRect viewName
+   view_NormalizeName viewName
+   if exists(stack viewName) is false then return merge("Error: stack [[viewName]] does not exist")
+   
+   put the uOPN ["frame_Rect"] of stack viewName into frameRect
+   if frameRect is not a rect then put the rect of the frame_View of me into frameRect
+   return frameRect
+end display_GetSavedFrameRect

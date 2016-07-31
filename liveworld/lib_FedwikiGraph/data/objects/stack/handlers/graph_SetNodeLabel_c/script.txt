@@ -1,0 +1,4 @@
+command graph_SetNodeLabel @dotGroupStyleArray, nodeLabel, nodeUrl
+   if nodeLabel is not empty then put nodeLabel into dotGroupStyleArray [nodeType]["node_StyleArray"]["label"]
+   if nodeUrl is not empty then put nodeUrl into dotGroupStyleArray [nodeType]["node_StyleArray"]["URL"]
+end graph_SetNodeLabel

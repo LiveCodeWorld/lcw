@@ -1,0 +1,6 @@
+setprop menu_PluginTable [pToolMode] menuRecord
+   menu_ConvertRecordToArray menuRecord
+   put menuRecord into mPluginArray [1]
+   set the menu_PluginArray [pToolMode] of the target to mPluginArray
+   return the result
+end menu_PluginTable

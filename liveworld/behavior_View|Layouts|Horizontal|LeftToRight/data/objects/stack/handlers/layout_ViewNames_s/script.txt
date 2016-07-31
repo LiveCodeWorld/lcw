@@ -1,0 +1,7 @@
+setprop layout_ViewNames vNames
+   replace comma with CR in vNames
+   layout_DeleteElements
+   repeat for each line vName in vNames
+      set the view_Insert of me to vName
+   end repeat
+end layout_ViewNames

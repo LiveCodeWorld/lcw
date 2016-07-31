@@ -1,0 +1,5 @@
+function overlayData_GetDataArray overlayData, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   put overlayData [pOverlayName]["data"] into dotHeaderArray
+   return dotHeaderArray
+end overlayData_GetDataArray

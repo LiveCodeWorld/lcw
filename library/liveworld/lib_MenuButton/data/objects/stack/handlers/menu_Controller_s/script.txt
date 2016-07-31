@@ -1,0 +1,12 @@
+setprop menu_Controller [pMenuTitle] mController
+   if mController is empty then
+      put the long id of the target into targetObject
+      put the view_Object of targetObject into someView
+      if exists(someView) is false then put targetObject into someView
+      custom_DeleteProperty "menu_Title", someView
+      custom_DeleteProperty pMenuTitle, someView, "menu_Controller"
+   else
+      set the burnt_MenuController [pMenuTitle] of the target to mController
+   end if
+   return the result
+end menu_Controller

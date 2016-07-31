@@ -1,0 +1,10 @@
+command text_EscapeReturns @someText
+   /*
+   \r = CR (Carriage Return) // Used as a new line character in Mac OS before X
+   \n = LF (Line Feed) // Used as a new line character in Unix/Mac OS X
+   \r\n = CR + LF // Used as a new line character in Windows
+   */
+   -- replace CRLF with "\r\n" in someText
+   replace CR with "\r" in someText
+   replace LF with "\n" in someText
+end text_EscapeReturns

@@ -1,0 +1,6 @@
+function html_ExtractChildNodeNames someNode, someHTML
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put revXMLChildNames (treeID, someNode, CR, empty, true) into tNodeNames
+   revDeleteXMLTree treeID
+   return tNodeNames
+end html_ExtractChildNodeNames

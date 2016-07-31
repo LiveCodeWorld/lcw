@@ -1,0 +1,4 @@
+command overlayData_SetDataArray @overlayData, dotHeaderArray, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   put dotHeaderArray into overlayData [pOverlayName]["data"]
+end overlayData_SetDataArray

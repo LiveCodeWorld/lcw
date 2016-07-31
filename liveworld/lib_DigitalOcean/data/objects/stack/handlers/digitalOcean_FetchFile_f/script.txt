@@ -1,0 +1,9 @@
+function digitalOcean_FetchFile somePath, pDropletName, pSshUserName
+   put digitalOcean_GetDropletIP (pDropletName) into dropletIP
+   if http_CheckIP (dropletIP) is false then
+      return "Error, fetching ip address for droplet" && dropletName
+   end if
+   
+   put digitalOcean_FetchFileFromIP (somePath, dropletIP, pSshUserName) into someData
+   return someData
+end digitalOcean_FetchFile

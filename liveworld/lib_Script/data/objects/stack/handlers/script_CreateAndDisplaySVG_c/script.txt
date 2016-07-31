@@ -1,0 +1,13 @@
+command script_CreateAndDisplaySVG scriptObject, pProjectName, pGraphStyle, pForceCreate
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put hkeyArray_ConstructFromScript (scriptObject, pProjectName, pForceCreate) into processedHkeyArray
+   
+   set the project_ProcessedHkeyArray of scriptObject to processedHkeyArray
+   
+   put the textStackOverlay_Folder [false] of scriptObject into overlayFolder
+   overlay_CreateGraph overlayFolder, processedHkeyArray, pProjectName, scriptObject, pGraphStyle, true, empty, "svg"
+   put the result into overlayArray
+   put overlayArray_GetImageFile (overlayArray, overlayFolder) into svgFile
+   display_SVG svgFile
+   return processedHkeyArray
+end script_CreateAndDisplaySVG

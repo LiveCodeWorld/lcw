@@ -1,0 +1,24 @@
+command fossil_Open fossilFile, checkoutFolder
+   put "fossil open" into someShell
+   put fossilFile into bashFile
+   shell_BashParamEscape bashFile
+   put space & bashFile after someShell
+   
+   put the defaultFolder into oFolder
+   set the defaultFolder to checkOutFolder
+   fossil_ExecuteShell someShell, checkOutFolder
+   put the result into openInfo
+   set the defaultFolder to oFolder
+   
+   if openInfo is empty then
+      -- Repository does not contain any files! Usually because we are opening a new empty repository.
+      breakpoint
+      put fossil_InfoArray (checkoutFolder) into checkoutArray
+      fossil_StoreCheckoutArray checkoutFolder, checkoutArray
+   else
+      put fossil_ParseOpenInfo (openInfo) into checkoutArray
+      put true into checkoutArray ["isExpanded"]
+      fossil_StoreCheckoutArray fossilFile, checkoutArray
+   end if
+   return checkoutArray
+end fossil_Open

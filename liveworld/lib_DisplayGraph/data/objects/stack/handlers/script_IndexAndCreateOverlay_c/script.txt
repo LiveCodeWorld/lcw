@@ -1,0 +1,8 @@
+command script_IndexAndCreateOverlay scriptObject, pProjectName, pGraphStyle, pProcessObject, pForceCreate
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put hkeyArray_ConstructFromScript (scriptObject, pProjectName, pProcessObject, pForceCreate) into processedHkeyArray
+   set the project_ProcessedHkeyArray of scriptObject to processedHkeyArray
+   script_CreateGraph processedHkeyArray, scriptObject, pProjectName, pGraphStyle
+   put the result into imageFile
+   return imageFile
+end script_IndexAndCreateOverlay

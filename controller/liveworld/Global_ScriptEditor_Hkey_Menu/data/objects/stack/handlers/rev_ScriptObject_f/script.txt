@@ -1,0 +1,7 @@
+function rev_ScriptObject
+   put rev_TopScriptEditor() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
+end rev_ScriptObject

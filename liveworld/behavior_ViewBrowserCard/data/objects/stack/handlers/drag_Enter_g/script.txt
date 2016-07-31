@@ -1,0 +1,19 @@
+getprop drag_Enter
+   put the dragDestination into targetObject
+   get the dragsource
+   put the stack_Object of it into sourceStack
+   if sourceStack = the stack_Object of targetObject then
+      set the dragAction to "none"
+      return false
+   end if
+   
+   put the view_Object of targetObject into targetView
+   if exists(targetView) then
+      if the placeholder_Button of targetObject is not empty then return false
+      set the dragAction to "link"
+      return true
+   else
+      set the dragAction to "none"
+      return false
+   end if
+end drag_Enter

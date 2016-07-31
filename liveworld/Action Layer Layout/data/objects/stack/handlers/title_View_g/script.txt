@@ -1,0 +1,6 @@
+getprop title_View
+   if exists (group "Title") is false then return empty
+   
+   put the long id of group "Title" into titleView
+   return titleView
+end title_View

@@ -1,0 +1,8 @@
+function file_HashName someText, pFolder, pExtension
+   if pExtension is empty then put "txt" into pExtension
+   if pFolder is empty then put file_TemporaryFolder() into pFolder
+   folder_Format pFolder
+   put text_Hash (someText) into hashName
+   put pFolder & hashName & "." & pExtension into someFile
+   return someFile
+end file_HashName

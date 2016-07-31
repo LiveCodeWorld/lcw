@@ -1,0 +1,31 @@
+command rev_CloseTab scriptObject, pDontWarn, pDontCloseIfLast, pDontChangeTab
+   # Parameters
+   #   pObject : reference to the object to remove
+   #   pDontWarn : whether or not to warn the user of losing unapplied changes (optional, defaults to false)
+   #   pDontCloseIfLast : optional, defaults to false. If true, then the script editor will not be closed when the last tab is deleted.
+   #   pDontChangeTab : optional, defaults to false, If true, then the script editor will not attempt to change tabs after removing the object
+   # Description
+   #   Removes the specified object from this script editor. If the removed object is the current
+   #   editing object, then changes the current object to the last selected object.
+   
+   put rev_ListTabScriptObjects() into tabScriptObjects
+   put the rugged_ID of scriptObject into scriptObject
+   if scriptObject is among the lines of tabScriptObjects then
+      
+      put rev_ScriptEditorGroup() into editorObject
+      put rev_ScriptEditorField() into editorObject
+      
+      dispatch "revSERemoveTargetObject" to editorObject with scriptObject,pDontWarn,pDontCloseIfLast,pDontChangeTab
+      switch it
+         case "handled" -- the message was handled and not passed
+            break
+         case "unhandled" -- no matching handlers were found
+            break
+         case "passed" -- the message was handled but passed by all handlers
+            break
+      end switch
+      return true
+   else
+      return false
+   end if
+end rev_CloseTab

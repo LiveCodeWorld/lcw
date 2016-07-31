@@ -1,0 +1,4 @@
+getprop fossil_StackHistory [pNotBrief]
+   put the mainstack_File of the target into someFile
+   return fossil_FileHistory (someFile, pNotBrief)
+end fossil_StackHistory

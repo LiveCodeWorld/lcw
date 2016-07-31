@@ -1,0 +1,4 @@
+on menu_EditThisTemplate mTarget
+   put the displayed_File of mTarget into someFile  
+   text_EditFile someFile
+end menu_EditThisTemplate

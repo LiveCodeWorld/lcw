@@ -1,0 +1,6 @@
+on menu_StoreCurrentCheckoutGlobals
+   library_StoreCheckoutGlobals
+   
+   put library_GetSetName() into setName
+   opn_Notify merge ("Stored the gOPN globals in the current set ('[[setName]]'), as an encoded array!")
+end menu_StoreCurrentCheckoutGlobals

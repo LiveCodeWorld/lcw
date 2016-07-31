@@ -1,0 +1,13 @@
+function script_AddMetaDataToScript someScript, uRipKey, uRipValue
+   put script_GetMetadataArray (someScript) into uRipArray
+   get the paramcount - 1
+   put trunc(it/2) into maxNum
+   repeat with paramNum = 2 to maxNum step 2
+      put param(paramNum) into uRipKey
+      put param(paramNum + 1) into uRipValue
+      put uRipValue into uRipArray [uRipKey]
+   end repeat
+   
+   script_SetMetadataArray someScript, uRipArray
+   return someScript
+end script_AddMetaDataToScript

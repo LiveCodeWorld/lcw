@@ -1,0 +1,270 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Harray
+type: model
+version: 0.8
+
+/*
+This model wraps a complex multidimensional array that stores lot's of information about scripts, handlers and objects in the Livecode environment.
+It is mistakenly labeled and stored in the global variable gHkey_Array. It should ratehr be called gHarray (for "handler array" or simply gLiveCodeWorld.
+
+Most of the handelrs here have been designed to work with parameters rather than directly with the global variable.
+In the future we look to store this data in an sqlite, or possible graph database.
+*/
+
+
+--> hArray | Model
+-
+[[ _FetchHandler (hArray_LoadGlobal,c) ]]
+
+[[ _FetchHandler (hArray_StoreGlobal,c) ]]
+
+[[ _FetchHandler (hArray_DeleteArrayDatabase,c) ]]
+
+[[ _FetchHandler (hArray_FetchData,f) ]]
+
+[[ _FetchHandler (hArray_StoreData,c) ]]
+
+
+--> hArray
+-
+[[ _FetchHandler (hArray_ConstructHkeySuiteArray,f) ]]
+
+
+--> Harray | Handler
+-
+[[ _FetchHandler (hArray_GetHandler,f) ]]
+
+
+--> Script | Array
+-
+[[ _FetchHandler (hArray_ConstructScriptArray,f) ]]
+
+[[ _FetchHandler (hArray_StripSuitesFromScriptDataArray,c) ]]
+
+
+--> hArray | Object | Types
+-
+[[ _FetchHandler (hArray_ListFrontLibraries,f) ]]
+
+[[ _FetchHandler (hArray_ListBackLibraries,f) ]]
+
+[[ _FetchHandler (hArray_ListUsedLibraries,f) ]]
+
+[[ _FetchHandler (hArray_ListViews,f) ]]
+
+[[ _FetchHandler (hArray_ListViewTemplates,f) ]]
+
+[[ _FetchHandler (hArray_ListModels,f) ]]
+
+[[ _FetchHandler (hArray_GetNamedObjectType,f) ]]
+
+[[ _FetchHandler (hArray_ConstructTypeNameObjectArray,f) ]]
+
+[[ _FetchHandler (hArray_ListObjectNamesOfType,f) ]]
+
+[[ _FetchHandler (hArray_ConstructNameObjectArray,f) ]]
+
+[[ _FetchHandler (hArray_ListObjectsOfType,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeArray,f) ]]
+
+[[ _FetchHandler (hArray_SetObjectTypeArray,c) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeData,f) ]]
+
+[[ _FetchHandler (hArray_SetObjectTypeData,c) ]]
+
+[[ _FetchHandler (hArray_ListObjectTypes,f) ]]
+
+[[ _FetchHandler (hArray_ListFirstObjectHkeys,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectScriptArray,f) ]]
+
+[[ _FetchHandler (hArray_ObjectIsIndexStatus,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectData,f) ]]
+
+[[ _FetchHandler (hArray_GetUripArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectMetaData,f) ]]
+
+[[ _FetchHandler (hArray_SetObjectMetaData,c) ]]
+
+
+--> hArray | keywords
+-
+[[ _FetchHandler (hArray_ListHkeyObjects,f) ]]
+
+[[ _FetchHandler (hArray_GetHandlerHash,f) ]]
+
+[[ _FetchHandler (hArray_GetHandlerLine,f) ]]
+
+[[ _FetchHandler (hArray_GetHkeyDataArray,f) ]]
+
+[[ _FetchHandler (hArray_FindHkey,f) ]]
+
+[[ _FetchHandler (hArray_GetFoundHkeyArray,f) ]]
+
+[[ _FetchHandler (hArray_ShortKeyHash,f) ]]
+
+[[ _FetchHandler (hArray_GetKeywordArray,f) ]]
+
+[[ _FetchHandler (hArray_SetKeywordArray,c) ]]
+
+[[ _FetchHandler (hArray_ListAllObjects,f) ]]
+
+[[ _FetchHandler (hArray_FetchObjectArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectArray,f) ]]
+
+[[ _FetchHandler (hArray_SetObjectArray,c) ]]
+   
+[[ _FetchHandler (hArray_GetHandlerArray,f) ]]
+
+[[ _FetchHandler (hArray_SetHandlerArray,c) ]]
+
+[[ _FetchHandler (hArray_ListHkeys,f) ]]
+
+[[ _FetchHandler (hArray_ConstructHkeyArray,f) ]]
+
+[[ _FetchHandler (hArray_GetScriptHash,f) ]]
+
+[[ _FetchHandler (hArray_ListIdenticalHkeys,f) ]]
+
+[[ _FetchHandler (hArray_ListDifferentHkeys,f) ]]
+
+[[ _FetchHandler (hArray_SetHkeyDifferences,c) ]]
+
+[[ _FetchHandler (hArray_ListHandlerHashes,f) ]]
+
+[[ _FetchHandler (hArray_ConstructHkeyHashArray,f) ]]
+
+[[ _FetchHandler (hArray_KeywordHkeys,f) ]]
+
+[[ _FetchHandler (hArray_KeywordHkeyArray,f) ]]
+
+[[ _FetchHandler (hArray_ListShortKeys,f) ]]
+
+[[ _FetchHandler (hArray_ListAllHkeys,f) ]]
+
+[[ _FetchHandler (hArray_ListUniqueHkeys,f) ]]
+
+
+--> hArray | duplicates
+-
+[[ _FetchHandler (hArray_ListDuplicateHkeys,f) ]]
+
+[[ _FetchHandler (hArray_ConstructDuplicateHkeyArray,c) ]]
+
+command hArray_ConstructDuplicateHkeyArray @duplicateShortKeyArray, @duplicateHkeys
+   local duplicateHKeyArray
+   timer_Start "hArray_ConstructDuplicateHkeyArray"
+   --
+   put hArray_ConstructHkeyHashArray() into hkeyHashArray
+   repeat for each key handlerHash in hkeyHashArray
+      put hkeyHashArray [handlerHash] into hkeyArray
+      if the number of elements of hkeyArray > 1 then
+         union duplicateHKeyArray with hkeyArray
+         
+         repeat for each key hKey in hkeyArray
+            put item 1 to 2 of hKey into shortHkey
+            -- put handlerHash into duplicateShortKeyArray [shortHkey][hKey]
+            put hkeyArray [hKey] into duplicateShortKeyArray [shortHkey][hKey]
+            put empty into duplicateShortKeyArray [shortHkey][hKey]
+         end repeat
+      end if
+   end repeat
+   
+   put keys (duplicateHKeyArray) into duplicateHkeys
+   sort duplicateHkeys by item 1 of each
+   --
+   timer_Stop "hArray_ConstructDuplicateHkeyArray"
+   
+   return duplicateHkeys
+end hArray_ConstructDuplicateHkeyArray
+
+
+--> hArray | Tidy
+-
+[[ _FetchHandler (hArray_FindAndRemoveMissingObjects,c) ]]
+
+[[ _FetchHandler (hArray_ListMissingObjects,f) ]]
+
+[[ _FetchHandler (hArray_RemoveObject,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromHandlerArray,c) ]]
+   
+[[ _FetchHandler (hArray_RemoveObjectFromTypeArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveSameNameTypeObjects,c) ]]
+
+
+--> View | Model
+-
+/*
+These handlers are the current way views store their metadata.
+Eventually the aim is to update this to the way stacks in general store their metadata for any object,
+which is based on the standard stack export model (with it's associated metadata folders for each exported object).
+These handlers have been place here in order to encourage this migration :)
+*/
+
+[[ _FetchHandler (view_RenameTemplate,c) ]]
+
+[[ _FetchHandler (view_DeleteTemplate,c) ]]
+
+[[ _FetchHandler (view_CreateIcon,c) ]]
+
+[[ _FetchHandler (view_IconUrl,f) ]]
+
+[[ _FetchHandler (view_LocalIconFile,f) ]]
+
+[[ _FetchHandler (view_DeleteIcon,c) ]]
+
+[[ _FetchHandler (view_GetHelpHtml,f) ]]
+
+[[ _FetchHandler (view_SetHelpHtml,c) ]]
+
+[[ _FetchHandler (view_DeleteHelpText,c) ]]
+
+[[ _FetchHandler (view_GetMetaData,f) ]]
+
+[[ _FetchHandler (view_SetMetaData,c) ]]
+
+[[ _FetchHandler (view_DeleteMetaData,c) ]]
+
+[[ _FetchHandler (view_GetPublished,f) ]]
+
+[[ _FetchHandler (view_SetPublished,c) ]]
+
+[[ _FetchHandler (view_GetFavourite,f) ]]
+
+[[ _FetchHandler (view_SetFavourite,c) ]]
+
+[[ _FetchHandler (view_GetTested,f) ]]
+
+[[ _FetchHandler (view_SetTested,c) ]]
+
+[[ _FetchHandler (view_GetOld,f) ]]
+
+[[ _FetchHandler (view_SetOld,c) ]]
+
+
+--> View | File | Model
+-
+/*
+Text and data for browsing and navigating view templates,
+but not needed for functioning of view - simply house-keeping.
+
+Not necessary to distribute with working views.
+
+Used for things like presenting and browsing library metadata.
+Stored as a text file (an encoded array), and is not need ed to be distribute with view stack for it to work.
+*/
+
+[[ _FetchHandler (view_GetFileMetaArray,f) ]]
+
+[[ _FetchHandler (view_SetFileMetaArray,c) ]]

@@ -1,0 +1,7 @@
+setprop displayed_HelpHkey [pDisplayedHelpHKey] hKey
+   put the help_Field of me into helpField
+   lock messages
+   set the displayed_HelpHkey of helpField to hKey
+   unlock messages
+   -- display_HkeyHelp hKey, pDisplayedHelpHKey
+end displayed_HelpHkey

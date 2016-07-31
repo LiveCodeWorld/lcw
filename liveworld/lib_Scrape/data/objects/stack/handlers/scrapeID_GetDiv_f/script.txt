@@ -1,0 +1,5 @@
+function scrapeID_GetDiv treeID, pAttributeName, pAttributeValue
+   put revXMLRootNode (treeID) into rootNode
+   put revXMLMatchingNode (treeID, rootNode, "div", pAttributeName, pAttributeValue, -1, false) into someDiv
+   return someDiv
+end scrapeID_GetDiv

@@ -1,0 +1,4 @@
+on model_UnregisterView modelName, someView, modelObject
+   put the mobile_Name of someView into mobileView
+   model_DeleteFromIndex mobileView, modelName, modelObject, "uOPN_LinkedViewsOfModel", "array"
+end model_UnregisterView

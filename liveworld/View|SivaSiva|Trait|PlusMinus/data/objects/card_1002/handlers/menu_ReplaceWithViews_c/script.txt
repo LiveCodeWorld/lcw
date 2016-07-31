@@ -1,0 +1,8 @@
+on menu_ReplaceWithViews plusMinusView
+   lock screen
+   set the control_Type of the positive_View of plusMinusView to "View|Text|Trait"
+   set the control_Type of the negative_View of plusMinusView to "View|Text|Trait"
+   -- set the control_Type of the square_View of plusMinusView to "View|Text|Square"
+   set the control_Type of the square_View of plusMinusView to "View|SivaSiva|Trait|Arrows|Horizontal"
+   unlock screen
+end menu_ReplaceWithViews

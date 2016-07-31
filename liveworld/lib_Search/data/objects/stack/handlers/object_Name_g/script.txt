@@ -1,0 +1,16 @@
+getprop object_Name [pObjectKeyProperty]
+   switch pObjectKeyProperty
+      case empty
+         return the rugged_ID of the target
+      case "rugged"
+         return the rugged_ID of the target
+      case "long"
+         return the long id of the target
+      case "short"
+         return the short id of the target
+      case empty
+         return the abbreviated id of the target
+      default
+         return the pObjectKeyProperty of the target
+   end switch
+end object_Name

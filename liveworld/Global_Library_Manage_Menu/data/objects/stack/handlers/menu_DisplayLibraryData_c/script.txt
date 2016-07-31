@@ -1,0 +1,6 @@
+on menu_DisplayLibraryData
+   put library_FetchSetData () into setData
+   
+   put merge ("library_FetchSetData()") into someTitle
+   display_Array setData, someTitle
+end menu_DisplayLibraryData

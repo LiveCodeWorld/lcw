@@ -1,0 +1,12 @@
+function overlay_TestGraph overlayFolder, pOverlayName
+   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Hash") into storedOverlayHash
+   if storedOverlayHash is empty then return false
+   
+   put overlayArray_GetGraphProperty (overlayArray, "image_File") into shortImageFile
+   folder_Format overlayFolder
+   put overlayFolder & shortImageFile into imageFile
+   put file_Hash (imageFile) into imageHash
+   
+   return imageHash = storedOverlayHash
+end overlay_TestGraph

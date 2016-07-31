@@ -1,0 +1,9 @@
+on dragEnter
+   put the dragData ["files"] into someFiles
+   put line 1 of someFiles into someFile
+   if there is a file someFile then
+      -- could check that it is an image
+      -- opn_Notify someFile
+      set the dragAction to "link"
+   end if
+end dragEnter

@@ -1,0 +1,17 @@
+getprop object_IsMenuBar
+   /*
+   Returns true for a group of controls that is made up of only menu buttons
+   */
+   put the long id of the target into someGroup
+   
+   if word 1 of someGroup is not "group" then return false
+   put the number of buttons of someGroup into maxButtons
+   if the number of controls of someGroup is not maxButtons then return false
+   
+   repeat with btnNum = 1 to maxButtons
+      if the style of button btnNum of someGroup is not "menu" then
+         return false
+      end if
+   end repeat
+   return true
+end object_IsMenuBar

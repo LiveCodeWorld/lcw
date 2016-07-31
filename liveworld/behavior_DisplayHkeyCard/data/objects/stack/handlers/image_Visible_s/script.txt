@@ -1,0 +1,13 @@
+setprop image_Visible [pOverlayName] someBoolean
+   if someBoolean is true then
+      put the displayed_Hkey of me into hKey
+      set the displayed_HkeyGraph [pOverlayName] of me to hKey
+      put the result into imageFile
+      return imageFile
+   else
+      lock screen
+      set the visible_Status of the hkey_ImageView of me to someBoolean
+      set the visible_Status of the description_Header of me to false
+      unlock screen
+   end if
+end image_Visible

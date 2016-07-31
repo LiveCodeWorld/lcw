@@ -1,0 +1,4 @@
+on menu_OpenHandlerLibraryFolder
+   put library_HkeyFolder (empty, false) into hkeyFolder
+   finder_Reveal hkeyFolder
+end menu_OpenHandlerLibraryFolder

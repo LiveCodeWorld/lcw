@@ -1,0 +1,9 @@
+function stack_LoadedWithoutFiles
+    repeat for each line stackName in the mainstacks
+        if the filename of stack stackName is empty then
+            put stackName & CR after stackNamesWithoutFiles
+        end if
+    end repeat
+    filter stackNamesWithoutFiles without "rev*"
+    return word 1 to -1 of stackNamesWithoutFiles
+end stack_LoadedWithoutFiles

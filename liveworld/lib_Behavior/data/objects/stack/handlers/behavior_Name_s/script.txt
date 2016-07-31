@@ -1,0 +1,12 @@
+setprop behavior_Name bName
+   if bName is empty then
+      set the behavior of the target to empty
+      return empty
+   end if
+   
+   -- put behavior_GetObject (bName) into bObject - this would get either view behavior or plain behavior oject
+   put hArray_GetNamedObjectType (bName, "behavior") into bObject
+   if exists (bObject) is false then return empty
+   set the behavior of the target to bObject
+   return bObject
+end behavior_Name

@@ -1,0 +1,5 @@
+command hkey_AddBackLink backKey, hKey
+   put hkey_GetBackLinks (hKey) into backLinks
+   line_Add backKey, backLinks
+   hkey_SetBackLinks hKey, backLinks
+end hkey_AddBackLink

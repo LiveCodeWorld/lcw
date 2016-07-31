@@ -1,0 +1,14 @@
+function ccc_ConstructTagHTML cccArray
+   -- https://media.ccc.de/tags/Art%20&%20Beauty 
+   -- put cccArray ["ccctvURL"] into baseURL
+   put "https://media.ccc.de/" into baseURL
+   
+   put cccArray ["tags"] into tagArray
+   repeat for each key someTag in tagArray
+      put tagArray [someTag] into relTagUrl
+      put baseURL & relTagUrl into tagURL
+      put html_ConstructRefLink (someTag, tagURL, "_blank") & comma & space after tagHTML
+   end repeat
+   put item 1 to -2 of tagHTML into tagHTML
+   return tagHTML
+end ccc_ConstructTagHTML

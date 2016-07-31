@@ -1,0 +1,7 @@
+function list_FromIndex someIndex
+   repeat for each line someLine in someIndex
+      put word 1 to -1 of someLine & comma after someList
+   end repeat
+   delete char -1 of someList
+   return someList
+end list_FromIndex

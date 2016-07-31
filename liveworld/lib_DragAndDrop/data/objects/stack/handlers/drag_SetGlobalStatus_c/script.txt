@@ -1,0 +1,4 @@
+on drag_SetGlobalStatus someBoolean
+    global OPN
+    put someBoolean is true into OPN ["Global_Drag"]
+end drag_SetGlobalStatus

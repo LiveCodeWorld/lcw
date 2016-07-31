@@ -1,0 +1,24 @@
+function linkArray_ConstructDot linkArray, pDotMetadataArray, pDefSection, pGraphController
+   set the cursor to watch
+   put pDotMetadataArray ["dot_HeaderArray"] into dotPropertyArray
+   put pDotMetadataArray ["graph_PropertyArray"] into graphPropertyArray
+   
+   put graphPropertyArray ["overlay_Name"] into graphName
+   if graphName is empty then put "linkArray_ConstructDot" into graphName
+   put graphPropertyArray ["overlay_Size"] into graphSize
+   put graphPropertyArray ["overlay_Style"] into graphStyle
+   put graphPropertyArray ["overlay_UseInches"] into graphUseInches
+   
+   put dot_ConstructHeader (graphSize, dotPropertyArray, graphStyle, graphUseInches) into graphHeader
+   
+   put linkArray_DotNodeLinks (linkArray) into linkSection
+   put linkArray_ConstructLinkSection (linkArray, pNodeTypeArray, pClusterArray, pGraphController) into nodeSection
+   
+   if pDefSection is empty then
+      put linkSection into nodeSection
+   else
+      put pDefSection & CR & CR & linkSection into nodeSection
+   end if
+   put dot_Construct (graphName, nodeSection, graphHeader) into dotText
+   return dotText
+end linkArray_ConstructDot

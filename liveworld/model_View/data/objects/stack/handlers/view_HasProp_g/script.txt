@@ -1,0 +1,4 @@
+getprop view_HasProp [propName]
+   put the view_Props of the target into viewProps
+   return propName is among the lines of viewProps
+end view_HasProp

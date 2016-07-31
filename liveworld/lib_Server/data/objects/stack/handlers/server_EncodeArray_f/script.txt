@@ -1,0 +1,4 @@
+function server_EncodeArray someArray
+   put base64Encode(arrayEncode (someArray)) into tEncodedArray
+   return tEncodedArray
+end server_EncodeArray

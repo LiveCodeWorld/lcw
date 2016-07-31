@@ -1,0 +1,11 @@
+function stack_GetAllKnown pHomeStackName
+   local stackFileArray
+   if pHomeStackName is empty then put the short name of this stack into pHomeStackName
+   
+   set the cursor to watch
+   put spotlight_ListAllStacks() into longStackPaths
+   put the filename of stack pHomeStackName into rootFile
+   put folder_Above (rootFile) into baseFolder
+   stackFile_AddToArray stackFileArray, longStackPaths, baseFolder
+   return stackFileArray
+end stack_GetAllKnown

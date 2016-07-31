@@ -1,0 +1,5 @@
+function wikicommons_ConstructImageHtml pageArray, pImageCaption, pWikimediaLink
+   wikicommons_DeconstructPageArray pageArray, pageTitle, imageURL, descriptionURL, pImageCaption
+   put fedwiki_ConstructImageHtml (imageURL, pImageCaption, descriptionURL, "- wikimedia") into imageHTML
+   return imageHTML
+end wikicommons_ConstructImageHtml

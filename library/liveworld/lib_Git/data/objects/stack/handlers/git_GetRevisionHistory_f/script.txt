@@ -1,0 +1,14 @@
+function git_GetRevisionHistory gitHash, pObject, pShowDiff
+   put "git log --stat -n1" into someShell
+   if pShowDiff is not false then put space & "-p" after someShell
+   -- put space & "--graph" after someShell
+   
+   if gitHash is not empty then put space & gitHash after someShell
+   if pObject is not empty then
+      put the script_RelativeFile of pObject into objectFile
+      put space & kwote(objectFile) after someShell
+   end if
+   
+   put git_ExecuteShellCommand(someShell) into logText
+   return logText
+end git_GetRevisionHistory

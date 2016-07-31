@@ -1,0 +1,4 @@
+getprop top_View
+   if exists (TopView) is false then view_IndexChildren
+   return TopView
+end top_View

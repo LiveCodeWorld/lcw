@@ -1,0 +1,36 @@
+function graph_ConstructGroupStyleArray nodeIdArray
+   local dotGroupStyleArray
+   
+   linkarray_ExtractRandomNodes nodeIdArray, 9
+   put the result into nodeIDs
+   if nodeIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Friends", nodeIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://google.com"
+   end if
+   
+   linkarray_ExtractRandomNodes nodeIdArray, 21
+   put the result into nodeIDs
+   if nodeIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Enemies", nodeIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://example.com"
+   end if
+   
+   linkarray_ExtractRandomNodes nodeIdArray, 12
+   put the result into nodeIDs
+   if nodeIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Bots", nodeIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://google.com"
+   end if
+   
+   put keys (nodeIdArray) into remainingIDs
+   if remainingIDs is not empty then
+      put dot_RandomColour() into rColour
+      graph_AddToGroupStyleArray dotGroupStyleArray, "Aliens", remainingIDs, "black", rColour
+      graph_SetNodeLabel dotGroupStyleArray, empty, "http://google.com"
+   end if
+   
+   return dotGroupStyleArray
+end graph_ConstructGroupStyleArray

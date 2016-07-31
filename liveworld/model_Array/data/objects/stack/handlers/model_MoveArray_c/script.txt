@@ -1,0 +1,4 @@
+on model_MoveArray modelName, oldDataObject, newDataObject, modelType
+   custom_CopySet modelName, oldDataObject, newDataObject
+   custom_DeleteSet modelName, oldDataObject
+end model_MoveArray

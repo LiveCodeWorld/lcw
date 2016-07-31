@@ -1,0 +1,6 @@
+getprop tree_SortType [treeView]
+   put the tree_Widget of treeView into treeWidget
+   if exists (treeWidget) is false then return empty
+   put the sortType of treeWidget into treeSortType
+   return treeSortType
+end tree_SortType

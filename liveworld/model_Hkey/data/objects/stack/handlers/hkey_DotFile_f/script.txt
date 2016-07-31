@@ -1,0 +1,5 @@
+function hkey_DotFile hKey, pVersionName, pDontCreate
+   hkey_NormalizeGraphName pOverlayName
+   put pOverlayName & "." & "dot" into shortFile
+   return hkey_Folder (hKey, pDontCreate) & shortFile
+end hkey_DotFile

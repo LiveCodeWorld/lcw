@@ -1,0 +1,11 @@
+on menu_EditGlobalGitIgnoreFile
+   put git_GlobalIgnoreFile() into ignoreFile
+   if there is not a file ignoreFile then
+      answer "Create and edit new global .ignore file in the $HOME directory?" with "Cancel" and "OK"
+      if it is "Cancel" then exit to top
+      git_CreateIgnoreFile true, pIgnoreType
+   end if
+   
+   display_TextFile ignoreFile, "Git Ignore Files"
+   edit_TextFile ignoreFile
+end menu_EditGlobalGitIgnoreFile

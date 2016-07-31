@@ -1,0 +1,20 @@
+function git_FindDotGitFolder someFile
+   if someFile is empty then return false
+   
+   put someFile into folderAbove
+   set the itemdelimiter to "/"
+   put the directory into oDirectory
+   repeat
+      delete item -1 of folderAbove
+      if folderAbove is empty then exit repeat
+      
+      set the directory to folderAbove
+      put the folders into shortFolders
+      if ".git" is among the lines of shortFolders then
+         set the directory to oDirectory
+         return folderAbove & "/.git"
+      end if
+   end repeat
+   set the directory to oDirectory
+   return empty
+end git_FindDotGitFolder

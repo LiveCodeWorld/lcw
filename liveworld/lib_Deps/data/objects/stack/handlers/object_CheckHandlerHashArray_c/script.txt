@@ -1,0 +1,11 @@
+command object_CheckHandlerHashArray scriptObject, pDontNotify
+   hArray_TidyHandlerHashes scriptObject, pDontNotify
+   put the result into resultArray
+   put resultArray ["isTidy"] into someBoolean
+   if someBoolean is true and pDontNotify is not true then
+      put the mobile_Name of scriptObject into mObject
+      put "There are no problems with the object_HandlerHashArray of" && mObject into someComment
+      opn_Notify someComment, true
+   end if
+   return resultArray
+end object_CheckHandlerHashArray

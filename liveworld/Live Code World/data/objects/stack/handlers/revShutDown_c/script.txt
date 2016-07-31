@@ -1,0 +1,6 @@
+on revShutDown
+   answer warning "Do you want to save the global state?" with "Cancel" or "Yes please"
+   if it is not "Cancel" then
+      -- save stuff here
+   end if
+end revShutDown

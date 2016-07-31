@@ -1,0 +1,5 @@
+getprop object_MobileID
+   put the long ID of the target into mobileObject
+   object_SetShortStackName mobileObject, mainStackStart, mainStackEnd
+   return mobileObject
+end object_MobileID

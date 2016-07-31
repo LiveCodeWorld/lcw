@@ -1,0 +1,36 @@
+command _setGridNum gridNum
+   lock screen
+   --
+   put gridNum ^ 0.5 into tilesAcross
+   if tilesAcross is not an integer then return empty
+   
+   put tilesAcross into LocalArray ["tiles_Across"]
+   put the childControlIDs of me into childIDs
+   put the number of lines of childIDs into oldGridNum -- more robust
+   
+   put the rect of me into oRect
+   switch
+      case oldGridNum > gridNum
+         -- delete the ones at the end
+         repeat with lineNum = (gridNum + 1) to oldGridNum
+            put line lineNum of childIDs into childID
+            delete control id childID
+         end repeat
+         break
+      case gridNum > oldGridNum
+         -- add new ones to the end
+         put the short id of me into groupID
+         put the rect of me into someRect
+         repeat with childNum = (oldGridNum + 1) to gridNum
+            put "n" & childNum into someName
+            create_PlaceHolder someName, someRect, groupID
+         end repeat
+         break
+      default -- oldGridNum = gridNum
+         -- do nothing
+   end switch
+   LayoutControl oRect
+   --
+   unlock screen
+   return gridNum
+end _setGridNum

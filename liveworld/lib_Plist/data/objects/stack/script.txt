@@ -1,0 +1,24 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Plist
+type: script library
+version: 0.1
+
+
+--> PLIST
+-
+/*
+A small library for editing plists
+*/
+
+[[ _FetchHandler (plist_Outline,g) ]]
+
+[[ _FetchHandler (plist_Read,f) ]]
+
+[[ _FetchHandler (plist_DictFromArray,f) ]]
+
+[[ _FetchHandler (plist_ConvertToNamedOutline,f) ]]
+
+[[ _FetchHandler (plist_RecurseConvert,pc) ]]

@@ -1,0 +1,11 @@
+function embedly_FetchArray someUrl, pWidth
+   local EmbedlyApiKey = "593b77f67742450bb7396b1c12427af5"
+   if pWidth is empty then put 420 into pWidth
+   
+   put urlEncode (someUrl) into encodedUrl
+   put merge ("http://api.embed.ly/1/oembed?key=[[EmbedlyApiKey]]&url=[[encodedUrl]]") into someURL
+   if mWidth is not empty then put "&maxwidth=" & pWidth after someURL
+   put url someURL into someJSON
+   put json_ToArray (someJSON) into someArray
+   return someArray
+end embedly_FetchArray

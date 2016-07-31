@@ -1,0 +1,10 @@
+function digitalocean_RetrieveDomainRecord oceanDomainName, recordID
+   -- same data as is received in batch from "digitalocean_FetchDomainRecordArray"
+   
+   -- constant dsfa = "https://api.digitalocean.com/v2/domains/digitaloceanisthebombdiggity.com/records/3352896"
+   -- curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer b7d03a6947b217efb6f3ec3bd3504582' "[[apiUrl]]"
+   
+   put "domains/" & oceanDomainName & "/records/" & recordID into domainPath
+   put digitalocean_FetchJsonArray (domainPath) into domainInfoArray
+   return domainInfoArray
+end digitalocean_RetrieveDomainRecord

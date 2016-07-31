@@ -1,0 +1,5 @@
+function menu_GlobalTitles pFilter
+   put menu_ListGlobalNames() into globalTitles
+   if pFilter is not empty then filter globalTitles with pFilter
+   return globalTitles
+end menu_GlobalTitles

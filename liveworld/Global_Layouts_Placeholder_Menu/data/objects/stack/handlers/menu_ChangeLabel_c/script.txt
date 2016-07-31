@@ -1,0 +1,9 @@
+on menu_ChangeLabel mTarget
+   put the view_Label of mTarget into someValue
+   
+   ask "Change the label of this place holder?" with someValue
+   if the result is "Cancel" then exit to top
+   put it into newValue
+   
+   set the view_Label of mTarget to newValue
+end menu_ChangeLabel

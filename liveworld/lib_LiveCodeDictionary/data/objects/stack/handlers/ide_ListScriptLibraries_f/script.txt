@@ -1,0 +1,5 @@
+function ide_ListScriptLibraries
+   put ide_LivecodeScriptFolder() into someFolder  
+   put folder_ShortFiles (someFolder) into shortFiles
+   return shortFiles
+end ide_ListScriptLibraries

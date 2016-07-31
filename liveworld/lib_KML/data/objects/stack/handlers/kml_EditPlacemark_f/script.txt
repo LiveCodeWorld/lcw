@@ -1,0 +1,39 @@
+function kml_EditPlacemark newName, nodeXML, latitude, longitude, range, someTilt, heading, pointLongitude, pointLatitude, pointHeight
+    put revCreateXMLTree(nodeXML, false, true, false) into treeID
+    if char 1 to 6 of treeID is "xmlerr" then
+        opn_Notify treeID
+        return treeID
+    end if
+    
+    put revXMLRootNode(treeID) into rootNode
+    
+    put rootNode & "/Placemark[1]/Name[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, newName
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/latitude[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, latitude
+    
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/longitude[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, longitude
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/range[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, range
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/tilt[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, someTilt
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/heading[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, heading
+    
+    put pointLongitude into item 1 of coordinates
+    put pointLatitude into item 2 of coordinates
+    put pointHeight into item 3 of coordinates
+     
+    put rootNode & "/Placemark[1]/Point[1]" & "/coordinates[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, coordinates
+    
+    put revXMLText(treeID) into newXml
+     
+    revDeleteXMLTree treeID
+    return newXml
+end kml_EditPlacemark

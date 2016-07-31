@@ -1,0 +1,39 @@
+private command _FilterAndAddStacks shortFiles, someFolder, @stackNameArray, @bigFileIndex
+    local filteredFiles
+    
+    put shortFiles into mcFiles
+    filter mcFiles with "*.mc"
+    line_Insert mcFiles, filteredFiles
+     
+    put shortFiles into revFiles
+    filter revFiles with "*.rev"
+    line_Insert revFiles, filteredFiles
+     
+    if filteredFiles is not empty then
+        repeat for each line filePath in filteredFiles
+            put someFolder & filePath into tFilePath
+             
+            -- this is where you can test individual files
+            set lockmessages to true
+            if exists(stack tFilePath) then
+                put the short name of stack tFilePath into stackName
+                put the long name of stack tFilePath into mainStackObject
+                 
+                array_AddToIndex mainStackObject, stackName, stackNameArray
+                
+                put the substacks of stack tFilePath into subStackNames
+                repeat for each line subStackName in subStackNames
+                    put the long name of stack subStackName of stack tFilePath into subStackObject
+                     
+                    array_AddToIndex subStackObject, subStackName, stackNameArray
+                end repeat
+                 
+                put tFilePath & return after foundFiles
+            end if
+            set lockmessages to false
+        end repeat
+         
+        put foundFiles after bigFileIndex
+    end if
+    return foundFiles
+end _FilterAndAddStacks

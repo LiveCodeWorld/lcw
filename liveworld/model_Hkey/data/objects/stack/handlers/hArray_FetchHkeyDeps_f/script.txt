@@ -1,0 +1,14 @@
+function hArray_FetchHkeyDeps hKey
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then return false -- maybe it is a shortheky in a library?
+   put the mainstack_WalkArray of hObject into mainstackHkeyWalkArray
+   if mainstackHkeyWalkArray is not an array then return false
+   put mainstackHkeyWalkArray ["hkeyArray"] into hkeyArray
+   if mainstackHkeyWalkArray is not an array then return false
+   put hkeyArray_ExtractSubArray (hKey, hkeyArray) into hkeySubArray
+   
+   put array_AllNodes (hkeySubArray) into hKeyDeps
+   line_Delete hKey, hKeyDeps
+   sort hKeyDeps by item 1 of each
+   return hKeyDeps
+end hArray_FetchHkeyDeps

@@ -1,0 +1,5 @@
+function cloud_FetchEvernoteFolderContents folderPath
+   put "folders/contents?path="& urlencode (folderPath) into shortApiPath
+   put cloud_RestGet (shortApiPath) into someJSON
+   return someJSON
+end cloud_FetchEvernoteFolderContents

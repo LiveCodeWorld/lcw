@@ -1,0 +1,5 @@
+private command _addContentLengthHeader @someHeader, theContent
+   -- maybe we should be careful and check it is not already there?
+   put "Content-Length:" && length (theContent)  into headlerLine   
+   put CRLF & headlerLine after someHeader 
+end _addContentLengthHeader

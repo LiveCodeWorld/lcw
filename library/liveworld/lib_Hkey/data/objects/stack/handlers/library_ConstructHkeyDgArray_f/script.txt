@@ -1,0 +1,10 @@
+function library_ConstructHkeyDgArray hKey
+   put library_HkeyDeps (hKey) into hKeyDeps
+   if hKeyDeps is empty then
+      put hKey into hKeys
+   else
+      sort lines of hKeyDeps by item 1 of each
+      put hKey & CR & hKeyDeps into hKeys
+   end if
+   return library_ConstructDisplayDataArray (hKeys)
+end library_ConstructHkeyDgArray

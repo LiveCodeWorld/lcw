@@ -1,0 +1,36 @@
+command menu_DeconstructPath mPath, @foundPath, @foundParam, @pigeon, @mController, @mTitlePath, @mItemType
+   -- lets search to see if there is a param being sent with the menu
+   -- pity menus don't use a different delimiter like tab
+   -- as the text of the menu item could include "|" we can't just check the first item
+   -- but should search back down through all items
+   
+   global gTemp_ActiveMenuArray
+   
+   put empty into foundParam
+   put empty into pigeon
+   put empty into mController
+   put empty into mTitlePath
+   put empty into mItemType
+   
+   set the itemdelimiter to "|"
+   put the number of items of mPath into maxNum
+   repeat with itemNum = maxNum down to 1
+      put item 1 to itemNum of mPath into foundPath
+      put gTemp_ActiveMenuArray ["mPath"][foundPath] into foundArray
+      
+      if foundArray is an array then
+         -- found a mPath in active menu global
+         
+         put foundArray ["pigeon"] into pigeon
+         put foundArray ["mController"] into mController
+         put foundArray ["mItemType"] into mItemType
+         put foundArray ["mTitlePath"] into mTitlePath
+         
+         put item (itemNum + 1) to maxNum of mPath into foundParam
+         return true
+      end if
+   end repeat
+   
+   put empty into foundPath
+   return false
+end menu_DeconstructPath

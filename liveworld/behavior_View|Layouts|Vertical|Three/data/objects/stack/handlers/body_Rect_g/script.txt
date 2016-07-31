@@ -1,0 +1,11 @@
+getprop body_Rect [pRect]
+   put the inner_Rect [pRect] of me into bodyRect
+   put the vertical_Spacing of me into vSpacing
+   add the header_Height of me + vSpacing to item 2 of bodyRect
+   put item 2 of bodyRect + the body_Height of me into item 4 of bodyRect
+   
+   -- a hack
+   subtract 1 from item 2 of bodyRect
+   
+   return bodyRect
+end body_Rect

@@ -1,0 +1,6 @@
+getprop fossil_ScriptHistoryArray
+   put the script_File of the target into someFile
+   put fossil_FileHistory (someFile, true) into historyTable
+   put fossil_ParseFileHistory (historyTable) into dataArray
+   return dataArray
+end fossil_ScriptHistoryArray

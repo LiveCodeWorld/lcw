@@ -1,0 +1,11 @@
+setprop svg_Width someWidth
+   put svg_CreateXmlTree() into treeID
+   revXMLSetAttribute treeID, "/svg","width", someWidth
+   put revXMLText (treeID, empty, true) into newSvgXML
+   svg_DeleteXmlTree
+   delete line 1 of newSvgXML -- the xml header
+   put word 1 to -1 of newSvgXML into newSvgXML
+   
+   set the svg_XML of me to newSvgXML
+   return newSvgXML
+end svg_Width

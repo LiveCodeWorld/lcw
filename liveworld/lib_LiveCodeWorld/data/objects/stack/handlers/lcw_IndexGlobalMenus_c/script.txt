@@ -1,0 +1,13 @@
+command lcw_IndexGlobalMenus longStackFiles
+   repeat for each line longStackFile in longStackFiles
+      set the cursor to busy
+      put the name of stack longStackFile into stackObject
+      put the menu_GlobalTitle of stackObject into globalMenuTitle
+      if globalMenuTitle is not empty then
+         menu_SetGlobalController globalMenuTitle, stackObject
+         put menu_GetGlobalController (globalMenuTitle) into testController
+      end if
+   end repeat
+   put menu_GetGlobalArray() into mGlobalArray
+   return mGlobalArray
+end lcw_IndexGlobalMenus

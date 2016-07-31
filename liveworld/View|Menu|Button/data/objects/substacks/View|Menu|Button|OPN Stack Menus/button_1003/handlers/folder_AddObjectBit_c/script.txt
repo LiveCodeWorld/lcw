@@ -1,0 +1,11 @@
+command folder_AddObjectBit @objectFolder, someObject
+   put word 1 of someObject into objectType
+   switch
+      case objectType = "stack"
+         put "stack/" after objectFolder
+         break
+      default
+         put objectType & "_" & word 3 of someObject & "/" after objectFolder
+         break
+   end switch
+end folder_AddObjectBit

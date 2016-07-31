@@ -1,0 +1,8 @@
+function fedwiki_ExtractPageSlugsFromPath urlPath
+   set the itemdelimiter to "/"
+   repeat with itemNum = 2 to the number of items of urlPath step 2
+      put item itemNum of urlPath into someSlug
+      put someSlug & CR after someSlugs
+   end repeat
+   return word 1 to -1 of someSlugs
+end fedwiki_ExtractPageSlugsFromPath

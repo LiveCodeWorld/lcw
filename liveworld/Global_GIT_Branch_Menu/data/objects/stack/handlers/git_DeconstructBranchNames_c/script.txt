@@ -1,0 +1,31 @@
+command git_DeconstructBranchNames @localBranchNames, @remoteBranches, @remoteNames, @remoteBranchNames, @remoteMappings
+   put "git branch -a" into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   
+   set the itemdelimiter to "/"
+   repeat for each line someLine in shellResult
+      put char 1 to 2 of someLine into starBit
+      put char 3 to -1 of someLine into branchBit
+      
+      if item 1 of branchBit = "remotes" and the number of items of branchBit > 1 then
+         if branchBit contains " -> " then
+            put branchBit & CR after remoteMappings
+         else
+            put branchBit & CR after remoteBranches
+            put item 2 of branchBit & CR after remoteNames
+            put item 3 of branchBit & CR after remoteBranchNames
+         end if
+      else
+         if word 1 of starBit = "*" then
+            put "(" & branchBit & CR after localBranchNames
+         else
+            put branchBit & CR after localBranchNames
+         end if
+      end if
+   end repeat
+   delete char -1 of localBranchNames
+   delete char -1 of remoteBranches
+   delete char -1 of remoteNames
+   delete char -1 of remoteBranchNames
+   delete char -1 of remoteMappings
+end git_DeconstructBranchNames

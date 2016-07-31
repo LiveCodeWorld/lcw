@@ -1,0 +1,8 @@
+on menu_DisplayMergeScript scriptObject
+   answer file "Choose a script file to display..."
+   put it into someFile
+   if it is empty then exit to top
+   
+   put url ("file:" & fasd) into mergeScript
+   display_TextFile 
+end menu_DisplayMergeScript

@@ -1,0 +1,31 @@
+on preOpenControl
+   view_IndexChildren
+   
+   put the inner_Height of me into innerHeight
+   put the vertical_Spacing of me into vSpacing
+   put the header_MinimumHeight of me into minHeaderHeight
+   put the body_MinimumHeight of me into minBodyHeight
+   put the footer_MinimumHeight of me into minFooterHeight
+   
+   put the height of the header_View of me into actualHeight
+   put innerHeight - minBodyHeight - minFooterHeight - 2 *  vSpacing into maxHeaderHeight
+   if maxHeaderHeight > actualHeight > minHeaderHeight then
+      put actualHeight into LocalArray ["header_Height"]
+   else
+      put max (actualHeight, minHeaderHeight) into headerHeight
+      put min (headerHeight, maxHeaderHeight) into LocalArray ["header_Height"]
+   end if
+   
+   put the height of the footer_View of me into actualHeight
+   put innerHeight - minHeaderHeight - minBodyHeight - 2 *  vSpacing into maxFooterHeight
+   if maxFooterHeight > actualHeight > minFooterHeight then
+      -- it's OK leave it as it is
+      put actualHeight into LocalArray ["footer_Height"]
+   else
+      put max (actualHeight, minFooterHeight) into footerHeight
+      put min (footerHeight, maxFooterHeight) into LocalArray ["footer_Height"]
+   end if
+   
+   put innerHeight - LocalArray ["header_Height"] - LocalArray ["footer_Height"] -  2 *  vSpacing into LocalArray ["body_Height"]
+   -- display_Array LocalArray
+end preOpenControl

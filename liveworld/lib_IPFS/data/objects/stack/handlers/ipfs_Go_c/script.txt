@@ -1,0 +1,10 @@
+command ipfs_Go stackName
+   if exists (stack stackName) then
+      save stack stackName
+      delete stack stackName
+   end if
+   
+   put ipfs_GetMultiHash (stackName) into ipfsMultiHash
+   put "http://localhost:8080/ipfs/" & ipfsMultiHash into localURL
+   go to stack url localURL
+end ipfs_Go

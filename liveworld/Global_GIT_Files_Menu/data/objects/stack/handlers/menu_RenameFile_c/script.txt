@@ -1,0 +1,16 @@
+on menu_RenameFile
+   answer file "Select a repo file..."
+   put it into someFile
+   if someFile is empty then return empty
+   
+   ask file "Select a new file name..." with someFile
+   put it into newFile
+   if newFile is empty then return empty
+   
+   git_RenameFile someFile, newFile
+   if the result is not empty then
+      opn_Notify the result, true
+   else
+      git_RefreshDisplay
+   end if
+end menu_RenameFile

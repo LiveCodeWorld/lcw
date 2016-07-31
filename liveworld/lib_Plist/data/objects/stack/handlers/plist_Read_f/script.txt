@@ -1,0 +1,20 @@
+function plist_Read someDomain, someKey
+    /*
+    ie "defaults read com.elgato.eyetv PlayerWindowPos"
+    -- see man defaults
+    */
+    
+    shell_BashParamEscape someKey
+    shell_BashParamEscape someDomain
+     
+    if someDomain contains "." or someDomain contains "/" then
+        get merge("defaults read [[someDomain]] [[someKey]]")
+        put word 1 to -1 of it into someShell
+    else
+        -- lets assume it is the name of an application
+        get merge("defaults read -app [[someDomain]] [[someKey]]")
+        put word 1 to -1 of it into someShell
+    end if
+    put shell(someShell) into someXml
+    return someXml
+end plist_Read

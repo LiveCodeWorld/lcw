@@ -1,0 +1,22 @@
+on menu_CompareTest mTarget, menuChoice
+   set the cursor to watch
+   put the script of mTarget into nowScript
+   
+   switch menuChoice
+      case "exported_Script vs git_LastCommit"
+         put the exported_Script of mTarget into exportedScript
+         put the git_LastCommit of mTarget into lastCommitedText
+         -- put the git_LastScript [0] of mTarget into lastCommitedText
+         terminal_Diff lastCommitedText, exportedScript, "git_LastCommit", "exported_Script"
+         break
+      case "git_LastScript [1] vs exported_Script"
+         put the git_LastScript [1] of mTarget into previousScript
+         put the exported_Script of mTarget into exportedScript
+         terminal_Diff previousScript, exportedScript, "git_LastScript [1]", "exported_Script"
+         break
+      case "exported_Script vs the script of"
+         put the exported_Script of mTarget into exportedScript
+         terminal_Diff exportedScript, nowScript, "exported_Script", "Objects script"
+         break
+   end switch
+end menu_CompareTest

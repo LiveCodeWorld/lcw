@@ -1,0 +1,9 @@
+command hArray_SetObjectMetaData rObject, arrayOrValue, pKey
+   put hArray_GetObjectArray (rObject) into objectArray  
+   if pKey is empty then
+      put arrayOrValue into objectArray ["metadata"]
+   else
+      put arrayOrValue into objectArray ["metadata"][pKey]
+   end if
+   hArray_SetObjectArray rObject, objectArray
+end hArray_SetObjectMetaData

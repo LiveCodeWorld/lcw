@@ -1,0 +1,7 @@
+function menu_GetTargetOveride mTitlePath, mPath
+   put menu_GetItemTargetOveride (mPath) into mTarget
+   if exists (mTarget) then return mTarget
+   
+   put menu_GetTitleTargetOveride (mTitlePath) into mTarget
+   return mTarget
+end menu_GetTargetOveride

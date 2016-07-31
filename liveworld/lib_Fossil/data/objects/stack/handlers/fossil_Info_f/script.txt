@@ -1,0 +1,12 @@
+function fossil_Info fossilFileOrCheckoutFolder
+   set the itemdelimiter to "."
+   switch
+      case there is a file fossilFileOrCheckoutFolder and item -1 of fossilFileOrCheckoutFolder = "fossil"
+         -- case fossilFileOrCheckoutFolder is among the lines of fossil_ListAllRepositories() -- slower
+         return fossil_ProjectInfo (fossilFileOrCheckoutFolder)
+      case there is a file fossilFileOrCheckoutFolder
+         return fossil_CheckoutFileInfo (fossilFileOrCheckoutFolder)
+      default
+         return fossil_CheckoutInfo (fossilFileOrCheckoutFolder)
+   end switch
+end fossil_Info

@@ -1,0 +1,14 @@
+getprop group_InnerRect [rectBounds]
+   put the long id of the target into targetGroup
+   if rectBounds is empty then put the rect of targetGroup into rectBounds
+   
+   put the margins of targetGroup into someMargins
+   if the showborder of targetGroup is true then
+      put the borderwidth of targetGroup into bWidth
+      repeat with itemNum = 1 to the number of items of someMargins
+         add bWidth to item itemNum of someMargins
+      end repeat
+   end if
+   rect_SubtractMargins rectBounds, someMargins
+   return rectBounds
+end group_InnerRect

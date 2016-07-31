@@ -1,0 +1,34 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Git_Log_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Git | Log | Menu
+-
+[[ _FetchHandler (menu_CompareObjectScriptWithNow,c) ]]
+
+[[ _FetchHandler (menu_CompareObjectWithPrevious,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Git | Log | Menu | Props
+-
+--> Global | Git | Log | Menu | Disabled
+-
+[[ _FetchHandler (disabled_CompareObjectScriptWithNow,g) ]]
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Dev | Menu
+-

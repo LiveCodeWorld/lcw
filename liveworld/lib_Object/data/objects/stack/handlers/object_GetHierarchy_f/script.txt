@@ -1,0 +1,5 @@
+function object_GetHierarchy someObject
+   put the long id of someObject into someObject
+   object_SetHierarchy someObject, shortObjects, longObjects, objectOutline, namePath
+   return longObjects
+end object_GetHierarchy

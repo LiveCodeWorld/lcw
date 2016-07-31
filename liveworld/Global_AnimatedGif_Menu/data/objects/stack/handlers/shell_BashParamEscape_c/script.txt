@@ -1,0 +1,8 @@
+command shell_BashParamEscape @someParam
+   put word 1 to -1 of someParam into someParam
+   if text_IsQuoted(someParam) is false then
+      repeat for each char someChar in " |()"
+         replace someChar with ("\" & someChar) in someParam
+      end repeat
+   end if
+end shell_BashParamEscape

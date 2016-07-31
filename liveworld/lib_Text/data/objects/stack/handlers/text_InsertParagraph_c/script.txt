@@ -1,0 +1,19 @@
+command text_InsertParagraph newText, @someText, pCrNum
+   put word 1 to -1 of newText into newText
+   put word 1 to -1 of someText into someText
+   if pCrNum is empty then
+      put CR & CR into crBit 
+   else if pCrNum is a number then
+      put text_RepeatString (CR, pCrNum) into crBit
+   else
+      put crNum & CR & CR into crBit
+   end if
+   
+   if newText is not empty then
+      if someText is empty then
+         put newText into someText
+      else
+         put crBit & newText after someText
+      end if
+   end if
+end text_InsertParagraph

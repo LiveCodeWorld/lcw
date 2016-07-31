@@ -1,0 +1,6 @@
+on linux_Sudo
+    put "#!/bin/sh" & cr into tScript
+    put "pw="&tPassword & cr into tScript
+    put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
+    get shell(tScript)
+end linux_Sudo

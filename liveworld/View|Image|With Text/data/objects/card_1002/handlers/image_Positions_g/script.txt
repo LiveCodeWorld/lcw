@@ -1,0 +1,5 @@
+getprop image_Positions [imageView]
+   if the long id of the target is not the long id of me then pass image_Positions
+   put the image_Positions of imageView into imagePositions
+   return imagePositions
+end image_Positions

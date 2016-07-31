@@ -1,0 +1,7 @@
+on dragDrop
+   -- just so we don't need to remember to do it in "dragEnd" handler  in the source
+   drag_SetGlobalStatus false
+   
+   -- no passing prevents dropping of text into fields
+   pass dragDrop
+end dragDrop

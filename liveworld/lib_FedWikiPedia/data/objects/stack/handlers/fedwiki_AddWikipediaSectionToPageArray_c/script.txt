@@ -1,0 +1,52 @@
+command fedwiki_AddWikipediaSectionToPageArray @fedwikiPageArray, wikiSection, pNotTheseImages
+   --  [[File:Thefalloftheberlinwall1989.JPG|thumb|left|The [[Berlin Wall#The Fall|fall of the Berlin Wall]] on 9 November 1989. On [[German Unity Day|3 October 1990]], the [[German reunification]] process was formally finished.]]
+   -- put script_GetCommentAboveMe() into testLine
+   
+   fedwikipedia_CleanLine wikiSection
+   
+   put empty into markDownBulletSection
+   repeat for each line wikisectionLine in wikiSection
+      put word 1 to - 1 of wikisectionLine into wikisectionLine
+      switch
+         case char 1 to 2 of wikisectionLine = "* "
+            put wikisectionLine & CR after markDownBulletSection
+            next repeat
+         case markDownBulletSection is not empty
+            delete char -1 of markDownBulletSection
+            fedwiki_AddMarkdownToPageArray fedwikiPageArray, markDownBulletSection
+            put empty into markDownBulletSection
+            break
+         case char 1 to 7 of wikisectionLine = "[[File:"
+            mediawiki_DeconstructImageWikiText wikisectionLine, shortImageFile, captionBit
+            if shortImageFile is not among the lines of pNotTheseImages then
+               put wikicommons_FetchImageHtml (shortImageFile, captionBit) into imageHTML
+               fedwiki_AddHtmlToPageArray fedwikiPageArray, imageHTML
+            end if
+            break
+         case char 1 of wikisectionLine = "<"
+            fedwikipedia_CleanInternalLinks wikiSectionLine
+            fedwiki_AddHtmlToPageArray fedwikiPageArray, wikisectionLine
+            break
+         case char 1 of wikisectionLine = "=" and char -1 of wikisectionLine = "="
+            mediawiki_ConvertSectionTitle wikisectionLine
+            fedwiki_AddMarkdownToPageArray fedwikiPageArray, wikisectionLine
+            break
+         case wikisectionLine is not empty
+            fedwikipedia_CleanInternalLinks wikiSectionLine
+            fedwiki_AddParagraphToPageArray fedwikiPageArray, wikisectionLine
+            break
+         case wikisectionLine is empty
+            next repeat
+      end switch
+   end repeat
+   
+   if markDownBulletSection is not empty then
+      -- exitted without adding markDownBulletSection
+      delete char -1 of markDownBulletSection
+      fedwiki_AddMarkdownToPageArray fedwikiPageArray, markDownBulletSection
+      -- put empty into markDownBulletSection
+   end if
+   
+   delete char -2 to -1 of cleanedSections
+   fedwikipedia_MakeTextParagraphFirst fedwikiPageArray
+end fedwiki_AddWikipediaSectionToPageArray

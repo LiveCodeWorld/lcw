@@ -1,0 +1,5 @@
+getprop behavior_Names
+   put the long id of the target into targetObject
+   put behavior_GetNameHierarchy (targetObject) into bNames
+   return bNames
+end behavior_Names

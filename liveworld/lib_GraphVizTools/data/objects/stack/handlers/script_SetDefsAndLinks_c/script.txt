@@ -1,0 +1,39 @@
+on script_SetDefsAndLinks handlerKeys, someScript, @internalNodeDefs, @externalNodeDefs, @nodeLinks, scriptObject
+    set the wholematches to true
+    repeat for each line handlerKey in handlerKeys
+        set the cursor to busy
+        hkey_Deconstruct handlerKey, handlerName, handlerType, scriptObject, handlerNum
+        if handlerName is "_" then next repeat
+        
+        put handlerName,handlerType into generalKey
+        put kwote(generalKey) into someNode
+         
+        put script_GetNodeDef(someNode, handlerName, handlerType) into nodeDef
+        line_Add nodeDef, internalNodeDefs
+         
+        put script_ExtractHandlerType(handlerName, someScript, handlerType) into someHandler
+        put script_ExtractCalls(someHandler) into handlerCalls
+        
+        put the script_HandlerKeys of scriptObject into objectHandlerKeys
+        repeat for each line handlerCall in handlerCalls
+            put item 1 handlerCall into childName
+            put item 2 handlerCall into childType
+            if childName is "_" then next repeat
+            put kwote(handlerCall) into someChild
+             
+            put someNode && "->" && someChild & ";" into nodeLink
+            line_Insert nodeLink, nodeLinks
+             
+            put script_GetNodeDef(someChild, childName, childType) into nodeDef
+            
+            -- put uArray [childGeneralKey] is empty into callIsExternal
+            put hkey_Construct (childName, childType, scriptObject) into internalTestCall
+            put internalTestCall is not among the lines of objectHandlerKeys into callIsExternal
+            if callIsExternal then
+                line_Add nodeDef, externalNodeDefs
+            else
+                line_Add nodeDef, internalNodeDefs
+            end if
+        end repeat
+    end repeat
+end script_SetDefsAndLinks

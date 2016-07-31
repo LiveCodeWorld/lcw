@@ -1,0 +1,14 @@
+function pref_Folder
+   -- "preference" folders are not standard on all operating systems.
+   -- In general it may be better, to avoid lot's of nested if thens and instead switch libraries and behaviors for different platform specific code.
+   
+   if the platform is "MacOS" then
+      put specialfolderpath ("preferences") & "/" into prefFolder
+   else if the platform is "Win32" then
+      put pref_WindowsFolder() into prefFolder
+   else
+      -- put $HOME & "/Documents/"	# somewhere better?
+      put specialfolderpath ("Home") & "/.MyProgram/" into prefFolder
+   end if
+   return prefFolder
+end pref_Folder

@@ -1,0 +1,6 @@
+command display_GitFile relativePath, commitHash
+   git_ExportFileRevision relativePath, commitHash
+   put the result into tempFile
+   -- edit_TextFile tempFile
+   launch document tempFile
+end display_GitFile

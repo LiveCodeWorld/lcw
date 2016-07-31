@@ -1,0 +1,9 @@
+on menu_AddBehaviorToEnd scriptObject, bName
+   put the last line of the behavior_Objects of scriptObject into lastBehaviorObject
+   
+   set the behavior_Name of lastBehaviorObject to bName
+   put the result into bObject
+   
+   put "Set the behavior of" && the mobile_Name of scriptObject && "to" && kwote (bName) into someMessage
+   opn_Notify someMessage
+end menu_AddBehaviorToEnd

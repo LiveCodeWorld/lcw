@@ -1,0 +1,17 @@
+command overlayArray_ConstructOverlayAndCreateFiles @overlayArray, pOverlayFolder, pOverlayName
+   if pOverlayName is empty then
+      put overlayArray_GetGraphProperty (overlayArray, "overlay_Name") into overlayName
+   else
+      put pOverlayName into overlayName
+      overlayArray_SetGraphProperty overlayArray, "overlay_Name", overlayName
+   end if
+   if pOverlayFolder is empty then
+      put overlayArray_GetGraphProperty (overlayArray, "overlay_Folder") into overlayFolder
+   else
+      put pOverlayFolder into overlayFolder
+      overlayArray_SetGraphProperty overlayArray, "overlay_Folder", overlayFolder
+   end if
+   
+   overlay_SetArray overlayFolder, overlayArray, overlayName
+   overlayArray_CreateFilesAndSetGeometry overlayArray
+end overlayArray_ConstructOverlayAndCreateFiles

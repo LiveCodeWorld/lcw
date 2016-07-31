@@ -1,0 +1,8 @@
+command hkey_StoreHandler hKey, someHandler
+   put hkey_HandlerFile (hKey, false) into someFile
+   if someHandler is empty then
+      delete file someFile
+   else
+      put someHandler into url ("binfile:" & someFile)
+   end if
+end hkey_StoreHandler

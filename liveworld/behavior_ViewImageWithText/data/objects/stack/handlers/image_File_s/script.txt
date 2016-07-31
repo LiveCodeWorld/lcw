@@ -1,0 +1,8 @@
+setprop image_File someFile
+   put image_Object() into imageObject
+   lock screen
+   set the filename of imageObject to empty
+   set the filename of imageObject to someFile
+   Layoutcontrol
+   unlock screen
+end image_File

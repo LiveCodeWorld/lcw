@@ -1,0 +1,6 @@
+function hkey_FetchHelp hKey
+   put hkey_HelpFile (hKey, true) into someFile
+   put url ("file:" & someFile) into helpText
+   hack_UpdateBinFile helpText, someFile
+   return helpText
+end hkey_FetchHelp

@@ -1,0 +1,57 @@
+on LayoutControl pRect
+   if the long id of the target is not the long id of me then return empty -- this is important for nested datagrids at the moment.
+   if pRect is empty then put the rect of me into pRect
+   
+   put the top_View of me into layoutTopView
+   put the bottom_View of me into layoutBottomView
+   put the vertical_Divider of me into verticalDivider
+   
+   -- Get Position Properties
+   put the vertical_Spacing of me into viewSpacing
+   
+   put the inner_Rect [pRect] of me into innerRect
+   put item 4 of innerRect - item 2 of innerRect into innerHeight
+   
+   switch the resize_Style of me
+      case "top fixed"
+         put the height of layoutTopView into topHeight
+         put innerHeight - topHeight - viewSpacing into bottomHeight
+         break
+      case "bottom fixed"
+         put the height of layoutBottomView into bottomHeight
+         put innerHeight - bottomHeight - viewSpacing into topHeight
+         break
+      case "equal"
+         put round (innerHeight/2) into topHeight 
+         put rectHeight - topHeight - viewSpacing into bottomHeight
+         break
+      default -- case "fluid"
+         put the top_Factor of me into topFactor
+         put round (topFactor * innerHeight) into topHeight 
+         put innerHeight - topHeight into bottomHeight
+         break
+   end switch
+   
+   -- Top Rect
+   put innerRect into topRect
+   put item 2 of topRect + topHeight into topBottom
+   put topBottom into item 4 of topRect
+   
+   -- Spacer Rect
+   put innerRect into spacerRect
+   put topBottom into item 2 of spacerRect
+   put topBottom + viewSpacing into spacerBottom
+   put spacerBottom into item 4 of spacerRect
+   
+   -- Bottom Rect
+   put innerRect into bottomRect
+   put spacerBottom into item 2 of bottomRect
+   
+   -- Set Rects
+   set the rect of layoutTopView to topRect
+   
+   set the rect of verticalDivider to spacerRect
+   set the rect of layoutBottomView to bottomRect
+   
+   set the rect of me to pRect
+end LayoutControl

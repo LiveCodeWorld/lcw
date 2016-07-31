@@ -1,0 +1,10 @@
+command menu_SetTable mTitle, mController, mTable
+   put menu_GetDataArray (mController) into dataArray
+   if mTable is empty then
+      delete local dataArray [mTitle]
+   else
+      put mTable into dataArray [mTitle]
+   end if
+   menu_SetDataArray mController, dataArray
+   return dataArray
+end menu_SetTable

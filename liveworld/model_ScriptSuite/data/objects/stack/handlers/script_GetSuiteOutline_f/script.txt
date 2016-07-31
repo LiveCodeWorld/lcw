@@ -1,0 +1,23 @@
+function script_GetSuiteOutline someScript
+   -- plain outline (no html links)
+   -- see "script_ExtractObjectSuiteOutline"
+   -- check for private handlers
+   local handlerOutline
+   
+   script_TrimNonSuiteHandlers someScript, nonSuiteHandlers
+   if nonSuiteHandlers is not empty then
+      -- put script_ExtractHkeys (nonSuiteHandlers) into hKeys
+      script_ConstructArraysFromScript nonSuiteHandlers, handlerArray, uniqueArray, duplicateArray
+      put handlerArray ["orderedHandlers"] into handlerOutline
+   end if
+   
+   put script_GetSuiteTitles(someScript) into suiteNames
+   repeat for each line suiteName in suiteNames
+      get script_GetSuiteOrderedHandlerNames (suiteName, someScript)
+      if it is empty then next repeat
+      put suiteName & CR after handlerOutline
+      put outline_IncreaseIndent (it, 1) & CR after handlerOutline
+   end repeat
+   put word 1 to -1 of handlerOutline into handlerOutline
+   return handlerOutline
+end script_GetSuiteOutline

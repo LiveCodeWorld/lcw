@@ -1,0 +1,26 @@
+command fedwiki_PageArrayEdit @pageArray, actionArray
+   put actionArray ["id"] into itemID
+   put fedwiki_FindStoryItemID (pageArray, itemID) into storyItemNum
+   if storyItemNum < 1 then
+      -- should not be able to edit an item that deos not exist
+      -- but a newly created page with a factory may not have an id?
+      put fedwiki_FindStoryItemID (pageArray, itemID) into storyItemNum
+      put "Error: editing item" && itemID && "of page" && pageSlug & ". It does not exist" into someError
+      dispatch "daemon_Log" with someError
+      return someError
+   end if
+   
+   -- update the story item
+   put actionArray ["item"] into itemArray
+   put itemArray into pageArray [ "story"][storyItemNum]
+   
+   -- update the journal
+   put pageArray ["journal"] into journalArray
+   fedwiki_AddToJournalArray journalArray, itemArray, "edit"
+   put journalArray into pageArray ["journal"]
+   
+   -- if it is the first paragraph => update the site map
+   -- not done yet
+   
+   return empty -- everything is OK
+end fedwiki_PageArrayEdit

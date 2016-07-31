@@ -1,0 +1,10 @@
+command git_NormalizeTreeish @treeish
+   set the itemdelimiter to ":"
+   put item 1 of treeish into someHash
+   put item 2 of treeish into someFile
+   if someFile is not empty then
+      git_SetRelativePath someFile
+      shell_BashParamEscape someFile
+      put someFile into item 2 of treeish
+   end if
+end git_NormalizeTreeish

@@ -1,0 +1,4 @@
+command menu_SetDataArray mController, mDataArray
+   set the customproperties ["menu_Table"] of mController to mDataArray
+   return mDataArray
+end menu_SetDataArray

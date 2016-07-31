@@ -1,0 +1,6 @@
+private function constructDataArrayFromPaths mPaths, globalMenuTitle
+   local dgArray
+   -- put the title_Text of  of the dg_Tree of me into globalMenuTitle
+   addToDataArray mPaths, dgArray, globalMenuTitle
+   return dgArray
+end constructDataArrayFromPaths

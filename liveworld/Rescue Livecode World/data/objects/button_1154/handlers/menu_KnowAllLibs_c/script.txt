@@ -1,0 +1,11 @@
+on menu_KnowAllLibs indexView
+   put the index_LongStackFiles of indexView into longStackFiles
+   repeat for each line longStackFile in longStackFiles
+      set the cursor to busy
+      set the stack_IsKnown of stack longStackFile to true
+      set the stack_IsUsed of stack longStackFile to true
+      go to stack longStackFile
+   end repeat
+   answer "Everything seems OK?"
+   set the hilite_Used of me to true
+end menu_KnowAllLibs

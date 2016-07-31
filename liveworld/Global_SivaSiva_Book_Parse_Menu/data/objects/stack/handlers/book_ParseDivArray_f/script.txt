@@ -1,0 +1,16 @@
+function book_ParseDivArray someArray
+   put someArray ["@attributes"] into attributesArray
+   delete variable someArray ["@attributes"]
+   
+   put keys(someArray) into someIndex
+   sort numeric someIndex by token 3 of each
+   put the number of lines of someIndex into maxNum
+   
+   repeat for each line someKey in someIndex
+      set the cursor to busy
+      put someArray [someKey] into recordArray
+      put token 3 of someKey into indexNum
+      put recordArray into indexedArray [indexNum]
+      return indexedArray
+   end repeat
+end book_ParseDivArray

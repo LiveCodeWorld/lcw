@@ -1,0 +1,7 @@
+private function _getMyLastHkey
+   put the behavior of me into reallyMe
+   set lockmessages to true
+   put the displayed_Hkey of reallyMe into hKey
+   set lockmessages to false
+   return hKey
+end _getMyLastHkey

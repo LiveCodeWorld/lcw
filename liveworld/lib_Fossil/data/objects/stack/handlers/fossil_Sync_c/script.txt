@@ -1,0 +1,40 @@
+command fossil_Sync pFossilFileOrCheckout, pUrl
+   /*
+   Usage: fossil sync ?URL? ?options?
+   
+   Synchronize the local repository with a remote repository.  This is
+   the equivalent of running both "push" and "pull" at the same time.
+   Use the "-R REPO" or "--repository REPO" command-line options
+   to specify an alternative repository file.
+   
+   If a user-id and password are required, specify them as follows:
+   
+   http://userid:password@www.domain.com:1234/path
+   
+   If the URL is not specified, then the URL from the most recent successful
+   clone, push, pull, remote-url, or sync command is used.
+   
+   The URL specified normally becomes the new "remote-url" used for
+   subsequent push, pull, and sync operations.  However, the "--once" command-line
+   option makes the URL a one-time-use URL that is not saved.
+   */
+   
+   put "fossil sync" into someShell
+   if pUrl is not empty then put space & kwote (pUrl) after someShell
+   switch
+      case pFossilFileOrCheckout is empty
+         fossil_ExecuteShell someShell
+         break
+      case there is a file pFossilFileOrCheckout
+         shell_BashParamEscape pFossilFileOrCheckout
+         put space & "--repository" && pFossilFileOrCheckout after someShell
+         fossil_ExecuteShell someShell
+         break
+      case there is a folder pFossilFileOrCheckout
+         fossil_ExecuteShell someShell, pFossilFileOrCheckout
+         break
+      default
+         breakpoint -- a param error
+   end switch
+   return the result
+end fossil_Sync

@@ -1,0 +1,11 @@
+on menu_EditScript menuChoice
+   switch menuChoice
+      case "Kuler Library"
+         edit the script of stack "View|Record|Kuler"
+         break
+      case "Kuler View"
+         put view_GetTemplateObject ("View|Record|Kuler") into libraryObject
+         edit the script of the behavior of libraryObject
+         break
+   end switch
+end menu_EditScript

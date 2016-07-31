@@ -1,0 +1,10 @@
+function array_ConstructReverseDictionary idArray
+   -- for one-one dictionary arrays
+   -- put array_Reverse (idArray) into reverseArray
+   local reversedArray
+   repeat for each key someKey in idArray
+      put idArray [someKey] into reverseKey
+      put someKey into reversedArray [reverseKey] -- one-one dictionary
+   end repeat
+   return reversedArray
+end array_ConstructReverseDictionary

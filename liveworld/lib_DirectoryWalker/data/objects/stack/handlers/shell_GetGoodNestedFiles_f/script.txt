@@ -1,0 +1,9 @@
+function shell_GetGoodNestedFiles someFolder
+   put the defaultFolder into oFolder
+   set the defaultFolder to someFolder
+   
+   put "tree -afi --noreport --prune -P '*.html|*.xml' -I *-sidebar.html" into someShell
+   put shell (someShell) into someFiles
+   set the defaultFolder to oFolder
+   return someFiles
+end shell_GetGoodNestedFiles

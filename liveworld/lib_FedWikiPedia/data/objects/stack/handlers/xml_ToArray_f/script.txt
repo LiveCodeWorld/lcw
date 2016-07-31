@@ -1,0 +1,23 @@
+function xml_ToArray pXML, pTranslateKeyBoolean, pStoreEncodedAs, pUseValueKey, pGoodXML
+   -- was "xml_ConvertXmlToArray"
+   local theArray, theResult, theRootNode, treeID
+   local theXMLEncoding
+   
+   ## Create an XML tree from XML text
+   put pGoodXML is true into pGoodXML
+   put revCreateXMLTree (pXML, pGoodXML, true, false) into treeID
+   
+   if treeID is an integer then
+      xml_ExtractEncoding pXML, versionMatch, theXMLEncoding
+      
+      ## Now convert to array.
+      ## The 1st dimension has one key which is the name of the root node.
+      put revXMLRootNode(treeID) into theRootNode
+      if theRootNode is not empty and not (theRootNode begins with "xmlerr,") then
+         put xml_ConvertXMLNodeToArray (treeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArray [theRootNode]
+      end if
+      
+      revDeleteXMLTree treeID
+   end if
+   return theArray
+end xml_ToArray

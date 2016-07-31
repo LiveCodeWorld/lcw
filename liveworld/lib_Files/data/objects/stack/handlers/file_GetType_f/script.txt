@@ -1,0 +1,29 @@
+function file_GetType filePath
+   switch the platform 
+      case "MacOS"
+         --get file_DetailedInfo (filePath)
+         -- put item 11 of it into fType
+         put spotlight_Kind (filePath) into fType
+         return word -1 of fType
+      case "Win32"
+         put offset(".",filePath) into tChar
+         if tChar <> 0 then
+            put char tChar to length(filePath) of filePath into text
+            put queryregistry("HKEY_CLASSES_ROOT\"&(queryregistry("HKEY_CLASSES_ROOT\"&tExt& "\")) & "\") into tType
+         else
+            put "" into tType
+            put "" into text
+         end if
+         if tType = "" then
+            if text <> "" then
+               delete char 1 of text  -- remove "."
+               put toupper(tExt) && "File" into tType
+            else
+               put "File" into tType
+            end if
+         end if
+         return filePath & numtochar(9) & tType
+      default
+         return empty
+   end switch
+end file_GetType

@@ -1,0 +1,17 @@
+function html_AddHeaders someBody, htmlTitle, headerSection
+    -- was "htmlHeaders"
+    put "<HTML>" into someHtml
+    if headerSection is empty then
+        put CR & tab & "<HEAD><TITLE>" & htmlTitle & "</TITLE></HEAD>" after someHtml
+    else
+        put CR & tab & "<HEAD>" after someHtml
+        put CR & tab & tab & "<TITLE>" & htmlTitle & "</TITLE>" after someHtml
+        put CR & outline_IncreaseIndent(headerSection, 2) after someHtml
+        put CR & tab & "</HEAD>" after someHtml
+    end if
+    put CR & tab & "<BODY>" after someHtml
+    put CR & outline_IncreaseIndent(someBody, 2) after someHtml
+    put CR & tab & "</BODY>" after someHtml
+    put CR & "</HTML>" after someHtml
+    return someHtml
+end html_AddHeaders

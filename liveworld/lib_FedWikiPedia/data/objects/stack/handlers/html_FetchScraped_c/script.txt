@@ -1,0 +1,6 @@
+command html_FetchScraped someURL, @tidyXML, @xmlArray, @treeID
+   put html_FetchTidy (someURL) into tidyXML
+   put revXMLCreateTree (tidyXML, false, true, false) into treeID
+   xml_ExtractEncoding tidyXML, versionMatch, theXMLEncoding
+   put xml_ArrayFromID (treeID, theXMLEncoding) into xmlArray
+end html_FetchScraped

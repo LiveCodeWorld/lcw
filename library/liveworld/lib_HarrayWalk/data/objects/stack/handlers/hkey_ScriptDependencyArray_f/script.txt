@@ -1,0 +1,15 @@
+function hkey_ScriptDependencyArray hKeys, pMaxDepth, pDontRecurseOutside, pOriginalHkey, pTestExceptions, pForceSearch, pEnvironmentalFilter
+   -- hkeys will usually come from "put the script_Hkeys of the target into hkeys"
+   -- use "hkey_ConstructDependencyArray"
+   
+   local hKeyLinkArray
+   if pMaxDepth is not a number then put the overlay_MaximumDepth of me into pMaxDepth
+   repeat for each line hKey in hkeys
+      if pDontRecurseOutside is not empty then
+         put true into pDontRecurseOutside
+         put hKey into pOriginalHkey
+      end if
+      hkey_WalkHierarchy hKey, hKeyLinkArray, 0, pMaxDepth, pDontRecurseOutside, pOriginalHkey, pEnvironmentalFilter, pTestExceptions, pForceSearch
+   end repeat
+   return hKeyLinkArray
+end hkey_ScriptDependencyArray

@@ -1,0 +1,6 @@
+function ccc_CreateVideoPageJson droppedURL
+   put ccc_FetchData (droppedURL) into cccArray
+   put ccc_ConvertArray (cccArray) into pageArray
+   put json_FromArray (pageArray) into someJSON
+   return someJSON
+end ccc_CreateVideoPageJson

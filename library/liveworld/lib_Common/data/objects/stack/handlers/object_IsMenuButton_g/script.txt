@@ -1,0 +1,5 @@
+getprop object_IsMenuButton
+   put the long id of the target into mButton
+   put word 1 of mButton is "button" and the menumode of mButton is not empty into someBoolean
+   return someBoolean
+end object_IsMenuButton

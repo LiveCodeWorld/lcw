@@ -1,0 +1,7 @@
+private command cgiRawOutput pContent
+   if "HTTP/1.1" is not in pContent then
+      write "HTTP/1.1 200 OK" & crlf to socket gRequestA["socketID"]
+   end if
+   write pContent to socket gRequestA["socketID"]
+   close socket gRequestA["socketID"]
+end cgiRawOutput

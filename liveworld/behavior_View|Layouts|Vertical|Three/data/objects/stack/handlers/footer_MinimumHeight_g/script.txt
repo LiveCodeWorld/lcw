@@ -1,0 +1,5 @@
+getprop footer_MinimumHeight
+   put the back_Property ["footer_MinimumHeight"] of me into someHeight
+   if someHeight is empty then return 30
+   return someHeight
+end footer_MinimumHeight

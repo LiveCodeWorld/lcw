@@ -1,0 +1,12 @@
+function stackfile_ConvertArray oldStackObject, newStackObject
+   put the filename of newStackObject into baseStackFile
+   put folder_Above (baseStackFile) into baseFolder
+   
+   put the stackfile_FileArray of oldStackObject into someArray
+   repeat for each key someKey in someArray
+      put someArray [ someKey] into someFile
+      put file_GetRelativePath (someFile, baseFolder, commonPath) into relativePath
+      put relativePath into newArray [ someKey] 
+   end repeat
+   return newArray
+end stackfile_ConvertArray

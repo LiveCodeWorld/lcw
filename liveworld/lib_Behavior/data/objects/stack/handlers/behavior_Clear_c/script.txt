@@ -1,0 +1,9 @@
+command behavior_Clear bObjects
+   repeat for each line bObject in bObjects
+      if exists (bObject) is false then
+         return bObject
+      end if
+      set the behavior of bObject to empty
+   end repeat
+   return empty
+end behavior_Clear

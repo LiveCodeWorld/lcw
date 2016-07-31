@@ -1,0 +1,19 @@
+command stack_BlendIn stackName, someDelay
+    if someDelay is empty then put 5 into someDelay
+    if the visible of stack stackName is false then
+        set the blendlevel of stack stackName to 100
+        set the visible of stack stackName to true
+    end if
+     
+    put the blendlevel of stack stackName into someValue
+    subtract 1 from someValue
+    set the blendlevel of stack stackName to someValue
+    if someValue <= 0 then
+        set the blendlevel of stack stackName to 0
+        return true
+    else
+        put "stack_BlendIn" && kwote(stackName) into pigeon
+        send pigeon to me in someDelay milliseconds
+        return false
+    end if
+end stack_BlendIn

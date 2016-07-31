@@ -1,0 +1,28 @@
+private function _ConstructSortedOutlineSection someTitle, intersectArray, tidyHkeys
+   put someTitle & CR after someOutline
+   put intersectArray [someTitle] into titleArray
+   
+   repeat for each key nestedTitle in titleArray
+      put titleArray [nestedTitle] into someNames
+      put the number of lines of someNames into someNum
+      put nestedTitle,someNum & CR after someTable
+   end repeat
+   delete char -1 of someTable
+   -- sort someTable by item 1 of each
+   sort numeric someTable by item 2 of each
+   
+   repeat for each line someLine in someTable
+      put item 1 of someLine into nestedTitle
+      put item 2 of someLine into someNum
+      put titleArray [nestedTitle] into someNames
+      sort someNames by item 1 of each
+      
+      put nestedTitle && "(" & someNum & ")" into nestedTitle
+      if someNames is not empty then
+         if tidyHkeys is true then put hkey_ConstructNameLinks (someNames) into someNames
+         put tab & nestedTitle & CR after someOutline
+         put outline_IncreaseIndent (someNames, 2) & CR after someOutline
+      end if
+   end repeat
+   return someOutline
+end _ConstructSortedOutlineSection

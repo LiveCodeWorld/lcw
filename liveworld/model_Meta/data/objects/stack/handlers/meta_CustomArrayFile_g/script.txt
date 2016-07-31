@@ -1,0 +1,9 @@
+getprop meta_CustomArrayFile
+   put the object_Folder of the target into objectFolder
+   put meta_GetCustomArrayFile (objectFolder) into someFile
+   if there is a file someFile then
+      return someFile
+   else
+      return empty
+   end if
+end meta_CustomArrayFile

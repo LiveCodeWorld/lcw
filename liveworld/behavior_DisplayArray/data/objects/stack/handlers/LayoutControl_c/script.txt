@@ -1,0 +1,10 @@
+command LayoutControl cardRect
+   lock screen
+   put the inner_Rect [cardRect] of me into cardRect
+   rect_SubtractMargins cardRect
+   
+   set the rect of _headerWidget() to _headerRect (cardRect)
+   set the rect of _treeWidget() to _fieldRect (cardRect)
+   set the rect of _footerWidget() to _footerRect (cardRect)
+   unlock screen
+end LayoutControl

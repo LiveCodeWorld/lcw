@@ -1,0 +1,31 @@
+on menu_PushCurrentBranch
+   -- TO push THE new BRANCH TO A REMOTE REPOSITORY
+   
+   set the cursor to watch
+   put git_CurrentBranchName() into currentBranchName
+   put "git push origin" && kwote(currentBranchName) into someShell
+   
+   put git_ExecuteShellCommand(someShell) into shellResult
+   
+   switch
+      case shellResult begins with "Broken pipe"
+         break
+      case token 1 of shellResult = "Error"
+         /*
+         ERROR: Your account is disabled. Please see https://github.com/account/billing
+         fatal: Could not read from remote repository.
+         
+         Please make sure you have the correct access rights
+         and the repository exists.
+         */
+         put "Check billing" into btnText
+         answer shellResult with btnText or "Cancel"
+         if it is btnText then
+            launch url "https://github.com/account/billing"
+         end if
+         break
+      default
+         opn_Notify shellResult, true
+         display_GitStatus
+   end switch
+end menu_PushCurrentBranch

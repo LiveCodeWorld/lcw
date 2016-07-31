@@ -1,0 +1,36 @@
+command rig_DeleteStack shortStackFile, pDontNotify
+   -- should really do this checking on the shortStackFile first
+   
+   put rig_GetFolder ("stacks") & shortStackFile into stackPath
+   
+   put server_GetURL() into remoteDomain
+   put server_GetSshUser() into sshUser
+   
+   -- should do some checks to make sure it is a stack and not a folder?
+   put server_FileInfoArray (stackPath) into fileArray
+   switch
+      case fileArray ["isFolder"] is true
+         put merge ("Did not delete folder from [[remoteDomain]]. rig_DeleteStack does not allow deletion of folders.") into someComment
+         if pDontNotify is not true then opn_Notify someComment
+         return someComment
+      case fileArray ["file"] is empty
+         put merge ("Did not delete file [[shortStackFile]] from [[remoteDomain]]. It does not exist.") into someComment
+         if pDontNotify is not true then opn_Notify someComment
+         return someComment
+      case fileArray ["fileExtension"] is not among the items of "lc,livecode,rev,livecodescript"
+         put merge ("Did not delete file [[shortStackFile]] from [[remoteDomain]]. It was not a stack.") into someComment
+         if pDontNotify is not true then opn_Notify someComment
+         return someComment
+      default
+         -- it's a livecode file
+   end switch
+   
+   shell_DeleteFile sshUser, remoteDomain, stackPath
+   put the result into someResult
+   
+   if pDontNotify is not true then
+      put merge ("Deleted stack [[shortStackFile]] from [[remoteDomain]]!") into someComment
+      opn_Notify someComment
+   end if
+   return someResult
+end rig_DeleteStack

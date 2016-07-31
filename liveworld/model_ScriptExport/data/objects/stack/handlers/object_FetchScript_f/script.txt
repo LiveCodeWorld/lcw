@@ -1,0 +1,7 @@
+function object_FetchScript objectFolder
+   folder_Format objectFolder
+   put objectFolder & "script.txt" into someFile
+   put url ("binfile:" & someFile) into someScript
+   -- hack_UpdateBinFile someScript, someFile
+   return someScript
+end object_FetchScript

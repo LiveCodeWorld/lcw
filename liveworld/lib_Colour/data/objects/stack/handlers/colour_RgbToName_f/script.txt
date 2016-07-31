@@ -1,0 +1,8 @@
+function colour_RgbToName rgbColour
+   put revNumberToColor (rgbColour) into someColour
+   if someColour is empty then 
+      return rgbColour
+   else
+      return someColour
+   end if
+end colour_RgbToName

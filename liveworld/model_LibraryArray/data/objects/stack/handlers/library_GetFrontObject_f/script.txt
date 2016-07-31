@@ -1,0 +1,4 @@
+function library_GetFrontObject libName, pSetName
+   put library_GetObject (libName, "front", pSetName) into someObject
+   return someObject
+end library_GetFrontObject

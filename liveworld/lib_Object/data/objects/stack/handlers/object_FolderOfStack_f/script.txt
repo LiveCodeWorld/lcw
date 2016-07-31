@@ -1,0 +1,13 @@
+function object_FolderOfStack someObject,  localPath
+   object_Deconstruct someObject, someControl, cardObject, stackFileName
+   put folder_Above(stackFileName) into someFolder
+   if localPath is not empty then
+      if char 1 of localPath is "/" then delete char 1 of localPath
+      if char -1 of localPath is not "/" then put "/" after localPath
+      put localPath after someFolder
+      if there is not a folder someFolder then
+         folder_CreateNested someFolder
+      end if
+   end if
+   return someFolder
+end object_FolderOfStack

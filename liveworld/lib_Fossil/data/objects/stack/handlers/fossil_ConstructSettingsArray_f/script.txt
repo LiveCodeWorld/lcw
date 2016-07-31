@@ -1,0 +1,11 @@
+function fossil_ConstructSettingsArray checkoutFolder, pListGlobal
+   local someKey, someValue, isGlobal
+   put fossil_ListSettings (checkoutFolder, pListGlobal) into fossilSettings
+   repeat for each line someLine in fossilSettings
+      fossil_DeconstructSettingLine someLine, someKey, someValue, isGlobal
+      put someValue into settingsArray [someKey]
+      -- put someValue into settingsArray [someKey]["value"]
+      -- put isGlobal into settingsArray [someKey]["isGlobal"]
+   end repeat
+   return settingsArray
+end fossil_ConstructSettingsArray

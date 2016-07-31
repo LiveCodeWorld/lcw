@@ -1,0 +1,4 @@
+on menu_FieldProperties fieldObject, fieldProp
+    put the view_Object of fieldObject into someView
+    view_DoPropertyMenu fieldProp, someView
+end menu_FieldProperties

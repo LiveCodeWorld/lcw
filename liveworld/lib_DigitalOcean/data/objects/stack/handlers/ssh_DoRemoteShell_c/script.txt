@@ -1,0 +1,7 @@
+command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell
+   -- requires public ssh key to be installed on server
+   shell_BashParamEscape remoteShell
+   put "ssh" && sshUserName & "@" & serverAddress && remoteShell into someShell
+   put word 1 to -1 of shell (someShell) into wikiPageFiles
+   return someShell
+end ssh_DoRemoteShell

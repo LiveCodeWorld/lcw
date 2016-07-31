@@ -1,0 +1,35 @@
+command html_ParamDeconstuct someTag, @someKey, @someValue
+    -- replace lineFeed with empty in inputTag -- seems neessary
+    /*
+    -- from http://regexlib.com/REDetails.aspx?regexp_id=1195
+    
+    Pattern:  \s(type|name|value)=(?:(\w+)|(?:"(.*?)")|(?:\'(.*)\'))
+    Author: 	Carey Bishop
+    Matching Text: 	&lt;input type=&quot;text&quot; value='somevalue' name=fred&gt;
+    Non-Matching Text:	Any attributes that aren't &quot;type&quot;, &quot;name&quot;, or &quot;value&quot;
+    
+    Description
+    Returns the three most important attributes from an HTML &lt;input&gt; tag: 'type', 'name' and 'value'. 
+    Supports attribute values that are double- or single-quoted or unquoted. 
+    Returns four references, the first being the name of the attribute, and the other three being the value,
+    of which only one will be populated based on the way the value was quoted.
+    */
+    
+    put "\s(type|name|value)=(?:(\w+)|(?:" & quote & "(.*?)" & quote & ")|(?:\'(.*)\'))" into someReg
+    if matchchunk(someTag, someReg, sKey, eKey, sValue, eValue) is false then
+        put empty into someKey
+        put empty into someValue
+        return empty
+    else
+        put char sKey to eKey of someTag into someKey
+        put char sValue to eValue of someTag into someValue
+        
+        -- not sure why but empty quoted values rsults in empty sValue and eValue
+        if eValue is empty then
+            put the number of chars of someTag into lastValue
+            return sKey,eKey,0,lastValue
+        else
+            return sKey,eKey,sValue,eValue
+        end if
+    end if
+end html_ParamDeconstuct

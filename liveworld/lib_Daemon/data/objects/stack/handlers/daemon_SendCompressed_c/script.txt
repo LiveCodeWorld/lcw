@@ -1,0 +1,10 @@
+command daemon_SendCompressed someHeader, contentToSend, socketID
+   -- always adds "Content-Length:" header
+   put CRLF & "Content-Encoding: gzip" after someHeader
+   put compress (contentToSend) into compressedData
+   
+   _addContentLengthHeader someHeader, compressedData
+   
+   daemon_SendRaw someHeader, compressedData, socketID
+   return the result
+end daemon_SendCompressed

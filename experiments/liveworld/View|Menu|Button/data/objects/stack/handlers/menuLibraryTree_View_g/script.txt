@@ -1,0 +1,7 @@
+getprop menuLibraryTree_View
+    if exists(group 1 of me) then
+        return the long id of group 1 of me
+    else
+        return empty
+    end if
+end menuLibraryTree_View

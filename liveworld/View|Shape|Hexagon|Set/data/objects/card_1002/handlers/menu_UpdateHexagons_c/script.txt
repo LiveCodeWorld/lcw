@@ -1,0 +1,20 @@
+on menu_UpdateHexagons mTarget
+   lock screen
+   set the locklocation of mTarget to true
+   put view_GetTemplateObject ("Shape|Hexagon") into templateObject  
+   put the hexagon_Views of mTarget into hexagonViews
+   repeat for each line hexagonView in hexagonViews
+      set the cursor to busy
+      put the rect of hexagonView into hRect
+      put the class_Array of hexagonView into classArray
+      
+      delete hexagonView
+      copy templateObject to mTarget
+      put it into copiedView
+      
+      set the rect of copiedView to hRect
+      set the class_Array of copiedView to classArray
+   end repeat
+   set the locklocation of mTarget to false
+   unlock screen
+end menu_UpdateHexagons

@@ -1,0 +1,5 @@
+setprop displayed_Object [pOverlayName] scriptObject
+   _displayScriptObject scriptObject, pOverlayName
+   put the result into scriptArray
+   return scriptArray
+end displayed_Object

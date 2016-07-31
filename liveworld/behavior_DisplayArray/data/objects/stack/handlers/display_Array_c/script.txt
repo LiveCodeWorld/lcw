@@ -1,0 +1,34 @@
+command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pCommandObject
+   -- new feature for specifying widget and stack label titles using a comma
+   put word 1 to -1 of item 1 of pDisplayTitle into widgetDisplayTitle
+   put word 1 to -1 of item 2of pDisplayTitle into displayStackLabel
+   
+   put stack_ConstructNewCloneName ("Display Array") into newName
+   clone invisible stack "Display Array"
+   put it into clonedStack
+   set the name of clonedStack to newName
+   
+   set the label of stack newName to displayStackLabel
+   put the display_View of stack newName into displayView
+   
+   set the displayed_TitleColour of displayView to "random"
+   
+   set the displayed_Array of displayView to someArray
+   set the displayed_Title of displayView to widgetDisplayTitle -- new feature
+   set the cog_Menu of displayView to pTreeMenuTitle
+   set the line_Menu of displayView to pLineMenuTitle
+   
+   if pCommandObject is empty then
+      put script_CallingObject() into pCommandObject
+   end if
+   set the display_MouseTarget of displayView to pCommandObject
+   set the action_InspectCommand of displayView to pMouseDoubleUpCommand
+   set the action_DoubleClickCommand of displayView to pMouseUpCommand
+   
+   show stack newName
+   go to stack newName
+   
+   -- this should really return "displayView"
+   put the tree_Widget of displayView into treeWidget 
+   return treeWidget
+end display_Array

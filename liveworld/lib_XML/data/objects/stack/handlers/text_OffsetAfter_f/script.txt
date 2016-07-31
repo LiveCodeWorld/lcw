@@ -1,0 +1,6 @@
+function text_OffsetAfter stringToFind, textToSearch, pStartSearchAt
+   put offset (stringToFind, textToSearch, pStartSearchAt) into foundCharNum
+   if foundCharNum is not 0 then
+      add pStartSearchAt to foundCharNum
+   end if
+end text_OffsetAfter

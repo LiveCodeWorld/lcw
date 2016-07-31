@@ -1,0 +1,15 @@
+function git_Searchlog @searchString
+   /*
+   -S<string>
+   Look for differences that introduce or remove an instance of <string>. Note that this is different
+   than the string simply appearing in diff output; see the pickaxe entry in gitdiffcore(7) for more
+   details.
+   */
+   
+   if searchString is empty then put opn_Ask("Search log for string...") into searchString
+   put "git log --pretty=oneline -S" & kwote(searchString, "'") into someShell
+   -- display_Lines someShell
+   set the cursor to watch
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_Searchlog

@@ -1,0 +1,9 @@
+on menu_RevealIcon templateView
+   breakpoint
+   put the view_Name of templateView into viewName
+   put view_LocalIconFile (viewName) into imageFile
+   
+   finder_Reveal imageFile
+   display_Image imageFile, true, viewName
+   display_Lines ( imageFile )
+end menu_RevealIcon

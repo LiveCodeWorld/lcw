@@ -1,0 +1,7 @@
+command hkey_StripDefaultProps @overlayData
+   repeat for each key graphName in overlayData
+      put overlayData [graphName] into overlayArray
+      overlayArray_StripDefaultProps overlayArray
+      put overlayArray into overlayData [graphName]
+   end repeat
+end hkey_StripDefaultProps

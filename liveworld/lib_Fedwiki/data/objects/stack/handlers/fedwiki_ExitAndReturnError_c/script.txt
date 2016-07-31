@@ -1,0 +1,6 @@
+command fedwiki_ExitAndReturnError errorText, pErrorTitle
+   if pErrorTitle is empty then put "Error" into pErrorTitle
+   put fedwiki_ConstructErrorJSON (errorText, pErrorTitle) into errorJSON
+   fedwiki_ReturnJSON errorJSON
+   exit to top
+end fedwiki_ExitAndReturnError

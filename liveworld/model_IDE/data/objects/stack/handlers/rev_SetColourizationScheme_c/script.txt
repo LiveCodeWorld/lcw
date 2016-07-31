@@ -1,0 +1,5 @@
+command rev_SetColourizationScheme schemeName
+   -- sets the value
+   rev_SetPref "colorization", "scheme", schemeName
+   -- but does not update something so not really functioning???
+end rev_SetColourizationScheme

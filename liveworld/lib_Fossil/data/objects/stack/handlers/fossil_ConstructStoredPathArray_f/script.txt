@@ -1,0 +1,4 @@
+function fossil_ConstructStoredPathArray
+   put library_FetchArray ("Fossil") into fossilArray
+   return constructPathArray (fossilArray)
+end fossil_ConstructStoredPathArray

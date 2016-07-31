@@ -1,0 +1,15 @@
+command hkeyArray_Graph hkeyArray, graphStyle, graphSize
+   put hkeyArray_ConstructDot (hkeyArray, empty, graphStyle, graphSize) into dotText
+   
+   if the optionkey is "Down" then
+      put dotText
+   else
+      if graphStyle is empty then put the overlay_Style of me into graphStyle
+      if the flatten_Hierarchy of me is true then
+         display_Dot dotText, graphStyle
+      else
+         display_Dot dotText, graphStyle
+      end if
+      object_GoTo treeView
+   end if
+end hkeyArray_Graph

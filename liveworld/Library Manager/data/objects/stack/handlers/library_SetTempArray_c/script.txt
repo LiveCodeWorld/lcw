@@ -1,0 +1,4 @@
+command library_SetTempArray tempArray
+   put library_GetTempArrayFile() into tempArrayFile
+   array_Save tempArrayFile, tempArray
+end library_SetTempArray

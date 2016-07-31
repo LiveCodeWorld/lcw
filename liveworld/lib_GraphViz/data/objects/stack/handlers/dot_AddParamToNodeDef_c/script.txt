@@ -1,0 +1,11 @@
+on dot_AddParamToNodeDef paramTitle, paramContent, @nodeLine, kwoted
+    if paramContent is empty then return false
+     
+    if nodeLine is not empty then put "," & space after nodeLine
+    if kwoted is not false then 
+        put paramTitle & "=" & kwote(paramContent) after nodeLine
+    else
+        put paramTitle & "=" & paramContent after nodeLine
+    end if
+    return true
+end dot_AddParamToNodeDef

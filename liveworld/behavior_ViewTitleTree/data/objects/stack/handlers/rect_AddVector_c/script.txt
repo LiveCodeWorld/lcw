@@ -1,0 +1,11 @@
+command rect_AddVector @someRect, pointVector
+    -- was "rect_Translate"
+    put item 1 of pointVector into xVector
+    put item 2 of pointVector into yVector
+     
+    add xVector to item 1 of someRect
+    add xVector to item 3 of someRect
+     
+    add yVector to item 2 of someRect
+    add yVector to item 4 of someRect
+end rect_AddVector

@@ -1,0 +1,11 @@
+on display_CloseDisplayed
+   put the view_Name of the displayed_View of me into viewPath
+   -- put display_GetStoredPath() into viewPath
+   display_SetSavedFrameRect viewPath
+   
+   lock screen
+   stack_CloseMain viewPath
+   put the displayed_View of me into displayedView
+   display_DeleteDisplayed
+   unlock screen
+end display_CloseDisplayed

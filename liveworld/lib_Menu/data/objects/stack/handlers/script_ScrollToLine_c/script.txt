@@ -1,0 +1,8 @@
+command script_ScrollToLine suiteTitle, someScript
+   set the wholematches to true
+   put lineOffset (suiteTitle, someScript) into lineNum
+   if lineNum = 0 then return empty
+   
+   put rev_ScriptEditorField() into someField   
+   field_ScrollToLine lineNum, someField
+end script_ScrollToLine

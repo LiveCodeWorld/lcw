@@ -1,0 +1,6 @@
+getprop image_MenuTitles
+   put menu_GlobalTitles ("Global | Image *") into mTitles
+   -- line_Delete "Global | Image | Menu", mTitles
+   -- line_Insert "Global | Movie | Record | Menu", mTitles
+   return mTitles
+end image_MenuTitles

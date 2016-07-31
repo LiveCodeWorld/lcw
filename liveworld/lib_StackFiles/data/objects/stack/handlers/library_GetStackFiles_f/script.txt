@@ -1,0 +1,5 @@
+function library_GetStackFiles
+   -- was "opn_GetStackFiles"
+   put library_StackFileStack() into stackFileStack
+   return the stackfiles of stackFileStack
+end library_GetStackFiles

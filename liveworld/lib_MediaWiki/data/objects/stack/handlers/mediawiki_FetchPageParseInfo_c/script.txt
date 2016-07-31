@@ -1,0 +1,22 @@
+command mediawiki_FetchPageParseInfo pageSlug, @pageDescription, @pageTitle, @shortImageFile, @infoBoxArray, pSectionNum, pApiStem
+   -- Uses "parse" to extract wiktext sections. Lot's of fiddling with text. Messy as it returns lots of page templates that need cleaning. But we get wiki links
+   
+   if pSectionNum is empty then
+      put sandbox_ConstructSectionFragment (pageSlug) into sandBoxFragment
+   else
+      put sandbox_ConstructSectionFragment (pageSlug, pSectionNum) into sandBoxFragment
+   end if
+   
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   put sandboxArray ["parse"] into pageArray
+   put pageArray ["title"] into pageTitle
+   put pageArray ["wikitext"]["*"] into pageDescription
+   mediawiki_CleanPageDescription pageDescription, infoBoxArray
+   if infoBoxArray is an array then
+      put infoBoxArray ["image"] into shortImageFile
+   else
+      put pageArray ["images"] into imageArray
+      put mediawiki_ExtractFirstInterestingImage (imageArray) into shortImageFile
+   end if
+   return sandboxArray
+end mediawiki_FetchPageParseInfo

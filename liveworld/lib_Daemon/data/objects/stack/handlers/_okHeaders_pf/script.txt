@@ -1,0 +1,15 @@
+private function _okHeaders pContentType, pCookieName, pCookieValue
+   --  Generates the HTTPd Header with a 200 OK response. (200 OK = Yes it succeded!)
+   if pContentType is empty then put "text/html" into pContentType
+   
+   put "HTTP/1.1 200 OK" into someHeader
+   _addContentTypeHeader someHeader, pContentType
+   _addCorsHeader someHeader
+   -- _addCacheHeader someHeader
+   _addConnectionHeader someHeader
+   _addDateHeader someHeader
+   if pCookieName is not empty then
+      _addCookieHeader someHeader, pCookieName, pCookieValue
+   end if
+   return someHeader
+end _okHeaders

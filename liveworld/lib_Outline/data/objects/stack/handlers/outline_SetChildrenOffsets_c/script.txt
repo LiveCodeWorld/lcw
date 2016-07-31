@@ -1,0 +1,16 @@
+on outline_SetChildrenOffsets nodeLineNum, @firstOsTitleLineNum, @lastOsTitleLineNum, tabbedOutline
+    -- was "set_DomainOffsets"
+    -- a domain is index of children that are descendent of a node
+    if nodeLineNum is 0 then
+        put 1 into firstOsTitleLineNum
+        put the number of lines of tabbedOutline into lastOsTitleLineNum
+    else
+        put nodeLineNum + 1 into firstOsTitleLineNum
+        put outline_NextSameLevel(nodeLineNum, tabbedOutline) into nextNode_OfSameLevel
+        if nextNode_OfSameLevel is 0 then
+            put the number of lines of tabbedOutline into lastOsTitleLineNum
+        else
+            put nextNode_OfSameLevel - 1 into lastOsTitleLineNum
+        end if
+    end if
+end outline_SetChildrenOffsets

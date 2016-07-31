@@ -1,0 +1,4 @@
+function fossil_FetchHostedNames
+   put url "http://code.livecode.tv/cgi-bin/list_repos.cgi" into hostedFossilNames
+   return word 1 to -1 of hostedFossilNames
+end fossil_FetchHostedNames

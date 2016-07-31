@@ -1,0 +1,5 @@
+command rect_SetLeft @someRect, newLeft
+   put newLeft - item 1 of someRect into xVector
+   put xVector,0 into pointVector
+   rect_AddVector someRect, pointVector
+end rect_SetLeft

@@ -1,0 +1,24 @@
+command rig_SaveGistStacks serverStackFiles, pMergeHelp
+   put server_GetURL() into shortServer
+   _setScriptStackGistHelp pMergeHelp, shortServer
+   put gist_FetchListArray() into pGistListArray
+   
+   repeat for each line shortStack in serverStackFiles
+      set the cursor to busy
+      put rig_FetchStack (shortStack) into scriptOnlyStackScript
+      
+      put gist_ShortFileToKey (shortStack, "stack", shortServer) into shortGistFile
+      put merge (pMergeHelp) into mergeHelp
+      
+      gist_SaveOrUpdate scriptOnlyStackScript, shortGistFile, mergeHelp, false, pGistListArray
+      put the result into someArray
+      
+      opn_Notify merge ("Saved script-only stack [[shortGistFile]] as gist.")
+      -- display_Array someArray, shortGistFile
+      
+      put "* [[" & shortStack & "]]" & CR after markdownSection
+   end repeat
+   
+   delete char -1 of markdownSection
+   return markdownSection
+end rig_SaveGistStacks

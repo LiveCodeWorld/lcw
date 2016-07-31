@@ -1,0 +1,18 @@
+function youtube_FetchNextPageJson droppedURL, droppedHtml
+   put fedwiki_FetchMetadataArray (droppedURL) into metadataArray
+   put metadataArray ["pageTitle"] into pageTitle
+   put metadataArray ["author"] into transporterName
+   put metadataArray ["nextPageToken"] into nextPageToken
+   
+   if nextPageToken is empty then
+      put "Not a link that I can parse:" && droppedURL & CR & CR & droppedHtml into someInfo
+      put fedwiki_ConstructErrorJSON (someInfo) into someJSON
+   else -- dropped a Fedwiki page which has a nextPageToken
+      put 10 into pMaxResults
+      put true into pDontLinkTitle
+      put wcn_GetChannelID() into channelID
+      
+      put youtube_FetchChannelUploadPageJson (channelID, pMaxResults, pDontLinkTitle, nextPageToken) into someJSON
+   end if
+   return someJSON
+end youtube_FetchNextPageJson

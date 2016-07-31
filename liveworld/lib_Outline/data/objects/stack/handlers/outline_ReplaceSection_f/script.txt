@@ -1,0 +1,48 @@
+function outline_ReplaceSection osTitleOrNumber, someOutline, newOs, @oldOsLength
+    -- put outline_ReplaceSection(osTitleOrNumber, someOutline, newOs, oldOsLength)
+    -- version Tree, 23/1/02
+    if osTitleOrNumber is a number then
+        put osTitleOrNumber into osTitleLineNum
+        put line osTitleLineNum of someOutLine into someOsTitle
+        if osTitleLineNum < 1 then
+            put 0 into baseTabLevel
+        else
+            put countStrings(tab, someOsTitle) into baseTabLevel
+        end if
+    else
+        put osTitleOrNumber into someOsTitle
+        put countStrings(tab, someOsTitle) into baseTabLevel
+        put line_FindInIndex(osTitleOrNumber, someOutLine) into osTitleLineNum
+        if osTitleLineNum is 0 then
+            -- can't find title in full outline. Insert at end instead...
+            put the number of lines of someOutline into lastLineNum
+            put outline_IncreaseIndent(newOS, 1) into newOsToInsert
+            put someOsTitle & return & newOsToInsert into line (lastLineNum + 1) of someOutline
+            put 0 into oldOsLength
+            return someOutline
+        end if
+    end if
+     
+    put osTitleLineNum + 1 into startLineNum
+    put empty into nextLevelTitles
+    put the number of lines of someOutLine into lastLineNum
+    repeat with endOsLineNum = startLineNum to lastLineNum
+        put line endOsLineNum of someOutLine into someOsTitle
+        put countStrings(tab, someOsTitle) into someTabLevel
+        if someTabLevel is baseTabLevel then
+            if newOs is empty then
+                delete line osTitleLineNum to (endOsLineNum - 1) of someOutline
+            else
+                put outline_IncreaseIndent(newOS, baseTabLevel) into newOsToInsert
+                put newOsToInsert into line osTitleLineNum to (endOsLineNum - 1) of someOutline
+            end if
+            put endOsLineNum - osTitleLineNum into oldOsLength
+            return someOutline
+        end if
+    end repeat
+     
+    put outline_IncreaseIndent(newOS, baseTabLevel) into newOsToInsert
+    put newOsToInsert into line osTitleLineNum to lastLineNum of someOutline
+    put lastLineNum - osTitleLineNum + 1 into oldOsLength
+    return someOutline
+end outline_ReplaceSection

@@ -1,0 +1,19 @@
+function git_GetRevisionScript relativePath, gitHashOrNum
+   if gitHashOrNum is a number then
+      return git_GetLastRevision (relativePath, gitHashOrNum)
+   else if gitHashOrNum is empty then
+      put empty into pGitHash
+      put empty into pBeforeTipNum
+   else
+      put gitHashOrNum into pGitHash
+      put empty into pBeforeTipNum
+   end if
+   
+   put merge("git show") into someShell
+   put space & git_ConstructFileRevision(relativePath, pGitHash, pBeforeTipNum) after someShell
+   
+   -- display_Lines someShell, "Shell command"
+   put git_ExecuteShellCommand(someShell) into oldScript
+   text_UnixToMac oldScript
+   return oldScript
+end git_GetRevisionScript

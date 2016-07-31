@@ -1,0 +1,5 @@
+on menu_RevertStack scriptObject
+   put the stack_Object of scriptObject into stackObject
+   put the effective filename of stackObject into someFile
+   put git_GetLastRevision (someFile, 0)
+end menu_RevertStack

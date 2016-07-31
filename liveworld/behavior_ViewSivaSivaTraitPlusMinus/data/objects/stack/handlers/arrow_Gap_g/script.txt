@@ -1,0 +1,14 @@
+getprop arrow_Gap [innerWidth]
+   -- this is the gap between the trait and the top of the line
+   -- you may need to set this if you choose to show arrow heads
+   -- because unfortunately Livecode does not include the arrow in legnth calculations.
+   
+   -- this value works well with oval graphics
+   return -3
+   
+   put item 1 of the margins of me into someMargin
+   put _arrowTopFactor() * someMargin into arrowGap
+   
+   put round (innerWidth * 0.05) into arrowHeight
+   return arrowHeight
+end arrow_Gap

@@ -1,0 +1,19 @@
+command git_RenameFolder sourceFolder, destFolder
+   folder_Format sourceFolder
+   folder_Format destFolder
+   git_SetRelativePath sourceFolder
+   git_SetRelativePath destFolder
+   
+   put "git mv" into someShell
+   -- put space &  "-f" after someShell -- Force renaming or moving of a file even if the target exists
+   -- put space &  "-n" after someShell -- Do nothing; only show what would happen
+   
+   -- put space & kwote (sourceFolder) after someShell
+   -- put space & kwote (destFolder) after someShell
+   put space & sourceFolder after someShell
+   put space & destFolder after someShell
+   
+   put git_ExecuteShellCommand(someShell) into shellResult
+   if shellResult is not empty then opn_Notify shellResult, true
+   return shellResult
+end git_RenameFolder

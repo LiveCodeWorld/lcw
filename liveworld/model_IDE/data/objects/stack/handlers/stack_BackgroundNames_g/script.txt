@@ -1,0 +1,9 @@
+getprop stack_BackgroundNames
+   local bgNames
+   put the stack_Object of the target into stackObject
+   repeat with bgNum = 1 to the number of bgs of stackObject
+      put the short name of bg bgNum of stackObject & CR after bgNames
+   end repeat
+   delete char -1 of bgNames
+   return bgNames
+end stack_BackgroundNames

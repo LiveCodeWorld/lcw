@@ -1,0 +1,5 @@
+command project_StartUsed pProjectName
+   put project_FetchObjects ("used", pProjectName) into stackObjects
+   stack_StartUsed stackObjects
+   _setRescueStackLabel
+end project_StartUsed

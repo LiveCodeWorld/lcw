@@ -1,0 +1,12 @@
+function dot_GetLinkSection linkArray
+    local nodeLinks
+    repeat for each key fromLink in linkArray
+        put linkArray [fromLink] into toLinks
+        dot_NormalizeNode fromLink
+        repeat for each line toLink in toLinks
+            dot_NormalizeNode toLink
+            put fromLink && "->" && toLink & ";" & CR after nodeLinks
+        end repeat
+    end repeat
+    return nodeLinks
+end dot_GetLinkSection

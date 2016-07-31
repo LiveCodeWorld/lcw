@@ -1,0 +1,13 @@
+command fedwiki_SetLocalWikiFolder localWikiFolder
+   if localWikiFolder is empty then
+      answer folder "Choose a folder for the local wiki-page json files..."
+      put it into localWikiFolder
+      if localWikiFolder is empty then
+         exit to top
+      end if
+   end if
+   
+   folder_Format localWikiFolder
+   pref_SetValue "fedwiki_LocalWikiFolder", localWikiFolder
+   return localWikiFolder
+end fedwiki_SetLocalWikiFolder

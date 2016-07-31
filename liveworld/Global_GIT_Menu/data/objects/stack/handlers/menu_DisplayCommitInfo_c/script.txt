@@ -1,0 +1,6 @@
+on menu_DisplayCommitInfo treeField
+   put the tree_SelectedLink of treeField into commitHash
+   put git_HashInfo (commitHash) into hashInfo   
+   put "git show" && kwote (commitHash) into someShell
+   display_Text hashInfo, someShell
+end menu_DisplayCommitInfo

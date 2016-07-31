@@ -1,0 +1,4 @@
+command library_ExportAllHandlersFromObject scriptObject, pForceAdd
+   put the script_Hkeys of scriptObject into hKeys
+   library_AddHkeys hKeys, false, pForceAdd
+end library_ExportAllHandlersFromObject

@@ -1,0 +1,15 @@
+command fossil_ExecuteShell someShell, pExecuteWhere
+   -- called every time with object_Folder in "object_AddToArray"
+   if pExecuteWhere is empty then put "~" into pExecuteWhere
+   put fossil_FolderWithExecutable() into fossilPath
+   shell_BashParamEscape fossilPath
+   put fossilPath before someShell
+   -- if pExecuteWhere is empty then put fossil_GetDefaultRepoFolder() into pExecuteWhere
+   
+   put the defaultfolder into oFolder
+   set the defaultfolder to pExecuteWhere
+   put shell (someShell) into shellResult
+   set the defaultfolder to oFolder
+   
+   return word 1 to -1 of shellResult
+end fossil_ExecuteShell

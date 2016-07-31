@@ -1,0 +1,12 @@
+getprop selected_LongStackFiles
+   put the index_Field of the target into indexField
+   put the selected_ShortStackFiles of indexField into shortStackFiles
+   put the index_Folder of indexField into indexFolder
+   
+   repeat for each line shortStackFile in shortStackFiles
+      put indexFolder & shortStackFile into longStackFile
+      put longStackFile & CR after longStackFiles
+   end repeat
+   delete char -1 of longStackFiles
+   return longStackFiles
+end selected_LongStackFiles

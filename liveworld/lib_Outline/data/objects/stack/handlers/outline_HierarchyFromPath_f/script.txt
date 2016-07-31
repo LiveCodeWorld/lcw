@@ -1,0 +1,10 @@
+function outline_HierarchyFromPath somePath, someDelim
+    if someDelim is not empty then put "/" into someDelim
+    repeat for each item pathBit in somePath
+        put pathBit after pathOutlineSection
+        put tab after indentBit
+        put return & indentBit after pathOutlineSection
+    end repeat
+    delete last line of pathOutlineSection
+    return pathOutlineSection
+end outline_HierarchyFromPath

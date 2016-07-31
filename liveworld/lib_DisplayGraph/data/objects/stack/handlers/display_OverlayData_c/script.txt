@@ -1,0 +1,8 @@
+command display_OverlayData overlayFolder, pTitle
+   put overlay_GetData (overlayFolder) into overlayData 
+   
+   display_Array overlayData, pTitle, "Global | Script | Graph | Menu", "Global | Script | Graph | Line | Menu"
+   put the result into treeView
+   set the displayed_OverlayFolder of treeView to overlayFolder
+   set the displayed_OverlayName of treeView to pOverlayName
+end display_OverlayData

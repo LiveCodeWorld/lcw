@@ -1,0 +1,9 @@
+function fedwiki_LocalPageSlugs pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_LocalPagesFolder (pFedwikiDomain, pLocalWikiFolder) into localPagesFolder
+   if there is a folder localPagesFolder then
+      put folder_ShortFiles (localPagesFolder) into pageSlugs
+      return pageSlugs
+   else
+      return empty
+   end if
+end fedwiki_LocalPageSlugs

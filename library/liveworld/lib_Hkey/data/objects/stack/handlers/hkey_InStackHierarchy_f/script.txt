@@ -1,0 +1,11 @@
+function hkey_InStackHierarchy hkey, someObject
+   put item 3 of hkey into hkeyObject
+   if exists(hkeyObject) is false then return empty
+   
+   put the long id of hkeyObject into hkeyObject
+   put object_GetHierarchy (someObject) into objectHierarchy
+   repeat for each line objectInStack in objectHierarchy
+      if hkeyObject = objectInStack then return true
+   end repeat
+   return false
+end hkey_InStackHierarchy

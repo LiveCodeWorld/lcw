@@ -1,0 +1,28 @@
+function ipfs_ConstructUrl ipfsPath, pArgs, pFlags, pPort, pDomain
+   /*
+   http://127.0.0.1:5001/api/v0/swarm/peers
+   Gateway (writable) server listening on /ip4/127.0.0.1/tcp/8080
+   API server listening on /ip4/127.0.0.1/tcp/5001
+   */
+   if pPort is empty then put 5001 into ipfsPort
+   if pDomain is empty then put "localhost" into pDomain
+   
+   put "http://" & pDomain & ":" & ipfsPort & "/api/v0/" & ipfsPath into someUrl
+   if pArgs is not empty then
+      repeat for each line someArg in pArgs
+         --  ?arg=QmaaqrHyAQm7gALkRW8DcfGX3u8q9rWKnxEMmf7m9z515w
+         put "?arg=" & someArg after someURL
+      end repeat
+   end if
+   if pFlags is not empty then
+      -- Flags are added through the query string. 
+      -- For example, the --encoding=json flag is the &encoding=json
+      if pArgs is empty then
+         put "?" after someURL
+      else
+         put "&" after someURL
+      end if
+      put pFlags after someURL
+   end if
+   return someURL
+end ipfs_ConstructUrl

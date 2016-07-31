@@ -1,0 +1,20 @@
+on LayoutControl pRect
+   if pRect is empty then put the rect of me into pRect
+   
+   put background_Button() into titleBackground
+   put title_Button() into titleMenu
+   put the icon_Button of me into titleRightIconButton
+   put the menu_Button of me into titleMenuButton
+   
+   put rect_SubtractMargin (4, pRect) into rightIconRect
+   put item 4 of rightIconRect - item 2 of rightIconRect into rightIconHeight
+   put item 3 of rightIconRect - rightIconHeight into item 1 of rightIconRect
+   
+   set the rect of titleBackground to pRect
+   set the rect of titleMenu to pRect
+   set the rect of titleMenuButton to pRect
+   
+   set the rect of titleRightIconButton to rightIconRect
+   
+   -- dispatch view_HeightResized to me with pRect
+end LayoutControl

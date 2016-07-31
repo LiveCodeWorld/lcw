@@ -1,0 +1,15 @@
+getprop group_Above
+   put the long id of the target into targetObject
+   
+   if word 1 of targetObject = "group" then
+      put targetObject into groupObject
+   else
+      put targetObject into groupObject
+      delete word 1 to 4 of groupObject
+   end if
+   
+   put groupObject into groupAboveObject
+   delete word 1 to 4 of groupAboveObject
+   if exists(groupAboveObject) is false then put the card_Object of targetObject into groupAboveObject 
+   return groupAboveObject
+end group_Above

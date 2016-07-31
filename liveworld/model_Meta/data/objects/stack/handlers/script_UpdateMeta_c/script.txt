@@ -1,0 +1,6 @@
+command script_UpdateMeta scriptObject, someScript
+   put script_GetMetadataArray (someScript) into uRIPArray
+   delete local uRIPArray ["date"]
+   set the object_UripArray of scriptObject to uRipArray
+   return uRipArray
+end script_UpdateMeta

@@ -1,0 +1,21 @@
+getprop menu_Target [mTitlePath]
+   if mTitlePath contains "Global | Git | Stack | Menu" then
+      return the displayed_Object of me
+   else if mTitlePath contains "GIT | Line | Menu" then
+      put the git_Tree of me into cardTree
+      put the tree_SelectedIndex of cardTree into relPathLine
+      set the itemdelimiter to ":"
+      switch item 1 of relPathLine
+         case "unmerged"
+            delete item 1 of relPathLine
+            put word 1 to -1 of relPathLine into shortFile
+            return git_GetRootFolder() & shortFile
+         case "new file"
+            delete item 1 of relPathLine
+            put word 1 to -1 of relPathLine into shortFile
+            return git_GetRootFolder() & shortFile
+      end switch
+   else
+      pass menu_Target
+   end if
+end menu_Target

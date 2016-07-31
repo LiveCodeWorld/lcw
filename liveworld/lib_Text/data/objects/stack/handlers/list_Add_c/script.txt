@@ -1,0 +1,17 @@
+command list_Add someItems, @someList, pPartLine, pSkipLines
+   set the wholematches to (pPartLine is empty)
+   repeat for each item someItem in someItems
+      if someItem is empty then next repeat
+      put itemoffset (someItem, someList, pSkipLines) into itemNum
+      if itemNum is 0 then
+         put the number of items of someList into maxItem
+         put maxItem + 1 into itemNum
+         put someItem into item itemNum of someList
+      else
+         add pSkipLines to itemNum
+         put itemNum & comma after itemNums
+      end if
+   end repeat
+   delete char -1 of itemNums
+   return itemNums
+end list_Add

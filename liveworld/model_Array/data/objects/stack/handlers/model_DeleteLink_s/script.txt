@@ -1,0 +1,5 @@
+setprop model_DeleteLink [modelName] someView
+   put the long id of me into modelObject
+   model_UnregisterView modelName, someView, modelObject
+   return the result
+end model_DeleteLink

@@ -1,0 +1,5 @@
+function rev_GetModifiedObjects pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   dispatch "revSEGetModifiedObjects" to editorStack
+   return the result
+end rev_GetModifiedObjects

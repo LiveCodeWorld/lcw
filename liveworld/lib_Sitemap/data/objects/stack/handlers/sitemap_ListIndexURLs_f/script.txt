@@ -1,0 +1,12 @@
+function sitemap_ListIndexURLs
+   -- put "taka-sitemap.xml,book-sitemap.xml,video-sitemap.xml,audio-sitemap.xml,art-sitemap.xml,photos-sitemap.xml" into shortFiles
+   put sitemap_ListHapRefinementNames() into refinementNames
+   put ",html" after refinementNames
+   put "http://himalayanacademy.com/blog/taka/sitemap.xml.gz" & CR after siteMapUrls
+   repeat for each item refinementName in refinementNames
+      put sitemap_ConstructShortFileName (refinementName) into shortSitemapFile
+      put "http://himalayanacademy.com/" & shortSitemapFile & CR after siteMapUrls
+   end repeat
+   delete char -1 of siteMapUrls
+   return siteMapUrls
+end sitemap_ListIndexURLs

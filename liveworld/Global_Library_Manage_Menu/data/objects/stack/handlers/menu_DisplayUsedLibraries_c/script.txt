@@ -1,0 +1,5 @@
+on menu_DisplayUsedLibraries ideScriptObject, setName
+   -- put project_GetCurrentName() into setName
+   put library_ListUsedStacks (setName) into usedLibraries
+   display_Lines usedLibraries, setName
+end menu_DisplayUsedLibraries

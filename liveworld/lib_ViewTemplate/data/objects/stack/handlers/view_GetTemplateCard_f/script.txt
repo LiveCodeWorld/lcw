@@ -1,0 +1,9 @@
+function view_GetTemplateCard vName
+   if vName is empty then return empty
+   view_NormalizeName vName
+   put view_NameToFile (vName, "rev") into longStackName
+   if exists (stack longStackName) is false then put view_NameToFile (vName, "livecode") into longStackName
+   if exists (stack longStackName) is false then return empty
+   put the long id of card 1 of stack longStackName into viewTemplateCard 
+   return viewTemplateCard
+end view_GetTemplateCard

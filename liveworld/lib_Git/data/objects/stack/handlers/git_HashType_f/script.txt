@@ -1,0 +1,7 @@
+function git_HashType someHash
+   put "git cat-file -t" into someShell
+   put space & someHash after someShell
+   
+   put git_ExecuteShellCommand (someShell) into hashType
+   return hashType
+end git_HashType

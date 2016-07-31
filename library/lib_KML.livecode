@@ -1,0 +1,602 @@
+﻿script "lib_KML"
+--> MetaData
+-
+name: lib_KML
+type: script library 
+version: 0.4
+copyright: David Bovill
+licence:  GPLv3
+deps:
+
+/*
+A library for interfacing with KML
+*/
+
+
+--> Google Earth
+-
+getprop googleEarth_Speed
+    put the uOPN ["googleEarth_Speed"] of me into someSpeed
+    if someSpeed is empty then
+        return 1
+    else
+        return someSpeed
+    end if
+end googleEarth_Speed
+    
+setprop googleEarth_Speed someSpeed
+    set the uOPN ["googleEarth_Speed"] of me to someSpeed
+end googleEarth_Speed
+    
+getprop googleearth_Speeds
+    -- Navigation speed between 0.1 and 6, anything greater than 5 will be instantaneous (the default)
+    return "0.1,0.2,0.3,0.4,0.5,1,2,3,4,5,6"
+end googleearth_Speeds
+
+function googleEarth_GetViewLongitude
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    return longitude
+end googleEarth_GetViewLongitude
+
+function googleEarth_GetViewLatitude
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    return latitude
+end googleEarth_GetViewLatitude
+
+function googleEarth_GetViewRotation
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    return someRotation
+end googleEarth_GetViewRotation
+
+on googleEarth_SetViewRotation newRotation, someSpeed
+    if someSpeed is empty then put the googleEarth_Speed of me into someSpeed
+    
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    googleEarth_SetView latitude, longitude, someHeight, someTilt, newRotation, someSpeed
+    return the result
+end googleEarth_SetViewRotation
+
+function googleEarth_GetViewHeight
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    return someHeight
+end googleEarth_GetViewHeight
+
+on googleEarth_SetViewHeight newHeight, someSpeed
+    if someSpeed is empty then put the googleEarth_Speed of me into someSpeed
+    
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    -- put googleEarth_ConstructView(latitude, longitude, newHeight, someTilt, someRotation) into newView
+    googleEarth_SetView latitude, longitude, newHeight, someTilt, someRotation, someSpeed
+    return the result
+end googleEarth_SetViewHeight
+
+
+--> Google Earth | Model
+-
+on googleEarth_DisplayView latitude, longitude, someHeight, someTilt, someRotation
+    if latitude is empty then
+        put googleEarth_GetView() into googleView
+        googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+    end if
+    opn_Notify latitude & CR & longitude & CR & someHeight & CR & someTilt & CR & someRotation & CR & "OK", true
+end googleEarth_DisplayView
+
+on googleEarth_Nudge howMuch, shiftStatus
+    put the googleEarth_Speed of me into someSpeed
+    switch howMuch
+        case "Right Screen"
+            googleEarth_MoveView 0, -0.006863621916, 0, someSpeed
+            break
+        case "up"
+            if shiftStatus is true then
+                googleEarth_MoveView 0.000100000000, 0, 0, someSpeed
+            else
+                googleEarth_MoveView 0.000010000000, 0, 0, someSpeed
+            end if
+            break
+        case "down"
+            if shiftStatus is true then
+                googleEarth_MoveView -0.000100000000, 0, 0, someSpeed
+            else
+                googleEarth_MoveView -0.000010000000, 0, 0, someSpeed
+            end if
+            break
+        case "right"
+            if shiftStatus is true then
+                googleEarth_MoveView 0.000000000000, -0.000100000000, 0.000000000000, someSpeed
+            else
+                googleEarth_MoveView 0.000000000000, -0.000010000000, 0.000000000000, someSpeed
+            end if
+            break
+        case "left"
+            if shiftStatus is true then
+                googleEarth_MoveView 0, 0.000100000000, 0, someSpeed
+            else
+                googleEarth_MoveView 0, 0.000010000000, 0, someSpeed
+            end if
+            break
+    end switch
+end googleEarth_Nudge
+
+on googleEarth_SaveAndFlyKML someKML
+    put the tempname into tempFile
+    put "file:" & tempFile into tempUrl
+    put someKML into url tempUrl
+    
+    googleEarth_FlyToKmlFile tempFile
+end googleEarth_SaveAndFlyKML
+
+on googleEarth_FlyToKmlFile someFile
+   applescript_ConvertPath someFile
+   
+   put merge("tell application 'Google Earth' to open file '[[someFile]]'") into doScript
+   replace "'" with quote in doScript
+   do doScript as AppleScript
+   if the result is not empty then put doScript & cr & the result
+end googleEarth_FlyToKmlFile
+
+on googleEarth_DeconstructPoint threeLoc, @threeLat, @threeLong, @threeDist
+    if char 1 of threeLoc is "{" then delete char 1 of threeLoc
+    if char -1 of threeLoc is "}" then delete char -1 of threeLoc
+    
+    put item 1 of threeLoc into threeLat
+    put item 2 of threeLoc into threeLong
+    put item 3 of threeLoc into threeDist
+end googleEarth_DeconstructPoint
+
+on googleEarth_DeconstructView googleView, @latitude, @longitude, @someHeight, @someTilt, @someRotation
+    if char 1 of googleView is "{" then delete char 1 of googleView
+    if char -1 of googleView is "}" then delete char -1 of googleView
+    
+    set the itemdelimiter to ","
+    get item 1 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into latitude
+     
+    set the itemdelimiter to ","
+    get item 2 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into longitude
+    
+    set the itemdelimiter to ","
+    get item 3 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into someHeight
+    
+    set the itemdelimiter to ","
+    get item 4 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into someTilt
+    
+    set the itemdelimiter to ","
+    get item 5 of googleView
+    set the itemdelimiter to ":"
+    put word 1 of item 2 of it into someRotation
+end googleEarth_DeconstructView
+
+function googleEarth_ConstructView latitude, longitude, someHeight, someTilt, someRotation
+    return merge("{latitude:[[latitude]], longitude:[[longitude]], distance:[[someHeight]], tilt:[[someTilt]], azimuth:[[someRotation]]}")
+end googleEarth_ConstructView
+    
+on googleEarth_MoveView moveLat, moveLong, moveDist, someSpeed
+    if someSpeed is empty then put the googleEarth_Speed of me into someSpeed
+    put googleEarth_GetView() into googleView
+    googleEarth_DeconstructView googleView, latitude, longitude, someHeight, someTilt, someRotation
+     
+    put moveLat + latitude into newLat
+    put moveLong + longitude into newLong
+    put moveDist + someHeight into newDist
+     
+    /*
+    set the numberformat to "#.000000000000"
+    put moveLat + latitude & empty into newLat
+    put moveLong + longitude & empty into newLong
+    put moveDist + someHeight & empty into newDist
+    */
+    -- if the shiftkey is "Down" then googleEarth_DisplayView newLat, newLong, newDist, someTilt, someRotation, someSpeed
+     
+    googleEarth_SetView newLat, newLong, newDist, someTilt, someRotation, someSpeed
+    return the result -- & cr & doScript
+end googleEarth_MoveView
+
+on googleEarth_SetView latitude, longitude, someHeight, someTilt, someRotation, someSpeed
+    if someTilt is empty then put "0.0" into someTilt
+    if someRotation is empty then put "-150" into someRotation
+    if someSpeed is empty then put the googleEarth_Speed of me into someSpeed
+     
+    if char 1 to 6 of latitude is "xmlerr" then
+        opn_Notify latitude
+        exit to top
+    end if
+    set the numberformat to "#.000000000000"
+    put (latitude + 0) & empty into latitude
+    put (longitude + 0)  & empty into longitude
+    put (someHeight + 0)  & empty into someHeight
+    put (someTilt + 0 ) & empty into someTilt
+    put (someRotation + 0 ) & empty into someRotation
+     
+    put googleEarth_SetViewAppleScript(latitude, longitude, someHeight, someTilt, someRotation, someSpeed) into doScript
+    do doScript as AppleScript
+    put the result into someResult
+    if someResult contains "error" then
+        opn_Notify someResult
+    end if
+    return someResult
+end googleEarth_SetView
+
+function googleEarth_GetView
+    put googleEarth_GetViewAppleScript() into doScript
+    do doScript as AppleScript
+    return the result
+end googleEarth_GetView
+
+function googleEarth_GetViewAppleScript
+    put "tell application 'Google Earth'" into doScript
+    put cr & "GetViewInfo" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    return merge(doScript)
+end googleEarth_GetViewAppleScript
+
+function googleEarth_SetViewAppleScript latitude, longitude, someHeight, someTilt, someRotation, someSpeed
+    if someSpeed is empty then put "0.1" into someSpeed
+    put "tell application 'Google Earth'" into doScript
+    put googleEarth_ConstructView(latitude, longitude, someHeight, someTilt, someRotation) into googleView
+    put cr & "set newInfo to [[googleView]]" after doScript
+    put cr & "SetViewInfo newInfo speed [[someSpeed]]" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    return merge(doScript)
+end googleEarth_SetViewAppleScript
+
+on googleEarth_GetWindowDimensions @wWidth, @wHeight, @someHeight
+    get googleEarth_GetTerrainWindow()
+    put abs(item 3 of it - item 1 of it) into wWidth
+    put abs(item 4 of it - item 2 of it) into wHeight
+    put googleEarth_GetViewHeight() into someHeight
+end googleEarth_GetWindowDimensions
+
+function googleEarth_GetTerrainWindow
+    put googleEarth_GetGetPointOnTerrain("-1,1") into topLeftPoint
+    googleEarth_DeconstructAppleScriptPoint topLeftPoint, tlLatitude, tlLongitude, tlHeight
+    
+    put googleEarth_GetGetPointOnTerrain("1,-1") into bottomRightPoint
+    googleEarth_DeconstructAppleScriptPoint bottomRightPoint, brLatitude, brLongitude, brHeight
+     
+    return tlLatitude, tlLongitude, brLatitude, brLongitude
+end googleEarth_GetTerrainWindow
+           
+on googleEarth_DeconstructAppleScriptPoint somePoint, @latitude, @longitude, @someHeight
+    put word 1 to -1 of somePoint into somePoint
+    if char 1 of somePoint = "{" then delete char 1 of somePoint
+    if char -1 of somePoint = "}" then delete char -1 of somePoint
+    
+    put item 1 of somePoint into latitude
+    put item 2 of somePoint into longitude
+    put item 3 of somePoint into someHeight
+end googleEarth_DeconstructAppleScriptPoint
+
+function googleEarth_GetGetPointOnTerrain openglLoc
+    /*
+    set results to results & {GetPointOnTerrain {0, 0}}
+    (* The {0, 0} is in standard OpenGL coordinates; the space you draw
+    in with the projection and modelview matrices set to the identity.
+    {-1, -1} is the bottom left, {1, -1} is the bottom right, {1, 1} is
+    the top right, and the rest should be obvious. We pick the center. *) 
+    
+    The return value of GetPointOnTerrainFromScreenCoords
+    is a SAFEARRAY of Latitude in decimal degrees, Longitude in decimal degrees, and altitude (of the terrain point) in meters.
+    
+    The trick is reading a SAFEARRAY. In VBA it can be done with a Variant,
+    in C++ there are functions for SAFEARRAYs,
+    and there is a relatively straightforward way to do it in C#, but I don't know what it is.
+    */
+    
+    if openglLoc is empty then put "0,0" into openglLoc
+    
+    put "tell application 'Google Earth'" into doScript
+    put cr & "GetPointOnTerrain {[[openglLoc]]}" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    put merge(doScript) into doScript
+    -- return doScript
+     
+    do doScript as AppleScript
+    put the result into threeLoc
+    return threeLoc
+    
+    delete char 1 of threeLoc
+    delete char -1 of threeLoc
+    
+    put "latitude:" & word 1 of item 1 of threeLoc into googleView
+    put ", longitude:" & word 1 of item 2 of threeLoc after googleView
+    put ", someHeight:" && word 1 of item 3 of threeLoc after googleView
+    return googleView
+end googleEarth_GetGetPointOnTerrain
+
+function googleEarth_GetVersion
+    put "tell application 'Google Earth'" into doScript
+    put cr & "GetCurrentVersion" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    get merge(doScript)
+    do it as AppleScript
+    pu the result
+end googleEarth_GetVersion
+
+
+--> Google Earth | KML
+-
+on googleEarth_FlyToEncodedKml urlEncodedXML, flyToWhat, extra
+    put urlDecode(urlEncodedXML) into nodeXML
+    opn_Notify flyToWhat & CR & extra
+    put nodeXML
+end googleEarth_FlyToEncodedKml
+
+on googleEarth_FlyToKml nodeXML, flyToWhat
+    put xml_ConstructTag(nodeXML, "kml", "xmlns", "http://earth.google.com/kml/2.1") into someKML
+    xml_AddHeaderLine someKML
+    kml_DeconstructPlacemark nodeXML, latitude, longitude, range, someTilt, heading, pointLongitude, pointLatitude, pointHeight
+     
+    if flyToWhat is "View" then
+        googleEarth_SetView latitude, longitude, range, someTilt, heading
+    else
+        googleEarth_SetView pointLatitude, pointLongitude, pointHeight, 0, 0
+    end if
+end googleEarth_FlyToKml
+
+function googleEarth_ExtractTree someFolder, treeID
+    local someNodes
+     
+    line_Insert someFolder, someNodes
+    
+    put revXMLChildNames(treeID, someFolder, CR, "Folder", true) into subFolderNames
+    repeat for each line subFolderName in subFolderNames
+        put someFolder & "/" & subFolderName into folderNode	# 
+        put googleEarth_ExtractTree(folderNode, treeID) into newNodes
+        line_Insert newNodes, someNodes
+    end repeat
+    return someNodes
+end googleEarth_ExtractTree
+
+function googleEarth_MyPlacesFile
+    return $HOME & "/Library/Application Support/Google Earth/myplaces.kml"
+end googleEarth_MyPlacesFile
+
+function googleEarth_TempPlacesFile
+    return $HOME & "/Library/Application Support/Google Earth/myplaces.kml.tmp"
+end googleEarth_TempPlacesFile
+
+
+--> KML
+-
+function kml_GetRandomPlaceMark someTitle, description
+    if someTitle is empty then put "Random Placemark" into someTitle
+    
+    put random(180) - 90 into latitude
+    put random(360) - 180 into longitude
+    -- kml_NormaliseValue latitude
+    -- kml_NormaliseValue longitude
+    put kml_ConstructPlaceMark(someTitle, description, latitude, longitude, 100, 100, 0, 0) into placeMarkXML
+    put xml_ConstructTag(placeMarkXML, "kml", "xmlns", "http://earth.google.com/kml/2.1") into someKML
+    xml_AddHeaderLine someKML
+    return someKML
+end kml_GetRandomPlaceMark
+
+on kml_NormaliseValue @someValue
+    set the numberformat to "#.000000000000"
+    put someValue & empty into someValue
+end kml_NormaliseValue
+
+on kml_ExtractFolder searchName
+    if searchName is empty then
+        ask "What folder do you want to search for?"
+        put it into searchName
+        if searchName is empty then exit to top
+    end if
+    
+    put the tree_Field of me into treeField
+    put the tree_XmlID of treeField into treeID
+     
+    put "kml[1]/Document[1]/Folder[1]" into rootFolder
+    -- put revXMLChildContents(treeID, rootFolder, tab, CR, true, 1)
+     
+    put revXMLChildNames(treeID, rootFolder, CR, "Folder", true) into folderNames
+    put empty into foundContents
+    repeat for each line folderName in folderNames
+        put rootFolder & "/" & folderName into folderNode
+        put folderNode & "/name[1]" into someNode
+        get revXMLNodeContents(treeID, someNode)
+        if it is searchName then
+            put revXMLTree(treeID, folderNode, CR, tab, true, -1) into subTree
+            put revXMLText(treeID, folderNode) into foundContents
+            exit repeat
+        end if
+    end repeat
+    set the text of the description_Field of me to subTree & CR & CR & foundContents
+end kml_ExtractFolder
+
+function kml_EditPlacemark newName, nodeXML, latitude, longitude, range, someTilt, heading, pointLongitude, pointLatitude, pointHeight
+    put revCreateXMLTree(nodeXML, false, true, false) into treeID
+    if char 1 to 6 of treeID is "xmlerr" then
+        opn_Notify treeID
+        return treeID
+    end if
+    
+    put revXMLRootNode(treeID) into rootNode
+    
+    put rootNode & "/Placemark[1]/Name[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, newName
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/latitude[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, latitude
+    
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/longitude[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, longitude
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/range[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, range
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/tilt[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, someTilt
+     
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/heading[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, heading
+    
+    put pointLongitude into item 1 of coordinates
+    put pointLatitude into item 2 of coordinates
+    put pointHeight into item 3 of coordinates
+     
+    put rootNode & "/Placemark[1]/Point[1]" & "/coordinates[1]" into someNode
+    revPutIntoXMLNode treeID, someNode, coordinates
+    
+    put revXMLText(treeID) into newXml
+     
+    revDeleteXMLTree treeID
+    return newXml
+end kml_EditPlacemark
+
+on kml_DeconstructPlacemark nodeXML, @latitude, @longitude, @range, @someTilt, @heading, @pointLongitude, @pointLatitude, @pointHeight
+    put revCreateXMLTree(nodeXML, false, true, false) into treeID
+    if char 1 to 6 of treeID is "xmlerr" then
+        opn_Notify treeID
+        return treeID
+    end if
+    
+    put revXMLRootNode(treeID) into rootNode
+    if rootNode is "Placemark" then put empty into rootNode
+    
+    put rootNode & "/Placemark[1]/Point[1]" & "/coordinates[1]" into someNode
+    put revXMLNodeContents(treeID, someNode) into coordinates
+    if char 1 to 6 of latitude is "xmlerr" then
+        put empty into pointLongitude
+        put empty into pointLatitude
+        put empty into pointHeight
+        revDeleteXMLTree treeID
+        return false
+    else
+        put item 1 of coordinates into pointLongitude
+        put item 2 of coordinates into pointLatitude
+        put item 3 of coordinates into pointHeight
+    end if
+    
+    put rootNode & "/Placemark[1]/LookAt[1]" & "/latitude[1]" into someNode
+    put revXMLNodeContents(treeID, someNode) into latitude
+    if char 1 to 6 of latitude is "xmlerr" then
+        put empty into latitude
+        put empty into longitude
+        put empty into range
+        put empty into someTilt
+        put empty into heading
+    else   
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/longitude[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into longitude
+         
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/range[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into range
+         
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/tilt[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into someTilt
+         
+        put rootNode & "/Placemark[1]/LookAt[1]" & "/heading[1]" into someNode
+        put revXMLNodeContents(treeID, someNode) into heading
+    end if
+     
+    revDeleteXMLTree treeID
+    return true
+end kml_DeconstructPlacemark
+
+function kml_ConstructPhotoDescription photoTitle, description, photoUrl, photoLink, flickrUserName, flickrUserUrl
+    -- put uniEncode(photoTitle,"UTF8") into photoTitle
+    -- text_XmlEscape photoTitle
+    -- text_XmlEscape flickrUserName
+    -- put uniEncode(flickrUserName,"UTF8") into flickrUserName	
+    
+    put the uOPN ["googleearth_DescriptionTemplate"] of me into descriptionTemplate
+    return "<![CDATA[" & merge(descriptionTemplate) & "]]>"
+end kml_ConstructPhotoDescription
+
+function kml_ConstructPlaceMark someTitle, description, latitude, longitude, altitude, range, someTilt, heading, pointLongitude, pointLatitude, pointHeight
+    put longitude into pointLongitude
+    put latitude into pointLatitude
+    put altitude into pointHeight
+    
+    put empty into placemarkKml
+    put empty into lookAtKml
+    
+    put xml_ConstructTag(longitude, "longitude") & CR after lookAtKml
+    put xml_ConstructTag(latitude, "latitude") & CR after lookAtKml
+    if altitude is not empty then put xml_ConstructTag(altitude, "altitude") & CR after lookAtKml
+    if range is not empty then put xml_ConstructTag(range, "range") & CR after lookAtKml
+    if someTilt is not empty then put xml_ConstructTag(someTilt, "tilt") & CR after lookAtKml
+    if heading is not empty then put xml_ConstructTag(heading, "heading") & CR after lookAtKml
+    
+    delete last char of lookAtKml
+    put xml_ConstructTag(someTitle, "name") & CR after placemarkKml
+    if description is not empty then put xml_ConstructTag(description, "description") & CR after placemarkKml
+    put xml_ConstructTag(lookAtKml, "LookAt") & CR after placemarkKml
+     
+    -- put xml_ConstructTag("#default_copy3", "styleUrl") & CR after placemarkKml
+    put xml_ConstructTag("#msn_square", "styleUrl") & CR after placemarkKml
+     
+    put pointLongitude,pointLatitude,pointHeight into pointCoordinates
+    put xml_ConstructTag(pointCoordinates, "coordinates") into pointKml
+    put xml_ConstructTag(pointKml, "Point") & CR after placemarkKml
+     
+    delete last char of placemarkKml
+    get xml_ConstructTag(placemarkKml, "Placemark")
+    return it
+end kml_ConstructPlaceMark
+
+on kml_ConstructAndFly nodeXML
+    put xml_ConstructTag(nodeXML, "kml", "xmlns", "http://earth.google.com/kml/2.1") into someKML
+    xml_AddHeaderLine someKML
+    
+    put the tempname into someFile
+    put someKML into url ("file:" & someFile)
+    googleEarth_FlyToKmlFile someFile
+end kml_ConstructAndFly
+
+
+--> Deps
+-
+command opn_Notify someText
+   put someText
+end opn_Notify
+
+on xml_AddHeaderLine @someXml, pXmlVersion, pXmlEncoding
+    if pXmlVersion is empty then put "1.0" into pXmlVersion
+    if pXmlEncoding is empty then put "UTF-8" into pXmlEncoding
+    -- put format("<?xml version=\"1.0\" encoding=\"%s\"?>%s", pXmlEncoding, theXML) into theXML
+    put "<?xml version=" & kwote(pXmlVersion) && "encoding=" & kwote(pXmlEncoding) & "?>" & CR before someXml
+end xml_AddHeaderLine
+
+command line_Insert someLine, @someIndex, beforeLineNum
+    if someIndex is empty then
+        put someLine into someIndex
+    else if someLine is not empty then
+        if beforeLineNum is a number then
+            put someLine & CR before line beforeLineNum of someIndex
+        else
+            put CR & someLine after someIndex
+        end if
+    end if
+end line_Insert
+
+command applescript_ConvertPath @pFileOrFolder
+   -- "Macintosh HD:Applications:Revolution 2.6.1:"
+   put revMacFromUnixPath (pFileOrFolder) into pFileOrFolder
+   put kwote(pFileOrFolder) into pFileOrFolder
+   return empty
+end applescript_ConvertPath
+
+function kwote someText, pQuoteChar
+   if pQuoteChar is empty then put quote into pQuoteChar
+   return pQuoteChar & someText & pQuoteChar
+end kwote

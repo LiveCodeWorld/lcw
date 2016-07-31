@@ -1,0 +1,8 @@
+function hKeyArray_ConstructIdTypeArray idToHkeyArray
+    repeat for each key nodeID in idToHkeyArray
+        put idToHkeyArray [nodeID] into hKey
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        array_AddToIndex nodeID, handlerType, IdTypeArray
+    end repeat
+    return IdTypeArray
+end hKeyArray_ConstructIdTypeArray

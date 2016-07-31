@@ -1,0 +1,5 @@
+on menu_DisplayGlobalScriptArray mTarget, hkeyArrayKey
+   global gHkey_Array
+   put gHkey_Array [hkeyArrayKey] into someArray
+   display_Array someArray, ("Global gHkey_Array:" && hkeyArrayKey)
+end menu_DisplayGlobalScriptArray

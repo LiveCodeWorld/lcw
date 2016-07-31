@@ -1,0 +1,11 @@
+private function folder_ConstructInfoTableLine someFile, fileSize, creationDate, fileHash, baseItemNum
+set the itemdelimiter to "/"
+put "." into item 1 to baseItemNum of someFile
+ 
+put someFile & tab after tableLine
+put fileSize & tab after tableLine
+put creationDate & tab after tableLine
+put fileHash after tableLine
+ 
+return tableLine
+end folder_ConstructInfoTableLine

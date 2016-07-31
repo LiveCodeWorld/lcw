@@ -1,0 +1,15 @@
+command view_LoadBigIndex pForceLoad
+   global gLCW
+   
+   if pForceLoad is true or gLCW ["viewIndexMenu"] is empty then
+      put view_PathIndex() into viewPaths
+      replace ("View|") with empty in viewPaths
+      get outline_FromPathIndex(viewPaths, "|")
+      if it is empty then 
+         put "Place Holder" into gLCW ["viewIndexMenu"]
+      else
+         put it & cr & "-" & cr & "Place Holder" into vMenu
+      end if
+      put vMenu into gLCW ["viewIndexMenu"]
+   end if
+end view_LoadBigIndex

@@ -1,0 +1,6 @@
+command objectArray_FlatSearchGroup @objectArray, @propertyArray, containerObject, someProperty, pObjectKeyProperty, pControllerObject, pSplitArrays
+   repeat with controlNum = 1 to the number of controls in containerObject
+      put the long id of control controlNum of containerObject into someObject
+      objectArray_AddProperty objectArray, propertyArray, someObject, someProperty, pObjectKeyProperty, pControllerObject, pSplitArrays
+   end repeat
+end objectArray_FlatSearchGroup

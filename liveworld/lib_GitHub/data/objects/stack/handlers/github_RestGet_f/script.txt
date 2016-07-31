@@ -1,0 +1,5 @@
+function github_RestGet restPath
+   put _constructApiUrl (restPath) into someUrl
+   put github_RestGetFromUrl (someUrl) into someJSON
+   return someJSON
+end github_RestGet

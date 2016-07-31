@@ -1,0 +1,19 @@
+command fedwiki_CleanJournalArray @pageArray, pPreserveActions
+   switch pPreserveActions
+      case empty
+         fedwiki_StripJournalToCreate pageArray
+          break
+      default
+         put pageArray ["journal"] into journalArray
+         put item 2 of the extents of journalArray into lastJournalNum
+         put 1 into newItemNum
+         repeat with jNum = 1 to lastJournalNum
+            put journalArray [jNum] into itemArray
+            if itemArray ["type"] is among the items of pPreserveActions then
+               put itemArray into newJournalArray [newItemNum]
+               add 1 to newItemNum
+            end if
+         end repeat
+         put newJournalArray into pageArray ["journal"]
+   end switch
+end fedwiki_CleanJournalArray

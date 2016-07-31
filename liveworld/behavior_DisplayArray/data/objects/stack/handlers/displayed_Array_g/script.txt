@@ -1,0 +1,5 @@
+getprop displayed_Array
+   -- compatibility with old treeView
+   put the displayed_Data of me into someArray
+   return someArray
+end displayed_Array

@@ -1,0 +1,4 @@
+getprop header_View
+   if exists (HeaderView) is false then view_IndexChildren
+   return HeaderView
+end header_View

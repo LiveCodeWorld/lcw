@@ -1,0 +1,5 @@
+getprop edited_Flag
+   put the stack_Name of the target into stackName
+   put rev_ListEditedStackNames ("edited") into editedStackNames
+   return stackName is among the lines of editedStackNames
+end edited_Flag

@@ -1,0 +1,5 @@
+command repository_SetSaveNowCount someNum
+   if someNum is not a number then put empty into someNum
+   set the uOPN ["repository_SaveNowCount"] of me to someNum
+   return someNum
+end repository_SetSaveNowCount

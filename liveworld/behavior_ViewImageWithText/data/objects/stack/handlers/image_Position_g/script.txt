@@ -1,0 +1,5 @@
+getprop image_Position
+   put the view_DisplayValue ["image_Position"] of me into imagePosition
+   if imagePosition is empty then return "right"
+   return imagePosition
+end image_Position

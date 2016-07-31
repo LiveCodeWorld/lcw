@@ -1,0 +1,17 @@
+on menu_AddDefaultFoldersToSet mTarget, projectName
+   -- needs updating
+   breakpoint
+   -- put the displayed_Project of me into projectName
+   put "Default" into defaultProjectName
+   
+   put project_GetFolder ("Script Only Libs", defaultProjectName) into scriptOnlyFolder
+   put project_GetFolder ("Library Stacks", defaultProjectName) into usedFolder
+   put project_GetFolder ("Named Behaviors", defaultProjectName) into behaviorFolder
+   put project_GetFolder ("Views", defaultProjectName) into viewFolder
+   put project_GetFolder ("Model Stacks", defaultProjectName) into modelFolder
+   
+   put project_ConstructMetaData (projectName, scriptOnlyFolder, usedFolder, behaviorFolder, viewFolder, modelFolder) into projectMetaData
+   project_StoreMetadata projectMetaData, projectName
+   
+   display_ProjectArray projectName
+end menu_AddDefaultFoldersToSet

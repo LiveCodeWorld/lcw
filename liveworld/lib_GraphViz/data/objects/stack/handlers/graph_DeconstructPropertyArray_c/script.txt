@@ -1,0 +1,4 @@
+on graph_DeconstructPropertyArray dotPropertyArray, @nodeIDs, @flattenNum
+   put dotPropertyArray ["nodeIDs"] into nodeIDs
+   put dotPropertyArray ["flattenNum"] into flattenNum
+end graph_DeconstructPropertyArray

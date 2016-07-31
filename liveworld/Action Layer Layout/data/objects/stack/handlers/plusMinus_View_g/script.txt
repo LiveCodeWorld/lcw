@@ -1,0 +1,7 @@
+getprop plusMinus_View
+   put the card_Object of the target into cardObject
+   if exists (group "Trait Plus and Minus" of cardObject) is false then return empty
+   
+   put the long id of group "Trait Plus and Minus" of cardObject into plusMinusView
+   return plusMinusView
+end plusMinus_View

@@ -1,0 +1,6 @@
+getprop is_LcwFolder [pIndexView]
+   if pIndexView is empty then put the long id of the target into pIndexView
+   put the lcw_Folder of pIndexView into lcwFolder
+   put the index_Folder of pIndexView into indexFolder
+   return indexFolder = lcwFolder
+end is_LcwFolder

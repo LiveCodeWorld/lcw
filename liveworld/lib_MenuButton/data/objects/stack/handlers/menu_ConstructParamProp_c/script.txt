@@ -1,0 +1,74 @@
+command menu_ConstructParamProp someScript, mCommand, customParam, mController, @paramProp, @submenuProp, @fixedSubMenu
+   -- ignoreCall: submenuProperty,g
+   /*
+   Some strange bugs that have been got around here.
+   Putting a cProp handler with a param into a variable works
+   But no space between handler and "["
+   Also no quotes around variable
+   */
+   
+   put empty into mFormatProp
+   put empty into submenuProp
+   put empty into paramProp
+   put empty into fixedSubMenu
+   
+   switch
+      case customParam is empty
+         return empty
+      case param_IsBoolean (customParam)
+         set the itemdelimiter to "_"
+         put item 2 of mCommand into commandBody
+         if commandBody is empty then return empty
+         
+         put script_ParamToHandlerName (commandBody) into paramProp
+         put "submenu_Boolean" into submenuProp
+         return "boolean"
+      default
+         -- not a special case
+         -- so it is either a fixed menu based on the "Case conditions"
+         -- or a "custom" menu based on a getprop submenuProp handler
+         
+         put script_ParamToHandlerName (customParam) into paramProp
+         if last char of paramProp = "y" then
+            put char 1 to -2 of paramProp & "ies" into submenuProp
+         else
+            put paramProp & "s" into submenuProp
+         end if
+         
+         put token 1 of submenuProp into getPropName
+         -- put getPropName & comma & "g" into shortHkey
+         -- put the script_Handler [shortHKey]
+         if script_GetGetProp (getPropName, someScript) is not empty then
+            -- there is a getprop submenuProp handler in the mController script
+            return "custom submenu"
+         else
+            -- this hack allows global submenu properties to be defined
+            try
+               -- should be same as menu_ConvertTable (but on compile I do not know mTarget)
+               put submenuProp into submenuProperty
+               put the submenuProperty of mController into testSubMenu
+               if testSubMenu is not empty then return "custom external"
+            catch tError
+               -- looks like submenuProperty could require mTarget param
+               put submenuProp & "[" & mTarget & "]" into submenuProperty
+               opn_Notify "Error: with" && submenuProperty
+            end try
+            
+            -- is there a "case" statement in the script?
+            put script_GetCommand (mCommand, someScript) into menuHandler
+            put script_ExtractCaseConditions (menuHandler) into fixedSubMenu
+            line_Delete "default", fixedSubMenu
+            if fixedSubMenu is not empty then
+               put "submenu_Fixed[" & mCommand & "]" into submenuProp
+               return "fixed"
+            else if customParam is "menuChoice" then -- are you sure ???
+               put empty into paramProp
+               put empty into submenuProp
+               return empty
+            else
+               --in this case it can be useful to allow getprop handlers outside of the controller
+               return "custom external"
+            end if
+         end if
+   end switch
+end menu_ConstructParamProp

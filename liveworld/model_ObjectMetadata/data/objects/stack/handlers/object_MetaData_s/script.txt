@@ -1,0 +1,13 @@
+setprop object_MetaData [uRipKey] uRipArray
+   -- this also indexes using "object_AddToGlobalArray"
+   
+   if uRipKey is empty and uRipArray is an array then
+      set the script_MetaData of the target to uRipArray
+   else
+      put uRipArray into newValue
+      put the object_MetaData of the target into uRipArray
+      put newValue into uRipArray [uRipKey]
+      set the script_MetaData of the target to uRipArray
+   end if
+   return uRipArray
+end object_MetaData

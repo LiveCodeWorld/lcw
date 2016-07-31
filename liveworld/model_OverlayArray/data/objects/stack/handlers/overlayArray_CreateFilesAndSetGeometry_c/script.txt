@@ -1,0 +1,26 @@
+command overlayArray_CreateFilesAndSetGeometry @overlayArray, pMainstackHash, pImageFormat
+   -- does not save overlay array
+   if overlayArray is not an array then return empty
+   put overlayArray_GetLinkArray (overlayArray) into hkeyArray
+   if hkeyArray is not an array then return empty
+   
+   -- creates all the dot and image files (but does nto save the array files)
+   overlay_CreateDotFiles overlayArray, empty, pImageFormat
+   put the result into gvResult
+   if token 1 of gvResult = "error" then
+      opn_Notify gvResult, true
+      return gvResult
+   end if
+   
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Folder") into overlayFolder
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Name") into overlayName
+   
+   ## now set geometry by using dot to recreate files and then extract geometry array
+   put overlay_GetCmapText (overlayFolder, overlayName) into cmapText
+   put imagemap_ParseMap (cmapText) into geometryArray
+   overlayArray_SetGeometryArray overlayArray, geometryArray
+   
+   ## Store overlayArray in case not already stored
+   overlay_SetArray overlayFolder, overlayArray, overlayName, pMainstackHash
+   return geometryArray
+end overlayArray_CreateFilesAndSetGeometry

@@ -1,0 +1,4 @@
+function rev_GetSelectedHandlerName
+   put rev_GetHandlerTreeSelectedInfo() into hInfo
+   return word 2 of hInfo
+end rev_GetSelectedHandlerName

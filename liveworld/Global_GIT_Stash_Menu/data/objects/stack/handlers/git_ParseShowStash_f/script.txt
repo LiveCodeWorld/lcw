@@ -1,0 +1,19 @@
+function git_ParseShowStash gitResult
+   set the itemdelimiter to tab
+   put "Text" & CR Into textOutline
+   put "Binary" & CR Into binaryOutline
+   repeat for each line someLine in gitResult
+      put word 1 to -1 of item 1 of someLine into insertNum
+      put word 1 to -1 of item 2 of someLine into deleteNum
+      put word 1 to -1 of item 3 of someLine into relPath
+      
+      if insertNum is a number then
+         put tab & relPath & CR after textOutline
+      else
+         put tab & relPath & CR after binaryOutline
+      end if
+   end repeat
+   put textOutline & binaryOutline into someOutline
+   put word 1 to -1 of someOutline into someOutline
+   return someOutline
+end git_ParseShowStash

@@ -1,0 +1,28 @@
+command stackFile_AddStackNames newStackNames, toStackObject
+   put stackFile_ToArray (the stackfiles of toStackObject) into stackFileArray
+   put the filename of toStackObject into rootFile	# wiil add to memory -- assume it is OK?
+   put folder_Above(rootFile) into baseFolder
+   lock messages
+   put the mainstacks into oMainStacks
+   set the wholematches to true
+   repeat for each line newStackName in newStackNames
+      if there is not a stack newFile then next repeat
+      if newStackName contains comma then
+         -- need another way of dealing with this
+         next repeat
+      end if
+      
+      put the filename of stack newStackName into newFile
+      put file_GetRelativePath (newFile, baseFolder, commonPath) into newRelativeFile
+      put newRelativeFile into stackFileArray [newStackName]
+      
+      put the mainstack of stack newStackName into mainStackName
+      if mainStackName is not among the lines of oMainStacks then
+         delete stack mainStackName
+      end if
+   end repeat
+   unlock messages
+   
+   put stackFile_FromArray(stackFileArray) into newStackFiles
+   return newStackFiles
+end stackFile_AddStackNames

@@ -1,0 +1,25 @@
+command display_DotSections overlayArray, pGraphController, pImageView, pOverlayName
+   local pResizeStyle
+   if exists(pGraphController) is false then put the long id of the target into pGraphController
+   if exists (pImageView) is false then
+      if pResizeStyle is empty then put "fit inside frame" into pResizeStyle
+      display_Image empty, true, pOverlayName, true
+      put the result into pImageView
+   end if
+   
+   set the overlay_Array of pImageView to overlayArray
+   set the uOPN ["dot_File"] of pImageView to empty
+   set the displayed_OverlayName of pImageView to pOverlayName
+   set the overlay_Controller of pImageView to pGraphController
+   
+   put the dot_ConstructHeader [pImageView] of pGraphController into dotHeader
+   put the dot_ConstructDefSection [pImageView] of pGraphController into defSection
+   put the dot_ConstructClusterSection [pImageView] of pGraphController into clusterSection
+   put the dot_ConstructLinkSection [pImageView] of pGraphController into linkSection
+   put dot_TextFromSections (dotHeader, defSection, clusterSection, linkSection) into dotText
+   
+   set the dot_Text of pImageView to dotText 
+   
+   object_GoTo pImageView, true
+   return pImageView
+end display_DotSections

@@ -1,0 +1,23 @@
+function menu_ConstructTableLine mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp
+   set the itemdelimiter to tab
+   
+   put mLine into item 1 of mTableLine
+   put pigeon into item 2 of mTableLine
+   if exists(mController) is false then
+      -- could have a menu without a defined inserted Global menu?
+      put empty into item 3 of mTableLine
+   else
+      put the rugged_ID of mController into item 3 of mTableLine
+      -- put mController into item 3 of mTableLine
+   end if
+   put mTitle into item 4 of mTableLine
+   put mFormatProp into item 5 of mTableLine
+   put mItemType into item 6 of mTableLine
+   put submenuProp into item 7 of mTableLine
+   put paramProp into item 8 of mTableLine
+   
+   put menu_CleanLine (mLine) into mSendLine
+   put mSendLine into item 9 of mTableLine
+   
+   return mTableLine
+end menu_ConstructTableLine

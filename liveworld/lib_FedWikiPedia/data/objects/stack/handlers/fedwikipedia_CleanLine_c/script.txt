@@ -1,0 +1,9 @@
+command fedwikipedia_CleanLine @wikiText
+   fedwikipedia_CleanCitations wikiText
+   fedwikipedia_CleanReferences wikiText
+   fedwikipedia_CleanSeeAlso wikiText
+   fedwikipedia_CleanConvertTemplate wikiText
+   
+   fedwikipedia_StripAllTemplates wikiText
+   put word 1 to -1 of wikiText into wikiText
+end fedwikipedia_CleanLine

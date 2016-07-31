@@ -1,0 +1,22 @@
+function hArray_ConstructNameObjectArray objectType
+   local nameTypeArray
+   put hArray_GetObjectTypeArray (objectType) into objectTypeArray
+   repeat for each key rObject in objectTypeArray
+      if exists (rObject) is false then
+         next repeat
+      end if
+      put hArray_GetUripArray (rObject, "name") into uripName
+      if uripName is empty then
+         delete variable objectTypeArray [rObject]
+         hArray_SetObjectTypeArray objectType, objectTypeArray
+         
+         put the mobile_Name of rObject into mObject
+         put mObject && "has no uRIP ['name']." & CR & CR & "Removed it from gHkey_Array!" into someMessage
+         opn_Notify someMessage, true
+         next repeat
+      else
+         put empty into nameTypeArray [uripName][rObject]
+      end if
+   end repeat
+   return nameTypeArray
+end hArray_ConstructNameObjectArray

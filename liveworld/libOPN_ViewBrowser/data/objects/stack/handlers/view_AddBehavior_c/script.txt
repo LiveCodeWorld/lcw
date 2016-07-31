@@ -1,0 +1,7 @@
+command view_AddBehavior someView
+   put the view_Template of someView into viewTemplate
+   if exists(viewTemplate) is false then return empty
+   
+   view_TemplateAddBehavior viewTemplate
+   return the result
+end view_AddBehavior

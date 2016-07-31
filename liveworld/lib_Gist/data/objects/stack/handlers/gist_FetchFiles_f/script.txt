@@ -1,0 +1,6 @@
+function gist_FetchFiles whichType
+   put gist_List() into gistList
+   sort gistList
+   put gist_FilterWithKey (gistList, whichType) into shortGistFiles
+   return shortGistFiles
+end gist_FetchFiles

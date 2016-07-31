@@ -1,0 +1,9 @@
+function rig_ListFiles someFolder
+   if the environment = "server" then
+      put rig_ListServerFiles (someFolder) into shortFiles
+   else
+      put rig_FetchPathArray (someFolder) into fileArray
+      put rig_SortAndFilterCodeFiles (fileArray) into shortFiles
+   end if
+   return shortFiles
+end rig_ListFiles

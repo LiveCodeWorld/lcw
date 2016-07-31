@@ -1,0 +1,4 @@
+getprop overlay_Controller [pOverlayName]
+   put _GetGraphProperty (word 1 of the params, pOverlayName) into someValue
+   return someValue
+end overlay_Controller

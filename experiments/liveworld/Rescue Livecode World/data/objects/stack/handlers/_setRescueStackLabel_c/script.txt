@@ -1,0 +1,4 @@
+command _setRescueStackLabel
+   put _constructRescueStackLabel() into rescueStackLabel
+   set the label of this stack to rescueStackLabel
+end _setRescueStackLabel

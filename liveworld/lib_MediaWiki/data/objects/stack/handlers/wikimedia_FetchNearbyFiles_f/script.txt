@@ -1,0 +1,21 @@
+function wikimedia_FetchNearbyFiles someLat, someLong, pRadius, pFormat
+   /*
+   -- action=query&generator=geosearch&ggsprimary=all&ggsnamespace=6&ggsradius=500
+   -- &ggscoord=51.5|11.95&prop=imageinfo&iiprop=url&iiurlwidth=200
+   
+   put wikimedia_FetchNearbyFiles ( " 51.5", "11.95")
+   */
+   
+   if pFormat is empty then put "json" into pFormat
+   if pRadius is empty then put 500 into pRadius
+   
+   get merge ("?action=query&generator=geosearch&ggsprimary=all&ggsnamespace=6&ggsradius=[[pRadius]]&format=[[pFormat]]")
+   
+   put wikimedia_GetApiRoot() & it into someUrl
+   put "&ggscoord=" & someLat & "|" & someLong after someUrl -- 51.5|11.95
+   put "&prop=imageinfo&iiprop=url&iiurlwidth=200" after someUrl
+   
+   wikipedia_SetUserAgent
+   put url someURL into someJSON
+   return someJSON
+end wikimedia_FetchNearbyFiles

@@ -1,0 +1,23 @@
+on menu_ExportSvg svgView
+   put the htmltext of svgView into someHTML
+   put the svg_XML of svgView into someSVG
+   put the svg_URL of svgView into svgURL
+   
+   answer folder "Choose a folder to export the html and svg..."
+   if it is empty then exit to top
+   
+   put it into someFolder
+   set the defaultfolder to someFolder
+   
+   set the itemdelimiter to slash
+   put item -1 of svgURL into shortFile
+   if char -4 to -1 of shortFile is not ".svg" then
+      set the itemdelimiter to "."
+      if the number of items of shortFile = 2 then delete item -1 of shortFile
+      put ".svg" after shortFile
+   end if
+   put "file:" & shortFile into localSvgUrl
+   
+   put someHTML into url "file:index.html"
+   put someSVG into url localSvgUrl
+end menu_ExportSvg

@@ -1,0 +1,4 @@
+function menu_GlobalControllers pObjectFormat
+   put menu_ConstructGlobalControllerArray (pObjectFormat) into menuObjectArray
+   return keys(menuObjectArray)
+end menu_GlobalControllers

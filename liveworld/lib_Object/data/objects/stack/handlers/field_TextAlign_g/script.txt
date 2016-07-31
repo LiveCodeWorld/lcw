@@ -1,0 +1,8 @@
+getprop field_TextAlign
+   put the long ID of the target into someField
+   if word 1 of someField is "field" then
+      return the textAlign of someField
+   else
+      return empty
+   end if
+end field_TextAlign

@@ -1,0 +1,5 @@
+function fedwiki_GetLocalPageArray pageSlug, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_GetLocalPageJson (pageSlug, pFedwikiDomain, pLocalWikiFolder) into pageJSON
+   put json_ToArray (pageJSON) into pageArray 
+   return pageArray
+end fedwiki_GetLocalPageArray

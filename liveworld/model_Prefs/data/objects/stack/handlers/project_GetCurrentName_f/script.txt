@@ -1,0 +1,6 @@
+function project_GetCurrentName
+   global gLibrarySet_Array
+   put gLibrarySet_Array ["metadata"]["library_SetName"] into setName
+   if setName is empty then put "Default" into setName
+   return setName
+end project_GetCurrentName

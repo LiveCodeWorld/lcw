@@ -1,0 +1,11 @@
+function wikimedia_FetchFilesInCategory someCategory, pFormat
+   -- api.php?action=query&list=categorymembers&cmtype=file&cmtitle=Category:CC-BY-2.0
+   if pFormat is empty then put "json" into pFormat
+   
+   get merge ("?action=query&list=categorymembers&cmtype=file&cmtitle=Category:[[someCategory]]&format=[[pFormat]]")
+   put wikimedia_GetApiRoot() & it into someUrl
+   
+   wikipedia_SetUserAgent
+   put url someURL into someJSON
+   return someJSON
+end wikimedia_FetchFilesInCategory

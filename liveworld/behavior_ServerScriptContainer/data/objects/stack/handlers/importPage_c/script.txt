@@ -1,0 +1,5 @@
+on importPage
+   put fedwiki_GetDroppedUrl ($_POST_RAW) into wikipediaUrl
+   put fedwiki_FetchCoolWikipediaPageJson (wikipediaUrl) into someJSON
+   fedwiki_ReturnJSON someJSON
+end importPage

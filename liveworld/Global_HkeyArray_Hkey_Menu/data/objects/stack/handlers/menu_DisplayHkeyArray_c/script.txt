@@ -1,0 +1,11 @@
+on menu_DisplayHkeyArray treeView
+   -- put the displayed_Data of treeView into treeData
+   put the view_Data of treeView into hkeyArray
+   
+   put the displayed_Object of treeView into hObject
+   put the displayed_Hkey of treeView into hKey
+   put item 1 of hkey into hName
+   put item 3 of hkey into hObject
+   
+   display_HKeyArray hKeyArray, hKey
+end menu_DisplayHkeyArray

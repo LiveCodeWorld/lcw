@@ -1,0 +1,20 @@
+command rev_SetScriptEditorShowDocumentation hKey, pUnlockField
+   put hkey_FetchHelp (hKey) into someHtml
+   
+   lock screen
+   if someHtml is empty then
+      rev_SetLaunchDocButtonLabel
+   else
+      -- opn_Notify ("Displayed" && hKey), true
+      -- _autoSave hKey, someHtml
+      
+      rev_SetLaunchDocButtonLabel "Handler Doc"
+      rev_SetScriptEditorActivatePane "Documentation" -- this must be first as it also set's the htmltext
+      rev_SetScriptEditorDocumentation someHtml
+      
+      if pUnlockField is true then
+         rev_SetScriptEditorDocumentationLock true
+      end if
+   end if
+   unlock screen
+end rev_SetScriptEditorShowDocumentation

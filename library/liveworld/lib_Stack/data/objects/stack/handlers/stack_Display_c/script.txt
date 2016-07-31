@@ -1,0 +1,11 @@
+command stack_Display someObject, someRect, fadeIn
+    put the stack_Object of someObject into stackObject
+    go invisible stackObject
+    if someRect is a rect then set the rect of stackObject to someRect
+    if fadeIn is true then
+        set the blendlevel of stackObject to 100
+        set the stack_Faded of stackObject to false
+    else
+        set the visible of stackObject to true
+    end if
+end stack_Display

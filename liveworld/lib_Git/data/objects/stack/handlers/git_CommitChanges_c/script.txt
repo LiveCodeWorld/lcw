@@ -1,0 +1,12 @@
+command git_CommitChanges someComment, pAddIfNew, pViewDiff
+   repository_SetCommitComment someComment
+   
+   put "git commit" into someShell
+   if pAddIfNew is not false then put space & "-a" after someShell
+   if pViewDiff is not false then put space & "-v" after someShell
+   put space & "-m '" & someComment & "'" after someShell
+   
+   -- opn_Notify someShell, true
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_CommitChanges

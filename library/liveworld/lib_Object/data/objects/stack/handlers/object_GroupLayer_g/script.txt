@@ -1,0 +1,22 @@
+getprop object_GroupLayer
+   put the long ID of the target into someObject
+   put someObject into containerGroup
+   delete word 1 to 4 of containerGroup
+   
+   repeat with controlNum = 1 to the number of controls in containerGroup
+      put the long ID of control controlNum of containerGroup into testObject
+      if testObject = someObject then
+         /*
+         lock screen
+         put the short id of testObject into someID
+         start editing containerGroup
+         put the layer of control id someID into withinGroupLayer
+         stop editing
+         unlock screen
+         */
+         put the layer of testObject - the layer of containerGroup into withinGroupLayer
+         return withinGroupLayer
+      end if
+   end repeat
+   return empty
+end object_GroupLayer

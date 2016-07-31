@@ -1,0 +1,9 @@
+on menu_RestorePrefs scriptObject, projectName
+   answer merge ("Do you want to restore all gPref_* info from '[[projectName]]'?") with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   project_RestoreGlobalPrefs projectName
+   
+   put project_GatherGlobalPrefs() into projectPrefsArray
+   display_Array projectPrefsArray, "project_GatherGlobalPrefs()"
+end menu_RestorePrefs

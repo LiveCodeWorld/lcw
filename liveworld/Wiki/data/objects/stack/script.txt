@@ -1,0 +1,37 @@
+--> Metadata
+-
+
+--> Wiki
+-
+[[ _FetchHandler (convertCSS,c) ]]
+
+
+--> Wiki | Props
+-
+[[ _FetchHandler (wiki_URL,g) ]]
+
+[[ _FetchHandler (wiki_URL,s) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (wiki_View,g) ]]
+
+getprop wiki_View
+   return the long id of grp 1 of cd 1 of me
+end wiki_View
+
+[[ _FetchHandler (browser_Widget,g) ]]
+
+[[ _FetchHandler (field_Control,g) ]]
+
+
+--> Private | Controls
+-
+[[ _FetchHandler (_browserWidget,pf) ]]
+
+[[ _FetchHandler (_fieldControl,pf) ]]
+
+[[ _FetchHandler (_wikiView,pf) ]]
+
+[[ _FetchHandler (_wikiCard,pf) ]]

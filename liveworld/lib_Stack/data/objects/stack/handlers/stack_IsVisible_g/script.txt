@@ -1,0 +1,12 @@
+getprop stack_IsVisible
+    put the stack_Object of the target into stackObject
+    if the visible of stackObject is true then
+        if the blendlevel of stackObject > 5 then
+            return false
+        else
+            return true
+        end if
+    else
+        return false
+    end if
+end stack_IsVisible

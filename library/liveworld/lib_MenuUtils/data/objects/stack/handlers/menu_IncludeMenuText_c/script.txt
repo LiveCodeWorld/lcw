@@ -1,0 +1,9 @@
+command menu_IncludeMenuText @mText, insertedMenuTitle, targetObject, insertedMenuController, menuIsDisabled, pTitlePath, pTextPath, pMenuTarget
+   -- recursive handler so be careful here to avoid infinite loops
+   put menu_GetTable (insertedMenuTitle, insertedMenuController) into insertedMenuTable
+   -- set the itemdelimiter to "/"
+   -- delete item - 1 of pTitlePath
+   put menu_ConvertTable (insertedMenuTable, targetObject, pTitlePath, pTextPath, pMenuTarget, menuIsDisabled) into insertedMenu
+   if insertedMenu is not empty then put insertedMenu & CR after mText
+   return empty
+end menu_IncludeMenuText

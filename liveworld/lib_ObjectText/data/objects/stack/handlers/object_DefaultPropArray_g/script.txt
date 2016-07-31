@@ -1,0 +1,52 @@
+getprop object_DefaultPropArray
+   put the long id of the target into someObject
+   switch word 1 of someObject
+      case "stack"
+         reset the templateStack
+         put the properties of the templateStack into defaultArray
+         break
+      case "card"
+         reset the templateCard
+         put the properties of the templateCard into defaultArray
+         break
+      case "group"
+         reset the templateGroup
+         put the properties of the templateGroup into defaultArray
+         break
+      case "button"
+         reset the templateButton
+         put the properties of the templateButton into defaultArray
+         break
+      case "field"
+         reset the templateField
+         put the properties of the templateField into defaultArray
+         break
+      case "graphic"
+         -- see strokeradient = "none" bug
+         reset the templateGraphic
+         put the properties of the templateGraphic into defaultArray
+         break
+      case "scrollbar"
+         reset the templateScrollbar
+         put the properties of the templateScrollbar into defaultArray
+         break
+      case "player"
+         reset the templatePlayer
+         put the properties of the templatePlayer into defaultArray
+         break
+      case "image"
+         reset the templateImage
+         put the properties of the templateImage into defaultArray
+         break
+      case "videoclip"
+         reset the templateVideoClip
+         put the properties of the templateVideoClip into defaultArray
+         break
+      case "audioclip"
+         reset the templateAudioClip
+         put the properties of the templateAudioClip into defaultArray
+         break
+   end switch
+   
+   return defaultArray
+end object_DefaultPropArray

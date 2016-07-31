@@ -1,0 +1,16 @@
+command digitalocean_UpdateDomainRecord oceanDomainName, recordID, someJSON
+   /*
+   https://developers.digitalocean.com/documentation/v2/#update-a-domain-record
+   
+   To update an existing record, send a PUT request to /v2/domains/$DOMAIN_NAME/records/$RECORD_ID. 
+   Any attribute valid for the record type can be set to a new value for the record.
+   
+   -- constant dsfa = "https://api.digitalocean.com/v2/domains/digitaloceanisthebombdiggity.com/records"
+   -- curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer $Token' "[[fdas]"
+   */
+   
+   put "domains/" & oceanDomainName & "/records/" & recordID into domainPath
+   digitalocean_RestPut domainPath, someJSON
+   put the result into someResult
+   return someResult
+end digitalocean_UpdateDomainRecord

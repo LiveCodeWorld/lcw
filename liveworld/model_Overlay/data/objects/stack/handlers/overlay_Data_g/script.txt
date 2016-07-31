@@ -1,0 +1,5 @@
+getprop overlay_Data
+   put the overlay_Folder of the target into overlayFolder
+   put overlay_GetData (overlayFolder) into overlayData
+   return overlayData
+end overlay_Data

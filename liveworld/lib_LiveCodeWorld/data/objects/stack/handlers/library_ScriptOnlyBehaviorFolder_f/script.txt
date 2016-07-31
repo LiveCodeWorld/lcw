@@ -1,0 +1,4 @@
+function library_ScriptOnlyBehaviorFolder shortFileBit, pDontCreate
+   -- script only stacks
+   return library_PluginFolder ("opn_Behaviors/", pDontCreate) & shortFileBit
+end library_ScriptOnlyBehaviorFolder

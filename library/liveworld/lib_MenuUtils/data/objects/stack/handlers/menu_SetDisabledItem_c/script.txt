@@ -1,0 +1,10 @@
+command menu_SetDisabledItem someMenuItem, @someMenu, someBoolean
+   put someBoolean is not false into someBoolean
+   put menu_GetLineNum(someMenuItem, someMenu) into lineNum
+   if lineNum = 0 then return someMenu
+   
+   put line lineNum of someMenu into menuLine
+   if char 1 of word 1 of menuLine is "(" then delete char 1 of menuLine
+   if someBoolean is true then put "(" before word 1 of menuLine
+   put menuLine into line lineNum of someMenu
+end menu_SetDisabledItem

@@ -1,0 +1,4 @@
+on menu_SetChapter plusMinusView, cName
+   put sivasiva_GetChapterNum (cName) into chapterNum
+   set the chapter_Num of plusMinusView to chapterNum
+end menu_SetChapter

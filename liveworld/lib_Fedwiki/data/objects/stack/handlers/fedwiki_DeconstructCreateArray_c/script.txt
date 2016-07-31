@@ -1,0 +1,11 @@
+command fedwiki_DeconstructCreateArray createArray, @parentTitle, @sectionTitle, @transportURL, @sourceURL, @pageTitle, @linkDictionary
+   put createArray ["title"] into sectionTitle
+   put createArray ["create"]["item"]["title"] into parentTitle
+   put createArray ["create"]["source"] into sourceArray
+   
+   put sourceArray ["transport"] into transportURL
+   put sourceArray ["url"] into sourceURL
+   put sourceArray ["pageTitle"] into pageTitle
+   put sourceArray ["link_Dictionary"] into linkDictionary
+   return sourceArray
+end fedwiki_DeconstructCreateArray

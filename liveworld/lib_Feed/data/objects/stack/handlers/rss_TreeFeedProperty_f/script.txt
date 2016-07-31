@@ -1,0 +1,6 @@
+function rss_TreeFeedProperty tagName, treeID
+    put "rss/channel" into startNode
+    put startNode & "/" & tagName into someNode
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    return nodeContents
+end rss_TreeFeedProperty

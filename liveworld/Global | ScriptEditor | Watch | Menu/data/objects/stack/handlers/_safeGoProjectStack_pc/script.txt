@@ -1,0 +1,9 @@
+private command _safeGoProjectStack projectStackName
+   if exists (stack projectStackName) then
+      go to stack projectStackName
+      show stack projectStackName
+   else
+      answer merge ("Cannot locate stack '[[projectStackName]]'")
+      put projectStackName
+   end if
+end _safeGoProjectStack

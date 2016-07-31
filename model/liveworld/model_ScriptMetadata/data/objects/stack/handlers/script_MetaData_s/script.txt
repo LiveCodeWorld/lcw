@@ -1,0 +1,19 @@
+setprop script_MetaData uRIPArray
+   --we are actually also going to set the uRIP for safety
+   put the long id of the target into tObject
+   
+   -- try
+   put the script of tObject into someScript   
+   script_SetMetadataArray someScript, uRipArray
+   set the script of tObject to someScript
+   set the customproperties ["uRIP"] of tObject to uRipArray
+   
+   -- metadata changed so re-index
+   object_AddToGlobalArray tObject
+   return someScript
+   /*
+catch e
+   return empty
+end try
+*/
+end script_MetaData

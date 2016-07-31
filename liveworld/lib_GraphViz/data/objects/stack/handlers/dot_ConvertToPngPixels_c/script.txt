@@ -1,0 +1,4 @@
+on dot_ConvertToPngPixels @xdotValue
+    -- PNG is 96 dpi and xdot is at 72 dpi
+    put round(xdotValue * 96 / 72) into xdotValue 
+end dot_ConvertToPngPixels

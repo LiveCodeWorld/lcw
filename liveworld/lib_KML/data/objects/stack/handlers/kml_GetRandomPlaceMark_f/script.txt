@@ -1,0 +1,12 @@
+function kml_GetRandomPlaceMark someTitle, description
+    if someTitle is empty then put "Random Placemark" into someTitle
+    
+    put random(180) - 90 into latitude
+    put random(360) - 180 into longitude
+    -- kml_NormaliseValue latitude
+    -- kml_NormaliseValue longitude
+    put kml_ConstructPlaceMark(someTitle, description, latitude, longitude, 100, 100, 0, 0) into placeMarkXML
+    put xml_ConstructTag(placeMarkXML, "kml", "xmlns", "http://earth.google.com/kml/2.1") into someKML
+    xml_AddHeaderLine someKML
+    return someKML
+end kml_GetRandomPlaceMark

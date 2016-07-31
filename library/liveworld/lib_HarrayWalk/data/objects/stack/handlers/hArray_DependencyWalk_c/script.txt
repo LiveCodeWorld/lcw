@@ -1,0 +1,149 @@
+command hArray_DependencyWalk shortCall, hKey, @walkArray, pSearchOutSideMainStack, pSetName, pTestExceptions, pOriginalHkey, pFindAndIndex, pExportHandlers
+   /*
+   Aims to do the same as "hArray_SimpleWalk" but faster using indexed arrays.
+   Modified to use empty array index for hkeyArray (needs tidying with "array_StripDeeperLevels),
+   and uses nested "walkArray" to store info other than hkeyArray
+   */ 
+   if pOriginalHkey is empty then put hKey into pOriginalHkey
+   -- put shortCall & CR & hKey
+   
+   if the commandkey is "Down" and the optionKey is "Down" then
+      hkey_Deconstruct pOriginalHkey, oHandlerName, oHandlerType, oScriptObject, oHandlerNum
+      put "Currently indexing" && kwote (hKey) into pTitle
+      display_ObjectHKeyArray hkeyArray, oScriptObject, empty, empty, pTitle
+      put the result into treeView
+      set the displayed_Hkey of treeView to hKey
+      breakpoint  -- allow storing of work-in-progress (by refering to last hKey)
+   end if
+   
+   -- find it
+   put walkArray ["hArray"] into hArray
+   put item 3 of hKey into hObject
+   put hArray_FindHkeyInHierarchy (shortCall, hObject, hArray, pSetName) into foundCall
+   
+   if item 4 of foundCall > 1 then
+      breakpoint
+      put hArray_FindHkeyInHierarchy (shortCall, hObject, hArray, pSetName) into foundCall
+   end if
+   
+   if foundCall is empty and pFindAndIndex is true then
+      try -- find and index along the way
+         put item 1 of shortCall into callName
+         put item 2 of shortCall into callType
+         put hkey_FindAndIndex (callName, callType, hObject, pSetName) into foundCall
+      catch e
+         opn_Notify e, true
+         breakpoint
+      end try
+   end if
+   
+   switch
+      case foundCall is among the keys of walkArray ["hKeyArray"]
+         # still need to add the hKey -> foundCall link as foundCall may have been added to another handler
+         # but we don't want to recurse
+         put true into dontRecurse
+         break
+      case foundCall is hKey
+         -- if shortCall = item 1 to 2 of hKey then
+         -- it's a recursive call, pass or get/setprop with lock messages?
+         -- not 100% sure what to do here (for nwo we ignore)
+         -- or whether to do it here or at top of handler
+         -- take a deeper look when adding "pass" hierarchy parsing
+         
+         put empty into walkArray ["hKeyArray"][hKey][foundCall] -- think we should add it ???
+         
+         put hArray_GetHandler (hKey, hArray) into callHandler -- for a peak
+         put callHandler into walkArray ["recursive call"][hKey][shortCall]
+         put merge ("Found a recursive call '[[hKey]]'. Skipping!") into someMessage
+         opn_Notify someMessage, true
+         
+         return empty
+         -- end if
+      case foundCall is empty
+         # an external or missing call
+         
+         put item 1 of shortCall into callName
+         put item 2 of shortCall into callType
+         
+         -- hack to ignore some calls like uXXX getprops etc
+         if hkey_MissingHandlerIsNotImportant (callName, callType, hkey) is true then
+            put merge ("Call '[[shortCall]]' for handler '[[hKey]]' is missing - but ignoring as 'hkey_MissingHandlerIsNotImportant()'!") into someMessage
+            opn_Notify someMessage, true
+            return empty
+         end if
+         
+         put hArray_FindHkeyInHierarchy (shortCall, hObject) into foundCall -- could find from mainstack for external call?
+         if foundCall is empty then
+            put foundCall into walkArray ["missing"][shortCall][hKey]
+         else
+            put foundCall into walkArray ["external"][shortCall][hKey]
+         end if
+         
+         put pSearchOutSideMainStack is not false into dontRecurse
+         break
+      default
+         -- normal
+   end switch
+   
+   if item 4 of foundCall > 1 then
+      breakpoint
+      put hArray_GetShortCalls (foundCall, hArray) into shortCalls
+   end if
+   
+   -- pre-test
+   -- hack for exceptions (try to get rid of this code / minimize the number of tests)
+   if pTestExceptions is true and deps_DontAddOrRecurse (foundCall, pOriginalHkey, hArray) is true then
+      put empty into walkArray ["dontRecurse"][hKey][foundCall]
+      put merge ("Skipping recursion without adding [[foundCall]]!") into someMessage
+      opn_Notify someMessage
+      return empty
+   end if
+   
+   -- add it to the array
+   put empty into walkArray ["hKeyArray"][hKey][foundCall]
+   put merge ("Added [[foundCall]] to hKeyArray!") into someMessage
+   opn_Notify someMessage
+   
+   -- post-tests
+   if dontRecurse is true or pTestExceptions is true and deps_DontRecurse (foundCall, pOriginalHkey, hArray) is true then
+      put merge ("Skipping recursion for [[foundCall]]!") into someMessage
+      opn_Notify someMessage
+      return empty
+   end if
+   
+   put item 3 of foundCall into foundObject
+   if exists (foundObject) is false then
+      breakpoint
+      put foundCall into walkArray ["missing objects"][foundObject]
+      return empty
+   end if
+   
+   if pFindAndIndex is true then
+      -- this will slow things down a bit (maybe stop checking)?
+      put hArray_GetObjectMetaData (foundObject, "sha1", hArray) into scriptHash
+      try
+         put the script of foundObject into someScript
+         put sha1_Hash (someScript) = scriptHash into indexIsUpToDate
+      catch e
+         put foundCall into walkArray ["locked objects"][foundObject]
+         return empty
+      end try
+      
+      if indexIsUpToDate is false then
+         -- think we shoud do this regardless of pFindAndIndex
+         put pref_GetValue ("Construct hashArray on stack export") into pCreateHashArray
+         object_AddToArray hArray, foundObject, someScript, pExportHandlers, pCreateHashArray
+         put empty into walkArray ["reindexed"][foundObject]
+      end if
+   end if
+   
+   -- put hkey_FetchShortCalls (foundCall, hArray) into shortCalls
+   -- put hArray_GetHandler (foundCall, hArray) into callHandler
+   -- put handler_ExtractCalls (callHandler) into shortCalls
+   put hArray_GetShortCalls (foundCall, hArray) into shortCalls
+   
+   repeat for each line shortCall in shortCalls
+      hArray_DependencyWalk shortCall, foundCall, walkArray, pSearchOutSideMainStack, pSetName, pTestExceptions, pOriginalHkey, pFindAndIndex
+   end repeat
+   return newlyExportedHkeyArray
+end hArray_DependencyWalk

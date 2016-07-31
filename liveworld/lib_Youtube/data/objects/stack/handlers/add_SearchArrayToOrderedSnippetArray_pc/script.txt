@@ -1,0 +1,25 @@
+private command add_SearchArrayToOrderedSnippetArray @orderedSnippetArray, nextPlaylistArray
+   /*
+   There is not position in this array
+   And the videoID is somewhere odd.  
+   */
+   
+   put nextPlaylistArray ["items"] into someArray
+   put item 2 of the extents of orderedSnippetArray into lastMaxNum
+   if orderedSnippetArray is not an array then
+      put someArray into orderedSnippetArray
+      return lastMaxNum
+   end if
+   
+   repeat for each key itemNum in someArray
+      put someArray [itemNum] into itemArray
+      
+      put itemArray ["id"]["videoId"] into videoID
+      
+      put itemArray ["snippet"] into snippetArray
+      
+      put lastMaxNum + itemNum into orderedNum
+      put itemArray into orderedSnippetArray [orderedNum]
+   end repeat
+   return lastMaxNum
+end add_SearchArrayToOrderedSnippetArray

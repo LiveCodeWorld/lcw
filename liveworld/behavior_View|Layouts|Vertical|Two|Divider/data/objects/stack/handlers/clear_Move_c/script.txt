@@ -1,0 +1,10 @@
+on clear_Move
+   if LocalArray ["StartV"] is not empty then
+      dispatch "layout_StopHorizontalDividerMove" to the owner of me
+   end if
+   
+   get line 3 of the localnames
+   repeat for each item varName in it
+      do ("put empty into" && varName)
+   end repeat
+end clear_Move

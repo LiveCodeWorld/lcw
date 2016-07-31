@@ -1,0 +1,7 @@
+setprop layout_Margins someMargin
+   lock screen
+   put the rect of me into oRect
+   set the margins of me to someMargin
+   LayoutControl oRect
+   unlock screen
+end layout_Margins

@@ -1,0 +1,8 @@
+function graph_ConstructHeader pGraphStyle, graphSize
+   put empty into graphSize
+   put "dot_FromArray" into graphTitle
+   put graph_ConstructDotHeaderArray() into pDotHeaderArray
+   put false into pUseInches
+   put dot_ConstructHeader (graphSize, pDotHeaderArray, pGraphStyle, pUseInches) into dotHeader
+   return dotHeader
+end graph_ConstructHeader

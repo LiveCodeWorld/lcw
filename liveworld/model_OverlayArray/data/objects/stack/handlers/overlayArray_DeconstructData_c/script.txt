@@ -1,0 +1,10 @@
+command overlayArray_DeconstructData overlayArray, @linkArray, @idArray, @idLinkArray, @reverseIdArray, @dotClusterArray
+   -- overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdArray, dotClusterArray
+   put overlayArray ["data"] into dataArray
+   linkArray_DeconstructDataArray dataArray, linkArray, idLinkArray, idArray, reverseIdArray
+   put dataArray ["dot_ClusterArray"] into dotClusterArray
+   -- put dataArray ["linkArray"] into linkArray
+   -- put dataArray ["idArray"] into idArray
+   -- put dataArray ["idLinkArray"] into idLinkArray
+   -- put dataArray ["reverseIdLinkArray"] into reverseIdLinkArray
+end overlayArray_DeconstructData

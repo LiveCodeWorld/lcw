@@ -1,0 +1,5 @@
+getprop selected_StackNames
+   put the selected_ShortStackFiles of me into shortStackFiles  
+   put _getStackNames (shortStackFiles) into stackNames
+   return stackNames
+end selected_StackNames

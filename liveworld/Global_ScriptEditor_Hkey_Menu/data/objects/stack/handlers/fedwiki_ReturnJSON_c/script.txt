@@ -1,0 +1,8 @@
+command fedwiki_ReturnJSON pageJSON
+   -- this would normally return pageJSON back to the Fedwiki client
+   -- but here we override it
+   
+   if the shiftkey is "Down" then put pageJSON
+   put json_ToArray (pageJSON) into pageArray
+   display_Array pageArray, "fedwiki_ReturnJSON()"
+end fedwiki_ReturnJSON

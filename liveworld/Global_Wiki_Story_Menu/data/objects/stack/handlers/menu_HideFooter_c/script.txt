@@ -1,0 +1,10 @@
+on menu_HideFooter mTarget, someBoolean
+   put javascript_ConstructFooterVisibility (someBoolean) into someJavascript
+   if someBoolean is true then
+      put ";" & javascript_ConstructFooterHeight (18) after someJavascript
+   else
+      put ";" & javascript_ConstructFooterHeight (60) after someJavascript
+   end if
+   put the browser_Widget of mTarget into browserWidget
+   do someJavascript in browserWidget
+end menu_HideFooter

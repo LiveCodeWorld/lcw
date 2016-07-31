@@ -1,0 +1,8 @@
+on menu_FindHandlerInHierarchy
+   -- this looks for a handler not a string
+   -- put rev_ScriptEditorField() into fieldObject
+   -- put hkey_GetSelected (fieldObject) into hKey
+   put LocalArray ["selectedHkey"] into hKey
+   
+   hkey_Edit hKey
+end menu_FindHandlerInHierarchy

@@ -1,0 +1,145 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_ViewRecordDescription
+type: behavior
+version: 0.6
+
+/*
+A view with a title, an extra single line field and a scroling text field
+*/
+
+--> Events | Datagrid
+-
+[[ _FetchHandler (FillInData,c) ]]
+
+[[ _FetchHandler (CloseFieldEditor,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+-- setprop view_Rect someRect
+   LayoutControl someRect
+end view_Rect
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (DiscloseView,c) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDoubleUp,c) ]]
+
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (_startDrag,c) ]]
+
+[[ _FetchHandler (drag_SetGlobalStatus,c) ]]
+
+[[ _FetchHandler (mouseUp,c) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (viewDescription_Record,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (dgDataControl,g) ]]
+
+[[ _FetchHandler (linked_Template,g) ]]
+
+
+--> Datagrid
+-
+[[ _FetchHandler (dgHilite,s) ]]
+
+[[ _FetchHandler (_ColourMe,pf) ]]
+
+
+--> Record
+-
+[[ _FetchHandler (background_Colour,g) ]]
+
+[[ _FetchHandler (background_Colour,s) ]]
+
+[[ _FetchHandler (record_InfoViewName,g) ]]
+
+[[ _FetchHandler (record_InfoViewName,s) ]]
+
+[[ _FetchHandler (record_Name,g) ]]
+
+[[ _FetchHandler (record_Name,s) ]]
+
+
+--> Record | Movie
+-
+[[ _FetchHandler (record_ImageID,g) ]]
+
+[[ _FetchHandler (record_ImageContents,g) ]]
+
+[[ _FetchHandler (record_ImageContents,s) ]]
+
+[[ _FetchHandler (record_ImageFile,g) ]]
+
+[[ _FetchHandler (record_ImageFile,s) ]]
+
+
+--> Record | Movie
+-
+[[ _FetchHandler (record_MovieFile,g) ]]
+
+[[ _FetchHandler (record_MovieFile,s) ]]
+
+
+--> Record | Description
+-
+[[ _FetchHandler (record_HelpHtml,g) ]]
+
+[[ _FetchHandler (record_HelpHtml,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (view_Spacing,g) ]]
+
+[[ _FetchHandler (view_Spacing,s) ]]
+
+[[ _FetchHandler (formatted_Height,g) ]]
+
+[[ _FetchHandler (info_Height,g) ]]
+
+
+--> Geometry | Disclose
+-
+[[ _FetchHandler (record_IsExpanded,s) ]]
+
+[[ _FetchHandler (record_IsExpanded,g) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (dg_TopDataControl,g) ]]
+
+
+--> View | Objects
+-
+[[ _FetchHandler (info_Group,g) ]]
+
+[[ _FetchHandler (disclosure_Button,g) ]]
+
+[[ _FetchHandler (drag_Button,g) ]]
+
+
+--> Controls | Private
+-
+[[ _FetchHandler (title_Field,pf) ]]
+
+[[ _FetchHandler (graphic_Background,pf) ]]
+
+
+--> Library | Deps
+-
+[[ _FetchHandler (colour_Darken,f) ]]
+
+[[ _FetchHandler (rect_SubtractMargin,f) ]]

@@ -1,0 +1,50 @@
+﻿script "lib_Menu"
+--> MetaData
+-
+license: GPLv3
+name: lib_Menu
+type: script library
+copyright: David Bovill
+licence:  GPLv3
+version: 0.1
+
+
+--> Menu | Utilities
+-
+command menu_Edit pMenuTitle
+   if pMenuTitle is empty then put menu_GetSentTitle() into pMenuTitle
+   
+   set the itemdelimiter to "|"
+   if word 1 to -1 of item 1 of pMenuTitle is "Global" then
+      put menu_GetGlobalController (pMenuTitle) into mController
+   else if pMenuTitle is empty then
+      put menu_GetSentTitle() into pMenuTitle
+      put menu_ControllerFromTitlePath (pMenuTitle) into mController
+   else
+      put menu_ControllerFromTitlePath (pMenuTitle) into mController
+   end if
+   
+   if exists (mController) is false then
+      answer warning merge ("Cannot locate controller for menu '[[pMenuTitle]]'!")
+      exit to top
+   end if
+   
+   -- Let's edit the mController
+   edit the script of mController
+   put the script of mController into someScript
+   
+   -- Find the place and scroll to the mTitle
+   put "-->" && pMenuTitle into suiteTitle
+   script_ScrollToLine suiteTitle, someScript
+ end menu_Edit
+
+command script_ScrollToLine suiteTitle, someScript
+   set the wholematches to true
+   put lineOffset (suiteTitle, someScript) into lineNum
+   if lineNum = 0 then return empty
+   
+   put rev_ScriptEditorField() into someField   
+   field_ScrollToLine lineNum, someField
+end script_ScrollToLine
+
+

@@ -1,0 +1,16 @@
+function template_GetPropertyMenu vName, pFetchLive
+   if exists (stack vName) is false then return empty
+   put the name of stack vName into templatePropertyModel
+   
+   put the uOPN_ViewArray of templatePropertyModel into templateArray
+   put templateArray ["metadata"]["view_PropertyMenu"] into cachedMenu
+   
+   if cachedMenu is empty or pFetchLive is true then
+      local liveMenu, publicProps
+      put view_GetTemplateObject (vName) into templateObject
+      extractViewPropertyMenu templateObject, liveMenu, publicProps
+      return liveMenu
+   else
+      return cachedMenu
+   end if
+end template_GetPropertyMenu

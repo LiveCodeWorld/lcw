@@ -1,0 +1,10 @@
+getprop object_Name [mTarget]
+   put the object_Names of me into nameList
+   repeat for each item oName in nameList
+      if exists( control oName of mTarget) then
+         put oName & comma after objectNames
+      end if
+   end repeat
+   delete char -1 of objectNames
+   return objectNames
+end object_Name

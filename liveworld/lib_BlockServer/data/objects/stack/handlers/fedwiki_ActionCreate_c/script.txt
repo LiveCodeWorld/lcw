@@ -1,0 +1,12 @@
+command fedwiki_ActionCreate pageSlug, actionArray, pFedwikiDomain, pLocalWikiFolder
+   -- create a blank new page
+   put actionArray ["date"] into pCreateMilliSeconds
+   put actionArray ["item"]["title"] into pageTitle
+   
+   -- put fedwiki_ConstructNewPageArray (pageTitle) into pageArray 
+   put pageTitle into pageArray ["title"]  
+   put actionArray into pageArray ["journal"][1]
+   
+   fedwiki_SetLocalPageArray pageSlug, pageArray, pFedwikiDomain, pLocalWikiFolder, pCreateMilliSeconds
+   return pageArray
+end fedwiki_ActionCreate

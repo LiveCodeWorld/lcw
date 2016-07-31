@@ -1,0 +1,5 @@
+function hap_JsonFromArray pArray, pForceRootType, pPretty
+   -- needs "json' library but this seems automatically loaded for HA
+   put jsonFromArray (pArray) into someJSON
+   return someJSON
+end hap_JsonFromArray

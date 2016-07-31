@@ -1,0 +1,8 @@
+getprop view_ChildOutline [viewOutlineType]
+   local someOutline, objectIndex, outlineArray
+   repeat for each line childView in the view_Children of the target
+      put object_GetNestedDepth(childView) into oDepth
+      view_RecurseReferenceOutline childView, someOutline, oDepth, viewReference, objectIndex, false, viewOutlineType, outlineArray
+   end repeat
+   return word 1 to -1 of someOutline
+end view_ChildOutline

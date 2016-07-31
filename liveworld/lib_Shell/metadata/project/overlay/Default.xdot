@@ -1,0 +1,726 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 462 4347 462 4347 0 ",
+		bb="0,0,4347,462",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n33		 [URL="_convertVersionToNumber%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4100 34 106.5 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4100 29.8 0 152.2 23 -_convertVersionToNumber ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=_convertVersionToNumber,
+			pos="4100,34",
+			style=filled,
+			width=2.9514];
+		n2		 [URL="date_MonthToMonthNumber%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3155 250 114.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3155 245.8 0 165.44 23 -date_MonthToMonthNumber ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=date_MonthToMonthNumber,
+			pos="3155,250",
+			style=filled,
+			width=3.1837];
+		n31		 [URL="shell_ConvertHtmlToXML%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2090 406 106.52 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2090 401.8 0 153.01 22 -shell_ConvertHtmlToXML ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_ConvertHtmlToXML,
+			pos="2090,406",
+			style=filled,
+			width=2.9655];
+		n50		 [URL="shell_GetBashHistory%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3621 406 88.43 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3621 401.8 0 123.66 20 -shell_GetBashHistory ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_GetBashHistory,
+			pos="3621,406",
+			style=filled,
+			width=2.4505];
+		n27		 [URL="shell_ConstructLSArray%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3229 406 96.63 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3229 401.8 0 136.87 22 -shell_ConstructLSArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_ConstructLSArray,
+			pos="3229,406",
+			style=filled,
+			width=2.6823];
+		n38		 [URL="shell_GetBashPathExtraItems%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2851 406 116.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2851 401.8 0 167.97 27 -shell_GetBashPathExtraItems ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_GetBashPathExtraItems,
+			pos="2851,406",
+			style=filled,
+			width=3.228];
+		n5		 [URL="OSSL%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4161 332 31.97 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4161 327.8 0 34.23 4 -OSSL ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=OSSL,
+			pos="4161,332",
+			style=filled,
+			width=0.88144];
+		n21		 [URL="version_IsEarlier%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4100 106 71.01 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4100 101.8 0 96.41 17 -version_IsEarlier ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=version_IsEarlier,
+			pos="4100,106",
+			style=filled,
+			width=1.9724];
+		n36		 [URL="shell_ManPage%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3050 406 64.76 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3050 401.8 0 86.32 13 -shell_ManPage ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_ManPage,
+			pos="3050,406",
+			style=filled,
+			width=1.7953];
+		n42		 [URL="shell_ExecuteAtRoot%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3429 406 85.5 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3429 401.8 0 119.75 19 -shell_ExecuteAtRoot ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_ExecuteAtRoot,
+			pos="3429,406",
+			style=filled,
+			width=2.382];
+		n44		 [URL="shell_ConvertHtmlToXHTML%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2598 406 118.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2598 401.8 0 171.67 24 -shell_ConvertHtmlToXHTML ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_ConvertHtmlToXHTML,
+			pos="2598,406",
+			style=filled,
+			width=3.293];
+		n14		 [URL="shell_EscapeFile%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1404 332 70.06 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1404 327.8 0 94.86 16 -shell_EscapeFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_EscapeFile,
+			pos="1404,332",
+			style=filled,
+			width=1.9453];
+		n10		 [URL="shell_GetBashProfile%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2851 332 85.04 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2851 327.8 0 118.99 20 -shell_GetBashProfile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_GetBashProfile,
+			pos="2851,332",
+			style=filled,
+			width=2.3687];
+		n3		 [URL="shell_InterpretFileMode%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3384 250 96.13 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3384 245.8 0 136.08 23 -shell_InterpretFileMode ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_InterpretFileMode,
+			pos="3384,250",
+			style=filled,
+			width=2.6684];
+		n29		 [URL="ijwAPLIB_MakeOSXShellPath%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2338 406 123.21 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2338 401.8 0 178.89 25 -ijwAPLIB_MakeOSXShellPath ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=ijwAPLIB_MakeOSXShellPath,
+			pos="2338,406",
+			style=filled,
+			width=3.4196];
+		n30		 [URL="shell_FetchFile%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1147 406 64.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1147 401.8 0 86.32 15 -shell_FetchFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_FetchFile,
+			pos="1147,406",
+			style=filled,
+			width=1.7954];
+		n32		 [URL="shell_Tidy%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2344 332 47.75 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2344 327.8 0 59.4 10 -shell_Tidy ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_Tidy,
+			pos="2344,332",
+			style=filled,
+			width=1.323];
+		n46		 [URL="text_Merge%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4280 178 50.93 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4280 173.8 0 64.29 10 -text_Merge ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_Merge,
+			pos="4280,178",
+			style=filled,
+			width=1.4087];
+		n48		 [URL="shell_ListProcesses%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 621 178 79.25 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 621 173.8 0 109.66 19 -shell_ListProcesses ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_ListProcesses,
+			pos="621,178",
+			style=filled,
+			width=2.2048];
+		n24		 [URL="text_IsQuoted%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 376 34 60.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 376 29.8 0 79.32 13 -text_IsQuoted ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_IsQuoted,
+			pos="376,34",
+			style=filled,
+			width=1.6725];
+		n22		 [URL="library_PluginFolder%2Cf%2Cstack+%22model_Project%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3989 332 84.08 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3989 327.8 0 117.43 20 -library_PluginFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_PluginFolder,
+			pos="3989,332",
+			style=filled,
+			width=2.3413];
+		n20		 [URL="kwote%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4221 106 31.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4221 101.8 0 34.21 5 -kwote ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=kwote,
+			pos="4221,106",
+			style=filled,
+			width=0.88108];
+		n6		 [URL="sha1_HashFile%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1903 406 62.84 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1903 401.8 0 83.21 13 -sha1_HashFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=sha1_HashFile,
+			pos="1903,406",
+			style=filled,
+			width=1.7409];
+		n35		 [URL="socket_ListUsedPorts%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1735 406 87.47 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1735 401.8 0 122.1 20 -socket_ListUsedPorts ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=socket_ListUsedPorts,
+			pos="1735,406",
+			style=filled,
+			width=2.4232];
+		n37		 [URL="sha1_HashString%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1559 406 70.57 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1559 401.8 0 95.66 15 -sha1_HashString ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=sha1_HashString,
+			pos="1559,406",
+			style=filled,
+			width=1.9593];
+		n41		 [URL="linux_CheckMounted%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 681 332 87.47 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 681 327.8 0 122.1 18 -linux_CheckMounted ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=linux_CheckMounted,
+			pos="681,332",
+			style=filled,
+			width=2.4231];
+		n15		 [URL="osx_DaemonArray%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1735 332 77.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1735 327.8 0 106.52 15 -osx_DaemonArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=osx_DaemonArray,
+			pos="1735,332",
+			style=filled,
+			width=2.1499];
+		n11		 [URL="shell_GetBashProfileUrl%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2851 250 97.12 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2851 245.8 0 137.66 23 -shell_GetBashProfileUrl ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_GetBashProfileUrl,
+			pos="2851,250",
+			style=filled,
+			width=2.6961];
+		n13		 [URL="shell_Md5Hash%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1404 406 66.23 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1404 401.8 0 88.66 13 -shell_Md5Hash ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_Md5Hash,
+			pos="1404,406",
+			style=filled,
+			width=1.8365];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n28		 [URL="sudo_Kill%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 1275 406 44.99 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1275 401.8 0 55.23 9 -sudo_Kill ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=sudo_Kill,
+			pos="1275,406",
+			style=filled,
+			width=1.2498];
+		n45		 [URL="shell_DeleteFile%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 996 406 68.13 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 996 401.8 0 91.75 16 -shell_DeleteFile ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_DeleteFile,
+			pos="996,406",
+			style=filled,
+			width=1.8907];
+		n47		 [URL="shell_StoreFile%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 460 178 63.81 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 460 173.8 0 84.77 15 -shell_StoreFile ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_StoreFile,
+			pos="460,178",
+			style=filled,
+			width=1.7682];
+		n49		 [URL="linux_Mount%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 681 406 56.09 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 681 401.8 0 73.12 11 -linux_Mount ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=linux_Mount,
+			pos="681,406",
+			style=filled,
+			width=1.5637];
+		n25		 [URL="shell_AddBashParam%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 292 178 86.98 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 292 173.8 0 121.32 18 -shell_AddBashParam ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_AddBashParam,
+			pos="292,178",
+			style=filled,
+			width=2.4094];
+		n23		 [URL="folder_CreateNested%2Cc%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4128 250 83.05 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4128 245.8 0 115.83 19 -folder_CreateNested ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=folder_CreateNested,
+			pos="4128,250",
+			style=filled,
+			width=2.3133];
+		n18		 [URL="text_AddTrailing%2Cc%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3999 178 71.4 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3999 173.8 0 96.71 16 -text_AddTrailing ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_AddTrailing,
+			pos="3999,178",
+			style=filled,
+			width=1.9778];
+		n9		 [URL="shell_Chmod%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 130 178 57.05 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 130 173.8 0 74.67 11 -shell_Chmod ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_Chmod,
+			pos="130,178",
+			style=filled,
+			width=1.5909];
+		n40		 [URL="shell_DeleteFolder%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 833 406 77.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 833 401.8 0 106.52 18 -shell_DeleteFolder ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_DeleteFolder,
+			pos="833,406",
+			style=filled,
+			width=2.1499];
+		n16		 [URL="bonjour_RegisterPortMapper%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 130 406 113.51 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 130 401.8 0 164.08 26 -bonjour_RegisterPortMapper ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=bonjour_RegisterPortMapper,
+			pos="130,406",
+			style=filled,
+			width=3.1598];
+		n7		 [URL="shell_ExecuteInBackground%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 130 332 110.1 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 130 327.8 0 158.61 25 -shell_ExecuteInBackground ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_ExecuteInBackground,
+			pos="130,332",
+			style=filled,
+			width=3.0639];
+		n1		 [URL="shell_DeconstructLS%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3229 332 84.06 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3229 327.8 0 117.42 19 -shell_DeconstructLS ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_DeconstructLS,
+			pos="3229,332",
+			style=filled,
+			width=2.3411];
+		n34		 [URL="linux_Sudo%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 556 406 50.78 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 556 401.8 0 64.57 10 -linux_Sudo ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=linux_Sudo,
+			pos="556,406",
+			style=filled,
+			width=1.4136];
+		n12		 [URL="shell_RemoteExecute%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 996 332 87.43 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 996 327.8 0 122.07 19 -shell_RemoteExecute ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_RemoteExecute,
+			pos="996,332",
+			style=filled,
+			width=2.4226];
+		n26		 [URL="shell_BashParamEscape%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 376 106 96.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 376 101.8 0 136.85 21 -shell_BashParamEscape ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_BashParamEscape,
+			pos="376,106",
+			style=filled,
+			width=2.682];
+		n19		 [URL="osx_Notify%2Cc%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4161 178 49.81 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4161 173.8 0 63 10 -osx_Notify ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=osx_Notify,
+			pos="4161,178",
+			style=filled,
+			width=1.3862];
+		n8		 [URL="shell_MakeExecutable%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 130 250 90.8 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 130 245.8 0 127.5 20 -shell_MakeExecutable ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_MakeExecutable,
+			pos="130,250",
+			style=filled,
+			width=2.518];
+		n39		 [URL="shell_AddBashProfileToPath%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 374 406 112.82 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 374 401.8 0 162.35 26 -shell_AddBashProfileToPath ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_AddBashProfileToPath,
+			pos="374,406",
+			style=filled,
+			width=3.1295];
+		n4		 [URL="sha1_AskHashFile%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3804 406 76.84 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3804 401.8 0 105.77 16 -sha1_AskHashFile ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=sha1_AskHashFile,
+			pos="3804,406",
+			style=filled,
+			width=2.1367];
+		n43		 [URL="opn_Notify%2Cc%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4280 250 50.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4280 245.8 0 64.55 10 -opn_Notify ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=opn_Notify,
+			pos="4280,250",
+			style=filled,
+			width=1.4134];
+		n17		 [URL="folder_Format%2Cc%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3966 250 61.38 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3966 245.8 0 80.87 13 -folder_Format ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=folder_Format,
+			pos="3966,250",
+			style=filled,
+			width=1.6997];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#ff0000 C 7 -#ffa500 P 4 4121 306 4121 380 4201 380 4201 306 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4161 364.8 0 45.12 7 -Missing ",
+			bb="4121,306,4201,380",
+			color=red,
+			fillcolor=orange,
+			label=Missing,
+			lheight=0.19,
+			lp="4161,369",
+			lwidth=0.63,
+			style=filled
+		];
+		n5;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 8 8 454 3889 454 3889 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1948.5 438.8 0 94.25 17 -stack \"lib_Shell\" ",
+			bb="8,8,3889,454",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Shell\"",
+			lheight=0.19,
+			lp="1948.5,443",
+			lwidth=1.31,
+			style=filled
+		];
+		n2;
+		n31;
+		n32;
+		n31 -> n32		 [_draw_="c 7 -#000000 B 4 2142.01 390.26 2187.53 377.36 2253.05 358.78 2297.01 346.32 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2298.2 349.62 2306.87 343.53 2296.29 342.89 ",
+			pos="e,2306.9,343.53 2142,390.26 2187.5,377.36 2253.1,358.78 2297,346.32"];
+		n50;
+		n27;
+		n1;
+		n27 -> n1		 [_draw_="c 7 -#000000 B 4 3229 387.94 3229 379.81 3229 369.88 3229 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3232.5 360.44 3229 350.44 3225.5 360.44 ",
+			pos="e,3229,350.44 3229,387.94 3229,379.81 3229,369.88 3229,360.7"];
+		n38;
+		n10;
+		n38 -> n10		 [_draw_="c 7 -#000000 B 4 2851 387.94 2851 379.81 2851 369.88 2851 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2854.5 360.44 2851 350.44 2847.5 360.44 ",
+			pos="e,2851,350.44 2851,387.94 2851,379.81 2851,369.88 2851,360.7"];
+		n36;
+		n42;
+		n44;
+		n44 -> n32		 [_draw_="c 7 -#000000 B 4 2544.75 389.91 2499.27 377.01 2434.48 358.65 2390.92 346.3 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2391.72 342.89 2381.15 343.53 2389.81 349.62 ",
+			pos="e,2381.1,343.53 2544.8,389.91 2499.3,377.01 2434.5,358.65 2390.9,346.3"];
+		n14;
+		n11;
+		n10 -> n11		 [_draw_="c 7 -#000000 B 4 2851 313.64 2851 303.3 2851 289.94 2851 278.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2854.5 278.05 2851 268.05 2847.5 278.05 ",
+			pos="e,2851,268.05 2851,313.64 2851,303.3 2851,289.94 2851,278.22"];
+		n3;
+		n29;
+		n30;
+		n12;
+		n30 -> n12		 [_draw_="c 7 -#000000 B 4 1115.71 390.08 1093.27 379.38 1062.78 364.84 1038.19 353.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1039.61 349.92 1029.08 348.77 1036.6 356.24 ",
+			pos="e,1029.1,348.77 1115.7,390.08 1093.3,379.38 1062.8,364.84 1038.2,353.11"];
+		n48;
+		n26;
+		n48 -> n26		 [_draw_="c 7 -#000000 B 4 573.76 163.5 534.54 152.3 478.53 136.29 436.12 124.18 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 437.04 120.8 426.47 121.42 435.12 127.53 ",
+			pos="e,426.47,121.42 573.76,163.5 534.54,152.3 478.53,136.29 436.12,124.18"];
+		n24;
+		n6;
+		n35;
+		n15;
+		n35 -> n15		 [_draw_="c 7 -#000000 B 4 1735 387.94 1735 379.81 1735 369.88 1735 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1738.5 360.44 1735 350.44 1731.5 360.44 ",
+			pos="e,1735,350.44 1735,387.94 1735,379.81 1735,369.88 1735,360.7"];
+		n37;
+		n41;
+		n13;
+		n13 -> n14		 [_draw_="c 7 -#000000 B 4 1404 387.94 1404 379.81 1404 369.88 1404 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1407.5 360.44 1404 350.44 1400.5 360.44 ",
+			pos="e,1404,350.44 1404,387.94 1404,379.81 1404,369.88 1404,360.7"];
+		n28;
+		n45;
+		n45 -> n12		 [_draw_="c 7 -#000000 B 4 996 387.94 996 379.81 996 369.88 996 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 999.5 360.44 996 350.44 992.5 360.44 ",
+			pos="e,996,350.44 996,387.94 996,379.81 996,369.88 996,360.7"];
+		n47;
+		n47 -> n26		 [_draw_="c 7 -#000000 B 4 440.52 160.76 429.65 151.71 415.92 140.27 403.93 130.28 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 405.88 127.35 395.96 123.63 401.4 132.72 ",
+			pos="e,395.96,123.63 440.52,160.76 429.65,151.71 415.92,140.27 403.93,130.28"];
+		n49;
+		n49 -> n41		 [_draw_="c 7 -#000000 B 4 681 387.94 681 379.81 681 369.88 681 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 684.5 360.44 681 350.44 677.5 360.44 ",
+			pos="e,681,350.44 681,387.94 681,379.81 681,369.88 681,360.7"];
+		n25;
+		n25 -> n26		 [_draw_="c 7 -#000000 B 4 311.91 160.41 322.71 151.41 336.23 140.14 348.07 130.27 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 350.5 132.8 355.94 123.71 346.02 127.43 ",
+			pos="e,355.94,123.71 311.91,160.41 322.71,151.41 336.23,140.14 348.07,130.27"];
+		n9;
+		n9 -> n26		 [_draw_="c 7 -#000000 B 4 170.9 165.36 210.36 154.13 270.56 137 315.55 124.2 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 316.53 127.56 325.19 121.46 314.62 120.83 ",
+			pos="e,325.19,121.46 170.9,165.36 210.36,154.13 270.56,137 315.55,124.2"];
+		n40;
+		n40 -> n12		 [_draw_="c 7 -#000000 B 4 867.57 389.73 892.04 378.92 925.07 364.33 951.51 352.65 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 953.19 355.74 960.92 348.5 950.36 349.33 ",
+			pos="e,960.92,348.5 867.57,389.73 892.04,378.92 925.07,364.33 951.51,352.65"];
+		n16;
+		n7;
+		n16 -> n7		 [_draw_="c 7 -#000000 B 4 130 387.94 130 379.81 130 369.88 130 360.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 133.5 360.44 130 350.44 126.5 360.44 ",
+			pos="e,130,350.44 130,387.94 130,379.81 130,369.88 130,360.7"];
+		n8;
+		n7 -> n8		 [_draw_="c 7 -#000000 B 4 130 313.64 130 303.3 130 289.94 130 278.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 133.5 278.05 130 268.05 126.5 278.05 ",
+			pos="e,130,268.05 130,313.64 130,303.3 130,289.94 130,278.22"];
+		n1 -> n2		 [_draw_="c 7 -#000000 B 4 3213.31 314.03 3202.91 302.79 3189.1 287.87 3177.53 275.36 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3180.03 272.91 3170.67 267.94 3174.89 277.66 ",
+			pos="e,3170.7,267.94 3213.3,314.03 3202.9,302.79 3189.1,287.87 3177.5,275.36"];
+		n1 -> n3		 [_draw_="c 7 -#000000 B 4 3259.62 315.19 3283.77 302.73 3317.65 285.25 3343.95 271.67 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3345.63 274.74 3352.91 267.05 3342.42 268.52 ",
+			pos="e,3352.9,267.05 3259.6,315.19 3283.8,302.73 3317.7,285.25 3344,271.67"];
+		n34;
+		n26 -> n24		 [_draw_="c 7 -#000000 B 4 376 87.7 376 79.98 376 70.71 376 62.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 379.5 62.1 376 52.1 372.5 62.1 ",
+			pos="e,376,52.104 376,87.697 376,79.983 376,70.712 376,62.112"];
+		n8 -> n9		 [_draw_="c 7 -#000000 B 4 130 231.7 130 223.98 130 214.71 130 206.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 133.5 206.1 130 196.1 126.5 206.1 ",
+			pos="e,130,196.1 130,231.7 130,223.98 130,214.71 130,206.11"];
+		n39;
+		n4;
+	}
+	subgraph cluster3 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 3897 306 3897 380 4081 380 4081 306 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3989 364.8 0 125.34 21 -stack \"model_Project\" ",
+			bb="3897,306,4081,380",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"model_Project\"",
+			lheight=0.19,
+			lp="3989,369",
+			lwidth=1.74,
+			style=filled
+		];
+		n22;
+	}
+	subgraph cluster4 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 3897 8 3897 298 4339 298 4339 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4118 282.8 0 177.61 29 -stack \"Rescue Livecode World\" ",
+			bb="3897,8,4339,298",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"Rescue Livecode World\"",
+			lheight=0.19,
+			lp="4118,287",
+			lwidth=2.47,
+			style=filled
+		];
+		n33;
+		n21;
+		n21 -> n33		 [_draw_="c 7 -#000000 B 4 4100 87.7 4100 79.98 4100 70.71 4100 62.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4103.5 62.1 4100 52.1 4096.5 62.1 ",
+			pos="e,4100,52.104 4100,87.697 4100,79.983 4100,70.712 4100,62.112"];
+		n46;
+		n20;
+		n23;
+		n18;
+		n23 -> n18		 [_draw_="c 7 -#000000 B 4 4098.73 233.12 4080.37 223.16 4056.53 210.22 4036.76 199.49 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4038.17 196.27 4027.71 194.58 4034.83 202.43 ",
+			pos="e,4027.7,194.58 4098.7,233.12 4080.4,223.16 4056.5,210.22 4036.8,199.49"];
+		n19;
+		n19 -> n21		 [_draw_="c 7 -#000000 B 4 4146.54 160.41 4139.06 151.82 4129.77 141.16 4121.46 131.63 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4123.98 129.2 4114.78 123.96 4118.71 133.79 ",
+			pos="e,4114.8,123.96 4146.5,160.41 4139.1,151.82 4129.8,141.16 4121.5,131.63"];
+		n19 -> n20		 [_draw_="c 7 -#000000 B 4 4175.22 160.41 4182.91 151.44 4192.53 140.21 4200.97 130.37 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4203.85 132.38 4207.7 122.51 4198.54 127.83 ",
+			pos="e,4207.7,122.51 4175.2,160.41 4182.9,151.44 4192.5,140.21 4201,130.37"];
+		n43;
+		n43 -> n46		 [_draw_="c 7 -#000000 B 4 4280 231.7 4280 223.98 4280 214.71 4280 206.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4283.5 206.1 4280 196.1 4276.5 206.1 ",
+			pos="e,4280,196.1 4280,231.7 4280,223.98 4280,214.71 4280,206.11"];
+		n43 -> n19		 [_draw_="c 7 -#000000 B 4 4254.76 234.15 4237.33 223.9 4213.94 210.14 4194.89 198.93 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4196.59 195.88 4186.2 193.82 4193.05 201.91 ",
+			pos="e,4186.2,193.82 4254.8,234.15 4237.3,223.9 4213.9,210.14 4194.9,198.93"];
+		n17;
+		n17 -> n18		 [_draw_="c 7 -#000000 B 4 3973.99 232.05 3977.74 224.09 3982.31 214.41 3986.5 205.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3989.76 206.81 3990.86 196.28 3983.43 203.83 ",
+			pos="e,3990.9,196.28 3974,232.05 3977.7,224.09 3982.3,214.41 3986.5,205.51"];
+	}
+	n42 -> n22	 [_draw_="c 7 -#000000 B 10 3488.35 392.92 3500.12 390.94 3512.41 389.16 3524 388 3564.81 383.93 3853.15 389.69 3893 380 3914.65 374.74 3937.11 \
+364.07 3954.86 354.23 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3956.73 357.19 3963.68 349.19 3953.26 351.11 ",
+		pos="e,3963.7,349.19 3488.3,392.92 3500.1,390.94 3512.4,389.16 3524,388 3564.8,383.93 3853.2,389.69 3893,380 3914.7,374.74 3937.1,364.07 \
+3954.9,354.23"];
+	n42 -> n43	 [_draw_="c 7 -#000000 B 16 3488.09 392.89 3499.93 390.9 3512.33 389.12 3524 388 3539.51 386.51 4072.04 388.65 4085 380 4114.81 360.11 4087.84 \
+326.82 4117 306 4135.68 292.66 4198.6 306.32 4220 298 4233.56 292.72 4246.54 283.31 4256.94 274.28 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4259.32 276.85 4264.36 267.53 4254.6 271.68 ",
+		pos="e,4264.4,267.53 3488.1,392.89 3499.9,390.9 3512.3,389.12 3524,388 3539.5,386.51 4072,388.65 4085,380 4114.8,360.11 4087.8,326.82 \
+4117,306 4135.7,292.66 4198.6,306.32 4220,298 4233.6,292.72 4246.5,283.31 4256.9,274.28"];
+	n22 -> n23	 [_draw_="c 7 -#000000 B 4 4016.79 315 4038.06 302.77 4067.58 285.77 4090.87 272.37 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4092.86 275.27 4099.78 267.24 4089.36 269.2 ",
+		pos="e,4099.8,267.24 4016.8,315 4038.1,302.77 4067.6,285.77 4090.9,272.37"];
+	n22 -> n17	 [_draw_="c 7 -#000000 B 4 3984.01 313.64 3981.01 303.19 3977.12 289.67 3973.72 277.86 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3977.03 276.69 3970.9 268.05 3970.3 278.63 ",
+		pos="e,3970.9,268.05 3984,313.64 3981,303.19 3977.1,289.67 3973.7,277.86"];
+	n4 -> n5	 [_draw_="c 7 -#000000 B 7 3881.12 404.92 3959.52 403.76 4074.96 398.76 4115 380 4126.08 374.81 4135.95 365.72 4143.67 356.92 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4146.51 358.98 4150.14 349.03 4141.09 354.54 ",
+		pos="e,4150.1,349.03 3881.1,404.92 3959.5,403.76 4075,398.76 4115,380 4126.1,374.81 4135.9,365.72 4143.7,356.92"];
+}

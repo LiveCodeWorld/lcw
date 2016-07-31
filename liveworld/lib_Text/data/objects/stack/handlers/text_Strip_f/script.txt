@@ -1,0 +1,6 @@
+function text_Strip someContainer, charsToStrip, replaceWith
+    repeat for each char someChar in charsToStrip
+        replace someChar with replaceWith in someContainer
+    end repeat
+    return someContainer
+end text_Strip

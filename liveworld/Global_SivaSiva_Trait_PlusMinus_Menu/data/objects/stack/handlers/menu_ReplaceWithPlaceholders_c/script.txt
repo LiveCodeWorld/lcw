@@ -1,0 +1,7 @@
+on menu_ReplaceWithPlaceholders plusMinusView
+   lock screen
+   set the control_Type of the positive_View of plusMinusView to "placeholder"
+   set the control_Type of the negative_View of plusMinusView to "placeholder"
+   set the control_Type of the square_View of plusMinusView to "placeholder"
+   unlock screen
+end menu_ReplaceWithPlaceholders

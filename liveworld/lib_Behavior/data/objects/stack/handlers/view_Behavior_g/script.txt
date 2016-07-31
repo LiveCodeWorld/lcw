@@ -1,0 +1,6 @@
+getprop view_Behavior
+   put the behavior of the target into behaviorObject
+   if behaviorObject is empty then return empty
+   put hArray_GetName (behaviorObject, "view behavior") into vbName
+   return vbName
+end view_Behavior

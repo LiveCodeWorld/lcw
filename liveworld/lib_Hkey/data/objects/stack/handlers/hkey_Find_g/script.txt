@@ -1,0 +1,9 @@
+getprop hkey_Find [shortHkey]
+   local pSetName
+   put the long id of the target into hObject
+   put item 1 of shortHkey into hName
+   put item 2 of shortHkey into hType
+   
+   put hkey_FindAndIndex (hName, hType, hObject, pSetName) into foundHkey
+   return foundHkey
+end hkey_Find

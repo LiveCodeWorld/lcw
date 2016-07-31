@@ -1,0 +1,7 @@
+setprop server_PreferenceArray [serverURL] serverPrefArray
+   put serverPrefArray into LocalArray ["server_PreferenceArray"]
+   if serverURL is empty then put server_GetURL() into serverURL
+   put serverPrefArray [serverURL] into serverArray
+   set the server_Array of me to serverArray
+   return serverArray
+end server_PreferenceArray

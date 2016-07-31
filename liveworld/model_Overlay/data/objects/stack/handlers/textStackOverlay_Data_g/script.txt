@@ -1,0 +1,7 @@
+getprop textStackOverlay_Data  [pOverlayName]
+   put the textStackOverlay_Folder [true] of the target into overlayFolder
+   if there is not a folder overlayFolder then return empty
+   put overlay_GetData (overlayFolder) into overlayData
+   if pOverlayName is empty then return overlayData
+   return overlayData [pOverlayName]
+end textStackOverlay_Data

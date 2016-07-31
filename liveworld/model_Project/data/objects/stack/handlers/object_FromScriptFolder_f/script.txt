@@ -1,0 +1,27 @@
+function object_FromScriptFolder scriptFileOrFolder
+   set the itemdelimiter to "/"
+   
+   if item -1 of scriptFileOrFolder = "script.txt" then delete item -1 of scriptFileOrFolder
+   if item -2 of scriptFileOrFolder = "handlers" then delete item -2 to -1 of scriptFileOrFolder
+   
+   put item -1 of scriptFileOrFolder into objectBit
+   replace "_" with " id " in objectBit
+   
+   if item -3 of scriptFileOrFolder = "substacks" then
+      put item -2 of scriptFileOrFolder into subStackName
+      put item -6 of scriptFileOrFolder into mainStackName
+      if objectBit = "stack" then
+         put "stack" && kwote (subStackName) && "of stack" && kwote (mainStackName) into someObject
+      else
+         put objectBit && "of stack" && kwote (subStackName) && "of stack" && kwote (mainStackName) into someObject
+      end if
+   else
+      put item -4 of scriptFileOrFolder into mainStackName
+      if objectBit = "stack" then
+         put "stack" && kwote (mainStackName) into someObject
+      else
+         put objectBit && "of stack" && kwote (mainStackName) into someObject
+      end if
+   end if
+   return someObject
+end object_FromScriptFolder

@@ -1,0 +1,12 @@
+getprop script_MessageHandlers [pReturnHow]
+   try
+      put the long id of the target into tObject
+      put the revAvailableHandlers of tObject into handlerTable -- revAvailableHandlers only return first handler.
+      put the script of tObject into someScript
+      put script_HkeysFromAvailable (handlerTable, someScript, pReturnHow) into hKeys
+      return hKeys
+   catch someError
+      -- a locked stack
+      return empty
+   end try
+end script_MessageHandlers

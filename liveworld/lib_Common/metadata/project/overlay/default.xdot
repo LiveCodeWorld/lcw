@@ -1,0 +1,2805 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 1446 7043 1446 7043 0 ",
+		bb="0,0,7043,1446",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph s {
+		node [color=white,
+			fillcolor=grey,
+			style=filled
+		];
+		n89		 [URL="meta_Script%2Cs%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 4408 1390 52.68 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4408 1385.8 0 67.65 11 -meta_Script ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=meta_Script,
+			pos="4408,1390",
+			style=filled,
+			width=1.4677];
+		n88		 [URL="object_UripArray%2Cs%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#c0c0c0 E 5216 1390 72.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5216 1385.8 0 99.52 16 -object_UripArray ",
+			color=white,
+			fillcolor=grey,
+			height=0.5,
+			label=object_UripArray,
+			pos="5216,1390",
+			style=filled,
+			width=2.0269];
+	}
+	subgraph pc {
+		n144		 [URL="_parseDictionary%2Cpc%2Cstack+%22lib_LiveCodeDictionary%22%2C1",
+			_draw_="c 7 -#000000 e 6689 560 71.01 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6689 555.8 0 96.41 16 -_parseDictionary ",
+			height=0.5,
+			label=_parseDictionary,
+			pos="6689,560",
+			width=1.9724];
+	}
+	subgraph g {
+		node [color=white,
+			fillcolor=grey50,
+			style=filled
+		];
+		n141		 [URL="object_IsMenuButton%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5038 1390 87.47 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5038 1385.8 0 122.1 19 -object_IsMenuButton ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=object_IsMenuButton,
+			pos="5038,1390",
+			style=filled,
+			width=2.4231];
+		n65		 [URL="object_Folder%2Cg%2Cstack+%22model_ObjectMetadata%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5748 1234 59.45 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5748 1229.8 0 77.76 13 -object_Folder ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=object_Folder,
+			pos="5748,1234",
+			style=filled,
+			width=1.6451];
+		n39		 [URL="textStack_Folder%2Cg%2Cstack+%22model_ObjectMetadata%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5896 1234 70.55 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5896 1229.8 0 95.65 16 -textStack_Folder ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=textStack_Folder,
+			pos="5896,1234",
+			style=filled,
+			width=1.959];
+		n149		 [URL="script_Handler%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5218 414 62.82 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5218 409.8 0 83.19 14 -script_Handler ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=script_Handler,
+			pos="5218,414",
+			style=filled,
+			width=1.7405];
+		n7		 [URL="uRIP%2Cg%2CMissing%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 6017 560 28.08 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6017 555.8 0 28.79 4 -uRIP ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=uRIP,
+			pos="6017,560",
+			style=filled,
+			width=0.78584];
+		n79		 [URL="object_Metadata%2Cg%2Cstack+%22model_ObjectMetadata%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5602 1234 69.07 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5602 1229.8 0 93.29 15 -object_Metadata ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=object_Metadata,
+			pos="5602,1234",
+			style=filled,
+			width=1.9177];
+		n21		 [URL="stack_Name%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 2297 1016 53.63 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2297 1011.8 0 69.19 10 -stack_Name ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=stack_Name,
+			pos="2297,1016",
+			style=filled,
+			width=1.4949];
+		n40		 [URL="mainstack_File%2Cg%2Cstack+%22lib_Object%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 6359 1160 64.28 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6359 1155.8 0 85.54 14 -mainstack_File ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=mainstack_File,
+			pos="6359,1160",
+			style=filled,
+			width=1.7816];
+		n12		 [URL="view_IsTemplate%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5438 870 70.76 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5438 865.8 0 96.21 15 -view_IsTemplate ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=view_IsTemplate,
+			pos="5438,870",
+			style=filled,
+			width=1.9689];
+		n161		 [URL="stackDataObjects_Folder%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 4578 1390 99.49 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4578 1385.8 0 141.51 23 -stackDataObjects_Folder ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=stackDataObjects_Folder,
+			pos="4578,1390",
+			style=filled,
+			width=2.7638];
+		n126		 [URL="stack_SubName%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 2598 1088 67.65 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2598 1083.8 0 90.98 13 -stack_SubName ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=stack_SubName,
+			pos="2598,1088",
+			style=filled,
+			width=1.8771];
+		n174		 [URL="mainstack_File%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 2327 1088 64.28 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2327 1083.8 0 85.54 14 -mainstack_File ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=mainstack_File,
+			pos="2327,1088",
+			style=filled,
+			width=1.7816];
+		n6		 [URL="view_Name%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5064 870 52.67 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5064 865.8 0 67.64 9 -view_Name ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=view_Name,
+			pos="5064,870",
+			style=filled,
+			width=1.4676];
+		n86		 [URL="view_Hierarchy%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 3798 1390 67.14 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3798 1385.8 0 90.18 14 -view_Hierarchy ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=view_Hierarchy,
+			pos="3798,1390",
+			style=filled,
+			width=1.8631];
+		n66		 [URL="rugged_ID%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 4058 1016 48.33 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4058 1011.8 0 60.65 9 -rugged_ID ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=rugged_ID,
+			pos="4058,1016",
+			style=filled,
+			width=1.3449];
+		n14		 [URL="view_Template%2Cg%2Cstack+%22lib_ViewTemplate%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 6291 788 64.49 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6291 783.8 0 86.1 13 -view_Template ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=view_Template,
+			pos="6291,788",
+			style=filled,
+			width=1.7915];
+		n137		 [URL="mobile_Name%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 1755 1234 60.41 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1755 1229.8 0 79.31 11 -mobile_Name ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=mobile_Name,
+			pos="1755,1234",
+			style=filled,
+			width=1.6724];
+		n51		 [URL="main_Stack%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 2461 1088 51.72 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2461 1083.8 0 66.1 10 -main_Stack ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=main_Stack,
+			pos="2461,1088",
+			style=filled,
+			width=1.4405];
+		n41		 [URL="stack_Object%2Cg%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 2510 1016 56.04 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2510 1011.8 0 73.08 12 -stack_Object ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=stack_Object,
+			pos="2510,1016",
+			style=filled,
+			width=1.5631];
+		n70		 [URL="stackDataObjects_Folder%2Cg%2Cstack+%22model_ObjectMetadata%22%2C1",
+			_draw_="c 7 -#ffffff C 7 -#7f7f7f E 5646 1160 99.49 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5646 1155.8 0 141.51 23 -stackDataObjects_Folder ",
+			color=white,
+			fillcolor=grey50,
+			height=0.5,
+			label=stackDataObjects_Folder,
+			pos="5646,1160",
+			style=filled,
+			width=2.7638];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n84		 [URL="rev_SetSelectedHandlerTreeLineNum%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2879 1316 145.18 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2879 1311.8 0 214.09 33 -rev_SetSelectedHandlerTreeLineNum ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=rev_SetSelectedHandlerTreeLineNum,
+			pos="2879,1316",
+			style=filled,
+			width=4.0373];
+		n128		 [URL="line_Insert%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 114 1234 47.85 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 114 1229.8 0 59.87 11 -line_Insert ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=line_Insert,
+			pos="114,1234",
+			style=filled,
+			width=1.3312];
+		n75		 [URL="osx_Notify%2Cc%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6215 178 49.81 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6215 173.8 0 63 10 -osx_Notify ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=osx_Notify,
+			pos="6215,178",
+			style=filled,
+			width=1.3862];
+		n108		 [URL="handler_AddToCallArray%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3066 870 100.69 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3066 865.8 0 143.64 22 -handler_AddToCallArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=handler_AddToCallArray,
+			pos="3066,870",
+			style=filled,
+			width=2.8012];
+		n60		 [URL="object_AddToArray%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4058 1088 81.39 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4058 1083.8 0 112.54 17 -object_AddToArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=object_AddToArray,
+			pos="4058,1088",
+			style=filled,
+			width=2.2554];
+		n155		 [URL="object_AddToGlobalArray%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2648 1160 105.03 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2648 1155.8 0 150.64 23 -object_AddToGlobalArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=object_AddToGlobalArray,
+			pos="2648,1160",
+			style=filled,
+			width=2.924];
+		n92		 [URL="script_ExportHandlersAndCalls%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3151 414 123.66 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3151 409.8 0 179.63 29 -script_ExportHandlersAndCalls ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=script_ExportHandlersAndCalls,
+			pos="3151,414",
+			style=filled,
+			width=3.4327];
+		n64		 [URL="object_ExportScript%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2952 488 81.16 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2952 483.8 0 112.75 19 -object_ExportScript ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=object_ExportScript,
+			pos="2952,488",
+			style=filled,
+			width=2.2592];
+		n125		 [URL="stack_CreateSubStack%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2436 1160 89.37 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2436 1155.8 0 125.19 20 -stack_CreateSubStack ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=stack_CreateSubStack,
+			pos="2436,1160",
+			style=filled,
+			width=2.4773];
+		n146		 [URL="object_StackNameOffsets%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4860 1088 102.07 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4860 1083.8 0 145.93 23 -object_StackNameOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=object_StackNameOffsets,
+			pos="4860,1088",
+			style=filled,
+			width=2.8413];
+		n44		 [URL="custom_DeleteSet%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3117 1316 74.4 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3117 1311.8 0 101.86 16 -custom_DeleteSet ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=custom_DeleteSet,
+			pos="3117,1316",
+			style=filled,
+			width=2.0681];
+		n53		 [URL="hArray_RemoveObjectFromTypeArray%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4311 942 149.91 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4311 937.8 0 221.4 32 -hArray_RemoveObjectFromTypeArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hArray_RemoveObjectFromTypeArray,
+			pos="4311,942",
+			style=filled,
+			width=4.1655];
+		n93		 [URL="text_SetOffsets%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 283 1234 64.45 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 283 1229.8 0 86.07 15 -text_SetOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_SetOffsets,
+			pos="283,1234",
+			style=filled,
+			width=1.791];
+		n165		 [URL="menu_DeconstructPath%2Cc%2Cstack+%22lib_MenuButton%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6648 1316 92.75 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6648 1311.8 0 130.63 20 -menu_DeconstructPath ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=menu_DeconstructPath,
+			pos="6648,1316",
+			style=filled,
+			width=2.5729];
+		n170		 [URL="folder_AddObjectBit%2Cc%2Cstack+%22libOPN_TextStackFiles%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6182 1160 85.02 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6182 1155.8 0 118.97 19 -folder_AddObjectBit ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=folder_AddObjectBit,
+			pos="6182,1160",
+			style=filled,
+			width=2.3683];
+		n101		 [URL="line_Add%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2647 788 43.04 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2647 783.8 0 52.1 8 -line_Add ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=line_Add,
+			pos="2647,788",
+			style=filled,
+			width=1.195];
+		n131		 [URL="hkey_AddToKeyWordArray%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3596 942 110.89 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3596 937.8 0 159.63 22 -hkey_AddToKeyWordArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hkey_AddToKeyWordArray,
+			pos="3596,942",
+			style=filled,
+			width=3.0818];
+		n97		 [URL="opn_Notify%2Cc%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6273 250 50.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6273 245.8 0 64.55 10 -opn_Notify ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=opn_Notify,
+			pos="6273,250",
+			style=filled,
+			width=1.4134];
+		n24		 [URL="script_SetHandlerOffsets%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 664 1316 99.19 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 664 1311.8 0 141.27 24 -script_SetHandlerOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=script_SetHandlerOffsets,
+			pos="664,1316",
+			style=filled,
+			width=2.7596];
+		n43		 [URL="hArray_RemoveSameNameTypeObjects%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5335 942 154.25 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5335 937.8 0 228.39 32 -hArray_RemoveSameNameTypeObjects ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hArray_RemoveSameNameTypeObjects,
+			pos="5335,942",
+			style=filled,
+			width=4.2882];
+		n82		 [URL="rev_ActivateScriptEditorTab%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2370 1316 112.27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2370 1311.8 0 161.52 27 -rev_ActivateScriptEditorTab ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=rev_ActivateScriptEditorTab,
+			pos="2370,1316",
+			style=filled,
+			width=3.1149];
+		n63		 [URL="hArray_RemoveObjectFromArray%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4311 1016 132.31 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4311 1011.8 0 193.61 28 -hArray_RemoveObjectFromArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hArray_RemoveObjectFromArray,
+			pos="4311,1016",
+			style=filled,
+			width=3.6779];
+		n20		 [URL="script_SetSuiteOffsets%2Cc%2Cstack+%22model_ScriptSuite%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6538 870 89.08 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6538 865.8 0 124.96 22 -script_SetSuiteOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=script_SetSuiteOffsets,
+			pos="6538,870",
+			style=filled,
+			width=2.4734];
+		n102		 [URL="hkey_NormalizeType%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3353 332 86.69 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3353 327.8 0 121.08 18 -hkey_NormalizeType ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hkey_NormalizeType,
+			pos="3353,332",
+			style=filled,
+			width=2.4054];
+		n77		 [URL="custom_DeleteProperty%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2576 1390 93.71 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2576 1385.8 0 132.19 21 -custom_DeleteProperty ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=custom_DeleteProperty,
+			pos="2576,1390",
+			style=filled,
+			width=2.6002];
+		n90		 [URL="folder_CreateNested%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3103 250 83.05 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3103 245.8 0 115.83 19 -folder_CreateNested ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=folder_CreateNested,
+			pos="3103,250",
+			style=filled,
+			width=2.3133];
+		n166		 [URL="rev_MarkStackEdited%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4249 1390 87.92 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4249 1385.8 0 122.85 19 -rev_MarkStackEdited ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=rev_MarkStackEdited,
+			pos="4249,1390",
+			style=filled,
+			width=2.4363];
+		n37		 [URL="checkout_SetFolderAndRepotype%2Cc%2Cstack+%22model_ObjectMetadata%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5941 1088 129.92 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5941 1083.8 0 189.74 29 -checkout_SetFolderAndRepotype ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=checkout_SetFolderAndRepotype,
+			pos="5941,1088",
+			style=filled,
+			width=3.61];
+		n130		 [URL="script_DeconstructMetaDataSuite%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4013 1390 129.89 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4013 1385.8 0 189.72 31 -script_DeconstructMetaDataSuite ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=script_DeconstructMetaDataSuite,
+			pos="4013,1390",
+			style=filled,
+			width=3.6096];
+		n58		 [URL="git_ExecuteShell%2Cc%2Cstack+%22lib_Git%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5780 488 70.54 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5780 483.8 0 95.64 16 -git_ExecuteShell ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=git_ExecuteShell,
+			pos="5780,488",
+			style=filled,
+			width=1.9589];
+		n46		 [URL="rev_SetScriptEditorField%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2374 1234 98.56 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2374 1229.8 0 139.98 24 -rev_SetScriptEditorField ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=rev_SetScriptEditorField,
+			pos="2374,1234",
+			style=filled,
+			width=2.7369];
+		n138		 [URL="object_SetShortStackName%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2879 1160 107.23 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2879 1155.8 0 153.97 24 -object_SetShortStackName ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=object_SetShortStackName,
+			pos="2879,1160",
+			style=filled,
+			width=2.9823];
+		n113		 [URL="hkey_Deconstruct%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4880 250 74.39 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4880 245.8 0 101.86 16 -hkey_Deconstruct ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hkey_Deconstruct,
+			pos="4880,250",
+			style=filled,
+			width=2.068];
+		n81		 [URL="hkey_EditFoundHandler%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2367 1390 97.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2367 1385.8 0 138.42 21 -hkey_EditFoundHandler ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hkey_EditFoundHandler,
+			pos="2367,1390",
+			style=filled,
+			width=2.7096];
+		n62		 [URL="hArray_AddHandlerHash%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3836 1016 101.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3836 1011.8 0 144.62 21 -hArray_AddHandlerHash ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hArray_AddHandlerHash,
+			pos="3836,1016",
+			style=filled,
+			width=2.8183];
+		n153		 [URL="shell_BashParamEscape%2Cc%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 6167 414 96.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6167 409.8 0 136.85 21 -shell_BashParamEscape ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=shell_BashParamEscape,
+			pos="6167,414",
+			style=filled,
+			width=2.682];
+		n34		 [URL="folder_Format%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3205 178 61.38 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3205 173.8 0 80.87 13 -folder_Format ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=folder_Format,
+			pos="3205,178",
+			style=filled,
+			width=1.6997];
+		n123		 [URL="script_HandlerFromTableOffsets%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5218 250 126.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5218 245.8 0 184.61 30 -script_HandlerFromTableOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=script_HandlerFromTableOffsets,
+			pos="5218,250",
+			style=filled,
+			width=3.52];
+		n85		 [URL="script_HandlerTableOffsets%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 2608 1316 107.62 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2608 1311.8 0 154.27 26 -script_HandlerTableOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=script_HandlerTableOffsets,
+			pos="2608,1316",
+			style=filled,
+			width=2.9877];
+		n99		 [URL="script_SetPrivateHandlerOffsets%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 906 1316 124.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 906 1311.8 0 180.93 31 -script_SetPrivateHandlerOffsets ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=script_SetPrivateHandlerOffsets,
+			pos="906,1316",
+			style=filled,
+			width=3.4554];
+		n26		 [URL="text_EscapeRegularExpression%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 672 1234 120.25 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 672 1229.8 0 174.17 28 -text_EscapeRegularExpression ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=text_EscapeRegularExpression,
+			pos="672,1234",
+			style=filled,
+			width=3.3368];
+		n45		 [URL="line_Delete%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3188 1234 50.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3188 1229.8 0 64.52 11 -line_Delete ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=line_Delete,
+			pos="3188,1234",
+			style=filled,
+			width=1.4129];
+		n74		 [URL="folder_AddObjectBit%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3628 1390 85.02 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3628 1385.8 0 118.97 19 -folder_AddObjectBit ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=folder_AddObjectBit,
+			pos="3628,1390",
+			style=filled,
+			width=2.3683];
+		n78		 [URL="hArray_RemoveObject%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 3325 1316 92.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3325 1311.8 0 130.62 19 -hArray_RemoveObject ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hArray_RemoveObject,
+			pos="3325,1316",
+			style=filled,
+			width=2.5727];
+		n61		 [URL="file_SetHomeRelative%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4550 1016 88.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4550 1011.8 0 123.64 20 -file_SetHomeRelative ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=file_SetHomeRelative,
+			pos="4550,1016",
+			style=filled,
+			width=2.4502];
+		n69		 [URL="view_NormalizeName%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 5225 870 90.31 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5225 865.8 0 126.72 18 -view_NormalizeName ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=view_NormalizeName,
+			pos="5225,870",
+			style=filled,
+			width=2.5043];
+		n80		 [URL="hArray_RemoveObjectFromHandlerArray%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 4640 942 160.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4640 937.8 0 238.7 35 -hArray_RemoveObjectFromHandlerArray ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=hArray_RemoveObjectFromHandlerArray,
+			pos="4640,942",
+			style=filled,
+			width=4.4691];
+	}
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n152		 [URL="script_GetSuiteTitles%2Cf%2Cstack+%22model_ScriptSuite%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6682 942 84.91 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6682 937.8 0 118.49 21 -script_GetSuiteTitles ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_GetSuiteTitles,
+			pos="6682,942",
+			style=filled,
+			width=2.3599];
+		n22		 [URL="object_ExtractStack%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2348 942 81.13 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2348 937.8 0 112.73 19 -object_ExtractStack ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=object_ExtractStack,
+			pos="2348,942",
+			style=filled,
+			width=2.2588];
+		n49		 [URL="fossil_FindCheckoutFolder%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6242 560 106.79 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6242 555.8 0 153.22 25 -fossil_FindCheckoutFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=fossil_FindCheckoutFolder,
+			pos="6242,560",
+			style=filled,
+			width=2.9692];
+		n100		 [URL="text_InitialCaps%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2770 716 66.69 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2770 711.8 0 89.43 16 -text_InitialCaps ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_InitialCaps,
+			pos="2770,716",
+			style=filled,
+			width=1.8499];
+		n133		 [URL="param_IsBoolean%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3452 1390 72.46 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3452 1385.8 0 98.75 15 -param_IsBoolean ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=param_IsBoolean,
+			pos="3452,1390",
+			style=filled,
+			width=2.0134];
+		n124		 [URL="hkey_Construct%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3295 1390 66.22 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3295 1385.8 0 88.66 14 -hkey_Construct ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hkey_Construct,
+			pos="3295,1390",
+			style=filled,
+			width=1.8363];
+		n96		 [URL="library_PluginFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3759 332 84.08 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3759 327.8 0 117.43 20 -library_PluginFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_PluginFolder,
+			pos="3759,332",
+			style=filled,
+			width=2.3413];
+		n15		 [URL="library_FetchHandlerDatabaseArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3555 642 139.02 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3555 637.8 0 204.46 33 -library_FetchHandlerDatabaseArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_FetchHandlerDatabaseArray,
+			pos="3555,642",
+			style=filled,
+			width=3.8684];
+		n160		 [URL="script_MenuTitleArrayFromSuiteTitles%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3062 1390 149 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3062 1385.8 0 219.88 36 -script_MenuTitleArrayFromSuiteTitles ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_MenuTitleArrayFromSuiteTitles,
+			pos="3062,1390",
+			style=filled,
+			width=4.1388];
+		n104		 [URL="objectFolder_HandlerFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3138 332 110.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3138 327.8 0 159.4 26 -objectFolder_HandlerFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=objectFolder_HandlerFolder,
+			pos="3138,332",
+			style=filled,
+			width=3.0777];
+		n52		 [URL="rev_GetIcon%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4496 250 54.11 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4496 245.8 0 69.97 11 -rev_GetIcon ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_GetIcon,
+			pos="4496,250",
+			style=filled,
+			width=1.5084];
+		n19		 [URL="script_GetSuite%2Cf%2Cstack+%22model_ScriptSuite%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6514 942 65.25 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6514 937.8 0 87.1 15 -script_GetSuite ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_GetSuite,
+			pos="6514,942",
+			style=filled,
+			width=1.809];
+		n145		 [URL="ideDocsFetchLCSEntries%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6467 560 100 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6467 555.8 0 142.31 22 -ideDocsFetchLCSEntries ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=ideDocsFetchLCSEntries,
+			pos="6467,560",
+			style=filled,
+			width=2.7778];
+		n31		 [URL="text_StartsWithCaps%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3126 716 82.91 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3126 711.8 0 115.32 19 -text_StartsWithCaps ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_StartsWithCaps,
+			pos="3126,716",
+			style=filled,
+			width=2.3043];
+		n111		 [URL="script_ExtractFunctionCalls%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2800 870 109.17 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2800 865.8 0 157.08 27 -script_ExtractFunctionCalls ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_ExtractFunctionCalls,
+			pos="2800,870",
+			style=filled,
+			width=3.037];
+		n120		 [URL="_GetDefaultMenuTarget%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1447 1390 97 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1447 1385.8 0 137.16 21 -_GetDefaultMenuTarget ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=_GetDefaultMenuTarget,
+			pos="1447,1390",
+			style=filled,
+			width=2.6875];
+		n136		 [URL="rev_ApplicationFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1924 1234 90.82 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1924 1229.8 0 127.52 21 -rev_ApplicationFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ApplicationFolder,
+			pos="1924,1234",
+			style=filled,
+			width=2.5184];
+		n11		 [URL="rev_TopScriptEditor%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2162 1088 82.85 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2162 1083.8 0 114.88 19 -rev_TopScriptEditor ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_TopScriptEditor,
+			pos="2162,1088",
+			style=filled,
+			width=2.2966];
+		n164		 [URL="menu_TitlePathFromPath%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5408 1390 101.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5408 1385.8 0 144.17 22 -menu_TitlePathFromPath ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=menu_TitlePathFromPath,
+			pos="5408,1390",
+			style=filled,
+			width=2.8104];
+		n168		 [URL="hArray_GetObjectTypeArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5080 788 114.18 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5080 783.8 0 164.62 25 -hArray_GetObjectTypeArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetObjectTypeArray,
+			pos="5080,788",
+			style=filled,
+			width=3.1692];
+		n35		 [URL="textStack_FindRoot%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1643 1390 80.71 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1643 1385.8 0 112 18 -textStack_FindRoot ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=textStack_FindRoot,
+			pos="1643,1390",
+			style=filled,
+			width=2.246];
+		n171		 [URL="text_Merge%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6334 178 50.93 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6334 173.8 0 64.29 10 -text_Merge ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_Merge,
+			pos="6334,178",
+			style=filled,
+			width=1.4087];
+		n119		 [URL="library_ScriptTemplateFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3544 414 115.18 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3544 409.8 0 166.2 28 -library_ScriptTemplateFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_ScriptTemplateFolder,
+			pos="3544,414",
+			style=filled,
+			width=3.1969];
+		n56		 [URL="git_GetRootFolder%2Cf%2Cstack+%22lib_Git%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5780 414 76.84 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5780 409.8 0 105.77 17 -git_GetRootFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=git_GetRootFolder,
+			pos="5780,414",
+			style=filled,
+			width=2.1367];
+		n115		 [URL="hArray_GetNamedObjectType%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4874 870 119.01 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4874 865.8 0 172.4 25 -hArray_GetNamedObjectType ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetNamedObjectType,
+			pos="4874,870",
+			style=filled,
+			width=3.3057];
+		n71		 [URL="folder_AddStackBit%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3385 1088 81.17 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3385 1083.8 0 112.76 18 -folder_AddStackBit ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=folder_AddStackBit,
+			pos="3385,1088",
+			style=filled,
+			width=2.2593];
+		n87		 [URL="view_ConstructHierarchy%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3798 1316 101.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3798 1311.8 0 144.62 23 -view_ConstructHierarchy ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=view_ConstructHierarchy,
+			pos="3798,1316",
+			style=filled,
+			width=2.8183];
+		n68		 [URL="sha1_Hash%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3466 870 48.83 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3466 865.8 0 61.43 9 -sha1_Hash ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=sha1_Hash,
+			pos="3466,870",
+			style=filled,
+			width=1.3587];
+		n29		 [URL="text_RepeatString%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4055 870 73.93 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4055 865.8 0 101.09 17 -text_RepeatString ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_RepeatString,
+			pos="4055,870",
+			style=filled,
+			width=2.0545];
+		n151		 [URL="script_MenuToolModeArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3560 1316 112.3 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3560 1311.8 0 161.54 24 -script_MenuToolModeArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_MenuToolModeArray,
+			pos="3560,1316",
+			style=filled,
+			width=3.1152];
+		n25		 [URL="script_MatchEnd%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 890 1234 71.03 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 890 1229.8 0 96.42 15 -script_MatchEnd ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_MatchEnd,
+			pos="890,1234",
+			style=filled,
+			width=1.9726];
+		n48		 [URL="text_TokenOffset%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2180 1390 71.92 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2180 1385.8 0 97.52 16 -text_TokenOffset ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_TokenOffset,
+			pos="2180,1390",
+			style=filled,
+			width=1.9919];
+		n3		 [URL="library_FetchForgetArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3361 788 101.11 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3361 783.8 0 144.38 24 -library_FetchForgetArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_FetchForgetArray,
+			pos="3361,788",
+			style=filled,
+			width=2.814];
+		n132		 [URL="git_Version%2Cf%2Cstack+%22lib_Git%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5584 560 50.77 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5584 555.8 0 64.55 11 -git_Version ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=git_Version,
+			pos="5584,560",
+			style=filled,
+			width=1.4134];
+		n159		 [URL="hArray_GetUripArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4857 788 89.35 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4857 783.8 0 125.17 19 -hArray_GetUripArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetUripArray,
+			pos="4857,788",
+			style=filled,
+			width=2.4771];
+		n105		 [URL="error_mTopController%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2002 1390 88.63 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2002 1385.8 0 124.21 20 -error_mTopController ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=error_mTopController,
+			pos="2002,1390",
+			style=filled,
+			width=2.4602];
+		n83		 [URL="rev_ScriptEditorIsOpen%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2145 1316 94.68 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2145 1311.8 0 133.75 22 -rev_ScriptEditorIsOpen ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ScriptEditorIsOpen,
+			pos="2145,1316",
+			style=filled,
+			width=2.6275];
+		n129		 [URL="rev_ListTabScriptObjects%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2786 1234 100.69 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2786 1229.8 0 143.65 24 -rev_ListTabScriptObjects ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ListTabScriptObjects,
+			pos="2786,1234",
+			style=filled,
+			width=2.8013];
+		n142		 [URL="target_IsReference%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1819 1390 76.95 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1819 1385.8 0 105.46 18 -target_IsReference ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=target_IsReference,
+			pos="1819,1390",
+			style=filled,
+			width=2.1313];
+		n32		 [URL="hArray_GetObjectData%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4640 788 92.72 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4640 783.8 0 130.61 20 -hArray_GetObjectData ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetObjectData,
+			pos="4640,788",
+			style=filled,
+			width=2.5725];
+		n76		 [URL="kwote%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6195 106 31.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6195 101.8 0 34.21 5 -kwote ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=kwote,
+			pos="6195,106",
+			style=filled,
+			width=0.88108];
+		n109		 [URL="library_ListForgetHkeys%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3282 870 97.28 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3282 865.8 0 138.17 23 -library_ListForgetHkeys ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_ListForgetHkeys,
+			pos="3282,870",
+			style=filled,
+			width=2.7052];
+		n110		 [URL="script_DictionaryTerm%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3571 788 90.55 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3571 783.8 0 127.31 21 -script_DictionaryTerm ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_DictionaryTerm,
+			pos="3571,788",
+			style=filled,
+			width=2.5146];
+		n121		 [URL="addThenReturn%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1447 1316 65.23 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1447 1311.8 0 87.08 13 -addThenReturn ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=addThenReturn,
+			pos="1447,1316",
+			style=filled,
+			width=1.8088];
+		n154		 [URL="text_IsQuoted%2Cf%2Cstack+%22lib_Text%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6166 332 60.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6166 327.8 0 79.32 13 -text_IsQuoted ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_IsQuoted,
+			pos="6166,332",
+			style=filled,
+			width=1.6725];
+		n16		 [URL="library_FetchArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3585 560 78.24 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3585 555.8 0 108.07 18 -library_FetchArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_FetchArray,
+			pos="3585,560",
+			style=filled,
+			width=2.177];
+		n169		 [URL="script_GetCommand%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 350 1390 83.58 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 350 1385.8 0 116.65 17 -script_GetCommand ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_GetCommand,
+			pos="350,1390",
+			style=filled,
+			width=2.3275];
+		n36		 [URL="checkout_ConstructDefaultFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1661 1316 130.39 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1661 1311.8 0 190.5 31 -checkout_ConstructDefaultFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=checkout_ConstructDefaultFolder,
+			pos="1661,1316",
+			style=filled,
+			width=3.6234];
+		n118		 [URL="text_ExtractQuoted%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 114 1316 79.21 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 114 1311.8 0 109.63 18 -text_ExtractQuoted ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_ExtractQuoted,
+			pos="114,1316",
+			style=filled,
+			width=2.2043];
+		n57		 [URL="pref_GetValue%2Cf%2Cstack+%22model_Prefs%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6420 332 61.84 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6420 327.8 0 81.63 13 -pref_GetValue ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=pref_GetValue,
+			pos="6420,332",
+			style=filled,
+			width=1.713];
+		n72		 [URL="hArray_GetObjectTypeData%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5081 716 110.32 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5081 711.8 0 158.4 24 -hArray_GetObjectTypeData ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetObjectTypeData,
+			pos="5081,716",
+			style=filled,
+			width=3.06];
+		n114		 [URL="hArray_GetViewTemplate%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5059 942 103.99 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5059 937.8 0 148.24 22 -hArray_GetViewTemplate ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetViewTemplate,
+			pos="5059,942",
+			style=filled,
+			width=2.8818];
+		n150		 [URL="script_OrderedMenuTitles%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2791 1390 103.72 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2791 1385.8 0 148.03 24 -script_OrderedMenuTitles ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_OrderedMenuTitles,
+			pos="2791,1390",
+			style=filled,
+			width=2.8781];
+		n28		 [URL="outline_DecreaseIndent%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3869 870 94.16 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3869 865.8 0 132.94 22 -outline_DecreaseIndent ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=outline_DecreaseIndent,
+			pos="3869,870",
+			style=filled,
+			width=2.6134];
+		n47		 [URL="rev_ScriptEditorGroup%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3096 1160 91.79 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3096 1155.8 0 129.08 21 -rev_ScriptEditorGroup ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ScriptEditorGroup,
+			pos="3096,1160",
+			style=filled,
+			width=2.5457];
+		n2		 [URL="_convertVersionToNumber%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6281 34 106.5 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6281 29.8 0 152.2 23 -_convertVersionToNumber ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=_convertVersionToNumber,
+			pos="6281,34",
+			style=filled,
+			width=2.9514];
+		n139		 [URL="checkout_ConstructDefaultFolder%2Cf%2Cstack+%22model_ObjectMetadata%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5663 1088 130.39 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5663 1083.8 0 190.5 31 -checkout_ConstructDefaultFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=checkout_ConstructDefaultFolder,
+			pos="5663,1088",
+			style=filled,
+			width=3.6234];
+		n135		 [URL="text_SplitIntoWords%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3761 788 81.74 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3761 783.8 0 113.21 19 -text_SplitIntoWords ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_SplitIntoWords,
+			pos="3761,788",
+			style=filled,
+			width=2.2672];
+		n67		 [URL="script_GetMetadataArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5409 1016 100.43 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5409 1011.8 0 143.05 23 -script_GetMetadataArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_GetMetadataArray,
+			pos="5409,1016",
+			style=filled,
+			width=2.7908];
+		n158		 [URL="rev_DictionaryTerms%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4656 716 85.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4656 711.8 0 119.53 19 -rev_DictionaryTerms ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_DictionaryTerms,
+			pos="4656,716",
+			style=filled,
+			width=2.3781];
+		n147		 [URL="char%2Cf%2CMissing%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6090 560 27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6090 555.8 0 24.09 4 -char ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=char,
+			pos="6090,560",
+			style=filled,
+			width=0.75];
+		n50		 [URL="git_GetCheckoutFolder%2Cf%2Cstack+%22lib_Git%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5759 642 93.73 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5759 637.8 0 132.2 21 -git_GetCheckoutFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=git_GetCheckoutFolder,
+			pos="5759,642",
+			style=filled,
+			width=2.6004];
+		n143		 [URL="ide_GetDictionaryTerms%2Cf%2Cstack+%22lib_LiveCodeDictionary%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6689 642 97.79 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6689 637.8 0 138.97 22 -ide_GetDictionaryTerms ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=ide_GetDictionaryTerms,
+			pos="6689,642",
+			style=filled,
+			width=2.7193];
+		n33		 [URL="hArray_GetObjectArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4856 716 96.58 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4856 711.8 0 136.83 21 -hArray_GetObjectArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetObjectArray,
+			pos="4856,716",
+			style=filled,
+			width=2.6816];
+		n117		 [URL="script_ExtractSwitchSection%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 322 1316 110.6 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 322 1311.8 0 159.41 27 -script_ExtractSwitchSection ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_ExtractSwitchSection,
+			pos="322,1316",
+			style=filled,
+			width=3.0778];
+		n122		 [URL="hkey_ExtractHandlerFromObject%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5218 332 128.44 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5218 327.8 0 187.38 29 -hkey_ExtractHandlerFromObject ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hkey_ExtractHandlerFromObject,
+			pos="5218,332",
+			style=filled,
+			width=3.5686];
+		n17		 [URL="rev_ScriptEditorField%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1590 1234 87.46 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1590 1229.8 0 122.09 21 -rev_ScriptEditorField ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ScriptEditorField,
+			pos="1590,1234",
+			style=filled,
+			width=2.423];
+		n173		 [URL="menu_TitleFromViewName%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1223 1390 109.45 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1223 1385.8 0 157.31 22 -menu_TitleFromViewName ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=menu_TitleFromViewName,
+			pos="1223,1390",
+			style=filled,
+			width=3.041];
+		n9		 [URL="library_ArrayFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3759 414 81.63 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3759 409.8 0 113.52 19 -library_ArrayFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_ArrayFolder,
+			pos="3759,414",
+			style=filled,
+			width=2.2726];
+		n106		 [URL="kwote%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3862 250 31.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3862 245.8 0 34.21 5 -kwote ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=kwote,
+			pos="3862,250",
+			style=filled,
+			width=0.88108];
+		n54		 [URL="hArray_GetHandlerHash%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4044 942 99 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4044 937.8 0 140.72 21 -hArray_GetHandlerHash ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetHandlerHash,
+			pos="4044,942",
+			style=filled,
+			width=2.75];
+		n73		 [URL="array_Fetch%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3585 488 52.18 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3585 483.8 0 66.86 11 -array_Fetch ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=array_Fetch,
+			pos="3585,488",
+			style=filled,
+			width=1.4538];
+		n98		 [URL="script_GetGetProp%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1019 1390 76.34 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1019 1385.8 0 104.98 17 -script_GetGetProp ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_GetGetProp,
+			pos="1019,1390",
+			style=filled,
+			width=2.1228];
+		n94		 [URL="text_OffsetAfter%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 283 1160 68.29 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 283 1155.8 0 92.27 16 -text_OffsetAfter ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_OffsetAfter,
+			pos="283,1160",
+			style=filled,
+			width=1.8998];
+		n27		 [URL="outline_IncreaseIndent%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3836 942 91.27 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3836 937.8 0 128.28 22 -outline_IncreaseIndent ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=outline_IncreaseIndent,
+			pos="3836,942",
+			style=filled,
+			width=2.5316];
+		n162		 [URL="rev_ConstructHkeyTitle%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4496 332 95.51 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4496 327.8 0 135.59 22 -rev_ConstructHkeyTitle ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ConstructHkeyTitle,
+			pos="4496,332",
+			style=filled,
+			width=2.6599];
+		n1		 [URL="version_IsEarlier%2Cf%2Cstack+%22Rescue+Livecode+World%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6316 106 71.01 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6316 101.8 0 96.41 17 -version_IsEarlier ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=version_IsEarlier,
+			pos="6316,106",
+			style=filled,
+			width=1.9724];
+		n134		 [URL="hkey_ConstructKeywords%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3635 870 102.42 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3635 865.8 0 146.2 22 -hkey_ConstructKeywords ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hkey_ConstructKeywords,
+			pos="3635,870",
+			style=filled,
+			width=2.8461];
+		n157		 [URL="rev_HandlerTreeField%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2579 1234 88.24 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2579 1229.8 0 123.9 20 -rev_HandlerTreeField ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_HandlerTreeField,
+			pos="2579,1234",
+			style=filled,
+			width=2.4548];
+		n13		 [URL="view_GetTemplateObject%2Cf%2Cstack+%22lib_ViewTemplate%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6108 788 100.67 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6108 783.8 0 143.63 22 -view_GetTemplateObject ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=view_GetTemplateObject,
+			pos="6108,788",
+			style=filled,
+			width=2.801];
+		n148		 [URL="text_SplitCaps%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2770 788 62.38 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2770 783.8 0 82.45 14 -text_SplitCaps ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_SplitCaps,
+			pos="2770,788",
+			style=filled,
+			width=1.7274];
+		n42		 [URL="textStack_FindRoot%2Cf%2Cstack+%22model_ObjectMetadata%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5872 1160 80.71 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5872 1155.8 0 112 18 -textStack_FindRoot ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=textStack_FindRoot,
+			pos="5872,1160",
+			style=filled,
+			width=2.246];
+		n5		 [URL="param_IsObject%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 858 1390 66.67 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 858 1385.8 0 89.41 14 -param_IsObject ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=param_IsObject,
+			pos="858,1390",
+			style=filled,
+			width=1.8495];
+		n140		 [URL="git_PathToCommandLine%2Cf%2Cstack+%22lib_Git%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5755 560 101.69 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5755 555.8 0 145.23 21 -git_PathToCommandLine ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=git_PathToCommandLine,
+			pos="5755,560",
+			style=filled,
+			width=2.829];
+		n23		 [URL="rev_VersionIsLater%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 696 1390 77.76 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 696 1385.8 0 107.29 18 -rev_VersionIsLater ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_VersionIsLater,
+			pos="696,1390",
+			style=filled,
+			width=2.1633];
+		n103		 [URL="object_FromScriptFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3557 332 99.53 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3557 327.8 0 141.54 23 -object_FromScriptFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=object_FromScriptFolder,
+			pos="3557,332",
+			style=filled,
+			width=2.7643];
+		n91		 [URL="objectFolder_ScriptFile%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2895 332 94.21 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2895 327.8 0 132.98 23 -objectFolder_ScriptFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=objectFolder_ScriptFile,
+			pos="2895,332",
+			style=filled,
+			width=2.6141];
+		n167		 [URL="text_OffsetBefore%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 526 1390 73.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 526 1385.8 0 100.82 17 -text_OffsetBefore ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_OffsetBefore,
+			pos="526,1390",
+			style=filled,
+			width=2.0498];
+		n172		 [URL="rev_VersionIsLaterOrEqual%2Cf%2Cstack+%22libOPN_Rev%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 6919 642 107.68 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6919 637.8 0 154.72 25 -rev_VersionIsLaterOrEqual ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_VersionIsLaterOrEqual,
+			pos="6919,642",
+			style=filled,
+			width=2.9955];
+		n38		 [URL="rev_GetPluginFolder%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 1924 1316 84.55 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 1924 1311.8 0 118.21 19 -rev_GetPluginFolder ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_GetPluginFolder,
+			pos="1924,1316",
+			style=filled,
+			width=2.3549];
+		n8		 [URL="library_ArrayFile%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3743 488 72.46 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3743 483.8 0 98.75 17 -library_ArrayFile ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_ArrayFile,
+			pos="3743,488",
+			style=filled,
+			width=2.0134];
+		n107		 [URL="handler_ConstructCallArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3174 942 110.59 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3174 937.8 0 159.4 26 -handler_ConstructCallArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=handler_ConstructCallArray,
+			pos="3174,942",
+			style=filled,
+			width=3.0777];
+		n55		 [URL="hArray_GetHkeyDataArray%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4384 870 108.63 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4384 865.8 0 156.26 23 -hArray_GetHkeyDataArray ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=hArray_GetHkeyDataArray,
+			pos="4384,870",
+			style=filled,
+			width=3.0226];
+		n59		 [URL="shell_ExecuteAtRoot%2Cf%2Cstack+%22lib_Shell%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 5967 414 85.5 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5967 409.8 0 119.75 19 -shell_ExecuteAtRoot ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_ExecuteAtRoot,
+			pos="5967,414",
+			style=filled,
+			width=2.382];
+		n127		 [URL="rev_GetCachedScript%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2991 1234 86.46 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2991 1229.8 0 120.51 19 -rev_GetCachedScript ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_GetCachedScript,
+			pos="2991,1234",
+			style=filled,
+			width=2.3953];
+		n18		 [URL="rev_ScriptEditorStack%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2238 1160 88.89 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2238 1155.8 0 124.41 21 -rev_ScriptEditorStack ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ScriptEditorStack,
+			pos="2238,1160",
+			style=filled,
+			width=2.4638];
+		n95		 [URL="rev_OpenScriptEditorNames%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2145 1234 112.52 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2145 1229.8 0 162.51 25 -rev_OpenScriptEditorNames ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_OpenScriptEditorNames,
+			pos="2145,1234",
+			style=filled,
+			width=3.1322];
+		n163		 [URL="script_ExtractMenuSuiteTitles%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4814 1390 118.21 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4814 1385.8 0 171.36 29 -script_ExtractMenuSuiteTitles ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_ExtractMenuSuiteTitles,
+			pos="4814,1390",
+			style=filled,
+			width=3.2876];
+		n30		 [URL="script_ParamToHandlerName%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3126 788 115.64 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3126 783.8 0 166.96 25 -script_ParamToHandlerName ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_ParamToHandlerName,
+			pos="3126,788",
+			style=filled,
+			width=3.2103];
+		n112		 [URL="text_StripQuoted%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2921 788 71.04 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2921 783.8 0 96.43 16 -text_StripQuoted ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=text_StripQuoted,
+			pos="2921,788",
+			style=filled,
+			width=1.9728];
+		n156		 [URL="target_IsView%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 4878 942 59.54 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 4878 937.8 0 78.22 13 -target_IsView ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=target_IsView,
+			pos="4878,942",
+			style=filled,
+			width=1.6533];
+		n10		 [URL="rev_ScriptObject%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 2061 1160 70.53 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2061 1155.8 0 95.63 16 -rev_ScriptObject ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=rev_ScriptObject,
+			pos="2061,1160",
+			style=filled,
+			width=1.9588];
+		n4		 [URL="library_GetHandlerDatabaseMetadata%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 3494 716 144.82 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 3494 711.8 0 213.01 34 -library_GetHandlerDatabaseMetadata ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=library_GetHandlerDatabaseMetadata,
+			pos="3494,716",
+			style=filled,
+			width=4.0183];
+		n116		 [URL="script_ExtractCaseConditions%2Cf%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 132 1390 115.94 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 132 1385.8 0 167.19 28 -script_ExtractCaseConditions ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=script_ExtractCaseConditions,
+			pos="132,1390",
+			style=filled,
+			width=3.2144];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#ff0000 C 7 -#ffa500 P 4 5981 534 5981 608 6575 608 6575 534 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6278 592.8 0 45.12 7 -Missing ",
+			bb="5981,534,6575,608",
+			color=red,
+			fillcolor=orange,
+			label=Missing,
+			lheight=0.19,
+			lp="6278,597",
+			lwidth=0.63,
+			style=filled
+		];
+		n7;
+		n49;
+		n145;
+		n147;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 152 8 1438 5517 1438 5517 152 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 2762.5 1422.8 0 117.59 18 -stack \"lib_Common\" ",
+			bb="8,152,5517,1438",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Common\"",
+			lheight=0.19,
+			lp="2762.5,1427",
+			lwidth=1.63,
+			style=filled
+		];
+		n89;
+		n88;
+		n141;
+		n149;
+		n122;
+		n149 -> n122		 [_draw_="c 7 -#000000 B 4 5218 395.64 5218 385.3 5218 371.94 5218 360.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5221.5 360.05 5218 350.05 5214.5 360.05 ",
+			pos="e,5218,350.05 5218,395.64 5218,385.3 5218,371.94 5218,360.22"];
+		n21;
+		n22;
+		n21 -> n22		 [_draw_="c 7 -#000000 B 4 2308.83 998.3 2315.11 989.43 2322.96 978.35 2329.98 968.43 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2332.96 970.29 2335.88 960.11 2327.25 966.25 ",
+			pos="e,2335.9,960.11 2308.8,998.3 2315.1,989.43 2323,978.35 2330,968.43"];
+		n12;
+		n161;
+		n126;
+		n41;
+		n126 -> n41		 [_draw_="c 7 -#000000 B 4 2577.59 1070.76 2565.84 1061.42 2550.92 1049.55 2538.08 1039.33 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2540 1036.39 2530 1032.91 2535.64 1041.87 ",
+			pos="e,2530,1032.9 2577.6,1070.8 2565.8,1061.4 2550.9,1049.5 2538.1,1039.3"];
+		n174;
+		n174 -> n41		 [_draw_="c 7 -#000000 B 4 2363.59 1073 2393.09 1061.72 2434.65 1045.82 2465.97 1033.84 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2467.24 1037.1 2475.33 1030.26 2464.74 1030.57 ",
+			pos="e,2475.3,1030.3 2363.6,1073 2393.1,1061.7 2434.7,1045.8 2466,1033.8"];
+		n6;
+		n86;
+		n87;
+		n86 -> n87		 [_draw_="c 7 -#000000 B 4 3798 1371.94 3798 1363.81 3798 1353.88 3798 1344.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3801.5 1344.44 3798 1334.44 3794.5 1344.44 ",
+			pos="e,3798,1334.4 3798,1371.9 3798,1363.8 3798,1353.9 3798,1344.7"];
+		n66;
+		n137;
+		n138;
+		n137 -> n138		 [_draw_="c 7 -#000000 B 10 1797.04 1220.99 1805.87 1218.94 1815.19 1217.11 1824 1216 1875.71 1209.5 2710.88 1218.11 2762 1208 2788.38 1202.78 \
+2816.37 1191.75 2838.37 1181.69 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2840.14 1184.72 2847.71 1177.31 2837.17 1178.38 ",
+			pos="e,2847.7,1177.3 1797,1221 1805.9,1218.9 1815.2,1217.1 1824,1216 1875.7,1209.5 2710.9,1218.1 2762,1208 2788.4,1202.8 2816.4,1191.8 \
+2838.4,1181.7"];
+		n51;
+		n51 -> n41		 [_draw_="c 7 -#000000 B 4 2472.61 1070.41 2478.51 1061.99 2485.79 1051.58 2492.36 1042.2 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2495.26 1044.16 2498.13 1033.96 2489.53 1040.14 ",
+			pos="e,2498.1,1034 2472.6,1070.4 2478.5,1062 2485.8,1051.6 2492.4,1042.2"];
+		n41 -> n22		 [_draw_="c 7 -#000000 B 4 2478.38 1000.95 2453.75 990 2419.28 974.68 2391.96 962.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2393.18 959.25 2382.62 958.39 2390.34 965.65 ",
+			pos="e,2382.6,958.39 2478.4,1000.9 2453.8,990 2419.3,974.68 2392,962.54"];
+		n84;
+		n157;
+		n84 -> n157		 [_draw_="c 7 -#000000 B 7 2794.79 1301.33 2739.07 1292.28 2676.19 1282.06 2676 1282 2655.34 1275.47 2633.52 1265.23 2615.82 1255.97 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2617.43 1252.87 2606.96 1251.24 2614.14 1259.04 ",
+			pos="e,2607,1251.2 2794.8,1301.3 2739.1,1292.3 2676.2,1282.1 2676,1282 2655.3,1275.5 2633.5,1265.2 2615.8,1256"];
+		n128;
+		n108;
+		n60;
+		n60 -> n12		 [_draw_="c 7 -#000000 B 13 4132.85 1080.82 4325.98 1065.05 4856.99 1022.82 5300 998 5310.99 997.38 5490.37 997.94 5498 990 5518.32 968.84 \
+5510.06 950.74 5498 924 5492.55 911.9 5482.81 901.46 5472.75 893.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5474.74 890.23 5464.69 886.88 5470.46 895.77 ",
+			pos="e,5464.7,886.88 4132.8,1080.8 4326,1065 4857,1022.8 5300,998 5311,997.38 5490.4,997.94 5498,990 5518.3,968.84 5510.1,950.74 5498,\
+924 5492.5,911.9 5482.8,901.46 5472.8,893.11"];
+		n60 -> n66		 [_draw_="c 7 -#000000 B 4 4058 1069.7 4058 1061.98 4058 1052.71 4058 1044.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4061.5 1044.1 4058 1034.1 4054.5 1044.1 ",
+			pos="e,4058,1034.1 4058,1069.7 4058,1062 4058,1052.7 4058,1044.1"];
+		n60 -> n41		 [_draw_="c 7 -#000000 B 10 3979.27 1083.33 3867.26 1078.19 3655.46 1068.69 3475 1062 3276.15 1054.63 2777.18 1060.73 2580 1034 2573.74 1033.15 \
+2567.22 1031.97 2560.79 1030.63 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2561.34 1027.17 2550.82 1028.41 2559.82 1034 ",
+			pos="e,2550.8,1028.4 3979.3,1083.3 3867.3,1078.2 3655.5,1068.7 3475,1062 3276.2,1054.6 2777.2,1060.7 2580,1034 2573.7,1033.2 2567.2,1032 \
+2560.8,1030.6"];
+		n64;
+		n60 -> n64		 [_draw_="c 7 -#000000 B 10 3979.33 1083.47 3674.08 1069.28 2585 1013.7 2585 943 2585 943 2585 943 2585 641 2585 577.11 2777.23 526.09 2883.44 \
+502.77 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2884.41 506.14 2893.44 500.6 2882.93 499.3 ",
+			pos="e,2893.4,500.6 3979.3,1083.5 3674.1,1069.3 2585,1013.7 2585,943 2585,943 2585,943 2585,641 2585,577.11 2777.2,526.09 2883.4,502.77"];
+		n63;
+		n60 -> n63		 [_draw_="c 7 -#000000 B 4 4106.78 1073.5 4146.21 1062.59 4202.09 1047.13 4245.44 1035.14 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4246.62 1038.45 4255.32 1032.41 4244.75 1031.7 ",
+			pos="e,4255.3,1032.4 4106.8,1073.5 4146.2,1062.6 4202.1,1047.1 4245.4,1035.1"];
+		n62;
+		n60 -> n62		 [_draw_="c 7 -#000000 B 4 4013.34 1072.92 3978.82 1062.03 3930.78 1046.89 3893.4 1035.1 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3894.25 1031.7 3883.66 1032.03 3892.14 1038.37 ",
+			pos="e,3883.7,1032 4013.3,1072.9 3978.8,1062 3930.8,1046.9 3893.4,1035.1"];
+		n61;
+		n60 -> n61		 [_draw_="c 7 -#000000 B 7 4127.15 1078.51 4205.92 1068.64 4338.42 1051.48 4452 1034 4459.83 1032.8 4467.99 1031.48 4476.13 1030.12 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4476.73 1033.57 4486.01 1028.46 4475.57 1026.67 ",
+			pos="e,4486,1028.5 4127.2,1078.5 4205.9,1068.6 4338.4,1051.5 4452,1034 4459.8,1032.8 4468,1031.5 4476.1,1030.1"];
+		n68;
+		n60 -> n68		 [_draw_="c 7 -#000000 B 7 3977.53 1085.39 3833.86 1080.7 3542.02 1062.27 3476 990 3453.53 965.41 3455.33 924.81 3459.78 897.98 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3463.23 898.57 3461.64 888.1 3456.35 897.28 ",
+			pos="e,3461.6,888.1 3977.5,1085.4 3833.9,1080.7 3542,1062.3 3476,990 3453.5,965.41 3455.3,924.81 3459.8,897.98"];
+		n67;
+		n60 -> n67		 [_draw_="c 7 -#000000 B 7 4137.27 1084.09 4392.11 1074.67 5180.46 1044.96 5295 1034 5305.68 1032.98 5316.88 1031.64 5327.92 1030.16 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5328.56 1033.6 5337.99 1028.77 5327.61 1026.67 ",
+			pos="e,5338,1028.8 4137.3,1084.1 4392.1,1074.7 5180.5,1045 5295,1034 5305.7,1033 5316.9,1031.6 5327.9,1030.2"];
+		n155;
+		n155 -> n60		 [_draw_="c 7 -#000000 B 7 2704.1 1144.7 2722.72 1140.51 2743.64 1136.42 2763 1134 2822.57 1126.55 3683.38 1100.23 3967.65 1091.69 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3968.03 1095.18 3977.92 1091.39 3967.82 1088.19 ",
+			pos="e,3977.9,1091.4 2704.1,1144.7 2722.7,1140.5 2743.6,1136.4 2763,1134 2822.6,1126.6 3683.4,1100.2 3967.6,1091.7"];
+		n92;
+		n102;
+		n92 -> n102		 [_draw_="c 7 -#000000 B 7 3206.02 397.88 3222.89 392.75 3241.39 386.62 3258 380 3277.04 372.41 3297.49 362.53 3314.53 353.79 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3316.35 356.79 3323.61 349.07 3313.12 350.57 ",
+			pos="e,3323.6,349.07 3206,397.88 3222.9,392.75 3241.4,386.62 3258,380 3277,372.41 3297.5,362.53 3314.5,353.79"];
+		n104;
+		n92 -> n104		 [_draw_="c 7 -#000000 B 4 3148.18 395.64 3146.5 385.3 3144.33 371.94 3142.42 360.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3145.83 359.36 3140.77 350.05 3138.92 360.48 ",
+			pos="e,3140.8,350.05 3148.2,395.64 3146.5,385.3 3144.3,371.94 3142.4,360.22"];
+		n103;
+		n92 -> n103		 [_draw_="c 7 -#000000 B 7 3268.18 408.16 3323.71 403.81 3390.53 395.58 3449 380 3472.37 373.77 3497.2 363.27 3517.15 353.77 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3518.77 356.87 3526.23 349.35 3515.71 350.57 ",
+			pos="e,3526.2,349.35 3268.2,408.16 3323.7,403.81 3390.5,395.58 3449,380 3472.4,373.77 3497.2,363.27 3517.1,353.77"];
+		n91;
+		n92 -> n91		 [_draw_="c 7 -#000000 B 7 3086.29 398.62 3064.45 393.32 3040.02 386.91 3018 380 2992.43 371.97 2964.48 361.44 2941.69 352.38 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2942.85 349.07 2932.27 348.6 2940.24 355.57 ",
+			pos="e,2932.3,348.6 3086.3,398.62 3064.4,393.32 3040,386.91 3018,380 2992.4,371.97 2964.5,361.44 2941.7,352.38"];
+		n64 -> n92		 [_draw_="c 7 -#000000 B 4 2992.75 472.26 3023.07 461.28 3064.74 446.21 3097.71 434.28 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3098.98 437.54 3107.2 430.85 3096.6 430.96 ",
+			pos="e,3107.2,430.85 2992.8,472.26 3023.1,461.28 3064.7,446.21 3097.7,434.28"];
+		n90;
+		n64 -> n90		 [_draw_="c 7 -#000000 B 10 2960.26 469.88 2970.12 449 2986.7 412.46 2998 380 3009.2 347.82 2997.92 333.52 3018 306 3028.38 291.77 3043.66 \
+280.25 3058.41 271.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3060.47 274.36 3067.47 266.42 3057.04 268.26 ",
+			pos="e,3067.5,266.42 2960.3,469.88 2970.1,449 2986.7,412.46 2998,380 3009.2,347.82 2997.9,333.52 3018,306 3028.4,291.77 3043.7,280.25 \
+3058.4,271.51"];
+		n64 -> n91		 [_draw_="c 7 -#000000 B 4 2945.68 469.93 2935.8 443.22 2916.59 391.33 2904.87 359.66 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2908.1 358.31 2901.35 350.15 2901.53 360.74 ",
+			pos="e,2901.3,350.15 2945.7,469.93 2935.8,443.22 2916.6,391.33 2904.9,359.66"];
+		n125;
+		n125 -> n126		 [_draw_="c 7 -#000000 B 4 2471.95 1143.46 2496.44 1132.88 2528.99 1118.82 2554.88 1107.63 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2556.29 1110.83 2564.09 1103.65 2553.52 1104.41 ",
+			pos="e,2564.1,1103.7 2472,1143.5 2496.4,1132.9 2529,1118.8 2554.9,1107.6"];
+		n125 -> n51		 [_draw_="c 7 -#000000 B 4 2442.18 1141.7 2445 1133.81 2448.39 1124.3 2451.52 1115.55 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2454.82 1116.7 2454.89 1106.1 2448.23 1114.34 ",
+			pos="e,2454.9,1106.1 2442.2,1141.7 2445,1133.8 2448.4,1124.3 2451.5,1115.5"];
+		n146;
+		n44;
+		n45;
+		n44 -> n45		 [_draw_="c 7 -#000000 B 4 3132.06 1298.03 3142.07 1286.75 3155.39 1271.75 3166.51 1259.21 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3169.43 1261.2 3173.45 1251.39 3164.19 1256.55 ",
+			pos="e,3173.5,1251.4 3132.1,1298 3142.1,1286.7 3155.4,1271.7 3166.5,1259.2"];
+		n53;
+		n93;
+		n94;
+		n93 -> n94		 [_draw_="c 7 -#000000 B 4 283 1215.94 283 1207.81 283 1197.88 283 1188.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 286.5 1188.44 283 1178.44 279.5 1188.44 ",
+			pos="e,283,1178.4 283,1215.9 283,1207.8 283,1197.9 283,1188.7"];
+		n101;
+		n131;
+		n134;
+		n131 -> n134		 [_draw_="c 7 -#000000 B 4 3605.44 924.05 3609.92 916.01 3615.39 906.2 3620.39 897.23 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3623.57 898.71 3625.38 888.28 3617.45 895.31 ",
+			pos="e,3625.4,888.28 3605.4,924.05 3609.9,916.01 3615.4,906.2 3620.4,897.23"];
+		n24;
+		n26;
+		n24 -> n26		 [_draw_="c 7 -#000000 B 4 665.74 1297.64 666.77 1287.3 668.11 1273.94 669.28 1262.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 672.78 1262.35 670.29 1252.05 665.82 1261.65 ",
+			pos="e,670.29,1252.1 665.74,1297.6 666.77,1287.3 668.11,1273.9 669.28,1262.2"];
+		n25;
+		n24 -> n25		 [_draw_="c 7 -#000000 B 7 723.22 1301.46 756.71 1293.67 793.39 1284.87 801 1282 819.45 1275.03 838.93 1265.07 854.94 1256.12 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 856.98 1258.98 863.94 1250.99 853.52 1252.9 ",
+			pos="e,863.94,1251 723.22,1301.5 756.71,1293.7 793.39,1284.9 801,1282 819.45,1275 838.93,1265.1 854.94,1256.1"];
+		n43;
+		n43 -> n12		 [_draw_="c 7 -#000000 B 4 5359.93 924.05 5373.77 914.65 5391.13 902.85 5405.96 892.77 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5408.05 895.58 5414.36 887.07 5404.12 889.79 ",
+			pos="e,5414.4,887.07 5359.9,924.05 5373.8,914.65 5391.1,902.85 5406,892.77"];
+		n82;
+		n46;
+		n82 -> n46		 [_draw_="c 7 -#000000 B 4 2370.87 1297.64 2371.39 1287.3 2372.05 1273.94 2372.64 1262.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2376.14 1262.21 2373.15 1252.05 2369.15 1261.86 ",
+			pos="e,2373.1,1252.1 2370.9,1297.6 2371.4,1287.3 2372.1,1273.9 2372.6,1262.2"];
+		n129;
+		n82 -> n129		 [_draw_="c 7 -#000000 B 10 2429.69 1300.69 2449.13 1296.56 2470.88 1292.5 2491 1290 2572.67 1279.86 2595.75 1300.24 2676 1282 2700.59 1276.41 \
+2726.59 1265.55 2747.14 1255.68 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2748.75 1258.79 2756.18 1251.24 2745.66 1252.51 ",
+			pos="e,2756.2,1251.2 2429.7,1300.7 2449.1,1296.6 2470.9,1292.5 2491,1290 2572.7,1279.9 2595.7,1300.2 2676,1282 2700.6,1276.4 2726.6,1265.6 \
+2747.1,1255.7"];
+		n47;
+		n82 -> n47		 [_draw_="c 7 -#000000 B 10 2428.42 1300.59 2448.16 1296.35 2470.42 1292.24 2491 1290 2507.43 1288.21 3073.92 1293.28 3086 1282 3111.14 1258.54 \
+3108.3 1215.83 3102.93 1187.94 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3106.33 1187.09 3100.8 1178.05 3099.48 1188.56 ",
+			pos="e,3100.8,1178.1 2428.4,1300.6 2448.2,1296.3 2470.4,1292.2 2491,1290 2507.4,1288.2 3073.9,1293.3 3086,1282 3111.1,1258.5 3108.3,1215.8 \
+3102.9,1187.9"];
+		n127;
+		n82 -> n127		 [_draw_="c 7 -#000000 B 10 2428.73 1300.6 2448.4 1296.39 2470.54 1292.3 2491 1290 2535.73 1284.98 2852.28 1292.68 2896 1282 2917.31 1276.79 \
+2939.38 1266.24 2956.87 1256.46 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2958.66 1259.47 2965.58 1251.44 2955.16 1253.4 ",
+			pos="e,2965.6,1251.4 2428.7,1300.6 2448.4,1296.4 2470.5,1292.3 2491,1290 2535.7,1285 2852.3,1292.7 2896,1282 2917.3,1276.8 2939.4,1266.2 \
+2956.9,1256.5"];
+		n63 -> n53		 [_draw_="c 7 -#000000 B 4 4311 997.94 4311 989.81 4311 979.88 4311 970.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4314.5 970.44 4311 960.44 4307.5 970.44 ",
+			pos="e,4311,960.44 4311,997.94 4311,989.81 4311,979.88 4311,970.7"];
+		n63 -> n43		 [_draw_="c 7 -#000000 B 10 4401.01 1002.74 4418.24 1000.81 4436.15 999.1 4453 998 4532.72 992.8 5092.96 1001.62 5172 990 5209.07 984.55 5249.56 \
+972.91 5280.91 962.58 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5282.38 965.77 5290.75 959.28 5280.15 959.14 ",
+			pos="e,5290.7,959.28 4401,1002.7 4418.2,1000.8 4436.2,999.1 4453,998 4532.7,992.8 5093,1001.6 5172,990 5209.1,984.55 5249.6,972.91 5280.9,\
+962.58"];
+		n80;
+		n63 -> n80		 [_draw_="c 7 -#000000 B 7 4400.89 1002.69 4423.54 999.09 4447.74 994.81 4470 990 4506.21 982.17 4546.16 971.25 4578.24 961.9 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4579.31 965.23 4587.92 959.05 4577.34 958.51 ",
+			pos="e,4587.9,959.05 4400.9,1002.7 4423.5,999.09 4447.7,994.81 4470,990 4506.2,982.17 4546.2,971.25 4578.2,961.9"];
+		n77;
+		n77 -> n44		 [_draw_="c 7 -#000000 B 10 2640.3 1376.85 2652.76 1374.91 2665.76 1373.15 2678 1372 2717.28 1368.3 2994.94 1374.38 3033 1364 3051.87 1358.85 \
+3071.04 1348.59 3086.29 1338.96 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3088.33 1341.81 3094.79 1333.41 3084.51 1335.95 ",
+			pos="e,3094.8,1333.4 2640.3,1376.9 2652.8,1374.9 2665.8,1373.2 2678,1372 2717.3,1368.3 2994.9,1374.4 3033,1364 3051.9,1358.9 3071,1348.6 \
+3086.3,1339"];
+		n77 -> n45		 [_draw_="c 7 -#000000 B 10 2640.02 1376.83 2652.57 1374.87 2665.66 1373.12 2678 1372 2692.44 1370.69 3189.82 1374.33 3200 1364 3226.37 1337.22 \
+3213.2 1290.43 3200.88 1261.17 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3204.05 1259.69 3196.79 1251.97 3197.65 1262.53 ",
+			pos="e,3196.8,1252 2640,1376.8 2652.6,1374.9 2665.7,1373.1 2678,1372 2692.4,1370.7 3189.8,1374.3 3200,1364 3226.4,1337.2 3213.2,1290.4 \
+3200.9,1261.2"];
+		n34;
+		n90 -> n34		 [_draw_="c 7 -#000000 B 4 3126.91 232.59 3140.8 223.06 3158.45 210.95 3173.45 200.65 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3175.67 203.37 3181.94 194.83 3171.71 197.6 ",
+			pos="e,3181.9,194.83 3126.9,232.59 3140.8,223.06 3158.4,210.95 3173.5,200.65"];
+		n166;
+		n130;
+		n46 -> n47		 [_draw_="c 7 -#000000 B 10 2441.52 1220.88 2454.89 1218.9 2468.86 1217.13 2482 1216 2538.8 1211.11 2939.44 1220.75 2995 1208 3017.84 1202.76 \
+3041.69 1191.95 3060.47 1182.02 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3062.14 1185.09 3069.26 1177.24 3058.8 1178.94 ",
+			pos="e,3069.3,1177.2 2441.5,1220.9 2454.9,1218.9 2468.9,1217.1 2482,1216 2538.8,1211.1 2939.4,1220.8 2995,1208 3017.8,1202.8 3041.7,1191.9 \
+3060.5,1182"];
+		n138 -> n146		 [_draw_="c 7 -#000000 B 7 2935.28 1144.64 2954.14 1140.43 2975.36 1136.33 2995 1134 2997.74 1133.67 4348.95 1101.25 4749.42 1091.65 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4749.65 1095.15 4759.56 1091.41 4749.48 1088.15 ",
+			pos="e,4759.6,1091.4 2935.3,1144.6 2954.1,1140.4 2975.4,1136.3 2995,1134 2997.7,1133.7 4349,1101.3 4749.4,1091.7"];
+		n113;
+		n81;
+		n81 -> n84		 [_draw_="c 7 -#000000 B 10 2434.12 1376.91 2446.99 1374.97 2460.38 1373.21 2473 1372 2584.55 1361.33 2614.45 1382.29 2725 1364 2759.69 1358.26 \
+2797.47 1346.81 2826.92 1336.66 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2828.3 1339.88 2836.58 1333.27 2825.98 1333.28 ",
+			pos="e,2836.6,1333.3 2434.1,1376.9 2447,1375 2460.4,1373.2 2473,1372 2584.5,1361.3 2614.4,1382.3 2725,1364 2759.7,1358.3 2797.5,1346.8 \
+2826.9,1336.7"];
+		n81 -> n82		 [_draw_="c 7 -#000000 B 4 2367.71 1371.94 2368.05 1363.81 2368.46 1353.88 2368.85 1344.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2372.35 1344.58 2369.27 1334.44 2365.36 1344.29 ",
+			pos="e,2369.3,1334.4 2367.7,1371.9 2368,1363.8 2368.5,1353.9 2368.8,1344.7"];
+		n85;
+		n81 -> n85		 [_draw_="c 7 -#000000 B 7 2436.42 1377.33 2454.36 1373.68 2473.54 1369.22 2491 1364 2515.48 1356.68 2541.96 1346.27 2563.53 1337.1 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2564.96 1340.29 2572.76 1333.13 2562.19 1333.86 ",
+			pos="e,2572.8,1333.1 2436.4,1377.3 2454.4,1373.7 2473.5,1369.2 2491,1364 2515.5,1356.7 2542,1346.3 2563.5,1337.1"];
+		n78;
+		n81 -> n78		 [_draw_="c 7 -#000000 B 10 2433.54 1376.79 2446.58 1374.83 2460.19 1373.09 2473 1372 2553.49 1365.14 3120.6 1378.89 3200 1364 3228.54 1358.65 \
+3259.07 1347.28 3282.82 1337.07 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3284.48 1340.16 3292.22 1332.93 3281.66 1333.76 ",
+			pos="e,3292.2,1332.9 2433.5,1376.8 2446.6,1374.8 2460.2,1373.1 2473,1372 2553.5,1365.1 3120.6,1378.9 3200,1364 3228.5,1358.6 3259.1,1347.3 \
+3282.8,1337.1"];
+		n83;
+		n81 -> n83		 [_draw_="c 7 -#000000 B 7 2298.63 1377.13 2282.19 1373.56 2264.82 1369.18 2249 1364 2227.42 1356.93 2204.31 1346.77 2185.37 1337.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2186.68 1334.44 2176.16 1333.22 2183.62 1340.74 ",
+			pos="e,2176.2,1333.2 2298.6,1377.1 2282.2,1373.6 2264.8,1369.2 2249,1364 2227.4,1356.9 2204.3,1346.8 2185.4,1337.7"];
+		n62 -> n131		 [_draw_="c 7 -#000000 B 7 3769.6 1002.29 3753.57 998.75 3736.58 994.6 3721 990 3695.02 982.34 3666.73 971.88 3643.64 962.78 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3644.67 959.42 3634.08 958.97 3642.08 965.92 ",
+			pos="e,3634.1,958.97 3769.6,1002.3 3753.6,998.75 3736.6,994.6 3721,990 3695,982.34 3666.7,971.88 3643.6,962.78"];
+		n106;
+		n62 -> n106		 [_draw_="c 7 -#000000 B 22 3763.67 1003.32 3750.84 999.8 3740.21 995.4 3736 990 3717.95 966.88 3730.77 952.86 3736 924 3737.69 914.66 3758.46 \
+849.76 3766 844 3781.25 832.35 3838.49 849.63 3852 836 3889.36 798.3 3862 770.08 3862 717 3862 717 3862 717 3862 413 3862 365.7 \
+3862 310.64 3862 278.42 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3865.5 278.03 3862 268.03 3858.5 278.03 ",
+			pos="e,3862,268.03 3763.7,1003.3 3750.8,999.8 3740.2,995.4 3736,990 3717.9,966.88 3730.8,952.86 3736,924 3737.7,914.66 3758.5,849.76 \
+3766,844 3781.3,832.35 3838.5,849.63 3852,836 3889.4,798.3 3862,770.08 3862,717 3862,717 3862,717 3862,413 3862,365.7 3862,310.64 \
+3862,278.42"];
+		n54;
+		n62 -> n54		 [_draw_="c 7 -#000000 B 7 3896.75 1001.52 3909.82 998.15 3923.46 994.26 3936 990 3958.13 982.48 3982.03 972.3 4001.7 963.34 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4003.38 966.43 4011 959.06 4000.45 960.07 ",
+			pos="e,4011,959.06 3896.8,1001.5 3909.8,998.15 3923.5,994.26 3936,990 3958.1,982.48 3982,972.3 4001.7,963.34"];
+		n27;
+		n62 -> n27		 [_draw_="c 7 -#000000 B 4 3836 997.94 3836 989.81 3836 979.88 3836 970.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3839.5 970.44 3836 960.44 3832.5 970.44 ",
+			pos="e,3836,960.44 3836,997.94 3836,989.81 3836,979.88 3836,970.7"];
+		n107;
+		n62 -> n107		 [_draw_="c 7 -#000000 B 7 3739.15 1010.51 3666.57 1006.61 3564.87 999.98 3476 990 3400.83 981.56 3315.72 967.94 3255.06 957.53 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3255.61 954.08 3245.16 955.83 3254.42 960.97 ",
+			pos="e,3245.2,955.83 3739.2,1010.5 3666.6,1006.6 3564.9,999.98 3476,990 3400.8,981.56 3315.7,967.94 3255.1,957.53"];
+		n123;
+		n99;
+		n99 -> n26		 [_draw_="c 7 -#000000 B 4 859.77 1299.19 821.87 1286.24 768.1 1267.86 727.81 1254.08 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 728.73 1250.7 718.13 1250.77 726.46 1257.32 ",
+			pos="e,718.13,1250.8 859.77,1299.2 821.87,1286.2 768.1,1267.9 727.81,1254.1"];
+		n99 -> n25		 [_draw_="c 7 -#000000 B 4 902.53 1297.64 900.44 1287.19 897.73 1273.67 895.37 1261.86 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 898.8 1261.17 893.41 1252.05 891.94 1262.54 ",
+			pos="e,893.41,1252.1 902.53,1297.6 900.44,1287.2 897.73,1273.7 895.37,1261.9"];
+		n74;
+		n69;
+		n32;
+		n80 -> n32		 [_draw_="c 7 -#000000 B 4 4640 923.86 4640 897.75 4640 847.74 4640 816.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4643.5 816.31 4640 806.31 4636.5 816.31 ",
+			pos="e,4640,806.31 4640,923.86 4640,897.75 4640,847.74 4640,816.51"];
+		n100;
+		n133;
+		n124;
+		n96;
+		n96 -> n90		 [_draw_="c 7 -#000000 B 10 3713.53 316.7 3698.54 312.55 3681.69 308.47 3666 306 3595.23 294.86 3576.4 303.94 3505 298 3392.18 288.61 3262.15 \
+272.43 3181.25 261.72 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3181.52 258.22 3171.15 260.37 3180.6 265.16 ",
+			pos="e,3171.1,260.37 3713.5,316.7 3698.5,312.55 3681.7,308.47 3666,306 3595.2,294.86 3576.4,303.94 3505,298 3392.2,288.61 3262.1,272.43 \
+3181.3,261.72"];
+		n96 -> n34		 [_draw_="c 7 -#000000 B 4 3709.35 317.38 3605.28 288.82 3365.08 222.92 3258.09 193.57 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3258.73 190.11 3248.16 190.84 3256.87 196.86 ",
+			pos="e,3248.2,190.84 3709.3,317.38 3605.3,288.82 3365.1,222.92 3258.1,193.57"];
+		n15;
+		n16;
+		n15 -> n16		 [_draw_="c 7 -#000000 B 4 3561.51 623.64 3565.47 613.09 3570.6 599.39 3575.06 587.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3578.37 588.64 3578.61 578.05 3571.82 586.18 ",
+			pos="e,3578.6,578.05 3561.5,623.64 3565.5,613.09 3570.6,599.39 3575.1,587.51"];
+		n160;
+		n104 -> n90		 [_draw_="c 7 -#000000 B 4 3130.58 314.03 3125.89 303.32 3119.74 289.27 3114.44 277.15 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3117.63 275.7 3110.41 267.94 3111.21 278.51 ",
+			pos="e,3110.4,267.94 3130.6,314.03 3125.9,303.32 3119.7,289.27 3114.4,277.15"];
+		n104 -> n34		 [_draw_="c 7 -#000000 B 7 3177.18 315.14 3184.16 310.61 3190.59 304.95 3195 298 3212.38 270.57 3212.24 232.16 3209.51 206.47 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3212.95 205.8 3208.22 196.31 3206.01 206.67 ",
+			pos="e,3208.2,196.31 3177.2,315.14 3184.2,310.61 3190.6,304.95 3195,298 3212.4,270.57 3212.2,232.16 3209.5,206.47"];
+		n52;
+		n31;
+		n111;
+		n111 -> n101		 [_draw_="c 7 -#000000 B 7 2742.11 854.68 2727.52 849.85 2712.25 843.68 2699 836 2688.09 829.67 2677.49 820.77 2668.74 812.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2671.12 809.84 2661.56 805.28 2666.19 814.81 ",
+			pos="e,2661.6,805.28 2742.1,854.68 2727.5,849.85 2712.2,843.68 2699,836 2688.1,829.67 2677.5,820.77 2668.7,812.41"];
+		n111 -> n111		 [_draw_="c 7 -#000000 B 7 2872.96 883.41 2902.49 884.21 2927.33 879.74 2927.33 870 2927.33 861.4 2907.97 856.91 2883.11 856.53 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2882.93 853.03 2872.96 856.59 2882.98 860.03 ",
+			pos="e,2873,856.59 2873,883.41 2902.5,884.21 2927.3,879.74 2927.3,870 2927.3,861.4 2908,856.91 2883.1,856.53"];
+		n110;
+		n111 -> n110		 [_draw_="c 7 -#000000 B 10 2868.46 855.85 2895.61 851.21 2927.17 846.52 2956 844 3013.01 839.01 3415.24 848.9 3471 836 3493.54 830.78 3517.04 \
+820.05 3535.59 810.15 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3537.46 813.12 3544.54 805.24 3534.09 806.98 ",
+			pos="e,3544.5,805.24 2868.5,855.85 2895.6,851.21 2927.2,846.52 2956,844 3013,839.01 3415.2,848.9 3471,836 3493.5,830.78 3517,820.05 3535.6,\
+810.15"];
+		n112;
+		n111 -> n112		 [_draw_="c 7 -#000000 B 4 2825.07 852.42 2843.4 840.3 2868.43 823.76 2888.33 810.6 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2890.38 813.44 2896.79 805.01 2886.51 807.6 ",
+			pos="e,2896.8,805.01 2825.1,852.42 2843.4,840.3 2868.4,823.76 2888.3,810.6"];
+		n120;
+		n121;
+		n120 -> n121		 [_draw_="c 7 -#000000 B 4 1447 1371.94 1447 1363.81 1447 1353.88 1447 1344.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1450.5 1344.44 1447 1334.44 1443.5 1344.44 ",
+			pos="e,1447,1334.4 1447,1371.9 1447,1363.8 1447,1353.9 1447,1344.7"];
+		n136;
+		n11;
+		n11 -> n21		 [_draw_="c 7 -#000000 B 4 2192.63 1071.12 2212.56 1060.79 2238.66 1047.25 2259.78 1036.3 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2261.52 1039.34 2268.79 1031.63 2258.3 1033.12 ",
+			pos="e,2268.8,1031.6 2192.6,1071.1 2212.6,1060.8 2238.7,1047.2 2259.8,1036.3"];
+		n164;
+		n168;
+		n72;
+		n168 -> n72		 [_draw_="c 7 -#000000 B 4 5080.25 769.7 5080.36 761.98 5080.49 752.71 5080.61 744.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5084.11 744.15 5080.76 734.1 5077.11 744.05 ",
+			pos="e,5080.8,734.1 5080.2,769.7 5080.4,761.98 5080.5,752.71 5080.6,744.11"];
+		n35;
+		n36;
+		n35 -> n36		 [_draw_="c 7 -#000000 B 4 1647.27 1371.94 1649.32 1363.72 1651.83 1353.66 1654.15 1344.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1657.61 1344.99 1656.64 1334.44 1650.82 1343.29 ",
+			pos="e,1656.6,1334.4 1647.3,1371.9 1649.3,1363.7 1651.8,1353.7 1654.1,1344.4"];
+		n38;
+		n35 -> n38		 [_draw_="c 7 -#000000 B 10 1701 1377.45 1711.62 1375.5 1722.63 1373.6 1733 1372 1762.64 1367.44 1770.87 1371.15 1800 1364 1827.41 1357.27 \
+1857.01 1346.21 1880.41 1336.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1881.86 1339.7 1889.71 1332.59 1879.14 1333.25 ",
+			pos="e,1889.7,1332.6 1701,1377.4 1711.6,1375.5 1722.6,1373.6 1733,1372 1762.6,1367.4 1770.9,1371.1 1800,1364 1827.4,1357.3 1857,1346.2 \
+1880.4,1336.5"];
+		n119;
+		n119 -> n96		 [_draw_="c 7 -#000000 B 7 3606.22 398.78 3625.64 393.66 3646.95 387.3 3666 380 3684.96 372.73 3705.16 362.81 3721.88 353.95 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3723.63 356.98 3730.78 349.16 3720.32 350.82 ",
+			pos="e,3730.8,349.16 3606.2,398.78 3625.6,393.66 3646.9,387.3 3666,380 3685,372.73 3705.2,362.81 3721.9,353.95"];
+		n115;
+		n115 -> n168		 [_draw_="c 7 -#000000 B 4 4915.19 853 4948.14 840.21 4994.48 822.21 5029.63 808.56 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5031.18 811.72 5039.23 804.83 5028.64 805.19 ",
+			pos="e,5039.2,804.83 4915.2,853 4948.1,840.21 4994.5,822.21 5029.6,808.56"];
+		n159;
+		n115 -> n159		 [_draw_="c 7 -#000000 B 4 4870.31 851.64 4868.09 841.19 4865.22 827.67 4862.71 815.86 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4866.13 815.1 4860.62 806.05 4859.28 816.56 ",
+			pos="e,4860.6,806.05 4870.3,851.64 4868.1,841.19 4865.2,827.67 4862.7,815.86"];
+		n71;
+		n71 -> n41		 [_draw_="c 7 -#000000 B 7 3303.95 1086.27 3158.23 1083.94 2842.7 1074.24 2580 1034 2573.83 1033.06 2567.41 1031.83 2561.07 1030.48 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2561.75 1027.04 2551.22 1028.26 2560.21 1033.87 ",
+			pos="e,2551.2,1028.3 3303.9,1086.3 3158.2,1083.9 2842.7,1074.2 2580,1034 2573.8,1033.1 2567.4,1031.8 2561.1,1030.5"];
+		n29;
+		n151;
+		n48;
+		n3;
+		n4;
+		n3 -> n4		 [_draw_="c 7 -#000000 B 4 3391.85 770.76 3410.13 761.14 3433.52 748.83 3453.3 738.42 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3455.18 741.39 3462.4 733.63 3451.92 735.19 ",
+			pos="e,3462.4,733.63 3391.8,770.76 3410.1,761.14 3433.5,748.83 3453.3,738.42"];
+		n33;
+		n159 -> n33		 [_draw_="c 7 -#000000 B 4 4856.75 769.7 4856.64 761.98 4856.51 752.71 4856.39 744.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4859.89 744.05 4856.24 734.1 4852.89 744.15 ",
+			pos="e,4856.2,734.1 4856.8,769.7 4856.6,761.98 4856.5,752.71 4856.4,744.11"];
+		n105;
+		n95;
+		n83 -> n95		 [_draw_="c 7 -#000000 B 4 2145 1297.64 2145 1287.3 2145 1273.94 2145 1262.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2148.5 1262.05 2145 1252.05 2141.5 1262.05 ",
+			pos="e,2145,1252.1 2145,1297.6 2145,1287.3 2145,1273.9 2145,1262.2"];
+		n129 -> n47		 [_draw_="c 7 -#000000 B 10 2857.2 1221.22 2870.09 1219.31 2883.43 1217.48 2896 1216 2939.84 1210.85 2952.32 1219.27 2995 1208 3017.24 1202.13 \
+3040.61 1191.57 3059.26 1181.95 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3061.08 1184.95 3068.28 1177.18 3057.81 1178.76 ",
+			pos="e,3068.3,1177.2 2857.2,1221.2 2870.1,1219.3 2883.4,1217.5 2896,1216 2939.8,1210.8 2952.3,1219.3 2995,1208 3017.2,1202.1 3040.6,1191.6 \
+3059.3,1181.9"];
+		n142;
+		n32 -> n33		 [_draw_="c 7 -#000000 B 4 4685.54 772.24 4719.03 761.39 4764.73 746.58 4800.38 735.03 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4801.71 738.27 4810.15 731.86 4799.55 731.61 ",
+			pos="e,4810.1,731.86 4685.5,772.24 4719,761.39 4764.7,746.58 4800.4,735.03"];
+		n109;
+		n109 -> n3		 [_draw_="c 7 -#000000 B 4 3298.75 852.03 3309.86 840.79 3324.6 825.87 3336.94 813.36 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3339.73 815.52 3344.27 805.94 3334.75 810.6 ",
+			pos="e,3344.3,805.94 3298.8,852.03 3309.9,840.79 3324.6,825.87 3336.9,813.36"];
+		n158;
+		n110 -> n158		 [_draw_="c 7 -#000000 B 7 3619.2 772.76 3635.22 768.58 3653.25 764.47 3670 762 3839.92 736.93 4348.34 723.53 4560.92 718.89 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4561.2 722.39 4571.13 718.67 4561.05 715.39 ",
+			pos="e,4571.1,718.67 3619.2,772.76 3635.2,768.58 3653.3,764.47 3670,762 3839.9,736.93 4348.3,723.53 4560.9,718.89"];
+		n121 -> n137		 [_draw_="c 7 -#000000 B 10 1482.71 1300.89 1494.98 1296.64 1508.91 1292.45 1522 1290 1557.86 1283.28 1651.4 1293.59 1686 1282 1701.63 1276.76 \
+1717 1266.9 1729.24 1257.56 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1731.54 1260.2 1737.19 1251.23 1727.18 1254.72 ",
+			pos="e,1737.2,1251.2 1482.7,1300.9 1495,1296.6 1508.9,1292.5 1522,1290 1557.9,1283.3 1651.4,1293.6 1686,1282 1701.6,1276.8 1717,1266.9 \
+1729.2,1257.6"];
+		n73;
+		n16 -> n73		 [_draw_="c 7 -#000000 B 4 3585 541.7 3585 533.98 3585 524.71 3585 516.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3588.5 516.1 3585 506.1 3581.5 516.1 ",
+			pos="e,3585,506.1 3585,541.7 3585,533.98 3585,524.71 3585,516.11"];
+		n8;
+		n16 -> n8		 [_draw_="c 7 -#000000 B 4 3619.28 543.81 3642.86 533.36 3674.37 519.41 3699.68 508.19 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3701.33 511.29 3709.06 504.04 3698.49 504.89 ",
+			pos="e,3709.1,504.04 3619.3,543.81 3642.9,533.36 3674.4,519.41 3699.7,508.19"];
+		n169;
+		n169 -> n24		 [_draw_="c 7 -#000000 B 4 405.05 1376.38 457.9 1364.26 537.9 1345.92 594.98 1332.83 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 596.04 1336.17 605 1330.53 594.47 1329.35 ",
+			pos="e,605,1330.5 405.05,1376.4 457.9,1364.3 537.9,1345.9 594.98,1332.8"];
+		n169 -> n99		 [_draw_="c 7 -#000000 B 10 408.34 1376.9 419.79 1374.93 431.73 1373.16 443 1372 515.75 1364.51 700.06 1377.15 772 1364 802.21 1358.48 834.76 \
+1347.2 860.2 1337.07 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 861.64 1340.27 869.59 1333.26 859.01 1333.78 ",
+			pos="e,869.59,1333.3 408.34,1376.9 419.79,1374.9 431.73,1373.2 443,1372 515.75,1364.5 700.06,1377.2 772,1364 802.21,1358.5 834.76,1347.2 \
+860.2,1337.1"];
+		n118;
+		n118 -> n128		 [_draw_="c 7 -#000000 B 4 114 1297.64 114 1287.3 114 1273.94 114 1262.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 117.5 1262.05 114 1252.05 110.5 1262.05 ",
+			pos="e,114,1252.1 114,1297.6 114,1287.3 114,1273.9 114,1262.2"];
+		n118 -> n93		 [_draw_="c 7 -#000000 B 4 146.58 1299.58 173.93 1286.63 213.13 1268.07 242.5 1254.17 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 244.12 1257.28 251.66 1249.84 241.12 1250.95 ",
+			pos="e,251.66,1249.8 146.58,1299.6 173.93,1286.6 213.13,1268.1 242.5,1254.2"];
+		n114;
+		n114 -> n69		 [_draw_="c 7 -#000000 B 4 5096.67 925.12 5121.12 914.81 5153.14 901.3 5179.08 890.36 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5180.48 893.57 5188.34 886.46 5177.76 887.12 ",
+			pos="e,5188.3,886.46 5096.7,925.12 5121.1,914.81 5153.1,901.3 5179.1,890.36"];
+		n114 -> n115		 [_draw_="c 7 -#000000 B 4 5017.94 925.46 4990.69 915.15 4954.69 901.53 4925.51 890.49 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4926.5 887.12 4915.9 886.86 4924.02 893.67 ",
+			pos="e,4915.9,886.86 5017.9,925.46 4990.7,915.15 4954.7,901.53 4925.5,890.49"];
+		n150;
+		n150 -> n151		 [_draw_="c 7 -#000000 B 10 2861.96 1376.84 2875.86 1374.88 2890.36 1373.13 2904 1372 2961.92 1367.22 3369.8 1374.26 3427 1364 3457.24 1358.57 \
+3489.79 1347.18 3515.12 1336.97 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3516.54 1340.17 3524.45 1333.12 3513.87 1333.69 ",
+			pos="e,3524.5,1333.1 2862,1376.8 2875.9,1374.9 2890.4,1373.1 2904,1372 2961.9,1367.2 3369.8,1374.3 3427,1364 3457.2,1358.6 3489.8,1347.2 \
+3515.1,1337"];
+		n28;
+		n135;
+		n135 -> n31		 [_draw_="c 7 -#000000 B 7 3716.52 772.86 3702.13 768.76 3686.01 764.68 3671 762 3659.87 760.01 3363.52 736.07 3212.6 723.94 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3212.68 720.44 3202.43 723.12 3212.12 727.41 ",
+			pos="e,3202.4,723.12 3716.5,772.86 3702.1,768.76 3686,764.68 3671,762 3659.9,760.01 3363.5,736.07 3212.6,723.94"];
+		n117;
+		n117 -> n93		 [_draw_="c 7 -#000000 B 4 313.73 1298.03 308.51 1287.32 301.65 1273.27 295.75 1261.15 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 298.79 1259.4 291.26 1251.94 292.49 1262.46 ",
+			pos="e,291.26,1251.9 313.73,1298 308.51,1287.3 301.65,1273.3 295.75,1261.1"];
+		n122 -> n113		 [_draw_="c 7 -#000000 B 4 5155.61 316.23 5094.45 301.76 5001.8 279.83 4941.08 265.46 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4941.79 262.03 4931.25 263.13 4940.18 268.84 ",
+			pos="e,4931.3,263.13 5155.6,316.23 5094.4,301.76 5001.8,279.83 4941.1,265.46"];
+		n122 -> n123		 [_draw_="c 7 -#000000 B 4 5218 313.64 5218 303.3 5218 289.94 5218 278.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5221.5 278.05 5218 268.05 5214.5 278.05 ",
+			pos="e,5218,268.05 5218,313.64 5218,303.3 5218,289.94 5218,278.22"];
+		n17;
+		n18;
+		n17 -> n18		 [_draw_="c 7 -#000000 B 10 1649.97 1220.88 1661.86 1218.9 1674.29 1217.13 1686 1216 1736.33 1211.13 2091.82 1219.74 2141 1208 2162.7 1202.82 \
+2185.22 1192.27 2203.1 1182.48 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2205.01 1185.42 2212 1177.46 2201.57 1179.32 ",
+			pos="e,2212,1177.5 1650,1220.9 1661.9,1218.9 1674.3,1217.1 1686,1216 1736.3,1211.1 2091.8,1219.7 2141,1208 2162.7,1202.8 2185.2,1192.3 \
+2203.1,1182.5"];
+		n173;
+		n9;
+		n9 -> n96		 [_draw_="c 7 -#000000 B 4 3759 395.64 3759 385.3 3759 371.94 3759 360.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3762.5 360.05 3759 350.05 3755.5 360.05 ",
+			pos="e,3759,350.05 3759,395.64 3759,385.3 3759,371.94 3759,360.22"];
+		n55;
+		n54 -> n55		 [_draw_="c 7 -#000000 B 4 4107.15 928 4164.18 916.26 4248.19 898.96 4308.7 886.5 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4309.49 889.91 4318.58 884.47 4308.08 883.06 ",
+			pos="e,4318.6,884.47 4107.2,928 4164.2,916.26 4248.2,898.96 4308.7,886.5"];
+		n98;
+		n98 -> n24		 [_draw_="c 7 -#000000 B 10 965.69 1377.09 955.23 1375.1 944.3 1373.28 934 1372 862.9 1363.17 842.78 1380.22 773 1364 748.91 1358.4 723.46 \
+1347.72 703.21 1337.96 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 704.52 1334.71 694.01 1333.41 701.42 1340.98 ",
+			pos="e,694.01,1333.4 965.69,1377.1 955.23,1375.1 944.3,1373.3 934,1372 862.9,1363.2 842.78,1380.2 773,1364 748.91,1358.4 723.46,1347.7 \
+703.21,1338"];
+		n98 -> n99		 [_draw_="c 7 -#000000 B 4 993.64 1372.84 978.01 1362.89 957.77 1349.98 940.67 1339.09 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 942.37 1336.03 932.06 1333.6 938.61 1341.93 ",
+			pos="e,932.06,1333.6 993.64,1372.8 978.01,1362.9 957.77,1350 940.67,1339.1"];
+		n27 -> n29		 [_draw_="c 7 -#000000 B 4 3881.64 926.41 3916.86 915.16 3965.61 899.57 4002.45 887.8 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4003.56 891.12 4012.02 884.74 4001.43 884.45 ",
+			pos="e,4012,884.74 3881.6,926.41 3916.9,915.16 3965.6,899.57 4002.4,887.8"];
+		n27 -> n28		 [_draw_="c 7 -#000000 B 4 3843.99 924.05 3847.74 916.09 3852.31 906.41 3856.5 897.51 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3859.76 898.81 3860.86 888.28 3853.43 895.83 ",
+			pos="e,3860.9,888.28 3844,924.05 3847.7,916.09 3852.3,906.41 3856.5,897.51"];
+		n162;
+		n162 -> n113		 [_draw_="c 7 -#000000 B 4 4557.7 318.15 4628.46 303.4 4743.95 279.34 4815.77 264.38 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4816.53 267.8 4825.6 262.33 4815.1 260.95 ",
+			pos="e,4825.6,262.33 4557.7,318.15 4628.5,303.4 4744,279.34 4815.8,264.38"];
+		n162 -> n52		 [_draw_="c 7 -#000000 B 4 4496 313.64 4496 303.3 4496 289.94 4496 278.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4499.5 278.05 4496 268.05 4492.5 278.05 ",
+			pos="e,4496,268.05 4496,313.64 4496,303.3 4496,289.94 4496,278.22"];
+		n162 -> n106		 [_draw_="c 7 -#000000 B 4 4418.89 321.27 4283.3 304.16 4006.68 269.26 3902.71 256.14 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3902.98 252.64 3892.63 254.86 3902.11 259.59 ",
+			pos="e,3892.6,254.86 4418.9,321.27 4283.3,304.16 4006.7,269.26 3902.7,256.14"];
+		n134 -> n135		 [_draw_="c 7 -#000000 B 4 3661.11 852.42 3680.16 840.33 3706.15 823.83 3726.85 810.68 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3728.79 813.6 3735.36 805.28 3725.04 807.69 ",
+			pos="e,3735.4,805.28 3661.1,852.42 3680.2,840.33 3706.1,823.83 3726.8,810.68"];
+		n157 -> n18		 [_draw_="c 7 -#000000 B 10 2517.32 1221.07 2505.63 1219.12 2493.46 1217.32 2482 1216 2418.32 1208.68 2400.15 1223.7 2338 1208 2315.72 1202.37 \
+2292.41 1191.72 2273.89 1181.98 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2275.41 1178.83 2264.95 1177.15 2272.09 1184.99 ",
+			pos="e,2265,1177.2 2517.3,1221.1 2505.6,1219.1 2493.5,1217.3 2482,1216 2418.3,1208.7 2400.1,1223.7 2338,1208 2315.7,1202.4 2292.4,1191.7 \
+2273.9,1182"];
+		n148;
+		n148 -> n100		 [_draw_="c 7 -#000000 B 4 2770 769.7 2770 761.98 2770 752.71 2770 744.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2773.5 744.1 2770 734.1 2766.5 744.1 ",
+			pos="e,2770,734.1 2770,769.7 2770,761.98 2770,752.71 2770,744.11"];
+		n148 -> n31		 [_draw_="c 7 -#000000 B 7 2805.37 773.12 2816.63 769.09 2829.22 764.98 2841 762 2908.12 745.04 2985.83 733.27 3043.13 726.04 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3043.74 729.49 3053.23 724.79 3042.87 722.54 ",
+			pos="e,3053.2,724.79 2805.4,773.12 2816.6,769.09 2829.2,764.98 2841,762 2908.1,745.04 2985.8,733.27 3043.1,726.04"];
+		n5;
+		n23;
+		n103 -> n106		 [_draw_="c 7 -#000000 B 4 3611.18 316.79 3672.29 300.76 3770.12 275.1 3823.75 261.03 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3824.77 264.38 3833.55 258.46 3822.99 257.61 ",
+			pos="e,3833.6,258.46 3611.2,316.79 3672.3,300.76 3770.1,275.1 3823.8,261.03"];
+		n91 -> n90		 [_draw_="c 7 -#000000 B 4 2935.1 315.58 2969.24 302.45 3018.37 283.55 3054.67 269.59 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3056 272.83 3064.08 265.97 3053.49 266.29 ",
+			pos="e,3064.1,265.97 2935.1,315.58 2969.2,302.45 3018.4,283.55 3054.7,269.59"];
+		n91 -> n34		 [_draw_="c 7 -#000000 B 7 2910.19 314.05 2930.88 291.97 2970.04 253.67 3011 232 3051.88 210.37 3102.4 196.94 3141.64 189 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3142.47 192.41 3151.61 187.06 3141.13 185.54 ",
+			pos="e,3151.6,187.06 2910.2,314.05 2930.9,291.97 2970,253.67 3011,232 3051.9,210.37 3102.4,196.94 3141.6,189"];
+		n167;
+		n38 -> n136		 [_draw_="c 7 -#000000 B 4 1924 1297.64 1924 1287.3 1924 1273.94 1924 1262.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1927.5 1262.05 1924 1252.05 1920.5 1262.05 ",
+			pos="e,1924,1252.1 1924,1297.6 1924,1287.3 1924,1273.9 1924,1262.2"];
+		n8 -> n9		 [_draw_="c 7 -#000000 B 4 3746.79 469.94 3748.62 461.72 3750.85 451.66 3752.91 442.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3756.37 442.96 3755.12 432.44 3749.54 441.44 ",
+			pos="e,3755.1,432.44 3746.8,469.94 3748.6,461.72 3750.9,451.66 3752.9,442.41"];
+		n107 -> n108		 [_draw_="c 7 -#000000 B 4 3148.41 924.41 3133.88 915 3115.52 903.1 3099.82 892.92 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3101.71 889.97 3091.41 887.47 3097.9 895.85 ",
+			pos="e,3091.4,887.47 3148.4,924.41 3133.9,915 3115.5,903.1 3099.8,892.92"];
+		n107 -> n101		 [_draw_="c 7 -#000000 B 7 3070.02 935.66 2934.65 927.82 2711.75 911.53 2682 888 2660.27 870.82 2652.01 839.16 2648.88 816.26 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2652.34 815.68 2647.74 806.13 2645.38 816.46 ",
+			pos="e,2647.7,806.13 3070,935.66 2934.7,927.82 2711.8,911.53 2682,888 2660.3,870.82 2652,839.16 2648.9,816.26"];
+		n107 -> n111		 [_draw_="c 7 -#000000 B 4 3104.09 927.92 3040.24 915.97 2945.92 898.31 2879.28 885.84 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2879.72 882.36 2869.25 883.96 2878.43 889.24 ",
+			pos="e,2869.2,883.96 3104.1,927.92 3040.2,915.97 2945.9,898.31 2879.3,885.84"];
+		n107 -> n68		 [_draw_="c 7 -#000000 B 7 3236.84 927.1 3282.93 916.75 3346.99 902.03 3403 888 3407.96 886.76 3413.12 885.43 3418.27 884.08 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3419.31 887.42 3428.08 881.47 3417.52 880.65 ",
+			pos="e,3428.1,881.47 3236.8,927.1 3282.9,916.75 3347,902.03 3403,888 3408,886.76 3413.1,885.43 3418.3,884.08"];
+		n107 -> n109		 [_draw_="c 7 -#000000 B 4 3199.59 924.41 3214.12 915 3232.48 903.1 3248.18 892.92 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3250.1 895.85 3256.59 887.47 3246.29 889.97 ",
+			pos="e,3256.6,887.47 3199.6,924.41 3214.1,915 3232.5,903.1 3248.2,892.92"];
+		n107 -> n110		 [_draw_="c 7 -#000000 B 13 3275.36 934.59 3314.15 927.67 3356.58 914.12 3388 888 3404.52 874.27 3390.71 856.75 3408 844 3430.72 827.25 3443.9 \
+843.88 3471 836 3492.59 829.73 3515.37 819.35 3533.73 809.93 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3535.39 813.01 3542.62 805.27 3532.14 806.81 ",
+			pos="e,3542.6,805.27 3275.4,934.59 3314.2,927.67 3356.6,914.12 3388,888 3404.5,874.27 3390.7,856.75 3408,844 3430.7,827.25 3443.9,843.88 \
+3471,836 3492.6,829.73 3515.4,819.35 3533.7,809.93"];
+		n107 -> n112		 [_draw_="c 7 -#000000 B 7 3093.31 929.57 3039.98 920.52 2976.3 906.34 2956 888 2950.45 882.99 2937.64 843.75 2929.16 816.2 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2932.41 814.86 2926.14 806.32 2925.71 816.9 ",
+			pos="e,2926.1,806.32 3093.3,929.57 3040,920.52 2976.3,906.34 2956,888 2950.5,882.99 2937.6,843.75 2929.2,816.2"];
+		n55 -> n32		 [_draw_="c 7 -#000000 B 4 4432.45 853.86 4475.4 840.44 4538.13 820.83 4583.38 806.69 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 4584.54 810 4593.04 803.67 4582.45 803.32 ",
+			pos="e,4593,803.67 4432.5,853.86 4475.4,840.44 4538.1,820.83 4583.4,806.69"];
+		n127 -> n47		 [_draw_="c 7 -#000000 B 4 3014.83 1216.66 3029.22 1206.79 3047.77 1194.07 3063.5 1183.29 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3065.64 1186.06 3071.9 1177.52 3061.68 1180.29 ",
+			pos="e,3071.9,1177.5 3014.8,1216.7 3029.2,1206.8 3047.8,1194.1 3063.5,1183.3"];
+		n18 -> n11		 [_draw_="c 7 -#000000 B 4 2219.6 1142.05 2210.08 1133.28 2198.3 1122.43 2187.87 1112.83 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2189.95 1109.99 2180.23 1105.79 2185.21 1115.14 ",
+			pos="e,2180.2,1105.8 2219.6,1142.1 2210.1,1133.3 2198.3,1122.4 2187.9,1112.8"];
+		n163;
+		n30;
+		n30 -> n31		 [_draw_="c 7 -#000000 B 4 3126 769.7 3126 761.98 3126 752.71 3126 744.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3129.5 744.1 3126 734.1 3122.5 744.1 ",
+			pos="e,3126,734.1 3126,769.7 3126,761.98 3126,752.71 3126,744.11"];
+		n156;
+		n156 -> n6		 [_draw_="c 7 -#000000 B 4 4913.86 927.5 4944.19 916.09 4987.75 899.7 5020.15 887.5 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5021.69 890.66 5029.82 883.86 5019.23 884.11 ",
+			pos="e,5029.8,883.86 4913.9,927.5 4944.2,916.09 4987.8,899.7 5020.1,887.5"];
+		n156 -> n69		 [_draw_="c 7 -#000000 B 7 4921.81 929.66 4929.84 927.69 4938.16 925.72 4946 924 5014.59 908.92 5093.24 894.22 5149.51 884.13 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5150.16 887.57 5159.39 882.37 5148.93 880.68 ",
+			pos="e,5159.4,882.37 4921.8,929.66 4929.8,927.69 4938.2,925.72 4946,924 5014.6,908.92 5093.2,894.22 5149.5,884.13"];
+		n10;
+		n10 -> n11		 [_draw_="c 7 -#000000 B 4 2084.17 1142.94 2097.71 1133.56 2114.99 1121.58 2129.83 1111.3 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2132.01 1114.04 2138.24 1105.47 2128.02 1108.29 ",
+			pos="e,2138.2,1105.5 2084.2,1142.9 2097.7,1133.6 2115,1121.6 2129.8,1111.3"];
+		n4 -> n15		 [_draw_="c 7 -#000000 B 4 3508.46 697.94 3516.13 688.88 3525.7 677.59 3534.16 667.6 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3536.85 669.83 3540.65 659.94 3531.51 665.31 ",
+			pos="e,3540.6,659.94 3508.5,697.94 3516.1,688.88 3525.7,677.59 3534.2,667.6"];
+		n116;
+		n116 -> n118		 [_draw_="c 7 -#000000 B 4 127.73 1371.94 125.68 1363.72 123.17 1353.66 120.85 1344.41 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 124.18 1343.29 118.36 1334.44 117.39 1344.99 ",
+			pos="e,118.36,1334.4 127.73,1371.9 125.68,1363.7 123.17,1353.7 120.85,1344.4"];
+		n116 -> n117		 [_draw_="c 7 -#000000 B 7 176.51 1373.33 184.99 1370.28 193.78 1367.08 202 1364 225.46 1355.22 251.34 1345.13 273.05 1336.56 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 274.38 1339.8 282.39 1332.86 271.8 1333.29 ",
+			pos="e,282.39,1332.9 176.51,1373.3 184.99,1370.3 193.78,1367.1 202,1364 225.46,1355.2 251.34,1345.1 273.05,1336.6"];
+	}
+	subgraph cluster3 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 5525 388 5525 690 5865 690 5865 388 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5695 674.8 0 83.36 15 -stack \"lib_Git\" ",
+			bb="5525,388,5865,690",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Git\"",
+			lheight=0.19,
+			lp="5695,679",
+			lwidth=1.16,
+			style=filled
+		];
+		n58;
+		n56;
+		n58 -> n56		 [_draw_="c 7 -#000000 B 4 5780 469.94 5780 461.81 5780 451.88 5780 442.7 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5783.5 442.44 5780 432.44 5776.5 442.44 ",
+			pos="e,5780,432.44 5780,469.94 5780,461.81 5780,451.88 5780,442.7"];
+		n132;
+		n132 -> n58		 [_draw_="c 7 -#000000 B 7 5614.96 545.58 5624.24 541.69 5634.48 537.55 5644 534 5671.15 523.87 5701.77 513.64 5727.06 505.49 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5728.38 508.75 5736.83 502.37 5726.24 502.08 ",
+			pos="e,5736.8,502.37 5615,545.58 5624.2,541.69 5634.5,537.55 5644,534 5671.2,523.87 5701.8,513.64 5727.1,505.49"];
+		n50;
+		n50 -> n132		 [_draw_="c 7 -#000000 B 7 5698.24 628.25 5680.23 623.25 5660.84 616.59 5644 608 5631.45 601.59 5618.95 592.38 5608.64 583.8 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5610.74 581 5600.88 577.13 5606.18 586.3 ",
+			pos="e,5600.9,577.13 5698.2,628.25 5680.2,623.25 5660.8,616.59 5644,608 5631.4,601.59 5619,592.38 5608.6,583.8"];
+		n140;
+		n50 -> n140		 [_draw_="c 7 -#000000 B 4 5758.13 623.64 5757.61 613.3 5756.95 599.94 5756.36 588.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5759.85 587.86 5755.85 578.05 5752.86 588.21 ",
+			pos="e,5755.9,578.05 5758.1,623.64 5757.6,613.3 5756.9,599.94 5756.4,588.22"];
+	}
+	subgraph cluster4 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6583 534 6583 690 6795 690 6795 534 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6689 674.8 0 180.55 30 -stack \"lib_LiveCodeDictionary\" ",
+			bb="6583,534,6795,690",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_LiveCodeDictionary\"",
+			lheight=0.19,
+			lp="6689,679",
+			lwidth=2.51,
+			style=filled
+		];
+		n144;
+		n143;
+		n143 -> n144		 [_draw_="c 7 -#000000 B 4 6689 623.64 6689 613.3 6689 599.94 6689 588.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6692.5 588.05 6689 578.05 6685.5 588.05 ",
+			pos="e,6689,578.05 6689,623.64 6689,613.3 6689,599.94 6689,588.22"];
+	}
+	subgraph cluster5 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6547 1290 6547 1364 6749 1364 6749 1290 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6648 1348.8 0 136.25 22 -stack \"lib_MenuButton\" ",
+			bb="6547,1290,6749,1364",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_MenuButton\"",
+			lheight=0.19,
+			lp="6648,1353",
+			lwidth=1.89,
+			style=filled
+		];
+		n165;
+	}
+	subgraph cluster6 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6287 1134 6287 1208 6431 1208 6431 1134 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6359 1192.8 0 102.79 18 -stack \"lib_Object\" ",
+			bb="6287,1134,6431,1208",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Object\"",
+			lheight=0.19,
+			lp="6359,1197",
+			lwidth=1.43,
+			style=filled
+		];
+		n40;
+	}
+	subgraph cluster7 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 5873 388 5873 462 6272 462 6272 388 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6072.5 446.8 0 94.25 17 -stack \"lib_Shell\" ",
+			bb="5873,388,6272,462",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Shell\"",
+			lheight=0.19,
+			lp="6072.5,451",
+			lwidth=1.31,
+			style=filled
+		];
+		n153;
+		n59;
+	}
+	subgraph cluster8 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6098 306 6098 380 6234 380 6234 306 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6166 364.8 0 90.15 16 -stack \"lib_Text\" ",
+			bb="6098,306,6234,380",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Text\"",
+			lheight=0.19,
+			lp="6166,369",
+			lwidth=1.25,
+			style=filled
+		];
+		n154;
+	}
+	subgraph cluster9 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 5999 762 5999 836 6363 836 6363 762 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6181 820.8 0 146.85 24 -stack \"lib_ViewTemplate\" ",
+			bb="5999,762,6363,836",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_ViewTemplate\"",
+			lheight=0.19,
+			lp="6181,825",
+			lwidth=2.04,
+			style=filled
+		];
+		n14;
+		n13;
+	}
+	subgraph cluster10 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6803 616 6803 690 7035 690 7035 616 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6919 674.8 0 116.03 18 -stack \"libOPN_Rev\" ",
+			bb="6803,616,7035,690",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"libOPN_Rev\"",
+			lheight=0.19,
+			lp="6919,679",
+			lwidth=1.61,
+			style=filled
+		];
+		n172;
+	}
+	subgraph cluster11 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6087 1134 6087 1208 6279 1208 6279 1134 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6183 1192.8 0 176.49 29 -stack \"libOPN_TextStackFiles\" ",
+			bb="6087,1134,6279,1208",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"libOPN_TextStackFiles\"",
+			lheight=0.19,
+			lp="6183,1197",
+			lwidth=2.45,
+			style=filled
+		];
+		n170;
+	}
+	subgraph cluster12 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 5525 1062 5525 1282 6079 1282 6079 1062 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 5802 1266.8 0 175.09 28 -stack \"model_ObjectMetadata\" ",
+			bb="5525,1062,6079,1282",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"model_ObjectMetadata\"",
+			lheight=0.19,
+			lp="5802,1271",
+			lwidth=2.43,
+			style=filled
+		];
+		n65;
+		n70;
+		n65 -> n70		 [_draw_="c 7 -#000000 B 4 5725.62 1217.2 5711.56 1207.28 5693.23 1194.34 5677.69 1183.37 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5679.58 1180.42 5669.39 1177.51 5675.55 1186.14 ",
+			pos="e,5669.4,1177.5 5725.6,1217.2 5711.6,1207.3 5693.2,1194.3 5677.7,1183.4"];
+		n39;
+		n42;
+		n39 -> n42		 [_draw_="c 7 -#000000 B 4 5890.31 1215.94 5887.54 1207.63 5884.15 1197.44 5881.04 1188.11 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5884.3 1186.82 5877.81 1178.44 5877.66 1189.03 ",
+			pos="e,5877.8,1178.4 5890.3,1215.9 5887.5,1207.6 5884.1,1197.4 5881,1188.1"];
+		n79;
+		n37;
+		n139;
+		n42 -> n37		 [_draw_="c 7 -#000000 B 4 5888.7 1142.05 5897.14 1133.5 5907.53 1122.96 5916.82 1113.54 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5919.44 1115.85 5923.97 1106.28 5914.46 1110.94 ",
+			pos="e,5924,1106.3 5888.7,1142.1 5897.1,1133.5 5907.5,1123 5916.8,1113.5"];
+		n42 -> n139		 [_draw_="c 7 -#000000 B 4 5829.2 1144.67 5797.79 1134.14 5754.79 1119.74 5720.39 1108.22 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5721.07 1104.76 5710.48 1104.9 5718.85 1111.4 ",
+			pos="e,5710.5,1104.9 5829.2,1144.7 5797.8,1134.1 5754.8,1119.7 5720.4,1108.2"];
+	}
+	subgraph cluster13 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6350 306 6350 380 6490 380 6490 306 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6420 364.8 0 114.46 19 -stack \"model_Prefs\" ",
+			bb="6350,306,6490,380",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"model_Prefs\"",
+			lheight=0.19,
+			lp="6420,369",
+			lwidth=1.59,
+			style=filled
+		];
+		n57;
+	}
+	subgraph cluster14 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6441 844 6441 990 6775 990 6775 844 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6608 974.8 0 147.91 25 -stack \"model_ScriptSuite\" ",
+			bb="6441,844,6775,990",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"model_ScriptSuite\"",
+			lheight=0.19,
+			lp="6608,979",
+			lwidth=2.05,
+			style=filled
+		];
+		n20;
+		n152;
+		n19;
+		n19 -> n20		 [_draw_="c 7 -#000000 B 4 6519.81 924.05 6522.51 916.18 6525.79 906.62 6528.81 897.79 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6532.14 898.87 6532.08 888.28 6525.52 896.6 ",
+			pos="e,6532.1,888.28 6519.8,924.05 6522.5,916.18 6525.8,906.62 6528.8,897.79"];
+	}
+	subgraph cluster15 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 6155 8 6155 298 6395 298 6395 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 6275 282.8 0 177.61 29 -stack \"Rescue Livecode World\" ",
+			bb="6155,8,6395,298",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"Rescue Livecode World\"",
+			lheight=0.19,
+			lp="6275,287",
+			lwidth=2.47,
+			style=filled
+		];
+		n75;
+		n76;
+		n75 -> n76		 [_draw_="c 7 -#000000 B 4 6210.16 160.05 6207.93 152.26 6205.23 142.82 6202.74 134.08 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6206.05 132.93 6199.94 124.28 6199.32 134.85 ",
+			pos="e,6199.9,124.28 6210.2,160.05 6207.9,152.26 6205.2,142.82 6202.7,134.08"];
+		n1;
+		n75 -> n1		 [_draw_="c 7 -#000000 B 4 6236.92 161.81 6250.82 152.18 6269.03 139.55 6284.47 128.85 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6286.5 131.71 6292.72 123.13 6282.51 125.95 ",
+			pos="e,6292.7,123.13 6236.9,161.81 6250.8,152.18 6269,139.55 6284.5,128.85"];
+		n97;
+		n97 -> n75		 [_draw_="c 7 -#000000 B 4 6259.25 232.41 6252.03 223.69 6243.04 212.85 6235.06 203.21 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6237.72 200.94 6228.65 195.47 6232.33 205.4 ",
+			pos="e,6228.6,195.47 6259.3,232.41 6252,223.69 6243,212.85 6235.1,203.21"];
+		n171;
+		n97 -> n171		 [_draw_="c 7 -#000000 B 4 6287.46 232.41 6295.05 223.69 6304.51 212.85 6312.9 203.21 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6315.72 205.31 6319.65 195.47 6310.44 200.71 ",
+			pos="e,6319.6,195.47 6287.5,232.41 6295.1,223.69 6304.5,212.85 6312.9,203.21"];
+		n2;
+		n1 -> n2		 [_draw_="c 7 -#000000 B 4 6307.53 88.05 6303.5 80.01 6298.6 70.2 6294.11 61.23 ",
+			_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6297.24 59.65 6289.64 52.28 6290.98 62.78 ",
+			pos="e,6289.6,52.275 6307.5,88.055 6303.5,80.007 6298.6,70.205 6294.1,61.226"];
+	}
+	n89 -> n65	 [_draw_="c 7 -#000000 B 10 4444.96 1376.96 4516.06 1354.5 4677.21 1306.95 4817 1290 4864.6 1284.23 5634.3 1296.49 5680 1282 5695.67 1277.03 \
+5710.94 1267.1 5723.02 1257.64 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5725.32 1260.27 5730.84 1251.23 5720.89 1254.86 ",
+		pos="e,5730.8,1251.2 4445,1377 4516.1,1354.5 4677.2,1307 4817,1290 4864.6,1284.2 5634.3,1296.5 5680,1282 5695.7,1277 5710.9,1267.1 5723,\
+1257.6"];
+	n65 -> n170	 [_draw_="c 7 -#000000 B 10 5789.44 1221.14 5798.15 1219.07 5807.32 1217.2 5816 1216 5874.8 1207.87 6025.29 1221.91 6083 1208 6105.15 1202.66 \
+6128.24 1192.03 6146.55 1182.23 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6148.32 1185.25 6155.39 1177.36 6144.94 1179.12 ",
+		pos="e,6155.4,1177.4 5789.4,1221.1 5798.1,1219.1 5807.3,1217.2 5816,1216 5874.8,1207.9 6025.3,1221.9 6083,1208 6105.2,1202.7 6128.2,1192 \
+6146.6,1182.2"];
+	n39 -> n40	 [_draw_="c 7 -#000000 B 7 5966.39 1232.52 6061.58 1231.18 6226 1226.21 6283 1208 6299.97 1202.58 6317.01 1192.56 6330.64 1183.17 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6332.98 1185.8 6339.07 1177.13 6328.9 1180.11 ",
+		pos="e,6339.1,1177.1 5966.4,1232.5 6061.6,1231.2 6226,1226.2 6283,1208 6300,1202.6 6317,1192.6 6330.6,1183.2"];
+	n39 -> n41	 [_draw_="c 7 -#000000 B 13 5938.23 1219.54 5946.36 1216.25 5954.63 1212.39 5962 1208 6033.67 1165.29 6138.64 1121.35 6080 1062 6057.02 1038.74 \
+3758.69 1034.42 3726 1034 3287.22 1028.32 2759.39 1020.66 2576.33 1017.98 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 2576.11 1014.47 2566.06 1017.83 2576.01 1021.47 ",
+		pos="e,2566.1,1017.8 5938.2,1219.5 5946.4,1216.2 5954.6,1212.4 5962,1208 6033.7,1165.3 6138.6,1121.3 6080,1062 6057,1038.7 3758.7,1034.4 \
+3726,1034 3287.2,1028.3 2759.4,1020.7 2576.3,1018"];
+	n12 -> n14	 [_draw_="c 7 -#000000 B 7 5508.68 868.12 5688.07 865.59 6151.55 857.08 6218 836 6234.5 830.77 6250.89 820.77 6263.94 811.34 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6266.12 814.08 6272.01 805.27 6261.91 808.49 ",
+		pos="e,6272,805.27 5508.7,868.12 5688.1,865.59 6151.5,857.08 6218,836 6234.5,830.77 6250.9,820.77 6263.9,811.34"];
+	n12 -> n13	 [_draw_="c 7 -#000000 B 7 5508.53 867.68 5636.68 864.81 5902.82 856.51 5993 836 6018.46 830.21 6045.57 819.38 6067.06 809.58 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6068.63 812.71 6076.21 805.31 6065.67 806.36 ",
+		pos="e,6076.2,805.31 5508.5,867.68 5636.7,864.81 5902.8,856.51 5993,836 6018.5,830.21 6045.6,819.38 6067.1,809.58"];
+	n161 -> n39	 [_draw_="c 7 -#000000 B 13 4647.94 1377.1 4660.9 1375.18 4674.34 1373.37 4687 1372 4744.55 1365.76 4759.26 1368.15 4817 1364 5261.35 1332.09 \
+5391.27 1416.43 5816 1282 5833.68 1276.4 5851.63 1266.34 5866.04 1256.95 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5868.18 1259.73 5874.52 1251.24 5864.27 1253.93 ",
+		pos="e,5874.5,1251.2 4647.9,1377.1 4660.9,1375.2 4674.3,1373.4 4687,1372 4744.5,1365.8 4759.3,1368.1 4817,1364 5261.3,1332.1 5391.3,1416.4 \
+5816,1282 5833.7,1276.4 5851.6,1266.3 5866,1257"];
+	n6 -> n7	 [_draw_="c 7 -#000000 B 13 5093.71 855.06 5103.76 850.87 5115.19 846.69 5126 844 5159.39 835.71 5168.97 841.06 5203 836 5539.76 785.92 5685.47 \
+898.01 5955 690 5987.73 664.74 6004.1 617.82 6011.56 588.07 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6014.97 588.86 6013.84 578.33 6008.15 587.27 ",
+		pos="e,6013.8,578.33 5093.7,855.06 5103.8,850.87 5115.2,846.69 5126,844 5159.4,835.71 5169,841.06 5203,836 5539.8,785.92 5685.5,898.01 \
+5955,690 5987.7,664.74 6004.1,617.82 6011.6,588.07"];
+	n70 -> n71	 [_draw_="c 7 -#000000 B 10 5588.46 1145.25 5567.37 1140.8 5543.22 1136.4 5521 1134 5177.83 1096.89 4313.07 1114.14 3968 1106 3793.58 1101.88 \
+3589.85 1095.61 3475.28 1091.94 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3475.26 1088.44 3465.15 1091.62 3475.03 1095.44 ",
+		pos="e,3465.2,1091.6 5588.5,1145.2 5567.4,1140.8 5543.2,1136.4 5521,1134 5177.8,1096.9 4313.1,1114.1 3968,1106 3793.6,1101.9 3589.9,1095.6 \
+3475.3,1091.9"];
+	n84 -> n97	 [_draw_="c 7 -#000000 B 31 2953.61 1300.53 2979.01 1296.26 3007.65 1292.15 3034 1290 3202.83 1276.25 5914.54 1299.74 6083 1282 6241.99 1265.26 \
+6334.26 1332.13 6435 1208 6455.73 1182.46 6452.35 1161.94 6435 1134 6295.83 909.95 5903 1134.76 5903 871 5903 871 5903 871 5903 \
+715 5903 633.15 5887.4 599.11 5937 534 5946.82 521.11 6052.29 473.95 6068 470 6079.21 467.18 6267.98 470.33 6276 462 6323.61 412.53 \
+6299.9 322.42 6283.79 277.68 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6286.98 276.22 6280.19 268.09 6280.42 278.68 ",
+		pos="e,6280.2,268.09 2953.6,1300.5 2979,1296.3 3007.6,1292.1 3034,1290 3202.8,1276.2 5914.5,1299.7 6083,1282 6242,1265.3 6334.3,1332.1 \
+6435,1208 6455.7,1182.5 6452.4,1161.9 6435,1134 6295.8,909.95 5903,1134.8 5903,871 5903,871 5903,871 5903,715 5903,633.15 5887.4,\
+599.11 5937,534 5946.8,521.11 6052.3,473.95 6068,470 6079.2,467.18 6268,470.33 6276,462 6323.6,412.53 6299.9,322.42 6283.8,277.68"];
+	n60 -> n65	 [_draw_="c 7 -#000000 B 10 4131.87 1095.57 4348 1114.66 4997.94 1171.08 5538 1208 5601.06 1212.31 5617.5 1206.51 5680 1216 5685.34 1216.81 \
+5690.87 1217.85 5696.37 1219.02 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5695.65 1222.44 5706.17 1221.23 5697.19 1215.61 ",
+		pos="e,5706.2,1221.2 4131.9,1095.6 4348,1114.7 4997.9,1171.1 5538,1208 5601.1,1212.3 5617.5,1206.5 5680,1216 5685.3,1216.8 5690.9,1217.9 \
+5696.4,1219"];
+	n146 -> n147	 [_draw_="c 7 -#000000 B 13 4958.17 1082.88 5294.99 1068.11 6383 1014.83 6383 943 6383 943 6383 943 6383 715 6383 591.27 6224.06 683.45 6126 \
+608 6117.98 601.83 6110.81 593.46 6105.02 585.49 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6107.83 583.41 6099.3 577.13 6102.05 587.36 ",
+		pos="e,6099.3,577.13 4958.2,1082.9 5295,1068.1 6383,1014.8 6383,943 6383,943 6383,943 6383,715 6383,591.27 6224.1,683.45 6126,608 6118,\
+601.83 6110.8,593.46 6105,585.49"];
+	n37 -> n49	 [_draw_="c 7 -#000000 B 19 6058.34 1080.18 6184.91 1071.76 6371.82 1055.83 6397 1034 6428.6 1006.6 6421 984.83 6421 943 6421 943 6421 943 \
+6421 715 6421 669.73 6429.58 647.44 6397 616 6384.27 603.71 6374.94 613.12 6358 608 6333.83 600.69 6307.7 590.33 6286.37 581.2 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6287.5 577.88 6276.94 577.11 6284.72 584.3 ",
+		pos="e,6276.9,577.11 6058.3,1080.2 6184.9,1071.8 6371.8,1055.8 6397,1034 6428.6,1006.6 6421,984.83 6421,943 6421,943 6421,943 6421,715 \
+6421,669.73 6429.6,647.44 6397,616 6384.3,603.71 6374.9,613.12 6358,608 6333.8,600.69 6307.7,590.33 6286.4,581.2"];
+	n37 -> n50	 [_draw_="c 7 -#000000 B 10 5910.1 1070.32 5871.94 1047.2 5812 1001.57 5812 943 5812 943 5812 943 5812 787 5812 743.44 5790.38 696.78 5774.75 \
+668.75 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5777.74 666.92 5769.73 659.99 5771.67 670.4 ",
+		pos="e,5769.7,659.99 5910.1,1070.3 5871.9,1047.2 5812,1001.6 5812,943 5812,943 5812,943 5812,787 5812,743.44 5790.4,696.78 5774.8,668.75"];
+	n58 -> n59	 [_draw_="c 7 -#000000 B 7 5828.99 474.88 5842.13 471.19 5856.23 466.81 5869 462 5888.81 454.53 5910.09 444.58 5927.73 435.76 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5929.79 438.63 5937.13 430.99 5926.63 432.39 ",
+		pos="e,5937.1,430.99 5829,474.88 5842.1,471.19 5856.2,466.81 5869,462 5888.8,454.53 5910.1,444.58 5927.7,435.76"];
+	n62 -> n97	 [_draw_="c 7 -#000000 B 25 3916.86 1005.08 3943.6 1002.23 3973.54 999.48 4001 998 4084.05 993.51 5415.58 1001.1 5498 990 5700.04 962.79 5941 \
+1074.87 5941 871 5941 871 5941 871 5941 715 5941 632.98 5917.67 590.63 5977 534 6031.14 482.33 6259.08 520.3 6306 462 6349.47 407.99 \
+6324.51 372.82 6306 306 6303.1 295.54 6297.62 285.07 6291.95 276.11 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6294.79 274.06 6286.31 267.72 6288.98 277.97 ",
+		pos="e,6286.3,267.72 3916.9,1005.1 3943.6,1002.2 3973.5,999.48 4001,998 4084,993.51 5415.6,1001.1 5498,990 5700,962.79 5941,1074.9 5941,\
+871 5941,871 5941,871 5941,715 5941,632.98 5917.7,590.63 5977,534 6031.1,482.33 6259.1,520.3 6306,462 6349.5,407.99 6324.5,372.82 \
+6306,306 6303.1,295.54 6297.6,285.07 6292,276.11"];
+	n153 -> n154	 [_draw_="c 7 -#000000 B 4 6166.78 395.64 6166.65 385.3 6166.49 371.94 6166.34 360.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6169.84 360.01 6166.21 350.05 6162.84 360.09 ",
+		pos="e,6166.2,350.05 6166.8,395.64 6166.7,385.3 6166.5,371.94 6166.3,360.22"];
+	n78 -> n79	 [_draw_="c 7 -#000000 B 10 3377.4 1301.07 3396.62 1296.61 3418.66 1292.24 3439 1290 3496.49 1283.66 5465.18 1297.14 5521 1282 5539.32 1277.03 \
+5557.78 1266.82 5572.44 1257.18 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5574.76 1259.83 5581.04 1251.3 5570.81 1254.05 ",
+		pos="e,5581,1251.3 3377.4,1301.1 3396.6,1296.6 3418.7,1292.2 3439,1290 3496.5,1283.7 5465.2,1297.1 5521,1282 5539.3,1277 5557.8,1266.8 \
+5572.4,1257.2"];
+	n164 -> n165	 [_draw_="c 7 -#000000 B 7 5509.46 1389.02 5768.71 1388.75 6442.07 1385.91 6541 1364 6565.11 1358.66 6590.49 1347.77 6610.47 1337.82 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6612.22 1340.85 6619.53 1333.19 6609.03 1334.62 ",
+		pos="e,6619.5,1333.2 5509.5,1389 5768.7,1388.7 6442.1,1385.9 6541,1364 6565.1,1358.7 6590.5,1347.8 6610.5,1337.8"];
+	n35 -> n37	 [_draw_="c 7 -#000000 B 13 1698.46 1376.88 1709.83 1374.86 1721.76 1373.07 1733 1372 1853.29 1360.52 3787.19 1366.62 3908 1364 4022.95 1361.51 \
+5896.32 1364.9 5976 1282 6019.66 1236.58 5981.93 1156.01 5957.65 1114.82 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5960.59 1112.91 5952.42 1106.18 5954.61 1116.54 ",
+		pos="e,5952.4,1106.2 1698.5,1376.9 1709.8,1374.9 1721.8,1373.1 1733,1372 1853.3,1360.5 3787.2,1366.6 3908,1364 4023,1361.5 5896.3,1364.9 \
+5976,1282 6019.7,1236.6 5981.9,1156 5957.7,1114.8"];
+	n56 -> n57	 [_draw_="c 7 -#000000 B 10 5822.08 398.83 5836.75 394.52 5853.44 390.32 5869 388 5950.13 375.92 6156.75 391.22 6238 380 6283.8 373.68 6334.65 \
+359.96 6370.93 348.96 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6372.23 352.23 6380.76 345.94 6370.18 345.53 ",
+		pos="e,6380.8,345.94 5822.1,398.83 5836.8,394.52 5853.4,390.32 5869,388 5950.1,375.92 6156.8,391.22 6238,380 6283.8,373.68 6334.7,359.96 \
+6370.9,348.96"];
+	n151 -> n152	 [_draw_="c 7 -#000000 B 22 3620.21 1300.8 3641.49 1296.43 3665.69 1292.19 3688 1290 3707.19 1288.12 6450.11 1294.26 6465 1282 6507.32 1247.15 \
+6489 1215.83 6489 1161 6489 1161 6489 1161 6489 1087 6489 1046.03 6481.85 1024.61 6513 998 6525.75 987.11 6571.91 994.71 6588 990 \
+6608.39 984.03 6629.68 973.77 6646.83 964.35 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6648.9 967.2 6655.9 959.24 6645.47 961.1 ",
+		pos="e,6655.9,959.24 3620.2,1300.8 3641.5,1296.4 3665.7,1292.2 3688,1290 3707.2,1288.1 6450.1,1294.3 6465,1282 6507.3,1247.1 6489,1215.8 \
+6489,1161 6489,1161 6489,1161 6489,1087 6489,1046 6481.8,1024.6 6513,998 6525.7,987.11 6571.9,994.71 6588,990 6608.4,984.03 6629.7,\
+973.77 6646.8,964.35"];
+	n67 -> n19	 [_draw_="c 7 -#000000 B 7 5506.71 1011.65 5616 1007.64 5798.29 1000.17 5955 990 6130.88 978.58 6337.45 959.82 6443.42 949.8 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6444.05 953.26 6453.67 948.83 6443.38 946.29 ",
+		pos="e,6453.7,948.83 5506.7,1011.6 5616,1007.6 5798.3,1000.2 5955,990 6130.9,978.58 6337.5,959.82 6443.4,949.8"];
+	n158 -> n143	 [_draw_="c 7 -#000000 B 10 4714.45 702.83 4726.18 700.84 4738.44 699.08 4750 698 4873.8 686.45 5744.73 694 5869 690 6129.18 681.62 6435.28 \
+661.29 6589.49 650.32 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6590.16 653.78 6599.88 649.57 6589.66 646.8 ",
+		pos="e,6599.9,649.57 4714.5,702.83 4726.2,700.84 4738.4,699.08 4750,698 4873.8,686.45 5744.7,694 5869,690 6129.2,681.62 6435.3,661.29 \
+6589.5,650.32"];
+	n158 -> n172	 [_draw_="c 7 -#000000 B 10 4714.45 702.8 4726.17 700.81 4738.44 699.06 4750 698 4806.68 692.8 6743.09 700.67 6799 690 6826.21 684.81 6855.17 \
+673.64 6877.82 663.5 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6879.49 666.58 6887.12 659.23 6876.57 660.22 ",
+		pos="e,6887.1,659.23 4714.5,702.8 4726.2,700.81 4738.4,699.06 4750,698 4806.7,692.8 6743.1,700.67 6799,690 6826.2,684.81 6855.2,673.64 \
+6877.8,663.5"];
+	n50 -> n153	 [_draw_="c 7 -#000000 B 16 5824.76 629.1 5839.38 624.27 5854.06 617.5 5866 608 5895.77 584.33 5883.22 561.97 5909 534 5942.76 497.38 5954.55 \
+487.97 6001 470 6026.5 460.14 6035.69 469.44 6062 462 6084.63 455.6 6108.65 445.15 6128 435.72 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6129.7 438.78 6137.1 431.2 6126.58 432.52 ",
+		pos="e,6137.1,431.2 5824.8,629.1 5839.4,624.27 5854.1,617.5 5866,608 5895.8,584.33 5883.2,561.97 5909,534 5942.8,497.38 5954.5,487.97 \
+6001,470 6026.5,460.14 6035.7,469.44 6062,462 6084.6,455.6 6108.6,445.15 6128,435.72"];
+	n143 -> n145	 [_draw_="c 7 -#000000 B 7 6637.15 626.67 6618.66 621.24 6597.77 614.73 6579 608 6556.47 599.92 6531.89 589.76 6511.52 580.96 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6512.75 577.68 6502.18 576.89 6509.95 584.09 ",
+		pos="e,6502.2,576.89 6637.1,626.67 6618.7,621.24 6597.8,614.73 6579,608 6556.5,599.92 6531.9,589.76 6511.5,580.96"];
+	n122 -> n97	 [_draw_="c 7 -#000000 B 4 5327.92 322.66 5549.53 305.86 6043.35 268.41 6213.8 255.49 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6214.13 258.97 6223.83 254.73 6213.6 251.99 ",
+		pos="e,6223.8,254.73 5327.9,322.66 5549.5,305.86 6043.3,268.41 6213.8,255.49"];
+	n13 -> n69	 [_draw_="c 7 -#000000 B 10 6077.27 805.27 6054.66 816.31 6022.8 829.95 5993 836 5923.85 850.04 5428.21 837.01 5358 844 5336.3 846.16 5312.86 \
+850.04 5291.79 854.11 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5291.1 850.67 5281.97 856.05 5292.46 857.54 ",
+		pos="e,5282,856.05 6077.3,805.27 6054.7,816.31 6022.8,829.95 5993,836 5923.8,850.04 5428.2,837.01 5358,844 5336.3,846.16 5312.9,850.04 \
+5291.8,854.11"];
+	n13 -> n114	 [_draw_="c 7 -#000000 B 10 6075.61 805.09 6053.01 815.59 6021.85 828.68 5993 836 5637.29 926.26 5536.05 877.7 5172 924 5162.65 925.19 5152.88 \
+926.52 5143.17 927.9 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 5142.49 924.47 5133.09 929.36 5143.49 931.39 ",
+		pos="e,5133.1,929.36 6075.6,805.09 6053,815.59 6021.8,828.68 5993,836 5637.3,926.26 5536,877.7 5172,924 5162.7,925.19 5152.9,926.52 5143.2,\
+927.9"];
+	n42 -> n38	 [_draw_="c 7 -#000000 B 13 5840.88 1176.88 5817.61 1187.88 5784.66 1201.65 5754 1208 5736.95 1211.53 3265.41 1281.69 3248 1282 3180.95 1283.21 \
+2107.66 1282.73 2041 1290 2022.88 1291.98 2003.43 1295.54 1985.69 1299.36 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 1984.47 1296.05 1975.47 1301.63 1985.99 1302.88 ",
+		pos="e,1975.5,1301.6 5840.9,1176.9 5817.6,1187.9 5784.7,1201.6 5754,1208 5737,1211.5 3265.4,1281.7 3248,1282 3181,1283.2 2107.7,1282.7 \
+2041,1290 2022.9,1292 2003.4,1295.5 1985.7,1299.4"];
+	n140 -> n57	 [_draw_="c 7 -#000000 B 7 5836.92 549.23 5963.49 533.22 6199.95 499.42 6276 462 6327.48 436.67 6374.41 387.65 6399.92 357.88 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6402.77 359.93 6406.53 350.02 6397.41 355.42 ",
+		pos="e,6406.5,350.02 5836.9,549.23 5963.5,533.22 6199.9,499.42 6276,462 6327.5,436.67 6374.4,387.65 6399.9,357.88"];
+	n59 -> n97	 [_draw_="c 7 -#000000 B 10 6012.96 398.67 6028.11 394.51 6045.14 390.44 6061 388 6080.46 385.01 6222.64 392.31 6238 380 6268.16 355.83 6273.89 \
+308.51 6274.21 278.39 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6277.71 278.12 6274.12 268.15 6270.71 278.18 ",
+		pos="e,6274.1,268.15 6013,398.67 6028.1,394.51 6045.1,390.44 6061,388 6080.5,385.01 6222.6,392.31 6238,380 6268.2,355.83 6273.9,308.51 \
+6274.2,278.39"];
+	n59 -> n34	 [_draw_="c 7 -#000000 B 7 5928.73 397.84 5833.48 360.98 5577.35 267.1 5354 232 5145.33 199.21 3624.99 182.96 3276.19 179.65 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3276 176.14 3265.97 179.55 3275.93 183.14 ",
+		pos="e,3266,179.55 5928.7,397.84 5833.5,360.98 5577.4,267.1 5354,232 5145.3,199.21 3625,182.96 3276.2,179.65"];
+	n59 -> n96	 [_draw_="c 7 -#000000 B 10 5920.59 398.69 5904.43 394.37 5886.07 390.19 5869 388 5787.56 377.55 4473.05 383.27 4391 380 4195.05 372.19 3965.59 \
+352.47 3844.27 341.21 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 3844.58 337.73 3834.3 340.28 3843.93 344.7 ",
+		pos="e,3834.3,340.28 5920.6,398.69 5904.4,394.37 5886.1,390.19 5869,388 5787.6,377.55 4473,383.27 4391,380 4195,372.19 3965.6,352.47 \
+3844.3,341.21"];
+	n163 -> n152	 [_draw_="c 7 -#000000 B 16 4896.87 1377.08 4911.87 1375.19 4927.38 1373.39 4942 1372 5113.84 1355.63 6341.61 1364.95 6493 1282 6515.61 1269.61 \
+6527 1260.78 6527 1235 6527 1235 6527 1235 6527 1087 6527 1027.21 6589.67 985.23 6635.31 962.59 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 6636.98 965.67 6644.48 958.19 6633.95 959.36 ",
+		pos="e,6644.5,958.19 4896.9,1377.1 4911.9,1375.2 4927.4,1373.4 4942,1372 5113.8,1355.6 6341.6,1364.9 6493,1282 6515.6,1269.6 6527,1260.8 \
+6527,1235 6527,1235 6527,1235 6527,1087 6527,1027.2 6589.7,985.23 6635.3,962.59"];
+}

@@ -1,0 +1,8 @@
+command menu_SendMessageError tError
+   -- seems to throw a recursive error with 'revSetActiveStacks"
+   put merge("Error, there is no handler for '[[pigeon]]'... in the controller '[[mController]]'. The mPath was '[[mPath]]'") & CR & CR & tError into errorComment
+   log_Error errorComment,  "menu_SendMessage", true, true
+   
+   display_ActiveMenuArray
+   menu_ClearTargetGlobals
+end menu_SendMessageError

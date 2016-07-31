@@ -1,0 +1,11 @@
+command array_Save someFile, modelArray
+   if keys(modelArray) is empty then
+      -- file_Delete someFile
+      delete file someFile
+   else
+      set the itemdelimiter to "/"
+      put item 1 to -2 of someFile into someFolder
+      folder_CreateNested someFolder
+      put arrayencode (modelArray) into url ("binfile:" & someFile)
+   end if
+end array_Save

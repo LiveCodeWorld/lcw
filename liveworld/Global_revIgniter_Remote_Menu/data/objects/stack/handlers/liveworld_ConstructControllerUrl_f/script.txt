@@ -1,0 +1,17 @@
+function liveworld_ConstructControllerUrl controllerName, shortControllerFile
+   set the itemdelimiter to "."
+   put item 1 of shortControllerFile into restPath
+   put "https://" & server_GetURL() & "/" into restURL
+   
+   set the itemdelimiter to "."
+   put item 1 of controllerName after restURL
+   
+   switch restPath
+      case empty
+      case "index"
+         return restURL
+      default
+         put "/" &  restPath after restURL
+         return restURL
+   end switch
+end liveworld_ConstructControllerUrl

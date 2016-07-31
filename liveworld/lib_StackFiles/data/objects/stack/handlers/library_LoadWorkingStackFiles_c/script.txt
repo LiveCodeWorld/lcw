@@ -1,0 +1,4 @@
+command library_LoadWorkingStackFiles pSetName
+   put library_FetchStackFiles (pSetName) into stackFileTable
+   library_SetStackFiles stackFileTable
+end library_LoadWorkingStackFiles

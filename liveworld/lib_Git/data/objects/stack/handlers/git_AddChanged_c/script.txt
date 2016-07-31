@@ -1,0 +1,17 @@
+command git_AddChanged someFile
+   /*
+   -u, --update
+   Update only files that git already knows about, staging modified content for commit and marking
+   deleted files for removal. This is similar to what "git commit -a" does in preparation for making a
+   commit, except that the update is limited to paths specified on the command line. If no paths are
+   specified, all tracked files in the current directory and its subdirectories are updated.
+   */
+   
+   put "git add --update" into someShell
+   if someFile is not empty then
+      shell_BashParamEscape someFile
+      put space & "--" && someFile after someShell
+   end if
+   put git_ExecuteShellCommand(someShell) into shellResult
+   return shellResult
+end git_AddChanged

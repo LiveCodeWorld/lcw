@@ -1,0 +1,5 @@
+command rev_SetScriptEditorActivatePane paneName, pEditorNum
+   put rev_ScriptEditorPaneTabsGroup (pEditorNum) into scriptEditorPanesGroup
+   dispatch "setCurrentTab" to scriptEditorPanesGroup with paneName
+   return it
+end rev_SetScriptEditorActivatePane

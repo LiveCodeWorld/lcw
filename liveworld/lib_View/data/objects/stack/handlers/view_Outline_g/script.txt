@@ -1,0 +1,8 @@
+getprop view_Outline
+   local propertyArray, someOutline
+   
+   put the long id of the target into targetObject
+   view_SearchNested targetObject, propertyArray, someOutline, 0
+   delete char -1 of someOutline
+   return someOutline
+end view_Outline

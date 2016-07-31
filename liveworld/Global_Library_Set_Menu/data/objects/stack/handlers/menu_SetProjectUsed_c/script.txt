@@ -1,0 +1,15 @@
+on menu_SetProjectUsed mTarget, projectName
+   put merge ("Set project '[[projectName]]' to the use the selected stacks?") into someQuestion
+   
+   put the lib_Group of mTarget into libGroup
+   put the selected_Stacks of libGroup into stackObjects
+   
+   put stackObjects
+   answer someQuestion with "Cancel" or "OK"
+   if it is "Cancel" then exit to top
+   
+   project_SetUsedStacks stackObjects, projectName
+   dispatch "display_ProjectArray" to mTarget with projectName
+   
+   answer "Saved stacks to project!"
+end menu_SetProjectUsed

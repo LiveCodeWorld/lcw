@@ -1,0 +1,14 @@
+command object_OutlineFromNameArray objectArray, @objectOutline, @objectOutline_Array, pathDelim
+   if pathDelim is empty then put "/" into pathDelim
+   put empty into objectOutline
+   repeat for each line someKey in keys(objectArray)
+      put objectArray[someKey] into objectIndex
+      put somekey & return after objectOutline
+      
+      put someKey & pathDelim into pathStem
+      put object_ShortNamesFromIndex(objectIndex, objectOutline_Array, pathStem) into outlineSection
+      if outlineSection is not empty then put outline_IncreaseIndent(outlineSection, 1) & return after objectOutline
+   end repeat
+   delete last char of objectOutline
+   return keys(objectOutline_Array)
+end object_OutlineFromNameArray

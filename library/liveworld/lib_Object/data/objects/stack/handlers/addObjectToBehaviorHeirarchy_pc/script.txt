@@ -1,0 +1,30 @@
+private command addObjectToBehaviorHeirarchy longObject, @dictionaryArray, @longObjects, @shortObjects, @shortNames, @behaviorObjectMenu
+   put the name of longObject into shortObject
+   put token 2 of shortObject into shortName
+   
+   -- add object to index
+   put CR & longObject before longObjects
+   put CR & shortObject before shortObjects
+   put CR & shortName before shortNames
+   put CR & shortObject before behaviorObjectMenu
+   
+   put longObject into dictionaryArray [shortObject]
+   put longObject into dictionaryArray [shortName]
+   
+   -- add behavior to index
+   put the behavior of longObject into behaviorObject
+   if exists (behaviorObject) then
+      put the long ID of behaviorObject into behaviorObject
+      put the name of behaviorObject into shortObject
+      put token 2 of shortObject into shortName
+      
+      put CR & behaviorObject before longObjects
+      put CR & shortObject before shortObjects
+      put CR & shortName before shortNames
+      put CR & tab & "behavior" after line 2 of behaviorObjectMenu
+      put CR & tab & "script" after line 2 of behaviorObjectMenu
+      
+      put behaviorObject into dictionaryArray [shortObject]
+      put behaviorObject into dictionaryArray [shortName]
+   end if
+end addObjectToBehaviorHeirarchy

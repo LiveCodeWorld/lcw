@@ -1,0 +1,155 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_DisplayHkeyCard
+type: behavior
+version: 0.2
+
+/*
+This behavior is for the card "Display Hkey" of stack libOPN_Hkey
+
+Don't use it as a library because it will muck up the menus globally.
+*/
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Target,g) ]]
+
+-- getprop menu_ToolTitle
+return "Global | Title | Controller | Menu"
+end menu_ToolTitle
+
+[[ _FetchHandler (menu_Version,g) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (closeField,c) ]]
+
+[[ _FetchHandler (selectionChanged,c) ]]
+
+[[ _FetchHandler (mouseDoubleUp,c) ]]
+
+[[ _FetchHandler (linkClicked,c) ]]
+
+[[ _FetchHandler (link_DictionaryLink,c) ]]
+
+
+--> Events | Stuff
+-
+[[ _FetchHandler (hkey_FindHandler,f) ]]
+
+[[ _FetchHandler (click_Handler,c) ]]
+
+
+--> Events | Custom
+-
+[[ _FetchHandler (overlay_MouseUp,c) ]]
+
+[[ _FetchHandler (overlay_MouseDoubleUp,c) ]]
+
+[[ _FetchHandler (record_Views,g) ]]
+
+[[ _FetchHandler (record_Colour,s) ]]
+
+
+--> Menu | Props
+-
+local LocalArray
+
+[[ _FetchHandler (menu_Title,g) ]]
+
+
+--> Display
+-
+[[ _FetchHandler (display_HkeyHelp,c) ]]
+
+[[ _FetchHandler (display_ProjectHkeyHelp,c) ]]
+
+[[ _FetchHandler (display_HkeyLibraryHelp,c) ]]
+
+-- command display_HiliteHkeyRecord hKey
+put the dataGrid_View of me into dgView
+
+-- put the dgDataOfIndex [pHilitedIndex] of dgView into recordArray
+put recordArray ["hkey"] into hKey
+put recordArray ["hkey"] into pDisplayedHelpHKey
+
+display_HkeyHelp hKey
+end display_HiliteHkeyRecord
+
+
+--> Display | Props
+-
+[[ _FetchHandler (displayed_Hkeys,g) ]]
+
+[[ _FetchHandler (displayed_Hkeys,s) ]]
+
+[[ _FetchHandler (display_ProjectHandlers,g) ]]
+
+[[ _FetchHandler (display_ProjectHandlers,s) ]]
+
+[[ _FetchHandler (hkey_Type,g) ]]
+
+[[ _FetchHandler (hkey_Type,s) ]]
+
+
+--> Field | HyperText | Menu
+-
+[[ _FetchHandler (menu_Link,c) ]]
+
+
+--> Overlay
+-
+[[ _FetchHandler (overlay_Folder,g) ]]
+
+
+--> Data
+-
+[[ _FetchHandler (dg_Refresh,c) ]]
+
+[[ _FetchHandler (dg_SelectedHkey,g) ]]
+
+[[ _FetchHandler (dg_SelectedHkey,s) ]]
+
+[[ _FetchHandler (selected_Hkey,g) ]]
+
+[[ _FetchHandler (dg_FindLine,f) ]]
+
+[[ _FetchHandler (dg_Index,g) ]]
+
+[[ _FetchHandler (dg_FillInData,c) ]]
+
+
+--> Layout | Options
+-
+[[ _FetchHandler (image_Visible,g) ]]
+
+[[ _FetchHandler (image_Visible,s) ]]
+
+[[ _FetchHandler (displayed_ImageFile,g) ]]
+
+[[ _FetchHandler (displayed_HkeyGraph,s) ]]
+
+
+--> Displayed | Hkey
+-
+[[ _FetchHandler (displayed_HelpHkey,g) ]]
+
+[[ _FetchHandler (displayed_HelpHkey,s) ]]
+
+getprop displayed_ImageFile
+   put the image_File of the hkey_ImageView of me into imageFile
+   return imageFile
+end displayed_ImageFile
+
+[[ _FetchHandler (displayed_ImageFile,s) ]]
+
+[[ _FetchHandler (displayed_Hkey,g) ]]
+
+[[ _FetchHandler (displayed_Hkey,s) ]]
+
+[[ _FetchHandler (displayed_Handler,g) ]]
+
+[[ _FetchHandler (displayed_Script,g) ]]

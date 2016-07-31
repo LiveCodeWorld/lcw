@@ -1,0 +1,21 @@
+private command newUpdate someScript, scriptObject, relativeFile, someFile
+   -- timer_Add "git_ScriptDiff"
+   -- put the git_ScriptDiff of scriptObject into gitDiif
+   -- timer_Add "git_ScriptDiff"
+   
+   timer_Add "hdb_ScriptUpdate"
+   hdb_ScriptUpdate someScript, scriptObject, relativeFile
+   timer_Add "hdb_ScriptUpdate"
+   
+   timer_Add "git_CommitFile"
+   -- if pAutoCommit is true then  
+   put the script_CommitComment of the target into commitComment
+   git_CommitFile someFile, commitComment, true, true
+   put the result into commitResult
+   timer_Add "git_CommitFile"
+   
+   timer_Display
+   display_Lines gitDiif, "gitDiif"
+   display_Lines commitResult, "commitResult"
+   return someDiff
+end newUpdate

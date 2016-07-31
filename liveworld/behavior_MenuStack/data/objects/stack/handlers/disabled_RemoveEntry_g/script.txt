@@ -1,0 +1,6 @@
+getprop disabled_RemoveEntry
+   put the dg_Tree of me into cardTree
+   put the tree_SelectedIndex of cardTree into mTitle
+   put menu_GetGlobalController(mTitle) into mController
+   return exists(mController) is false
+end disabled_RemoveEntry

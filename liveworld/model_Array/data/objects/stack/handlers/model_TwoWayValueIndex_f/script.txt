@@ -1,0 +1,4 @@
+function model_TwoWayValueIndex modelName, modelObject, modelType
+   put model_GetArray(modelName, modelObject, modelType) into dataArray
+   return dictionary_ValueIndex (dataArray)
+end model_TwoWayValueIndex

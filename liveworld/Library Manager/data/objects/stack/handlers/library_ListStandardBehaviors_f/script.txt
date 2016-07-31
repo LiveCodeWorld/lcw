@@ -1,0 +1,9 @@
+function library_ListStandardBehaviors
+   put the behaviorButton_Card of me into behaviorButtonCard
+   repeat with btnNum = 1 to the number of buttons on behaviorButtonCard
+      put the long id of btn btnNum of behaviorButtonCard into behaviorObject
+      put behaviorObject & CR after behaviorObjects
+   end repeat
+   delete char -1 of behaviorObjects
+   return behaviorObjects
+end library_ListStandardBehaviors

@@ -1,0 +1,9 @@
+getprop video_Inputs [imageView]
+   put revCaptureListVideoInputs() into videoInputs
+   if videoInputs is empty then
+      return "default,none"
+   else
+      put "default,none,-" & CR before videoInputs
+      return videoInputs
+   end if
+end video_Inputs

@@ -1,0 +1,64 @@
+private command xml_ConvertArrayDimensionToXML pArray, pTreeID, pNode, pArrayEncoding, pStoreEncodedAs
+   /*
+   -- Helper function for xml_FromArray
+   -- Converts the multi-dimensional array pArray to nodes in pTreeID.-- Calls itself recursively.
+   -- Returns error message.
+   */
+   local theError, theKey, theKeys, theNode
+   
+   ## A workaround for fact that Revolution does not return
+   ## keys in the order we created them
+   put false into stripMetaKeys
+   put xml_SortArrayKeysWithXMLOrdering(pArray, stripMetaKeys) into theNodes
+   
+   ## Arrays might have sequencing info in name
+   ## (i.e. step[1], step[2], ... )
+   set the itemdelimiter to "["
+   
+   repeat for each line theFullNode in theNodes
+      put item 1 of theFullNode into theNode
+      
+      ## Look for attributes. These will be added as attributes to pNode.
+      if theNode is "@attributes" or theNode is "@attr" then
+         repeat for each line theKey in the keys of pArray[theFullNode]
+            revSetXMLAttribute pTreeID, pNode, theKey, xml_EncodeString(pArray[theFullNode][theKey], pArrayEncoding, pStoreEncodedAs)
+            if the result begins with "xmlerr," then
+               put the result && "(setting attribute" && theKey && "for node" && pNode & ")" into theError
+            end if
+            
+            if theError is not empty then exit repeat
+         end repeat
+         
+      else if theNode is "@value" then
+         ## This XML tree is using complex structure. Node is the value of the parent node
+         revPutIntoXMLNode pTreeID, pNode, xml_EncodeString(pArray[theFullNode], pArrayEncoding, pStoreEncodedAs)
+         if the result begins with "xmlerr," then
+            put the result && "(adding child node" && theNode && "to node" && pNode & ")" into theError
+         end if
+         
+      else
+         if the keys of pArray[theFullNode] is not empty then
+            ## Node has children. Add node to XML tree then call self recursivly to create children nodes.
+            revAddXMLNode pTreeID, pNode, theNode, empty
+            if the result begins with "xmlerr," then
+               put the result && "(adding node" && theNode & ")" into theError
+            end if
+            
+            if theError is empty then
+               xml_ConvertArrayDimensionToXML pArray[theFullNode], pTreeID, pNode & slash & theFullNode, pArrayEncoding, pStoreEncodedAs
+               put the result into theError
+            end if
+         else
+            ## Node has no children but possibly a value. Create node and add value (which may be empty).
+            revAddXMLNode pTreeID, pNode, theNode, xml_EncodeString(pArray[theFullNode], pArrayEncoding, pStoreEncodedAs)
+            if the result begins with "xmlerr," then
+               put the result && "(adding child node" && theNode && "to node" && pNode & ")" into theError
+            end if
+         end if
+      end if
+      
+      if theError is not empty then exit repeat
+   end repeat
+   
+   return theError
+end xml_ConvertArrayDimensionToXML

@@ -1,0 +1,10 @@
+command digitalocean_DeleteArecord oceanDomainName, subDomain
+   -- slow. Consider using an asychnronous call?
+   put digitalocean_FetchArecordID (oceanDomainName, subDomain) into recordID
+   if recordID is empty then
+      return merge("error, can't find A record for [[subDomain]] of [[oceanDomainName]]")
+   end if
+   digitalocean_DeleteDomainRecord oceanDomainName, recordID
+   put the result into theResult
+   return theResult
+end digitalocean_DeleteArecord

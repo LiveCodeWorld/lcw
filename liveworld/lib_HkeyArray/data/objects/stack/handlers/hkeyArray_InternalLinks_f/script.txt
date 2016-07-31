@@ -1,0 +1,30 @@
+function hkeyArray_InternalLinks hkeyArray, targetObject
+    set the wholematches to true
+    repeat for each key hKey in hkeyArray
+        set the cursor to busy
+        script_DeconstructHkey hKey, handlerName, handlerType, handlerNum, scriptObject
+        if exists(scriptObject) is false then
+            next repeat
+        end if
+         
+        if object_Contains(targetObject, scriptObject) is false then
+            delete local hkeyArray [hKey]
+        else
+            put hkeyArray [hKey] into handlerCalls
+            put empty into filteredCalls
+            repeat for each line callKey in handlerCalls
+                script_DeconstructHkey callKey, handlerName, handlerType, handlerNum, callObject
+                if exists(callObject) is false then
+                    put callKey & CR after filteredCalls
+                    next repeat
+                end if
+                if object_Contains(targetObject, callObject) then
+                    put callKey & CR after filteredCalls
+                end if
+            end repeat
+            delete last char of filteredCalls
+            put filteredCalls into hkeyArray [hKey]
+        end if
+    end repeat
+    return hkeyArray
+end hkeyArray_InternalLinks

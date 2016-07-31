@@ -1,0 +1,29 @@
+command rect_MouseDownDraw startLoc, imageView
+    if imageView is empty then
+        put the image_View of the target into imageView
+        if exists(imageView) is false then return empty
+    end if
+    if startLoc is empty then put the clickloc into startLoc
+    put the short id of the view_Object of the target into insideID
+     
+    put startLoc & "," & the mouseloc into someRect
+    if someRect is not a rect then return empty
+    
+    put empty into someScript
+    rect_CreateTestButton someRect, "_ZoomRectSelector", someScript, insideID, "yellow"
+    put the result into zoomButton
+    unlock screen
+    
+    repeat until the mouse is "Up"
+        put startLoc & "," & the mouseloc into someRect
+        if someRect is a rect then
+            set the rect of zoomButton to someRect
+        end if
+        -- unlock screen
+    end repeat
+    put the rect of zoomButton into zoomRect
+    delete zoomButton
+    
+    -- image_ScaleWithin zoomRect, imageView
+    return zoomRect
+end rect_MouseDownDraw

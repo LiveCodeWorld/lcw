@@ -1,0 +1,6 @@
+setprop field_TextSize someSize
+   put the field_Object of the target into fieldObject
+   if exists(fieldObject) is false then return empty
+   
+   set the textSize of fieldObject to someSize
+end field_TextSize

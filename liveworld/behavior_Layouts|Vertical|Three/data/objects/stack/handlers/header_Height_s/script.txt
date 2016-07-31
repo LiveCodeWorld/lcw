@@ -1,0 +1,5 @@
+setprop header_Height someHeight
+   put someHeight into LocalArray ["header_Height"]
+   LayoutControl
+   return the result
+end header_Height

@@ -1,0 +1,13 @@
+getprop object_MetaData [uRipKey]
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   put script_GetMetadataArray (someScript) into scriptMetaDataArray
+   put the customproperties ["uRIP"] of scriptObject into uRipArray
+   
+   union scriptMetaDataArray with uRipArray
+   if uRipKey is empty then
+      return scriptMetaDataArray
+   else
+      return scriptMetaDataArray [uRipKey]
+   end if
+end object_MetaData

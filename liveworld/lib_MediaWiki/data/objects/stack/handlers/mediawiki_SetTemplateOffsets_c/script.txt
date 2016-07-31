@@ -1,0 +1,32 @@
+command mediawiki_SetTemplateOffsets templateName, wikiText, @startWikiTemplate, @testEndNum
+   -- {{Infobox
+   put "[^\}]+" into untilCurlyBracket
+   put "(\{\{" & templateName & untilCurlyBracket & "\}\})" into someReg
+   put "(?m)" before someReg -- multiline search
+   
+   repeat
+      if matchchunk (wikiText, someReg, startWikiTemplate, endWikiTemplate) is true then
+         put startWikiTemplate into testStartNum
+         put endWikiTemplate into testEndNum
+         repeat
+            put _letsFindNestedStartBracketNum (testStartNum, testEndNum, wikiText) into foundNum
+            if foundNum = 0 then
+               exit repeat
+            else
+               --  let's go get stuff till the end of foundNum closing brackets
+               put _lastNestedBracket (wikiText, foundNum, testEndNum) into newTestEndNum
+               put testEndNum into testStartNum
+               put newTestEndNum into testEndNum
+            end if
+         end repeat
+         
+         put testEndNum into endWikiTemplate
+         put char startWikiTemplate to endWikiTemplate of wikiText into foundTemplate
+         return foundTemplate
+      else
+         put 0 into startWikiTemplate
+         put 0 into endWikiTemplate
+         return empty
+      end if
+   end repeat
+end mediawiki_SetTemplateOffsets

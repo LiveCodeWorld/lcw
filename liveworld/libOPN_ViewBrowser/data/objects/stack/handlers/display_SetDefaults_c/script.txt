@@ -1,0 +1,6 @@
+on display_SetDefaults
+   put the viewBrowser_DataGrid of me into dgView
+   set the dgProps ["style"] of dgView to "form"
+   set the dgProps ["fixed row height"] of dgView to false
+   set the record_ViewName of dgView to "View|Record|View Info"
+end display_SetDefaults

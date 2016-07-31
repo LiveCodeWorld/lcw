@@ -1,0 +1,14 @@
+command _DisplayFoundDifferences someObjects, someComment
+   put script_ConstructExportErrorArray (someObjects) into exportErrorArray
+   
+   if exportErrorArray is not an array then
+      opn_Notify someComment, true
+      return empty
+   end if
+   
+   put "Scripts which differ from exported scripts" into someTitle
+   display_Array exportErrorArray, someTitle, "Global | Script | Duplicates | Menu", "Global | Script | Duplicates | Line | Menu", empty, "display_ObjectScript"
+   put the result into treeView
+ 
+   return exportErrorArray
+end _DisplayFoundDifferences

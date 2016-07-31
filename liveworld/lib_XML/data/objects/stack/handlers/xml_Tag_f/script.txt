@@ -1,0 +1,19 @@
+function xml_Tag someString, tagName
+    -- see also "xml_Enclose"
+    -- was "encloseInTag", "xml_ConstructTag"
+     
+    put "<" & tagName into taggedText
+    put 2 into attributNum
+    get the paramcount
+    put it/2 - 1 into attributeCount
+    repeat attributeCount
+        put 2 * attributNum into paramNum
+        put param (paramNum - 1) into attributeName
+        put param(paramNum) into attributeValue
+        put space & attributeName & "=" & kwote(attributeValue) after taggedText
+        add 1 to attributNum
+    end repeat
+    
+    put ">" & someString & "</" & word 1 of tagName & ">" after taggedText
+    return taggedText
+end xml_Tag

@@ -1,0 +1,32 @@
+command folder_ConstructStackArrays @stackNameArray, @bigFileIndex, someFolder, searchNested, skipArchives, excludedFolderList	# recursive function
+    -- was "file_RecursiveStackSearch"
+    -- seems to look at files several times ???
+    if excludedFolderList is empty then put "CVS,retired,archive" into excludedFolderList
+    if skipArchives is not false and (char 1 of someFolder is "." or someFolder is among the items of excludedFolderList) then
+        return empty	# skip CVS folders
+    end if
+     
+    put the directory into oFolder
+    set the directory to someFolder
+    put the files into shortFiles
+     
+    folder_Format someFolder
+    _FilterAndAddStacks shortFiles, someFolder, stackNameArray, bigFileIndex
+     
+    if searchNested is not false then
+        put the folders into tFolderList
+        delete line 1 of tFolderList
+        repeat for each line tFolder in tFolderList
+            if the controlkey is "Down" then return foundFiles	# allow an exit?
+            if skipArchives is not false and (char 1 of tFolder is "." or tFolder is among the items of excludedFolderList) then
+                next repeat	# skip CVS folders
+            end if
+             
+            put someFolder & tFolder & "/" into tNuFolder
+            folder_ConstructStackArrays stackNameArray, bigFileIndex, tNuFolder, searchNested, skipArchives, excludedFolderList
+        end repeat
+    end if
+     
+    set the directory to oFolder
+    return ""
+end folder_ConstructStackArrays

@@ -1,0 +1,5 @@
+function text_StripQuoted someText
+   put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
+   put replaceText (someText, someReg, "еее") into strippedText
+   return strippedText
+end text_StripQuoted

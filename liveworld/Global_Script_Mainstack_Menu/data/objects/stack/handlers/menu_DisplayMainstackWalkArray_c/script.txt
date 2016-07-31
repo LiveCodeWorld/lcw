@@ -1,0 +1,4 @@
+on menu_DisplayMainstackWalkArray scriptObject
+   put the mainstack_WalkArray of scriptObject into mainStackWalkArray   
+   display_Array mainStackWalkArray, "the mainstack_WalkArray of scriptObject"
+end menu_DisplayMainstackWalkArray

@@ -1,0 +1,7 @@
+on menu_ConvertViewBehavior scriptObject
+   put "Choose a name for your script only menu stack...." into pQuestion
+   put "Global_Example_Menu" into suggestedAnswer
+   
+   put the script of scriptObject into bScript
+   lcw_CreateLibrary "controller", pQuestion, suggestedAnswer
+end menu_ConvertViewBehavior

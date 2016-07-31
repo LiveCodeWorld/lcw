@@ -1,0 +1,8 @@
+command library_StartBack pSetName
+   put library_FetchObjects ("back", pSetName) into backObjects
+   repeat for each line someObject in backObjects
+      if exists(someObject) then
+         insert the script of someObject into back
+      end if
+   end repeat
+end library_StartBack

@@ -1,0 +1,14 @@
+function text_OffsetBefore someString, someText, beforeHere
+   if beforeHere is not empty then
+      delete char beforeHere to -1 of someText
+   end if
+   put 0 into skipNum
+   repeat
+      get offset (someString, someText, skipNum)
+      if it is 0 then
+         return skipNum
+      else
+         add it to skipNum
+      end if
+   end repeat
+end text_OffsetBefore

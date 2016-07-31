@@ -1,0 +1,16 @@
+function spotlight_FindFile fileBit, pFolder
+   put "mdfind" into someShell
+   
+   if pFolder is not empty then
+      shell_BashParamEscape pFolder
+      put space & "-onlyin" && pFolder after someShell
+   end if
+   
+   if fileBit is not empty then
+      shell_BashParamEscape fileBit
+      put space & "-name" && fileBit after someShell
+   end if
+   
+   put shell (someShell) into shellResult
+   return shellResult
+end spotlight_FindFile

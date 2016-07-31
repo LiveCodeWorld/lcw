@@ -1,0 +1,13 @@
+function folder_AddStackBit dataOrMetadata, textStackFolder, someObject
+   put the stack_Object of someObject into stackObject
+   put the short name of stackObject into stackName
+   put the mainstack of stackObject into mainStackName
+   
+   if stackName = mainStackName then
+      put textStackFolder & dataOrMetadata & "/objects/" into stackFolder
+   else
+      put textStackFolder & dataOrMetadata & "/objects/substacks/" & stackName & "/" into stackFolder
+      -- put dataOrMetadata & "/objects/"  after stackFolder
+   end if
+   return stackFolder
+end folder_AddStackBit

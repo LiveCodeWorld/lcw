@@ -1,0 +1,5 @@
+on menu_SetMyName svgView
+   put the name of svgView into oldName
+   put opn_Ask ("Give this group and title a name...", oldName) into someName
+   set the name of svgView to someName
+end menu_SetMyName

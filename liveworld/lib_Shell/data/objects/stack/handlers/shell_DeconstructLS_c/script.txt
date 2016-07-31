@@ -1,0 +1,90 @@
+command shell_DeconstructLS someLine, @shortFileName, @filePermissions, @ownerName, @groupName, @fileSize, @lastModified, @lsType, @numberOfLinks
+   -- file mode
+   put word 1 of someLine into fileMode
+   put char 1 of fileMode into lsType
+   put char 2 to -1 of fileMode into filePermissions
+   
+   -- number of links
+   put word 2 of someLine into numberOfLinks
+   
+   -- owner name
+   put word 3 of someLine into ownerName
+   
+   -- group name
+   put word 4 of someLine into groupName
+   
+   -- number of bytes in the file
+   put word 5 of someLine into fileSize
+   
+   put word 6 of someLine into shortMonth   -- abbreviated month
+   put word 7 of someLine into dayNum   -- day-of-month file was last modified
+   put word 8 of someLine into timeModified
+   
+   if timeModified is a number then
+      /*
+      if the modification time of the file is more than 6 months in the past or
+      future, then the year of the last modification is displayed in place of
+      the hour and minute fields.
+      */
+      
+      put timeModified into yearModified
+      put 02 into hourModified  -- hour file last modified
+      put 00 into minuteModified   -- minute file last modified
+   else
+      set the itemdelimiter to ":"
+      put item 1 of timeModified into hourModified  -- hour file last modified
+      put item 2 of timeModified into minuteModified   -- minute file last modified
+      
+      set the itemdelimiter to comma
+      put the date into today
+      convert today to dateItems
+      put item 1 of today into thisYear
+      put item 2 of today into thisMonth
+      
+      put date_MonthToMonthNumber(shortMonth) into monthNumber
+      if monthNumber - thisMonth > 6 then 
+         put thisYear - 1 into yearModified
+      else
+         put thisYear into yearModified
+      end if
+   end if
+   
+   -- "Oct 10, 2006"
+   put shortMonth && dayNum & "," && yearModified into lastModified
+   convert lastModified to dateItems
+   
+   put hourModified into item 4 of lastModified
+   put minuteModified into item 5 of lastModified
+   put 0 into item 6 of lastModified
+   convert lastModified to internet date
+   
+   -- path name
+   delete word 1 to 8 of someLine
+   put word 1 to -1 of someLine into shortFileName
+   
+   switch lsType
+      case "b"
+         put "block special file" into typeExplanation
+         break
+      case "c"
+         put "character special file" into typeExplanation
+         break
+      case "d"
+         put "folder" into typeExplanation
+         break
+      case "l"
+         put "symbolic link" into typeExplanation
+         break
+      case "s"
+         put "socket link" into typeExplanation
+         break
+      case "p"
+         put "fifo" into typeExplanation
+         break
+      case "-"
+         put "file" into typeExplanation
+         break
+      default
+   end switch
+   return typeExplanation
+end shell_DeconstructLS

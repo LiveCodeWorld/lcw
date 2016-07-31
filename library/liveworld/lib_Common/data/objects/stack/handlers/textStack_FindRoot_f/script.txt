@@ -1,0 +1,29 @@
+function textStack_FindRoot objectFile, repoType
+   -- put checkout_FindRoot (objectFile, repoType) into checkOutFolder
+   checkout_SetFolderAndRepotype objectFile, repoType
+   put the result into checkOutFolder
+   
+   switch
+      case checkoutFolder is empty
+         -- not in a repo
+         put checkout_ConstructDefaultFolder (objectFile) into textStackFolder
+         return textStackFolder
+      case checkoutFolder = rev_GetPluginFolder()
+         -- this legacy mammoth project is also in "git"
+         put checkoutFolder & "opn_Plugins/opn_Text/rev/object/" into textStackFolder
+         return textStackFolder
+      case (checkoutFolder is not empty and repoType = "fossil")
+         -- attempt at catering for legacy fossil projects
+         put checkoutFolder & "opn_TextStacks/" into textStackFolder
+         return textStackFolder
+      case checkoutFolder is not empty and repoType = "git"
+         -- it's a new git project
+         -- let's use the new folder name
+         put checkoutFolder & "liveworld/" into textStackFolder
+         return textStackFolder
+      case checkoutFolder is not empty
+         -- as strange type of repo :)
+         put checkoutFolder & "liveworld/" into textStackFolder
+         return textStackFolder
+   end switch
+end textStack_FindRoot

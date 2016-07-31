@@ -1,0 +1,9 @@
+function server_FetchFileArray serverAddress, sshUser, serverPath, pSshKeyPath
+   if the environment = "server" then
+      
+   else
+      put server_FetchFileList (serverAddress, sshUser, serverPath, true, pSshKeyPath) into lsResult
+      put shell_ConstructLSArray (lsResult, true) into fileArray
+   end if
+   return fileArray
+end server_FetchFileArray

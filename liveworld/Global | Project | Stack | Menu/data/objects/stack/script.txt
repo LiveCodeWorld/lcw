@@ -1,0 +1,91 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Project | Stack | Menu
+type: controller
+version: 0.3
+
+
+--> Menu | Props
+-
+/*
+Submenus are not taking the menu_Target property.
+This seesm to only work now for the top_MenuController.
+*/
+
+
+--> Global | Project | Stack | Menu
+-
+[[ _FetchHandler (menu_GoToStack,c) ]]
+
+[[ _FetchHandler (menu_EditStackScript,c) ]]
+
+[[ _FetchHandler (menu_UseStack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RefreshIndex,c) ]]
+
+[[ _FetchHandler (menu_IndexScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Script,c) ]]
+
+[[ _FetchHandler (menu_DisplayDependencyObjectArray,c) ]]
+
+[[ _FetchHandler (menu_DependencyObjects,c) ]]
+
+[[ _FetchHandler (menu_RevealProjectOverlayFolder,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TrashStack,c) ]]
+
+[[ _FetchHandler (menu_DisplaySubstack,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddToThisProject,c) ]]
+
+[[ _FetchHandler (menu_AddToAllProjects,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RemoveFromThisProject,c) ]]
+
+[[ _FetchHandler (menu_RemoveFromAllProjects,c) ]]
+
+
+--> Global | Project | Stack | Menu | Props
+-
+[[ _FetchHandler (use_Stack,g) ]]
+
+[[ _FetchHandler (sub_StackNames,g) ]]
+
+
+--> Global | Project | Stack | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DisplayDependencyObjectArray,g) ]]
+
+[[ _FetchHandler (disabled_TrashStack,g) ]]
+
+[[ _FetchHandler (disabled_DisplaySubstack,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (_displayAndHilite,c) ]]
+
+
+
+--> Objects
+-
+[[ _FetchHandler (_indexView,f) ]]
+
+[[ _FetchHandler (_rescueDisplayCard,f) ]]

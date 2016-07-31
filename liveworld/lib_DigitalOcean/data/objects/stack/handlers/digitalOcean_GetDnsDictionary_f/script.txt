@@ -1,0 +1,6 @@
+function digitalOcean_GetDnsDictionary pDomainInfoArray
+   local domainNameArray, dnsDictionary
+   if pDomainInfoArray is not an array then put digitalocean_GetDomainInfoArray() into pDomainInfoArray
+   digitalocean_ConstructNameArrays pDomainInfoArray, domainNameArray, dnsDictionary
+   return dnsDictionary
+end digitalOcean_GetDnsDictionary

@@ -1,0 +1,19 @@
+command menu_DeconstructTableLine mTableLine, @mController, @pigeon, @mTitle, @mLine, @mFormatProp, @mItemType, @submenuProp, @paramProp, @mSendLine
+   set the itemdelimiter to tab
+   
+   put item 1 of mTableLine into mLine
+   put item 2 of mTableLine into pigeon
+   put item 3 of mTableLine into mController
+   put item 4 of mTableLine into mTitle
+   put item 5 of mTableLine into mFormatProp
+   put item 6 of mTableLine into mItemType
+   put item 7 of mTableLine into submenuProp
+   put item 8 of mTableLine into paramProp
+   
+   put item 9 of mTableLine into mSendLine
+   if mSendLine is empty then
+      put menu_CleanLine (mLine) into mSendLine -- for now while the mTables have not all been updated
+      
+      -- could update menu table here
+   end if
+end menu_DeconstructTableLine

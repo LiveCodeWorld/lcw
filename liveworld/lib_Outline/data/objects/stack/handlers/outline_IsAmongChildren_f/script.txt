@@ -1,0 +1,11 @@
+function outline_IsAmongChildren lineToTest, someNode, tabbedOutline
+    -- version domainIndex,3/3/03
+    put outline_GetChildren(someNode, tabbedOutline) into domainIndex
+    set the wholematches to true
+    put lineoffset(lineToTest, domainIndex) into lineNum
+    if lineNum is 0 then
+        return false
+    else
+        return true
+    end if
+end outline_IsAmongChildren

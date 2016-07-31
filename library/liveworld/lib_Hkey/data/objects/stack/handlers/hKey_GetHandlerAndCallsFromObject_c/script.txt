@@ -1,0 +1,5 @@
+command hKey_GetHandlerAndCallsFromObject hKey, pSomeScript
+   put script_ExtractHandler (hKey, pSomeScript, false) into someHandler
+   put handler_ExtractCalls (someHandler) into shortCalls
+   hkey_StoreCallsAndHandler hkey, someHandler, shortCalls
+end hKey_GetHandlerAndCallsFromObject

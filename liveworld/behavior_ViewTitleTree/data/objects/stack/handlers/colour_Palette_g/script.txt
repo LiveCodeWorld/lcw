@@ -1,0 +1,7 @@
+getprop colour_Palette
+   put title_Button() into titleButton
+   put the foregroundcolor of titleButton into colourPaletteArray[1]
+   put the backgroundcolor of titleButton into colourPaletteArray[2]
+   put the backgroundcolor of me into colourPaletteArray[4]
+   return colourPaletteArray
+end colour_Palette

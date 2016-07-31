@@ -1,0 +1,7 @@
+function graphViz_GetShellPath
+   put pref_GetValue ("dotPath") into dotPath
+   return dotPath
+   
+   return "/opt/local/bin/"
+   return "/Applications/Graphviz.app" & "/Contents/MacOS/" into graphVizShellPath
+end graphViz_GetShellPath

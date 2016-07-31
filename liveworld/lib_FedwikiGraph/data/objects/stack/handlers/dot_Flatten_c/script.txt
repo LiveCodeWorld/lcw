@@ -1,0 +1,9 @@
+command dot_Flatten dotFile, overlayFlattenNum
+   put dot_UnFlatten (dotFile, overlayFlattenNum) into unFlatDotText
+   if word 1 of unFlatDotText is among the items of "digraph,graph" then
+      file_CreateText unFlatDotText, dotFile
+      return unFlatDotText
+   else
+      return empty
+   end if
+end dot_Flatten

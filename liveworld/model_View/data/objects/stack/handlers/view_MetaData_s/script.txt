@@ -1,0 +1,5 @@
+setprop view_MetaData [pUseCard] metaDataArray
+   put the view_Array [pUseCard] of the target into viewArray
+   put metaDataArray into viewArray ["metadata"]
+   set the view_Array [pUseCard] of the target to viewArray
+end view_MetaData

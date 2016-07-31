@@ -1,0 +1,7 @@
+getprop include_HandlersFrom
+   lock messages
+   put the include_HandlersFrom of me into includeHandlersFrom
+   unlock messages
+   if includeHandlersFrom is empty then return "stack"
+   return includeHandlersFrom
+end include_HandlersFrom

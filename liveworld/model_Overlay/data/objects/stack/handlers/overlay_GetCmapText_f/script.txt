@@ -1,0 +1,5 @@
+function overlay_GetCmapText overlayFolder, pOverlayName
+   put overlay_GetCmapFile (overlayFolder, pOverlayName) into cmapFile
+   put url ("file:" & cmapFile) into cmapText
+   return cmapText
+end overlay_GetCmapText

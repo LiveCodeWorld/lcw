@@ -1,0 +1,6 @@
+command applescript_ConvertPath @pFileOrFolder
+   -- "Macintosh HD:Applications:Revolution 2.6.1:"
+   put revMacFromUnixPath (pFileOrFolder) into pFileOrFolder
+   put kwote(pFileOrFolder) into pFileOrFolder
+   return empty
+end applescript_ConvertPath

@@ -1,0 +1,5 @@
+on behavior_SetHelpHtml bName, someHtml, pOnLineMode
+   put library_TextUrl ("help.html", bName, "behavior", false) into someUrl
+   if someUrl is not empty then put someHtml into url someUrl
+   return someUrl
+end behavior_SetHelpHtml

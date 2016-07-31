@@ -1,0 +1,156 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Image
+type: script library
+version: 0.1
+
+/*
+This library is where we collect usefull handlers for manipulating images.
+
+At present it is an old library full of stuff from ages ago.
+needs sorting and working out what is actually useful.
+*/
+
+
+--> Image
+-
+[[ _FetchHandler (image_Find,f) ]]
+
+[[ _FetchHandler (image_FileTypeFromPath,f) ]]
+
+[[ _FetchHandler (image_TypeFromPath,f) ]]
+
+
+--> Image | QR Code
+-
+[[ _FetchHandler (image_QrCode,s) ]]
+
+[[ _FetchHandler (image_FetchQrCode,f) ]]
+
+
+--> Image | OCR
+-
+[[ _FetchHandler (image_TiffToText,f) ]]
+
+[[ _FetchHandler (image_TypeFromContents,f) ]]
+
+[[ _FetchHandler (image_DetectType,f) ]]
+
+[[ _FetchHandler (image_IsPict,f) ]]
+
+[[ _FetchHandler (image_GetFileType,f) ]]
+
+--> Image | Import
+-
+[[ _FetchHandler (image_ImportFileData,c) ]]
+
+[[ _FetchHandler (image_FileDimensions,f) ]]
+
+[[ _FetchHandler (image_FileWidth,f) ]]
+    
+
+[[ _FetchHandler (image_ExportToFile,c) ]]
+
+[[ _FetchHandler (image_Export,c) ]]
+
+[[ _FetchHandler (image_RevExport,c) ]]
+
+[[ _FetchHandler (file_ConvertImageFormat,c) ]]
+
+
+--> EXIF
+-
+[[ _FetchHandler (exif_IsInstalled,f) ]]
+
+[[ _FetchHandler (exif_GetTag,f) ]]
+
+[[ _FetchHandler (exif_GetTagLine,f) ]]
+
+[[ _FetchHandler (exif_GetMetaDataArray,f) ]]
+
+[[ _FetchHandler (exif_GetMetaData,f) ]]
+
+-- on exif_SetTag tagName, imageFile, tagValue
+    shell_BashParamEscape imageFile
+    shell_BashParamEscape tagName
+    put "exif -t" && tagName && imageFile into someShell
+    return shell(someShell)
+end exif_SetTag
+
+[[ _FetchHandler (exif_ListTags,f) ]]
+
+[[ _FetchHandler (exif_ParseExifToolResult,f) ]]
+
+[[ _FetchHandler (exif_ParseTagList,f) ]]
+
+
+--> Image | SIPS
+-
+/*
+Ian Wood <revlist@azurevision.co.uk>
+
+-r degreesCW
+--rotate degreesCW
+
+-f horizontal|vertical
+--flip horizontal|vertical
+
+-c pixelsH pixelsW
+--cropToHeightWidth pixelsH pixelsW
+Crop image to fit specified size.
+
+-p pixelsH pixelsW
+--padToHeightWidth pixelsH pixelsW
+Pad image with pixels to fit specified size.
+
+--padColor hexcolor
+Use this color when padding. White=FFFFFF, Red=FF0000, Default=Black=000000
+
+-z pixelsH pixelsW
+--resampleHeightWidth pixelsH pixelsW
+Resample image at specified size. Image apsect ratio may be altered.
+
+--resampleWidth pixelsW
+Resample image to specified width.
+
+--resampleHeight pixelsH
+Resample image to specified height.
+*/
+
+[[ _FetchHandler (sips_ConvertImageFormat,c) ]]
+
+[[ _FetchHandler (sips_SetWidth,c) ]]
+
+[[ _FetchHandler (sips_RotateImage,f) ]]
+
+[[ _FetchHandler (sips_ImageInfo,f) ]]
+
+[[ _FetchHandler (sips_ExportFormats,f) ]]
+
+[[ _FetchHandler (sips_Formats,f) ]]
+
+[[ _FetchHandler (shell_MakeOSXShellPath,f) ]]
+
+
+--> Image | Snapshot
+-
+[[ _FetchHandler (image_GetSnapShot,f) ]]
+
+[[ _FetchHandler (image_SnapRect,c) ]]
+
+[[ _FetchHandler (image_SnapshotStack,c) ]]
+
+[[ _FetchHandler (image_ChooseSaveToFile,f) ]]
+
+
+--> Image | Groups
+-
+[[ _FetchHandler (image_ExportFromIDs,c) ]]
+
+[[ _FetchHandler (image_FindFromID,f) ]]
+
+[[ _FetchHandler (image_GuessFileName,g) ]]
+
+
+[[ _FetchHandler (image_GetRevCropped,f) ]]

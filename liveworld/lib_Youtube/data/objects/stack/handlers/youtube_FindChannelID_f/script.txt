@@ -1,0 +1,6 @@
+function youtube_FindChannelID searchChannelSlug
+   put youtube_FindChannelArray (searchChannelSlug) into snippetArray
+   -- display_Array snippetArray, searchChannelSlug
+   put snippetArray ["channelId"] into channelID
+   return channelID
+end youtube_FindChannelID

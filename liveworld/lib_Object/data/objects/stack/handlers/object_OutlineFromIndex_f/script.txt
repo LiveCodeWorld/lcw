@@ -1,0 +1,9 @@
+function object_OutlineFromIndex objectIndex
+   local tabbedOutline
+   put numToChar(28) into pathDelim
+   repeat for each line someObject in objectIndex
+      put object_OutlinePath (someObject, pathDelim) into objectPath
+      put outline_AddPath (objectPath, tabbedOutline, pathDelim) into tabbedOutline
+   end repeat
+   return tabbedOutline
+end object_OutlineFromIndex

@@ -1,0 +1,178 @@
+project_FixUsedlicense: GPLv3
+name: model_LibraryArray
+type: model
+version: 0.1
+
+/*
+This model provides an interface to a databse of objects (stored in the hArray array database)
+and "sets" which is an array of "projects" that yu can use.
+*/
+
+
+--> Library | Add
+-
+[[ _FetchHandler (library_AddFrontObject,c) ]]
+
+[[ _FetchHandler (library_AddUsedStack,c) ]]
+
+[[ _FetchHandler (library_AddBackObject,c) ]]
+
+[[ _FetchHandler (library_AddObject,c) ]]
+
+[[ _FetchHandler (library_DeleteObject,c) ]]
+
+
+--> Library | Delete
+-
+[[ _FetchHandler (library_DeleteFrontObject,c) ]]
+
+[[ _FetchHandler (library_DeleteBackObject,c) ]]
+
+[[ _FetchHandler (library_DeleteUsedStack,c) ]]
+
+
+--> Library | Objects
+-
+[[ _FetchHandler (library_FetchEveryObject,f) ]]
+
+[[ _FetchHandler (library_FetchObjects,f) ]]
+
+[[ _FetchHandler (library_FetchAllObjects,f) ]]
+
+
+--> Library | List | Objects
+-
+[[ _FetchHandler (library_ListGlobalMenuNames,f) ]]
+
+[[ _FetchHandler (library_ListGlobalMenuObjects,f) ]]
+
+[[ _FetchHandler (library_ListFrontObjects,f) ]]
+
+[[ _FetchHandler (library_ListUsedStacks,f) ]]
+
+[[ _FetchHandler (library_ListBackObjects,f) ]]
+
+[[ _FetchHandler (library_ListObjects,f) ]]
+
+
+--> Library | List | Names
+-
+[[ _FetchHandler (library_ListScriptLibs,f) ]]
+
+[[ _FetchHandler (library_ListScriptLibNames,f) ]]
+
+[[ _FetchHandler (library_ListFrontNames,f) ]]
+
+[[ _FetchHandler (library_ListUsedNames,f) ]]
+
+[[ _FetchHandler (library_ListBackNames,f) ]]
+
+[[ _FetchHandler (library_ListNames,f) ]]
+
+
+--> Library | Type Array
+-
+/*
+This is still all a bit of a mess until "all" is sorted.
+*/
+
+[[ _FetchHandler (library_GetScriptLibArray,f) ]]
+
+[[ _FetchHandler (library_ConstructNameTypeArray,f) ]]
+
+[[ _FetchHandler (library_FetchObjectTypeArray,f) ]]
+
+[[ _FetchHandler (library_FetchTypeArray,f) ]]
+
+[[ _FetchHandler (library_StoreObjectTypeArray,c) ]]
+
+[[ _FetchHandler (library_ConstructAllObjectSetArray,f) ]]
+
+[[ _FetchHandler (library_ConstructAllObjectTypeArray,f) ]]
+
+[[ _FetchHandler (library_AddSetNamesToStore,c) ]]
+
+
+--> Library | Get Object
+-
+[[ _FetchHandler (library_GetFrontObject,f) ]]
+
+[[ _FetchHandler (library_GetUsedStack,f) ]]
+
+[[ _FetchHandler (library_GetBackObject,f) ]]
+
+
+--> Library | Sets
+-
+[[ _FetchHandler (library_RemoveSetNamesFromStore,c) ]]
+
+[[ _FetchHandler (library_StoreSetNames,c) ]]
+
+[[ _FetchHandler (library_ListSetNames,f) ]]
+
+[[ _FetchHandler (library_GetSetArray,f) ]]
+
+[[ _FetchHandler (library_SetSetArray,c) ]]
+
+[[ _FetchHandler (library_GetTypeArray,f) ]]
+
+[[ _FetchHandler (library_GetObject,f) ]]
+
+[[ _FetchHandler (library_Delete,c) ]]
+
+
+--> Library | Sets
+-
+[[ _FetchHandler (library_DeleteStoredSet,c) ]]
+
+[[ _FetchHandler (library_FetchSetArray,f) ]]
+
+[[ _FetchHandler (library_StoreSetArray,c) ]]
+
+[[ _FetchHandler (library_FetchSetData,f) ]]
+
+[[ _FetchHandler (library_StoreSetData,c) ]]
+
+[[ _FetchHandler (library_FetchSetsContaining,f) ]]
+
+command library_RemoveSetNamesFromStore ruggedObject, libType, setNames
+   put library_FetchSetData() into setData
+   repeat for each line setName in setNames
+      delete variable setData [setName]["data"][libType][ruggedObject]
+   end repeat
+   library_StoreSetData setData
+   return setData
+end library_RemoveSetNamesFromStore
+
+command library_StoreSetNames ruggedObject, libType, setNames
+   put library_FetchSetData() into modelArray
+   put keys(modelArray) into otherSetNames
+   -- add
+   repeat for each line setName in setNames
+      put empty into modelArray [setName]["data"][libType][ruggedObject]
+      line_Delete setName, otherSetNames
+   end repeat
+   -- remove from the rest
+   repeat for each line setName in otherSetNames
+      delete variable modelArray [setName]["data"][libType][ruggedObject]
+   end repeat
+   library_StoreSetData modelArray
+   return modelArray
+end library_StoreSetNames
+
+function library_ListSetNames pAddDefaults
+   put library_FetchSetData() into modelArray
+   put keys (modelArray) into setNames
+   sort setNames
+   if pAddDefaults is true then
+      put CR & "None" after setNames
+   end if
+   return setNames
+end library_ListSetNames
+
+
+--> Library | Private ?
+-
+[[ _FetchHandler (objectArray_AddRuggedObject,c) ]]
+
+[[ _FetchHandler (objectArray_AddLongIdObject,c) ]]

@@ -1,0 +1,5 @@
+function rev_GetHandlerTreeCallbackTarget
+   put rev_HandlerTree() into handlerTree
+   put the cCallbackTarget of handlerTree into callBackTarget
+   return callBackTarget
+end rev_GetHandlerTreeCallbackTarget

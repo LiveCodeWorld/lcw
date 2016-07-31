@@ -1,0 +1,15 @@
+command object_StripIndex objectsToRemove, @objectIndex
+   repeat for each line objectToRemove in objectsToRemove
+      if exists (objectToRemove) is false then next repeat
+      
+      put the long id of objectToRemove into objectToRemove
+      repeat with lineNum = the number of lines of objectIndex down to 1
+         put line lineNum of objectIndex into indexObject
+         if exists (indexObject) is false then
+            delete line lineNum of objectIndex
+         else if the long id of indexObject = objectToRemove then
+            delete line lineNum of objectIndex
+         end if
+      end repeat
+   end repeat
+end object_StripIndex

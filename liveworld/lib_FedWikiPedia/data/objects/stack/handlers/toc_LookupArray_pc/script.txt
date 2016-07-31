@@ -1,0 +1,12 @@
+private command toc_LookupArray tocArray, @lookUpArray, @markdownTOC
+   delete variable tocArray ["index"]
+   repeat with itemNum = (the number of lines of the keys of tocArray) down to 1
+      put tocArray [itemNum]["meta"] into metaTocArray
+      put metaTocArray ["title"] into sectionTitle
+      delete variable metaTocArray ["title"]
+      
+      put metaTocArray into lookUpArray ["wiki_links"][sectionTitle]
+      put "* [[" & sectionTitle & "]]" & CR before markdownTOC
+   end repeat
+   delete char -1 of markdownTOC
+end toc_LookupArray

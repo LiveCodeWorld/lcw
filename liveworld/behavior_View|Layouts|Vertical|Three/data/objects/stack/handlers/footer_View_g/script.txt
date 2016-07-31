@@ -1,0 +1,4 @@
+getprop footer_View
+   if exists (FooterView) is false then view_IndexChildren
+   return FooterView
+end footer_View

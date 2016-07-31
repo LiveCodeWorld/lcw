@@ -1,0 +1,5 @@
+command project_LoadGlobalArray pProjectName
+   global gLibrarySet_Array
+   put project_FetchArray (pProjectName) into gLibrarySet_Array
+   return gLibrarySet_Array
+end project_LoadGlobalArray

@@ -1,0 +1,13 @@
+function fedwiki_ConstructNewImagePageArray pageTitle, someImage, imageType, pImageCaption, pSourceArray
+   local fedwikiPageArray, journalArray
+   
+   put pageTitle into fedwikiPageArray ["title"]  
+   put fedwiki_ConstructImageArray (someImage, imageType, pImageCaption) into imageArray
+   fedwiki_PageArrayAddToEnd imageArray, fedwikiPageArray
+   
+   put fedwiki_ConstructJournalArray (pageTitle, pSourceArray) into journalArray
+   fedwiki_AddToJournalArray journalArray, imageArray, "add"
+   put journalArray into fedwikiPageArray ["journal"] 
+   
+   return fedwikiPageArray
+end fedwiki_ConstructNewImagePageArray

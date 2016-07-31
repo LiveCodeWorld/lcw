@@ -1,0 +1,12 @@
+on menu_EditRecordBehavior dgView
+   put  rview_GetName (dgView) into vName
+   if vName is empty then
+      put the long id of group "Row Template" of card id 1005 of stack "Data Grid Templates 1430422692515" of stack "View|SFW|Story" into rView      
+   else
+      put view_GetTemplateObject (vName) into rView
+   end if
+   
+   if exists(rView) is false then return empty
+   put the behavior of rView into rviewBehavior
+   edit the script of rviewBehavior
+end menu_EditRecordBehavior

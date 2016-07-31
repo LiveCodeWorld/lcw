@@ -1,0 +1,14 @@
+function rect_GetCentre someRect
+   -- does not always return the same as the loc
+   -- out by one pixel (rounding error)?
+   -- trunc or round?
+   put item 1 of someRect into someLeft
+   put trunc((item 3 of someRect - someLeft)/2) into halfWidth
+   -- put round((item 3 of someRect - someLeft)/2) into halfWidth
+   put item 2 of someRect into someTop
+   -- put round((item 4 of someRect - someTop)/2) into halfHeight
+   put trunc((item 4 of someRect - someTop)/2) into halfHeight
+   put someLeft + halfWidth into item 1 of someMiddle
+   put someTop + halfHeight into item 2 of someMiddle
+   return someMiddle
+end rect_GetCentre

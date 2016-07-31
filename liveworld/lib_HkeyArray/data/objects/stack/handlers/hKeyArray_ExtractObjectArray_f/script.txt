@@ -1,0 +1,8 @@
+function hKeyArray_ExtractObjectArray someObject, hKeyLinkArray, pIncludeParents
+   if pIncludeParents is true then
+      put hKeyArray_ObjectAndParentArray (someObject, hKeyLinkArray) into objectArray
+   else
+      put hKeyArray_ObjectArray (someObject, hKeyLinkArray) into objectArray
+   end if
+   return objectArray
+end hKeyArray_ExtractObjectArray

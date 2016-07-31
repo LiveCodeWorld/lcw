@@ -1,0 +1,51 @@
+--> Metadata
+-
+/*
+This menu contains the code for the menu of the button "Title".
+You should customise it to suit your local needs.
+*/
+
+local LocalArray
+
+
+--> Title | Menu
+-
+[[ _FetchHandler (menu_DisplayViewBrowser,c) ]]
+
+[[ _FetchHandler (menu_CreateView,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_KnowAll,c) ]]
+
+[[ _FetchHandler (menu_KnowSelected,c) ]]
+
+[[ _FetchHandler (menu_AddViewsToHarray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_IsLcwFolder,c) ]]
+
+-- getprop disabled_IsLcwFolder
+   /*
+   Not moved the files inside this folder to the lcw library yet.
+   The plan is to move them individually when they have been converted to text only versions.
+   */
+   return true
+end disabled_IsLcwFolder
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Tools,c) ]]
+
+
+--> Title | Menu | Props
+-
+--> Title | Menu | Disabled
+-
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]

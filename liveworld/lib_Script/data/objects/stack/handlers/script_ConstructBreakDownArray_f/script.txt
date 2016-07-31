@@ -1,0 +1,23 @@
+function script_ConstructBreakDownArray scriptArray
+   repeat for each key indexNum in scriptArray
+      put scriptArray [indexNum] into handerArray
+      put handerArray ["hKey"] into hKey
+      
+      if pKeepSpacer is not true and hKey = "-,c" then next repeat
+      
+      if hKey is not empty then -- could be metadata etc
+         hkey_Deconstruct hKey, handlerName, hType, scriptObject, handlerNum
+         if handlerNum > 1 then
+            put handerArray into duplicateArray [hKey]
+         else
+            put hKey & CR after uniqueKeys      
+         end if
+      end if
+   end repeat
+   delete char - 1 of uniqueKeys
+   
+   put uniqueKeys into breakdownArray ["uniqueKeys"]
+   put duplicateArray into breakdownArray ["duplicateArray"]
+   put scriptArray into breakdownArray ["scriptArray"]
+   return breakdownArray
+end script_ConstructBreakDownArray

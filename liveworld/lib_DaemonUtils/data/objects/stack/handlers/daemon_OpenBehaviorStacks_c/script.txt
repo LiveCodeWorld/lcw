@@ -1,0 +1,6 @@
+command daemon_OpenBehaviorStacks
+   put the behavior_Hierarchy of me into bObjects
+   repeat for each line bObject in bObjects
+      object_GoTo bObject
+   end repeat
+end daemon_OpenBehaviorStacks

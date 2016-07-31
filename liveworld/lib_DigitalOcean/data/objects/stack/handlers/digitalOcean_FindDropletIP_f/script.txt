@@ -1,0 +1,12 @@
+function digitalOcean_FindDropletIP oceanDomainName, pDomainInfoArray
+   -- could be smart with "*"
+   -- for now it is just a match
+   local domainNameArray, dnsDictionary
+   
+   if pDomainInfoArray is not an array then
+      put digitalocean_GetDomainInfoArray() into pDomainInfoArray
+   end if
+   digitalocean_ConstructNameArrays pDomainInfoArray, domainNameArray, dnsDictionary
+   put dnsDictionary [oceanDomainName] into someIP
+   return someIP
+end digitalOcean_FindDropletIP

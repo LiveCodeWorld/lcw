@@ -1,0 +1,9 @@
+command script_DeconstructSetPropHandler propHandler, @handlerName, @setPropValue, @setPropParam
+   get line 1 of propHandler
+   put word 2 of it into handlerName
+   put word -1 of it into setPropValue
+   
+   delete word 1 to 2 of it
+   delete word -1 of it
+   put token 2 of it into setPropParam
+end script_DeconstructSetPropHandler

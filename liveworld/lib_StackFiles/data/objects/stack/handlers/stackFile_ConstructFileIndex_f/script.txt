@@ -1,0 +1,15 @@
+function stackFile_ConstructFileIndex stackFileTable, stackFile
+   -- was fileIndex_FromStackFiles
+   put folder_Above(stackFile) into stackRoot
+   -- add the stack as the stackFiles may not be linked to itself (unless there are substacks)
+   -- bit odd to do this generally?
+   put stackFile into longFileNames
+   repeat for each line stackFileLine in stackFileTable
+      delete item 1 of stackFileLine
+      put file_FromRelativeRoot(stackFileLine, stackRoot) into newLine
+      if newLine is not among the lines of longFileNames then
+         put return & newLine after longFileNames
+      end if
+   end repeat
+   return longFileNames
+end stackFile_ConstructFileIndex

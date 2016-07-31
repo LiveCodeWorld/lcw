@@ -1,0 +1,37 @@
+on display_CloseAllViewStacks
+   put the mainstacks into allStacks
+   put allStacks into viewStacks
+   filter viewStacks with "View|*"
+   
+   put allStacks into unclassifiedStacks
+   filter unclassifiedStacks with "Unclassified|*"
+   line_Insert unclassifiedStacks, viewStacks
+   
+   sort viewStacks
+   put word 1 to -1 of viewStacks into viewStacks
+   
+   -- set lockmessages to true
+   put empty into notClosed
+   set the wholematches to true
+   repeat for each line stackName in viewStacks
+      if stackName is "View|Tree|Simple Tree" then next repeat
+      try
+         if stackName is among the lines of stacksinuse then
+            -- stop using stack stackName
+            line_Insert stackName, notClosed
+         else
+            delete stack stackName
+            put the result into deleteResult
+         end if
+      catch someError
+         put "Error deleting stack" && kwote(stackName) into someMessage
+         opn_Notify someMessage, true
+         put someError
+      end try
+   end repeat
+   
+   if notClosed is not empty then
+      opn_Notify merge("I did not close the following library views: [[notClosed]]"), true
+      put notClosed
+   end if
+end display_CloseAllViewStacks

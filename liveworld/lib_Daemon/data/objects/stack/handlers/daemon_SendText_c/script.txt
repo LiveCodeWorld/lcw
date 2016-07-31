@@ -1,0 +1,6 @@
+command daemon_SendText socketOrRequestArray, someText, pETag, pCookieName, pCookieValue, pSendCompressed
+   put _normalizeSocket (socketorRequestArray) into socketID
+   put _okHeaders ("text/html", pCookieName, pCookieValue) into someHeader
+   daemon_Send someHeader, someText, socketID, pSendCompressed
+   return someHeader
+end daemon_SendText

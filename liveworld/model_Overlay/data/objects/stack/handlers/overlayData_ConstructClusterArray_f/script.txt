@@ -1,0 +1,5 @@
+function overlayData_ConstructClusterArray overlayArray
+   put overlayArray ["data"]["idArray"] into idArray
+   put hKeyArray_ConstructObjectIDArray (idArray) into objectIDArray
+   return objectIDArray
+end overlayData_ConstructClusterArray

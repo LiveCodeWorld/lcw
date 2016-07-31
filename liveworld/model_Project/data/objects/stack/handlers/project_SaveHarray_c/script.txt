@@ -1,0 +1,6 @@
+command project_SaveHarray hArray, pProjectName
+   -- if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   library_StoreArray "Hkey_Data", hArray
+   put the result into arrayFile
+   return arrayFile
+end project_SaveHarray

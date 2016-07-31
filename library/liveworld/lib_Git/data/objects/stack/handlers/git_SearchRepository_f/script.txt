@@ -1,0 +1,5 @@
+function git_SearchRepository grepString
+   put "git grep --text -i" && kwote (grepString, "'") into someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   return shellResult
+end git_SearchRepository

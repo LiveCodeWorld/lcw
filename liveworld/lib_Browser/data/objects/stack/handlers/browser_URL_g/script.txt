@@ -1,0 +1,8 @@
+getprop browser_URL
+   put the browser_ID of me into browserID
+   if browserID is empty then
+      return empty  -- a default if the browser is not open
+   else
+      return revBrowserGet (browserID, "url")
+   end if
+end browser_URL

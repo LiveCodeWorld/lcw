@@ -1,0 +1,19 @@
+function hkey_ConstructHarrayWalkArray hKeys, hArray, pSearchOutSideMainStack
+   -- uses local main stack export data
+   local walkArray
+   if pTestExceptions is empty then put true into pTestExceptions
+   if pSetName is empty then put "Menus Only" into pSetName
+   
+   repeat for each line hKey in hKeys
+      put hkey_FetchShortCalls (hKey) into shortCalls
+      repeat for each line shortCall in shortCalls
+         hArray_DependencyWalk shortCall, hKey, walkArray, pSearchOutSideMainStack, pSetName, pTestExceptions
+      end repeat
+   end repeat
+   
+   -- changing hKeyArray functions to use keys instead of lines would avoid this step and speed things
+   put walkArray ["hKeyArray"] into mainStackHkeyArray
+   array_StripDeeperLevels mainStackHkeyArray
+   put mainStackHkeyArray into walkArray ["hKeyArray"]
+   return walkArray
+end hkey_ConstructHarrayWalkArray

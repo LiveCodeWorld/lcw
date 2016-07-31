@@ -1,0 +1,968 @@
+﻿script "lib_XmlExtras"
+--> MetaData
+-
+license: GPLv3
+name: lib_XmlExtras
+type: script library
+version: 0.1
+
+
+script "lib_XML"
+--> MetaData
+-
+name: lib_XML
+type: script library
+copyright: David Bovill
+license: GPLv3
+author: David Bovill
+
+/*
+A library for XML and XML related data structures.
+*/
+
+
+--> XML | Tag | RegExp
+-
+function xml_GetPlainTagContents tagName, someXml
+    -- this version is for constructed tags without white space, or parameters, or nesting
+    put merge("(?Usmi)<[[tagName]]>(.*)</[[tagName]]>") into someReg
+    if matchtext(someXML, someReg, tagContent) is false then
+        return empty
+    else
+        return word 1 to -1 of tagContent
+    end if
+end xml_GetPlainTagContents
+
+on xml_TagOffsets someXML, tagName, @startTag, @endTag, @someTag, @tagContents
+   -- won't work with nested tags of same name
+   -- but should work well with single and double tags sread over any number of lines
+   
+   put empty into someTag
+   put empty into tagContents
+   
+   -- fixed to find first opening tag (even if a simple tag)
+   -- put "(?Uim)(<\s*" & tagName & "\s*>)|(<\s*" & tagName & "\s*/\s*>)" into openingReg
+   put "(" & ">" & "|" & "\s+.*>" & ")" into someEnding
+   put "(?Uim)(<\s*" & tagName & someEnding & ")" into openingReg
+   if matchchunk(someXML, openingReg, startTag, endOpening) is false then
+      put empty into tagName
+      put empty into startTag
+      put empty into endTag
+      return false
+   end if
+   
+   put char startTag to endOpening of someXML into openingTag
+   put endOpening -1 into beforeEndBracketNum
+   repeat with charNum = beforeEndBracketNum down to 1
+      get char charNum of someXML
+      if it is "/" then
+         -- its a single tag
+         put endOpening into endTag
+         get char startTag to endTag of someXML
+         put word 1 to -1 of it into someTag
+         return true
+      else if it is space then
+         next repeat
+      else
+         exit repeat
+      end if
+   end repeat
+   
+   put someXML into testXML
+   delete char 1 to endOpening of testXML
+   put "(?Uim)(<\s*/" & tagName & "\s*>)" into closingReg
+   
+   if matchchunk(testXML, closingReg, startClosing, endClippedTag) is false then
+      -- something seriously wrong
+      put empty into tagName
+      put empty into startTag
+      put empty into endTag
+      return false
+   else
+      put endClippedTag + endOpening + 0 into endTag
+      get char startTag to endTag of someXML
+      put word 1 to -1 of it into someTag
+      
+      get char (endOpening+1) to (startClosing+endOpening-1) of someXML
+      put word 1 to -1 of it into tagContents
+      return true
+   end if
+end xml_TagOffsets
+
+on xml_SetTagContents tagName, @someXml, newContents
+    if xml_TagOffsets(tagName, someXml, startTag, endTag) is true then
+        put newContents into char startTag to endTag of someXml
+        return true
+    else
+        return false
+    end if
+end xml_SetTagContents
+
+
+--> XML | Tag | Simple
+-
+function xml_GetSimpleTagContents  tagName, someXml
+    -- simple non-whitespace version
+    put xml_GetSimpleTag(tagName, someXml, 0) into someTag
+    if someTag is empty then return empty
+    
+    get the number of chars of tagName
+    put it + 3 into startChar
+    put it + 4 into backChar
+    return char startChar to - backChar of someTag
+end xml_GetSimpleTagContents
+
+function xml_GetSimpleTag tagName, someXml, startAfterCharNum
+    -- was "xml_GetTag"
+    -- simple non-whitespace version
+    put "<" & tagName & ">" into startTag
+    put "</" & tagName & ">" into endTag
+    text_SetOffsets startTag, endTag, someXml, startChar, endChar, startAfterCharNum
+    if startChar = 0 or endChar = 0 then return empty
+    put char startChar to endChar of someXml into someTag
+    return someTag
+end xml_GetSimpleTag
+
+
+--> XML | Attributes
+-
+function xml_TagAttributeArray tagName, someXml
+   -- Note: if there are no attributes AND no space the regExpression will fail to match
+   -- but thats OK for this function
+   
+   put "(?im)<" & tagName & "\s+([^>]*)\s*/\s*>" into singleReg
+   put "(?im)<" & tagName & "\s+([^>]*)\s*>" into doubleReg
+   
+   -- not sure why this has problems
+   -- put singleReg & "|" & doubleReg into someReg
+   -- but this is OK
+   put doubleReg & "|" & singleReg into someReg
+
+   if matchtext(someXML, doubleReg, tagContent) is false then
+      return empty
+   else
+      replace CR with empty in tagContent
+      replace space with CR in tagContent
+      replace quote with empty in tagContent
+      replace "'" with empty in tagContent
+      
+      split tagContent with CR and "="
+      return tagContent
+   end if
+end xml_TagAttributeArray
+
+function xml_GetAttribute attributeName, someXMLTag, @startAttributeValue, @endAttributeValue
+    -- older non-regexp version below:
+    -- quick hack, should use regular expression.
+    -- bug in that it does not allow single quotes "'"
+     
+    put attributeName & "=" & quote into startString
+    put tab & CRLF & space into whiteSpace
+     
+    put offset(startString, someXMLTag) into startAttributeValue
+    if startAttributeValue is 0 then
+        put 0 into endAttributeValue
+        return empty
+    else if char (startAttributeValue-1) of someXMLTag is not in whiteSpace then
+        put 0 into startAttributeValue
+        put 0 into endAttributeValue
+        return empty
+    else
+        add the length of startString to startAttributeValue
+        put text_OffsetAfter(quote, someXMLTag, startAttributeValue) into endAttributeValue
+        if endAttributeValue is 0 then
+            put 0 into startAttributeValue
+            return empty
+        else
+            subtract 1 from endAttributeValue
+            put char startAttributeValue to endAttributeValue of someXMLTag into attributeValue
+            replace "'" with quote in attributeValue
+            return attributeValue
+        end if
+        -- set the itemDelimiter to quote
+        -- return item 2 of someXMLTag
+    end if
+end xml_GetAttribute
+
+
+--> XML | First Tag
+-
+function xml_FirstTagName someXML
+   put "(?im)<\s*(\w+)[ />]" into someReg
+   if matchtext(someXML, someReg, tagName) is false then
+      return empty
+   else
+      return tagName
+   end if
+end xml_FirstTagName
+
+function xml_FirstTag someXML
+   -- won't work with nested tags of same name
+   -- but should work well with single and double tags sread over any number of lines
+   
+   xml_FirstTagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+   if the result is false then
+      return empty
+   else
+      return someTag
+   end if
+   
+   put xml_FirstTagName(someXML) into tagName
+   if tagName is empty then
+      return empty
+   else 
+      put "(?im)(<\s*" & tagName & "\s+[^>]*\s*>)" into openingReg
+      if matchchunk(someXML, openingReg, startTag, endOpening) is false then
+         -- something seriously wrong
+         breakpoint
+         return empty
+      else
+         repeat with charNum = (endOpening-1) down to 1
+            get char charNum of someXML
+            if it is "/" then
+               -- its a single tag
+               put char startTag to endOpening of someXML into someTag
+               return someTag
+            else if it is space then
+               next repeat
+            else
+               exit repeat
+            end if
+         end repeat
+         
+         put someXML into testXML
+         delete char 1 to endOpening of testXML
+         put "(?im)(<\s*/" & tagName & "\s*>)" into closingReg
+         
+         if matchchunk(testXML, closingReg, startClosing, endClippedTag) is false then
+            -- something seriously wrong
+            breakpoint
+            return empty
+         else
+            put endClippedTag + endOpening + 0 into endTag
+            put char startTag to endTag of someXML into someTag
+            return someTag
+         end if
+      end if
+   end if
+end xml_FirstTag
+
+on xml_FirstTagOffsets someXML, @tagName, @startTag, @endTag, @someTag, @tagContents
+   -- won't work with nested tags of same name
+   -- but should work well with single and double tags sread over any number of lines
+   
+   put empty into someTag
+   put empty into tagContents
+   
+   put xml_FirstTagName(someXML) into tagName
+   if tagName is empty then
+      return false
+   else 
+      xml_TagOffsets someXML, tagName, startTag, endTag, someTag, tagContents
+      return the result
+   end if
+end xml_FirstTagOffsets
+
+on xml_FirstTagOffsets someXML, @tagName, @startCharNum, @endCharNum
+   -- extractFirstXmlTag
+   put xml_FirstTagName(someXML) into tagName
+   if tagName is empty then
+      put empty into startCharNum
+      put empty into endCharNum
+   else
+      put "(?im)(<\s*" & tagName & "\s+[^>]*\s*/\s*>.*<\s*" & tagName & "\s*/\s*>)" into doubleReg
+      
+      put "(?im)(<\s*" & tagName & "\s+[^>]*\s*>)" into singleReg
+      put singleReg & "|" & doubleReg into someReg
+      
+      if matchtext(someXML, someReg, someTag) is false then
+         return empty
+      else
+         return someTag
+      end if
+   end if
+end xml_FirstTagOffsets
+
+
+--> XML | Old
+-
+function xml_TagRegEx tagName
+    -- not complete
+    return merge("(?Usmi)<[[tagName]].*</[[tagName]]>")
+    return merge("(?Usi)<[[tagName]].*</[[tagName]]>")
+end xml_TagRegEx
+
+function xml_Nodes someXml, startNode, includeChildCount
+    put xml_NodeOutline(someXml, startNode, includeChildCount) into nodeOutline
+    put outline_ToPathIndex(nodeOutline) into nodeIndex
+    return nodeIndex
+end xml_Nodes
+
+function xml_ReplaceChildCount treeOutline
+    -- put "." into notabracket
+    -- put "\d*" into notabracket	# a digit
+    put "[^\]]*" into notabracket
+    put "\[" & notabracket & "\]" into matchExpression
+    get replacetext(treeOutline, matchExpression, empty)
+    return it
+end xml_ReplaceChildCount
+
+function xml_ConstructTreeArray someXML
+    -- see also "xml_ConstructTreePathArray"
+    local countArray
+    repeat 100  -- just to be safe repeat 100!
+        xml_FirstTagOffsets tagContents, tagName, startTag, endTag, someTag, tagContents
+        put countArray [tagName] + 1 into countArray [tagName]
+        if someTag is empty then
+            return treeArray
+        else
+            delete char 1 to endTag of tagContents
+            
+            put countArray [tagName] into tagNumber
+            put tagContents into treeArray ["_tree"][tagName][tagNumber]
+             
+            put xml_TagAttributeArray(tagName, someXml) into attributeArray
+            put attributeArray into treeArray ["_attribute"][tagName][tagNumber]
+        end if
+    end repeat
+    beep 3
+    return treeArray
+end xml_ConstructTreeArray
+
+
+--> Xml | Tidy
+-
+function xml_StripInitialTabs someXML
+    put text_SwapEOL(someXML, "remove") into someXML 
+    put replacetext(someXML, "¬[\t ]+","¬") into someXML
+    put replacetext(someXML, "^¬","") into someXML
+    return (text_SwapEOL(someXML, "restore") )
+end xml_StripInitialTabs
+
+function xml_MakePretty someXML, tidyHow
+    if tidyHow is empty then put "perfect" into tidyHow
+    switch tidyHow
+        case "perfect"
+            put revCreateXMLTree(someXML, true, true, false) into treeID
+            if treeID is a number then
+                put revXMLText(treeID, "", true) into someXML
+                revDeleteXMLTree treeID
+                xml_TidySpace someXML
+                return someXML
+            else
+                return treeID
+            end if
+            break
+        case "external"
+            put revCreateXMLTree (someXML, true, true, false) into treeID
+            if treeID is a number then
+                put revXMLText(treeID, "", true) into someXML
+                revDeleteXMLTree treeID
+                return someXML
+            else
+                return treeID
+                return someXML
+            end if
+        case "flat"
+            put revCreateXMLTree(someXML, true, true, false) into treeID
+            if treeID is a number then
+                put revXMLText(treeID, "") into someXML
+                revDeleteXMLTree treeID
+                return someXML
+            else
+                put shell_XmlCheck(someXML)
+                return treeID
+                return someXML
+            end if
+        case "shell"
+            put shell_XmlTidy (someXML) into someXML
+            -- xml_TidySpace someXML
+            return someXML
+            break
+        case "broken"
+            -- missing function repeatOffset
+            put offset(">", someXML) into endStartTag
+            put repeatOffset("<", someXML, "last") into startEndTag
+            if endStartTag = 0 or startEndtag = 0 then return someXML
+             
+            if char (endStartTag + 1) of someXML <> return then
+                get ">" & return & indentSpace
+                put the length of it into insertTextLength
+                add insertTextLength to startEndtag
+                put it into char endStartTag of someXML
+            end if
+             
+            if char (startEndtag - 2) of someXML <> return then
+                get indentSpace & return & "<"
+                put it into char (startEndtag - 1) of someXML
+            end if
+            return someXML
+        default
+            if indentSpace is empty then put tab into indentSpace
+            replace "><" with ">" & CR & tab & "<" in someXML
+            return someXML
+    end switch
+end xml_MakePretty
+
+on xml_TidySpace @someXML
+    -- bug as there can be two spaces in the xml.
+    replace space & space with tab in someXML    -- tidy indents by 2 spaces, but I prefer tabs
+end xml_TidySpace
+
+
+--> XML | Rev External
+-
+function xml_ExtractDiv xHtml, divID, pStartNode
+    put revCreateXMLTree (xHtml, true, true, false) into xmlID
+    put xml_ExtractDivFromID (xmlID, divID, pStartNode) into someXML
+    revDeleteXmlTree xmlID
+    return someXML
+end xml_ExtractDiv
+
+function xml_ExtractDivFromID xmlID, divID, pStartNode
+    if pStartNode is empty then
+        -- could use body
+        put revXMLRootNode(xmlID) into pStartNode
+    end if
+    put revXMLMatchingNode (xmlID, pStartNode, "div", "id", divID, -1) into foundNode
+    if foundNode is empty then
+        put empty into someXML
+    else
+        put revXMLText (xmlID, foundNode, true) into someXML
+    end if
+    revDeleteXmlTree xmlID
+    return someXML
+end xml_ExtractDivFromID
+
+command xml_CreateTree rootNode, @treeID
+   put xml_Tag (empty, rootNode) into someXml
+   put revCreateXMLTree (someXml, true, true, false) into treeID
+   return treeID
+end xml_CreateTree
+
+function xml_Nodes someXml, startNode, includeChildCount
+    put xml_NodeOutline(someXml, startNode, includeChildCount) into nodeOutline
+    put outline_ToPathIndex(nodeOutline) into nodeIndex
+    return nodeIndex
+end xml_Nodes
+
+function xml_NodeOutline someXml, startNode, includeChildCount
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    put xml_TreeNodeOutline(treeID, startNode, includeChildCount) into nodeOutline
+    revDeleteXMLTree treeID
+    return nodeOutline
+end xml_NodeOutline
+
+function xml_GetNodeContents someXml, someNode
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    revDeleteXMLTree treeID
+    return nodeContents
+end xml_GetNodeContents
+
+on xml_SetNodeContents @someXml, someNode, nodeContents
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    revPutIntoXMLNode treeID, someNode, nodeContents
+    put the result into theResult
+    if char 1 to 6 of theResult is "xmlerr" then
+        xml_TreeAddNode someNode, nodeContents, treeID
+        put the result into theResult
+        if char 1 to 6 of theResult is not "xmlerr" then
+            put revXMLText(treeID) into someXml
+        end if
+    else
+        put revXMLText(treeID) into someXml
+    end if
+    revDeleteXMLTree treeID
+    return theResult
+end xml_SetNodeContents
+
+function xml_GetNodeArray someXml, startNode, includeChildCount
+    local nodeArray
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    if nodeIndex is empty then put xml_TreeNodes(treeID, startNode, includeChildCount) into nodeIndex
+    repeat for each line someNode in nodeIndex
+        put revXMLNodeContents(treeID, someNode) into nodeContents
+        put nodeContents into nodeArray [someNode]
+    end repeat
+    revDeleteXMLTree treeID
+    return nodeArray
+end xml_GetNodeArray
+
+function xml_GetShortNodeArray someXml, startNode, depth, includeChildCount
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    if startNode is empty then put revXMLRootNode(treeID) into startNode
+    put revXMLChildContents(treeID, startNode, tab, CR, includeChildCount, depth) into nodeArray
+    split nodeArray with CR and tab
+    revDeleteXMLTree treeID
+    return nodeArray
+end xml_GetShortNodeArray
+
+on xml_AddNodeArray @someXml, nodeArray
+    -- can have many "someNode, nodeContents" params pairs
+    
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    repeat for each key someNode in nodeArray
+        put nodeArray [someNode] into nodeContents
+        xml_TreeAddNode someNode, nodeContents, treeID
+    end repeat
+    put revXMLText(treeID) into someXml
+    revDeleteXMLTree treeID
+    return the result
+end xml_AddNodeArray
+
+function xml_ExtractNode someNode, someXML
+   if someXML is empty then return empty
+   put revXMLCreateTree (someXML, true, true, false) into treeID
+   put revXMLText (treeID, someNode) into nodeXml
+   revDeleteXMLTree treeID
+   return nodeXml
+end xml_ExtractNode
+
+
+--> XML | Tree
+-
+/*
+Handlers that deal with global treeIDs, and not xml directly
+*/
+
+function xml_TreeNodeValues treeID, nodeIndex, pDelim
+    if pDelim is empty then put CR into pDelim
+    repeat for each line someNode in nodeIndex
+        put revXMLText(treeID, someNode) & pDelim after nodeValues
+        -- put revXMLNodeContents(treeID, someNode) & pDelim after nodeValues
+    end repeat
+    delete char -1 of nodeValues
+end xml_TreeNodeValues
+
+function xml_TreeChildNodeContents treeID, startNode, pChildName, pDelim
+    if pDelim is empty then put CR into pDelim
+    if char -1 of startNode is "/" then delete char -1 of startNode
+    put revXMLChildNames(treeID, startNode, CR, pChildName, true) into childNames
+    if item 1 of childNames = "xmlerr" then return empty
+    
+    repeat for each line childName in childNames
+        put startNode & "/" & childName into childNode
+        
+        put revXMLText(treeID, childNode) into childNodeContents
+        put revXMLNodeContents(treeID, childNode) into childNodeContents
+        put childNodeContents & pDelim after childNodeContents
+    end repeat
+    delete char -1 of childNodeContents
+    return childNodeContents
+end xml_TreeChildNodeContents
+
+function xml_TreeChildNodes treeID, startNode, pChildName, pIncludeChildCount
+    -- use of this handler often implies repeating loop twice, which is naturally slower
+    -- but it is convenient for scripting
+    -- to speed up just copy code into function
+    
+    if char -1 of startNode is "/" then delete char -1 of startNode
+    put revXMLChildNames(treeID, startNode, CR, pChildName, pIncludeChildCount) into childNames
+    if item 1 of childNames = "xmlerr" then return empty
+     
+    repeat for each line childName in childNames
+        put startNode & "/" & childName & CR after childNodes
+        -- could get clever and do a callback function here
+    end repeat
+    delete char -1 of childNodes
+    return childNodes
+end xml_TreeChildNodes
+
+function xml_TreeNodes treeID, startNode, includeChildCount
+    if treeID is not a number then return empty
+    put xml_TreeNodeOutline(treeID, startNode, includeChildCount) into someOutline
+    return outline_ToPathIndex(someOutline, "/")
+end xml_TreeNodes
+
+
+--> XML | Tree | Outline
+-
+function xml_TreeConstructOutline treeID
+    put revXMLRootNode(treeID) into myStartNode
+    if myStartNode is empty then
+        -- revXMLTree crashes with empty start nodes caused by parsing bad xml
+        exit to top
+    end if
+    put revXMLTree(treeID, myStartNode, return, tab, true, -1) into tabbedText
+    return tabbedText
+end xml_TreeConstructOutline
+
+function xml_TreeNodeOutline treeID, startNode, includeChildCount
+    if startNode is empty then put revXMLRootNode(treeID) into startNode
+    return revXMLTree(treeID, startNode, CR, tab, includeChildCount, -1)
+end xml_TreeNodeOutline
+
+on xml_TreeAddNode someNode, nodeContents, treeID
+    revPutIntoXMLNode treeID, someNode, nodeContents
+    put the result into theResult
+    if char 1 to 6 of theResult is "xmlerr" then
+        set the itemdelimiter to "/"
+        repeat with itemNum = 2 to (the number of items of someNode - 1)
+            put item 1 to itemNum of someNode into parentPath
+            
+            -- if there is a node parentPath
+            put revXMLNodeContents(treeID, parentPath) into testError
+            if char 1 to 6 of testError is "xmlerr" then
+                -- lets add an empty node
+                put item -1 of parentPath into nodeName
+                put item 1 to -2 of parentPath into baseNode
+                revAddXMLNode treeID, baseNode, nodeName, empty
+            end if
+        end repeat
+        put item -1 of someNode into nodeName
+        put item 1 to -2 of someNode into parentPath
+        revAddXMLNode treeID, parentPath, nodeName, nodeContents
+    end if
+    return the result
+end xml_TreeAddNode
+
+on xml_TreeAddChild childName, someNode, nodeContents, treeID
+    -- changed param order (was "xml_TreeAddNodeChild")
+    put someNode & "/" & childName into childNode
+    revPutIntoXMLNode treeID, childNode, nodeContents
+    put the result into theResult
+    if char 1 to 6 of theResult is "xmlerr" then
+        revAddXMLNode treeID, someNode, childName, nodeContents
+        put the result into theResult
+    end if
+    return theResult
+end xml_TreeAddChild
+
+function xml_TreeRecurse treeID, startNode, tabBit
+    -- was "xml_RecurseChildren
+    local titleOutline
+    
+    put revXMLAttribute(treeID, startNode, "text") into nodeTitle
+    if item 1 of nodeTitle is "xmlErr" then put "Body" into nodeTitle
+    put tabBit & nodeTitle into osTilte
+    line_Insert osTilte, titleOutline
+     
+    put revXMLChildNames(treeID, startNode, return, empty, true) into childNames
+    repeat for each line childName in childNames
+        put tab & tabBit into nextTabBit
+        put startNode & "/" & childName into someChild
+        put xml_TreeRecurse(treeID, someChild, nextTabBit) into nextOutlineBit
+        line_Insert nextOutlineBit, titleOutline
+    end repeat
+    return titleOutline
+end xml_TreeRecurse
+
+function xml_TreeCreateAttributeTag someNode, treeID
+    put xml_TreeNodeAttributeArray(someNode, treeID) into attribute_Array
+    put keys(attribute_Array) into attributeKeys
+     
+    if attributeKeys is empty then
+        put empty into someTag
+    else
+        set the itemdelimiter to "/"
+        put last item of someNode into someTitle
+        put "<" & someTitle into someTag
+        repeat for each line someKey in attributeKeys
+            put attribute_Array[someKey] into someValue
+            put space & someKey & "=" & kwote(someValue) after someTag
+        end repeat
+        if nodeContents is empty then put "/" after someTag
+        put ">" after someTag
+    end if
+    return someTag
+end xml_TreeCreateAttributeTag
+
+function xml_TreeNodeAttributeArray someNode, treeID
+    put revXMLAttributes(treeID, someNode, tab, return) into attributeTable
+    split attributeTable by return and tab
+    return attributeTable
+end xml_TreeNodeAttributeArray
+
+
+--> XML | Tree | Array
+-
+function xml_ConstructTreePathArray someXML
+    -- hack for "xmlns
+    replace " xmlns='" with " xmlNameSpace='" in someXml
+    
+    local treeArray
+    put revCreateXMLTree(someXml, true, true, false) into treeID
+    put revXMLRootNode(treeID) into startNode
+    xml_TreeConstructArray treeID, startNode, treeArray
+    revDeleteXMLTree treeID
+    return treeArray
+end xml_ConstructTreePathArray
+
+on xml_TreeConstructArray treeID, startNode, @treeArray
+    xml_TreeAddToArray startNode, treeID, treeArray
+    
+    put revXMLChildNames(treeID, startNode, return, empty, true) into childNames
+    repeat for each line childName in childNames
+        put startNode & "/" & childName into childNode
+        xml_TreeConstructArray treeID, childNode, treeArray
+    end repeat
+end xml_TreeConstructArray
+
+on xml_TreeAddToArray someNode, treeID, @treeArray
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    if item 1 of nodeContents is not "xmlerr" then
+        put nodeContents into treeArray ["_tree"][someNode]
+    end if
+     
+    -- "revXMLAttributes" ignores "xmlns" attributes
+    put revXMLAttributes(treeID, someNode, tab, CR) into attributeArray
+    if item 1 of attributeArray is not "xmlerr" then
+        split attributeArray by CR and tab
+        put attributeArray into treeArray ["_attribute"][someNode]
+    end if
+end xml_TreeAddToArray
+
+
+--> XML | Tree | Array | Trevor
+-
+/*
+Converts an XML tree into a Revolution multi-dimensional array.
+A nodes attributes will be stored as an array of it's "@attributes" key.
+Node names will retain the sequence information (i.e. node[1], node[2], etc.).
+This information is necessary to determine order that keys should be processed in. Example:
+set the itemDelimiter to "["
+put the keys of theArray into theKeys
+sort theKeys numeric by the last item of each
+
+pUseValueKey: The default value is false. In this case you get an array that has an @attributes
+key for nodes that have attributes and either a) no value or b) only child nodes. Otherwise it contains the node contents.
+Set to true if you want to store a nodes value in the '@value' key. This will allow a key to have
+both attributes (in @attributes key) and a value (in @value key).
+
+"put the array_KeyTranslation [theKey] of the target into theKey" is used to translate keys if pTranslateKeyBoolean = true
+pStoreEncodedAs defaults to "UTF-8"
+*/
+
+function xml_ToArray pXML, pTranslateKeyBoolean, pStoreEncodedAs, pUseValueKey, pGoodXML
+   -- was "xml_ConvertXmlToArray"
+   local theArray, theResult, theRootNode, treeID
+   local theXMLEncoding
+   
+   ## Create an XML tree from XML text
+   put pGoodXML is true into pGoodXML
+   put revCreateXMLTree (pXML, pGoodXML, true, false) into treeID
+   
+   if treeID is an integer then
+      xml_ExtractEncoding pXML, versionMatch, theXMLEncoding
+      
+      ## Now convert to array.
+      ## The 1st dimension has one key which is the name of the root node.
+      put revXMLRootNode(treeID) into theRootNode
+      if theRootNode is not empty and not (theRootNode begins with "xmlerr,") then
+         put xml_ConvertXMLNodeToArray (treeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArray [theRootNode]
+      end if
+      
+      revDeleteXMLTree treeID
+   end if
+   return theArray
+end xml_ToArray
+
+function xml_ArrayFromID treeID, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean
+   xml_ExtractEncoding pXML, versionMatch, theXMLEncoding
+   put revXMLRootNode (treeID) into theRootNode
+   if theRootNode is not empty and not (theRootNode begins with "xmlerr,") then
+      put xml_ConvertXMLNodeToArray (treeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArray [theRootNode]
+   else
+      return empty
+   end if
+   return theArray
+end xml_ArrayFromID
+
+function xml_ConvertXMLTreeToArray pXMLTree, pStoreEncodedAs, pUseValueKey
+    return xml_ToArray (revXMLText (pXMLTree), pStoreEncodedAs, pUseValueKey)
+end xml_ConvertXMLTreeToArray
+
+function xml_FromArray pArray, pArrayEncoding, pStoreEncodedAs, pStartNode, pIsFormatted
+   put xml_TreeFromArray (pArray, pArrayEncoding, pStoreEncodedAs) into treeID
+   put revXMLText (treeID, pStartNode, pIsFormatted) into someXml
+   revDeleteXMLTree treeID
+   return someXml
+end xml_FromArray
+
+function xml_TreeFromArray pArray, pArrayEncoding, pStoreEncodedAs
+   -- was "xml_ConvertArrayToXML"
+   /*
+   Converts a multi-dimensional array to an XML tree.
+   The array should contain one key in the 1st dimension which
+   will become the root node. Attributes of a node should be stored
+   as an array in the @attributes key. Sequence information for multiple
+   nodes with the same name should be included in the node name using
+   brackets (i.e. node[1], node[2], node[3]).
+   Returns an xml tree id (integer) or an error message.
+   */
+   
+   local theError,theRootNode,theXML,theXMLTree
+   
+   ## if pArrayEncoding is empty then current platform encoding is assumed
+   if pStoreEncodedAs is empty then put "UTF-8" into pStoreEncodedAs
+   
+   ## Create XML for root node. Note that we take extra steps in order to support
+   ## converting an array that only represents part of a tree rather than the entire tree.
+   ## In this case there may be multiple nodes at the root level.
+   put line 1 of the keys of pArray into theRootNode
+   set the itemdelimiter to "["
+   put "<" & item 1 of theRootNode & "/>" into theXML
+   
+   ## Create XML needed to create tree
+   put format("<?xml version=\"1.0\" encoding=\"%s\"?>%s", pStoreEncodedAs, theXML) into theXML
+   put revCreateXMLTree(theXML, true, true, false) into theXMLTree
+   
+   if theXMLTree is an integer then
+      ## Loop over all nodes at root level
+      put false into stripMetaKeys
+      put xml_SortArrayKeysWithXMLOrdering (pArray, stripMetaKeys) into theNodes
+      
+      ## Create tree using helper function
+      repeat for each line theNode in theNodes
+         xml_ConvertArrayDimensionToXML pArray[theNode], theXMLTree, slash & theNode, pArrayEncoding, pStoreEncodedAs
+         put the result into theError
+         
+         if theError is not empty then exit repeat
+      end repeat
+      
+      if theError is not empty then
+         ## something went wrong, clean bad tree
+         revDeleteXMLTree theXMLTree
+      end if
+   else
+      put theXMLTree into theError
+   end if
+   
+   if theError is not empty then
+      return theError
+   else
+      return theXMLTree
+   end if
+end xml_TreeFromArray
+
+private command xml_ConvertArrayDimensionToXML pArray, pTreeID, pNode, pArrayEncoding, pStoreEncodedAs
+   /*
+   -- Helper function for xml_FromArray
+   -- Converts the multi-dimensional array pArray to nodes in pTreeID.-- Calls itself recursively.
+   -- Returns error message.
+   */
+   local theError, theKey, theKeys, theNode
+   
+   ## A workaround for fact that Revolution does not return
+   ## keys in the order we created them
+   put false into stripMetaKeys
+   put xml_SortArrayKeysWithXMLOrdering(pArray, stripMetaKeys) into theNodes
+   
+   ## Arrays might have sequencing info in name
+   ## (i.e. step[1], step[2], ... )
+   set the itemdelimiter to "["
+   
+   repeat for each line theFullNode in theNodes
+      put item 1 of theFullNode into theNode
+      
+      ## Look for attributes. These will be added as attributes to pNode.
+      if theNode is "@attributes" or theNode is "@attr" then
+         repeat for each line theKey in the keys of pArray[theFullNode]
+            revSetXMLAttribute pTreeID, pNode, theKey, xml_EncodeString(pArray[theFullNode][theKey], pArrayEncoding, pStoreEncodedAs)
+            if the result begins with "xmlerr," then
+               put the result && "(setting attribute" && theKey && "for node" && pNode & ")" into theError
+            end if
+            
+            if theError is not empty then exit repeat
+         end repeat
+         
+      else if theNode is "@value" then
+         ## This XML tree is using complex structure. Node is the value of the parent node
+         revPutIntoXMLNode pTreeID, pNode, xml_EncodeString(pArray[theFullNode], pArrayEncoding, pStoreEncodedAs)
+         if the result begins with "xmlerr," then
+            put the result && "(adding child node" && theNode && "to node" && pNode & ")" into theError
+         end if
+         
+      else
+         if the keys of pArray[theFullNode] is not empty then
+            ## Node has children. Add node to XML tree then call self recursivly to create children nodes.
+            revAddXMLNode pTreeID, pNode, theNode, empty
+            if the result begins with "xmlerr," then
+               put the result && "(adding node" && theNode & ")" into theError
+            end if
+            
+            if theError is empty then
+               xml_ConvertArrayDimensionToXML pArray[theFullNode], pTreeID, pNode & slash & theFullNode, pArrayEncoding, pStoreEncodedAs
+               put the result into theError
+            end if
+         else
+            ## Node has no children but possibly a value. Create node and add value (which may be empty).
+            revAddXMLNode pTreeID, pNode, theNode, xml_EncodeString(pArray[theFullNode], pArrayEncoding, pStoreEncodedAs)
+            if the result begins with "xmlerr," then
+               put the result && "(adding child node" && theNode && "to node" && pNode & ")" into theError
+            end if
+         end if
+      end if
+      
+      if theError is not empty then exit repeat
+   end repeat
+   
+   return theError
+end xml_ConvertArrayDimensionToXML
+
+function xml_SortArrayKeysWithXMLOrdering pArray, pStripMetaKeys
+    -- Revolution array keys are never guaranteed to be in order you created-- them in so we must come up with some other way of maintaining-- proper sequence. For arrays representing XML, the XML syntax is-- used (i.e. node[1], node[2], etc.). This handler will sort keys that use-- this syntax for representing sequence.
+    put pStripMetaKeys is not false into pStripMetaKeys
+    
+    put the keys of pArray into theKeys
+    set the itemdelimiter to "["
+    sort theKeys numeric by the last item of each -- 1], 2], 3], etc.
+    
+    if pStripMetaKeys then
+        filter theKeys without "@*"
+    end if
+    
+    return theKeys
+end xml_SortArrayKeysWithXMLOrdering
+
+private function xml_ConvertXMLNodeToArray pTreeID, pNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean
+   /*
+   Helper function for xml_ToArray.
+   Converts an XML node to a multi-dimensional array.-- Calls itself recursively.
+   */
+   local theArrayA, theAttributes, theChildNode, theKey
+   
+   ## Look for attributes of the node. Store as array in "@attributes" key
+   put revXMLAttributes (pTreeID, pNode, tab, cr) into theAttributes
+   if theAttributes is not empty then
+      put xml_EncodeString (theAttributes, pXMLTreeEncoding, pStoreEncodedAs) into theAttributes
+      split theAttributes by cr and tab -- create array
+      put theAttributes into theArrayA ["@attributes"]
+   end if
+   
+   ## Look for children nodes.
+   set the itemdelimiter to slash
+   put revXMLFirstChild (pTreeID, pNode) into theChildNode
+   if theChildNode is empty or theChildNode begins with "xmlerr," then
+      put xml_EncodeString (revXMLNodeContents (pTreeID, pNode), pXMLTreeEncoding, pStoreEncodedAs) into theValue
+      if word 1 to -1 of theValue is empty and the keys of theArrayA is not empty then
+         ## Empty node that has attributes
+         return theArrayA
+      else if pUseValueKey then
+         ## Force value into @value
+         put theValue into theArrayA ["@value"]
+         return theArrayA
+      else
+         ## Single Node with value: Return value. Attributes are ignored.
+         return theValue
+      end if
+   else
+      ## Child nodes were found. Recursively call self and store result in array.
+      repeat while theChildNode is not empty and not (theChildNode begins with "xmlerr,")
+         put the last item of theChildNode into theKey
+         
+         /*
+         if pTranslateKeyBoolean is true then
+            put the array_KeyTranslation [theKey] of the target into theKey
+            if theKey is empty then next repeat -- this can repeat forever
+         end if 
+         */
+         
+         put xml_ConvertXMLNodeToArray (pTreeID, theChildNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArrayA [theKey]
+         put revXMLNextSibling (pTreeID, theChildNode) into theChildNode
+      end repeat
+      
+      return theArrayA
+   end if
+end xml_ConvertXMLNodeToArray

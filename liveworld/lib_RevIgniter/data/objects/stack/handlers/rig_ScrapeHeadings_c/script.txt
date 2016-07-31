@@ -1,0 +1,20 @@
+command rig_ScrapeHeadings someHtml, @pageTitle, @handlerNames, @handerTitleNodes
+   -- revXMLDeleteAllTrees
+   
+   if pTidyIsTrue then html_Tidy someHtml
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   --
+   put scrapeID_GetDiv (treeID, "id", "content") into contentsDiv
+   put xpath_ConstructHeadingPath (1, "content") into someXPath
+   put word 1 to -1 of line 1 of revXMLDataFromXPathQuery (treeID, someXPath) into pageTitle
+   -- 
+   put xpath_ConstructHeadingPath (3, "content") into someXPath
+   put word 1 to -1 of revXMLEvaluateXPath (treeID, someXPath) into handerTitleNodes
+   put revXMLDataFromXPathQuery (treeID, someXPath) into handlerNames
+   rig_CleanHandlerNames handlerNames
+   
+   put scrapeID_ConstructHeaderPageArray (treeID) into headerPageArray
+   --
+   revDeleteXMLTree treeID
+   return headerPageArray
+end rig_ScrapeHeadings

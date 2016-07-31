@@ -1,0 +1,12 @@
+function hArray_ConstructHkeyArray
+   global gHkey_Array
+   local bigHKeyArray
+   
+   put gHkey_Array ["handlerArray"] into handlerArray
+   repeat for each key shortHkey in handlerArray
+      if shortHkey = "_,c" then next repeat
+      put handlerArray [shortHkey] into hKeyArray
+      union bigHKeyArray with hKeyArray
+   end repeat
+   return bigHKeyArray
+end hArray_ConstructHkeyArray

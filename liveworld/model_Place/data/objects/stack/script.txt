@@ -1,0 +1,30 @@
+--> MetaData
+-
+license: GPLv3
+name: model_Place
+type: model
+version: 0.1
+
+/*
+Some old code here.
+The idea is that we should make it sersiously easy to create a model for where stacks or assets are on disk.
+*/
+
+
+--> Folder | Stack Places | Model
+-
+[[ _FetchHandler (folder_AddToStackPlaces,c) ]]
+
+[[ _FetchHandler (folder_DeleteFromStackPlaces,c) ]]
+
+[[ _FetchHandler (folder_GetPlaceFolder,f) ]]
+
+[[ _FetchHandler (folder_SetPlaceFolder,c) ]]
+
+[[ _FetchHandler (folder_GetStackPlaceNames,f) ]]
+
+[[ _FetchHandler (folder_GetStackPlaces,f) ]]
+
+[[ _FetchHandler (folder_GetStackPlaceArray,f) ]]
+
+[[ _FetchHandler (folder_SetStackPlaceArray,c) ]]

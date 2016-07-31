@@ -1,0 +1,14 @@
+function object_ConstructFromPath somePath, someDelimiter
+   -- was "path_ConvertToObject"
+   if someDelimiter is empty then put "/" into someDelimiter
+   set the itemDelimiter to someDelimiter
+   if somePath is empty then return empty
+   
+   put "control " into someObject
+   repeat with itemNum = (the number of items of somePath) down to 1
+      put item itemNum of somePath into objectName
+      put kwote(objectName) && "of group " after someObject
+   end repeat
+   delete word -2 to -1 of someObject
+   return someObject
+end object_ConstructFromPath

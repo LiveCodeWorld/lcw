@@ -1,0 +1,14 @@
+on menu_IsLcwFolder indexView, someBoolean
+   lock screen
+   if someBoolean is true then
+      put the lcw_Folder of indexView into newIndexFolder
+      set the view_Label of indexView to "LCW Libs"
+   else
+      put library_StandardLibFolder() into newIndexFolder
+      set the view_Label of indexView to "OPN Libs"
+   end if
+   set the index_Folder of indexView to newIndexFolder
+   
+   dispatch "refresh" to indexView with true
+   unlock screen
+end menu_IsLcwFolder

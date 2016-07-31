@@ -1,0 +1,5 @@
+getprop object_Owner
+   -- a safe way to work out the object owner
+   put the long id of the target into tObject
+   return object_GetOwner (tObject)
+end object_Owner

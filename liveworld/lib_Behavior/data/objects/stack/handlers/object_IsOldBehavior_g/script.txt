@@ -1,0 +1,10 @@
+getprop object_IsOldBehavior
+   -- must be a button
+   put the long id of the target into scriptObject
+   if word 1 of scriptObject is not "button" then return false
+   
+   -- must also be marked as a "view behavior" in the script metadata
+   put the script_MetaData of scriptObject into scriptMetaData
+   put scriptMetaData ["type"] into scriptType
+   return scriptType is "view behavior"
+end object_IsOldBehavior

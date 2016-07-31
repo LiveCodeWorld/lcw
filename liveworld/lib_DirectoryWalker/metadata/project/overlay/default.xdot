@@ -1,0 +1,94 @@
+digraph dot_FromArray {
+	graph [_draw_="c 9 -#fffffe00 C 7 -#ffffff P 4 0 0 0 172 549 172 549 0 ",
+		bb="0,0,549,172",
+		clusterrank=true,
+		size="31.2500,31.2500",
+		xdotversion=1.7
+	];
+	node [label="\N"];
+	subgraph f {
+		node [color=Green4,
+			fillcolor=GreenYellow,
+			style=filled
+		];
+		n1		 [URL="_FilterFoundFiles%2Cf%2Cstack+%22lib_DirectoryWalker%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 460 116 73.48 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 460 111.8 0 100.34 17 -_FilterFoundFiles ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=_FilterFoundFiles,
+			pos="460,116",
+			style=filled,
+			width=2.0414];
+		n2		 [URL="shell_GetGoodNestedFiles%2Cf%2Cstack+%22lib_DirectoryWalker%22%2C1",
+			_draw_="c 7 -#008b00 C 7 -#adff2f E 263 116 105.31 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 263 111.8 0 150.87 24 -shell_GetGoodNestedFiles ",
+			color=Green4,
+			fillcolor=GreenYellow,
+			height=0.5,
+			label=shell_GetGoodNestedFiles,
+			pos="263,116",
+			style=filled,
+			width=2.928];
+	}
+	subgraph c {
+		node [color=Blue,
+			fillcolor=LightBlue,
+			style=filled
+		];
+		n4		 [URL="folder_Format%2Cc%2Cstack+%22lib_Common%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 78 34 61.38 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 78 29.8 0 80.87 13 -folder_Format ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=folder_Format,
+			pos="78,34",
+			style=filled,
+			width=1.6997];
+		n3		 [URL="_AddInfoFiles%2Cc%2Cstack+%22lib_DirectoryWalker%22%2C1",
+			_draw_="c 7 -#0000ff C 7 -#add8e6 E 78 116 61.88 18 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 78 111.8 0 81.66 13 -_AddInfoFiles ",
+			color=Blue,
+			fillcolor=LightBlue,
+			height=0.5,
+			label=_AddInfoFiles,
+			pos="78,116",
+			style=filled,
+			width=1.7136];
+	}
+	subgraph cluster1 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 9 8 9 82 147 82 147 8 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 78 66.8 0 117.59 18 -stack \"lib_Common\" ",
+			bb="9,8,147,82",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_Common\"",
+			lheight=0.19,
+			lp="78,71",
+			lwidth=1.63,
+			style=filled
+		];
+		n4;
+	}
+	subgraph cluster2 {
+		graph [_draw_="c 7 -#999999 C 7 -#999999 P 4 8 90 8 164 541 164 541 90 ",
+			_ldraw_="F 14 11 -Times-Roman c 7 -#000000 T 274.5 148.8 0 159.2 27 -stack \"lib_DirectoryWalker\" ",
+			bb="8,90,541,164",
+			color=grey60,
+			fillcolor=grey60,
+			label="stack \"lib_DirectoryWalker\"",
+			lheight=0.19,
+			lp="274.5,153",
+			lwidth=2.21,
+			style=filled
+		];
+		n1;
+		n2;
+		n3;
+	}
+	n3 -> n4	 [_draw_="c 7 -#000000 B 4 78 97.64 78 87.3 78 73.94 78 62.22 ",
+		_hdraw_="S 5 -solid c 7 -#000000 C 7 -#000000 P 3 81.5 62.05 78 52.05 74.5 62.05 ",
+		pos="e,78,52.05 78,97.641 78,87.297 78,73.941 78,62.221"];
+}

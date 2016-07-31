@@ -1,0 +1,15 @@
+command menu_Edit pMenuTitle
+   if pMenuTitle is empty then put menu_GetSentTitle() into pMenuTitle
+   
+   set the itemdelimiter to "|"
+   if word 1 to -1 of item 1 of pMenuTitle is "Global" then
+      put menu_GetGlobalController (pMenuTitle) into mController
+   else if pMenuTitle is empty then
+      put menu_GetSentTitle() into pMenuTitle
+      put menu_ControllerFromTitlePath (pMenuTitle) into mController
+   else
+      put menu_ControllerFromTitlePath (pMenuTitle) into mController
+   end if
+   put script_ConstructSuiteHeader (pMenuTitle) into menuHeader
+   script_Edit mController, menuHeader, true
+end menu_Edit

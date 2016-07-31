@@ -1,0 +1,65 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_RigTableWrappers
+type: script library
+version: 0.1
+
+
+--> revIgniter | Compatibility
+-
+/*
+A set of wrappers around revIgniter to handle case where we use old terminology.
+That is where handlers call the original revIgniter code instead of the newly renamed code.
+They should not be needed for new coding.
+Except if it proves useful to seperate out revIgniter compatibility, and to keep the new terminology as optional
+Then these handlers could work with a library of private handlers that are used as a behavior of script only stack.,
+or included at the end
+*/
+
+--> revIgniter | Compatibility | Table.lc
+-
+[[ _FetchHandler (rigSetTableTemplate,c) ]]
+
+[[ _FetchHandler (rigSetTableHeading,c) ]]
+
+[[ _FetchHandler (rigMakeTableColumns,f) ]]
+
+[[ _FetchHandler (rigSetEmptyCellVal,c) ]]
+
+[[ _FetchHandler (rigAddTableRow,c) ]]
+
+[[ _FetchHandler (rigSetTableCaption,c) ]]
+
+[[ _FetchHandler (rigGenerateTable,f) ]]
+
+[[ _FetchHandler (rigClearTableVars,c) ]]
+
+[[ _FetchHandler (rigCompileTableTemplate,c) ]]
+
+
+--> Should be Private 
+-
+[[ _FetchHandler (_rigSetTableData,c) ]]
+
+[[ _FetchHandler (_rigDefaultTableTemplate,f) ]]
+
+
+--> revIgniter | Compatibility | Array.lc
+-
+[[ _FetchHandler (rigArrayElement,f) ]]
+
+[[ _FetchHandler (rigArrayRandElement,f) ]]
+
+[[ _FetchHandler (rigArrayKeys,f) ]]
+
+[[ _FetchHandler (rigArrayValues,f) ]]
+
+[[ _FetchHandler (rigArraySplice,f) ]]
+
+[[ _FetchHandler (rigImplode,f) ]]
+
+[[ _FetchHandler (rigElementsList,f) ]]
+
+[[ _FetchHandler (rigArrayMerge,f) ]]

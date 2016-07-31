@@ -1,0 +1,19 @@
+function object_SearchForProperty objectIndex, booleanProperty, pIsTrue
+   local foundObjects, cantFindObjects
+   put pIsTrue is not false into pIsTrue
+   repeat for each line someObject in objectIndex
+      if exists(someObject) is false then
+         -- opn_Notify ("Cannot find object" && someObject), true
+         line_Add someObject, cantFindObjects
+         next repeat
+      end if
+      
+      set the cursor to busy
+      if the booleanProperty of someObject is pIsTrue then
+         -- put someObject & CR after foundObjects
+         line_Add someObject, foundObjects
+      end if
+   end repeat
+   
+   return word 1 to -1 of foundObjects
+end object_SearchForProperty

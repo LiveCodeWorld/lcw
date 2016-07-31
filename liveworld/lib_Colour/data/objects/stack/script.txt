@@ -1,0 +1,133 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Colour
+type: library
+version: 0.1
+copyright: David Bovill
+
+/*
+This library is for working with colour.
+*/
+
+
+--> Deps
+-
+[[ _FetchHandler (group_Above,g) ]]
+
+[[ _FetchHandler (opn_SwatchFolder,f) ]]
+
+[[ _FetchHandler (opn_ColourFolder,f) ]]
+
+
+--> Colour
+-
+[[ _FetchHandler (colour_Name,g) ]]
+
+[[ _FetchHandler (colour_Name,s) ]]
+
+[[ _FetchHandler (colour_Names,g) ]]
+
+[[ _FetchHandler (colour_Paths,g) ]]
+
+[[ _FetchHandler (colour_BaseNames,f) ]]
+
+[[ _FetchHandler (colour_MenuOutline,f) ]]
+
+[[ _FetchHandler (colour_BaseColourOutline,f) ]]
+
+[[ _FetchHandler (colour_FromMenuPath,c) ]]
+
+[[ _FetchHandler (colour_GetRandom,f) ]]
+
+
+--> Colour | Palette
+-
+[[ _FetchHandler (colour_Palette,g) ]]
+
+[[ _FetchHandler (colour_Palette,s) ]]
+
+[[ _FetchHandler (colour_SetObjectPalette,c) ]]
+
+
+--> Colour | Swatch | Model
+-
+[[ _FetchHandler (colour_GetSwatchArray,f) ]]
+
+[[ _FetchHandler (colour_SetSwatchArray,c) ]]
+
+[[ _FetchHandler (colour_DeleteSwatchArray,c) ]]
+
+[[ _FetchHandler (colour_SwatchNames,f) ]]
+
+[[ _FetchHandler (colour_DeleteSwatch,c) ]]
+
+
+--> Colour | Conversion
+-
+[[ _FetchHandler (colour_RgbNormalise,c) ]]
+
+[[ _FetchHandler (colour_HexNormalise,c) ]]
+
+[[ _FetchHandler (colour_RgbToName,f) ]]
+
+[[ _FetchHandler (colour_NameToRgb,f) ]]
+
+[[ _FetchHandler (colour_TranslateName,f) ]]
+
+[[ _FetchHandler (colour_IsRgb,f) ]]
+
+[[ _FetchHandler (colour_ConvertEnglishName,c) ]]
+
+[[ _FetchHandler (colour_InitialiseNameArray,c) ]]
+
+[[ _FetchHandler (colour_ConstructArray,c) ]]
+
+[[ _FetchHandler (colour_Darken,f) ]]
+
+[[ _FetchHandler (colour_RgbToHSV,f) ]]
+
+[[ _FetchHandler (colour_HSVToRGB,f) ]]
+
+[[ _FetchHandler (colour_RgbToHex,f) ]]
+
+[[ _FetchHandler (colour_HexToRgb,f) ]]
+
+
+--> Image
+-
+[[ _FetchHandler (image_PixelZoom,c) ]]
+
+[[ _FetchHandler (image_SetMaxDimensions,c) ]]
+
+
+--> Image | Data | Pixel
+-
+[[ _FetchHandler (image_PixelToRGB,f) ]]
+
+[[ _FetchHandler (image_RGBToPixel,f) ]]
+
+[[ _FetchHandler (image_PixelColour,f) ]]
+
+[[ _FetchHandler (image_ColourFromPixelNum,f) ]]
+
+[[ _FetchHandler (image_PixelNum,f) ]]
+
+[[ _FetchHandler (image_PixelColour,g) ]]
+
+[[ _FetchHandler (image_PixelTable,g) ]]
+
+[[ _FetchHandler (image_PixelTable,s) ]]
+
+[[ _FetchHandler (image_PixelArray,g) ]]
+
+[[ _FetchHandler (image_ConstructPixelArray,f) ]]
+
+[[ _FetchHandler (image_AddToPixelArray,pc) ]]
+
+
+--> Image | Data | Pixel | Average
+-
+[[ _FetchHandler (image_AverageBlockColour,f) ]]
+
+[[ _FetchHandler (image_AveragePixel,f) ]]

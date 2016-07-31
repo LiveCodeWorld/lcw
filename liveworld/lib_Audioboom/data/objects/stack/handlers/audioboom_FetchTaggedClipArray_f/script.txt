@@ -1,0 +1,10 @@
+function audioboom_FetchTaggedClipArray someTag
+   -- This call will return a paginated response.
+   -- GET /tag/*tag*/audio_clips returns all the audio clips tagged with the specified tag.
+   
+   put urlencode(someTag) into someTag
+   put merge ("tag/[[someTag]]/audio_clips") into apiPath
+   put audioboom_RestGET (apiPath) into someJson
+   put json_ToArray (someJson) into someArray
+   return someArray
+end audioboom_FetchTaggedClipArray

@@ -1,0 +1,10 @@
+getprop view_DisplayModelName
+   -- the default based on the views stem
+   -- return "uOPN_TreeDisplayTable"
+   
+   put the view_Object of the target into someView
+   put the view_Stem of someView into viewStem
+   put toupper(char 1 of viewStem) into char 1 of viewStem
+   put "uOPN_" & viewStem & "DisplayTable" into modelName
+   return modelName
+end view_DisplayModelName

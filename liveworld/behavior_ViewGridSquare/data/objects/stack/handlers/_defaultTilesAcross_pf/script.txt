@@ -1,0 +1,9 @@
+private function _defaultTilesAcross
+   -- let's get a sensible default
+   put the childControlIDs of me into childIDs
+   put the number of lines of childIDs into gridNum
+   
+   put gridNum ^ 0.5 into tilesAcross
+   if tilesAcross is not an integer then return 8
+   return tilesAcross
+end _defaultTilesAcross

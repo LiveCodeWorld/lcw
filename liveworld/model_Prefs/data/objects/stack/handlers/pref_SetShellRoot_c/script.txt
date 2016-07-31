@@ -1,0 +1,19 @@
+command pref_SetShellRoot someShellCommand, prefRootName
+   put "which" && someShellCommand into someShell
+   put line 1 of shell (someShell) into testPath
+   if testPath is empty then
+      put pref_GetValue (prefRootName) into testFolder
+      if there is a folder testFolder then
+         return testFolder
+      else
+         answer warning merge("There is a problem with the path to the shell command [[someShellCommand]]!")
+         breakpoint
+         return empty
+      end if
+   else
+      set the itemdelimiter to slash
+      put empty into item -1 of testPath
+      pref_SetValue prefRootName, testPath
+      return testPath
+   end if
+end pref_SetShellRoot

@@ -1,0 +1,7 @@
+on libraryStack
+   put the short name of the target into targetStackName
+   put the short name of me into myName
+   if targetStackName is not myName then pass libraryStack
+   
+   ide_AddBehaviorHacks true
+end libraryStack

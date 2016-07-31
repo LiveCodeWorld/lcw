@@ -1,0 +1,9 @@
+on linux_Mount mountPath
+  if linux_CheckMounted() contains mountPath then
+    return "Already Mounted"
+  else
+    put "mount" && mountPath into someShellCommand
+    put shell(someShellCommand) into shellResult
+    return shellResult
+  end if
+end linux_Mount

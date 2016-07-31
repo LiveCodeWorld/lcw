@@ -1,0 +1,26 @@
+function dot_ConstructDefSection dotGroupStyleArray, nodeIdArray
+   local defSection
+   repeat for each key numOrName in dotGroupStyleArray
+      put dotGroupStyleArray [numOrName] into groupStyleArray
+      overlayArray_DeconstructGroupStyleArray nodeIds, nodeStyleArray, groupStyleArray
+      put dot_StyleArrayToParams (nodeStyleArray) into styleParams
+      
+      if numOrName is not a number then
+         put "subgraph" && kwote(numOrName) & space after defSection
+      end if
+      put "{" & CR after defSection
+      put tab & "node [" & styleParams & "];" & CR after defSection
+      put CR after defSection
+      
+      -- replace CR with comma in nodeIDs -- lazy
+      repeat for each item nodeID in nodeIDs
+         put dot_ConstructDefaultDefLine (nodeID, nodeIdArray) into nodeDefLine
+         put tab & nodeDefLine & CR after defSection
+      end repeat
+      
+      put "}"  & CR after defSection
+      put CR after defSection
+   end repeat
+   delete char -2 to -1 of defSection
+   return defSection
+end dot_ConstructDefSection

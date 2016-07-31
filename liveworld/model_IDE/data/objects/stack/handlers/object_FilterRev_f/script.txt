@@ -1,0 +1,10 @@
+function object_FilterRev objectIndex
+    repeat for each line someObject in objectIndex
+        get the stack_Name of someObject
+        if char 1 to 3 of it is not "rev" then
+            put someObject & CR after nonRevObjects
+        end if
+    end repeat
+    delete last char of nonRevObjects
+    return nonRevObjects
+end object_FilterRev

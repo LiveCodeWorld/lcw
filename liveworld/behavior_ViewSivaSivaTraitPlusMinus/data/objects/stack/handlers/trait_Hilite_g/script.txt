@@ -1,0 +1,15 @@
+getprop trait_Hilite
+   put the trait_Hilite of the positive_View of me into pHilite
+   put the trait_Hilite of the negative_View of me into nHilite
+   put nHilite and pHilite into bHilite
+   switch
+      case pHilite is false and nHilite is false
+         return "none"
+      case pHilite is true and nHilite is false
+         return "positive"
+      case nHilite is true and pHilite is false
+         return "negaitve"
+      default
+         return "both"
+   end switch
+end trait_Hilite

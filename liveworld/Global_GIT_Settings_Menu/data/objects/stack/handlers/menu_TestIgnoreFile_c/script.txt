@@ -1,0 +1,14 @@
+on menu_TestIgnoreFile mTarget, menuChoice
+   switch menuChoice
+      case "Global"
+         put git_GlobalIgnoreFile() into ignoreFile
+         break
+      case "Local"
+         break
+         put git_GlobalIgnoreFile() into ignoreFile
+   end switch
+   
+   put url ("binfile:" & ignoreFile) into ignoreText
+   put text_LineEndingPlatform (ignoreText) into somePlatform
+   opn_Notify somePlatform, true
+end menu_TestIgnoreFile

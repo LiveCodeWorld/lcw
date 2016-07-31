@@ -1,0 +1,11 @@
+command daemon_SendRedirect redirectURL, socketID, pDescriptiveContent
+   -- Handler that Forwards the user to another URL. It needs an absolute url as a parameter.
+   -- This handler uses a 301 (permanent redirection) to drive the browser to a new location.
+   
+   if pDescriptiveContent is empty then
+      put "Should redirect to <a href=" & quote & redirectURL & quote & ">" & redirectURL & "</a>" into descriptiveContent
+   end if
+   put _redirectionHeaders (redirectURL, pDescriptiveContent) into someHeader
+   daemon_Send someHeader, descriptiveContent, socketID, false
+   return the result
+end daemon_SendRedirect

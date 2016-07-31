@@ -1,0 +1,16 @@
+on mouseUp
+   ask file "Select a file to save your revision..."
+   put it into newFile
+   if it is empty then exit to top
+   
+   put library_ArrayFile ("Hkey_Data") into someFile  
+   put git_GetLastRevision (someFile, 0) into encodedDataArray
+   put encodedDataArray into url ("binfile:" & newFile)
+   put newFile
+   
+   put url ("binfile:" & newFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   display_Array modelArray
+   -- project_SaveHarray gHkey_Array, pProjectName
+end mouseUp

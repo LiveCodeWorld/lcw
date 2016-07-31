@@ -1,0 +1,18 @@
+on tree_MouseDoubleUp treeField
+   if the tree_IsLeaf of treeField is false then pass tree_MouseDoubleUp
+   
+   switch the title_Text of treeField
+      case "Global Menu Object Outline"
+         put the tree_SelectedPath of treeField into objectPath
+         put object_FromPath (objectPath) into someObject
+         if exists(someObject) then
+            edit the script of someObject
+         else
+            beep
+         end if
+         break
+      default
+         put the tree_SelectedIndex of treeField into mTitle
+         menu_EditMenuScript mTitle
+   end switch
+end tree_MouseDoubleUp

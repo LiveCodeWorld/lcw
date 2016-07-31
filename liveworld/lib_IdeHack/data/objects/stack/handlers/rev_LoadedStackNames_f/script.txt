@@ -1,0 +1,18 @@
+function rev_LoadedStackNames
+   -- returns an index of short stack names
+   switch searchScope
+      case "all"
+         return revLoadedStacks (searchScope)  -- includes stacks such as message box
+      case "application"
+         return revLoadedStacks (searchScope) -- only includes non-Rev stacks
+      case "-"
+      case "known"
+         put revLoadedStacks ("application") into stackNames
+         put opn_GetStackNameIndex() into opnStackNames -- only those known to opn
+         line_Add stackNames, opnStackNames
+         return stackNames
+      case "-"
+      case "preferences"
+         return revLoadedStacks() -- respects current preference setting
+   end switch
+end rev_LoadedStackNames

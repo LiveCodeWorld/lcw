@@ -1,0 +1,5 @@
+on menu_SetMyName mTarget
+   put the group_Name of mTarget into oldName
+   put opn_Ask ("Give this group and title a name...", oldName) into someName
+   set the group_Name ["random"] of mTarget to someName
+end menu_SetMyName

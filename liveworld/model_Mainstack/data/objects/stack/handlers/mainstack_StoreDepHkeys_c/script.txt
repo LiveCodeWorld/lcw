@@ -1,0 +1,6 @@
+command mainstack_StoreDepHkeys mainStackFolder, shortHkeys
+   sort shortHkeys by item 1 of each
+   mainstack_StoreText mainStackFolder, "short_hkey_deps.txt", shortHkeys
+   put the result into someFile
+   return someFile
+end mainstack_StoreDepHkeys

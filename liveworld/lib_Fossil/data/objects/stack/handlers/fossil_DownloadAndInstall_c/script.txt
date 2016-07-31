@@ -1,0 +1,13 @@
+command fossil_DownloadAndInstall installationFolder
+   put fossil_FetchBinary() into binData
+   
+   folder_Format installationFolder
+   put installationFolder & "fossil" into installationPath
+   fossil_InstallBinary binData, installationPath
+   
+   put the fossilPreference_Card of me into fossilPreferenceCard
+   set the displayed_FossilPath of fossilPreferenceCard to installationPath
+   
+   put the fossilNotInstalled_View of me into notInstalledView
+   hide notInstalledView
+end fossil_DownloadAndInstall

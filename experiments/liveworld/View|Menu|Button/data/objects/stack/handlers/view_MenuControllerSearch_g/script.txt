@@ -1,0 +1,5 @@
+getprop view_MenuControllerSearch [mTitle]
+   put the long id of the target into someView
+   menu_SearchViewHierarchy someView, mTitle, mController
+   return mController
+end view_MenuControllerSearch

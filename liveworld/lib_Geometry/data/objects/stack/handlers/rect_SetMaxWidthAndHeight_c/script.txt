@@ -1,0 +1,27 @@
+command rect_SetMaxWidthAndHeight maxW, maxH, originalW, originalH, @newW, @newH
+    -- was "rect_SetWidthAndHeight"
+    put maxW / originalW into x_ScaleFactor
+    if maxH is empty then
+        put round(x_ScaleFactor * originalH) into newH
+        put round(x_ScaleFactor * originalW) into newW
+    else
+        put maxH / originalH into y_ScaleFactor
+        
+        -- choose the biggest and then test
+        if y_ScaleFactor > x_ScaleFactor then
+            put y_ScaleFactor into sFactor
+        else
+            put x_ScaleFactor into sFactor
+        end if
+        put round(sFactor * originalH) into newH
+        put round(sFactor * originalW) into newW
+         
+        if newH > maxH then
+            put round(y_ScaleFactor * originalH) into newH
+            put round(y_ScaleFactor * originalW) into newW
+        else if newW > maxW then
+            put round(x_ScaleFactor * originalH) into newH
+            put round(x_ScaleFactor * originalW) into newW
+        end if
+    end if
+end rect_SetMaxWidthAndHeight

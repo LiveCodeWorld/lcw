@@ -1,0 +1,12 @@
+function child_AllNamesThere childNames
+   put the child_Names of me into realChildNames
+   if the number of lines of childNames is not the number of lines of realChildNames then
+      return false
+   end if
+   repeat for each line childName in childNames
+      if childName is not among the lines of realChildNames then
+         return false
+      end if
+   end repeat
+   return true
+end child_AllNamesThere

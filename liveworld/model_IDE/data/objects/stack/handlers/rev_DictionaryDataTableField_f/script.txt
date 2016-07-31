@@ -1,0 +1,22 @@
+function rev_DictionaryDataTableField
+   if exists (fld "Data" of card "Index" of stack "revDictionary") then
+      return the long id of fld "Data" of card "Index" of stack "revDictionary"
+   else
+      --/Applications/Revolution Enterprise/3.5.0-gm-2/Toolset/revdictionary.rev
+      put the filename of stack "Home" into someFile
+      set the itemdelimiter to "/"
+      put "revdictionary.rev" into item -1 of someFile
+      if exists (stack someFile) then
+         if exists (fld "Data" of card "Index" of stack someFile) then
+            put the long id of fld "Data" of card "Index" of stack someFile into tableField
+            return tableField
+         else
+            go to stack someFile
+            exit to top
+            -- return the long id of fld "Data" of card "Index" of stack someFile
+         end if
+      else
+         breakpoint
+      end if
+   end if
+end rev_DictionaryDataTableField

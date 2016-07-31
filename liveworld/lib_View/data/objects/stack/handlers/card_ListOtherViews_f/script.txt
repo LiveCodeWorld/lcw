@@ -1,0 +1,14 @@
+function card_ListOtherViews cardObject, pNotTheseViewNames
+   local foundObjects
+   view_NormalizeName viewName
+   repeat with cNum = 1 to the number of controls in cardObject
+      put the long id of control cNum of cardObject into testObject
+      put the view_Name of testObject into testViewName
+      if testViewName is empty then next repeat
+      
+      if testViewName is not among the items of pNotTheseViewNames then
+         put testObject & CR after foundObjects
+      end if
+   end repeat
+   return foundObjects
+end card_ListOtherViews

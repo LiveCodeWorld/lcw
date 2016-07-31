@@ -1,0 +1,4 @@
+command hkey_DeleteDotFile hKey
+   put hkey_DotFile (hKey) into someFile
+   delete file someFile
+end hkey_DeleteDotFile

@@ -1,0 +1,15 @@
+function dot_MakeAcyclic dotFile
+    /*
+    acyclicis a filter that takes a directed graph as input and outputs a copyofthe graph with sufficient edges 
+    reversed to makethe graph acyclic. The reversed edge inherits all of the attributes of the original edge. The 
+    optional file argument specifies where the the input graph is stored; by default, the program reads from 
+    stdin. 
+    */
+    -- acyclic[?nv? ][?ooutfile][ file]
+    shell_BashParamEscape dotFile
+    put merge("acyclic [[dotFile]]") into someShell
+    
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & someShell into someShell
+    return shell(someShell)
+end dot_MakeAcyclic

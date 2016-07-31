@@ -1,0 +1,7 @@
+function _arrowWidth squareWidth
+   if squareWidth is empty then return 50
+   
+   put round ( squareWidth / 10 ) into halfArrowWidth
+   put 2 * halfArrowWidth into arrowWidth
+   return arrowWidth
+end _arrowWidth

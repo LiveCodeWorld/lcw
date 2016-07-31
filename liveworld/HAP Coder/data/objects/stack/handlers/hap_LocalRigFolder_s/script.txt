@@ -1,0 +1,6 @@
+setprop hap_LocalRigFolder rigFolder
+   put the hap_MetaDataArray of me into hapMetaDataArray
+   put rigFolder into hapMetaDataArray ["hap_LocalRigFolder"]
+   set the hap_MetaDataArray of me to hapMetaDataArray
+   return hapMetaDataArray
+end hap_LocalRigFolder

@@ -1,0 +1,15 @@
+getprop script_ContainsToken [someToken]
+   put the long id of the target into targetObject
+   try
+      put the script of targetObject into someScript
+      if someScript is empty then return false
+      if someToken is among the tokens of someScript then
+         return true
+      else
+         return false
+      end if
+   catch someError
+      -- script may be protected
+      return false
+   end try
+end script_ContainsToken

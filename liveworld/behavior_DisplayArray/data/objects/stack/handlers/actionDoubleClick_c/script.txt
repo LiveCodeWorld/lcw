@@ -1,0 +1,11 @@
+command actionDoubleClick pathItems
+   put _getValue (pathItems) into someValue
+   put the action_DoubleClickCommand of me into mouseDoubleUpCommand
+   if mouseDoubleUpCommand is empty then
+      put someValue
+   else
+      put the display_MouseTarget of me into displayMouseTarget
+      put the long id of the target into treeWidget
+      dispatch mouseDoubleUpCommand to displayMouseTarget with treeWidget,someValue,pathItems
+   end if
+end actionDoubleClick

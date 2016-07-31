@@ -1,0 +1,6 @@
+function menu_GetSentTitlePath
+   -- could be called "menu_GetSentTitlePath"
+   global gTemp_ActiveMenuArray
+   put gTemp_ActiveMenuArray ["sent"]["mTitlePath"] into sentMenuPath
+   return sentMenuPath
+end menu_GetSentTitlePath

@@ -1,0 +1,13 @@
+function folder_ListShortStackFiles someFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   repeat for each line shortFile in shortFiles
+      if there is a stack shortFile then
+         put shortFile & CR after shortStackFiles
+      end if
+   end repeat
+   delete char -1 of shortStackFiles
+   set the defaultfolder to oFolder
+   return shortStackFiles
+end folder_ListShortStackFiles

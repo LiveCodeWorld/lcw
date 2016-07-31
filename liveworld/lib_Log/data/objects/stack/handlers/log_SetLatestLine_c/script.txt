@@ -1,0 +1,11 @@
+command log_SetLatestLine logEntry, pLogName
+   -- log_AddLine
+   put log_GetFile (pLogName) into logErrorFile
+
+   put "file:" & logErrorFile into logUrl
+   put url logUrl into fullLogIndex
+   put logEntry & CR before fullLogIndex
+   put fullLogIndex into url logUrl
+
+   return fullLogIndex
+end log_SetLatestLine

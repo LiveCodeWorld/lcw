@@ -1,0 +1,6 @@
+on menu_RemoveLibraryFromAll ideScriptObject, allStack
+   library_DeleteUsedStack allStack, "All"
+   
+   put opn_LibraryStackFiles ("All") into stackNames
+   display_Lines stackNames
+end menu_RemoveLibraryFromAll

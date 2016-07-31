@@ -1,0 +1,10 @@
+on menu_LoadCheckoutGlobal scriptObject, setName
+   put merge ("Are you sure you want to replace the current global checkout variables with those loaded from the set '[[setName]]'?") into someQuestion
+   opn_Answer someQuestion
+   
+   library_ReloadCheckoutGlobals setName
+   
+   put library_GetSetName() into currentSetName
+   put merge ("The global checkout variables loaded from the stored set '[[setName]]' have been loaded into memory. They will now automatically be saved with the currently active set ('[[currentSetName]])!") into someComment
+   opn_Notify someComment
+end menu_LoadCheckoutGlobal

@@ -1,0 +1,9 @@
+private command view_TrimFirstViewNameItem @vNames
+   put replacetext (vNames, "(View\|)\W*", empty) into vNames
+   return empty
+   
+   set the itemdelimiter to "|"
+   repeat with lineNum = 1 to the number of lines of vNames
+      delete item 1 of line lineNum of vNames 
+   end repeat
+end view_TrimFirstViewNameItem

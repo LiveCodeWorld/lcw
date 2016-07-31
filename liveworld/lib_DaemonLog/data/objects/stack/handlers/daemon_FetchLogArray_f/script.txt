@@ -1,0 +1,5 @@
+function daemon_FetchLogArray
+   put server_LogArrayFile() into someFile
+   put array_Fetch (someFile) into dataArray
+   return dataArray
+end daemon_FetchLogArray

@@ -1,0 +1,5 @@
+function logArray_Fetch
+   put logArray_File() into someFile
+   put array_Fetch (someFile) into dataArray
+   return dataArray
+end logArray_Fetch

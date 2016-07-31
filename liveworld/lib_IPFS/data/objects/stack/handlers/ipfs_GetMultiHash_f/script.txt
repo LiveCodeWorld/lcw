@@ -1,0 +1,5 @@
+function ipfs_GetMultiHash stackName
+   put ipfs_FetchArray() into ipfsArray
+   put ipfsArray [stackName] into ipfsMultiHash
+   return ipfsMultiHash
+end ipfs_GetMultiHash

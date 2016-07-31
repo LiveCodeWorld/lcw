@@ -1,0 +1,18 @@
+function overlayArray_FromLinkArray linkArray, pDotHeaderArray, pGraphPropertyArray
+   local overlayArray
+   if linkArray is not an array then return empty
+   
+   overlayArray_SetData overlayArray, linkArray
+   overlayData_ConstructAndSetGroupStyleArray overlayArray, pOverlayName
+   put overlayData_ConstructClusterArray (overlayArray) into clusterArray
+   overlayArray_SetClusterArray overlayArray, clusterArray
+   
+   if pDotHeaderArray is an array then overlayArray_SetHeaderArray overlayArray, pDotHeaderArray
+   if pGraphPropertyArray is an array then overlayArray_SetGraphPropertyArray overlayArray, pGraphPropertyArray
+   
+   put overlay_GetDefaultArray() into dotDefaultArray -- not working
+   overlayArray_AddDefaultUnion overlayArray, dotDefaultArray
+   dot_NormalizeArray overlayArray -- should not be needed if overlay_GetDefaultArray() gets somethign sensible
+   
+   return overlayArray
+end overlayArray_FromLinkArray

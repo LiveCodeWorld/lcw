@@ -1,0 +1,18 @@
+command stack_RevertLoaded pStackNames, pLockMessages
+   -- this needs work!!!
+   -- important handler to get robustly right
+   -- could be fine tuned to simply act on the stack
+   
+   if pStackNames is empty then put revLoadedStacks("application") into pStackNames
+   if pLockMessages is not false then set the lockmessages to true
+   put the defaultstack into oDefault
+   repeat for each line stackName in pStackNames
+      -- set the defaultstack to stackName
+      toplevel stack stackName
+      revert
+   end repeat
+   if pLockMessages is not false then set the lockmessages to false
+   library_StopEnvironment
+   library_StartEnvironment
+   set the defaultstack to oDefault
+end stack_RevertLoaded

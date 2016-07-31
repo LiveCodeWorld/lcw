@@ -1,0 +1,5 @@
+setprop image_ViewName vName
+   put the image_View of me into imageView
+   set the view_Swap of imageView to vName
+   return the result
+end image_ViewName

@@ -1,0 +1,5 @@
+getprop git_ScriptFileLog
+   put the script_File of the target into someFile
+   put git_FileLog (someFile) into someLog
+   return someLog
+end git_ScriptFileLog

@@ -1,0 +1,12 @@
+getprop vertical_Spacing  
+   put LocalArray ["verticalSpacing"] into verticalSpacing
+   if verticalSpacing is empty then
+      -- a default
+      put 0 into verticalSpacing
+      put verticalSpacing into LocalArray ["verticalSpacing"]
+   end if
+   return verticalSpacing
+   
+   -- all a bit complicated ???
+   -- put the back_Property ["vertical_Spacing"] of me into verticalSpacing
+end vertical_Spacing

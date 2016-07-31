@@ -1,0 +1,5 @@
+function hkey_IsAuthored hKey, pHarray
+   put hArray_GetHandler (hKey, pHarray, true) into someHandler
+   put hkey_TestFetchDeps (hKey, someHandler, skipHkeyComponents, skipHkeyProps) into someBoolean
+   return someBoolean
+end hkey_IsAuthored

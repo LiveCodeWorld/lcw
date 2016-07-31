@@ -1,0 +1,42 @@
+function dot_HeaderFromArrays dotHeaderArray, defaultNodePropertyArray, defaultEdgePropertyArray
+   -- dot properties are used in the "graph" section of the dot header
+   put keys(dotHeaderArray) into dotHeaderKeys
+   if dotHeaderKeys is not empty then
+      put "graph [" & CR after dotHeader
+      set the itemdelimiter to "_"
+      repeat for each line someKey in dotHeaderKeys
+         -- let's assume they are named properly (otherwise need a switch statement)
+         put dotHeaderArray [someKey] into someValue
+         put tolower(item -1 of someKey) into dotParam
+         put tab & dotParam & "=" & kwote(someValue) & CR after dotHeader -- could use comma's
+      end repeat
+      put "];" & CR after dotHeader
+      put CR after dotHeader
+   end if
+   
+   -- properties for a default node
+   put keys(defaultNodePropertyArray) into nodeKeys
+   if nodeKeys is not empty then
+      put "node [" & CR after dotHeader
+      repeat for each line someKey in nodeKeys
+         put defaultNodePropertyArray [someKey] into someValue
+         put someKey & "=" & kwote(someValue) & ";" & CR after dotHeader
+      end repeat
+      put "];" & CR after dotHeader
+      put CR after dotHeader
+   end if
+   
+   -- properties for a default edge
+   put keys(defaultEdgePropertyArray) into edgeKeys
+   if edgeKeys is not empty then
+      put "edge [" & CR after dotHeader
+      repeat for each line someKey in edgeKeys
+         put defaultEdgePropertyArray [someKey] into someValue
+         put someKey & "=" & kwote(someValue) & ";" & CR after dotHeader
+      end repeat
+      put "];" & CR after dotHeader
+      put CR after dotHeader
+   end if
+   
+   return word 1 to -1 of dotHeader
+end dot_HeaderFromArrays

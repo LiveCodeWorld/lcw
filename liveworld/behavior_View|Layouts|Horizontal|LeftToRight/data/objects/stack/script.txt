@@ -1,0 +1,101 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Layouts|Horizontal|LeftToRight
+type: view behavior
+copyright: David Bovill
+version: 0.1
+
+/*
+was "View|Layouts|Horizontal|Left to Right"
+*/
+
+[[ _FetchHandler (leftToRight_Layout,g) ]]
+
+[[ _FetchHandler (layout_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> Events
+-
+
+
+--> Record
+-
+[[ _FetchHandler (ResizeLabel,c) ]]
+   
+[[ _FetchHandler (record_DefaultLabelWidth,g) ]]
+
+[[ _FetchHandler (record_LabelWidth,g) ]]
+
+[[ _FetchHandler (record_LabelWidth,s) ]]
+
+[[ _FetchHandler (record_Height,g) ]]
+
+[[ _FetchHandler (record_Height,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (test_Layout,g) ]]
+
+[[ _FetchHandler (test_Layout,s) ]]
+
+[[ _FetchHandler (layout_Style,g) ]]
+
+[[ _FetchHandler (layout_Styles,g) ]]
+
+[[ _FetchHandler (layout_Style,s) ]]
+
+[[ _FetchHandler (formatted_Width,g) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]
+
+[[ _FetchHandler (layout_TotalElementWidth,g) ]]
+
+[[ _FetchHandler (use_FormattedWidth,g) ]]
+
+[[ _FetchHandler (use_FormattedWidth,s) ]]
+
+[[ _FetchHandler (layout_ElementWidth,g) ]]
+
+[[ _FetchHandler (layout_ElementWidth,s) ]]
+
+[[ _FetchHandler (_ElementWidthSum,pf) ]]
+
+[[ _FetchHandler (view_Spacing,g) ]]
+
+[[ _FetchHandler (view_Spacing,s) ]]
+
+[[ _FetchHandler (layout_RestDividers,c) ]]
+
+[[ _FetchHandler (layout_DeleteDividers,c) ]]
+
+[[ _FetchHandler (layout_DeleteElements,c) ]]
+
+
+--> Layout
+-
+[[ _FetchHandler (layout_ViewNames,g) ]]
+
+[[ _FetchHandler (layout_ViewNames,s) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (view_Children,g) ]]
+
+[[ _FetchHandler (layout_Element,g) ]]
+
+[[ _FetchHandler (layout_Elements,g) ]]
+
+
+--> View | Object | Children
+-

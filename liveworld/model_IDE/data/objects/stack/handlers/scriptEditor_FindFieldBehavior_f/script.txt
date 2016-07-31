@@ -1,0 +1,12 @@
+function scriptEditor_FindFieldBehavior
+   if exists (stack "behavior_IdeFindField") then
+      put the name of stack "behavior_IdeFindField" into bObject
+      return bObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put scriptEditor_GetBehaviorButton ("Livecode Simple Find Field") into someObject
+      if exists(someObject) is false then return empty
+      return revRuggedID (someObject)
+   end if
+end scriptEditor_FindFieldBehavior

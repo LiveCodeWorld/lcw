@@ -1,0 +1,8 @@
+getprop menu_Target [mTitlePath]
+   switch
+      case mTitlePath contains "zzz"
+         break
+      default
+         pass menu_Target
+   end switch
+end menu_Target

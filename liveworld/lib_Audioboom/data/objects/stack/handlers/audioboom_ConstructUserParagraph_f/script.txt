@@ -1,0 +1,24 @@
+function audioboom_ConstructUserParagraph locationDescription, userArray, clipMilliseconds, booURL
+   -- Mouans Sartoux
+   put item 1 of locationDescription into funkyPlace
+   put userArray ["userName"] into funkyUser
+   put "This recording was made near [[" && funkyPlace & "]],  by [[" & funkyUser & "]]" into wikiText
+   
+   -- Jun 23, 2015 at 2:19 PM
+   -- https://audioboom.com/boos/3275407-wiki-game audioboom.com
+   set the itemdelimiter to "/"
+   put item 3 of booURL into booDomain
+   set the itemdelimiter to "."
+   -- put item -2 to -1 of booDomain into booUrlName
+   put booURL && "audioboom" into funkUrl
+   set the itemdelimiter to comma
+   
+   put clipMilliseconds into clipDate
+   convert clipDate to abbreviated date
+   put clipMilliseconds into clipTime
+   convert clipTime to time
+   
+   put item 2 to 3 of clipDate && "at" && clipTime into funkyDate
+   put  ", on" &&  funkyDate && "- [" & funkUrl & "]" after wikiText
+   return wikiText
+end audioboom_ConstructUserParagraph

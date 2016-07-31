@@ -1,0 +1,5 @@
+on menu_IncreaseNodeFactor mTarget
+   put the node_Factor of mTarget into nodeFactor
+   add (0.1 * nodeFactor) to nodeFactor
+   set the node_Factor of mTarget to nodeFactor
+end menu_IncreaseNodeFactor

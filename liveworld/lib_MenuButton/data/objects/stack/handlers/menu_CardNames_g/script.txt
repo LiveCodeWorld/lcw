@@ -1,0 +1,7 @@
+getprop menu_CardNames
+   put the menu_SubStack of the target into menuSubStack
+   if exists (menuSubStack) is false then return empty
+   put the cardNames of stack menuSubStack into mCardNames
+   filter mCardNames with "* | Menu"
+   return mCardNames
+end menu_CardNames

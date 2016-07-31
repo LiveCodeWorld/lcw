@@ -1,0 +1,166 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_HarrayWalk
+type: script library
+version: 0.2
+
+
+--> Walk Array
+-
+[[ _FetchHandler (walkArray_GetMainstackHash,f) ]]
+
+[[ _FetchHandler (walkArray_SetMainstackHash,c) ]]
+
+
+--> Hkey | Deps | From Object
+-
+[[ _FetchHandler (hkey_DependencyArrayFromObjects,f) ]]
+
+[[ _FetchHandler (hkey_SmartFind,f) ]]
+
+[[ _FetchHandler (hkey_ObjectWalk,c) ]]
+
+[[ _FetchHandler (hkey_SimpleWalk,c) ]]
+
+
+--> Library | Walk
+-
+/*
+These handlers use the library hanlder database (stored in an array and accessed with "library_GetHandlerDatabaseMetadata"). 
+They don't do live testing, but instead use the stored pre-filtered calls in the hArray.
+*/
+
+[[ _FetchHandler (library_HandlerWalk,c) ]]
+
+
+--> Project | Walk
+-
+/*
+These handlers use "hArray" only (no objects or file based info). 
+They don't do live testing, but instead use the stored pre-filtered calls in the hArray.
+*/
+
+[[ _FetchHandler (object_HkeyArray,g) ]]
+
+[[ _FetchHandler (project_ConstructHkeyArray,f) ]]
+
+[[ _FetchHandler (project_ConstructWalkArray,f) ]]
+
+
+-- function project_ConstructWalkArray hArray, pDepObject
+breakpoint
+-- recursive version (no need for recursion use "project_ConstructHkeyArray" instead)
+-- walkArray has the following keys:  hArray, external,hKeyArray,missing
+-- local walkArray
+
+if exists (pDepObject) then
+   put revRuggedID (pDepObject) into pDepObject
+   hArray_RemoveObjectFromArray pDepObject, hArray 
+end if
+put hArray ["scriptArray"] into objectArray
+put hArray into walkArray ["hArray"]
+
+repeat for each key rObject in objectArray
+   put objectArray [rObject] into scriptObjectArray
+   put scriptObjectArray ["data"]["firstHkeyArray"] into firstHkeyArray
+   
+   repeat for each key firstShortHkey in firstHkeyArray
+      if firstShortHkey = "_,c" then next repeat -- could check handler is empty
+      
+      put firstShortHkey,rObject,1 into hKey
+      put empty into walkArray ["hkeyArray"][hKey]
+      
+      put hArray_GetShortCalls (hKey, hArray) into shortCalls
+      repeat for each line shortCall in shortCalls
+         project_DependencyWalk shortCall, hKey, walkArray
+      end repeat
+   end repeat
+end repeat
+
+put walkArray ["hKeyArray"] into mainStackHkeyArray
+array_StripDeeperLevels mainStackHkeyArray
+put mainStackHkeyArray into walkArray ["hKeyArray"]
+return walkArray
+end project_ConstructWalkArray
+
+[[ _FetchHandler (project_DependencyWalk,c) ]]
+
+
+--> Harray | Walk | With Tests
+-
+/*
+These handlers use "hArray_DependencyWalk" and test exceptions.
+*/
+
+[[ _FetchHandler (hkey_ConstructHarrayWalkArray,f) ]]
+
+[[ _FetchHandler (hArray_WalkHkeyDeps,f) ]]
+
+[[ _FetchHandler (hArray_WalkArray,f) ]]
+
+[[ _FetchHandler (hArray_DependencyWalk,c) ]]
+
+[[ _FetchHandler (hkey_MissingHandlerIsNotImportant,f) ]]
+
+[[ _FetchHandler (deps_DontRecurse,f) ]]
+
+[[ _FetchHandler (deps_DontAddOrRecurse,f) ]]
+
+
+--> Old | Simple | Walk
+-
+[[ _FetchHandler (hkey_DependencyArray,g) ]]
+
+
+--> Old | Hkey | Walk
+-
+-- function hkey_ConstructDependencyArray hkey, pSetName, pTestExceptions, pOriginalHkey
+-- local hKeyLinkArray
+-- this is the older non-hArray version
+
+hkey_Deconstruct hKey, hName, hType, hObject, hNum
+try
+   put the script of hObject into someScript
+   
+   put false into notPrivate 
+   put script_ExtractHandler (hKey, someScript, false) into someHandler
+   put handler_ExtractCalls (someHandler) into shortCalls
+   
+   -- now we have shortCall and hKey (let's recurse)
+   repeat for each line shortCall in shortCalls
+      hkey_SimpleWalk shortCall, hKey, hKeyLinkArray, pSetName, pTestExceptions, pOriginalHkey
+   end repeat
+   return hKeyLinkArray
+catch e -- script is locled
+   return empty
+end try
+end hkey_ConstructDependencyArray
+
+[[ _FetchHandler (hkey_ScriptDependencyArray,f) ]]
+
+[[ _FetchHandler (script_GetSimpleDependencyArray,f) ]]
+
+[[ _FetchHandler (hArray_SimpleWalk,c) ]]
+
+[[ _FetchHandler (hkey_WalkHierarchy,c) ]]
+
+function hkey_MissingHandlerIsNotImportant callName, callType
+   switch
+      case callType is among the items of "g,s"
+         -- if not found, then it's OK for get/setprops
+         -- put hkey_Construct (callName, callType, "missing custom", 1) into foundCall
+         -- array_AddToIndex empty, foundCall, hKeyLinkArray
+         return true
+      case char 1 to 3 of callName = "rev" and char 4 of callName is not "_"
+         -- it should not have been indexed as it is a LiveCode IDE handler
+         return true
+      case the number of words of callName > 1
+         -- bug - often "default -- case"
+         put merge ("Bug with call '[[shortCall]]' for handler '[[hKey]]'") into someMessage
+         opn_Notify someMessage, true
+         return true
+      default
+         return false
+   end switch
+end hkey_MissingHandlerIsNotImportant

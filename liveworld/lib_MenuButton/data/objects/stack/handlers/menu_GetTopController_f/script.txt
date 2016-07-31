@@ -1,0 +1,6 @@
+function menu_GetTopController
+   -- could probably work out from mTitlePath (by getting first items mController)
+   global gTemp_ActiveMenuArray
+   put gTemp_ActiveMenuArray ["top"]["mController"] into mTopController
+   return mTopController
+end menu_GetTopController

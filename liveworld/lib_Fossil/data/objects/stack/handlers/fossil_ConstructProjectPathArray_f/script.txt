@@ -1,0 +1,9 @@
+function fossil_ConstructProjectPathArray
+   put fossil_ListAllRepositories() into fossilPaths
+   set the itemdelimiter to "/"
+   repeat for each line fossilPath in fossilPaths
+      put item -1 of fossilPath into shortPath
+      put fossilPath into pathArray [shortPath]
+   end repeat
+   return pathArray
+end fossil_ConstructProjectPathArray

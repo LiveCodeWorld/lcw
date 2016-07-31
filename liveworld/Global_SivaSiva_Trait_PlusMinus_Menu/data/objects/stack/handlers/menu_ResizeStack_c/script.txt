@@ -1,0 +1,4 @@
+on menu_ResizeStack plusMinusView, someBoolean
+   put the stack_Object of plusMinusView into stackObject
+   set the resizable of stackObject to someBoolean
+end menu_ResizeStack

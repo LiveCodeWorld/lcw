@@ -1,0 +1,15 @@
+function wikicommons_ConstructVideoPageArray pageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray
+   --need to add imagedescription
+   
+   put wikicommons_CostructBasicSummaryPageArray (pageTitle, simplePageDescription, wikipediaUrl, shortImageFile, pSourceArray) into fedwikiPageArray
+   
+   put urlencode (word 1 to -1 of shortImageFile) into shortImageFile
+   put wikicommons_FetchImageSandboxArray (shortImageFile) into sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   put line 1 of keys (pagesArray) into pageID
+   put pagesArray [pageID] into pageArray
+   wikicommons_AddVideoToPageArray fedwikiPageArray, pageArray
+   -- fedwiki_AddWikipediaSectionToPageArray fedwikiPageArray, pageDescription, shortImageFile
+   -- fedwiki_PageArrayAddToEnd imageArray, fedwikiPageArray
+   return fedwikiPageArray
+end wikicommons_ConstructVideoPageArray

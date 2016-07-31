@@ -1,0 +1,6 @@
+function fossil_FetchBinary
+   -- stub for now
+   put "binfile:" & "/Users/david/Desktop/fossil" into someUrl
+   put url someUrl into binData
+   return binData
+end fossil_FetchBinary

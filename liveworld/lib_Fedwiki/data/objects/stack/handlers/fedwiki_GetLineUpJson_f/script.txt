@@ -1,0 +1,12 @@
+function fedwiki_GetLineUpJson urlArray, lineUpNum
+   if lineUpNum = -1 then put item 2 of the extents of urlArray into lineUpNum
+   
+   put urlArray [lineUpNum]["pageSlug"] into pageSlug
+   put urlArray [lineUpNum]["someDomain"] into someDomain
+   
+   -- http://forage.david.bovill.me/entry-level-browser.json?random=72428048
+   put "http://" & someDomain & "/" & pageSlug & ".json" into someUrl
+   -- put "?random=" & the ticks after someUrl
+   put url someUrl into someJSON
+   return someJSON
+end fedwiki_GetLineUpJson

@@ -1,0 +1,7 @@
+on menu_ConfigureGitEmail
+   put user_GetEmail() into userEmail
+   put opn_Ask("GIT user email...", userEmail) into userEmail
+   put "git config --global user.email" && kwote(userEmail) into someShell
+   put git_ExecuteShellCommand(someShell) into shellResult
+   display_Text shellResult, "git config --list"
+end menu_ConfigureGitEmail

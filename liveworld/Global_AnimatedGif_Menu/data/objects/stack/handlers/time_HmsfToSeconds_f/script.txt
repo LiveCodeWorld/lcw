@@ -1,0 +1,13 @@
+function time_HmsfToSeconds hmsf
+    set the itemdelimiter to ":"
+    put item 1 of hmsf into someHours
+    put item 2 of hmsf into someMinutes
+    put item 3 of hmsf into someSeconds
+    put item 4 of hmsf into someFrames
+     
+    add someHours * 3600 to someSeconds
+    add someMinutes * 60 to someSeconds
+    add someFrames / 25 to someSeconds
+     
+    return someSeconds
+end time_HmsfToSeconds

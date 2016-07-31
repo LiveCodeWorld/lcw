@@ -1,0 +1,10 @@
+command hKey_DeconstructStoredArray hKey, @hKeyCalls, @backLinks, @allCalls, pVersionName, pOverlayName
+   put hkey_GetOverlayArray (hKey, pOverlayName, pVersionName) into overlayArray
+   put overlayArray ["data"]["backLinks"] into backLinks
+   overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdArray, dotClusterArray
+   
+   put linkArray [hKey] into hKeyCalls
+   put array_AllNodes (linkArray) into allCalls
+   sort allCalls
+   line_Delete hKey, allCalls -- just in case
+end hKey_DeconstructStoredArray

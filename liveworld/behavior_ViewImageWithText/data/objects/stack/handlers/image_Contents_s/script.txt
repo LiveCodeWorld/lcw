@@ -1,0 +1,5 @@
+setprop image_Contents someImage
+   put image_Object() into imageObject
+   put the short id of imageObject into imageObjectID
+   put someImage into image id imageObjectID of me
+end image_Contents

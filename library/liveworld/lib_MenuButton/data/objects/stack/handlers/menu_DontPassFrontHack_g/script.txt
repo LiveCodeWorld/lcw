@@ -1,0 +1,12 @@
+getprop menu_DontPassFrontHack [targetObject]
+    -- this is the place for hacks
+    -- normally just setting the beforeLineNumber to 0 will do the job
+    -- but in case where other users scripts reset the menu you may wish to block the mouseDown here?
+     
+    global gOPN_MenuArray
+    
+    put menu_GetMouseDownBlocks() into mouseDownBlocks
+    -- could speed up by converting mobile name to long id at startup
+    put the mobile_Name of the target into targetObject
+    return targetObject is among the lines of mouseDownBlocks
+end menu_DontPassFrontHack

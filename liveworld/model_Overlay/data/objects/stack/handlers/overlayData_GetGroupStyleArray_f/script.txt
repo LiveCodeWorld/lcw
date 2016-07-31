@@ -1,0 +1,5 @@
+function overlayData_GetGroupStyleArray overlayData, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   put overlayData [pOverlayName]["metadata"]["dot_GroupStyleArray"] into dotGroupStyleArray
+   return dotGroupStyleArray
+end overlayData_GetGroupStyleArray

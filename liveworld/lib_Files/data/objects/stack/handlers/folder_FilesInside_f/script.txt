@@ -1,0 +1,20 @@
+function folder_FilesInside pFolder, pFilter, pQuestion, pShowInvisible
+   if pFolder is empty then
+      if pQuestion is empty then put "Select a folder..." into pQuestion
+      answer folder pQuestion
+      put it into pFolder
+      if it is empty then return "Error: user cancelled"
+   end if
+   
+   if last char of pFolder is "/" then delete last char of pFolder
+   if there is a folder pFolder then
+      put the directory into oDirectory
+      set the directory to pFolder
+      put the files into longFiles
+      file_ShortToLong longFiles, pFolder, pShowInvisible, pFilter
+      set the directory to oDirectory
+      return word 1 to -1 of longFiles
+   else
+      return empty
+   end if
+end folder_FilesInside

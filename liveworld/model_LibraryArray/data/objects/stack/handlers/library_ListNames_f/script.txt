@@ -1,0 +1,7 @@
+function library_ListNames libType, pSetName
+   -- used in general for menus to construct named interfaces
+   put library_ConstructNameTypeArray (libType, pSetName) into nameArray
+   put keys (nameArray) into someNames
+   sort someNames
+   return someNames
+end library_ListNames

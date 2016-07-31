@@ -1,0 +1,43 @@
+function control_ConstructCreateDoScript controlType, someName, targetOwner, pClassOrViewName
+   switch
+      case controlType is empty
+      case controlType = "placeholder"
+         put view_GetTemplateObject ("View|Layouts|Placeholder") into templateObject 
+         put "copy" && templateObject && "to" && targetOwner into doScript
+         return doScript
+      case controlType = "view"
+         put view_GetTemplateObject (pClassOrViewName) into templateObject 
+         put "copy" && templateObject && "to" && targetOwner into doScript
+         return doScript
+      case controlType contains "|"
+         put controlType into viewName
+         put view_GetTemplateObject (viewName) into templateObject 
+         put "copy" && templateObject && "to" && targetOwner into doScript
+         return doScript
+      case controlType = "headerBar"
+         put widget_ConstructCreateDoScript (someName, "com.livecode.widget.headerBar", targetOwner) into doScript
+         return doScript
+      case controlType = "navBar"
+         put widget_ConstructCreateDoScript (someName, "com.livecode.widget.navBar", targetOwner) into doScript
+         return doScript
+      case controlType = "segmented"
+         put widget_ConstructCreateDoScript (someName, "com.livecode.widget.segmented", targetOwner) into doScript
+         return doScript
+      case controlType = "browser"
+         put widget_ConstructCreateDoScript (someName, "com.livecode.widget.browser", targetOwner) into doScript
+         return doScript
+      case controlType = "tree"
+         put widget_ConstructCreateDoScript (someName, "com.livecode.widget.treeView", targetOwner) into doScript
+         return doScript
+      case controlType = "widget"
+         put widget_ConstructCreateDoScript (someName, pClassOrViewName, targetOwner) into doScript
+         return doScript
+      default
+         if word 1 of targetOwner is "group" then
+            put "create invisible" && controlType && quote & someName & quote && "in" && targetOwner into doScript
+         else
+            put "create invisible" && controlType && quote & someName & quote into doScript
+         end if
+         return doScript
+   end switch
+end control_ConstructCreateDoScript

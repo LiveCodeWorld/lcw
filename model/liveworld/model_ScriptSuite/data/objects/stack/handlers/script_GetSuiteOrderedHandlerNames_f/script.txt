@@ -1,0 +1,7 @@
+function script_GetSuiteOrderedHandlerNames suiteName, someScript
+   -- was "script_GetSuiteHandlers"
+   -- think this is broke
+   put script_GetSectionHandlerArray (suiteName, someScript) into sectionArray
+   put sectionArray ["orderedHandlers"] into handlerNames
+   return handlerNames
+end script_GetSuiteOrderedHandlerNames

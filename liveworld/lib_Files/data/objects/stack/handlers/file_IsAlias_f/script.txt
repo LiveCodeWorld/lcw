@@ -1,0 +1,4 @@
+function file_IsAlias someFile
+    put the aliasreference of someFile into testAlias
+    return someFile is not testAlias or testAlias is empty
+end file_IsAlias

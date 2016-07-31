@@ -1,0 +1,7 @@
+on menu_ConstructMainStackSuiteArray treeView
+   put the displayed_Object of treeView into mainStackObject
+   put the mainstack_Harray of mainStackObject into mainstackHarray
+   
+   put hArray_ConstructHkeySuiteArray (mainstackHarray) into scriptObjectSuiteArray
+   _DisplayArray treeView, scriptObjectSuiteArray, "hArray_ConstructHkeySuiteArray()", 1
+end menu_ConstructMainStackSuiteArray

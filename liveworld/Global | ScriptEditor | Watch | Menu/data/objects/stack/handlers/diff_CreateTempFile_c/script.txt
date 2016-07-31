@@ -1,0 +1,11 @@
+command diff_CreateTempFile someText, shortFile
+   -- from "libOPN_PatchAndDiff"
+   
+   put specialfolderpath ("Desktop") into desktopFolder
+   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
+   folder_CreateNested compareFolder
+   
+   put compareFolder & shortFile into someFile
+   put someText into url ("binfile:" & someFile)
+   return someFile
+end diff_CreateTempFile

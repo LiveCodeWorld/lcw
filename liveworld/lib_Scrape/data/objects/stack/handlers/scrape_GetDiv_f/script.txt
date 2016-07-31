@@ -1,0 +1,7 @@
+function scrape_GetDiv someHtml, attributeName, attributeValue
+   if pTidyIsTrue then html_Tidy someHtml
+   put revXMLCreateTree (someHTML, false, true, false) into treeID
+   put scrapeID_GetDiv (treeID, attributeName, attributeValue) into someContent
+   revDeleteXMLTree treeID
+   return someContent
+end scrape_GetDiv

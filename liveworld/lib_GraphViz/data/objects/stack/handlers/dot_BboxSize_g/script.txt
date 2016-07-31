@@ -1,0 +1,5 @@
+getprop dot_BboxSize
+   put the rect of the target into someRect
+   put dot_BboxSize (someRect) into targetSize
+   return targetSize
+end dot_BboxSize

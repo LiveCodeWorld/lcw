@@ -1,0 +1,19 @@
+function shell_ExecuteAtRoot someShell, pExecuteWhere, pShellCommandRoot
+   -- see also shell_Execute
+   if pExecuteWhere is empty then put library_PluginFolder() into pExecuteWhere
+   if pShellCommandRoot is not empty then
+      folder_Format pShellCommandRoot
+      if there is a folder pShellCommandRoot then
+         shell_BashParamEscape pShellCommandRoot
+         put pShellCommandRoot before someShell
+      else
+         opn_Notify merge("Cannot locate folder '[[pShellCommandRoot]]'!"), true
+      end if
+   end if
+   
+   put the defaultfolder into oFolder
+   set the defaultfolder to pExecuteWhere
+   put shell(someShell) into shellResult
+   set the defaultfolder to oFolder
+   return shellResult
+end shell_ExecuteAtRoot

@@ -1,0 +1,6 @@
+on menu_RevealTextStackFolder svgView
+   put the displayed_Object of svgView into scriptObject
+   put the textStack_Folder of scriptObject into textStackFolder
+   put "the textStack_Folder:" && textStackFolder
+   finder_Reveal textStackFolder
+end menu_RevealTextStackFolder

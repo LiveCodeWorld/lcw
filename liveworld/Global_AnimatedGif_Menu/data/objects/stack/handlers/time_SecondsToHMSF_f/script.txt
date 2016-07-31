@@ -1,0 +1,20 @@
+function time_SecondsToHMSF someSeconds, someFrames
+    put the numberformat into oFormat
+    set the numberformat to "##"
+     
+    put someSeconds div 3600 into someHours 
+    put someSeconds mod 3600 into secondsLeft
+     
+    put secondsLeft div 60 into someMinutes
+    put secondsLeft mod 60 into secondsLeft
+     
+    put trunc(secondsLeft) into someSeconds
+    put secondsLeft - someSeconds into someFraction
+     
+    if someFrames is empty then put round(someFraction * 25) into someFrames
+    add 0 to someFrames
+     
+    get someHours & ":" & someMinutes  & ":" & someSeconds  & ":" & someFrames
+    set the numberformat to oFormat
+    return it
+end time_SecondsToHMSF

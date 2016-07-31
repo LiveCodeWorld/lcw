@@ -1,0 +1,6 @@
+command digitalocean_SetAuthHeaders
+   -- http_SetBasicAuthentication "Bearer", somePassWord, moreHeaders
+   put "Content-Type: application/json" into someHeader
+   put CR & "Authorization: Bearer" && OceanApiKey after someHeader
+   set the httpheaders to someHeader
+end digitalocean_SetAuthHeaders

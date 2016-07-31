@@ -1,0 +1,31 @@
+command display_GitHkeyLog hKey, pDoubleUpThing, pStackLabel
+   put hkey_HandlerFile (hKey) into handlerFile
+   
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put "History for" && kwote(handler_ConvertType (hType) && hName) into someTitle
+   
+   put handlerFile into gitRelativeFile
+   git_SetRelativePath gitRelativeFile
+   
+   -- temp set gitRoot
+   put git_GetRootFolder() into oRoot
+   put git_GetCheckoutFolder (handlerFile) into tempRootFolder
+   git_SetRootFolder tempRootFolder
+   
+   if pStackLabel is empty then put "Hkey Log" into pStackLabel
+   put hKey into someTitle
+   display_GitFileHistory gitRelativeFile, someTitle, pDoubleUpThing, pStackLabel
+   
+   put the result into treeView
+   put the tree_Field of treeView into treeField
+   
+   lock messages
+   set the displayed_Hkey of treeField to hKey
+   set the displayed_Object of treeField to hObject
+   set the displayed_File of treeField to handlerFile
+   unlock messages
+   
+   -- reset git root
+   git_SetRootFolder oRoot
+   return treeView
+end display_GitHkeyLog

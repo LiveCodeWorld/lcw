@@ -1,0 +1,4 @@
+function youtube_ConstructWatchUrl videoID
+    put "https://www.youtube.com/watch?v=" & videoID into youtubeURL
+   return youtubeURL
+end youtube_ConstructWatchUrl

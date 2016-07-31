@@ -1,0 +1,5 @@
+command external_SetInstalled xName, someBoolean
+   put pref_GetValue ("installedArray") into installedArray
+   put someBoolean into installedArray [xName]
+   pref_SetValue "installedArray", installedArray
+end external_SetInstalled

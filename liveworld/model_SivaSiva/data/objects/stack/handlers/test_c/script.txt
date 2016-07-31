@@ -1,0 +1,16 @@
+on test
+   put sivasiva_GetRandomChapter() into chapterArray
+   put random (3) into situationNum
+   
+   put trait_GetPositiveLabel (chapterArray) & CR & trait_GetNegativeLabel (chapterArray) after someTest
+   put CR & CR & trait_GetDescription (chapterArray) after someTest
+   put CR & CR & trait_GetQuote (chapterArray) after someTest
+   
+   put CR & CR & trait_GetSituation (chapterArray, situationNum) after someTest
+   put CR & CR & trait_GetPositiveResponse (chapterArray, situationNum) after someTest
+   put CR & CR & trait_GetNegativeResponse (chapterArray, situationNum) after someTest
+   put CR & CR & trait_GetAssignment (chapterArray) after someTest
+   put CR & CR & trait_GetThoughtLabel (chapterArray) after someTest
+   
+   put someTest
+end test

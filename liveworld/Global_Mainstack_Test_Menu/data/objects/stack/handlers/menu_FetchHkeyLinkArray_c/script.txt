@@ -1,0 +1,4 @@
+on menu_FetchHkeyLinkArray hKey, oldFetchHow
+   put hkey_FetchLinkArray (hKey, fetchHow) into hKeyArray
+   display_HKeyArray hKeyArray, hkey
+end menu_FetchHkeyLinkArray

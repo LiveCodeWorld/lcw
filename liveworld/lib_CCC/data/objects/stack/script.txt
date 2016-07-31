@@ -1,0 +1,44 @@
+--> MetaData
+-
+name: lib_CCC
+type: script library
+version: 0.6
+copyright: David Bovill
+licence:  GPLv3
+deps: lib_Fedwiki
+
+
+/*
+*/
+
+--> CCC
+-
+[[ _FetchHandler (ccc_ProcessDrop,c) ]]
+
+[[ _FetchHandler (ccc_CreateVideoPageJson,f) ]]
+
+[[ _FetchHandler (ccc_ConstructTagHTML,f) ]]
+
+[[ _FetchHandler (ccc_ConstructAuthorHTML,f) ]]
+
+[[ _FetchHandler (ccc_ConstructVideoHtml,f) ]]
+
+[[ _FetchHandler (ccc_ConstructMultiSourceVideoHtml,f) ]]
+
+[[ _FetchHandler (ccc_ConstructVideoCaption,f) ]]
+
+[[ _FetchHandler (ccc_ConstructDateHtml,f) ]]
+
+[[ _FetchHandler (ccc_HashtagFromYear,f) ]]
+
+[[ _FetchHandler (ccc_NumFromYear,f) ]]
+
+[[ _FetchHandler (ccc_ConvertArray,f) ]]
+
+[[ _FetchHandler (ccc_FetchData,f) ]]
+
+[[ _FetchHandler (ccc_ExtractData,f) ]]
+
+
+--> Deps
+-

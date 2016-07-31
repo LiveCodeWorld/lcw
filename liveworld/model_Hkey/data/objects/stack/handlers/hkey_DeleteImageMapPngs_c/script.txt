@@ -1,0 +1,6 @@
+command hkey_DeleteImageMapPngs hKey
+   put hkey_ImageMapPngs (hKey) into someFiles
+   repeat for each line someFile in someFiles
+      delete file someFile
+   end repeat
+end hkey_DeleteImageMapPngs

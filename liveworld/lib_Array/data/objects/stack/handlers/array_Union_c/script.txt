@@ -1,0 +1,15 @@
+command array_Union @mainArray, arrayToAdd
+   -- fixes bug in union when arrays are empty
+   -- only adds arrays
+   if mainArray is an array then
+      if arrayToAdd is an array then
+         union mainArray with arrayToAdd
+      else
+         -- do nothing
+      end if
+   else if arrayToAdd is an array then
+      put arrayToAdd into mainArray
+   else
+      put empty into mainArray
+   end if
+end array_Union

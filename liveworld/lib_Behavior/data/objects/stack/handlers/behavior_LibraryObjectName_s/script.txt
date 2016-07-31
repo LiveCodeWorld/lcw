@@ -1,0 +1,8 @@
+setprop behavior_LibraryObjectName [notify] bName
+   put the long id of the target into behaviorObject
+   behaviorModel_SetObject bName, behaviorObject
+   if notify is not false then opn_Notify merge("Added behavior '[[bName]]' to model")
+   if "libOPN_Behavior" is among the lines of the openstacks then
+      display_Behaviors
+   end if
+end behavior_LibraryObjectName

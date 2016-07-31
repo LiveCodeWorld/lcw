@@ -1,0 +1,10 @@
+command hArray_SetObjectTypeData objectTypeData, pHarray
+   if pHarray is an array then
+      put objectTypeData into pHarray ["objectType"]
+      return pHarray
+   else
+      global gHkey_Array
+      put objectTypeData into gHkey_Array ["objectType"]
+      return gHkey_Array
+   end if
+end hArray_SetObjectTypeData

@@ -1,0 +1,9 @@
+command array_DeleteFromIndex someValue, someKey, @someArray
+   put someArray [someKey] into someIndex
+   line_Delete someValue, someIndex
+   if someIndex is empty then
+      delete local someArray [someKey]
+   else
+      put someIndex into someArray [someKey]
+   end if
+end array_DeleteFromIndex

@@ -1,0 +1,14 @@
+getprop verticalLayout_Stacks
+   put the child_Views ["View|Index|Group"] of me into indexGroups
+   repeat for each line indexGroup in indexGroups
+      put the child_Views ["View|Index|Simple"] of indexGroup into indexViews
+      repeat for each line indexView in indexViews
+         set the cursor to busy
+         put the indexView_Stacks of indexView into indexViewStackObjects
+         put indexViewStackObjects & CR after stackObjects
+      end repeat
+   end repeat
+   delete char -1 of stackObjects
+   sort stackObjects
+   return word 1 to -1 of stackObjects
+end verticalLayout_Stacks

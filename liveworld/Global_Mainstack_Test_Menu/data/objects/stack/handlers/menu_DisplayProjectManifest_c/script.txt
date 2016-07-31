@@ -1,0 +1,5 @@
+on menu_DisplayProjectManifest scriptObject
+   set the cursor to watch   
+   put the mainStack_ManifestArray of scriptObject into manifestArray
+   display_Array manifestArray, "the mainStack_ManifestArray of hObject"
+end menu_DisplayProjectManifest

@@ -1,0 +1,15 @@
+on menu_OverwriteIgnoreFile mTarget, menuChoice
+   set the cursor to watch
+   switch menuChoice
+      case "Global"
+         git_CreateIgnoreFile true
+         put the result into ignoreFile
+         break
+      case "Local"
+         git_CreateIgnoreFile
+         put the result into ignoreFile
+         break
+   end switch
+   display_TextFile ignoreFile, "Git Ignore Files"
+   git_RefreshDisplay
+end menu_OverwriteIgnoreFile

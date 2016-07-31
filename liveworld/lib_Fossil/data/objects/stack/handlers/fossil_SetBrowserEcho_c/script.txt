@@ -1,0 +1,8 @@
+command fossil_SetBrowserEcho someBoolean, pFossilCheckoutFolder, pSetGlobal
+   if someBoolean is true then
+      fossil_SetBrowserShellCommand "echo", pFossilCheckoutFolder, pSetGlobal
+   else if someBoolean is false then
+      fossil_DeleteSetting "web-browser", pFossilCheckoutFolder
+   end if
+   return the result
+end fossil_SetBrowserEcho

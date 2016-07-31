@@ -1,0 +1,4 @@
+on menu_StackTitleStyle scriptObject, stackTitleStyle
+   put the stack_Object of scriptObject into stackObject
+   set the stack_TitleStyle of stackObject to stackTitleStyle
+end menu_StackTitleStyle

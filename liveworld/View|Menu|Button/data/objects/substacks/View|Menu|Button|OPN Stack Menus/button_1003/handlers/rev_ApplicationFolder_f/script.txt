@@ -1,0 +1,13 @@
+function rev_ApplicationFolder
+   -- was "rev_GetApplicationFolder"
+   put the filename of stack "Home" into homeStack
+   set the itemdelimiter to "/"
+   if the version < 2.7 then
+      -- return folder_AboveFile(homeStack)
+      delete item -1 of homeStack
+      return homeStack & "/"
+   else
+      delete item -2 to -1 of homeStack
+      return homeStack & "/"
+   end if
+end rev_ApplicationFolder

@@ -1,0 +1,6 @@
+getprop display_Style [treeView]
+   lock messages
+   put the display_Style of treeView into someStyle
+   unlock messages
+   return someStyle
+end display_Style

@@ -1,0 +1,23 @@
+command display_GitScriptLog someObject, pDoubleUpThing, pStackLabel
+   put the script_File of someObject into someFile
+   
+   -- temp set gitRoot
+   -- should maybe do this built in with all git file related handlers?
+   put git_GetRootFolder() into oRoot
+   put git_GetCheckoutFolder (someFile) into tempRootFolder
+   git_SetRootFolder tempRootFolder
+   
+   if pStackLabel is empty then put "Script Log" into pStackLabel
+   put the mobile_Name of someObject into someTitle
+   
+   git_SetRelativePath someFile
+   display_GitFileHistory someFile, someTitle, pDoubleUpThing, pStackLabel
+   put the result into treeView
+   
+   put the tree_Field of treeView into treeField
+   set the displayed_Object of treeField to someObject
+   
+   -- reset git root
+   git_SetRootFolder oRoot
+   return tempRootFolder
+end display_GitScriptLog

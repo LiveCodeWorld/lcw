@@ -1,0 +1,5 @@
+function trait_GetDescription chapterArray
+   put chapterArray ["traitDefinition"] into traitDescription
+   text_StripTags traitDescription
+   return traitDescription
+end trait_GetDescription

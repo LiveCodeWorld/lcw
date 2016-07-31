@@ -1,0 +1,4 @@
+on menu_DisplayMainstackHarray scriptObject
+   put the mainstack_Harray of scriptObject into mainStackHarray
+   display_Array mainStackHarray, "the mainstack_Harray of scriptObject"
+end menu_DisplayMainstackHarray

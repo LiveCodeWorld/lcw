@@ -1,0 +1,6 @@
+command deconstruct_ClockSectionArray @sIndex, @sColour, @sDuration, @sName, sArray
+   put sArray ["section_Name"] into sName
+   put sArray ["section_Colour"] into sColour
+   put sArray ["section_Index"] into sIndex
+   put sArray ["section_Duration"] into sDuration
+end deconstruct_ClockSectionArray

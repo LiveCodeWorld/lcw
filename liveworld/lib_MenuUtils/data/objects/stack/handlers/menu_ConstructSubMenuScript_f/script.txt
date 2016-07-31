@@ -1,0 +1,14 @@
+function menu_ConstructSubMenuScript mTitle
+   put menu_SubMenuHierarchy (mTitle) into mTitleHierarchy
+   repeat for each line subMenuTitle in mTitleHierarchy
+      put "return" && kwote(subMenuTitle) into hBody
+      replace " | " with comma in subMenuTitle
+      put item 2 to -2 of subMenuTitle into pigeonBit
+      replace comma with empty in pigeonBit
+      put "submenu_" & pigeonBit into pigeon
+      put script_ConstructCommand (pigeon, hBody, true) into someScript
+      put someScript & CR & CR after subMenuScript
+   end repeat
+   delete char -2 to -1 of subMenuScript
+   return subMenuScript
+end menu_ConstructSubMenuScript

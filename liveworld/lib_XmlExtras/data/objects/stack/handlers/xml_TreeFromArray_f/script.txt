@@ -1,0 +1,55 @@
+function xml_TreeFromArray pArray, pArrayEncoding, pStoreEncodedAs
+   -- was "xml_ConvertArrayToXML"
+   /*
+   Converts a multi-dimensional array to an XML tree.
+   The array should contain one key in the 1st dimension which
+   will become the root node. Attributes of a node should be stored
+   as an array in the @attributes key. Sequence information for multiple
+   nodes with the same name should be included in the node name using
+   brackets (i.e. node[1], node[2], node[3]).
+   Returns an xml tree id (integer) or an error message.
+   */
+   
+   local theError,theRootNode,theXML,theXMLTree
+   
+   ## if pArrayEncoding is empty then current platform encoding is assumed
+   if pStoreEncodedAs is empty then put "UTF-8" into pStoreEncodedAs
+   
+   ## Create XML for root node. Note that we take extra steps in order to support
+   ## converting an array that only represents part of a tree rather than the entire tree.
+   ## In this case there may be multiple nodes at the root level.
+   put line 1 of the keys of pArray into theRootNode
+   set the itemdelimiter to "["
+   put "<" & item 1 of theRootNode & "/>" into theXML
+   
+   ## Create XML needed to create tree
+   put format("<?xml version=\"1.0\" encoding=\"%s\"?>%s", pStoreEncodedAs, theXML) into theXML
+   put revCreateXMLTree(theXML, true, true, false) into theXMLTree
+   
+   if theXMLTree is an integer then
+      ## Loop over all nodes at root level
+      put false into stripMetaKeys
+      put xml_SortArrayKeysWithXMLOrdering (pArray, stripMetaKeys) into theNodes
+      
+      ## Create tree using helper function
+      repeat for each line theNode in theNodes
+         xml_ConvertArrayDimensionToXML pArray[theNode], theXMLTree, slash & theNode, pArrayEncoding, pStoreEncodedAs
+         put the result into theError
+         
+         if theError is not empty then exit repeat
+      end repeat
+      
+      if theError is not empty then
+         ## something went wrong, clean bad tree
+         revDeleteXMLTree theXMLTree
+      end if
+   else
+      put theXMLTree into theError
+   end if
+   
+   if theError is not empty then
+      return theError
+   else
+      return theXMLTree
+   end if
+end xml_TreeFromArray

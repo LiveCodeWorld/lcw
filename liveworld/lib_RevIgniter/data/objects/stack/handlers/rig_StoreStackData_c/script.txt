@@ -1,0 +1,6 @@
+command rig_StoreStackData shortFile, stackData
+   put rig_ApplicationPath ("stacks/" & shortFile) into somePath
+   put rig_GetFolder ("stacks") & shortFile into somePath
+   rig_StoreData stackData, somePath
+   return the result
+end rig_StoreStackData

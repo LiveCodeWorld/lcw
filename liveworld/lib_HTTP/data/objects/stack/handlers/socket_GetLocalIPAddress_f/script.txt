@@ -1,0 +1,7 @@
+function socket_GetLocalIPAddress tCheckAddress
+    if tCheckAddress is empty then put "255.255.255.255:6000" into tCheckAddress
+    open datagram socket to tCheckAddress
+    put the hostaddress of tCheckAddress into tMyIP
+    close socket tCheckAddress
+    return tMyIP
+end socket_GetLocalIPAddress

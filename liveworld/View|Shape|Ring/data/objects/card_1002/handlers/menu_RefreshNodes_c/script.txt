@@ -1,0 +1,4 @@
+on menu_RefreshNodes mTarget
+   put the ring_NodeNumber of mTarget into nodeNum
+   set the ring_NodeNumber of mTarget to nodeNum
+end menu_RefreshNodes

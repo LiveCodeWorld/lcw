@@ -1,0 +1,21 @@
+command text_StarQuoted @someText
+   local replacedArray
+   
+   put someText into replacedArray ["original text"]
+   put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
+   put 1 into indexNum
+   repeat
+      if matchchunk (someText, someReg, startChar, endChar) is false then
+         exit repeat
+      else
+         put char startChar to endChar of someText into replacedArray [indexNum]["someString"]
+         put startChar into replacedArray [indexNum]["startChar"]
+         put endChar into replacedArray [indexNum]["endChar"]
+         repeat with charNum = startChar to endChar
+            put "¥" into char charNum of someText
+         end repeat
+         add 1 to indexNum
+      end if
+   end repeat
+   return replacedArray
+end text_StarQuoted

@@ -1,0 +1,4 @@
+on menu_ShowHiddenFiles mTarget, someBoolean
+   finder_SetShowInvisibleFiles someBoolean
+   finder_Restart
+end menu_ShowHiddenFiles

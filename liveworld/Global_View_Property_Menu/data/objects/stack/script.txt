@@ -1,0 +1,78 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | View | Property | Menu
+type: controller
+version: 0.2
+
+
+--> Menu | Props
+-
+local ViewPropertyMenu
+
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | View | Property | Menu
+-
+[[ _FetchHandler (menu_ViewProperty,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditViewBehavior,c) ]]
+
+[[ _FetchHandler (menu_EditViewTemplate,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_PropertyPalette,c) ]]
+
+[[ _FetchHandler (menu_GoToTemplate,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | View | Property | Menu | Props
+-
+[[ _FetchHandler (some_Props,g) ]]
+
+[[ _FetchHandler (style_Name,g) ]]
+
+[[ _FetchHandler (style_Names,g) ]]
+
+
+--> Global | View | Property | Menu | Disabled
+-
+[[ _FetchHandler (disabled_EditViewBehavior,g) ]]
+
+[[ _FetchHandler (disabled_ViewProperty,g) ]]
+
+
+--> Global | View | Property | Menu | Helpers
+-
+[[ _FetchHandler (tree_BackspaceKey,c) ]]
+
+[[ _FetchHandler (deleteTemplateArray,c) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (submenu_Swap,c) ]]
+
+[[ _FetchHandler (menu_ViewOutline,c) ]]
+
+[[ _FetchHandler (menu_TemplateOutline,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ViewStyle,c) ]]
+
+[[ _FetchHandler (menu_DisplayArray,c) ]]

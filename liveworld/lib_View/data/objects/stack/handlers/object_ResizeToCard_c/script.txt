@@ -1,0 +1,13 @@
+on object_ResizeToCard pMargin, pResizeObject, pDimensions
+   -- if the object_ContainsMessageHandler ["resizeControl"] of pResizeObject is true then
+   put the card_ViewRect [pMargin] of pResizeObject into someRect
+   switch
+      case pDimensions is empty
+         set the rect of pResizeObject to someRect
+         break
+      default
+         set the media_Rect [pDimensions] of pResizeObject to someRect
+         break
+   end switch
+   return the result
+end object_ResizeToCard

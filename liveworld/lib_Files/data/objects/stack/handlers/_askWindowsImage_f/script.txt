@@ -1,0 +1,14 @@
+function _askWindowsImage someType, preferredFolder, comment
+    if someType is empty then put _getWindowsImageTypes() into someType
+    if preferredFolder is empty then
+        answer file comment with filter someType
+    else
+        answer file comment with preferredFolder with filter someType
+    end if
+    put it into filePath
+    if filePath is empty then
+        exit to top
+    else
+        return filePath
+    end if
+end _askWindowsImage

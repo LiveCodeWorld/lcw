@@ -1,0 +1,10 @@
+private function _movedTemporarilyHeaders locationURL
+   put "HTTP/1.1 302 Moved Temporarily" into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   put CRLF & "Location:" && locationURL after someHeader
+   put CRLF & "Vary: Accept" after someHeader
+   _addConnectionHeader someHeader
+   _addCorsHeader someHeader
+   _addDateHeader someHeader
+   return someHeader
+end _movedTemporarilyHeaders

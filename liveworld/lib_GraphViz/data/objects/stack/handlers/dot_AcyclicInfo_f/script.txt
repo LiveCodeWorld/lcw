@@ -1,0 +1,9 @@
+function dot_AcyclicInfo dotFile, acyclicFile
+    shell_BashParamEscape dotFile
+    shell_BashParamEscape acyclicFile
+    put merge("acyclic -v -o [[acyclicFile]] [[dotFile]]") into someShell
+    
+    put graphViz_GetShellPath() into gvPath
+    put gvPath & someShell into someShell
+    return shell(someShell)
+end dot_AcyclicInfo

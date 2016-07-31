@@ -1,0 +1,147 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_StackFiles
+type: script library
+version: 0.8
+
+/*
+This is a library to manipulate and store stackfiles automatically.
+
+It is an old but working library that should be updated to work with arrays better.
+*/
+
+
+--> StackFile | Props
+-
+[[ _FetchHandler (stackFile_ExtraPaths,s) ]]
+
+[[ _FetchHandler (stackFile_AddFolder,s) ]]
+
+[[ _FetchHandler (stackfile_Paths,g) ]]
+
+[[ _FetchHandler (stackfile_Paths,s) ]]
+
+[[ _FetchHandler (stackfile_FileArray,g) ]]
+
+[[ _FetchHandler (stackfile_Array,g) ]]
+
+[[ _FetchHandler (stackfile_Array,s) ]]
+
+[[ _FetchHandler (stackFile_ErrorArray,g) ]]
+
+
+--> Stackfiles | Known
+-
+[[ _FetchHandler (known_Stackfiles,g) ]]
+
+[[ _FetchHandler (known_StackfileArray,g) ]]
+
+[[ _FetchHandler (know_Me,c) ]]
+
+[[ _FetchHandler (know_Everything,c) ]]
+
+[[ _FetchHandler (known_ListRelativeStackFiles,f) ]]
+
+[[ _FetchHandler (known_GetStackFileArray,f) ]]
+
+
+--> Library | Stackfiles
+-
+[[ _FetchHandler (library_FixStackFiles,c) ]]
+
+[[ _FetchHandler (library_ListKnownFiles,f) ]]
+
+[[ _FetchHandler (library_ListKnownStackNames,f) ]]
+
+[[ _FetchHandler (library_ListKnownAndCreateOutline,f) ]]
+
+[[ _FetchHandler (library_RemoveStackFromKnown,c) ]]
+
+[[ _FetchHandler (library_AddStackToKnown,c) ]]
+
+[[ _FetchHandler (library_AddToStackFiles,c) ]]
+
+[[ _FetchHandler (library_AddFolderToStackFiles,c) ]]
+
+[[ _FetchHandler (library_AddFilesToStackFiles,c) ]]
+
+
+--> Library | StackFile | Model
+-
+[[ _FetchHandler (library_GetStackFile,f) ]]
+
+[[ _FetchHandler (library_GetStackFiles,f) ]]
+
+[[ _FetchHandler (library_SetStackFiles,c) ]]
+
+[[ _FetchHandler (library_GetStackFileArray,f) ]]
+
+[[ _FetchHandler (library_SetStackFileArray,c) ]]
+
+
+--> Library | Stackfiles
+-
+[[ _FetchHandler (library_StoreWorkingStackFiles,c) ]]
+
+[[ _FetchHandler (library_LoadWorkingStackFiles,c) ]]
+
+[[ _FetchHandler (library_FetchShortStackFiles,f) ]]
+
+[[ _FetchHandler (library_FetchStackFiles,f) ]]
+
+[[ _FetchHandler (library_StoreStackFiles,c) ]]
+
+
+--> StackFile | Fix
+-
+[[ _FetchHandler (stackFile_FixStackFiles,c) ]]
+
+
+--> StackFile | Array
+-
+[[ _FetchHandler (stackFile_GetRelativeArray,f) ]]
+
+[[ _FetchHandler (stackFile_ToArray,f) ]]
+
+[[ _FetchHandler (stackFile_FromArray,f) ]]
+
+[[ _FetchHandler (stackfile_ConvertArray,f) ]]
+
+
+--> Stackfile | Shorfiles
+-
+[[ _FetchHandler (stackfile_FilterShortFilesForKnown,f) ]]
+
+[[ _FetchHandler (stackfile_FilterStackNamesForKnown,f) ]]
+
+[[ _FetchHandler (stackFile_ContainsShortFile,f) ]]
+
+[[ _FetchHandler (stackFile_NameFromShortFile,f) ]]
+
+[[ _FetchHandler (stackFile_NamesFromShortFiles,f) ]]
+
+[[ _FetchHandler (stackFile_PathFromShortFile,f) ]]
+
+[[ _FetchHandler (stackFile_PathsFromShortFiles,f) ]]
+
+[[ _FetchHandler (stackFile_ConstructShortFileArray,f) ]]
+
+[[ _FetchHandler (stackFile_DeconstructShortFileIndex,c) ]]
+
+
+--> Stackfile
+-
+[[ _FetchHandler (stackFile_TableFromPaths,f) ]]
+
+[[ _FetchHandler (stackFile_AddStackPaths,c) ]]
+
+[[ _FetchHandler (stackFile_AddToArray,c) ]]
+
+[[ _FetchHandler (stackFile_AddStackNames,c) ]]
+
+[[ _FetchHandler (stackFile_GetRelativeFileIndex,f) ]]
+
+[[ _FetchHandler (stackFile_GetStackNameIndex,f) ]]
+
+[[ _FetchHandler (stackFile_ConstructFileIndex,f) ]]

@@ -1,0 +1,6 @@
+command daemon_SendPNG socketorRequestArray, faviconPNG, pSendCompressed
+   put _normalizeSocket (socketorRequestArray) into socketID
+   put _okHeaders ("image/png") into someHeader
+   daemon_Send someHeader, faviconPNG, socketID, pSendCompressed
+   return someHeader
+end daemon_SendPNG

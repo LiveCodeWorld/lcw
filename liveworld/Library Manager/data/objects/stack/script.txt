@@ -1,0 +1,453 @@
+--> MetaData
+-
+name: Library Manager
+type: library
+copyright: David Bovill
+author: David Bovill
+
+/*
+Gradually moving all these handlers into script only models and libraries.
+See:
+-  model_Library
+-  model_Harray
+-  model_LibraryArray
+-  model_handlerLibrary
+
+
+This stack is designed to manipulate set of libraries - front, back and "used" libraries.
+Each set is given a name, and this name refers to a more flexible notion of an "environment",
+that a user can define.
+A user or script can easily switch between sets.
+*/
+
+local LocalArray
+
+
+--> Library
+-
+[[ _FetchHandler (library_CreateComponent,c) ]]
+
+[[ _FetchHandler (library_CreateComponentFolder,c) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (library_StackFileStack,f) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (stack_CleanBeforeSave,c) ]]
+
+-- on preOpenStack
+library_LoadWorkingStackFiles pSetName
+end preOpenStack
+
+
+--> Display
+-
+[[ _FetchHandler (display_LibraryStatus,c) ]]
+
+[[ _FetchHandler (display_LibrarySet,c) ]]
+
+[[ _FetchHandler (display_Known,c) ]]
+
+
+--> Tabkey | Deps
+-
+[[ _FetchHandler (scriptField_Tabkey,c) ]]
+
+[[ _FetchHandler (scriptField_TabComplete,c) ]]
+
+[[ _FetchHandler (scriptField_ConstructHkey,f) ]]
+
+[[ _FetchHandler (scriptField_SetTokenInfo,c) ]]
+
+-- getprop field_SelectedBackWord
+if word 1 of the target is not "field" then return empty
+put word 2 of the selectedChunk of the target into lastCharNum
+put the text of the target into someText
+text_ConstructLineChunk lastCharNum, someText, charOfLine, wordOfLine, itemOfLine, lineNum
+put word wordOfLine of item itemOfLine of line lineNum of someText into backWord
+return backWord
+end field_SelectedBackWord
+
+
+--> Events | Plugin
+-
+[[ _FetchHandler (revEditScript,c) ]]
+
+
+--> Library | Set Utils
+-
+[[ _FetchHandler (library_StoreCurrentlyUsedToSet,c) ]]
+
+[[ _FetchHandler (library_ListNonRevFrontscripts,f) ]]
+
+[[ _FetchHandler (library_ListNonRevBackscripts,f) ]]
+
+[[ _FetchHandler (rev_SplitFrontObjects,c) ]]
+
+[[ _FetchHandler (rev_SplitBackObjects,c) ]]
+
+[[ _FetchHandler (library_ConstructMenuSetArray,f) ]]
+
+
+--> Library | Help | Hack
+-
+[[ _FetchHandler (hack_UpdateBinFile,c) ]]
+
+
+--> Hkey | Is
+-
+[[ _FetchHandler (library_HandlerIsCurrent,f) ]]
+
+[[ _FetchHandler (hkey_IsInLibrary,f) ]]
+
+[[ _FetchHandler (hkey_IsExported,f) ]]
+
+[[ _FetchHandler (hkey_CheckLibraryAndObject,c) ]]
+
+[[ _FetchHandler (hKey_IsComponent,f) ]]
+
+[[ _FetchHandler (hkey_IsDataGridCall,f) ]]
+
+[[ _FetchHandler (hkey_IsAuthored,f) ]]
+
+
+--> Library | Standard Objects
+-
+[[ _FetchHandler (library_ReindexStandardBehaviors,c) ]]
+
+[[ _FetchHandler (library_ReindexStandardFrontScripts,c) ]]
+
+[[ _FetchHandler (library_ReindexStandardBackScripts,c) ]]
+
+[[ _FetchHandler (library_ReindexStandardUsedStacks,c) ]]
+
+[[ _FetchHandler (library_ListStandardBehaviors,f) ]]
+
+[[ _FetchHandler (library_ListStandardFrontScripts,f) ]]
+
+[[ _FetchHandler (library_ListStandardBackScripts,f) ]]
+
+[[ _FetchHandler (library_ListStandardUsedStacks,f) ]]
+
+
+--> Library | Fetch and Store
+-
+/*
+This needs updating as it is now stored not in a seperate array.
+But in the default "Checkout_Globals.array" file. (see "library_StoreCheckoutGlobals")
+*/
+
+[[ _FetchHandler (library_GetRevHackStatus,f) ]]
+
+[[ _FetchHandler (library_SetRevHackStatus,c) ]]
+
+[[ _FetchHandler (library_LoadSet,c) ]]
+
+[[ _FetchHandler (library_StoreSet,c) ]]
+
+
+--> Temp | Session
+-
+[[ _FetchHandler (library_ListSessionObjects,f) ]]
+
+[[ _FetchHandler (library_AddObjectToSessionArray,c) ]]
+
+[[ _FetchHandler (library_RemoveObjectFromSessionArray,c) ]]
+
+[[ _FetchHandler (library_GetTempArray,f) ]]
+
+[[ _FetchHandler (library_SetTempArray,c) ]]
+
+[[ _FetchHandler (library_GetTempArrayFile,f) ]]
+
+[[ _FetchHandler (library_TempFolder,f) ]]
+
+
+--> Object | Is
+-
+[[ _FetchHandler (object_IsFrontLibrary,g) ]]
+
+[[ _FetchHandler (object_IsBackLibrary,g) ]]
+
+[[ _FetchHandler (stack_IsLibrary,g) ]]
+
+[[ _FetchHandler (stack_IsLibrary,s) ]]
+
+[[ _FetchHandler (stack_IsKnown,g) ]]
+
+[[ _FetchHandler (stack_IsKnown,s) ]]
+
+
+--> Library | Sets
+-
+[[ _FetchHandler (library_Sets,g) ]]
+
+[[ _FetchHandler (library_Sets,s) ]]
+
+-- getprop library_SetNames [libType]
+if libType is empty then put "used" into libType
+put the rugged_ID of the target into ruggedObject
+
+put library_FetchSetData() into setData
+set the wholematches to true
+repeat for each key setName in setData
+   put setData [setName]["data"][libType] into rObjectArray
+   put keys (rObjectArray) into someObjects
+   if ruggedObject is among the lines of someObjects then
+      -- put setName & comma after setNameList
+      put setName & CR after setNameList
+   end if
+end repeat
+delete char -1 of setNameList
+return setNameList
+end library_SetNames
+
+-- setprop library_SetNames [libType] setNames
+if libType is empty then put "used" into libType
+put the rugged_ID of the target into ruggedObject
+end library_SetNames
+
+[[ _FetchHandler (library_DeletedSets,g) ]]
+
+[[ _FetchHandler (library_DeletedSets,s) ]]
+
+[[ _FetchHandler (library_GetSetName,f) ]]
+
+[[ _FetchHandler (library_SetSetName,c) ]]
+
+
+--> Library | Start and Stop
+-
+[[ _FetchHandler (library_StartEnvironment,c) ]]
+
+[[ _FetchHandler (library_StoreGlobals,c) ]]
+
+[[ _FetchHandler (library_StopEnvironment,c) ]]
+
+[[ _FetchHandler (library_StartUsed,c) ]]
+
+[[ _FetchHandler (library_StopUsed,c) ]]
+
+[[ _FetchHandler (library_StartBack,c) ]]
+
+[[ _FetchHandler (library_StopBack,c) ]]
+
+[[ _FetchHandler (library_StartFront,c) ]]
+
+[[ _FetchHandler (library_StopFront,c) ]]
+
+
+--> Library | Add
+-
+[[ _FetchHandler (library_AddFrontObject,c) ]]
+
+[[ _FetchHandler (library_AddUsedStack,c) ]]
+
+[[ _FetchHandler (library_AddBackObject,c) ]]
+
+[[ _FetchHandler (library_AddObject,c) ]]
+
+[[ _FetchHandler (library_DeleteObject,c) ]]
+
+
+--> Library | Externals
+-
+/*
+Not just externals but also command line utilities. A set of dummy stubs for now.
+*/
+
+[[ _FetchHandler (fossil_TestInstalled,f) ]]
+
+[[ _FetchHandler (git_TestInstalled,f) ]]
+
+[[ _FetchHandler (svn_TestInstalled,f) ]]
+
+[[ _FetchHandler (graphviz_TestInstalled,f) ]]
+
+[[ _FetchHandler (eqt_TestInstalled,f) ]]
+
+[[ _FetchHandler (yoga_TestInstalled,f) ]]
+
+[[ _FetchHandler (external_AutoSet,c) ]]
+
+[[ _FetchHandler (external_ListAllComponents,f) ]]
+
+[[ _FetchHandler (external_GetInstalled,f) ]]
+
+[[ _FetchHandler (external_SetInstalled,c) ]]
+
+[[ _FetchHandler (external_ListComponents,f) ]]
+
+
+--> Pref
+-
+/*
+Not transfered with repository updates or sending application / stacks.
+Should be enhanced with shared user, and default values.
+*/
+
+[[ _FetchHandler (pref_GetValue,f) ]]
+
+[[ _FetchHandler (pref_SetValue,c) ]]
+
+[[ _FetchHandler (pref_DeleteValue,c) ]]
+
+[[ _FetchHandler (pref_FetchValue,f) ]]
+
+command pref_DeleteValue prefName, pSetName
+   pref_DeleteValue prefName
+   put the result into prefArray
+   pref_StoreArray prefArray, pSetName
+end pref_DeleteValue
+
+[[ _FetchHandler (pref_SaveValue,c) ]]
+
+[[ _FetchHandler (pref_DeleteSet,c) ]]
+
+[[ _FetchHandler (pref_GetValues,f) ]]
+
+[[ _FetchHandler (pref_ListSetNames,f) ]]
+
+[[ _FetchHandler (pref_FetchArray,f) ]]
+
+[[ _FetchHandler (pref_StoreArray,c) ]]
+
+[[ _FetchHandler (pref_FetchGlobal,f) ]]
+
+[[ _FetchHandler (pref_StoreGlobal,c) ]]
+
+[[ _FetchHandler (pref_FetchData,f) ]]
+
+[[ _FetchHandler (pref_StoreData,c) ]]
+
+
+--> Library | Globals
+-
+[[ _FetchHandler (library_ListTempGlobals,f) ]]
+
+[[ _FetchHandler (library_ListPrefGlobals,f) ]]
+
+[[ _FetchHandler (library_ListCheckoutGlobals,f) ]]
+
+
+--> Library | To Sort
+-
+[[ _FetchHandler (library_ConstructDescriptionArray,f) ]]
+
+[[ _FetchHandler (library_DeconstructSetArray,f) ]]
+
+[[ _FetchHandler (library_ConstructSetArray,f) ]]
+
+
+--> Library | Globals
+-
+/*
+Not sure if these handlers are used at the moment.
+They are not restored when a library set is loaded.
+
+OPN Globals are Stored in a text file as part of the shared OPN repository.
+
+They should not contain user specific data and passwords, or long stack names or file paths,
+as the data is shared and moved between users.
+
+Data stored this way is only shared every time the environment is updated from the repository.
+For more dynamic data sharing you should use a web service with local caching.
+*/
+
+[[ _FetchHandler (library_ReloadCheckoutGlobals,c) ]]
+
+[[ _FetchHandler (library_FetchCheckoutGlobal,f) ]]
+
+[[ _FetchHandler (library_StoreCheckoutGlobal,c) ]]
+
+[[ _FetchHandler (library_StoreCheckoutGlobals,c) ]]
+
+[[ _FetchHandler (library_ConstructCheckoutArray,f) ]]
+
+[[ _FetchHandler (libary_RestoreGlobalPrefs,c) ]]
+
+[[ _FetchHandler (library_CheckEssentialPrefs,c) ]]
+
+[[ _FetchHandler (pref_SetShellRoot,c) ]]
+
+[[ _FetchHandler (library_StoreGlobalPrefs,c) ]]
+
+[[ _FetchHandler (libary_ClearGlobalPrefs,c) ]]
+
+[[ _FetchHandler (library_ConstructPrefsArray,f) ]]
+
+
+--> Library | Set Object
+-
+/* 
+These are old and don;t store arrays but indexes.
+*/
+
+-- command library_SetFrontObject libName, scriptObject, pSetName
+put library_GetFrontArray (pSetName) into dataArray
+put the rugged_ID of scriptObject into scriptObject
+dictionary_Set dataArray, libName, scriptObject
+library_SetFrontArray dataArray, pSetName
+end library_SetFrontObject
+
+-- command library_SetFrontArray frontArray, pSetName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put library_FetchSetData() into modelArray
+   put frontArray into modelArray [pSetName]["front"]
+   library_StoreSetData modelArray
+end library_SetFrontArray
+
+-- command library_SetBackArray backArray, pSetName
+   if pSetName is empty then put library_GetSetName() into pSetName
+   put library_FetchSetData() into modelArray
+   put backArray into modelArray [pSetName]["back"]
+   library_StoreSetData modelArray
+end library_SetBackArray
+
+
+--> Library | Array
+-
+[[ _FetchHandler (library_FetchArray,f) ]]
+
+[[ _FetchHandler (library_StoreArray,c) ]]
+
+[[ _FetchHandler (library_ArrayFile,f) ]]
+
+
+--> hArray
+-
+[[ _FetchHandler (hArray_LoadGlobal,c) ]]
+
+[[ _FetchHandler (hArray_StoreGlobal,c) ]]
+
+[[ _FetchHandler (hArray_FetchData,f) ]]
+
+[[ _FetchHandler (hArray_StoreData,c) ]]
+
+
+--> Script Editor | Hacks
+-
+[[ _FetchHandler (rev_CompileHackStatus,f) ]]
+
+[[ _FetchHandler (rev_AddCompileHacks,c) ]]
+
+[[ _FetchHandler (rev_AddBehaviorHacks,c) ]]
+
+[[ _FetchHandler (rev_CheckBehaviorHacks,f) ]]
+
+
+--> OPN | Notify
+-
+[[ _FetchHandler (opn_Notify,c) ]]
+
+[[ _FetchHandler (osx_Notify,c) ]]
+
+[[ _FetchHandler (version_IsEarlier,f) ]]
+
+[[ _FetchHandler (_convertVersionToNumber,f) ]]
+
+[[ _FetchHandler (text_Merge,f) ]]

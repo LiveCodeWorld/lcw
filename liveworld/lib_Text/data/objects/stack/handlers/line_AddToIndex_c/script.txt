@@ -1,0 +1,6 @@
+command line_AddToIndex newLines, @someIndex
+    repeat for each line someLine in newLines
+        line_Add someLine, someIndex
+    end repeat
+    if line 1 of someIndex is empty then delete line 1 of someIndex
+end line_AddToIndex

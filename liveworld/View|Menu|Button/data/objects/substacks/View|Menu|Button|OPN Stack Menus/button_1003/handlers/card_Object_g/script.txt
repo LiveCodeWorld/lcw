@@ -1,0 +1,29 @@
+getprop card_Object
+   put the long id of the target into targetObject
+   switch
+      case word 1 of targetObject = "card"
+         return targetObject
+      case word 1 of targetObject is among the items of "stack,background,bkgnd,bg"
+         return empty  -- no such thing as a unique card_Object
+      default
+         put text_TokenOffset ("card", targetObject) into tokenNum
+         if tokenNum = 0 then
+            -- breakpoint -- bug with sending and rugged ids of behaviors !!!
+            put word 3 of targetObject into someID
+            put word 5 to -1 of targetObject into stackObject
+            repeat for each line cardID in the cardids of stackObject
+               put the long id of card id cardID of stackObject into cardObject
+               put the number of controls of cardObject into maxNum
+               repeat with cNum = 1 to maxNum
+                  put the short id of control cNum of cardObject into cID
+                  if cID = someID then return cardObject 
+               end repeat
+            end repeat
+            return empty
+         else
+            delete token 1 to (tokenNum - 1) of targetObject
+            put word 1 to -1 of targetObject into cardObject
+            return cardObject
+         end if
+   end switch
+end card_Object

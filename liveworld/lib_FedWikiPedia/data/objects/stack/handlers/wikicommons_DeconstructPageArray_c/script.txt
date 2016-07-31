@@ -1,0 +1,18 @@
+command wikicommons_DeconstructPageArray pageArray, @imageTitle, @imageURL, @descriptionURL, @pImageCaption
+   put pageArray ["title"] into imageTitle
+   
+   put pageArray ["imageinfo"]["1"] into imageInfoArray  -- if there is only one
+   put imageInfoArray ["descriptionURL"] into descriptionURL
+   put imageInfoArray ["width"] into imageWidth
+   put imageInfoArray ["height"] into imageHeight
+   put imageInfoArray ["url"] into imageURL
+   
+   put imageInfoArray ["thumburl"] into thumbURL
+   put imageInfoArray ["thumbwidth"] into thumbWidth
+   put imageInfoArray ["thumbheight"] into thumbHeight
+   put imageInfoArray ["thumbmime"] into thumbMime
+   
+   if pImageCaption is empty then
+      put imageInfoArray ["extmetadata"]["imageDescription"]["value"] into pImageCaption
+   end if
+end wikicommons_DeconstructPageArray

@@ -1,0 +1,5 @@
+on menu_DisplayTitles treeView
+   display_MenuTitles
+   put the tree_Field of treeView into treeField
+   display_MenuTitles treeField
+end menu_DisplayTitles

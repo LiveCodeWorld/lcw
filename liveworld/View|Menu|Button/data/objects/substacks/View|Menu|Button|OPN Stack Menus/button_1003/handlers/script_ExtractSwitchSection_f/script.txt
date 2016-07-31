@@ -1,0 +1,15 @@
+function script_ExtractSwitchSection someHandler, pSwitchOptions
+   local startChar, endChar
+   text_SetOffsets "  switch", "  end switch", someHandler, startChar, endChar, 0
+   put the result into switchSection
+   
+   if pSwitchOptions is empty then return switchSection
+   put word 2 of line 1 of switchSection into switchParam
+   if switchParam is empty then return switchSection
+   
+   if switchParam is among the items of pSwitchOptions then
+      return switchSection
+   else
+      return empty
+   end if
+end script_ExtractSwitchSection

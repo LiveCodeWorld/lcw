@@ -1,0 +1,11 @@
+setprop model_Array [pModelType] dataArray
+   put the model_Object of the target into modelObject
+   if exists(modelObject) is false then put the long id of the target into modelObject
+   
+   put the model_Name of the target into modelName
+   if modelName is empty then put "model" into modelName
+   
+   if pModelType is empty then put the model_Type of the target into pModelType
+   model_SetArray modelName, modelObject, pModelType, modelArray
+   return modelArray
+end model_Array

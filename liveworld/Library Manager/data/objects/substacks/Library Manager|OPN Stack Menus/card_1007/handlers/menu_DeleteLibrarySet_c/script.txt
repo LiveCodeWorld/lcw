@@ -1,0 +1,10 @@
+on menu_DeleteLibrarySet ideScriptObject, setName
+   put merge ("Sure you want to delete library set '[[setName]]'?") into someQuestion
+   opn_Answer someQuestion
+   
+   library_DeleteStoredSet setName
+   
+   display_LibraryStatus
+   put merge ("Deleted the set '[[setName]]' from the stored array.") into someComment
+   opn_Notify someComment
+end menu_DeleteLibrarySet

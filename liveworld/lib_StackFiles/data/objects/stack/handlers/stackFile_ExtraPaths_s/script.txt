@@ -1,0 +1,6 @@
+setprop stackFile_ExtraPaths someFiles
+   put the stack_Object of the target into toStackObject
+   stackFile_AddStackPaths someFiles, toStackObject   
+   put the result into stackFileTable
+   return stackFileTable
+end stackFile_ExtraPaths

@@ -1,0 +1,21 @@
+getprop view_OrCard
+   -- searches for a view in the objects hierarchy
+   -- considers a view to be either something markey with either:
+   -- uRIP "view", a group with the selectGroupedControls on, or the card
+   put the long id of the target into targetObject
+   repeat
+      switch word 1 of targetObject
+         case "card"
+            return targetObject
+         case "stack"
+            return empty
+         case empty
+            return empty
+         default
+            if the uRIP ["type"] of targetObject is "view" then return targetObject
+            if word 1 of targetObject = "group" and the selectGroupedControls of targetObject then return targetObject 
+            
+            delete word 1 to 4 of targetObject -- does not work for substacks
+      end switch
+   end repeat
+end view_OrCard

@@ -1,0 +1,7 @@
+function library_HkeyToPublicShortHkey hKey
+   -- change private handler to public one for library
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   if char 1 of hType = "p" then delete char 1 of hType
+   put hName,hType into shortHKey
+   return shortHKey
+end library_HkeyToPublicShortHkey

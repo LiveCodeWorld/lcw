@@ -1,0 +1,11 @@
+on menu_AddAllHandlerToLibrary treeView
+   put the displayed_Array of treeView into hKeyArray
+   put array_AllNodes (hKeyArray) into hKeys
+   repeat for each line hKey in hKeys
+      set the cursor to busy
+      library_AddHkey hKey
+   end repeat
+   
+   put the displayed_Hkey of treeView into hKey
+   display_Hkey hKey, "library"
+end menu_AddAllHandlerToLibrary

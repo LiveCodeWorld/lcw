@@ -1,0 +1,5 @@
+getprop title_Menu
+   put LocalArray ["title_Menu"] into titleMenuName
+   if titleMenuName is empty then put "Global | Array | Menu" into titleMenuName
+   return titleMenuName
+end title_Menu

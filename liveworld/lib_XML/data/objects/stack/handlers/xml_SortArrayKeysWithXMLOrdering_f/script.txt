@@ -1,0 +1,14 @@
+function xml_SortArrayKeysWithXMLOrdering pArray, pStripMetaKeys
+    -- Revolution array keys are never guaranteed to be in order you created-- them in so we must come up with some other way of maintaining-- proper sequence. For arrays representing XML, the XML syntax is-- used (i.e. node[1], node[2], etc.). This handler will sort keys that use-- this syntax for representing sequence.
+    put pStripMetaKeys is not false into pStripMetaKeys
+    
+    put the keys of pArray into theKeys
+    set the itemdelimiter to "["
+    sort theKeys numeric by the last item of each -- 1], 2], 3], etc.
+    
+    if pStripMetaKeys then
+        filter theKeys without "@*"
+    end if
+    
+    return theKeys
+end xml_SortArrayKeysWithXMLOrdering

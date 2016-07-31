@@ -1,0 +1,9 @@
+getprop chapter_Array
+   -- a virtual wrapper
+   -- we don't actually store this locally
+   -- although we could store it in a local variable to speed things up
+   local bookArray
+   put the chapter_Num of the target into chapterNum
+   put sivasiva_GetChapterArray (chapterNum, bookArray) into chapterArray
+   return chapterArray
+end chapter_Array

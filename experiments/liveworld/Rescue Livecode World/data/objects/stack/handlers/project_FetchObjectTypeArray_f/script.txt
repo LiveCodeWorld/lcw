@@ -1,0 +1,6 @@
+function project_FetchObjectTypeArray libType, pProjectName
+   -- renamed to project and removed switch complexity from "library_FetchObjectTypeArray"
+   put library_FetchSetData() into setData
+   put setData [pProjectName]["data"][libType] into libTypeArray
+   return libTypeArray
+end project_FetchObjectTypeArray

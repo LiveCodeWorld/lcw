@@ -1,0 +1,21 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Gitter
+type: script library
+version: 0.3
+
+/*
+A library for interfacing with Gitter via GitHub APIv3.
+*/
+
+constant GitterApiStem = "https://api.gitter.im/v1/"
+
+[[ _FetchHandler (gitter_FetchMyRooms,f) ]]
+
+[[ _FetchHandler (gitter_FetchMyUserArray,f) ]]
+
+[[ _FetchHandler (gitter_RestfulGet,f) ]]
+
+[[ _FetchHandler (gitter_SetAuthHeaders,c) ]]

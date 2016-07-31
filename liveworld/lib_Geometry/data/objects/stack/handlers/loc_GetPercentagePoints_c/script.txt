@@ -1,0 +1,7 @@
+on loc_GetPercentagePoints someLoc, someRect, @percentageX, @percentageY
+   put item 1 of someLoc - item 1 of someRect into relativeX
+   put item 2 of someLoc- item 2 of someRect into relativeY
+   rect_ExtractDimensions someRect, someW, someH
+   put relativeX/someW into percentageX
+   put relativeY/someH into percentageY
+end loc_GetPercentagePoints

@@ -1,0 +1,8 @@
+function _convertVersionToNumber someVersion
+   -- assumes a version of the format ###.###.###
+   -- to be safe each number can be up to 3 digits (they are usually 2)
+   set the itemdelimiter to "."
+   set the numberformat to "000"
+   put (item 1 of someVersion + 0) & (item 2 of someVersion + 0) & (item 3 of someVersion + 0) into someNum
+   return someNum
+end _convertVersionToNumber

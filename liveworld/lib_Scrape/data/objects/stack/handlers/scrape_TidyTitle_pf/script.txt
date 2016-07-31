@@ -1,0 +1,5 @@
+private function scrape_TidyTitle titleBit, headerTitle
+   replace CR with empty in titleBit
+   put replacetext (titleBit, "<[^><]*>","") into headerTitle
+   return headerTitle
+end scrape_TidyTitle

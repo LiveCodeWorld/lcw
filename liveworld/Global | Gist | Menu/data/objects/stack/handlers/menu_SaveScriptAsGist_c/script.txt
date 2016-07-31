@@ -1,0 +1,15 @@
+on menu_SaveScriptAsGist scriptObject   
+   put hkey_FetchHelp (hKey) into helpText
+   put html_StripAllTags (helpText) into helpText
+   put merge ("Give a description for [[scriptObject]]...") into someComment
+   put opn_Ask (someComment, helpText) into pGistHelp
+   
+   gist_SaveObjectScript scriptObject, pGistHelp
+   put the result into gistReplyArray
+   display_Array gistReplyArray, scriptObject
+   
+   put gistReplyArray ["html_url"] into htmlURL
+   if htmlURL is not empty then
+      launch url htmlURL
+   end if
+end menu_SaveScriptAsGist

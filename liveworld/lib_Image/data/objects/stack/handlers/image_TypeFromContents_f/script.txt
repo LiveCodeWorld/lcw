@@ -1,0 +1,10 @@
+function image_TypeFromContents imageContents
+    put char 1 to 10 of imageContents into imageHeader
+    if imageHeader contains "JFIF" then
+        return "JPEG"
+    else if imageHeader contains "PNG" then
+        return "PNG"
+    else if imageHeader contains "GIF89" then
+        return "GIF"
+    end if
+end image_TypeFromContents

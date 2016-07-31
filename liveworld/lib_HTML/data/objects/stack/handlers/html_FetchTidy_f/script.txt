@@ -1,0 +1,5 @@
+function html_FetchTidy someUrl
+   put url someUrl into someHtml
+   html_Tidy someHtml
+   return someHtml
+end html_FetchTidy

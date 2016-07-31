@@ -1,0 +1,4 @@
+function dictionary_GetReverseValue dataArray, someValue
+   put dataArray ["value"][someValue] into someKey
+   return someKey
+end dictionary_GetReverseValue

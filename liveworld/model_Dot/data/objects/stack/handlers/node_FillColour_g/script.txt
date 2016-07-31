@@ -1,0 +1,7 @@
+getprop node_FillColour [groupNameOrNum]
+   put the dot_GroupStyleArray of the target into dotGroupStyleArray
+   put dotGroupStyleArray [groupNameOrNum]["node_StyleArray"] into nodeStyleArray
+   put nodeStyleArray ["fillcolor"] into dotColour
+   put text_SplitCaps (dotColour) into someColour
+   return someColour
+end node_FillColour

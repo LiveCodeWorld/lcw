@@ -1,0 +1,17 @@
+function mediawiki_ListPageImages pageTitle, pApiStem
+   put "/w/api.php?action=query&prop=images&format=json&imlimit=100&titles=" & urlencode (pageTitle) into sandBoxFragment
+   put mediawiki_GetSandboxArray (sandBoxFragment, pApiStem) into sandboxArray
+   put sandboxArray ["query"]["pages"] into pagesArray
+   set the itemdelimiter to ":"
+   repeat for each key pageID in pagesArray
+      put pagesArray [pageID]["images"] into imagesArray
+      put the number of lines of keys(imagesArray) into maxNum
+      repeat with imageNum = 1 to maxNum
+         put imagesArray [imageNum]["title"] into shortFileBit
+         delete item 1 of shortFileBit -- what if it si not an image file???
+         put shortFileBit & CR after shortFileBits
+      end repeat
+   end repeat
+   delete char -1 of shortFileBits
+   return shortFileBits
+end mediawiki_ListPageImages

@@ -1,0 +1,6 @@
+function library_ListShortFiles folderGroupName, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_GetFolder (folderGroupName, pProjectName) into someFolder 
+   put folder_ListShortStackFiles (someFolder) into goodShortFiles
+   return goodShortFiles
+end library_ListShortFiles

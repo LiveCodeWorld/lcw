@@ -1,0 +1,7 @@
+getprop object_Name
+   put the long ID of the target into targetObject
+   
+   put the object_Metadata ["name"] of targetObject into someName
+   set the uRIP ["name"] of targetObject to someName	# in case it has not already been set
+   return someName
+end object_Name

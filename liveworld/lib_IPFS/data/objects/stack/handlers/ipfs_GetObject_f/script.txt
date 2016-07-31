@@ -1,0 +1,9 @@
+function ipfs_GetObject someHash
+   /*
+   curl "http://127.0.0.1:5001/api/v0/object/get
+   ?arg=QmaaqrHyAQm7gALkRW8DcfGX3u8q9rWKnxEMmf7m9z515w
+   &encoding=json"
+   */
+   put ipfs_RestGet ("object/get", someHash) into someJSON
+   return someJSON
+end ipfs_GetObject

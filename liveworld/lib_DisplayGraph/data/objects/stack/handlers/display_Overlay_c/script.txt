@@ -1,0 +1,20 @@
+command display_Overlay overlayFolder, pOverlayName, pImageView, pStackLabel, pResizeStyle
+   overlay_SetFileNames overlayFolder, pOverlayName
+   
+   put overlay_GetData (overlayFolder) into overlayData
+   overlayData_NormalizeName pOverlayName, overlayData
+   put overlayData [pOverlayName] into overlayArray
+   
+   overlayArray_SetGraphProperty overlayArray, "image_MenuName", "Global | Image | Dot | Menu"
+   
+   if pImageView is empty then
+      -- set the trigger_Name ["mouseUp"] of overlayView to "Global | Image | Overlay | Node | Menu/Edit Handler"
+      -- overlayArray_SetGraphProperty overlayArray, "trigger_Name", "Global | Image | Overlay | Node | Menu/Display Handler"
+      put menu_ConstuctMenuItemHkey ("Display Handler", "Global | Image | Overlay | Node | Menu") into mouseUpTrigger
+      -- overlayArray_SetGraphProperty overlayArray, "mouseDoubleUpTrigger", mouseDoubleUpTrigger
+      overlayArray_SetGraphProperty overlayArray, "mouseUpTrigger", mouseUpTrigger
+   end if
+   
+   overlayArray_Graph overlayArray, pImageView, pResizeStyle, pStackLabel
+   return the result
+end display_Overlay

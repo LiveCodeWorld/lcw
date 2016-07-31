@@ -1,0 +1,6 @@
+setprop view_EventArray eventArray   
+   put eventArray ["dragCommand"] into LocalArray ["event"]["dragCommand"]
+   put eventArray ["eventTarget"] into LocalArray ["event"]["eventTarget"]
+   put eventArray ["mouseUp"] into LocalArray ["event"]["mouseUp"]
+   put eventArray ["mouseDoubleUp"] into LocalArray ["event"]["mouseDoubleUp"]
+end view_EventArray

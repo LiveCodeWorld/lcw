@@ -1,0 +1,8 @@
+on menu_ChooseLocalRigFolder mTarget
+   answer folder "Choose a local revIgniter folder..."
+   put it into rigFolder
+   if rigFolder is empty then exit to top
+   
+   set the displayed_RigFolder of mTarget to rigFolder
+   put the result into rigCoderArray
+end menu_ChooseLocalRigFolder

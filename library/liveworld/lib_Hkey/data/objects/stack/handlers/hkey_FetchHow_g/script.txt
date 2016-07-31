@@ -1,0 +1,8 @@
+getprop hkey_FetchHow
+   put the uOPN ["hkey_FetchHow"] of me into hkeyFetchHow
+   if hkeyFetchHow is empty then
+      return "local"
+   else
+      return hkeyFetchHow
+   end if
+end hkey_FetchHow

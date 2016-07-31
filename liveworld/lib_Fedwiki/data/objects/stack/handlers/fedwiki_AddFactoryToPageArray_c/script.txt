@@ -1,0 +1,4 @@
+command fedwiki_AddFactoryToPageArray @pageArray, pID
+   put fedwiki_ConstructFactoryArray (pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddFactoryToPageArray

@@ -1,0 +1,31 @@
+command folder_ConstructInfoTable @infoTable, someFolder, baseItemNum, maxFileSize
+    -- as fast as possible
+    -- make sure initial folder is formatted (folder_Format)
+    set the directory to someFolder
+    put the detailed files into detailedFiles
+    repeat for each line someLine in detailedFiles
+        put urldecode(item 1 of someLine) into shortName
+        if char 1 of shortName is "." then next repeat
+         
+        put someFolder & shortName into someFile
+        put item 2 of someLine into fileSize
+        put item 4 of someLine into creationDate
+         
+        if fileSize < maxFileSize or maxFileSize is empty then
+            -- put file_Md5Hash(someFile) into fileHash
+            put url ("binfile:" & someFile) into someData
+            put text_Hash(someData) into fileHash
+        else
+            put empty into fileHash
+        end if
+        get folder_ConstructInfoTableLine(someFile, fileSize, creationDate, fileHash, baseItemNum)
+        put it & CR after infoTable
+    end repeat
+    
+    put the folders into folderNames
+    repeat for each line folderName in folderNames
+        if char 1 of folderName is "." then next repeat
+        put someFolder & folderName & "/" into subFolder
+        folder_ConstructInfoTable infoTable, subFolder, baseItemNum, maxFileSize
+    end repeat
+end folder_ConstructInfoTable

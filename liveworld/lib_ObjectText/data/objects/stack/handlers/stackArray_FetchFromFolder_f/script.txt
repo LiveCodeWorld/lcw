@@ -1,0 +1,53 @@
+function stackArray_FetchFromFolder textStackFolder, pUseCustomFolders
+   folder_Format stackFolder
+   put stack_FetchManifestArray (textStackFolder) into manifestArray
+   put manifestArray into stackArray ["manifest"]
+   
+   put textStackFolder & "data/objects/" into objectsFolder
+   -- if pDontCreate is false then folder_CreateNested objectsFolder
+   if there is not a folder objectsFolder then return empty -- should always be there!
+   
+   put the directory into originalDirectory
+   set the directory to objectsFolder
+   put the folders into shortFolders
+   
+   repeat for each line shortFolder in shortFolders
+      switch
+         case char 1 of shortFolder = "." 
+            next repeat
+         case shortFolder = "substacks"
+            put objectsFolder & "substacks/" into substacksFolder
+            set the directory to substacksFolder
+            put the folders into shortSubstackFolders
+            repeat for each line substackName in shortSubstackFolders
+               switch
+                  case char 1 of substackName = "." 
+                     next repeat
+                  default
+                     put substacksFolder & substackName & "/" into substackFolder
+                     set the directory to substackFolder
+                     put the folders into shortSubstackObjectFolders
+                     repeat for each line shortSubstackObjectFolder in shortSubstackObjectFolders
+                        switch
+                           case char 1 of shortSubstackObjectFolder = "." 
+                              next repeat
+                           default
+                              put substackFolder & shortSubstackObjectFolder & "/" into substackObjectFolder
+                              put object_ConstructArrayFromFolder (substackObjectFolder, pUseCustomFolders) into substackObjectArray
+                              put substackObjectArray into objectsArray ["substacks"][substackName]["objects"][shortSubstackObjectFolder]
+                        end switch
+                     end repeat
+               end switch
+            end repeat
+            next repeat
+         default
+            put objectsFolder & "/" & shortFolder & "/" into objectFolder
+            put object_ConstructArrayFromFolder (objectFolder, pUseCustomFolders) into objectArray
+            put objectArray into objectsArray [shortFolder]
+      end switch
+   end repeat
+   
+   put objectsArray into stackArray ["objects"]
+   set the directory to originalDirectory
+   return stackArray
+end stackArray_FetchFromFolder

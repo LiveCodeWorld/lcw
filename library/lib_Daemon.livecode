@@ -1,0 +1,792 @@
+﻿script "lib_Daemon"
+--> MetaData
+-
+name: lib_Daemon
+type: behavior
+version: 0.9
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+A minimal library for creating simple HTTP and Restful servers using Livecode.
+It should contain only code that is absolutle necessary - and is optimised for speed.
+
+Another aim of this library is that it should be able to rund a server, without any additional code
+using only custom properties of an object
+that it is attached to as a behavior.
+
+All othere messages (if any are needed) would be dispatched and optional)
+Logging and similar functions are added using before/after middleware handlers.
+
+Not sure yet what to do as a default routing behavior.
+*/
+
+local SocketData   -- Array used to gather socket data from potentially multiple connections as they come in
+
+local DaemonServer
+local DropDelay = 60
+local SessionArray
+
+
+--> Objects
+-
+getprop daemon_Server
+   /*
+   This is the control (often a stack) that is an instance of a particular server.
+   Attached to this object is a chain of behaviors that implement the generic daemon server functionality.
+   
+   You customise the server by:
+   
+   1) Adding scripts to the daemon_Server
+   2) Dropping in on wrting your own custom daemon_RouterLibrary
+   3) Messing with the behavior_Hierarchy of the daemon_Server
+   */
+   
+   return DaemonServer
+end daemon_Server
+
+
+--> Daemon | Start and Stop
+-
+command daemon_Start pPortToListenOn, pDaemonServer
+   -- first we make sure we've set the control that is the server
+   if exists (pDaemonServer) is false then
+      put the deamon_Server of the target into DaemonServer
+      if exists (DaemonServer) is false then
+         put the long id of the target into DaemonServer
+      end if
+   end if
+   put pDaemonServer into DaemonServer
+   
+   -- make sure we have a port to listen on
+   if pPortToListenOn is a number then
+      set the daemon_Port of me to pPortToListenOn
+   else
+      put the daemon_Port of me into pPortToListenOn
+   end if
+   
+   accept connections on port pPortToListenOn with message "newConnection"
+end daemon_Start
+
+command daemon_Stop
+   -- Handler that stops the server.
+   put the daemon_Port of me into portToListenOn
+   close socket portToListenOn
+   -- daemon_DeleteSocketData
+end daemon_Stop
+
+function daemon_GetSocketData
+   return SocketData
+end daemon_GetSocketData
+
+command daemon_DeleteSocketData
+   delete variable SocketData
+end daemon_DeleteSocketData
+
+
+--> Daemon | Objects
+-
+/*
+Could be removed to utils for minimalism reasons.
+*/
+
+getprop daemon_Router
+   return the daemon_Router of me
+end daemon_Router
+
+setprop daemon_Router someControl
+   -- as messages are dispatched to "the daemon_Router of me" by the 'processRequest" handler
+   -- dispatch "daemon_RouteRequest" to routerObject with requestArray
+   -- we can change it here
+   -- this handler is nto needed as the custom property has the same name
+   
+   if exists (someControl) is false then put empty into someControl
+   set the daemon_Router of me to someControl
+   return someControl
+end daemon_Router
+
+
+--> Daemon | Props
+-
+getprop daemon_IsRunning
+   put the daemon_Port of me into portToListenOn
+   put portToListenOn is among the lines of the opensockets into daemonIsRunning
+   return daemonIsRunning
+end daemon_IsRunning
+
+setprop daemon_IsRunning someBoolean
+   put the daemon_IsRunning of me into daemonIsRunning
+   if someBoolean is true then
+      if daemonIsRunning is false then daemon_Start
+      return true
+   else
+      if daemonIsRunning is true then daemon_Start
+      return false
+   end if
+end daemon_IsRunning
+
+getprop daemon_Port
+   put the daemon_Port of me into portToListenOn
+   if portToListenOn is empty then put 8082 into portToListenOn
+   return portToListenOn
+end daemon_Port
+
+setprop daemon_Port portToListenOn
+   set the daemon_Port of me to portToListenOn
+   daemon_Stop
+   daemon_Start
+end daemon_Port
+
+command daemon_SetPort newPort
+   set the daemon_Port of me to newPort
+end daemon_SetPort
+
+
+--> Daemon | Connection
+-
+on newConnection pSocketID
+   /*
+   This handler is the first step of a new connection. It will start processing the connections and pipeing the control to the handler called "proccessRequest"
+   
+   pDropDelay is the number of seconds that a connection that never completed is kept around in SocketData before it is purged. 
+   In this case, I assume that if we don't get a fully formed set of data within 10 minutes of the initial connection, it's not going to happen.
+   */
+   put the long id of target into SocketData [pSocketId]["theTarget"]
+   put the seconds + DropDelay into SocketData [pSocketId]["theSeconds"]
+   read from socket pSocketID until CRLF with message "readRequest"
+end newConnection
+
+on readRequest pSocketId, pSocketData
+   /*
+   This handler gets the next set of data that comes in a connection. 
+   It is possible for this data to come in a separate packet from the initial connection. 
+   Under certain conditions Revolution may assume that the first packet was all the data there was and think it is ready to let the code process the data. 
+   This causes it to wait for more of the request when the request spans multiple packets.
+   */
+   
+   put pSocketData into SocketData [pSocketId]["request"]
+   read from socket pSocketID until CRLF & CRLF with message "readheaders"
+end readRequest
+
+on readHeaders pSocketId, pSocketData
+   /*
+   And this handler gets the final set of data that is coming in the request, 
+   again just in case the request is split into multiple packets for some reason by the sender.
+   This chain of handlers makes the processing more reliable.
+   */
+   put pSocketData into SocketData [pSocketId]["headers"]
+   read from socket pSocketID until empty with message "processRequest"
+end readHeaders
+
+on processRequest pSocketID, theData
+   -- This handler is called when we process a new request.
+   put theData into SocketData [pSocketId]["theData"]
+   put _constructRequestArray (pSocketID) into requestArray
+   
+   -- this allows dispatching to any control in the Livecode environment
+   -- and does not bug out
+   -- check if dispatching is significantly slower than using the message hierarchy
+   put the daemon_Router of me into routerObject
+   if exists (routerObject) is false then put the long id of me into routerObject
+   
+   dispatch "daemon_RouteRequest" to routerObject with requestArray
+   switch it
+      -- could do stuff here
+      case "handled"
+         break
+      case "unhandled" -- no matching handlers were found
+         break
+      case "passed" -- the message was handled but passed by all handlers
+         break
+   end switch
+   
+   -- let's automatically close the socket (so that routers don't need to do that)
+   put requestArray ["socketID"] into socketID
+   if socketID is among the lines of the opensockets then
+      close socket socketID
+   end if
+   _cleanSocketData socketID
+end processRequest
+
+
+--> Dameon | POST
+-
+function daemon_GetPostData requestArray
+   -- put SocketData [socketID]["theData"] into theData
+   return requestArray ["theData"]
+end daemon_GetPostData
+
+
+--> Dameon | Send
+-
+command daemon_SendPNG socketorRequestArray, faviconPNG, pSendCompressed
+   put _normalizeSocket (socketorRequestArray) into socketID
+   put _okHeaders ("image/png") into someHeader
+   daemon_Send someHeader, faviconPNG, socketID, pSendCompressed
+   return someHeader
+end daemon_SendPNG
+
+command daemon_SendJSON socketOrRequestArray, someJSON, pSendCompressed
+   put _normalizeSocket (socketorRequestArray) into socketID
+   put _okHeaders ("application/json; charset=utf-8") into someHeader
+   daemon_Send someHeader, someJSON, socketID, pSendCompressed
+   return someHeader
+end daemon_SendJSON
+
+command daemon_SendCSS socketOrRequestArray, someText, pSendCompressed
+   put _normalizeSocket (socketorRequestArray) into socketID
+   put _okHeaders ("text/css; charset=UTF-8") into someHeader
+   daemon_Send someHeader, someText, socketID, pSendCompressed
+   return someHeader
+end daemon_SendCSS
+
+command daemon_SendText socketOrRequestArray, someText, pETag, pCookieName, pCookieValue, pSendCompressed
+   put _normalizeSocket (socketorRequestArray) into socketID
+   put _okHeaders ("text/html", pCookieName, pCookieValue) into someHeader
+   daemon_Send someHeader, someText, socketID, pSendCompressed
+   return someHeader
+end daemon_SendText
+
+command daemon_SendMovedTemporarily socketID, locationURL
+   /*
+   •	Date:Tue, 28 Jul 2015 16:27:39 GMT
+   •	Location:welcome-visitors.html
+   •	Vary:Accept
+   */
+   put _movedTemporarilyHeaders (locationURL) into someHeader
+   daemon_Send someHeader, "Moved Temporarily", socketID, false
+   return the result
+end daemon_SendMovedTemporarily
+
+command daemon_SendNotFound socketID
+   put _notFoundHeaders() into someHeader
+   daemon_Send someHeader, "Page not found", socketID, false
+   return the result
+   
+   -- put _customHeaders (404, "Error: 404", "file not found") into someHeader
+   put someHeader & CRLF & CRLF & contentToSend into headersAndContent
+   write headersAndContent to socket socketID
+   return headersAndContent
+end daemon_SendNotFound
+
+command daemon_SendRedirect redirectURL, socketID, pDescriptiveContent
+   -- Handler that Forwards the user to another URL. It needs an absolute url as a parameter.
+   -- This handler uses a 301 (permanent redirection) to drive the browser to a new location.
+   
+   if pDescriptiveContent is empty then
+      put "Should redirect to <a href=" & quote & redirectURL & quote & ">" & redirectURL & "</a>" into descriptiveContent
+   end if
+   put _redirectionHeaders (redirectURL, pDescriptiveContent) into someHeader
+   daemon_Send someHeader, descriptiveContent, socketID, false
+   return the result
+end daemon_SendRedirect
+
+command daemon_SendHeaderArray someRoute, headerArray, socketID, pSendCompressed
+   put daemon_GetRouteData (someRoute) into routeData
+   
+   put daemon_ConstructDefaultHeader() into defaultHeaderArray
+   delete variable headerArray ["Content-Length"] -- because it is always added below
+   union headerArray with defaultHeaderArray
+   put "HTTP/1.1 200 OK" into someHeader
+   put CRLF & daemon_DeconstructHeaderArray (headerArray) after someHeader
+   
+   -- daemon_SendRaw someHeader, routeData, socketID
+   daemon_Send someHeader, routeData, socketID, pSendCompressed -- adds "Content-Length"
+   return the result
+end daemon_SendHeaderArray
+
+command daemon_Send someHeader, contentToSend, socketID, pSendCompressed
+   -- always adds "Content-Length:" header
+   -- should choose compression based on headers of requestArray
+   if pSendCompressed is true then
+      put CRLF & "Content-Encoding: gzip" after someHeader
+      put compress (contentToSend) into contentToSend
+   end if
+   
+   _addContentLengthHeader someHeader, contentToSend
+   
+   daemon_SendRaw someHeader, contentToSend, socketID
+   return the result
+end daemon_Send
+
+command daemon_SendCompressed someHeader, contentToSend, socketID
+   -- always adds "Content-Length:" header
+   put CRLF & "Content-Encoding: gzip" after someHeader
+   put compress (contentToSend) into compressedData
+   
+   _addContentLengthHeader someHeader, compressedData
+   
+   daemon_SendRaw someHeader, compressedData, socketID
+   return the result
+end daemon_SendCompressed
+
+command daemon_SendSimple someHeader, contentToSend, socketID
+   -- always adds "Content-Length:" header
+   _addContentLengthHeader someHeader, contentToSend
+   
+   daemon_SendRaw someHeader, contentToSend, socketID
+   return the result
+end daemon_SendSimple
+
+command daemon_SendRaw someHeader, contentToSend, socketID
+   -- everything should use this to send (so it can be trapped by middleware for logging etc)
+   put someHeader & CRLF & CRLF & contentToSend into headersAndContent
+   write headersAndContent to socket socketID
+   return headersAndContent
+end daemon_SendRaw
+
+
+--> Dameon | Send | And Close
+-
+command daemon_SendOK socketOrRequestArray, contentToSend, pContentType, pCookieName, pCookieValue
+   -- sends output back to the browser
+   if socketorRequestArray is an array then
+      put socketorRequestArray ["socketID"] into socketID
+   else
+      put socketorRequestArray into socketID
+   end if
+   put _okHeaders (pContentType, pCookieName, pCookieValue) into someHeader
+   daemon_SendAndCloseSocket someHeader, contentToSend, socketID
+end daemon_SendOK
+
+command daemon_SendAndCloseSocket someHeader, contentToSend, socketID
+   -- always adds "Content-Length:" header
+   _addContentLengthHeader someHeader, contentToSend
+   put someHeader & CRLF & CRLF & contentToSend into headersAndContent
+   daemon_RawSendAndClose headersAndContent, socketID
+end daemon_SendAndCloseSocket
+
+command daemon_RawSendAndClose headersAndContent, socketID
+   write headersAndContent to socket socketID
+   close socket socketID
+end daemon_RawSendAndClose
+
+
+--> Daemon | RouteMetaArray | Model
+-
+/*
+Stores metadata, and raw data in a custom property.
+Altering the custom proerty handler can stor the data externally.
+
+All the data can be copied from Firefox pull down items in the webdeveloper tools
+Control-click on the network menu tab item for the relevant request and copy the url or curl command. 
+*/
+
+-- function daemon_GetCurlCommand someRoute  
+put "/curl" after someRoute
+put daemon_GetRouteValue (curlRoute) into someShell
+return someShell
+end daemon_GetCurlCommand
+
+-- command daemon_SetCurlCommand someRoute, someShell
+put "/curl" after someRoute
+daemon_SetRouteValue someRoute, someShell
+return the result
+end daemon_SetCurlCommand
+
+function daemon_GetExampleUrl someRoute
+   put "/example url" after someRoute
+   put daemon_GetRouteValue (someRoute) into routeData
+   return routeData
+end daemon_GetExampleUrl
+
+command daemon_SetExampleUrl someRoute, someUrl
+   put "/example url" after someRoute
+   daemon_SetRouteValue someRoute, someUrl
+   return the result
+end daemon_SetExampleUrl
+
+function daemon_GetRouteData someRoute
+   put "/data" after someRoute
+   put daemon_GetRouteValue (someRoute) into routeData
+   return routeData
+end daemon_GetRouteData
+
+command daemon_SetRouteData someRoute, routeData
+   put "/data" after someRoute
+   daemon_SetRouteValue someRoute, routeData
+   return the result
+end daemon_SetRouteData
+
+function daemon_GetRouteContentType someRoute
+   put daemon_GetRouteHeaderArray (someRoute) into headerArray
+   put headerArray ["Content-Type"] into contentType
+   return contentType
+end daemon_GetRouteContentType
+
+command daemon_SetRouteContentType someRoute, contentType
+   put daemon_GetRouteHeaderArray (someRoute) into headerArray
+   put contentType into headerArray ["Content-Type"] 
+   daemon_SetRouteHeaderArray someRoute, headerArray
+   return the result
+end daemon_SetRouteContentType
+
+function daemon_GetRouteHeaderArray someRoute
+   put "/headers" after someRoute
+   put daemon_GetRouteValue (someRoute) into headerArray
+   return headerArray
+end daemon_GetRouteHeaderArray
+
+command daemon_SetRouteHeaderArray someRoute, headerArray
+   put "/headers" after someRoute
+   daemon_SetRouteValue someRoute, headerArray
+   return the result
+end daemon_SetRouteHeaderArray
+
+command daemon_RouteMetadata someRoute, @someData, @headerArray
+   put daemon_GetRouteValue (someRoute) into routeData
+   put routeData ["data"] into someData
+   put routeData ["headers"] into headerArray
+end daemon_RouteMetadata
+
+command daemon_SetRouteData someRoute, routeData
+   put "/data" after someRoute
+   daemon_SetRouteValue someRoute, routeData
+   return the result
+end daemon_SetRouteData
+
+function daemon_GetRouteValue someRoute
+   -- can be an array or an end value depending on the route
+   put the daemon_RouteMetaArray of me into routeMetaArray
+   put daemon_ConstructArrayKey (someRoute) into routeArrayKey
+   put routeMetaArray [routeArrayKey] into someValue
+   return someValue
+end daemon_GetRouteValue
+
+command daemon_SetRouteValue someRoute, someValue
+   -- can be an array or an end value depending on the route
+   put the daemon_RouteMetaArray of me into routeMetaArray
+   put daemon_ConstructArrayKey (someRoute) into routeArrayKey
+   put someValue into routeMetaArray [routeArrayKey]
+   set the daemon_RouteMetaArray of me to routeMetaArray
+   return routeMetaArray
+end daemon_SetRouteValue
+
+command daemon_DeleteRouteArray someRoute
+   -- can be an array or an end value depending on the route
+   put the daemon_RouteMetaArray of me into routeMetaArray
+   put daemon_ConstructArrayKey (someRoute) into routeArrayKey
+   delete variable routeMetaArray [routeArrayKey]
+   set the daemon_RouteMetaArray of me to routeMetaArray
+   return routeMetaArray
+end daemon_DeleteRouteArray
+
+function daemon_ConstructArrayKey someRoute
+   put someRoute into routeArrayKey
+   if char 1 of someRoute = "/" then delete char 1 of routeArrayKey
+   split routeArrayKey with "/"
+   return routeArrayKey
+end daemon_ConstructArrayKey
+
+function daemon_GuessContentType someRoute
+   set the itemdelimiter to "."
+   put item - 1 of someRoute into someFileExtension
+   switch
+      case someFileExtension = "png"
+         return "image/png"
+      case someFileExtension is among the items of "js.json"
+         return "application/json; charset=utf-8"
+      case someFileExtension = "css"
+         return "text/css; charset=UTF-8"
+      case someFileExtension is among the items of "txt.html.htm"
+         return "text/html"
+      default
+         return empty
+   end switch
+end daemon_GuessContentType
+
+
+--> Dameon | Headers
+-
+command daemon_StripDefaultHeadersFromArray @headerArray
+   put daemon_ConstructDefaultHeader() into defaultHeaderArray
+   delete variable defaultHeaderArray ["Content-Type"]
+   repeat for each key someKey in defaultHeaderArray
+      delete variable headerArray [someKey]
+   end repeat
+   
+   set the itemdelimiter to "/"
+   repeat for each key someKey in headerArray
+      if item 1 of someKey = "HTTP" then
+         delete variable headerArray [someKey]
+      end if
+   end repeat
+   put "Block Daemon" into  headerArray ["X-Powered-By"]
+end daemon_StripDefaultHeadersFromArray
+
+function daemon_ConstructDefaultHeader
+   put "text/html" into headerArray ["Content-Type"] 
+   put "*" into headerArray ["Access-Control-Allow-Origin"]
+   put "Close" into headerArray ["Connection"]
+   -- put the date & the time into headerArray ["Date"]
+   put the internet date into headerArray ["Date"]
+   -- _addCacheHeader someHeader
+   -- put "public, max-age=0" into headerArray ["Cache-Control"] after someHeader
+   return headerArray
+end daemon_ConstructDefaultHeader
+
+function daemon_DeconstructHeaderArray headerArray
+   combine headerArray with CRLF and ":"
+   return headerArray
+end daemon_DeconstructHeaderArray
+
+function daemon_ConstructHeaderArray someHeaders, pFast
+   if pFast is true then
+      split someHeaders with CR and ":"
+      return someHeaders
+   end if
+   
+   set the itemdelimiter to ":"
+   put quote & "'" into someQuotes
+   repeat for each line headerLine in someHeaders
+      put word 1 to -1 of item 1 of headerLine into headerKey
+      put word 1 to -1 of item 2 of headerLine into headerValue
+      if char 1 of headerValue is among the chars of someQuotes and char -1 of headerValue is among the chars of someQuotes then
+         delete char 1 of headerValue
+         delete char -1 of headerValue
+      end if
+      put headerValue into headerArray [headerKey]
+   end repeat
+   return headerArray
+end daemon_ConstructHeaderArray
+
+private function _redirectionHeaders redirectURL
+   if pContentType is empty then put "text/html" into pContentType
+   
+   put "HTTP/1.1 307 redirect" into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   put CRLF & "Location:" && redirectURL after someHeader
+   _addConnectionHeader someHeader
+   _addCorsHeader someHeader
+   _addDateHeader someHeader
+   return someHeader
+end _redirectionHeaders
+
+private function _notFoundHeaders
+   put "HTTP/1.1 404 Error: 404" into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   _addCorsHeader someHeader
+   _addKeepAliveHeader someHeader
+   return someHeader
+end _notFoundHeaders
+
+private function _movedTemporarilyHeaders locationURL
+   put "HTTP/1.1 302 Moved Temporarily" into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   put CRLF & "Location:" && locationURL after someHeader
+   put CRLF & "Vary: Accept" after someHeader
+   _addConnectionHeader someHeader
+   _addCorsHeader someHeader
+   _addDateHeader someHeader
+   return someHeader
+end _movedTemporarilyHeaders
+
+private function _okHeaders pContentType, pCookieName, pCookieValue
+   --  Generates the HTTPd Header with a 200 OK response. (200 OK = Yes it succeded!)
+   if pContentType is empty then put "text/html" into pContentType
+   
+   put "HTTP/1.1 200 OK" into someHeader
+   _addContentTypeHeader someHeader, pContentType
+   _addCorsHeader someHeader
+   -- _addCacheHeader someHeader
+   _addConnectionHeader someHeader
+   _addDateHeader someHeader
+   if pCookieName is not empty then
+      _addCookieHeader someHeader, pCookieName, pCookieValue
+   end if
+   return someHeader
+end _okHeaders
+
+
+--> Dameon | HTTP | Header | Utitlities
+-
+/*
+These handlers help construct http headers.
+Handlers that begin with _Add assume a header is not empty
+ie there is is at least one line in an existing header, then they add to it
+*/
+
+private function _customHeaders httpStatusCode, contentToSend, httpStatusMessage
+   -- Function that generates custom headers, like redirections and errors. Helper function to generate custom httpd headers.
+   -- see https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+   put "HTTP/1.1" && httpStatusCode && httpStatusMessage into someHeader
+   _addContentTypeHeader someHeader, "text/html"
+   _addCorsHeader someHeader
+   _addContentLengthHeader someHeader, contentToSend
+   return someHeader
+end _customHeaders
+
+private command _addSessionCookie @someHeader
+   return empty
+   
+   -- for now a quick hack
+   if SessionArray is empty then return "Cookie not set"
+   get "qvHx_T04gEAtKXxlGHG0Cw.j9Kd9ZUK-wSPFr12Ml4jtqhQsvXve3AnwUbVOYu081QD3Xe65TuV5s0Ts8IQWSYi.1438080455096.86400000.7Q_SkgQfc7nrHgjZoLfL-xSOKtNUKNounvxyD-oIjtI"
+   _addCookieHeader someHeader, "session", it
+end _addSessionCookie
+
+private command _addCookieHeader @someHeader, cookieName, cookieValue
+   put cookieName & "=" & cookieValue & ";" into cookieString
+   put CRLF & "Set-Cookie:" && cookieString  after someHeader
+end _addCookieHeader
+
+
+private command _addConnectionHeader @someHeader
+   -- always defaults to close for now
+   put CRLF & "Connection: Close " after someHeader
+end _addConnectionHeader
+
+private command _addDateHeader @someHeader
+   put "Date:" && the date & the time into headlerLine  
+   put CRLF & headlerLine after someHeader 
+end _addDateHeader
+
+private command _addKeepAliveHeader @someHeader
+   put "Connection:keep-alive" into headlerLine  
+   put CRLF & headlerLine after someHeader 
+end _addKeepAliveHeader
+
+private command _addCorsHeader @someHeader
+   put CRLF & "Access-Control-Allow-Origin:*" after someHeader
+end _addCorsHeader
+
+private command _addCacheHeader @someHeader
+   put CRLF & "Cache-Control:public, max-age=0" after someHeader
+end _addCacheHeader
+
+private command _addContentTypeHeader @someHeader, pContentType
+   if pContentType is empty then put "text/html" into pContentType
+   put "Content-Type:" && pContentType into headlerLine
+   put CRLF & headlerLine after someHeader 
+end _addContentTypeHeader
+
+private command _addContentLengthHeader @someHeader, theContent
+   -- maybe we should be careful and check it is not already there?
+   put "Content-Length:" && length (theContent)  into headlerLine   
+   put CRLF & headlerLine after someHeader 
+end _addContentLengthHeader
+
+
+--> Dameon | Utilis
+-
+private function _normalizeSocket socketorRequestArray
+   -- sends output back to the browser
+   if socketorRequestArray is an array then
+      put socketorRequestArray ["socketID"] into socketID
+   else
+      put socketorRequestArray into socketID
+   end if
+   return socketID
+end _normalizeSocket
+
+private function _constructRequestArray pSocketID
+   put the itemdel into oDelim
+   -- 
+   put pSocketID into requestArray ["SocketID"] -- Store the socket id, we'll use that later for responding back to the browser
+   put DaemonServer into requestArray ["daemonServer"] -- store as it is the only way to reference the daemon_Server instance
+   
+   put SocketData [pSocketId]["request"] into someRequest
+   put word 1 to -1 of SocketData [pSocketId]["headers"] into requestArray ["receivedHeaders"]
+   
+   put word 1 of someRequest into someMethod
+   put someMethod into requestArray ["Request Method"]
+   -- if someMethod is among the items of "POST,PUT" then
+   put SocketData [pSocketId]["theData"] into requestArray ["theData"]
+   -- end if
+   
+   put word 2 of someRequest into requestUrl
+   put requestUrl into requestArray ["Requested URL"]
+   
+   -- could do all of this afterwards and if needed?
+   set the itemdel to "?"
+   put item 1 of requestUrl into requestArray ["SCRIPT_NAME"]
+   put item 2 of requestUrl into queryString
+   put queryString into requestArray ["QUERY_STRING"]
+   
+   put "&" & queryString into tVarsA
+   split tVarsA by "&" and "="
+   repeat for each line tKey in the keys of tVarsA
+      if tKey is empty then next repeat
+      put tVarsA [tKey] into varValue
+      put urldecode (varValue) into requestArray ["queryArray"][tKey]
+   end repeat
+   set the itemdel to oDelim
+   
+   _setEnvironmentalVariables requestArray
+   return requestArray
+end _constructRequestArray
+
+private command _setEnvironmentalVariables requestArray
+   -- not vital (check them???)
+   -- must happen after "_constructRequestArray"
+   put "LiveDaemon" into $SERVER_SOFTWARE
+   put the daemon_Port of me into $SERVER_PORT
+   put requestArray ["SCRIPT_NAME"] into $SCRIPT_NAME
+   put requestArray ["QUERY_STRING"] into $QUERY_STRING
+end _setEnvironmentalVariables
+
+command _cleanSocketData pSocketId
+   /*
+   Clean out SocketData of any partial connection data that is older than the 'on newConnection' dropDelay number of seconds.
+   If the connection to RevHTTPd does not complete but there has been some data stored in this array, this routine finds it and deletes it when it is too old.
+   Otherwise SocketData could fill up and use up all available memory until Revolution dies.
+   */
+   -- and remove this connection data from local variable SocketData (otherwise it will look like a memory leak)
+   delete variable SocketData [pSocketId]
+   
+   repeat for each key someSocketID in SocketData
+      put SocketData [someSocketID]["theSeconds"] into timeToKill
+      put the seconds into theSeconds
+      if timeToKill < theSeconds then
+         delete variable SocketData [someSocketID]
+      end if
+   end repeat
+end _cleanSocketData
+
+
+--> Daemon | Session
+-
+/*
+Experimental session stuff.
+*/
+
+command daemon_SetSession socketID, someReply, pContentType
+   -- Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GM
+   -- put true into SessionArray
+   
+   get "IHqOSrK5HDQ7rFiarE1KcQ.EqHAy6x1nZ4z80ClyyMVivHNqfs4zhkNRoFqMbe6DlBkBAI3aRAtseJGHO7qcaqE.1438105299038.86400000.UzvAUVkRttrGikzPDllFJG4iNgURB4cVMqkr_rBR4EU"
+   put it into theSessionID
+   put _okHeaders (pContentType, "session", theSessionID) into someHeader
+   daemon_Send someHeader, someReply, socketID
+   return the result
+end daemon_SetSession
+
+
+--> Deps
+-
+function json_FromArray pArray, pForceRootType, pPretty
+   -- identical to (simply renamed) "ArrayToJSON"
+   -- pArray - array to be encoded
+   -- pForceRootType - can force the root to be an object if it looks like an array
+   -- pPretty - include whitespace
+   repeat for each key tKey in pArray
+      if pArray[tKey] is an array then
+         put "}" & json_FromArray (pArray [tKey]) into pArray [tKey]
+      end if
+   end repeat
+   return (mergJSONEncode ("pArray", pForceRootType, pPretty))
+end json_FromArray
+
+function json_ToArray pJSON
+   if pJSON is empty then return false
+   try -- as otherwise an error with non-json causes script to exit
+      local tArray,tKeys
+      if pJSON is empty then return empty
+      repeat for each line tKey in mergJSONDecode (pJSON, "tArray")
+         put json_ToArray(tArray[tKey]) into tArray[tKey]
+      end repeat
+      return tArray
+   catch e
+      return empty
+   end try
+end json_ToArray

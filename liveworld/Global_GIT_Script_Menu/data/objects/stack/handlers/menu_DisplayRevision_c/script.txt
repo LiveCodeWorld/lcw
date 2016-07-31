@@ -1,0 +1,40 @@
+on menu_DisplayRevision treeField
+   put the displayed_File of treeField into relativeFile
+   put the tree_SelectedLink of treeField into cHash
+   put cHash & ":" & relativeFile into treeish
+   
+   put git_Show (treeish) into someData
+   
+   put data_DuckType (someData) into dataType
+   switch dataType
+      case "livecode"
+         put the displayed_File of treeField into relativeFile
+         put rev_PluginFullPath (relativeFile) into someFile
+         
+         lock messages
+         delete stack someFile
+         unlock messages
+         wait for messages
+         go to stack someData
+         if the result is not empty then opn_Notify the result, true
+         break
+      default
+         put the stack_object of treeField into displayStack
+         if the label of displayStack = "Script Log" then
+            put the displayed_Object of treeField into displayedObject -- should be
+            
+            put the selectedtext of treeField into commitComment
+            put "Revision" && cHash && ":  of" && displayedObject into someTitle
+            put CR & "Script file:" && relativeFile after someTitle
+            
+            put someData into someScript
+            display_Script someScript, someTitle
+            
+            display_Text someData, someTitle
+         else
+            put the selectedtext of treeField into someTitle
+            text_UnixToMac someData
+            display_Text someData, someTitle
+         end if
+   end switch
+end menu_DisplayRevision

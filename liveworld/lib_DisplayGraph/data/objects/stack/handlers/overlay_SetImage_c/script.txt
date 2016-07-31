@@ -1,0 +1,14 @@
+command overlay_SetImage imageView, linkArray, idLinkArray, idArray, geometryArray, imageFile, dotFile, xdotFile, cmapFile 
+   overlay_CreateAndSetData imageView, linkArray, idLinkArray, idArray -- draw overlay and set link data
+   put the result into overlayView
+   
+   set the image_File of imageView to imageFile
+   set the uOPN ["dot_File"] of imageView to dotFile
+   set the uOPN ["xdot_File"] of imageView to xdotFile
+   set the uOPN ["cmapx_File"] of imageView to cmapFile
+   
+   set the displayed_OverlayGeometry of overlayView to geometryArray --set overlay node data from cmapText
+   
+   set the menu_ToolTitle of imageView to "Global | Image | Dot | Menu"
+   set the trigger_Name ["mouseUp"] of overlayView to "Global | Image | Overlay | Node | Menu/Edit Handler"
+end overlay_SetImage

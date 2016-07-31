@@ -1,0 +1,16 @@
+function file_IndexToOutline filePaths, pType
+   switch pType
+      case "outline"
+         put outline_FromPathIndex (filePaths, "/", true) into someOutline
+         return someOutline
+         break
+      default
+         set the itemdelimiter to "/"
+         repeat for each line filePath in filePaths
+            put the last item of filePath into someText
+            put html_ConstructNameLink(someText, filePath) & CR after someOutline
+         end repeat
+         delete last char of someOutline
+         return someOutline
+   end switch
+end file_IndexToOutline

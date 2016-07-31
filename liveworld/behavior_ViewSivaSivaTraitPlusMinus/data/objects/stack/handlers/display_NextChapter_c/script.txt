@@ -1,0 +1,9 @@
+command display_NextChapter
+   put the chapter_Num of me into chapterNum
+   if chapterNum = 64 then
+      put 1 into nextChapterNum
+   else
+      put chapterNum + 1 into nextChapterNum
+   end if
+   set the displayed_ChapterTitle of me to nextChapterNum
+end display_NextChapter

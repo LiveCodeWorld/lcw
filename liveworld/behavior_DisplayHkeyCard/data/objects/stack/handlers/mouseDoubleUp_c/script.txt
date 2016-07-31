@@ -1,0 +1,32 @@
+on mouseDoubleUp 
+   put the the short name of the target into shortName
+   switch
+      case shortName is among the items of "image,_View Background"
+         set the cursor to watch
+         put the hkey_ImageView of me into hkeyImageView
+         set the visible_Status of hkeyImageView to false
+         
+         put the displayed_Hkey of the target into hKey
+         if the display_ProjectHandlers of me is true then
+            put project_HandlerMetadataFolder (hKey) into overlayFolder
+         else
+            put library_HkeyFolder (hKey, true) into overlayFolder
+         end if
+         
+         put overlay_GetDefaultName (overlayFolder) into pOverlayName
+         put empty into pStackLabel
+         display_Overlay overlayFolder, pOverlayName -- , empty, pStackLabel, "fit inside frame"
+         break
+      case shortName is among the items of "_Text Field,Script"  
+         put the record_Array of the target into recordArray
+         put recordArray ["hKey"] into hKey
+         if the display_ProjectHandlers of me is true then
+            hKey_EditFoundHandler hKey
+         else
+            put library_FetchHandler (hKey)
+         end if
+         break
+      default
+         opn_Notify shortName
+   end switch
+end mouseDoubleUp

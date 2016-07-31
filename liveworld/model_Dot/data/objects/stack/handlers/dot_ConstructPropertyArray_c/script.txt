@@ -1,0 +1,11 @@
+command dot_ConstructPropertyArray @propertyArray, overlap, concentrate, splines, cluster, direction, dotOrder, defaultShape, defaultUrl
+   -- wa "dot_ConstructHeaderArray"
+   put overlap into propertyArray ["overlap"]
+   put concentrate into propertyArray ["concentrate"]
+   put splines into propertyArray ["splines"]
+   put cluster into propertyArray ["cluster"]
+   put direction into propertyArray ["direction"]
+   put dotOrder into propertyArray ["dotOrder"]
+   put defaultShape into propertyArray ["defaultShape"]
+   put defaultUrl into propertyArray ["defaultUrl"]
+end dot_ConstructPropertyArray

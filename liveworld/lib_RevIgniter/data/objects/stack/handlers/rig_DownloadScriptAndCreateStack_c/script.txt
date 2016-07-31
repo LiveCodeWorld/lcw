@@ -1,0 +1,23 @@
+command rig_DownloadScriptAndCreateStack shortController, controllerFolder
+   put controllerFolder & shortController into controllerFile
+   
+   put rig_FetchController (shortController) into rigScript
+   put rigScript into url ("file:" & controllerFile)
+   
+   set the itemdelimiter to slash
+   put item 1 to -2 of controllerFolder & "/stacks/" into stackFolder
+   set the itemdelimiter to "."
+   put stackFolder & shortController into scriptStackFile
+   put "livecodescript" into item -1 of scriptStackFile
+   
+   put rig_CreateContainerScript (rigScript) into someScript
+   if exists (stack scriptStackFile) then
+      set the script of stack scriptStackFile to someScript
+   else
+      create script only stack shortController
+      set the script of stack shortController to someScript
+      set the filename of stack shortController to scriptStackFile
+      save stack shortController
+   end if
+   return scriptStackFile
+end rig_DownloadScriptAndCreateStack

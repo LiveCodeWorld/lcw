@@ -1,0 +1,53 @@
+function menu_GetDefaultController mTitle, targetObject, pSearchScript
+   -- careful to avoid recursion 
+   -- called repeatedly on menu draw (consider speeding up by using caching / and / or using menu_TitleBurn)
+   
+   -- check if it is global
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 1 of mTitle into mTitleStem
+   if mTitleStem is "Global" then
+      put menu_GetGlobalController (mTitle) into mController
+      if exists (mController) is true then
+         return mController
+      end if
+   end if
+   
+   -- here we allow sub stack cards to override defaults
+   put the menu_SubStackCard [mTitle] of targetObject into mController
+   if exists(mController) then return mController
+   
+   -- here are the best guess defaults
+   -- put the view_Object of targetObject into someView
+   switch
+      case word 1 of targetObject = "card"
+         -- even when there is a backgound view
+         -- the default controller of a menus card script is the card not the card_Object of the view
+         return targetObject
+         -- case exists (someView) is false
+         -- the default menu_Controller of anything other than a view is the target itself
+         -- return the rugged_Id of the target
+      case mTitle is empty
+         -- for views the default controller is the card
+         -- can be unreliable in the case of backgound views (will take the card that is showing)
+         put the card_Object of targetObject into cardObject
+         return cardObject
+      default
+         -- if pSearchScript is true then 
+         -- does not refer to default values via menu_Table but uses script
+         -- used by menu_CreateOnCompile to construct menu_Tables (so the menu_Table is empty)
+         -- else
+         -- lets search for a possible controller which has the right mTitle
+         -- we can use the menu_Table (a bit faster)
+         
+         -- let's see if the menu if defined in the target
+         put menu_GetTableTitles (targetObject) into mTitles
+         if mTitle is among the lines of mTitles then return targetObject
+         
+         -- let's search the (view) hierarchy
+         menu_SearchViewHierarchy targetObject, mTitle, mController, pSearchScript
+         if mController is not empty then return mController
+         
+         put the card_Object of targetObject into cardObject
+         return cardObject
+   end switch
+end menu_GetDefaultController

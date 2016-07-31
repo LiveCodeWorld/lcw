@@ -1,0 +1,4 @@
+function script_GetUniqueTitle
+   put script_GetGlobalSuiteTitles() into globalSuiteTitles
+   return "Untitled" && the number of lines of globalSuiteTitles
+end script_GetUniqueTitle

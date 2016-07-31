@@ -1,0 +1,7 @@
+function hKey_IsHandler hKey, handlerName, handlerType
+   if handlerType is empty then
+      return item 1 of hKey is handlerName
+   else
+      return item 1 of hKey is handlerName and item 2 of hKey is handlerType
+   end if
+end hKey_IsHandler

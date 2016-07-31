@@ -1,0 +1,7 @@
+command fedwiki_PostJSON someJSON, restURL
+   set the httpheaders to "Content-Type: application/json" -- required for revIgnitor
+   post someJSON to url restURL
+   put it into jsonResult
+   if the shiftKey is "Down" then put restURL
+   return jsonResult
+end fedwiki_PostJSON

@@ -1,0 +1,5 @@
+getprop mainstack_ExportArray
+   put the textStack_Folder of the target into mainStackFolder
+   put mainStackArray_FetchFromFolder (mainStackFolder) into mainStackArray
+   return mainStackArray
+end mainstack_ExportArray

@@ -1,0 +1,6 @@
+function behavior_GetScript bName
+   put library_TextUrl ("script.txt", bName, "behavior", true) into someUrl
+   if someUrl is empty then return empty
+   put url someUrl into helpHtml
+   return helpHtml
+end behavior_GetScript

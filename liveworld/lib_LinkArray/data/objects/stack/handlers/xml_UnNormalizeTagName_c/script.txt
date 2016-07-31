@@ -1,0 +1,5 @@
+on xml_UnNormalizeTagName @tagName
+   if char 1 to 5 of tagName = "node_" then
+      delete char 1 to 5 of tagName
+   end if
+end xml_UnNormalizeTagName

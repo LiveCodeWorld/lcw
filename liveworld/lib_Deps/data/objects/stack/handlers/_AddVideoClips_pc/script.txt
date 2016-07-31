@@ -1,0 +1,18 @@
+private command _AddVideoClips subStackName, mainStackName, @stackArray
+   put the number of videoClips of stack subStackName of stack mainStackName into maxVclipNum
+   repeat with clipNum = 1 to maxVclipNum
+      put the object_PropertyArray of videoClip clipNum of stack subStackName of stack mainStackName into objectPropertyArray
+      put clipNum into objectPropertyArray ["rev"]["layer"]
+      put the abbreviated id of videoClip clipNum of stack subStackName of stack mainStackName into aObject
+      put object_ConvertAbbreviated (aObject) into aFolderName
+      put objectPropertyArray into stackArray ["objects"][aFolderName]
+      
+      if maxVclipNum = 1 then
+         put "videoclip" into clipArrayKey
+      else
+         put "videoclip[" & clipNum & "]" into clipArrayKey
+      end if
+      put aObject into stackArray ["manifest"]["videoclips"][clipArrayKey]["object"]
+      put objectPropertyArray ["rev"]["name"] into stackArray ["manifest"]["videoclips"][clipArrayKey]["name"]
+   end repeat
+end _AddVideoClips

@@ -1,0 +1,10 @@
+function addThenReturn mTarget
+   -- simply adds mTarget to global before returning
+   global gTemp_ActiveMenuArray
+   if exists (mTarget) then
+      put the mobile_Name of mTarget into gTemp_ActiveMenuArray ["top"]["mTarget"]
+   else
+      put mTarget into gTemp_ActiveMenuArray ["top"]["mTarget"]
+   end if
+   return mTarget
+end addThenReturn

@@ -1,0 +1,5 @@
+setprop view_Index someIndex
+   put fieldView() into fieldObject
+   set the text of fieldObject to someIndex
+   return fieldObject
+end view_Index

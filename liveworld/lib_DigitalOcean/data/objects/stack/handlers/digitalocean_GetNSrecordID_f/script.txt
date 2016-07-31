@@ -1,0 +1,9 @@
+function digitalocean_GetNSrecordID oceanDomainName, nameServer, oceanDomainRecordArray
+   put oceanDomainRecordArray ["domain_records"] into domainArray
+   repeat for each key recordNum in domainArray
+      if domainArray [recordNum]["type"] is not "NS" then next repeat
+      if domainArray [recordNum]["data"] is not nameServer then next repeat
+      return domainArray [recordNum]["id"]
+   end repeat
+   return empty
+end digitalocean_GetNSrecordID

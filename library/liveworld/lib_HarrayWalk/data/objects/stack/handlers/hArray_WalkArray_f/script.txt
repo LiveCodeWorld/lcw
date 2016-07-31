@@ -1,0 +1,42 @@
+function hArray_WalkArray hArray, mainStackFolder, pDepObject, pSetName, pTestExceptions, pSearchHierarchy, pSearchOutSideMainStack
+   local walkArray, pOriginalHkey
+   if pTestExceptions is empty then put true into pTestExceptions
+   if pSetName is empty then put "Menus Only" into pSetName
+   
+   if exists (pDepObject) then
+      put revRuggedID (pDepObject) into pDepObject
+      hArray_RemoveObjectFromArray pDepObject, hArray 
+   end if
+   put hArray ["scriptArray"] into objectArray
+   put hArray into walkArray ["hArray"]
+   
+   repeat for each key rObject in objectArray
+      if exists (rObject) is false then
+         breakpoint
+         next repeat -- error check (should not be!_
+      end if
+      put objectArray [rObject] into scriptObjectArray
+      put scriptObjectArray ["data"]["firstHkeyArray"] into firstHkeyArray
+      
+      repeat for each key firstShortHkey in firstHkeyArray
+         if firstShortHkey = "_,c" then next repeat -- could check handler is empty
+         
+         put firstShortHkey,rObject,1 into hKey
+         put empty into walkArray ["hkeyArray"][hKey]
+         
+         put hArray_GetShortCalls (hKey, hArray) into shortCalls
+         -- put hArray_GetHandler (hKey, hArray) into callHandler
+         -- put handler_ExtractCalls (callHandler) into shortCalls
+         repeat for each line shortCall in shortCalls
+            hArray_DependencyWalk shortCall, hKey, walkArray, pSearchOutSideMainStack, pSetName, pTestExceptions, pOriginalHkey
+         end repeat
+      end repeat
+   end repeat
+   
+   -- changing hKeyArray functions to use keys instead of lines would avodi this step and speed things
+   put walkArray ["hKeyArray"] into mainStackHkeyArray
+   array_StripDeeperLevels mainStackHkeyArray
+   put mainStackHkeyArray into walkArray ["hKeyArray"]
+   
+   return walkArray
+end hArray_WalkArray

@@ -1,0 +1,4 @@
+on menu_EditHkey treeView
+   put the displayed_Hkey of treeView into hKey
+   hkey_Edit hKey
+end menu_EditHkey

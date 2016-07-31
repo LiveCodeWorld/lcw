@@ -1,0 +1,18 @@
+on mouseDown
+   switch word 1 of the name of the target
+      case "button"
+         if the controlkey is "Down" then
+            menu_PullDown "Global | Index | Simple | Menu"
+         else
+            menu_PullDown "Title | Menu"
+         end if
+         break
+      case "field"
+         put word 2 of the clickline into cNum
+         if the controlkey is "Down" then
+            set the hilitedlines of the target to cNum
+            menu_PopUp "List | Menu"
+         end if
+         break
+   end switch
+end mouseDown

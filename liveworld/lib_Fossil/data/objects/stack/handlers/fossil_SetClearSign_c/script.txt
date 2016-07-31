@@ -1,0 +1,10 @@
+command fossil_SetClearSign someBoolean, pCheckoutFolder, pSetGlobal
+   -- fossil settings clearsign off
+   if someBoolean is false then
+      put "off" into someValue
+   else
+      put "on" into someValue
+   end if
+   fossil_SetSetting "clearsign", someValue, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetClearSign

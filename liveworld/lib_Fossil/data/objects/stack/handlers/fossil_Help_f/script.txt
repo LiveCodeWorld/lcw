@@ -1,0 +1,8 @@
+function fossil_Help pFossilCommand
+   put "fossil help" into someShell
+   if pFossilCommand is not empty then put space & pFossilCommand after someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into shellResult
+   return shellResult
+end fossil_Help

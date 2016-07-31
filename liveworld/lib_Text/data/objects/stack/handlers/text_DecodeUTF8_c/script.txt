@@ -1,0 +1,3 @@
+command text_DecodeUTF8 @someText
+   put unidecode (uniencode (someText,"UTF8")) into someText
+end text_DecodeUTF8

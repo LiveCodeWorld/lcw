@@ -1,0 +1,5 @@
+getprop displayed_ImportantStacks
+   put _importantStackField() into importantStackField
+   put the text of importantStackField into importantStackNames
+   return importantStackNames
+end displayed_ImportantStacks

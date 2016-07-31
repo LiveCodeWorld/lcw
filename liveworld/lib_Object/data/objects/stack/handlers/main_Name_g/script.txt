@@ -1,0 +1,9 @@
+getprop main_Name
+   -- used for cloned substacks
+   put the long ID of the target into targetObject
+   put the name of targetObject into mobileObject
+   put object_ExtractStack (targetObject) into stackObject
+   put the mainStack of stackObject into mainName
+   get mobileObject && "of stack" && kwote(mainName)
+   return it
+end main_Name

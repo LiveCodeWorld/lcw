@@ -1,0 +1,8 @@
+command lcw_IndexAllScripts pHomeStackName
+   if pHomeStackName is empty then put the stack_Name of the target into pHomeStackName
+   put the project_Folder of stack pHomeStackName into homeFolder
+   standard_IndexAllScripts homeFolder
+   put the result into stackPathProblems
+   if stackPathProblems is not empty then put stackPathProblems
+   -- put "OK" & CR & stackPathProblems
+end lcw_IndexAllScripts

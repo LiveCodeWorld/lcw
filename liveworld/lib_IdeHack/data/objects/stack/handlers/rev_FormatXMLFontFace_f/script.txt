@@ -1,0 +1,8 @@
+function rev_FormatXMLFontFace pTag
+   -- Given a tag name, returns the font that the contents of this
+   -- tag should be displayed in.
+   local tFace
+   put item 1 of the cStyles[pTag] of revDocumentationStack() into tFace
+   if tFace is "default" then return empty
+   return tFace
+end rev_FormatXMLFontFace

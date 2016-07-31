@@ -1,0 +1,4 @@
+command overlayData_SetGroupStyleArray @overlayData, dotGroupStyleArray, pOverlayName
+   overlayData_NormalizeName pOverlayName, overlayData
+   put dotGroupStyleArray into overlayData [pOverlayName]["metadata"]["dot_GroupStyleArray"]
+end overlayData_SetGroupStyleArray

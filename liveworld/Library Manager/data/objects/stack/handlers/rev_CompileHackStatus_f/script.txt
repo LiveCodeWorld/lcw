@@ -1,0 +1,19 @@
+function rev_CompileHackStatus
+   put scriptEditor_CompileButtonBehavior() into defaultBehavior
+   -- put rev_BehaviorID (compileButtonBehavior) into defaultBehavior
+   if exists(defaultBehavior) is false then return false
+   
+   put rev_OpenScriptEditorNames() into editorNames
+   repeat with someNum = 0 to the number of lines of editorNames
+      put rev_CompileButton (someNum) into compileButton
+      if exists(compileButton) is false then next repeat
+      
+      put the behavior of compileButton into compileButtonBehavior
+      if exists(compileButtonBehavior) is false then return false
+      
+      if the long id of compileButtonBehavior is not the long id of defaultBehavior then
+         return false
+      end if
+   end repeat
+   return true
+end rev_CompileHackStatus

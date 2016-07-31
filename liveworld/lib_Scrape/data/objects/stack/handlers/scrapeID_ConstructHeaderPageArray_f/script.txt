@@ -1,0 +1,51 @@
+function scrapeID_ConstructHeaderPageArray treeID
+   put scrapeID_GetContentSectionPath (treeID) into contentSectionPath
+   put revXMLNumberOfChildren (treeID, contentSectionPath, "", 1) into numberOfChildren -- for safety
+   put revXMLFirstChild (treeID, contentSectionPath, false) into nextNode
+   
+   put 1 into headerNum
+   put 0 into numKeyList
+   set the itemdelimiter to "/"
+   repeat numberOfChildren -- for safety
+      put item -1 of nextNode into someLeaf
+      put token 1 of someLeaf into headerNum
+      delete char 1 of headerNum
+      switch  
+         case (char 1 of someLeaf = "h" and headerNum is a number)  
+            put revXMLText (treeID, nextNode, true) into titleBit
+            put revXMLNodeContents (treeID, nextNode) into headerTitle
+            
+            put scrape_TidyTitle (titleBit, headerTitle) into headerTitle
+            
+            scrape_IncrementNumKeyList numKeyList, headerNum
+            put scrape_ConstructNumKeyArray (numKeyList, headerNum) into numKeyArray
+            
+            put headerTitle into headerPageArray [numKeyArray]["@attributes"]["title"]
+            put headerNum into headerPageArray [numKeyArray]["@attributes"]["level"]
+            
+            -- now put content into previous headers numKeyArray
+            if htmlArray is an array then
+               put htmlArray into headerPageArray [previousNumKeyArray]["@content"]
+               delete variable htmlArray
+            end if
+            
+            put numKeyArray into previousNumKeyArray
+            break
+         default
+            put revXMLText (treeID, nextNode, true) into htmlBit
+            fedwiki_AddToEndOfIndexArray htmlBit, htmlArray
+      end switch
+      
+      put revXMLNextSibling (treeID, nextNode, false) into nextNode
+      if nextNode is empty then
+         exit repeat
+      end if
+   end repeat
+   
+   if htmlArray is an array then
+      -- if theri is only one title - theri may be some left here to add to the top title
+      put htmlArray into headerPageArray [previousNumKeyArray]["@content"]
+      delete variable htmlArray
+   end if
+   return headerPageArray
+end scrapeID_ConstructHeaderPageArray

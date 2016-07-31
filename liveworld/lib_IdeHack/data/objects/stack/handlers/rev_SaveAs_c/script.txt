@@ -1,0 +1,119 @@
+command rev_SaveAs pShortName, pDefaultFilePath, pAskComment, pSubstackOnly
+   -- slightly modified from revSaveAs of revBackScript
+   local tMakeMainStack, tMainStackName, tStackName
+   global gREVMessageDispatch
+   
+   -- allows specifying a default file path to save and customising the ask file message
+   -- otherwise should be the same
+   if pAskComment is empty then put "Save stack" && pShortName && "as:" into pAskComment
+   
+   if the platform is not "MacOS" then
+      put revFixPath (pShortName) into tStackName
+   else
+      put pShortName into tStackName
+      if char -4 to -1 of tStackName is not ".rev" and revExtensionShow() then
+         put ".rev" after tStackName
+      end if
+   end if
+   
+   switch
+      case pDefaultFilePath is empty
+         put tStackName into pDefaultFilePath
+         break
+      case char -1 of pDefaultFilePath = "/"
+         put tStackName after pDefaultFilePath
+         break
+      default
+         -- leave user specified default path as is
+   end switch
+   --
+   
+   put the short name of stack pShortName into pShortName
+   
+   put the name of stack pShortName into stackObject
+   repeat for each line l in gREVMessageDispatch [revSaveStackRequest]
+      dispatch "revSaveStackRequest" to this cd of stack l with stackObject -- not sends stackObject not stackName as param
+   end repeat
+   
+   if "id 1230" is in the frontScripts and "revTools" is in the frontScripts then
+      select empty
+      send "revSetMarkers true" to btn "revReshape" of stack "revTools"
+      remove script of btn "revReshape" of stack "revTools" from front
+   end if
+   
+   put the defaultStack into tDefaultStackBackup
+   put pShortName into pShortNameBackup
+   
+   put true into tMakeMainStack
+   put the mainStack of stack pShortName into tMainStackName
+   if tMainStackName is not pShortName and tMainStackName is not "Home" then
+      if not pSubStackOnly then
+         put false into tMakeMainStack
+         put tMainStackName into pShortName
+      end if
+   end if
+   
+   if the systemFileSelector then
+      switch the platform
+         case "Win32"
+            put "Revolution Stacks" & cr & "*.rev" & cr & "MetaCard Stacks" & cr & "*.mc" & cr & "All Files" & cr & "*.*" into tFilterString
+            break
+         case "MacOS"
+            put "MSTK" into tFilterString
+            break
+         default
+            put "*.rev" into tFilterString
+      end switch
+   else put "*.rev" into tFilterString
+   
+   ask file pAskComment with pDefaultFilePath with filter tFilterString
+   
+   if it is empty then
+      put "edited" into gREVStackStackStatus [pShortName]
+      return empty
+   end if
+   
+   if the platform is not "MacOS" and char -4 to -1 of it is not ".rev" then
+      put ".rev" after it
+   end if
+   put it into tFilePath
+   if the platform is not in "Win32,MacOS" and there is a file tFilePath then
+      answer warning "File exists.  Overwrite?" with "Cancel" or "OK"
+      if it is "Cancel" then return empty
+      else delete file tFilePath
+   end if
+   
+   if tMakeMainStack and pShortName is not tMainStackName then
+      put the colors of stack pShortName into tStackColors
+      put the colors of stack "Home" into tHomeColors
+      repeat with i = 1 to 8
+         if line i of tStackColors is empty
+         then put line i of tHomeColors into line i of tStackColors
+      end repeat
+      set the colors of stack pShortName to tStackColors
+      set mainStack stack pShortName to pShortName
+      set the cursor to watch
+      save stack tMainStackName
+   end if
+   
+   set the cursor to watch
+   lock messages
+   save stack pShortName as tFilePath
+   if the result is not empty then
+      answer "Can't save stack" && l && "due to an error:" & cr & the result
+      unlock messages
+      return empty
+   else
+      put empty into gREVStackStatus [pShortName]
+      put the mainStack of stack pShortName into tMainStackList
+      put CR & the substacks of stack pShortName after tMainStackList
+      repeat for each line xy in tMainStackList
+         if xy is empty then next repeat
+         put empty into gREVStackStatus [xy]
+      end repeat
+      revUpdateRecentFiles pShortName
+      revKillAllLinkedPalettes
+      unlock messages
+      return tFilePath
+   end if
+end rev_SaveAs

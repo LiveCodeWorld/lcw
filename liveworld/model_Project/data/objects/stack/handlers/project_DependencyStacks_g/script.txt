@@ -1,0 +1,10 @@
+getprop project_DependencyStacks
+   put the project_DependencyStackArray of the target into objectArray
+   delete variable objectArray ["Missing"]
+   put the stack_Object of the target into longStackObject
+   delete variable objectArray ["revIgniter"]
+   put the name of longStackObject into myStackObject
+   delete variable objectArray [myStackObject]
+   put keys (objectArray) into dependencyStacks
+   return dependencyStacks
+end project_DependencyStacks

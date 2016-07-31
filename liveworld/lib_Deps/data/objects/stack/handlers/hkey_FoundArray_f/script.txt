@@ -1,0 +1,44 @@
+function hkey_FoundArray shortHKey, tObject, pProjectName
+   put item 1 of shortHKey into hName
+   put item 2 of shortHKey into hType
+   put the hkey_SearchHierarchy [pProjectName] of tObject into searchHierarchy
+   
+   put the long id of tObject into tObject
+   repeat with lineNum = the number of lines of searchHierarchy down to 1
+      put line lineNum of searchHierarchy into hierarchyObject
+      put the revAvailableHandlers of hierarchyObject into handlerTable
+      
+      if the long id of hierarchyObject = tObject and char 1 of hType is not "p" then -- if looking for private skip
+         -- look for private handlers first (ideally should get the first version?)
+         put "p" & hType into privateHype
+         put hName,privateHype into privateShortKey
+         script_HandlerFromTableOffsets privateShortKey, handlerTable, startLineNum, endLineNum
+         if the result is true then
+            put handlerTable into foundArray ["handlerTable"]
+            put startLineNum into foundArray ["startLineNum"]
+            put endLineNum into foundArray ["endLineNum"]
+            put hkey_Construct (hName, privateHype, hierarchyObject) into foundArray ["foundHkey"]
+            return foundArray
+         else
+            script_HandlerFromTableOffsets shortHkey, handlerTable, startLineNum, endLineNum
+            if the result is true then
+               put handlerTable into foundArray ["handlerTable"]
+               put startLineNum into foundArray ["startLineNum"]
+               put endLineNum into foundArray ["endLineNum"]
+               put hkey_Construct (hName, hType, hierarchyObject) into foundArray ["foundHkey"]
+               return foundArray
+            end if
+         end if
+      else
+         script_HandlerFromTableOffsets shortHkey, handlerTable, startLineNum, endLineNum
+         if the result is true then
+            put handlerTable into foundArray ["handlerTable"]
+            put startLineNum into foundArray ["startLineNum"]
+            put endLineNum into foundArray ["endLineNum"]
+            put hkey_Construct (hName, hType, hierarchyObject) into foundArray ["foundHkey"]
+            return foundArray
+         end if
+      end if
+   end repeat
+   return empty
+end hkey_FoundArray

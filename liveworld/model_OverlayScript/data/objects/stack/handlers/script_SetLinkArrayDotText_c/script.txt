@@ -1,0 +1,5 @@
+command script_SetLinkArrayDotText scriptObject, dotText
+   put scriptObject_DotFile (scriptObject) into someFile
+   put dotText into url ("file:" & someFile)
+   return dotText
+end script_SetLinkArrayDotText

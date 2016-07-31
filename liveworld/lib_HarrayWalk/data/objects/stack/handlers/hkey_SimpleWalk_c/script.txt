@@ -1,0 +1,82 @@
+command hkey_SimpleWalk shortCall, hKey, @hKeyLinkArray, pSetName, pTestExceptions, pOriginalHkey
+   -- mixed up but working, test based walk, of objects and stuff
+   -- use an object, library, or project walk instead.
+   
+   if pOriginalHkey is empty then put hKey into pOriginalHkey
+   if the commandkey is "Down" and the optionKey is "Down" then
+      hkey_Deconstruct pOriginalHkey, oHandlerName, oHandlerType, oScriptObject, oHandlerNum
+      put "Currently indexing" && kwote (hKey) into pTitle
+      display_ObjectHKeyArray hKeyLinkArray, oScriptObject, empty, empty, pTitle
+      put the result into treeView
+      set the displayed_Hkey of treeView to hKey
+      
+      -- allow storing of work-in-progress (by refering to last hKey)
+      -- give an export!
+      breakpoint
+   end if
+   
+   -- find it
+   local foundHKey, foundHandler
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put item 1 of shortCall into callName
+   put item 2 of shortCall into callType
+   
+   try
+      -- put hArray_FindHkeyInHierarchy (shortCall, hObject) into foundCall
+      put hkey_FindInHierarchy (shortCall, hObject, pSetName) into foundCall
+      if foundCall is empty then
+         put hkey_FindAndIndex (callName, callType, hObject, pSetName) into foundCall
+      end if
+   catch e
+      opn_Notify e, true
+      exit to top
+   end try
+   
+   switch
+      case foundCall is empty
+         if hkey_MissingHandlerIsNotImportant (callName, callType) is true then return empty
+         
+         -- it's missing and should not be!
+         -- hope it is not "dispatch" :)
+         put merge ("Call '[[shortCall]]' for handler '[[hKey]]' is missing!") into someMessage
+         opn_Notify someMessage, true
+         
+         put hkey_Construct (callName, callType, "missing", 1) into foundCall
+         array_AddToIndex foundCall, hKey, hKeyLinkArray
+         return empty
+      case foundCall is among the keys of hKeyLinkArray
+         -- found it (ie not empty), but...
+         -- but we do need to add it to the array!
+         array_AddToIndex foundCall, hKey, hKeyLinkArray
+         
+         -- already indexed so no need to recurse
+         return empty
+      default
+         -- continue
+   end switch
+   
+   -- hack for exceptions
+   if pTestExceptions is true then
+      if hkey_DontRecurse (foundCall, pOriginalHkey) is true then
+         return empty
+      end if
+   end if
+   
+   -- add it to the array
+   put merge ("Added [[foundCall]] to hKeyArray!") into someMessage
+   opn_Notify someMessage
+   array_AddToIndex foundCall, hKey, hKeyLinkArray
+   
+   -- now lets repeat and recurse for each call found
+   put hkey_GetHandler (foundCall) into callHandler
+   if callHandler is empty then breakPoint
+   put handler_ExtractCalls (callHandler) into shortCalls -- should also return the type of call (ie "dispatch")?
+   
+   -- store them for future fast searches
+   -- hkey_StoreCallsAndHandler foundCall, callHandler, shortCalls
+   
+   repeat for each line shortCall in shortCalls
+      hkey_SimpleWalk shortCall, foundCall, hKeyLinkArray, pSetName, pTestExceptions, pOriginalHkey
+   end repeat
+   return empty
+end hkey_SimpleWalk

@@ -1,0 +1,12 @@
+function json_FromArray pArray, pForceRootType, pPretty
+   -- identical to (simply renamed) "ArrayToJSON"
+   -- pArray - array to be encoded
+   -- pForceRootType - can force the root to be an object if it looks like an array
+   -- pPretty - include whitespace
+   repeat for each key tKey in pArray
+      if pArray[tKey] is an array then
+         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
+      end if
+   end repeat
+   return(mergJSONEncode("pArray",pForceRootType,pPretty))
+end json_FromArray

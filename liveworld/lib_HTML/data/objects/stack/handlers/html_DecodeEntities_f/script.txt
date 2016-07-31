@@ -1,0 +1,37 @@
+function html_DecodeEntities pText
+   /*
+   -- curtesy of Sarah Reichelt <sarah.reichelt@gmail.com>
+   -- was "decodeEntities"
+   Use it like this:        put decodeEntities("&#8220;Kanwar&#8221")
+   which returns:         “Kanwar” (curly opening & closing quotes which
+   may not show in the email).
+   */
+   
+   if pText contains "&#" is false then return pText
+   
+   set the useunicode to true
+   put empty into tNew
+   repeat until pText is empty
+      put char 1 of pText into c
+      if c <> "&" then
+         put c after tNew
+         delete char 1 of pText
+      else
+         put empty into tCode
+         delete char 1 to 2 of pText
+         repeat until char 1 of pText = ";"
+            put char 1 of pText after tCode
+            delete char 1 of pText
+            if pText is empty then exit repeat
+         end repeat
+         delete char 1 of pText
+         put numtochar(tCode) into tChar
+         set the unicodetext of the templatefield to tChar
+         put the text of the templatefield after tNew
+      end if
+   end repeat
+   
+   set the useunicode to true
+   
+   return tNew
+end html_DecodeEntities

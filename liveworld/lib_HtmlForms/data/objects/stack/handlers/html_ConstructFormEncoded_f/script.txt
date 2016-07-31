@@ -1,0 +1,9 @@
+function html_ConstructFormEncoded pA
+    repeat for each line pKey in the keys of pA
+        put format("\"%s\", pA[\"%s\"],", pKey, pKey) after tCmd
+    end repeat
+    delete char -1 of tCmd
+    put format("get libURLFormData(%s)", tCmd) into tCmd
+    do tCmd
+    return it
+end html_ConstructFormEncoded

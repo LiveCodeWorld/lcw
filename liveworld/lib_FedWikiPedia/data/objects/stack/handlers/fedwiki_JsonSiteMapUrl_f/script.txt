@@ -1,0 +1,6 @@
+function fedwiki_JsonSiteMapUrl fedwikiUrl   
+   set the itemDelimiter to "/"
+   put item 1 to 3 of fedwikiUrl into sitemapURL
+   put "/system/sitemap.json" after sitemapURL
+   return sitemapURL
+end fedwiki_JsonSiteMapUrl

@@ -1,0 +1,5 @@
+getprop mobile_Name
+   put the long name of the target into mobileObject
+   object_SetShortStackName mobileObject, mainStackStart, mainStackEnd
+   return mobileObject
+end mobile_Name

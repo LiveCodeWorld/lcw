@@ -1,0 +1,5 @@
+function fedwiki_FetchWikipediaSummaryPageJson pageSlug, pApiStem
+   put fedwiki_FetchWikipediaSummaryPageArray (pageSlug, pApiStem) into fedwikiPageArray
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   return pageJSON
+end fedwiki_FetchWikipediaSummaryPageJson

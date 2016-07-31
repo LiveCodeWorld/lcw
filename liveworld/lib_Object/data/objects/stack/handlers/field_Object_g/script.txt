@@ -1,0 +1,9 @@
+getprop field_Object
+   -- a default
+   put the long ID of the target into fieldObject
+   if word 1 of fieldObject ="field" then
+      return fieldObject
+   else
+      return empty
+   end if
+end field_Object

@@ -1,0 +1,180 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Text
+type: script library
+version: 0.8
+
+
+--> Rename
+-
+[[ _FetchHandler (opn_Answer,c) ]]
+
+[[ _FetchHandler (opn_Ask,f) ]]
+
+[[ _FetchHandler (text_Merge,f) ]]
+
+
+--> Lines and Indexes
+-
+[[ _FetchHandler (line_AddIndex,c) ]]
+
+[[ _FetchHandler (line_LineNumberStartingWithWord,f) ]]
+
+[[ _FetchHandler (line_StripDoubleEmpty,c) ]]
+
+[[ _FetchHandler (line_ConstructDupicateArray,f) ]]
+
+[[ _FetchHandler (line_UniqueIndex,f) ]]
+
+[[ _FetchHandler (line_SetUnique,c) ]]
+
+[[ _FetchHandler (line_Replace,c) ]]
+
+[[ _FetchHandler (line_InsertIntoIndex,f) ]]
+
+[[ _FetchHandler (line_InsertBefore,c) ]]
+
+[[ _FetchHandler (line_AddToIndex,c) ]]
+
+[[ _FetchHandler (line_AddToIndex,f) ]]
+
+[[ _FetchHandler (line_ConstructCompareArray,f) ]]
+
+[[ _FetchHandler (line_GetCommon,f) ]]
+
+[[ _FetchHandler (line_GetMissing,f) ]]
+
+[[ _FetchHandler (line_DeleteEmpty,c) ]]
+    
+[[ _FetchHandler (line_DeleteFromIndex,f) ]]
+
+[[ _FetchHandler (line_FindInIndex,f) ]]
+
+
+--> Lists
+-
+[[ _FetchHandler (list_Add,c) ]]
+
+[[ _FetchHandler (list_Delete,c) ]]
+
+[[ _FetchHandler (list_Tidy,c) ]]
+
+[[ _FetchHandler (list_MakePretty,c) ]]
+
+[[ _FetchHandler (list_ToIndex,f) ]]
+
+[[ _FetchHandler (list_FromIndex,f) ]]
+
+
+--> Text
+-
+[[ _FetchHandler (text_OffsetAfter,f) ]]
+
+[[ _FetchHandler (text_OffsetBefore,f) ]]
+
+[[ _FetchHandler (text_SetOffsets,c) ]]
+
+[[ _FetchHandler (text_StripJunk,f) ]]
+
+[[ _FetchHandler (text_Strip,f) ]]
+
+
+--> Text | Quotes
+-
+[[ _FetchHandler (kwote,f) ]]
+
+[[ _FetchHandler (text_ExtractQuoted,f) ]]
+
+
+--> Text | lib
+-
+[[ _FetchHandler (text_TopAndTail,c) ]]
+
+[[ _FetchHandler (text_DecodeUTF8,c) ]]
+
+[[ _FetchHandler (number_PadLeft,c) ]]
+
+[[ _FetchHandler (text_AddTrailing,c) ]]
+
+[[ _FetchHandler (text_IndexFromList,f) ]]
+
+[[ _FetchHandler (text_ListFromIndex,f) ]]
+
+[[ _FetchHandler (text_StripLeadingSpaces,c) ]]
+
+[[ _FetchHandler (text_StripTrailingSpaces,c) ]]
+
+[[ _FetchHandler (text_ReplaceMultipleSpaces,c) ]]
+
+[[ _FetchHandler (text_ConstructLineChunk,c) ]]
+
+[[ _FetchHandler (text_TokenOffset,f) ]]
+
+[[ _FetchHandler (text_FirstLetter,f) ]]
+
+[[ _FetchHandler (text_WhiteChunk,f) ]]
+
+[[ _FetchHandler (text_ContainsItem,f) ]]
+
+[[ _FetchHandler (text_GetPlural,f) ]]
+
+[[ _FetchHandler (text_GetSingular,f) ]]
+
+[[ _FetchHandler (text_AddParagraph,c) ]]
+
+[[ _FetchHandler (text_InsertParagraph,c) ]]
+
+[[ _FetchHandler (text_Hash,f) ]]
+
+[[ _FetchHandler (md5_Hash,f) ]]
+
+[[ _FetchHandler (text_GetBetween,f) ]]
+
+[[ _FetchHandler (text_SetBetween,c) ]]
+
+[[ _FetchHandler (text_StringCount,f) ]]
+
+[[ _FetchHandler (text_RepeatString,f) ]]
+
+
+--> Text | Tags
+-
+[[ _FetchHandler (text_StripTags,c) ]]
+
+[[ _FetchHandler (text_StripAllTags,f) ]]
+
+
+--> Text | Quotes
+-
+[[ _FetchHandler (text_IsQuoted,f) ]]
+
+[[ _FetchHandler (text_GetQuoted,f) ]]
+   
+[[ _FetchHandler (withinQuotes,f) ]]
+
+[[ _FetchHandler (text_StarQuoted,c) ]]
+
+[[ _FetchHandler (text_StripQuoted,f) ]]
+
+[[ _FetchHandler (text_TempReplaceQuoted,f) ]]
+
+[[ _FetchHandler (text_ReReplaceQuoted,f) ]]
+
+[[ _FetchHandler (replaceQuotedItems,f) ]]
+
+[[ _FetchHandler (text_StripSurroundingQuotes,c) ]]
+
+
+--> Text | Caps
+-
+[[ _FetchHandler (text_InitialCaps,f) ]]
+
+[[ _FetchHandler (text_SplitCaps,f) ]]
+
+[[ _FetchHandler (text_StartsWithCaps,f) ]]
+
+[[ _FetchHandler (text_StemCaps,f) ]]
+
+[[ _FetchHandler (text_IsCaps,f) ]]

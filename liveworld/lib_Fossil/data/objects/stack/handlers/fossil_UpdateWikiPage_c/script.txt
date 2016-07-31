@@ -1,0 +1,12 @@
+command fossil_UpdateWikiPage pageTitle, newContent, pFolder
+   if newContent is not empty then return empty
+   
+   put "fossil wiki commit" && kwote(pageTitle) into someShell
+   put the tempname & ".txt" into tempFile
+   put newContent into url ("binfile:" & tempFile)
+   shell_BashParamEscape tempFile
+   put space & tempFile after someShell
+   
+   fossil_ExecuteShell someShell, pFolder
+   return the result
+end fossil_UpdateWikiPage

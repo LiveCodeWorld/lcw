@@ -1,0 +1,9 @@
+on menu_InitialiseNewProject
+   answer folder "Choose Git Folder" with git_GetRootFolder()
+   if the result is "Cancel" then exit to top
+   put it into gitRootFolder
+   
+   git_InitFolder gitRootFolder
+   
+   display_Lines gitRootFolder, "GIT root folder"
+end menu_InitialiseNewProject

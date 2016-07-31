@@ -1,0 +1,14 @@
+function project_GatherGlobalPrefs
+   -- was "library_ConstructPrefsArray" then "project_GatherPrefsArray"
+   -- gathers all appropriately named globals into a single array for storage.
+   
+   put the globals into gNames
+   replace comma with CR in gNames
+   filter gNames with "gPrefs_*"
+   repeat for each line gName in gNames  
+      put "global" && gName & CR & "get" && gName into doScript   
+      do doScript
+      put it into prefsArray [gName]
+   end repeat
+   return prefsArray
+end project_GatherGlobalPrefs

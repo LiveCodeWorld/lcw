@@ -1,0 +1,4 @@
+function stackFile_ContainsShortFile shortFile
+   put stackFile_NameFromShortFile (shortFile) into stackName
+   return stackName is not empty
+end stackFile_ContainsShortFile

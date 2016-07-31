@@ -1,0 +1,10 @@
+getprop model_File [modelName]
+   put the model_Object of the target into modelObject
+   if exists(modelObject) is false then put the long id of the target into modelObject
+   
+   if modelName is empty then put "array" into modelName
+   put the model_Folder of modelObject into modelFolder
+   folder_Format modelFolder
+   put modelFolder & modelName into someFile
+   return someFile
+end model_File

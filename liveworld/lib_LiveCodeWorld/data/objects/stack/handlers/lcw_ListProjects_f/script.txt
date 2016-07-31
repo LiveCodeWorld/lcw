@@ -1,0 +1,8 @@
+function lcw_ListProjects
+   put library_FetchSetData() into modelArray
+   delete variable modelArray ["All"]
+   delete variable modelArray ["None"]
+   put keys (modelArray) into setNames
+   sort setNames
+   return setNames
+end lcw_ListProjects

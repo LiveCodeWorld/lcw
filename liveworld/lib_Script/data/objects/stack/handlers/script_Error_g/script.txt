@@ -1,0 +1,7 @@
+getprop script_Error [someMessage]
+    if script_GetErrorDisplay() is not false then
+        opn_Notify someMessage, true
+    end if
+    -- could / should log
+    return someMessage
+end script_Error

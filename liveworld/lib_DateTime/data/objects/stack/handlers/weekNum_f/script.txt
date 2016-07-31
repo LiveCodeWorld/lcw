@@ -1,0 +1,69 @@
+function weekNum pDate, pBeginningDay
+    -- recursive function
+    if pDate is empty then put the date into pDate
+    convert pDate to dateItems
+     
+    -- return the number of the current week according to ISO: first thursday of the year is always in the first week of the year
+    -- the second param is "sunday" or "monday" and indicates the first week day displayed
+    -- requires convertDate and dayNum functions
+    if pBeginningDay is empty then put "monday" into pBeginningDay
+    -- if the param is empty, assumes whole ISO norm
+     
+    ## computing the number of days in current week:
+    get last item of pDate
+    if pBeginningDay = "sunday" then
+        put it into tNumOfDaysInCurrentWeek
+    else
+        if it = 1 then put 7 into tNumOfDaysInCurrentWeek
+        else put it - 1 into tNumOfDaysInCurrentWeek
+    end if
+     
+    ## computing the number of days in first week of the year:
+    get convertDate(pDate,1,1) -- Æ
+    if pBeginningDay = "sunday" then
+        put (last item of it is not in "67") into tThursdayIsInFirstWeek
+    else
+        put (last item of it is not in "167") into tThursdayIsInFirstWeek
+    end if
+     
+    if pBeginningDay = "sunday" then
+        put 8 - (last item of it) into tNumOfDaysInFirstWeek
+    else
+        if last item of it = 1 then put 1 into tNumOfDaysInFirstWeek
+        else put 9 - last item of it into tNumOfDaysInFirstWeek
+    end if
+     
+    -- computing the week number and returning the result:
+    get round(dayNum(pDate)) -- Æ
+    if tThursdayIsInFirstWeek then
+        if it <= tNumOfDaysInFirstWeek then
+            return "1"
+        else if (it > tNumOfDaysInFirstWeek) and (it <= tNumOfDaysInFirstWeek + tNumOfDaysInCurrentWeek) then
+            return "2"
+        else
+            get ((it - (tNumOfDaysInFirstWeek + tNumOfDaysInCurrentWeek))/7)+2
+            if it = 53 then
+                if last item of convertDate(pDate,12,31) < 5 then
+                    return 1 -- Æ
+                else return 53
+            else if it = 54 then return 1
+            else return it
+        end if
+    else
+        if it <= tNumOfDaysInFirstWeek then
+            get last item of convertDate(pDate,1,1) -- Æ
+            if (it < 4 and pBeginningDay = "sunday") or (it <> 1 and it < 4 and pBeginningDay = "monday") then return 1 -- Æ
+            else
+                get convertDate(pDate,12,31) -- Æ
+                subtract 1 from item 1 of it
+                convert it to dateItems
+                return weekNum(it,pBeginningDay)
+            end if
+        end if
+    else if (it > tNumOfDaysInFirstWeek) and (it <= tNumOfDaysInFirstWeek + tNumOfDaysInCurrentWeek) then
+        return "1"
+    else
+        return ((it - (tNumOfDaysInFirstWeek + tNumOfDaysInCurrentWeek))/7)+1
+    end if
+end if
+end weekNum

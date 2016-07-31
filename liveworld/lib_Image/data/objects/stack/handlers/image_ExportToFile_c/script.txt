@@ -1,0 +1,25 @@
+command image_ExportToFile viewOrImage, pSaveToFile, pExtension
+    put the image_Object of viewOrImage into imageObject
+    if exists(imageObject) is false then return false
+     
+    if pSaveToFile is empty then put image_ChooseSaveToFile() into pSaveToFile
+     
+    if pExtension is empty then
+        file_Deconstruct pSaveToFile, someRoot, shortName, pExtension
+        if pExtension is empty then put "png" into pExtension
+    end if
+    
+    put the filename of imageObject into linkedImageFile
+    if linkedImageFile is not "" then
+        file_ConvertImageFormat linkedImageFile, pSaveToFile, pExtension
+        return the result is empty
+    else if pExtension = "tiff" then
+        -- its not a linked file and we want to export as a tiff
+        put the tempname & ".png" into inputFile
+        image_RevExport imageObject, inputFile, "png"
+        file_ConvertImageFormat inputFile, pSaveToFile, "tiff"
+    else if pExtension is among the items of rev_ImageExportFormats() then
+        image_RevExport imageObject, pSaveToFile, pExtension
+    end if
+    return pSaveToFile
+end image_ExportToFile

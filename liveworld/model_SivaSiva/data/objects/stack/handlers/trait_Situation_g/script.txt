@@ -1,0 +1,5 @@
+getprop trait_Situation [situationNum]
+   put the chapter_Array of the target into chapterArray
+   put trait_GetSituation (chapterArray, situationNum) into traitSituation
+   return traitSituation
+end trait_Situation

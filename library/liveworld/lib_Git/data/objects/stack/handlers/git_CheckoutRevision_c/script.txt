@@ -1,0 +1,7 @@
+command git_CheckoutRevision relativePath, commitHash
+   -- check out and old version of a file or entire folder
+   -- put "git checkout" && commitHash && kwote(relativePath) into someShell
+   put git_ConstructCheckoutCommand (relativePath, commitHash) into someShell
+   put git_ExecuteShellCommand (someShell) into shellResult
+   return shellResult
+end git_CheckoutRevision

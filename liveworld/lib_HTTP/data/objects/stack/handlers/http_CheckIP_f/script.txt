@@ -1,0 +1,10 @@
+function http_CheckIP dropletIP
+   -- rough check for now. Improve please!
+   -- this checks to see if it is a valid IP adresss
+   set the itemdelimiter to "."
+   if the number of items of dropletIP is not 4 then return false
+   repeat for each item testItem in dropletIP
+      if testItem is not a number then return false
+   end repeat
+   return true
+end http_CheckIP

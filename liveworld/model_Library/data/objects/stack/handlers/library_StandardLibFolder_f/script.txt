@@ -1,0 +1,12 @@
+function library_StandardLibFolder pShortFileBit
+   -- this is the old place for the newer script_only library folder
+   -- put library_PluginFolder ("opn_Text/rev/libraries/", pDontCreate) into standardFolder
+   
+   breakpoint
+   put lcw_GetFolder ("library") into standardFolder
+   if there is a folder standardFolder then
+      return standardFolder & pShortFileBit 
+   else
+      return empty
+   end if
+end library_StandardLibFolder

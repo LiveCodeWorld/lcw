@@ -1,0 +1,13 @@
+command rev_SetScriptEditorField pScript
+   -- ignoreCall: textSetScript,c
+   
+   put rev_ScriptEditorGroup() into revScriptEditorGroup
+   send "textSetScript pScript" to revScriptEditorGroup
+   put the result into someError
+   
+   #   pMode : the mode to set to, either "edit" or "debug"
+   #   Sets the mode of this script editor.
+   put "edit" into pMode
+   send "revSESetMode pMode" to revScriptEditorGroup
+   return the result
+end rev_SetScriptEditorField

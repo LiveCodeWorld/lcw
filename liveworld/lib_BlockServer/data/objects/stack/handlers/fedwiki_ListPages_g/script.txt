@@ -1,0 +1,5 @@
+getprop fedwiki_ListPages [pFedwikiDomain]
+   put fedwiki_LocalSiteMapJson (pFedwikiDomain) into someJSON
+   put fedwiki_SitemapIndex (someJSON) into pageTitles
+   return pageTitles
+end fedwiki_ListPages

@@ -1,0 +1,6 @@
+function opn_GetGlobalArray opnGlobalName
+   put "global" && opnGlobalName into doScript
+   put CR & "get" && opnGlobalName after doScript
+   do doScript
+   return it
+end opn_GetGlobalArray

@@ -1,0 +1,4 @@
+command fossil_SetBrowserShellCommand someValue, pCheckoutFolder, pSetGlobal
+   fossil_SetSetting "web-browser", someValue, pCheckoutFolder, pSetGlobal
+   return the result
+end fossil_SetBrowserShellCommand

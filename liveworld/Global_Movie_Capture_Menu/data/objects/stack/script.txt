@@ -1,0 +1,63 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Movie_Capture_Menu
+type: controller
+version: 0.1
+
+local LocalArray
+
+
+--> Global | Movie | Capture | Menu
+-
+[[ _FetchHandler (menu_StartCapture,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AudioInput,c) ]]
+
+[[ _FetchHandler (menu_VideoInput,c) ]]
+
+[[ _FetchHandler (menu_AudioCodec,c) ]]
+
+[[ _FetchHandler (menu_VideoCodec,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StopCapture,c) ]]
+
+
+--> Global | Movie | Capture | Menu | Props
+-
+[[ _FetchHandler (audio_Codec,g) ]]
+   
+[[ _FetchHandler (audio_Codecs,g) ]]
+   
+[[ _FetchHandler (video_Codec,g) ]]
+   
+[[ _FetchHandler (video_Codecs,g) ]]
+   
+[[ _FetchHandler (audio_Input,g) ]]
+
+[[ _FetchHandler (audio_Inputs,g) ]]
+
+[[ _FetchHandler (video_Input,g) ]]
+
+[[ _FetchHandler (video_Inputs,g) ]]
+
+
+--> Global | Movie | Capture | Menu | Disabled
+-
+[[ _FetchHandler (disabled_StartCapture,g) ]]
+
+[[ _FetchHandler (disabled_AudioInput,g) ]]
+
+[[ _FetchHandler (disabled_VideoInput,g) ]]
+
+[[ _FetchHandler (disabled_StopCapture,g) ]]
+
+
+--> Menu | Props
+-

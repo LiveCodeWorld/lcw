@@ -1,0 +1,10 @@
+function library_ConstructMenuSetArray
+   put the name of stack "View|Menu|Button" into rObject
+   put empty into setArray ["data"]["used"][rObject]
+   
+   put scriptEditor_CompileFrontScript() into rObject
+   put empty into setArray ["data"]["front"][rObject]
+   
+   put true into setArray ["data"]["rev_AddBehaviorHacks"]
+   return setArray
+end library_ConstructMenuSetArray

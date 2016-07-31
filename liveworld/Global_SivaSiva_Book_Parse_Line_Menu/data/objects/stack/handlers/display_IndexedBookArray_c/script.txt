@@ -1,0 +1,11 @@
+command display_IndexedBookArray someArray, bookTitle
+   local indexedArray, attributesArray
+   
+   book_ParseDivArray someArray, indexedArray, attributesArray
+   put attributesArray ["class"] into divClass
+   put attributesArray ["id"] into divID
+   
+   put divClass & comma & divID into bookTitle
+   
+   display_BookData indexedArray, bookTitle
+end display_IndexedBookArray

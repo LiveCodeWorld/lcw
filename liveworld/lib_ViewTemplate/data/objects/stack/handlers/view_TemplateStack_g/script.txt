@@ -1,0 +1,6 @@
+getprop view_TemplateStack
+   put the view_Name of the target into viewName
+   if exists(stack viewName) is false then return empty
+   put the name of stack viewName into stackObject
+   return stackObject
+end view_TemplateStack

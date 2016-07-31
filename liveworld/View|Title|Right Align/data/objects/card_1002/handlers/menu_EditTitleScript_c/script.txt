@@ -1,0 +1,27 @@
+on menu_EditTitleScript menuChoice, mTarget
+   switch menuChoice
+      case "View Script"
+         put the title_View of mTarget into titleView
+         if exists(titleView) is false then exit to top
+         edit the script of titleView
+         break
+      case "View Behavior"
+         put the title_View of mTarget into titleView
+         if exists(titleView) is false then exit to top
+         put the behavior of titleView into viewBehavior
+         if exists(titleView) is false then
+            if rev_VersionIsLaterOrEqual (3.5) then
+               opn_Notify "There is no behavior set for view 'View|Title|Simple'", true 
+            else
+               
+            end if
+            exit to top
+         else
+            edit the script of viewBehavior
+         end if
+         break
+      case "Global Title Menu Script"
+         menu_SelfEdit "Global | Title | Menu"
+         break
+   end switch
+end menu_EditTitleScript

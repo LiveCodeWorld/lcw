@@ -1,0 +1,7 @@
+function fedwiki_ConstructStoryItemArray someText, itemType, pID  
+   fedwiki_SetID pID   
+   put someText into itemArray ["text"]
+   put itemType into itemArray ["type"]
+   put pID into itemArray ["id"]
+   return itemArray
+end fedwiki_ConstructStoryItemArray

@@ -1,0 +1,8 @@
+getprop chapter_Num
+   put LocalArray ["chapter_Num"] into chapterNum
+   if chapterNum is empty then
+      put 1 into chapterNum
+      set the chapter_Num of me to 1
+   end if
+   return chapterNum
+end chapter_Num

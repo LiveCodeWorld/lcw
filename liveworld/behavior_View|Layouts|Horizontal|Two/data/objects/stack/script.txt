@@ -1,0 +1,128 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Layouts|Horizontal|Two
+type: view behavior
+version: 0.1
+copyright: David Bovill
+
+/*
+This layout allows you to resize two horzontally divided panes.
+
+There seems to be a bug regarding resizing - the veritcal bar and the margin.
+*/
+
+
+--> Variables
+-
+local LocalArray
+local LeftView, RightView
+
+
+--> Initialisation
+-
+[[ _FetchHandler (view_IndexChildren,c) ]]
+
+
+--> Views
+-
+[[ _FetchHandler (horizontal_Layout,g) ]]
+
+[[ _FetchHandler (layout_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (left_View,g) ]]
+
+[[ _FetchHandler (right_View,g) ]]
+
+[[ _FetchHandler (vertical_Divider,g) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (preOpenControl,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (refresh,c) ]]
+
+--> Currently Working On
+-
+[[ _FetchHandler (layout_Elements,g) ]]
+
+[[ _FetchHandler (view_Children,g) ]]
+
+[[ _FetchHandler (top_ControlNames,g) ]]
+
+[[ _FetchHandler (top_Controls,g) ]]
+
+
+--> Geometry | Layout
+-
+[[ _FetchHandler (horizontal_Spacing,g) ]]
+
+[[ _FetchHandler (horizontal_Spacing,s) ]]
+
+[[ _FetchHandler (layout_Margins,s) ]]
+
+[[ _FetchHandler (layout_Margins,g) ]]
+
+[[ _FetchHandler (fixed_View,g) ]]
+
+[[ _FetchHandler (fixed_View,s) ]]
+
+[[ _FetchHandler (fixed_Views,g) ]]
+
+[[ _FetchHandler (layout_DividerStyle,g) ]]
+
+[[ _FetchHandler (layout_DividerStyle,s) ]]
+
+[[ _FetchHandler (layout_DividerStyles,g) ]]
+
+
+--> Show and Hide
+-
+[[ _FetchHandler (hidden_View,g) ]]
+
+[[ _FetchHandler (hidden_View,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Geometry | Right View | Width
+-
+/*
+I think this needs tidying to work like title_Height
+*/
+
+[[ _FetchHandler (right_Width,g) ]]
+
+[[ _FetchHandler (right_Width,s) ]]
+
+
+--> Geometry | Left View | Width
+-
+/*
+I think this needs tidying to work like title_Height
+*/
+
+[[ _FetchHandler (left_Width,g) ]]
+
+[[ _FetchHandler (left_Width,s) ]]
+
+[[ _FetchHandler (layout_GetLeftViewWidth,pf) ]]
+
+
+--> Geometry | Subview Defaults
+-
+[[ _FetchHandler (formatted_Width,g) ]]
+
+
+--> Deps
+-

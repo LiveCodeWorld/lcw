@@ -1,0 +1,6 @@
+on menu_Init tObject
+   put menu_GetTargetObject() into scriptObject
+   put the object_MetaData ["type"] of scriptObject into mObectType
+   put mObectType into LocalArray ["mObectType"]
+   put mObectType contains "view" into LocalArray ["viewOrViewBehavior"]
+end menu_Init

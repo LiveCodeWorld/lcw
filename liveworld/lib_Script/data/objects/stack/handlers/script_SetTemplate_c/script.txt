@@ -1,0 +1,6 @@
+command script_SetTemplate templateName, someScript
+   put library_ScriptTemplateFolder (templateName) into someFile
+   file_CreateText someScript, someFile
+   put the result into savedFile
+   return savedFile
+end script_SetTemplate

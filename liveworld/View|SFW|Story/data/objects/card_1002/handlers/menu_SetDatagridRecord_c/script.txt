@@ -1,0 +1,8 @@
+on menu_SetDatagridRecord dgView, rviewName
+   if rviewName = "Stack" then
+      put the long id of group "Row Template" of card id 1005 of stack "Data Grid Templates 1430422692515" of stack "View|SFW|Story" into templateObject
+      set the dgProps ["row template"] of dgView to templateObject
+   else
+      set the record_ViewName of dgView to rviewName
+   end if
+end menu_SetDatagridRecord

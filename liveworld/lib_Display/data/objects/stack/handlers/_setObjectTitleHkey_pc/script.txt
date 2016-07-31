@@ -1,0 +1,20 @@
+private command _setObjectTitleHkey hkeyOrObject, @hKey, @hObject, @displayTitle
+   switch
+      case exists (hkeyOrObject)
+         put "script" into hName
+         put hkeyOrObject into hObject
+         put empty into hKey
+         put hName,hObject into displayTitle
+         break
+      case the number of items of hkeyOrObject = 4
+         put hkeyOrObject into hKey
+         put item 1 of hKey into hName
+         put item 3 of hKey into hObject
+         put hName,hObject into displayTitle
+         break
+      default
+         put "hKeyArray" into displayTitle
+         put empty into hKey
+         put empty into hObject
+   end switch
+end _setObjectTitleHkey

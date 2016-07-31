@@ -1,0 +1,5 @@
+function youtube_FetchPlayListIndexPageJson playlistID, pPageTitle, pDirection, pNumbered, pDroppedURL
+   put youtube_FetchPlayListIndexPageArray (playlistID, pPageTitle, pDirection, pNumbered, pDroppedURL) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end youtube_FetchPlayListIndexPageJson 

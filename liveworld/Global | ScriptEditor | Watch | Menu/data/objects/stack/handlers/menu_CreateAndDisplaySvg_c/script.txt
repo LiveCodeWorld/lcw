@@ -1,0 +1,5 @@
+on menu_CreateAndDisplaySvg scriptObject, projectName
+   script_CreateAndDisplaySVG scriptObject, projectName 
+   put the result into processedHkeyArray
+   display_Array processedHkeyArray, "processedHkeyArray"
+end menu_CreateAndDisplaySvg

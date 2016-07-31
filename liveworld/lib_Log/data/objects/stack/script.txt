@@ -1,0 +1,134 @@
+--> MetaData
+-
+name: lib_Log
+type: behavior
+version: 0.3
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+This stack contains some simple scripts to create and manipulate log files.
+*/
+
+--> Log | Props
+-
+/*
+These property handlers are here utility handlers to do basic stuff and let you know they exist.
+They are not required for a functioning app.
+They are crafted so that cProps of the target are set with the same name, and the app should keep working
+even if the lib_Log library is not present or linked / used.
+*/
+
+[[ _FetchHandler (log_View,g) ]]
+
+[[ _FetchHandler (log_View,s) ]]
+
+[[ _FetchHandler (live_Logging,g) ]]
+
+[[ _FetchHandler (live_Logging,s) ]]
+
+[[ _FetchHandler (log_Name,g) ]]
+
+[[ _FetchHandler (log_Name,s) ]]
+
+
+--> Display
+-
+[[ _FetchHandler (display_ServerLog,c) ]]
+
+[[ _FetchHandler (display_Log,c) ]]
+
+[[ _FetchHandler (log_GetDisplayError,f) ]]
+
+[[ _FetchHandler (log_SetDisplayError,c) ]]
+
+
+--> Log | Array
+-
+[[ _FetchHandler (logArray_AddRequest,c) ]]
+
+[[ _FetchHandler (logArray_Fetch,f) ]]
+
+[[ _FetchHandler (logArray_Store,c) ]]
+
+[[ _FetchHandler (logArray_Delete,c) ]]
+
+[[ _FetchHandler (logArray_File,f) ]]
+
+
+--> Log | Text | Props
+-
+[[ _FetchHandler (latest_LogLine,g) ]]
+
+[[ _FetchHandler (latest_LogLine,s) ]]
+
+[[ _FetchHandler (log_Text,g) ]]
+
+[[ _FetchHandler (log_Text,s) ]]
+
+
+--> Log | Line
+-
+[[ _FetchHandler (log_SetTimeStampEntry,c) ]]
+
+
+   --> Log | Line
+   -
+[[ _FetchHandler (log_GetLatestLine,f) ]]
+
+[[ _FetchHandler (log_SetLatestLine,c) ]]
+
+
+--> Log | Paragraph Experiments
+-
+[[ _FetchHandler (log_GetLatestParagraphEntry,f) ]]
+
+[[ _FetchHandler (log_SetLatestParagraphEntry,c) ]]
+
+[[ _FetchHandler (log_GetLatestEntry,f) ]]
+
+[[ _FetchHandler (log_SetLatestEntry,c) ]]
+
+
+--> Log | Get and Set
+-
+[[ _FetchHandler (log_Get,f) ]]
+
+[[ _FetchHandler (log_Set,c) ]]
+
+[[ _FetchHandler (log_Clear,c) ]]
+
+
+--> Log | Construct and Deconstruct
+-
+[[ _FetchHandler (log_ConstructEntry,f) ]]
+
+[[ _FetchHandler (log_DeconstructLineEntry,c) ]]
+
+[[ _FetchHandler (log_DeconstructParagraphEntry,c) ]]
+
+[[ _FetchHandler (log_DeconstructTitle,c) ]]
+
+
+--> Log | Files
+-
+[[ _FetchHandler (log_GetFile,f) ]]
+
+[[ _FetchHandler (log_SetFile,c) ]]
+
+[[ _FetchHandler (log_SetTemporaryLogFile,c) ]]
+
+[[ _FetchHandler (log_ConstructTemporaryFileName,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (opn_Notify,c) ]]
+
+[[ _FetchHandler (osx_Notify,c) ]]
+
+[[ _FetchHandler (text_Merge,f) ]]
+
+[[ _FetchHandler (version_IsEarlier,f) ]]
+
+[[ _FetchHandler (_convertVersionToNumber,f) ]]

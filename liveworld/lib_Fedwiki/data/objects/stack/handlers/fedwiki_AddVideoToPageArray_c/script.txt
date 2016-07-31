@@ -1,0 +1,4 @@
+command fedwiki_AddVideoToPageArray @pageArray, videoID, videoType, videoDescription, pID
+   put fedwiki_ConstructVideoCodeArray (videoID, videoType, videoDescription, pID) into itemArray
+   fedwiki_PageArrayAddToEnd itemArray, pageArray
+end fedwiki_AddVideoToPageArray

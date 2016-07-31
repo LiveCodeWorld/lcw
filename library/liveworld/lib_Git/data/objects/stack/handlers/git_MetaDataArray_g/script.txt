@@ -1,0 +1,6 @@
+getprop git_MetaDataArray
+   put the git_CommitHash of the target into commitHash
+   put git_BlobHashInfo (commitHash) into logText
+   put git_ExtractLogMetadataArray (logText) into metadataArray
+   return metadataArray
+end git_MetaDataArray

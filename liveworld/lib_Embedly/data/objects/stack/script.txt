@@ -1,0 +1,30 @@
+--> MetaData
+-
+name: lib_Embedly
+type: script library
+version: 0.3
+copyright: David Bovill
+licence:  GPLv3
+deps: none
+
+
+/*
+A library for interfacing with MediaWiki instances.
+*/
+
+--> SOX
+-
+[[ _FetchHandler (sox_NormalizeAudio,c) ]]
+
+
+--> Embedly
+-
+[[ _FetchHandler (embedly_FetchArray,f) ]]
+
+[[ _FetchHandler (cloud_FetchEvernoteFolderContentsArray,f) ]]
+
+[[ _FetchHandler (cloud_FetchEvernoteFolderContents,f) ]]
+
+[[ _FetchHandler (cloud_FetchEvernoteFile,f) ]]
+
+[[ _FetchHandler (cloud_FetchEvernoteFileLink,f) ]]

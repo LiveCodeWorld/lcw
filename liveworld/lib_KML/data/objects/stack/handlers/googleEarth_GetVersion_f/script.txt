@@ -1,0 +1,9 @@
+function googleEarth_GetVersion
+    put "tell application 'Google Earth'" into doScript
+    put cr & "GetCurrentVersion" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    get merge(doScript)
+    do it as AppleScript
+    pu the result
+end googleEarth_GetVersion

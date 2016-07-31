@@ -1,0 +1,15 @@
+on refresh pHow
+   lock screen
+   view_IndexChildren
+   switch pHow
+      case "placeholders"
+         set the control_Type ["header_View"] of the header_View of me to "placeholder"
+         set the control_Type ["body_View"] of the body_View of me to "placeholder"
+         set the control_Type ["footer_View"] of the footer_View of me to "placeholder"
+         break
+      default
+   end switch
+   LayoutControl
+   unlock screen
+   return the result
+end refresh

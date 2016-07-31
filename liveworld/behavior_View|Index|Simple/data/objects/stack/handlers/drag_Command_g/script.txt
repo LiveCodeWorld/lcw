@@ -1,0 +1,4 @@
+getprop drag_Command
+   put LocalArray ["event"]["dragCommand"] into dragCommand
+   return dragCommand
+end drag_Command

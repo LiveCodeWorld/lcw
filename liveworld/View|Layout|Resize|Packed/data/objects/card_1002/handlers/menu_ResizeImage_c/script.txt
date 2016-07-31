@@ -1,0 +1,11 @@
+on menu_ResizeImage imageObject, someWidth
+   put the loc of imageObject into someLoc
+   put rect_LocWidthHeight (someLoc, someWidth, someWidth) into newRect
+   set the lockloc of imageObject to true
+   set the rect of imageObject to newRect
+   set the imagedata of imageObject to the imagedata of imageObject
+   set the lockloc of imageObject to false
+   
+   dispatch "LayoutControl" to imageObject
+   dispatch "LayoutControl" to imageObject
+end menu_ResizeImage

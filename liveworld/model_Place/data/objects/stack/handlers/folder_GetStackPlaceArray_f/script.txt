@@ -1,0 +1,5 @@
+function folder_GetStackPlaceArray
+   put the opn_Library of me into modelObject
+   put model_GetArray ("uOPN_StackPlace", modelObject) into placeNameArray
+   return placeNameArray
+end folder_GetStackPlaceArray

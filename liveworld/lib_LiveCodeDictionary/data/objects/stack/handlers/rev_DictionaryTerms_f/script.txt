@@ -1,0 +1,17 @@
+function rev_DictionaryTerms
+   switch
+      case rev_VersionIsLaterOrEqual (8.0)
+         put ide_GetDictionaryTerms() into dictionaryTerms
+         return dictionaryTerms
+      case rev_VersionIsLater (3.99)
+         put revDocumentationDictionaryIndex() into dataArray
+         repeat for each key indexNum in dataArray
+            put dataArray [indexNum]["keyword"] into dictTerm
+            put dictTerm & CR after dictionaryTerms
+         end repeat
+         delete char -1 of dictionaryTerms
+         return dictionaryTerms
+      default
+         return empty
+   end switch
+end rev_DictionaryTerms

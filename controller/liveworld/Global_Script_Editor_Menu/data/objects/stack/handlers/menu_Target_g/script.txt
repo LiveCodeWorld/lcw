@@ -1,0 +1,12 @@
+getprop menu_Target [mTitlePath]
+   put rev_ScriptObject() into scriptObject
+   switch
+      case mTitlePath contains "Global | Overlay | Array | Menu"
+         put the overlay_Folder of scriptObject into overlayFolder
+         return overlayFolder
+      case mTitlePath = "Global | Script | Editor | Menu"
+         return scriptObject
+      default
+         return scriptObject
+   end switch
+end menu_Target

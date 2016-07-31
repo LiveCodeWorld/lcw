@@ -1,0 +1,9 @@
+function script_GetSuite suiteTitle, someScript
+   script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
+   if the result is true then
+      put line startLineNum to endLineNum of someScript into suiteScript
+      return word 1 to -1 of suiteScript
+   else
+      return empty
+   end if
+end script_GetSuite

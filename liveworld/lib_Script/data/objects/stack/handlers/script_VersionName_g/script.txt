@@ -1,0 +1,6 @@
+getprop script_VersionName
+   -- hack (work in progress)
+   -- scripts can be in libraries that are specific for "author" or "reader" etc
+   -- the default value is "author"
+   return "author"
+end script_VersionName

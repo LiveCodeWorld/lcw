@@ -1,0 +1,5 @@
+command hArray_SearchAndEdit hKey, pHandlerHash
+   put hArray_SimpleSearch (hKey, pHandlerHash) into foundHKey
+   if foundHKey is empty then return false
+   hkey_EditFoundHandler foundHKey
+end hArray_SearchAndEdit

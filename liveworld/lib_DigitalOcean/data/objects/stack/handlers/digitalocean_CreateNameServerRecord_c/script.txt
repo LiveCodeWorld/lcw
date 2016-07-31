@@ -1,0 +1,9 @@
+command digitalocean_CreateNameServerRecord oceanDomainName, nameServerDomain
+   dns_AddDotToDomain nameServerDomain
+   get "{'type':'NS','data':'[[nameServerDomain]]'}"
+   replace "'" with quote in it
+   put merge(it) into someJSON
+   digitalocean_CreateNewDomainRecord oceanDomainName, someJSON
+   put the result into someResult
+   return someResult
+end digitalocean_CreateNameServerRecord

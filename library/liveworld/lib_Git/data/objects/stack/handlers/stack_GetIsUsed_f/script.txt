@@ -1,0 +1,5 @@
+function stack_GetIsUsed stackName
+   set the wholematches to true
+   put stackName is among the lines of the stacksinuse into someBoolean
+   return someBoolean
+end stack_GetIsUsed

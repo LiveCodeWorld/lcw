@@ -1,0 +1,2565 @@
+﻿script "lib_Common"
+--> MetaData
+-
+author: David Bovill
+copyright: David Bovill
+name: Menu Tools Library Deps
+type: deps
+
+
+--> Deps | actionCompile,c
+-
+setprop meta_Script [pDontExport] someScript
+   put the long id of the target into someObject
+   put the object_Folder [pDontExport] of someObject into objectFolder
+   object_ExportScript objectFolder, someScript, pExportHandlers
+   put the result into someFile
+   return someFile
+end meta_Script
+
+setprop object_UripArray uRipArray
+   set the customproperties ["uRIP"] of the target to uRipArray
+   return uRipArray
+end object_UripArray
+
+command rev_MarkStackEdited stackName
+   global gREVStackStatus
+   
+   if stackName is empty then put the short name of this stack into stackName
+   if char 1 to 3 of stackName is not "rev" then
+      put "edited" into gREVStackStatus [stackName]
+   end if
+end rev_MarkStackEdited
+
+function rev_ScriptEditorField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (fld "Script" of group "Editor" of cd "Main" of editorStack) is false then return empty
+   put the long id of fld "Script" of group "Editor" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_ScriptEditorField
+
+function rev_ScriptObject
+   put rev_TopScriptEditor() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
+end rev_ScriptObject
+
+
+--> Deps | From mainstacks
+-
+function target_IsView someObject, vName
+   view_NormalizeName vName
+   if exists (someObject) is false then return false
+   put the view_Name of someObject into targetViewName
+   if vName ends with "|" then
+      return targetViewName begins with vName
+   else
+      return targetViewName = vName
+   end if
+end target_IsView
+
+function target_IsReference someObject, objectReference
+   -- ignoreCall:  objectReference,g
+   if exists (someObject) is false then return false
+   put the objectReference of someObject into someView
+   if exists (someView) is false then return false
+   put the long id of someView = the long id of someObject into someBoolean
+   return someBoolean
+end target_IsReference
+
+-- command menu_TidyText @mText
+   put word 1 to -1 of mText into mText
+   
+   -- remove double dividers
+   replace (CR & "-" & CR & "-" & CR) with (CR & "-" & CR) in mText
+   
+   -- removes things like blank missing menu spaces
+   repeat while (word 1 to -1 of line 1 of mText = "-")
+      delete line 1 of mText
+   end repeat
+   repeat while (word 1 to -1 of line -1 of mText = "-")
+      delete line -1 of mText
+   end repeat
+end menu_TidyText
+
+function menu_TitleFromViewName viewName, levelAbove
+   set the itemdelimiter to "|"
+   delete item 1 of viewName
+   if levelAbove is a number then
+      delete item -1 to -levelAbove of viewName
+   end if
+   replace "|" with " | " in viewName
+   
+   put viewName && "| Menu" into mTitle
+   return mTitle
+end menu_TitleFromViewName
+
+function menu_TitlePathFromPath mPath
+   menu_DeconstructPath mPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType
+   return mTitlePath
+end menu_TitlePathFromPath
+
+getprop object_IsMenuButton
+   put the long id of the target into mButton
+   put word 1 of mButton is "button" and the menumode of mButton is not empty into someBoolean
+   return someBoolean
+end object_IsMenuButton
+
+
+--> Deps
+-
+function addThenReturn mTarget
+   -- simply adds mTarget to global before returning
+   global gTemp_ActiveMenuArray
+   if exists (mTarget) then
+      put the mobile_Name of mTarget into gTemp_ActiveMenuArray ["top"]["mTarget"]
+   else
+      put mTarget into gTemp_ActiveMenuArray ["top"]["mTarget"]
+   end if
+   return mTarget
+end addThenReturn
+
+-- command addToMenuActiveArray mPath, mTitlePath, pigeon, mController, mView, mItemType, pMenuTarget
+   if mPath is empty then return empty -- an insert?
+   global gTemp_ActiveMenuArray
+   
+   if mItemType is among the items of "insert" then
+      -- may need to disable a submenu, and need gTemp_ActiveMenuArray to work out mTarget
+      return empty
+   end if
+   if pMenuTarget is not empty then
+      menu_SetItemTargetOveride mPath, pMenuTarget
+   end if
+   
+   -- lets set work in progress mPath, mTitlePath so that submenus etc can use them to automatically gather context
+   menu_SetTitlePath mTitlePath
+   menu_SetSentPath mPath
+   
+   put pigeon into gTemp_ActiveMenuArray ["mPath"][mPath]["pigeon"]
+   put mController into gTemp_ActiveMenuArray ["mPath"][mPath]["mController"]
+   put mItemType into gTemp_ActiveMenuArray ["mPath"][mPath]["mItemType"]
+   put mTitlePath into gTemp_ActiveMenuArray ["mPath"][mPath]["mTitlePath"]
+   
+   put mController into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mController"]
+   return empty
+   
+   put gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mPath"] into mPaths
+   line_Insert mPath, mPaths
+   put mPaths into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mPath"]
+   
+   put gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["pigeon"] into menuCommands
+   line_Insert pigeon, menuCommands
+   put menuCommands into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["pigeon"]
+end addToMenuActiveArray
+
+function error_mTopController mTopController, mTopTitle, menuRecord
+   if exists(mTopController) is false then
+      put "No controller exists for menu" && mTopTitle & CR after someError
+      put "-->" && mTopTitle & CR & "-" & CR after someError
+      put "menuRecord:" && menuRecord & CR after someError
+      -- log_Error someError, ("mouseDown error: mController does not exist for" && mTopTitle), true
+      return true
+   else
+      return false
+   end if
+end error_mTopController
+
+
+--> Deps | Private
+-
+function _GetDefaultMenuTarget mPath, mTitlePath, targetObject
+   -- ignoreCall:  menu_Target,g
+   -- ignoreCall:  view_object,g
+   -- default steps below are needed when menu_Target in the controller is not specified
+   
+   -- a default can be dynamic and defined in the view using a "getprop menu_Target" handler
+   put the menu_Target [mTitlePath] of targetObject into mTarget
+   -- if exists(mTarget) then return addThenReturn (mTarget)
+   if mTarget is not empty then return addThenReturn (mTarget) -- could be something other than an object
+   
+   /*
+   -- this authoring version guesses a default based on mPath (from which it gets mTitles)
+   -- look at mTitles associated with mPath and then work out for views with corresponding names.
+   
+   put menu_TitlePathFromPath (mPath) into mTitlePath
+   put menu_TitlePathToView (mTitlePath) into viewNames
+   if viewNames is not empty then
+      -- this looks for the top view
+      put the card_View [viewNames] of targetObject into linkedView
+      if exists(linkedView) is true then
+         return linkedView
+      end if
+   end if
+   */
+   
+   -- Finally if all else fails it returns the view or the target object.
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   return someView
+end _GetDefaultMenuTarget
+
+
+--> Utilities | rev_ScriptObject
+-
+/*
+These handlers are useful to hack menus into the rev IDE's script editor.
+They allow the menu_Target to refer to the owner of the script displayed in the script editor,
+rather than the field the script is displayed in in the Script Editor.
+*/
+
+function rev_ScriptObject
+   -- ignoreCall: revSEGetCurrentObject,c
+   put rev_TopScriptEditor() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
+end rev_ScriptObject
+
+function rev_TopScriptEditor
+   put the stack_Name of the target into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else 
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      -- opn_Notify stackNames, true
+      if stackNames is empty then return empty
+      put line 1 of stackNames into stackName
+      if exists(stack stackName) is false then
+         put the stack_Name of the target into stackName
+      end if
+      return the long id of stack stackName
+   end if
+end rev_TopScriptEditor
+
+
+--> Deps
+-
+function array_Fetch someFile
+   put url ("binfile:" & someFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   return modelArray
+end array_Fetch
+
+function checkout_ConstructDefaultFolder objectFile
+   put objectFile into checkoutFolder
+   set the itemdelimiter to "/"
+   -- put "opn_TextStacks/" into item -1 of checkoutFolder
+   put "liveworld/" into item -1 of checkoutFolder
+   return checkoutFolder
+end checkout_ConstructDefaultFolder
+
+-- function checkout_FindRoot objectFile, repoType
+checkout_SetFolderAndRepotype objectFile, repoType
+put the result into checkoutFolder
+return checkoutFolder
+end checkout_FindRoot
+
+-- command checkout_SetFolderAndRepotype objectFile, @repoType
+-- ignoreCall: fossil_FindCheckoutFolder,f
+-- ignoreCall: git_GetCheckoutFolder,f
+
+switch repoType
+   case "fossil"
+      try
+         put fossil_FindCheckoutFolder (objectFile) into checkoutFolder
+         put "fossil" into repoType
+         return checkoutFolder
+      catch e
+         return empty 
+      end try
+   case "git"
+      try
+         put git_GetCheckoutFolder (objectFile) into checkoutFolder
+         put "git" into repoType
+         return checkoutFolder
+      catch e
+         return empty 
+      end try
+   default
+      -- let's try to see if there is a repo
+      try
+         put git_GetCheckoutFolder (objectFile) into gitCheckoutFolder
+      catch e
+         put empty into gitCheckoutFolder
+      end try
+      
+      try
+         put fossil_FindCheckoutFolder (objectFile) into fossilCheckoutFolder
+      catch e
+         put empty into fossilCheckoutFolder
+      end try
+      
+      switch
+         case gitCheckoutFolder is empty and fossilCheckoutFolder is empty
+            put "" into repoType
+            return empty
+         case gitCheckoutFolder is empty and fossilCheckoutFolder is not empty
+            put "fossil" into repoType
+            return fossilCheckoutFolder
+         case gitCheckoutFolder is not empty and fossilCheckoutFolder is empty
+            put "git" into repoType
+            return gitCheckoutFolder
+         default -- case objectFile begins with gitCheckoutFolder and objectFile begins with fossilCheckoutFolder
+            -- it's both ?
+            -- let's just return the longest (usually the closest folder above objectFile)
+            if the number of chars of gitCheckoutFolder > the number of chars of fossilCheckoutFolder then
+               put "git" into repoType
+               return gitCheckoutFolder
+            else
+               put "fossil" into repoType
+               return fossilCheckoutFolder
+            end if
+      end switch
+end switch
+end checkout_SetFolderAndRepotype
+
+command custom_DeleteProperty propName, targetObject, pSetName
+   put the custompropertyset of targetObject into oSetName
+   set the custompropertyset of targetObject to pSetName
+   put the customproperties of targetObject into propArray
+   put propArray [propName] into propValue
+   put the customkeys of targetObject into cKeys
+   line_Delete propName, cKeys
+   set the customkeys of targetObject to cKeys
+   if cKeys is empty then
+      custom_DeleteSet pSetName, targetObject
+   end if
+   set the custompropertyset of targetObject to oSetName
+   return propValue
+end custom_DeleteProperty
+
+command custom_DeleteSet setName, someObject
+   -- was "array_DeleteStored"
+   put the custompropertysets of someObject into setNames
+   line_Delete setName, setNames
+   set the custompropertysets of someObject to setNames
+   return setNames
+end custom_DeleteSet
+
+-- command extractInsertedTitle mCommand, mController, someScript, @insertedMenuTitle, @customControllerParam, @dynamicTitleProp, @mLine, @pigeon, mItemType
+-- ignoreCall: mCommand,c
+
+if mItemType = "insert" then -- inserted version
+   -- this is a single menu script item!
+   -- should be the same structure as an mvc controller
+   -- "Global | Library | Menu,menu_StartupLibrary sillyChoice, mTarget"
+   -- with the first item refering to the controller object (or named shortcut), and the second the command
+   
+   try
+      send mCommand to mController
+      put the result into insertedInfo
+   catch someError -- often a compile error
+      return empty
+   end try
+   
+   put item 1 of insertedInfo into insertedMenuTitle
+   put item 2 to -1 of insertedInfo into pigeon
+   put menu_CommandToText (word 1 of pigeon) into mLine
+   
+   put empty into customControllerParam
+   put empty into dynamicTitleProp
+else if mItemType = "submenu" then -- submenu version
+   
+   put empty into mLine
+   put script_GetCommand (mCommand, someScript) into menuHandler
+   
+   set the wholematches to true
+   put wordoffset ("menu_DoSub", menuHandler) into wordNum
+   if wordNum = 0 then
+      -- now lets try the return technique used by "insert"
+      try
+         send mCommand to mController
+         put the result into insertedInfo
+         put item 1 of insertedInfo into insertedMenuTitle
+         put item 2 of insertedInfo into customControllerParam
+      catch someError -- often a compile error
+         put empty into insertedMenuTitle
+         put empty into customControllerParam
+         return empty
+      end try
+   else
+      delete word 1 to wordNum of menuHandler
+      put token 1 of line 1 of menuHandler into insertedMenuTitle
+      put token 3 of line 1 of menuHandler into customControllerParam
+   end if
+   
+   -- no longer stores pigeon to send, but calculates from subMenuTitle + scriptObject
+   -- put mCommand && "subMenuPath, mTarget" into pigeon
+   put empty into pigeon
+   put empty into dynamicTitleProp
+end if
+end extractInsertedTitle
+
+command file_SetHomeRelative @longFile
+   put $HOME into myHome
+   put the number of chars of myHome into maxNum
+   if char 1 to maxNum of longFile is myHome then
+      put "~" into char 1 to maxNum of longFile
+   end if
+end file_SetHomeRelative
+
+command folder_AddObjectBit @objectFolder, someObject
+   put word 1 of someObject into objectType
+   switch
+      case objectType = "stack"
+         put "stack/" after objectFolder
+         break
+      default
+         put objectType & "_" & word 3 of someObject & "/" after objectFolder
+         break
+   end switch
+end folder_AddObjectBit
+
+function folder_AddStackBit dataOrMetadata, textStackFolder, someObject
+   put the stack_Object of someObject into stackObject
+   put the short name of stackObject into stackName
+   put the mainstack of stackObject into mainStackName
+   
+   if stackName = mainStackName then
+      put textStackFolder & dataOrMetadata & "/objects/" into stackFolder
+   else
+      put textStackFolder & dataOrMetadata & "/objects/substacks/" & stackName & "/" into stackFolder
+      -- put dataOrMetadata & "/objects/"  after stackFolder
+   end if
+   return stackFolder
+end folder_AddStackBit
+
+command folder_CreateNested @someFolder
+   folder_Format someFolder
+   if there is a folder someFolder then return empty
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of someFolder
+      put item 1 to itemNum of someFolder & "/" into testFolder
+      if there is a folder testFolder then next repeat
+      create folder testFolder
+   end repeat
+end folder_CreateNested
+
+command folder_Format @someFolder
+   -- should be renamed "folder_Normalize"
+   if someFolder is empty then return empty
+   repeat while last char of someFolder is "/"
+      delete last char of someFolder
+   end repeat
+   put "/" after someFolder
+end folder_Format
+
+command handler_AddToCallArray @tempArray, shortHKey, handlerArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, pForgetHkeys  
+   put empty into tempArray ["hkeyCalls"][shortHKey]
+   put handlerArray ["addCall"] into tempArray ["hkeyCalls"][shortHKey]
+   
+   if handlerArray ["component"] is true then return false
+   
+   -- don't index rev handler calls (assume they are IDE handlers)
+   put item 1 of shortHKey into hName
+   if char 1 to 3 of hName = "rev" and char 4 of hName is not "_" then return false
+   
+   put handlerArray ["ignoreCall"] into ignoreCalls
+   if shortHkey is among the lines of ignoreCalls then return false
+   
+   set the wholematches to true
+   if shortHkey is among the lines of pForgetHkeys then return false
+   
+   -- if hkey_TestShortDeps (shortHKey, someHandler, pSkipHkeyComponents, pSkipHkeyProps) is false then return false
+   
+   put empty into tempArray ["filteredCalls"][shortHKey]
+end handler_AddToCallArray
+
+function handler_ConstructCallArray someHandler, pSkipHkeyComponents, pSkipHkeyProps
+   -- this is slow, and needs to be as fast as possible as we want to call it on every script compile!
+   -- should be modified to include "pass"
+   
+   local allCalls
+   
+   put library_ListForgetHkeys() into forgetHkeys
+   
+   put word 1 to -1 of someHandler into someHandler
+   delete line 1 of someHandler
+   delete line -1 of someHandler
+   
+   put false into repeatUntilEndOfComment
+   repeat for each line someLine in someHandler
+      if repeatUntilEndOfComment is true then
+         put char -2 to -1 of someLine into endCommentBit
+         if endCommentBit = "*/" then
+            put false into repeatUntilEndOfComment
+         end if
+         next repeat
+      else if char 1 to 2 of word 1 of someLine = "/*" then
+         put true into repeatUntilEndOfComment
+         next repeat
+      else
+         -- first lt's deal with single line comments
+         repeat for each item commentBlock in "--,#"
+            if someLine contains commentBlock then
+               put text_StripQuoted (someLine) into commentLine
+               
+               put wordOffset (commentBlock, commentLine) into wordNum
+               if wordNum > 0 then
+                  put word wordNum to -1 of commentLine into someComment
+                  
+                  if char -1 of word 2 of someComment = ":" then
+                     set the itemdelimiter to ":"
+                     put word 2 of item 1 of someComment into someKey
+                     put word 1 to -1 of item 2 of commentLine into someValue
+                     set the itemdelimiter to ","
+                     
+                     put metadataArray [someKey] into someIndex
+                     line_Add someValue, someIndex
+                     put someIndex into metadataArray [someKey]
+                  end if
+                  
+                  -- delete the comments part
+                  delete word wordNum to -1 of someLine
+               end if
+            end if
+         end repeat
+         
+         if the number of words of someLine = 0 then next repeat
+         
+         put someLine into testLine
+         replace " then " with CR in testLine
+         replace " else " with CR in testLine
+         repeat for each line testBit in testLine
+            put token 1 of testBit into testComand
+            if testComand is empty then next repeat
+            
+            switch
+               case testComand = "dispatch"
+                  put token 2 of testBit into dispatchCommand
+                  put dispatchCommand,"c" into shortHKey
+                  
+                  handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+                  
+                  delete token 1 to 3 of someLine  -- let's look at the rest of the line
+                  break
+               case testComand is among the items of "send,call"
+                  put token 2 of testBit into sendMessage
+                  put token 1 of sendMessage into sendComand
+                  put sendComand,"c" into shortHKey
+                  
+                  handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+                  
+                  delete token 1 to 3 of someLine  -- let's look at the rest of the line
+                  break
+               case script_DictionaryTerm (testComand) is true
+                  break
+               default
+                  -- first word and not a LiveCode term
+                  put testComand,"c" into shortHKey
+                  
+                  handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+                  
+                  delete token 1 of someLine  -- let's look at the rest of the line
+            end switch
+         end repeat
+         
+         put script_ExtractFunctionCalls (someLine, false) into fNames
+         repeat for each line fName in fNames
+            put fName,"f" into shortHKey
+            
+            handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+         end repeat
+         
+         -- could still have other stuff on line
+         set the wholematches to true
+         put wordoffset ("the", someLine) into theWordNum
+         if theWordNum is 0 then next repeat
+         
+         put theWordNum - 1 into setGetPutWordNum
+         put word setGetPutWordNum to -1 of someLine into testLineBit
+         
+         put 3 into handlerTokenNum
+         put token handlerTokenNum of testLineBit into handlerName
+         if script_DictionaryTerm (handlerName) is true then next repeat
+         
+         -- now check getprop / setprop calls ("the xxx [zzz] of")
+         
+         put handlerTokenNum + 1 into ofTokenNum
+         get token ofTokenNum of testLineBit
+         if it is "[" then
+            put handlerTokenNum + 4 into ofTokenNum
+            get token ofTokenNum of testLineBit
+         end if
+         
+         if it is "of" then
+            put token 1 of testLineBit into setGetPut
+            if setGetPut is "set" and "to" is among the words of someLine then
+               put handlerName,"s" into shortHKey
+               
+               handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+            else -- if setGetPut is among the items of "case,if,get,put" then
+               put handlerName,"g" into shortHKey
+               
+               handler_AddToCallArray tempArray, shortHKey, metadataArray, someHandler, pSkipHkeyComponents, pSkipHkeyProps, forgetHkeys
+            end if
+         end if
+      end if
+   end repeat
+   
+   put tempArray ["hkeyCalls"] into someArray
+   put keys (someArray) into metadataArray ["hkeyCalls"]
+   put tempArray ["filteredCalls"] into someArray
+   put keys (someArray) into metadataArray ["filteredCalls"]
+   
+   put sha1_Hash (someHandler) into handlerHash
+   put handlerHash into metadataArray ["sha1"]
+   -- hkey_AddToKeyWordArray metadataArray, hKey, handlerHash
+   
+   return metadataArray
+end handler_ConstructCallArray
+
+command hArray_AddHandlerHash @hArray, hKey, someHandler, handlerHash, indexTime, pForceindex
+   -- we could add to an hKeyArray here? But can't use hArray to find calls in hierarchy as it is in progress of being built
+   
+   put hArray ["handlerHashArray"]["cached"][handlerHash]["hashTime"] is not empty into alreadyIndexed
+   
+   -- let's get the old handler hash and delete the old entry
+   put hArray_GetHandlerHash (hKey, hArray) into oldHandlerHash
+   if oldHandlerHash is not handlerHash then
+      delete variable hArray ["handlerHashArray"]["cached"][oldHandlerHash]
+      delete variable hArray ["handlerHashArray"]["new"][oldHandlerHash]
+   end if
+   
+   -- add hKey to list of hkeys with same handler(hash)
+   put empty into hArray ["handlerHashArray"]["cached"][handlerHash]["hKey"][hKey]
+   
+   if alreadyIndexed is false or pForceindex is true then
+      -- if new (handlerHash) entry extract calls and add to index
+      put indexTime into hArray ["handlerHashArray"]["cached"][handlerHash]["hashTime"]
+      
+      -- now let's extract keywords and index shortHkey against each (no point doing it for non first Hkeys
+      hkey_AddToKeyWordArray hArray, hKey, handlerHash
+      
+      -- but don't clear hkey list
+      put handler_ConstructCallArray (someHandler) into metadataArray
+      put metadataArray ["filteredCalls"] into shortCalls
+      
+      put shortCalls into hArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"]
+      put metadataArray ["hkeyCalls"] into hArray ["handlerHashArray"]["cached"][handlerHash]["allShortCalls"]
+      -- put handler_ExtractCalls (someHandler) into hArray ["handlerHashArray"]["cached"][handlerHash]["shortCalls"]
+      
+      put "Indexed" && kwote (hKey) into someComment
+      if shortCalls is not empty then
+         put CR & CR & "With the following calls to other handlers:" after someComment
+         put CR & outline_IncreaseIndent (shortCalls, 4, space) after someComment
+      end if
+      opn_Notify someComment
+      
+      -- put someHandler into hArray ["handlerHashArray"]["cached"][handlerHash]["handler"]
+   else
+      -- put "Already Indexed" && kwote (hKey) into someComment
+   end if
+end hArray_AddHandlerHash
+
+function hArray_GetHandlerHash hKey, pHArray
+   put hArray_GetHkeyDataArray (hKey, pHArray) into handlerArray
+   put handlerArray ["sha1"] into handlerHash
+   return handlerHash
+end hArray_GetHandlerHash
+
+function hArray_GetHkeyDataArray hKey, pHArray
+   put item 3 of hKey into hObject
+   put hArray_GetObjectData (hObject, "script_DataArray", pHArray) into scriptArray
+   repeat for each key indexNum in scriptArray
+      put scriptArray [indexNum]["hkey"] into testHkey
+      if testHkey = hKey then
+         return scriptArray [indexNum]
+      end if
+   end repeat
+   return empty
+end hArray_GetHkeyDataArray
+
+function hArray_GetNamedObjectType viewName, objectType
+   put hArray_GetObjectTypeArray (objectType) into typeArray
+   repeat for each key rObject in typeArray
+      put hArray_GetUripArray (rObject, "name") into objectViewName
+      if objectViewName = viewName then
+         return rObject
+      end if
+   end repeat
+   return empty
+end hArray_GetNamedObjectType
+
+function hArray_GetObjectArray rObject, pHarray
+   if pHarray is an array then
+      if rObject is empty then
+         return pHarray ["scriptArray"]
+      else
+         return pHarray ["scriptArray"][rObject]
+      end if
+   else
+      global gHkey_Array   
+      if rObject is empty then
+         return gHkey_Array ["scriptArray"]
+      else
+         return gHkey_Array ["scriptArray"][rObject]
+      end if
+   end if
+end hArray_GetObjectArray
+
+function hArray_GetObjectData rObject, pKey, pHarray
+   put hArray_GetObjectArray (rObject, pHarray) into objectArray  
+   if pKey is empty then
+      return objectArray ["data"]
+   else
+      return objectArray ["data"][pKey]
+   end if
+end hArray_GetObjectData
+
+function hArray_GetObjectTypeArray objectType
+   put hArray_GetObjectTypeData() into objectTypeData
+   return objectTypeData [objectType]
+end hArray_GetObjectTypeArray
+
+function hArray_GetObjectTypeData pHarray
+   if pHarray is an array then
+      return pHarray ["objectType"]
+   else
+      global gHkey_Array
+      return gHkey_Array ["objectType"]
+   end if
+end hArray_GetObjectTypeData
+
+function hArray_GetUripArray rObject, pKey, pHarray
+   put hArray_GetObjectArray (rObject, pHarray) into objectArray
+   if pKey is empty then
+      return objectArray ["metadata"]["uripArray"]
+   else
+      return objectArray ["metadata"]["uripArray"][pKey]
+   end if
+end hArray_GetUripArray
+
+function hArray_GetViewTemplate viewName
+   view_NormalizeName viewName
+   put hArray_GetNamedObjectType (viewName, "view template") into viewTempate
+   return viewTempate
+end hArray_GetViewTemplate
+
+command hArray_RemoveObject someObject
+   global gHkey_Array
+   if exists (someObject) then
+      put revRuggedID (someObject) into rObject
+      put the object_Metadata of rObject into uRipArray
+   else
+      put someObject into rObject -- assume it is in the right format (won't do anythign if it is not)
+      put empty into uRipArray -- won;t strip same name / type objects
+   end if
+   
+   global gHkey_Array
+   hArray_RemoveObjectFromArray rObject, gHkey_Array, uRipArray
+end hArray_RemoveObject
+
+command hArray_RemoveObjectFromArray rObject, @hArray, pUripArray
+   delete variable hArray ["scriptArray"][rObject]
+   hArray_RemoveObjectFromHandlerArray rObject, hArray
+   hArray_RemoveObjectFromTypeArray rObject, hArray
+   if pUripArray is an array then
+      hArray_RemoveSameNameTypeObjects rObject, hArray, pUripArray
+   end if
+end hArray_RemoveObjectFromArray
+
+command hArray_RemoveObjectFromHandlerArray rObject, @hArray, pSlowClean
+   if pSlowClean is not false then
+      -- this is slower but thorough (should not be needed with a tidy db)
+      put hArray ["handlerArray"] into handlerArray
+      repeat for each key shortHkey in handlerArray
+         put handlerArray [shortHkey] into shortKeyArray
+         repeat for each key hkey in shortKeyArray
+            if item 3 of hkey = rObject then
+               put keys(shortKeyArray) into hKeys
+               if the number of lines of hKeys = 1 then
+                  delete variable hArray ["handlerArray"][shortHkey]
+               else
+                  delete variable hArray ["handlerArray"][shortHkey][hkey]
+               end if
+            end if
+         end repeat
+      end repeat
+   else
+      put hArray_GetObjectData (rObject, "script_DataArray", hArray) into scriptData -- should be old handlers and work
+      repeat for each key indexNum in scriptData
+         put scriptData [indexNum]["hKey"] into hKey
+         if hKey is empty then next repeat
+         
+         put item 1 to 2 of hKey into shortHKey
+         put hArray ["handlerArray"][shortHKey] into shortKeyArray
+         if shortKeyArray is an array then -- not sure if we really need to check this for speed reasons
+            delete variable hArray ["handlerArray"][shortHKey][hKey]
+            put hArray ["handlerArray"][shortHKey] into shortKeyArray
+            if shortKeyArray is not an array then
+               delete variable hArray ["handlerArray"][shortHKey] -- to tidy empty arrays
+            end if
+         end if
+      end repeat
+   end if
+end hArray_RemoveObjectFromHandlerArray
+
+command hArray_RemoveObjectFromTypeArray rObject, @hArray
+   put hArray ["objectType"] into objectTypeArray
+   repeat for each key objectType in objectTypeArray
+      -- remove the object from every object type
+      delete variable hArray ["objectType"][objectType][rObject]
+      if hArray ["objectType"][objectType] is not an array then
+         delete variable hArray ["objectType"][objectType]
+      end if
+   end repeat
+end hArray_RemoveObjectFromTypeArray
+
+command hArray_RemoveSameNameTypeObjects rObject, @hArray, uRipArray 
+   put uRipArray ["name"] into uripName
+   put uRipArray ["type"] into objectType
+   if objectType is "view" and the view_IsTemplate of rObject is true then
+      put "view template" into objectType
+   end if
+   
+   -- only for the particular type
+   -- an object with the same uRipName can have different "types"
+   -- but the uripName / type cobination must be unique
+   -- so here we delete any other objects of the same type and uRipName
+   put hArray ["objectType"][objectType] into rObjectTypeArray
+   repeat for each key testObject in rObjectTypeArray
+      put rObjectTypeArray [testObject]["uripName"] into testName
+      if testName is empty then next repeat
+      if testName = uripName then
+         delete variable hArray ["objectType"][objectType][testObject]
+      end if
+   end repeat
+end hArray_RemoveSameNameTypeObjects
+
+command hkey_AddToKeyWordArray @hArray, hKey, handlerHash
+   put hkey_ConstructKeywords (item 1 of hKey) into kWords
+   put item 1 to 2 of hKey into shortHKey
+   repeat for each line kWord in kWords
+      put handlerHash into hArray ["keywordArray"][kWord][shortHKey]["sha1"]
+      put item 3 of hKey into hObject
+      if hObject is not empty then put hObject into hArray ["keywordArray"][kWord][shortHKey]["rugged_ID"]
+   end repeat
+end hkey_AddToKeyWordArray
+
+function hkey_Construct hName, hType, hObject, pHandlerNum
+   if exists (hObject) then
+      put revRuggedID (hObject) into hObject
+   else
+      put "Missing" into hObject	# could add scriptObject info ??? 
+   end if
+   if pHandlerNum is empty then put 1 into pHandlerNum
+   return hName,hType,hObject,pHandlerNum
+end hkey_Construct
+
+command hkey_Deconstruct hKey, @hName, @hType, @hObject, @hNum
+   put word 1 to -1 of item 1 of hKey into hName
+   put word 1 to -1 of item 2 of hKey into hType
+   if hType is empty then put "c" into hType
+   put word 1 to -1 of item 3 of hKey into hObject
+   put item 4 of hKey into hNum
+end hkey_Deconstruct
+
+function hkey_ConstructKeywords hKeyOrName
+   put word 1 to -1 of item 1 of hKeyOrName into hName
+   put text_SplitIntoWords (hName) into kWords
+   put toLower (kWords) into kWords
+   return kWords
+end hkey_ConstructKeywords
+
+command hkey_EditFoundHandler hkey
+   lock screen
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then
+      breakPoint  -- should search?
+      if hObject = "Missing" then exit to top
+      hArray_RemoveObject hObject
+      exit to top
+   end if
+   
+   put rev_ScriptEditorIsOpen() into wasAlreadyOpen
+   if wasAlreadyOpen is true then
+      rev_ActivateScriptEditorTab hObject
+      if the result is false then
+         edit the script of hObject
+      end if
+   else
+      edit the script of hObject
+      wait 5 ticks
+   end if
+   
+   -- put rev_GetSelectedHandlerTreeLineNum (hkey) into revHandlerTreeLineNum
+   put the revAvailableHandlers of hObject into handlerTable
+   script_HandlerTableOffsets hkey, handlerTable, startLineNum, endLineNum, revHandlerTreeLineNum
+   if the result is false then
+      breakpoint
+      return false
+   end if
+   
+   rev_SetSelectedHandlerTreeLineNum revHandlerTreeLineNum
+   
+   -- put rev_ScriptEditorField() into editorField
+   -- field_ScrollToLine startLineNum, editorField
+   -- set the hilitedline of editorField to startLineNum
+   -- select line startLineNum to endLineNum of editorField
+   
+   unlock screen
+   -- opn_Notify revHandlerTreeLineNum, true
+   return true
+end hkey_EditFoundHandler
+
+command script_HandlerTableOffsets shortHkey, handlerTable, @startLineNum, @endLineNum, @handlerNum
+   if handlerTable is empty then
+      put 0 into startLineNum
+      put 0 into endLineNum
+      put 0 into handlerNum
+      return false
+   end if
+   
+   put item 1 of shortHkey into hName
+   put item 2 of shortHkey into hType
+   switch char -1 of hType
+      case "c"
+         put "M" into char -1 of hType
+         break
+      case "o"
+         put "M" into char -1 of hType
+         break
+   end switch
+   
+   sort numeric  lines of handlerTable by word 3 of each
+   repeat with handlerNum = 1 to the number of lines of handlerTable
+      put line handlerNum of handlerTable into someLine
+      
+      put word 2 of someLine into hTableName
+      if hTableName is not hName then next repeat
+      
+      put word 1 of someLine into hTableType
+      switch
+         if char -1 of hTableType = "C" then put "M" into char -1 of hTableType
+         
+      case hTableType = hType
+         put word 3 of someLine into startLineNum
+         put word 4 of someLine into endLineNum
+         return true
+   end switch
+end repeat
+put 0 into startLineNum
+put 0 into endLineNum
+put 0 into handlerNum
+return false
+end script_HandlerTableOffsets
+
+command hkey_NormalizeType @hType
+   -- standardize revAvailableHandlers hType for hKeys
+   replace "M" with "c" in hType
+   put tolower (hType) into hType
+end hkey_NormalizeType
+
+function kwote someText, pQuoteChar
+   if pQuoteChar is empty then put quote into pQuoteChar
+   return pQuoteChar & someText & pQuoteChar
+end kwote
+
+function library_ArrayFile shortName, pDontCreate
+   put shortName & ".array" into shortFile
+   put library_ArrayFolder (shortFile, pDontCreate) into someFile
+   return someFile
+end library_ArrayFile
+
+function library_ArrayFolder shortFileBit, pDontCreate
+   return library_PluginFolder ("opn_Text/array/", pDontCreate) & shortFileBit
+end library_ArrayFolder
+
+function library_FetchArray shortName
+   put library_ArrayFile (shortName) into someFile
+   put array_Fetch (someFile) into modelArray
+   return modelArray
+end library_FetchArray
+
+function library_FetchForgetArray
+   put library_GetHandlerDatabaseMetadata() into dbMetaData
+   put dbMetaData ["allwaysFilterHkeyArray"] into allwaysFilterHkeyArray
+   return allwaysFilterHkeyArray
+end library_FetchForgetArray
+
+function library_FetchHandlerDatabaseArray
+   put library_FetchArray ("Hkey_Library") into handlerDatabaseArray
+   return handlerDatabaseArray
+end library_FetchHandlerDatabaseArray
+
+function library_GetHandlerDatabaseMetadata
+   put library_FetchHandlerDatabaseArray() into handlerDatabaseArray
+   put handlerDatabaseArray ["metadata"] into dbMetaData
+   return dbMetaData
+end library_GetHandlerDatabaseMetadata
+
+function library_ListForgetHkeys
+   put library_FetchForgetArray() into allwaysFilterHkeyArray
+   return keys (allwaysFilterHkeyArray)
+end library_ListForgetHkeys
+
+function library_PluginFolder pSubFolder, pDontCreate
+   put revEnvironmentUserPluginsPath() & "/" into opnRootFolder
+   put opnRootFolder & "opn_Plugins/" into someFolder
+   
+   if pSubFolder is not empty then
+      folder_Format pSubFolder   
+      put pSubFolder after someFolder
+   end if
+   
+   if pDontCreate is not true then folder_CreateNested someFolder
+   return someFolder
+end library_PluginFolder
+
+function library_ScriptTemplateFolder shortFileBit, pDontCreate
+   return library_PluginFolder ("opn_Text/rev/template/", pDontCreate) & shortFileBit
+end library_ScriptTemplateFolder
+
+command line_Add someLines, @someIndex
+   repeat for each line someLine in someLines
+      if someLine is empty then next repeat
+      set the wholematches to true
+      put lineoffset(someLine, someIndex) into lineNum
+      if lineNum is 0 then
+         put the number of lines of someIndex into maxLine
+         put maxLine + 1 into lineNum
+         put someLine into line lineNum of someIndex
+      else
+         put lineNum & comma after lineNums
+      end if
+   end repeat
+   delete char -1 of lineNums
+   return lineNums
+end line_Add
+
+command line_Delete someLines, @fromContainer, partLine, skipLines
+   set the wholematches to (partLine is empty)
+   repeat with ii = 1 to the number of lines of someLines
+      put line ii of someLines into someLine
+      get lineoffset(someLine, fromContainer, skipLines)
+      if it is not 0 then
+         put it + skipLines into lineNum
+         delete line lineNum of fromContainer
+      end if 
+   end repeat
+   return the number of lines of someIndex
+end line_Delete
+
+command line_Insert someLine, @someIndex, beforeLineNum
+   if someIndex is empty then
+      put someLine into someIndex
+   else if someLine is not empty then
+      if beforeLineNum is a number then
+         put someLine & CR before line beforeLineNum of someIndex
+      else
+         put CR & someLine after someIndex
+      end if
+   end if
+end line_Insert
+
+getprop main_Stack
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into stackName
+   return the name of stack stackName
+end main_Stack
+
+getprop mainstack_File
+   put the stack_Object of the target into stackObject
+   return the effective filename of stackObject
+end mainstack_File
+
+getprop mobile_Name
+   put the long name of the target into mobileObject
+   object_SetShortStackName mobileObject, mainStackStart, mainStackEnd
+   return mobileObject
+end mobile_Name
+
+command object_AddToGlobalArray someObject, pExportHandlers, pDontExport
+   put false into pCreateHashArray
+   put false into pForceIndexHandlerCalls
+   
+   global gHkey_Array
+   try
+      put the script of someObject into someScript
+   catch e
+      return merge ("error, [[someObject]] is probably a locked stack so can't index script.")
+   end try
+   
+   object_AddToArray gHkey_Array, someObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
+   put the result into someScript
+   return someScript
+end object_AddToGlobalArray
+
+command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
+   -- bug:  this means that fetching the object_Array also exports the script
+   if pCreateHashArray is not true then
+      delete variable hArray ["handlerHashArray"]
+   end if
+   
+   put the stack_Object of someObject into stackObject
+   put the mainstack of stackObject into mainStackName
+   put the name of stack mainStackName into ruggedMainStack
+   put the filename of stack mainStackName into stackFile
+   file_SetHomeRelative stackFile
+   
+   put the rugged_ID of someObject into ruggedObject
+   
+   put the object_Folder of someObject into objectFolder
+   object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport  -- here we can export the script
+   put the result into scriptFile
+   -- put the script_File of someObject into someFile
+   file_SetHomeRelative scriptFile
+   
+   put the ticks into indexTime
+   put sha1_Hash (someScript) into scriptHash
+   
+   put script_GetMetadataArray (someScript) into objectMetaData
+   put the customproperties ["uRIP"] of someObject into uRipArray
+   union objectMetaData with uRipArray
+   
+   -- first let's delete any old entries for this object
+   hArray_RemoveObjectFromArray ruggedObject, hArray, uRipArray
+   delete variable hArray ["scriptArray"][ruggedObject]
+   
+   -- now let's index object types
+   put objectMetaData ["type"] into uRipType
+   if uRipType is not empty then
+      put objectMetaData ["name"] into uRipName
+      -- with the info below you can get rugged_IDs fast, and hkeys in them pretty fast
+      -- after this you can use the hKey to get handler info from the "handlerArray" below
+      if uRipType = "view" and the view_IsTemplate of someObject is true then
+         put "view template" into uRipType
+      end if
+      put scriptHash into hArray ["objectType"][uRipType][ruggedObject]["scriptHash"] 
+      put objectMetaData ["name"] into hArray ["objectType"][uRipType][ruggedObject]["uRipName"] 
+   end if
+   
+   -- Add script details to object metadata
+   put scriptHash into hArray ["scriptArray"][ruggedObject]["metadata"]["sha1"]
+   
+   put objectMetaData into hArray ["scriptArray"][ruggedObject]["metadata"]["uripArray"]
+   put scriptFile into hArray ["scriptArray"][ruggedObject]["metadata"]["scriptFile"]
+   put stackFile into hArray ["scriptArray"][ruggedObject]["metadata"]["stackFile"]
+   put ruggedMainStack into hArray ["scriptArray"][ruggedObject]["metadata"]["main stack object"]
+   put indexTime into hArray ["scriptArray"][ruggedObject]["metadata"]["indexTime"]
+   
+   -- index any behaviors
+   put the behavior of someObject into behaviorObject
+   if behaviorObject is not empty then
+      put scriptHash into hArray ["behaviorArray"][behaviorObject]["data"]["object"][ruggedObject]["scriptHash"]
+   end if
+   
+   -- fast and simple (to get comments and metadata will need to process later
+   put false into pIsExpanded
+   local suiteTitle
+   put 1 into indexNum
+   put 1 into lineNum
+   
+   -- same logic as "the script_Array"
+   put false into commentBlock
+   repeat with lineNum = 1 to the number of lines of someScript
+      put line lineNum of someScript into scriptLine
+      switch
+         case word 1 of scriptLine = "/*"
+            put true into commentBlock
+            break
+         case commentBlock is true
+            -- keep looping till end of block
+            if word -1 of scriptLine = "*/" then
+               -- could put this commented out section in the index?
+               put false into commentBlock
+            end if
+            break
+         case word 1 of scriptLine = "-->" 
+            put word 2 to -1 of scriptLine into suiteTitle
+            
+            put "t" into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["lineType"]
+            put lineNum into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["startLineNum"]
+            put suiteTitle into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["scriptLine"]
+            put pIsExpanded into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["isExpanded"]
+            
+            add 1 to indexNum
+            break    
+         case word 1 of scriptLine is among the items of "command,on,function,getprop,setprop,private"
+            put true into indexingHandler
+            
+            if word 1 of scriptLine is "private" then
+               put "p" into pBit
+               delete word 1 of scriptLine
+            else
+               put empty into pBit
+            end if
+            
+            get char 1 of scriptLine
+            if it = "o" then
+               put true into isOnMessage
+               put pBit & "c" into lineType
+            else
+               put false into isOnMessage
+               put pBit & it into lineType
+            end if
+            
+            put word 2 of scriptLine into hName
+            
+            put countArray [hName][lineType] into hNum
+            add 1 to hNum
+            put hNum into countArray [hName][lineType]
+            
+            put hName,lineType into shortHKey
+            put shortHKey,ruggedObject,hNum into hKey
+            put lineNum into startLineNum
+            
+            put hKey into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["hKey"]
+            put lineType into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["lineType"]
+            put suiteTitle into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["suiteTitle"]
+            put pIsExpanded is true into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["isExpanded"]
+            put startLineNum into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["startLineNum"]
+            
+            put scriptLine into startScriptLine
+            put startScriptLine into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["handlerLine"]
+            
+            break
+         case word 1 of scriptLine = "end" and word 2 of scriptLine = hName and indexingHandler is true
+            put false into indexingHandler
+            put lineNum into endLineNum
+            
+            put endLineNum into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["endLineNum"]
+            
+            put line startLineNum to endLineNum of someScript into someHandler
+            put sha1_Hash (someHandler) into handlerHash
+            put handlerHash into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["sha1"]
+            
+            
+            -- here we check to see if the handlerHash already exists for that mainstack object
+            -- this only happens if hArray ["handlerHashArray"] is added to hArray before walking
+            -- this can be initialised by adding a previously stored handlerHashArray from disk
+            -- or simply doing something like 'put empty into hArray ['"handlerHashArray"]["new"]'
+            if pCreateHashArray is true then
+               hArray_AddHandlerHash hArray, hKey, someHandler, handlerHash, indexTime, pForceIndexHandlerCalls
+               put empty into hArray ["handlerHashArray"]["actual"][handlerHash]
+            end if
+            
+            
+            -- now index unique global suites
+            -- if word 1 of suiteTitle = "Global" and word 2 of suiteTitle = "|" and word -2 of suiteTitle = "|" then
+            if word -1 of suiteTitle = "Menu" and word -2 of suiteTitle = "|" then
+               -- it's a menu
+               switch
+                  case word 1 of suiteTitle = "Global" and word 2 of suiteTitle = "|"
+                     if suiteTitle is not among the keys of thisScriptsMenuArray then
+                        -- a new global menu for this script
+                        -- delete and old ones in global
+                        delete variable hArray ["Global Menus"][suiteTitle]
+                        put empty into thisScriptsMenuArray[suiteTitle]
+                     end if
+                     
+                     put ruggedObject into hArray ["Global Menus"][suiteTitle]["mController"]
+                     -- put indexTime into hArray ["Global Menus"][suiteTitle]["indexTime"]
+                     -- put scriptHash into hArray ["Global Menus"][suiteTitle]["scriptHash"]
+                     
+                     if isOnMessage is true and lineType = "c" then
+                        put hArray ["Global Menus"][suiteTitle]["item"] into shortkeySuiteArray
+                        if shortkeySuiteArray is not an array then
+                           put 1 into itemNum
+                        else
+                           put (the number of elements of shortkeySuiteArray) + 1 into itemNum
+                        end if
+                        
+                        put shortHkey into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["shortHkey"]
+                        put handlerHash into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["sha1"]
+                     end if
+                     break
+                  default
+                     -- store local menu with the mainstack section of the array
+                     
+                     if ruggedMainStack is not among the keys of thisScriptsMenuArray then
+                        -- a new global menu for this script
+                        -- delete and old ones in global
+                        delete variable hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"]
+                        put empty into thisScriptsMenuArray [ruggedMainStack]
+                     end if
+                     
+                     put ruggedObject into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["mController"]
+                     -- put indexTime into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["indexTime"]
+                     put scriptHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["scriptHash"]
+                     
+                     if isOnMessage is true and lineType = "c" then
+                        put hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"] into shortkeySuiteArray
+                        if shortkeySuiteArray is not an array then
+                           put 1 into itemNum
+                        else
+                           put (the number of elements of shortkeySuiteArray) + 1 into itemNum
+                        end if
+                        
+                        put shortHkey into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["shortHkey"]
+                        put handlerHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["sha1"]
+                     end if                     
+               end switch
+            end if
+            
+            -- now index first (not last!) hKeys of object
+            if hArray ["scriptArray"][ruggedObject]["data"]["firstHKeyArray"][shortHKey]["sha1"] is empty then
+               -- only index first handler with this array
+               put handlerHash into hArray ["scriptArray"][ruggedObject]["data"]["firstHKeyArray"][shortHKey]["sha1"]
+               
+               -- only firstHkeys can ever get called so only these go in handlerArray
+               put startScriptLine into hArray ["handlerArray"][shortHKey][hKey]["scriptLine"]
+               put handlerHash into hArray ["handlerArray"][shortHKey][hkey]["handlerHash"]
+               put startLineNum into hArray ["handlerArray"][shortHKey][hKey]["startLineNum"]
+               put endLineNum into hArray ["handlerArray"][shortHKey][hkey]["endLineNum"]
+               
+               -- now let's extract keywords and index shortHkey against each (no point doing it for non first Hkeys
+               -- hkey_AddToKeyWordArray hArray, hKey, handlerHash -- could index twice with same hash in different places
+            end if
+            
+            add 1 to indexNum
+            break
+         case token 1 of scriptLine is empty
+            -- it's a comment or some junk
+            -- however script suites are also comments (so put at end of tests)!
+            -- not actually needed
+            break
+         default
+            /*
+            should modify to collect stuff here, and add to metadata outside of handlers
+            */
+      end switch
+   end repeat
+   return someScript
+end object_AddToArray
+
+command object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport
+   -- simply export the objects script to the right place (see also "exported_Script")
+   -- note use of binFile to avoid translating of LF to CR on Macs by Revolution (which causes difficulties for git)
+   
+   if there is not a folder objectFolder and pDontExport is true then
+      return empty
+   end if
+   
+   put objectFolder_ScriptFile (objectFolder) into someFile
+   
+   if pExportHandlers is not false then
+      script_ExportHandlersAndCalls someScript, objectFolder
+      put the result into mergeScript
+   else
+      if someScript is empty then
+         -- not really needed as everything is deleted before re-exporting
+         delete file someFile
+         put empty into someFile
+      else
+         put someFile into scriptFolder
+         set the itemdelimiter to "/"
+         delete item -1 of scriptFolder
+         folder_CreateNested scriptFolder
+         set the itemdelimiter to comma
+         
+         put someScript into url ("binfile:" & someFile)
+      end if
+   end if
+   return someFile
+end object_ExportScript
+
+function object_ExtractStack someObject
+   -- old use the defaultstack when the target is correct
+   
+   set the wholematches to true
+   put word (wordOffset ("stack", someObject)) to -1 of someObject into stackObject
+   return stackObject
+end object_ExtractStack
+
+function object_FromScriptFolder scriptFileOrFolder
+   set the itemdelimiter to "/"
+   
+   if item -1 of scriptFileOrFolder = "script.txt" then delete item -1 of scriptFileOrFolder
+   if item -2 of scriptFileOrFolder = "handlers" then delete item -2 to -1 of scriptFileOrFolder
+   
+   put item -1 of scriptFileOrFolder into objectBit
+   replace "_" with " id " in objectBit
+   
+   if item -3 of scriptFileOrFolder = "substacks" then
+      put item -2 of scriptFileOrFolder into subStackName
+      put item -6 of scriptFileOrFolder into mainStackName
+      if objectBit = "stack" then
+         put "stack" && kwote (subStackName) && "of stack" && kwote (mainStackName) into someObject
+      else
+         put objectBit && "of stack" && kwote (subStackName) && "of stack" && kwote (mainStackName) into someObject
+      end if
+   else
+      put item -4 of scriptFileOrFolder into mainStackName
+      if objectBit = "stack" then
+         put "stack" && kwote (mainStackName) into someObject
+      else
+         put objectBit && "of stack" && kwote (mainStackName) into someObject
+      end if
+   end if
+   return someObject
+end object_FromScriptFolder
+
+command object_SetShortStackName @someObject, @mainStackStart, @mainStackEnd
+   -- was "set_ShortStackBit"
+   object_StackNameOffsets someObject, mainStackStart, mainStackEnd, substackStart, substackEnd
+   put char mainStackStart to mainStackEnd of someObject into longStackName
+   
+   if exists(stack longStackName) is false then
+      return empty
+   else
+      put the short name of stack longStackName into shortStackName
+      put char mainStackStart to mainStackEnd of someObject into stackPath
+      put shortStackName into char mainStackStart to mainStackEnd of someObject
+      return stackPath
+   end if
+end object_SetShortStackName
+
+command object_StackNameOffsets someObject, @mainStackStart, @mainStackEnd, @substackStart, @substackEnd
+   -- now modified to look for substacks
+   
+   put the number of chars of someObject into lastQuoteCharNum
+   put lastQuoteCharNum - 1 into mainStackEnd
+   put text_OffsetBefore(quote, someObject, lastQuoteCharNum) + 1 into mainStackStart
+   
+   put someObject into testSubStack
+   delete char (mainStackStart - 7) to -1 of testSubStack
+   
+   -- put offset(space & "stack" && quote, testSubStack) into substackStart
+   put offset("stack" && quote, testSubStack) into substackStart
+   -- put wordoffset("stack" && quote, testSubStack) into substackStart
+   
+   if substackStart = 0 then
+      put 0 into substackEnd
+      return char (mainStackStart - 7) to -1 of someObject
+   else
+      put 8 - 1 into tweek
+      put substackStart + tweek into tSkip
+      put offset(quote, testSubStack, tSkip) into substackEnd
+      
+      put substackStart + tweek into substackStart
+      put substackEnd + tSkip - 1 into substackEnd
+      return char (substackStart - 7) to -1 of someObject
+   end if
+end object_StackNameOffsets
+
+function objectFolder_HandlerFolder shortHkey, objectFolder, pDontCreate
+   folder_Format objectFolder
+   put item 1 shortHkey & "_" & item 2 of shortHkey into folderName
+   put objectFolder & "handlers/" & folderName & "/" into handlerFolder
+   if pDontCreate is false then folder_CreateNested handlerFolder
+   return handlerFolder
+end objectFolder_HandlerFolder
+
+function objectFolder_ScriptFile objectFolder, pDontCreate
+   -- was "project_ScriptFile"
+   -- returns the same as the script_File
+   if pDontCreate is false then
+      folder_CreateNested handlerFolder
+   else
+      folder_Format objectFolder
+   end if
+   put objectFolder & "script.txt" into someFile
+   return someFile
+end objectFolder_ScriptFile
+
+function outline_DecreaseIndent someOsSection, byIndentLevel
+   --was "outline_DecreaseIndent"
+   if byIndentLevel = 0 then return someOsSection
+   repeat with ii = 1 to the number of lines of someOsSection
+      put line ii of someOsSection into osTitle
+      repeat byIndentlevel
+         if char 1 of osTitle is tab then
+            delete char 1 of osTitle
+         else
+            exit repeat
+         end if
+      end repeat
+      put osTitle into line ii of someOsSection
+   end repeat
+   return someOsSection
+end outline_DecreaseIndent
+
+function outline_IncreaseIndent someOsSection, byIndentLevel, indentString
+   if indentString is empty then put tab into indentString
+   if byIndentLevel is not a number then put 1 into byIndentLevel
+   if byIndentLevel = 0 then return someOsSection
+   if byIndentLevel < 0 then return outline_DecreaseIndent(someOsSection, abs(byIndentLevel))
+   put text_RepeatString(indentString, byIndentLevel) into indentWhiteSpace
+   repeat with ii = 1 to the number of lines of someOsSection
+      put indentWhiteSpace before line ii of someOsSection
+   end repeat
+   return someOsSection
+end outline_IncreaseIndent
+
+function param_IsBoolean customParam
+   return customParam is among the items of "boolean,someBoolean,isBoolean"
+end param_IsBoolean
+
+function param_IsObject someParam
+   if char -4 to -1 of someParam = "View" then return true
+   if char -5 to -1 of someParam = "Field" then return true
+   if char -6 to -1 of someParam is among the items of "Object,Target,Button" then return true
+   return false
+   
+   get "targetObject,treeField,treeView,mTarget,menuTarget,someView,someObject,someField,someButton,menuButton,cardObject,stackObject"
+   set the wholematches to true
+   return someParam is among the items of it
+   
+   repeat for each item testString in "object,target,view,field,button,card,stack"
+      if someParam contains testString then return true
+   end repeat
+   return false
+end param_IsObject
+
+command rev_ActivateScriptEditorTab someObject, pSetScript
+   put revRuggedId (someObject) into someObject
+   put rev_ListTabScriptObjects() into ruggedIDs
+   set the wholematches to true
+   if someObject is not among the lines of ruggedIDs then return false
+   
+   put rev_ScriptEditorGroup() into revScriptEditorGroup
+   dispatch "revSESetCurrentObject" to revScriptEditorGroup with someObject
+   
+   if pSetScript is not empty then
+      put rev_GetCachedScript (someObject) into oldCachedScript
+      rev_SetScriptEditorField pSetScript
+      set the clipboarddata to oldCachedScript
+      return oldCachedScript
+   else
+      return true
+   end if
+end rev_ActivateScriptEditorTab
+
+function rev_ApplicationFolder
+   -- was "rev_GetApplicationFolder"
+   put the filename of stack "Home" into homeStack
+   set the itemdelimiter to "/"
+   if the version < 2.7 then
+      -- return folder_AboveFile(homeStack)
+      delete item -1 of homeStack
+      return homeStack & "/"
+   else
+      delete item -2 to -1 of homeStack
+      return homeStack & "/"
+   end if
+end rev_ApplicationFolder
+
+function rev_ConstructHkeyTitle someText
+   put line 1 of someText into hkey
+   put line 2 of someText into extraText
+   hkey_Deconstruct hkey, hName, hType, hObject, hNum
+   put rev_GetIcon (hType) into someIcon
+   -- put "<p><sub><img src=" & someIcon & "></img></sub>  " & hName & "</p>" into someHtml -- LiveCode does not use xHtml
+   put "<p><sub><img src=" & kwote (someIcon) & "></sub>  " & hName & extraText & "</p>" into someHtml
+   -- put "<i>" & hName & "</i>" into someHtml
+   return someHtml
+end rev_ConstructHkeyTitle
+
+function rev_GetCachedScript pObject
+   -- ignoreCall: scriptGet,c
+   send "scriptGet pObject" to rev_ScriptEditorGroup()
+   return the result
+end rev_GetCachedScript
+
+function rev_GetIcon hType
+   -- ignoreCall: uIconMap,g
+   
+   local tTag
+   put "handler" into tTag
+   
+   if char 1 of hType = "p" then
+      put "Private" after tTag
+      delete char 1 of hType
+   end if
+   
+   switch hType
+      case "c"
+         put "Command" after tTag
+         break
+      case "m"
+         put "Message" after tTag
+         break
+      case "f"
+         put "Function" after tTag
+         break
+      case "g"
+         put "Getprop" after tTag
+         break
+      case "s"
+         put "Setprop" after tTag
+         break
+   end switch
+   put the uIconMap [tTag] of stack "revSETemplate" into someIcon
+   return someIcon
+end rev_GetIcon
+
+function rev_GetPluginFolder
+   if the version < 2.7 then
+      put rev_ApplicationFolder() into revpluginFolder
+      put "plugins/" after revpluginFolder
+   else
+      return revEnvironmentUserPluginsPath() & "/"
+   end if
+end rev_GetPluginFolder
+
+-- function rev_GetSelectedHandlerTreeLineNum pHkey
+put rev_HandlerTreeField() into handlerField
+
+if pHkey is not empty then
+   put the htmltext of rev_HandlerTreeField() into someHtml
+   put rev_ConstructHkeyTitle (pHkey) into htmlTitle
+   set the wholematches to true
+   put lineOffset (htmlTitle, someHtml) into lineNum
+else
+   put the hilitedLine of handlerField into lineNum
+end if
+return lineNum
+end rev_GetSelectedHandlerTreeLineNum
+
+function rev_HandlerTreeField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (field "handlers" of group "Left Bar" of cd "Main" of editorStack) is false then return empty
+   put the long id of field "handlers" of group "Left Bar" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_HandlerTreeField
+
+function rev_ListTabScriptObjects
+   send "revSEGetTargetObjects" to rev_ScriptEditorGroup()
+   put the result into ruggedIDs
+   return ruggedIDs
+end rev_ListTabScriptObjects
+
+function rev_OpenScriptEditorNames
+   put the openstacks into stackNames
+   -- filter stackNames with "revscripteditor *" -- old version ???
+   filter stackNames with "revNewScriptEditor *"
+   return stackNames
+end rev_OpenScriptEditorNames
+
+function rev_ScriptEditorGroup
+   return the long id of group "Editor" of card "Main" of stack "revNewScriptEditor 1"
+end rev_ScriptEditorGroup
+
+function rev_ScriptEditorIsOpen
+   return rev_OpenScriptEditorNames() is not empty
+end rev_ScriptEditorIsOpen
+
+function rev_ScriptEditorStack pEditorNum
+   switch
+      case pEditorNum is empty
+         return rev_TopScriptEditor()
+      case pEditorNum = 0
+         put the long id of stack "revSETemplate" of stack "revNewScriptEditor" into stackObject
+         return stackObject
+         return revRuggedID (stackObject)
+      case pEditorNum is a number
+         put "revNewScriptEditor" && pEditorNum into stackName
+         if exists (stack stackName) is false then return empty
+         return the name stack stackName
+   end switch
+end rev_ScriptEditorStack
+
+command rev_SetScriptEditorField pScript
+   -- ignoreCall: textSetScript,c
+   
+   put rev_ScriptEditorGroup() into revScriptEditorGroup
+   send "textSetScript pScript" to revScriptEditorGroup
+   put the result into someError
+   
+   #   pMode : the mode to set to, either "edit" or "debug"
+   #   Sets the mode of this script editor.
+   put "edit" into pMode
+   send "revSESetMode pMode" to revScriptEditorGroup
+   return the result
+end rev_SetScriptEditorField
+
+command rev_SetSelectedHandlerTreeLineNum treeLineNum
+   -- ignoreCall:  closeAccept,c
+   put rev_HandlerTreeField() into handlerTreeField
+   try
+      set the hilitedLine of handlerTreeField to treeLineNum
+      dispatch "closeAccept" to handlerTreeField
+   catch e
+      opn_Notify (the params & CR & handlerTreeField), true
+   end try
+   return empty
+end rev_SetSelectedHandlerTreeLineNum
+
+function rev_TopScriptEditor
+   put the stack_Name of the target into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else 
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      -- opn_Notify stackNames, true
+      if stackNames is empty then return empty
+      put line 1 of stackNames into stackName
+      if exists(stack stackName) is false then
+         put the stack_Name of the target into stackName
+      end if
+      return the long id of stack stackName
+   end if
+end rev_TopScriptEditor
+
+function rev_VersionIsLater someVersion
+   -- ie this RunRev engine version > someVersion?
+   -- 3.5.0-dp-2
+   put the version into thisVersion
+   
+   set the itemdelimiter to "-"
+   put item 1 of thisVersion into thisNumber
+   put item 1 of someVersion into someNumber
+   
+   set the itemdelimiter to "."
+   repeat with itemNum = 1 to 3
+      put item itemNum of thisNumber into testThis
+      if testThis is empty then put 0 into testThis
+      put item itemNum of someNumber into testSome
+      if testSome is empty then put 0 into testSome
+      
+      if testThis > testSome then
+         return true
+      end if
+   end repeat
+   return false
+end rev_VersionIsLater
+
+getprop rugged_ID
+   -- could also be called "rugged_Object"
+   put the long id of the target into pObject
+   put revRuggedId (pObject) into ruggedObject
+   return ruggedObject
+end rugged_ID
+
+command script_DeconstructMetaDataSuite metaDataSuite, @metadataBit, @commentBit, @handlerBit
+   put empty into metadataBit
+   put empty into commentBit
+   put empty into handlerBit
+   
+   -- lets trim of suite header
+   set the itemdelimiter to ":"
+   repeat while line 1 of metaDataSuite begins with "-"
+      delete line 1 of metaDataSuite
+   end repeat
+   
+   set the itemdelimiter to ":"
+   repeat with lineNum = 1 to the number of lines of metaDataSuite
+      put line lineNum of metaDataSuite into someLine
+      switch
+         case word 1 of scriptLine = "/*"
+            put true into commentBlock
+            put lineNum into startCommentLine
+            break
+         case commentBlock is true
+            -- keep looping till end of block
+            if word -1 of scriptLine = "*/" then
+               -- could put this commented out section in the index?
+               put lineNum into endCommentLine
+               put line (startCommentLine + 1) to (endCommentLine - 1) of metaDataSuite into commentBit
+               put false into commentBlock
+            end if
+            break
+         case token 1 of scriptLine is among the items of "on,command,function,getprop,setprop,private,local,constant,global"
+            put word 1 to -1 of line lineNum to -1 of metaDataSuite into handlerBit
+            break
+         case the number of items of someLine = 2
+            put someLine & CR after metadataBit
+      end switch
+   end repeat
+   delete char -1 of metadataBit
+end script_DeconstructMetaDataSuite
+
+command script_ExportHandlersAndCalls mergeScript, objectFolder
+   -- here we export a script as a folder of handlers and calls
+   -- could speed up by not having to call revAivailablehandlers on object here and also fully index object script manually
+   put object_FromScriptFolder (objectFolder) into someObject
+   if exists (someObject) is false then
+      -- error checking (should not be)
+      breakpoint
+      put object_FromScriptFolder (objectFolder) into someObject
+      return empty
+   end if
+   
+   put the revAvailableHandlers of someObject into handlerTable
+   if handlerTable is empty then
+      return empty -- everything is deleted before re-exporting
+   end if
+   
+   sort numeric descending handlerTable by word 3 of each
+   repeat for each line handlerTableLine in handlerTable
+      set the cursor to busy
+      put word 1 of handlerTableLine into hType
+      put word 2 of handlerTableLine into hName
+      if hName = "_" then next repeat -- could check handler is empty ?
+      put word 3 of handlerTableLine into startLineNum
+      put word 4 of handlerTableLine into endLineNum
+      
+      put line startLineNum to endLineNum of mergeScript into someHandler
+      hkey_NormalizeType hType
+      put hName,hType into shortHkey
+      
+      -- project_StoreHandler hKey, someHandler
+      put objectFolder_HandlerFolder (shortHkey, objectFolder, false) & "script.txt" into someFile
+      put someHandler into url ( "binfile:" & someFile)
+      
+      put "[[ _FetchHandler (" & hName, hType & ") ]]" into line startLineNum to endLineNum of mergeScript
+      -- put "[[ _FetchHandler (" & kwote(hName) & "," && kwote(hType) & ") ]]" into line startLineNum to endLineNum of mergeScript
+   end repeat
+   
+   put objectFolder_ScriptFile (objectFolder, false) into someFile
+   put mergeScript into url ( "binfile:" & someFile)
+   return mergeScript
+end script_ExportHandlersAndCalls
+
+function script_ExtractCaseConditions someHandler, pSwitchParams
+   -- should be renamed "handler_ExtractCaseConditions"
+   put script_ExtractSwitchSection (someHandler, pSwitchParams) into caseSection
+   if caseSection is empty then return empty
+   
+   filter caseSection with ("*case *")
+   -- filter caseSection with ("*case" && quote & "*")
+   put empty into caseConditions
+   repeat for each line caseLine in caseSection
+      if word 1 of caseLine is not among the items of "case,default" then next repeat
+      get text_ExtractQuoted(caseLine)
+      if it is not empty then put it & CR after caseConditions
+   end repeat
+   replace comma with CR in caseConditions
+   
+   /*
+   -- optional second filter
+   filter someHandler with ("*default *--")
+   put text_ExtractQuoted(line -1 of someHandler) into defaultText
+   if defaultText is not empty then put defaultText & CR after caseConditions
+   */
+   
+   put word 1 to -1 of caseConditions into caseConditions
+   return caseConditions
+end script_ExtractCaseConditions
+
+function script_ExtractMenuSuiteTitles someScript
+   put script_GetSuiteTitles (someScript) into suiteTitles
+   put script_MenuTitleArrayFromSuiteTitles (suiteTitles) into menuTitleArray
+   return menuTitleArray ["OrderedMenuTitles"]
+end script_ExtractMenuSuiteTitles
+
+function script_ExtractSwitchSection someHandler, pSwitchOptions
+   local startChar, endChar
+   text_SetOffsets "  switch", "  end switch", someHandler, startChar, endChar, 0
+   put the result into switchSection
+   
+   if pSwitchOptions is empty then return switchSection
+   put word 2 of line 1 of switchSection into switchParam
+   if switchParam is empty then return switchSection
+   
+   if switchParam is among the items of pSwitchOptions then
+      return switchSection
+   else
+      return empty
+   end if
+end script_ExtractSwitchSection
+
+function script_GetCommand cName, someScript, pNotPrivate
+   local startHandler, endHandler
+   if pNotPrivate is not true then
+      script_SetPrivateHandlerOffsets startHandler, endHandler, cName, "on", someScript
+      put the result into someHandler
+      if someHandler is not empty then return someHandler
+   end if
+   
+   script_SetHandlerOffsets startHandler, endHandler, cName, "on", someScript
+   put the result into someHandler
+   return someHandler
+end script_GetCommand
+
+function script_GetGetProp propName, someScript, pNotPrivate
+   local startHandler, endHandler
+   if pNotPrivate is not true then
+      script_SetPrivateHandlerOffsets startHandler, endHandler, propName, "getprop", someScript
+      put the result into someHandler
+      if someHandler is not empty then return someHandler
+   end if
+   
+   script_SetHandlerOffsets startHandler, endHandler, propName, "getprop", someScript
+   put the result into someHandler
+   return someHandler
+end script_GetGetProp
+
+function script_GetMetadataArray someScript
+   local metadataArray
+   put script_GetSuite("MetaData", someScript) into metaDataSuite
+   if metaDataSuite is empty then return empty
+   
+   script_DeconstructMetaDataSuite metaDataSuite, metadataBit, commentBit, handlerBit
+   put commentBit into metadataArray ["script_Help"]
+   
+   -- loop through metadata part of suite
+   set the itemdelimiter to ":"
+   repeat for each line someLine in metadataBit
+      put item 1 of someLine into someKey
+      put item 2 to -1 of someLine into someValue
+      if someValue is empty then next repeat
+      
+      put word 1 to -1 of someKey into someKey
+      put word 1 to -1 of someValue into someValue
+      -- replace quote with empty in someKey
+      -- replace quote with empty in someValue
+      
+      put someValue into metadataArray [someKey]
+   end repeat
+   return metadataArray
+end script_GetMetadataArray
+
+-- function script_GetSuite suiteTitle, someScript
+   script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
+   if the result is true then
+      put line startLineNum to endLineNum of someScript into suiteScript
+      return word 1 to -1 of suiteScript
+   else
+      return empty
+   end if
+end script_GetSuite
+
+-- function script_GetSuiteTitles someScript
+   filter someScript with "-->*"
+   replace "--> " with empty in someScript
+   replace "-->" with empty in someScript
+   return word 1 to -1 of someScript
+end script_GetSuiteTitles
+
+getprop script_Handler [shortHKey]
+   if shortHKey is empty then return empty
+   put the long id of the target into tObject
+   put hkey_ExtractHandlerFromObject (hKey) into foundHandler
+   return foundHandler
+end script_Handler
+
+function hkey_ExtractHandlerFromObject hKey
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum 
+   
+   try
+      put the revAvailableHandlers of hObject into handlerTable
+      script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+      if startLineNum = 0 then
+         -- look for private handler?
+         put "P" before item 2 of hKey
+         script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+         if startLineNum = 0 then
+            return empty
+         end if
+      end if
+      put the script of hObject into someScript
+      put line startLineNum to endLineNum of someScript into foundHandler
+      return foundHandler
+   catch someError
+      opn_Notify merge ("Could not get handler [[hKey]]. Probably a locked stack?")
+      return empty
+   end try
+end hkey_ExtractHandlerFromObject
+
+command script_HandlerFromTableOffsets shortHkey, handlerTable, @startLineNum, @endLineNum
+   if handlerTable is empty then
+      put 0 into startLineNum
+      put 0 into endLineNum
+      return false
+   end if
+   
+   put item 1 of shortHkey into hName
+   put item 2 of shortHkey into hType
+   switch char -1 of hType
+      case "c"
+         put "M" into char -1 of hType
+         break
+      case "o"
+         put "M" into char -1 of hType
+         break
+   end switch
+   
+   repeat for each line someLine in handlerTable      
+      put word 2 of someLine into hTableName
+      if hTableName is not hName then next repeat
+      
+      put word 1 of someLine into hTableType
+      switch
+         case hTableType = hType
+            put word 3 of someLine into startLineNum
+            put word 4 of someLine into endLineNum
+            return true
+      end switch
+      
+      add 1 to handlerLineNum
+   end repeat
+   put 0 into startLineNum
+   put 0 into endLineNum
+   return false
+end script_HandlerFromTableOffsets
+
+function script_MatchEnd handlerName, startHandler, someScript
+   put CR after someScript -- in case handler is at end
+   put "(?mi)^\s*(" & "end" & " +" & handlerName & ")\W" into regExp
+   
+   -- this will fail if the end has a space before it (can happen)
+   -- put "(?mi)^(" & "end" & " +" & handlerName & ")\W" into regExp
+   
+   delete char 1 to startHandler of someScript
+   if matchchunk(someScript, regExp, startEndHandlerLine, endH) is true then
+      put startHandler + endH - 0 into endHandler
+      return endHandler
+   else
+      return empty
+   end if
+end script_MatchEnd
+
+function script_MenuTitleArrayFromSuiteTitles suiteTitles
+   local menuTitleArray
+   set the itemdelimiter to "|"
+   put "Menu \((.*)\)" into regularExpression
+   put empty into menuTitles
+   repeat for each line suiteTitle in suiteTitles
+      put word 1 to -1 of last item of suiteTitle into lastMenuItem
+      if lastMenuItem is "Menu" then
+         put suiteTitle & CR after menuTitles
+         put "" into menuTitleArray [suiteTitle]
+      else if matchtext(lastMenuItem, regularExpression, toolMode) is true then
+         put suiteTitle & CR after menuTitles
+         put toolMode into menuTitleArray [suiteTitle]
+      end if
+   end repeat
+   delete last char of menuTitles
+   put menuTitles into menuTitleArray ["OrderedMenuTitles"]
+   return menuTitleArray
+end script_MenuTitleArrayFromSuiteTitles
+
+function script_MenuToolModeArray someScript
+   local menuToolModeArray
+   put script_GetSuiteTitles(someScript) into suiteTitles
+   
+   set the itemdelimiter to "|"
+   put "Menu \((.*)\)" into regularExpression
+   put empty into menuTitles
+   set the wholematches to true
+   repeat for each line suiteTitle in suiteTitles
+      put word 1 to -1 of last item of suiteTitle into lastMenuItem
+      if lastMenuItem is among the items of "Menu|Menus|Submenu|Submenus" then
+         put suiteTitle & CR after menuTitles
+         put empty into menuToolModeArray [suiteTitle]
+      else if matchtext(lastMenuItem, regularExpression, toolMode) is true then
+         put suiteTitle & CR after menuTitles
+         put toolMode into menuToolModeArray [suiteTitle]
+      end if
+   end repeat
+   delete last char of menuTitles
+   put menuTitles into menuToolModeArray ["OrderedMenuTitles"]
+   return menuToolModeArray
+end script_MenuToolModeArray
+
+function script_OrderedMenuTitles someScript
+   put script_MenuToolModeArray(someScript) into menuToolModeArray
+   put menuToolModeArray ["OrderedMenuTitles"] into menuTitles
+   return menuTitles
+end script_OrderedMenuTitles
+
+function script_ParamToHandlerName customParam
+   put word 1 of customParam into customParam
+   put tolower(char 1 of customParam) into char 1 of customParam
+   
+   repeat with charNum = 1 to the number of chars of customParam
+      if text_StartsWithCaps(char charNum of customParam) is true then
+         put "_" before char charNum of customParam
+         return customParam
+      end if
+   end repeat
+   return customParam
+end script_ParamToHandlerName
+
+command script_SetHandlerOffsets @startHandler, @endHandler, handlerName, onWord, someScript
+   local startH, endHandlerName, startEndHandlerLine, endH
+   
+   -- this will fail if the end has a space before it (can happen)
+   -- put "(?mi)^(" & onWord & " +" & handlerName & ")\W" after regExp
+   
+   -- lets not distinguish between "command" and "on" as they are functinally equivalent
+   if onword is among the items of "command,on" then put "(command|on)" into onWord
+   
+   put word 1 of handlerName into handlerName
+   text_EscapeRegularExpression handlerName
+   put "(?mi)^\s*(" & onWord & " +" & handlerName & ")\W" after regExp
+   
+   put CR & someScript & CR into someScript
+   if matchchunk (someScript, regExp, startHandler, endHandlerName, startEnd, endEnd) is true then
+      put script_MatchEnd (handlerName, startHandler, someScript) into endHandler
+      if endHandler is empty then
+         put 0 into startHandler
+         put 0 into endHandler
+         return empty
+      else
+         -- because of CR insertion around someScript
+         put char startHandler to endHandler of someScript into someHandler
+         subtract 1 from startHandler
+         subtract 1 from endHandler
+         return someHandler
+      end if
+   else
+      put 0 into startHandler
+      put 0 into endHandler
+      return empty
+   end if
+end script_SetHandlerOffsets
+
+command script_SetPrivateHandlerOffsets @startHandler, @endHandler, handlerName, onWord, someScript
+   local startH, endHandlerName, startEndHandlerLine, endH
+   
+   put word 1 of handlerName into handlerName
+   text_EscapeRegularExpression handlerName  
+   
+   if onword is among the items of "command,on" then put "(command|on)" into onWord
+   put "(?mi)^(private +" & onWord & " +" & handlerName & ")\W" into regExp
+   
+   put CR & someScript & CR into someScript
+   if matchchunk (someScript, regExp, startHandler, endHandlerName, startEnd, endEnd) is true then
+      put script_MatchEnd (handlerName, startHandler, someScript) into endHandler
+      if endHandler is empty then
+         put 0 into startHandler
+         put 0 into endHandler
+         return empty
+      else
+         -- because of CR insertion around someScript
+         put char startHandler to endHandler of someScript into someHandler
+         subtract 1 from startHandler
+         subtract 1 from endHandler
+         return someHandler
+      end if
+   else
+      put 0 into startHandler
+      put 0 into endHandler
+      return empty
+   end if
+end script_SetPrivateHandlerOffsets
+
+-- command script_SetSuiteOffsets suiteTitle, someScript, @startLineNum, @endLineNum
+   set wholematches to true
+   put 0 into startLineNum
+   put 0 into endLineNum
+   put lineoffset("-->" &&  suiteTitle, someScript) into startLineNum
+   if startLineNum is zero then
+      put lineoffset("-->" &  suiteTitle, someScript) into startLineNum
+   end if
+   if startLineNum is zero then return false
+   
+   put someScript into suiteTitleLines
+   filter suiteTitleLines with "-->*"
+   put lineoffset("-->" &&  suiteTitle, suiteTitleLines) into titleLineNum
+   put line titleLineNum + 1 of suiteTitleLines into nextTitleLine
+   if nextTitleLine is empty then
+      put the number of lines in someScript into endLineNum
+   else
+      put lineoffset(nextTitleLine, someScript, startLineNum) into afterStartlineNum
+      
+      if afterStartlineNum is zero then
+         put the number of lines in someScript into endLineNum
+      else
+         put startLineNum + afterStartlineNum - 1 into endLineNum
+      end if
+   end if
+   return true
+end script_SetSuiteOffsets
+
+function sha1_Hash someData
+   local hexDigest
+   put sha1digest (someData) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end sha1_Hash
+
+command stack_CreateSubStack someObject, subStackStem
+   put the main_Stack of someObject into mainStackObject
+   put the short name of mainStackObject into mainStackName
+   
+   put the stack_SubName [subStackStem] of mainStackObject into subStackName
+   -- could do extensive checking for a unique name
+   put exists (stack subStackName) is true into stackExists
+   put exists (stack subStackName of stack mainStackName) is true into subStackExists
+   
+   switch
+      case (stackExists is false) and (subStackExists is false)
+         create invisible stack subStackName
+         set the mainstack of stack subStackName to stackObject
+         break
+      case subStackExists is true
+         -- already created -- skip to copy over view_Template
+         return the long id of stack subStackName of stack mainStackName
+      case stackExists is true
+         -- there is a mainstack of this name
+         return the long id of stack subStackName
+      default
+         answer warning merge ("A stack named '[[subStackName]]' already exists! Be careful (check manually)!")
+         exit to top
+   end switch
+end stack_CreateSubStack
+
+getprop stack_Name
+   return the short name of the defaultstack
+end stack_Name
+
+getprop stack_Object
+   return the defaultstack
+end stack_Object
+
+getprop stack_Name
+   return the short name of the defaultstack
+   
+   -- old version
+   put the long id of the target into targetObject
+   put object_ExtractStack (targetObject) into stackObject
+   return the short name of stackObject
+end stack_Name
+
+getprop stack_Object
+   return the defaultstack
+   
+   -- old version
+   put the long id of the target into targetObject
+   return object_ExtractStack(targetObject)
+end stack_Object
+
+-- getprop stack_Object
+put the long ID of the target into targetObject
+get object_ExtractStack (targetObject)
+return it
+end stack_Object
+
+getprop stack_SubName [subStackStem]
+   if subStackStem is empty then put "OPN SubStack" into subStackStem
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   put mainStackName & "|" & subStackStem into subStackName
+   return subStackName
+end stack_SubName
+
+getprop stackDataObjects_Folder [pDontCreate]
+   put the long ID of the target into someObject
+   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
+   put folder_AddStackBit ("data", textStackFolder, someObject) into stackFolder
+   if pDontCreate is false then folder_CreateNested stackFolder
+   return stackFolder
+end stackDataObjects_Folder
+
+command text_EscapeRegularExpression @someString
+   put "\" & tab & quote & "[]|*.?()" into specialChars
+   repeat for each char specialChar in specialChars
+      replace specialChar with "\" & specialChar in someString
+   end repeat
+end text_EscapeRegularExpression
+
+function text_ExtractQuoted someText
+   local quotedLines
+   put 0 into startAfterCharNum
+   repeat
+      text_SetOffsets quote, quote, someText, startChar, endChar, startAfterCharNum
+      if startChar = 0 or endChar = 0 then return quotedLines
+      put char (startChar + 1) to (endChar - 1) of someText into quotedText
+      line_Insert quotedText, quotedLines
+      put endChar into startAfterCharNum
+   end repeat
+end text_ExtractQuoted
+
+function text_InitialCaps someText
+   repeat with wordNum = 1 to the number of words of someText
+      put tolower(word wordNum of someText) into someWord
+      put toupper(char 1 of someWord ) into char 1 of someWord
+      put someWord into word wordNum of someText
+   end repeat
+   return someText
+end text_InitialCaps
+
+function text_OffsetAfter string, someText, startChar
+   -- version 9.0
+   if startChar < 0 then put 0 into startChar
+   delete char 1 to startChar of someText
+   get offset(string, someText)
+   if it is 0 then return 0
+   else return it + startChar
+end text_OffsetAfter
+
+function text_OffsetBefore someString, someText, beforeHere
+   if beforeHere is not empty then
+      delete char beforeHere to -1 of someText
+   end if
+   put 0 into skipNum
+   repeat
+      get offset (someString, someText, skipNum)
+      if it is 0 then
+         return skipNum
+      else
+         add it to skipNum
+      end if
+   end repeat
+end text_OffsetBefore
+
+function text_RepeatString someString, repeatNum
+   -- was "opn_GetRepeatString"
+   
+   put empty into repeatString
+   if repeatNum < 0 then
+      answer "Repeating forever! text_RepeatString repeatNum =" && repeatNum
+      edit the script of me
+      exit to top
+   end if
+   repeat repeatNum
+      put someString after repeatString
+   end repeat
+   return repeatString
+end text_RepeatString
+
+command text_SetOffsets startText, endText, someText, @startChar, @endChar, startAfterCharNum
+   -- version whereIsText 8.9,30/4/02
+   
+   delete char 1 to startAfterCharNum of someText
+   put offset(startText, someText) into startChar
+   if startChar is 0 then
+      put 0 into startChar
+      put 0 into endChar
+      return empty
+   end if
+   put the length of startText - 1 into startBit
+   if endText = empty then
+      put startChar + startBit into endChar
+   else
+      put text_OffsetAfter(endText, someText, startChar + startBit) into endChar
+      if endChar is 0 then
+         put 0 into startChar
+         put 0 into endChar
+         return empty
+      end if
+      add the length of endText - 1 to endChar
+   end if
+   
+   add startAfterCharNum to startChar
+   add startAfterCharNum to endChar
+   return char startChar to endChar of someText
+end text_SetOffsets
+
+function text_SplitCaps someWord
+   -- was "capsSplit"
+   put 1 into charNum
+   repeat the number of chars of someWord
+      put char charNum of someWord into someChar
+      if text_StartsWithCaps(someChar) is true then
+         put space before char charNum of someWord
+         add 2 to charNum
+      else
+         add 1 to charNum
+      end if
+   end repeat
+   put text_InitialCaps(word 1 of someWord) into word 1 of someWord
+   return word 1 to -1 of someWord
+end text_SplitCaps
+
+function text_SplitIntoWords someWord
+   local uniqueIndex
+   
+   put word 1 to - 1 of someWord into wordIndex
+   put 1 into charNum
+   put 0 into previousInsert
+   repeat the number of chars of wordIndex
+      put char charNum of wordIndex into someChar
+      if someChar is empty then exit repeat
+      if someChar is among the chars of (space & tab) then exit repeat
+      if someChar is among the chars of "_-,.:;/\|" then
+         if charNum = 1 then
+            delete char 1 of wordIndex
+            next repeat
+         else
+            put CR into char charNum of wordIndex
+            put charNum + 1 into previousInsert
+            add 1 to charNum
+            next repeat
+         end if
+      end if
+      
+      if text_StartsWithCaps(someChar) is true then        
+         get char previousInsert to charNum of wordIndex
+         if the number of chars of it > 2 then
+            put CR before char charNum of wordIndex
+            put charNum + 1 into previousInsert
+            add 2 to charNum
+         else
+            add 1 to charNum
+         end if
+         
+         -- but lets string together capital sequences like
+         repeat
+            put char charNum + 1 of wordIndex into nextChar
+            if nextChar is among the chars of "_-,.:;/\|" then
+               put CR into char charNum + 1 of wordIndex
+               put charNum + 2 into previousInsert
+               add 2 to charNum
+               exit repeat
+            else if nextChar is empty then
+               -- it is the last char
+               return word 1 to - 1 of wordIndex
+               exit repeat
+            else
+               if text_StartsWithCaps(nextChar) is true then
+                  add 1 to charNum
+               else
+                  exit repeat
+               end if
+            end if
+         end repeat
+      else
+         add 1 to charNum
+      end if
+   end repeat
+   
+   put word 1 to - 1 of wordIndex into wordIndex
+   repeat for each line testLine in wordIndex
+      if testLine is empty then next repeat
+      if testLine is among the lines of uniqueIndex then next repeat
+      put testLine & CR after uniqueIndex
+   end repeat
+   delete char -1 of uniqueIndex
+   
+   -- opn_Notify (someWord & CR & CR & uniqueIndex)
+   return uniqueIndex
+end text_SplitIntoWords
+
+function text_StartsWithCaps someText
+   -- was "startsWithCaps"
+   put char 1 of sometext into testChar
+   put chartonum(testChar) into someCharNum
+   if someCharNum >= 97 and someCharNum <= 122 then
+      return false
+   else
+      return true
+   end if
+end text_StartsWithCaps
+
+function text_StripQuoted someText
+   put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
+   put replaceText (someText, someReg, "•••") into strippedText
+   return strippedText
+end text_StripQuoted
+
+function text_TokenOffset someString, someContainer
+   repeat with tokenNum = 1 to the number of tokens in someContainer
+      put token tokenNum of someContainer into someToken
+      if someToken = someString then
+         return tokenNum
+      end if
+   end repeat
+   return 0
+end text_TokenOffset
+
+function textStack_FindRoot objectFile, repoType
+   -- put checkout_FindRoot (objectFile, repoType) into checkOutFolder
+   checkout_SetFolderAndRepotype objectFile, repoType
+   put the result into checkOutFolder
+   
+   switch
+      case checkoutFolder is empty
+         -- not in a repo
+         put checkout_ConstructDefaultFolder (objectFile) into textStackFolder
+         return textStackFolder
+      case checkoutFolder = rev_GetPluginFolder()
+         -- this legacy mammoth project is also in "git"
+         put checkoutFolder & "opn_Plugins/opn_Text/rev/object/" into textStackFolder
+         return textStackFolder
+      case (checkoutFolder is not empty and repoType = "fossil")
+         -- attempt at catering for legacy fossil projects
+         put checkoutFolder & "opn_TextStacks/" into textStackFolder
+         return textStackFolder
+      case checkoutFolder is not empty and repoType = "git"
+         -- it's a new git project
+         -- let's use the new folder name
+         put checkoutFolder & "liveworld/" into textStackFolder
+         return textStackFolder
+      case checkoutFolder is not empty
+         -- as strange type of repo :)
+         put checkoutFolder & "liveworld/" into textStackFolder
+         return textStackFolder
+   end switch
+end textStack_FindRoot
+
+function view_ConstructHierarchy targetObject
+   -- ignoreCall: view_Object,g
+   local groupHierarchy
+   repeat
+      if word 1 of targetObject is "card" then
+         -- background groups can cause infinite loops
+         -- so have to stop hierarchy check at the card level
+         -- which means this will not work for views etc which are at the card level or above!
+         return word 1 to -1 of groupHierarchy
+      else
+         put the view_Object of targetObject into someView
+         if someView is empty then return word 1 to -1 of groupHierarchy
+         
+         put someView & CR before groupHierarchy
+         
+         put someView into targetObject
+         delete word 1 to 4 of targetObject
+         if targetObject is empty then return word 1 to -1 of groupHierarchy
+      end if
+   end repeat
+   return groupHierarchy
+end view_ConstructHierarchy
+
+-- function view_GetTemplateObject vName
+   view_NormalizeName vName
+   -- slow due to loops through every template in the array
+   -- consider creating a reverse array cache
+   return hArray_GetViewTemplate (vName)
+end view_GetTemplateObject
+
+getprop view_Hierarchy
+   put the long id of the target into targetObject
+   put view_ConstructHierarchy (targetObject) into viewObjects
+   return viewObjects
+end view_Hierarchy
+
+getprop view_IsTemplate [vName]
+   put the long id of the target into targetObject
+   if vName is empty then
+      put the view_Template of targetObject into templateObject
+   else
+      put view_GetTemplateObject (vName) templateObject
+   end if
+   return templateObject = targetObject
+end view_IsTemplate
+
+getprop view_Name
+   -- a value of the target (property is not inherited by objects below)  
+   put the uRIP ["name"] of the target into vName
+   if the dgProps ["style"] of the target is among the items of "table,form" then
+      -- it is a datagrid
+      if vName is empty then
+         -- in case it is not named (ie a vanilla Rev control)
+         return "View|Rev|Datagrid"
+      else
+         return vName
+      end if
+   else if the uRIP ["type"] of the target is not "view" then
+      -- it is not only views that have uRip names
+      return empty
+   else
+      return vName
+   end if
+end view_Name
+
+command view_NormalizeName @viewPath
+   if viewPath is empty then return empty
+   put word 1 to -1 of viewPath into viewPath
+   
+   set the itemdelimiter to "|"
+   repeat with itemNum = 1 to the number of items of viewPath
+      put word 1 to -1 of item itemNum of viewPath into someItem
+      put someItem into item itemNum of viewPath
+   end repeat
+   if item 1 of viewPath is not "View" then put "View|" before viewPath
+   return viewPath
+end view_NormalizeName
+
+-- getprop view_Template
+-- in lib_ViewTemplate
+put the view_Name of the target into vName
+put view_GetTemplateObject (vName) into templateObject
+return templateObject
+end view_Template

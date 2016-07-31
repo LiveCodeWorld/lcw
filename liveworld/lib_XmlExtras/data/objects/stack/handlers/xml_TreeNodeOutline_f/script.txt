@@ -1,0 +1,4 @@
+function xml_TreeNodeOutline treeID, startNode, includeChildCount
+    if startNode is empty then put revXMLRootNode(treeID) into startNode
+    return revXMLTree(treeID, startNode, CR, tab, includeChildCount, -1)
+end xml_TreeNodeOutline

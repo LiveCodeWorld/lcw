@@ -1,0 +1,10 @@
+function number_NormalizeRange someValue, maxValue, minValue
+   -- was "number_Normalise"
+    if someValue < minValue then
+        return minValue
+    else if someValue > maxValue then
+        return maxValue
+    else
+        return someValue
+    end if
+end number_NormalizeRange

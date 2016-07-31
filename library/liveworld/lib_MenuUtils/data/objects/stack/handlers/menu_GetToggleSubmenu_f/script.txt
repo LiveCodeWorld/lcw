@@ -1,0 +1,14 @@
+function menu_GetToggleSubmenu subMenuProperty, menuCommandName, menuController
+    put the script_Command [menuCommandName] of menuController into someHandler
+    put script_ExtractCaseConditions(someHandler) into someMenu
+    line_Delete "default", someMenu
+    
+    put the subMenuProperty of menuController into popertyValue
+    if popertyValue is empty then
+        return someMenu
+    else
+        menu_SetCheckedItem popertyValue, someMenu, true
+        return someMenu
+        -- return menu_SetCheckedItem(popertyValue, someMenu, true)
+    end if
+end menu_GetToggleSubmenu

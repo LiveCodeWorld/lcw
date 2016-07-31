@@ -1,0 +1,4 @@
+command hkey_DeleteFolder hKey
+   put hkey_Folder (hKey) into hkeyFolder
+   revDeleteFolder hkeyFolder
+end hkey_DeleteFolder

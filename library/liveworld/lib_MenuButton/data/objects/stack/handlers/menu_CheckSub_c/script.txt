@@ -1,0 +1,25 @@
+command menu_CheckSub @subMenu, paramProp, mController, mTarget, mItemType
+   -- ignoreCall: paramProperty,g
+   
+   if paramProp is empty then return empty
+   -- passing parameter can cause a custom property to fail to return when no getprop is there.
+   put paramProp & "[" & mTarget & "]" into paramProperty
+   try
+      put the paramProperty of mController into checkedItems
+      if checkedItems is empty and mItemType is among the items of "custom,fixed" then
+         -- a hack ???
+         -- put the paramProp of mController into checkedItems
+      end if
+      
+      replace comma with CR in checkedItems
+      repeat for each line checkedItem in checkedItems
+         menu_SetCheckedItem checkedItem, subMenu, true
+      end repeat
+   catch tError
+      if exists (mController) then put the mobile_Name of mController into mController
+      put paramProperty & CR & mController into errorInfo
+      -- display_Lines errorInfo, "menu_CheckSub - the paramProperty of"
+      -- breakPoint
+      if exists (mController) then edit the script of mController
+   end try
+end menu_CheckSub

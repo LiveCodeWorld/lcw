@@ -1,0 +1,434 @@
+--> MetaData
+-
+author: David Bovill
+copyright: David Bovill
+name: Menu Tools Library Deps
+type: deps
+
+/*
+This should be replaced by the newer "lib_Common"
+*/
+
+
+--> Deps | actionCompile,c
+-
+[[ _FetchHandler (object_UripArray,s) ]]
+
+[[ _FetchHandler (rev_MarkStackEdited,c) ]]
+
+[[ _FetchHandler (rev_ScriptEditorField,f) ]]
+
+[[ _FetchHandler (rev_ScriptObject,f) ]]
+
+
+--> Deps | From mainstacks
+-
+[[ _FetchHandler (target_IsView,f) ]]
+
+[[ _FetchHandler (target_IsReference,f) ]]
+
+[[ _FetchHandler (menu_TidyText,c) ]]
+
+[[ _FetchHandler (menu_TitleFromViewName,f) ]]
+
+[[ _FetchHandler (menu_TitlePathFromPath,f) ]]
+
+[[ _FetchHandler (object_IsMenuButton,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (addThenReturn,f) ]]
+
+[[ _FetchHandler (addToMenuActiveArray,c) ]]
+
+[[ _FetchHandler (error_mTopController,f) ]]
+
+
+--> Deps | Private
+-
+[[ _FetchHandler (_GetDefaultMenuTarget,f) ]]
+
+
+--> Utilities | rev_ScriptObject
+-
+/*
+These handlers are useful to hack menus into the rev IDE's script editor.
+They allow the menu_Target to refer to the owner of the script displayed in the script editor,
+rather than the field the script is displayed in in the Script Editor.
+*/
+
+function rev_ScriptObject
+   -- ignoreCall: revSEGetCurrentObject,c
+   put rev_TopScriptEditor() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
+end rev_ScriptObject
+
+[[ _FetchHandler (rev_TopScriptEditor,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (array_Fetch,f) ]]
+
+[[ _FetchHandler (checkout_ConstructDefaultFolder,f) ]]
+
+-- function checkout_ConstructDefaultFolder objectFile
+put objectFile into checkoutFolder
+set the itemdelimiter to "/"
+put "opn_TextStacks/" into item -1 of checkoutFolder
+return checkoutFolder
+end checkout_ConstructDefaultFolder
+
+-- function checkout_FindRoot objectFile, repoType
+checkout_SetFolderAndRepotype objectFile, repoType
+put the result into checkoutFolder
+return checkoutFolder
+end checkout_FindRoot
+
+[[ _FetchHandler (checkout_FindRoot,f) ]]
+
+[[ _FetchHandler (checkout_SetFolderAndRepotype,c) ]]
+
+[[ _FetchHandler (custom_DeleteProperty,c) ]]
+
+[[ _FetchHandler (custom_DeleteSet,c) ]]
+
+[[ _FetchHandler (extractInsertedTitle,c) ]]
+
+[[ _FetchHandler (menu_CommandToText,f) ]]
+
+[[ _FetchHandler (file_SetHomeRelative,c) ]]
+
+[[ _FetchHandler (folder_AddObjectBit,c) ]]
+
+[[ _FetchHandler (folder_AddStackBit,f) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+[[ _FetchHandler (folder_Format,c) ]]
+
+[[ _FetchHandler (handler_AddToCallArray,c) ]]
+
+[[ _FetchHandler (handler_ConstructCallArray,f) ]]
+
+[[ _FetchHandler (hArray_AddHandlerHash,c) ]]
+
+[[ _FetchHandler (hArray_GetHandlerHash,f) ]]
+
+[[ _FetchHandler (hArray_GetHkeyDataArray,f) ]]
+
+[[ _FetchHandler (hArray_GetNamedObjectType,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectData,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeArray,f) ]]
+
+[[ _FetchHandler (hArray_GetObjectTypeData,f) ]]
+
+[[ _FetchHandler (hArray_GetUripArray,f) ]]
+
+[[ _FetchHandler (hArray_GetViewTemplate,f) ]]
+
+[[ _FetchHandler (hArray_RemoveObject,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromHandlerArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveObjectFromTypeArray,c) ]]
+
+[[ _FetchHandler (hArray_RemoveSameNameTypeObjects,c) ]]
+
+[[ _FetchHandler (hkey_AddToKeyWordArray,c) ]]
+
+[[ _FetchHandler (hkey_Construct,f) ]]
+
+[[ _FetchHandler (hkey_Deconstruct,c) ]]
+
+[[ _FetchHandler (hkey_ConstructKeywords,f) ]]
+
+[[ _FetchHandler (hkey_EditFoundHandler,c) ]]
+
+[[ _FetchHandler (script_HandlerTableOffsets,c) ]]
+
+[[ _FetchHandler (hkey_NormalizeType,c) ]]
+
+[[ _FetchHandler (kwote,f) ]]
+
+[[ _FetchHandler (library_ArrayFile,f) ]]
+
+[[ _FetchHandler (library_ArrayFolder,f) ]]
+
+[[ _FetchHandler (library_FetchArray,f) ]]
+
+[[ _FetchHandler (library_FetchForgetArray,f) ]]
+
+[[ _FetchHandler (library_FetchHandlerDatabaseArray,f) ]]
+
+[[ _FetchHandler (library_GetHandlerDatabaseMetadata,f) ]]
+
+[[ _FetchHandler (library_ListForgetHkeys,f) ]]
+
+[[ _FetchHandler (library_PluginFolder,f) ]]
+
+[[ _FetchHandler (library_ScriptTemplateFolder,f) ]]
+
+[[ _FetchHandler (line_Add,c) ]]
+
+[[ _FetchHandler (line_Delete,c) ]]
+
+[[ _FetchHandler (line_Insert,c) ]]
+
+[[ _FetchHandler (main_Stack,g) ]]
+
+[[ _FetchHandler (mainstack_File,g) ]]
+
+[[ _FetchHandler (mobile_Name,g) ]]
+
+[[ _FetchHandler (object_AddToGlobalArray,c) ]]
+
+[[ _FetchHandler (object_AddToArray,c) ]]
+
+[[ _FetchHandler (object_ExportScript,c) ]]
+
+[[ _FetchHandler (object_ExtractStack,f) ]]
+
+[[ _FetchHandler (object_Folder,g) ]]
+
+[[ _FetchHandler (object_FromScriptFolder,f) ]]
+
+[[ _FetchHandler (object_MetaData,g) ]]
+
+[[ _FetchHandler (object_SetShortStackName,c) ]]
+
+[[ _FetchHandler (object_StackNameOffsets,c) ]]
+
+[[ _FetchHandler (objectFolder_HandlerFolder,f) ]]
+
+[[ _FetchHandler (objectFolder_ScriptFile,f) ]]
+
+[[ _FetchHandler (outline_DecreaseIndent,f) ]]
+
+[[ _FetchHandler (outline_IncreaseIndent,f) ]]
+
+[[ _FetchHandler (param_IsBoolean,f) ]]
+
+[[ _FetchHandler (param_IsObject,f) ]]
+
+[[ _FetchHandler (rev_ActivateScriptEditorTab,c) ]]
+
+[[ _FetchHandler (rev_ApplicationFolder,f) ]]
+
+[[ _FetchHandler (rev_ConstructHkeyTitle,f) ]]
+
+[[ _FetchHandler (rev_DictionaryTerms,f) ]]
+
+[[ _FetchHandler (rev_GetCachedScript,f) ]]
+
+[[ _FetchHandler (rev_GetIcon,f) ]]
+
+[[ _FetchHandler (rev_GetPluginFolder,f) ]]
+
+-- function rev_GetSelectedHandlerTreeLineNum pHkey
+put rev_HandlerTreeField() into handlerField
+
+if pHkey is not empty then
+   put the htmltext of rev_HandlerTreeField() into someHtml
+   put rev_ConstructHkeyTitle (pHkey) into htmlTitle
+   set the wholematches to true
+   put lineOffset (htmlTitle, someHtml) into lineNum
+else
+   put the hilitedLine of handlerField into lineNum
+end if
+return lineNum
+end rev_GetSelectedHandlerTreeLineNum
+
+[[ _FetchHandler (rev_HandlerTreeField,f) ]]
+
+[[ _FetchHandler (rev_ListTabScriptObjects,f) ]]
+
+[[ _FetchHandler (rev_OpenScriptEditorNames,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorGroup,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorIsOpen,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorStack,f) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorField,c) ]]
+
+[[ _FetchHandler (rev_SetSelectedHandlerTreeLineNum,c) ]]
+
+function rev_TopScriptEditor
+   put the stack_Name of the target into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else 
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      -- opn_Notify stackNames, true
+      if stackNames is empty then return empty
+      put line 1 of stackNames into stackName
+      if exists(stack stackName) is false then
+         put the stack_Name of the target into stackName
+      end if
+      return the long id of stack stackName
+   end if
+end rev_TopScriptEditor
+
+[[ _FetchHandler (rev_VersionIsLater,f) ]]
+
+[[ _FetchHandler (rugged_ID,g) ]]
+
+[[ _FetchHandler (script_DeconstructMetaDataSuite,c) ]]
+
+--  function script_DictionaryTerm someWord
+   if char 1 to 3 of someWord is "rev" and char 4 of someWord is not "_" then return true -- a bit risky to assume this!
+   
+   put rev_DictionaryTerms() into knownTerms
+   set the wholematches to true
+   return someWord is among the words of knownTerms
+end script_DictionaryTerm
+
+[[ _FetchHandler (script_ExportHandlersAndCalls,c) ]]
+
+[[ _FetchHandler (script_ExtractCaseConditions,f) ]]
+
+[[ _FetchHandler (script_ExtractFunctionCalls,f) ]]
+
+[[ _FetchHandler (script_ExtractMenuSuiteTitles,f) ]]
+
+[[ _FetchHandler (script_ExtractSwitchSection,f) ]]
+
+[[ _FetchHandler (script_GetCommand,f) ]]
+
+[[ _FetchHandler (script_GetGetProp,f) ]]
+
+[[ _FetchHandler (script_GetMetadataArray,f) ]]
+
+[[ _FetchHandler (script_GetSuite,f) ]]
+
+[[ _FetchHandler (script_GetSuiteTitles,f) ]]
+
+[[ _FetchHandler (script_Handler,g) ]]
+
+[[ _FetchHandler (hkey_ExtractHandlerFromObject,f) ]]
+
+[[ _FetchHandler (script_HandlerFromTableOffsets,c) ]]
+
+[[ _FetchHandler (script_MatchEnd,f) ]]
+
+[[ _FetchHandler (script_MenuTitleArrayFromSuiteTitles,f) ]]
+
+[[ _FetchHandler (script_MenuToolModeArray,f) ]]
+
+[[ _FetchHandler (script_OrderedMenuTitles,f) ]]
+
+[[ _FetchHandler (script_ParamToHandlerName,f) ]]
+
+[[ _FetchHandler (script_SetHandlerOffsets,c) ]]
+
+[[ _FetchHandler (script_SetPrivateHandlerOffsets,c) ]]
+
+[[ _FetchHandler (script_SetSuiteOffsets,c) ]]
+
+[[ _FetchHandler (sha1_Hash,f) ]]
+
+[[ _FetchHandler (stack_CreateSubStack,c) ]]
+
+[[ _FetchHandler (stack_Name,g) ]]
+
+[[ _FetchHandler (stack_Object,g) ]]
+
+[[ _FetchHandler (stack_SubName,g) ]]
+
+[[ _FetchHandler (stackDataObjects_Folder,g) ]]
+
+[[ _FetchHandler (text_EscapeRegularExpression,c) ]]
+
+[[ _FetchHandler (text_ExtractQuoted,f) ]]
+
+[[ _FetchHandler (text_InitialCaps,f) ]]
+
+[[ _FetchHandler (text_OffsetAfter,f) ]]
+
+[[ _FetchHandler (text_OffsetBefore,f) ]]
+
+[[ _FetchHandler (text_RepeatString,f) ]]
+
+[[ _FetchHandler (text_SetOffsets,c) ]]
+
+[[ _FetchHandler (text_SplitCaps,f) ]]
+
+[[ _FetchHandler (text_SplitIntoWords,f) ]]
+
+[[ _FetchHandler (text_StartsWithCaps,f) ]]
+
+[[ _FetchHandler (text_StripQuoted,f) ]]
+
+[[ _FetchHandler (text_TokenOffset,f) ]]
+
+[[ _FetchHandler (textStack_FindRoot,f) ]]
+
+-- function textStack_FindRoot objectFile, repoType
+put checkout_FindRoot (objectFile, repoType) into checkOutFolder
+switch
+   case checkoutFolder is empty
+      put checkout_ConstructDefaultFolder (objectFile) into textStackFolder
+      return textStackFolder
+   case checkoutFolder = rev_GetPluginFolder()
+      put checkoutFolder & "opn_Plugins/opn_Text/rev/object/" into textStackFolder
+      return textStackFolder
+   case checkoutFolder is not empty
+      put checkoutFolder & "opn_TextStacks/" into textStackFolder
+      return textStackFolder
+end switch
+end textStack_FindRoot
+
+[[ _FetchHandler (textStack_Folder,g) ]]
+
+[[ _FetchHandler (view_ConstructHierarchy,f) ]]
+
+-- function view_GetTemplateObject vName
+   view_NormalizeName vName
+   -- slow due to loops through every template in the array
+   -- consider creating a reverse array cache
+   return hArray_GetViewTemplate (vName)
+end view_GetTemplateObject
+
+[[ _FetchHandler (view_Hierarchy,g) ]]
+
+[[ _FetchHandler (view_IsTemplate,g) ]]
+
+-- getprop view_Name
+   -- a value of the target (property is not inherited by objects below)  
+   put the uRIP ["name"] of the target into vName
+   if the dgProps ["style"] of the target is among the items of "table,form" then
+      -- it is a datagrid
+      if vName is empty then
+         -- in case it is not named (ie a vanilla Rev control)
+         return "View|Rev|Datagrid"
+      else
+         return vName
+      end if
+   else if the uRIP ["type"] of the target is not "view" then
+      -- it is not only views that have uRip names
+      return empty
+   else
+      return vName
+   end if
+end view_Name
+
+[[ _FetchHandler (view_NormalizeName,c) ]]
+
+-- getprop view_Template
+put the view_Name of the target into vName
+put view_GetTemplateObject (vName) into templateObject
+return templateObject
+end view_Template

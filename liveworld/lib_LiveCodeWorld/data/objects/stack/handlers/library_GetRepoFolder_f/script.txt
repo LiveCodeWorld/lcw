@@ -1,0 +1,5 @@
+function library_GetRepoFolder
+   put pref_GetValue ("libraryRepoFolder") into libraryRepoFolder
+   if libraryRepoFolder is empty then library_SetRepoFolder libraryRepoFolder
+   return libraryRepoFolder
+end library_GetRepoFolder

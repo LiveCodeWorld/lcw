@@ -1,0 +1,68 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: behavior_View|Text|Square
+type: behavior
+version: 0.1
+
+local LocalArray
+
+
+--> Controls
+-
+[[ _FetchHandler (sivaSquareText_View,g) ]]
+
+[[ _FetchHandler (square_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> SivaSiva | Text | Square | Props
+-
+[[ _FetchHandler (text_Size,g) ]]
+
+[[ _FetchHandler (text_Size,s) ]]
+
+[[ _FetchHandler (view_Text,g) ]]
+
+[[ _FetchHandler (view_Text,s) ]]
+
+[[ _FetchHandler (view_UTF8,g) ]]
+
+[[ _FetchHandler (view_UTF8,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (inner_Margin,g) ]]
+
+[[ _FetchHandler (inner_Margin,s) ]]
+
+[[ _FetchHandler (default_InnerMargin,pf) ]]
+
+
+
+--> Events
+-
+-- on rawKeydown
+   send "LayoutControl" to me in 2 ticks
+   pass rawKeydown
+end rawKeydown
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (_fixOverFlow,pc) ]]
+
+[[ _FetchHandler (auto_TextSize,s) ]]
+
+[[ _FetchHandler (_guessAutoFactor,pf) ]]
+
+
+--> Children
+-
+[[ _FetchHandler (_textField,pf) ]]
+
+[[ _FetchHandler (_frameView,pf) ]]

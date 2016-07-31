@@ -1,0 +1,133 @@
+--> Currently working on
+-
+
+
+--> Events
+-
+[[ _FetchHandler (preOpenStack,c) ]]
+
+-- on openStack
+set the cursor to watch
+-- send "know_Everything" to me in 2 ticks
+-- know_Everything
+-- fix_CardBehaviors
+put the result into testArray
+put keys (testArray ["exists and is broken"]) into brokenObject
+if brokenObject is not empty then
+   put brokenObject
+   answer "Some Behaviors were broken"
+end if
+pass openStack
+end openStack
+
+[[ _FetchHandler (resizeStack,c) ]]
+
+
+--> Props
+-
+[[ _FetchHandler (displayed_StandardFiles,g) ]]
+
+[[ _FetchHandler (refresh_Everything,c) ]]
+
+[[ _FetchHandler (hilite_Displayed,c) ]]
+
+[[ _FetchHandler (hilite_ImportantStacks,c) ]]
+
+[[ _FetchHandler (hilite_LibDisplayField,c) ]]
+
+
+--> Tools
+-
+[[ _FetchHandler (shiftGo,c) ]]
+
+[[ _FetchHandler (goAndFix,c) ]]
+
+[[ _FetchHandler (display_RemoveSelectedShortFilesFromUsed,c) ]]
+
+[[ _FetchHandler (display_ProjectArray,c) ]]
+
+[[ _FetchHandler (display_SetFolders,c) ]]
+
+[[ _FetchHandler (index_DisplayFiles,c) ]]
+
+
+--> Display | Props
+-
+[[ _FetchHandler (display_BehaviorHacks,c) ]]
+
+[[ _FetchHandler (displayed_BehaviorHacks,g) ]]
+
+[[ _FetchHandler (displayed_BehaviorHacks,s) ]]
+
+[[ _FetchHandler (displayed_Project,g) ]]
+
+[[ _FetchHandler (displayed_Project,s) ]]
+
+[[ _FetchHandler (displayed_ProjectSetArray,g) ]]
+
+[[ _FetchHandler (displayed_Libraries,g) ]]
+
+[[ _FetchHandler (displayed_Libraries,s) ]]
+
+[[ _FetchHandler (displayed_Folder,g) ]]
+
+[[ _FetchHandler (displayed_FolderName,g) ]]
+
+[[ _FetchHandler (displayed_FolderName,s) ]]
+
+[[ _FetchHandler (rescue_FolderNames,g) ]]
+
+[[ _FetchHandler (rescue_Files,g) ]]
+
+[[ _FetchHandler (rescue_Files,s) ]]
+
+
+--> Handlers
+-
+[[ _FetchHandler (rescue_DisplayedShortFiles,c) ]]
+
+[[ _FetchHandler (rescue_GetFiles,f) ]]
+
+put project_GetFolder (groupName, projectName) into someFolder 
+
+-- function rescue_GetLibraryFolder folderGroupName
+put _folderField (folderGroupName) into folderField
+put the text of folderField into someFolder
+if char -1 of someFolder is not slash then put slash after someFolder
+return someFolder
+end rescue_GetLibraryFolder
+
+[[ _FetchHandler (rescue_SetLibraryFolder,c) ]]
+
+[[ _FetchHandler (displayed_ImportantStacks,g) ]]
+
+[[ _FetchHandler (lib_Group,g) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (_libField,f) ]]
+
+[[ _FetchHandler (_libStackGroup,f) ]]
+
+[[ _FetchHandler (_importantStackField,f) ]]
+
+[[ _FetchHandler (_importantStackGroup,f) ]]
+
+[[ _FetchHandler (_setCogMenu,f) ]]
+
+[[ _FetchHandler (_setMenuButton,f) ]]
+
+[[ _FetchHandler (_setTreeWidget,f) ]]
+
+[[ _FetchHandler (_setDisplayGroup,f) ]]
+
+[[ _FetchHandler (_stackLibraryTabMenu,f) ]]
+
+[[ _FetchHandler (_folderField,f) ]]
+
+[[ _FetchHandler (_tabDisplayField,f) ]]
+
+[[ _FetchHandler (_libraryFolderGroup,f) ]]
+
+[[ _FetchHandler (_displayStackLibraryGroup,f) ]]

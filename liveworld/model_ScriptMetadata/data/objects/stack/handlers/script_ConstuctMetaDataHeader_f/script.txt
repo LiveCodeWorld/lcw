@@ -1,0 +1,36 @@
+function script_ConstuctMetaDataHeader metadataArray, pScriptHelp, pScriptHelpTile
+   local mData
+   
+   if pScriptHelp is empty then
+      put metadataArray ["script_Help"] into oldBit
+      if oldBit is empty then
+         put empty into helpSection
+      else
+         put "/*" & oldBit & "*/" into helpSection
+      end if
+   else
+      put "/*" into helpSection
+      if pScriptHelpTile is not empty then put space & pScriptHelpTile after helpSection
+      put CR & pScriptHelp after helpSection
+      put CR & "*/" after helpSection
+   end if
+   
+   delete local metadataArray ["script_Help"]
+   repeat for each line someKey in keys(metadataArray)
+      put metadataArray [someKey] into someValue
+      put someKey & ":" && someValue & CR after mData
+   end repeat
+   delete last char of mData
+   sort lines of mData
+   
+   put script_ConstructSuiteHeader ("MetaData") into metaDataHeader
+   if mData is not empty then
+      put CR & mData after metaDataHeader
+   end if
+   
+   if helpSection is not empty then
+      put CR & CR & helpSection after metaDataHeader
+   end if
+   
+   return metaDataHeader
+end script_ConstuctMetaDataHeader

@@ -1,0 +1,7 @@
+on menu_RecentChangesHack
+   put scriptEditor_HistoryButtonBehavior() into historyBehavior
+   put rev_HistoryButton (0) into scriptEditorHistoryButton
+   
+   edit the script of historyBehavior
+   edit the script of scriptEditorHistoryButton
+end menu_RecentChangesHack

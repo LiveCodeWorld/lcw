@@ -1,0 +1,6 @@
+on http_SetBasicAuthentication someUser, somePassWord, moreHeaders
+    put someUser & ":" & somePassWord into tToken
+    put format("Authorization: Basic %s", base64encode(tToken)) into tAuthToken
+    line_Insert moreHeaders, tAuthToken
+    set the httpheaders to tAuthToken
+end http_SetBasicAuthentication

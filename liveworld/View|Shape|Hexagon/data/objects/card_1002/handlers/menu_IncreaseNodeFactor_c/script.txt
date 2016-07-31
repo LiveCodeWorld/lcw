@@ -1,0 +1,7 @@
+on menu_IncreaseNodeFactor sHexagon
+   put the inner_View of sHexagon into ringView
+   
+   put the node_Factor of ringView into nodeFactor
+   add (0.1 * nodeFactor) to nodeFactor
+   set the node_Factor of ringView to nodeFactor
+end menu_IncreaseNodeFactor

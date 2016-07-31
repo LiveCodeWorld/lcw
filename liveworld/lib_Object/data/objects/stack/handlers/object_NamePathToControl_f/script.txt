@@ -1,0 +1,9 @@
+function object_NamePathToControl namePath, topObject, someDelimiter
+   if someDelimiter is empty then put "/" into someDelimiter
+   set the itemDelimiter to someDelimiter
+   repeat with itemNum = 2 to the number of items of namePath
+      put item itemNum of namePath into nestedName
+      put the long ID of control nestedName of topObject into topObject
+   end repeat   
+   return topObject
+end object_NamePathToControl

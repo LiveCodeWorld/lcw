@@ -1,0 +1,118 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Layouts|Vertical|Two
+type: view behavior
+version: 0.5
+author: David Bovill
+copyright: David Bovill
+
+/*
+*/
+
+--> Variables
+-
+local TopView
+local BottomView
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (preOpenControl,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (refresh,c) ]]
+
+
+--> Initialisation
+-
+[[ _FetchHandler (view_IndexChildren,c) ]]
+
+
+--> Layout | Children
+-
+[[ _FetchHandler (layout_Children,g) ]]
+
+[[ _FetchHandler (top_ControlNames,g) ]]
+
+[[ _FetchHandler (top_Controls,g) ]]
+
+-- getprop placeholder_Num
+put 0 into placeholderNum
+repeat for each line viewChild in the layout_Children of me
+   put the view_Name of viewChild into viewChildName
+   if viewChildName = "View|Layout|Placeholder" then
+      add 1 to placeholderNum
+   end if
+end repeat
+return placeholderNum
+end placeholder_Num
+
+
+--> Layout | Divider | Props
+-
+[[ _FetchHandler (layout_DividerStyle,g) ]]
+
+[[ _FetchHandler (layout_DividerStyle,s) ]]
+
+[[ _FetchHandler (layout_DividerStyles,g) ]]
+
+
+--> Layout | Props
+-
+[[ _FetchHandler (vertical_Spacing,g) ]]
+
+[[ _FetchHandler (vertical_Spacing,s) ]]
+
+[[ _FetchHandler (default_Height,g) ]]
+
+[[ _FetchHandler (default_Height,s) ]]
+
+[[ _FetchHandler (resize_Style,g) ]]
+
+[[ _FetchHandler (resize_Style,s) ]]
+
+[[ _FetchHandler (resize_Styles,g) ]]
+
+[[ _FetchHandler (top_Factor,g) ]]
+
+[[ _FetchHandler (top_Factor,s) ]]
+
+[[ _FetchHandler (layout_StopHorizontalDividerMove,c) ]]
+
+[[ _FetchHandler (formatted_Width,g) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Controls
+-
+[[ _FetchHandler (layout_View,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (top_View,g) ]]
+
+[[ _FetchHandler (bottom_View,g) ]]
+
+[[ _FetchHandler (vertical_Divider,g) ]]
+
+
+--> Private
+-
+[[ _FetchHandler (_defaultResizeStyle,pf) ]]
+
+[[ _FetchHandler (_defaultVerticalSpacing,pf) ]]
+
+private function _defaultVerticalSpacing
+   return item 1 of the margins of me
+end _defaultVerticalSpacing
+
+[[ _FetchHandler (_calculateTopFactor,pf) ]]

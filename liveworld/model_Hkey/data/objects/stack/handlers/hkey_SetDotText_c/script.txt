@@ -1,0 +1,4 @@
+command hkey_SetDotText hKey, dotText, pVersionName
+   put hkey_DotFile (hKey, pVersionName) into someFile
+   put dotText into url ("file:" & someFile)
+end hkey_SetDotText

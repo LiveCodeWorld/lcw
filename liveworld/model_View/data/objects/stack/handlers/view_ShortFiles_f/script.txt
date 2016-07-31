@@ -1,0 +1,5 @@
+function view_ShortFiles
+   put library_StandardViewFolder() into someFolder
+   put folder_ShortFiles (someFolder) into shortFiles
+   return shortFiles
+end view_ShortFiles

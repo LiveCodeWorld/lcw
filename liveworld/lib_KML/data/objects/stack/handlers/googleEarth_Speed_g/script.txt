@@ -1,0 +1,8 @@
+getprop googleEarth_Speed
+    put the uOPN ["googleEarth_Speed"] of me into someSpeed
+    if someSpeed is empty then
+        return 1
+    else
+        return someSpeed
+    end if
+end googleEarth_Speed

@@ -1,0 +1,19 @@
+function html_ExtractImages someHtml
+    /*
+    Not all 'img' tags are in link tags
+    */
+    
+    replace CR with empty in someHtml -- text is now one line
+    replace "img src=" with ("img" & CR & "src=") in someHtml -- assumes a single space
+    replace ".jpg" with ".jpg" & cr in someHtml
+    replace ".gif" with ".gif" & cr in someHtml
+    filter someHtml with "src=*"
+    set the itemdel to "="
+    
+    put empty into newImgList
+    repeat for each line LNN in someHtml
+        put item 2 of LNN & cr after newImgList
+    end repeat
+    delete last char of newImgList
+    return newImgList
+end html_ExtractImages

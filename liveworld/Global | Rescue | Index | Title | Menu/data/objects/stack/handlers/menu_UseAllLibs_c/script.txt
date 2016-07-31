@@ -1,0 +1,16 @@
+on menu_UseAllLibs indexView, someBoolean
+   put the index_LongStackFiles of indexView into longStackFiles
+   
+   -- temporary hack
+   put the search_LongStackFile ["lib_MenuUtils"] of indexView into utilPath
+   line_Delete longStackFiles, utilPath
+   
+   repeat for each line longStackFile in longStackFiles
+      set the cursor to busy
+      if someBoolean is true then
+         start using stack longStackFile
+      else
+         stop using stack longStackFile
+      end if
+   end repeat
+end menu_UseAllLibs

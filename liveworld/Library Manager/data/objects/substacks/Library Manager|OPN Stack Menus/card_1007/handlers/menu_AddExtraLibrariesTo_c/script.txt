@@ -1,0 +1,30 @@
+on menu_AddExtraLibrariesTo ideScriptObject, setName
+   put library_FetchSetArray (setName) into setArray
+   --
+   put "Library Manager,View|Menu|Button" into stackNames
+   repeat for each item stackName in stackNames
+      put the name of stack stackName into rObject
+      put empty into setArray ["data"]["used"][rObject]
+   end repeat
+   
+   put scriptEditor_CompileFrontScript() into rObject
+   put empty into setArray ["data"]["front"][rObject]
+   
+   put library_ListStandardBackScripts() into someObjects
+   repeat for each line scriptObject in someObjects
+      put revRuggedID (scriptObject) into rObject
+      put empty into setArray ["data"]["back"][rObject]
+   end repeat
+   
+   put "OPN,View|Tree|With Title" into backNames
+   repeat for each item stackName in backNames
+      put the name of stack stackName into rObject
+      put empty into setArray ["data"]["back"][rObject]
+   end repeat
+   --
+   library_StoreSetArray setArray, setName
+   
+   put merge ("Added stacks [[stackNames]], the stacks [[backNames]] + library_ListStandardBackScripts() to the back scripts, and the 'scriptEditor_CompileFrontScript()' to the frontscript of the library set '[[setName]]'!") into someComment
+   opn_Notify someComment
+   menu_DisplayLibraryArray ideScriptObject, setName
+end menu_AddExtraLibrariesTo

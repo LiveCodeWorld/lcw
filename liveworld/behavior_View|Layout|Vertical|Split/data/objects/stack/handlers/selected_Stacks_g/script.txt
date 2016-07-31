@@ -1,0 +1,15 @@
+getprop selected_Stacks
+   put the child_Names of group "Stacks and Libraries" into indexGroupNames
+   repeat for each line indexGroupName in indexGroupNames
+      put the child_Controls of group indexGroupName of group "Stacks and Libraries" into indexViews
+      repeat for each line indexView in indexViews
+         put the short name of indexView into testName
+         get the selected_StackObjects of indexView
+         if it is not empty then
+            put it & CR after selectedStackObjects
+         end if
+      end repeat
+   end repeat
+   delete char -1 of selectedStackObjects
+   return selectedStackObjects
+end selected_Stacks

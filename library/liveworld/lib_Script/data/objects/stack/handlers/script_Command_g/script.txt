@@ -1,0 +1,5 @@
+getprop script_Command [cName]
+   put the script of the target into someScript
+   put script_GetCommand(cName, someScript) into commandHandler
+   return commandHandler
+end script_Command

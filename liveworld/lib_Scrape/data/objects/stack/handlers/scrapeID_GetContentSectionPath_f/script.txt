@@ -1,0 +1,5 @@
+function scrapeID_GetContentSectionPath treeID
+   put "//*[@id='content']" into someXPath
+   put revXMLEvaluateXPath (treeID, someXPath) into contentSectionNode
+   return line 1 of contentSectionNode
+end scrapeID_GetContentSectionPath

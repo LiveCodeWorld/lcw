@@ -1,0 +1,11 @@
+getprop model_Array [pModelType]
+   put the model_Object of the target into modelObject
+   if exists(modelObject) is false then put the long id of the target into modelObject
+   
+   put the model_Name of the target into modelName
+   if modelName is empty then put "model" into modelName
+   
+   if pModelType is empty then put the model_Type of the target into pModelType
+   put model_GetArray (modelName, modelObject, pModelType) into modelArray
+   return modelArray
+end model_Array

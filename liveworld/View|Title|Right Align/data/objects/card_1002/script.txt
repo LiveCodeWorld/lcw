@@ -1,0 +1,41 @@
+--> Metadata
+-
+/*
+As title_Views are designed to display titles for their "containers" - the views enclosing them,
+and these views will often define their own menus,
+which in turn may call this menu,
+*/
+
+--> Menu | Target
+-
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Card | Menu
+-
+[[ _FetchHandler (insert_GlobalTitleMenu,c) ]]
+
+[[ _FetchHandler (insert_TitlePropertiesMenu,c) ]]
+
+[[ _FetchHandler (insert_TitleViewMenu,c) ]]
+
+
+--> Title | View | Menu
+-
+[[ _FetchHandler (menu_GoToLibraryView,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditTitleScript,c) ]]
+
+[[ _FetchHandler (submenu_TitleLineMenu,c) ]]
+
+[[ _FetchHandler (submenu_GlobalViewUpdateMenu,c) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (resizeStack,c) ]]

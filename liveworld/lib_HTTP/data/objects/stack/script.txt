@@ -1,0 +1,183 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_HTTP
+type: script library
+version: 0.1
+
+
+--> CURL
+-
+[[ _FetchHandler (curl_GetUrl,f) ]]
+
+
+--> HTTP
+-
+[[ _FetchHandler (http_CheckIP,f) ]]
+
+-- function http_GetHostIpCountry ipAddress, latAndLong
+    -- 208.113.152.59
+    -- http://api.hostip.info/?ip=12.215.42.19
+    put "http://api.hostip.info/country.php" into someUrl
+    
+end http_GetHostIpCountry
+
+[[ _FetchHandler (http_GetHostIpInfo,f) ]]
+
+--> HTTP | Authentication
+-
+[[ _FetchHandler (http_SetBasicAuthentication,c) ]]
+
+[[ _FetchHandler (http_GetLastModificationDate,f) ]]
+
+[[ _FetchHandler (http_GetType,f) ]]
+
+[[ _FetchHandler (http_GetLength,f) ]]
+
+[[ _FetchHandler (http_ResponseCode,f) ]]
+
+[[ _FetchHandler (http_GetReceivedHeader,f) ]]
+
+[[ _FetchHandler (http_GetReceivedHeaderArray,f) ]]
+
+[[ _FetchHandler (http_GetHeader,f) ]]
+
+[[ _FetchHandler (http_GetHeaders,f) ]]
+
+[[ _FetchHandler (http_ConstructCookieArray,f) ]]
+
+[[ _FetchHandler (http_GetRecievedCookies,f) ]]
+
+[[ _FetchHandler (http_ExtractSetCookie,f) ]]
+
+function http_ConstructCookieArray cookieName, cookieValue, expires, cookiePath, comment, maxAge, cookieDomain, cookieVersion
+    put cookieName into cookieArray["Name"]   -- required
+    put cookieValue into cookieArray["Value"] -- required
+    
+    if expires is not empty then put expires into cookieArray ["Expires"]  -- expiry date
+    if cookiePath is not empty then put cookiePath into cookieArray ["Path"]  -- cookie path
+    if comment is not empty then put comment into cookieArray ["Comment"]
+    if maxAge is not empty then put maxAge into cookieArray ["Max-Age"]  -- max age in seconds
+    if cookieDomain is not empty then put cookieDomain into cookieArray ["Domain"]
+    if cookieVersion is not empty then put cookieVersion into cookieArray ["Version"]
+    
+    return cookieArray
+end http_ConstructCookieArray
+
+[[ _FetchHandler (http_DeconstructCookieLine,c) ]]
+
+[[ _FetchHandler (http_ConstructCookieHeaders,f) ]]
+
+-- function http_SetCookie
+   put "Set-Cookie: " into tBuffer
+   repeat for each item tCookie in params()
+      put tCookie["name"] & "=" &quote& tCookie["value"] &quote& ";" after tBuffer
+      repeat for each line tLine in keys(tCookie)
+         if tLine <> "name" and tLine <> "value" then
+            put tLine & "=" &quote& tCookie[tLine] &quote& ";" after tBuffer
+         end if
+      end repeat
+      put "," into char -1 of tBuffer
+   end repeat
+   delete the last char of tBuffer
+   put tBuffer & cr
+end http_SetCookie
+
+
+--> HTTPD
+-
+[[ _FetchHandler (httpd_RecentLog,f) ]]
+
+
+--> URL
+-
+[[ _FetchHandler (is_Url,f) ]]
+
+[[ _FetchHandler (url_EmptyCache,c) ]]
+
+[[ _FetchHandler (url_Construct,f) ]]
+
+[[ _FetchHandler (url_ConstructParamArray,f) ]]
+
+[[ _FetchHandler (url_ConstructPostArray,f) ]]
+
+[[ _FetchHandler (url_ExtractFileExtension,f) ]]
+
+[[ _FetchHandler (url_StripProtocol,f) ]]
+ 
+[[ _FetchHandler (url_ConstructBaseUrl,f) ]]
+
+[[ _FetchHandler (url_EncodePath,f) ]]
+
+[[ _FetchHandler (url_Deconstruct,c) ]]
+
+function url_Construct someProtocol, urlDomain, urlPath, shortName, fileExtension, userName, pissWord
+    put someProtocol & "://" into someUrl
+    if userName is not empty then
+        put userName & ":" & pissWord & "@" after someUrl
+    end if
+    put urlDomain after someUrl
+    if urlPath is not empty then
+        folder_Format someUrl
+        if char 1 of urlPath is "/" then delete char 1 of urlPath
+        put urlPath after someUrl
+    end if
+    if shortName is empty then
+        -- put "/" after someUrl -- not always a directory can be a web application path / wiki
+    else
+        folder_Format someUrl
+        put shortName after someUrl
+         
+        if fileExtension is not empty then
+            put "." & fileExtension after someUrl
+        end if
+    end if
+    return someUrl
+end url_Construct
+
+function url_ExtractFileExtension someUrl
+    -- should use regExpression to match only 3 digit extension?
+    set the itemdelimiter to "."
+    return last item of someUrl
+end url_ExtractFileExtension
+
+function url_StripProtocol someUrl
+    set the itemDelimiter to ":"
+    delete item 1 of someUrl
+    return someUrl
+end url_StripProtocol
+ 
+function url_ConstructBaseUrl baseUrl
+    -- was "object_BaseUrlGuess"
+    -- create a folder if it does not exist!
+    switch baseUrl
+    case "local"
+        put folder_AboveFile(the fileName of this stack) into baseFolder
+        put "wiki/" after baseFolder
+        if there is not a folder baseFolder then
+            folder_CreateNested baseFolder
+        end if
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    case empty
+        put the short name of this card into wikiTitle
+        if word 1 to 2 of wikiTitle is "card id" then
+            put the short name of this stack into wikiTitle
+        end if
+        put wiki_GetFolder(wikiTitle) into baseFolder
+        put "file:" & baseFolder into baseUrl
+        return baseUrl
+    default -- leave as is
+        return baseUrl
+    end switch
+end url_ConstructBaseUrl
+
+
+--> Sockets
+-
+[[ _FetchHandler (socket_GetLocalIPAddress,f) ]]
+
+[[ _FetchHandler (socket_ClosePending,c) ]]
+
+[[ _FetchHandler (socket_CloseOpen,c) ]]

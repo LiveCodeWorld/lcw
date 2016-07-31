@@ -1,0 +1,17 @@
+setprop script_OverlayArray [pOverlayName] overlayArray
+   put the long id of the target into scriptObject
+   if pOverlayName is empty then
+      put overlayArray_GetGraphProperty (overlayArray, "overlay_Name") into pOverlayName
+      if pOverlayName is empty then
+         put "hierarchical" into pOverlayName
+      end if
+   end if
+   put the script_OverlayData of scriptObject into overlayData
+   if overlayArray is an array then
+      put overlayArray into overlayData [pOverlayName]
+   else
+      delete local overlayData [pOverlayName]
+   end if
+   set the script_OverlayData of scriptObject to overlayData
+   return the result
+end script_OverlayArray

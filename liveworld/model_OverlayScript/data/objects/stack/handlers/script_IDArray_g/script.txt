@@ -1,0 +1,5 @@
+getprop script_IDArray [pOverlayName]
+   put the long id of the target into scriptObject
+   put the script_DataArray [pOverlayName] of scriptObject into dataArray
+   return dataArray ["idArray"]
+end script_IDArray

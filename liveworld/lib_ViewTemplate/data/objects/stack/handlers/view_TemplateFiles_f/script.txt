@@ -1,0 +1,5 @@
+function view_TemplateFiles
+   put library_ViewFolder() into someFolder
+   put folder_FilesInside(someFolder) into viewFiles
+   return viewFiles
+end view_TemplateFiles

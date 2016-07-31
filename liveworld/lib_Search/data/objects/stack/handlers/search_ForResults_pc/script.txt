@@ -1,0 +1,9 @@
+private command search_ForResults @objectArray, targetObject, someProperty, pControllerObject
+    if pControllerObject is empty then
+        put the someProperty of targetObject into objectArray [targetObject]
+    else
+        -- a getprop controller somewhere (most likely where search is called from) 
+        put someProperty & "[" & targetObject & "]" into someProperty
+        put the someProperty of pControllerObject into objectArray [targetObject]
+    end if
+end search_ForResults

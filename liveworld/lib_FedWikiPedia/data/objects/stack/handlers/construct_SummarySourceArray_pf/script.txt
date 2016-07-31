@@ -1,0 +1,15 @@
+private function construct_SummarySourceArray pageTitle, pageSlug, wikipediaUrl, wikipediaRevisionID, lookUpArray
+   put "https://livecode.world/mediawiki/transportAgain" into transportURL
+   put the milliseconds into dateTransported
+   put "https://github.com/LiveCodeWorld/lib_MediaWiki" into repoURL
+   put fedwiki_ConstructCreateSourceArray (transportURL, wikipediaUrl, dateTransported, repoURL, wikipediaRevisionID) into pSourceArray
+   -- put infoBoxArray into pSourceArray ["infobox"]
+   
+   text_Utf8Encode pageSlug -- this fixes bug / crash if page_Slug has non-utf8 characters
+   put pageSlug into pSourceArray ["pageSlug"]
+   put pageTitle into pSourceArray ["pageTitle"]
+   if lookUpArray is an array then
+      put lookUpArray into pSourceArray ["link_dictionary"]
+   end if
+   return pSourceArray
+end construct_SummarySourceArray

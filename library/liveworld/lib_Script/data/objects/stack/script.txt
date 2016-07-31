@@ -1,0 +1,323 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Script
+type: script library
+version: 0.1
+
+/*
+A library for script analysis and processing.
+*/
+
+
+--> Currently Working On
+-
+--> Script | Object File Properteis
+-
+/*
+These utility propoerties allow you to fetch script metadata related files of an object..
+*/
+
+[[ _FetchHandler (script_File,g) ]]
+
+[[ _FetchHandler (script_RelativeFile,g) ]]
+
+[[ _FetchHandler (script_Files,g) ]]
+
+[[ _FetchHandler (script_HelpFile,g) ]]
+
+[[ _FetchHandler (script_OverlayFile,g) ]]
+
+[[ _FetchHandler (script_DotFile,g) ]]
+
+[[ _FetchHandler (script_CmapFile,g) ]]
+
+[[ _FetchHandler (script_GraphImageFile,g) ]]
+
+[[ _FetchHandler (script_ImageFiles,g) ]]
+
+
+--> Script | Object File Properteis
+-
+/*
+These utility propoerties allow you to fetch script metadata related files of an object..
+*/
+
+getprop script_File [pDontCreate]
+   put pDontCreate is not false into pDontCreate
+   put the object_Folder [pDontCreate] of the target into objectFolder
+   put objectFolder & "script.txt" into someFile
+   return someFile
+end script_File
+
+getprop script_RelativeFile
+   put the script_File of the target into scriptFile
+   put git_GetRootFolder() into baseFolder
+   file_SetRelativePath scriptFile, baseFolder
+   return scriptFile
+end script_RelativeFile
+
+getprop script_Files
+   put the long id of the target into scriptObject
+   put the object_MetaDataFolder [true] of scriptObject into metadataFolder
+   put folder_ShortFiles (metadataFolder) into someFiles
+   return someFiles
+end script_Files
+
+getprop script_HelpFile [pDontCreate]
+   put the long id of the target into scriptObject
+   put the object_MetaDataFolder [pDontCreate] of scriptObject into metadataFolder
+   put metadataFolder & "help.html" into someFile
+   return someFile
+end script_HelpFile
+
+getprop script_OverlayFile [pDontCreate]
+   put the long id of the target into scriptObject
+   put the overlay_Folder [pDontCreate] of scriptObject into overlayFolder
+   
+   -- put overlayFolder & "overlaydata.array" into someFile
+   put overlay_ArrayFile (overlayFolder) into someFile
+   return someFile
+end script_OverlayFile
+
+getprop script_DotFile [pOverlayName]
+   put the long id of the target into scriptObject
+   put scriptObject_DotFile (scriptObject, pOverlayName) into scriptArrayFolder
+   return scriptArrayFolder
+end script_DotFile
+
+getprop script_CmapFile [pOverlayName]
+   put the long id of the target into scriptObject
+   put the object_MetaDataFolder [true] of scriptObject into scriptFolder
+   
+   scriptObject_NormalizeGraphName pOverlayName, scriptFolder
+   put pOverlayName & ".cmapx" into shortFile
+   put scriptFolder & shortFile into someFile
+   return someFile
+end script_CmapFile
+
+getprop script_GraphImageFile [pOverlayName]
+   put the long id of the target into scriptObject
+   return scriptObject_ImageFile (scriptObject, pOverlayName)
+end script_GraphImageFile
+
+getprop script_ImageFiles
+   put the script_Files of the target into somePngs
+   filter somePngs with "*.png"
+   return somePngs
+end script_ImageFiles
+
+
+--> Script | Props
+-
+[[ _FetchHandler (script_ContainsString,g) ]]
+
+[[ _FetchHandler (script_ContainsToken,g) ]]
+
+[[ _FetchHandler (script_Suite,g) ]]
+
+[[ _FetchHandler (object_ContainsMessageHandler,g) ]]
+
+[[ _FetchHandler (script_OffestTable,g) ]]
+
+[[ _FetchHandler (script_MessageHandlers,g) ]]
+
+[[ _FetchHandler (script_Events,g) ]]
+
+[[ _FetchHandler (script_SetProp,g) ]]
+
+[[ _FetchHandler (script_GetProp,g) ]]
+
+[[ _FetchHandler (script_Command,g) ]]
+
+[[ _FetchHandler (script_CommandHandlers,g) ]]
+
+[[ _FetchHandler (script_CommandLines,g) ]]
+
+[[ _FetchHandler (script_Function,g) ]]
+
+[[ _FetchHandler (script_FunctionHandlers,g) ]]
+
+[[ _FetchHandler (script_DuplicateKeys,g) ]]
+
+[[ _FetchHandler (script_DuplicateKeyArray,g) ]]
+
+[[ _FetchHandler (script_BreakdownArray,g) ]]
+
+
+--> Currently Working On
+-
+[[ _FetchHandler (script_Contains,f) ]]
+
+[[ _FetchHandler (hkey_ExportStatus,f) ]]
+
+
+--> Hkey | MetaData | Dot
+-
+[[ _FetchHandler (hKeyArray_ConstructNestedObjectDot,f) ]]
+
+
+--> Script | Comments
+-
+[[ _FetchHandler (script_GetCommentAboveMe,f) ]]
+
+[[ _FetchHandler (script_GetLineAboveMe,f) ]]
+
+[[ _FetchHandler (script_CallingObject,f) ]]
+
+
+--> Script
+-
+[[ _FetchHandler (script_CreateAndEditHashCard,c) ]]
+
+[[ _FetchHandler (script_CreateHashCard,c) ]]
+
+
+--> Script | Checks
+-
+[[ _FetchHandler (script_ConstructExportErrorArray,f) ]]
+
+
+--> Script | Duplicates
+-
+[[ _FetchHandler (script_ConstructBreakDownArray,f) ]]
+
+
+--> Script | Comments
+-
+[[ _FetchHandler (script_ExtractAndStripMultiLineComments,c) ]]
+
+[[ _FetchHandler (script_MultiLineCommentOffsets,c) ]]
+
+[[ _FetchHandler (script_StripComments,f) ]]
+
+-- function script_StripComments someScript
+put 0 into commentLineNum
+repeat
+   put lineStartsWith("--", someScript, false, commentLineNum) into commentLineNum
+   if commentLineNum = 0 then
+      return someScript
+   else
+      delete line commentLineNum of someScript
+   end if
+end repeat
+end script_StripComments
+
+[[ _FetchHandler (script_ExtractHandlerLines,f) ]]
+
+
+--> Script | Command
+-
+[[ _FetchHandler (script_GetCommand,f) ]]
+
+[[ _FetchHandler (script_ExtractCommandHandlers,f) ]]
+
+
+--> Script | Function
+-
+[[ _FetchHandler (script_GetFunction,f) ]]
+
+[[ _FetchHandler (script_ExtractFunctionHandlers,f) ]]
+
+
+--> Script | Getprop
+-
+[[ _FetchHandler (script_GetGetProp,f) ]]
+
+[[ _FetchHandler (script_ExtractGetPropHandlers,f) ]]
+
+[[ _FetchHandler (script_SlowExtractGetPropHandlers,f) ]]
+
+
+--> Script | Setprop
+-
+[[ _FetchHandler (script_GetSetProp,f) ]]
+
+[[ _FetchHandler (script_ExtractSetPropHandlers,f) ]]
+
+[[ _FetchHandler (script_SlowExtractSetPropHandlers,f) ]]
+
+
+--> Script | Events
+-
+[[ _FetchHandler (script_ExtractMessageHandlers,f) ]]
+
+
+--> Script | Utilities
+-
+[[ _FetchHandler (script_GetOffsetTable,f) ]]
+
+
+--> Handler
+-
+[[ _FetchHandler (handler_GetType,f) ]]
+
+[[ _FetchHandler (_addPrivate,pf) ]]
+
+[[ _FetchHandler (handler_ConvertType,f) ]]
+
+
+--> Script | Array | Offsets
+-
+[[ _FetchHandler (script_SetOffsetArrays,c) ]]
+
+[[ _FetchHandler (script_ContainsMessageHandler,f) ]]
+
+[[ _FetchHandler (script_SetPrivateHandlerOffsets,c) ]]
+
+[[ _FetchHandler (script_SetHandlerOffsets,c) ]]
+
+[[ _FetchHandler (script_MatchEnd,f) ]]
+
+[[ _FetchHandler (text_EscapeRegularExpression,c) ]]
+
+
+--> Script | Arrays | Type
+-
+[[ _FetchHandler (handler_Deconstruct,c) ]]
+
+[[ _FetchHandler (script_ConstructArraysFromScript,c) ]]
+
+[[ _FetchHandler (script_ExtendHkey,c) ]]
+
+
+--> Script | Construction
+-
+[[ _FetchHandler (script_ConstructCommand,f) ]]
+
+[[ _FetchHandler (script_DeconstructCommandLine,c) ]]
+
+[[ _FetchHandler (script_ExtractSwitchSection,f) ]]
+
+[[ _FetchHandler (script_ExtractSetpropConditions,f) ]]
+
+[[ _FetchHandler (script_DeconstructSetPropHandler,c) ]]
+
+[[ _FetchHandler (script_ExtractCaseConditions,f) ]]
+
+
+--> Script | Errors
+-
+[[ _FetchHandler (script_GetErrorDisplay,f) ]]
+
+[[ _FetchHandler (script_SetErrorDisplay,c) ]]
+
+
+--> Script | Dictionary
+-
+[[ _FetchHandler (script_DocumentationTokens,f) ]]
+
+[[ _FetchHandler (galaxy_DocumentationTokensOld,f) ]]
+
+
+--> Script | Templates
+-
+[[ _FetchHandler (script_GetTemplate,f) ]]
+
+[[ _FetchHandler (script_SetTemplate,c) ]]
+
+[[ _FetchHandler (script_ConstructTemplateUrl,f) ]]
+
+[[ _FetchHandler (script_DeleteTemplate,c) ]]
+
+[[ _FetchHandler (script_TemplateNames,f) ]]

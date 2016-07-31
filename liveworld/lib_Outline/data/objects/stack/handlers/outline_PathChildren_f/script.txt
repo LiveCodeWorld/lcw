@@ -1,0 +1,16 @@
+function outline_PathChildren somePath, tabbedOutline, pathDelim, noPath
+    if somepath is empty then
+        return outline_TopChildren(tabbedOutline)
+    else
+        if pathDelim is empty then put "/" into pathDelim
+        put outline_PathOffset(somePath, tabbedOutline, pathDelim) into startOsLineNum
+        if startOsLineNum = 0 then return empty
+        
+        if noPath is true then
+            put empty into pathBit
+        else
+            put somePath & pathDelim into pathBit
+        end if
+        return outline_GetChildren(startOsLineNum, tabbedOutline, pathBit)
+    end if
+end outline_PathChildren

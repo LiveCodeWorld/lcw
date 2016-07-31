@@ -1,0 +1,6 @@
+function mainstack_ConstructDependencySuite mainStackFolder
+   put mainstack_FetchDepHkeys (mainStackFolder) into shortHkeys
+   put hkey_CollectExported (shortHkeys) into depScript
+   put script_ConstructSuite ("Deps", depScript) into depSuite
+   return depSuite
+end mainstack_ConstructDependencySuite

@@ -1,0 +1,6 @@
+function fossil_ListFtpProjectFiles
+   put fossil_FtpDirectory () into ftpDirectory
+   libURLSetFTPListCommand "NLST"
+   put url ftpDirectory into ftpResult
+   return word 1 to -1 of ftpResult
+end fossil_ListFtpProjectFiles

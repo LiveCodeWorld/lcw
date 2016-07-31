@@ -1,0 +1,6 @@
+on myJSHandler pMessage, pValue
+   -- Define a handler to respond to javascript calls.
+   put the mouseloc into menuLoc
+   menu_PopUp "Global | Wiki | Story | Menu", menuLoc
+   -- answer the params
+end myJSHandler

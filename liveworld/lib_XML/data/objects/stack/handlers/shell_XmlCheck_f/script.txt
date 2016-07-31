@@ -1,0 +1,13 @@
+function shell_XmlCheck someXML
+    -- or just to look for errors (returns empty or a list of errors)
+    put "tidy -eq -xml " into someShell
+     
+    put the tempname & ".xml" into someFile
+    put someXML into url ("file:" & someFile)
+     
+    shell_AddBashParam someShell, someFile
+    put shell(someShell) into someXML
+    
+    delete file someFile
+    return someXML
+end shell_XmlCheck

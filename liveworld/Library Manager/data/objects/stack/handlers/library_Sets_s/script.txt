@@ -1,0 +1,8 @@
+setprop library_Sets [pLibType] setNames
+   put the long id of the target into someObject
+   if pLibType is empty then put "used" into pLibType
+   
+   put revRuggedId (someObject) into ruggedObject
+   library_StoreSetNames ruggedObject, pLibType, setNames
+   return the result
+end library_Sets

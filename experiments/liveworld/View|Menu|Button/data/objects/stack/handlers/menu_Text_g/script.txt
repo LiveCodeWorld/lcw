@@ -1,0 +1,12 @@
+getprop menu_Text [pMenuTitle]
+   local mTopController
+   put the long id of the target into targetObject
+   
+   menu_ClearTargetGlobals
+   menu_SetTargetObject targetObject
+   menu_InitialiseTopTitle pMenuTitle, targetObject
+   menu_InitialiseTopController mTopController, pMenuTitle, targetObject
+   
+   put menu_GetTextFromTitleTable (pMenuTitle, targetObject) into mText
+   return mText
+end menu_Text

@@ -1,0 +1,8 @@
+function text_StemCaps someText
+    put tolower(word 1 of someText) into stemCaps
+    delete word 1 of someText
+    get text_InitialCaps(someText)
+    replace space with empty in it
+    put it after stemCaps
+    return stemCaps
+end text_StemCaps

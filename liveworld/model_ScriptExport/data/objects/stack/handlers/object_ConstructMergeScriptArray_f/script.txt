@@ -1,0 +1,4 @@
+function object_ConstructMergeScriptArray tObject
+   put the script of tObject into someScript
+   return script_ConstructMergeArray (someScript)
+end object_ConstructMergeScriptArray

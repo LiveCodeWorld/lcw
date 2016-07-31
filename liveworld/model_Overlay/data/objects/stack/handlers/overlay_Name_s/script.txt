@@ -1,0 +1,6 @@
+setprop overlay_Name overlayName
+   -- stored with the stack (not the target) to indicate which overly is being displayed
+   put the stack_Object of the target into stackObject
+   set the uOPN ["overlay_Name"] of stackObject to overlayName
+   return overlayName
+end overlay_Name

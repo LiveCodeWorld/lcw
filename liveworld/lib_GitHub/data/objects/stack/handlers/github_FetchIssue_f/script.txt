@@ -1,0 +1,8 @@
+function github_FetchIssue repoOwner, someRepo, issueNum
+   -- GET /repos/:owner/:repo/issues/:number
+   
+   put "issues/" & issueNum into issueString   
+   put _issueCommandPath (repoOwner, someRepo, issueString) into restPath
+   put github_RestGet (restPath) into someJSON
+   return someJSON
+end github_FetchIssue

@@ -1,0 +1,4 @@
+getprop fossil_ScriptHistory [pNotBrief]
+   put the script_File of the target into someFile
+   return fossil_FileHistory (someFile, pNotBrief)
+end fossil_ScriptHistory

@@ -1,0 +1,15 @@
+function rect_LocWidthHeight someLoc, newW, newH
+   put round(newW/2) into leftBit
+   put newW - leftBit into rightBit
+   put item 1 of someLoc into someX
+   put someX - leftBit into item 1 of someRect
+   put someX + rightBit into item 3 of someRect
+   
+   put round(newH/2) into upBit
+   put newH - upBit into downBit
+   put item 2 of someLoc into someY
+   put someY - upBit into item 2 of someRect
+   put someY + downBit into item 4 of someRect
+   
+   return someRect
+end rect_LocWidthHeight

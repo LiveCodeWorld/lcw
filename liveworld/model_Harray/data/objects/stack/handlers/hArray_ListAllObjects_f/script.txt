@@ -1,0 +1,10 @@
+function hArray_ListAllObjects pHarray
+   if pHarray is an array then
+      global gHkey_Array
+      put gHkey_Array ["scriptArray"] into rObjectArray
+   else
+      put pHarray ["scriptArray"] into rObjectArray
+   end if
+   put keys (rObjectArray) into rObjects
+   return rObjects
+end hArray_ListAllObjects

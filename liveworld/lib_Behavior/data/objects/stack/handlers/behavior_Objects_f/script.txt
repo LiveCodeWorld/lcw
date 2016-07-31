@@ -1,0 +1,11 @@
+function behavior_Objects
+   put behaviorModel_GetArray() into behaviorArray
+   put keys(behaviorArray) into bNames
+   sort bNames
+   repeat for each line bName in bNames
+      put behaviorArray [bName]["ruggedID"] into behaviorObject
+      put behaviorObject & CR after behaviorObjects
+   end repeat
+   delete char -1 of behaviorObjects
+   return behaviorObjects
+end behavior_Objects

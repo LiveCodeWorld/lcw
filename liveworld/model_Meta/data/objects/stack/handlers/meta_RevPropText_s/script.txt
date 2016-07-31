@@ -1,0 +1,5 @@
+setprop meta_RevPropText revPropText
+   put the object_Folder of the target into objectFolder
+   object_ExportRevPropText objectFolder, revPropText
+   return the result
+end meta_RevPropText

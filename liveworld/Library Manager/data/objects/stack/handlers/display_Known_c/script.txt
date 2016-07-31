@@ -1,0 +1,5 @@
+command display_Known
+   local subStackOutline
+   put library_ListKnownAndCreateOutline (subStackOutline) into stackIndex
+   display_Outline subStackOutline, "Known stacks"
+end display_Known

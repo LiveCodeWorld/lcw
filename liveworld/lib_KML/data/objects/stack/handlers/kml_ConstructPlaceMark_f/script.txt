@@ -1,0 +1,31 @@
+function kml_ConstructPlaceMark someTitle, description, latitude, longitude, altitude, range, someTilt, heading, pointLongitude, pointLatitude, pointHeight
+    put longitude into pointLongitude
+    put latitude into pointLatitude
+    put altitude into pointHeight
+    
+    put empty into placemarkKml
+    put empty into lookAtKml
+    
+    put xml_ConstructTag(longitude, "longitude") & CR after lookAtKml
+    put xml_ConstructTag(latitude, "latitude") & CR after lookAtKml
+    if altitude is not empty then put xml_ConstructTag(altitude, "altitude") & CR after lookAtKml
+    if range is not empty then put xml_ConstructTag(range, "range") & CR after lookAtKml
+    if someTilt is not empty then put xml_ConstructTag(someTilt, "tilt") & CR after lookAtKml
+    if heading is not empty then put xml_ConstructTag(heading, "heading") & CR after lookAtKml
+    
+    delete last char of lookAtKml
+    put xml_ConstructTag(someTitle, "name") & CR after placemarkKml
+    if description is not empty then put xml_ConstructTag(description, "description") & CR after placemarkKml
+    put xml_ConstructTag(lookAtKml, "LookAt") & CR after placemarkKml
+     
+    -- put xml_ConstructTag("#default_copy3", "styleUrl") & CR after placemarkKml
+    put xml_ConstructTag("#msn_square", "styleUrl") & CR after placemarkKml
+     
+    put pointLongitude,pointLatitude,pointHeight into pointCoordinates
+    put xml_ConstructTag(pointCoordinates, "coordinates") into pointKml
+    put xml_ConstructTag(pointKml, "Point") & CR after placemarkKml
+     
+    delete last char of placemarkKml
+    get xml_ConstructTag(placemarkKml, "Placemark")
+    return it
+end kml_ConstructPlaceMark

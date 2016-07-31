@@ -1,0 +1,9 @@
+on menu_DisplayViewBrowser 
+   put library_StandardFolder ("libOPN_ViewBrowser.rev") into longFile
+   if there is not a stack longFile then
+      answer warning "Stack does not exist!"
+      exit to top
+   end if
+   
+   go to stack longFile -- "libOPN_ViewBrowser"
+end menu_DisplayViewBrowser

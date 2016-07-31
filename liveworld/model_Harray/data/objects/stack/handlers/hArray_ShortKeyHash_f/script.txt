@@ -1,0 +1,6 @@
+function hArray_ShortKeyHash hKey
+   global gHkey_Array
+   put item 1 to 2 of hKey into shortHkey
+   put gHkey_Array ["handlerArray"][shortHkey]["handlerHash"] into latestShortkeyHash
+   return latestShortkeyHash
+end hArray_ShortKeyHash

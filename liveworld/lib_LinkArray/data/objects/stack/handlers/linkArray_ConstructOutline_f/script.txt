@@ -1,0 +1,21 @@
+function linkArray_ConstructOutline linkArray, hIdArray
+    -- constructs a simple (reversable) outline from a link array
+    -- different outlines are possible depending on the order of keys
+    -- so sorting improves consistency
+    
+    put keys(linkArray) into linkKeys
+    sort linkKeys
+    repeat for each line keyID in linkKeys
+        put hIdArray [keyID] into realKey
+        put html_ConstructNameLink(realKey, keyID) & CR after someOutline
+         
+        put linkArray [keyID] into linkIDs
+        put empty into realValues
+        repeat for each line linkID in linkIDs
+            put hIdArray [linkID] into realValue
+            put tab & html_ConstructNameLink (realValue, linkID) & CR after someOutline
+        end repeat
+    end repeat
+    delete char -1 of someOutline
+    return someOutline
+end linkArray_ConstructOutline

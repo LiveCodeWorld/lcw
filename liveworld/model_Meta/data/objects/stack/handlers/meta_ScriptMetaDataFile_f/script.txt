@@ -1,0 +1,6 @@
+function meta_ScriptMetaDataFile objectFolder, pDontCreate
+   folder_Format objectFolder
+   put objectFolder & "scriptMetaData.array" into someFile
+   if pDontCreate is false then folder_CreateNested objectFolder
+   return someFile
+end meta_ScriptMetaDataFile

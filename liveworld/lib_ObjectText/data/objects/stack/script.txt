@@ -1,0 +1,127 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_ObjectText
+type: library
+version: 0.1
+
+
+--> Props
+-
+[[ _FetchHandler (meta_MainStackArray,g) ]]
+
+[[ _FetchHandler (object_MetaArray,g) ]]
+
+[[ _FetchHandler (object_PropertyText,g) ]]
+
+[[ _FetchHandler (object_DefaultPropArray,g) ]]
+
+[[ _FetchHandler (stackArray_Version,g) ]]
+
+[[ _FetchHandler (stack_Array,g) ]]
+
+[[ _FetchHandler (stack_PropertArrays,g) ]]
+
+[[ _FetchHandler (mainstack_ExportArray,g) ]]
+
+[[ _FetchHandler (object_Array,g) ]]
+
+
+--> Props | Get and Set
+-
+[[ _FetchHandler (object_MainStackArray,g) ]]
+
+[[ _FetchHandler (object_MainStackArray,s) ]]
+
+[[ _FetchHandler (object_PropertyArray,g) ]]
+
+[[ _FetchHandler (object_PropertyArray,s) ]]
+
+[[ _FetchHandler (custom_PropertyArray,g) ]]
+
+[[ _FetchHandler (custom_PropertyArray,s) ]]
+
+[[ _FetchHandler (rev_PropertyArray,g) ]]
+
+[[ _FetchHandler (rev_PropertyArray,s) ]]
+
+
+--> Mainstack | Array
+-
+[[ _FetchHandler (mainstack_ConstructMetaArray,f) ]]
+
+[[ _FetchHandler (object_ConvertAbbreviated,f) ]]
+
+[[ _FetchHandler (stack_GetPropertArrays,c) ]]
+
+[[ _FetchHandler (stack_Array,s) ]]
+
+
+--> Card | Create
+-
+[[ _FetchHandler (card_CreateFromArray,c) ]]
+
+
+--> Stack | Export
+-
+[[ _FetchHandler (mainStackArray_FetchFromFolder,f) ]]
+
+[[ _FetchHandler (stackArray_FetchFromFolder,f) ]]
+
+
+--> Object | Array
+-
+[[ _FetchHandler (objectArray_AddCard,c) ]]
+
+[[ _FetchHandler (objectArray_AddClonedBackgroundToCard,c) ]]
+
+[[ _FetchHandler (stackArray_GetVariableElements,f) ]]
+
+[[ _FetchHandler (stackArray_GetBackgroundArray,f) ]]
+
+[[ _FetchHandler (objectArray_AddControl,c) ]]
+
+
+--> Object | Create
+-
+[[ _FetchHandler (object_Create,c) ]]
+
+
+--> Meta | Utils
+-
+[[ _FetchHandler (object_ConstructArrayFromFolder,f) ]]
+
+
+--> Object | Property
+-   
+[[ _FetchHandler (object_DeconstructPropertyArray,c) ]]
+
+[[ _FetchHandler (objectArray_TempClean,c) ]]
+
+[[ _FetchHandler (objectArray_CleanGeneral,c) ]]
+
+[[ _FetchHandler (object_FetchCustomArray,f) ]]
+
+[[ _FetchHandler (object_ExportCustomArray,c) ]]
+
+
+--> Object | Property | Array
+-
+[[ _FetchHandler (object_GetPropertyArrays,c) ]]
+
+[[ _FetchHandler (object_AddScriptAndCustomArray,c) ]]
+
+[[ _FetchHandler (rev_SetMissing,pc) ]]
+
+[[ _FetchHandler (object_AddMissingArrays,pc) ]]
+
+
+--> Object | Property | Deps
+-
+[[ _FetchHandler (objectArray_StripMobile,c) ]]
+
+[[ _FetchHandler (propertyArray_StripMobile,c) ]]
+
+[[ _FetchHandler (rev_PropertyTextToArray,f) ]]
+
+[[ _FetchHandler (rev_PropertyArrayToText,f) ]]

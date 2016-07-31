@@ -1,0 +1,10 @@
+getprop card_Margin
+   put the card_Object of the target into cardObject
+   if exists(cardObject) is false then return empty
+      
+   lock messages
+   if cardMargin is a number then set the card_Margin of cardObject to cardMargin   
+   put the card_Margin of cardObject into cardMargin
+   unlock messages
+   return cardMargin
+end card_Margin

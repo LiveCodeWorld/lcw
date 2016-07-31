@@ -1,0 +1,8 @@
+getprop template_Model
+   put the view_Object of the target into viewObject
+   if exists (viewObject) is false then return empty
+   put the view_Name of viewObject into vName
+   if exists (stack vName) is false then return empty
+   put the name of stack vName into templatePropertyModel
+   return templatePropertyModel
+end template_Model

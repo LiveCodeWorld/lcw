@@ -1,0 +1,14 @@
+command script_SetGlobalObject suiteTitle, scriptObject
+   put script_GetGlobalSuiteArray() into dataArray
+   if suiteTitle is empty then return "Error: suiteTitle is empty"
+   if exists(scriptObject) then
+      put the rugged_ID of scriptObject into scriptObject
+      put scriptObject into dataArray [suiteTitle]
+      script_SetGlobalSuiteArray dataArray
+      return true
+   else
+      delete local dataArray [suiteTitle]
+      script_SetGlobalSuiteArray dataArray
+      return false
+   end if
+end script_SetGlobalObject

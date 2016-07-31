@@ -1,0 +1,6 @@
+function audioboom_RestGET apiPath, pAudioboomApiStem
+   if pAudioboomApiStem is empty then put "http://api.audioboom.com/" into  pAudioboomApiStem
+   put pAudioboomApiStem & apiPath into someUrl
+   put url someUrl into someJson
+   return someJson
+end audioboom_RestGET

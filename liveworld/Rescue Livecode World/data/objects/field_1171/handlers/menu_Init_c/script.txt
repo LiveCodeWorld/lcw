@@ -1,0 +1,5 @@
+on menu_Init
+   put the view_Index of me into viewIndex
+   put viewIndex into LocalArray ["viewIndex"]
+   put the selected_StackObject of me into LocalArray ["selectedStackObject"]
+end menu_Init

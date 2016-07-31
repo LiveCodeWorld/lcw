@@ -1,0 +1,29 @@
+on dragDrop
+   set the cursor to watch
+   local movieFile
+   put the dragdata ["files"] into dropFiles
+   repeat for each line dropFile in dropFiles
+      switch
+         case file_IsEyeTvMovie (dropFile) is true
+            put eyetv_ExtractMp4File (dropFile) into movieFile
+            if movieFile is empty then
+               put eyetv_ExtractTiffFile (dropFile) into movieFile
+            end if
+            break
+         case there is a folder dropFile
+            beep
+            break
+         case file_IsVideo (dropFile) is true
+            put dropFile into movieFile
+            break
+      end switch
+      if movieFile is not empty then
+         put movieFile & CR after movieFiles
+      end if
+   end repeat
+   
+   put the tree_Grid of me into treeGrid
+   put the dgData of treeGrid into dgArray
+   addToDataArray movieFiles, dgArray
+   set the dgData of treeGrid to dgArray
+end dragDrop

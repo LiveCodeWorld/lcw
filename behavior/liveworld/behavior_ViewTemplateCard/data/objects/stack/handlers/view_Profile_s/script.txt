@@ -1,0 +1,11 @@
+setprop view_Profile profileName
+   put the view_Object of the target into viewObject
+   if exists(viewObject) is false then return empty
+   
+   lock screen  
+   set the cREVGeneral ["profile"] of viewObject to profileName
+   repeat with cNum = 1 to the number of controls of viewObject
+      set the cREVGeneral ["profile"] of control cNum of viewObject to profileName
+   end repeat
+   unlock screen
+end view_Profile

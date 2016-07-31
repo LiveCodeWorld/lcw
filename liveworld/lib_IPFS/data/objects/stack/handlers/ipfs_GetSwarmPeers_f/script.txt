@@ -1,0 +1,4 @@
+function ipfs_GetSwarmPeers
+   put ipfs_RestGet ("swarm/peers") into someResult
+   return someResult
+end ipfs_GetSwarmPeers

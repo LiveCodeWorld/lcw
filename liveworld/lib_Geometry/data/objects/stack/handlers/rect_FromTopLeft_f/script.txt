@@ -1,0 +1,8 @@
+function rect_FromTopLeft rectOrTopLeftLoc, newW, newH
+   put item 1 to 2 of rectOrTopLeftLoc into rectOrTopLeftLoc
+   put rectOrTopLeftLoc into someRect
+   
+   put item 1 of someRect + newW into item 3 of someRect
+   put item 2 of someRect + newH into item 4 of someRect
+   return someRect
+end rect_FromTopLeft

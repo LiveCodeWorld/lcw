@@ -1,0 +1,4 @@
+function fossil_ListWikiPages pFolder
+   fossil_ExecuteShell "fossil wiki list", pFolder
+   return the result
+end fossil_ListWikiPages

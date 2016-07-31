@@ -1,0 +1,14 @@
+command search_StackAndSubstacks @objectArray, stackObject, someProperty, pControllerObject
+   put the mainstack of stackObject into mainStackName
+   put the name of stack mainStackName into mainStackObject
+   
+   search_SubStackForResult objectArray, mainStackObject, someProperty, pControllerObject
+   
+   put the substacks of stack mainStackName into subStackNames
+   repeat for each line subStackName in subStackNames
+      set the cursor to busy
+      -- put the long id of stack subStackName of stackObject into subStackObject -- LiveCode bug - stackObject not working with substack reference
+      put the long id of stack subStackName of stack mainStackName into subStackObject
+      search_SubStackForResult objectArray, subStackObject, someProperty, pControllerObject
+   end repeat
+end search_StackAndSubstacks

@@ -1,0 +1,16 @@
+command scriptObject_RevertToExportedFile scriptObject
+   put rev_ListTabScriptObjects() into scriptEditorObjects
+   if scriptObject is among the lines of scriptEditorObjects then
+      return merge("Error: close script editor tab for [[scriptObject]] before using this tool")
+   end if
+   
+   put the script of scriptObject into nowScript
+   put the script_File of scriptObject into scriptFile
+   put url ("file:" & scriptFile) into fileScript
+   
+   display_Lines nowScript, "The old script of the object"
+   put the result into treeView
+   set the displayed_Object of treeView to scriptObject
+   
+   set the script of scriptObject to fileScript
+end scriptObject_RevertToExportedFile

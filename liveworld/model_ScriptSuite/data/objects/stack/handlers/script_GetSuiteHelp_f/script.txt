@@ -1,0 +1,11 @@
+function script_GetSuiteHelp suiteScript
+   set the wholematches to false
+   put lineoffset("/*", suiteScript) into startLineNum
+   if startLineNum is zero then return empty
+   put lineoffset("*/", suiteScript, startLineNum) into skipEnd
+   if skipEnd is zero then return empty
+   
+   put skipEnd + startLineNum into endLineNum
+   put line startLineNum to endLineNum of suiteScript into suiteHelp
+   return word 1 to -1 of suiteHelp
+end script_GetSuiteHelp

@@ -1,0 +1,12 @@
+private command deconstruct_PlayListInfoArray infoArray, @playListTitle, @thumbnailURL, @playListDescription
+   put infoArray ["items"][1]["snippet"] into snippetArray
+   put snippetArray ["channelId"] into channelID
+   put snippetArray ["channelTitle"] into channelTitle
+   
+   put snippetArray ["title"] into playListTitle
+   put snippetArray ["description"] into playListDescription
+   put snippetArray ["publishedAt"] into publishedAt
+   put snippetArray ["thumbails"] into thumbailsArray
+   put thumbailsArray ["medium"]["url"]  into thumbnailURL
+   return thumbailsArray
+end deconstruct_PlayListInfoArray

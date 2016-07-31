@@ -1,0 +1,21 @@
+on menu_DeleteSkin sHexagon
+   put the owner of sHexagon into setContainer
+   put the skin_Hexagons of sHexagon into skinHexagons
+   put false into sendLater
+   lock screen
+   repeat for each line skinHexagon in skinHexagons
+      if the long id of skinHexagon = the long id of sHexagon then
+         put true into sendLater
+         next repeat
+      end if
+      
+      delete skinHexagon
+   end repeat
+   if sendLater is true then
+      send "delete sHexagon" to sHexagon in 1 ticks
+      send "skin_Colourize" to setContainer in 3 ticks
+   else
+      dispatch skin_Colourize to setContainer
+   end if  
+   unlock screen
+end menu_DeleteSkin

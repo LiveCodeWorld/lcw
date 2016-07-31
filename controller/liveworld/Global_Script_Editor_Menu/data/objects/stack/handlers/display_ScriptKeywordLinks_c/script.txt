@@ -1,0 +1,32 @@
+command display_ScriptKeywordLinks intersectArray
+   -- display_Array intersectArray
+   put _ConstructSortedOutlineSection ("and", intersectArray) after someOutline
+   put _ConstructSortedOutlineSection ("handler keyword", intersectArray, true) after someOutline
+   
+   put "all keyword links" into someTitle
+   put intersectArray [someTitle] into hKeys
+   sort hKeys by item 1 of each
+   put hkey_ConstructNameLinks (hKeys) into htmlLines
+   put the number of lines of hKeys into someNum
+   put someTitle && "(" & someNum & ")" into someTitle
+   put someTitle & CR after someOutline
+   put outline_IncreaseIndent (htmlLines, 1) & CR after someOutline 
+   
+   put "ordered keywords" into someTitle
+   put someTitle & CR after someOutline
+   put intersectArray [someTitle] into htmlLines
+   put outline_IncreaseIndent (htmlLines, 1) & CR after someOutline 
+   
+   delete char -1 of someOutline
+   
+   put "Script Keyword Search" into displayTitle
+   put empty into treeMenuTitle
+   put empty into treeLineMenuTitle
+   display_Outline someOutline, displayTitle, treeMenuTitle, treeLineMenuTitle, "and,2,handler keyword,ordered keywords"
+   put the result into treeView
+   put the tree_Field of treeView into treeField
+   
+   put the long id of me into myController
+   put hkey_Construct("tree_MouseDoubleUp", "c", myController) into hKey
+   set the event_Trigger ["mouseDoubleUp"] of treeField to hKey
+end display_ScriptKeywordLinks

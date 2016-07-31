@@ -1,0 +1,17 @@
+command shiftGo pLineNum
+   if pLineNum is empty then
+      put word 2 of the clickline into pLineNum
+   end if
+   put the index_Folder of the target into indexFolder
+   put the view_Index of the target into shortFiles
+   put line pLineNum of shortFiles into shortFile
+   put indexFolder & shortFile into longStackFile
+   
+   if exists (stack longStackFile) then
+      go to stack longStackFile
+      edit the script of stack longStackFile
+   else
+      put longStackFile
+      answer warning "Stack is not known!"
+   end if
+end shiftGo

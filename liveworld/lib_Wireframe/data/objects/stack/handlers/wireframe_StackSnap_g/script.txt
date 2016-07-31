@@ -1,0 +1,15 @@
+getprop wireframe_StackSnap 
+   put the long id of the target into someControl
+   
+   -- the stack needs to be open and visible, and on top
+   put the stack_Name of someControl into stackName
+   -- object_GoTo someControl -- this will go to the card
+   -- toplevel stackName
+   put the windowid of stack stackName into someWindowID
+   
+   -- export snapshot from rect someRect of window someWindowID to file imageFile as PNG
+   -- set the defaultstack to stackName
+   put the rect of card 1 of stack stackName into someRect
+   export snapshot from rect someRect of window someWindowID to somePNG as PNG
+   return somePNG
+end wireframe_StackSnap

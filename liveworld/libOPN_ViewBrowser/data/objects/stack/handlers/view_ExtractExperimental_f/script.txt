@@ -1,0 +1,10 @@
+function view_ExtractExperimental dgArray
+   repeat for each key lineNum in dgArray
+      put dgArray [lineNum]["title"] into vName
+      put view_GetTested (vName) into isTested
+      if isTested is true then
+         delete local dgArray [lineNum]
+      end if
+   end repeat
+   return dgArray
+end view_ExtractExperimental

@@ -1,0 +1,14 @@
+private command search_TestObject @foundObjects, targetObject, someProperty, someValue, controllerObject
+    if someValue is empty then put true into someValue
+    if controllerObject is empty then
+        if the someProperty of targetObject = someValue then
+            put targetObject & CR after foundObjects
+        end if
+    else
+        -- a getprop controller somewhere (most likely where search is called from) 
+        put someProperty & "[" & targetObject & "]" into someProperty
+        if the someProperty of controllerObject = someValue then
+            put targetObject & CR after foundObjects
+        end if
+    end if
+end search_TestObject

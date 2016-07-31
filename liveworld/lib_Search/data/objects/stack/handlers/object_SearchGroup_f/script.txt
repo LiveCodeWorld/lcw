@@ -1,0 +1,6 @@
+function object_SearchGroup containerObject, someProperty, controllerObject, pObjectKeyProperty
+   local objectArray
+   put the long id of the target into containerObject
+   objectArray_SearchGroupForValue objectArray, propertyArray, containerObject, someProperty, pObjectKeyProperty, controllerObject
+   return objectArray
+end object_SearchGroup

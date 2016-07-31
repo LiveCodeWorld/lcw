@@ -1,0 +1,4 @@
+on mouseUp
+   put the selectedtext of me into someURL
+   set the fedwiki_DroppedURL of this stack to someURL
+end mouseUp

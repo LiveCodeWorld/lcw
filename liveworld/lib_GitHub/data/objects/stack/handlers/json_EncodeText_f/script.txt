@@ -1,0 +1,5 @@
+function json_EncodeText someText
+   text_EscapeReturns someText
+   xml_Escape someText
+   put text_UTF8
+end json_EncodeText

@@ -1,0 +1,6 @@
+function hkey_ConstructCallArray hKey, pFetchHow
+   -- fetch from "links.txt" file recursively
+   local hkeyArray
+   hkey_RecurseCallArray hKey, hkeyArray, pFetchHow
+   return hkeyArray
+end hkey_ConstructCallArray

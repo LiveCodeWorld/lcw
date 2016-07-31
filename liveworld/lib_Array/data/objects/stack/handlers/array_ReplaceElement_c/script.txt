@@ -1,0 +1,13 @@
+command array_ReplaceElement someElement, newElement, @someArray
+    repeat for each key testKey in someArray
+        put someArray [testKey] into testElements
+        
+        line_Replace someElement, newElement, testElements
+        if testKey = someElement then
+            put testElements into newArray [newElement]
+        else
+            put testElements into newArray [testKey]
+        end if
+    end repeat
+    -- return newArray
+end array_ReplaceElement

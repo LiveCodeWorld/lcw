@@ -1,0 +1,5 @@
+on menu_SetViewCardBehavior someView
+   put the card_Object of someView into cardObject
+   put the name of stack "behavior_ViewTemplateCard" into bObject
+   set the behavior of cardObject to bObject
+end menu_SetViewCardBehavior

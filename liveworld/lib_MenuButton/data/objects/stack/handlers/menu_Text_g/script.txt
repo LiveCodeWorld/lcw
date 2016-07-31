@@ -1,0 +1,21 @@
+getprop menu_Text [mTopTitle]
+   put the long id of the target into tObject
+   
+   if mTopTitle is empty then
+      if the controlkey is "Down" then
+         -- put the menu_ToolTitle of tObject into mTopTitle
+         put the menu_Title of tObject into mTopTitle
+      else
+         put the menu_Title of tObject into mTopTitle
+      end if
+   end if
+   put the menu_Controller [mTopTitle] of tObject into mTopController
+   
+   menu_ClearTargetGlobals
+   menu_SetTargetObject tObject
+   menu_SetTopTitle mTopTitle
+   menu_SetTopController mTopController
+   
+   put menu_GetTextFromTitleTable (mTopTitle, tObject) into mText
+   return mText
+end menu_Text

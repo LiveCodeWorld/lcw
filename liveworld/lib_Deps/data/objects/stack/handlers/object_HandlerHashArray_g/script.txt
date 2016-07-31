@@ -1,0 +1,14 @@
+getprop object_HandlerHashArray
+   put the rugged_ID of the target into rObject
+   put the mainstack_HandlerHashArray of the target into mainStackHandlerHashArray
+   
+   put mainStackHandlerHashArray ["cached"] into cachedHashArray
+   repeat for each key handlerHash in cachedHashArray
+      put cachedHashArray [handlerHash]["hkey"] into emptyHkeyArray
+      put keys(emptyHkeyArray) into hkey
+      if item 3 of hkey = rObject then
+         put cachedHashArray [handlerHash] into objectHandlerHashArray [handlerHash]
+      end if
+   end repeat
+   return objectHandlerHashArray
+end object_HandlerHashArray

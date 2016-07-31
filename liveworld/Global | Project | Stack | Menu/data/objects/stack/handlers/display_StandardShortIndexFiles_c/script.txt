@@ -1,0 +1,8 @@
+command display_StandardShortIndexFiles pIndexView
+   if pIndexView is empty then put _indexView() into pIndexView
+      
+   set the cursor to watch
+   put the folder_Name of pIndexView into folderName
+   put lcw_ListShortStackFiles (folderName) into shortStackFiles
+   set the view_Index of pIndexView to shortStackFiles
+end display_StandardShortIndexFiles

@@ -1,0 +1,6 @@
+on menu_RevealMainstackDotText scriptObject
+   put the textStackOverlay_Folder [true] of scriptObject into overlayFolder
+   put overlay_ConstructFile ("dot", overlayFolder, "Mainstack Structure") into someFile
+   
+   finder_Reveal someFile
+end menu_RevealMainstackDotText

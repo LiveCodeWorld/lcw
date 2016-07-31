@@ -1,0 +1,24 @@
+function getPathForArt pA
+   -- art.lc
+   repeat for each key k in pA["formats"]
+      switch
+         case "_ful" is in pA["formats"][k]["filename"]
+            put  pA["formats"][k] into tFormatA
+            break
+            ##### BR: 2104-12-17 for reasons we do not understand the case statement drop thru to 
+            ## the "_med" value even if we have a "_ful" version in the items format table.
+            ## by commenting these out, it defaults to "_ful" which we have in all cases.
+            #case "_lrg" is in pA["formats"][k]["filename"]
+            #	put  pA["formats"][k] into tFormatA
+            #break
+            #case "_med" is in pA["formats"][k]["filename"]
+            #	put  pA["formats"][k] into tFormatA
+            #break
+      end switch
+   end repeat
+   get (folderForArt(pA) & "/" & tFormatA["filename"] )
+   
+   put hap_GetDocumentRoot() into docRoot
+   replace docRoot with empty in it
+   return it
+end getPathForArt

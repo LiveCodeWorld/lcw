@@ -1,0 +1,14 @@
+function _askMacImage someType, preferredFolder, comment
+    if someType is empty then put _getMacImageTypes() into someType
+    if preferredFolder is empty then
+        answer file comment of type someType titled "Choose an Image"
+    else
+        answer file comment with preferredFolder of type someType titled "Choose an Image"
+    end if
+    put it into filePath
+    if filePath is empty then
+        exit to top
+    else
+        return filePath
+    end if
+end _askMacImage

@@ -1,0 +1,5 @@
+command daemon_SetRouteData someRoute, routeData
+   put "/data" after someRoute
+   daemon_SetRouteValue someRoute, routeData
+   return the result
+end daemon_SetRouteData

@@ -1,0 +1,10 @@
+on tree_MouseDoubleUp treeField 
+   if the tree_IsLeaf of treeField is false then
+      -- pass tree_MouseDoubleUp
+      dispatch "tree_Expand" to treeField
+   else
+      put the tree_SelectedLink of treeField into hKey
+      set the clipboarddata to hKey
+      hkey_Edit hKey
+   end if
+end tree_MouseDoubleUp

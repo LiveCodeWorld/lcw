@@ -1,0 +1,5 @@
+function day_MondayBefore someDate
+    put day_DaysBefore(someDate, 2) into howManyDays
+    put addDays(- howManyDays, someDate) into newDate
+    return date_Round(newDate, "d")
+end day_MondayBefore

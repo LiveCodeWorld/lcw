@@ -1,0 +1,6 @@
+getprop stack_CompressedData
+    put the effective filename of the target into someFile
+    put "file:" & someFile into someUrl
+    put url someUrl into stackData
+    return compress(stackData)
+end stack_CompressedData

@@ -1,0 +1,19 @@
+command daemon_Start pPortToListenOn, pDaemonServer
+   -- first we make sure we've set the control that is the server
+   if exists (pDaemonServer) is false then
+      put the deamon_Server of the target into DaemonServer
+      if exists (DaemonServer) is false then
+         put the long id of the target into DaemonServer
+      end if
+   end if
+   put pDaemonServer into DaemonServer
+   
+   -- make sure we have a port to listen on
+   if pPortToListenOn is a number then
+      set the daemon_Port of me to pPortToListenOn
+   else
+      put the daemon_Port of me into pPortToListenOn
+   end if
+   
+   accept connections on port pPortToListenOn with message "newConnection"
+end daemon_Start

@@ -1,0 +1,9 @@
+setprop index_Folder someFolder
+   put the long id of the target into indexView
+   
+   put the group_Name of indexView into groupName
+   put the displayed_Project of indexView into projectName
+   
+   project_SetFolder groupName, projectName, someFolder
+   return groupName    
+end index_Folder

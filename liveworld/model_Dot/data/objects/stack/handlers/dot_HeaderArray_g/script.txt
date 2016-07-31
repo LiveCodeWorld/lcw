@@ -1,0 +1,5 @@
+getprop dot_HeaderArray [pOverlayName]
+   put the overlay_Array [pOverlayName] of the target into overlayArray
+   put overlayArray_GetHeaderArray (overlayArray) into propertyArray
+   return propertyArray
+end dot_HeaderArray

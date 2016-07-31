@@ -1,0 +1,5 @@
+function url_StripProtocol someUrl
+    set the itemdelimiter to ":"
+    delete item 1 of someUrl
+    return someUrl
+end url_StripProtocol

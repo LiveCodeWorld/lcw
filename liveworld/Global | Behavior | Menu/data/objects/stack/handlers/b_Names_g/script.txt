@@ -1,0 +1,15 @@
+getprop b_Names [scriptObject]
+   put hArray_ListBehaviorNames() into allBNames
+   put the stack_BehaviorButtonNames of scriptObject into stackBNames
+   line_Delete stackBNames, allBNames
+   
+   if stackBNames is not empty then put stackBNames & CR & "-" & CR after bNames
+   if allBNames is not empty then put allBNames & CR & "-" & CR after bNames
+   delete char -3 to -1 of bNames
+   if bNames is empty then
+      return "Clear"
+   else
+      put CR & "-" & CR & "Clear" after bNames
+      return bNames
+   end if
+end b_Names

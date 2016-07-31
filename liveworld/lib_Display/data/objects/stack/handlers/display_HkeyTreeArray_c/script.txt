@@ -1,0 +1,17 @@
+command display_HkeyTreeArray treeArray, hkeyOrObject
+   _setObjectTitleHkey hkeyOrObject, hKey, hObject, displayTitle
+   
+   put "Global | HkeyArray | Menu"into treeMenu
+   put "Global | HkeyArray | Line | Menu" into lineMenu
+   put "display_HkeyArrayHandler" into mDoubleUpCommand
+   -- may want to use "Global | HkeyArray | Tree | Filter | Menu"
+   put empty into mUpCommand
+   
+   display_Array treeArray, displayTitle, treeMenu, lineMenu, mUpCommand, mDoubleUpCommand
+   put the result into treeView
+   set the view_Data of treeView to hKeyArray
+   
+   set the displayed_Object of treeView to hObject
+   set the displayed_Hkey of treeView to hKey
+   return treeview
+end display_HkeyTreeArray

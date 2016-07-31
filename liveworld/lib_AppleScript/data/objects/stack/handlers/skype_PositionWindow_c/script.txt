@@ -1,0 +1,5 @@
+command skype_PositionWindow someRect, windowName
+    if windowName is empty then put 5 into windowName
+    finder_PositionWindow "Skype", someRect, windowName
+    return the result	
+end skype_PositionWindow

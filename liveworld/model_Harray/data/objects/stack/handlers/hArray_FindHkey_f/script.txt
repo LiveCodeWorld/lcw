@@ -1,0 +1,22 @@
+function hArray_FindHkey shortHkey, pHandlerHash
+   -- a fast lookup that ignores hierarchy
+   put item 1 to 2 of shortHkey into shortHkey
+   
+   put hArray_GetFoundHkeyArray (shortHkey) into hkeyArray
+   if hkeyArray is not an array and char 1 of item 2 of shortHkey is not "p" then
+      put "p" before char 1 of item 2 of shortHkey
+      put hArray_GetFoundHkeyArray (shortHkey) into hkeyArray
+   end if
+   
+   if pHandlerHash is empty then
+      put line 1 of the keys of hkeyArray into foundHKey
+      return foundHKey
+   else
+      repeat for each key hKey in hkeyArray
+         if hkeyArray [hKey]["handlerHash"] = pHandlerHash then
+            return hKey
+         end if
+      end repeat
+      return empty
+   end if
+end hArray_FindHkey

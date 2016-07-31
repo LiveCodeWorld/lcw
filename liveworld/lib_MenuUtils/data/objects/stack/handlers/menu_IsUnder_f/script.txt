@@ -1,0 +1,12 @@
+function menu_IsUnder mTitlePath, mStem
+   get char 1 to (the number of chars of mStem) of mTitlePath
+   return it = mStem
+   
+   set the itemDelimiter to "|"
+   delete item -1 of mTitle
+   delete item -1 of mStem
+   
+   put item 1 to (the number of items of mStem) of mTitle into testStem
+   -- could normalize spaces
+   return testStem = mStem
+end menu_IsUnder

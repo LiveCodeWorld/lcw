@@ -1,0 +1,4 @@
+getprop mainStack_ManifestArray
+   put the textStack_Folder [true] of the target into textStackFolder
+   return stack_FetchManifestArray (textStackFolder)
+end mainStack_ManifestArray

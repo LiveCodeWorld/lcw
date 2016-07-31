@@ -1,0 +1,4 @@
+function text_WhiteChunk theText
+    -- thanx to Mark Schonewille <m.schonewille@economy-x-talk.com>
+    return "char 1 to" && (offset(word 1 of theText, theText) - 1)
+end text_WhiteChunk

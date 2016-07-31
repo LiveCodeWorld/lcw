@@ -1,0 +1,10 @@
+on menu_HideFooter dgView, someBoolean
+   put the browser_ID of dgView into browserID
+   if someBoolean is true then
+      -- put "document.getElementById('site-owner').style.visibility = 'hidden'" into someJavascript
+      put "var myElement = document.querySelector('footer');myElement.style.visibility = 'hidden'" into someJavascript
+   else
+      put "var myElement = document.querySelector('footer');myElement.style.visibility = 'visible'" into someJavascript
+   end if
+   put revBrowserExecuteScript (browserID, someJavascript)
+end menu_HideFooter

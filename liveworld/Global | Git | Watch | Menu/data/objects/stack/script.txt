@@ -1,0 +1,91 @@
+--> MetaData
+-
+license: GPLv3
+name: Global | Git | Watch | Menu
+type: controller
+version: 0.1
+
+
+--> Global | Git | Watch | Menu
+-
+[[ _FetchHandler (insert_GitCommon,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_LocalMenus,c) ]]
+
+[[ _FetchHandler (menu_CutMenu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_ScriptExport,c) ]]
+
+[[ _FetchHandler (submenu_Mainstack,c) ]]
+
+[[ _FetchHandler (submenu_Behavior,c) ]]
+
+[[ _FetchHandler (submenu_ScriptBehavior,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (insert_History,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Template,c) ]]
+
+[[ _FetchHandler (submenu_ScriptArray,c) ]]
+
+[[ _FetchHandler (submenu_Dependencies,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Library,c) ]]
+
+[[ _FetchHandler (submenu_ManageLibrary,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (submenu_Exported,c) ]]
+
+[[ _FetchHandler (submenu_Patch,c) ]]
+
+[[ _FetchHandler (menu_PreviousScriptCommit,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CompareTest,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddFileToGit,c) ]]
+
+[[ _FetchHandler (menu_CommitScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AllTheLastChanges,c) ]]
+
+
+--> Dev | Menu | Props
+-
+[[ _FetchHandler (previous_Nums,g) ]]
+
+
+--> Dev | Menu | Disabled
+-
+[[ _FetchHandler (disabled_ReExport,g) ]]

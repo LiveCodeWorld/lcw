@@ -1,0 +1,8 @@
+function url_DecodePath routeIndex
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of routeIndex
+      put item itemNum of routeIndex into someRoute
+      put urldecode (someRoute) into item itemNum of somePath
+   end repeat
+   return somePath
+end url_DecodePath

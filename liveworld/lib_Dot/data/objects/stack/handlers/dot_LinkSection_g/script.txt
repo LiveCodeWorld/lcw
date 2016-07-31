@@ -1,0 +1,13 @@
+getprop dot_LinkSection
+   put the displayed_OverlayName of the target into graphName
+   put the overlay_Array of the target into overlayArray
+   
+   if dotClusterArray is an array then
+      -- put linkArray_ConstructClusterDefs (overlayArray, pGraphController) into linkSection
+      put overlayData_ConstructClusterSection (overlayArray, graphName) into linkSection
+   else
+      overlayArray_DeconstructData overlayArray, linkArray, idArray, idLinkArray, reverseIdLinkArray, dotClusterArray
+      put linkArray_DotNodeLinks (linkArray) into linkSection
+   end if
+   return linkSection
+end dot_LinkSection

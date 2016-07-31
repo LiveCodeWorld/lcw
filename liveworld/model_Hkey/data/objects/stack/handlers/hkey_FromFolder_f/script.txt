@@ -1,0 +1,6 @@
+function hkey_FromFolder someFolder
+   set the itemdelimiter to "/"
+   put item - 1 of someFolder into shortFolder
+   put hkey_FromShortFolder (shortFolder) into shortHkey
+   return shortHkey
+end hkey_FromFolder

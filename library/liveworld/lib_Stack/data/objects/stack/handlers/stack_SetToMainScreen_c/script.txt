@@ -1,0 +1,23 @@
+command stack_SetToMainScreen stackNames
+   put the working screenrect into workingMainScreenRect
+   put rect_SubtractMargin (60, workingMainScreenRect) into safeRect
+   put item 1 to 2 of safeRect into safeTopLeft
+   
+   if stackNames is empty then
+      put the openstacks into stackNames
+      line_Delete "revMenubar", stackNames
+   end if
+   repeat for each line stackName in stackNames
+      put the rect of stack stackName into stackRect
+      
+      if rect_FitsWithin (stackRect, safeRect) is false then
+         if the resizeable of stack stackName is true then
+            rect_MoveTopLeft stackRect, safeTopLeft
+            rect_Normalize stackRect, safeRect
+            set the rect of stack stackName to stackRect
+         else
+            set the topleft of stack stackName to safeTopLeft
+         end if
+      end if
+   end repeat
+end stack_SetToMainScreen

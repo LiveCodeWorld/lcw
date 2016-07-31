@@ -1,0 +1,14 @@
+getprop object_NamePath [someDelim]
+   if someDelim is empty then put "/" into someDelim
+   put the mobile_Name of the target into someObject
+   put text_ExtractQuoted(someObject) into objectNamePath
+   replace CR with someDelim in objectNamePath
+   
+   set the itemDelimiter to someDelim
+   put empty into reversedNamePath
+   repeat with itemNum = the number of items of objectNamePath down to 1
+      put item itemNum of objectNamePath & someDelim after reversedNamePath
+   end repeat
+   delete last char of reversedNamePath
+   return reversedNamePath
+end object_NamePath

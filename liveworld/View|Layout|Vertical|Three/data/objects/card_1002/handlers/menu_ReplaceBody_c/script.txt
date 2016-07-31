@@ -1,0 +1,7 @@
+on menu_ReplaceBody someView, bodyViewName
+   put the body_View of someView into bodyView
+   set the control_Type of bodyView to bodyViewName
+   if the result is empty then
+      answer warning "Problem replacing the control!"
+   end if
+end menu_ReplaceBody

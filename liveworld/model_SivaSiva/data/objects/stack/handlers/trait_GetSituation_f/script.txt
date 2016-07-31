@@ -1,0 +1,6 @@
+function trait_GetSituation chapterArray, pSituationNum
+   if pSituationNum is empty then put 1 into pSituationNum
+   put chapterArray ["tableArray"]["tbody"][pSituationNum][1] into traitSituation
+   text_DecodeUTF8 traitSituation
+   return traitSituation
+end trait_GetSituation

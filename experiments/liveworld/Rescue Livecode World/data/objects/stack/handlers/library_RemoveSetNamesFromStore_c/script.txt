@@ -1,0 +1,8 @@
+command library_RemoveSetNamesFromStore ruggedObject, libType, setNames
+   put library_FetchSetData() into setData
+   repeat for each line setName in setNames
+      delete variable setData [setName]["data"][libType][ruggedObject]
+   end repeat
+   library_StoreSetData setData
+   return setData
+end library_RemoveSetNamesFromStore

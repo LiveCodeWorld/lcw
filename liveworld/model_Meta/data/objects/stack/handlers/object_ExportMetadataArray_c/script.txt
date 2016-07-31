@@ -1,0 +1,8 @@
+command object_ExportMetadataArray objectFolder, metadataArray
+   -- object_ConstructMetadataFolder is missing / renamed?
+   if metadataArray is not an array then return false
+   
+   put object_ConstructMetadataFolder (objectFolder) into metaFolder
+   array_ToFolder metaFolder, metadataArray
+   return metaFolder
+end object_ExportMetadataArray

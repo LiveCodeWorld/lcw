@@ -1,0 +1,140 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_ScriptEditor_Hkey_Menu
+type: controller
+version: 0.4
+
+
+--> Global | ScriptEditor | Hkey | Menu
+-
+[[ _FetchHandler (insert_SendHkey,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FindHandlerWithSpotlight,c) ]]
+
+[[ _FetchHandler (submenu_Gist,c) ]]
+
+[[ _FetchHandler (menu_SaveAsGist,c) ]]
+
+[[ _FetchHandler (menu_SaveAsPrivateGist,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayProjectHandler,c) ]]
+
+[[ _FetchHandler (menu_DisplayLibraryHandler,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddHandlerToLibrary,c) ]]
+
+[[ _FetchHandler (menu_ReplaceHandlerInLibrary,c) ]]
+
+[[ _FetchHandler (submenu_History,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_HandlerMenu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Hkey | Menu | Props
+-
+-- getprop handler_IsIndexed [hKey]
+-- complains some times?
+put hkey_IsInLibrary (hKey) into isInLibrary
+return isInLibrary
+end handler_IsIndexed
+
+
+--> Hkey | Menu | Disabled
+-
+[[ _FetchHandler (disabled_DisplayLibraryHandler,g) ]]
+
+[[ _FetchHandler (disabled_AddHandlerToLibrary,g) ]]
+
+getprop disabled_DisplayLibraryHandler [hKey]
+   -- want to be able to re-add it
+   put hkey_IsInLibrary (hKey) into isInLibrary
+   if isInLibrary is true then
+      return false
+   else
+      return true
+   end if
+end disabled_DisplayLibraryHandler
+
+[[ _FetchHandler (disabled_ReplaceHandlerInLibrary,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_FetchProjectHandler,c) ]]
+
+[[ _FetchHandler (menu_FetchLibraryCalls,c) ]]
+
+-- on menu_FetchDeps hKey, fetchHow
+   set the cursor to watch
+   put hkey_FetchDeps (hKey, fetchHow) into hKeyDeps
+   put hKeyDeps
+end menu_FetchDeps
+
+-- getprop fetch_Hows [hKey]
+   -- put the object_Hkey ["hkey_RecurseCallArray,c"] of stack
+   put hArray_FindHkey ("hkey_RecurseCallArray,c") into hKey
+   put hkey_GetCaseConditions (hKey) into fetchHows
+   return fetchHows
+end fetch_Hows
+
+[[ _FetchHandler (menu_FilteredLibraryDeps,c) ]]
+
+
+--> Handlers
+-
+[[ _FetchHandler (launchFile,c) ]]
+
+
+--> Deps | menu_Init
+-
+[[ _FetchHandler (line_Delete,c) ]]
+
+[[ _FetchHandler (hArray_ListHkeyObjects,f) ]]
+
+[[ _FetchHandler (hArray_GetFoundHkeyArray,f) ]]
+
+[[ _FetchHandler (library_HandlerFile,f) ]]
+
+[[ _FetchHandler (library_HkeyFolder,f) ]]
+
+[[ _FetchHandler (library_HandlerFolder,f) ]]
+
+[[ _FetchHandler (library_PluginFolder,f) ]]
+
+[[ _FetchHandler (folder_CreateNested,c) ]]
+
+[[ _FetchHandler (folder_Format,c) ]]
+
+[[ _FetchHandler (hkey_FolderName,f) ]]
+
+[[ _FetchHandler (library_HkeyToPublicShortHkey,f) ]]
+
+[[ _FetchHandler (hkey_Deconstruct,c) ]]
+
+[[ _FetchHandler (rev_GetHandlerTreeSelectedInfo,f) ]]
+
+[[ _FetchHandler (rev_HandlerTreeField,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorStack,f) ]]
+
+[[ _FetchHandler (rev_TopScriptEditor,f) ]]
+
+[[ _FetchHandler (rev_ScriptObject,f) ]]

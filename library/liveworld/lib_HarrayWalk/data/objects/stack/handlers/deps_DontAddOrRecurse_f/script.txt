@@ -1,0 +1,5 @@
+function deps_DontAddOrRecurse hKey, pOriginalHkey, hArray
+   -- remember can also do this after collecting everything
+   -- the purpse here is to stop unecessarily long recursion
+   return false
+end deps_DontAddOrRecurse

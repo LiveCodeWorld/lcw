@@ -1,0 +1,19 @@
+getprop view_Name
+   -- a value of the target (property is not inherited by objects below)  
+   put the uRIP ["name"] of the target into vName
+   switch
+      case the dgProps ["style"] of the target is among the items of "table,form"
+         -- it is a datagrid
+         if vName is empty then
+            -- in case it is not named (ie a vanilla Rev control)
+            return "View|Rev|Datagrid"
+         else
+            return vName
+         end if
+         break
+      case the uRIP ["type"] of the target is among the items of "view,view template"
+         return vName
+      default
+         return empty
+   end switch
+end view_Name

@@ -1,0 +1,16 @@
+function script_FileFromMetadataArray metadataArray
+   put metadataArray ["script_Name"] into scriptName
+   put scriptName &".txt" into shortFile
+   
+   put metadataArray ["script_Type"] into scriptType
+   switch scriptType
+      case "menu"
+         return opn_GetMenuScriptFolder(shortFile)
+      case "library"
+         return opn_GetLibraryScriptFolder(shortFile)
+      case "controller"
+         return opn_GetLibraryScriptFolder(shortFile)
+      default
+         return empty
+   end switch
+end script_FileFromMetadataArray

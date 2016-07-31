@@ -1,0 +1,4 @@
+function rev_GetSelectedHandlerScriptEndLineNum
+   put rev_GetHandlerTreeSelectedInfo() into hInfo
+   return word 4 of hInfo
+end rev_GetSelectedHandlerScriptEndLineNum

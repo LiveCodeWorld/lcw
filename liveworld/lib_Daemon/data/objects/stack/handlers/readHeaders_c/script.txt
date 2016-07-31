@@ -1,0 +1,9 @@
+on readHeaders pSocketId, pSocketData
+   /*
+   And this handler gets the final set of data that is coming in the request, 
+   again just in case the request is split into multiple packets for some reason by the sender.
+   This chain of handlers makes the processing more reliable.
+   */
+   put pSocketData into SocketData [pSocketId]["headers"]
+   read from socket pSocketID until empty with message "processRequest"
+end readHeaders

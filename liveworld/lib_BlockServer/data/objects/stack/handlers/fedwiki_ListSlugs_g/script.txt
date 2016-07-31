@@ -1,0 +1,4 @@
+getprop fedwiki_ListSlugs [pFedwikiDomain]
+   put fedwiki_LocalPageSlugs (pFedwikiDomain) into pageSlugs
+   return pageSlugs
+end fedwiki_ListSlugs

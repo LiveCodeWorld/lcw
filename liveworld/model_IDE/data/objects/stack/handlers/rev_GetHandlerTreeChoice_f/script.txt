@@ -1,0 +1,5 @@
+function rev_GetHandlerTreeChoice
+   put rev_HandlerTree() into handlerTree
+   put the cChoice of handlerTree into handlerChoice
+   return handlerChoice
+end rev_GetHandlerTreeChoice

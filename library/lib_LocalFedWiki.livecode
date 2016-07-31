@@ -1,0 +1,579 @@
+﻿script "lib_LocalFedWiki"
+--> MetaData
+-
+name: lib_LocalFedwiki
+type: script library
+version: 1.0
+copyright: David Bovill
+licence:  GPLv3
+
+/*
+A library for interfacing with Federated Wiki.
+*/
+
+--> Fedwiki | Model | Wrappers
+-
+command utopia_StoreFile fedwikiDomain, wikiPageSlug, localFile
+   put fedwiki_ConstructPath (fedwikiDomain, wikiPageSlug) into wikiPagePath
+   digitalOcean_StoreFile "Utopia", wikiPagePath, localFile
+   return the result
+end utopia_StoreFile
+
+command atopia_StoreFile fedwikiDomain, wikiPageSlug, localFile
+   put fedwiki_ConstructPath (fedwikiDomain, wikiPageSlug) into wikiPagePath
+   digitalOcean_StoreFile "Atopia", wikiPagePath, localFile
+   return the result
+end atopia_StoreFile
+
+
+--> Node
+-
+command fedwiki_OpenModulesFolder
+   put fedwiki_GetModulesFolder() into fedwikiModulesFolder
+   if fedwikiModulesFolder is empty then return empty
+   
+   finder_Reveal fedwikiModulesFolder
+   return fedwikiModulesFolder
+end fedwiki_OpenModulesFolder
+
+function fedwiki_GetModulesFolder
+   -- it's inside the node modules /wiki/node-modules" folder
+   put node_GetModulesFolder() into nodeModulesFolder
+   if there is not a folder nodeModulesFolder then  return empty
+   
+   put nodeModulesFolder & "wiki/node_modules/" into fedwikiModulesFolder
+   if there is not a folder fedwikiModulesFolder then  return empty
+   
+   return fedwikiModulesFolder
+end fedwiki_GetModulesFolder
+
+command node_OpenModulesFolder
+   put node_GetModulesFolder() into someFolder
+   if someFolder is empty then return empty
+   
+   finder_Reveal someFolder
+   return someFolder
+end node_OpenModulesFolder
+
+function node_GetModulesFolder
+   put line 1 of shell ("npm root -g") & "/" into nodeModulesFolder
+   if there is not a folder nodeModulesFolder then return empty
+   return nodeModulesFolder
+end node_GetModulesFolder
+
+function node_GetNodeBinaryPath
+   return line 1 of shell ("npm bin -g") & "/npm"
+end node_GetNodeBinaryPath
+
+
+--> Fedwiki | Sitemap
+-
+function fedwiki_SitemapIndex sitemapJSON
+   put json_ToArray (sitemapJSON) into sitemapArray
+   repeat for each key indexNum in sitemapArray
+      put sitemapArray [indexNum]["title"] into someTitle
+      put someTitle & CR after someIndex
+   end repeat
+   delete char -1 of someIndex
+   sort someIndex
+   return someIndex
+end fedwiki_SitemapIndex
+
+function fedwiki_ConstructSiteMapArray pageTitle, pageSynopsis, pDateInMilliseconds, pPageSlug
+   if pPageSlug is empty then put fedwiki_ConstructSlug (pageTitle) into pPageSlug
+   if pDateInMilliseconds is empty then put the milliseconds into pDateInMilliseconds
+   
+   put pDateInMilliseconds into mapArray ["date"] 
+   put pPageSlug into mapArray ["slug"]
+   put pageSynopsis into mapArray ["synopsis"] 
+   put pageTitle into mapArray ["title"]    
+   return mapArray
+end fedwiki_ConstructSiteMapArray
+
+command fedwiki_AddToSitemapArray @sitemapArray, pageTitle, pageSynopsis, pDateInMilliseconds, pPageSlug
+   put fedwiki_ConstructSiteMapArray (pageTitle, pageSynopsis, pDateInMilliseconds, pPageSlug) into mapArray
+   fedwiki_AddToEndOfIndexArray mapArray, sitemapArray
+end fedwiki_AddToSitemapArray
+
+command fedwiki_UpdateLocalSiteMap pageArray, pFedwikiDomain, pDateInMilliseconds
+   put pageArray ["title"] into pageTitle
+   put pageArray ["story"][1]["text"] into pageSynopsis
+   put pageArray ["journal"] into journalArray
+   if pDateInMilliseconds is empty then
+      -- setting pDateInMilliseconds to the value of the time of a forl
+      -- allows page forking to be set to the date of the fork event
+      -- not the date of the original page creation
+      put item 2 of the extents of journalArray into lastItemNum
+      put journalArray [lastItemNum]["date"] into pDateInMilliseconds
+   end if
+   
+   put fedwiki_GetLocalSitemapJson (pFedwikiDomain) into localSitemapJson
+   put json_ToArray (localSitemapJson) into sitemapArray
+   fedwiki_AddToSitemapArray sitemapArray, pageTitle, pageSynopsis, pDateInMilliseconds
+   put json_FromArray (sitemapArray) into updatedSitemapJson
+   fedwiki_SetLocalSitemapJson pFedwikiDomain, updatedSitemapJson
+end fedwiki_UpdateLocalSiteMap
+
+
+--> Fedwiki | Roster
+-
+-- function fedwiki_ExtractReferences pageJSON
+   -- david.bovill.me/davids-sites
+   put word 2 to -1 of someLine into someRef
+   put item 1 of someRef into fedwikiDomain
+   put item 2 of someRef into pageSlug
+   put fedwiki_FetchPageJson ("david.bovill.me", "davids-sites") into pageJson
+   
+end fedwiki_ExtractReferences
+
+function fedwiki_ExtractRosterSites 
+   put url "http://david.bovill.me/welcome-visitors.json" into pageJSON
+   put fedwiki_ExtractRoster (pageJSON) into someRoster
+   
+   repeat for each line someLine in someRoster
+      put word 1 of someLine into firstWord
+      if matchtext (firstWord, "\b[A-Z]+\b", anyThing) is false then next repeat
+      
+      set the itemdelimiter to "/"
+      switch firstWord
+         case "REFERENCES"
+            -- david.bovill.me/davids-sites
+            put word 2 to -1 of someLine into someRef
+            put item 1 of someRef into fedwikiDomain
+            put item 2 of someRef into pageSlug
+            put fedwiki_FetchPageJson (fedwikiDomain, pageSlug) into pageJson
+            return pageJson
+            break
+         default
+      end switch
+   end repeat
+end fedwiki_ExtractRosterSites
+
+function fedwiki_ExtractRoster pageJSON
+   put json_ToArray (pageJSON) into pageArray
+   put pageArray ["story"] into storyArray
+   repeat for each key indexNum in storyArray
+      put storyArray [indexNum] into itemArray
+      if itemArray ["type"] = "roster" then
+         put itemArray ["text"] into someRoster
+         return someRoster
+      end if
+   end repeat
+   return empty
+end fedwiki_ExtractRoster
+
+
+--> Fedwiki | Export and Import
+-
+command fedwiki_DownloadDomainToFolder fedwikiDomain, pLocalWikiFolder
+   /*
+   Fetches each site-json file one at a time, and parses then into json
+   Then spits out individual json files.
+   Better way to back-up is to use git or rsync
+   But it's a good test of the scripts.
+   */
+   
+   put fedwiki_FetchSiteExport (fedwikiDomain) into siteJSON
+   fedwiki_SetLocalSiteJson fedwikiDomain, siteJSON, pLocalWikiFolder
+   
+   put json_ToArray (siteJSON) into siteArray
+   fedwiki_SetLocalSiteArray fedwikiDomain, siteArray, pLocalWikiFolder
+   
+   if siteArray is not an array then return empty
+   repeat for each key pageSlug in siteArray
+      set the cursor to busy
+      put siteArray [pageSlug] into pageArray
+      -- now would be a good time to index
+      
+      put json_FromArray (pageArray) into pageJson
+      fedwiki_SetLocalPageJson pageSlug, pageJSON, fedwikiDomain, pLocalWikiFolder
+   end repeat
+   put fedwiki_FetchFavicon (fedwikiDomain) into pngData
+   fedwiki_SetLocalFavicon fedwikiDomain, pngData
+   return siteArray
+end fedwiki_DownloadDomainToFolder
+
+
+--> Fedwiki | PageArray | Process 
+-
+function fedwiki_ExtractReferenceLinks pageArray, fromSlug, fromDomain
+   put fromDomain & "/" & fromSlug into fromLink
+   put pageArray ["story"] into storyArray
+   repeat for each key nodeNum in storyArray
+      put storyArray [nodeNum] into nodeArray
+      put nodeArray ["type"] into nodeType
+      if nodeType = "reference" then
+         put nodeArray ["site"] into toDomain
+         put nodeArray ["slug"] into toSlug
+         
+         -- a bit archaic (should use nested arrays I think)
+         put toDomain & "/" & toSlug into toLink
+         if toDomain = fromDomain then
+            put nodeArray into linkArray ["internal"][fromLink][toLink]
+         else
+            put nodeArray into linkArray ["external"][fromLink][toLink]
+         end if
+      end if
+   end repeat
+   return linkArray
+end fedwiki_ExtractReferenceLinks
+
+function fedwiki_ExtractForkLinks pageArray, fromSlug, fromDomain
+   if fromDomain is empty then
+      breakpoint
+   end if
+   put fromDomain & "/" & fromSlug into fromLink
+   put pageArray ["journal"] into journalArray
+   put item 2 of the extents of journalArray into maxNum
+   put 1 into forkNum
+   repeat with nodeNum = 1 to maxNum
+      put journalArray [nodeNum] into nodeArray
+      put nodeArray ["type"] into nodeType
+      if nodeType = "fork" then
+         put nodeArray ["site"] into toDomain
+         
+         if toDomain is fromDomain or toDomain is empty then
+            -- going to assume it's a self-fork
+            put fromDomain into toDomain
+            next repeat -- not bothering storing this information (it's sort of useful for bugs?)
+         end if
+         
+         -- a bit archaic (should use nested arrays I think)
+         put toDomain & "/" & fromSlug into toLink -- a fork has the same slug
+         put nodeArray into linkArray [forkNum][fromLink][toLink]
+         add 1 to forkNum
+      end if
+   end repeat
+   return linkArray
+end fedwiki_ExtractForkLinks
+
+
+--> Fedwiki | Data
+-
+function fedwiki_FetchFavicon fedwikiDomain
+   put fedwiki_FaviconURL (fedwikiDomain) into someUrl
+   put url someUrl into pngData
+   return pngData
+end fedwiki_FetchFavicon
+
+function fedwiki_FetchSiteExport fedwikiDomain
+   -- load if you want better responsiveness
+   put fedwiki_JsonSiteExportUrl (fedwikiDomain) into someUrl
+   put url someUrl into someJSON
+   return someJSON
+end fedwiki_FetchSiteExport
+
+function fedwiki_FetchPageJson fedwikiDomain, pSlug
+   -- http://c0de.academy/currently-working-on.html
+   put fedwiki_PageJsonUrl (fedwikiDomain, pSlug) into someUrl
+   put url someUrl into someJSON
+   return someJSON
+end fedwiki_FetchPageJson
+
+
+--> Fedwiki | URL
+-
+command fedwiki_OpenBrowser fedwikiDomain, pTitleOrSlug
+   put fedwiki_ConstructSlug (pTitleOrSlug) into pageSlug
+   put fedwiki_PageUrl (fedwikiDomain, pageSlug) into someUrl
+   launch url someUrl
+end fedwiki_OpenBrowser
+
+-- command fedwiki_Launch fedwikiDomain, fedwikiTitle
+put fedwiki_ConstructSlug (fedwikiTitle) into pageSlug
+put "http://" & fedwikiDomain & "/view/welcome-visitors/view/" & pageSlug into someURL
+launch url someURL
+end fedwiki_Launch
+
+function fedwiki_PageUrl fedwikiDomain, pSlug
+   -- launch url "http://david.viral.academy/view/bicycle-bug"
+   if pSlug is empty then
+      return "http://" & fedwikiDomain
+   else
+      return "http://" & fedwikiDomain & "/view/" & pSlug
+   end if
+end fedwiki_PageUrl
+
+function fedwiki_UrlPathToSlug urlPath
+   set the itemdelimiter to "/"
+   get item -1 of urlPath
+   set the itemdelimiter to "."
+   put item 1 of it into pageSlug
+   return pageSlug
+end fedwiki_UrlPathToSlug
+
+function fedwiki_PageJsonUrl fedwikiDomain, pSlug
+   if pSlug is empty then
+      -- http://c0de.academy/welcome-visitors.json?random=95b9c89e
+      put "http://" & fedwikiDomain & "/welcome-visitors.json" into someUrl
+   else
+      -- put url "http://c0de.academy/currently-working-on.json?random=32c053a"
+      put "http://" & fedwikiDomain & "/" & pSlug & ".json" into someUrl
+   end if
+   put "?random=" & the ticks after someUrl
+   return someUrl
+end fedwiki_PageJsonUrl
+
+function fedwiki_FaviconURL fedwikiDomain
+   put "http://" & fedwikiDomain & "/favicon.png" into someUrl
+   return someUrl
+end fedwiki_FaviconURL
+
+function fedwiki_ExtractPageSlugsFromPath urlPath
+   set the itemdelimiter to "/"
+   repeat with itemNum = 2 to the number of items of urlPath step 2
+      put item itemNum of urlPath into someSlug
+      put someSlug & CR after someSlugs
+   end repeat
+   return word 1 to -1 of someSlugs
+end fedwiki_ExtractPageSlugsFromPath
+
+function fedwiki_FetchSitemap fedwikiDomain
+   put fedwiki_JsonSiteMapUrl (fedwikiDomain) into someUrl
+   put url someUrl into sitemapJSON
+   return sitemapJSON
+end fedwiki_FetchSitemap
+
+function fedwiki_JsonSiteMapUrl fedwikiDomain
+   --   http://wikimedia.commons.academy/system/sitemap.json
+   put "http://" & fedwikiDomain & "/system/sitemap.json" into someUrl
+   return someUrl
+end fedwiki_JsonSiteMapUrl
+
+function fedwiki_JsonSiteExportUrl fedwikiDomain
+   -- http://david.viral.academy/system/export.json
+   put "http://" & fedwikiDomain & "/system/export.json" into someUrl
+   return someUrl
+end fedwiki_JsonSiteExportUrl
+
+
+--> Fedwiki | Local | JSON
+-
+function fedwiki_GetLocalPageArray pageSlug, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_GetLocalPageJson (pageSlug, pFedwikiDomain, pLocalWikiFolder) into pageJSON
+   put json_ToArray (pageJSON) into pageArray 
+   return pageArray
+end fedwiki_GetLocalPageArray
+
+command fedwiki_SetLocalPageArray pageSlug, pageArray, pFedwikiDomain, pLocalWikiFolder, pCreateMilliSeconds
+   -- stores the pageArray as local json and updates the local site map
+   put json_FromArray (pageArray) into pageJSON  
+   fedwiki_SetLocalPageJson pageSlug, pageJSON, pFedwikiDomain, pLocalWikiFolder
+   fedwiki_UpdateLocalSiteMap pageArray, pFedwikiDomain, pCreateMilliSeconds
+   return pageJSON
+end fedwiki_SetLocalPageArray
+
+function fedwiki_GetLocalPageJson pageSlug, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_LocalPageJsonFile (pageSlug, pFedwikiDomain, false, pLocalWikiFolder) into someFile
+   if there is a file someFile then
+      put url ("file:" & someFile) into pageJSON
+      return pageJSON
+   else
+      return empty
+   end if
+end fedwiki_GetLocalPageJson
+
+command fedwiki_SetLocalPageJson pageSlug, pageJSON, pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_LocalPageJsonFile (pageSlug, pFedwikiDomain, true, pLocalWikiFolder) into someFile
+   put pageJSON into url ("file:" & someFile)
+   return someFile
+end fedwiki_SetLocalPageJson
+
+
+--> Fedwiki | Favicon
+-
+function fedwiki_GetLocalFavicon fedwikiDomain, pLocalStatusFolder
+   put fedwiki_LocalFaviconFile (fedwikiDomain, false, pLocalStatusFolder) into someFile
+   if there is a file someFile then
+      put url ("binfile:" & someFile) into pngData
+      return pngData
+   else
+      return empty
+   end if
+end fedwiki_GetLocalFavicon
+
+command fedwiki_SetLocalFavicon fedwikiDomain, pngData, pLocalStatusFolder
+   put fedwiki_LocalFaviconFile (fedwikiDomain, true, pLocalStatusFolder) into someFile
+   put pngData into url ("binfile:" & someFile)
+   return someFile
+end fedwiki_SetLocalFavicon
+
+
+--> Fedwiki | Local | Page Json | Files
+-
+/*
+JSON page files and favicons are all stored in a standard place within a ".wiki" folder as they are on the remote Node server.
+This local folder is named "wiki" without the first "." (as it would be on the remote Node server) so that it is visible.
+
+You can customise this location by using a getprop 
+*/
+
+function fedwiki_LocalFaviconFile fedwikiDomain, pCreateFolder, pLocalStatusFolder
+   if pLocalStatusFolder is empty then
+      put fedwiki_LocalStatusFolder (fedwikiDomain) into pLocalStatusFolder
+   end if
+   folder_Format pLocalStatusFolder
+   if pCreateFolder is true then
+      folder_CreateNested pLocalStatusFolder
+   end if
+   put pLocalStatusFolder & "favicon.png" into someFile
+   return someFile
+end fedwiki_LocalFaviconFile
+
+function fedwiki_LocalPageSlugs pFedwikiDomain, pLocalWikiFolder
+   put fedwiki_LocalPagesFolder (pFedwikiDomain, pLocalWikiFolder) into localPagesFolder
+   if there is a folder localPagesFolder then
+      put folder_ShortFiles (localPagesFolder) into pageSlugs
+      return pageSlugs
+   else
+      return empty
+   end if
+end fedwiki_LocalPageSlugs
+
+function fedwiki_LocalPageJsonFile pageSlug, pFedwikiDomain, pCreateFolder, pLocalWikiFolder
+   put fedwiki_LocalPagesFolder (pFedwikiDomain, pLocalWikiFolder) into localPagesFolder
+   if pCreateFolder is true then
+      folder_CreateNested localPagesFolder
+   end if
+   put localPagesFolder & pageSlug into someFile
+   return someFile
+end fedwiki_LocalPageJsonFile
+
+function fedwiki_LocalSiteMapJson pFedwikiDomain
+   put fedwiki_LocalSiteMapFile (pFedwikiDomain) into someFile
+   if there is a file someFile then
+      put url ("file:" & someFile) into someJSON -- sould it be "binfile:"???
+      return someJSON
+   else
+      return empty
+   end if
+end fedwiki_LocalSiteMapJson
+
+function fedwiki_GetLocalSitemapJson pFedwikiDomain
+   put fedwiki_LocalSiteMapFile (pFedwikiDomain) into someFile
+   if there is a file someFile then
+      put url ("file:" & someFile) into pageJSON
+      return pageJSON
+   else
+      return empty
+   end if
+end fedwiki_GetLocalSitemapJson
+
+command fedwiki_SetLocalSitemapJson pageSlug, pageJSON, pFedwikiDomain
+   put fedwiki_LocalSiteMapFile (pFedwikiDomain) into someFile
+   put pageJSON into url ("file:" & someFile)
+   return someFile
+end fedwiki_SetLocalSitemapJson
+
+function fedwiki_LocalSiteMapFile pFedwikiDomain
+   put fedwiki_GetLocalWikiRoot() into localWikiFolder
+   put localWikiFolder & fedwiki_JsonSiteMapPathBit (pFedwikiDomain) into siteMapFile
+   return siteMapFile
+end fedwiki_LocalSiteMapFile
+
+function fedwiki_JsonSiteMapPathBit pFedwikiDomain
+   --   .wiki/audio.commons.academy/status/sitemap.json
+   if pFedwikiDomain is empty then
+      return "status/sitemap.json"
+   else
+      put pFedwikiDomain & "/status/sitemap.json" into pathBit
+      return pathBit
+   end if
+end fedwiki_JsonSiteMapPathBit
+
+
+--> FedWiki | Local | Folders
+-
+function fedwiki_LocalPagesFolder pFedwikiDomain, pLocalWikiFolder  
+   if pLocalWikiFolder is empty then
+      put fedwiki_GetLocalWikiFolder (pFedwikiDomain) into pLocalWikiFolder
+   end if
+   folder_Format pLocalWikiFolder
+   put pLocalWikiFolder & "pages/" into localPagesFolder
+   return localPagesFolder
+end fedwiki_LocalPagesFolder
+
+function fedwiki_LocalStatusFolder fedwikiDomain
+   put fedwiki_GetLocalWikiFolder (fedwikiDomain) & "status/" into localStatusFolder
+   folder_Format localStatusFolder
+   return localStatusFolder
+end fedwiki_LocalStatusFolder
+
+function fedwiki_GetLocalWikiFolder pFedwikiDomain
+   put fedwiki_GetLocalWikiRoot() into localWikiFolder
+   if localWikiFolder is empty then return empty
+   
+   if pFedwikiDomain is not empty then
+      put pFedwikiDomain after localWikiFolder
+      folder_Format localWikiFolder
+   end if
+   return localWikiFolder
+end fedwiki_GetLocalWikiFolder
+
+function fedwiki_GetLocalWikiRoot
+   put the fedwiki_LocalWikiRoot of me into localWikiFolder -- so we can override if we want
+   if localWikiFolder is empty then
+      put "~/.wiki/" into localWikiFolder -- this is the default root for a wiki-node server on OSX and Linux
+   else
+      folder_Format localWikiFolder
+   end if
+   return localWikiFolder
+end fedwiki_GetLocalWikiRoot
+
+function fedwiki_GetLocalFolders
+   put fedwiki_GetLocalWikiRoot() into localWikiFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to localWikiFolder
+   put the folders into fedwikiFolders
+   set the defaultfolder to oFolder
+   filter fedwikiFolders without ".*"
+   line_Delete "pages", fedwikiFolders
+   line_Delete "status", fedwikiFolders
+   return fedwikiFolders
+end fedwiki_GetLocalFolders
+
+
+--> Deps
+-
+command line_Delete someLines, @fromContainer, partLine, skipLines
+    set the wholematches to (partLine is empty)
+    repeat with ii = 1 to the number of lines of someLines
+        put line ii of someLines into someLine
+        get lineoffset(someLine, fromContainer, skipLines)
+        if it is not 0 then
+            put it + skipLines into lineNum
+            delete line lineNum of fromContainer
+        end if 
+    end repeat
+    return the number of lines of someIndex
+end line_Delete
+
+function folder_ShortFiles someFolder, pFilter, pShowInvisible
+   put the defaultFolder into oDirectory
+   set the defaultFolder to someFolder
+   put the files into shortFiles
+   set the defaultFolder to oDirectory
+   if pFilter is not empty then filter shortFiles with pFilter
+   if pShowInvisible is not true then filter shortFiles without ".*"
+   return shortFiles
+end folder_ShortFiles
+
+command folder_Format @someFolder
+   -- should be renamed "folder_Normalize"
+   if someFolder is empty then return empty
+   repeat while last char of someFolder is "/"
+      delete last char of someFolder
+   end repeat
+   put "/" after someFolder
+end folder_Format
+
+command folder_CreateNested @someFolder
+   folder_Format someFolder
+   if there is a folder someFolder then return empty
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of someFolder
+      put item 1 to itemNum of someFolder & "/" into testFolder
+      if there is a folder testFolder then next repeat
+      create folder testFolder
+   end repeat
+end folder_CreateNested

@@ -1,0 +1,14 @@
+function wikimedia_RestfulFetch shortImageFile, pProps, pExtraProps, pFormat
+   if pFormat is empty then put "json" into pFormat
+   get merge ("?action=query&titles=Image:[[shortImageFile]]&prop=[[pProps]]&format=[[pFormat]]")
+   if pExtraProps is not empty then put "&" & pExtraProps after it
+   put wikimedia_GetApiRoot() & it into someURL
+   
+   wikipedia_SetUserAgent
+   put url someURL into someJSON
+   if the number of words of someJSON = 0 then
+      return someURL
+   else
+      return someJSON
+   end if
+end wikimedia_RestfulFetch

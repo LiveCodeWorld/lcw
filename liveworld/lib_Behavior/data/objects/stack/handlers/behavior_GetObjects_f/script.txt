@@ -1,0 +1,12 @@
+function behavior_GetObjects bNames
+   repeat for each line bName in bNames
+      put behavior_GetObject (bName) into bObject
+      if exists (bObject) is false then
+         -- not sure what to do -- should return an error
+         return empty
+      end if
+      put bObject & CR after bObjects
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_GetObjects

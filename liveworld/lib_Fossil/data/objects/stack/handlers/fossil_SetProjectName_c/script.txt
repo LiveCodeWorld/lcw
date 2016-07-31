@@ -1,0 +1,14 @@
+command fossil_SetProjectName fossilFile, projectName, pProjectDescription
+   put projectName into paramArray ["ProjectName"]
+   put pProjectDescription into paramArray ["ProjectDescription"]
+   
+   put fossil_ConstructConfiguration (paramArray, fossilFile) into fossilConfig
+   
+   put fossil_GetDefaultRepoFolder() & "config.txt" into tempConfigFile
+   -- put the tempname & ".txt" into tempConfigFile
+   put fossilConfig into url ("binfile:" & tempConfigFile)
+   
+   fossil_ImportConfiguration fossilFile, tempConfigFile
+   put the result into shellResult
+   return shellResult
+end fossil_SetProjectName

@@ -1,0 +1,6 @@
+command display_HkeyArrayHandler treeWidget, someValue, pathItems
+   put item 1 of pathItems into hKey
+   replace slash with comma in hKey
+   put hKey
+   hkey_Edit hKey
+end display_HkeyArrayHandler

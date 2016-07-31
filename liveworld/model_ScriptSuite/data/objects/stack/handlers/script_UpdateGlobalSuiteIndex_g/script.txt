@@ -1,0 +1,17 @@
+getprop script_UpdateGlobalSuiteIndex
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   
+   put script_ExtractGlobalTitles (someScript) into newSuiteTitles
+   script_RemoveObjectFromSuiteArray scriptObject
+   
+   put the rugged_ID of scriptObject into scriptObject
+   put empty into newArray
+   repeat for each line suiteTitle in newSuiteTitles
+      put scriptObject into newArray [suiteTitle]
+   end repeat
+   
+   script_AddToGlobalSuiteArray newArray
+   put the result into arrayKeyList
+   return arrayKeyList
+end script_UpdateGlobalSuiteIndex

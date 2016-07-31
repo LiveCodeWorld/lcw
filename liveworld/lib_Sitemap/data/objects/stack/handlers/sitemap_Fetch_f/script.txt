@@ -1,0 +1,5 @@
+function sitemap_Fetch shortSitemapFile
+   put sitemap_ConstructFilePath (shortSitemapFile) into someFile
+   put url ("binfile:" & someFile) into sitemapXML
+   return sitemapXML
+end sitemap_Fetch

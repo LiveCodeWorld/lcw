@@ -1,0 +1,136 @@
+--> MetaData
+-
+license: GPLv3
+name: model_SivaSiva
+type: model
+version: 0.1
+
+/*
+This model provides access to the array based book format used in the SivaSiva Book Modules.
+*/
+
+
+-->Test
+-
+[[ _FetchHandler (sivasiva_GetRandomChapter,f) ]]
+
+
+--> Chapter | Model
+-
+/*
+Getting and setting the:
+
+-  chapter_Title
+-  chapter_Num
+
+has the effect of setting the model for that view.
+Knowing the chapter_Title or chapter_Num enables us to fetch the chapter_Array,
+and therefore all the info we need.
+*/
+
+[[ _FetchHandler (chapter_Num,g) ]]
+
+[[ _FetchHandler (chapter_Num,s) ]]
+
+
+--> Chapter | Model | Wrappers
+-
+/*
+As long as the view defines the basic "chapter_Num" model. These handlers can go anywhere in the hierarchy.
+
+These should probably be called the longer "displayed_ChapterTitle" in order to distinguish from authoring.
+*/
+
+[[ _FetchHandler (chapter_Title,g) ]]
+
+[[ _FetchHandler (chapter_Title,s) ]]
+
+[[ _FetchHandler (chapter_Array,g) ]]
+
+
+--> SivaSiva | Chapter | Model
+-
+[[ _FetchHandler (positive_Label,g) ]]
+
+[[ _FetchHandler (negative_Label,g) ]]
+
+[[ _FetchHandler (trait_Description,g) ]]
+
+[[ _FetchHandler (trait_Quote,g) ]]
+
+[[ _FetchHandler (trait_Situation,g) ]]
+
+[[ _FetchHandler (positive_Response,g) ]]
+
+[[ _FetchHandler (negative_Response,g) ]]
+
+[[ _FetchHandler (trait_Assignment,g) ]]
+
+[[ _FetchHandler (thought_Label,g) ]]
+
+[[ _FetchHandler (trait_Image,g) ]]
+
+
+--> SivaSiva | Chapter | Model | Functions
+-
+[[ _FetchHandler (trait_GetDescription,f) ]]
+
+[[ _FetchHandler (trait_GetQuote,f) ]]
+
+[[ _FetchHandler (trait_GetSituation,f) ]]
+
+[[ _FetchHandler (trait_GetPositiveResponse,f) ]]
+
+[[ _FetchHandler (trait_GetNegativeResponse,f) ]]
+
+[[ _FetchHandler (trait_GetAssignment,f) ]]
+
+[[ _FetchHandler (trait_GetThoughtLabel,f) ]]
+
+[[ _FetchHandler (trait_GetPositiveLabel,f) ]]
+
+[[ _FetchHandler (trait_GetNegativeLabel,f) ]]
+
+
+--> SivaSiva | Model | Wrappers
+-
+[[ _FetchHandler (sivasiva_GetChapterArray,f) ]]
+
+[[ _FetchHandler (sivasiva_FetchChapters,f) ]]
+
+[[ _FetchHandler (sivasiva_GetChapterNum,f) ]]
+
+
+--> SivaSiva | Model
+-
+/*
+This is it for now.
+When it comes to authoring, or editing the content we should have some wrapers for chapters and so on.
+*/
+
+[[ _FetchHandler (sivasiva_FetchBookArray,f) ]]
+
+[[ _FetchHandler (sivasiva_SaveBookArray,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (text_StripTags,c) ]]
+
+
+--> Old
+-
+-- command sivasiva_SaveChapters orderedChapterTitleIndex
+   project_SaveValue "orderedChapterTitleIndex", orderedChapterTitleIndex, "SivaSiva"
+   return the result
+end sivasiva_SaveChapters
+
+-- command sivasiva_SaveChapterTitleArray chapterTitleArray
+   project_SaveValue "chapterTitleArray", chapterTitleArray, "SivaSiva"
+   return the result
+end sivasiva_SaveChapterTitleArray
+
+-- function sivasiva_FetchOldBookArray
+   put project_FetchValue ("contentArray", "SivaSiva") into bookArray
+   return bookArray
+end sivasiva_FetchOldBookArray

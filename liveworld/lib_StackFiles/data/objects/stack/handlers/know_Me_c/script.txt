@@ -1,0 +1,8 @@
+command know_Me pImportantPaths   
+   put the project_HomeStack of the target into projectHomeStack
+   project_GuessHomeStack projectHomeStack
+   put project_ListStandardFiles (pImportantPaths) into stackPaths
+   set the stackfile_Paths of projectHomeStack to stackPaths
+   put the result into stackFileTable
+   return stackFileTable
+end know_Me

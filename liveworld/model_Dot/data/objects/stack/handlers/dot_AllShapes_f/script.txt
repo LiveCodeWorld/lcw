@@ -1,0 +1,18 @@
+function dot_AllShapes
+   -- put "rect,rectangle" & comma after nodeStyles
+   put "none" & comma after nodeStyles
+   put "-" & comma after nodeStyles
+   put "box,ellipse,circle,point,triangle,plaintext" & comma after nodeStyles
+   put "-" & comma after nodeStyles
+   put "shapefile" & comma after nodeStyles
+   put "-" & comma after nodeStyles
+   put "polygon,diamond,pentagon,hexagon,septagon,octagon" & comma after nodeStyles
+   put "-" & comma after nodeStyles
+   put "doublecircle,doubleoctagon,tripleoctagon" & comma after nodeStyles
+   put "Mdiamond,Msquare,Mcircle" & comma after nodeStyles
+   put "-" & comma after nodeStyles
+   put "egg,trapezium,parallelogram,house,invtriangle,invtrapezium,invhouse" & comma after nodeStyles
+   
+   delete char -1 of nodeStyles
+   return nodeStyles
+end dot_AllShapes

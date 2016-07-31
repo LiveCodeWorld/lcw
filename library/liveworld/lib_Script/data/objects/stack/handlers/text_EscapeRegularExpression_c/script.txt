@@ -1,0 +1,6 @@
+command text_EscapeRegularExpression @someString
+   put "\" & tab & quote & "[]|*.?()" into specialChars
+   repeat for each char specialChar in specialChars
+      replace specialChar with "\" & specialChar in someString
+   end repeat
+end text_EscapeRegularExpression

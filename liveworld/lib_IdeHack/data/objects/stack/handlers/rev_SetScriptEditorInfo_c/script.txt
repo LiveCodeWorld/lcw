@@ -1,0 +1,42 @@
+command rev_SetScriptEditorInfo @hKey, @someHandler, @suiteTitle, @scriptSuite, @scriptObject
+   -- should select the clickline
+   
+   put rev_HandlerTreeField() into handlerTreeField
+   put rev_ScriptObject() into scriptObject
+   
+   -- put item 1 of the hilitedLine of handlerTreeField into lineNum
+   put word 2 of the clickline into lineNum
+   put word 1 to -1 of line lineNum of the text of handlerTreeField into handlerName
+   -- opn_Notify handlerName, true
+   
+   -- have to get suite title from script
+   get the htmltext of line lineNum of handlerTreeField
+   switch 
+      case it contains ("<img src=" & kwote(205023) & ">")
+         put "f" into handlerType
+         break
+      case it contains ("<img src=" & kwote(205026) & ">")
+         put "g" into handlerType
+         break
+      case it contains ("<img src=" & kwote(205024) & ">")
+         put "s" into handlerType
+         break
+      case it contains ("<img src=" & kwote(205025) & ">")
+         put "c" into handlerType
+         break
+   end switch
+   
+   put handlerName,handlerType into shortHKey
+   put hkey_Construct (handlerName, handlerType, scriptObject) into hKey
+   
+   put the script of scriptObject into someScript
+   -- put script_ExtractHandlerType(handlerName, someScript, handlerType) into someHandler
+   put handler_ConvertType (handlerType) into onWord
+   script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+   put char startHandler to endHandler of someScript into someHandler
+   
+   -- Suite stuff
+   get char 1 to startHandler of someScript
+   put script_GetSuiteTitles (someScript) into suiteTitles
+   put line -1 of suiteTitles into suiteTitle
+end rev_SetScriptEditorInfo

@@ -1,0 +1,24 @@
+function script_GetMetadataArray someScript
+   local metadataArray
+   put script_GetSuite("MetaData", someScript) into metaDataSuite
+   if metaDataSuite is empty then return empty
+   
+   script_DeconstructMetaDataSuite metaDataSuite, metadataBit, commentBit, handlerBit
+   put commentBit into metadataArray ["script_Help"]
+   
+   -- loop through metadata part of suite
+   set the itemdelimiter to ":"
+   repeat for each line someLine in metadataBit
+      put item 1 of someLine into someKey
+      put item 2 to -1 of someLine into someValue
+      if someValue is empty then next repeat
+      
+      put word 1 to -1 of someKey into someKey
+      put word 1 to -1 of someValue into someValue
+      -- replace quote with empty in someKey
+      -- replace quote with empty in someValue
+      
+      put someValue into metadataArray [someKey]
+   end repeat
+   return metadataArray
+end script_GetMetadataArray

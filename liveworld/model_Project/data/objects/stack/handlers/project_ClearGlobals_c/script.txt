@@ -1,0 +1,11 @@
+command project_ClearGlobals
+   global gTemp_ActiveMenuArray
+   global gLibrarySet_Array
+   global gHkey_Array
+   global gPrefs_Array
+   
+   delete variable gTemp_ActiveMenuArray
+   delete variable gLibrarySet_Array
+   delete variable gHkey_Array
+   delete variable gPrefs_Array
+end project_ClearGlobals

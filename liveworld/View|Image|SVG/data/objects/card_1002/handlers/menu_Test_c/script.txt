@@ -1,0 +1,5 @@
+on menu_Test mTarget, testParam
+   put the svg_HeaderArray of svgView into svgHeaderArray
+   delete variable svgHeaderArray [headerKey]
+   set the svg_HeaderArray of svgView to svgHeaderArray
+end menu_Test

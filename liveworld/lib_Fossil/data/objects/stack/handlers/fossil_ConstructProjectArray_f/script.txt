@@ -1,0 +1,9 @@
+function fossil_ConstructProjectArray
+   put fossil_ListAllRepositories() into fossilFiles
+   repeat for each line fossilFile in fossilFiles
+      put fossil_InfoArray (fossilFile) into infoArray
+      put fossilFile into infoArray ["repository"]
+      put infoArray into fossilArray [fossilFile]
+   end repeat
+   return fossilArray
+end fossil_ConstructProjectArray

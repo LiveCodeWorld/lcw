@@ -1,0 +1,13 @@
+function dot_DoShell imageFile, pDotCommand, pImageFormat
+   dot_NormalizeDotCommand pDotCommand
+   if pImageFormat is empty then put "png" into pImageFormat
+   put graphViz_GetShellPath() into gvPath
+   
+   put gvPath & pDotCommand into someShell
+   put space & "-T" & pImageFormat after someShell
+   put space & quote & imageFile & quote after someShell
+   
+   put shell(someShell) into gvResult
+   put dot_CheckResult(gvResult, "png", someShell) into shellResult
+   return shellResult
+end dot_DoShell

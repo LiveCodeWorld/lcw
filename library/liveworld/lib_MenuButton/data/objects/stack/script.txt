@@ -1,0 +1,283 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_MenuButton
+type: script library
+version: 0.9
+
+/*
+Latest library to implement dynamic menus from script introspection.
+These handlers used to be in the standalone "View|Menu|Button" stack script
+
+It is designed to be just the minimal set of handlers needed to implement the handlers
+:   menu_PullDown, menu_PopUp
+and to support the behavior of the menu_Button.
+*/
+
+
+--> Currently Working On
+-
+/*
+Aiming to remove  menu_ToolTitle. It is no longer used in this stack.
+It overcomplicates things. 
+
+Tool logic should be placed in the details of the tools script - not the library here.
+*/
+
+
+--> Menu | Basics
+-
+-- getprop menu_Button
+   -- a default
+   -- local scripts can define their own
+   return the long id of btn 1 of card 1 of stack "View|Menu|Button"
+end menu_Button
+
+[[ _FetchHandler (menu_MouseDown,c) ]]
+
+[[ _FetchHandler (menu_PopUp,c) ]]
+
+[[ _FetchHandler (menu_PullDown,c) ]]
+
+
+--> Menu | Checks
+-
+[[ _FetchHandler (menu_CheckTitleController,f) ]]
+
+
+--> Deps | menu_SendMessage
+-
+/*
+These handlers could be in the menu_Button's behavior.
+*/
+
+[[ _FetchHandler (menu_SendMessage,c) ]]
+
+[[ _FetchHandler (menu_EditMenuItem,c) ]]
+
+[[ _FetchHandler (menu_EditMenuItemScript,c) ]]
+
+[[ _FetchHandler (menu_ExportMenuItemScript,c) ]]
+
+[[ _FetchHandler (menu_OptionEdit,g) ]]
+
+
+--> Deps | Menu | Title
+-
+[[ _FetchHandler (menu_Title,g) ]]
+
+[[ _FetchHandler (menu_Title,s) ]]
+
+[[ _FetchHandler (menu_Controller,g) ]]
+
+[[ _FetchHandler (menu_Controller,s) ]]
+
+[[ _FetchHandler (menu_Table,g) ]]
+
+[[ _FetchHandler (menu_Text,g) ]]
+
+[[ _FetchHandler (menu_Text,s) ]]
+
+[[ _FetchHandler (menu_Array,g) ]]
+
+
+--> Menu | Extras
+-
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+[[ _FetchHandler (menu_BurntTitle,s) ]]
+
+[[ _FetchHandler (menu_BurntTitle,g) ]]
+
+[[ _FetchHandler (menu_DefaultTitle,g) ]]
+
+[[ _FetchHandler (menu_DefaultToolTitle,g) ]]
+
+[[ _FetchHandler (menu_GetTitleTargetOveride,f) ]]
+
+
+--> Deps | Menu | Controller
+-
+/*
+Views can have attached menus. 
+These menus are defined and controlled by scripts that reside in a revolution object. 
+The object that contains this script is a "menu_Controller", and we store the link to this menu_Controller
+as a view_Value. 
+If not value is set then we return a default value, which for views is the card the view is on.
+
+It is possible to set the "menu_Controller" to another object, and so move the scripts controlling the menu arround.
+This is often simpler to do with a "global menu".
+*/
+
+[[ _FetchHandler (burnt_MenuController,g) ]]
+
+[[ _FetchHandler (burnt_MenuController,s) ]]
+
+[[ _FetchHandler (menu_GetDefaultController,f) ]]
+
+[[ _FetchHandler (menu_SearchViewHierarchy,c) ]]
+
+
+--> Menu | Sub Stacks
+-
+/*
+Menu sub-stacks allow you to separate out menus onto their own sel-contained cards,
+without haivng to go to create a Global menu.
+
+These are used by "menu_TableLineFromScript"
+*/
+
+[[ _FetchHandler (menu_Cards,g) ]]
+
+[[ _FetchHandler (menu_CardNames,g) ]]
+
+[[ _FetchHandler (menu_CardMenu,g) ]]
+
+[[ _FetchHandler (menu_ConstructCardMenu,f) ]]
+
+[[ _FetchHandler (menu_CardArray,g) ]]
+
+[[ _FetchHandler (menu_SubStackCard,g) ]]
+
+[[ _FetchHandler (menu_SubStackName,g) ]]
+
+[[ _FetchHandler (menu_SubStack,g) ]]
+
+[[ _FetchHandler (menu_IndexStackMenuCards,c) ]]
+
+[[ _FetchHandler (menu_CreateSubStack,c) ]]
+
+
+--> Deps | Menu | Text
+-
+/*
+menu_Text is a property of the targetObject.
+the text is derived from the menu_Table
+which is in turn stored with the menu_Controller 
+
+menu_Text is now quickly constructed from the menu_Table (cached with the menu_Controller)
+Submenus are created by recursively calling menu_Text on the submenu menu_Title
+So script should be modified to prevent recursion.
+
+While fetching the text (usually on a mousedown)
+the menu_Table is also converted to an array
+and added to the global gTemp_ActiveMenuArray
+*/
+
+[[ _FetchHandler (menu_TextFromTitle,s) ]]
+
+
+--> Deps | Menu
+-
+[[ _FetchHandler (menu_AddBooleanLine,c) ]]
+
+[[ _FetchHandler (menu_CheckDisabled,f) ]]
+
+[[ _FetchHandler (menu_CheckDisabledItem,f) ]]
+
+[[ _FetchHandler (menu_CheckSub,c) ]]
+
+[[ _FetchHandler (menu_CleanLine,f) ]]
+
+[[ _FetchHandler (menu_CleanMarks,f) ]]
+
+[[ _FetchHandler (menu_CleanCheckMarks,c) ]]
+
+[[ _FetchHandler (menu_ConstructSubmenuTableLine,f) ]]
+
+[[ _FetchHandler (menu_ConstructTableLine,f) ]]
+
+[[ _FetchHandler (menu_ClearTargetGlobals,c) ]]
+
+[[ _FetchHandler (menu_ConvertTable,f) ]]
+
+[[ _FetchHandler (menu_TidyText,c) ]]
+
+[[ _FetchHandler (addToMenuActiveArray,c) ]]
+
+[[ _FetchHandler (menu_DeconstructPath,c) ]]
+
+[[ _FetchHandler (menu_DeconstructTableLine,c) ]]
+
+[[ _FetchHandler (menu_DisableLine,c) ]]
+
+[[ _FetchHandler (menu_FetchCustomMenuItems,c) ]]
+
+[[ _FetchHandler (menu_GetItemTargetOveride,f) ]]
+
+[[ _FetchHandler (menu_GetLineNum,f) ]]
+
+[[ _FetchHandler (menu_GetTextFromTitleTable,f) ]]
+
+[[ _FetchHandler (menu_GetTopController,f) ]]
+
+[[ _FetchHandler (menu_GetTopTitle,f) ]]
+
+[[ _FetchHandler (menu_IncludeMenuText,c) ]]
+
+[[ _FetchHandler (menu_InsertFixed,c) ]]
+
+[[ _FetchHandler (menu_InsertSubMenu,c) ]]
+
+[[ _FetchHandler (menu_MenuTextFromTitle,f) ]]
+
+[[ _FetchHandler (menu_ScriptTitles,g) ]]
+
+[[ _FetchHandler (menu_SentIsChecked,f) ]]
+
+[[ _FetchHandler (menu_LineNumFromPath,f) ]]
+
+[[ _FetchHandler (menu_SetCheckedItem,c) ]]
+
+[[ _FetchHandler (menu_SetCheckedLine,f) ]]
+
+[[ _FetchHandler (menu_SetItemTargetOveride,c) ]]
+
+[[ _FetchHandler (menu_SetSentPath,c) ]]
+
+[[ _FetchHandler (menu_SetTargetObject,c) ]]
+
+[[ _FetchHandler (menu_SetTitlePath,c) ]]
+
+[[ _FetchHandler (menu_SetTopController,c) ]]
+
+[[ _FetchHandler (menu_SetTopTitle,c) ]]
+
+[[ _FetchHandler (menu_TargetFromGlobal,f) ]]
+
+
+--> Menu | Deps
+-
+[[ _FetchHandler (menu_DeconstructCommandLine,c) ]]
+
+[[ _FetchHandler (menu_DefaultTableLine,c) ]]
+
+[[ _FetchHandler (menu_DeleteTables,c) ]]
+
+[[ _FetchHandler (menu_ExtractTableFromScript,f) ]]
+
+[[ _FetchHandler (menu_SetSubmenuFixedProp,c) ]]
+
+[[ _FetchHandler (menu_TableLineFromScript,c) ]]
+
+
+--> Deps | actionCompile,c
+-
+[[ _FetchHandler (menu_ConstructParamProp,c) ]]
+
+
+--> Deps | Menu Front Scripts
+-
+[[ _FetchHandler (menu_ConvertArrayToRecord,c) ]]
+
+[[ _FetchHandler (menu_DeconstructPluginRecord,c) ]]
+
+[[ _FetchHandler (menu_DontPassFrontHack,g) ]]
+
+[[ _FetchHandler (menu_GetMouseDownBlocks,f) ]]
+
+[[ _FetchHandler (menu_ModifierKeys,f) ]]
+
+[[ _FetchHandler (menu_PluginArray,g) ]]
+
+[[ _FetchHandler (menu_PluginTable,g) ]]

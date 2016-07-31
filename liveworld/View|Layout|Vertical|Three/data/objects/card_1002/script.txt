@@ -1,0 +1,73 @@
+--> Metadata
+-
+/*
+menu_Target is defined in the view. Can override by placing a getprop menu_Target handler here.
+*/
+
+local LocalArray
+
+
+--> Global | Layouts | Vertical | Three | Menu
+-
+[[ _FetchHandler (submenu_Property,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReplaceHeader,c) ]]
+
+[[ _FetchHandler (menu_ReplaceBody,c) ]]
+
+[[ _FetchHandler (menu_ReplaceFooter,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_LayoutStyle,c) ]]
+
+[[ _FetchHandler (menu_HeaderHeight,c) ]]
+
+[[ _FetchHandler (submenu_TestGeometry,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_EditBehavior,c) ]]
+
+
+--> Global | Layouts | Vertical | Three | Menu | Props
+-
+[[ _FetchHandler (layout_Style,g) ]]
+
+[[ _FetchHandler (layout_Styles,g) ]]
+
+[[ _FetchHandler (header_ViewName,g) ]]
+
+[[ _FetchHandler (body_ViewName,g) ]]
+
+[[ _FetchHandler (footer_ViewName,g) ]]
+
+[[ _FetchHandler (header_ViewNames,g) ]]
+
+[[ _FetchHandler (body_ViewNames,g) ]]
+
+[[ _FetchHandler (footer_ViewNames,g) ]]
+
+[[ _FetchHandler (_getViewName,f) ]]
+
+[[ _FetchHandler (some_Height,g) ]]
+
+[[ _FetchHandler (some_Heights,g) ]]
+
+
+--> Global | Layouts | Vertical | Three | Menu | Disabled
+-
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]

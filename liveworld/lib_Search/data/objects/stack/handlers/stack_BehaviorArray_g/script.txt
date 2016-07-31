@@ -1,0 +1,27 @@
+getprop stack_BehaviorArray
+   -- return a list of the views in a stack and all it's substacks
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mStackName
+   put the long id of stack mStackName into longMainStack
+   -- put the name of stack mStackName into mStack
+   
+   put search_StackForResults (longMainStack, "behavior") into objectArray
+   put objectArray into behaviorArray ["behavior object"]
+   
+   repeat for each key behaviorObject in objectArray
+      put the long id of behaviorObject into longBehavior
+      
+      if longBehavior ends with longMainStack then
+         put objectArray [behaviorObject] & CR after objectsWithInternalBehavior
+         repeat for each line someObject in objectsWithInternalBehavior
+            put behaviorObject into behaviorArray ["within mainstack"][someObject]
+         end repeat
+      else
+         put objectArray [behaviorObject] into objectsWithExternalBehaviors
+         repeat for each line someObject in objectsWithExternalBehaviors
+            put behaviorObject into behaviorArray ["outside mainstack"][someObject]
+         end repeat
+      end if
+   end repeat
+   return behaviorArray
+end stack_BehaviorArray

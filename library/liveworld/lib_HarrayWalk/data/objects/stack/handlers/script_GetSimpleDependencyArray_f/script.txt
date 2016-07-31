@@ -1,0 +1,33 @@
+function script_GetSimpleDependencyArray scriptObject, pSetName, pTestExceptions, pFromObject
+   local hKeyLinkArray
+   
+   if pFromObject is true then 
+      put the script_Hkeys of scriptObject into hkeys
+   else
+      if the hArray_ObjectIndexCurrent of scriptObject is false then
+         object_AddToGlobalArray scriptObject
+      end if
+      put the hArray_FirstHkeys of scriptObject into hkeys
+   end if
+   
+   try
+      if pFromObject is true then put the script of scriptObject into someScript
+      
+      put false into notPrivate 
+      repeat for each line hKey in hkeys
+         put item 3 of hkey into someObject
+         if the hArray_ObjectIndexCurrent of someObject is false then
+            object_AddToGlobalArray someObject
+         end if
+         
+         put hkey_GetCalls (hKey) into shortCalls
+         repeat for each line shortCall in shortCalls
+            hArray_SimpleWalk shortCall, hKey, hKeyLinkArray, pSetName, pTestExceptions, hKey
+         end repeat
+      end repeat
+      array_StripDeeperLevels hKeyLinkArray
+      return hKeyLinkArray
+   catch e -- script is locked
+      return empty
+   end try
+end script_GetSimpleDependencyArray

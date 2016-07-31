@@ -1,0 +1,12 @@
+getprop view_Parent
+   -- was "view_Above" and "view_Owner"
+   put the long id of the target into someObject
+   if word 1 of someObject is "stack" then
+      -- a stack cant be a view?
+      return empty
+   else
+      delete word 1 to 4 of someObject
+      put the view_Object of someObject into someView
+      return someView
+   end if
+end view_Parent

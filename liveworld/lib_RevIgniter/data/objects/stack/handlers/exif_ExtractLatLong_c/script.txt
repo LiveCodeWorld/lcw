@@ -1,0 +1,23 @@
+command exif_ExtractLatLong exifArray, @mapLat, @mapLong
+   -- put resultArray ["exifArray"] into exifArray
+   put exifArray ["exif"]["GPSInfo"] into gpsArray
+   put gpsArray ["GPSLatitude"] into latInfo
+   put gpsArray ["GPSLongitude"] into longInfo
+   
+   if latInfo is empty or longInfo is empty then
+      put empty into mapLat
+      put empty into mapLong
+      return false
+   end if
+   
+   put exif_GpsToDegrees (latInfo) into mapLat
+   put exif_GpsToDegrees (longInfo) into mapLong
+   
+   if gpsArray ["GPSLongitudeRef"] = "West" then
+      put -1 * mapLong into mapLong
+   end if
+   if gpsArray ["GPSLatitudeRef"] = "South" then
+      put -1 * mapLat into mapLat
+   end if
+   return true
+end exif_ExtractLatLong

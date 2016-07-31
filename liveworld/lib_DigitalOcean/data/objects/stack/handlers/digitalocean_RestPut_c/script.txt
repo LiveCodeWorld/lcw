@@ -1,0 +1,9 @@
+command digitalocean_RestPut domainPath, someJSON
+   -- v2
+   put OceanApiRoot & domainPath into someUrl
+   digitalocean_SetAuthHeaders
+   
+   put someJSON into url someUrl
+   put the result into someResult
+   return someResult
+end digitalocean_RestPut

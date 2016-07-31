@@ -1,0 +1,8 @@
+getprop edited_StackNames
+   put LocalArray ["editedStacks"] into editedStacks
+   if editedStacks is empty then
+      return empty
+   else
+      return editedStacks & ",-,Save All"
+   end if
+end edited_StackNames

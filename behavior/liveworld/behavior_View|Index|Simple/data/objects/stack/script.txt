@@ -1,0 +1,119 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Index|Simple
+type: view behavior
+version: 0.3
+
+/*
+Was "View|Index|Simple" - now moverd to this script-ony behavior.
+*/
+
+
+--> Variables
+-
+local LocalArray
+
+
+--> Events
+-
+[[ _FetchHandler (nameChanged,c) ]]
+
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (menu_Controller,g) ]]
+
+[[ _FetchHandler (preOpenControl,c) ]]
+
+[[ _FetchHandler (resizeControl,c) ]]
+
+
+--> Events | Custom
+-
+[[ _FetchHandler (refreshDisplay,c) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+
+--> Index | Props | Index
+-
+[[ _FetchHandler (view_Index,g) ]]
+
+[[ _FetchHandler (view_Index,s) ]]
+
+[[ _FetchHandler (selected_Index,g) ]]
+
+[[ _FetchHandler (selected_Index,s) ]]
+
+
+--> Names and Titles
+-
+/*
+Rationalise these naames and check other external handlers do not reference old ones.
+*/
+
+[[ _FetchHandler (group_Name,g) ]]
+
+[[ _FetchHandler (group_Name,s) ]]
+
+[[ _FetchHandler (view_Title,g) ]]
+
+[[ _FetchHandler (view_Title,s) ]]
+
+[[ _FetchHandler (view_Label,g) ]]
+
+[[ _FetchHandler (view_Label,s) ]]
+
+[[ _FetchHandler (title_Text,g) ]]
+
+[[ _FetchHandler (title_Text,s) ]]
+
+
+--> Index | Props
+-
+[[ _FetchHandler (multiple_Hilites,g) ]]
+
+[[ _FetchHandler (multiple_Hilites,s) ]]
+
+[[ _FetchHandler (title_Colour,g) ]]
+
+[[ _FetchHandler (title_Colour,s) ]]
+
+[[ _FetchHandler (title_TextColour,g) ]]
+
+[[ _FetchHandler (title_TextColour,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (header_Height,g) ]]
+
+[[ _FetchHandler (header_Height,s) ]]
+
+[[ _FetchHandler (_headerRect,pf) ]]
+
+[[ _FetchHandler (_fieldRect,pf) ]]
+
+[[ _FetchHandler (_headerHeight,pf) ]]
+
+[[ _FetchHandler (_setDefaultHeight,pc) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (index_View,g) ]]
+
+[[ _FetchHandler (index_Field,g) ]]
+
+[[ _FetchHandler (titleView,f) ]]
+
+[[ _FetchHandler (fieldView,f) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]

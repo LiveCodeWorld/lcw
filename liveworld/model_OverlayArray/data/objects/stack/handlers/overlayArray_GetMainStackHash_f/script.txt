@@ -1,0 +1,5 @@
+function overlayArray_GetMainStackHash overlayArray
+   put overlayArray_GetMetadataArray (overlayArray) into metadataArray
+   put metadataArray ["mainstack_Hash"] into mainstackHash
+   return mainstackHash
+end overlayArray_GetMainStackHash

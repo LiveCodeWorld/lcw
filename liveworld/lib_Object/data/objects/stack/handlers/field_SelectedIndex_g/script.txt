@@ -1,0 +1,5 @@
+getprop field_SelectedIndex
+   put the long ID of the target into fieldObject
+   if word 1 of fieldObject is not "field" then return empty
+   return the selectedText of fieldObject
+end field_SelectedIndex

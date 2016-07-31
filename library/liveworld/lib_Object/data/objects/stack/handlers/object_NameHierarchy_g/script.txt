@@ -1,0 +1,5 @@
+getprop object_NameHierarchy
+   put the mobile_Name of the target into someObject
+   object_SetHierarchy someObject, shortObjects, longObjects, objectOutline, namePath
+   return shortObjects
+end object_NameHierarchy

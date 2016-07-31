@@ -1,0 +1,12 @@
+command line_Delete someLines, @fromContainer, partLine, skipLines
+   set the wholematches to (partLine is empty)
+   repeat with ii = 1 to the number of lines of someLines
+      put line ii of someLines into someLine
+      get lineoffset(someLine, fromContainer, skipLines)
+      if it is not 0 then
+         put it + skipLines into lineNum
+         delete line lineNum of fromContainer
+      end if 
+   end repeat
+   return the number of lines of someIndex
+end line_Delete

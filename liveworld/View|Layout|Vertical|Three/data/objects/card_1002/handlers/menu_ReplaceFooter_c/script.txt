@@ -1,0 +1,7 @@
+on menu_ReplaceFooter someView, footerViewName
+   put the footer_View of someView into footerView
+   set the control_Type of footerView to footerViewName
+   if the result is empty then
+      answer warning "Problem replacing the control!"
+   end if
+end menu_ReplaceFooter

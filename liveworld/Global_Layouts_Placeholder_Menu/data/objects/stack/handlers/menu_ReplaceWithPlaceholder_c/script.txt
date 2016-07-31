@@ -1,0 +1,5 @@
+on menu_ReplaceWithPlaceholder mTarget 
+   put the short name of mTarget into oName
+   set the control_Type [oName] of mTarget to "placeHolder"
+   put the result into newView
+end menu_ReplaceWithPlaceholder

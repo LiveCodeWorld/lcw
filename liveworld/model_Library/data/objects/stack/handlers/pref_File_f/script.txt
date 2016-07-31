@@ -1,0 +1,4 @@
+function pref_File pModelName
+   put library_PrefFolder ("opn_pref.array") into someFile
+   return someFile
+end pref_File

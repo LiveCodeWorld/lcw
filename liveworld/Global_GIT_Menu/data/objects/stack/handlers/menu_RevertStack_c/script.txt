@@ -1,0 +1,14 @@
+on menu_RevertStack treeField
+   put the tree_SelectedLink of treeField into commitHash
+   put the displayed_Object of treeField into stackObject
+   /*
+   put the stack_RelativeFile of mTarget into relativeFile
+   put git_GetLastRevision (relativeFile, 1) into binaryStackData
+   display_Text binaryStackData
+   */
+   
+   -- put the long id of stackObject into stackObject
+   -- delete stackObject
+   git_RevertStack stackObject, commitHash
+   -- go to stackObject
+end menu_RevertStack

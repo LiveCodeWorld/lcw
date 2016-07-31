@@ -1,0 +1,12 @@
+on menu_FetchRigScript stackObject, rigController
+   put rig_FetchControllerFolder() into controllerFolder
+   if there is not a folder controllerFolder then
+      put controllerFolder
+      answer warning "Cannot locate controller folder. Please set one!"
+      exit to top
+   end if
+   
+   rig_DownloadScriptAndCreateStack rigController, controllerFolder
+   put the result into scriptStackFile
+   edit the script of stack scriptStackFile
+end menu_FetchRigScript

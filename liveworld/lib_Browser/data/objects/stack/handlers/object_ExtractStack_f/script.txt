@@ -1,0 +1,5 @@
+function object_ExtractStack someObject
+   set the wholematches to true
+   put word (wordOffset ("stack", someObject)) to -1 of someObject into stackObject
+   return stackObject
+end object_ExtractStack

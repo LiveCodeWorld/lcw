@@ -1,0 +1,31 @@
+setprop layout_Style someStyle
+   lock screen
+   switch someStyle
+      case "browser"
+         set the header_Height of me to 64
+         set footer_Height of me to 49
+         set the fluid_View of me to "body_View"
+         
+         set the control_Type of the header_View of me to "headerBar"
+         set the control_Type of the body_View of me to "browser"
+         set the control_Type of the footer_View of me to "navBar"
+         
+         set the showborder of the footer_View of me to false
+         set the itemStyle of the footer_View of me to "icons"
+         set the url of the body_View of me to "http://david.bovill.me"
+         break
+      case "small"
+      default
+         set the header_Height of me to 30
+         set the footer_Height of me to 30
+         set the fluid_View of me to "body_View"
+         
+         set the control_Type ["header_View"] of the header_View of me to "placeholder"
+         set the control_Type ["body_View"] of the footer_View of me to "placeholder"
+   end switch
+   
+   set lockmessages to true
+   set the layout_Style of me to someStyle 
+   set lockmessages to false
+   unlock screen
+end layout_Style

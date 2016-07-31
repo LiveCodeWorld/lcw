@@ -1,0 +1,5 @@
+function fedwiki_Slugify someTitle
+   put tolower (someTitle) into someSlug
+   replace space with "-" in someSlug
+   return someSlug
+end fedwiki_Slugify

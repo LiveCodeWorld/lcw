@@ -1,0 +1,5 @@
+on menu_DeleteCheckoutGlobal mTarget, opnGlobal
+   opn_Answer merge ("Are you sure you want to remove the global variable '[[opnGlobal]]' from memory?")
+   opn_DeleteGlobalArray opnGlobal
+   opn_Notify merge ("Removed the global variable [[opnGlobal]] from memory!")
+end menu_DeleteCheckoutGlobal

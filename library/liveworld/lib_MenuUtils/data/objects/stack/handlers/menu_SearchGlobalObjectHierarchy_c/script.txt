@@ -1,0 +1,14 @@
+command menu_SearchGlobalObjectHierarchy @foundGlobalTitle, @foundMenuController
+   -- get the executioncontexts
+   put empty into foundMenuController
+   put foundGlobalTitle into oTitle
+   put script_ExtractGlobalSuiteArray ("Menu") into dataArray
+   set the itemdelimiter to "|"
+   repeat (the number of items of foundGlobalTitle - 2)
+      put dataArray [foundGlobalTitle] into foundMenuController
+      if exists(foundMenuController) then return foundMenuController
+      delete item - 2 of foundGlobalTitle
+   end repeat
+   put oTitle into foundGlobalTitle
+   put empty into foundMenuController
+end menu_SearchGlobalObjectHierarchy

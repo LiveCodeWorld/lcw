@@ -1,0 +1,21 @@
+setprop burnt_MenuController [pMenuTitle] mController
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   if pMenuTitle is empty then
+      put the menu_Title of targetObject into pMenuTitle
+   else
+      -- for convenience lets switch the menu_Title as well!
+      set the menu_BurntTitle of targetObject to pMenuTitle
+   end if
+   
+   if mController is empty then
+      custom_DeleteProperty "menu_Controller", someView
+   else
+      set lockmessages to true
+      set the menu_Controller [pMenuTitle] of someView to mController
+      set lockmessages to false
+   end if
+   return pMenuTitle
+end burnt_MenuController

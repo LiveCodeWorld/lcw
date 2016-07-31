@@ -1,0 +1,377 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Deps
+type: script library
+version: 0.1
+
+/*
+A library to handle dependencies (in particular script dependencies).
+It used to be in "libOPN_Deps"
+
+It provides code for graphing dependencies, and extracting handlers required by a script or stack to function.
+It also enables the automatic creation of depndency behavior scripts for libraries.
+
+The Main Stack| Meta Array is the combined hArray and mainStackArray export format.
+
+It superceded the older handlers below. 
+There were some problems with stackObject references to substacks,
+and the organisation requires some repetition in order to allow accumilation of hArray data as the parsing procedes.
+In addition there is some duplication of data, particulalry the "scriptArray" and "objects" sections of the two main arrays.
+This woud probably be much better stored in an sqlite database.
+*/
+
+
+--> Hkey | Deps | From Library
+-
+[[ _FetchHandler (library_HkeyDeps,f) ]]
+
+[[ _FetchHandler (library_HkeyCallArray,f) ]]
+
+
+--> Handler
+-
+[[ _FetchHandler (hkey_GetObjectHandler,f) ]]
+
+[[ _FetchHandler (script_ExtractHandler,f) ]]
+
+[[ _FetchHandler (hkey_GetHandler,f) ]]
+
+
+--> Handler | New
+-
+[[ _FetchHandler (hkey_ExtractHandlerFromObject,f) ]]
+
+[[ _FetchHandler (script_HandlerFromTableOffsets,c) ]]
+
+
+--> Hkey | Hierarchy | New
+-
+/*
+These newer handlers use the more flexible "getprop hkey_SearchHierarchy" and built in "revAvailableHandlers"
+
+See also "put hArray_FindHkeyInHierarchy (shortCall, hObject, hArray, pSetName) into foundCall"
+These handlers will look for private handler only in the actual target,
+need to check whether we should also look for private handlers in the behavior of the target.
+*/
+
+[[ _FetchHandler (hkey_FindInHierarchy,f) ]]
+
+[[ _FetchHandler (hkey_FoundArray,f) ]]
+
+[[ _FetchHandler (hArray_FindHkeyInHierarchy,f) ]]
+
+
+/*
+--> Display
+-
+command display_UnindexedHkeyArray scriptObject, pTreeView
+   put the textStack_Folder of scriptObject into mainStackFolder
+   put mainstack_FetchWalkArray (mainStackFolder) into hKeyWalkArray
+   put hKeyWalkArray ["external"] into externalArray
+   
+   put mainstack_FetchDepHkeys (mainStackFolder) into shortDepHkeys
+   
+   repeat for each line shortHkey in shortDepHkeys
+      delete variable externalArray [shortHkey]
+   end repeat
+   
+   put "Unindexed External Hkeys for" && scriptObject into someTitle
+   if exists (pTreeView) is true then
+      lock screen
+      set the tree_Array [1] of pTreeView to externalArray
+      set the title_Text of pTreeView to someTitle
+      unlock screen
+   else
+      display_Array externalArray, someTitle, "Global | Hkey | Project | External | Menu", "Global | Hkey | Project | External | Line | Menu"
+      put the result into pTreeView
+      put the object_Hkey ["treeAction_EditHarrayObjectScript,c"] of me into hKey
+      set the event_Trigger ["mouseDoubleUp"] of the tree_Field of pTreeView to hKey
+      set the displayed_MainStackWalkArray of pTreeView to hKeyWalkArray
+      put the main_Stack of scriptObject into mainStackObject
+      set the displayed_Object of pTreeView to mainStackObject
+   end if
+   return pTreeView
+end display_UnindexedHkeyArray
+
+command display_ExternalHkeyArray scriptObject, pHKeyWalkArray, pTreeView
+   -- component:  true
+   put the main_Stack of scriptObject into mainStackObject
+   
+   if pHKeyWalkArray is an array then
+      put pHKeyWalkArray into hKeyWalkArray
+   else
+      put the textStack_Folder of scriptObject into mainStackFolder
+      put mainstack_FetchWalkArray (mainStackFolder) into hKeyWalkArray
+   end if
+   put hKeyWalkArray ["external"] into externalArray
+   
+   -- put keys (externalArray) into shortExternalKeys
+   put "External dependencies for stack" && kwote (the short name of mainStackObject) into someTitle
+   if exists (pTreeView) is true then
+      put the tree_Field of pTreeView into treeField
+      lock screen
+      set the tree_Array [1] of treeField to externalArray
+      set the title_Text of treeField to someTitle
+      unlock screen
+   else
+      display_Array externalArray, someTitle, "Global | Hkey | Project | External | Menu", "Global | Hkey | Project | External | Line | Menu"
+      put the result into treeField
+      put the object_Hkey ["treeAction_EditHarrayObjectScript,c"] of me into hKey
+      set the event_Trigger ["mouseDoubleUp"] of treeField to hKey
+      set the displayed_MainStackWalkArray of treeField to hKeyWalkArray
+      set the displayed_Object of treeField to mainStackObject
+   end if
+   return pTreeView
+end display_ExternalHkeyArray
+
+command display_HkeyWalkArray scriptObject, pHKeyWalkArray
+   -- component:  true
+   put the main_Stack of scriptObject into mainStackObject
+   
+   if pHKeyWalkArray is an array then
+      put pHKeyWalkArray into hKeyWalkArray
+   else
+      put the textStack_Folder of scriptObject into mainStackFolder
+      put mainstack_FetchWalkArray (mainStackFolder) into hKeyWalkArray
+   end if
+   
+   put hKeyWalkArray ["hKeyArray"] into mainStackHkeyArray
+   put hKeyWalkArray ["dontRecurse"] into skippedRecursionArray
+   put hKeyWalkArray ["reindexed"] into newlyHarrayIndexed
+   put hKeyWalkArray ["external"] into externalArray
+   put hKeyWalkArray ["missing"] into missingArray
+   
+   display_Array hKeyWalkArray, ("hKeyWalkArray for" && scriptObject)
+   
+   if externalArray is an array then
+      display_ExternalHkeyArray scriptObject, hKeyWalkArray
+      
+      display_ObjectHKeyArray mainStackHkeyArray, mainStackObject, "Mainstack HkeyArray", "Mainstack HkeyArray"
+      put the result into treeView
+      set the displayed_MainStackWalkArray of treeView to hKeyWalkArray
+      set the displayed_Object of treeView to mainStackObject
+   else
+      put "There are no calls to external handlers from this mainstack. It is a standalone component!" into someMessage
+      opn_Notify someMessage, true
+   end if
+   
+   if missingArray is an array then
+      put "Missing dependencies for stack" && kwote (the short name of mainStackObject) into someTitle
+      display_Array missingArray, someTitle, "Global | Hkey | Dependency | MissingArray | Menu", "Global | Hkey | Dependency | External | Line | Menu"
+      put the result into treeView
+      
+      put the object_Hkey ["treeAction_EditHarrayObjectScript,c"] of me into hKey
+      set the event_Trigger ["mouseDoubleUp"] of the tree_Field of treeView to hKey 
+      set the displayed_MainStackWalkArray of treeView to hKeyWalkArray
+      set the displayed_Object of treeView to mainStackObject
+   else
+      put "There are no calls to missing handlers from this mainstack." into someMessage
+      opn_Notify someMessage, true
+   end if
+end display_HkeyWalkArray
+
+command treeAction_EditHarrayObjectScript treeField
+   put the selected_Index of treeField into someLine
+   put the tree_SelectedDepth of treeField into tabLevel
+   
+   switch
+      case the number of items of someLine = 4
+         put someLine into hKey
+         hkey_EditFoundHandler hKey
+         break
+      case the number of items of someLine = 2
+         put someLine into shortHkey
+         put the selected_ArrayValue of treeField into subArray
+         repeat for each key parentHkey in subArray
+            put subArray [parentHkey] into calledExternalHkey
+            switch
+               case calledExternalHkey is an array
+                  breakpoint
+                  exit repeat
+               case calledExternalHkey is empty
+                  put parentHkey into hKey
+                  hkey_EditFoundHandler hKey
+                  exit repeat
+               default
+                  -- they should all be the same, so let's take this one
+                  hkey_EditFoundHandler calledExternalHkey
+                  exit repeat
+            end switch
+         end repeat
+         break
+      case the number of items of someLine = 1
+         put the selected_Index of treeField into someObject
+         if exists(someObject) then
+            edit the script of someObject
+         end if
+      case tabLevel = 1
+         break
+      default
+         -- put the selected_Array of treeField into selectedArray
+         -- put line 1 of keys (selectedArray) into hKey
+   end switch
+   pass treeAction_EditHarrayObjectScript
+end treeAction_EditHarrayObjectScript
+*/
+
+
+--> Deps | Export
+-
+[[ _FetchHandler (mainstack_ExportAsText,c) ]]
+
+[[ _FetchHandler (mainStack_ExportAsFiles,c) ]]
+
+[[ _FetchHandler (mainstack_AddArrayToGlobal,c) ]]
+
+ 
+--> Harray | handlerHashArray
+-
+[[ _FetchHandler (object_UpdateHandlerHashArray,c) ]]
+
+[[ _FetchHandler (object_CheckHandlerHashArray,c) ]]
+
+[[ _FetchHandler (hArray_TidyHandlerHashes,c) ]]
+
+[[ _FetchHandler (hArray_GetHashedHandler,f) ]]
+
+[[ _FetchHandler (hArray_GetHandlerHashArray,f) ]]
+
+[[ _FetchHandler (hArray_SetHandlerHashArray,c) ]]
+
+[[ _FetchHandler (hArray_AddHandlerHash,c) ]]
+
+[[ _FetchHandler (hArray_ListHashHkeys,f) ]]
+
+[[ _FetchHandler (hArray_ListNewHandlerHashes,f) ]]
+
+[[ _FetchHandler (hArray_ListNewHkeys,f) ]]
+
+[[ _FetchHandler (sha1_Hash,f) ]]
+
+
+--> Deps | Create Graph | hKey
+-
+[[ _FetchHandler (display_HkeyArrayGraph,c) ]]
+
+[[ _FetchHandler (hkey_CreateDependencyGraph,c) ]]
+
+
+--> Deps | Create Graph | hArray
+-
+[[ _FetchHandler (hArray_CreateDependencyGraph,c) ]]
+
+[[ _FetchHandler (file_Hash,f) ]]
+
+
+--> Mainstack | Deps | Construct
+-
+[[ _FetchHandler (mainstack_ConstructHandlerHashArray,c) ]]
+
+
+--> Main Stack | Export | Deps
+-
+[[ _FetchHandler (object_ExportAsFiles,c) ]]
+
+[[ _FetchHandler (objectArray_ExportAsFiles,c) ]]
+
+
+--> Deps | Create
+-
+[[ _FetchHandler (library_CreateStackDependencyButton,c) ]]
+
+[[ _FetchHandler (behavior_CreateStackButton,c) ]]
+
+[[ _FetchHandler (behavior_CreateSubStackCard,c) ]]
+
+-- function library_ConstructDefaultDepBehaviorScript libraryName, pAuthorName
+   put script_GetTemplate ("Library Behavior Deps") into scriptTemplate
+   if pAuthorName is empty then
+      put pref_GetValue ("userName") into authorName
+   else
+      put pAuthorName into authorName
+   end if
+   put merge (scriptTemplate) into someScript
+   return someScript
+end library_ConstructDefaultDepBehaviorScript
+
+
+--> Private
+-
+[[ _FetchHandler (hArray_FilterHkeyArray,c) ]]
+
+-- command hArray_FilterHkeyArray @hKeyArray, pHarray
+put keys (hKeyArray) into filteredKeys
+hArray_FilterHkeys filteredKeys, pHarray
+repeat for each line hKey in filteredKeys
+   put hKeyArray [hKey] into hkeyLinks
+   if hkeyLinks is an array then put keys (hkeyLinks) into hkeyLinks
+   hArray_FilterHkeys hkeyLinks, pHarray
+   put hkeyLinks into filteredHkeyArray [hKey]
+end repeat
+put filteredHkeyArray into hKeyArray
+end hArray_FilterHkeyArray
+
+[[ _FetchHandler (hArray_FilterHkeys,c) ]]
+
+[[ _FetchHandler (hkey_TestFetchDeps,f) ]]
+
+[[ _FetchHandler (hkey_TestShortDeps,f) ]]
+
+[[ _FetchHandler (stackArray_DeleteObjectFolder,c) ]]
+
+-- private command stackArray_ExportAsFiles stackArray, textStackFolder, pUseCustomFolders, pExportHandlers, pDontExport
+   /*
+   This deletes the objects folder, but leaves the metadata folder untouched.
+   It would be good to tidy the metadata folder so that any deleted objects also had their metadata folders removed?
+   */
+   
+   stackArray_DeleteObjectFolder textStackFolder
+   put the result into objectsFolder
+   
+   put stackArray ["objects"] into objectArray
+   put stackArray ["manifest"] into manifestArray
+   put manifestArray ["name"] into stackName
+   put manifestArray ["object"] into stackObject
+   
+   mainStack_StoreManifestArray textStackFolder, manifestArray
+   
+   repeat for each key objectBit in objectArray
+      if objectBit = "substacks" then next repeat
+      
+      put stackArray_ConstructObjectFolder (textStackFolder, objectBit, subStackName) into objectFolder
+      
+      if objectBit = "stack" then
+         stackArray_ExportStackFiles objectFolder, stackArray
+         stackArray_ExportVideoClips objectFolder, stackArray
+         stackArray_ExportAudioClips objectFolder, stackArray
+      end if
+      
+      folder_CreateNested objectFolder
+      put objectArray [objectBit] into objectPropArray
+      
+      objectArray_ExportAsFiles objectPropArray, objectFolder, pUseCustomFolders, pExportHandlers, pDontExport
+   end repeat
+end stackArray_ExportAsFiles
+
+[[ _FetchHandler (stackArray_ExportStackFiles,c) ]]
+
+[[ _FetchHandler (stackArray_ExportVideoClips,c) ]]
+
+[[ _FetchHandler (stackArray_ExportAudioClips,c) ]]
+
+
+--> Old
+-
+[[ _FetchHandler (hkey_SearchObjectHierarchy,f) ]]
+
+[[ _FetchHandler (hkey_FindAndExtractCalls,f) ]]
+
+[[ _FetchHandler (hkey_FindHandlerInHierarchy,c) ]]
+
+
+--> Deps | Private
+-
+[[ _FetchHandler (_AddVideoClips,pc) ]]
+
+[[ _FetchHandler (_AddAudioClips,pc) ]]

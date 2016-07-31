@@ -1,0 +1,5 @@
+command overlayData_SetFunctionStyle @dotGroupStyleArray  
+   put "LightBlue" into dotGroupStyleArray ["c"]["node_StyleArray"]["fillcolor"]
+   put "Blue" into dotGroupStyleArray ["c"]["node_StyleArray"]["color"]
+   put "filled" into dotGroupStyleArray ["c"]["node_StyleArray"]["style"]
+end overlayData_SetFunctionStyle

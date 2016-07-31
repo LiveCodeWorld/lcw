@@ -1,0 +1,9 @@
+getprop opn_External
+   repeat for each item someExternal in external_ListAllComponents()
+      if external_GetInstalled (someExternal) then
+         put someExternal & CR after someExternals
+      end if
+   end repeat
+   delete char -1 of someExternals
+   return someExternals
+end opn_External

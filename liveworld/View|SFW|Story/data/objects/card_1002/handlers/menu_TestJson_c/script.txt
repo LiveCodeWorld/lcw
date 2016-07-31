@@ -1,0 +1,6 @@
+on menu_TestJson dgView
+   put url "http://livecode.viral.academy/svg.json?random=079fed55" into someJSON
+   put json_ToArray (someJSON) into someArray
+   -- display_Array someArray
+   set the dgData of dgView to someArray ["Story"]
+end menu_TestJson

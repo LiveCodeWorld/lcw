@@ -1,0 +1,8 @@
+function rig_FetchPathArray someFolder
+   put server_GetURL() into serverURL
+   put server_GetSshUser() into sshUser
+   put server_GetSshKeyPath() into sshKeyPath
+   
+   put server_FetchFileArray (serverURL, sshUser, someFolder, sshKeyPath) into fileAndFolderArray
+   return fileAndFolderArray ["file"]
+end rig_FetchPathArray

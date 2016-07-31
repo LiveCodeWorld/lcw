@@ -1,0 +1,5 @@
+on menu_CoolestColours mTarget
+   set the cursor to watch
+   put kuler_FetchCoolestRss() into someRss
+   kuler_DiplayRss someRSS, mTarget
+end menu_CoolestColours

@@ -1,0 +1,49 @@
+﻿script "lib_Server"
+--> MetaData
+-
+license: GPLv3
+name: lib_Server
+type: script library
+version: 0.1
+
+/*
+This library stack contains general scripts for Livecode and revIgniter servers that do not depend on ssh and remote access.
+
+Scripts specific to revIgnter can be found in lib_RevIgniter.livecode
+*/
+
+--> Server | Arrays
+-
+command server_ReturnEncodedArray someArray
+   put server_EncodeArray (someArray)
+end server_ReturnEncodedArray
+
+function server_EncodeArray someArray
+   put base64Encode(arrayEncode (someArray)) into tEncodedArray
+   return tEncodedArray
+end server_EncodeArray
+
+command server_ReturnArray someArray
+  if the environment = "server" then
+    put new header "Content-Type: application/lc.array.compressed"
+    put new header "Access-Control-Allow-Origin: *"
+    put new header "Access-Control-Allow-Headers: Accept, Authorization, Content-Type"
+    put new header "Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS, LINK, UNLINK"
+  end if
+  put base64Encode(arrayEncode(someArray)) into tEncodedArray
+  put tEncodedArray
+end server_ReturnArray
+
+command server_ReturnJSON someJSON
+  if the environment = "server" then
+    put new header "Content-Type: application/json; charset=utf-8"
+    put new header "Access-Control-Allow-Origin: *"
+    put new header "Access-Control-Allow-Headers: Accept, Authorization, Content-Type"
+    put new header "Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS, LINK, UNLINK"
+  end if
+  put someJSON
+end server_ReturnJSON
+
+
+
+

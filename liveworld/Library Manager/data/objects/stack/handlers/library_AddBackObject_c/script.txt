@@ -1,0 +1,6 @@
+command library_AddBackObject scriptObject, pSetName
+   put revRuggedId (scriptObject) into ruggedObject
+   library_AddObject ruggedObject, "back", pSetName
+   put the result into libName
+   return libName
+end library_AddBackObject

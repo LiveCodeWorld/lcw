@@ -1,0 +1,6 @@
+function library_ViewFiles pDontFilter
+   put library_ViewFolder() into libraryFolder
+   put folder_FilesInside (libraryFolder) into opnLibraryFiles
+   if pDontFilter is not true then filter opnLibraryFiles with "*.rev"
+   return opnLibraryFiles
+end library_ViewFiles

@@ -1,0 +1,23 @@
+command stack_PlaceGroupOnAllCards groupName, stackName
+    -- was "opn_PlaceGroupOnAllCards"
+    if stackName is empty then
+        put the long id of this stack into stackObject
+    else
+        put the long id of stack stackName into stackObject
+    end if
+    put the cardids of stackObject into idIndex
+    
+    put the defaultstack into oDefault
+    set the defaultstack to stackObject
+    set the wholematches to true
+    put empty into placedIDs
+    repeat for each line someID in idIndex
+        if groupName is not among the lines of (the groupnames of card id someID) then
+            place group groupName onto card id someID
+            put someID & return after placedIDs
+        end if
+    end repeat
+    delete last char of placedIDs
+    set the defaultstack to oDefault
+    return placedIDs
+end stack_PlaceGroupOnAllCards

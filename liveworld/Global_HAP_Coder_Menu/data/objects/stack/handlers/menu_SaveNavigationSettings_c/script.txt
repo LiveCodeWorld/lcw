@@ -1,0 +1,5 @@
+on menu_SaveNavigationSettings mTarget
+   breakPoint
+   put the displayed_NavigationSettings of mTarget into navigationSettingsArray
+   set the hap_NavigationSettings of mTarget to navigationSettingsArray
+end menu_SaveNavigationSettings

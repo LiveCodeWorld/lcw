@@ -1,0 +1,4 @@
+command menu_SetActiveText mText
+   global gTemp_ActiveMenuArray
+   put mText into gTemp_ActiveMenuArray ["menu"]["text"]
+end menu_SetActiveText

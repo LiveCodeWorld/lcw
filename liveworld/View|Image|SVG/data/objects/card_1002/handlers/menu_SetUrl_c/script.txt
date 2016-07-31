@@ -1,0 +1,29 @@
+on menu_SetUrl svgView, whichUrl
+   switch whichUrl
+      case "Compound"
+         put "http://livecode.world/graphs/graph.html" into someUrl
+         break
+      case "Paths"
+         put "https://livecode.world/graphs/graphviz.html" into someUrl
+         -- put "http://js.cytoscape.org/demos/6c9907e7896f8ae23f9f/" into someUrl
+         break
+      case "Huge"
+         -- put "http://js.cytoscape.org/demos/57e7cc43342193d9d21a/" into someUrl
+         put "http://js.cytoscape.org/demos/f64e811fc3311414e083/" into someUrl
+         break
+      case "Cats"
+         put "http://js.cytoscape.org/demos/aedff159b0df05ccfaa5/" into someUrl
+         break
+      case "Wine"
+         put "http://js.cytoscape.org/demos/cde4db55e581d10405f5/" into someURL
+         break
+      default
+         answer file "Enter a url..."
+         if it is empty then exit to top
+         put it into someFile
+         
+         put "file:" & someFile into someURL
+   end switch
+   put someFile
+   set the url of svgView to someFile -- someUrl
+end menu_SetUrl

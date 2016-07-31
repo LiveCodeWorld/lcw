@@ -1,0 +1,7 @@
+command pref_StoreGlobal gValue, pGlobalName, pProjectName
+   if pGlobalName is empty then put "gPrefs_Array" into gName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchData() into dataArray
+   put gValue into dataArray [pProjectName][pGlobalName]
+   pref_StoreData dataArray
+end pref_StoreGlobal

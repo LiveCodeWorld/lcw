@@ -1,0 +1,24 @@
+on menu_ProcessBookXml displayView
+   put the displayed_Array of displayView into bookArray
+   put bookArray ["html"]["body"] into bodyArray
+   
+   put bodyArray ["@attributes"]["id"] into bookTitle
+   delete variable bodyArray ["@attributes"] -- or extents does not work
+   get the extents of bodyArray -- it's empty because the kesy are named "div[100]" and not "100"
+   put the keys of bodyArray into bodyKeys
+   put the number of lines of bodyKeys into maxDivNum
+   
+   -- repeat with divNum = 1 to maxDivNum
+   -- seems to start with 100
+   -- repeat for each key divNum in bodyArray
+   -- not sorted in order ?
+   sort bodyKeys
+   repeat for each line divNum in bodyKeys
+      put bodyArray [divNum] into divArray
+      
+      put divArray ["@attributes"]["id"] into divID
+      put divArray ["@attributes"]["class"] into divClass
+      put divArray into divContentArray
+      delete variable divContentArray ["@attributes"]
+   end repeat
+end menu_ProcessBookXml

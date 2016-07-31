@@ -1,0 +1,14 @@
+function object_NameArray someGroup, nested
+   if someGroup is empty then put the long ID of the target into someGroup
+   put empty into name_Array
+   repeat with controlNum = 1 to the number of controls in someGroup
+      put the long ID of control controlNum of someGroup into controlObject
+      object_WithinStackReference controlObject
+      if nested is not true and word 1 of controlObject is "group" then
+         add the number of layers in controlObject to controlNum
+      end if
+      put the short name of controlObject into objectName
+      put controlObject into name_Array[objectName]
+   end repeat
+   return name_Array
+end object_NameArray

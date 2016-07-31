@@ -1,0 +1,7 @@
+getprop mainstack_Hash
+   put the main_Stack of the target into mainStackObject
+   put the filename of mainStackObject into someFile
+   put url ("binfile:" & someFile) into someData
+   put sha1_Hash (someData) into mainstackHash
+   return mainstackHash
+end mainstack_Hash

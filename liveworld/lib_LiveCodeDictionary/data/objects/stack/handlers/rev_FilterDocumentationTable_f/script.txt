@@ -1,0 +1,76 @@
+function rev_FilterDocumentationTable documentationTable, tokenCategory, subCategory
+    -- was "indexApplyFilter"
+    -- this function is used for tree display filtering
+     
+    if subCategory is "all" then
+        return documentationTable
+    end if
+     
+    local tFilteredData
+    switch tokenCategory 
+        case "Library"
+            -- the library is column 10 in the data
+            set the itemdelimiter to tab
+            repeat for each line someLine in documentationTable
+                if item 10 of someLine is subCategory then
+                    put someLine & CR after tFilteredData
+                end if
+            end repeat
+            break
+        case "Object"
+            local tColumnNumbers
+             
+            -- If we don't want to change the index format, to do this we need to 
+            -- find out which column the string <img src="20133"/> appears in, and then
+            -- this column number can be mapped to the type of object. If it doesnt match
+            -- then the keyword is not associated with any given object.
+            repeat for each line someLine in documentationTable
+                --local tColumnNumbers
+                put itemsEquallingString(someLine, "<img src=" & quote & "201233" & quote & "/>") into tColumnNumbers
+                 
+                repeat for each item tColumnNumber in tColumnNumbers
+                    if columnNumberToObjectName(tColumnNumber) is subCategory then
+                        put someLine & CR after tFilteredData
+                    end if
+                end repeat
+            end repeat
+            break
+        case "Language"
+            -- column 3 has to equal subCategory
+            set the itemdelimiter to tab
+            repeat for each line someLine in documentationTable
+                if item 3 of someLine is subCategory then
+                    put someLine & CR after tFilteredData
+                end if
+            end repeat
+            break
+        case ""
+            -- Object header, all keywords that are associated with any object
+            if subCategory is "Object Category" then
+                -- all objects, any line that contains <img src="20133"/>
+                set the itemdelimiter to tab
+                repeat for each line someLine in documentationTable
+                    put itemsEquallingString(someLine, "<img src=" & quote & "201233" & quote & "/>") into tColumnNumbers
+                    if tColumnNumbers is not empty then
+                        put someLine & CR after tFilteredData
+                    end if
+                end repeat
+            end if
+             
+            if subCategory is "Library Category" then
+                set the itemdelimiter to tab
+                repeat for each line someLine in documentationTable
+                    if item 10 of someLine is not empty then
+                        put someLine & CR after tFilteredData
+                    end if
+                end repeat
+            end if
+             
+            if subCategory is "Language Category" then
+                return documentationTable
+            end if
+    end switch
+     
+    delete the last char of tFilteredData
+    return tFilteredData
+end rev_FilterDocumentationTable

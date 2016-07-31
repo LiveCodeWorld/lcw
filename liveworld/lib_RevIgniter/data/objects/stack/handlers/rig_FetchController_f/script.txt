@@ -1,0 +1,5 @@
+function rig_FetchController shortFile, pServerURL
+   put rig_GetFolder ("controllers") & shortFile into somePath
+   put rig_FetchFile (somePath, pServerURL) into someData
+   return someData
+end rig_FetchController

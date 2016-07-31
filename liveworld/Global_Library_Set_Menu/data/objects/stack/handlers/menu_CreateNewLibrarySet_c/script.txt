@@ -1,0 +1,5 @@
+on menu_CreateNewLibrarySet
+   put opn_Ask ("Give the new project set a name...", "new project name") into newProjectName
+   put project_ConstructMenuSetArray() into projectArray
+   project_SaveArray projectArray, newProjectName
+end menu_CreateNewLibrarySet

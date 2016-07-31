@@ -1,0 +1,6 @@
+getprop menu_SelectedTitle [menuModelName]
+    put the long id of the target into menuBtnObject
+    put the menu_Text [menuModelName] of menuBtnObject into menuText
+    put the menuhistory of menuBtnObject into lineNum
+    return line lineNum of menuText
+end menu_SelectedTitle

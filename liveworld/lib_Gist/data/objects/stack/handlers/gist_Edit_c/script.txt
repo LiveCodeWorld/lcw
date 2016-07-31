@@ -1,0 +1,10 @@
+command gist_Edit gistID, shortGistFile, pSomeText, pDescription, pIsPublic
+   -- PATCH /gists/:id
+   -- but you can use a POST
+   
+   put "/gists/" & gistID into restPath
+   put gist_ConstructEditJSON (shortGistFile, pSomeText, pDescription, pIsPublic) into postJSON
+   github_RestPatch restPath, postJSON
+   put the result into someJSON
+   return someJSON
+end gist_Edit

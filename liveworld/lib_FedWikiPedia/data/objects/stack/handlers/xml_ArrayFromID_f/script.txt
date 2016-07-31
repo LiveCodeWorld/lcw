@@ -1,0 +1,10 @@
+function xml_ArrayFromID treeID, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean
+   xml_ExtractEncoding pXML, versionMatch, theXMLEncoding
+   put revXMLRootNode (treeID) into theRootNode
+   if theRootNode is not empty and not (theRootNode begins with "xmlerr,") then
+      put xml_ConvertXMLNodeToArray (treeID, theRootNode, theXMLEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into theArray [theRootNode]
+   else
+      return empty
+   end if
+   return theArray
+end xml_ArrayFromID

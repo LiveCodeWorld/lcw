@@ -1,0 +1,5 @@
+on menu_DisplayMainStackHarray scriptObject
+   set the cursor to watch
+   put the mainstack_Harray of scriptObject into mainStackHarray
+   display_Array mainStackHarray, "the mainstack_Harray"
+end menu_DisplayMainStackHarray

@@ -1,0 +1,5 @@
+function log_Get pLogName
+   put log_GetFile (pLogName) into logErrorFile
+   put "file:" & logErrorFile into logUrl
+   return url logUrl
+end log_Get

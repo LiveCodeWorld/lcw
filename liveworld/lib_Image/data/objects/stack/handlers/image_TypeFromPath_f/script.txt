@@ -1,0 +1,5 @@
+function image_TypeFromPath imageFile
+   -- can use platform specific command line stuff
+   file_Deconstruct imageFile, someRoot, shortName, imageExtension
+   return imageExtension
+end image_TypeFromPath

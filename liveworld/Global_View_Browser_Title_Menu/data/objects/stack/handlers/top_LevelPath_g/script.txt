@@ -1,0 +1,7 @@
+getprop top_LevelPath [normalize]
+   put the uOPN ["top_LevelPath"] of me into viewStem
+   if normalize is true then
+      view_NormalizeName viewStem
+   end if
+   return viewStem
+end top_LevelPath

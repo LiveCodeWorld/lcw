@@ -1,0 +1,20 @@
+on linkArray_HashConstruct someArray, @hashedArray, @hashDictionary
+    -- usefull to create simple arrays from complex data.
+    -- references to complex data stored in hash key dictionary "hashDictionary"
+    
+    repeat for each key someKey in someArray
+        put text_Hash (someKey) into hashKey
+        put someKey into hashDictionary [hashKey]
+         
+        put someArray [someKey] into someValues
+        
+        put empty into hashValues
+        repeat for each line someValue in someValues
+            put text_Hash (someValue) into hashValue
+            put someValue into hashDictionary [hashValue]
+            put hashValue & CR after hashValues
+        end repeat
+        delete char -1 of hashValues
+        put hashValues into hashedArray [hashKey]
+    end repeat
+end linkArray_HashConstruct

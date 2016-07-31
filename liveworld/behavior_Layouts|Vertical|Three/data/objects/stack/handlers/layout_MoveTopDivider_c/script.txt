@@ -1,0 +1,9 @@
+command layout_MoveTopDivider newHeaderHeight, newBodyHeight
+   put newHeaderHeight into LocalArray ["header_Height"]
+   put newBodyHeight into LocalArray ["body_Height"]
+   
+   # moved back to local variable for this dynamic property
+   -- set the view_DisplayProperty ["header_Height"] of me to newHeaderHeight
+   -- set the view_DisplayProperty ["body_Height"] of me to newBodyHeight
+   LayoutControl
+end layout_MoveTopDivider

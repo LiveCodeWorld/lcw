@@ -1,0 +1,9 @@
+command library_AddUsedStack stackObject, pSetName
+   if exists(stackObject) is false then return empty
+   if word 1 of stackObject is not "stack" then put the stack_Object of stackObject into stackObject
+   put the name of stackObject into stackObject
+   
+   library_AddObject stackObject, "used", pSetName
+   put the result into libName
+   return libName
+end library_AddUsedStack

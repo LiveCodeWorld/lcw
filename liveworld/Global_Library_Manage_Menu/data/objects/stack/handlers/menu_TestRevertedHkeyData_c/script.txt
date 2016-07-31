@@ -1,0 +1,22 @@
+on menu_TestRevertedHkeyData
+   global gHkey_Array
+   
+   answer file "Check file..."
+   put it into newFile
+   if it is empty then exit to top
+   
+   put url ("binfile:" & newFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into hArray
+   
+   display_Array hArray, "hArray"
+   
+   answer "Is this OK to load into gHKey_Array?" with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   union hArray with gHkey_Array recursively
+   
+   breakpoint
+   put hArray into gHkey_Array
+   -- project_SaveHarray hArray
+end menu_TestRevertedHkeyData

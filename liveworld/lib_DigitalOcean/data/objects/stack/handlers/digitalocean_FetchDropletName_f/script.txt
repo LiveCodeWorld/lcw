@@ -1,0 +1,13 @@
+function digitalocean_FetchDropletName someTLD, pDomainArray
+   /*
+   This looks for the "@" address of type "A" int the DNS records
+   */
+   local pDropletInfoArray
+   if pDomainArray is not an array then
+      -- put digitalocean_GetDomainArray (someTLD) into domainArray
+      put digitalocean_FetchDomainArray (someTLD) into pDomainArray
+   end if
+   put digitalocean_ExtractIpAddessFrom (pDomainArray) into someIP
+   put digitalocean_TranslateIP (someIP, pDropletInfoArray) into dropletName
+   return dropletName
+end digitalocean_FetchDropletName

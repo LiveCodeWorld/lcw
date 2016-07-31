@@ -1,0 +1,7 @@
+function overlay_ConstructFile fileSuffix, overlayFolder, pOverlayName
+   if pOverlayName is empty then put overlay_GetDefaultName (overlayFolder) into pOverlayName
+   folder_Format overlayFolder
+   put pOverlayName & "." & fileSuffix into shortFile
+   put overlayFolder & shortFile into someFile
+   return someFile
+end overlay_ConstructFile

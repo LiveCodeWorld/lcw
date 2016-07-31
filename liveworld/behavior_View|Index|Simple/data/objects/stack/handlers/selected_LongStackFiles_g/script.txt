@@ -1,0 +1,5 @@
+getprop selected_LongStackFiles
+   put the selected_ShortStackFiles of me into shortStackFiles  
+   put _getLongStackFiles (shortStackFiles) into longStackFiles
+   return longStackFiles
+end selected_LongStackFiles

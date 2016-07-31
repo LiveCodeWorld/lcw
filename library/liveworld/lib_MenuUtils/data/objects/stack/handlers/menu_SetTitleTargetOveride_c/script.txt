@@ -1,0 +1,4 @@
+command menu_SetTitleTargetOveride mTitleToMatch, mTarget
+   global gTemp_ActiveMenuArray
+   put mTarget into gTemp_ActiveMenuArray ["overide"]["mTitle"][mTitleToMatch]["mTarget"]
+end menu_SetTitleTargetOveride

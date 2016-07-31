@@ -1,0 +1,7 @@
+on menu_RemoteBranch remoteBranchName
+   put "git remote show" && remoteBranchName into someShell
+   
+   -- opn_Notify someShell, true
+   put git_ExecuteShellCommand(someShell) into shellResult
+   display_Lines shellResult, someShell
+end menu_RemoteBranch

@@ -1,0 +1,10 @@
+command graph_LinkArray linkArray, pOverlayStyle, pOverlayFolder, pDotHeaderArray, pGraphPropertyArray
+   -- this draws a graph and then creates a Livecode view using overlays
+   put graph_ConstructDotHeaderArray() into pDotHeaderArray
+   -- standard overlay based routing. Allows interactive image views
+   if linkArray is not an array then return empty
+   linkArray_RemoveSelfLinks linkArray
+   if pOverlayFolder is empty then put fedwiki_GetBigDataFolder() into pOverlayFolder
+   put overlayArray_FromLinkArray (linkArray, pDotHeaderArray, pGraphPropertyArray) into overlayArray
+   overlayArray_CreateAndDisplayGraph overlayArray, pOverlayStyle, pOverlayFolder
+end graph_LinkArray

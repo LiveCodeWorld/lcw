@@ -1,0 +1,9 @@
+on menu_CreateDot treeView
+   local pOverlayName
+   
+   put the view_Data of treeView into hKeyArray
+   put the displayed_Object of treeView into scriptObject
+   put the project_ProcessedHkeyArray of scriptObject into hkeyArray
+   
+   put dot_FromArray (overlayArray, pOverlayName)
+end menu_CreateDot

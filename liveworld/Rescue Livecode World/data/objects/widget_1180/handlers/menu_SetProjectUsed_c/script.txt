@@ -1,0 +1,14 @@
+on menu_SetProjectUsed mTarget, projectName
+   -- put the displayed_Project of me into projectName  
+   put merge ("Set project '[[projectName]]' to the use the selected stacks?") into someQuestion
+   put the selected_Stacks of mTarget into stackObjects
+   
+   put stackObjects
+   answer someQuestion with "Cancel" or "OK"
+   if it is "Cancel" then exit to top
+   
+   project_SetUsedStacks stackObjects, projectName
+   display_ProjectArray projectName
+   
+   answer "Saved stacks to project!"
+end menu_SetProjectUsed

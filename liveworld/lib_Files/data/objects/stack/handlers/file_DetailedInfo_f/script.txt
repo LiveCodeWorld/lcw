@@ -1,0 +1,26 @@
+function file_DetailedInfo filePath
+   if filePath is empty then return empty
+   put filePath into someDirectory
+   if there is a file filePath then
+      set the itemdelimiter to "/"
+      put last item of filePath into shortFileName
+      delete last item of someDirectory
+      
+      put the directory into oDirectory
+      set the directory to someDirectory
+      put the detailed files into detailedFileTable     
+      set the directory to oDirectory
+      
+      put urlencode(shortFileName) into shortFileName -- seems to need it again???
+      filter detailedFileTable with (shortFileName & ",*")
+      return detailedFileTable
+   else if there is a folder filePath then
+      put the directory into oDirectory
+      set the directory to someDirectory
+      put the detailed files into detailedFileTable     
+      set the directory to oDirectory
+      return detailedFileTable
+   else
+      return empty
+   end if
+end file_DetailedInfo

@@ -1,0 +1,8 @@
+getprop object_IsLibraryView
+   put the long ID of the target into targetObject
+   
+   put the view_Name of the target into viewName
+   if viewName is empty then return false
+   put view_GetTemplateObject (viewName) into libraryObject
+   return targetObject = libraryObject
+end object_IsLibraryView

@@ -1,0 +1,6 @@
+getprop menu_CheckTarget [scriptObject]
+   -- should maybe check folder as script could be empty? 
+   put LocalArray ["scriptFile"] into scriptFile
+   put there is a file scriptFile into fileExists
+   return fileExists
+end menu_CheckTarget

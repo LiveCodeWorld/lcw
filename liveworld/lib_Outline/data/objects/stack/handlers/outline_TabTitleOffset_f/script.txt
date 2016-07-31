@@ -1,0 +1,8 @@
+function outline_TabTitleOffset someTitle, tabLevel, fullOutline
+    -- was "osTitleOffset"
+    -- this finds a title of a given tab level
+    put text_RepeatString(tab, tabLevel) & someTitle into osLine
+    set the wholematches to true
+    put lineoffset(osLine, fullOutline) into foundLineNum
+    return foundLineNum
+end outline_TabTitleOffset

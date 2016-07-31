@@ -1,0 +1,63 @@
+on LayoutControl someRect
+   lock screen
+   
+   put the drag_Button of me into scriptButton
+   put title_Field() into titleField
+   put the disclosure_Button of me into disclosureButton
+   put graphic_Background() into graphicBackground
+   
+   put the info_Group of me into infoGroup
+   
+   put the view_Spacing of me into someMargin
+   put the info_Height of me into infoHeight
+   
+   put rect_SubtractMargin(someMargin, someRect) into innerRect
+   put the title_Height of titleField into headerHeight
+   if headerHeight is empty then
+      -- put the height of titleField into headerHeight
+      put 18 into headerHeight
+   end if
+   
+   put innerRect into headerRect
+   put item 2 of headerRect + headerHeight into headerBotton
+   put headerBotton into item 4 of headerRect
+   
+   put headerRect into rightButtonRect
+   put item 3 of headerRect - headerHeight into rightButtonLeft
+   put rightButtonLeft into item 1 of rightButtonRect
+   
+   put rect_SubtractMargin(3, rightButtonRect) into rightButtonRect
+   
+   put headerRect into leftButtonRect
+   put item 1 of headerRect + headerHeight into leftButtonRight
+   put leftButtonRight into item 3 of leftButtonRect
+   
+   put headerRect into titleRect
+   put leftButtonRight + someMargin into item 1 of titleRect
+   put rightButtonLeft - someMargin into item 3 of titleRect
+   
+   if the visible of infoGroup is true then
+      put innerRect into infoRect
+      put headerBotton + someMargin into bodyTop
+      put bodyTop into item 2 of infoRect
+      put leftButtonRight + someMargin into item 1 of infoRect
+      put bodyTop + infoHeight into item 4 of infoRect
+      
+      put someRect into graphicRect
+      put item 4 of infoRect + someMargin into item 4 of graphicRect
+      -- rect_CreateMask graphicRect, "graphicRect"
+      
+      set the view_Rect of infoGroup to infoRect
+      -- rect_CreateMask infoRect, "infoRect"
+   else
+      put someRect into graphicRect
+      put headerBotton + someMargin into item 4 of graphicRect
+   end if
+   
+   set the rect of titleField to titleRect
+   set the rect of disclosureButton to leftButtonRect
+   set the rect of scriptButton to rightButtonRect
+   set the rect of graphicBackground to graphicRect
+   
+   unlock screen
+end LayoutControl

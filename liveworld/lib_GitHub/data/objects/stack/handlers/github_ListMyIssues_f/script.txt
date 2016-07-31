@@ -1,0 +1,6 @@
+function github_ListMyIssues
+   -- help: https://developer.github.com/v3/issues/#list-issues
+   -- List all issues across owned and member repositories for the authenticated user:
+   put github_RestGet ("/user/issues") into someJSON
+   return someJSON
+end github_ListMyIssues

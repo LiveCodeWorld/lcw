@@ -1,0 +1,43 @@
+command test_ViewRect menuChoice, mTarget
+   -- put the rect of mTarget into oRect
+   put the template_CardRect of mTarget into oRect
+   rect_CreateMask oRect, "Original Rect", mTarget, "yellow"
+   
+   repeat 6
+      switch menuChoice
+         case "LayoutControl"
+            put the rect of mTarget into someRect
+            dispatch "LayoutControl" to mTarget with someRect
+            break
+         case "view_Rect"
+            put the rect of mTarget into someRect
+            set the view_Rect of mTarget to someRect
+            break
+         case "rect"
+            put the rect of mTarget into someRect
+            set the rect of mTarget to someRect
+            break
+         case "view_FormattedRect"
+            put the view_FormattedRect of mTarget into someRect
+            set the rect of mTarget to someRect
+            break
+         case "set the view_Rect to view_FormattedRect"
+            put the view_FormattedRect of mTarget into someRect
+            set the view_Rect of mTarget to someRect
+            break
+      end switch
+   end repeat
+   put the rect of mTarget into newRect
+   rect_CreateMask someRect, "Test Mask", mTarget
+   
+   if newRect = oRect then
+      put "Test passed - same as original rect!" into someMessage
+      if menuChoice = "rect" then
+         put CR & CR & "However, setting a rect of a group to it's original rect doed not trigger a resizeControl handler" after someMessage
+      end if
+   else
+      beep
+      put "Test failed - new rect is different from original!" into someMessage
+   end if
+   opn_Notify someMessage, true
+end test_ViewRect

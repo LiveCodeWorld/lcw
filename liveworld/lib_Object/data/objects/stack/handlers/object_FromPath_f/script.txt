@@ -1,0 +1,10 @@
+function object_FromPath objectPath, someDelimiter
+   if someDelimiter is empty then put "/" into someDelimiter
+   set the itemDelimiter to someDelimiter
+   if objectPath is empty then return empty
+   
+   repeat with itemNum = the number of items of objectPath down to 1
+      put item itemNum of objectPath && "of"  & space after someObject
+   end repeat
+   return word 1 to -2 of someObject
+end object_FromPath

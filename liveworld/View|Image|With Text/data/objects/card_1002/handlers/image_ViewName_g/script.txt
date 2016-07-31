@@ -1,0 +1,5 @@
+getprop image_ViewName [imageView]
+   if the long id of the target is not the long id of me then pass image_ViewName
+   put the image_ViewName of imageView into imageViewName
+   return imageViewName
+end image_ViewName

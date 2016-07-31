@@ -1,0 +1,26 @@
+function array_FromFolder someFolder
+   if there is not a folder someFolder then return empty
+   folder_Format someFolder
+   set the itemdelimiter to "/"
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put item -1 of someFolder into shortFolder
+   
+   put the files into shortFiles
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFile = "." then next repeat
+      put someFolder & shortFile into someFile
+      put url ("binfile:" & someFile) into someValue
+      put someValue into someArray [shortFile]
+   end repeat
+   
+   put the folders into shortFolders
+   repeat for each line shortFolder in shortFolders
+      -- recurse subfolders
+      if char 1 of shortFolder = "." then next repeat
+      put someFolder & shortFolder & "/" into subFolder
+      put array_FromFolder (subFolder) into subArray
+      put subArray into someArray [shortFolder]
+   end repeat
+   return someArray
+end array_FromFolder

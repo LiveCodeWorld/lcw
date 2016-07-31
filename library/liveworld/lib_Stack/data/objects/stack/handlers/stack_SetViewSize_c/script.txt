@@ -1,0 +1,31 @@
+command stack_SetViewSize someSize
+    switch someSize
+        case "Full screen"
+            put the loc of this stack into someLoc
+            repeat for each line someRect in the screenrects
+                if loc_WithinRect(someLoc, someRect) then
+                    set the rect of this stack to someRect
+                end if
+            end repeat
+            break
+        case "1280 x 800"
+            put the rect of this stack into someRect
+            if item 2 of someRect < 44 then put 44 into item 2 of someRect
+            put rect_FromWidthAndHeight(someRect, 1280, 800) into newRect
+            set the rect of this stack to newRect
+            break
+        case "1024 x 768"
+            put the rect of this stack into someRect
+            if item 2 of someRect < 44 then put 44 into item 2 of someRect
+            put rect_FromWidthAndHeight(someRect, 1024, 768) into newRect
+            set the rect of this stack to newRect
+            
+            break
+        case "800 x 600"
+            put the rect of this stack into someRect
+            if item 2 of someRect < 44 then put 44 into item 2 of someRect
+            put rect_FromWidthAndHeight(someRect, 800, 600) into newRect
+            set the rect of this stack to newRect
+            break
+    end switch
+end stack_SetViewSize

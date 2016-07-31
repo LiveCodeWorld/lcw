@@ -1,0 +1,4 @@
+getprop grid_Control [gridNum]
+   put _getGridControl (gridNum) into gridControl
+   return gridControl
+end grid_Control

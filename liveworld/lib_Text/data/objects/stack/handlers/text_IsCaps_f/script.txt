@@ -1,0 +1,12 @@
+function text_IsCaps someText
+   -- use casesensitive
+   return matchtext (word 1 to -1 of someText, "\b[A-Z]+\b", anyThing)
+   
+   repeat for each char testChar in someText
+      put chartonum (testChar) into someCharNum
+      if someCharNum >= 65 and someCharNum <= 90 then
+         return false
+      end if
+   end repeat
+   return true
+end text_IsCaps

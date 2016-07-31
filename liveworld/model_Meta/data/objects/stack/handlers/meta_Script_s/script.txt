@@ -1,0 +1,7 @@
+setprop meta_Script [pExportHandlers] someScript
+   put the long id of the target into someObject
+   put the object_Folder of someObject into objectFolder
+   object_ExportScript objectFolder, someScript, pExportHandlers
+   put the result into someFile
+   return someFile
+end meta_Script

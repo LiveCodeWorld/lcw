@@ -1,0 +1,6 @@
+getprop view_Profile
+   put the view_Object of the target into viewObject
+   if exists(viewObject) is false then return empty
+   put the cREVGeneral ["profile"] of viewObject into profileName
+   return profileName
+end view_Profile

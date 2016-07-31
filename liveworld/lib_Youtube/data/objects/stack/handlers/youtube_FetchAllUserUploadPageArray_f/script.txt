@@ -1,0 +1,5 @@
+function youtube_FetchAllUserUploadPageArray userName, pDontLinkTitle
+   put youtube_FetchUserChannelID (userName) into channelID
+   put youtube_FetchAllChannelUploadPageArray (channelID, pDontLinkTitle) into pageArray
+   return pageArray
+end youtube_FetchAllUserUploadPageArray

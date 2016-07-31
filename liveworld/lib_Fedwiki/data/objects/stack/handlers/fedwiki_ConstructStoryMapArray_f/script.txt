@@ -1,0 +1,13 @@
+function fedwiki_ConstructStoryMapArray mapLat, mapLong, mapText, mapZoom, pID
+   fedwiki_SetID pID
+   put pID into itemArray ["id"]
+   if mapLat is not empty then
+      put mapLat into itemArray ["latlng"]["lat"]
+      put mapLong into itemArray ["latlng"]["lng"]
+   end if
+   if mapText is empty then put "Map" into mapText
+   put mapText into itemArray ["text"]
+   put "map" into itemArray ["type"]
+   put mapZoom into itemArray ["zoom"]
+   return itemArray
+end fedwiki_ConstructStoryMapArray

@@ -1,0 +1,12 @@
+function handler_ConstructMetadataArray hKey, pHandler, pSkipHkeyComponents, pSkipHkeyProps
+   if pHandler is empty then
+      if the number of items of hKey = 2 then
+         put library_FetchHandler (hKey) into pHandler
+      else
+         put hkey_ExtractHandlerFromObject (hKey) into pHandler
+      end if
+   end if
+   put handler_ConstructCallArray (pHandler) into metadataArray
+   hkey_AddToKeyWordArray metadataArray, hKey, handlerHash
+   return metadataArray
+end handler_ConstructMetadataArray

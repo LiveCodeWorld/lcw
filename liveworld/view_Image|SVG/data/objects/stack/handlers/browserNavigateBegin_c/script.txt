@@ -1,0 +1,8 @@
+on browserNavigateBegin clickedURL
+   -- "http://libbrowser_dummy_url/list_ImageFileIDs%2Cc%2Cstack+%22behavior_ServerScriptContainer%22%2C1"
+   set the itemdelimiter to slash
+   put item -1 of clickedURL into urlEncodedHKey
+   put urldecode (urlEncodedHKey) into hKey
+   
+   hKey_Edit hKey
+end browserNavigateBegin

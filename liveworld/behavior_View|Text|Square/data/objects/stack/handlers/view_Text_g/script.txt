@@ -1,0 +1,5 @@
+getprop view_Text
+   put _textField() into textField
+   put the text of textField into someText
+   return someText
+end view_Text

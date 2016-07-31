@@ -1,0 +1,15 @@
+function object_GetNestedDepth idObject
+   -- needs to be a long id
+   -- put the long id of idObject into idObject
+   repeat
+      if word 4 of line -1 of idObject is "of" then
+         put word 1 to 3 of idObject & CR after objectIndex
+         delete word 1 to 4 of idObject
+      else
+         -- its the stack bit
+         put idObject into longStack
+         exit repeat
+      end if
+   end repeat
+   return the number of lines of objectIndex
+end object_GetNestedDepth

@@ -1,0 +1,6 @@
+command text_SetBetween startText, endText, @someText, newSection, startAfterCharNum
+    text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
+    if startChar = 0 or endChar = 0 then return empty
+     
+    put newSection into char startChar to endChar of someText
+end text_SetBetween

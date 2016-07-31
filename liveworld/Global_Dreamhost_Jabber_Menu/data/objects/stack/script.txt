@@ -1,0 +1,42 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Dreamhost_Jabber_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Dreamhost | Jabber | Menu
+-
+[[ _FetchHandler (menu_JabberDomains,c) ]]
+
+[[ _FetchHandler (menu_JabberUsers,c) ]]
+
+[[ _FetchHandler (menu_AddJabberUser,c) ]]
+
+[[ _FetchHandler (menu_ServiceProgress,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | DreamHost | Jabber | Menu | Props
+-
+--> Global | DreamHost | Jabber | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Test,g) ]]
+
+
+--> Global | DreamHost | Jabber | Menu | Deps
+-
+[[ _FetchHandler (dreamhost_ApiKey,f) ]]
+
+[[ _FetchHandler (dreamHost_ParseTableResult,f) ]]
+
+[[ _FetchHandler (dreamHost_ParseResult,f) ]]
+
+
+--> Dev | Menu
+-

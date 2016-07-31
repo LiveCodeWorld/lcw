@@ -1,0 +1,17 @@
+getprop stackfile_FileArray
+   -- returns an array with long not relative file names
+   
+   local fileNameArray
+   put the stack_Object of the target into stackObject
+   put the stackfiles of stackObject into stackFileTable
+   put the filename of stackObject into someFile
+   put folder_Above(someFile) into baseFolder
+   
+   repeat for each line someLine in stackFileTable
+      put item 1 of someLine into stackName
+      put item 2 to -1 of someLine into relativeFile
+      put file_FromRelativePath(relativeFile, baseFolder) into someFile
+      put someFile into fileNameArray [stackName]
+   end repeat
+   return fileNameArray
+end stackfile_FileArray

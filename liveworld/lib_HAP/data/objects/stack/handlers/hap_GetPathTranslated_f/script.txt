@@ -1,0 +1,10 @@
+function hap_GetPathTranslated
+   if the environment is "server" then
+      # GET PATH TRANSLATED - NEEDED TO GET FILE INFO
+      put $_SERVER["PATH_TRANSLATED"] into tPathTranslated
+      # REMOVE index.lc
+      set the itemDel to "/"
+      put (item 1 to - 2 of tPathTranslated) & "/" into tPathTranslated
+   end if
+   return tPathTranslated
+end hap_GetPathTranslated

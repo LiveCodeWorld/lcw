@@ -1,0 +1,128 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Menu_Table_Menu
+type: controller
+version: 0.1
+
+
+--> Global | Menu | Table | Menu
+-
+/*
+Seems to be a problem with an error: of mController: card "Menu Table Menus" of stack "libOPN_Menus"
+*/
+
+[[ _FetchHandler (submenu_GlobalMenu,c) ]]
+
+[[ _FetchHandler (menu_ListGlobalMenus,c) ]]
+
+[[ _FetchHandler (editTreeMenu,c) ]]
+
+[[ _FetchHandler (menu_DisplayMenuPickHandler,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_LocalMenus,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CutMenu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Development,c) ]]
+
+
+--> Global | Menu | Table | Menu | Props
+-
+[[ _FetchHandler (show_MenuStack,g) ]]
+
+[[ _FetchHandler (script_MenuTitles,g) ]]
+
+[[ _FetchHandler (cached_MenuTitles,g) ]]
+
+
+--> Global | Menu | Table | Menu | Disabled
+-
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_MenuTableArray,c) ]]
+
+[[ _FetchHandler (menu_CachedMenuTable,c) ]]
+
+[[ _FetchHandler (menu_CachedMenuArray,c) ]]
+
+[[ _FetchHandler (menu_LiveMenuTable,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ClearCachedMenuTable,c) ]]
+
+[[ _FetchHandler (menu_ClearEntireCache,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_BurnMenu,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_MenuControllerCustomProperty,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayMenuText,c) ]]
+
+[[ _FetchHandler (menu_DisplayMenuObjects,c) ]]
+
+[[ _FetchHandler (menu_Reindex,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayMenuExtras,c) ]]
+
+[[ _FetchHandler (menu_MenuOptionEdit,c) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (menu_GetItemScript,f) ]]
+
+
+--> Tree | Menu
+-
+[[ _FetchHandler (menu_TestFirstRecord,c) ]]
+
+[[ _FetchHandler (display_FormArray,c) ]]
+
+[[ _FetchHandler (display_MenuTable,pc) ]]
+
+
+--> Dev | Menu | Disabled
+-
+[[ _FetchHandler (disabled_CachedMenuTable,g) ]]
+
+[[ _FetchHandler (disabled_LiveMenuTable,g) ]]
+
+[[ _FetchHandler (disabled_DisplayMenuText,g) ]]
+
+[[ _FetchHandler (disabled_ClearCachedMenuTable,g) ]]
+
+-- getprop disabled_ClearEntireCache
+    return LocalArray ["menu_TableTitles"] is empty
+end disabled_ClearEntireCache
+
+
+--> Menu | Props
+-
+local LocalArray
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]

@@ -1,0 +1,10 @@
+setprop menu_Array mArray
+   put the long id of the target into mController
+   if mArray is empty then
+      custom_DeleteProperty "menu_Array", mController
+   else
+      lock messages
+      set the menu_Array of mController to mArray
+      unlock messages
+   end if
+end menu_Array

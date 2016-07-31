@@ -1,0 +1,4 @@
+getprop menu_MetaDataArray [mTitle]
+   put the menu_Array of the target into mArray
+   return mArray [mTitle]["metadata"]
+end menu_MetaDataArray

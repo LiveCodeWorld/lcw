@@ -1,0 +1,5 @@
+getprop view_MenuArray
+   put the title_Menu of me into menuArray ["title"]
+   put the line_Menu of me into menuArray ["line"]
+   return menuArray
+end view_MenuArray

@@ -1,0 +1,75 @@
+function rev_XmlDocToArray theXML
+   -- based on code from BVG Docu
+   if char 1 to 5 of word 1 of theXML = "<doc>" then
+      put "<?xml version=" & quote & "1.0" & quote & "?>" before theXML
+   else if char 1 to 5 of word 1 of theXML <> "<?xml" then
+      return "I couldn't understand the file you referenced:" & return & thePath
+   end if
+   --If you wonder what the hell I did right after this comment, then try this: put the cDictDTD of stack "revDocs"
+   --note: as of 3.5 that stack does not exist in the ide, instead it's "revDocumentationLibrary"
+   put the DTD of card 1 of this stack after char offset(">",theXML) of theXML
+   
+   put revcreatexmltree(theXML,true,true,false) into theID
+   replace "><" with ">" & return & "<" in theXML
+   set the XMLtext of this stack to theXML
+   if theID is not a number then
+      return "revXML made a booboo:" & return & theID
+   end if
+   if revXMLRootNode(theID) is not "doc" then
+      return "This is XML, but not the kind I Expected:" & revXMLRootNode(theID)
+   end if
+   
+   put rev_DocCleanup(revxmltext(theID, "doc/name"),false, "name") into content["name"]
+   if content["name"] contains "&gt;" or content["name"] contains "&lt;" then --xml doesn't like < and >
+      replace "&gt;" with ">" in content["name"]
+      replace "&lt;" with "<" in content["name"]
+   else if content["name"] contains "&amp;" then
+      replace "&amp;" with "&" in content["name"]
+   end if
+   put rev_DocCleanup(revxmltext(theID, "doc/type"),false, "type") into content["type"]
+   --put "<p>" & rev_DocCleanup(revxmltext(theID, "doc/syntax"),false, "syntax") & "</p>" into content["syntax"]
+   put rev_DocCleanup(revxmltext(theID, "doc/syntax"),false, "syntax") into content["syntax"]
+   replace "</p><p>" with return in content["syntax"]
+   replace "<p>" with empty in content["syntax"]
+   replace "</p>" with empty in content["syntax"]
+   put word 1 to -1 of content["syntax"] into content["syntax"]
+   replace return with "</p><p>" in content["syntax"]
+   if char 1 to 3 of content["syntax"] <> "<p>" and content["syntax"] <> "" then
+      put "<p>" & content["syntax"] & "</p>" into content["syntax"]
+   end if
+   put rev_DocCleanup(revxmlchildcontents(theID, "doc/synonyms",comma,return, false, 1),true) into content["synonyms"]
+   put rev_DocCleanup(revxmlchildcontents(theID, "doc/objects",comma,return, false, 1),true) into content["objects"]
+   put rev_DocCleanup(revxmlchildcontents(theID, "doc/categories",comma,return, false, 1)) into temp
+   repeat for each line theLine in temp
+      put item 2 to -1 theLine & return after content["categories"]
+   end repeat
+   delete char -1 of content["categories"]
+   set the itemdelimiter to "/"
+   put 0 into x
+   repeat for revXMLnumberofChildren(theID, "doc/related",,1) times
+      add one to x
+      if item 1 of revXMLattribute(theID, "doc/related/docRef[" & x & "]","src") = "Dictionary" then
+         put revXMLnodecontents(theID, "doc/related/docRef[" & x & "]") after content["related"]
+         if word -2 to -1 of line -1 of content["related"] = "control structure" then
+            put word 1 to -3 of line -1 of content["related"] & tab & word -2 to -1 of line -1 of content["related"] & return into line -1 of content["related"]
+         else
+            put word 1 to -2 of line -1 of content["related"] & tab & word -1 of line -1 of content["related"] & return into line -1 of content["related"]
+         end if
+      end if
+   end repeat
+   delete char -1 of content["related"]
+   set the itemdelimiter to comma
+   put rev_DocCleanup(revXMLattribute(theID, "doc/introduced","version")) into content["introduced"]
+   put rev_DocCleanup(revXMLattribute(theID, "doc/changed","version")) into content["changed"]
+   put rev_DocCleanup(revXMLattribute(theID, "doc/removed","version")) into content["removed"]
+   put rev_DocCleanup(revXMLattribute(theID, "doc/osx","support")) into content["osx"]
+   put rev_DocCleanup(revXMLattribute(theID, "doc/macos","support")) into content["macos"]
+   put rev_DocCleanup(revXMLattribute(theID, "doc/win32","support")) into content["win32"]
+   put rev_DocCleanup(revXMLattribute(theID, "doc/unix","support")) into content["unix"]
+   put rev_DocCleanup(revxmltext(theID, "doc/summary"),false, "summary") into content["summary"]
+   put rev_DocCleanup(revxmltext(theID, "doc/example"),false, "example") into content["example"]
+   put rev_DocCleanup(revxmltext(theID, "doc/description"),false, "description") into content["description"]
+   
+   revdeleteXMLtree theID
+   return content
+end rev_XmlDocToArray

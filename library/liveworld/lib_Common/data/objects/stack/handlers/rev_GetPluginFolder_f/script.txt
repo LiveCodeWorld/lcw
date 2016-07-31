@@ -1,0 +1,8 @@
+function rev_GetPluginFolder
+   if the version < 2.7 then
+      put rev_ApplicationFolder() into revpluginFolder
+      put "plugins/" after revpluginFolder
+   else
+      return revEnvironmentUserPluginsPath() & "/"
+   end if
+end rev_GetPluginFolder

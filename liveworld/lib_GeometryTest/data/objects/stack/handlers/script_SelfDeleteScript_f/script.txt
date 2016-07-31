@@ -1,0 +1,7 @@
+function script_SelfDeleteScript
+    put "on mouseUp" & return into someScript
+    put "put the long id of the target into targetObject" & return after someScript
+    put "send" && kwote("delete targetObject") && " to the target in 2 ticks" & return after someScript
+    put "end mouseUp" after someScript
+    return someScript
+end script_SelfDeleteScript

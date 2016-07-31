@@ -1,0 +1,9 @@
+getprop project_Name
+   put git_GetRootFolder() into gitFolder
+   if there is a folder gitFolder then
+      set the itemDelimiter to "/"
+      return item -1 of gitFolder
+   else
+      return "(Error:" && gitFolder
+   end if
+end project_Name

@@ -1,0 +1,8 @@
+function dot_NodeDefFromArray nodeDefArray
+   repeat for each key nodeID in nodeDefArray
+      put nodeDefArray [nodeID] into defLineArray
+      put dot_NodeDefLineFromArray (nodeID, defLineArray) & CR after nodeDefs
+   end repeat
+   delete char -1 of nodeDefs
+   return nodeDefs
+end dot_NodeDefFromArray

@@ -1,0 +1,6 @@
+function http_ResponseCode pLastHeaders
+   -- HTTP/1.1 200 OK
+   if pLastHeaders is empty then put libURLLastRHHeaders() into pLastHeaders
+   put word 2 of pLastHeaders into httpResponseCode
+   return httpResponseCode
+end http_ResponseCode

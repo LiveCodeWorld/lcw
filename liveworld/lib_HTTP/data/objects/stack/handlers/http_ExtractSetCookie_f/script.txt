@@ -1,0 +1,13 @@
+function http_ExtractSetCookie pHeader
+   if pHeader is empty then put libUrlLastRHHeaders() into pHeader
+   
+   set the itemdelimiter to ":"
+   repeat for each line someLine in pHeader
+      if item 1 of someLine = "Set-Cookie" then
+         put word 1 to -1 of item 2 of someLine into cookieLine
+         put cookieLine & CR after cookies
+      end if
+   end repeat
+   delete char -1 of cookies
+   return cookies
+end http_ExtractSetCookie

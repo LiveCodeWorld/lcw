@@ -1,0 +1,10 @@
+on menu_EditLivecodeBehaviorButton mTarget, ideBname
+   switch ideBname
+      case "Livecode Handler List Field"
+         put scriptEditor_HandlerListBehavior() into ideBehavior
+         break
+      default
+         put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
+   end switch
+   edit the script of ideBehavior
+end menu_EditLivecodeBehaviorButton

@@ -1,0 +1,43 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_Finder
+type: library
+version: 0.1
+
+
+--> Finder | Wrappers
+-
+[[ _FetchHandler (wrangler_Open,c) ]]
+
+[[ _FetchHandler (preview_Image,c) ]]
+
+
+--> Finder | Prefs
+-
+[[ _FetchHandler (finder_GetShowInvisibleFiles,f) ]]
+
+[[ _FetchHandler (finder_SetShowInvisibleFiles,c) ]]
+
+[[ _FetchHandler (finder_Restart,c) ]]
+
+
+--> Finder
+-
+[[ _FetchHandler (finder_PositionWindow,c) ]]
+
+[[ _FetchHandler (finder_GetFrontApplication,f) ]]
+
+[[ _FetchHandler (finder_Disks,f) ]]
+
+[[ _FetchHandler (finder_EjectDisk,c) ]]
+
+[[ _FetchHandler (finder_Reveal,c) ]]
+
+[[ _FetchHandler (folder_Open,c) ]]
+
+[[ _FetchHandler (finder_SelectFileOrFolder,c) ]]
+
+[[ _FetchHandler (finder_BringToFront,c) ]]
+
+[[ _FetchHandler (finder_Open,c) ]]

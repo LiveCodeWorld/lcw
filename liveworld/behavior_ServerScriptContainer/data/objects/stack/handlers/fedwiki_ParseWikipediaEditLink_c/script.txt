@@ -1,0 +1,5 @@
+command fedwiki_ParseWikipediaEditLink pageSlug, sectionNum, wikipediaUrl, someLang
+   put fedwiki_FetchWikipediaSectionArray (pageSlug, sectionNum, wikipediaUrl) into fedwikiPageArray
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   fedwiki_ReturnJSON pageJSON
+end fedwiki_ParseWikipediaEditLink

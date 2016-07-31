@@ -1,0 +1,6 @@
+on menu_DeleteTempGlobal scriptObject, tempGlobal
+   global_DisplayValue tempGlobal
+   opn_Answer merge ("Are you sure you want to remove the global variable '[[tempGlobal]]' from memory?")
+   global_Delete tempGlobal
+   opn_Notify merge ("Removed the global variable '[[tempGlobal]]' from memory!")
+end menu_DeleteTempGlobal

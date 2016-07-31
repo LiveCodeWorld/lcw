@@ -1,0 +1,13 @@
+getprop menu_AssociatedView [mTitlePath]
+   put the long id of the target into mTarget
+   
+   set the itemdelimiter to "/"
+   repeat for each item mTitle in mTitlePath
+      put menu_ViewReferenceFromTitle(mTitle) into viewRef
+      if viewRef is empty then return mTarget
+      put the viewRef of mTarget into newMenuTarget
+      if exists(newMenuTarget) is false then return mTarget
+      put newMenuTarget into mTarget
+   end repeat
+   return mTarget
+end menu_AssociatedView

@@ -1,0 +1,8 @@
+getprop menu_FullTitle
+   put the long id of the target into targetObject
+   put the view_Value ["menu_Title"] of targetObject into mTitle
+   if mTitle is empty then
+      put the menu_DefaultTitle of targetObject into mTitle
+   end if
+   return mTitle 
+end menu_FullTitle

@@ -1,0 +1,5 @@
+on behavior_SetRepositoryScript bName, someScript, pOnLineMode
+   put library_TextUrl ("script.txt", bName, "behavior", false) into someUrl
+   if someUrl is not empty then put someScript into url someUrl
+   return someUrl
+end behavior_SetRepositoryScript

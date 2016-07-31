@@ -1,0 +1,8 @@
+getprop displayed_HelpHkey
+   put the help_Field of me into helpField
+   lock messages
+   put the displayed_HelpHkey of helpField into hKey
+   unlock messages
+   -- put LocalArray ["displayed_HelpHkey"] into hKey
+   return hKey
+end displayed_HelpHkey

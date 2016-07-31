@@ -1,0 +1,9 @@
+function stack_CheckProtected stackName
+   put the password of stack stackName into pWord
+   return pWord is true
+   
+   -- this doe snot waork for new versions of LiveCode
+   put the passKey of stack stackName into pKey
+   put pWord <>  pKey into isProtected
+   return isProtected
+end stack_CheckProtected

@@ -1,0 +1,4 @@
+function server_FetchPrefArray pProjectName
+   put pref_FetchValue ("server_Array", pProjectName) into serverPrefArray
+   return serverPrefArray
+end server_FetchPrefArray

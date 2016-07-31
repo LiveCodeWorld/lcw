@@ -1,0 +1,12 @@
+command display_ObjectHkeyArrayHandler treeWidget, someValue, pathItems
+   put 1 into hNum
+   put item 1 of pathItems into hObject
+   get item 2 of pathItems 
+   set the itemdelimiter to "_"
+   put item 1 to -2 of it into hName
+   put item -1 of it into hType
+   put hName,hType,hObject,hNum into hKey
+   put hKey
+   
+   hkey_Edit hKey
+end display_ObjectHkeyArrayHandler

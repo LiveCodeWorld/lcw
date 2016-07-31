@@ -1,0 +1,14 @@
+command overlay_ReconstructDotArray overlayFolder, overlayStyle, pLinkArray, pOverlayName, pDotDefaultArray
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_GetArray (overlayData, pOverlayName) into overlayArray
+   
+   if pOverlayName is empty then put overlayStyle into pOverlayName
+   overlayArray_SetGraphProperty overlayArray, "overlay_Name", pOverlayName
+   
+   put rev_PluginRelativePath (overlayFolder) into relativeOverlayFolder
+   overlayArray_SetGraphProperty overlayArray, "overlay_Folder", relativeOverlayFolder
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", overlayStyle
+   
+   overlay_ReconstructArray overlayArray, pLinkArray, pDotDefaultArray
+   return overlayArray
+end overlay_ReconstructDotArray

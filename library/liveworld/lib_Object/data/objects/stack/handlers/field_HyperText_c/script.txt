@@ -1,0 +1,18 @@
+command field_HyperText someLink, targetObject
+   if targetObject is empty then put the long ID of the target into targetObject
+   set the itemDelimiter to ":"
+   switch item 1 of someLink
+      case "http"
+         opn_GoUrl someLink
+         break
+      default
+         if the script_CheckSafe [someLink] of targetObject is not false then
+            try
+               -- do someLink
+               send someLink to targetObject
+            catch errorNum
+               get the opn_Error [errorNum] of me
+            end try
+         end if
+   end switch
+end field_HyperText

@@ -1,0 +1,14 @@
+command menu_TidyText @mText
+   put word 1 to -1 of mText into mText
+   
+   -- remove double dividers
+   replace (CR & "-" & CR & "-" & CR) with (CR & "-" & CR) in mText
+   
+   -- removes things like blank missing menu spaces
+   repeat while (word 1 to -1 of line 1 of mText = "-")
+      delete line 1 of mText
+   end repeat
+   repeat while (word 1 to -1 of line -1 of mText = "-")
+      delete line -1 of mText
+   end repeat
+end menu_TidyText

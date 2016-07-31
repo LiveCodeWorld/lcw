@@ -1,0 +1,12 @@
+function applescript_ConstructIndex kwoteList
+    repeat
+        put word 1 of kwoteList into someValue
+        applescript_StripRecord someValue
+        put someValue & CR after someIndex
+        delete word 1 of kwoteList
+        delete item 1 of kwoteList
+        if kwoteList is empty then exit repeat
+    end repeat
+    delete char -1 of someIndex
+    return someIndex
+end applescript_ConstructIndex

@@ -1,0 +1,18 @@
+getprop daemon_RouteHandlers
+   -- as fast as possible
+   local dHandlerNames
+   put the script of the target into someScript
+   put the revAvailableHandlers of the target into handlerTable
+   repeat for each line tableLine in handlerTable
+      if word 1 of tableLine = "M" then
+         put word 2 of tableLine into hName
+         if hName begins with "daemon_" then next repeat
+         put hName & CR after dHandlerNames
+      else
+         delete char -1 of dHandlerNames
+         return dHandlerNames
+      end if
+   end repeat
+   delete char -1 of dHandlerNames
+   return dHandlerNames
+end daemon_RouteHandlers

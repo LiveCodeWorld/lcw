@@ -1,0 +1,8 @@
+setprop vertical_Spacing verticalSpacing
+   put verticalSpacing into LocalArray ["verticalSpacing"]
+   dispatch "LayoutControl" to me
+   return the result
+   
+   -- all a bit complicated ???
+   -- set the back_Property ["vertical_Spacing"] of me to verticalSpacing
+end vertical_Spacing

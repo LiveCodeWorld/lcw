@@ -1,0 +1,9 @@
+on menu_CachedMenuTable mTarget, cachedMenuTitle
+   put rev_ScriptObject() into mController
+   put the menu_Table [cachedMenuTitle] of mController into mTable
+   
+   put script_ConstructSuiteHeader (cachedMenuTitle) into menuHeader
+   script_Edit mController, menuHeader, true
+   
+   display_MenuTable mTable, mController, cachedMenuTitle
+end menu_CachedMenuTable

@@ -1,0 +1,6 @@
+on menu_DisplayBookArray
+   put sivasiva_FetchBookArray() into bookArray
+   put "Global | SivaSiva | Book | Parse | Menu" into titleMenu
+   put "Global | SivaSiva | Book | Parse | Line | Menu" into titleLineMenu
+   display_Array bookArray, "Character Traits Book Array", titleMenu, titleLineMenu
+end menu_DisplayBookArray

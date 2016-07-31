@@ -1,0 +1,11 @@
+command behaviorModel_RenameRecord oldName, newName
+   -- old move to hArray
+   breakpoint
+   
+   local behaviorArray
+   put behaviorModel_GetArray() into behaviorArray
+   put behaviorArray [oldName] into behaviorArray [newName]
+   delete local behaviorArray [oldName]
+   behaviorModel_SetArray behaviorArray
+   return the result
+end behaviorModel_RenameRecord

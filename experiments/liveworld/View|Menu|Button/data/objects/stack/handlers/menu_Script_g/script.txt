@@ -1,0 +1,7 @@
+getprop menu_Script [pTitle]
+   put the long id of the target into targetObject
+   if pTitle is empty then put the menu_Title of targetObject into pTitle
+   
+   put menu_GetScript (pTitle, targetObject) into scriptSuite
+   return scriptSuite
+end menu_Script   

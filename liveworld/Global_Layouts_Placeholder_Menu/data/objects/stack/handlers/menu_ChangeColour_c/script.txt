@@ -1,0 +1,7 @@
+on menu_ChangeColour mTarget
+   answer color
+   if the result is "Cancel" then exit to top
+   put it into newValue
+   
+   set the view_Colour of mTarget to newValue
+end menu_ChangeColour

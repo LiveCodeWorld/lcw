@@ -1,0 +1,14 @@
+private function _guessAutoFactor squareWidth
+   if squareWidth < 120 then
+      put 30 into someFactor
+   else if squareWidth >= 180 and squareWidth < 270 then
+      put 19 into someFactor
+   else if squareWidth >= 270 and squareWidth < 320 then
+      put 19 into someFactor
+   else if squareWidth >= 320 and squareWidth < 350 then
+      put 18 into someFactor
+   else -- if squareWidth >= 300 then
+      put 17 into someFactor
+   end if
+   return someFactor
+end _guessAutoFactor

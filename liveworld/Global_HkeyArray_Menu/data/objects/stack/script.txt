@@ -1,0 +1,71 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_HkeyArray_Menu
+type: controller
+version: 0.1
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | HkeyArray | Menu
+-
+/*
+The menu for tree views of overlay arrays.
+See also "Global | Image | Dot | Menu" and "Global | Script | Dependency | Menu"
+*/
+
+[[ _FetchHandler (submenu_Hkey,c) ]]
+
+[[ _FetchHandler (submenu_CreateGraph,c) ]]
+
+[[ _FetchHandler (submenu_OverlayArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Display,c) ]]
+
+[[ _FetchHandler (submenu_Filter,c) ]]
+
+[[ _FetchHandler (submenu_Deps,c) ]]
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | HkeyArray | Menu | Disabled
+-
+--> Global | HkeyArray | Menu | Props
+-
+
+--> Deps
+-
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_RecreateOverlay,c) ]]
+
+[[ _FetchHandler (menu_SaveDisplayedOverlayArray,c) ]]
+
+[[ _FetchHandler (menu_SetOverlayObject,c) ]]
+
+[[ _FetchHandler (menu_ExportScriptArray,c) ]]
+
+[[ _FetchHandler (menu_RevealOverlayFolder,c) ]]
+
+
+--> Menu | Props
+-
+/*
+This menu is designed to be the title menu of a tree or similar widget that presents an hkeyArray.
+it should allow export to the appropriate place on disk, as it can take a long time to process these arrays,
+and they may want to be examined before they are saved!
+*/
+
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (deconstructLocalArray,c) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]

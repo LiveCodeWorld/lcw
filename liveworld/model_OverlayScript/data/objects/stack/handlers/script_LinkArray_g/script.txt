@@ -1,0 +1,5 @@
+getprop script_LinkArray [pOverlayName]
+   put the long id of the target into scriptObject
+   put the script_DataArray [pOverlayName] of scriptObject into dataArray
+   return dataArray ["linkArray"]
+end script_LinkArray

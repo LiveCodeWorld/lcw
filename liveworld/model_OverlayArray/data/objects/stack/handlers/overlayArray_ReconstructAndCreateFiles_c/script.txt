@@ -1,0 +1,15 @@
+command overlayArray_ReconstructAndCreateFiles linkArray, overlayName, overlayFolder, pGraphStyle, dotHeaderArray, graphPropertyArray
+   put overlayArray_FromLinkArray (linkArray, dotHeaderArray, graphPropertyArray) into overlayArray
+   overlayArray_SetGraphProperty overlayArray, "overlay_Folder", overlayFolder
+   overlayArray_SetGraphProperty overlayArray, "overlay_Name", overlayName
+   if pGraphStyle is empty then
+      if overlayName is among the items of dot_AllGraphStyles() then
+         put overlayName into pGraphStyle
+      else
+         put "hierarchical" into pGraphStyle
+      end if
+   end if
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", pGraphStyle
+   overlayArray_CreateFilesAndSetGeometry overlayArray
+   return overlayArray
+end overlayArray_ReconstructAndCreateFiles

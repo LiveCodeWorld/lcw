@@ -1,0 +1,13 @@
+command ipfs_SaveStack stackName
+   save stack stackName
+   put the filename of stack stackName into someFile
+   -- ipfs_ShellAddFile someFile
+   ipfs_AddFile someFile
+   put the result into resultArray
+   put resultArray ["Hash"] into ipfsMultiHash
+   -- here we are not storing previous versions in the array
+   -- which we could do with a numercially indexed array of all hashes
+   put ipfsMultiHash into ipfsArray [stackName]
+   ipfs_SaveArray ipfsArray
+   return ipfsArray
+end ipfs_SaveStack

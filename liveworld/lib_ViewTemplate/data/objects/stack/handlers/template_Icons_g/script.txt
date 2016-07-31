@@ -1,0 +1,9 @@
+getprop template_Icons
+   put the template_IconGroup of the target into templateIconGroup
+   if exists (templateIconGroup) is false then return empty
+   repeat with imageNum = 1 to the number of images of templateIconGroup
+      put the short id of image imageNum of templateIconGroup into imageID
+      put imageID & CR after imageIDs
+   end repeat
+   return imageIDs
+end template_Icons

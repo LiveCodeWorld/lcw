@@ -1,0 +1,5 @@
+function spotlight_MetaMovieHash movieFile
+    get spotlight_ExtractFixedMovieInfo(movieFile)
+    put it
+    return text_Hash(it)
+end spotlight_MetaMovieHash

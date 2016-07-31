@@ -1,0 +1,9 @@
+function rig_AssetImageFolder
+   switch the platform
+      case "MacOS"
+         return "/Users/BabyBlue/Pictures/OSCEDays Bilbao/"
+      default
+         put the defaultfolder & "/assets/img/" into imageFolder
+         return imageFolder
+   end switch
+end rig_AssetImageFolder

@@ -1,0 +1,7 @@
+function ipfs_ConstructBrowserUrl someHash, pPath, pPort
+   -- http://127.0.0.1:8080/ipfs/QmQy1iYDG86WMNnwFZXxWUBgtG4dFtHtyNodz6jaqSNKNj
+   if pPort is empty then put 8080 into pPort
+   put "http://localhost:" & pPort & "/ipfs/" & someHash into someUrl
+   if pPath is not empty then put "/" & pPath after someUrl
+   return someUrl
+end ipfs_ConstructBrowserUrl

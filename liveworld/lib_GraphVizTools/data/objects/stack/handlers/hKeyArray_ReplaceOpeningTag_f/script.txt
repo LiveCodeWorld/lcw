@@ -1,0 +1,7 @@
+function hKeyArray_ReplaceOpeningTag tagNumber, someXml
+    put "subgraph cluster" & tagNumber && "{" into subHeader
+    -- put CR after subHeader
+    put "<n" & tagNumber & ">" into openingTag
+    put replacetext(someXml, openingTag, subHeader) into someXml
+    return someXml
+end hKeyArray_ReplaceOpeningTag

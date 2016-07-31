@@ -1,0 +1,7 @@
+function googleEarth_GetViewAppleScript
+    put "tell application 'Google Earth'" into doScript
+    put cr & "GetViewInfo" after doScript
+    put cr & "end tell"  after doScript
+    replace "'" with quote in doScript
+    return merge(doScript)
+end googleEarth_GetViewAppleScript

@@ -1,0 +1,4 @@
+getprop m_Cards [treeView]
+   if exists (stack "libOPN_HkeyArray") is false then return empty
+   return the menu_CardMenu of stack "libOPN_HkeyArray"
+end m_Cards

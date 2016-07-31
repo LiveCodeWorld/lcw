@@ -1,0 +1,5 @@
+function rev_DocumentationTable
+   put revDocumentationDictionaryIndexPath() into theDictFile
+   put url ("file:" & theDictFile) into dictionaryTable
+   return dictionaryTable
+end rev_DocumentationTable

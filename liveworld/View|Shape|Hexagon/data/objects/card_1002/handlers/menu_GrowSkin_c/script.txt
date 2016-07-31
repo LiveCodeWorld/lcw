@@ -1,0 +1,8 @@
+on menu_GrowSkin sHexagon
+   -- dispatch "skin_Colourize" to sHexagon
+   lock screen
+   dispatch "skin_Grow" to sHexagon
+   dispatch "skin_Colourize" to sHexagon
+   unlock screen
+   -- hexagon_IterateSkin sHexagon
+end menu_GrowSkin

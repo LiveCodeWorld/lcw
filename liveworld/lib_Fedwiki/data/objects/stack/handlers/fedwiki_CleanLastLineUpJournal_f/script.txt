@@ -1,0 +1,6 @@
+function fedwiki_CleanLastLineUpJournal droppedURL, pPreserveActions, pNotTheseSlugs
+   put fedwiki_FetchLastLineUpArray (droppedURL, pNotTheseSlugs) into pageArray
+   fedwiki_CleanJournalArray pageArray, pPreserveActions
+   put json_FromArray (pageArray) into cleanJSON
+   return cleanJSON
+end fedwiki_CleanLastLineUpJournal

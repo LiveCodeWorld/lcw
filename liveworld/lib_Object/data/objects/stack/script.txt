@@ -1,0 +1,608 @@
+--> Metadata
+-
+name: lib_Object
+type: script library
+version: 1.1
+copyright: David Bovill
+
+/*
+This eventually stack contains the handlers to help with manipulating Revolution controls as objects.
+
+These are not real "objects" in an "object oriented programming" (OOP) sense, but borrow from the same philosophy.
+In some ways it is more flexible in that you are free to throw away OOP techniques and use simpler concepts.
+
+or you can use OOP techniques to develop your project, taking advantage of the maintainability and ease of
+updapting and replacing components that are "work in progress" - then "burning" the finished product into a flat,
+non-OOP file for speed optimisation or other reasons.
+*/
+
+
+--> Event | Helpers
+-
+[[ _FetchHandler (mouse_ResizeObject,c) ]]
+
+[[ _FetchHandler (mouse_SetResizedRect,pc) ]]
+
+[[ _FetchHandler (mouse_WithinBorder,f) ]]
+
+[[ _FetchHandler (mouse_WithinCorner,f) ]]
+
+[[ _FetchHandler (mouse_WithinBottomCorner,f) ]]
+
+
+--> Field
+-
+[[ _FetchHandler (field_Object,g) ]]
+
+[[ _FetchHandler (field_Locked,g) ]]
+
+[[ _FetchHandler (field_Locked,s) ]]
+
+[[ _FetchHandler (field_TextSize,g) ]]
+
+[[ _FetchHandler (field_TextSize,s) ]]
+
+[[ _FetchHandler (field_TextSizes,g) ]]
+
+[[ _FetchHandler (field_Style,g) ]]
+
+[[ _FetchHandler (field_Style,s) ]]
+
+[[ _FetchHandler (field_Styles,g) ]]
+
+[[ _FetchHandler (field_SelectedIndex,g) ]]
+
+[[ _FetchHandler (field_SelectedIndex,s) ]]
+
+[[ _FetchHandler (field_SelectText,c) ]]
+
+[[ _FetchHandler (field_SelectLines,c) ]]
+
+[[ _FetchHandler (field_DeleteText,c) ]]
+
+[[ _FetchHandler (field_DeleteLine,c) ]]
+
+[[ _FetchHandler (field_GetLinkText,f) ]]
+
+[[ _FetchHandler (field_HyperText,c) ]]
+
+[[ _FetchHandler (field_HyperMenu,c) ]]
+
+[[ _FetchHandler (menu_Option,c) ]]
+
+[[ _FetchHandler (field_SetLinkedText,c) ]]
+
+
+--> Field | Scrolling
+-
+[[ _FetchHandler (field_ScrollToLine,c) ]]
+
+
+--> Field | Properties
+-
+[[ _FetchHandler (field_AutoScrollBar,g) ]]
+
+[[ _FetchHandler (field_Menu,g) ]]
+
+[[ _FetchHandler (field_WrappedText,g) ]]
+
+[[ _FetchHandler (field_Text,g) ]]
+
+[[ _FetchHandler (field_Text,s) ]]
+
+[[ _FetchHandler (field_HtmlText,g) ]]
+
+[[ _FetchHandler (field_HtmlText,s) ]]
+
+[[ _FetchHandler (field_LinkVisited,g) ]]
+
+[[ _FetchHandler (field_LinkVisited,s) ]]
+
+[[ _FetchHandler (field_TextAlign,g) ]]
+
+[[ _FetchHandler (field_TextAlign,s) ]]
+
+[[ _FetchHandler (field_TextAligns,g) ]]
+
+getprop field_Locked
+   return the lockText of the target
+end field_Locked
+
+setprop field_Locked [makeList] someBoolean
+   -- was "field_LockText"
+   
+   put the long ID of the target into fieldObject
+   
+   if word 1 of fieldObject is "field" then
+      set the lockText of fieldObject to someBoolean
+      if makeList is not empty then set the listBehavior of fieldObject to makeList is true
+      
+      if the listBehavior of fieldObject is true then
+         if someBoolean is true then
+            put the uOPN ["listbehavior"] of fieldObject into oBoolean
+            put oBoolean is not false into oBoolean
+            
+            set listBehavior of fieldObject to oBoolean
+         else
+            set the uOPN ["listbehavior"] of fieldObject to true
+            set listBehavior of fieldObject to false
+         end if
+      else
+         set the traversalOn of fieldObject to true
+         set the autoHilite of fieldObject to true
+      end if
+   end if
+end field_Locked
+
+
+--> Groups
+-
+[[ _FetchHandler (object_GroupIndex,g) ]]
+
+[[ _FetchHandler (group_GetObjectIndex,f) ]]
+
+[[ _FetchHandler (group_SetNameArray,c) ]]
+
+[[ _FetchHandler (group_NameArray,f) ]]
+
+
+--> Library
+-
+[[ _FetchHandler (library_Stack,g) ]]
+
+
+--> Object
+-
+[[ _FetchHandler (object_IsSame,f) ]]
+
+[[ _FetchHandler (objects_MakeFriendlyArray,f) ]]
+
+[[ _FetchHandler (objects_MakeFriendly,c) ]]
+
+[[ _FetchHandler (object_MakeFriendly,f) ]]
+
+[[ _FetchHandler (mainstack_File,g) ]]
+
+[[ _FetchHandler (object_Behaviors,g) ]]
+
+[[ _FetchHandler (object_CantDelete,g) ]]
+
+[[ _FetchHandler (object_SelfDelete,c) ]]
+
+[[ _FetchHandler (object_Contains,f) ]]
+
+
+--> Object | Names
+-
+[[ _FetchHandler (object_Name,g) ]]
+
+[[ _FetchHandler (virtual_Child,g) ]]
+
+[[ _FetchHandler (virtual_Object,g) ]]
+
+
+--> Object | Names | Real
+-
+[[ _FetchHandler (object_RealName,g) ]]
+
+[[ _FetchHandler (object_RealName,s) ]]
+
+[[ _FetchHandler (object_RealNameChanged,c) ]]
+
+
+--> Object | Names | Real | Local Version
+-
+getprop object_RealName [fixedName]
+   -- local version   
+   put Local_ObjectNameArray [fixedName] into realName
+   if realName is empty then   -- assume it is first time
+      if exists (control fixedName of someView) then  -- guess that is what we want and initate
+         put fixedName into Local_ObjectNameArray [fixedName]
+         return fixedName
+      else
+         return empty
+      end if
+   end if
+   return realName
+end object_RealName
+
+setprop object_RealName [fixedName] realName
+   -- local version   
+   
+   set the name of the target to realName
+   put realName into Local_ObjectNameArray [fixedName]
+end object_RealName
+
+command object_RealNameChanged oldName, newName
+   -- local version
+   repeat for each key fixedName in Local_ObjectNameArray
+      put Local_ObjectNameArray [fixedName] into oldRealName
+      if oldRealName is oldName then
+         put newName into Local_ObjectNameArray [fixedName]
+      end if
+   end repeat
+end object_RealNameChanged
+
+
+--> Object | Containers
+-
+/*
+Not just groups - cards or stacks.
+These script should not fail when passed any object.
+*/
+
+[[ _FetchHandler (object_GroupIDs,g) ]]
+
+[[ _FetchHandler (object_GroupShortIds,f) ]]
+
+
+--> Object | Snapshots
+-
+[[ _FetchHandler (object_SnapShot,g) ]]
+
+
+--> Object | Geometry
+-
+[[ _FetchHandler (object_RelativeRect,g) ]]
+
+[[ _FetchHandler (object_RelativeRect,s) ]]
+
+[[ _FetchHandler (object_GetRelativeRect,f) ]]
+
+[[ _FetchHandler (object_SetRelativeRect,c) ]]
+
+
+--> Object | Eric
+-
+[[ _FetchHandler (object_IsVisible,f) ]]
+
+[[ _FetchHandler (object_ObjOwners,f) ]]
+
+[[ _FetchHandler (object_OutOfCardWindow,f) ]]
+
+[[ _FetchHandler (object_IsHiddenByAnotherControl,f) ]]
+
+
+--> Object | Tests
+-
+[[ _FetchHandler (object_IsView,g) ]]
+
+[[ _FetchHandler (object_IsWithinView,g) ]]
+
+[[ _FetchHandler (object_IsLibrary,g) ]]
+
+[[ _FetchHandler (object_WithinStack,f) ]]
+
+[[ _FetchHandler (object_ScriptSaved,g) ]]
+
+function object_IsSame someObject, anotherObject
+   if exists(someObject) is false then return empty
+   if exists(anotherObject) is false then return empty
+   
+   put the long ID of someObject into someObject
+   put the long ID of anotherObject into anotherObject
+   return someObject = anotherObject
+end object_IsSame
+
+
+--> Object | Mobile
+-
+[[ _FetchHandler (main_Name,g) ]]
+
+[[ _FetchHandler (object_Owner,g) ]]
+
+[[ _FetchHandler (object_GetOwner,f) ]]
+
+[[ _FetchHandler (object_ExtractStack,f) ]]
+
+[[ _FetchHandler (mobile_ID,g) ]]
+
+[[ _FetchHandler (object_MobileID,g) ]]
+
+[[ _FetchHandler (object_LocalID,g) ]]
+
+[[ _FetchHandler (mobile_ControlName,g) ]]
+
+[[ _FetchHandler (object_WithinStackReference,c) ]]
+
+
+--> Object | Reference
+-
+/*
+Perhaps these should be view properties?
+*/
+
+[[ _FetchHandler (object_FromReferencePath,g) ]]
+
+[[ _FetchHandler (object_ConstructFromReferencePath,f) ]]
+
+[[ _FetchHandler (object_FromReference,g) ]]
+
+[[ _FetchHandler (object_IndexFromReferences,f) ]]
+
+/*
+function object_PropertiesToReferences objectPropertyNames
+   put empty into objectReferences
+   repeat for each line objectProperty in objectPropertyNames
+      put "opnReference" && objectProperty & return after objectReferences
+   end repeat
+   delete last char of objectReferences
+   return objectReferences
+end object_PropertiesToReferences
+
+getprop target_Object [someReference]
+   put the long id of the target into targetObject
+   if someReference is empty then return targetObject
+   get object_ReferenceToControl(someReference, targetObject)
+   if it is empty then
+      return targetObject
+   else
+      return it
+   end if
+end target_Object
+
+function object_NameToReference originalName
+   if char 1 of originalName is "_" then delete char 1 of originalName	# should be an underScore
+   replace space with "_" in originalName
+   put "opnReference" && originalName into objectReference
+   return objectReference
+end object_NameToReference
+
+function object_ReferenceToName objectReference
+   if char 1 to 3 of objectReference is "opn" then
+      delete word 1 of objectReference
+      replace "_" with space in objectReference
+      return "_" & objectReference
+   else
+      -- could try to get from the object?
+      return empty
+   end if
+end object_ReferenceToName
+
+getprop object_ReferenceHandler [handlerName]
+   put the long id of the target into targetObject
+   return script_ConstructReferenceHandler(targetObject, "", handlerName)
+end object_ReferenceHandler
+*/
+
+
+--> Object | Deconstruction
+-
+[[ _FetchHandler (object_SetRelativeGroup,c) ]]
+
+
+--> Object | Layer
+-
+[[ _FetchHandler (object_GroupLayer,g) ]]
+
+[[ _FetchHandler (object_GroupLayer,s) ]]
+
+[[ _FetchHandler (object_BringToFront,c) ]]
+
+[[ _FetchHandler (object_SendToBack,c) ]]
+
+
+--> Object | Utility
+-
+[[ _FetchHandler (object_FolderOfStack,f) ]]
+
+[[ _FetchHandler (object_GoTo,c) ]]
+
+[[ _FetchHandler (object_MakeLabelGroup,c) ]]
+
+
+--> Object | Effects
+-
+[[ _FetchHandler (object_PrettyHide,c) ]]
+
+[[ _FetchHandler (object_PrettyShow,c) ]]
+
+
+--> Top
+-
+[[ _FetchHandler (top_Controls,g) ]]
+
+[[ _FetchHandler (top_Views,g) ]]
+
+
+--> Object | Top
+-
+[[ _FetchHandler (top_Control,g) ]]
+
+[[ _FetchHandler (object_TopControls,g) ]]
+
+[[ _FetchHandler (object_TopLevelGroup,f) ]]
+
+[[ _FetchHandler (object_TopViews,g) ]]
+
+[[ _FetchHandler (object_GetTopViews,f) ]]
+
+[[ _FetchHandler (object_TopGroupIDs,g) ]]
+
+[[ _FetchHandler (object_TopGroups,g) ]]
+
+[[ _FetchHandler (object_GetTopGroups,f) ]]
+
+[[ _FetchHandler (object_SetToplevelGroupArrays,c) ]]
+
+
+--> Object | Controls
+-
+/*
+The members, elements, objects or rev contols of a group or card.
+The list returned does not include the group group called,
+only the lements inside that group.
+*/
+
+[[ _FetchHandler (object_ControlIDs,f) ]]
+
+[[ _FetchHandler (object_VisibleControls,g) ]]
+
+[[ _FetchHandler (object_GetTopControl,f) ]]
+
+[[ _FetchHandler (object_GetGroupControls,f) ]]
+
+
+
+--> Object | Control | Indexes
+-
+/*
+The indexes and outlines returned here by default,
+return the object called as the top level element of the index.
+*/
+
+[[ _FetchHandler (object_ControlIndex,g) ]]
+
+[[ _FetchHandler (object_ConstructMobileIndex,f) ]]
+
+[[ _FetchHandler (object_GetMobileIndex,f) ]]
+
+[[ _FetchHandler (object_GetIdReferenceIndex,f) ]]
+
+[[ _FetchHandler (object_NotInGroupIndex,f) ]]
+
+[[ _FetchHandler (object_NotInBackgroundindex,f) ]]
+
+
+--> Object | Marked
+-
+[[ _FetchHandler (object_MarkedInStack,f) ]]
+
+[[ _FetchHandler (object_MarkedOnCard,f) ]]
+
+[[ _FetchHandler (object_MarkedInContainer,f) ]]
+
+
+--> Object | Indexes
+-
+[[ _FetchHandler (object_SetIndexArray,c) ]]
+
+[[ _FetchHandler (object_NameIndex,f) ]]
+
+[[ _FetchHandler (object_BadIndex,f) ]]
+
+[[ _FetchHandler (object_IndexArray,f) ]]
+
+[[ _FetchHandler (object_MobileIndex,f) ]]
+
+[[ _FetchHandler (object_IndexFromShortNames,f) ]]
+
+[[ _FetchHandler (object_NamesFromIndex,f) ]]
+
+[[ _FetchHandler (object_ShortNamesFromIndex,f) ]]
+
+
+--> Object | Outlines
+-
+/*
+See also "Outline | Paths" section of stack "libOPN_Outline"
+*/
+
+[[ _FetchHandler (object_Outline,g) ]]
+
+[[ _FetchHandler (object_ConstructPropertiesOutline,f) ]]
+
+[[ _FetchHandler (object_OutlineFromIndex,f) ]]
+
+[[ _FetchHandler (object_OutlinePath,f) ]]
+
+[[ _FetchHandler (object_IndexFromOutline,f) ]]
+
+[[ _FetchHandler (object_FromOutlineLineNum,f) ]]
+
+[[ _FetchHandler (object_GetOutline,f) ]]
+
+[[ _FetchHandler (object_GetControlOutline,f) ]]
+
+[[ _FetchHandler (object_ConstructCardOutline,f) ]]
+
+[[ _FetchHandler (object_OutlineFromNameArray,c) ]]
+
+[[ _FetchHandler (object_ConstructFromPath,f) ]]
+
+[[ _FetchHandler (object_FromPath,f) ]]
+
+[[ _FetchHandler (object_FromOutlineHierarchy,f) ]]
+
+[[ _FetchHandler (object_ConstructControlOutline,f) ]]
+
+[[ _FetchHandler (object_NestedDepth,g) ]]
+
+[[ _FetchHandler (object_GetNestedDepth,f) ]]
+
+
+--> Object | Paths
+-
+[[ _FetchHandler (object_OutlinePath,g) ]]
+
+[[ _FetchHandler (object_NameHierarchy,g) ]]
+
+[[ _FetchHandler (object_PathToControl,f) ]]
+
+[[ _FetchHandler (object_NamePath,g) ]]
+
+
+--> Object | Arrays
+-
+[[ _FetchHandler (object_NameArray,f) ]]
+
+[[ _FetchHandler (object_GetGroupNameArray,f) ]]
+
+[[ _FetchHandler (object_FromShortName,f) ]]
+
+[[ _FetchHandler (object_NamePathToControl,f) ]]
+
+
+--> Object | Hierarchies
+-
+/*
+Could be sped up and simplified with suggestion from Tereza Snyder <tereza@califex.com>
+
+get the long id of the selectedobject; replace " of " with "," in it; put it
+
+which results in:
+
+field id 226375,group id 226358,group id 226332,card id 224190,stack "..."
+
+then a simple "for each item" loop to traverse it.
+*/
+
+[[ _FetchHandler (view_Objects,g) ]]
+
+[[ _FetchHandler (object_IsLibraryView,g) ]]
+
+[[ _FetchHandler (object_WithinLibraryStack,g) ]]
+
+[[ _FetchHandler (object_Hierarchy,g) ]]
+
+[[ _FetchHandler (object_AddBehaviors,c) ]]
+
+[[ _FetchHandler (object_MaybeAddBehavior,c) ]]
+
+
+--> Object | Hierarchies | Behavior
+-
+[[ _FetchHandler (object_ScriptHierarchy,g) ]]
+
+[[ _FetchHandler (object_ScriptHierarchyMenu,g) ]]
+
+[[ _FetchHandler (object_BehaviorHierarchyArray,g) ]]
+
+[[ _FetchHandler (object_ConstructBehaviorHierarchy,c) ]]
+
+[[ _FetchHandler (addObjectToBehaviorHeirarchy,pc) ]]
+
+
+--> Object | Hierarchies | Stack
+-
+[[ _FetchHandler (object_StackHierarchy,g) ]]
+
+[[ _FetchHandler (object_GetHierarchy,f) ]]
+
+[[ _FetchHandler (object_GetShortHierarchy,f) ]]
+
+[[ _FetchHandler (object_SetHierarchy,c) ]]
+
+[[ _FetchHandler (object_GetFullHierarchy,f) ]]
+
+[[ _FetchHandler (object_GetLibrariesInUse,f) ]]

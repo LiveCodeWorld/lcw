@@ -1,0 +1,4 @@
+getprop fedwiki_WelcomeHtml
+   put server_GetWelcomeHtml() into welcomeHtml
+   return welcomeHtml
+end fedwiki_WelcomeHtml

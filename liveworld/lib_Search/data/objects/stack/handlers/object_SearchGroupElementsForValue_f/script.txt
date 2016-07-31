@@ -1,0 +1,6 @@
+function object_SearchGroupElementsForValue containerObject, someProperty, useTargetProperty
+   local objectArray
+   put the long id of the target into targetObject
+   objectArray_FlatSearchGroup objectArray, propertyArray, containerObject, someProperty, pUseTargetProperty
+   return objectArray
+end object_SearchGroupElementsForValue

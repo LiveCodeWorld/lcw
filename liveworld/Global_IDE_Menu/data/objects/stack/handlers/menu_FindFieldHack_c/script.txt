@@ -1,0 +1,7 @@
+on menu_FindFieldHack
+   put scriptEditor_FindFieldBehavior() into findFieldBehavior
+   put rev_SimpleFindField (0) into scriptEditorFindField
+   
+   edit the script of findFieldBehavior
+   edit the script of scriptEditorFindField
+end menu_FindFieldHack

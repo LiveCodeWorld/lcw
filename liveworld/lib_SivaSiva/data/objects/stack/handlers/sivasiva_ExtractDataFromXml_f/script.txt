@@ -1,0 +1,21 @@
+function sivasiva_ExtractDataFromXml someXml, someXPath, someKey
+   put revCreateXMLTree (someXml, true, true, false) into treeID
+   --       
+   put revXMLEvaluateXPath (treeID, someXPath) into tableNodePaths
+   
+   -- hack
+   revDeleteXMLTree treeID
+   return tableNodePaths
+   
+   put 1 into indexNum
+   repeat for each line testPath in tableNodePaths
+      put revXMLDataFromXPathQuery (treeID, testPath) into testResult
+      if word 1 to -1 of testResult is not empty then
+         put testResult into tableContentArray [indexNum][someKey]
+         add 1 to indexNum
+      end if
+   end repeat
+   --
+   revDeleteXMLTree treeID
+   return tableContentArray
+end sivasiva_ExtractDataFromXml

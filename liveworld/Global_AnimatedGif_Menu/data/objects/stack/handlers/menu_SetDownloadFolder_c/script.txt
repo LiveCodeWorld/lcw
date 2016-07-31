@@ -1,0 +1,6 @@
+on menu_SetDownloadFolder
+   answer folder "Select a download folder"
+   if it is empty then return empty
+   set the defaultfolder  to it
+   return it
+end menu_SetDownloadFolder

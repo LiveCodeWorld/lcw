@@ -1,0 +1,23 @@
+function fedwiki_ConvertWikipediaQueryArray wikipediaQueryArray
+   put wikipediaQueryArray ["query"]["pages"] into pagesArray
+   repeat for each key pageID in pagesArray
+      put pagesArray [pageID] into pageArray
+      
+      put pageArray ["title"] into pageTitle
+      put pageArray ["extract"] into pageExtract
+      put pageArray ["terms"]["description"][1] into pageDescription
+      
+      put pageArray ["pageImage"] into shortImageFile
+      put pageArray ["thumbnail"] into thumbnail
+      put pageArray ["images"] into imageArray
+      
+      exit repeat -- just do one page for now
+   end repeat
+   
+   put fedwiki_ConstructNewPageArray (pageTitle, pageDescription) into pageArray
+   fedwiki_AddHtmlToPageArray pageArray, pageExtract
+   
+   wikicommons_AddAllImages pageArray, pageTitle
+   
+   return pageArray
+end fedwiki_ConvertWikipediaQueryArray

@@ -1,0 +1,13 @@
+on menu_AddLibraryFilesToAllUsed
+   put "All" into pSetName
+   put opn_LibraryStackFiles() into stackNames
+   -- set the itemdelimiter to "/"
+   repeat for each line stackName in stackNames
+      set the cursor to busy
+      put "stack" && kwote(stackName) into stackObject
+      library_AddUsedStack stackObject, pSetName
+   end repeat
+   
+   put library_ListUsedStacks ("All") into usedLibraries
+   display_Lines usedLibraries, "Library files plus any extra"
+end menu_AddLibraryFilesToAllUsed

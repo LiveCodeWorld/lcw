@@ -1,0 +1,3 @@
+function behaviorModel_GetHelpUrl bName
+   return behaviorModel_GetRecordValue ("helpURL", bName)
+end behaviorModel_GetHelpUrl

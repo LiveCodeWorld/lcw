@@ -1,0 +1,5 @@
+command project_FetchOverlayArrayAndHash hKey, pOverlayName, @overlayArray, @mainstackHash
+   put project_HandlerMetadataFolder (hKey) into overlayFolder
+   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
+   put overlayArray_GetMainStackHash (overlayArray) into mainstackHash
+end project_FetchOverlayArrayAndHash

@@ -1,0 +1,9 @@
+on menu_EditBehavior scriptObject
+   put the behavior of scriptObject into bObject
+   if exists (bObject) then
+      edit the script of bObject
+   else
+      answer warning "Unable to find referenced behavior [[bObject]]!"
+      put bObject
+   end if
+end menu_EditBehavior

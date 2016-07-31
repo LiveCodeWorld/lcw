@@ -1,0 +1,10 @@
+command _displayAndHilite
+   put _rescueDisplayCard() into displayCard
+   if exists(displayCard) is false then return empty
+   
+   lock screen
+   set the hilite_Used of displayCard to true
+   dispatch "display_ProjectArray" to displayCard
+   unlock screen
+   return displayCard
+end _displayAndHilite

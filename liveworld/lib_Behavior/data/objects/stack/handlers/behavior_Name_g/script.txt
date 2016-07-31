@@ -1,0 +1,7 @@
+getprop behavior_Name
+   put the behavior of the target into behaviorObject
+   if behaviorObject is empty then return empty
+   -- put behavior_GetName (behaviorObject) into bName
+   put hArray_GetName (behaviorObject, "behavior") into bName
+   return bName
+end behavior_Name

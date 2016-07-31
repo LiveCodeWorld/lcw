@@ -1,0 +1,11 @@
+getprop card_TopView
+   -- return the card if there are no top views, or more than 1 top view
+   put the long id of the target into targetObject
+   put the card_Object of targetObject into cardObject
+   put the card_TopViews of cardObject into topViews
+   if the number of lines of topViews = 1 then
+      return topViews
+   else
+      return cardObject
+   end if
+end card_TopView

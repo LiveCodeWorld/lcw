@@ -1,0 +1,3 @@
+on menu_UnlockText textDisplayView, someBoolean
+   set the lock_Text of textDisplayView to (someBoolean is false)
+end menu_UnlockText

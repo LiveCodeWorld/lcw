@@ -1,0 +1,79 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Handler_Menu
+type: controller
+version: 0.4
+
+
+--> Menu | Props
+-
+/*
+Changed this menu to be a general hKey menu. 
+The menu_Init code has been removed so it can be placed in the local mController that calls the hkey menu.
+See the behavior "Livecode Script History Button"
+*/
+
+local LocalArray
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Handler | Menu
+-
+[[ _FetchHandler (menu_SaveAsGist,c) ]]
+
+[[ _FetchHandler (menu_SaveAsPrivateGist,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_OtherObjectsWithHandler,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Handler | Menu | Props
+-
+[[ _FetchHandler (other_Places,g) ]]
+
+[[ _FetchHandler (suite_Title,g) ]]
+
+[[ _FetchHandler (suite_Titles,g) ]]
+
+
+--> Global | Handler | Menu | Disabled
+-
+[[ _FetchHandler (disabled_ExportHandler,g) ]]
+
+[[ _FetchHandler (disabled_ReexportHandler,g) ]]
+
+[[ _FetchHandler (disabled_OtherObjectsWithHandler,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_FindSimilarHandlers,c) ]]
+
+[[ _FetchHandler (menu_AnalizeMainStack,c) ]]
+
+[[ _FetchHandler (menu_UnitTests,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_AddHandlerToLibrary,c) ]]
+
+[[ _FetchHandler (menu_EditHandler,c) ]]
+
+[[ _FetchHandler (menu_EditHandlerHelp,c) ]]
+
+[[ _FetchHandler (menu_RevealHandlerHelpFile,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ReindexHandlerHarray,c) ]]

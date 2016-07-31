@@ -1,0 +1,7 @@
+getprop menu_ToolModeArray
+    put the long id of the target into menuController
+    put the script of menuController into someScript
+    get script_MenuToolModeArray(someScript)
+    if keys(it) is not empty then put keys(it)
+    return it
+end menu_ToolModeArray

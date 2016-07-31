@@ -1,0 +1,29 @@
+on processRequest pSocketID, theData
+   -- This handler is called when we process a new request.
+   put theData into SocketData [pSocketId]["theData"]
+   put _constructRequestArray (pSocketID) into requestArray
+   
+   -- this allows dispatching to any control in the Livecode environment
+   -- and does not bug out
+   -- check if dispatching is significantly slower than using the message hierarchy
+   put the daemon_Router of me into routerObject
+   if exists (routerObject) is false then put the long id of me into routerObject
+   
+   dispatch "daemon_RouteRequest" to routerObject with requestArray
+   switch it
+      -- could do stuff here
+      case "handled"
+         break
+      case "unhandled" -- no matching handlers were found
+         break
+      case "passed" -- the message was handled but passed by all handlers
+         break
+   end switch
+   
+   -- let's automatically close the socket (so that routers don't need to do that)
+   put requestArray ["socketID"] into socketID
+   if socketID is among the lines of the opensockets then
+      close socket socketID
+   end if
+   _cleanSocketData socketID
+end processRequest

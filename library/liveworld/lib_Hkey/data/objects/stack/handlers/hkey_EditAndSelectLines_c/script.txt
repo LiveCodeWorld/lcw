@@ -1,0 +1,5 @@
+command hkey_EditAndSelectLines hKey, startLineNum, endLineNum
+   hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum 
+   script_EditAndSelectLines scriptObject, startLineNum, endLineNum
+   return the result
+end hkey_EditAndSelectLines

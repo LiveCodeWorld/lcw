@@ -1,0 +1,6 @@
+on menu_Init
+   put menu_GetTargetObject() into tObject
+   if word 1 of tObject = "card" then put the long id of grp 1 of tObject into tObject
+   put the textDisplay_View of tObject into textDisplayView
+   put textDisplayView into LocalArray ["textDisplayView"]   
+end menu_Init

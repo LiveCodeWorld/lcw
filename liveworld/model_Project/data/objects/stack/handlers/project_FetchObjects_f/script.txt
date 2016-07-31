@@ -1,0 +1,7 @@
+function project_FetchObjects libType, pProjectName
+   -- renamed to project and removed switch complexity from "library_FetchObjectTypeArray"
+   put project_FetchObjectTypeArray (libType, pProjectName) into libTypeArray
+   put keys (libTypeArray) into someObjects
+   sort someObjects
+   return someObjects
+end project_FetchObjects

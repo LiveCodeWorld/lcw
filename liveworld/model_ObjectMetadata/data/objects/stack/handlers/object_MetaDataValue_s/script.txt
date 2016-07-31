@@ -1,0 +1,4 @@
+setprop object_MetaDataValue [someKey] someValue
+   put the object_MetaData of the target into uRipArray
+   put someValue into uRipArray [someKey]
+end object_MetaDataValue

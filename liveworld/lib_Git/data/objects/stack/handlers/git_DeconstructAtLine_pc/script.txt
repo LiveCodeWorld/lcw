@@ -1,0 +1,28 @@
+private command git_DeconstructAtLine @someLine, @parentNum, @oStartNum, @oEndNum, @nStartNum, @nEndNum
+   put word 1 of someLine into testFirst
+   replace "@" with empty in testFirst
+   if testFirst is not empty then return false -- a bug or problem in the format
+   
+   put word 1 of someLine into testFirst
+   put wordoffset (testFirst, someLine, 1) into endWordNum
+   if endWordNum = 0 then return false -- a bug or problem in the format
+   
+   -- first char is a space for some reason - thought it should be a CR (ie new line)??? 
+   put word 1 to (endWordNum + 1) of someLine into diffBit
+   delete char 1 to (the number of chars of diffBit) of someLine
+   -- delete word 1 to (endWordNum + 1) of someLine
+   
+   -- it's OK - lets deconstruct
+   put the number of chars of testFirst - 1 into parentNum
+   
+   -- put token 2 of diffBit into minusToken
+   put token 3 of diffBit into oStartNum
+   -- put token 4 of diffBit into firstComma
+   put token 5 of diffBit into oEndNum
+   
+   -- put token 6 of diffBit into plusToken
+   put token 7 of diffBit into nStartNum
+   -- put token 8 of diffBit into secondComma
+   put token 9 of diffBit into nEndNum
+   return true
+end git_DeconstructAtLine

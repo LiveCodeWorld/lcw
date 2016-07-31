@@ -1,0 +1,21 @@
+command outline_AddToChildren someTitle, sectionTitle, @tabbedOutline
+   put outline_LineOffset(sectionTitle, tabbedOutline) into startOsLineNum
+   if startOsLineNum = 0 then
+      -- no match for title (leave untouched)
+      return false
+   end if
+   put line startOsLineNum of tabbedOutline into sectionTitleOsLine
+   
+   put outline_GetChildren(startOsLineNum, tabbedOutline) into domainIndex
+   set the wholematches to true
+   put lineoffset(sectionTitle, domainIndex) into lineNum
+   if lineNum is 0 then
+      -- so add the child title
+      put outline_TabLevel(sectionTitleOsLine) + 1 into insertTabLevel
+      put outline_IncreaseIndent(someTitle, insertTabLevel) into addOsLine
+      put return & addOsLine after line startOsLineNum of tabbedOutline
+      return true
+   else
+      return false
+   end if
+end outline_AddToChildren

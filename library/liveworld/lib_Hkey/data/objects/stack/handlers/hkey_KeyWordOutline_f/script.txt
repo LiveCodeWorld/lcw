@@ -1,0 +1,23 @@
+function hkey_KeyWordOutline keywordArray, pNotPrivate
+   put keys(keywordArray) into kWords
+   sort kWords
+   repeat for each line kWord in kWords
+      set the cursor to busy
+      put keywordArray [kWord] into hKeys
+      sort hKeys
+      put word 1 to -1 of hKeys into hKeys
+      put the number of lines of hKeys into hKeyNum
+      
+      put kWord && "(" & hKeyNum & ")" & CR after tabbedOutline
+      repeat for each line hKey in hKeys
+         if pNotPrivate is not false then
+            if char 1 of hKey = "_" or char 2 of item 2 of hKey is "p" then next repeat
+         end if
+         
+         put html_ConstructNameLink(item 1 of hKey, hKey) into handlerLink
+         put tab & handlerLink & CR after tabbedOutline
+      end repeat
+   end repeat
+   delete char -1 of tabbedOutline
+   return tabbedOutline
+end hkey_KeyWordOutline

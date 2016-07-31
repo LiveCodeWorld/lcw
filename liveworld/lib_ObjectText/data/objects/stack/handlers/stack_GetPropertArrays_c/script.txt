@@ -1,0 +1,66 @@
+command stack_GetPropertArrays stackObject, @stackArray, @hArray, pLinkToViews, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   put the stackArray_Version of me into stackArray ["manifest"]["version"]
+   
+   put the short name of stackObject into stackName
+   put stackName into stackArray ["manifest"]["name"]
+   put revRuggedID (stackObject) into stackArray ["manifest"]["object"]
+   put the effective filename of stackObject into someFile
+   file_SetHomeRelative someFile
+   put someFile into stackArray ["manifest"]["filename"]
+   
+   object_GetPropertyArrays stackObject, stackPropertyArray, hArray, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   put stackPropertyArray into stackArray ["objects"]["stack"]
+   
+   set the wholematches to true
+   put the cardids of stackObject into someCardIDs
+   put the number of lines of someCardIDs into cardMaxNum
+   repeat with cardNum = 1 to cardMaxNum
+      set the cursor to busy
+      put the long id of card cardNum of stackObject into cardObject
+      objectArray_AddCard cardObject, stackArray, hArray, pLinkToViews, cardNum, pExportHandlers, pDontDiff, pDontExport, pForceIndexHandlerCalls
+   end repeat
+   
+   -- don't now max number of duplicated background objects until end
+   -- so problem with scenario of only one bg for xml reconversion comaptability of key naming
+   -- as there should be a line "if maxBgNum = 1 then put "bg" into bgArrayKey
+   -- have to fix at end of stack parsing
+   put stackArray ["manifest"]["backgrounds"] into backgroundsArray
+   if the number of lines of keys(backgroundsArray) = 1 then
+      put backgroundsArray ["bg[1]"] into stackArray ["manifest"]["backgrounds"]["bg"]
+      delete local stackArray ["manifest"]["backgrounds"]["bg[1]"]
+   end if
+   
+   put the number of videoClips of stackObject into maxVclipNum
+   repeat with clipNum = 1 to maxVclipNum
+      put the object_PropertyArray of videoClip clipNum of stackObject into objectPropertyArray
+      put clipNum into objectPropertyArray ["rev"]["layer"]
+      put the abbreviated id of videoClip clipNum of stackObject into aObject
+      put object_ConvertAbbreviated (aObject) into aFolderName
+      put objectPropertyArray into stackArray ["objects"][aFolderName]
+      
+      if maxVclipNum = 1 then
+         put "videoclip" into clipArrayKey
+      else
+         put "videoclip[" & clipNum & "]" into clipArrayKey
+      end if
+      put aObject into stackArray ["manifest"]["videoclips"][clipArrayKey]["object"]
+      put objectPropertyArray ["rev"]["name"] into stackArray ["manifest"]["videoclips"][clipArrayKey]["name"]
+   end repeat
+   
+   put the number of audioClips of stackObject into maxAclipNum
+   repeat with clipNum = 1 to maxAclipNum
+      put the object_PropertyArray of audioClip clipNum of stackObject into objectPropertyArray
+      put clipNum into objectPropertyArray ["rev"]["layer"]
+      put the abbreviated id of audioClip clipNum of stackObject into aObject
+      put object_ConvertAbbreviated (aObject) into aFolderName
+      put objectPropertyArray into stackArray ["objects"][aFolderName]
+      
+      if maxAclipNum = 1 then
+         put "audioclip" into clipArrayKey
+      else
+         put "audioclip[" & clipNum & "]" into clipArrayKey
+      end if
+      put aObject into stackArray ["manifest"]["audioclips"][clipArrayKey]["object"]
+      put objectPropertyArray ["rev"]["name"] into stackArray ["manifest"]["audioclips"][clipArrayKey]["name"]
+   end repeat
+end stack_GetPropertArrays

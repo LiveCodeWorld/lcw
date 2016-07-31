@@ -1,0 +1,7 @@
+function script_GetSuiteTitles someScript
+    put someScript into theHandlerGroups
+    filter theHandlerGroups with "-->*"
+    replace "--> " with empty in theHandlerGroups
+    replace "-->" with empty in theHandlerGroups
+    return theHandlerGroups
+end script_GetSuiteTitles

@@ -1,0 +1,6 @@
+getprop menu_ControllerExists [mTitle]
+   if mTitle is empty then return false
+   put the menu_Controller [mTitle] of the target into mController
+   put menu_CheckTitleController (mTitle, mController) into mTitleIsThere
+   return mTitleIsThere
+end menu_ControllerExists

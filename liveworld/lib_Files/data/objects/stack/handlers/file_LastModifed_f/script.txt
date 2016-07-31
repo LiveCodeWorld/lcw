@@ -1,0 +1,4 @@
+function file_LastModifed filePath
+    -- version original,27/12/02
+    return item 5 of file_DetailedInfo(filePath)
+end file_LastModifed

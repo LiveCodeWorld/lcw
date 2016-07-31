@@ -1,0 +1,5 @@
+on menu_CompareWithLastCommit scriptObject
+   put the exported_Script of scriptObject into exportedScript
+   put the git_LastCommit of scriptObject into lastCommitedText
+   terminal_Diff lastCommitedText, exportedScript, "git_LastCommit", "exported_Script"
+end menu_CompareWithLastCommit

@@ -1,0 +1,17 @@
+function exif_ParseTagList shellResult, @tagArray, allTags
+    set the itemdelimiter to tab
+    -- put shellResult
+    delete line 1 of shellResult
+    replace "  " with tab in shellResult
+    -- if allTags is not true then filter shellResult with "*[*]*"
+    -- put shellResult
+    repeat for each line someLine in shellResult
+        get item 2 of shellResult
+        put word 1 of it into someID
+        put word 2 to -1 of item 2 of someLine into tagName
+        put someID into tagArray [tagName]
+    end repeat
+    put keys(tagArray) into tagNames
+    sort tagNames
+    return tagNames
+end exif_ParseTagList

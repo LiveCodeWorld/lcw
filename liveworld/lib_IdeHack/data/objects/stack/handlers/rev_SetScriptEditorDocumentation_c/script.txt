@@ -1,0 +1,5 @@
+command rev_SetScriptEditorDocumentation someHtmlText, pEditorNum
+   put rev_ScriptEditorDocField (pEditorNum) into scriptEditorDocField
+   set the htmlText of scriptEditorDocField to someHtmlText
+   return scriptEditorDocField
+end rev_SetScriptEditorDocumentation

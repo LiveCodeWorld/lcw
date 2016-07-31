@@ -1,0 +1,11 @@
+getprop menu_BurntToolTitle
+   -- put the view_Value ["menu_ToolTitle"] of the target into mTitle
+   put the long id of the target into targetObject
+   put the view_Object of targetObject into someView
+   if exists(someView) is false then put targetObject into someView
+   
+   lock messages
+   put the menu_ToolTitle of someView into mTitle
+   unlock messages
+   return mTitle
+end menu_BurntToolTitle

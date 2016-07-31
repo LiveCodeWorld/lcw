@@ -1,0 +1,4 @@
+getprop already_Known [stackObject]
+   if exists(stackObject) is false then return empty
+   return the stack_IsKnown of stackObject
+end already_Known

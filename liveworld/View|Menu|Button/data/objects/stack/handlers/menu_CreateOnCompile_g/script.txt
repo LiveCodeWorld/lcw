@@ -1,0 +1,5 @@
+getprop menu_CreateOnCompile
+   put the long id of the target into mController
+   menu_CreateAndStoreTables mController
+   return the result
+end menu_CreateOnCompile

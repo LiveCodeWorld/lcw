@@ -1,0 +1,5 @@
+on menu_DisplayMainStackHkeyWalkArray scriptObject
+   set the cursor to watch
+   put the mainstack_WalkArray of scriptObject into mainStackHkeyWalkArray
+   display_HkeyWalkArray scriptObject, mainStackHkeyWalkArray
+end menu_DisplayMainStackHkeyWalkArray

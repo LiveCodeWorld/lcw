@@ -1,0 +1,7 @@
+function mainstack_FetchWalkArray mainStackFolder
+   put mainstack_GetWalkArrayFile (mainStackFolder) into someFile
+   put url ("binfile:" & someFile) into encodedArray
+   if encodedArray is empty then return empty
+   put arrayDecode (encodedArray) into walkArray
+   return walkArray
+end mainstack_FetchWalkArray

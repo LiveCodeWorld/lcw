@@ -1,0 +1,445 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_View
+type: script library
+version: 0.8
+
+
+--> View | Props | Back Property
+-
+/*
+These handlers implement back behavior like properties that can be overidden by props placed higher up the hierarchy
+*/
+
+[[ _FetchHandler (back_Property,g) ]]
+
+[[ _FetchHandler (back_Property,s) ]]
+
+
+--> View | Swap
+-
+[[ _FetchHandler (title_ViewName,g) ]]
+ 
+[[ _FetchHandler (title_ViewName,s) ]]
+
+[[ _FetchHandler (body_ViewName,g) ]]
+ 
+[[ _FetchHandler (body_ViewName,s) ]]
+
+--> View | Hierarchy
+-
+[[ _FetchHandler (object_Views,g) ]]
+
+[[ _FetchHandler (object_ViewNames,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+[[ _FetchHandler (view_OrCard,g) ]]
+
+[[ _FetchHandler (locked_View,g) ]]
+
+[[ _FetchHandler (view_GetStackBackgroundID,f) ]]
+
+[[ _FetchHandler (view_AboveTarget,g) ]]
+
+[[ _FetchHandler (view_TopObject,g) ]]
+
+[[ _FetchHandler (view_Parent,g) ]]
+
+[[ _FetchHandler (view_HierarchyPath,g) ]]
+
+[[ _FetchHandler (view_Hierarchy,g) ]]
+
+[[ _FetchHandler (view_ConstructHierarchy,f) ]]
+
+
+--> View | Hierarchy | Children
+-
+/*
+Returns the nested views referenced by the containing views script.
+This default script can be over-ridden by a local script in the view.
+Depends on a well structured script using a "View | Object | Children" script suite
+to list the getprop references to the child views.
+*/
+
+[[ _FetchHandler (view_Children,g) ]]
+
+[[ _FetchHandler (view_Children,s) ]]
+
+[[ _FetchHandler (view_ChildReferences,g) ]]
+
+
+--> View
+-
+[[ _FetchHandler (view_NormalizeName,c) ]]
+
+
+--> View | Menu
+-
+[[ _FetchHandler (view_ToolMenu,g) ]]
+
+[[ _FetchHandler (view_ChildToolMenus,g) ]]
+
+[[ _FetchHandler (view_DoParamProp,c) ]]
+
+[[ _FetchHandler (view_AskPublicValue,f) ]]
+
+
+--> View | Hierarchy | Class
+-
+[[ _FetchHandler (view_IsTemplate,g) ]]
+
+[[ _FetchHandler (view_IsClass,g) ]]
+
+[[ _FetchHandler (view_InheritsClass,f) ]]
+
+[[ _FetchHandler (view_IsMemberOfClass,f) ]]
+
+
+--> View | Hierarchy
+-
+[[ _FetchHandler (view_Objects,g) ]]
+
+[[ _FetchHandler (rugged_Views,g) ]]
+
+[[ _FetchHandler (view_NestedArray,g) ]]
+
+[[ _FetchHandler (view_SearchNested,c) ]]
+
+[[ _FetchHandler (view_Outline,g) ]]
+
+[[ _FetchHandler (_ViewOutlineBit,pf) ]]
+
+[[ _FetchHandler (view_Above,g) ]]
+ 
+getprop view_TopObject
+    -- this is the default value for a view
+    -- which is the top (highest) someView in the current layout
+    
+    put the long id of the target into testGroup
+    put view_HierarchyObjects(testGroup) into groupHierarchy
+    put line 1 of groupHierarchy into topView
+    return topView
+end view_TopObject
+
+getprop view_Hierarchy
+    -- was "view_GroupHierarchy"
+    put the long id of the target into testGroup
+    put view_HierarchyObjects(testGroup) into groupHierarchy
+    return groupHierarchy
+end view_Hierarchy
+
+getprop view_HierarchyPath
+    /*
+    script and possibly "concept" is a bit of an ugly  hack - improve!
+    
+    This property acts like a class reference.
+    A path is constructed based on the object hierarchy of the views.
+    */
+    
+    put the long id of the target into someView
+    put view_HierarchyObjects(someView) into viewHierarchy
+    
+    set the itemdelimiter to "|"
+    put line -1 of viewHierarchy into bottomView
+    put item -1 of the object_Name of bottomView into bottomViewShortName
+     
+    put "View" into nestedPath
+    repeat for each line hierarchyView in viewHierarchy
+        put the object_Name of hierarchyView into hierarchyViewPath
+        if item 1 of hierarchyViewPath is "View" then delete item 1 of hierarchyViewPath
+        delete item -1 of hierarchyViewPath
+        if hierarchyViewPath is not empty then
+            put "|" & hierarchyViewPath after nestedPath
+        end if
+    end repeat
+    get nestedPath & "|" & bottomViewShortName
+    return it
+end view_HierarchyPath
+
+[[ _FetchHandler (view_HierarchyObjects,f) ]]
+
+
+--> View | Geometry
+-
+/*
+getprop view_Height
+   -- dangerous to put in a library in this general way
+   -- allow views to define them
+   -- returning empty is the same as undefined.
+   return the height of the target	# a default (can over-ride locally)
+end view_Height
+
+setprop view_Height someHeight
+   set the height of the target to someHeight	# a default (can over-ride locally)
+   return the result
+end view_Height
+
+getprop view_Width
+   return the width of the target	# a defaults  (can over-ride locally)
+end view_Width
+
+setprop view_Width someWidth
+   set the width of the target to someWidth	# a defaults  (can over-ride locally)
+   return the result
+end view_Width
+
+getprop view_Height
+    return the height of the target	# a default (can over-ride locally)
+end view_Height
+
+getprop view_Width
+    return the width of the target	# a defaults  (can over-ride locally)
+end view_Width
+
+getprop formatted_Width
+    -- defaults to formattedWidth (can over-ride locally)
+    return the formattedwidth of the target
+end formatted_Width
+
+-- getprop view_Spacing
+    -- defaults to the "view_StackPadding" of the target
+    -- which in turn defaults to the value below!
+    
+    put the long id of the target into targetObject
+    return the view_StackPadding of targetObject
+end view_Spacing
+*/
+
+[[ _FetchHandler (view_Rect,g) ]]
+
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (view_StackPadding,g) ]]
+
+[[ _FetchHandler (view_StackMinMaxHeight,s) ]]
+
+[[ _FetchHandler (view_StackHeight,g) ]]
+
+[[ _FetchHandler (view_IsResizeable,g) ]]
+
+[[ _FetchHandler (view_ResizeToCard,c) ]]
+
+[[ _FetchHandler (object_ResizeToCard,c) ]]
+
+[[ _FetchHandler (formatted_Width,g) ]]
+
+[[ _FetchHandler (formatted_Height,g) ]]
+
+[[ _FetchHandler (view_ChildRect,g) ]]
+
+[[ _FetchHandler (card_ViewRect,g) ]]
+
+[[ _FetchHandler (card_Margin,g) ]]
+
+[[ _FetchHandler (card_Margin,s) ]]
+
+getprop view_StackHeight [someView]
+    put the long id of the target into targetObject
+    if someView is empty then
+        put object_ExtractStack(targetObject) into stackObject
+        if exists(group 1 of stackObject) then 
+            put the long id of group 1 of stackObject into someView
+        else
+            return empty
+        end if
+    end if
+    put the card_Margin of someView into stackPadding
+    put (the formattedheight of someView) + 2 * stackPadding into goodHeight
+    return goodHeight
+end view_StackHeight
+
+[[ _FetchHandler (view_ResizeStackScript,g) ]]
+
+
+--> View | Props | Default
+-
+[[ _FetchHandler (view_Text,g) ]]
+
+[[ _FetchHandler (view_Text,s) ]]
+
+[[ _FetchHandler (view_Html,g) ]]
+
+[[ _FetchHandler (view_Html,s) ]]
+
+[[ _FetchHandler (view_Utf8,g) ]]
+
+[[ _FetchHandler (view_Utf8,s) ]]
+
+[[ _FetchHandler (view_Colour,g) ]]
+
+[[ _FetchHandler (view_TextColour,g) ]]
+
+
+--> View | Name
+-
+/*
+Properties of all views.
+
+Views are uniquely named in a way in which they can be orgaised into a hierarchy.
+These names are stored as custom properties of the view.
+
+Views are also usually associated with 2 models, the "data model" and the "display model".
+By default both models are named according to the views "stem name".
+
+For example a "tree" view has the stem "Tree",
+the (data) model_Name "uOPN_DisplayTable" and
+the view_DisplayModelName "uOPN_TreeDisplayTable".
+
+This hierarchy allows the view to not only be displayed as part of a hierarchy,
+but for generic scripts to use this hierarchical information to simulate "inheretance".
+*/
+
+[[ _FetchHandler (view_Name,g) ]]
+
+[[ _FetchHandler (component_Name,g) ]]
+
+[[ _FetchHandler (component_Name,s) ]]
+
+[[ _FetchHandler (view_Name,s) ]]
+
+[[ _FetchHandler (component_SetName,c) ]]
+
+
+--> View | Behaviors
+-
+[[ _FetchHandler (object_ViewBehavior,g) ]]
+
+[[ _FetchHandler (object_ViewBehavior,s) ]]
+
+[[ _FetchHandler (view_GetTemplateBehavior,f) ]]
+
+[[ _FetchHandler (view_Alternatives,g) ]]
+
+[[ _FetchHandler (view_Behavior,g) ]]
+
+[[ _FetchHandler (template_Behavior,g) ]]
+
+[[ _FetchHandler (view_GetBehavior,f) ]]
+
+[[ _FetchHandler (view_ListBehaviors,f) ]]
+
+[[ _FetchHandler (view_BehaviorScript,g) ]]
+
+
+--> View | Tests
+-
+getprop view_IsResizeable
+   put the long id of the target into targetObject
+   put the script_SetPropHandlers of targetObject into setPropHandlerIndex
+   set the wholematches to true
+   return "view_Rect" is among the lines of setPropHandlerIndex
+end view_IsResizeable
+
+[[ _FetchHandler (view_IsOld,g) ]]
+
+
+--> View | Name | References
+-
+-- getprop datagrid_View
+   return the long id of me
+end datagrid_View
+
+[[ _FetchHandler (view_InsideViews,g) ]]
+
+[[ _FetchHandler (view_Reference,g) ]]
+
+[[ _FetchHandler (view_DisplayModelName,g) ]]
+
+[[ _FetchHandler (view_Stem,g) ]]
+
+[[ _FetchHandler (view_StemFromName,f) ]]
+
+[[ _FetchHandler (view_Stem,s) ]]
+
+
+--> View | Top
+-
+/*
+A number of similar scripts here - needs rationalising.
+*/
+
+[[ _FetchHandler (top_View,g) ]]
+
+[[ _FetchHandler (top_CardView,g) ]]
+
+[[ _FetchHandler (card_SpaceControls,c) ]]
+
+[[ _FetchHandler (card_ViewOutline,g) ]]
+
+[[ _FetchHandler (card_TopView,g) ]]
+
+[[ _FetchHandler (card_GetTopView,f) ]]
+
+[[ _FetchHandler (card_ListOtherViews,f) ]]
+
+[[ _FetchHandler (card_ListViews,f) ]]
+
+[[ _FetchHandler (card_Views,g) ]]
+
+[[ _FetchHandler (card_TopViews,g) ]]
+
+
+--> View | Find
+-
+[[ _FetchHandler (card_View,g) ]]
+
+[[ _FetchHandler (card_ViewMatch,g) ]]
+
+[[ _FetchHandler (view_Match,g) ]]
+
+[[ _FetchHandler (view_FindInside,g) ]]
+
+[[ _FetchHandler (view_Inside,g) ]]
+
+[[ _FetchHandler (view_LazyFindInside,g) ]]
+
+[[ _FetchHandler (view_SlightlyLazyMatchInside,g) ]]
+   
+[[ _FetchHandler (view_VeryLazyMatchInside,g) ]]
+
+[[ _FetchHandler (view_LazyMatchInside,g) ]]
+
+[[ _FetchHandler (view_MatchInside,g) ]]
+
+getprop view_Above [vNameOrStem]
+   -- search for a named view in the hierarchy above the target
+   -- including the target itself
+   
+   put the long id of the target into targetObject
+   if vNameOrStem is empty then
+      delete word 1 to 4 of targetObject
+      if exists(targetObject) is false then return empty
+      put the view_Object of targetObject into viewAbove
+      return viewAbove
+   end if
+   
+   repeat
+      if word 1 of targetObject is "card" then
+         return empty
+      else
+         put the view_Object of targetObject into someView
+         if exists (someView) is false then return empty
+         
+         -- lets check for a match
+         put the view_Name of someView into vName
+         if lazyViewNameMatch (vNameOrStem, vName) is true then
+            return someView
+         else
+            -- return empty here forces a match only if the named view is one level up
+            -- doing nothing allows the named view to be several levels up
+         end if
+         
+         -- go up one level and try again
+         put someView into targetObject
+         delete word 1 to 4 of targetObject
+         if targetObject is empty then return empty
+      end if
+   end repeat
+   return empty
+end view_Above
+
+[[ _FetchHandler (lazyViewNameMatch,pf) ]]
+
+[[ _FetchHandler (strictViewNameMatch,pf) ]]

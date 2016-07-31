@@ -1,0 +1,9 @@
+function hArray_ConstructScriptArray someScript, someObject, pIndexSuites, pIsExpanded
+   -- does the same as script_ConstructArray
+   object_AddToGlobalArray someObject, pIsExpanded
+   put the object_ScriptDataArray of someObject into dataArray
+   if pIndexSuites is false then
+      hArray_StripSuitesFromScriptDataArray dataArray
+   end if
+   return dataArray
+end hArray_ConstructScriptArray

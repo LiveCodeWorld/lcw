@@ -1,0 +1,6 @@
+command dot_SaveTemporaryFile dotText, dotFile
+   if dotFile is empty then put dot_NewTemporaryFilePath (dotText) into dotFile
+   file_CreateText dotText, dotFile
+   put the result into dotFile
+   return the result
+end dot_SaveTemporaryFile

@@ -1,0 +1,19 @@
+private command table_ParseSection @tableArray, xmlID, theadNode, sectionName
+   put revXMLChildNames (xmlID, theadNode, CR, "tr", true) into rowNames
+   put the number of lines of rowNames into maxRowNum
+   repeat with rowNum = 1 to maxRowNum
+      put theadNode & "/" & line rowNum of rowNames into rowNode
+      
+      put revXMLChildNames (xmlID, rowNode, CR, "td", true) into columnNames
+      put the number of lines of columnNames into maxColumnNum
+      repeat with columnNum = 1 to maxColumnNum
+         put rowNode & "/" & line columnNum of columnNames into columnNode
+         
+         -- a custom bit that assumes the entry is wrapped in <p>
+         put columnNode & "/p" into childNode
+         get revXMLNodeContents (xmlID, childNode)
+         
+         put word 1 to -1 of it into tableArray [sectionName][rowNum][columnNum]
+      end repeat
+   end repeat
+end table_ParseSection

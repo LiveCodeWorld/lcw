@@ -1,0 +1,7 @@
+function localhost_ConstructImagePath shortFile
+   put localhost_GetImageFolder() into imageFolder
+   if there is not a folder imageFolder then return empty
+   
+   put imageFolder & shortFile into imageFile
+   return imageFile
+end localhost_ConstructImagePath

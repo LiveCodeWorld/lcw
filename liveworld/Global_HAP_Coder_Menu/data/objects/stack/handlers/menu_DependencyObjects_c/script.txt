@@ -1,0 +1,4 @@
+on menu_DependencyObjects scriptObject
+   -- put the missing_HkeyArray of scriptObject into missingHkeyArray
+   put the project_DependencyStacks of scriptObject -- into dependencyStacks
+end menu_DependencyObjects

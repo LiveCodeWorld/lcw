@@ -1,0 +1,11 @@
+getprop menu_TableFromScript [mTitle]
+   /*
+   There is a bug, which is almost useful, when a menu is labled 
+   "-->Test | Menu", rather than "--> Test | Menu", the menu is combined with any menus below it in the script!
+   */
+   
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   put menu_ExtractTableFromScript (mTitle, someScript, scriptObject) into mTable
+   return mTable
+end menu_TableFromScript

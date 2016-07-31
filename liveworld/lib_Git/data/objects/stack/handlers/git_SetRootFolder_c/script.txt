@@ -1,0 +1,5 @@
+command git_SetRootFolder gitRootFolder
+   folder_Format gitRootFolder
+   pref_SetValue "gitRootFolder", gitRootFolder
+   return the result
+end git_SetRootFolder

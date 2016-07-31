@@ -1,0 +1,15 @@
+function rect_SetDimensions someRect, someDimension, pMargin, pDontCentre, pDontLimit
+   put item 1 of someDimension into someWidth
+   rect_SetWidth someRect, someWidth, pDontCentre
+   put item 2 of someDimension into someHeight
+   rect_SetHeight someRect, someHeight, pDontCentre
+   put rect_SubtractMargin (pMargin, someRect) into newRect
+   
+   if pDontLimit is not true then
+      put rect_GetCentre (newRect) into gLoc
+      put loc_WithinWhichScreenRect (gLoc) into sRect
+      put rect_SubtractMargin (40, sRect) into outsideRect
+      rect_Normalize newRect, outsideRect
+   end if
+   return newRect
+end rect_SetDimensions

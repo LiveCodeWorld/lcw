@@ -1,0 +1,16 @@
+function script_GetOffsetTable someScript, scriptObject
+   local scriptOffestTable
+   -- put script_ExtractHandlerLines(someScript, scriptObject) into handlerLines
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   put handlerArray ["handlerLines"] into handlerLines
+   repeat for each line handlerLine in handlerLines
+      put word 1 of handlerLine into onWord
+      put word 2 of handlerLine into handlerName
+      script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+      put handler_GetType(handlerLine) into hType
+      
+      put handlerName,hType,startHandler,endHandler & CR after scriptOffestTable
+   end repeat
+   delete last char of scriptOffestTable
+   return scriptOffestTable
+end script_GetOffsetTable

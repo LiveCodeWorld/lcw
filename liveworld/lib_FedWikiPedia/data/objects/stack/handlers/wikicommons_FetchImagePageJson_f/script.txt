@@ -1,0 +1,6 @@
+function wikicommons_FetchImagePageJson shortImageFile
+   -- just HTML version
+   put wikicommons_FetchImagePageArray (shortImageFile, true) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   return pageJSON
+end wikicommons_FetchImagePageJson

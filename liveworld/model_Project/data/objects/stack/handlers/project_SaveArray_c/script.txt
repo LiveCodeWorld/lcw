@@ -1,0 +1,8 @@
+command project_SaveArray projectArray, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   
+   put library_FetchSetData() into librarySetData
+   put projectArray into librarySetData [pProjectName]
+   library_StoreSetData librarySetData
+   return librarySetData
+end project_SaveArray

@@ -1,0 +1,5 @@
+function hArray_GetHandlerHash hKey, pHArray
+   put hArray_GetHkeyDataArray (hKey, pHArray) into handlerArray
+   put handlerArray ["sha1"] into handlerHash
+   return handlerHash
+end hArray_GetHandlerHash

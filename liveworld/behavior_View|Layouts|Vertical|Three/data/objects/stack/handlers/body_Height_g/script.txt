@@ -1,0 +1,21 @@
+getprop body_Height
+   if the visible of the body_View of me = false then return 0
+   switch the fluid_View of me
+      case "body_View" -- calculate from other views
+         put the inner_Height of me into someHeight
+         subtract the header_Height of me from someHeight
+         subtract the footer_Height of me from someHeight
+         subtract 2 * the vertical_Spacing of me from someHeight
+         break
+      default
+         put LocalArray ["body_Height"] into someHeight
+   end switch
+   
+   put the body_MinimumHeight of me into mHeight
+   put max (someHeight, mHeight) into someHeight
+   
+   -- a tweek hack
+   add 1 to someHeight
+   
+   return someHeight
+end body_Height

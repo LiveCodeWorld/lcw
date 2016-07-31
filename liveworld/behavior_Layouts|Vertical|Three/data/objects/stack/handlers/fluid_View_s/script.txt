@@ -1,0 +1,10 @@
+setprop fluid_View fluidView
+   set the back_Property ["fluid_View"] of me to fluidView
+   
+   put the height of the header_View of me into LocalArray ["header_Height"]
+   put the height of the body_View of me into LocalArray ["body_Height"]
+   put the height of the footer_View of me into LocalArray ["footer_Height"]
+   
+   LayoutControl
+   return the result
+end fluid_View

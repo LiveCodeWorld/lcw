@@ -1,0 +1,34 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_View_Wireframe_Menu
+type: controller
+version: 0.2
+
+
+--> Global | View | Wireframe | Menu
+-
+[[ _FetchHandler (menu_TakePictureOfView,c) ]]
+
+[[ _FetchHandler (menu_TakePictureOfStack,c) ]]
+
+[[ _FetchHandler (menu_ViewSnapshot,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | View | Wireframe | Menu | Props
+-
+--> Handlers
+-
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_RevealIcon,c) ]]
+
+[[ _FetchHandler (menu_DeletePicture,c) ]]
+
+[[ _FetchHandler (menu_IconifyImage,c) ]]

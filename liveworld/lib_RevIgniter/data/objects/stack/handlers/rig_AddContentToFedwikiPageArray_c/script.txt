@@ -1,0 +1,11 @@
+command rig_AddContentToFedwikiPageArray @fedwikiPageArray, sectionContentArray
+   repeat for each key itemNum in sectionContentArray
+      put sectionContentArray [itemNum] into someHTML
+      
+      -- here we can tidy and process each section
+      switch
+         default
+            fedwiki_AddHtmlToPageArray fedwikiPageArray, someHTML
+      end switch
+   end repeat
+end rig_AddContentToFedwikiPageArray

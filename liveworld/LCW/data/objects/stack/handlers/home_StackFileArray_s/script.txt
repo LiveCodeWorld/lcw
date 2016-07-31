@@ -1,0 +1,13 @@
+setprop home_StackFileArray homeStackFileArray
+   -- constructs a stackfile table from the array
+   -- sets the script-only home stacks stackfiles to the result
+   -- this data is lost when saving script-only stack
+   -- set this property dynamically when intialising the environment
+   
+   put the project_HomeStack of the target into projectHomeStack
+   put homeStackFileArray into stackFileCSV
+   combine stackFileCSV using CR and comma 
+   sort stackFileCSV by item 1 of each
+   set the stackfiles of projectHomeStack to stackFileCSV
+   return stackFileCSV
+end home_StackFileArray

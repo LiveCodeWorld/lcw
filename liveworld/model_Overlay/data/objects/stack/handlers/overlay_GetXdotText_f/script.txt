@@ -1,0 +1,5 @@
+function overlay_GetXdotText overlayFolder, pOverlayName
+   put overlay_ConstructFile ("xdot", overlayFolder, pOverlayName) into someFile
+   put url ("file:" & someFile) into xdotText
+   return xdotText
+end overlay_GetXdotText

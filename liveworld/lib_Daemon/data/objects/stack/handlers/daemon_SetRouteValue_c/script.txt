@@ -1,0 +1,8 @@
+command daemon_SetRouteValue someRoute, someValue
+   -- can be an array or an end value depending on the route
+   put the daemon_RouteMetaArray of me into routeMetaArray
+   put daemon_ConstructArrayKey (someRoute) into routeArrayKey
+   put someValue into routeMetaArray [routeArrayKey]
+   set the daemon_RouteMetaArray of me to routeMetaArray
+   return routeMetaArray
+end daemon_SetRouteValue

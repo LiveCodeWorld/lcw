@@ -1,0 +1,53 @@
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Feed
+type: script library
+version: 0.1
+
+
+--> RSS
+-
+[[ _FetchHandler (rss_ConstructArray,f) ]]
+
+[[ _FetchHandler (rss_ConstructItemArray,c) ]]
+
+[[ _FetchHandler (rss_FeedName,f) ]]
+
+
+--> RSS | Tree ID
+-
+[[ _FetchHandler (rss_TreeFeedProperty,f) ]]
+
+[[ _FetchHandler (rss_TreeItemValue,f) ]]
+
+
+--> RSS | Plain
+-
+/*
+These handlers try to deal with RSS without using Livecodes XML functionality.
+*/
+
+[[ _FetchHandler (rss_Parse,c) ]]
+
+[[ _FetchHandler (rss_DeconstructItem,c) ]]
+
+
+--> OPML
+-
+[[ _FetchHandler (opml_ExtractTitleOutline,f) ]]
+
+[[ _FetchHandler (opml_FromOutline,f) ]]
+
+[[ _FetchHandler (opml_ConstructXml,f) ]]
+
+[[ _FetchHandler (opml_ConvertOutline,f) ]]
+
+[[ _FetchHandler (opml_ConstructLine,f) ]]
+
+[[ _FetchHandler (opml_ConstructHeader,f) ]]
+
+[[ _FetchHandler (opml_ConvertToOutline,c) ]]
+
+[[ _FetchHandler (opml_RecurseOutlineNodes,f) ]]

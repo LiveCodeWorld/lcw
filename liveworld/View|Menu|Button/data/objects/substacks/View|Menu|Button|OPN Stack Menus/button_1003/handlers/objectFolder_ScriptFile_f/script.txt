@@ -1,0 +1,11 @@
+function objectFolder_ScriptFile objectFolder, pDontCreate
+   -- was "project_ScriptFile"
+   -- returns the same as the script_File
+   if pDontCreate is false then
+      folder_CreateNested handlerFolder
+   else
+      folder_Format objectFolder
+   end if
+   put objectFolder & "script.txt" into someFile
+   return someFile
+end objectFolder_ScriptFile

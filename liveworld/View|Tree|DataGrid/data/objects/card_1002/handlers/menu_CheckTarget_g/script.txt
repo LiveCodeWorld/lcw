@@ -1,0 +1,8 @@
+getprop menu_CheckTarget [targetObject]
+   put the datagrid_Tree of targetObject into datagridTree
+   if exists (datagridTree) then
+      return true
+   else
+      return false
+   end if
+end menu_CheckTarget

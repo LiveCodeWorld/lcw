@@ -1,0 +1,10 @@
+command project_WalkAndStoreObjectDependencies hKey, pAllCalls, pSetName 
+   put hkey_DependencyArrayFromObjects (hKey, pSetName, pAllCalls) into hKeyArray
+   
+   -- let's store the overlay in the project handler metadata folder (and create a hierarchical graph)
+   put empty into pOverlayName 
+   put item 3 of hKey into hObject
+   put the mainstack_Hash of hObject into mainstackHash
+   project_StoreHkeyArray hKey, hkeyArray, pOverlayName, mainstackHash, "hierarchical"
+   return hkeyArray
+end project_WalkAndStoreObjectDependencies

@@ -1,0 +1,6 @@
+function pref_FetchArray pProjectName
+   -- contains all the preference globals int the set with the keys as global names
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchData() into dataArray
+   return dataArray [pProjectName]
+end pref_FetchArray

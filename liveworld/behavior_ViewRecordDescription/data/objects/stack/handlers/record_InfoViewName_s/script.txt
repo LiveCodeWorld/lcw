@@ -1,0 +1,5 @@
+setprop record_InfoViewName viewName
+   put the info_Group of me into infoGroup
+   set the view_Swap of infoGroup to viewName
+   return the result
+end record_InfoViewName

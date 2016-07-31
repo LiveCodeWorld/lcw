@@ -1,0 +1,27 @@
+function object_ConstructArrayFromFolder objectFolder, pUseCustomFolders
+   if pUseCustomFolders is empty then
+      put meta_GetCustomArrayFile (objectFolder) into someFile
+      put there is not a file someFile into pUseCustomFolders
+   end if
+   
+   put object_FetchRevPropText (objectFolder) into revPropText
+   put rev_PropertyTextToArray (revPropText) into revPropertyArray 
+   put revPropertyArray into objectPropArray ["rev"]
+   
+   put object_FetchMetaText (objectFolder) into objectText
+   if objectText is not empty then put objectText into objectPropArray ["text"]
+   
+   put object_FetchMetaHtml (objectFolder) into objectHtml
+   if objectHtml is not empty then put objectHtml into objectPropArray ["htmlText"]
+   
+   put object_FetchScript (objectFolder) into someScript
+   if someScript is not empty then put someScript into objectPropArray ["script"]
+   
+   put object_FetchMetaImage (objectFolder) into someImage  -- no idea what type of image it is (but don't use imagedata) ???
+   if someImage is not empty then put someImage into objectPropArray ["image"]
+   
+   put object_FetchCustomArray (objectFolder, pUseCustomFolders) into customArray
+   if customArray is an array then put customArray into objectPropArray ["custom"]
+   
+   return objectPropArray
+end object_ConstructArrayFromFolder

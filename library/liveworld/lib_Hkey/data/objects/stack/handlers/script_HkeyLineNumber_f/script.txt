@@ -1,0 +1,5 @@
+function script_HkeyLineNumber hKey, pScript
+   hkey_SetOffsets hKey, startHandler, endHandler, pScript
+   put the number of lines of char 1 to startHandler of pScript into lineNum
+   return lineNum
+end script_HkeyLineNumber

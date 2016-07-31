@@ -1,0 +1,5 @@
+getprop dot_HeaderValue [someKey]
+   put the long id of the target into targetObject
+   put dot_GetHeaderValue (targetObject, someKey) into headerValue
+   return headerValue
+end dot_HeaderValue

@@ -1,0 +1,47 @@
+on menu_CreateNewLibrary
+   repeat
+      put opn_Ask ("What do you want to call this new library?" , "libOPN_Example") into libName
+      if exists (stack libName) then
+         put merge("Can't create stack [['libName']] as a stack of this name already exists! Try again?") into someQuestion
+         answer warning someQuestion with "OK" or "Open and Cancel"
+         if it is "Open and Cancel" then
+            toplevel stack libName
+            exit to top
+         end if
+      else
+         exit repeat
+      end if
+   end repeat
+   
+   create stack libName
+   put stack_NameToShortFile (libName) into shortFile
+   put library_StandardFolder(shortFile) into someFile
+   set the filename of stack libName to someFile
+   
+   set the destroystack of stack libName to false
+   set the destroywindow of stack libName to false
+   
+   /*
+   name: libOPN_Yoga
+   type: library
+   version: 1.2
+   copyright: OPN Technologies LLP
+   */
+   
+   put libName into metadataArray ["name"]
+   put "library" into metadataArray ["type"]
+   put "0.1" into metadataArray ["version"]
+   put "OPN Technologies LLP" into metadataArray ["copyright"]
+   put "Some brief help about this library..." into metadataArray ["script_Help"]
+   
+   set the script_MetaData of stack libName to metadataArray
+   save stack libName
+   
+   set the stack_IsKnown of stack libName to true
+   set the stack_IsLibrary of stack libName to true
+   start using stack libName
+   
+   edit the script of stack libName
+   put merge("This new library stack has been saved to file '[[someFile]]' and added to the OPN environment!") into someQuestion
+   opn_Notify (someComment, true)
+end menu_CreateNewLibrary

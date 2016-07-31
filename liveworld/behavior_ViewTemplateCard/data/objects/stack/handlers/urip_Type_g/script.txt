@@ -1,0 +1,10 @@
+getprop urip_Type
+   /*
+   This handler overrides the default handler which fetches the urip_Type from the script_Metadata
+   That allows a view to be marked as a "view" instead of "view tmplate",
+   while having the urip_Type return "view template" in cases where we want to know
+   if the control is a template or an instance of a view.
+   */
+   
+   return "view template"
+end urip_Type

@@ -1,0 +1,17 @@
+function ccc_ConstructVideoCaption cccArray
+   -- pageTitle, ccctvURL, pageAuthorLinks, dateDisplay
+   put cccArray ["pageTitle"] into pageTitle
+   put cccArray ["ccctvURL"] into ccctvURL
+   put cccArray ["date"] into dateDisplay
+   put ccc_ConstructAuthorHTML (cccArray) into pageAuthorLinks
+   
+   put "<br></br>" into someHTML
+   put html_ConstructRefLink (pageTitle, ccctvURL, "_blank") into titleLink
+   put titleLink && "- a talk by" && pageAuthorLinks && "at" && ccc_ConstructDateHtml (dateDisplay) after someHTML 
+   
+   put  ". This video is licensed" && html_ConstructRefLink ("CC-by-3.0", "http://creativecommons.org/licenses/by/3.0/", "_blank") after someHTML
+   
+   put ", courtesy of [[Chaos Computer Club]]" after someHTML
+   -- put " <a href="&quote& ccctvURL &quote && "target=" &quote& "_blank" &quote& ">CCC</a>." after someHTML
+   return someHTML
+end ccc_ConstructVideoCaption

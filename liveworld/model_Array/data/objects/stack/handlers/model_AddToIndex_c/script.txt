@@ -1,0 +1,9 @@
+on model_AddToIndex someLine, indexKey, modelObject, modelName, modelType
+   -- was "index_AddTo"
+   if indexKey is empty then return "Error: indexname is empty"
+   
+   put model_GetValue (indexKey, modelObject, modelName, modelType) into someIndex
+   line_Add someLine, someIndex
+   model_SetValue indexKey, modelObject, someIndex, modelName, modelType
+   return someIndex
+end model_AddToIndex

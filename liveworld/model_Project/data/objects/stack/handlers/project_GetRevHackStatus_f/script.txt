@@ -1,0 +1,6 @@
+function project_GetRevHackStatus pSetName
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   put library_FetchSetData() into librarySetData
+   put librarySetData [pSetName]["data"]["rev_AddBehaviorHacks"] is true into someBoolean
+   return someBoolean
+end project_GetRevHackStatus

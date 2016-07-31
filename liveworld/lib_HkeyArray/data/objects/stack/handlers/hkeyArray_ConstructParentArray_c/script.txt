@@ -1,0 +1,15 @@
+command hkeyArray_ConstructParentArray hKey, hkeyArray, @parentArray
+   set the wholematches to true
+   repeat for each key maybeParentKey in hkeyArray 
+      put hkeyArray [maybeParentKey] into childKeys
+      if hKey is among the lines of childKeys then
+         -- beware circular recursion (has hKey already been indexed?)
+         if maybeParentKey is among the keys of parentArray then
+            next repeat
+         end if
+         
+         array_AddToIndex hKey, maybeParentKey, parentArray
+         hkeyArray_ConstructParentArray maybeParentKey, hkeyArray, parentArray
+      end if
+   end repeat
+end hkeyArray_ConstructParentArray

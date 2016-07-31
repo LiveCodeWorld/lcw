@@ -1,0 +1,15 @@
+command display_IndexedBookArray someArray, bookTitle
+   local indexedArray, attributesArray
+   
+   book_ParseDivArray someArray, indexedArray, attributesArray
+   put attributesArray ["class"] into divClass
+   put attributesArray ["id"] into divID
+   
+   put divClass & comma & divID into bookTitle
+   
+   put "Global | SivaSiva | Book | Parse | Menu" into titleMenu
+   put "Global | SivaSiva | Book | Parse | Line | Menu" into titleLineMenu
+   display_Array indexedArray, bookTitle, titleMenu, titleLineMenu
+   put the result into displayView
+   set the tree_SortType of displayView to "numeric"
+end display_IndexedBookArray

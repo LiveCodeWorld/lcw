@@ -1,0 +1,4 @@
+function trait_GetQuote chapterArray
+   put chapterArray ["quoteText"] into traitQuote
+   return traitQuote
+end trait_GetQuote

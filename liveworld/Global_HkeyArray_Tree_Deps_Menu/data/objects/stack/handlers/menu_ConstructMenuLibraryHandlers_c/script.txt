@@ -1,0 +1,27 @@
+on menu_ConstructMenuLibraryHandlers treeView
+   set the cursor to watch
+   put the displayed_Array of treeView into hKeyArray
+   put the displayed_Object of treeView into scriptObject
+   
+   put "menu_PopUp,c|menu_PullDown,c|menu_SendMessage,c" into shortHkeys
+   set the itemdelimiter to "|"
+   repeat for each item shortHkey in shortHkeys
+      put the hkey_Find [shortHkey] of scriptObject & CR after hKeys
+   end repeat
+   delete char -1 of hKeys
+   
+   put hkey_DependencyArrayFromObjects (hKeys) into hkeyArray
+   
+   display_ObjectHkeyArray hkeyArray, scriptObject, "pop,pull,send"
+   return empty
+   
+   set the cursor to watch
+   put the displayed_Array of treeView into hKeyArray
+   put the displayed_Object of treeView into scriptObject
+   
+   put pref_GetValue ("skip_HkeyComponents") is not false into stripComponents
+   put pref_GetValue ("skip_HkeyProps") is not false into stripProps
+   
+   display_HkeyArrayDependencyScript hkeyArray, scriptObject, false, stripProps
+   put the result into missingKeys
+end menu_ConstructMenuLibraryHandlers

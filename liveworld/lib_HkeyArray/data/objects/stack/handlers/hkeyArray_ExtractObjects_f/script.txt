@@ -1,0 +1,15 @@
+function hkeyArray_ExtractObjects hkeyArray
+    local arrayObjects
+    repeat for each key hKey in hkeyArray
+        set the cursor to busy
+        script_DeconstructHkey hKey, handlerName, handlerType, handlerNum, scriptObject
+        line_Add scriptObject, arrayObjects
+        
+        put hkeyArray [hKey] into handlerCalls
+        repeat for each line callKey in handlerCalls
+            script_DeconstructHkey callKey, handlerName, handlerType, handlerNum, callObject
+            line_Add callObject, arrayObjects
+        end repeat
+    end repeat
+    return arrayObjects
+end hkeyArray_ExtractObjects

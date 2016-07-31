@@ -1,0 +1,11 @@
+function rigArrayRandElement pArray
+   --| Summary: Takes an array as input and returns a random element.
+   --|                    Works with one-dimensional arrays only
+   --| Return: mixed
+   
+   if pArray is not an array then
+      return pArray
+   end if
+   put any line in the keys of pArray into tKey
+   return pArray [tKey]
+end rigArrayRandElement

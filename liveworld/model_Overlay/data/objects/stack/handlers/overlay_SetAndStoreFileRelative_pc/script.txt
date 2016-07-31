@@ -1,0 +1,5 @@
+private command overlay_SetAndStoreFileRelative @overlayArray, filePropName, someFile
+   put overlayArray_GetGraphProperty (overlayArray, "overlay_Folder") into overlayFolder
+   overlay_SetFileRelative someFile, overlayFolder
+   overlayArray_SetGraphProperty overlayArray, filePropName, someFile
+end overlay_SetAndStoreFileRelative

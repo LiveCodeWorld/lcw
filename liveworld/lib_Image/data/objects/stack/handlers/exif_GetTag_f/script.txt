@@ -1,0 +1,10 @@
+function exif_GetTag tagName, imageFile, padded
+    put exif_GetTagLine(tagName, imageFile, empty) into tagLine
+    return tagLine
+    
+    -- using exif (http://libexif.sourceforge.net/ http://exif.darwinports.com/)
+    shell_BashParamEscape imageFile
+    shell_BashParamEscape tagName
+    put "exif -t" && tagName && imageFile into someShell
+    return shell(someShell)
+end exif_GetTag

@@ -1,0 +1,6 @@
+command mediawiki_FetchSectionQueryInfo pageSlug, sectionNum, @sectionDescription, @pageTitle, @shortImageFile, @sectionArray, @wikipediaRevisionID
+   put sandbox_FetchSectionArray (pageSlug, sectionNum) into sandboxArray
+   sandbox_DeconstructSectionArray sandboxArray, pageTitle, sectionDescription, imageArray, sectionArray, wikipediaRevisionID
+   put mediawiki_ExtractFirstInterestingImage (imageArray) into shortImageFile
+   return sandboxArray
+end mediawiki_FetchSectionQueryInfo

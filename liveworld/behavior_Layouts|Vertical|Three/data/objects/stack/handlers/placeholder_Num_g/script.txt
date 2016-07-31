@@ -1,0 +1,10 @@
+getprop placeholder_Num
+   put 0 into placeholderNum
+   repeat for each line viewChild in the view_Children of me
+      put the view_Name of viewChild into viewChildName
+      if viewChildName = "View|Layouts|Placeholder" then
+         add 1 to placeholderNum
+      end if
+   end repeat
+   return placeholderNum
+end placeholder_Num

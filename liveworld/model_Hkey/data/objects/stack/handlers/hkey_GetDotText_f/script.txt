@@ -1,0 +1,5 @@
+function hkey_GetDotText hKey, pVersionName
+   put hkey_DotFile (hKey, pVersionName) into someFile
+   get url ("file:" & someFile) into encodedArray
+   return it
+end hkey_GetDotText

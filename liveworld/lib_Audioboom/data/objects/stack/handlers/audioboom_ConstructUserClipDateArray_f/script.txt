@@ -1,0 +1,12 @@
+function audioboom_ConstructUserClipDateArray audioboomUserClipArray
+   put audioboom_GetAudioClipArray (audioboomUserClipArray) into audioClipArray
+   repeat for each key indexNum in audioClipArray
+      put audioClipArray [indexNum]["title"] into booTitle
+      put audioClipArray [indexNum]["recorded_at_ts"] into booDate
+      
+      put indexNum into dateArray [booDate]["indexnum"]
+      put booTitle into dateArray [booDate]["booTitle"]
+      -- put indexNum into dateArray [booDate]["indexnum"]
+   end repeat
+   return dateArray
+end audioboom_ConstructUserClipDateArray

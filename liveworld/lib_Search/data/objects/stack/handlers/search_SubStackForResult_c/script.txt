@@ -1,0 +1,42 @@
+command search_SubStackForResult @objectArray, stackObject, someProperty, pControllerObject
+   search_ForValue objectArray, stackObject, someProperty, pControllerObject
+   -- search_ForResults objectArray, stackObject, someProperty, pControllerObject
+   
+   -- get the objects in the backgrounds
+   put the backgroundids of stackObject into someBgIds
+   repeat for each line someId in someBgIds
+      set the cursor to busy
+      put the long id of background id someId of stackObject into someBackground
+      search_ForValue objectArray, someBackground, someProperty, pControllerObject
+      -- search_ForResults objectArray, someBackground, someProperty, pControllerObject
+      
+      repeat with controlNum = 1 to the number of controls in someBackground
+         put the long id of control controlNum of someBackground into someObject
+         search_ForValue objectArray, someObject, someProperty, pControllerObject
+         -- search_ForResults objectArray, someObject, someProperty, pControllerObject
+      end repeat
+   end repeat
+   
+   -- get the card only objects of the cards
+   put the cardids of stackObject into someCardIDs
+   repeat for each line cardID in someCardIDs
+      set the cursor to busy
+      put the long id of card id cardId of stackObject into cardObject
+      search_ForValue objectArray, cardObject, someProperty, pControllerObject
+      -- search_ForResults objectArray, cardObject, someProperty, pControllerObject
+      
+      repeat with controlNum = 1 to the number of controls in cardObject
+         set the cursor to busy
+         put the long id of control controlNum of cardObject into someObject
+         
+         put word 3 of someObject into someID
+         if someID is among the lines of someBgIds then
+            add the number of controls in someObject to controlNum
+         else
+            search_ForValue objectArray, someObject, someProperty, pControllerObject
+            -- search_ForResults objectArray, someObject, someProperty, pControllerObject
+         end if
+      end repeat
+   end repeat
+   return objectArray
+end search_SubStackForResult

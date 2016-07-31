@@ -1,0 +1,12 @@
+function exif_GetTagLine tagName, imageFile, padded
+    --  Using exiftool (http://sno.phy.queensu.ca/%7Ephil/exiftool/exiftool_pod.html#reading_examples)
+    shell_BashParamEscape imageFile
+    
+    if padded is true then
+        put "exiftool -s -" & tagName && imageFile into someShell
+    else
+        put "exiftool -s -s -" & tagName  && imageFile into someShell
+    end if
+    put someShell
+    return shell(someShell)
+end exif_GetTagLine

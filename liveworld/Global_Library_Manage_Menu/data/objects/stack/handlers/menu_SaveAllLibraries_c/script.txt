@@ -1,0 +1,9 @@
+on menu_SaveAllLibraries
+   put library_ListUsedStacks ("All") into usedLibraries
+   repeat for each line stackName in usedLibraries
+      set the cursor to busy
+      if there is a stack stackName then
+         save stack stackName
+      end if
+   end repeat
+end menu_SaveAllLibraries

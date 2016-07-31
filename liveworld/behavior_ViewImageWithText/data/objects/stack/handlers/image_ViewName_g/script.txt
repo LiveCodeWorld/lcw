@@ -1,0 +1,7 @@
+getprop image_ViewName
+   put the image_View of me into imageView
+   put the view_Name of imageView into vName
+   set the itemdelimiter to "|"
+   delete item 1 of vName
+   return vName
+end image_ViewName

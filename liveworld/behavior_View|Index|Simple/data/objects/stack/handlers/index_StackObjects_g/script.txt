@@ -1,0 +1,5 @@
+getprop index_StackObjects
+   put the index_ShortFiles of me into shortStackFiles  
+   put _getStackObjects (shortStackFiles) into stackObjects
+   return stackObjects
+end index_StackObjects

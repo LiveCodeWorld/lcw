@@ -1,0 +1,8 @@
+function git_ExtractLogMetadataArray logText
+   set the itemdelimiter to ":"
+   put word 2 of line 1 of logText into metadataArray ["commitHash"]
+   put word 1 to -1 of item 2 of line 2 of logText into metadataArray ["commitAuthor"]
+   put word 1 to -1 of item 2 of line 3 of logText into metadataArray ["commitDate"]
+   
+   return metadataArray
+end git_ExtractLogMetadataArray

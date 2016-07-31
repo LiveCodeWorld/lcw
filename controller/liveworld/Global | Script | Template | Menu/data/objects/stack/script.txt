@@ -1,0 +1,68 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Script_Template_Menu
+type: controller
+version: 0.1
+
+local LocalArray
+
+
+--> Global | Script | Template | Menu
+-
+[[ _FetchHandler (menu_DisplayTemplate,c) ]]
+
+[[ _FetchHandler (menu_NewTemplateFromClipboard,c) ]]
+
+[[ _FetchHandler (menu_CopyTemplateToClipboard,c) ]]
+
+[[ _FetchHandler (menu_DeleteTemplate,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_Save,c) ]]
+
+[[ _FetchHandler (menu_SaveAs,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+    
+--> Global | Script | Template | Menu | Props
+-
+[[ _FetchHandler (template_Names,g) ]]
+
+
+--> Global | Script | Template | Menu | Disabled
+-
+[[ _FetchHandler (disabled_Save,g) ]]
+
+[[ _FetchHandler (disabled_SaveAs,g) ]]
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_DisplayGist,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditThisTemplate,c) ]]
+
+[[ _FetchHandler (menu_EditTemplate,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_CopyMergeScriptToClipboard,c) ]]
+
+
+
+--> Menu | Props
+-
+[[ _FetchHandler (menu_Init,c) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]

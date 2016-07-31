@@ -1,0 +1,6 @@
+function fedwiki_FetchPageJson fedwikiDomain, pSlug
+   -- http://c0de.academy/currently-working-on.html
+   put fedwiki_PageJsonUrl (fedwikiDomain, pSlug) into someUrl
+   put url someUrl into someJSON
+   return someJSON
+end fedwiki_FetchPageJson

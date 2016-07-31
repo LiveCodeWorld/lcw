@@ -1,0 +1,29 @@
+function stack_NotNeeded
+    -- they may be needed :)
+    local mainStackNames
+    
+    put revLoadedStacks("application") into stackNames
+    repeat for each line stackName in stackNames
+        get the mainstack of stack stackName
+        line_Add it, mainStackNames
+    end repeat
+    
+    repeat for each line usedStackName in the stacksinuse
+        put the mainstack of stack usedStackName into mainStackName
+        put the short name of stack mainStackName into stackName
+        line_Delete stackName, mainStackNames
+    end repeat
+     
+    repeat for each line someObject in the backscripts
+        put the stack_Object of someObject into someStack
+        put the short name of the mainstack of someStack into stackName
+        line_Delete stackName, mainStackNames
+    end repeat
+     
+    repeat for each line someObject in the frontscripts
+        put the stack_Object of someObject into someStack
+        put the short name of the mainstack of someStack into stackName
+        line_Delete stackName, mainStackNames
+    end repeat
+    return mainStackNames
+end stack_NotNeeded

@@ -1,0 +1,21 @@
+function restbase_FetchWikipediaSectionPageArray pageSlug, sectionNum, someLang
+   -- https://en.wikipedia.org/w/index.php?title=Bruce_Sterling&action=edit&section=5&editintro=Template:BLP_editintro
+   put restbase_FetchSectionArray (pageSlug, someLang) into sectionPageArray
+   
+   put sectionPageArray ["lead"]["description"] into pageDescription
+   put sectionPageArray ["lead"]["displayTitle"] into pageTitle
+   put sectionPageArray ["lead"]["image"] into imageArray
+   put imageArray ["file"] into shortImageFile
+   put "https:" & imageArray ["640"] into imageURL
+   put sectionPageArray ["lead"]["sections"]["1"]["text"] into htmlPageDescription
+   
+   put sectionPageArray ["remaining"]["sections"] into sectionArray
+   put sectionArray [sectionNum]["line"] into sectionTitle
+   put sectionArray [sectionNum]["tocLevel"] into tocLevel
+   put sectionArray [sectionNum]["text"] into sectionHTML
+   
+   put empty into wikipediaUrl
+   put wikicommons_ConstructTwoImagePageArray (pageTitle, pageDescription, shortImageFile, wikipediaUrl) into fedwikiPageArray
+   
+   return fedwikiPageArray
+end restbase_FetchWikipediaSectionPageArray

@@ -1,0 +1,15 @@
+command fedwiki_SetLocalFolders pBigDataFolder
+   /*
+   A utility to set all three folders 
+   by simply chosing or setting one overarching "bigData folder" and creating sesnible defaults
+   */
+   fedwiki_SetBigDataFolder pBigDataFolder
+   put the result into pBigDataFolder
+   
+   -- now we have the top level pBigDataFolder
+   -- lets set standard inner folders for the .wiki folder and dowloaded jaon files
+   put pBigDataFolder & "/wiki/" into localWikiFolder
+   fedwiki_SetLocalWikiFolder localWikiFolder
+   put pBigDataFolder & "/site_json/" into localSiteJsonFolder
+   fedwiki_SetLocalSiteJsonFolder localSiteJsonFolder
+end fedwiki_SetLocalFolders

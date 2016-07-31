@@ -1,0 +1,389 @@
+﻿script "lib_Feed"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Feed
+type: script library
+version: 0.1
+
+
+--> RSS
+-
+function rss_ConstructArray someRSS, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean
+   -- return xml_ToArray (someRSS, pStoreEncodedAs, pUseValueKey)
+   -- display_Lines someRSS
+   
+   local itemArray   
+   put revCreateXMLTree(someRSS, true, true, false) into treeID
+   if treeID is an integer then
+      xml_ExtractEncoding someRSS, versionMatch, xmlEncoding
+      
+      put revXMLRootNode(treeID) into rootNode
+      switch rootNode
+         case "rss"
+            put "/rss[1]/channel[1]" into channelNode
+            
+            put xml_TreeNodeAttributeArray("rss", treeID) into rssAttributeArray
+            put rssAttributeArray into rssArray ["rss"]["Metadata"]
+            
+            put revXMLChildNames(treeID, channelNode, CR, "", true) into nodeNames
+            filter nodeNames without "item*"
+            repeat for each line nodeName in nodeNames
+               put channelNode & "/" & nodeName into someNode
+               get xml_ConvertXMLNodeToArray (treeID, someNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean)
+               put it into rssArray ["rss"]["Metadata"][nodeName]
+            end repeat
+            
+            put revXMLChildNames(treeID, channelNode, CR, "item", true) into itemNames
+            repeat with itemNum = 1 to the number of lines of itemNames
+               put line itemNum of itemNames into itemName
+               put channelNode & "/" & itemName into itemNode
+               put xml_ConvertXMLNodeToArray (treeID, itemNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into itemArray [itemNum]
+            end repeat
+            put itemArray into rssArray ["rss"]["Items"]
+            break
+         case "feed"
+            put revXMLChildNames(treeID, rootNode, CR, "", true) into nodeNames
+            filter nodeNames without "entry*"
+            repeat for each line nodeName in nodeNames
+               put rootNode & "/" & nodeName into someNode
+               get xml_ConvertXMLNodeToArray (treeID, someNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean)
+               put it into rssArray ["rss"]["Metadata"][nodeName]
+            end repeat
+            
+            put revXMLChildNames(treeID, rootNode, CR, "entry", true) into entryNames
+            repeat with entryNum = 1 to the number of lines of entryNames
+               put line entryNum of entryNames into entryName
+               put rootNode & "/" & entryName into itemNode
+               put xml_ConvertXMLNodeToArray (treeID, itemNode, xmlEncoding, pStoreEncodedAs, pUseValueKey, pTranslateKeyBoolean) into itemArray [entryNum]
+            end repeat
+            put itemArray into rssArray ["rss"]["Items"]
+            break
+      end switch
+      
+      revDeleteXMLTree treeID
+   end if
+   return rssArray
+end rss_ConstructArray
+
+on rss_ConstructItemArray @itemArray, treeID, itemNum, itemNode, pXMLTreeEncoding, pStoreEncodedAs, pUseValueKey
+   put empty into categoryList
+   put revXMLChildNames(treeID, itemNode, CR, "", true) into itemElementNames
+   repeat for each line itemElementName in itemElementNames
+      put itemNode & "/" & itemElementName into itemElementNode
+      put revXMLNodeContents(treeID, itemElementNode) into itemElementNodeContents
+      
+      put token 1 of itemElementName into elementKey
+      -- could make this generic to something already there, and make a snumerically indexed sub array
+      if elementKey = "category" then
+         put itemElementNodeContents & comma after categoryList
+      else
+         put itemElementNodeContents into itemArray [itemNum][elementKey]
+      end if
+   end repeat
+   delete char -1 of categoryList
+   
+   put categoryList into itemArray [itemNum]["category list"]
+   return itemArray
+end rss_ConstructItemArray
+
+function rss_FeedName metaArray
+    return metaArray ["title"]
+end rss_FeedName
+
+
+--> RSS | Tree ID
+-
+function rss_TreeFeedProperty tagName, treeID
+    put "rss/channel" into startNode
+    put startNode & "/" & tagName into someNode
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    return nodeContents
+end rss_TreeFeedProperty
+
+function rss_TreeItemValue tagName, itemNum, treeID
+    -- was "xml_ExtractNodeItem"
+    put "rss/channel/item[" & itemNum & "]/" & tagName into someNode
+    put revXMLNodeContents(treeID, someNode) into nodeContents
+    return nodeContents
+end rss_TreeItemValue
+
+
+--> RSS | Plain
+-
+/*
+These handlers try to deal with RSS without using Livecodes XML functionality.
+*/
+
+command rss_Parse tRSSfeed, maxNum
+   -- was "rss_Parse"
+    if maxNum is empty then put 50 into maxNum
+    
+    if tRSSfeed is empty then exit rss_Parse
+    put 0 into newsID
+    set the wholematches to false
+    put replacetext(tRSSfeed,"[\t\n\r]"," ") into tRSSfeed
+     
+    put offset("<item>", tRSSfeed) into tStart
+    delete char 1 to (tStart - 1) of tRSSfeed
+    repeat until newsID > maxNum
+        add 1 to newsID
+        put offset("</item>",tRSSfeed) into tOffset
+        if (tOffset+0) is zero then exit repeat
+        put char 1 to (tOffset + 6) of tRSSfeed into tItem
+        
+        delete char 1 to (tOffset + 6) of tRSSfeed
+         
+        rss_DeconstructItem tItem, tTitle, tLink, tGuid, tDescription, tpubDate
+        put tLink into lstLinks[newsID]
+        put tTitle & cr after newsTitles
+    end repeat
+    delete char -1 of newsTitles
+end rss_Parse
+
+command rss_DeconstructItem tItem, @tTitle, @tLink, @tGuid, @tDescription, @tpubDate
+   -- was "rss_DeconstructItem"
+   get matchtext (tItem, "<item>(.*)</item>", tItemContent)
+   get matchtext (tItemContent, "<title>(.*)</title>", tTitle)
+   get matchtext (tItemContent, "<link>(.*)</link>", tLink)
+   get matchtext (tItemContent, "<guid>(.*)</guid>", tGuid)
+   get matchtext (tItemContent, "<description>(.*)</description>", tDescription)
+   get matchtext (tItemContent, "<pubDate>(.*)</pubDate>", tpubDate)
+end rss_DeconstructItem
+
+
+--> OPML
+-
+function opml_ExtractTitleOutline someOPML, @treeID
+    revDeleteAllXMLTrees
+     
+    put revCreateXMLTree(someOPML, false, true, false) into treeID
+     
+    put revXMLNodeContents(treeID, "/opml/head/title") into treeTitle
+    put revXMLNodeContents(treeID, "/opml/head/dateCreated") into treeCreationDate
+    put revXMLNodeContents(treeID, "/opml/head/dateModified") into treeModifiedDate
+    
+    put revXMLText(treeID, "/opml/body") into nodeXml
+     
+    put xml_TreeRecurse(treeID, "/opml/body") into tabbedOutline
+    delete line 1 of tabbedOutline
+    put outline_DecreaseIndent(tabbedOutline, 1) into tabbedOutline
+    return tabbedOutline
+end opml_ExtractTitleOutline
+
+function opml_FromOutline tabbedOutline, pOpmlHeader, pIndent
+    put "</outline>" into endTag
+    put 0 into extraindent
+    repeat with lineNum = 1 to the number of lines of tabbedOutline
+        put line lineNum of tabbedOutline into someHtmlLine
+         
+        html_DeconstructLink someHtmlLine, someLine, someLink
+        
+        put line (lineNum + 1) of tabbedOutline into nextHtmlLine
+        html_DeconstructLink nextHtmlLine, nextLine, nextLineLink
+         
+        if someLine is empty then
+            exit repeat
+        else
+            put word 1 to -1 of someLine into someText
+            if someLink is empty then
+                put empty into linkType
+                put empty into someUrl
+            else
+                put "link" into linkType
+                put someLink into someUrl
+            end if
+            put empty into dateCreated
+            
+            put opml_ConstructLine(someText, linkType, someUrl, dateCreated) into opmlLine
+            
+            if nextLine is empty then
+                put pIndent & opmlLine & CR after opmlOutline
+                exit repeat
+            else
+                put outline_TabLevel(someHtmlLine) into thisTabLevel
+                put outline_TabLevel(nextHtmlLine) into nextTabLevel
+                if nextTabLevel > thisTabLevel then
+                    put ">" into char -2 to -1 of opmlLine
+                    put pIndent & opmlLine & CR after opmlOutline
+                    put tab after pIndent
+                    add 1 to extraindent
+                else if nextTabLevel = thisTabLevel then
+                    put pIndent & opmlLine & CR after opmlOutline
+                else
+                    put pIndent & opmlLine & CR after opmlOutline
+                    delete char -1 of pIndent
+                    put pIndent & endTag & CR after opmlOutline
+                    subtract 1 from extraindent
+                end if
+            end if
+        end if
+    end repeat
+    repeat extraindent
+        -- opn_notify "Not balanced!" && extraindent, true
+        delete char -1 of pIndent
+        put pIndent & endTag & CR after opmlOutline
+    end repeat
+    delete last char of opmlOutline
+    
+    return opml_ConstructXml(pOpmlHeader, opmlOutline)
+end opml_FromOutline
+
+function opml_ConstructXml opmlHeader, opmlOutline
+    put "<?xml version='1.0' encoding='ISO-8859-1'?>" into opml
+    put CR & "<opml version='1.1'>" after opml
+    --
+    put CR & tab & "<head>" after opml
+    put CR & outline_IncreaseIndent(opmlHeader, 2) after opml
+    put CR & tab & "</head>" after opml
+    
+    put CR & tab & "<body>" after opml
+    put CR & outline_IncreaseIndent(opmlOutline, 2) after opml
+    put CR & tab & "</body>" after opml
+    -- 
+    put CR & "</opml>" after opml
+    return opml
+end opml_ConstructXml
+
+function opml_ConvertOutline tabbedOutline, startIndent
+    local opmlOutline
+    
+    put startIndent into thisIndent
+    put "</outline>" into endTag
+    put 0 into extraindent
+    repeat with lineNum = 1 to the number of lines of tabbedOutline
+        put line lineNum of tabbedOutline into someLine
+        put line (lineNum + 1) of tabbedOutline into nextLine
+        if someLine is empty then
+            exit repeat
+        else
+            put word 1 to -1 of someLine into someText
+            put empty into linkType
+            put empty into someUrl
+            put empty into dateCreated
+            put opml_ConstructLine(someText, linkType, someUrl, dateCreated) into opmlLine
+             
+            if nextLine is empty then
+                put thisIndent & opmlLine & CR after opmlOutline
+                exit repeat
+            else
+                put outline_TabLevel(someLine) into thisTabLevel
+                put outline_TabLevel(nextLine) into nextTabLevel
+                if nextTabLevel > thisTabLevel then
+                    put ">" into char -2 to -1 of opmlLine
+                    put thisIndent & opmlLine & CR after opmlOutline
+                    put tab after thisIndent
+                    add 1 to extraindent
+                else if nextTabLevel = thisTabLevel then
+                    put thisIndent & opmlLine & CR after opmlOutline
+                else
+                    put thisIndent & opmlLine & CR after opmlOutline
+                    delete char -1 of thisIndent
+                    put thisIndent & endTag & CR after opmlOutline
+                    subtract 1 from extraindent
+                end if
+            end if
+        end if
+    end repeat
+    repeat extraindent
+        -- opn_notify "Not balanced!" && extraindent, true
+        delete char -1 of thisIndent
+        put thisIndent & endTag & CR after opmlOutline
+    end repeat
+    delete last char of opmlOutline
+    return opmlOutline
+end opml_ConvertOutline
+
+function opml_ConstructLine someText, linkType, someUrl, dateCreated
+    xml_Escape someText
+    put "<outline text=" && kwote(someText) into opmlLine
+    if linkType is not empty then put space & "type=" & kwote(linkType) after opmlLine
+    if someUrl is not empty then put space & "url=" & kwote(someUrl) after opmlLine
+    if dateCreated is not empty then put space & "dateCreated=" & kwote(dateCreated) after opmlLine
+    put "/>" after opmlLine
+    return opmlLine
+end opml_ConstructLine
+
+function opml_ConstructHeader someTitle, dateCreated, dateModified, ownerName, ownerEmail, expansionState, vertScrollState, someRect, indentBit
+    put "<title>[[someTitle]]</title>" into opmlHeader
+    if dateCreated is not empty then put indentBit & "<dateCreated>[[dateCreated]]</dateCreated>" after opmlHeader
+    if dateModified is not empty then put indentBit & "<dateModified>[[dateModified]]</dateModified>" after opmlHeader
+    if ownerName is not empty then put indentBit & "<ownerName>[[ownerName]]</ownerName>" after opmlHeader
+    if ownerEmail is not empty then put indentBit & "<ownerEmail>[[ownerEmail]]</ownerEmail>" after opmlHeader
+    if expansionState is not empty then put indentBit & "<expansionState>[[expansionState]]</expansionState>" after opmlHeader
+    if vertScrollState is not empty then put indentBit & "<vertScrollState>[[vertScrollState]]</vertScrollState>" after opmlHeader
+    
+    if someRect is not empty then 
+        put item 1 of someRect into windowLeft
+        put item 2 of someRect into windowTop
+        put item 3 of someRect into windowRight
+        put item 4 of someRect into windowBottom
+         
+        put indentBit & "<windowTop>[[windowTop]]</windowTop>" after opmlHeader
+        put indentBit & "<windowLeft>[[windowLeft]]</windowLeft>" after opmlHeader
+        put indentBit & "<windowBottom>[[windowBottom]]</windowBottom>" after opmlHeader
+        put indentBit & "<windowRight>[[windowRight]]</windowRight>" after opmlHeader
+    end if
+    return merge(opmlHeader)
+end opml_ConstructHeader
+
+command opml_ConvertToOutline someOPML, @treeTitle, @tabbedOutline
+    put empty into treeTitle
+    put empty into tabbedOutline
+     
+    put revCreateXMLTree(someOPML, false, true, false) into treeID
+    put revXMLRootNode(treeID) into rootNode
+    if rootNode is not "opml" then
+        opn_Notify "Not a valid OPML file!", true
+    else
+        put "opml/head/" into headRoot
+        put headRoot & "title" into someNode
+        put revXMLNodeContents(treeID, someNode) into treeTitle
+         
+       try
+            put opml_RecurseOutlineNodes(treeID) into tabbedOutline
+            revDeleteXMLTree treeID
+            return true
+        catch someError
+            opn_Notify someError
+        end try
+    end if
+     
+    revDeleteXMLTree treeID
+    return false
+end opml_ConvertToOutline
+
+function opml_RecurseOutlineNodes treeID, rootNode
+    local newOutline
+    
+    if rootNode is empty then
+        put "opml[1]/body[1]" into rootNode
+    else
+        set the itemdelimiter to"/"
+        put empty into indentBit
+        put the number of items of rootNode - 3 into indentLevel
+        repeat indentLevel
+            put tab after indentBit
+        end repeat
+         
+        put revXMLAttributes(treeID, rootNode, tab, CR) into attributeArray
+        split attributeArray using CR and tab
+        put attributeArray ["text"] into someText
+        put attributeArray ["url"] into someLink
+        put html_ConstructNameLink(someText, someLink) into newLine
+         
+        put indentBit & newLine & Cr after newOutline
+    end if
+     
+    put revXMLChildNames(treeID, rootNode, CR, "outline", true) into childNodes
+    if childNodes is not empty then
+        repeat for each line childNode in childNodes
+            put rootNode & "/" & childNode into childRoot
+            get opml_RecurseOutlineNodes(treeID, childRoot)
+            put it & CR after newOutline
+        end repeat
+    end if
+    delete last char of newOutline
+    return newOutline
+end opml_RecurseOutlineNodes

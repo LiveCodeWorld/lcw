@@ -1,0 +1,17 @@
+function colour_BaseNames
+   put the the colornames into colourNames
+   repeat for each line colourName in colourNames
+      if last char of colourName is a number then next repeat
+      put text_SplitCaps(colourName) into colourWord
+      put colourWord & CR after colourWords
+   end repeat
+   delete last char of colourWords
+   -- sort colourWords by the number of words of each
+   sort colourWords by word -3 of each
+   sort colourWords by word -2 of each
+   sort colourWords by word -1 of each
+   
+   -- sort colourWords by the number of words of each
+   -- sort colourWords by last word of each
+   return colourWords
+end colour_BaseNames

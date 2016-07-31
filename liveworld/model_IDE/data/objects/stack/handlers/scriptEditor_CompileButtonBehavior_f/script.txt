@@ -1,0 +1,11 @@
+function scriptEditor_CompileButtonBehavior
+   if exists (stack "behavior_IdeCompileButton") then
+      put the name of stack "behavior_IdeCompileButton" into bObject
+      return bObject
+   else
+      -- this is the old way of doing things and is too fragile
+      breakpoint
+      put the long id of control id 1014 of stack "View|Menu|Button" into compileButtonBehavior
+      return revRuggedID (compileButtonBehavior)
+   end if
+end scriptEditor_CompileButtonBehavior

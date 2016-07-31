@@ -1,0 +1,5 @@
+on menu_ChangeStyleWithJavascript mTarget
+   put javascript_ConstructHideSiteOwner() into someJavascript
+   put the browser_Widget of mTarget into browserWidget
+   do someJavascript in browserWidget
+end menu_ChangeStyleWithJavascript

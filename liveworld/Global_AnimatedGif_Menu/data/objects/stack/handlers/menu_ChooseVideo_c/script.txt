@@ -1,0 +1,8 @@
+on menu_ChooseVideo
+   answer file "Choose a video"
+   put it into someFileName
+   if someFileName is empty then return empty
+   
+   set the filename of player 1 to someFileName
+   return someFileName
+end menu_ChooseVideo

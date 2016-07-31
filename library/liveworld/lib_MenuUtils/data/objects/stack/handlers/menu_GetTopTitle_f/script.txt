@@ -1,0 +1,5 @@
+function menu_GetTopTitle
+   global gTemp_ActiveMenuArray
+   put gTemp_ActiveMenuArray ["top"]["mTitlePath"] into mTopTitle
+   return mTopTitle
+end menu_GetTopTitle

@@ -1,0 +1,6 @@
+command project_SaveValue someKey, someValue, pProjectName
+   put project_FetchArray (pProjectName) into projectArray
+   put someValue into projectArray [someKey]
+   project_SaveArray projectArray, pProjectName
+   return projectArray
+end project_SaveValue

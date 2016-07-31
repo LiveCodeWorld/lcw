@@ -1,0 +1,6 @@
+function pref_FetchValue prefName, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put pref_FetchArray (pProjectName) into prefArray
+   put prefArray [prefName] into someValue
+   return someValue
+end pref_FetchValue

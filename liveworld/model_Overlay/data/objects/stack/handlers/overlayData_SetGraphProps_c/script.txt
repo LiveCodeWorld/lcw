@@ -1,0 +1,7 @@
+command overlayData_SetGraphProps @overlayData, propName, propValue
+   repeat for each key overlayName in overlayData
+      put overlayData [overlayName] into overlayArray
+      overlayArray_SetGraphProperty overlayArray, propName, propValue
+      put overlayArray into overlayData [overlayName]
+   end repeat
+end overlayData_SetGraphProps

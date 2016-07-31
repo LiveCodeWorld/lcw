@@ -1,0 +1,22 @@
+command script_CreateHashCard commitHash, someScript
+   put "revTemporaryScriptCards" into stackName
+   if exists (stack stackName) is false then
+      put the tempname & ".livecode" into someFile
+      create invisible stack stackName
+      set the filename of stack stackName to someFile
+   end if
+   
+   if exists (card commitHash of stack stackName) is false then
+      put the defaultstack into oDefault
+      set the defaultstack to stackName
+      create card commitHash
+      
+      if someScript is not empty then
+         set the script of card commitHash of stack stackName to someScript
+      end if
+      set the defaultstack to oDefault
+   else
+      set the script of card commitHash of stack stackName to someScript
+   end if
+   return the rugged_ID of card commitHash of stack stackName
+end script_CreateHashCard

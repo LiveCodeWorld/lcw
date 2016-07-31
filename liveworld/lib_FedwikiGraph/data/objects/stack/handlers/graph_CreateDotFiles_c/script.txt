@@ -1,0 +1,56 @@
+command graph_CreateDotFiles linkArray, pGraphStyle, pDotFile
+   -- simplified version of "overlayArray_CreateAndDisplayGraph"
+   -- creates all the dot and PNG and SVG files
+   if linkArray is not an array then return empty
+   linkArray_RemoveSelfLinks linkArray
+   if pGraphStyle is empty then put "hierarchical" into pGraphStyle
+   if pDotFile is empty then
+      put opn_Ask ("Choose a short file name for your dot file...", "bigdata.dot") into shortFile
+      put fedwiki_GetBigDataFolder() & shortFile into pDotFile
+   end if
+   set the cursor to watch
+   
+   local nodeLinkArray, nodeIdArray
+   linkArray_IdConstruct linkArray, nodeLinkArray, nodeIdArray
+   put linkArray_DotNodeLinks (nodeLinkArray) into linkSection
+   
+   put graph_ConstructHeader (pGraphStyle) into dotHeader
+   put graph_ConstructDefSection (nodeIdArray) into defSection
+   put graph_ConstructCluster (nodeIdArray, linkArray) into clusterSection
+   
+   put dot_TextFromSections (dotHeader, defSection, clusterSection, linkSection, graphTitle) into dotText
+   
+   dot_SaveTemporaryFile dotText, pDotFile
+   if pGraphStyle = "hierarchical" then dot_Flatten pDotFile, 9
+   
+   set the itemdelimiter to "."
+   --
+   put pDotFile into imageFile
+   put "png" into item -1 of imageFile
+   put pDotFile into svgFile
+   put "svg" into item -1 of svgFile
+   
+   shell_BashParamEscape pDotFile
+   put pGraphStyle into dotCommand
+   dot_NormalizeDotCommand dotCommand -- converts a graphStyle to a dotCommand
+   put dotCommand & space & pDotFile into someShell
+   
+   put space & "-Tsvg" after someShell
+   shell_BashParamEscape svgFile
+   put space & "-o" && svgFile after someShell
+   
+   put space & "-Tpng" after someShell
+   get imageFile
+   shell_BashParamEscape it
+   put space & "-o" && it after someShell
+   --
+   set the itemdelimiter to "."
+   
+   put shell (someShell) into gvResult
+   put the result into gvResult
+   if gvResult is empty then
+      return imageFile
+   else
+      return "error," && gvResult
+   end if
+end graph_CreateDotFiles

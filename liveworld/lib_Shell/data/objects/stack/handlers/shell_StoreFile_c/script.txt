@@ -1,0 +1,19 @@
+command shell_StoreFile sshUser, remoteDomain, fullPath, localFile, pSshKeyPath
+   -- scp ÐP 40050 Desktop/url.txt yatri@192.168.1.50:~/Desktop/url.txt
+   -- scp hierarchical.png root@178.62.43.72:~/.wiki/actual.world/pages/hierarchical.png
+   
+   shell_BashParamEscape localFile
+   shell_BashParamEscape fullPath
+   
+   put sshUser & "@" & remoteDomain & ":" & fullPath into scpDestination
+   put "scp"  into someShell
+   if pSshKeyPath is not empty then
+      shell_BashParamEscape pSshKeyPath
+      put space & "-i " && pSshKeyPath after someShell
+   end if
+   put space & localFile && scpDestination after someShell
+   
+   -- shell_RemoteExecute sshUser, remoteDomain, remoteCommand
+   put shell (someShell) into shellResult
+   return shellResult
+end shell_StoreFile

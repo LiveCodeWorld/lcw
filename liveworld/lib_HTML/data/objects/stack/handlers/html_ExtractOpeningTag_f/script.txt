@@ -1,0 +1,11 @@
+function html_ExtractOpeningTag tagName, someHtml
+    local tagContents -- not sure if it is still required
+    replace lineFeed with empty in someHtml -- seems neessary
+    
+    put "(<\s*" & tagName & "\s[^>]*>)" into someReg
+    if matchtext(someHtml, someReg, tagContents) is false then
+        return empty
+    else
+        return tagContents
+    end if
+end html_ExtractOpeningTag

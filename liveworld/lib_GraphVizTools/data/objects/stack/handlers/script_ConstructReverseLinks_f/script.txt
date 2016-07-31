@@ -1,0 +1,12 @@
+function script_ConstructReverseLinks hKeys, fromLink
+    local nodeLinks
+     
+    put script_ConstructNodeFromHkey(fromLink) into fromNode
+    repeat for each line hKey in hKeys
+        set the cursor to busy
+        put script_ConstructNodeFromHkey(hKey) into someNode
+        put fromNode && "->" && someNode & ";" & CR after nodeLinks
+    end repeat
+    delete last char of nodeLinks
+    return nodeLinks
+end script_ConstructReverseLinks

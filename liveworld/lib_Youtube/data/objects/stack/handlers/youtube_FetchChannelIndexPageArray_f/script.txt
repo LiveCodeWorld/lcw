@@ -1,0 +1,15 @@
+function youtube_FetchChannelIndexPageArray channelID, pDroppedURL
+   -- here the numbers of those found and indicated are all a bit different.
+   -- probably a bug in the paging
+   
+   put youtube_FetchAllSearchChannelArray (channelID) into allSearchChannelArray
+   -- put youtube_FetchSearchChannelArray (channelID) into searchChannelArray -- finds more items
+   -- put youtube_FetchChannelUploadPlayListArray (channelID) into allUploadArray
+   
+   -- allSearchChannelArray is not the same structure as a playListArray (but videoTitle is OK)
+   put youtube_FetchChannelArray (channelID) into channelArray   
+   deconstruct_ChannelArray channelArray, channelTitle, channelDescription, thumbnailURL, uploadsPlaylistID
+   put channelTitle && "Videos" into pageTitle
+   put construct_VideoIndexPageArray (allSearchChannelArray, pageTitle, pDirection, pNumbered, pDroppedURL) into pageArray
+   return pageArray
+end youtube_FetchChannelIndexPageArray

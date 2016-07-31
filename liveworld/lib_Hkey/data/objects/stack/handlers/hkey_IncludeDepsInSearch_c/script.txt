@@ -1,0 +1,8 @@
+command hkey_IncludeDepsInSearch someBoolean
+   global gOPN
+   put someBoolean into gOPN ["include_DependencyBehaviors"]
+   return someBoolean
+   
+   pref_SetValue "include_DependencyBehaviors", someBoolean
+   return the result
+end hkey_IncludeDepsInSearch

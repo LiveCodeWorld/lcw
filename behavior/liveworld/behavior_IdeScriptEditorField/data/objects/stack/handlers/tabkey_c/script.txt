@@ -1,0 +1,7 @@
+on tabkey
+   put the long id of me into scriptField
+   put the selectedText of scriptField into selText
+   if selText is empty then pass tabkey
+   scriptField_Tabkey selText, scriptField
+   pass tabkey
+end tabkey

@@ -1,0 +1,29 @@
+function sandbox_ConstructPageQueryFragment pageTitle, pSectionFormat, pIntroOnly
+   -- use parse like "sandbox_ConstructSectionFragment" instead?
+   -- /w/api.php?action=query&format=json&prop=extracts%7Ccategories%7Cpageprops%7Cinfo&titles=Therion&exintro=1&explaintext=1&exsectionformat=wiki
+   -- /w/api.php?action=query&format=json&prop=extracts%7Cinfo%7Cpageprops%7Cpageterms&continue=&titles=Trotsky&redirects=1&exintro=1&explaintext=1&exsectionformat=wiki
+   
+   -- /w/api.php?action=query&format=json
+   -- &prop=extracts%7Cinfo%7Cpageprops%7Cpageterms%7Ccoordinates
+   -- &titles=Alexanderplatz&redirects=1&exintro=1&explaintext=1&exsectionformat=wiki
+   -- &inprop=url%7Cdisplaytitle
+   
+   text_Utf8Encode pageTitle
+   put urlencode (pageTitle) into pageTitle
+   
+   if pSectionFormat is empty then put "plain" into pSectionFormat
+   put "/w/api.php?action=query" into sandBoxFragment
+   put "&prop=extracts|info|pageprops|pageterms|coordinates" after sandBoxFragment
+   put "|pageterms"  after sandBoxFragment
+   -- put "|categories" after sandBoxFragment
+   
+   if pIntroOnly is true then
+      put "&exintro=" & "1" after sandBoxFragment
+      put "&explaintext=&exsectionformat=" & pSectionFormat after sandBoxFragment
+   end if
+   put "&titles=" & pageTitle after sandBoxFragment
+   put "&inprop=url|displaytitle" after sandBoxFragment
+   put "&redirects" after sandBoxFragment
+   put "&format=json" after sandBoxFragment
+   return sandBoxFragment
+end sandbox_ConstructPageQueryFragment

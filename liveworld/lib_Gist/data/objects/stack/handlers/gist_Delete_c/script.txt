@@ -1,0 +1,8 @@
+command gist_Delete gistID
+   -- this is slow
+   -- DELETE /gists/:id
+   put "/gists/" & gistID into restPath
+   github_RestDelete restPath
+   put the result into someJSON
+   return someJSON
+end gist_Delete

@@ -1,0 +1,8 @@
+getprop field_WrappedText
+   put the formattedtext of the target into fText
+   repeat for each line someLine in fText
+      put word 1 to -1 of someLine & "\n" after nText
+   end repeat
+   delete char -2 to -1 of nText
+   return nText
+end field_WrappedText

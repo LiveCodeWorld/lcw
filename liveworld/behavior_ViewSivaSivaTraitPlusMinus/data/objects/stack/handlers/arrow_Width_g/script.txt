@@ -1,0 +1,13 @@
+getprop arrow_Width [innerHeight]
+   -- put innerHeight
+   switch
+      case innerHeight < 2000
+         return 1
+      case innerHeight < 250
+         return 2
+      case innerHeight < 400
+         return 3
+      default
+         return 4
+   end switch
+end arrow_Width

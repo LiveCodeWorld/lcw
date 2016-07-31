@@ -1,0 +1,25 @@
+private function addSuiteScripts suiteName, suiteScripts, oldObjectScript, scriptHierachy
+   -- not currently used ?
+   -- version addSuiteScripts 8.9
+   put getHandlerNames(oldObjectScript) into handlersToStrip
+   -- remove all handlers from suite that are in the objects script
+   put stripHandlersFromSuite(handlersToStrip, suiteScripts) into suiteScriptsToPaste
+   
+   if scriptHierachy <> empty then
+      repeat with ii = 1 to then number of lines of scriptHierachy
+         put line ii of scriptHierachy into scriptHierachyObject
+         put the script of scriptHierachyObject into usedObjectScript
+         put getHandlerNames(usedObjectScript) into handlersToStrip
+         -- remove all handlers from suite that are in the objects script
+         put stripHandlersFromSuite(handlersToStrip, suiteScriptsToPaste) into suiteScriptsToPaste
+      end repeat
+   end if
+   
+   -- don't overwrite suite script add them
+   put getScriptSection(suiteName, oldObjectScript) into oldSuiteScripts
+   if oldSuiteScripts <> empty then
+      put addHandlersToSuite(oldSuiteScripts, suiteScriptsToPaste) into suiteScriptsToPaste
+   end if
+   put replaceScriptSection(suiteName, oldPasteObjectScript, suiteScriptsToPaste) into newPasteObjectScripts
+   return newPasteObjectScripts
+end addSuiteScripts

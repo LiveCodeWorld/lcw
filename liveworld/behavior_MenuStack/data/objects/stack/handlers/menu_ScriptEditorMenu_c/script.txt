@@ -1,0 +1,18 @@
+on menu_ScriptEditorMenu treeView, menuChoice
+   menu_ClearPluginArray
+   
+   switch menuChoice
+      case "Default Script Editor Menus"
+         -- set the menu_Plugin of rev_ScriptEditorField() to "Global | Script | Editor | Menu"
+         -- set the menu_Plugin of rev_HandlerTreeField() to "Global | Handler | Menu"
+         menu_AddPlugin rev_ScriptEditorField(), "control", "Global | Script | Editor | Menu"
+         menu_AddPlugin rev_HandlerTreeField(), "control", "Global | Handler | Menu"
+         break
+      case "Test Script Editor Menu"
+         -- set the menu_Plugin of rev_ScriptEditorField() to "Global | Script | Editor | Test | Menu"
+         menu_AddPlugin rev_ScriptEditorField(), "control", "Global | Script | Editor | Test | Menu"
+         break
+   end switch
+   
+   opn_Notify merge ("Added the [[menuChoice]]!")
+end menu_ScriptEditorMenu

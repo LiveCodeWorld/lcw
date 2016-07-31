@@ -1,0 +1,5 @@
+getprop script_DotFile [pOverlayName]
+   put the long id of the target into scriptObject
+   put scriptObject_DotFile (scriptObject, pOverlayName) into scriptArrayFolder
+   return scriptArrayFolder
+end script_DotFile

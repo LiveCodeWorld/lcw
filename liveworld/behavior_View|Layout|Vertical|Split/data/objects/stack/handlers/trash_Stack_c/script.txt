@@ -1,0 +1,15 @@
+command trash_Stack stackObject
+   put shortStackFiles
+   put merge ("Would you like to move the [[stackObject]] to the trash?") into someComment
+   answer warning someComment with "OK" or "Cancel"
+   if it is "Cancel" then exit to top
+   
+   library_RemoveStackFromAllProjects stackObject
+   put the filename of stackObject into longStackFile
+   stop using stackObject
+   -- set the stack_IsUsed of stack longStackFile to false
+   set the stack_IsKnow of stack longStackFile to false
+   
+   delete stackObject
+   delete file longStackFile
+end trash_Stack

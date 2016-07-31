@@ -1,0 +1,7 @@
+on menu_ReplaceHeader someView, headerViewName
+   put the header_View of someView into headerView
+   set the control_Type of headerView to headerViewName
+   if the result is empty then
+      answer warning "Problem replacing the control!"
+   end if
+end menu_ReplaceHeader

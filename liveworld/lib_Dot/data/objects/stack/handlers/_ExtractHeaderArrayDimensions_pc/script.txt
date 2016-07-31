@@ -1,0 +1,11 @@
+private command _ExtractHeaderArrayDimensions headerArray, @graphWidth, @graphHeight
+   put headerArray ["bb"] into bb
+   if bb is empty then
+      put headerArray ["size"] into inchItems
+      put round(96 * item 1 of inchItems) into graphWidth
+      put round(96 * item 2 of inchItems) into graphHeight
+   else
+      put item 3 of bb into graphWidth
+      put item 4 of bb into graphHeight
+   end if
+end _ExtractHeaderArrayDimensions

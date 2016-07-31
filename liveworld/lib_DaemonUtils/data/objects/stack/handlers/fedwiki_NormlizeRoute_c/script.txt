@@ -1,0 +1,21 @@
+command fedwiki_NormlizeRoute @someRoute
+   switch someRoute
+      /*
+      case "/"
+         put "/view/welcome-visitors" into someRoute
+         break
+         */
+      case "/view/welcome-visitors.html"
+         put "/view/welcome-visitors" into someRoute
+         break
+      case "/welcome-visitors"
+         put "/view/welcome-visitors" into someRoute
+         break
+      case "/welcome-visitors.html"
+         put "/view/welcome-visitors" into someRoute
+         break
+      case "/"
+         put "/view/welcome-visitors" into someRoute
+         break
+   end switch
+end fedwiki_NormlizeRoute

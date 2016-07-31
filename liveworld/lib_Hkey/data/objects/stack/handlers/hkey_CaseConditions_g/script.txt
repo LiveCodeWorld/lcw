@@ -1,0 +1,5 @@
+getprop hkey_CaseConditions [shortHKey]
+   put the long id of the target into scriptObject
+   put hkey_GetCaseConditions (shortHKey, scriptObject) into caseConditions
+   return caseConditions
+end hkey_CaseConditions

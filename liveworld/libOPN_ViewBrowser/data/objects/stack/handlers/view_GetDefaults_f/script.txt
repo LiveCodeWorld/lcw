@@ -1,0 +1,4 @@
+function view_GetDefaults
+   put the mvc_Library of me into modelObject
+   return model_GetArrayKeys("DefaultView", modelObject, "array")
+end view_GetDefaults

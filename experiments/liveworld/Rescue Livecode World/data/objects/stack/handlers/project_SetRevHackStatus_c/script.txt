@@ -1,0 +1,7 @@
+command project_SetRevHackStatus someBoolean, pSetName
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   put library_FetchSetData() into librarySetData
+   put someBoolean is true into librarySetData [pSetName]["data"]["rev_AddBehaviorHacks"]
+   library_StoreSetData librarySetData
+   return librarySetData
+end project_SetRevHackStatus

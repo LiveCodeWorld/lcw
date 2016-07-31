@@ -1,0 +1,8 @@
+function known_ListRelativeStackFiles projectHomeFileName
+   set the cursor to watch
+   local stackFileArray
+   put spotlight_ListAllStacks() into longStackPaths
+   put folder_Above (projectHomeFileName) into baseFolder
+   stackFile_AddToArray stackFileArray, longStackPaths, baseFolder
+   return stackFileArray
+end known_ListRelativeStackFiles

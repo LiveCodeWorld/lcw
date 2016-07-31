@@ -1,0 +1,6 @@
+function overlayArray_Construct metadataArray, linkArray, pOverlayName
+   local overlayArray
+   overlayArray_SetMetadataArray overlayArray, metadataArray, pOverlayName
+   overlayArray_SetData overlayArray, linkArray
+   return overlayArray
+end overlayArray_Construct

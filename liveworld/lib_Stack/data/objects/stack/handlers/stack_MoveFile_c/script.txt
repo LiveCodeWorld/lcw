@@ -1,0 +1,8 @@
+command stack_MoveFile fromFile, toFile
+    breakpoint
+    if exists(the svn_Library of me) then
+        svn_Move fromFile, toFile
+    else
+        rename file fromFile to toFile
+    end if
+end stack_MoveFile

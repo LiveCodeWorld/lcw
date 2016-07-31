@@ -1,0 +1,7 @@
+on menu_SetTitleTextColour mTarget
+   answer color
+   if it is empty then exit to top
+   
+   put it into someColour
+   set the title_TextColour of mTarget to someColour
+end menu_SetTitleTextColour

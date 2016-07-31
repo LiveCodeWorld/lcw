@@ -1,0 +1,15 @@
+function outline_ToArray tabbedText
+    -- this could be done better with clever use of delimiters
+    -- itemdelim = CR and tab or funny char insead of CR
+    
+    local someArray
+    replace (CR & tab) with tab in tabbedText
+    set the itemdelimiter to tab
+    repeat for each line someLine in tabbedText
+        put item 1 of someLine into someKey
+        put item 2 to -1 of someLine into someValue
+        replace tab with CR in someValue
+        put someValue into someArray [someKey]
+    end repeat
+    return someArray
+end outline_ToArray

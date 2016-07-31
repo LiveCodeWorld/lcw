@@ -1,0 +1,38 @@
+function handler_PopularStemOutline
+   local tabbedOutline, stemArray
+   
+   put handler_GetIndexArray() into indexArray
+   put keys(indexArray) into handlerIndex
+   put handler_StemIndex(handlerIndex) into stemIndex
+   repeat for each line scriptStem in stemIndex
+      set the cursor to busy
+      put handlerIndex into filteredIndex
+      filter filteredIndex with (scriptStem & "_*")
+      sort filteredIndex
+      put word 1 to -1 of filteredIndex into filteredIndex
+      put the number of lines of filteredIndex into popularNum
+      
+      put filteredIndex into stemArray [scriptStem]
+      put popularNum & comma & scriptStem & CR after scriptStemTable
+   end repeat
+   delete char -1 of scriptStemTable
+   
+   sort numeric descending scriptStemTable by item 1 of each
+   repeat for each line tableLine in scriptStemTable
+      put item 1 of tableLine into popularNum
+      put item 2 of tableLine into scriptStem
+      put stemArray [scriptStem] into filteredIndex
+      sort filteredIndex
+      
+      put scriptStem && "(" & popularNum & ")" & CR after tabbedOutline
+      -- put scriptStem & CR after tabbedOutline
+      repeat for each line filteredHandler in filteredIndex
+         put indexArray [filteredHandler] into hKey
+         put html_ConstructNameLink(filteredHandler, hKey) into handlerLink
+         put tab & handlerLink & CR after tabbedOutline
+      end repeat
+   end repeat
+   
+   delete char -1 of tabbedOutline
+   return tabbedOutline
+end handler_PopularStemOutline

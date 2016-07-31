@@ -1,0 +1,15 @@
+on menu_TestTemplate
+   put LocalArray ["selectedStackObject"] into selectedViewStackObject
+   put the view_Template of cd 1 of selectedStackObject into templateObject
+   if exists (templateObject) is false then
+      put the long id of control 1 of cd 1 of selectedStackObject into templateObject
+   end if
+   put the view_Name of templateObject into vName
+   if vName is empty then
+      answer warning merge ("I cannot find the view template for [[selectedStackObject]]!")
+      exit to top
+   end if
+   
+   put view_GetTemplateObject (vName)
+   answer "Great - everything looks OK. here is teh controller..."
+end menu_TestTemplate

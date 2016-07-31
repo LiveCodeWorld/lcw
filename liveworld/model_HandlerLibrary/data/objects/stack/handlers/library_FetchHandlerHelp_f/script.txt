@@ -1,0 +1,8 @@
+function library_FetchHandlerHelp shortHkey
+   -- should not create a folder if there is no help
+   put library_HandlerFile (shortHkey, "help.html", true) into someFile
+   if someFile is empty then return empty
+   put url ("binfile:" & someFile) into someHelp
+   hack_UpdateBinFile someHelp, someFile -- hack for old binary file endings?
+   return someHelp
+end library_FetchHandlerHelp

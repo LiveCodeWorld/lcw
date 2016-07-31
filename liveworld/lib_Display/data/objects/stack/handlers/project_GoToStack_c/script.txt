@@ -1,0 +1,15 @@
+command project_GoToStack targetObject, stackName
+   if exists (stack stackName) is false then
+      put stackName
+      project_RemoveOpenStack stackName
+      display_LoadedStacks
+      answer warning merge ("Cannot locate stack '[[stackName]]'")
+      exit to top
+   end if
+   
+   if the scriptonly of stack stackName is true then
+      edit the script of stack stackName
+   else
+      go to stack stackName
+   end if
+end project_GoToStack

@@ -1,0 +1,5 @@
+command menu_SetGlobalArray gMenuHkeyArray
+   global gHkey_Array
+   put gMenuHkeyArray into gHkey_Array ["Global Menus"]
+   return gHkey_Array ["Global Menus"]
+end menu_SetGlobalArray

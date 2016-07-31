@@ -1,0 +1,9 @@
+function rect_FitToHeight originalW, originalH, targetRect
+    rect_ExtractDimensions targetRect, someW, newH
+    
+    put newH / originalH into sFactor
+    put round (originalW * sFactor) into newW
+    put rect_GetCentre (targetRect) into targetLoc
+    put rect_LocWidthHeight (targetLoc, newW, newH) into newRect
+    return newRect
+end rect_FitToHeight

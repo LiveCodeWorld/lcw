@@ -1,0 +1,12 @@
+on preOpenStack
+   -- bug:  revSaving sends openStack and preOpenStack is sent every time any stack is saved ???
+   -- should be sent to the first card of this stack
+   -- but targetStackName is "revSaving" 
+   put the short name of the defaultstack into targetStackName -- same as the stack_Name
+   put the short name of me into myName
+   if targetStackName is not myName then
+      pass preOpenStack
+   else
+      start using me
+   end if
+end preOpenStack

@@ -1,0 +1,12 @@
+on outline_SetSectionOffsets someTitle, tabbedOutline @startLineNum, @lastLineNum
+    put outline_LineOffset (someTitle, tabbedOutline) into startLineNum
+    put outline_NextSameLevel (startLineNum, tabbedOutline) into lastLineNum
+    if lastLineNum = 0 then
+        put 0 into lastLineNum
+        return empty
+    end if
+    put the number of lines of tabbedOutline into maxLineNum
+    if lastLineNum is not maxLineNum then
+        subtract 1 from lastLineNum
+    end if
+end outline_SetSectionOffsets

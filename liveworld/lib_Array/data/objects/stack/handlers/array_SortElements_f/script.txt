@@ -1,0 +1,10 @@
+function array_SortElements someArray, @arrayKeys
+    put keys(someArray) into arrayKeys
+    sort arrayKeys
+    put empty into arrayElements
+    repeat for each line someKey in arrayKeys
+        put someArray[someKey] & return after arrayElements
+    end repeat
+    delete last char of arrayElements
+    return arrayElements
+end array_SortElements

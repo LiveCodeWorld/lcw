@@ -1,0 +1,20 @@
+function menu_GetItemTargetOveride sentMenuItemPath
+   -- search for exact match in each item of path
+   -- will return empty if match does not exist perhaps because stack is not known.
+   global gTemp_ActiveMenuArray
+   
+   -- if the overide is an exact path return any match immediately
+   put gTemp_ActiveMenuArray ["overide"]["mItem"][sentMenuItemPath]["mTarget"] into mItemTarget
+   if exists(mItemTarget) then return mItemTarget
+   
+   -- faster to search through any stored overides
+   put gTemp_ActiveMenuArray ["overide"]["mItem"] into itemMatchArray
+   set the itemdelimiter to "/"
+   repeat for each key mItemToMatch in itemMatchArray
+      if mItemToMatch is among the items of sentMenuItemPath then
+         put itemMatchArray [mItemToMatch]["mTarget"] into mItemTarget
+         if exists(mItemTarget) then return mItemTarget
+      end if
+   end repeat
+   return empty
+end menu_GetItemTargetOveride

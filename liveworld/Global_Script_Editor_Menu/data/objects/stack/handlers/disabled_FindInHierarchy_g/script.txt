@@ -1,0 +1,16 @@
+getprop disabled_FindInHierarchy [mTarget]
+   -- put the long id of the clickfield into scriptField
+   put rev_ScriptEditorField() into scriptField
+   if exists(scriptField) is false then return empty
+   put the selectedtext of scriptField into someToken
+   if someToken is empty then return "delete"
+   
+   if script_DictionaryTerm(someToken) is true then
+      -- return "true"
+      return "delete"
+   else
+      put hkey_GetSelected (scriptField) into hKey
+      set the search_Hkey of me to hKey
+      return false
+   end if
+end disabled_FindInHierarchy

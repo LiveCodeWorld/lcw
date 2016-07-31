@@ -1,0 +1,6 @@
+command github_CreateIssue repoOwner, someRepo, postJSON
+   -- POST /repos/:owner/:repo/issues
+   put _issueCommandPath (repoOwner, someRepo, "issues") into restPath
+   github_RestPost restPath, postJSON
+   return the result
+end github_CreateIssue

@@ -1,0 +1,6 @@
+getprop menu_ScriptTitles
+   put the long id of the target into mController
+   put the script of mController into someScript
+   put script_ExtractMenuSuiteTitles (someScript) into scriptMenuTitles
+   return scriptMenuTitles
+end menu_ScriptTitles

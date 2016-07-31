@@ -1,0 +1,5 @@
+getprop git_CheckoutFolder
+   put the mainstack_File of the target  into objectFile
+   put git_GetCheckoutFolder (objectFile) into repoRootFolder
+   return repoRootFolder
+end git_CheckoutFolder

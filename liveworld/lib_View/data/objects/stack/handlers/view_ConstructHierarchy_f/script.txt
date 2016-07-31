@@ -1,0 +1,22 @@
+function view_ConstructHierarchy targetObject
+   -- ignoreCall: view_Object,g
+   local groupHierarchy
+   repeat
+      if word 1 of targetObject is "card" then
+         -- background groups can cause infinite loops
+         -- so have to stop hierarchy check at the card level
+         -- which means this will not work for views etc which are at the card level or above!
+         return word 1 to -1 of groupHierarchy
+      else
+         put the view_Object of targetObject into someView
+         if someView is empty then return word 1 to -1 of groupHierarchy
+         
+         put someView & CR before groupHierarchy
+         
+         put someView into targetObject
+         delete word 1 to 4 of targetObject
+         if targetObject is empty then return word 1 to -1 of groupHierarchy
+      end if
+   end repeat
+   return groupHierarchy
+end view_ConstructHierarchy

@@ -1,0 +1,13 @@
+function library_ListTempGlobals
+   get the globals
+   replace comma with CR in it
+   
+   filter it without "gREV*"
+   filter it without "$*"
+   line_Delete "each", it
+   line_Delete "msg", it
+   
+   filter it without "gOPN*"
+   filter it without "gPrefs_*"
+   return it
+end library_ListTempGlobals

@@ -1,0 +1,11 @@
+command trait_SetText
+   put the long id of card "Text" into textCard
+   put the text_View of textCard into textView
+   put the plusMinus_View of cd 3 into plusMinusView
+   
+   put the trait_Description of plusMinusView into traitDescription
+   put the trait_Quote of plusMinusView into traitQuote
+   
+   put traitDescription & "<p><p><b>Quote</b><p><p>" & traitQuote into someText
+   set the htmltext of textView to someText
+end trait_SetText

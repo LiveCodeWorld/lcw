@@ -1,0 +1,7 @@
+setprop urip_Version someVersion
+   -- this also indexes using "object_AddToGlobalArray"
+   -- was "object_Version"
+   set the object_MetaData ["version"] of the target to objectType
+   put the result into uRipArray
+   return uRipArray
+end urip_Version

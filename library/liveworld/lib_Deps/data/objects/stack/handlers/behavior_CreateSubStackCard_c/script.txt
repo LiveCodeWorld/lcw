@@ -1,0 +1,24 @@
+command behavior_CreateSubStackCard someObject
+   put the menu_SubStack of someObject into menuSubStack
+   switch
+      case exists (menuSubStack) is false
+         stack_CreateSubStack someObject, "OPN Stack Menus"
+         put the result into menuSubStack
+         set the name of cd 1 of menuSubStack to "Behaviors"
+         return the long id of cd 1 of menuSubStack
+      case there is a card "Behaviors" of menuSubStack
+         return the long id of cd "Behaviors" of menuSubStack
+      default
+         -- stack exists but there is no named behavior card
+         if word 1 to 2 of the short name of cd 1 of menuSubStack = "card id" then
+            set the name of cd 1 of menuSubStack to "Behaviors"
+            return the long id of cd 1 of menuSubStack
+         else
+            put the defaultstack into oDefault
+            set the defaultstack to menuSubStack
+            create card "Behaviors"
+            set the defaultstack to oDefault
+            return the long id of cd "Behaviors" of menuSubStack
+         end if
+   end switch
+end behavior_CreateSubStackCard

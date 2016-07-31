@@ -1,0 +1,9 @@
+function linkArray_ConstructClusterDefs clusterArray, pGraphController
+   -- cloned from "hKeyArray_DotNestedObjectClusters"
+   -- needs a recursive function to turn a nested array into a nested cluster def in dot
+   
+   return empty
+   
+   put array_ToXml 
+   return clusterDefs
+end linkArray_ConstructClusterDefs

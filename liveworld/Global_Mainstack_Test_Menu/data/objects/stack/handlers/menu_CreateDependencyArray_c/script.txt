@@ -1,0 +1,7 @@
+on menu_CreateDependencyArray scriptObject   
+   -- as we have no way right now of checking that this is up to date
+   deps_SaveMainstackAndExportArrays scriptObject
+   deps_ConstructDependencyArray scriptObject, true
+   put the result into hKeyArray
+   display_Array hKeyArray, scriptObject
+end menu_CreateDependencyArray

@@ -1,0 +1,16 @@
+function library_GetObject libName, libType, pSetName
+   if pSetName is empty then
+      put library_GetTypeArray (libType) into ruggedArray
+   else
+      put library_FetchObjectTypeArray (libType, pSetName) into ruggedArray
+   end if
+   repeat for each key rObject in ruggedArray
+      if exists (rObject) is false then opn_Notify (rObject && "does not exist!")
+      
+      put hArray_GetUripArray (rObject, "name") into vName
+      if vName = libName then
+         return rObject
+      end if
+   end repeat
+   return empty
+end library_GetObject

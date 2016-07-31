@@ -1,0 +1,7 @@
+getprop known_StackfileArray
+   put the project_HomeStack of the target into projectHomeStack
+   project_GuessHomeStack projectHomeStack
+   put the filename of projectHomeStack into projectHomeFileName
+   put known_ListRelativeStackFiles (projectHomeFileName) into projectStackFileArray
+   return projectStackFileArray
+end known_StackfileArray

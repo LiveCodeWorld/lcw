@@ -1,0 +1,9 @@
+private function _normalizeSocket socketorRequestArray
+   -- sends output back to the browser
+   if socketorRequestArray is an array then
+      put socketorRequestArray ["socketID"] into socketID
+   else
+      put socketorRequestArray into socketID
+   end if
+   return socketID
+end _normalizeSocket

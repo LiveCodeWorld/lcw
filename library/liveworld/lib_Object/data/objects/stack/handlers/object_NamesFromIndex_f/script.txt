@@ -1,0 +1,12 @@
+function object_NamesFromIndex objectIndex, @index_Array, pathStem
+   put empty into objectNames
+   repeat for each line someObject in objectIndex
+      if exists(someObject) then
+         put the name of someObject into someName
+         put someObject into index_Array[pathStem & someName]
+         put someName & return after objectNames
+      end if
+   end repeat
+   delete last char of objectNames
+   return objectNames
+end object_NamesFromIndex

@@ -1,0 +1,4 @@
+function httpd_RecentLog
+    get shell("tail /var/log/system.log")
+    return it
+end httpd_RecentLog

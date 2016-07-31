@@ -1,0 +1,8 @@
+function hkey_ConstructShortKeyArray hKeys
+   repeat for each line hKey in hKeys
+      hkey_Deconstruct hKey, hName, hType, hObject, hNum
+      put hName,hType into shortHkey
+      put empty into shortHkeyArray [shortHkey][hKey]
+   end repeat
+   return shortHkeyArray
+end hkey_ConstructShortKeyArray

@@ -1,0 +1,6 @@
+command mainStack_StoreManifestArray textStackFolder, manifestArray
+   put mainstack_GetManifestArrayFile (textStackFolder, false) into someFile
+   put arrayEncode (manifestArray) into encodedArray
+   put encodedArray into url ("binfile:" & someFile)
+   return someFile
+end mainStack_StoreManifestArray

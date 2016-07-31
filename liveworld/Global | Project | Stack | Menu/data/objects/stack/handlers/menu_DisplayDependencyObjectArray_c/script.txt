@@ -1,0 +1,4 @@
+on menu_DisplayDependencyObjectArray stackObject
+   put the project_DependencyStackArray of stackObject into depObjectArray
+   display_Array depObjectArray
+end menu_DisplayDependencyObjectArray

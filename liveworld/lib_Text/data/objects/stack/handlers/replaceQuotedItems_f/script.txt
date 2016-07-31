@@ -1,0 +1,18 @@
+function replaceQuotedItems someList
+    put "¥|comma|¥" into opfSafeComma
+    repeat
+        get whereIsText(quote, quote, someList)
+        if it is "Not Found" then
+            exit repeat
+        else
+            put item 1 of it into startChar
+            put item 2 of it into endChar
+            put char startChar to endChar of somelist into quotedItem
+            put replaceAll(",", quotedItem, opfSafeComma) into safeItem
+            if char 1 of safeItem is quote then delete char 1 of safeItem
+            if last char of safeItem is quote then delete last char of safeItem
+            put safeItem into char startChar to endChar of someList
+        end if
+    end repeat
+    return someList
+end replaceQuotedItems

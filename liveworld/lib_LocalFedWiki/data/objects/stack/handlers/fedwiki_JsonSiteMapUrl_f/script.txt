@@ -1,0 +1,5 @@
+function fedwiki_JsonSiteMapUrl fedwikiDomain
+   --   http://wikimedia.commons.academy/system/sitemap.json
+   put "http://" & fedwikiDomain & "/system/sitemap.json" into someUrl
+   return someUrl
+end fedwiki_JsonSiteMapUrl

@@ -1,0 +1,15 @@
+function script_MergeLines mergeScript, handlerTable
+   -- put merge (mergeScript) into remergedScript -- not safe when mergeScript contains odd chars?
+   sort numeric ascending handlerTable by word 3 of each
+   
+   repeat for each line handlerTableLine in handlerTable
+      put word 1 of handlerTableLine into hType
+      put word 2 of handlerTableLine into hName
+      put word 3 of handlerTableLine into startLineNum
+      put word 4 of handlerTableLine into endLineNum
+      
+      put library_FetchHandler (hName, hType) into someHandler
+      put someHandler into line startLineNum of mergeScript
+   end repeat
+   return mergeScript
+end script_MergeLines

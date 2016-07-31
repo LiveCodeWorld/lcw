@@ -1,0 +1,18 @@
+function hap_ConstructUrls shortFoundHtmlFiles
+   put cHapRoot into urlStem
+   repeat for each line shortFile in shortFoundHtmlFiles
+      set the itemdelimiter to "/"
+      if item -1 of shortFile is among the items of "index.html/index.xml" then
+         delete item -1 of shortFile
+      else
+         set the itemdelimiter to "."
+         if item -1 of shortFile is among the items of "html.xml.htm" then
+            delete item -1 of shortFile
+         end if
+      end if
+      
+      put urlStem & shortFile & CR after someURLs
+   end repeat
+   delete char -1 of someURLs
+   return someURLs
+end hap_ConstructUrls

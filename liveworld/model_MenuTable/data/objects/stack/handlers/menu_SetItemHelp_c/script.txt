@@ -1,0 +1,5 @@
+command menu_SetItemHelp hName, mController, someHtml
+   put the menu_Array of mController into mArray
+   put someHtml into mArray [mTitle]["metadata"]["help"]["menu item"][hName]
+   set the menu_Array of mController to mArray
+end menu_SetItemHelp

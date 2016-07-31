@@ -1,0 +1,22 @@
+on hiliteChanged
+   put the hilitedItemName of the target into hName
+   switch hName
+      case "cytoscape"
+         browser_Show true, "http://livecode.world/graphs/graph.html"
+         break
+      case "book"
+         browser_Show true, "http://dev.himalayan.academy/"
+         break
+      case "text"
+         browser_Show false
+         break
+      case "map"
+         browser_Show true, "http://livecode.world/graphviz.html"
+         break
+      case "help"
+         browser_Show true, "http://sivasiva.himalayan.academy/"
+         break
+      default
+         put hName
+   end switch
+end hiliteChanged

@@ -1,0 +1,81 @@
+command objectArray_AddClonedBackgroundToCard someObject, abbreviatedID, @stackArray, cardObject
+   -- not tidying first long entry in manifest, as create scripts can create it using that
+   -- only second and later cases need to use a pointer to place a background
+   -- could tidy this at the very end, as info is stored with background section
+   
+   local bgManifestArray, bgObjectsArray
+   
+   -- let's check to see if it has already been added
+   put 1 into newBgNum
+   repeat for each element bgArray in stackArray ["manifest"]["backgrounds"]
+      if abbreviatedID = bgArray ["object"] then return empty -- already indexed
+      add 1 to newBgNum
+   end repeat
+   
+   -- let's add it
+   -- don't now max number of duplicated background objects until end
+   -- so problem with scenario of only one bg for xml reconversion comaptability of key naming
+   -- as there should be a line "if maxBgNum = 1 then put "bg" into bgArrayKey
+   -- have to fix at end of stack parsing
+   put "bg[" & newBgNum & "]" into bgArrayKey 
+   
+   -- if it is not on a card and a group then get an error (need bg not group)
+   put abbreviatedID into stackArray ["manifest"]["backgrounds"][bgArrayKey]["object"]
+   put newBgNum into stackArray ["manifest"]["backgrounds"][bgArrayKey]["bg_num"] -- hope it is the same as bg someNum of stack (ie not layer on card)
+   
+   -- just for readability
+   put the short name of someObject into objectName
+   put objectName into stackArray ["manifest"]["backgrounds"][bgArrayKey]["name"]
+   
+   put the number of controls in someObject into maxNum
+   put 1 into controlNum
+   put empty into variableElements
+   repeat maxNum
+      set the cursor to busy
+      if maxNum = 1 then
+         put "control" into controlArrayKey -- to be equivalent to xml import script
+      else
+         put "control[" & controlNum & "]" into controlArrayKey
+      end if
+      put the long id of control controlNum of someObject into nestedObject
+      
+      put the abbreviated id of nestedObject into aNestedObject
+      put aNestedObject into stackArray ["manifest"]["backgrounds"][bgArrayKey]["controls"][controlArrayKey]["object"]
+      put controlNum into stackArray ["manifest"]["backgrounds"][bgArrayKey]["controls"][controlArrayKey]["group_layer"] -- not same as card layer - control gLayer of group x
+      
+      -- just for readability
+      put the short name of nestedObject into objectName
+      put objectName into stackArray ["manifest"]["backgrounds"][bgArrayKey]["controls"][controlArrayKey]["name"]
+      
+      put objectsArray [aNestedObject] into indexedObjectPropArray
+      if indexedObjectPropArray is an array then
+         breakPoint --- should be impossible as it is not a toplevel background
+         -- it is a background that has already been indexed (even if the backgroundbehavior is false!)
+         put the number of controls of nestedObject into skipNum
+         add skipNum to controlNum
+      else
+         put the abbreviated id of the owner of nestedObject into abbreviatedOwner
+         put abbreviatedOwner into stackArray ["manifest"]["backgrounds"][bgArrayKey]["controls"][controlArrayKey]["owner"]
+      end if
+      
+      switch word 1 of aNestedObject
+         case "field"
+            if the sharedText of nestedObject is false then
+               put aNestedObject && "of" && the abbreviated id of cardObject & CR after variableElements
+            end if
+            break
+         case "button"
+            if the sharedHilite of nestedObject is false then
+               put aNestedObject && "of" && the abbreviated id of cardObject & CR after variableElements
+            end if
+            break
+      end switch
+      
+      add 1 to controlNum
+      if controlNum > maxNum then exit repeat
+   end repeat
+   delete char -1 of variableElements
+   put variableElements into stackArray ["manifest"]["backgrounds"][bgArrayKey]["variable_elements"]
+   
+   return newBgNum
+end objectArray_AddClonedBackgroundToCard

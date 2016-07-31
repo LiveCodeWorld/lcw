@@ -1,0 +1,6 @@
+function ccc_FetchData videoPageURL
+   put html_FetchTidy (videoPageURL) into tidyXML
+   put ccc_ExtractData (tidyXML) into cccArray
+   put videoPageURL into cccArray ["ccctvURL"]
+   return cccArray
+end ccc_FetchData

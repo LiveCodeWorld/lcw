@@ -1,0 +1,6 @@
+on menu_EditViewTemplate mTarget
+   put the view_Template of mTarget into templateObject
+   object_GoTo templateObject
+   put the behavior of templateObject into templateBehavior
+   if exists(templateBehavior) then edit the script of templateBehavior
+end menu_EditViewTemplate

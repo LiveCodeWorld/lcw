@@ -1,0 +1,4 @@
+function hArray_ListObjectNamesOfType objectType
+   put hArray_ConstructNameObjectArray (objectType) into nameObjectArray
+   return keys (nameObjectArray)
+end hArray_ListObjectNamesOfType

@@ -1,0 +1,5 @@
+function script_GetGlobalModelObject modelName
+    put script_ExtractGlobalSuiteArray("Model") into dataArray
+    put dataArray [modelName] into someObject
+    return someObject
+end script_GetGlobalModelObject

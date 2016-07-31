@@ -1,0 +1,20 @@
+command terminal_Diff thisText, lastText, pThisShortFile, pLastShortFile
+   if pThisShortFile is empty then put "this.txt" into pThisShortFile
+   if pLastShortFile is empty then put "last.txt" into pLastShortFile
+   
+   put specialfolderpath ("Desktop") into desktopFolder
+   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
+   folder_CreateNested compareFolder
+   
+   put compareFolder & pThisShortFile into thisFile
+   put compareFolder & pLastShortFile into lastFile
+   
+   diff_CreateTempFile thisText, pThisShortFile
+   put the result into thisFile
+   
+   diff_CreateTempFile lastText, pLastShortFile
+   put the result into lastFile
+   
+   diff_Files thisFile, lastFile
+   return the result
+end terminal_Diff

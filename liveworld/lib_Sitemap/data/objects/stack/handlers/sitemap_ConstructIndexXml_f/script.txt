@@ -1,0 +1,16 @@
+function sitemap_ConstructIndexXml siteMapUrls, pMakePretty
+   put pMakePretty is not false into pIndent
+   put date_ConstructWc3Datetime (the seconds) into dateNow
+   repeat for each line someUrl in siteMapUrls
+      put empty into someXML
+      put xml_Enclose (someUrl, "loc", pIndent) after someXML
+      put CR after someXML
+      put xml_Enclose (dateNow, "lastmod", false) after someXML
+      put CR after someXML
+      put xml_Enclose (someXML, "sitemap", pIndent) into siteXML
+      put siteXML & CR after sitesXML
+   end repeat
+   put xml_Enclose (sitesXML, "sitemapindex", pIndent, "xmlns", cXMLNS) into someXML
+   xml_AddHeaderLine someXml, "1.0", "UTF-8"
+   return someXML
+end sitemap_ConstructIndexXml

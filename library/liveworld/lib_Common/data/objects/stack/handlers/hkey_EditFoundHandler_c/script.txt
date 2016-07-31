@@ -1,0 +1,40 @@
+command hkey_EditFoundHandler hkey
+   lock screen
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then
+      breakPoint  -- should search?
+      if hObject = "Missing" then exit to top
+      hArray_RemoveObject hObject
+      exit to top
+   end if
+   
+   put rev_ScriptEditorIsOpen() into wasAlreadyOpen
+   if wasAlreadyOpen is true then
+      rev_ActivateScriptEditorTab hObject
+      if the result is false then
+         edit the script of hObject
+      end if
+   else
+      edit the script of hObject
+      wait 5 ticks
+   end if
+   
+   -- put rev_GetSelectedHandlerTreeLineNum (hkey) into revHandlerTreeLineNum
+   put the revAvailableHandlers of hObject into handlerTable
+   script_HandlerTableOffsets hkey, handlerTable, startLineNum, endLineNum, revHandlerTreeLineNum
+   if the result is false then
+      breakpoint
+      return false
+   end if
+   
+   rev_SetSelectedHandlerTreeLineNum revHandlerTreeLineNum
+   
+   -- put rev_ScriptEditorField() into editorField
+   -- field_ScrollToLine startLineNum, editorField
+   -- set the hilitedline of editorField to startLineNum
+   -- select line startLineNum to endLineNum of editorField
+   
+   unlock screen
+   -- opn_Notify revHandlerTreeLineNum, true
+   return true
+end hkey_EditFoundHandler

@@ -1,0 +1,14 @@
+function stack_ConstructFolderBit someObject
+   local mainStackStart, mainStackEnd, substackStart, substackEnd
+   
+   object_StackNameOffsets someObject, mainStackStart, mainStackEnd, substackStart, substackEnd
+   put char mainStackStart to mainStackEnd of someObject into longStackName
+   put the short name of stack longStackName into mainStackName
+   put char substackStart to substackEnd of someObject into subStackName
+   
+   put mainStackName & "/" into objectPath
+   if subStackName is not empty then
+      put "substacks/" & subStackName & "/" after objectPath
+   end if
+   return objectPath
+end stack_ConstructFolderBit

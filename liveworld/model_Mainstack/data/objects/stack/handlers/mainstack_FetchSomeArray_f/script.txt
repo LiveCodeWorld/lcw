@@ -1,0 +1,4 @@
+function mainstack_FetchSomeArray mainStackFolder, someKey
+   put mainstack_FetchWalkArray (mainStackFolder) into walkArray
+   return walkArray [someKey]
+end mainstack_FetchSomeArray

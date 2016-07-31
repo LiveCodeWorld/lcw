@@ -1,0 +1,5 @@
+setprop object_Version someVersion
+   set the object_MetaData ["version"] of the target to objectType
+   put the result into uRipArray
+   return uRipArray
+end object_Version

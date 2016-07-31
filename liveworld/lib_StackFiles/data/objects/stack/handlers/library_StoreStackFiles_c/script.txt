@@ -1,0 +1,5 @@
+command library_StoreStackFiles stackFileTable, pSetName
+   put library_FetchSetArray (pSetName) into setArray
+   put stackFileTable into setArray ["data"]["stackfiles"]
+   library_StoreSetArray setArray, pSetName
+end library_StoreStackFiles

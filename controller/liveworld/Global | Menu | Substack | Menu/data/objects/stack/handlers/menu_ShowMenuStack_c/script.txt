@@ -1,0 +1,12 @@
+on menu_ShowMenuStack scriptObject, someBoolean
+   put rev_ScriptObject() into mController
+   put the menu_SubStack of mController into subStackObject
+   if exists (subStackObject) then
+      set the visible of subStackObject to someBoolean
+      if someBoolean is true then
+         go to subStackObject
+      end if
+   else
+      beep
+   end if
+end menu_ShowMenuStack

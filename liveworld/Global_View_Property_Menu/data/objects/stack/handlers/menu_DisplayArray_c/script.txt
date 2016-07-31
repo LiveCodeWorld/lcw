@@ -1,0 +1,28 @@
+on menu_DisplayArray someView, menuChoice
+   switch menuChoice
+      case "template_Array"
+         put the template_Array of someView into someArray
+         break
+      case "view_DisplayedStyleArray"
+         put the view_DisplayedStyleArray of someView into someArray
+         break
+      case "view_RevPropertyArray"
+         put the view_RevPropArray of someView into someArray
+         break
+   end switch
+   
+   if someArray is not an array then
+      beep
+      opn_Notify "Array is empty!", true
+      return false
+   end if
+   
+   
+   display_Array someArray, menuChoice
+   put the result into treeView
+   put the tree_Field of treeView into treeField
+   
+   put the object_Hkey ["tree_BackspaceKey,c"] of me into hKey
+   set the event_Trigger ["backspaceKey"] of treeField to hKey
+   set the linked_View of treeField to someView
+end menu_DisplayArray

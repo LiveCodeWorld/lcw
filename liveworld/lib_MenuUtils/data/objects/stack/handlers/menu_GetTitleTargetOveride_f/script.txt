@@ -1,0 +1,18 @@
+function menu_GetTitleTargetOveride sentTitlePath
+   global gTemp_ActiveMenuArray
+   set the itemdelimiter to "/"
+   
+   -- if the overide is an exact path return any match immediately
+   put gTemp_ActiveMenuArray ["overide"]["mTitle"][sentTitlePath]["mTarget"] into mTitleTarget
+   if exists (mTitleTarget) then return mTitleTarget
+   
+   -- faster to search through any stored overides (as they are rare)
+   put gTemp_ActiveMenuArray ["overide"]["mTitle"] into titleMatchArray
+   repeat for each key mTitleToMatch in titleMatchArray
+      if mTitleToMatch is among the items of sentTitlePath then
+         put titleMatchArray [mTitleToMatch]["mTarget"] into mTitleTarget
+         if exists (mTitleTarget) then return mTitleTarget
+      end if
+   end repeat
+   return empty
+end menu_GetTitleTargetOveride

@@ -1,0 +1,5 @@
+getprop menu_DataArray
+   put the long id of the target into mController
+   put menu_GetDataArray (mController) into mDataArray
+   return mDataArray
+end menu_DataArray

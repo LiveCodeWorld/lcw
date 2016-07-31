@@ -1,0 +1,5 @@
+function project_ListStandardScriptOnlyFiles
+   put project_ListStandardFiles() into longFiles
+   filter longFiles with "*.livecodescript"
+   return longFiles
+end project_ListStandardScriptOnlyFiles

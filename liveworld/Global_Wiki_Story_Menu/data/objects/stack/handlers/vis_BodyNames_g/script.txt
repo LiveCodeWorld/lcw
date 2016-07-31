@@ -1,0 +1,6 @@
+getprop vis_BodyNames [mTarget]
+   put the wiki_View of mTarget into wikiView
+   put the body_View of wikiView into bodyView
+   put the visible_Names of bodyView into visBodyNames
+   return visBodyNames
+end vis_BodyNames

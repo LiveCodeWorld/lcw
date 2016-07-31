@@ -1,0 +1,12 @@
+command rect_CreateMask someRect, someName, targetObject, pColour
+   local someScript, insideID, createInvisible
+   put the defaultstack into oDefault
+   if exists(targetObject) then
+      set the defaultstack to the stack_Object of targetObject
+   end if
+   
+   rect_CreateTestButton someRect, someName, someScript, insideID, pColour, createInvisible
+   put the result into createdButton
+   set the defaultstack to oDefault
+   return createdButton
+end rect_CreateMask

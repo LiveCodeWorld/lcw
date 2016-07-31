@@ -1,0 +1,10 @@
+function hArray_GetNamedObjectType viewName, objectType
+   put hArray_GetObjectTypeArray (objectType) into typeArray
+   repeat for each key rObject in typeArray
+      put hArray_GetUripArray (rObject, "name") into objectViewName
+      if objectViewName = viewName then
+         return rObject
+      end if
+   end repeat
+   return empty
+end hArray_GetNamedObjectType

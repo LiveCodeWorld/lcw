@@ -1,0 +1,8 @@
+private command clearLocals
+    -- occassional bug where local seems to get wrong initial setting    
+    put empty into LocalArray ["StartV"]
+    put empty into LocalArray ["ViewAbove"]
+    put empty into LocalArray ["ViewAboveRect"]
+    put empty into LocalArray ["ViewBelow"]
+    put empty into LocalArray ["ViewBelowRect"]
+end clearLocals

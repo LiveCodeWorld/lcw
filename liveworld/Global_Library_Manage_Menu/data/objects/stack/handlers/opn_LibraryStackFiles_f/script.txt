@@ -1,0 +1,5 @@
+function opn_LibraryStackFiles
+   put library_StandardFolder() into opnLibraryFolder
+   put folder_FilesInside (opnLibraryFolder) into stackNames
+   return stackNames
+end opn_LibraryStackFiles

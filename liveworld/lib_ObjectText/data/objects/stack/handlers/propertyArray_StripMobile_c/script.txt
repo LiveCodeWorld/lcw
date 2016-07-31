@@ -1,0 +1,8 @@
+command propertyArray_StripMobile @revPropertyArray
+   -- lets not store ids, positions (rect),, layers, or text (as we have html)
+   delete local revPropertyArray ["id"]
+   delete local revPropertyArray ["rect"]
+   delete local revPropertyArray ["layer"]
+   
+   delete local revPropertyArray ["script"]
+end propertyArray_StripMobile

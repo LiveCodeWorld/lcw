@@ -1,0 +1,10 @@
+command display_ScriptDotArray scriptObject, pOverlayName
+   put "The script_OverlayArray for" && the mobile_Name of scriptObject into pTitle
+   put the script_OverlayArray [pOverlayName] of scriptObject into overlayArray
+   -- put the script_OverlayData [pOverlayName] of scriptObject into graphData
+   
+   display_Array overlayArray, pTitle, "Global | Script | Graph | Menu", "Global | Script | Graph | Line | Menu"
+   put the result into treeView
+   set the displayed_OverlayFolder of treeView to the overlay_Folder of scriptObject
+   set the displayed_OverlayName of treeView to pOverlayName
+end display_ScriptDotArray

@@ -1,0 +1,11 @@
+on selectionChanged pHilitedIndex, pPrevHilitedIndex
+   put the dgDataOfIndex [ pHilitedIndex ] of the target into recordArray
+   put recordArray ["hKey"] into hKey
+   if hKey is not empty then
+      lock screen  
+      -- script_SaveDisplayedHelp -- not saving for now
+      put hkey_FetchHelp (hKey) into handlerHelp
+      set the displayed_Description [hKey] of me to handlerHelp
+      unlock screen
+   end if
+end selectionChanged

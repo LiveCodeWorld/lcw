@@ -1,0 +1,16 @@
+function object_IsType mTarget, mTargetType
+   switch
+      case mTargetType = empty
+         return true
+      case mTargetType = "view"
+         if exists(mTarget) is false then return false
+         return the object_IsView of mTarget
+      case mTargetType contains "|"
+         if exists(mTarget) is false then return false
+         put mTargetType into viewName
+         return the view_IsClass [viewName] of mTarget
+      default
+         -- mTargetType = "field,button,graphic,scrollbar,player,image,group,background,card,stack
+         return word 1 of mTarget = mTargetType
+   end switch
+end object_IsType

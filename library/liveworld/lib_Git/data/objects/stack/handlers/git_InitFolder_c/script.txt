@@ -1,0 +1,32 @@
+command git_InitFolder gitRootFolder, pDontAdd
+   put the defaultfolder into oDefault
+   set the defaultfolder to gitRootFolder
+   
+   put git_PathToCommandLine() into gitPath
+   put gitPath & "git init" into someShell
+   put shell(someShell) into shellResult
+   opn_Notify shellResult, true
+   
+   get word 1 to 5 of shellResult
+   if it is not "Initialized empty Git repository in" and it is not "Reinitialized existing Git repository in" then
+      opn_Notify shellResult, true
+      set the defaultfolder to oDefault
+      exit to top
+   end  if
+   
+   if pDontAdd is not true then
+      git_AddEverything
+      if the result is not empty then
+         opn_Notify shellResult, true
+         breakpoint
+         -- exit to top
+      end if
+   end if
+   
+   git_SetRootFolder gitRootFolder
+   git_AddRootFolderToIndex gitRootFolder
+   
+   set the defaultfolder to oDefault
+   -- git_RefreshDisplay "Git Status"
+   return gitRootFolder
+end git_InitFolder

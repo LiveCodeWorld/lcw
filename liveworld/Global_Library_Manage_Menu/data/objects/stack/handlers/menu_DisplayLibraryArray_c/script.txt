@@ -1,0 +1,6 @@
+on menu_DisplayLibraryArray ideScriptObject, librarySetName
+   put library_FetchSetArray (librarySetName) into setArray
+   
+   put merge ("library_FetchSetArray ('[[librarySetName]]')") into someTitle
+   display_Array setArray, someTitle
+end menu_DisplayLibraryArray

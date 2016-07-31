@@ -1,0 +1,33 @@
+function hArray_GetHandler hKey, pHarray, pCheckHash
+   put item 3 of hKey into hObject
+   if exists (hObject) is false then
+      breakpoint
+      return empty
+   end if
+   try
+      put the script of hObject into someScript
+   catch e
+      opn_Notify (hObject && "script is locked!"), true
+      return empty
+   end try
+   
+   put hArray_GetObjectData (hObject, "script_DataArray", pHarray) into scriptArray
+   repeat for each key indexNum in scriptArray
+      put scriptArray [indexNum]["hkey"] into testHkey
+      if testHkey = hKey then
+         put scriptArray [indexNum]["startLineNum"] into startLineNum
+         put scriptArray [indexNum]["endLineNum"] into endLineNum
+         put line startLineNum to endLineNum of someScript into someHandler
+         switch
+            case pCheckHash is not false
+               return someHandler
+            case sha1_Hash (someHandler) = scriptArray [indexNum]["sha1"]
+               return someHandler
+            default
+               return empty
+         end switch
+      end if
+   end repeat
+   -- breakpoint -- should re-index and try again
+   return empty
+end hArray_GetHandler

@@ -1,0 +1,26 @@
+command hKeyArray_FilterSystemMessages @hKeyLinkArray
+   put rev_MessageNames() into revMessageNames
+   put keys(hKeyLinkArray) into hKeys
+   repeat for each line hKey in hKeys
+      if item 1 of hKey is among the lines of revMessageNames then
+         -- only delete end nodes not start nodes
+         if item 4 of hKey is "Missing" then
+            delete local hKeyLinkArray [hKey]
+            next repeat
+         end if
+      end if
+      
+      put hKeyLinkArray [hKey] into subKeys
+      put empty into goodSubKeys
+      repeat for each line subKey in subKeys
+         if item 1 of subKey is among the lines of revMessageNames then
+            if item 4 of subKey is "missing" then
+               next repeat
+            end if
+         end if
+         put subKey & CR after goodSubKeys
+      end repeat
+      delete char -1 of goodSubKeys
+      put goodSubKeys into hKeyLinkArray [hKey]
+   end repeat
+end hKeyArray_FilterSystemMessages

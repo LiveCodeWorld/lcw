@@ -1,0 +1,6 @@
+on menu_EditNamedBehavior scriptObject, bName
+   if bName is "Clear" then return false
+   
+   put hArray_GetNamedObjectType (bName, "behavior") into bObject
+   edit the script of bObject
+end menu_EditNamedBehavior

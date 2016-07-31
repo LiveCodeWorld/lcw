@@ -1,0 +1,7 @@
+getprop view_Text
+   if word 1 of the target is "field" then
+      return the text of the target
+   else
+      return the uOPN ["text"] of the target
+   end if
+end view_Text

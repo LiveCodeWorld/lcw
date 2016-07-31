@@ -1,0 +1,38 @@
+command dot_ResizeImage someView, dotGraphSize
+   put the dot_Text of someView into dotText
+   
+   switch dotGraphSize
+      -- put "0,0,3000,3000" into headerArray ["bb"]
+      -- put the dot_BboxSize of someView into headerArray ["bb"]
+      -- delete local headerArray ["size"]
+      -- put the dot_BboxSize [false] of someView into headerArray ["bb"]
+      case "none"
+         put empty into newHeader
+         break
+      case "full"
+         put empty into newHeader
+         break
+      default
+         put the dot_InchSize [false] of someView into inchItems
+         
+   end switch
+   
+   put dot_GetGraphHeader (dotText) into oldHeader
+   if oldHeader is empty then
+      put empty into oldHeaderArray
+      if inchItems is not empty then put "size =" && kwote(inchItems) into graphSize
+      dot_ConstructPropertyArray dotPropertyArray
+      put dot_ConstructHeader (graphSize, dotPropertyArray) into newHeader
+   else
+      put dot_GraphSectionToArray (oldHeader) into headerArray
+      -- put headerArray into oldHeaderArray
+      delete local headerArray ["bb"]
+      delete local headerArray ["size"]
+      if inchItems is not empty then put inchItems into headerArray ["size"]
+      put dot_HeaderFromArrays (headerArray) into newHeader
+   end if
+   
+   dot_SetHeader dotText, newHeader
+   set the dot_Text of someView to dotText
+   return oldHeaderArray
+end dot_ResizeImage

@@ -1,0 +1,6 @@
+function browser_Exists browserID
+   set the wholematches to true
+   put revBrowserInstances() into browserInstances
+   put browserID is among the items of browserInstances into isTrue
+   return isTrue
+end browser_Exists

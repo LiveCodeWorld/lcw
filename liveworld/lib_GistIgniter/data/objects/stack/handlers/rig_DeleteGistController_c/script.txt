@@ -1,0 +1,7 @@
+command rig_DeleteGistController shortController, pServerURL, pGistListArray
+   put gist_ShortFileToKey (shortController, "controller", pServerURL) into shortGistFile
+   put gist_FindInListArray (shortGistFile) into gistID
+   gist_Delete gistID
+   put the result into resultJSON
+   return resultJSON
+end rig_DeleteGistController

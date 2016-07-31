@@ -1,0 +1,125 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_HandlerCalls
+type: script library
+version: 0.1
+
+/*
+This library is the central place to organise all code that deals with extracting script calls from a handler.
+It was taken from "libOPN_Calls".
+
+There are several ways to refer to handlers:
+-  as a handler of a sript object "handler"
+-  using an hKey reference
+-  using the global hArray database
+
+Call links in the library are stored a simple short hkeys.
+They are stored in two places, a a simple link.txt file with a list of CR separated short hKeys,
+and in the projects metadata array file as metadataArray ["filteredCalls"], and metadataArray ["allCalls"].
+
+Eventually should decide which to use (probably get rid of links.txt, and maybe loose both and replace with an sqLite db.
+*/
+
+
+--> Calls | Props
+-
+[[ _FetchHandler (hkey_Calls,g) ]]
+
+[[ _FetchHandler (script_HkeyArrayFromExportedCalls,g) ]]
+
+
+--> Calls
+-
+[[ _FetchHandler (library_FetchHkeyCalls,f) ]]
+
+[[ _FetchHandler (library_StoreHkeyCalls,c) ]]
+
+[[ _FetchHandler (library_GetFilteredCalls,f) ]]
+
+[[ _FetchHandler (library_SetFilteredCalls,c) ]]
+
+[[ _FetchHandler (library_GetCalls,f) ]]
+
+[[ _FetchHandler (library_SetCalls,c) ]]
+
+[[ _FetchHandler (hkey_StoreCalls,c) ]]
+
+
+--> Library | Handler | DatabaseArray
+-
+[[ _FetchHandler (library_FetchHandlerMetadata,f) ]]
+
+[[ _FetchHandler (library_StoreHandlerMetadata,c) ]]
+
+[[ _FetchHandler (library_GetHandlerDatabaseMetadata,f) ]]
+
+[[ _FetchHandler (library_SetHandlerDatabaseMetadata,c) ]]
+
+[[ _FetchHandler (library_ListHkeys,f) ]]
+
+[[ _FetchHandler (library_FetchHandlerDatabaseArray,f) ]]
+
+[[ _FetchHandler (library_StoreHandlerDatabaseArray,c) ]]
+
+
+--> Hkey Calls | Harray
+-
+[[ _FetchHandler (hkey_GetCalls,f) ]]
+
+[[ _FetchHandler (hkey_GetCallsFromObject,f) ]]
+
+[[ _FetchHandler (hkey_FetchShortCalls,f) ]]
+
+[[ _FetchHandler (hArray_GetCalls,f) ]]
+
+[[ _FetchHandler (hkey_ExtractShortCalls,f) ]]
+
+[[ _FetchHandler (hArray_GetShortCalls,f) ]]
+
+[[ _FetchHandler (hArray_SetShortCalls,c) ]]
+
+
+--> hKey  | Calls | Model
+-
+/*
+Use these handlers to interface with handler calls stored as text files with the handler.
+*/
+
+[[ _FetchHandler (hArray_GetHkeyCalls,f) ]]
+
+[[ _FetchHandler (hkey_DeleteFolder,c) ]]
+
+[[ _FetchHandler (handler_ConstructMetadataArray,f) ]]
+
+[[ _FetchHandler (handler_ConstructCallArray,f) ]]
+
+[[ _FetchHandler (handler_AddToCallArray,pc) ]]
+
+[[ _FetchHandler (handler_ExtractCalls,f) ]]
+
+[[ _FetchHandler (handler_ExtractFilteredCalls,f) ]]
+
+[[ _FetchHandler (script_ExtractFunctionCalls,f) ]]
+
+
+--> Hkey | MetaData | Array
+-
+[[ _FetchHandler (hkey_GetMetadataArray,f) ]]
+
+[[ _FetchHandler (hkey_SetMetadataArray,c) ]]
+
+
+--> Old Mixed | Hkey | Deps
+-
+[[ _FetchHandler (hkey_ConstructCallArray,f) ]]
+
+[[ _FetchHandler (scriptArray_ConstructShortHkeyArray,f) ]]
+
+[[ _FetchHandler (hkey_CallArrayFromExported,f) ]]
+
+[[ _FetchHandler (hkey_RecurseLongCallArrayFromExported,c) ]]
+
+[[ _FetchHandler (script_ExtractSubGraphArray,f) ]]
+
+[[ _FetchHandler (hkey_ConstructShortKeyArray,f) ]]

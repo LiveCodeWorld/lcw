@@ -1,0 +1,4 @@
+getprop menu_Cards
+   put the menu_CardArray of the target into mCardArray
+   return keys (mCardArray ["rugged_ID"])
+end menu_Cards

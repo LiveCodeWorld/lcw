@@ -1,0 +1,21 @@
+on menu_TestRemoteTransport hKey
+   put item 1 of hKey into controllerHandler
+   put item 3 of hKey into stackObject
+   put the short name of stackObject into controllerName
+   
+   put liveworld_ConstructControllerUrl (controllerName) into restURL
+   if controllerHandler is not "index" then put "/" & controllerHandler after restURL
+   
+   put fedwiki_GetDroppedUrl() into droppedURL
+   put fedwiki_ConstructDroppedJSON (droppedURL) into someJSON
+   
+   fedwiki_PostJSON someJSON, restURL
+   put the result into pageJSON  
+   put json_ToArray (pageJSON) into pageArray
+   if pageArray is an array then
+      display_Array pageArray
+   else
+      -- an error (not json)
+      put pageJSON
+   end if
+end menu_TestRemoteTransport

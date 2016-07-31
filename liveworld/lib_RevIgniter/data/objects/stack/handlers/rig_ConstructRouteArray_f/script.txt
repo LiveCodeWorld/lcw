@@ -1,0 +1,34 @@
+function rig_ConstructRouteArray
+   -- this code is taken directly from routes.lc
+   -- maybe it should use introspection on get access to global gRoute on server
+   -- is there a revIgnitor function for this?
+   
+   put "api/bookget/$1" into gRoute[8]["api/book/get/(:any)"]
+   put "api/bookupdate/$1" into gRoute[9]["api/book/update/(:any)"]
+   put "api/bookinsert/$1" into gRoute[10]["api/book/new/(:any)"]
+   put "api/savecover/$1" into gRoute[11]["api/book/setcover/(:any)"]
+   put "books/sender/$1/$2" into gRoute[12]["books/(:any)/web/(:any)"]
+   put "listen/index/$1/mp3" into gRoute[13]["listen/(:any)"]
+   put "listen/index/$1/$2" into gRoute[14]["listen/(:any)/(:any)"]
+   put "bodhinatha" into gRoute[29]["bodhinatha/:any"]
+   put "manager" into gRoute[15]["manager/:any"]
+   put "info" into gRoute[15]["info/:any"]
+   put "monastery" into gRoute[16]["monastery/:any"]
+   put "readlearn" into gRoute[17]["readlearn/:any"]
+   put "looklisten" into gRoute[18]["looklisten/:any"]
+   put "donations/student-donate" into gRoute[26]["livespiritually/become-student/donate"]
+   put "livespiritually" into gRoute[19]["livespiritually/:any"]
+   put "visit" into gRoute[27]["visit/:any"]
+   put "donations" into gRoute[20]["donations/:any"]
+   put "site/viewmedia/$1" into gRoute[21]["view/(:any)"]
+   put "site/downloadfile/$1" into gRoute[22]["download/(:any)"]
+   put "cloudreader/readbook/$1" into gRoute[23]["readbook/(:any)"]
+   put "site/reviews/$1" into gRoute[24]["reviews/(:any)"]
+   put "cloudreader/simplereader/$1" into gRoute[25]["book/(:any)"]
+   put "cloudreader/simplereader/$1/$2" into gRoute[26]["book/(:any)/(:any)"]
+   # put "cloudreader/simplereader/$1/$2" into gRoute[27]["media/books/(:any)/web/ops/xhtml/(:any)"]
+   put "cloudreader/bookPageToSpineNo/$1/$2" into gRoute[27]["media/books/(:any)/web/ops/xhtml/(:any)"]
+   put "site/viewmedia/$1" into gRoute[28]["apps/(:any)"]
+   
+   return gRoute
+end rig_ConstructRouteArray

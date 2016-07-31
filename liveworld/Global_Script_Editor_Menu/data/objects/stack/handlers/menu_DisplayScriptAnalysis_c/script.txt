@@ -1,0 +1,25 @@
+on menu_DisplayScriptAnalysis scriptObject
+   -- put the script_BreakdownArray of scriptObject into breakdownArray
+   
+   -- should make sure the object is indexed and stored.
+   object_AddToGlobalArray scriptObject
+   put revRuggedID (scriptObject) into rObject
+   put hArray_GetObjectScriptArray (rObject) into scriptArray
+   put script_ConstructBreakDownArray (scriptArray) into breakdownArray
+   
+   put breakdownArray ["uniqueKeys"] into uniqueKeys
+   repeat for each line uniqueKey in uniqueKeys
+      put hArray_ListHkeyObjects (uniqueKey) into otherObjects
+      put item 1 to 2 of uniqueKey into shortKey
+      put otherObjects into breakdownArray ["elsewhere"][shortKey]
+   end repeat
+   if breakdownArray ["duplicateArray"] is empty then delete variable breakdownArray ["duplicateArray"]
+   delete variable breakdownArray ["scriptArray"]
+   
+   put "Script analysis for" && the name of scriptObject into someTitle
+   display_Array breakdownArray, someTitle, "Global | Script | Duplicates | Menu", "Global | Script | Duplicates | Line | Menu"
+   put the result into treeView
+   
+   put the object_Hkey ["display_DuplicateKey,c"] of me into hKey
+   set the event_Trigger ["mouseDoubleUp"] of the tree_Field of treeView to hKey
+end menu_DisplayScriptAnalysis

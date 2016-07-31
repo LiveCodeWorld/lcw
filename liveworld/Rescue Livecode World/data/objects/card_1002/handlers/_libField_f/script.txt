@@ -1,0 +1,5 @@
+function _libField
+   put _libStackGroup() into stackGroup
+   put the long id of field 1 of stackGroup into someField
+   return someField
+end _libField

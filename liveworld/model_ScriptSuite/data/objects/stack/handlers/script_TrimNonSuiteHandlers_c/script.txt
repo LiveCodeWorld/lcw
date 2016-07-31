@@ -1,0 +1,19 @@
+command script_TrimNonSuiteHandlers @someScript, @nonSuiteHandlers
+   put CR before someScript
+   put empty into nonSuiteHandlers
+   put offset (CR & "-->", someScript) into lastChar
+   if lastChar = 0 then
+      -- not suites
+      put someScript into nonSuiteHandlers
+      delete char 1 of nonSuiteHandlers
+      put empty into someScript
+      return false
+   end if
+   
+   get char 2 to lastChar of someScript
+   put word 1 to -1 of it into nonSuiteHandlers
+   
+   delete char 1 to lastChar of someScript
+   put word 1 to -1 of someScript into someScript
+   return true
+end script_TrimNonSuiteHandlers

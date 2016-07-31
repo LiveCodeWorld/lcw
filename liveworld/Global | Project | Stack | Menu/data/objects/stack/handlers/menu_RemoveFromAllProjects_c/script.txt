@@ -1,0 +1,5 @@
+on menu_RemoveFromAllProjects stackObject
+   stop using stackObject 
+   library_RemoveStackFromAllProjects stackObject
+   _displayAndHilite
+end menu_RemoveFromAllProjects

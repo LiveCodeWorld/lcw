@@ -1,0 +1,45 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_View_Test_Geometry_Menu
+type: controller
+version: 0.1
+
+
+--> Global | View | Test | Geometry | Menu
+-
+[[ _FetchHandler (menu_Clone,c) ]]
+
+[[ _FetchHandler (menu_DispatchLayoutControl,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TestLayoutControl,c) ]]
+
+[[ _FetchHandler (menu_TestViewRect,c) ]]
+
+[[ _FetchHandler (menu_TestRect,c) ]]
+
+[[ _FetchHandler (menu_TestFormattedRect,c) ]]
+
+[[ _FetchHandler (menu_TestViewRectToFormattedRect,c) ]]
+
+on _
+end _
+    
+[[ _FetchHandler (menu_TestMashed,c) ]]
+
+
+--> Global | View | Test | Geometry | Menu | Disabled
+-
+[[ _FetchHandler (disabled_TestFormattedRect,g) ]]
+
+[[ _FetchHandler (disabled_TestViewRectToFormattedRect,g) ]]
+
+
+--> Menu | Props
+-
+--> Deps
+-
+[[ _FetchHandler (test_ViewRect,c) ]]

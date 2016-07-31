@@ -1,0 +1,10 @@
+command digitalocean_DeleteNameServerRecord oceanDomainName, nameServer
+   put digitalocean_FetchNSrecordID (oceanDomainName, nameServer) into recordID
+   if recordID is empty then
+      return merge("error, can't find a NS record for [[subDomain]] of [[oceanDomainName]]")
+   end if
+   
+   digitalocean_DeleteDomainRecord oceanDomainName, recordID
+   put the result into theResult
+   return theResult
+end digitalocean_DeleteNameServerRecord

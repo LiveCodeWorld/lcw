@@ -1,0 +1,5 @@
+on menu_SetPositiveLabel plusMinusView
+   put the positive_Label of plusMinusView into someText
+   put opn_Ask ("Edit the label...", someText) into someText
+   set the positive_Label of plusMinusView to someText
+end menu_SetPositiveLabel

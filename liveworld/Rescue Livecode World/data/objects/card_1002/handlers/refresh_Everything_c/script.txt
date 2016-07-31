@@ -1,0 +1,14 @@
+command refresh_Everything
+   put the child_Names of group "Stacks and Libraries" into indexGroupNames
+   repeat for each line indexGroupName in indexGroupNames
+      put the child_Views of group indexGroupName of group "Stacks and Libraries" into indexViews
+      repeat for each line indexView in indexViews
+         put the is_LcwFolder of indexView into isLcwFolder
+         if isLcwFolder is true then
+            dispatch "refresh" to indexView with true
+         else
+            dispatch "refresh" to indexView with false
+         end if
+      end repeat
+   end repeat
+end refresh_Everything

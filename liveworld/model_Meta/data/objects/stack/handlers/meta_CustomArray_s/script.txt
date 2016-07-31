@@ -1,0 +1,6 @@
+setprop meta_CustomArray customArray
+   breakPoint -- should delte as syntax is ugly (use dispatch instead"
+   put the object_Folder of the target into objectFolder
+   object_ExportCustomArray objectFolder, customArray
+   return the result
+end meta_CustomArray

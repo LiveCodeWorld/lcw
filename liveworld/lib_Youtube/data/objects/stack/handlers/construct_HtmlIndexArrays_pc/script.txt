@@ -1,0 +1,34 @@
+private command construct_HtmlIndexArrays orderedSnippetArray, @htmlIndex, @lookupArray, pDirection, pNumbered
+   put item 2 of the extents of orderedSnippetArray into maxNum
+   if pNumbered is false then
+      put "<ul>" into htmlIndex
+   else
+      put "<ol>" into htmlIndex
+   end if
+   switch pDirection
+      case "recentFirst"
+         repeat with episodeNum = 1 to maxNum
+            put orderedSnippetArray [episodeNum]["snippet"] into snippetArray
+            deconstruct_VideoSnippetArray snippetArray, videoTitle, videoDescription, videoID, thumbNailURL, publishedAt, positionPlusOneNum, tagArray, thumbNailWidth
+            put CR & "    " after htmlIndex
+            put "<li>" & fedwiki_ConstructLink (videoTitle) & "</li>" after htmlIndex
+            put snippetArray into lookupArray [videoTitle]
+         end repeat
+         break
+      default -- "oldestFirst"
+         repeat with episodeNum = maxNum down to 1
+            put orderedSnippetArray [episodeNum]["snippet"] into snippetArray
+            deconstruct_VideoSnippetArray snippetArray, videoTitle, videoDescription, videoID, thumbNailURL, publishedAt, positionPlusOneNum, tagArray, thumbNailWidth
+            put CR & "    " after htmlIndex
+            put "<li>" & fedwiki_ConstructLink (videoTitle) & "</li>" after htmlIndex
+            put snippetArray into lookupArray [videoTitle]
+         end repeat
+   end switch
+   put CR after htmlIndex
+   if pNumbered is false then
+      put "</ul>" after htmlIndex
+   else
+      put "</ol>" after htmlIndex
+   end if
+   return htmlIndex
+end construct_HtmlIndexArrays

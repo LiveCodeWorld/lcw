@@ -1,0 +1,18 @@
+function wikimedia_ListImages fromName, pFormat
+   -- this does not seem to return good lists of images
+   -- lot's of dodgy characters = spam? in file names etc?
+   -- api.php?action=query&list=allimages&ailimit=5&aifrom=Albert&aiprop=dimensions|mime [try in ApiSandbox]
+   put "Albert Einstein" into fromName
+   put "IndustrialSymbiosisWasteHeatExchange.png" into shortImageFile
+   if pFormat is empty then put "json" into pFormat
+   
+   put "?action=query&list=allimages&format=[[pFormat]]" into urlPattern
+   -- put "&aifrom=[[fromName]]&ailimit=5&aiprop=dimensions|mime" after urlPattern
+   put "&titles=Image:[[shortImageFile]]" after urlPattern
+   
+   put wikimedia_GetApiRoot() & merge (urlPattern) into someURL
+   -- if pExtraProps is not empty then put "&" & pExtraProps after someURL
+   
+   put url someURL into someJSON
+   return someJSON
+end wikimedia_ListImages

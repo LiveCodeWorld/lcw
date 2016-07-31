@@ -1,0 +1,15 @@
+command daemon_StripDefaultHeadersFromArray @headerArray
+   put daemon_ConstructDefaultHeader() into defaultHeaderArray
+   delete variable defaultHeaderArray ["Content-Type"]
+   repeat for each key someKey in defaultHeaderArray
+      delete variable headerArray [someKey]
+   end repeat
+   
+   set the itemdelimiter to "/"
+   repeat for each key someKey in headerArray
+      if item 1 of someKey = "HTTP" then
+         delete variable headerArray [someKey]
+      end if
+   end repeat
+   put "Block Daemon" into  headerArray ["X-Powered-By"]
+end daemon_StripDefaultHeadersFromArray

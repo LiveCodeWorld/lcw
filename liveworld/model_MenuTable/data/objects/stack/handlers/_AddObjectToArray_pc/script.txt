@@ -1,0 +1,5 @@
+private command _AddObjectToArray someKey, itemNum, lineNum, @mTableArray, someLine
+   set the itemdelimiter to tab
+   put item itemNum of someLine into someObject
+   put the rugged_ID of someObject into mTableArray [lineNum][someKey]
+end _AddObjectToArray

@@ -1,0 +1,7 @@
+command display_BookData indexedArray, bookTitle
+   put "Global | SivaSiva | Book | Parse | Menu" into titleMenu
+   put "Global | SivaSiva | Book | Parse | Line | Menu" into titleLineMenu
+   display_Array indexedArray, bookTitle, titleMenu, titleLineMenu
+   put the result into displayView
+   set the tree_SortType of displayView to "numeric"
+end display_BookData

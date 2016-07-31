@@ -1,0 +1,11 @@
+private function object_GetCustomProperty containerObject, someProperty, pControllerObject
+   if pControllerObject is empty then
+      put containerObject into propertyObject
+      put someProperty into objectProperty
+   else
+      put pControllerObject into propertyObject
+      put someProperty & "[" & containerObject & "]" into objectProperty
+   end if
+   put the objectProperty of propertyObject into objectResult
+   return objectResult
+end object_GetCustomProperty

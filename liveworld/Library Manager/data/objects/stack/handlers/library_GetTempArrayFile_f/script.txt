@@ -1,0 +1,4 @@
+function library_GetTempArrayFile
+   put library_TempFolder() into libraryTempFolder
+   return libraryTempFolder & "temp_library.array"
+end library_GetTempArrayFile

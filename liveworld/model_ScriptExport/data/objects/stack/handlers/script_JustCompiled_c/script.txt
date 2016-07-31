@@ -1,0 +1,8 @@
+on script_JustCompiled scriptObject
+   -- sent by LCW behavior on compile
+   put the script of scriptObject into someScript
+   set the exported_Script of scriptObject to someScript
+   
+   put the stack_Name of scriptObject into stackName
+   rev_MarkStackEdited stackName
+end script_JustCompiled

@@ -1,0 +1,123 @@
+command hkey_FindHandlerInHierarchy handlerName, handlerType, scriptObject, scriptHierarchy, @hKey, @foundHandler, pNotPrivate
+   -- this is the step that takes time
+   -- looks for first hKey in scriptHierarchy
+   local startHandler, endHandler
+   
+   if exists (scriptObject) is false then
+      put scriptObject && "does not exist! Exiting..." into someMessage
+      opn_Notify someMessage, true
+      return empty
+   end if
+   
+   --  and from now on search rest of hierarchy only for public handler
+   put handlerName,handlerType into shortHKey
+   repeat with lineNum = (the number of lines of scriptHierarchy) down to 1
+      set the cursor to busy
+      put empty into hKey
+      put line lineNum of scriptHierarchy into someObject
+      
+      if exists (someObject) is false then
+         put someObject && "does not exist! Skipping..." into someMessage
+         opn_Notify someMessage, true
+         next repeat
+      end if
+      
+      if the long id of someObject = the long id of scriptObject then
+         -- as it is the script object where the shortHkey is called from 
+         -- allow private handlers
+         
+         if the hArray_IsCurrent of someObject is true then
+            if the hArray_HkeyPresent [hKey] of someObject is true then
+               put hkey_Construct (handlerName, handlerType, someObject) into hKey
+               put library_FetchHandler (hKey) into foundHandler
+               return hKey
+            end if         
+         else
+            -- not properly indexed, so do it manually.
+            try
+               put the script of someObject into someScript
+               
+               -- don't think we need to have this option 
+               -- change to look for either. Forget whether handlerType = "p"
+               if char 1 of handlerType = "p" then
+                  put handlerType into privateHandlerType
+                  
+                  put handlerName,privateHandlerType into shortHKey
+                  hkey_SetOffsets shortHKey, startHandler, endHandler, someScript, pNotPrivate
+                  put the result into foundHandler
+                  
+                  if foundHandler is not empty then
+                     -- found private handler => construct and return hKey
+                     put hkey_Construct (handlerName, privateHandlerType, someObject) into hKey
+                     return hKey
+                  else
+                     -- no point in searching hierarchy for private handlers
+                     return empty
+                  end if
+               else
+                  -- should find first regardless of public or private
+                  -- for now finds private first
+                  put "p" & handlerType into privateHandlerType
+                  
+                  put handlerName,privateHandlerType into shortHKey
+                  hkey_SetOffsets shortHKey, startHandler, endHandler, someScript, pNotPrivate
+                  put the result into foundHandler
+                  
+                  if foundHandler is not empty then
+                     -- found private handler => construct and return hKey
+                     put hkey_Construct (handlerName, privateHandlerType, someObject) into hKey
+                     return hKey
+                  else
+                     -- lets try public
+                     put handlerName,handlerType into shortHKey
+                     hkey_SetOffsets shortHKey, startHandler, endHandler, someScript, pNotPrivate
+                     put the result into foundHandler
+                     if foundHandler is not empty then
+                        -- found public handler => construct and return hKey
+                        put hkey_Construct (handlerName, handlerType, someObject) into hKey
+                        return hKey
+                     end if
+                  end if
+                  
+               end if
+            catch someError
+               -- locked
+               put "Did not search" && the mobile_Name of someObject && "as it's script is locked!" into someMessage
+               opn_Notify someMessage, true
+               next repeat
+            end try
+         end if
+      else
+         -- not the script object where the shortHkey is called from
+         -- don't allow private handlers
+         
+         if the hArray_IsCurrent of someObject is true then
+            if the hArray_PublicHkeyPresent [hKey] of someObject is true then
+               put hkey_Construct (handlerName, handlerType, someObject) into hKey
+               put library_FetchHandler (hKey) into foundHandler
+               return hKey
+            end if         
+         else
+            try
+               put the script of someObject into someScript
+            catch someError
+               -- locked
+               next repeat
+            end try
+            
+            hkey_SetOffsets shortHKey, startHandler, endHandler, someScript, pNotPrivate
+            put the result into foundHandler
+            if foundHandler is empty then next repeat
+            if script_HandlerContainsPass (handlerName, foundHandler) is false then
+               -- found => construct and return hKey
+               put hkey_Construct (handlerName, handlerType, someObject) into hKey
+               return hKey
+            end if
+         end if
+         
+      end if
+   end repeat
+   
+   -- gone through every object in hierarchy
+   return empty
+end hkey_FindHandlerInHierarchy

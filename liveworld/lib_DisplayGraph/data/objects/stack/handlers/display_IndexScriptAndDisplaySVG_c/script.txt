@@ -1,0 +1,14 @@
+command display_IndexScriptAndDisplaySVG scriptObject, pProjectName, pGraphStyle, pProcessObject, pForceCreate
+   if exists (pProcessObject) is false then
+      -- put script_CallingObject() into pProcessObject
+      get the executioncontexts
+      put item 1 of line -2 of it into pProcessObject
+   end if
+   
+   script_IndexAndCreateOverlay scriptObject, pProjectName, pGraphStyle, pProcessObject, pForceCreate
+   put the result into imageFile
+   display_SVG imageFile, scriptObject
+   put the result into displayView
+   set the displayed_Object of displayView to scriptObject
+   return imageFile
+end display_IndexScriptAndDisplaySVG

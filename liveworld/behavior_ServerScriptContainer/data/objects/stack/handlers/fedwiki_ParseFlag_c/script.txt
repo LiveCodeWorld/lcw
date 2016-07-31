@@ -1,0 +1,6 @@
+command fedwiki_ParseFlag droppedHtml
+   put "This is Fedwiki flag, or Twins, or a Neighbour." into someText
+   put CR & CR & droppedHtml after someText
+   put fedwiki_ConstructErrorJSON (someText) into errorJSON
+   fedwiki_ReturnJSON errorJSON
+end fedwiki_ParseFlag

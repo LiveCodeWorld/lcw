@@ -1,0 +1,11 @@
+function is_Url testUrl
+    -- quick hack
+    set the itemdelimiter to ":"
+    put item 1 of testUrl into urlProtocol
+    set the itemdelimiter to ","
+    if urlProtocol is among the items of "file,http,https,ftp" then
+        return true
+    else
+        return false
+    end if
+end is_Url

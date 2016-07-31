@@ -1,0 +1,23 @@
+function array_ExpandSorted someArray, sortKey, direction
+    -- was "expandArray" "array_GetExpanded"
+   put keys(someArray) into keyNames
+    if keyNames is empty then return someArray
+    if sortKey is empty then
+        sort keyNames
+    else if direction is empty then
+        put "sort keyNames" && sortKey into doScript
+        do doScript
+    else
+        put "sort keyNames" && direction && sortKey into doScript
+        do doScript
+    end if
+    put empty into someOutline
+    repeat for each line keyName in keyNames
+        line_Insert keyname, someOutline
+        put someArray[keyName] into someThread
+        if someThread is empty then next repeat
+        put outline_IncreaseIndent(someThread) into indentedThread
+        put CR & indentedThread after someOutline
+    end repeat
+    return someOutline
+end array_ExpandSorted

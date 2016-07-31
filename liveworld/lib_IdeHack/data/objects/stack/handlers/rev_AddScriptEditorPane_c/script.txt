@@ -1,0 +1,28 @@
+command rev_AddScriptEditorPane tabName, viewName
+   put revTopMostScriptEditor() into seStackObject
+   if exists (seStackObject) is false then return false
+   
+   put the long id of group "Panes" of seStackObject into paneGroup
+   put the long id of group "Pane Tabs" of seStackObject into paneTabGroup
+   if exists (btn tabName of paneTabGroup) is true then return false
+   
+   -- put hArray_GetViewTemplate (viewName) into someView
+   view_NormalizeName viewName
+   if exists (stack viewName) is false then return empty
+   put the template_View of card 1 of stack viewName into someView
+   if exists (someView) is false then return empty
+   
+   lock screen
+   copy someView to paneGroup
+   put it into copiedPaneView
+   set the name of copiedPaneView to tabName
+   
+   clone btn "Search Results" of paneTabGroup
+   put it into clonedTabButton
+   set the name of clonedTabButton to tabName
+   
+   dispatch "resize" to paneTabGroup
+   dispatch "setCurrentTab" to paneTabGroup with tabName
+   
+   return copiedPaneView
+end rev_AddScriptEditorPane

@@ -1,0 +1,6 @@
+getprop stack_NestedBackgroundObjects
+    -- list all the groups (including nested ones) in a stack
+  put the stack_name of the target into stackName
+   put revBackgroundIDs (stackName) into bgNames
+   return bgNames
+end stack_NestedBackgroundObjects

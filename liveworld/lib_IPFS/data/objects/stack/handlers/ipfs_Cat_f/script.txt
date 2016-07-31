@@ -1,0 +1,19 @@
+function ipfs_Cat someHash, pUseRest
+   /*
+   -- for some reason "put shell ("ipfs cat 'QmaSRYp3f8Psd7Ryp4f9n9qhv4QMMepVTVKim7iANNfkFC'") complains
+   -- but the following works
+   -- put shell ("echo 'QmaSRYp3f8Psd7Ryp4f9n9qhv4QMMepVTVKim7iANNfkFC' | ipfs cat")
+   */
+   
+   if pUseRest is true then
+      put ipfs_RestGet ("cat", someHash) into someJSON
+   else
+      --   ipfs cat /ipfs/QmPXME1oRtoT627YKaDPDQ3PwA8tdP9rWuAAweLzqSwAWT/readme
+      -- put "ipfs cat" && someHash into thisIsStangelyBroken
+      
+      ipfs_AddToPATH
+      put merge ("echo [[someHash]] | ipfs cat") into someShell
+      put shell (someShell) into someJSON
+   end if
+   return someJSON
+end ipfs_Cat

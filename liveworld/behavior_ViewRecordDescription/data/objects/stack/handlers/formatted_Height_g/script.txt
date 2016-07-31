@@ -1,0 +1,11 @@
+getprop formatted_Height
+   if the long id of the target = the long id of me then
+      put title_Field() into titleField
+      -- put the margins of me into someMargin
+      -- margin_Normalize someMargin, lMargin, tMargin, rMargin, bMargin
+      return the formattedheight of titleField -- + tMargin + bMargin
+   else
+      -- blocks something higher up interfering
+      return empty
+   end if
+end formatted_Height

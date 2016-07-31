@@ -1,0 +1,51 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Script_Exported_Menu
+type: controller
+version: 0.1
+
+
+/*
+These tools work on exported scripts.
+
+The menu_target for these handlers is the scriptObject that owns the script currently presented by the Script Editor.
+These menu tools should therefore work equally well on any LiveCode object,
+and in particular either along side any of the more specific version control tools for GIT or Fossil.
+*/
+
+
+
+--> Global | Script | Exported | Menu
+-
+[[ _FetchHandler (menu_DisplayMergeScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_EditExportedScript,c) ]]
+
+[[ _FetchHandler (menu_EditRawExportedScript,c) ]]
+
+[[ _FetchHandler (menu_AnalizeExportedScript,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RevealScriptFile,c) ]]
+
+[[ _FetchHandler (menu_DeleteScriptFile,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_RevealTextStackOverlayFolder,c) ]]
+
+[[ _FetchHandler (menu_RevealTextStackFolder,c) ]]
+   
+[[ _FetchHandler (menu_RevealMainstackDotText,c) ]]
+
+
+--> Menu | Props
+-
+

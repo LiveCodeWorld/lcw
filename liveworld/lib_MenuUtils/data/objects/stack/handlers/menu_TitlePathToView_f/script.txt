@@ -1,0 +1,8 @@
+function menu_TitlePathToView mTitlePath, topView
+   set the itemdelimiter to "/"
+   repeat for each item mTitle in mTitlePath
+      put menu_TitleToViewName(mTitle) into viewName
+      put viewName & CR after viewNames
+   end repeat
+   return viewNames
+end menu_TitlePathToView

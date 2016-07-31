@@ -1,0 +1,8 @@
+function git_ConstructCheckoutCommand relativePath, commitHash
+   -- needs to be called from git root
+   -- or relatveipath needs to be relative to current folder
+   -- git checkout 0f3165fea876ebfa537e5a16f5c505a846e2c7ee -- opn_Plugins/opn_Text/rev/template/
+   shell_BashParamEscape relativePath
+   put "git checkout" && commitHash && "--" && relativePath into someShell
+   return someShell
+end git_ConstructCheckoutCommand

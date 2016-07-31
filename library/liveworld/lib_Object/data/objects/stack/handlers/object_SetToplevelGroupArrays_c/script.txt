@@ -1,0 +1,14 @@
+command object_SetToplevelGroupArrays @topLevel_NameDictionary, @topLevel_IdDictionary, cardObject
+   -- should be renamed to "object_SetToplevelCardGroupArrays"?
+   if cardObject is empty then put the long ID of this card into cardObject
+   put the groupNames of cardObject into topLevelGroupNames
+   put the groupIDs of cardObject into topLevelGroupIds
+   repeat with lineNum = 1 to the number of lines of topLevelGroupNames
+      put line lineNum of topLevelGroupNames into topLevelGroupName
+      put line lineNum of topLevelGroupIds into topLevelGroupId
+      put the long ID of group ID topLevelGroupId of cardObject into someGroup
+      
+      put someGroup into topLevel_NameDictionary[topLevelGroupName]
+      put topLevelGroupName into topLevel_IdDictionary[someGroup]
+   end repeat
+end object_SetToplevelGroupArrays

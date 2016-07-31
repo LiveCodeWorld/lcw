@@ -1,0 +1,11 @@
+getprop disabled_OpenSubstack [someView]
+   put the stack_Object of someView into stackObject
+   put the mainstack of stackObject into stackName
+   put the substacks of stack stackName into substackNames
+   if substackNames is empty then
+      return "delete"
+   else
+      put substackNames into LocalArray ["substackNames"]
+      return false
+   end if
+end disabled_OpenSubstack

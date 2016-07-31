@@ -1,0 +1,4 @@
+function view_PathIndex includeStem
+   return view_ListNames (empty, includeStem)
+   return view_ListNamesOfStandardFiles()
+end view_PathIndex

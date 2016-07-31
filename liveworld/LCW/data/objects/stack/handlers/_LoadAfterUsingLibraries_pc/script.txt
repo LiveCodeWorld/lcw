@@ -1,0 +1,10 @@
+private command _LoadAfterUsingLibraries projectName
+   -- the code beow requires the above libraries to be used
+   -- should be stored as arrays in the projects folder
+   -- hack for now (we use "default")
+   
+   loadGlobals projectName
+   
+   lcw_IndexAllScripts -- this adds to any previously loaded hArray (as in above)
+   return the result
+end _LoadAfterUsingLibraries

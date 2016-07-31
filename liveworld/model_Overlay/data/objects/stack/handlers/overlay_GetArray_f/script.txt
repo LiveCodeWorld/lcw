@@ -1,0 +1,5 @@
+function overlay_GetArray overlayFolder, pOverlayName
+   put overlay_GetData (overlayFolder) into overlayData
+   put overlayData_GetArray (overlayData, pOverlayName) into overlayArray
+   return overlayArray
+end overlay_GetArray

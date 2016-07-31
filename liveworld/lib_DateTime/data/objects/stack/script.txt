@@ -1,0 +1,192 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_DateTime
+type: script library
+version: 0.6
+
+/*
+A library for date time and project management stuff like scheduling.
+*/
+
+
+--> Date
+-
+[[ _FetchHandler (date_Round,f) ]]
+
+[[ _FetchHandler (date_Construct8601,f) ]]
+
+[[ _FetchHandler (date_Convert8601,c) ]]
+
+[[ _FetchHandler (date_CombineWithTime,f) ]]
+
+[[ _FetchHandler (date_PadTwoZeros,f) ]]
+
+[[ _FetchHandler (date_ConstructWc3Datetime,f) ]]
+
+[[ _FetchHandler (date_Wc3Datetime,c) ]]
+
+[[ _FetchHandler (date_ConvertEnglish,f) ]]
+
+[[ _FetchHandler (date_IsEarlier,f) ]]
+
+[[ _FetchHandler (isLater,f) ]]
+
+
+--> Date | Months
+-
+[[ _FetchHandler (month_Name,f) ]]
+
+[[ _FetchHandler (month_GetPeriod,f) ]]
+
+[[ _FetchHandler (period_MonthStarting,c) ]]
+
+[[ _FetchHandler (date_AddMonth,c) ]]
+
+on date_AddMonth monthsToAdd, startDate, @endMonth, @endYear
+    /*
+    Problem is if new month has less days in it than the original start date days
+    then just adding a month will add 2 months on conversion as the overlap pushes it over the month
+    */
+    
+    convert startDate to dateItems
+    put startDate into someDate
+    
+    put item 3 to 7 of someDate into lastBit
+    
+    put 1 into item 3 of someDate
+    put 2 into item 4 of someDate	# seems to be required !!!
+    add monthsToAdd to item 2 of someDate
+    convert someDate to dateItems
+     
+    put item 1 of someDate into endYear
+    put item 2 of someDate into endMonth
+    
+    put lastBit into item 3 to 7 of someDate
+    put date_MaxDaysInMonth(endMonth, endYear) into item 3 of someDate
+    convert someDate to internet date
+    return someDate
+end date_AddMonth
+
+[[ _FetchHandler (date_ExtractMonthName,f) ]]
+
+
+--> Date | Years
+-
+[[ _FetchHandler (year_Number,f) ]]
+
+[[ _FetchHandler (date_IsLeapYear,f) ]]
+
+[[ _FetchHandler (date_ExtractYear,f) ]]
+
+[[ _FetchHandler (date_NextFinancialYear,f) ]]
+
+
+--> Date | Hours
+-
+[[ _FetchHandler (hour_GetPeriod,f) ]]
+
+[[ _FetchHandler (addHours,f) ]]
+
+
+--> Date | Weeks
+-
+[[ _FetchHandler (weeksBetween,f) ]]
+
+[[ _FetchHandler (period_WeekStarting,c) ]]
+
+[[ _FetchHandler (addWeeks,f) ]]
+
+
+--> Date | Days
+-
+[[ _FetchHandler (day_Name,f) ]]
+
+[[ _FetchHandler (day_AbreviatedName,f) ]]
+
+[[ _FetchHandler (day_Number,f) ]]
+
+[[ _FetchHandler (day_Suffix,f) ]]
+
+[[ _FetchHandler (daysBetween,f) ]]
+
+[[ _FetchHandler (day_Round,f) ]]
+
+[[ _FetchHandler (day_SundayAfter,f) ]]
+
+[[ _FetchHandler (day_SundayBefore,f) ]]
+
+[[ _FetchHandler (day_MondayAfter,f) ]]
+
+[[ _FetchHandler (day_MondayBefore,f) ]]
+
+[[ _FetchHandler (day_DaysBefore,f) ]]
+
+[[ _FetchHandler (date_FirstOfNextMonth,f) ]]
+
+[[ _FetchHandler (date_FirstOfMonth,f) ]]
+
+[[ _FetchHandler (date_EndOfMonth,f) ]]
+
+[[ _FetchHandler (addDays,f) ]]
+
+[[ _FetchHandler (date_MaxDaysInMonth,f) ]]
+
+function date_MaxDaysInMonth theMonth, theYear
+    put "1,January,3,March,5,May,7,July,8,August,10,October,12,December" into Months31
+    put "4,April,6,June,9,September,11,November" into Months30
+    if theMonth is among the items of Months31 then
+        put 31 into HowManyDays
+    else if theMonth is among the items of Months30 then
+        put 30 into HowManyDays
+    else --February
+        if (theYear mod 400 = 0) or (theYear mod 100 <> 0) and (theYear mod 4 = 0) then
+            put 29 into HowManyDays -- leap year
+        else
+            put 28 into HowManyDays
+        end if
+    end if
+    return HowManyDays
+    
+    /*
+    Base on the rhyme:
+    30 days has September, April, June and Novemeber
+    All the rest have 31
+    Except Februaruy
+    Which has 28 and 29 on a leap year
+    */
+    
+    put 30 into item 9 of maxDaylist
+    put 30 into item 4 of maxDaylist
+    put 30 into item 6 of maxDaylist
+    put 30 into item 11 of maxDaylist
+    
+    put 31 into item 1 of maxDaylist
+    put 31 into item 3 of maxDaylist
+    put 31 into item 5 of maxDaylist
+    put 31 into item 7 of maxDaylist
+    put 31 into item 8 of maxDaylist
+    put 31 into item 10 of maxDaylist
+    put 31 into item 12 of maxDaylist
+     
+    if date_IsLeapYear(someDate) then
+        put 29 into item 2 of maxDaylist
+    else
+        put 28 into item 2 of maxDaylist
+    end if
+    
+    return item theMonth of maxDaylist
+end date_MaxDaysInMonth
+
+
+--> Date and Time | Picker
+-
+/*
+Taken and modified a bit from eric.chatonet@wanadoo.fr date Picker 1.0
+*/
+
+[[ _FetchHandler (weekNum,f) ]]
+
+[[ _FetchHandler (convertDate,f) ]]
+
+[[ _FetchHandler (dayNum,f) ]]

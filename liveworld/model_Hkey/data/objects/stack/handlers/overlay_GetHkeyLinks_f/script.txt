@@ -1,0 +1,5 @@
+function overlay_GetHkeyLinks hKey, pOverlayName
+   put hkey_GetLinkArray (hKey, pOverlayName) into hkeyArray
+   put hkeyArray [hKey] into hKeyCalls
+   return hKeyCalls
+end overlay_GetHkeyLinks

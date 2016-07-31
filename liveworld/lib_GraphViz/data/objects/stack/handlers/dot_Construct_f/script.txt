@@ -1,0 +1,6 @@
+function dot_Construct graphName, nodeSection, graphHeader
+   put graphHeader into dotText
+   line_Insert nodeSection, dotText
+   put "digraph" && kwote(graphName) && "{" & CR & outline_IncreaseIndent (dotText) & CR & "}" into dotText
+   return dotText
+end dot_Construct

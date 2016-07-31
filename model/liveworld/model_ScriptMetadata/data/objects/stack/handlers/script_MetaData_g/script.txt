@@ -1,0 +1,9 @@
+getprop script_MetaData [someKey]
+   put the script of the target into someScript
+   put script_GetMetadataArray (someScript) into uRipArray
+   if someKey is empty then
+      return uRIPArray
+   else
+      return uRIPArray [someKey]
+   end if
+end script_MetaData

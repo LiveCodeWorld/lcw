@@ -1,0 +1,6 @@
+setprop dot_LinkArray [pOverlayName] linkArray
+   put the dot_DataArray [pOverlayName] of the target into dataArray
+   put linkArray into dataArray ["linkArray"]
+   set the dot_DataArray [pOverlayName] of the target to dataArray
+   return dataArray
+end dot_LinkArray

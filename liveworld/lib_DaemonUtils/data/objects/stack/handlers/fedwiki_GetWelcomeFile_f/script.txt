@@ -1,0 +1,5 @@
+function fedwiki_GetWelcomeFile
+   put fedwiki_GetRootFolder() into rootFolder
+   put rootFolder & "Welcome Visitors.html" into indexFile
+   return indexFile
+end fedwiki_GetWelcomeFile

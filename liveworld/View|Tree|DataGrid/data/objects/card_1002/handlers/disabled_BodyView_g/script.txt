@@ -1,0 +1,14 @@
+getprop disabled_BodyView [mTarget]
+   put the tree_Field of mTarget into treeField
+   if exists (treeField) is true then
+      return true
+   else
+      put the body_View of mTarget into bodyView
+      if exists (bodyView) is true then
+         return false
+      else
+         -- don't show for old tree_Field views
+         return "delete"
+      end if
+   end if
+end disabled_BodyView

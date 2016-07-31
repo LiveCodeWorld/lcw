@@ -1,0 +1,41 @@
+function object_ConstructCardOutline cardObject, @outlineTitle_Array
+   put the name of cardObject into newLine
+   
+   put cardObject into outlineTitle_Array[newLine]
+   put cardObject & return into objectIndex
+   
+   put newLine into someOutline
+   put the number of lines of the script of cardObject & return into scriptLines
+   
+   put " of" && cardObject into someObjectTail
+   repeat with controlNum = 1 to the number of controls in cardObject
+      put the long ID of control controlNum of cardObject into controlObject
+      
+      put offset(someObjectTail, controlObject) into objectTail
+      put char 1 to (objectTail - 1) of controlObject into stemObject
+      put text_StripQuoted(stemObject) into testStem
+      replace " of " with return in testStem
+      
+      put the number of lines of testStem - 0 into indentLevel
+      put empty into indentBit
+      repeat indentLevel
+         put tab after indentBit
+      end repeat
+      put the number of lines of the script of controlObject into scriptLineNum
+      put indentBit & the name of controlObject into newLine
+      
+      put scriptLineNum & return after scriptLines
+      put return & newLine after someOutline
+      
+      put controlObject into outlineTitle_Array[newLine]
+      put controlObject & return after objectIndex
+   end repeat
+   delete last char of scriptLines
+   delete last char of objectIndex
+   
+   put scriptLines into outlineTitle_Array["Script Lines"]
+   put objectIndex into outlineTitle_Array["Object Index"]
+   
+   -- answer outlineTitle_Array["Script Lines"]
+   return someOutline
+end object_ConstructCardOutline

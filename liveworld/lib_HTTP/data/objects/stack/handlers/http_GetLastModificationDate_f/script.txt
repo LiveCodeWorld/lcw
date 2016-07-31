@@ -1,0 +1,3 @@
+function http_GetLastModificationDate pServer, pResource
+    return http_GetHeader(pServer, pResource, "Last-Modified")
+end http_GetLastModificationDate

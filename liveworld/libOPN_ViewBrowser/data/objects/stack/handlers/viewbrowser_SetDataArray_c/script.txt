@@ -1,0 +1,4 @@
+command viewbrowser_SetDataArray dgArray
+   put the viewBrowser_DataGrid of me into dgView
+   set the dg_Data of dgView to dgArray
+end viewbrowser_SetDataArray

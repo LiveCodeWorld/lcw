@@ -1,0 +1,10 @@
+command fossil_CloseUsingProjectFile fossilFile
+   put "fossil close" into someShell
+   
+   shell_BashParamEscape fossilFile
+   put space & fossilFile after someShell
+   
+   fossil_ExecuteShell someShell
+   put the result into openInfo
+   return openInfo
+end fossil_CloseUsingProjectFile

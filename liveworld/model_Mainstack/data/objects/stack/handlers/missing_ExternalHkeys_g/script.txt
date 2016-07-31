@@ -1,0 +1,8 @@
+getprop missing_ExternalHkeys
+   -- these are all the hKeys that are external to the target
+   -- taken from stored mainstack arrays
+   put the mainstack_WalkArray of the target into mainstackWalkArray
+   put mainstackWalkArray ["external"] into externalArray
+   put keys (externalArray) into missingHkeys
+   return missingHkeys
+end missing_ExternalHkeys

@@ -1,0 +1,7 @@
+setprop view_Text [someTitle] someText
+   if word 1 of the target is "field" then
+      set the text of the target to someText
+   else
+      set the uOPN ["text"] of the target to someText
+   end if
+end view_Text

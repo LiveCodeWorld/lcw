@@ -1,0 +1,19 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_DirectoryWalker
+type: script library
+version: 0.1
+
+/*
+In this library we keep everything to do with walking and filtering HA folders and files.
+*/
+
+
+--> Tree
+-
+[[ _FetchHandler (_FilterFoundFiles,f) ]]
+
+[[ _FetchHandler (_AddInfoFiles,c) ]]
+
+[[ _FetchHandler (shell_GetGoodNestedFiles,f) ]]

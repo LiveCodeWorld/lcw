@@ -1,0 +1,4 @@
+function external_ListComponents
+   put pref_GetValue ("installedArray") into installedArray
+   return keys (installedArray)
+end external_ListComponents

@@ -1,0 +1,11 @@
+command hkey_AddHandlerFromObject shortHKey, somePlace
+   put the script_Handler [shortHKey] of somePlace into otherHandler
+   library_AddHkey shortHkey, otherHandler
+   
+   put hkey_IsInLibrary (shortHkey) into someBoolean
+   if someBoolean is true then
+      opn_Notify merge ("Exported handler '[[shortHkey]]', and added it to the hkey library array!")
+   else
+      opn_Notify merge ("Failed to add handler '[[shortHkey]]' to the hkey library array!")
+   end if
+end hkey_AddHandlerFromObject

@@ -1,0 +1,106 @@
+--> Clock Events
+-
+[[ _FetchHandler (newClockSection,c) ]]
+
+[[ _FetchHandler (clock_Updated,c) ]]
+
+[[ _FetchHandler (clock_Finished,c) ]]
+
+
+--> Menu | Target
+-
+[[ _FetchHandler (menu_Version,g) ]]
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+[[ _FetchHandler (menu_CheckTarget,g) ]]
+
+
+--> Global | Shape | Cobweb | Menu
+-
+[[ _FetchHandler (setUpLearningObject,pc) ]]
+
+[[ _FetchHandler (menu_DisplayPieChart,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StartLearningObject,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_ClockDuration,c) ]]
+
+[[ _FetchHandler (clock_Duration,g) ]]
+
+[[ _FetchHandler (clock_Durations,g) ]]
+
+[[ _FetchHandler (menu_StartClock,c) ]]
+
+[[ _FetchHandler (menu_ClockStopped,c) ]]
+
+[[ _FetchHandler (menu_ClockVisible,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_StartClockSections,c) ]]
+
+[[ _FetchHandler (menu_SetClockSections,c) ]]
+
+[[ _FetchHandler (menu_DisplaySectionModel,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplayTriggerArray,c) ]]
+
+[[ _FetchHandler (menu_SetTriggerArray,c) ]]
+
+[[ _FetchHandler (menu_ClearTriggerArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_DisplaySpiderLinkArray,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_TrianglesVisible,c) ]]
+
+[[ _FetchHandler (menu_CobwebVisible,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Dev,c) ]]
+
+
+--> Global | Shape | Cobweb | Menu | Props
+-
+[[ _FetchHandler (cobweb_Visible,g) ]]
+
+[[ _FetchHandler (clock_Stopped,g) ]]
+
+[[ _FetchHandler (clock_Visible,g) ]]
+
+[[ _FetchHandler (triangles_Visible,g) ]]
+
+
+--> Global | Shape | Cobweb | Menu | Disabled
+-
+
+
+--> Dev | Menu
+-
+[[ _FetchHandler (menu_ObjectExists,c) ]]
+
+[[ _FetchHandler (object_Name,g) ]]
+
+[[ _FetchHandler (object_Names,g) ]]
+
+[[ _FetchHandler (construct_ClockSectionArray,f) ]]
+
+[[ _FetchHandler (deconstruct_ClockSectionArray,c) ]]

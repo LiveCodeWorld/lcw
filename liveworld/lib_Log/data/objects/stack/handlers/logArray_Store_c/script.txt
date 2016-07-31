@@ -1,0 +1,5 @@
+command logArray_Store dataArray
+   put logArray_File() into someFile
+   array_Save someFile, dataArray
+   return someFile
+end logArray_Store

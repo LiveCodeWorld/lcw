@@ -1,0 +1,5 @@
+getprop all_Stacks
+   put library_ListUsedStacks ("All") into usedLibraries
+   put word 1 to -1 of usedLibraries into usedLibraries
+   return usedLibraries
+end all_Stacks

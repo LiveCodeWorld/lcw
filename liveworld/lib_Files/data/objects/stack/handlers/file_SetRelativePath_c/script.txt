@@ -1,0 +1,5 @@
+command file_SetRelativePath @filePath, baseFolder
+   if baseFolder is empty then put folder_Above (the filename of this stack) into baseFolder
+   put file_GetRelativePath (filePath, baseFolder, commonPath) into filePath
+   return commonPath
+end file_SetRelativePath

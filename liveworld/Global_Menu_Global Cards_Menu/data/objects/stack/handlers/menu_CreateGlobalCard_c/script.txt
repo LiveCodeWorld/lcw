@@ -1,0 +1,47 @@
+on menu_CreateGlobalCard originalMenuController, newGlobalTitle
+   if newGlobalTitle is empty or newGlobalTitle is "Create" then
+      put opn_Ask ("Create new global menu card?", "Global | ??? | Menu") into newGlobalTitle
+   end if
+   
+   -- put rev_ScriptObject() into originalMenuController
+   
+   put the script of originalMenuController into someScript
+   put script_GetSuite (newGlobalTitle, someScript) into globalMenuSuites
+   
+   if exists (card newGlobalTitle of stack "libOPN_Menus") is true then
+      -- should not be!
+      if globalMenuSuites is not empty then set the clipboarddata to globalMenuSuites
+      opn_Notify "Copied menu script to clipboard.", true
+      edit the script of card newGlobalTitle of stack "libOPN_Menus"
+   else
+      -- put script_DeleteSuite (newGlobalTitle, someScript) into newOriginalScript
+      menu_DeleteTitleSuites newGlobalTitle, someScript
+      put the result into globalMenuSuites
+      
+      set the defaultstack to "libOPN_Menus"
+      create card newGlobalTitle
+      put the long id of cd newGlobalTitle of stack "libOPN_Menus" into newGlobalMenuController
+      display_Menus
+      
+      if globalMenuSuites is empty then
+         -- put script_ConstructSuite ("Object", newScripts) into newSuite
+         put menu_ConstructTemplateScript (newGlobalTitle) into globalMenuSuites
+         set the script of newGlobalMenuController to globalMenuSuites
+      else
+         rev_CloseTab originalMenuController
+         set the script of newGlobalMenuController to globalMenuSuites
+         set the script of originalMenuController to someScript
+         menu_CreateAndStoreTables originalMenuController
+         -- rev_SetScriptEditorField someScript
+         edit the script of originalMenuController
+      end if
+      
+      -- reindex menu tables for orignal menu controller and new global menu card controller
+      menu_CreateAndStoreTables newGlobalMenuController      
+      -- update the displayed originalMenuController script, and edit the script of the new global menu card
+      edit the script of newGlobalMenuController
+      
+      put "Created new global menu" && kwote(newGlobalTitle) into someComment
+      opn_Notify someComment, true
+   end if
+end menu_CreateGlobalCard

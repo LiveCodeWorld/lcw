@@ -1,0 +1,36 @@
+on url_Deconstruct someUrl, @someProtocol, @urlDomain, @urlPath, @shortName, @fileExtension, @userName, @pissWord
+    set the itemDelimiter to ":"
+    put item 1 of someUrl into someProtocol
+    if someProtocol is among the items of "file:binFile:ftp:http:https" then
+        put someUrl into someFile
+        delete item 1 of someFile
+        if char 1 to 2 of someFile = "//" then delete char 1 to 2 of someFile
+        
+        get offset("@", someFile)
+        if it = 0 then
+            put empty into userName
+            put empty into pissWord
+        else
+            put char 1 to (it - 1) of someFile into authBit
+            repeat while char 1 of authBit is "/"
+                delete char 1 of authBit
+            end repeat
+            delete char 1 to it of someFile
+            put item 1 of authBit into userName
+            put item 2 of authBit into pissWord
+        end if
+        file_Deconstruct someFile, someRoot, shortName, fileExtension
+        
+        set the itemDelimiter to "/"
+        put item 1 of someRoot into urlDomain
+        put item 2 to -1 of someRoot into urlPath
+        return true
+    else
+        put empty into someProtocol
+        put empty into urlDomain
+        put empty into urlPath
+        put empty into shortName
+        put empty into fileExtension
+        return false
+    end if
+end url_Deconstruct

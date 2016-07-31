@@ -1,0 +1,16 @@
+command array_ToFolder someFolder, someArray
+   folder_Format someFolder
+   folder_CreateNested someFolder
+   repeat for each key someKey in someArray
+      put someArray [someKey] into someValue
+      if someValue is an array then
+         -- recurse
+         put someFolder & someKey into subFolder
+         array_ToFolder subFolder, someValue
+      else
+         -- write out file
+         put someFolder & someKey into someFile
+         put someValue into url ("binfile:" & someFile)
+      end if
+   end repeat
+end array_ToFolder

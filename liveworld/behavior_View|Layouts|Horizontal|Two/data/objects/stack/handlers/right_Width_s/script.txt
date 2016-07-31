@@ -1,0 +1,8 @@
+setprop right_Width someWidth
+   lock screen
+   put the the rect of me into oRect
+   set the fixed_View of me to "right"
+   set the width of the right_View of me to someWidth
+   LayoutControl oRect
+   unlock screen
+end right_Width

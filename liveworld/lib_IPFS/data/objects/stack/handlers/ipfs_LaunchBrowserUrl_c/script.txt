@@ -1,0 +1,5 @@
+command ipfs_LaunchBrowserUrl someHash, pPath, pPort
+   put ipfs_ConstructBrowserUrl (someHash, pPath, pPort) into someUrl
+   launch url someUrl
+   return the result
+end ipfs_LaunchBrowserUrl

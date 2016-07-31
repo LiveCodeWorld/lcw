@@ -1,0 +1,14 @@
+command stackArray_DeleteObjectFolder textStackFolder
+   folder_Format textStackFolder
+   
+   -- hack
+   set the itemdelimiter to "/"
+   put textStackFolder & "objects/" into oldObjectsFolder
+   revDeleteFolder oldObjectsFolder -- lets start again, but keep metadata and other folders
+   -- end hack
+   
+   put textStackFolder & "data/" into dataFolder
+   put dataFolder & "objects/" into objectsFolder
+   
+   revDeleteFolder dataFolder -- lets start again, but keep metadata and other folders
+end stackArray_DeleteObjectFolder

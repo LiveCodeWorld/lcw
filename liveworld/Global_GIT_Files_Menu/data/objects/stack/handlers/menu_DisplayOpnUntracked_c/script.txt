@@ -1,0 +1,7 @@
+on menu_DisplayOpnUntracked mTarget
+   put git_UntrackedFiles() into untrackedFiles
+   filter untrackedFiles with "opn*"
+   
+   put untrackedFiles
+   -- set the tree_Outline of mTarget to untrackedFiles
+end menu_DisplayOpnUntracked

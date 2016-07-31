@@ -1,0 +1,36 @@
+command hkeyArray_ReplaceWithObject stackObject, @hkeyArray
+   -- seems like an old version of "hkeyArray_HandlerLinkToObjectLink"???
+   repeat for each key hKey in hkeyArray
+      script_DeconstructHkey hKey, handlerName, handlerType, handlerNum, scriptObject
+      
+      put hkeyArray [hKey] into hKeyLinks
+      put empty into newLinks
+      repeat for each line hKeyLink in hKeyLinks
+         script_DeconstructHkey hKeyLink, linkName, linkType, linkNum, linkObject
+         if exists (linkObject) is false then
+            line_Insert hKeyLink, newLinks
+         else
+            get the stack_Object of linkObject
+            if it is stackObject then
+               line_Insert hKeyLink, newLinks
+            else if linkObject = scriptObject then
+               -- actually anywhere in the path
+               next repeat
+            else
+               line_Add linkObject, newLinks
+            end if
+         end if
+      end repeat
+      
+      if exists(scriptObject) is false then
+         put newLinks into hkeyArray [hKey]
+      else
+         get the stack_Object of scriptObject
+         if it is stackObject then
+            put newLinks into hkeyArray [hKey]
+         else
+            put newLinks into hkeyArray [scriptObject]
+         end if
+      end if
+   end repeat
+end hkeyArray_ReplaceWithObject

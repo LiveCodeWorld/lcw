@@ -1,0 +1,4 @@
+on menu_ClearText mTarget
+   put the sivaSquareText_View of mTarget into sivaTraitView
+   set the view_Text of sivaTraitView to empty
+end menu_ClearText

@@ -1,0 +1,9 @@
+getprop control_IsTop
+   put the long id of the target into targetObject
+   put the long id of the owner of targetObject into targetOwner
+   
+   put the layer of targetOwner into targetOwnerLayer
+   put the layer of targetObject into targetObjectLayer
+   put targetObjectLayer = targetOwnerLayer + 1 into isTopLayer
+   return isTopLayer
+end control_IsTop

@@ -1,0 +1,7 @@
+on menu_CreateNewBranch
+   put opn_Ask("What's the new branch name?", "test") into branchName
+   put "git branch" && branchName into someShell
+   opn_Notify someShell, true
+   put git_ExecuteShellCommand(someShell) into shellResult
+   display_Text shellResult
+end menu_CreateNewBranch

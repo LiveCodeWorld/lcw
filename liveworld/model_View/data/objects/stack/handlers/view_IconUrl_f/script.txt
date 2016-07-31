@@ -1,0 +1,4 @@
+function view_IconUrl vName, pDontCreate
+   put library_TextUrl ("icon.png", vName, "view", pDontCreate) into someUrl
+   return someUrl
+end view_IconUrl

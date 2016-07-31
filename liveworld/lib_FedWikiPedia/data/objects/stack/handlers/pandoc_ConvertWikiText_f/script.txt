@@ -1,0 +1,8 @@
+function pandoc_ConvertWikiText wikiText, pFormat
+   if pFormat is empty then put "plain" into pFormat
+   file_SaveTempText wikiText, "wiki"
+   put the result into someFile
+   put "pandoc --from mediawiki --to" && pFormat && "-i" && someFile into someShell
+   put shell (SomeShell) into convertedText
+   return convertedText
+end pandoc_ConvertWikiText

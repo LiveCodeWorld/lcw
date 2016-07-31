@@ -1,0 +1,12 @@
+command view_NormalizeName @viewPath
+   if viewPath is empty then return empty
+   put word 1 to -1 of viewPath into viewPath
+   
+   set the itemdelimiter to "|"
+   repeat with itemNum = 1 to the number of items of viewPath
+      put word 1 to -1 of item itemNum of viewPath into someItem
+      put someItem into item itemNum of viewPath
+   end repeat
+   if item 1 of viewPath is not "View" then put "View|" before viewPath
+   return viewPath
+end view_NormalizeName

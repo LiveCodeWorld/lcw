@@ -1,0 +1,6 @@
+function fedwikipedia_GetPageSlug dropJSON
+   put fedwiki_GetDroppedUrl (dropJSON) into droppedURL
+   put mediwiki_ExtractPageSlugFromUrl (droppedURL) into pageSlug
+   fedwiki_ReturnError pageSlug, "Not a Wikipedia page!"
+   return pageSlug
+end fedwikipedia_GetPageSlug

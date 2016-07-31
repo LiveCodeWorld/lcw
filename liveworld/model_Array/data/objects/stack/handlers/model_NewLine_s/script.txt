@@ -1,0 +1,5 @@
+setprop model_NewLine [indexKey] someLine
+   put the long id of the target into modelObject
+   model_AddToIndex someLine, indexKey, modelObject, "uOPN", "array"
+   return the result
+end model_NewLine

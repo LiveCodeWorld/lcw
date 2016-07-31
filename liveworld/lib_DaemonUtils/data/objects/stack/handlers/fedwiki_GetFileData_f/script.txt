@@ -1,0 +1,14 @@
+function fedwiki_GetFileData shortFile
+   set the itemdelimiter to "."
+   put item - 1 of shortFile into someFileExtension
+   switch someFileExtension
+      case "png"
+         put "binfile:" & fedwiki_GetFile (shortFile) into someUrl
+         break
+      default -- case "js"
+         put "file:" & fedwiki_GetFile (shortFile) into someUrl
+         break
+   end switch
+   put url someUrl into someData
+   return someData
+end fedwiki_GetFileData

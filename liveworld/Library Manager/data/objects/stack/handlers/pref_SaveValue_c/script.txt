@@ -1,0 +1,5 @@
+command pref_SaveValue prefName, someValue, pSetName
+   pref_SetValue prefName, someValue
+   put the result into prefArray
+   pref_StoreArray prefArray, pSetName
+end pref_SaveValue

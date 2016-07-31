@@ -1,0 +1,4 @@
+on menu_DownloadYoutubeVideo
+   put youtube_DownloadVideo() into downloadedFile
+   set the filename of player 1 to downloadedFile
+end menu_DownloadYoutubeVideo

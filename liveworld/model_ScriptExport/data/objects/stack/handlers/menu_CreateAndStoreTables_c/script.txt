@@ -1,0 +1,7 @@
+command menu_CreateAndStoreTables mController
+   menu_ClearTargetGlobals
+   menu_DeleteTables mController   
+   put the script_MenuTitleTableArray of mController into mTitleTableArray
+   menu_SetDataArray mController, mTitleTableArray
+   return dataArray
+end menu_CreateAndStoreTables

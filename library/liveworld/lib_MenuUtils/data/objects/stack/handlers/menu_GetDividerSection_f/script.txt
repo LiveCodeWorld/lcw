@@ -1,0 +1,7 @@
+function menu_GetDividerSection dividerTitle, someMenu
+    put menu_GetDividerArray(someMenu) into dividerArray
+    put dividerArray[dividerTitle] into dividerInfo
+    if dividerInfo is empty then return empty
+    _menu_DeconstructDividerInfo dividerInfo, startLineNum, endLineNum, dividerMenuText
+    return dividerMenuText
+end menu_GetDividerSection

@@ -1,0 +1,9 @@
+private function _constructApiUrl restPath
+   local GitHubApiStem = "https://api.github.com"
+   
+   put GitHubApiStem into someUrl
+   if char 1 of restPath is not "/" then put "/" after someUrl
+   put restPath after someUrl
+   
+   return someUrl
+end _constructApiUrl

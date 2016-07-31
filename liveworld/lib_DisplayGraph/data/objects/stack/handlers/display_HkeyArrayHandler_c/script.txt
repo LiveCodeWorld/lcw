@@ -1,0 +1,14 @@
+command display_HkeyArrayHandler treeWidget, someValue, pathItems
+   put item 1 of pathItems into someThing
+   replace slash with comma in someThing
+   switch
+      case exists (someThing)
+         edit the script of someThing
+         break
+      case the number of items of someThing = 4
+         hkey_Edit someThing
+         break
+      default
+         put someThing
+   end switch
+end display_HkeyArrayHandler

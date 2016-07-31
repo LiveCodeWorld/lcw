@@ -1,0 +1,34 @@
+function outline_LinePath osLineNum, tabbedOutline, @osLineNumList, pathDelim
+    if pathDelim is empty then put "/" into pathDelim
+    put tabbedOutline into someIndex
+    replace tab with empty in someIndex
+    
+    put empty into outlineHierarchy
+    repeat with lineNum = osLineNum down to 1
+        put line lineNum of tabbedOutline into tabTitle
+        put line lineNum of someIndex into someTitle
+        put outline_TabLevel(tabTitle) into someTabLevel
+        if someTabLevel is 0 then
+            -- should always really return here
+            put someTitle & pathDelim before outlineHierarchy
+            delete last char of outlineHierarchy
+            
+            put lineNum & "," before osLineNumList
+            delete last char of osLineNumList
+             
+            return outlineHierarchy
+            exit repeat
+        else if someTabLevel < lastTabLevel then
+            put someTitle & pathDelim before outlineHierarchy
+            put lineNum & "," before osLineNumList
+            put someTabLevel into lastTabLevel
+        end if
+    end repeat
+    
+    -- bit funny but i guess first line could start with a tab
+    put someTitle & pathDelim before outlineHierarchy
+    delete last char of outlineHierarchy
+    put lineNum & "," before osLineNumList
+    delete last char of osLineNumList
+    return outlineHierarchy
+end outline_LinePath

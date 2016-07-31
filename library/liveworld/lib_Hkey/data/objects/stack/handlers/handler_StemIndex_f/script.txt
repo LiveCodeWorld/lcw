@@ -1,0 +1,12 @@
+function handler_StemIndex handlerIndex
+   if handlerIndex is empty then put handler_GetIndex() into handlerIndex
+   filter handlerIndex with "*_*"
+   
+   -- this is case sensitive (so get  keys applescript and appleScript)!
+   split handlerIndex with CR and "_"
+   put keys(handlerIndex) into stemIndex
+   put line_UniqueIndex(stemIndex) into stemIndex
+   
+   sort stemIndex
+   return word 1 to -1 of stemIndex
+end handler_StemIndex

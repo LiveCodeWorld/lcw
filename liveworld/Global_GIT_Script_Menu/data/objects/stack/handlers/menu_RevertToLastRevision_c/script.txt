@@ -1,0 +1,10 @@
+on menu_RevertToLastRevision scriptObject
+   put the git_LastRevision of scriptObject into previousScript
+   rev_SetScriptEditorField previousScript
+   
+   -- rev_ActivateScriptEditorTab scriptObject, previousScript
+   -- display_Lines previousScript
+   put the mobile_Name of scriptObject into mObject
+   put "Copied previous script to the script editor of" && mObject & ". Apply changes to save them!" into someComment
+   opn_Notify mObject, true
+end menu_RevertToLastRevision

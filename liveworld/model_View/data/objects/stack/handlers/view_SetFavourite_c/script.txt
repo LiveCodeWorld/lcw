@@ -1,0 +1,5 @@
+command view_SetFavourite vName, someBoolean
+   put view_GetFileMetaArray() into metaDataArray
+   put someBoolean into metaDataArray [vName]["isFavourite"]
+   view_SetFileMetaArray metaDataArray
+end view_SetFavourite

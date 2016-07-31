@@ -1,0 +1,5 @@
+function script_GetSuiteHandlers suiteTitle, someScript
+    get script_GetSuite(suiteTitle, someScript)
+    delete line 1 to 2 of it
+    return word 1 to -1 of it
+end script_GetSuiteHandlers

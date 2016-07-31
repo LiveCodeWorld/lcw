@@ -1,0 +1,7 @@
+function galleria_GetRecordFolder pRecordA
+   put pRecordA ["file_id"] into tFileID 
+   set the itemdel to "-"
+   put item 1 of pRecordA ["date_created"] into tYear
+   put format ("media/slideshows/%s/%s", tYear, tFileID) into tFilePath
+   return tFilePath
+end galleria_GetRecordFolder

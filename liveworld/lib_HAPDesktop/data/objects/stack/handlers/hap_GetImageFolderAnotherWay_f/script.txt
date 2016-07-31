@@ -1,0 +1,17 @@
+function hap_GetImageFolderAnotherWay recordArray
+   --  equivalent to folderForArt (pA) in art.lc
+   
+   set the itemDel to "/"
+   put item 2 of recordArray ["media_type"] into mType
+   -- put mType into gData ["artFolder"]
+   put recordArray ["file_id"] into fileID
+   
+   put hap_GetDocumentRoot() into docRoot
+   if mType is empty then return docRoot
+   
+   put docRoot & "/media/art/" & mType into artFolder
+   if fileID is empty then return artFolder
+   
+   put "/" & fileID after artFolder
+   return artFolder
+end hap_GetImageFolderAnotherWay

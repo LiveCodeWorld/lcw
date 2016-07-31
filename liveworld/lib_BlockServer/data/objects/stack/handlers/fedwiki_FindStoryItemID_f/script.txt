@@ -1,0 +1,10 @@
+function fedwiki_FindStoryItemID pageArray, itemID
+   put pageArray [ "story"] into storyArray
+   repeat for each key storyNum in storyArray
+      put storyArray [storyNum]["id"] into storyItemID
+      if storyItemID = itemID then
+         return storyNum
+      end if
+   end repeat
+   return empty
+end fedwiki_FindStoryItemID

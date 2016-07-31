@@ -1,0 +1,5 @@
+getprop meta_RevPropText
+   put the object_Folder of the target into objectFolder
+   put object_FetchRevPropText (objectFolder) into revPropText
+   return revPropText
+end meta_RevPropText

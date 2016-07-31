@@ -1,0 +1,13 @@
+getprop view_AboveTarget
+   -- use when you don't want a "view_Object" to trap things
+   -- like when a datagrid is within a view object
+   -- works even for datagrids, and objects without "view_Object" handlers
+   put the long id of the target into targetObject
+   repeat
+      if the view_Name of targetObject is not empty then return targetObject
+      if word 1 of targetObject = "group" and the selectGroupedControls of targetObject then return targetObject 
+      if word 1 of targetObject = "stack" or targetObject = empty then return empty
+      
+      delete word 1 to 4 of targetObject -- does not work for substacks
+   end repeat
+end view_AboveTarget

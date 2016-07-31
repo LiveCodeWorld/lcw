@@ -1,0 +1,9 @@
+on menu_ReExportStash
+   put the stack_Array of stack "libOPN_Menus stash@{0}" into stackArray
+   put "libOPN_Menus" into stackName
+   put the name of stack stackName into stackArray ["@manifest"]["abbreviated object"]
+   put stackName into stackArray ["@manifest"]["name"]
+   put the stack_RelativeFile of stack stackName into stackArray ["@manifest"]["filename"]
+   -- display_Array stackArray
+   stackArray_ExportAsFiles stackArray
+end menu_ReExportStash

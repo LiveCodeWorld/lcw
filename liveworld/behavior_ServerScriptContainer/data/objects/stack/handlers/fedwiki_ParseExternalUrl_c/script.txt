@@ -1,0 +1,26 @@
+command fedwiki_ParseExternalUrl someUrl
+   -- see also mediwiki_ExtractPageSlugFromUrl
+   url_Deconstruct someUrl, someProtocol, urlDomain, urlPath, shortName, fileExtension, uName, pWord
+   switch
+   case urlDomain ends with ".wikipedia.org"
+   set the itemdelimiter to "/"
+   if item 1 of urlPath is not "wiki" then return empty
+   
+   -- put fedwikipedia_FetchPageJson (someUrl) into pageJSON
+   put mediwiki_ExtractPageSlugFromUrl (someUrl) into pageSlug
+   put fedwiki_FetchWikipediaSummaryPageJson (pageSlug) into pageJSON
+   
+   fedwiki_ReturnJSON pageJSON
+   break
+   default
+   html_FetchScraped someURL, tidyXML, xmlArray, treeID
+   put xmlArray ["html"]["head"]["title"] into htmlTitle
+   revDeleteXMLTree treeID
+   
+   put "Here is a wiki link for this external url that you can drag onto you page:" into someText
+   put "- [ ] [" & someURL && htmlTitle & "]" after someText
+   
+   put fedwiki_ConstructErrorJSON (someText) into errorJSON
+   fedwiki_ReturnJSON errorJSON
+end switch
+end fedwiki_ParseExternalUrl

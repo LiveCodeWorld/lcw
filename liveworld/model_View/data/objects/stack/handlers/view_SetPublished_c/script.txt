@@ -1,0 +1,5 @@
+command view_SetPublished vName, someBoolean
+   put view_GetFileMetaArray() into metaDataArray
+   put someBoolean into metaDataArray [vName]["isPublished"]
+   view_SetFileMetaArray metaDataArray
+end view_SetPublished

@@ -1,0 +1,5 @@
+function library_ListGlobalMenuNames
+   global gHkey_Array
+   put gHkey_Array ["Global Menus"] into menuArray
+   return keys (menuArray)
+end library_ListGlobalMenuNames

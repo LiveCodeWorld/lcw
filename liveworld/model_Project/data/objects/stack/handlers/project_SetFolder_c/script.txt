@@ -1,0 +1,7 @@
+command project_SetFolder someName, projectName, someFolder
+   if char -1 of someFolder is not slash then put slash after someFolder
+   put library_FetchSetArray (projectName) into setArray
+   put projectName into setArray ["metadata"]["library_SetName"] -- should be called "project_Name"
+   put someFolder into setArray ["metadata"][someName]["folder"]
+   library_StoreSetArray setArray, projectName
+end project_SetFolder

@@ -1,0 +1,28 @@
+on menu_AddViewsToHarray indexView
+   put the index_Stacks of indexView into indexStackObjects
+   repeat for each line indexStackObject in indexStackObjects
+      set the cursor to busy
+      try
+         if exists (indexStackObject) is false then next repeat
+         put the view_Template of cd 1 of indexStackObject into templateObject
+         if exists (templateObject) is false then
+            put the long id of control 1 of cd 1 of indexStackObject into templateObject
+         end if
+         put the view_Name of templateObject into vName
+         if vName is empty then next repeat -- give up
+         
+         set the behavior of cd 1 of indexStackObject to the name of stack "behavior_ViewTemplateCard"
+         set the urip_Type of templateObject to "view template"
+         
+         -- let's index it
+         script_UpdateAndExport templateObject
+         -- object_AddToGlobalArray templateObject
+      catch e
+         opn_Notify merge ("Problem with view '[[vName]]'!")
+         put indexStackObject
+         put indexStackObject & CR after badViews
+      end try
+   end repeat
+   put badViews
+   answer "Added views to global Hkey_Array"
+end menu_AddViewsToHarray

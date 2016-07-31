@@ -1,0 +1,15 @@
+getprop layout_Elements
+   if the long id of the target is not the long id of me then pass layout_Elements
+   
+   repeat for each item objectRef in "left_View,right_View"
+      put the objectRef of me into someView
+      put the layout_Elements of someView into viewElements
+      if viewElements is empty then
+         put someView & CR after layoutElements
+      else
+         put viewElements & CR after layoutElements
+      end if
+   end repeat
+   delete char -1 of layoutElements
+   return layoutElements
+end layout_Elements

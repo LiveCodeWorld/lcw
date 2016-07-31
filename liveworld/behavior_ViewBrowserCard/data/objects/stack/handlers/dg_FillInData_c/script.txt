@@ -1,0 +1,24 @@
+on dg_FillInData pDataArray, recordView
+   try   
+      put pDataArray ["title"] into vName
+      
+      set the itemdelimiter to "|"
+      delete item 1 of vName
+      set the record_Name of recordView to vName
+      
+      put view_GetHelpHtml (vName) into someHtml
+      set the record_HelpHtml of recordView to someHtml
+      
+      put view_LocalIconFile (vName) into imageFile
+      if there is a file imageFile then set the record_ImageFile of recordView to imageFile
+      
+      put pDataArray ["isExpanded"] is true into isExpanded
+      set the record_IsExpanded of recordView to isExpanded
+      
+      set the menu_Title of recordView to "Tree | Field | Menu"
+      set the menu_ToolTitle of recordView to "Global | Record | View Info | Menu"
+   catch e
+      -- log_Error "dg_FillInData", e
+      opn_Notify e, true
+   end try
+end dg_FillInData

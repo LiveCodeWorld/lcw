@@ -1,0 +1,6 @@
+function library_FetchStackFiles pSetName
+   -- see also "meta_StackArrayFile" for project level stackfile storage
+   put library_FetchSetArray (pSetName) into setArray
+   put setArray ["data"]["stackfiles"] into stackFileTable
+   return stackFileTable
+end library_FetchStackFiles

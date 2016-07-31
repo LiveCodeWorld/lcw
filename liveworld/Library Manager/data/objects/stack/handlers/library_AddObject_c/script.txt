@@ -1,0 +1,16 @@
+command library_AddObject ruggedObject, libType, pSetName 
+   put library_GetSetName() into currentSetName
+   if pSetName is empty then put currentSetName into pSetName
+   if pSetName = currentSetName then
+      global gLibrarySet_Array
+      put empty into gLibrarySet_Array ["data"][libType][ruggedObject]
+      
+      object_AddToGlobalArray ruggedObject
+      put library_FetchSetArray (pSetName) into setArray
+      put empty into setArray ["data"][libType][ruggedObject]
+      library_StoreSetArray setArray, pSetName
+   else
+      library_AddSetNamesToStore ruggedObject, libType, pSetName
+   end if
+   return pSetName
+end library_AddObject

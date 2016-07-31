@@ -1,0 +1,54 @@
+function rev_GetIcon hType
+   -- ignoreCall: uIconMap,g
+   
+   # Parameters
+   #   pTag : A single letter tag that refers to certain property of a handler
+   #   Possible values:
+   #     C - command
+   #     M - message
+   #     F - function
+   #     G - getProp
+   #     S - setprop
+   #     B - before
+   #     A - after
+   #   pIsPrivate : whether or not the handler is private (commands and functions only)
+   # Returns
+   #   The id of a suitable image to represent the property pTag of a handler. Note: this function
+   #   may return empty if no image is required to represent this.
+   
+   local tTag
+   put "handler" into tTag
+   
+   if char 1 of hType = "p" then
+      put "Private" after tTag
+      delete char 1 of hType
+   end if
+   
+   switch pTag
+      case "C"
+         put "Command" after tTag
+         break
+      case "M"
+         put "Message" after tTag
+         break
+      case "F"
+         put "Function" after tTag
+         break
+      case "G"
+         put "Getprop" after tTag
+         break
+      case "S"
+         put "Setprop" after tTag
+         break
+      case "B"
+         put "Before" after tTag
+         break
+      case "A"
+         put "After" after tTag
+         break
+   end switch
+   
+   -- return seGetIcon(tTag)
+   put the uIconMap [tTag] of stack "revSETemplate" into someIcon
+   return someIcon
+end rev_GetIcon

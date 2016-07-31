@@ -1,0 +1,6 @@
+getprop displayed_OverlayArray [pOverlayName]
+   breakpoint
+   put the displayed_Object of me into scriptObject
+   put the overlay_Array of scriptObject into overlayArray
+   return overlayArray
+end displayed_OverlayArray

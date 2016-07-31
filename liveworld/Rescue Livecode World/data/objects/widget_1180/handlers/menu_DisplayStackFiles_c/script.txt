@@ -1,0 +1,3 @@
+on menu_DisplayStackFiles mTarget, projectName
+   put project_FetchStackFiles (projectName)
+end menu_DisplayStackFiles

@@ -1,0 +1,16 @@
+command mediawiki_DeconstructImageWikiText imageWikiText, @shortImageFile, @captionBit
+   delete char 1 to 2 of imageWikiText
+   delete char -2 to -1 of imageWikiText
+   
+   set the itemdelimiter to "|"
+   put item 1 of imageWikiText into shortFileBit
+   put item 2 of imageWikiText into thumbBit
+   put item 3 of imageWikiText into directionBit
+   put item -1 of imageWikiText into captionBit
+   
+   set the itemdelimiter to ":"
+   put item 2 of shortFileBit into shortImageFile
+   replace space with "_" in shortImageFile
+   
+   return shortFileBit & CR & thumbBit & CR & directionBit
+end mediawiki_DeconstructImageWikiText

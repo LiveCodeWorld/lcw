@@ -1,0 +1,5 @@
+function menu_TitleIsGlobal mTitle
+   -- here in case we nee to change mTitle to start with "Menu" rather than end
+   set the itemDelimiter to "|"
+   return word 1 to -1 of item 1 of mTitle is "Global"
+end menu_TitleIsGlobal

@@ -1,0 +1,34 @@
+command stack_Save someObject, pClean, pCleanGeometry, pFilePath, pMacStackFileType
+   put the stack_Object of someObject into stackObject
+   if pFilePath is empty then put the effective fileName of stackObject into pFilePath
+   if pFilePath is empty or theFilePath is "ask" then
+      put the short name of stackObject into theTitle
+      put ".rev" after theTitle
+      ask file "Type a name for this stack and save it:" with theTitle
+      put it into pFilePath
+      
+      if pFilePath is empty then return "cancel"
+   end if
+   
+   if pClean is not false then
+      -- cleans every object, then saves and compacts
+      rev_CleanStack stackObject, pCleanGeometry
+      put the result into cleanInfo
+      -- opn_Notify cleanInfo
+   else
+      do "compact" && stackObject
+      if pMacStackFileType is empty then put "revoRSTK" into pMacStackFileType
+      put the filetype into oFiletype
+      set the filetype to pMacStackFileType
+      lock messages
+      save stackObject as pFilePath
+      unlock messages
+      set the filetype to oFiletype
+   end if
+   
+   global gREVStackStatus
+   put the short name of stackObject into stackName
+   delete global gREVStackStatus [stackName]
+   
+   return empty
+end stack_Save

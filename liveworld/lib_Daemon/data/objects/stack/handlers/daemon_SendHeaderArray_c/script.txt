@@ -1,0 +1,13 @@
+command daemon_SendHeaderArray someRoute, headerArray, socketID, pSendCompressed
+   put daemon_GetRouteData (someRoute) into routeData
+   
+   put daemon_ConstructDefaultHeader() into defaultHeaderArray
+   delete variable headerArray ["Content-Length"] -- because it is always added below
+   union headerArray with defaultHeaderArray
+   put "HTTP/1.1 200 OK" into someHeader
+   put CRLF & daemon_DeconstructHeaderArray (headerArray) after someHeader
+   
+   -- daemon_SendRaw someHeader, routeData, socketID
+   daemon_Send someHeader, routeData, socketID, pSendCompressed -- adds "Content-Length"
+   return the result
+end daemon_SendHeaderArray

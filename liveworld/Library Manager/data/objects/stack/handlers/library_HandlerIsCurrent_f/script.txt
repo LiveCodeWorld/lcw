@@ -1,0 +1,5 @@
+function library_HandlerIsCurrent shortHKey, someHandler
+   put sha1_Hash (someHandler) into thisHash
+   put library_FetchHkeyHash (shortHKey) into thatHash
+   return thisHash = thatHash
+end library_HandlerIsCurrent

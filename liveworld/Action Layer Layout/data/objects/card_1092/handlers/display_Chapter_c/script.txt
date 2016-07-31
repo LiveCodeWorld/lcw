@@ -1,0 +1,9 @@
+command display_Chapter targetControl, chapterName
+   lock screen
+   put sivasiva_GetChapterNum (chapterName) into chapterNum
+   put the plusMinus_View of cd 3 into plusMinusView
+   set the chapter_Num of plusMinusView to chapterNum
+   
+   go to cd 2
+   unlock screen
+end display_Chapter

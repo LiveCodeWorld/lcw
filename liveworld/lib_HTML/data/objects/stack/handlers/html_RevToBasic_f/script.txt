@@ -1,0 +1,4 @@
+function html_RevToBasic someHtmlText
+    put html_RevToColourSpan(someHtmlText) into someHtml
+    return html_RevToBoldSpan(someHtml)
+end html_RevToBasic

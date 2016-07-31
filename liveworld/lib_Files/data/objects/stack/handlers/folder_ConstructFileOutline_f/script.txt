@@ -1,0 +1,53 @@
+function folder_ConstructFileOutline someFolder, @infoArray, excludeFolderList, includeInvisible, tabBit, pUseHtmlLinks
+   local shortFileOutline
+   
+   if there is not a folder someFolder then return empty
+   folder_Format someFolder
+   put infoArray["FolderIndex"] into folderIndex 
+   put infoArray["FileIndex"] into fileIndex 
+   line_Insert someFolder, folderIndex
+   put folderIndex into infoArray["FolderIndex"]
+   
+   put the directory into oDirectory
+   set the directory to someFolder
+   put the files into shortFiles
+   if includeInvisible is not false then filter shortFiles without ".*"
+   
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into filePath
+      line_Insert filePath, fileIndex
+      
+      if pUseHtmlLinks is not true then
+         put tabBit & shortFile into osTitle
+      else
+         put tabBit & html_ConstructNameLink(shortFile, filePath) into osTitle
+      end if
+      line_Insert osTitle, shortFileOutline
+   end repeat
+   put fileIndex into infoArray["FileIndex"]
+   
+   put the folders into newShortFolders
+   if includeInvisible is not false then filter newShortFolders without ".*"
+   
+   -- what else needs escaping?
+   replace "/" with ":" in newShortFolders
+   
+   repeat for each line shortFolder in newShortFolders
+      if shortFolder is among the items of excludeFolderList then next repeat
+      put someFolder & shortFolder & "/" into nestedFolder
+      
+      if pUseHtmlLinks is not true then
+         put tabBit & shortFolder into osTitle
+      else
+         put tabBit & html_ConstructNameLink (shortFolder, nestedFolder) into osTitle
+      end if
+      line_Insert osTitle, shortFileOutline
+      
+      put tabBit & tab into nextTabBit
+      put folder_ConstructFileOutline (nestedFolder, infoArray, excludeFolderList, includeInvisible, nextTabBit, pUseHtmlLinks) into nestedOutline
+      line_Insert nestedOutline, shortFileOutline
+   end repeat
+   
+   set the directory to oDirectory
+   return shortFileOutline
+end folder_ConstructFileOutline

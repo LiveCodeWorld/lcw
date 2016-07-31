@@ -1,0 +1,16 @@
+on xml_SetNodeContents @someXml, someNode, nodeContents
+    put revCreateXMLTree(someXml, false, true, false) into treeID
+    revPutIntoXMLNode treeID, someNode, nodeContents
+    put the result into theResult
+    if char 1 to 6 of theResult is "xmlerr" then
+        xml_TreeAddNode someNode, nodeContents, treeID
+        put the result into theResult
+        if char 1 to 6 of theResult is not "xmlerr" then
+            put revXMLText(treeID) into someXml
+        end if
+    else
+        put revXMLText(treeID) into someXml
+    end if
+    revDeleteXMLTree treeID
+    return theResult
+end xml_SetNodeContents

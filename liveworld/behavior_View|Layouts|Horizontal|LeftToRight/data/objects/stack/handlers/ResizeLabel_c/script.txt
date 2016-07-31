@@ -1,0 +1,5 @@
+on ResizeLabel recordLabelWidth
+   -- upward (top down) chaining
+   dispatch "ResizeLabel" to of the owner of me with recordLabelWidth
+   if it is not "handled" then set the record_LabelWidth of me to recordLabelWidth
+end ResizeLabel

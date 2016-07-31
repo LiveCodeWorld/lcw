@@ -1,0 +1,9 @@
+function appleScript_GetLiveCodePathEnvironmentalVariable
+   -- totally useless, but shows how shell inherits LiveCodes value for $PATH
+   -- put $PATH = appleScript_GetLiveCodePathEnvironmentalVariable() = true
+   do "do shell script" && kwote ("echo $PATH") as AppleScript
+   put the result into liveCodeInheritedPathVariable
+   if char 1 of liveCodeInheritedPathVariable is quote then delete char 1 of liveCodeInheritedPathVariable
+   if char -1 of liveCodeInheritedPathVariable is quote then delete char -1 of liveCodeInheritedPathVariable
+   return liveCodeInheritedPathVariable
+end appleScript_GetLiveCodePathEnvironmentalVariable

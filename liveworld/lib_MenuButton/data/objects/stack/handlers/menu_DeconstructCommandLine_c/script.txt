@@ -1,0 +1,23 @@
+command menu_DeconstructCommandLine mVersion, handlerLine, @handlerName, @handlerPrefix, @handlerSuffix, @customParam
+   put token 1 of handlerLine into handlerName
+   put token 2 of item 1 of handlerLine into firstParam
+   put token 1 of item 2 of handlerLine into secondParam
+   
+   /*
+   -- old way which switches depending on the menu_Version (too complicated)
+   if mVersion is empty then
+      if param_IsObject (firstParam) then
+         put empty into customParam
+      else
+         put firstParam into customParam 
+      end if
+   else
+      put secondParam into customParam
+   end if
+   */
+   
+   put secondParam into customParam -- new way (always pass mTarget as first param)
+   set the itemdelimiter to "_"
+   put item 1 of handlerName into handlerPrefix
+   put item 2 of handlerName into handlerSuffix
+end menu_DeconstructCommandLine

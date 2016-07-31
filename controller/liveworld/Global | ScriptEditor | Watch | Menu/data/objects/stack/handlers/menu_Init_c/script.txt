@@ -1,0 +1,15 @@
+on menu_Init
+   put rev_ListEditedStackNames() into editedStacks
+   repeat for each line stackName in editedStacks
+      switch
+         case exists (stack stackName) is false
+            next repeat
+         case word 1 of stackName = "Untitled"
+            next repeat
+         default
+            put stackName & CR after goodEditedStackNames
+      end switch
+   end repeat
+   delete char -1 of goodEditedStackNames
+   put goodEditedStackNames into LocalArray ["editedStacks"]
+end menu_Init

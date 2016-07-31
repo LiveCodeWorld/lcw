@@ -1,0 +1,9 @@
+function hap_GetDocumentRoot
+   -- so we can test and debug on desktop as well
+   if the environment is "server" then
+      put $_SERVER["DOCUMENT_ROOT"] into docRoot
+   else
+      put "/home/devhap/public_html" into docRoot
+   end if
+   return docRoot
+end hap_GetDocumentRoot

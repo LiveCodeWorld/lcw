@@ -1,0 +1,8 @@
+getprop disabled_AnalizeScript [scriptObject]
+   return false
+   if LocalArray ["overlayNames"] is empty then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_AnalizeScript

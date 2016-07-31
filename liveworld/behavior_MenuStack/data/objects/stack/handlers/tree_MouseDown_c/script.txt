@@ -1,0 +1,14 @@
+on tree_MouseDown treeField
+   if the controlKey is "Down" then
+      -- put the menu_ToolTitle of the tree_Field of me into mTitle -- note not menu_ToolTitle
+      menu_PopUp "Global | Tree | Line | Menu"
+      return false
+   end if
+   
+   set the tree_DragOn of treeField to true
+   put the tree_SelectedIndex of treeField into mTitle
+   if mTitle is not "-" then
+      set the dragdata ["private"] to mTitle
+      drag_SetGlobalStatus true
+   end if
+end tree_MouseDown

@@ -1,0 +1,4 @@
+getprop header_Divider
+   if exists (control "_Header Divider" of me) is false then return empty
+   return the long id of control "_Header Divider" of me
+end header_Divider

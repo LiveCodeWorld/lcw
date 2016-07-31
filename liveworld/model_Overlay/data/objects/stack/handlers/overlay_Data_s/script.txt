@@ -1,0 +1,5 @@
+setprop overlay_Data overlayData
+   put the overlay_Folder of the target into overlayFolder
+   overlay_SetData overlayFolder, overlayData
+   return the result
+end overlay_Data

@@ -1,0 +1,4 @@
+function script_GetGlobalMenuArray
+   put script_ExtractGlobalSuiteArray ("Menu") into menuArray
+   return menuArray
+end script_GetGlobalMenuArray

@@ -1,0 +1,7 @@
+function _constructObjectArray someObjects
+   local objectArray
+   repeat for each line someObject in someObjects
+      put empty into objectArray [someObject]
+   end repeat
+   return objectArray
+end _constructObjectArray

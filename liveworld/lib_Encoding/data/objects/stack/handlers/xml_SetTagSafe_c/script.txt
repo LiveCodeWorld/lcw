@@ -1,0 +1,8 @@
+command xml_SetTagSafe @tagName
+    -- check xml stuff 
+    -- this handler should remove any invalid chars in an xmL tag name
+    -- ideally in a way in which it can be restored automatically!
+    
+    replace space with "_" in  tagName
+    -- put wiki_ConstructID(tagName) into tagName
+end xml_SetTagSafe

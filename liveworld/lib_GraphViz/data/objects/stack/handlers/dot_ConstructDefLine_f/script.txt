@@ -1,0 +1,32 @@
+function dot_ConstructDefLine nodeLabel, nodeShape, nodeStyle, nodeColour, nodeFillColour, polyParams, nodeUrl, nodeToolTip, nodeShapeFile
+    -- was "node_ConstructParamLine"
+    local nodeLine
+    
+    if nodeLabel is not empty then
+        put "label='[[nodeLabel]]'" into nodeLine
+    end if
+     
+    if nodeShape is not empty then
+        if nodeLine is not empty then
+            put "," & space after nodeLine
+        end if
+        put "shape=[[nodeShape]]" after nodeLine
+        if nodeShape is "polygon" then
+            if polyParams is not empty then
+                put "," && polyParams after nodeLine
+            end if
+        end if
+    end if
+     
+    dot_AddParamToNodeDef "style", nodeStyle, nodeLine, false
+    dot_AddParamToNodeDef "color", nodeColour, nodeLine, false
+    dot_AddParamToNodeDef "fillcolor", nodeFillColour, nodeLine, false
+    dot_AddParamToNodeDef "URL", nodeUrl, nodeLine
+    dot_AddParamToNodeDef "tooltip", nodeToolTip, nodeLine
+    dot_AddParamToNodeDef "shapefile", nodeShapeFile, nodeLine
+    
+    replace "'" with quote in nodeLine
+    put merge(nodeLine) into nodeLine
+     
+    return nodeLine
+end dot_ConstructDefLine

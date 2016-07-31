@@ -1,0 +1,15 @@
+on menu_GoToView scriptObject
+   put the object_MetaData ["name"] of scriptObject into viewName
+   put view_GetTemplateObject (viewName) into templateObject
+   switch
+      case templateObject = empty
+         answer warning merge ("The view '[[viewName]]' is not in the database!")
+         break
+      case exists (templateObject) is false
+         put templateObject
+         answer warning merge ("I cannot find the view template for view '[[viewName]]'")
+         break
+      default
+         object_GoTo templateObject
+   end switch
+end menu_GoToView

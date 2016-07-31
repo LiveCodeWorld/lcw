@@ -1,0 +1,8 @@
+command trait_SetQuote
+   put the long id of card "Quote" into quoteCard
+   put the plusMinus_View of quoteCard into plusMinusView  
+   
+   put the trait_Quote of plusMinusView into traitQuote
+   set the displayed_SquareText of plusMinusView to traitQuote
+   set the show_TraitLabels of plusMinusView to false
+end trait_SetQuote

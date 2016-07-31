@@ -1,0 +1,26 @@
+function viewBrowser_ConstructBehaviorArray pWithBehavior
+   put view_PathIndex() into vNames
+   filter vNames without "Compound|*"
+   
+   repeat for each line vName in vNames
+      put view_GetTemplateObject (vName) into libraryObject
+      if exists(libraryObject) is false then
+         log_Error merge("view_GetTemplateObject ([[vName]]) does not exist!"), true
+         next repeat
+      end if
+      put the behavior of libraryObject into someBehavior
+      put exists(someBehavior) into hasBehavior
+      
+      if pWithBehavior and hasBehavior then
+         put vName & CR after bNames
+      else if pWithBehavior is false then
+         if hasBehavior is false then
+            put vName & CR after bNames
+         end if
+      end if
+   end repeat
+   delete char -1 of bNames
+   
+   put viewBrowser_ConstructArrayFromViewNames (bNames) into dgArray
+   return dgArray
+end viewBrowser_ConstructBehaviorArray

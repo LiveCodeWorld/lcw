@@ -1,0 +1,6 @@
+on actionCompile
+   if the shiftKey is "Down" then pass actionCompile
+   put rev_ScriptObject() into scriptObject   
+   send "script_JustCompiled scriptObject" to me in 2 ticks	# asynch send (so that script is set to new script)
+   pass actionCompile
+end actionCompile

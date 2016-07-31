@@ -1,0 +1,24 @@
+command folder_CheckStacks someFolder
+   if char -1 of someFolder is not slash then put slash after someFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into stackFilePath
+      if there is a stack stackFilePath then
+         put the stack_IsKnown of stack stackFilePath into wasKnown
+         if wasKnown is false then
+            set the stack_IsKnown of stack stackFilePath to true
+            put the stack_IsKnown of stack stackFilePath into isKnown -- just for debugging check
+         end if
+         
+         put the short name of stack stackFilePath into shortName
+         put shortName & CR after shortNames
+      end if
+   end repeat
+   delete char -1 of shortName
+   set the defaultfolder to oFolder
+   return shortName
+end folder_CheckStacks

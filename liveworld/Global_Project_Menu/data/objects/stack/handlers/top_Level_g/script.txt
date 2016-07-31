@@ -1,0 +1,5 @@
+getprop top_Level [mTarget]
+   put the stack_Name of mTarget into stackName
+   put the mode of stack stackname into someMode
+   return someMode is not 4
+end top_Level

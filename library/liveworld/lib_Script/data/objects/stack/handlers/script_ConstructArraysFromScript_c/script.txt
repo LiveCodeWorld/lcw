@@ -1,0 +1,104 @@
+command script_ConstructArraysFromScript someScript, @handlerArray, @uniqueArray, @duplicateArray, scriptObject
+   -- very slow as it loops through each line (use with care)
+   
+   local messageHandlers, commandHandlers, functionHandlers, setpropHandlers, getpropHandlers, orderedHandlers, errorHandlers, commandLines
+   local handlerKeys, handlerName, hType, privateBit
+   
+   -- would be faster to do in repeat loop below
+   local mulitLineComment
+   script_ExtractAndStripMultiLineComments someScript, mulitLineComment
+   
+   put rev_MessageNames() into revMessageNames
+   set the wholematches to true
+   repeat for each line handlerLine in someScript
+      if handlerLine is empty then next repeat
+      handler_Deconstruct handlerLine, handlerName, hType, privateBit
+      if handlerName = "_" then next repeat
+      
+      switch char 1 of hType
+         case "f"
+            put handlerName & CR after functionHandlers
+            break
+         case "g"
+            put handlerName & CR after getpropHandlers
+            break
+         case "s"
+            put handlerName & CR after setpropHandlers
+            break
+         case empty
+            -- someJunk
+            next repeat
+         default -- (hType = "on" or hType = "command")
+            if handlerName is among the lines of revMessageNames then
+               put handlerName & CR after messageHandlers
+            else
+               put handlerName & CR after commandHandlers
+               
+               put handlerLine into commandLine
+               delete token 1 of commandLine
+               put commandLine & CR after commandLines
+            end if
+            break
+      end switch
+      
+      put handlerLine & CR after handlerLines
+      put handlerName & CR after orderedHandlers
+      put char 1 of hType & privateBit into hType
+      
+      put handlerName & "," & hType into shortHKey
+      put uniqueArray [shortHKey] into firstFoundObject
+      
+      if firstFoundObject is empty then
+         put scriptObject into uniqueArray [shortHKey]
+         put 1 into handlerNum
+      else
+         put duplicateArray [shortHKey] into duplicateIndex
+         put the number of lines of duplicateIndex + 1 into handlerNum
+         if handlerNum = 1 then
+            put hkey_Construct (handlerName, hType, scriptObject, 1) & CR & hkey_Construct (handlerName, hType, scriptObject, 2) into duplicateIndex
+         else
+            put hkey_Construct (handlerName, hType, scriptObject, (handlerNum+1)) into duplicateKey
+            line_Insert duplicateKey, duplicateIndex
+         end if
+         put duplicateIndex into duplicateArray [shortHKey]
+      end if
+      
+      -- add last bit (new)
+      if privateBit is not true then
+         put hkey_Construct (handlerName, hType, scriptObject, handlerNum) into hKey
+         put hKey & CR after notPrivateHkeys
+      end if
+      --
+      if privateBit is empty then
+         script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+      else
+         script_SetPrivateHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+      end if
+      put char startHandler to endHandler of someScript into someHandler
+      put someHandler into handlerArray [hKey] -- this is a bit messy (better handlerArray ["handler"][hKey]
+      -- put startHandler,endHandler into offsetArray [hKey]
+   end repeat
+   
+   delete last char of handlerLines
+   delete last char of commandLines
+   delete last char of orderedHandlers
+   
+   delete last char of messageHandlers
+   delete last char of commandHandlers
+   delete last char of functionHandlers
+   delete last char of getpropHandlers
+   delete last char of setpropHandlers
+   
+   put handlerLines into handlerArray ["handlerLines"]
+   put commandLines into handlerArray ["commandLines"]
+   put orderedHandlers into handlerArray ["orderedHandlers"]
+   
+   put messageHandlers into handlerArray ["message"]
+   put commandHandlers into handlerArray ["command"]
+   put functionHandlers into handlerArray ["function"]
+   put getpropHandlers into handlerArray ["getprop"]
+   put setpropHandlers into handlerArray ["setprop"]
+   
+   delete last char of notPrivateHkeys
+   return notPrivateHkeys
+end script_ConstructArraysFromScript

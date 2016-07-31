@@ -1,0 +1,4 @@
+on menu_RevealObjectFolder scriptObject
+   put the object_Folder [true] of scriptObject into someFolder
+   finder_Reveal someFolder
+end menu_RevealObjectFolder

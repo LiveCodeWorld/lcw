@@ -1,0 +1,5 @@
+getprop model_ViewLinks [modelName]
+   -- was "model_LinkedViews" then "model_Links"
+   put the long id of me into modelObject
+   return model_GetValue(modelName, modelObject, "uOPN_LinkedViewsOfModel", "array")
+end model_ViewLinks

@@ -1,0 +1,18 @@
+function digitalocean_FetchWikiFiles fedwikiDomain, dropletName, pListAll
+   -- requires public ssh key to be installed on server
+   put digitalOcean_GetDropletInfoArray() into pIndexedDropletArray
+   put digitalOcean_GetDropletIP (dropletName, pIndexedDropletArray) into dropletIP
+   if http_CheckIP (dropletIP) is false then return "error, fetching ip address for droplet" && dropletName
+   
+   put "ssh root@" & dropletIP && "ls" into someShell
+   if pListAll is true then
+      put space &  "-la" after someShell
+   end if
+   
+   shell_BashParamEscape fedwikiDomain
+   -- .wiki/actual.world/pages
+   put space & ".wiki/" & fedwikiDomain & "/pages/" after someShell
+   
+   put word 1 to -1 of shell (someShell) into wikiPageFiles
+   return wikiPageFiles
+end digitalocean_FetchWikiFiles

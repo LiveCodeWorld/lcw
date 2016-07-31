@@ -1,0 +1,4 @@
+command overlayArray_SetMetadataArray @overlayArray, metadataArray
+   put metadataArray into overlayArray ["metadata"]
+   return overlayArray
+end overlayArray_SetMetadataArray

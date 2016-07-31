@@ -1,0 +1,4 @@
+command graph_AddToGroupStyleArray @dotGroupStyleArray, nodeType, nodeIDs, someColour, someFillcolor, nodeUrl, nodeIdArray
+   put nodeIDs into dotGroupStyleArray [nodeType]["nodeIDs"]
+   graph_SetNodeTypeStyle dotGroupStyleArray, nodeType, someColour, someFillcolor, nodeUrl
+end graph_AddToGroupStyleArray

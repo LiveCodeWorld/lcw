@@ -1,0 +1,4 @@
+command library_SetRevHackStatus someBoolean
+   global gLibrarySet_Array
+   put someBoolean is true into gLibrarySet_Array ["data"]["rev_AddBehaviorHacks"]
+end library_SetRevHackStatus

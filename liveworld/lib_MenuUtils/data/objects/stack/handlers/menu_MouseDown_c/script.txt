@@ -1,0 +1,7 @@
+command menu_MouseDown pMenuTitleTable, pTargetObject
+   if exists(pTargetObject) is false then put the long id of the target into pTargetObject
+   if pMenuTitleTable is empty then put the menu_Title of pTargetObject into pMenuTitleTable
+   set the menu_TextFromTitle of pTargetObject to pMenuTitleTable
+   put the result into mText
+   if mText is empty then return "false"
+end menu_MouseDown

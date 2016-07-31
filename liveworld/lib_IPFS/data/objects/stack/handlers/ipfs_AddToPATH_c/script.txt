@@ -1,0 +1,10 @@
+command ipfs_AddToPATH
+   put "/Users/BabyBlue/go/bin/" into goPath
+   set the itemdelimiter to ":"
+   if goPath is among the items of $PATH then
+      return $PATH
+   else
+      put ":" & goPath after $PATH
+      return $PATH
+   end if
+end ipfs_AddToPATH

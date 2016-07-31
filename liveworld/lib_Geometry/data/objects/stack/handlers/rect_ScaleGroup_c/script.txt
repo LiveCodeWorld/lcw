@@ -1,0 +1,19 @@
+on rect_ScaleGroup someGroup, sFactor, scaleCentre, scaleGroup
+    lock screen
+    put the rect of someGroup into groupRect
+     
+    put the object_Controls of someGroup into groupElements
+    repeat for each line groupElement in groupElements
+        get the name of groupElement
+        put the rect of groupElement into elementRect
+        put rect_ScaleFromCentre(elementRect, sFactor, scaleCentre) into newElementRect
+        set the rect of groupElement to newElementRect
+    end repeat
+    
+    if the locklocation of someGroup is true and scaleGroup is not false then 
+        put rect_ScaleFromCentre(groupRect, sFactor, scaleCentre) into newGroupRect
+        -- rect_CreateTestButton newGroupRect
+        set the rect of someGroup to newGroupRect
+    end if
+    unlock screen
+end rect_ScaleGroup

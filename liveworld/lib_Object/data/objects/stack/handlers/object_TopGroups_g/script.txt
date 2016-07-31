@@ -1,0 +1,4 @@
+getprop object_TopGroups [visibleOnly]
+   put the long ID of the target into someContainer
+   return object_GetTopGroups(someContainer, true, visibleOnly)
+end object_TopGroups

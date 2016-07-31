@@ -1,0 +1,6 @@
+on menu_SnapView scriptObject
+   wireframe_SnapAndExport scriptObject, true
+   put the result into imageFile
+   put the wireframe_LocalhostURL of scriptObject into localhostURL
+   finder_Reveal imageFile
+end menu_SnapView

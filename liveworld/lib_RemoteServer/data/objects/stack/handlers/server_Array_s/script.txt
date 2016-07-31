@@ -1,0 +1,12 @@
+setprop server_Array serverArray
+   put serverArray into LocalArray ["serverArray"]
+   
+   put serverArray ["serverURL"] into Server_URL
+   put serverArray ["sshKeyPath"] into SSH_KeyPath
+   put serverArray ["sshUser"] into SSH_UserName
+   put serverArray ["serverAddress"] into Server_Address
+   put serverArray ["dropletName"] into Server_DropletName
+   put serverArray ["rigApplicationFolder"] into Rig_ApplicationFolder
+   
+   return Server_URL
+end server_Array

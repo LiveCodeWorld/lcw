@@ -1,0 +1,10 @@
+on menu_EditScript treeView, objectReference
+   put the objectReference of treeView into scriptObject
+   
+   if exists (scriptObject) is false then
+      put merge ("the [[objectReference]] of [[treeView]]")
+      answer warning merge ("Cannot locate the [[objectReference]] of treeView?")
+   else
+      edit the script of scriptObject
+   end if
+end menu_EditScript

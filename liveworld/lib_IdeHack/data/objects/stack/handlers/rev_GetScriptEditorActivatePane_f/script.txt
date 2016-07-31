@@ -1,0 +1,6 @@
+function rev_GetScriptEditorActivatePane pEditorNum
+   put rev_ScriptEditorPaneTabsGroup (pEditorNum) into scriptEditorPanesGroup
+   dispatch "getCurrentTab" to scriptEditorPanesGroup
+   put the result into paneName
+   return paneName
+end rev_GetScriptEditorActivatePane

@@ -1,0 +1,29 @@
+function object_MarkedInContainer someMark, containerObject, @object_Array, setShort
+   -- version original,2/2/03
+   
+   put the someMark of containerObject into markValue
+   put empty into objectIndex
+   
+   if markValue is not empty then
+      if setShort is not false then object_SetShortStackName containerObject, stackNameStart, stackNameEnd
+      put markValue into object_Array[containerObject]
+      put containerObject & return after objectIndex
+   else
+      -- put empty into object_Array
+   end if
+   repeat with controlNum = 1 to the number of controls in containerObject
+      put the long ID of control controlNum of containerObject into testObject
+      put the someMark of testObject into markValue
+      if markValue is not empty then
+         if setShort is not false then object_SetShortStackName testObject, stackNameStart, stackNameEnd
+         put markValue into object_Array[testObject]
+         put testObject & return after objectIndex
+      end if
+   end repeat
+   delete last char of objectIndex
+   
+   -- local objects
+   return objectIndex
+   -- not accumulated results
+   -- return keys(object_Array)
+end object_MarkedInContainer

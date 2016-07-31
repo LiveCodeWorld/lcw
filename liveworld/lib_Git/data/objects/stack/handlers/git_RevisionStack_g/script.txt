@@ -1,0 +1,10 @@
+getprop git_RevisionStack [gitHashOrNum]
+   put the stack_Object of the target into stackObject
+   put the filename of stackObject into someFile
+   if someFile is empty then return empty
+   
+   put git_GetRootFolder() into baseFolder
+   file_SetRelativePath someFile, baseFolder
+   put git_GetLastRevision (someFile, gitHashOrNum) into binaryStackData
+   return binaryStackData
+end git_RevisionStack

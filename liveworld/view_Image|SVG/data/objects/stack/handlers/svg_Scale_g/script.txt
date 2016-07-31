@@ -1,0 +1,14 @@
+getprop svg_Scale
+   put the htmltext of me into someHTML
+   
+   set the wholematches to false
+   put "<g transform=" into tagBit
+   put lineOffset (tagBit, someHTML) into lineNum
+   
+   -- "<g transform='scale([[svgScale]])'>"
+   put line lineNum of someHTML into firstLine
+   replace quote with "'" in firstLine
+   put token 7 of firstLine into svgScale
+   
+   return svgScale
+end svg_Scale

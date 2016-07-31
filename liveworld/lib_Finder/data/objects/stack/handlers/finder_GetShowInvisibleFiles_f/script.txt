@@ -1,0 +1,4 @@
+function finder_GetShowInvisibleFiles
+   put shell ("defaults read com.apple.finder AppleShowAllFiles") into shellResult
+   return word 1 of shellResult = "YES"
+end finder_GetShowInvisibleFiles

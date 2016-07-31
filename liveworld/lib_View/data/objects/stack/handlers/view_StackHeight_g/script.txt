@@ -1,0 +1,14 @@
+getprop view_StackHeight [someView]
+    put the long id of the target into targetObject
+    if someView is empty then
+        put object_ExtractStack(targetObject) into stackObject
+        if exists(group 1 of stackObject) then 
+            put the long id of group 1 of stackObject into someView
+        else
+            return empty
+        end if
+    end if
+    put the view_StackPadding of someView into stackPadding
+    put (the formattedheight of someView) + 2 * stackPadding into goodHeight
+    return goodHeight
+end view_StackHeight

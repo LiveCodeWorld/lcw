@@ -1,0 +1,15 @@
+function hkeyArray_ExtractObjects hkeyLinkArray
+   repeat for each key hKey in hkeyLinkArray
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      put hKey into dumpArray [scriptObject]
+      
+      put hkeyLinkArray [hKey] into linkedKeys
+      repeat for each line linkedKey in linkedKeys
+         hkey_Deconstruct linkedKey, handlerName, handlerType, scriptObject, handlerNum
+         put hKey into dumpArray [scriptObject]
+      end repeat
+   end repeat
+   
+   put keys (dumpArray) into scriptObjects
+   return scriptObjects
+end hkeyArray_ExtractObjects

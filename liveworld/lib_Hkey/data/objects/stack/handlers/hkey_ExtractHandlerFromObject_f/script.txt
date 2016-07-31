@@ -1,0 +1,21 @@
+function hkey_ExtractHandlerFromObject hKey
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum 
+   
+   try
+      put the revAvailableHandlers of hObject into handlerTable
+      script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+      if startLineNum = 0 then
+         -- look for private handler?
+         put "P" before item 2 of hKey
+         script_HandlerFromTableOffsets hKey, handlerTable, startLineNum, endLineNum
+         if startLineNum = 0 then
+            return empty
+         end if
+      end if
+      put the script of hObject into someScript
+      put line startLineNum to endLineNum of someScript into foundHandler
+      return foundHandler
+   catch someError
+      return empty -- a locked stack
+   end try
+end hkey_ExtractHandlerFromObject

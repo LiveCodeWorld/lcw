@@ -1,0 +1,9 @@
+command rev_RestartIDE
+   show menubar
+   set the topleft of stack "revMenuBar" to 0,22
+   go to stack "revMenubar"
+   show stack "revMenubar"
+   go to stack "revTools"
+   show stack "revTools"
+   unlock cursor
+end rev_RestartIDE

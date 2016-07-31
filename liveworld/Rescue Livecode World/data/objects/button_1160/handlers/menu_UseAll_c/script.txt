@@ -1,0 +1,28 @@
+on menu_UseAll indexView, someBoolean
+   local badStackPaths
+   
+   put the selected_LongStackFiles of indexView into longStackFiles
+   repeat for each line longStackFile in longStackFiles
+      set the cursor to busy
+      if exists (stack longStackFile) is false then
+         breakpoint
+         next repeat
+      end if
+      
+      put longStackFile
+      try
+         if someBoolean is true then
+            start using stack longStackFile
+         else
+            stop using stack longStackFile
+         end if
+      catch e
+         put longStackFile & CR after badStackPaths
+      end try
+   end repeat
+   
+   if badStackPaths is not empty then
+      put badStackPaths
+      answer warning "Some problesm with the following stacks..."
+   end if
+end menu_UseAll

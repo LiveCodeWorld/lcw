@@ -1,0 +1,22 @@
+command scriptField_TabComplete shortHkey, firstCharNum, lastCharNum, selText, scriptObject, scriptField
+   put hArray_FindHkeyInHierarchy (shortHkey, scriptObject) into foundHkey
+   put hArray_GetHandlerLine (foundHkey) into completeLine
+   
+   if completeLine is empty then return empty
+   put word 2 to -1 of completeLine into completeLine
+   switch
+      case item 2 of shortHkey = "g"
+         break
+      case item 2 of shortHkey = "s"
+         break
+      case item 2 of shortHkey = "f"
+         put "(" before token 2 of completeLine
+         put ")" after completeLine
+         break
+      default
+         replace "@" with empty in completeLine
+   end switch
+   set the clipboarddata to completeLine
+   opn_Notify "Copied handler line to clipboard!"
+   return completeLine
+end scriptField_TabComplete

@@ -1,0 +1,24 @@
+getprop card_ViewRect [someMargin]
+    -- a default
+    put the card_Object of the target into cardObject
+    if exists(cardObject) is false then return empty
+    
+    if someMargin is empty then
+        put the card_Margin of cardObject into someMargin
+        if not(someMargin is a number or someMargin is a rect) then
+            --  put the opn_Error ["The stored card margin is not a number or rect!"] of me
+            put 0 into someMargin
+            set the card_Margin of cardObject to 0
+        end if
+    else if someMargin is a number or someMargin is a rect then
+        -- lets store it
+        set the card_Margin of cardObject to someMargin
+    else
+        put the opn_Error ["Margin is not a number or rect!"] of me
+        put 0 into someMargin
+    end if
+    
+    put the rect of cardObject into someRect
+    put rect_SubtractMargin(someMargin, someRect) into viewRect
+    return viewRect
+end card_ViewRect

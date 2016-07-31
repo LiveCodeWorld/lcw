@@ -1,0 +1,4 @@
+function model_TwoWayKeyIndex modelName, modelObject, modelType
+   put model_GetArray(modelName, modelObject, modelType) into dataArray
+   return dictionary_KeyIndex(dataArray)
+end model_TwoWayKeyIndex

@@ -1,0 +1,71 @@
+on view_RecurseReferenceOutline someView, @someOutline, oDepth, viewReference, @objectIndex, onlyViewNames, outlineType, @outlineArray
+   -- recursive command to create an outline of all nested views.
+   -- depends on child references (not good)
+   
+   if someView is among the lines of objectIndex then
+      put "Can be caused by view_ChildReferences of someView," 
+      breakpoint
+      exit view_RecurseReferenceOutline
+   else
+      line_Insert someView, objectIndex
+   end if
+   
+   if viewReference is empty then put "view_Object" into viewReference
+   put the view_Name of someView into viewName
+   if viewName is empty and onlyViewNames is not false then return false
+   
+   put object_GetNestedDepth(someView) into someDepth
+   put someDepth - oDepth into repeatNum
+   put text_RepeatString (tab, repeatNum) into someIndent
+   
+   put the rugged_ID of someView into ruggedID
+   switch outlineType 
+      case "name references"
+         if viewName is not empty then
+            put someIndent & html_ConstructNameLink(viewName, viewReference) into osLine
+         end if
+      case "reference"
+         if viewReference is not empty then
+            put someIndent & viewReference into osLine
+         end if
+         break
+      case "-"
+      case "names"
+         put someIndent & the short name of someView into osLine
+         break
+      case "view names"
+         if viewName is not empty then
+            put someIndent & viewName into osLine
+         end if
+         break
+      case "-"
+      case "reference links"
+         put someIndent & html_ConstructNameLink(viewReference, ruggedID) into osLine
+         break
+      case "name links"
+         put the short name of someView into shortName
+         put someIndent & html_ConstructNameLink(shortName, ruggedID) into osLine
+         break
+      default --case "view name links"
+         if viewName is not empty then
+            put someIndent & html_ConstructNameLink(viewName, ruggedID) into osLine
+         end if
+         break
+   end switch
+   line_Insert osLine, someOutline
+   put the number of lines of someOutline into catLineNum
+   
+   put viewName into outlineArray [catLineNum]["viewName"]
+   put viewReference into outlineArray [catLineNum]["viewReference"]
+   put ruggedID into outlineArray [catLineNum]["object"]
+   
+   put the view_ChildReferences of someView into childReferences
+   repeat for each line childReference in childReferences
+      put the childReference of someView into childView
+      if exists(childView) is false then next repeat
+      -- put object_GetNestedDepth(childView) into someDepth
+      -- view_RecurseReferenceOutline childView, someOutline, oDepth, childReference, objectIndex, onlyViewNames, outlineType, outlineArray
+      view_RecurseReferenceOutline childView, someOutline, oDepth, childReference, objectIndex, onlyViewNames, outlineType, outlineArray
+   end repeat
+   return outlineArray
+end view_RecurseReferenceOutline

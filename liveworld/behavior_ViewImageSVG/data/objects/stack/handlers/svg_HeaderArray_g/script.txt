@@ -1,0 +1,5 @@
+getprop svg_HeaderArray
+   put the svg_HeaderAttributes of me into attributeTable
+   split attributeTable with CR and tab
+   return attributeTable
+end svg_HeaderArray

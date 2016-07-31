@@ -1,0 +1,7 @@
+setprop trait_Border someBoolean
+   if someBoolean is true then
+      set the linesize of _frameGraphic() to 1
+   else
+      set the linesize of _frameGraphic() to 0
+   end if
+end trait_Border

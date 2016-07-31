@@ -1,0 +1,5 @@
+on menu_CreateWithoutObjectClusters hKey
+   breakpoint
+   deps_CreateMainStackOverlay scriptObject, "hierarchical", "display", true, "none"
+   put hkey_DependencyArrayFromObjects (hKey, "Menu Only", true) into hKeyArray
+end menu_CreateWithoutObjectClusters

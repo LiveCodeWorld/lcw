@@ -1,0 +1,8 @@
+getprop disabled_GoToStack
+   put project_FetchValue ("openStacks") into stackNames
+   if stackNames is empty then
+      return true
+   else
+      return false
+   end if
+end disabled_GoToStack

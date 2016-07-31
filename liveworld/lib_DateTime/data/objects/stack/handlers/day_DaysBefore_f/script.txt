@@ -1,0 +1,7 @@
+function day_DaysBefore someDate, dayNum
+    convert someDate to dateItems
+    put last item of someDate into dateDayNum
+    put dateDayNum - dayNum into modDays
+    if modDays < 0 then add 7 to modDays
+    return modDays
+end day_DaysBefore

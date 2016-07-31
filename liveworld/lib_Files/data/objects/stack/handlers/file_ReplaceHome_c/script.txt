@@ -1,0 +1,7 @@
+command file_ReplaceHome @fileOrFolder
+   if fileOrFolder begins with $HOME then
+      set the itemdelimiter to "/"
+      put the number of items of $HOME into itemNum
+      put "~" into item 1 to itemNum of fileOrFolder
+   end if
+end file_ReplaceHome

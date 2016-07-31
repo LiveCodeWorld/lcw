@@ -1,0 +1,8 @@
+setprop colour_Palette colourPaletteArray
+   put title_Button() into titleButton
+   lock screen   
+   set the foregroundcolor of titleButton to colourPaletteArray[1]
+   set the backgroundcolor of titleButton to colourPaletteArray[2]
+   set the backgroundcolor of me to colourPaletteArray[4]
+   unlock screen
+end colour_Palette

@@ -1,0 +1,15 @@
+getprop selected_StackObjects
+   put the selected_ShortStackFiles of the target into shortStackFiles
+   put the index_Folder of the target into indexFolder
+   repeat for each line shortStackFile in shortStackFiles
+      put indexFolder & shortStackFile into longStackFile
+      if exists (stack longStackFile) is false then
+         put longStackFile & CR after badStackFiles
+         next repeat
+      end if
+      
+      put the name of stack longStackFile & CR after stackObjects
+   end repeat
+   delete char -1 of stackObjects
+   return stackObjects
+end selected_StackObjects

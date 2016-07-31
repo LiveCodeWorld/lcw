@@ -1,0 +1,8 @@
+setprop view_Utf8 [someTitle] someUtf8
+   if word 1 of the target is "field" then
+      put uniencode(someUtf8, "UTF8") into someU16
+      set the unicodetext of the target to someU16
+   else
+      set the uOPN ["utf8"] of the target to someUtf8
+   end if
+end view_Utf8

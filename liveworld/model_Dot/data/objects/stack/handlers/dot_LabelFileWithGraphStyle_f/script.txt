@@ -1,0 +1,16 @@
+function dot_LabelFileWithGraphStyle graphStyle, dotFile, pImageFormat
+   -- adds graphStyle_ before the short file name
+   if dotFile is empty then put dot_NewTemporaryFilePath() into dotFile
+   if pImageFormat is empty then put "png" into pImageFormat
+   file_Deconstruct dotFile, rootFolder, shortName, dotFileFormat
+   if graphStyle is not empty then
+      set the itemdelimiter to "_"
+      if the number of items of shortName > 1 then
+         put graphStyle into item 1 of shortName
+      else
+         put graphStyle & "_" before shortName
+      end if
+   end if
+   put file_Construct (rootFolder, shortName, pImageFormat) into imageFile
+   return imageFile
+end dot_LabelFileWithGraphStyle

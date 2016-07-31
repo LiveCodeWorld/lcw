@@ -1,0 +1,27 @@
+command fedwikipedia_ConstructSectionTocArray sectionArray, sectionNum, @sectionTocArray, @sectionTitle
+   put sectionArray [1]["fromTitle"] into tocTitle
+   put sectionArray [1]["line"] into sectionTitle
+   
+   put item 2 of the extents of sectionArray into maxNum
+   set the itemdelimiter to "."
+   repeat with itemNum = 2 to maxNum
+      put sectionArray [itemNum]["line"] into tocLine
+      put sectionArray [itemNum]["number"] into tocNumber
+      put sectionArray [itemNum]["level"] into tocLevel
+      
+      delete item 1 of tocNumber
+      put itemNum - 1 + sectionNum into tocNum
+      
+      put tocNumber into sectionTocArray ["index"][tocLine]["dot_number"]
+      put tocNum into sectionTocArray ["index"][tocLine]["section_number"]
+      put tocLevel into sectionTocArray ["index"][tocLine]["section_level"]
+      
+      put tocNumber into dotKeyArray
+      split dotKeyArray by "."
+      put tocLine into sectionTocArray [dotKeyArray]["meta"]["title"]
+      put tocNumber into sectionTocArray [dotKeyArray]["meta"]["dot_number"]
+      put tocNum into sectionTocArray [dotKeyArray]["meta"]["section_number"]
+      put tocLevel into sectionTocArray [dotKeyArray]["meta"]["section_level"]
+   end repeat
+   return sectionTocArray
+end fedwikipedia_ConstructSectionTocArray

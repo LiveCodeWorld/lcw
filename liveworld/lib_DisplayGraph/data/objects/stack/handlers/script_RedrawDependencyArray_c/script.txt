@@ -1,0 +1,10 @@
+command script_RedrawDependencyArray hkeyArray, pGraphStyle, pScriptObject, pGraphSize
+   local pImageView, pOverlayName
+   set the cursor to watch
+   put the scriptLibrary_Card of me into graphController  
+   put scriptObject_DotFile (pScriptObject, pGraphStyle, pGraphSize) into dotFile
+   linkArray_RedrawOverlayMap hkeyArray, dotFile, graphController, graphController, pImageView, pGraphStyle, pGraphSize, pOverlayName
+   put the result into pImageView
+   set the overlay_Of of pImageView to pScriptObject
+   return pImageView
+end script_RedrawDependencyArray

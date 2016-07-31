@@ -1,0 +1,11 @@
+on libraryStack
+   set the loc of me to the screenloc
+   -- show me
+   put the short name of the target into targetStackName
+   put the short name of me into myName
+   if targetStackName is not myName then
+      pass libraryStack
+   else
+      _StartEnvironment
+   end if
+end libraryStack

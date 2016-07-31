@@ -1,0 +1,14 @@
+command menu_SetChoice menuChoice, @mainChoice, @secondChoice
+   -- bug - needs to take account of quoted things like stack names with "|" in their name.
+   text_StarQuoted menuChoice
+   put the result into replacedArray
+   put replacedArray ["original text"] into oText
+   
+   put line 1 of menuChoice into menuChoice
+   set the itemdelimiter to "|"
+   put the number of chars of item 1 of menuChoice into firstLength
+   put char 1 to firstLength of oText into mainChoice
+   
+   put firstLength + 2 into secondStart
+   put char secondStart to -1 of oText into secondChoice
+end menu_SetChoice

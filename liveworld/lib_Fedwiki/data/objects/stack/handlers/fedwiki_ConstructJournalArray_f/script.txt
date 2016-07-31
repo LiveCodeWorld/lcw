@@ -1,0 +1,5 @@
+function fedwiki_ConstructJournalArray pageTitle, pSourceArray
+   put fedwiki_ConstructCreateArray (pageTitle, pSourceArray) into createArray
+   put createArray into journalArray [1]
+   return journalArray
+end fedwiki_ConstructJournalArray

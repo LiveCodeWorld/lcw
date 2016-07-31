@@ -1,0 +1,4 @@
+on menu_DeleteOtherIcons imageObject
+   put menu_GetTargetObject() into imageObject
+   set the icon_Images of imageObject to imageObject
+end menu_DeleteOtherIcons

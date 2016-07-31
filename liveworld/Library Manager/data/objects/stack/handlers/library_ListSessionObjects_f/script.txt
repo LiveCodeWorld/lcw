@@ -1,0 +1,5 @@
+function library_ListSessionObjects
+   put library_GetTempArray ("library_SessionArray") into librarySessionArray
+   put librarySessionArray ["objects"] into sessionObjectArray
+   return keys (sessionObjectArray)
+end library_ListSessionObjects

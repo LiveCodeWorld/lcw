@@ -1,0 +1,42 @@
+function script_ConstructDotNodeSection someScript
+    local nodeLinks, nodeDefs, graphData, uArray, dArray
+    
+    script_ConstructHandlerArrays someScript, graphData, uArray, dArray, "dummy"
+    repeat for each key someKey in uArray
+        set the cursor to busy
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        put handlerName,handlerType into generalKey
+        if handlerName is "_" then next repeat
+        put kwote(generalKey) into someNode
+         
+        put script_GetNodeDef(someNode, handlerName, handlerType, scriptObject) into nodeDef
+        line_Add nodeDef, nodeDefs
+         
+        put script_ExtractHandlerType(handlerName, someScript, handlerType) into someHandler
+        put script_ExtractCalls(someHandler) into handlerCalls
+        
+        repeat for each line handlerCall in handlerCalls
+            -- put kwote(handlerCall) into someChild
+            hkey_Deconstruct handlerCall, childName, childType, childObject, childNum
+            if childName is "_" then next repeat
+            put childName,childType into childGeneralKey
+            put kwote(childGeneralKey) into someChild
+             
+            put someNode && "->" && someChild & ";" & CR after nodeLinks
+            put script_GetNodeDef(someChild, childName, childType, childObject) into nodeDef
+            line_Add nodeDef, nodeDefs
+        end repeat
+    end repeat
+    
+    if nodeLinks is empty then
+        return empty
+    else
+        if the shiftkey is "Down" then
+            return nodeLinks
+        else
+            put nodeDefs into nodeSection
+            put CR & nodeLinks after nodeSection
+            return nodeSection
+        end if
+    end if
+end script_ConstructDotNodeSection

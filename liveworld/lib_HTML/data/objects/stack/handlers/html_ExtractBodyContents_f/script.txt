@@ -1,0 +1,4 @@
+function html_ExtractBodyContents someHTML
+   put html_ExtractNodeContents ("html/body", someHTML) into innerXML
+   return innerXML
+end html_ExtractBodyContents

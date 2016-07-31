@@ -1,0 +1,21 @@
+function html_ConstructList someLines, pIsOrdered
+   switch pIsOrdered
+      case "ordered"
+         put "<ol>" into someHtml
+         break
+      default
+         put "<ul>" into someHtml
+   end switch
+   repeat for each line someLine in someLines
+      put CR & tab & "<li>" & html_ConstructRefLink (someLine, someLine) & "</li>" after someHtml
+      -- put CR & tab & "<li>" & someLine after someHtml
+   end repeat
+   switch pIsOrdered
+      case "ordered"
+         put CR & "</ol>" after someHtml
+         break
+      default
+         put CR & "</ul>" after someHtml
+   end switch
+   return someHtml
+end html_ConstructList

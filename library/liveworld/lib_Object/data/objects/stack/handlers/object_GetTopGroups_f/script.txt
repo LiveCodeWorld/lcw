@@ -1,0 +1,21 @@
+function object_GetTopGroups someContainer, setShort, visibleOnly
+   -- was "object_TopGroups"
+   -- this stem technique is not needed (use same as "object_GetGroupControls")
+   
+   put the long ID of someContainer into someContainer
+   put empty into myGroups
+   repeat with groupNum = 1 to the number of groups in someContainer
+      put the long ID of group groupNum of someContainer into testGroup
+      if visibleOnly is true and the visible of testGroup is false then next repeat
+      
+      put offset(someContainer, testGroup) - 1 into endStem
+      put char 1 to endStem of testGroup into groupStem
+      put the number of words of groupStem into wordNum
+      if wordNum = 4 then
+         if setShort is not false then object_SetShortStackName testGroup, stackNameStart, stackNameEnd
+         put testGroup & return after myGroups
+      end if
+   end repeat
+   delete last char of myGroups
+   return myGroups
+end object_GetTopGroups

@@ -1,0 +1,19 @@
+function script_ConstructLinks hKeys, toLink
+    local nodeLinks
+     
+    hkey_Deconstruct toLink, toName, toType, scriptObject, handlerNum
+    put toName,toType into toKey
+    put kwote(toKey) into toNode
+     
+    repeat for each line hKey in hKeys
+        set the cursor to busy
+        hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+        put handlerName,handlerType into generalKey
+        if handlerName is "_" then next repeat
+        put kwote(generalKey) into someNode
+        
+        put someNode && "->" && toNode & ";" & CR after nodeLinks
+    end repeat
+    delete last char of nodeLinks
+    return nodeLinks
+end script_ConstructLinks

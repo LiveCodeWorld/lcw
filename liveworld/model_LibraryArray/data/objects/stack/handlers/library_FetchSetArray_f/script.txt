@@ -1,0 +1,13 @@
+function library_FetchSetArray pSetName
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   switch pSetName
+      case "all"
+         put library_ConstructAllObjectSetArray () into setArray
+         return setArray
+      case "none"
+         return empty
+      default
+         put library_FetchSetData() into setData
+         return setData [pSetName]
+   end switch
+end library_FetchSetArray

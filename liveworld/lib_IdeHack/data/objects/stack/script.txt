@@ -1,0 +1,502 @@
+--> MetaData
+-
+license: GPLv3
+name: lib_IdeHack
+type: library
+version: 0.1
+
+
+/*
+This stack is a list of hacks for the IDE that needs sorting.
+The organised ones I've put in model_IDE
+This one needs some serious tidying.
+
+
+These functions were introduced in v5.5
+
+revEnvironmentUserExternalsPath()  -- The location of the folder to use for additional externals. 
+revEnvironmentUserPluginsPath()  -- The location of the folder to use for additional plugins. 
+revEnvironmentUserResourcesPath() -- The location of the folder to use for additional resources.
+
+revEnvironmentCustomizationPath()  -- The location of the IDE customization folder.
+revEnvironmentUserCachePath()  -- The location of the folder to use for caching files.
+revEnvironmentUserPreferencesPath()  -- The location of the folder to use for preference files.
+
+revEnvironmentToolsPath() -- The location containing the main IDE files.
+revEnvironmentToolsetPath()  -- The location of the main IDE stacks.
+revEnvironmentExternalsPath()  -- The location of the externals that come with the IDE. 
+revEnvironmentPluginsPath()  -- The location of the plugins that come with the IDE.
+revEnvironmentRuntimePath()  -- The location of the standalones that come with the IDE. 
+
+revEnvironmentDocumentationPath()  -- The location of the documentation files.
+revEnvironmentResourcesPath()  -- The location of the resources that come with the IDE. 
+*/
+
+
+--> Rev | Hacks | More | Disabled
+-
+-- function revListMenuHandlers pObject, pSort, pIndentationLevel
+# OK-2007-05-03: Bug 4833.
+# Parameters
+#   pObject : reference to the object to list handlers for
+#   pSort : Whether to sort the list of handlers
+#   pIndentationLevel : How many tabs should appear before each line
+# Description
+#   Returns a formatted list of handler names for the context menu
+local tRawHandlers
+put the revAvailableHandlers of pObject into tRawHandlers
+
+local tIndent
+if pIndentationLevel is an integer then
+repeat pIndentationLevel times
+put tab after tIndent
+end repeat
+end if
+
+local tFormattedHandlers
+repeat for each line tHandler in tRawHandlers
+if char 1 of tHandler is "P" then
+next repeat
+else if char 1 of tHandler is among the items of "S,G,F" then
+next repeat
+else
+# OK-2008-02-26 : Remove start and end line numbers from formattedHandlers, as these were added to the engine recently
+#put tIndent & word 2 to -1 of tHandler & return after tFormattedHandlers
+put tIndent & word 2 of tHandler & return after tFormattedHandlers
+end if
+
+end repeat
+
+# OK-2009-04-02 : Bug 7874 - Include behavior handlers if applicable
+if the behavior of pObject is not empty and there is a (the behavior of pObject) then
+local tBehaviorHandlers
+put the revAvailableHandlers of the behavior of pObject into tBehaviorHandlers
+
+# Only behavior handlers that are non-private, of type "command" and not overridden by the
+# object are included.
+repeat for each line tBehaviorHandler in tBehaviorHandlers
+if char 1 of tBehaviorHandler is "P" then
+next repeat
+else if char 1 of tBehaviorHandler is among the items of "S,G,F" then
+next repeat
+end if
+
+# For each behavior handler, find out if it was overridden by the object before including it
+local tOverridden
+put false into tOverridden
+repeat for each line tFormattedHandler in tFormattedHandlers
+if word 1 of tFormattedHandler is word 2 of tBehaviorHandler then
+put true into tOverridden
+exit repeat
+end if
+end repeat
+
+if not tOverridden then
+put tIndent & word 2 of tBehaviorHandler & return after tFormattedHandlers
+end if
+end repeat
+end if
+delete the last char tFormattedHandlers
+
+if pSort then
+sort lines of tFormattedHandlers
+end if
+
+if tFormattedHandlers is empty then
+put tIndent into tFormattedHandlers
+end if
+
+return tFormattedHandlers  
+end revListMenuHandlers
+
+-- command findText pText, pGlobal, pStartFrom, pEndAt, pSearch
+   local tResult, tRegExp
+   
+   put empty into sFindUpdateRequired
+   
+   # Clear previous search results
+   findClearResults
+   
+   if pSearch["query"] is empty then
+      return empty
+   end if
+   
+   -- findText works via a regular expression. Thus, anything that comes in is transformed into one.
+   if pSearch["regexp"] then
+      put "(" & pSearch["query"] & ")" into tRegExp
+   else
+      put "(" into tRegExp
+      put escapeString (pSearch["query"], pSearch["wildcard"]) into pSearch["query"]
+      if pSearch["ignorecase"] then
+         put "(?i)" after tRegExp
+      end if
+      if pSearch["wholematches"] then
+         put "\b" before pSearch["query"]
+         put "\b" after pSearch["query"]
+      end if
+      put pSearch["query"] & ")" after tRegExp
+   end if
+   
+   local tStart, tEnd, tFrom, tTo, tText
+   
+   put pText into tText
+   
+   if pStartFrom is empty or pStartFrom <= 1 then
+      put 1 into tFrom
+   else
+      put pStartFrom into tFrom
+   end if
+   if pEndAt is empty then
+      put the number of chars of tText into tTo
+   else
+      put pEndAt into tTo
+   end if
+   repeat forever
+      try
+         if matchChunk(char tFrom to tTo of tText, tRegExp, tStart, tEnd) then
+            put tStart + tFrom - 1,tEnd + tFrom - 1 & return after tResult
+            if not pGlobal then -- we have one result, we're happy
+               exit repeat
+            end if
+            add tEnd to tFrom
+            if tFrom > tTo then
+               exit repeat
+            end if
+         else
+            -- no match, exit
+            exit repeat
+         end if
+      catch tError
+         put "invalid regular expression." into tResult
+         exit repeat
+      end try
+   end repeat
+   delete the last char of tResult
+   return tResult
+end findText
+
+
+--> Rev | App Browser
+-
+[[ _FetchHandler (rev_RefreshAppBrowser,c) ]]
+
+
+--> Rev | Script Editor | Search Results
+-
+[[ _FetchHandler (rev_FormatHkeySearchResult,f) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorSearchResults,c) ]]
+
+[[ _FetchHandler (rev_RemoveScriptEditorPane,c) ]]
+
+[[ _FetchHandler (rev_AddScriptEditorPane,c) ]]
+
+
+--> Rev | Save
+-
+[[ _FetchHandler (rev_SaveStack,c) ]]
+
+[[ _FetchHandler (rev_SaveAs,c) ]]
+
+[[ _FetchHandler (rev_FixPath,f) ]]
+
+
+--> Repository | Counter | Model
+-
+*/
+This model is here as it is used by the front script (which can depend on it being there!), 
+and therefore any controls can access it.
+*/
+
+[[ _FetchHandler (repository_GetSaveNowCount,f) ]]
+
+[[ _FetchHandler (repository_SetSaveNowCount,c) ]]
+
+[[ _FetchHandler (repository_GetArchiveNowCount,f) ]]
+
+[[ _FetchHandler (repository_SetArchiveNowCount,c) ]]
+
+
+--> Field | Script
+-
+[[ _FetchHandler (field_ScriptScheme,s) ]]
+
+[[ _FetchHandler (rev_SetColourizationScheme,c) ]]
+
+[[ _FetchHandler (rev_ListColourizationSchemes,f) ]]
+
+
+--> App Browser
+-
+[[ _FetchHandler (rev_GetAppBrowserSelectedControls,f) ]]
+
+
+--> Script Editor | Documentation
+-
+[[ _FetchHandler (rev_SetScriptEditorShowDocumentation,c) ]]
+
+[[ _FetchHandler (rev_GetLaunchDocButtonLabel,f) ]]
+
+[[ _FetchHandler (rev_SetLaunchDocButtonLabel,c) ]]
+
+[[ _FetchHandler (rev_GetScriptEditorDocumentation,f) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorDocumentation,c) ]]
+
+[[ _FetchHandler (rev_GetScriptEditorDocumentationLock,f) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorDocumentationLock,c) ]]
+
+[[ _FetchHandler (rev_ScriptEditorDocFieldRect,f) ]]
+
+
+--> Script Editor | Panes
+-
+[[ _FetchHandler (rev_ListScriptEditorPaneNames,f) ]]
+
+[[ _FetchHandler (rev_GetScriptEditorActivatePane,f) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorActivatePane,c) ]]
+
+
+--> Script Editor | Documentation | Auto Save
+-
+[[ _FetchHandler (_autoSave,pc) ]]
+
+[[ _FetchHandler (_getMyLastHkey,pf) ]]
+
+[[ _FetchHandler (_setMyLastHkey,pc) ]]
+
+
+--> Rev
+-
+[[ _FetchHandler (rev_GetIcon,f) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorInfo,c) ]]
+
+[[ _FetchHandler (rev_ConstructHkeyTitle,f) ]]
+
+[[ _FetchHandler (rev_GetSelectedHandlerTreeLineNum,f) ]]
+
+[[ _FetchHandler (script_HandlerFromTableOffsets,c) ]]
+
+[[ _FetchHandler (rev_SetSelectedHandlerTreeLineNum,c) ]]
+
+[[ _FetchHandler (rev_GetHandlerTreeCallbackTarget,f) ]]
+
+[[ _FetchHandler (rev_GetHandlerTreeCallback,f) ]]
+
+[[ _FetchHandler (rev_GetHandlerTreeChoice,f) ]]
+
+[[ _FetchHandler (rev_SelectTopScriptEditorTreeLineNum,c) ]]
+
+[[ _FetchHandler (rev_GetSelectedHandlerType,f) ]]
+
+[[ _FetchHandler (rev_GetSelectedHandlerName,f) ]]
+
+[[ _FetchHandler (rev_GetSelectedHandlerScriptStartLineNum,f) ]]
+
+[[ _FetchHandler (rev_GetSelectedHandlerScriptEndLineNum,f) ]]
+
+[[ _FetchHandler (rev_GetFirstScriptEditorSelectedHkey,f) ]]
+
+[[ _FetchHandler (rev_GetHandlerTreeSelectedInfo,f) ]]
+
+
+--> Rev | 4.0
+-
+[[ _FetchHandler (rev_DictionaryDataGrid,f) ]]
+
+
+--> Rev | 3.5
+-
+[[ _FetchHandler (rev_DictionaryDataTableField,f) ]]
+
+[[ _FetchHandler (rev_DictionaryIndexField,f) ]]
+
+-- getprop rev_DataGrid
+   put the object_Hierarchy of the target into objectHierarchy
+   filter objectHierarchy with "group *"
+   repeat with lineNum = the number of lines of objectHierarchy down to 1
+      put line lineNum of objectHierarchy into testObject
+      -- if the asdf of testObject
+      return testObject
+   end repeat
+   return empty
+end rev_DataGrid
+
+[[ _FetchHandler (rev_DataGridStack,f) ]]
+
+[[ _FetchHandler (rev_DataGridBehavior,f) ]]
+
+
+--> Rev | Script Editor | Tabs
+-
+[[ _FetchHandler (rev_ActivateScriptEditorTab,c) ]]
+
+[[ _FetchHandler (rev_CreateNewTab,c) ]]
+
+[[ _FetchHandler (rev_CloseTab,c) ]]
+
+[[ _FetchHandler (rev_SetScriptEditorField,c) ]]
+
+[[ _FetchHandler (rev_GetHandlerList,f) ]]
+
+[[ _FetchHandler (rev_SearchScripts,c) ]]
+
+[[ _FetchHandler (rev_ListTabScriptObjects,f) ]]
+
+[[ _FetchHandler (rev_GetCachedScript,f) ]]
+
+[[ _FetchHandler (rev_FormatScript,f) ]]
+
+[[ _FetchHandler (rev_ScriptEditorGroup,f) ]]
+
+
+--> Rev | Dictionary
+-
+[[ _FetchHandler (rev_XmlDocToArray,f) ]]
+
+[[ _FetchHandler (rev_DocCleanup,pf) ]]
+
+
+--> Rev | Dictionary | Styles
+-
+[[ _FetchHandler (rev_DictionaryStyleArray,f) ]]
+
+[[ _FetchHandler (rev_FormatXMLFontFace,f) ]]
+
+[[ _FetchHandler (rev_FormatXMLFontSize,f) ]]
+
+[[ _FetchHandler (rev_FormatXMLFontColor,f) ]]
+
+-- Given a tag name, returns the style that the contents of this
+-- tag should be displayed in.
+[[ _FetchHandler (rev_FormatXMLFontStyle,f) ]]
+
+
+--> Rev | Preferences
+-
+[[ _FetchHandler (rev_GetColourizationScheme,f) ]]
+
+[[ _FetchHandler (rev_ListPrefArray,f) ]]
+
+[[ _FetchHandler (rev_ListPrefOutline,f) ]]
+
+[[ _FetchHandler (rev_ListPrefTypes,f) ]]
+
+[[ _FetchHandler (rev_GetEditorPref,f) ]]
+
+[[ _FetchHandler (rev_SetEditorPref,c) ]]
+
+[[ _FetchHandler (rev_ListEditorPrefs,f) ]]
+
+[[ _FetchHandler (rev_GetPref,f) ]]
+
+[[ _FetchHandler (rev_SetPref,c) ]]
+
+[[ _FetchHandler (rev_ListPrefs,f) ]]
+
+
+--> IDE | More
+-
+[[ _FetchHandler (rev_ScriptAsHtmlText,f) ]]
+
+[[ _FetchHandler (rev_ScriptAsHtml,f) ]]
+
+
+--> Windows
+-
+[[ _FetchHandler (windows_Version,f) ]]
+
+[[ _FetchHandler (windows_Versions,f) ]]
+
+[[ _FetchHandler (windows_SystemVersionArray,f) ]]
+
+
+--> Rev
+-
+[[ _FetchHandler (stack_BackgroundNames,g) ]]
+
+[[ _FetchHandler (stack_BackgroundObjects,g) ]]
+
+[[ _FetchHandler (stack_NestedBackgroundNames,g) ]]
+
+[[ _FetchHandler (stack_NestedBackgroundObjects,g) ]]
+
+[[ _FetchHandler (rev_LoadedStackNames,f) ]]
+
+[[ _FetchHandler (rev_PropertyNames,g) ]]
+
+[[ _FetchHandler (rev_RestartIDE,c) ]]
+
+[[ _FetchHandler (rev_Platforms,f) ]]
+
+[[ _FetchHandler (rev_PlatformArray,f) ]]
+
+
+--> Rev | Application Version
+-
+[[ _FetchHandler (rev_VersionIsLaterOrEqual,f) ]]
+
+[[ _FetchHandler (rev_VersionIsLater,f) ]]
+
+[[ _FetchHandler (rev_VersionIsEarlier,f) ]]
+
+
+--> Rev | Libraries
+-
+[[ _FetchHandler (rev_ImageLibraries,f) ]]
+
+[[ _FetchHandler (rev_ImageLibraryIcons,f) ]]
+ 
+[[ _FetchHandler (rev_GetImageLibPath,f) ]]
+
+[[ _FetchHandler (rev_GetImageLibFolder,f) ]]
+
+[[ _FetchHandler (rev_GetPluginFolder,f) ]]
+
+[[ _FetchHandler (rev_ApplicationFolder,f) ]]
+
+[[ _FetchHandler (rev_IsRevStack,f) ]]
+
+
+[[ _FetchHandler (rev_SupressMessageWatcherMessages,c) ]]
+
+
+--> Rev | Dictionary
+-
+/*
+These scripts intercept those in the backscript = stack "revDocumentationLibrary"
+*/
+
+-- command addCommentRequest
+    beep
+    -- pass addCommentRequest
+end addCommentRequest
+   
+-- command showHelpPopup
+    pass showHelpPopup
+end showHelpPopup
+
+-- command revDocumentationShowPopup pCommentHtml
+    if pCommentHtml is empty then
+        put the htmltext of field "Comment Help" of card "Templates" of stack "revDictionary" into pCommentHtml
+    end if
+    display_Text pCommentHtml
+    pass revDocumentationShowPopup
+end revDocumentationShowPopup
+
+
+--> Object | Refs
+-
+[[ _FetchHandler (rugged_ID,g) ]]
+
+[[ _FetchHandler (rev_BehaviorID,f) ]]
+
+
+--> Object | Revolution
+-
+[[ _FetchHandler (object_FilterRev,f) ]]
+
+[[ _FetchHandler (object_EditProperty,c) ]]

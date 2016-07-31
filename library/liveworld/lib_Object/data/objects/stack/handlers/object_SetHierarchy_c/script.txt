@@ -1,0 +1,45 @@
+command object_SetHierarchy someObject, @shortObjects, @longObjects, @objectOutline, @namePath, pathDelim
+   if pathDelim is empty then put "/" into pathDelim
+   put empty into shortObjects
+   put empty into longObjects
+   put empty into objectOutline
+   put empty into namePath
+   
+   set the wholeMatches to true
+   put 0 into skipNum
+   put empty into tabBit
+   repeat
+      put wordOffset("of", someObject, skipNum) into wordNum
+      if wordNum = 0 then exit repeat
+      
+      put word (1 + skipNum) to (wordNum - 1 + skipNum) of someObject into shortObject
+      put CR & shortObject before shortObjects
+      put word (1 + skipNum) to -1 of someObject into longObject
+      put CR & longObject before longObjects
+      
+      put CR & tabBit & shortObject before objectOutline
+      put tab after tabBit
+      put word 2 of shortObject into someName
+      replace quote with empty in someName
+      put pathDelim & someName before namePath
+      
+      add wordNum to skipNum
+   end repeat
+   
+   put word (1 + skipNum) to -1 of someObject into shortObject
+   put CR & shortObject before shortObjects
+   put word (1 + skipNum) to -1 of someObject into longObject
+   put CR & longObject before longObjects
+   
+   put CR & tabBit & shortObject before objectOutline
+   put tab after tabBit
+   
+   put word 2 of shortObject into someName
+   replace quote with empty in someName
+   put pathDelim & someName before namePath
+   
+   delete char 1 of objectOutline
+   delete char 1 of namePath
+   delete char 1 of shortObjects
+   delete char 1 of longObjects
+end object_SetHierarchy

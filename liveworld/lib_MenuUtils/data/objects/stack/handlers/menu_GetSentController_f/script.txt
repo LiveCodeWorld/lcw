@@ -1,0 +1,5 @@
+function menu_GetSentController
+   put menu_GetSentPath() into mPath
+   menu_DeconstructPath mPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType
+   return mController
+end menu_GetSentController

@@ -1,0 +1,11 @@
+on menu_CytoZoom mTarget
+   /*
+   var pos = window.cy2.nodes("#n6").position();
+   window.cy2.zoom({
+   level: 1.0,
+   position: pos
+   });
+   */
+   put script_GetCommentAboveMe() into someJavascript
+   set the wiki_Javascript of mTarget to someJavascript
+end menu_CytoZoom

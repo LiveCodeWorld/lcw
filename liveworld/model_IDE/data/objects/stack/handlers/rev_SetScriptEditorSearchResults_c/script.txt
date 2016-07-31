@@ -1,0 +1,22 @@
+command rev_SetScriptEditorSearchResults tFormattedResults
+   -- ignoreCall: sePrefSet,c
+   -- ignoreCall: setCurrentTab,c
+   -- ignoreCall: expandCurrentPane,c
+   -- ignoreCall: refreshCurrentPane,c
+   
+   # Parameters
+   #   pResultsString : A list of search results, one per line. Format described below
+   # Description
+   #   Displays the specified results. If pResultsString is empty then displays nothing.
+   #   Format of pResultsString is a list of search results, one per line, where each search result is in the following form:
+   #      <object long id> <line number> <start char> <end char> <matched text with context>
+   #       (all fields are separated by tabs).
+   #   pResultsString also contains a header, this makes up the first two lines of the string. Line 1 is the search term and line 2 is the search scope.
+   
+   put revTopMostScriptEditor() into topScriptEditorStack
+   
+   dispatch "sePrefSet" to stack "revNewScriptEditor" with "editor,lastsearchresults",tFormattedResults
+   send "setCurrentTab Search Results" to group "Pane Tabs" of topScriptEditorStack
+   send "expandCurrentPane" to group "Panes" of topScriptEditorStack
+   send "refreshCurrentPane" to group "Panes" of topScriptEditorStack
+end rev_SetScriptEditorSearchResults

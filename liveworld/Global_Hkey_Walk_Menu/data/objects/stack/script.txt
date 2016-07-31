@@ -1,0 +1,84 @@
+--> MetaData
+-
+license: GPLv3
+name: Global_Hkey_Walk_Menu
+type: controller
+version: 0.2
+
+/*
+This menu concentrates on walking the dependency tree of a handler.
+*/
+
+--> Variables
+-
+local LocalArray
+
+
+--> Global | Hkey | Walk | Menu
+-
+[[ _FetchHandler (menu_WalkHkey,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_FetchStoredHkeyArray,c) ]]
+
+[[ _FetchHandler (menu_RevealFolder,c) ]]
+
+
+--> Global | Hkey | Walk | Menu | Props
+-
+[[ _FetchHandler (project_Name,g) ]]
+
+[[ _FetchHandler (project_Names,g) ]]
+
+
+--> Global | Hkey | Walk | Menu | Disabled
+-
+[[ _FetchHandler (disabled_FetchStoredHkeyArray,g) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (project_WalkAndStoreObjectDependencies,c) ]]
+
+-- function project_HackExtractHkeyArray hKey, pReIndexFromObjects, pSetName, pAllCalls
+   -- was "project_GetHkeyArray"
+   
+   -- get the best option
+   -- try mainstack walkarray first, then project hkey overlay, and finally walk the objects
+   -- check hashes to ensure only up to date returned
+   -- create new project hkey overlay from object walk if no up-to-date hKeyArray present
+   
+   if pReIndexFromObjects is not true then
+      put item 3 of hKey into hObject
+      if exists (hObject) is false then 
+         breakpoint
+         return empty
+      end if
+      put the mainstack_Hash of hObject into mainstackHash
+      
+      -- first choice get from the mainstack walk array if it is indexed and up to date
+      put project_HkeyArrayFromMainstackWalkArray (hKey, mainstackHash) into hKeyArray
+      if hKeyArray is an array then return hKeyArray
+      
+      -- next let's look for a locally stored hKeyArray as part of an project hKey overlay
+      put empty into pOverlayName 
+      
+      -- put project_FetchHkeyArray (hKey, pOverlayName, mainstackHash) into hKeyArray
+      local overlayArray, storedStackHash
+      put project_HandlerMetadataFolder (hKey) into overlayFolder
+      project_FetchOverlayArrayAndHash hKey, pOverlayName, overlayArray, storedStackHash
+      put overlayArray_GetLinkArray (overlayArray) into hkeyArray
+      if storedStackHash = mainstackHash then return hkeyArray
+   end if
+   
+   -- finally let's walk the dependency graph of each object
+   project_WalkAndStoreObjectDependencies hKey, pAllCalls, pSetName
+   put the result into hkeyArray
+   return hkeyArray
+end project_HackExtractHkeyArray
+
+
+--> Private
+-

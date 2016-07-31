@@ -1,0 +1,14 @@
+on menu_BodyViewProps mTarget, bodyProp
+   put the tree_Field of mTarget into treeField
+   if exists (treeField) is true then
+      view_DoPropertyMenu bodyProp, treeField
+   else
+      put the body_View of mTarget into bodyView
+      if exists (bodyView) is true then
+         dg_EditProperty bodyProp, bodyView
+      else
+         -- should not be!
+         return empty
+      end if
+   end if
+end menu_BodyViewProps

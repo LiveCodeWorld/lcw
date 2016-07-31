@@ -1,0 +1,4 @@
+getprop view_IsLocked
+   if the long id of the target is not the long id of me then return empty
+   return the view_IsLocked of the header_View of me
+end view_IsLocked

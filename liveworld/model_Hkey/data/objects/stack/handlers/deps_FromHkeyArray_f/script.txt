@@ -1,0 +1,15 @@
+function deps_FromHkeyArray hKey, hkeyDepArray, pReturnShortHkey
+   put array_AllNodes (hkeyDepArray) into allHkeys
+   sort allHkeys by item 1 of each
+   repeat for each line depKey in allHkeys
+      put item 1 to 2 of depKey into shortDepKey
+      if shortDepKey =  item 1 to 2 of hKey then next repeat
+      if pReturnShortHkey is not false then
+         put shortDepKey & CR after hKeyDeps
+      else
+         put depKey & CR after hKeyDeps
+      end if
+   end repeat
+   delete char -1 of hKeyDeps
+   return hKeyDeps
+end deps_FromHkeyArray

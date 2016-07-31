@@ -1,0 +1,5 @@
+function youtube_FetchVideoPageArray videoID, pPageTitle, pNextPageToken, pDontLinkTitle, pSourceArray
+   put youtube_FetchVideoSnippetArray (videoID, pNextPageToken) into snippetArray
+   put convert_SnippetToPageArray (snippetArray, videoID, pPageTitle, pDontLinkTitle, pSourceArray) into pageArray
+   return pageArray
+end youtube_FetchVideoPageArray

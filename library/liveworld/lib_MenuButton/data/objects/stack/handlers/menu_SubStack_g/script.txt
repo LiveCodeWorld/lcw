@@ -1,0 +1,15 @@
+getprop menu_SubStack
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   -- put the stack_Name of the target into mainStackName -- give a substack name
+   
+   put the stack_SubName ["OPN Stack Menus"] of stackObject into subStackName
+   -- put the menu_SubStackName of the target into subStackName
+   
+   if exists(stack subStackName of stack mainStackName) then
+      put the long name of stack subStackName of stack mainStackName into stackObject
+      return stackObject
+   else
+      return empty
+   end if
+end menu_SubStack

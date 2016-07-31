@@ -1,0 +1,10 @@
+command library_ForgetHkey hKey, someBoolean
+   put library_HkeyToPublicShortHkey (hKey) into shortHkey
+   put library_GetHandlerDatabaseMetadata() into dbMetaData
+   if someBoolean is false then
+      delete variable dbMetaData ["allwaysFilterHkeyArray"][shortHkey]
+   else
+      put empty into dbMetaData ["allwaysFilterHkeyArray"][shortHkey]
+   end if
+   library_SetHandlerDatabaseMetadata dbMetaData
+end library_ForgetHkey

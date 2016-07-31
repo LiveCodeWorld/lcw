@@ -1,0 +1,13 @@
+private command hkeyArray_RemoveObjectLinksBit @hkeyArray, fromKey, objectToRemove
+   put hkeyArray [fromKey] into toKeys
+   repeat for each line toKey in toKeys
+      hkey_Deconstruct toKey, toName, toType, toObject, toNum
+      if exists (toObject) then
+         if the long id of toObject is not objectToRemove then
+            put toKey & CR after newToKeys
+         end if
+      end if
+   end repeat
+   delete char -1 of newToKeys
+   put newToKeys into hkeyArray [fromKey]
+end hkeyArray_RemoveObjectLinksBit

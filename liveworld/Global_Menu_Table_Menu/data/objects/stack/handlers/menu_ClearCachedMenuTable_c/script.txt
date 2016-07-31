@@ -1,0 +1,4 @@
+on menu_ClearCachedMenuTable scriptObject, cachedMenuTitle
+    put rev_ScriptObject() into scriptObject
+    set the menu_Table [cachedMenuTitle] of scriptObject to empty
+end menu_ClearCachedMenuTable

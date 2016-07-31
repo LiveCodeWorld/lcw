@@ -1,0 +1,6 @@
+function log_ConstructTemporaryFileName pLogName
+   if pLogName is empty then put the log_Name of me into pLogName
+   put the tempname into logFile
+   put "_" & pLogName after logFile
+   return logFile
+end log_ConstructTemporaryFileName

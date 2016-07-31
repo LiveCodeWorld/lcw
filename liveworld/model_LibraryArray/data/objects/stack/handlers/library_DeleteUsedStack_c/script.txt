@@ -1,0 +1,6 @@
+command library_DeleteUsedStack stackObject, pSetName
+   -- removed checks so we can delete entires that don't exist
+   if pSetName is empty then put project_GetCurrentName() into pSetName
+   library_DeleteObject stackObject, "used", pSetName
+   return the result
+end library_DeleteUsedStack

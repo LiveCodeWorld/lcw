@@ -1,0 +1,7 @@
+command rig_UploadLocalFile localFile, pathToStore
+   put server_GetURL() into serverAddress
+   put server_GetSshUser() into sshUser
+   server_StoreFile localFile, pathToStore, serverAddress, sshUser
+   put the result into someResult
+   return someResult
+end rig_UploadLocalFile

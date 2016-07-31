@@ -1,0 +1,9 @@
+function exif_IsInstalled
+   put shell ("exiftool --help") into shellResult
+   
+   if shellResult contains "exiftool: command not found" then
+      return false
+   else
+      return true
+   end if
+end exif_IsInstalled

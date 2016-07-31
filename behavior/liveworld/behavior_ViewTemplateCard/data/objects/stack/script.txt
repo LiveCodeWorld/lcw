@@ -1,0 +1,149 @@
+--> MetaData
+-
+author: David Bovill
+copyright: OPN Technologies LLP
+name: behavior_ViewTemplateCard
+type: behavior
+
+
+/*
+Was "Card View Behavior" and moved to this script-only behavior.
+
+This behavior makes a view template easy to resize and test it's geometry.
+It also provides the default behavior for the views menu.
+You can of course override this on the cards script, or set another behavior there.
+*/
+
+--> Currently Working On
+-
+[[ _FetchHandler (view_BehaviorStackName,g) ]]
+
+
+--> Events
+-
+[[ _FetchHandler (stack_CleanBeforeSave,c) ]]
+
+-- on newGroup
+   if the view_Name of the target is empty then
+      put the stack_Name of the target into viewName
+      set the view_Name of the target to viewName
+      display_Views
+   end if
+   pass newGroup
+end newGroup
+
+[[ _FetchHandler (mouseDown,c) ]]
+
+[[ _FetchHandler (resizeStack,c) ]]
+
+
+--> Menu | Props
+-
+-- getprop menu_Table [pMenuTitle]
+   if the controlKey is "Up" then pass menu_Table
+   
+   -- custom: true
+   put the long id of the target into targetObject
+   if pMenuTitle is empty then put the menu_Title of targetObject into pMenuTitle
+   if pMenuTitle is empty then return empty
+   put the menu_Controller [pMenuTitle] of targetObject into mController
+   put menu_GetTable (pMenuTitle, mController) into mTable
+   
+   -- add the submenu table line 
+   put menu_ConstructSubmenuTableLine ("View", "Global | View | Property | Menu", pMenuTitle, targetObject, mController) into submenuTableLine
+   if submenuTableLine is not among the lines of mTable then
+      put submenuTableLine & CR after submenuTableLines
+   end if
+   put menu_ConstructSubmenuTableLine ("Script", "Global | View | Script | Menu", pMenuTitle, targetObject, mController) into submenuTableLine
+   if submenuTableLine is not among the lines of mTable then
+      put submenuTableLine & CR after submenuTableLines
+   end if
+   put menu_ConstructSubmenuTableLine ("Test", "Global | View | Test | Geometry | Menu", pMenuTitle, targetObject, mController) into submenuTableLine
+   if submenuTableLine is not among the lines of mTable then
+      put submenuTableLine & CR after submenuTableLines
+   end if
+   
+   delete char -1 of submenuTableLines
+   if submenuTableLines is not empty then
+      put CR & "-" & CR & submenuTableLines after mTable
+   end if
+   return mTable
+end menu_Table
+
+[[ _FetchHandler (menu_Target,g) ]]
+
+
+--> Template
+-
+[[ _FetchHandler (view_IsTemplate,g) ]]
+
+[[ _FetchHandler (view_Template,g) ]]
+
+[[ _FetchHandler (template_Object,g) ]]
+
+[[ _FetchHandler (template_View,g) ]]
+
+[[ _FetchHandler (templateView,pf) ]]
+
+
+--> Deps
+-
+[[ _FetchHandler (card_Margin,g) ]]
+
+[[ _FetchHandler (card_Margin,s) ]]
+
+[[ _FetchHandler (card_Object,g) ]]
+
+[[ _FetchHandler (card_TopViews,g) ]]
+
+[[ _FetchHandler (card_View,g) ]]
+
+[[ _FetchHandler (card_ViewMatch,g) ]]
+
+[[ _FetchHandler (lazyViewNameMatch,pf) ]]
+
+[[ _FetchHandler (margin_Normalize,c) ]]
+
+[[ _FetchHandler (object_ExtractStack,f) ]]
+
+[[ _FetchHandler (object_GetGroupControls,f) ]]
+
+[[ _FetchHandler (object_StackNameOffsets,c) ]]
+
+[[ _FetchHandler (object_TopControls,g) ]]
+
+[[ _FetchHandler (rect_SubtractMargin,f) ]]
+
+[[ _FetchHandler (rect_SubtractMargins,c) ]]
+
+[[ _FetchHandler (stack_Name,g) ]]
+
+[[ _FetchHandler (strictViewNameMatch,pf) ]]
+
+[[ _FetchHandler (text_OffsetAfter,f) ]]
+
+[[ _FetchHandler (text_OffsetBefore,f) ]]
+
+[[ _FetchHandler (text_TokenOffset,f) ]]
+
+[[ _FetchHandler (view_Above,g) ]]
+
+[[ _FetchHandler (view_Inside,g) ]]
+
+[[ _FetchHandler (view_LazyFindInside,g) ]]
+
+[[ _FetchHandler (view_LazyMatchInside,g) ]]
+
+[[ _FetchHandler (view_Match,g) ]]
+
+[[ _FetchHandler (view_MatchInside,g) ]]
+
+[[ _FetchHandler (view_Name,g) ]]
+
+[[ _FetchHandler (view_NormalizeName,c) ]]
+
+[[ _FetchHandler (view_Profile,s) ]]
+
+[[ _FetchHandler (template_CardRect,g) ]]
+
+[[ _FetchHandler (view_SlightlyLazyMatchInside,g) ]]

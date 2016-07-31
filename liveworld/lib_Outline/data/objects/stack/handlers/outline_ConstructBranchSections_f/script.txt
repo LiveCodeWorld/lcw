@@ -1,0 +1,34 @@
+function outline_ConstructBranchSections someOutline, addDividers
+    -- needs fixing
+    local newOutline
+    put addDividers is not false into addDividers
+    put word 1 to -1 of someOutline into someOutline
+    
+    put the number of lines of someOutline into maxLine
+    repeat with lineNum = 1 to (maxLine - 1)
+        put line lineNum of someOutline into someLine
+        
+        put someLine into dividerLine
+        put "-" into word 1 to -1 of dividerLine
+         
+        put line (lineNum+1) of someOutline into nextLine
+        put outline_TabLevel(someLine) into thisTabLevel
+        if outline_TabLevel(nextLine) > thisTabLevel then
+            put word 1 to -1 of line -1 of newOutline = "-" into lastLineIsDivider
+            if addDividers is true and lastLineIsDivider is false then put dividerLine & CR after newOutline
+             
+            put someLine & CR after newOutline
+            put someLine & CR after newOutline
+        else
+            put word 1 to -1 of line -1 of newOutline = "-" into lastLineIsDivider
+            -- if addDividers is true and lastLineIsDivider is false then put dividerLine & CR after newOutline
+             
+            put someLine & CR after newOutline
+        end if
+    end repeat
+    put line maxLine of someOutline after newOutline
+    
+    if word 1 to -1 of line 1 of newOutline = "-" then delete line 1 of newOutline
+    -- put newOutline
+    return newOutline
+end outline_ConstructBranchSections

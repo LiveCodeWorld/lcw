@@ -1,0 +1,5 @@
+function dot_ConstructDefaultEdgeDefs edgeColour, edgeStyle, arrowhead, edgeWidth
+    --  edge [color=cyan, style=solid, arrowhead=none, width=2]
+    put dot_ConstructEdgeDefParams(edgeColour, edgeStyle, arrowhead, edgeWidth) into nodeLine
+    return "edge [" & nodeLine & "];"
+end dot_ConstructDefaultEdgeDefs

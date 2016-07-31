@@ -1,0 +1,6 @@
+on menu_DisplayHarray mTarget, projectName
+   put project_FetchHarray (projectName) into hArray
+   
+   put merge ("project_FetchHarray ('[[projectName]]')") into someTitle
+   display_Array hArray, someTitle
+end menu_DisplayHarray

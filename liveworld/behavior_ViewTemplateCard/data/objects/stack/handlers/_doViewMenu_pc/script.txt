@@ -1,0 +1,8 @@
+private command _doViewMenu
+   put the long id of control 1 of me into mView
+   put the view_Name of mView into viewName
+   if exists (mView) is false then return empty
+   put "Global |" && menu_TitleFromViewName (viewName) into mTitle
+   menu_PopUp mTitle, empty, mView
+   return the result
+end _doViewMenu

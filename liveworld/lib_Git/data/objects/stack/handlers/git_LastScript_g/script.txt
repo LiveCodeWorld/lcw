@@ -1,0 +1,5 @@
+getprop git_LastScript [pBackNum]
+   put the script_File of the target into relativeFile
+   put git_GetLastRevision (relativeFile, pBackNum) into revisionScript
+   return revisionScript
+end git_LastScript

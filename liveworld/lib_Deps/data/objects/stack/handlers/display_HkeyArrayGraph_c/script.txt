@@ -1,0 +1,11 @@
+command display_HkeyArrayGraph hkeyArray, pGraphStyle
+   -- component: true
+   
+   if pGraphStyle is empty then put "hierarchical" into pGraphStyle
+   -- overlayArray_ReconstructAndCreateFiles hKeyArray, pOverlayName, overlayFolder, pGraphStyle, dotHeaderArray, graphPropertyArray
+   put overlayArray_FromLinkArray (hkeyArray) into overlayArray
+   overlayArray_SetGraphProperty overlayArray, "overlay_Style", pGraphStyle
+   overlayArray_CreateAndDisplayGraph overlayArray, pGraphStyle
+   put the result into imageView
+   return imageView
+end display_HkeyArrayGraph

@@ -1,0 +1,4 @@
+on menu_LiveStackArray scriptObject
+   put the stack_Array of scriptObject into stackArray
+   display_StackArray stackArray, "the stack_Array"
+end menu_LiveStackArray

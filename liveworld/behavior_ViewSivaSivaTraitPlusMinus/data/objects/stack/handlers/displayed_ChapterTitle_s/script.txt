@@ -1,0 +1,11 @@
+setprop displayed_ChapterTitle chapterTitleOrNum
+   if chapterTitleOrNum is a number then
+      set the chapter_Num of me to chapterTitleOrNum
+   else
+      set the chapter_Title of me to chapterTitleOrNum
+   end if
+   
+   set the displayed_PositiveLabel of me to the positive_Label of me
+   set the displayed_NegativeLabel of me to the negative_Label of me
+   set the displayed_SquareText of me to the trait_Description of me
+end displayed_ChapterTitle

@@ -1,0 +1,9 @@
+function trait_GetAssignment chapterArray
+   put chapterArray ["assignment"]["assignmentLine"] into traitAssignment
+   text_StripTags traitAssignment
+   set the itemdelimiter to ":"
+   if item 1 of traitAssignment = "Assignment" then
+      delete item 1 of traitAssignment
+   end if
+   return traitAssignment
+end trait_GetAssignment

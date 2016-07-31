@@ -1,0 +1,178 @@
+--> MetaData
+-
+license: GPLv3
+name: behavior_View|Tree|Datagrid
+type: view behavior
+version: 0.1
+copyright: David Bovill
+
+/*
+Here we have a general header and body view, designed to display information felxibly.
+*/
+
+[[ _FetchHandler (datagrid_Tree,g) ]]
+
+[[ _FetchHandler (view_Object,g) ]]
+
+
+--> Datagrid
+-
+[[ _FetchHandler (dg_Data,g) ]]
+
+[[ _FetchHandler (dg_Data,s) ]]
+
+[[ _FetchHandler (record_Behavior,g) ]]
+
+[[ _FetchHandler (record_Behavior,s) ]]
+
+setprop record_Behavior someObject
+   put the record_View of the target into recordObject
+   if exists (recordObject) is false then return empty
+   set the behavior of recordObject to someObject
+   return someObject
+end record_Behavior
+
+[[ _FetchHandler (record_View,g) ]]
+
+[[ _FetchHandler (record_View,s) ]]
+
+[[ _FetchHandler (record_ViewName,g) ]]
+ 
+[[ _FetchHandler (record_ViewName,s) ]]
+
+
+--> Menu | Props
+-
+/*
+getprop menu_Target [mTitlePath]
+   set the itemDelimiter to "|"
+   switch
+      case mTitlePath contains "Global | Tree |"
+         return the tree_Field of me
+      case mTitlePath contains "Global | Title |"
+         return the title_View of me
+      default
+         pass menu_Target
+   end switch
+end menu_Target
+
+getprop menu_Title
+   if the long id of the target is not the long id of me then pass menu_Title
+   put the view_Value ["menu_Title"] of me into mTitle
+   -- put the uOPN ["menu_Title"] of me into mTitle
+   if mTitle is not empty then return mTitle
+   put the menu_DefaultTitle of me into mTitle
+   return mTitle
+end menu_Title
+
+setprop menu_Title mTitle
+   if the long id of the target is not the long id of me then pass menu_Title
+   set the view_Value ["menu_Title"] of me to mTitle
+   -- set the uOPN ["menu_Title"] of me to mTitle
+end menu_Title
+
+getprop menu_DefaultTitle
+   if the long id of the target is not the long id of me then pass menu_DefaultTitle
+   put the menu_DefaultTitle of the body_View of me into mTitle
+   return mTitle
+end menu_DefaultTitle
+
+getprop menu_ToolTitle
+   if the long id of the target is not the long id of me then pass menu_ToolTitle
+   put the view_Value ["menu_ToolTitle"] of the target into mTitle
+   if mTitle is not empty then
+      return mTitle
+   else
+      local testController
+      put the menu_DefaultToolTitle of the body_View of me into globalMenuTitle
+      menu_SearchGlobalObjectHierarchy globalMenuTitle, testController
+      return globalMenuTitle
+   end if
+end menu_ToolTitle
+*/
+
+
+--> Title
+-
+/*
+These standard title_View scripts are passed down to be handeled by the title_View of the layout.
+
+In order to avoid recursion if the target = the title_View then the call are passed,
+however calls to a target within the body view or to this view itself are accepted.
+*/
+
+[[ _FetchHandler (title_Text,g) ]]
+
+[[ _FetchHandler (title_Text,s) ]]
+
+[[ _FetchHandler (title_TextAlign,g) ]]
+
+[[ _FetchHandler (title_TextAlign,s) ]]
+
+
+--> Title | Colours
+-
+[[ _FetchHandler (colour_Palette,g) ]]
+
+[[ _FetchHandler (colour_Palette,s) ]]
+
+[[ _FetchHandler (title_TextColour,g) ]]
+
+[[ _FetchHandler (title_TextColour,s) ]]
+
+[[ _FetchHandler (title_Colour,g) ]]
+
+[[ _FetchHandler (title_Colour,s) ]]
+
+
+--> Geometry
+-
+[[ _FetchHandler (resizeControl,c) ]]
+
+[[ _FetchHandler (view_Rect,s) ]]
+
+[[ _FetchHandler (LayoutControl,c) ]]
+
+[[ _FetchHandler (view_Spacing,g) ]]
+
+[[ _FetchHandler (view_Spacing,s) ]]
+
+[[ _FetchHandler (body_Indent,g) ]]
+
+[[ _FetchHandler (body_Indent,s) ]]
+
+[[ _FetchHandler (title_Height,g) ]]
+
+[[ _FetchHandler (title_Height,s) ]]
+
+[[ _FetchHandler (title_DefaultHeight,g) ]]
+
+[[ _FetchHandler (title_ViewName,g) ]]
+ 
+[[ _FetchHandler (title_ViewName,s) ]]
+
+[[ _FetchHandler (body_ViewName,g) ]]
+ 
+[[ _FetchHandler (body_ViewName,s) ]]
+
+
+--> Objects
+-
+[[ _FetchHandler (dg_View,g) ]]
+
+[[ _FetchHandler (tree_Field,g) ]]
+
+[[ _FetchHandler (tree_View,g) ]]
+
+
+--> Objects | Children
+-
+[[ _FetchHandler (title_View,g) ]]
+
+[[ _FetchHandler (header_View,g) ]]
+
+[[ _FetchHandler (body_View,g) ]]
+
+[[ _FetchHandler (top_Control,g) ]]
+
+[[ _FetchHandler (menu_Button,g) ]]

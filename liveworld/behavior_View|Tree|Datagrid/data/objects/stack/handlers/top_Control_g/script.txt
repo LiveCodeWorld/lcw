@@ -1,0 +1,21 @@
+getprop top_Control [pName]
+   put the childcontrolids of me into topControlIDs
+   switch
+      case pName is empty
+         put line 1 of topControlIDs into cID
+         if cID is empty then return empty
+         return the long id of control id cID of me
+      case pName is a number
+         put line pName of topControlIDs into cID
+         if cID is empty then return empty
+         return the long id of control id cID of me
+      default
+         repeat for each line cID in topControlIDs
+            put the long id of control id cID of me into topControl
+            if the short name of topControl = pName then
+               return topControl
+            end if
+         end repeat
+         return empty
+   end switch
+end top_Control

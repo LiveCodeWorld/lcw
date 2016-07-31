@@ -1,0 +1,4 @@
+on menu_HiliteAll indexView
+   put the view_Index of indexView into shortFiles
+   set the selected_Index of indexView to shortFiles
+end menu_HiliteAll

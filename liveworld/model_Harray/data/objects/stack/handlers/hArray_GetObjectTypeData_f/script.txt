@@ -1,0 +1,8 @@
+function hArray_GetObjectTypeData pHarray
+   if pHarray is an array then
+      return pHarray ["objectType"]
+   else
+      global gHkey_Array
+      return gHkey_Array ["objectType"]
+   end if
+end hArray_GetObjectTypeData

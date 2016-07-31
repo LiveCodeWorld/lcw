@@ -1,0 +1,14 @@
+function fedwiki_FetchTitle someURL
+   set the itemdelimiter to "."
+   put "json" into item -1 of someURL
+   put url someURL into someJSON
+   
+   put json_ToArray (someJSON) into fedwikiPageArray
+   put keys (fedwikiPageArray) into wikiKeys
+   repeat for each item someKey in "title,journal,story"
+      if someKey is not among the lines of wikiKeys then 
+         return empty
+      end if 
+   end repeat
+   return fedwikiPageArray ["title"]
+end fedwiki_FetchTitle

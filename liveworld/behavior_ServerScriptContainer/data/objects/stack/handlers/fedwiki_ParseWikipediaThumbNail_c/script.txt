@@ -1,0 +1,10 @@
+command fedwiki_ParseWikipediaThumbNail droppedHtml
+   -- <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><img alt="" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Bruce_Sterling_at_ARE_2010.jpg/220px-Bruce_Sterling_at_ARE_2010.jpg" width="220" height="147" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Bruce_Sterling_at_ARE_2010.jpg/330px-Bruce_Sterling_at_ARE_2010.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Bruce_Sterling_at_ARE_2010.jpg/440px-Bruce_Sterling_at_ARE_2010.jpg 2x" data-file-width="3888" data-file-height="2592">
+   -- if droppedHtml is empty then put script_GetCommentAboveMe() into droppedHTML
+   put fedwikipedia_ExtractShortImageFile (droppedHTML) into shortImageFile
+   
+   put wikicommons_FetchBasicTwoImagePageArray (shortImageFile) into pageArray
+   put json_FromArray (pageArray) into pageJSON
+   
+   fedwiki_ReturnJSON pageJSON
+end fedwiki_ParseWikipediaThumbNail

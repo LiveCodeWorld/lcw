@@ -1,0 +1,6 @@
+private command toc_LookupArrayFromDotNum tocArray, dotNum, @lookUpArray, @markdownTOC
+   split dotNum by "."
+   put tocArray [dotNum] into sectionTocArray
+   delete variable sectionTocArray ["meta"]
+   toc_LookupArray sectionTocArray, lookUpArray, markdownTOC
+end toc_LookupArrayFromDotNum

@@ -1,0 +1,6 @@
+function menu_GetGlobalController globalMenuTitle
+   -- was "menu_GlobalController"
+   put menu_GetGlobalArray() into gMenuHkeyArray
+   put gMenuHkeyArray [globalMenuTitle]["mController"] into mController
+   return mController
+end menu_GetGlobalController

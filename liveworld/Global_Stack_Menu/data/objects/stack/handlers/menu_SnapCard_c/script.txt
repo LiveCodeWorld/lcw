@@ -1,0 +1,13 @@
+on menu_SnapCard scriptObject
+   put the card_Object of scriptObject into cardObject
+   if exists (cardObject) is false then
+      answer warning "No card for this script object!"
+      exit to top
+   end if
+   
+   wireframe_SnapAndExport cardObject, false
+   put the result into imageFile
+   display_Image imageFile
+   -- set the filename of image 1 of cd 1 of stack "Test Wireframe Image" to imageFile
+   finder_Reveal imageFile
+end menu_SnapCard

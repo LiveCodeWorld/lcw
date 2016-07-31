@@ -1,0 +1,12 @@
+on menu_DiffStackBinaries treeField
+   put the tree_SelectedLink of treeField into commitHash
+   put the displayed_Object of treeField into stackObject
+   
+   put the filename of stackObject into thisFile
+   put the stack_RelativeFile of stackObject into relativePath
+   
+   git_ExportFileRevision relativePath, commitHash
+   put the result into toFile
+   
+   diff_Files thisFile, toFile
+end menu_DiffStackBinaries

@@ -1,0 +1,11 @@
+command script_AddToExtractCalls handlerNames, handlerType, scriptHierarchy, @allCalls
+   put false into notPrivate -- bug! Need to change so it only searches objects script for private
+   repeat for each line handlerName in handlerNames
+      if scriptHierarchy is empty then
+         put handlerName,handlerType into hKey
+      else
+         put hkey_SearchHierarchy (handlerName, handlerType, scriptHierarchy, notPrivate) into hKey
+      end if
+      line_Add hKey, allCalls
+   end repeat
+end script_AddToExtractCalls

@@ -1,0 +1,3 @@
+command xml_BlankError @xmlBit
+   if item 1 of xmlBit = "xmlerr" then put empty into xmlBit
+end xml_BlankError

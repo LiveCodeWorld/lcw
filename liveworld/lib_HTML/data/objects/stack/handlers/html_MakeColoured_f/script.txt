@@ -1,0 +1,5 @@
+function html_MakeColoured someText, someColour
+   if someColour is empty then return someText
+   colour_HexNormalise someColour
+   return "<font color=" & kwote(someColour) & ">" & someText & "</font>"
+end html_MakeColoured

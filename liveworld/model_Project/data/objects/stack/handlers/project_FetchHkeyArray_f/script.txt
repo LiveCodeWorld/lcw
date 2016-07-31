@@ -1,0 +1,9 @@
+function project_FetchHkeyArray hKey, pOverlayName, pMainStackHash
+   -- fetch from hkey overlay
+   local overlayArray, mainstackHash
+   put project_HandlerMetadataFolder (hKey) into overlayFolder
+   project_FetchOverlayArrayAndHash hKey, pOverlayName, overlayArray, mainstackHash
+   if pMainStackHash is not empty and pMainStackHash is not mainstackHash then return empty
+   put overlayArray_GetLinkArray (overlayArray) into hkeyArray
+   return hkeyArray
+end project_FetchHkeyArray

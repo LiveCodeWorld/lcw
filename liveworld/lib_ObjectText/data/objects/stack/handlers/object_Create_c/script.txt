@@ -1,0 +1,73 @@
+command object_Create someObject, pOwner, pObjectPropArray
+   put pObjectPropArray ["view"] into vName
+   if vName is not empty then
+      if word 1 of pOwner is empty then
+         put the long id of this card into pOwner
+      end if
+      
+      view_InsertFromPath vName, pOwner
+      put the result into createdObject
+      
+      delete local pObjectPropArray ["rev"]["layer"] -- layers can cause problems (hack)
+      set the object_PropertyArray of createdObject to pObjectPropArray
+   else
+      set lockmessages to true
+      if word 1 of pOwner = "card" or pOwner is empty then
+         switch word 1 of someObject
+            case "field"
+               create field
+               break
+            case "button"
+               create button
+               break
+            case "graphic"
+               create graphic
+               break
+            case "image"
+               create image
+               break
+            case "player"
+               create player
+               break
+            case "group"
+               create group
+               break
+            case "scrollbar"
+               create scrollbar
+               break
+         end switch
+      else
+         switch word 1 of someObject
+            case "field"
+               create field in pOwner
+               break
+            case "button"
+               create button in pOwner
+               break
+            case "graphic"
+               create graphic in pOwner
+               break
+            case "image"
+               create image in pOwner
+               break
+            case "player"
+               create player in pOwner
+               break
+            case "group"
+               create group in pOwner
+               break
+            case "scrollbar"
+               create scrollbar in pOwner
+               break
+         end switch
+      end if
+      put it into createdObject  
+      set lockmessages to false
+      
+      if pObjectPropArray is an array then
+         delete local pObjectPropArray ["rev"]["layer"] -- layers can cause problems (hack)
+         set the object_PropertyArray of createdObject to pObjectPropArray
+      end if
+      return createdObject
+   end if
+end object_Create

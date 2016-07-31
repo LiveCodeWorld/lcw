@@ -1,0 +1,7 @@
+function fedwiki_ConstructVideoCodeArray videoID, videoType, videoDescription, pID
+   fedwiki_SetID pID
+   put toUpper (videoType) && videoID & CR & line 1 of videoDescription into itemArray ["text"]
+   put "video" into itemArray ["type"]
+   put pID into itemArray ["id"]
+   return itemArray
+end fedwiki_ConstructVideoCodeArray

@@ -1,0 +1,7 @@
+function library_ListStandardBackScripts
+   -- temporary hack for now
+   return empty
+   put the rugged_ID of card id 1515 of stack "OPN" & CR after defaultObjects
+   delete char -1 of defaultObjects
+   return defaultObjects
+end library_ListStandardBackScripts

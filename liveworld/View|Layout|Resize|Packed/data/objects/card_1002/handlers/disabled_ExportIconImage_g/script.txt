@@ -1,0 +1,9 @@
+getprop disabled_ExportIconImage [imageObject]
+   if word 1 of imageObject is not "image" then return true
+   
+   put the filename of imageObject into imageFile
+   if imageFile is empty then return false 
+   if there is a file imageFile then return true
+   
+   return false
+end disabled_ExportIconImage

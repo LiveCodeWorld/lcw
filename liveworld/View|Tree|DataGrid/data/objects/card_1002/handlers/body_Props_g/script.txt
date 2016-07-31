@@ -1,0 +1,14 @@
+getprop body_Props [mTarget]
+   put the tree_Field of mTarget into treeField
+   if exists (treeField) is true then
+      return the view_PropertyMenu of treeField
+   else
+      put the body_View of mTarget into bodyView
+      if exists (bodyView) is true then
+         return the view_PropertyMenu of bodyView
+      else
+         -- should not be!
+         return empty
+      end if
+   end if
+end body_Props

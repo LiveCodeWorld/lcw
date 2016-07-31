@@ -1,0 +1,12 @@
+command array_Compare leftArray, rightArray, @commonArray, @leftWithoutArray, @rightWithoutArray
+   put leftArray into leftWithoutArray
+   put rightArray into rightWithoutArray
+   repeat for each key leftKey in leftArray
+      get rightArray [leftKey]
+      if it is an array or it is not empty then
+         put it into commonArray [leftKey]
+         delete variable leftWithoutArray [leftKey]
+      end if
+      delete variable rightWithoutArray [leftKey]
+   end repeat
+end array_Compare

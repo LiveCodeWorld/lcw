@@ -1,0 +1,8 @@
+getprop menu_DisplayedTitle
+    return the label of the target
+    
+    put the long id of the target into menuBtnObject
+    put the text of menuBtnObject into menuText
+    put the menuhistory of menuBtnObject into lineNum
+    return line lineNum of menuText
+end menu_DisplayedTitle

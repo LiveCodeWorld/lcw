@@ -1,0 +1,45 @@
+--> MetaData
+-
+name: Menu Tools Library
+type: controller
+author: David Bovill
+copyright: David Bovill
+
+/*
+This menu contains the code for the menu of the button "Title" of the "Script Only Libs" group.
+It contains tools that are useful for manipulating, indexing and checking script-only libraries.
+*/
+
+local LocalArray
+
+
+--> Title | Menu
+-
+[[ _FetchHandler (menu_CreateLibrary,c) ]]
+
+[[ _FetchHandler (menu_IsLcwFolder,c) ]]
+
+[[ _FetchHandler (is_LcwFolder,g) ]]
+
+on _
+end _
+
+[[ _FetchHandler (menu_KnowEverything,c) ]]
+
+[[ _FetchHandler (menu_IndexSelectedLibraries,c) ]]
+
+on _
+end _
+
+[[ _FetchHandler (submenu_Tools,c) ]]
+
+
+--> Title | Menu | Props
+-
+--> Title | Menu | Disabled
+-
+--> Menu | Props
+-
+--> Deps
+-
+[[ _FetchHandler (line_Delete,c) ]]

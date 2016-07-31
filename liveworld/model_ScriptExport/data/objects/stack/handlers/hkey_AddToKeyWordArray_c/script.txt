@@ -1,0 +1,9 @@
+command hkey_AddToKeyWordArray @hArray, hKey, handlerHash
+   put hkey_ConstructKeywords (item 1 of hKey) into kWords
+   put item 1 to 2 of hKey into shortHKey
+   repeat for each line kWord in kWords
+      put handlerHash into hArray ["keywordArray"][kWord][shortHKey]["sha1"]
+      put item 3 of hKey into hObject
+      if hObject is not empty then put hObject into hArray ["keywordArray"][kWord][shortHKey]["rugged_ID"]
+   end repeat
+end hkey_AddToKeyWordArray

@@ -1,0 +1,29 @@
+on menu_Go scriptObject, whichStack
+   switch whichStack
+      case "Rescue Livecode World"
+         go to stack "Rescue Livecode World"
+         break
+      case "Library Manager"
+         go to stack "Library Manager"
+         break
+      case "View Browser"
+         go to stack "libOPN_ViewBrowser"
+         break
+      case "Display Array"
+         go to stack "Display Array"
+         break
+      case "libOPN_Menus"
+         go to stack "libOPN_Menus"
+         get library_ListGlobalMenuNames()
+         sort it
+         display_Lines it
+         break
+      case "libOPN_GIT"
+         go to stack "libOPN_GIT"
+         break
+      case "-"
+      case "Go to Object"
+         object_GoTo scriptObject
+         break
+   end switch
+end menu_Go

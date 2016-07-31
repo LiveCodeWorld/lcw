@@ -1,0 +1,4 @@
+getprop menu_CheckTarget [scriptObject]
+   if exists (scriptObject) is false then return false
+   return true
+end menu_CheckTarget

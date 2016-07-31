@@ -1,0 +1,28 @@
+command fedwiki_ParseDroppedmediaWikiUrl droppedURL, @pageTitle, @apiStem
+   -- this should inspect the wiki's pecial page and extract the apistem from things like
+   -- https://en.wikipedia.org/wiki/Laetoli#Hominid_footprints
+   -- http://hackteria.org/wiki/api.php?action=query&prop=categories
+   -- http://p2pfoundation.net/Decision-Making_Tools
+   -- http://hackteria.org/wiki/Explorations_in_BioLuminescence
+   -- for now we just look it up in an internal array
+   
+   set the itemdelimiter to "/"
+   put item 3 of droppedURL into wikiDomain
+   switch
+      case wikiDomain = "hackteria.org"
+         put "http://hackteria.org/wiki/api.php" into apiStem
+         put item 5 of droppedURL into pageTitle
+         break
+      case wikiDomain = "p2pfoundation.net"
+         put "http://p2pfoundation.net/api.php" into apiStem
+         put item 4 of droppedURL into pageTitle
+         break
+      default
+         -- case wikiDomain = "en.wikipedia.org"
+         put wikipedia_GetApiRoot() into apiStem
+         put item 5 of droppedURL into pageTitle
+   end switch
+   set the itemdelimiter to "#"
+   put item 1 of pageTitle into pageTitle
+   replace "_" with space in pageTitle
+end fedwiki_ParseDroppedmediaWikiUrl

@@ -1,0 +1,5 @@
+function fedwikipedia_FetchSectionSummaryPageJson pageSlug, sectionNum, pSourceArray
+   put fedwikipedia_FetchSectionSummaryPageArray (pageSlug, sectionNum, pSourceArray) into fedwikiPageArray
+   put json_FromArray (fedwikiPageArray) into pageJSON
+   return pageJSON
+end fedwikipedia_FetchSectionSummaryPageJson

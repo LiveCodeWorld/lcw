@@ -1,0 +1,8 @@
+command global_Load globalDataArray
+   repeat for each key gName in globalDataArray
+      if the number of words of gName is not 1 then next repeat -- safety check
+      put globalDataArray [gName] into globalValue
+      put "global" && gName & CR & "put globalValue into" && gName into doScript
+      do doScript
+   end repeat
+end global_Load

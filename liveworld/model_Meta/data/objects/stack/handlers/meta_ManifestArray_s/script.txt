@@ -1,0 +1,6 @@
+setprop meta_ManifestArray manifestArray
+   breakPoint -- should delte as syntax is ugly (use dispatch instead"
+   put the textStack_Folder of the target into mainStackFolder
+   mainStack_StoreManifestArray mainStackFolder, manifestArray
+   return manifestArray
+end meta_ManifestArray
