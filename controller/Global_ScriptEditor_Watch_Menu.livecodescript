@@ -84,6 +84,13 @@ on menu_SaveEditedStacks mTarget, editedStackName
    ide_SaveEditedStacks editedStackName
 end menu_SaveEditedStacks
 
+on _
+end _
+
+on insert_CustomMenu
+   return "Global | ScriptEditor | Custom | Menu"
+end insert_CustomMenu
+
 on menu_IndexAndExportScript scriptObject
    script_UpdateAndExport scriptObject, true
 end menu_IndexAndExportScript
@@ -279,6 +286,10 @@ end submenu_Hacks
 on _
 end _
 
+on menu_SetMenu mTarget, mTitle
+   set the ide_RecentChangesMenuMenuTitle of mTarget to mTitle
+end menu_SetMenu
+
 on submenu_Dev
    return "Dev | Menu"
 end submenu_Dev
@@ -286,6 +297,14 @@ end submenu_Dev
 
 --> Global | ScriptEditor | Watch | Menu | Props
 -
+getprop m_Title
+   return ide_RecentChangesShortTitle()
+end m_Title
+
+getprop m_Titles
+   return ide_RecentChangesShortTitles()
+end m_Titles
+
 getprop project_StackNames
    put project_FetchValue ("openStacks") into stackNames
    return stackNames

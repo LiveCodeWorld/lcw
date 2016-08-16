@@ -55,11 +55,21 @@ end lcw_AddProjectArrayToGlobal
 
 --> Project | Initialise | After
 -
+command project_IndexAfterUsed projectFolder
+   -- "project_LoadAfterUsing" depends on handlers in stack "model_ProjectArray"
+   try
+      -- project_LoadAfterUsing projectFolder
+   catch e
+      put projectFolder
+      answer warning merge ("Failed to load project globals and index scripts for project '[[projectName]]'!")
+   end try
+end project_IndexAfterUsed
+
 command project_LoadAfterUsing projectFolder
    -- the code below requires the above libraries to be used
    -- should be stored as arrays in the projects folder
-   
    put project_NameFromFolder (projectFolder) into projectName
+   
    project_LoadGlobalPrefs projectName
    project_LoadGlobalHarray projectName -- this clobbers any previously loaded hArray
    project_LoadGlobalArray projectName

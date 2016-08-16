@@ -4,7 +4,7 @@
 license: GPLv3
 name: Global | ScriptEditor | Basic | Menu
 type: controller
-version: 0.1
+version: 0.7
 
 
 local LocalArray
@@ -33,13 +33,6 @@ getprop menu_Target [mTitlePath]
 end menu_Target
 
 
---> Global | ScriptEditor | Custom | Menu
--
-on menu_Test
-   put rev_GetScriptEditorHistoryObjects()
-end menu_Test
-
-
 --> Global | ScriptEditor | Basic | Menu
 -
 on menu_RecentScripts scriptObject, recentObject
@@ -62,9 +55,24 @@ on insert_MyCustomMenu
    return "Global | ScriptEditor | Custom | Menu"
 end insert_MyCustomMenu
 
+on _
+end _
+
+on menu_SetMenu mTarget, mTitle
+   set the ide_RecentChangesMenuMenuTitle of mTarget to mTitle
+end menu_SetMenu
+
 
 --> Global | ScriptEditor | Basic | Menu | Props
 -
+getprop m_Title
+   return ide_RecentChangesShortTitle()
+end m_Title
+
+getprop m_Titles
+   return ide_RecentChangesShortTitles()
+end m_Titles
+
 getprop edited_StackNames
    put LocalArray ["editedStacks"] into editedStacks
    if editedStacks is empty then
@@ -73,7 +81,6 @@ getprop edited_StackNames
       return editedStacks & ",-,Save All"
    end if
 end edited_StackNames
-
 
 
 --> Global | ScriptEditor | Basic | Menu | Disabled

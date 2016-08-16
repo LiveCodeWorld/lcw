@@ -39,7 +39,7 @@ The storage of the actual data differs slightly from a normal array based model 
 --> Menu | Models | MetaData
 -
 function menu_GetTable mTitle, mController
-   if word 1 of mTitle = "Global" and word 2 of pMenuTitle = "|" then
+   if word 1 of mTitle = "Global" and word 2 of mTitle = "|" then
       put menu_GetGlobalTable (mTitle) into mTable
       menu_FixGlobalTitleArray mTable, mTitle
    else

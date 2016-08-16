@@ -9,6 +9,11 @@ licence:  GPLv3
 version: 0.1
 
 
+--> Deps
+-
+deps: field_ScrollToLine,c
+
+
 --> Menu | Global
 -
 

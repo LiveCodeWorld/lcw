@@ -17,18 +17,10 @@ local LocalArray
 -
 on mouseDown pMenuButton
    if the shiftKey is "Down" then pass mouseDown
-   put _GetRecentChangesMenu() into mTitle
+   put the ide_RecentChangesMenuMenuTitle of me into mTitle
+   if mTitle is empty then put "Global | ScriptEditor | Basic | Menu" into mTitle
    menu_PullDown mTitle
 end mouseDown
-
-private function _GetRecentChangesMenu
-   try
-      put env_GetRecentChangesMenu() into mTitle
-   catch e
-      put "Global | ScriptEditor | Watch | Menu" into mTitle
-   end try
-   return mTitle
-end _GetRecentChangesMenu
 
 
 --> Blah | Menu

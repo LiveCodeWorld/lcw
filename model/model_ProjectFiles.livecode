@@ -213,17 +213,6 @@ function project_ConstructNeededStackFileArray projectFolder
    return stackFileArray
 end project_ConstructNeededStackFileArray
 
-function project_ConstructStackFiles projectName
-   local homeStackFileArray
-   put the project_Folder of the target into homeFolder
-   put project_ListFolders (homeFolder) into standardFolders
-   repeat for each line standardFolder in standardFolders
-      put folder_ConstructStackNameArray (standardFolder, homeFolder) into stackNameArray
-      union homeStackFileArray with stackNameArray
-   end repeat
-   return homeStackFileArray
-end project_ConstructStackFiles
-
 
 --> Project | Folder
 -

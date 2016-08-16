@@ -6,13 +6,15 @@ name: Global_IDE_Menu
 type: controller
 version: 0.1
 
+local LocalArray
 
 --> Global | IDE | Menu
 -
 
 on menu_BehaviorHack mTarget, ideBname
-   put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
-   edit the script of ideBehavior
+   edit the script of stack ideBname
+   -- put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
+   -- edit the script of ideBehavior
 end menu_BehaviorHack
 
 on submenu_InterfaceScripts
@@ -23,6 +25,16 @@ end submenu_InterfaceScripts
 --> Global | IDE | Menu | Props
 -
 getprop ide_BNames
+   put lcw_BehaviorPaths() into bPaths
+   set the itemdelimiter to slash
+   repeat for each line bPath in bPaths
+      if item -1 of bPath begins with "behavior_Ide" then
+         put the short name of stack bPath into bName
+         put bName & CR after bNames
+      end if
+   end repeat
+   return bNames
+   
    put hArray_ListBehaviorNames() into bNames
    filter bNames with "behavior_Ide*"
    return bNames

@@ -209,13 +209,18 @@ setprop menu_Update someBoolean
    repeat for each key gMenuTile in mTitleTableArray
       if word 1 of gMenuTile = "Global" and word 2 of gMenuTile = "|" then
          put mTitleTableArray [gMenuTile] into gMenuTable
-         if someBoolean is true then
-            menu_SetGlobalTable gMenuTile, gMenuTable
-         end if
          put gMenuTable into menuTitleArray [gMenuTile]["gMenuTable"]
          put scriptObject into menuTitleArray [gMenuTile]["mController"]
       end if
    end repeat
+   
+   if someBoolean is true then
+      -- menu_SetGlobalTable gMenuTile, gMenuTable
+      put menu_GetGlobalArray() into gMenuTitleArray
+      union menuTitleArray with gMenuTitleArray
+      menu_SetGlobalArray menuTitleArray
+   end if
+   
    return menuTitleArray
 end menu_Update
 

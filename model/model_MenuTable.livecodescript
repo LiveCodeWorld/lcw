@@ -393,6 +393,11 @@ getprop menu_TableArray [pMenuTitle]
    return mTableArray
 end menu_TableArray
 
+function menu_GetDataArray mController
+   put the customproperties ["menu_Table"] of mController into mDataArray
+   return mDataArray
+end menu_GetDataArray
+
 command menuTableArray_AddBoolean @mTableArray, lineNum, mLine, mController, pigeon, pCheckedProp, pDisabledProp
    put "boolean" into mTableArray [lineNum]["mType"]
    
