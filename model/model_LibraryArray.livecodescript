@@ -1,13 +1,61 @@
 ﻿script "model_LibraryArray"
-project_FixUsedlicense: GPLv3
+--> MetaData
+-
+license: GPLv3
 name: model_LibraryArray
 type: model
-version: 0.1
+version: 0.7
 
 /*
 This model provides an interface to a databse of objects (stored in the hArray array database)
 and "sets" which is an array of "projects" that yu can use.
 */
+
+
+--> Working on
+-
+--> Library | Model | Array
+-
+function library_FetchArray shortName
+   put library_ArrayFile (shortName) into someFile
+   put array_Fetch (someFile) into modelArray
+   return modelArray
+end library_FetchArray
+
+command library_StoreArray shortName, dataArray
+   put library_ArrayFile (shortName) into someFile
+   array_Save someFile, dataArray
+   return someFile
+end library_StoreArray
+
+command library_DeleteArray shortName
+   put library_ArrayFile (shortName) into someFile
+   delete file someFile
+   return someFile
+end library_DeleteArray
+
+function library_ArrayFile shortName, pDontCreate
+   put shortName & ".array" into shortFile
+   put library_ArrayFolder (shortFile, pDontCreate) into someFile
+   return someFile
+end library_ArrayFile
+
+function library_ArrayFolder shortFileBit, pDontCreate
+   return library_PluginFolder ("opn_Text/array/", pDontCreate) & shortFileBit
+end library_ArrayFolder
+
+function library_PluginFolder pSubFolder, pDontCreate
+   put revEnvironmentUserPluginsPath() & "/" into opnRootFolder
+   put opnRootFolder & "opn_Plugins/" into someFolder
+   
+   if pSubFolder is not empty then
+      text_AddTrailing pSubFolder, slash
+      put pSubFolder after someFolder
+   end if
+   
+   if pDontCreate is not true then folder_CreateNested someFolder
+   return someFolder
+end library_PluginFolder
 
 
 --> Library | Add
@@ -44,9 +92,9 @@ command library_AddObject ruggedObject, libType, pSetName
       put empty into gLibrarySet_Array ["data"][libType][ruggedObject]
       
       object_AddToGlobalArray ruggedObject
-      put library_FetchSetArray (pSetName) into setArray
+      put library_FetchProjectArray (pSetName) into setArray
       put empty into setArray ["data"][libType][ruggedObject]
-      library_StoreSetArray setArray, pSetName
+      library_StoreProjectArray pSetName, setArray
    else
       library_AddSetNamesToStore ruggedObject, libType, pSetName
    end if
@@ -89,7 +137,7 @@ end library_DeleteUsedStack
 -
 function library_FetchEveryObject pAddHaaray, pAddStandard
    local bigObjectArray
-   put library_FetchSetData() into setData
+   put library_FetchProjectData() into setData
    repeat for each key setName in setData
       repeat for each item libType in "back,used,front"
          put setData [setName]["data"][libType] into rObjectArray
@@ -259,22 +307,22 @@ function library_FetchObjectTypeArray libType, setName
       case "all"
          return library_ConstructAllObjectTypeArray (libType)
       default
-         put library_FetchSetData() into setData
+         put library_FetchProjectData() into setData
          put setData [setName]["data"][libType] into libTypeArray
          return libTypeArray
    end switch
 end library_FetchObjectTypeArray
 
 function library_FetchTypeArray libType, pSetName
-   put library_FetchSetArray (pSetName) into libArray
+   put library_FetchProjectArray (pSetName) into libArray
    put libArray ["data"][libType] into ruggedArray
    return ruggedArray
 end library_FetchTypeArray
 
 command library_StoreObjectTypeArray libType, setName, libTypeArray
-   put library_FetchSetData() into setData
+   put library_FetchProjectData() into setData
    put libTypeArray into setData [setName]["data"][libType]
-   library_StoreSetData setData
+   library_StoreProjectData setData
 end library_StoreObjectTypeArray
 
 function library_ConstructAllObjectSetArray
@@ -298,11 +346,11 @@ function library_ConstructAllObjectTypeArray libType
 end library_ConstructAllObjectTypeArray
 
 command library_AddSetNamesToStore ruggedObject, libType, setNames
-   put library_FetchSetData() into modelArray
+   put library_FetchProjectData() into modelArray
    repeat for each line setName in setNames
       put empty into modelArray [setName]["data"][libType][ruggedObject]
    end repeat
-   library_StoreSetData modelArray
+   library_StoreProjectData modelArray
    return modelArray
 end library_AddSetNamesToStore
 
@@ -328,16 +376,16 @@ end library_GetBackObject
 --> Library | Sets
 -
 command library_RemoveSetNamesFromStore ruggedObject, libType, setNames
-   put library_FetchSetData() into setData
+   put library_FetchProjectData() into setData
    repeat for each line setName in setNames
       delete variable setData [setName]["data"][libType][ruggedObject]
    end repeat
-   library_StoreSetData setData
+   library_StoreProjectData setData
    return setData
 end library_RemoveSetNamesFromStore
 
 command library_StoreSetNames ruggedObject, libType, setNames
-   put library_FetchSetData() into modelArray
+   put library_FetchProjectData() into modelArray
    put keys(modelArray) into otherSetNames
    repeat for each line setName in setNames
       put empty into modelArray [setName]["data"][libType][ruggedObject]
@@ -346,19 +394,9 @@ command library_StoreSetNames ruggedObject, libType, setNames
    repeat for each line setName in otherSetNames
       delete variable modelArray [setName]["data"][libType][ruggedObject]
    end repeat
-   library_StoreSetData modelArray
+   library_StoreProjectData modelArray
    return modelArray
 end library_StoreSetNames
-
-function library_ListSetNames pAddDefaults
-   put library_FetchSetData() into modelArray
-   put keys (modelArray) into setNames
-   sort setNames
-   if pAddDefaults is true then
-      put CR & "None" after setNames
-   end if
-   return setNames
-end library_ListSetNames
 
 function library_GetSetArray
    global gLibrarySet_Array
@@ -397,106 +435,6 @@ command library_Delete pLibType
    global gLibrarySet_Array
    delete variable gLibrarySet_Array
 end library_Delete
-
-
---> Library | Sets
--
-command library_DeleteStoredSet setName
-   put library_FetchSetData() into modelArray
-   delete local modelArray [setName]
-   library_StoreSetData modelArray
-   library_SetSetName "Default"
-end library_DeleteStoredSet
-
-function library_FetchSetArray pSetName
-   if pSetName is empty then put project_GetCurrentName() into pSetName
-   switch pSetName
-      case "all"
-         put library_ConstructAllObjectSetArray () into setArray
-         return setArray
-      case "none"
-         return empty
-      default
-         put library_FetchSetData() into setData
-         return setData [pSetName]
-   end switch
-end library_FetchSetArray
-
-command library_StoreSetArray setArray, pSetName
-   -- don't store anything for the standard sets "all" and "none" which are calculated from other info.
-   switch pSetName
-      case "all"
-         return empty
-      case "none"
-         return empty
-      default
-         if pSetName is empty then put project_GetCurrentName() into pSetName
-         
-         put library_FetchSetData() into setData
-         put setArray into setData [pSetName]
-         library_StoreSetData setData
-   end switch
-end library_StoreSetArray
-
-function library_FetchSetData
-   -- the stored checkout array "gOPN_LibrarySets" does not store sets "none" or "all"
-   put library_FetchArray ("gOPN_LibrarySets") into modelArray
-   return modelArray
-end library_FetchSetData
-
-command library_StoreSetData modelArray
-   -- careful not to store data for sets "none" or "all"
-   -- as these are constructed
-   library_StoreArray "gOPN_LibrarySets", modelArray
-end library_StoreSetData
-
-function library_FetchSetsContaining ruggedObject, libType
-   put library_FetchSetData() into modelArray
-   repeat for each key setName in modelArray
-      put modelArray [setName]["data"][libType] into libTypeArray
-      put keys (libTypeArray) into rObjects
-      if ruggedObject is among the lines of rObjects then
-         put setName & CR after setNames
-      end if
-   end repeat
-   delete char -1 of setNames
-   return setNames
-end library_FetchSetsContaining
-
-command library_RemoveSetNamesFromStore ruggedObject, libType, setNames
-   put library_FetchSetData() into setData
-   repeat for each line setName in setNames
-      delete variable setData [setName]["data"][libType][ruggedObject]
-   end repeat
-   library_StoreSetData setData
-   return setData
-end library_RemoveSetNamesFromStore
-
-command library_StoreSetNames ruggedObject, libType, setNames
-   put library_FetchSetData() into modelArray
-   put keys(modelArray) into otherSetNames
-   -- add
-   repeat for each line setName in setNames
-      put empty into modelArray [setName]["data"][libType][ruggedObject]
-      line_Delete setName, otherSetNames
-   end repeat
-   -- remove from the rest
-   repeat for each line setName in otherSetNames
-      delete variable modelArray [setName]["data"][libType][ruggedObject]
-   end repeat
-   library_StoreSetData modelArray
-   return modelArray
-end library_StoreSetNames
-
-function library_ListSetNames pAddDefaults
-   put library_FetchSetData() into modelArray
-   put keys (modelArray) into setNames
-   sort setNames
-   if pAddDefaults is true then
-      put CR & "None" after setNames
-   end if
-   return setNames
-end library_ListSetNames
 
 
 --> Library | Private ?

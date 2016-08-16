@@ -156,16 +156,16 @@ on menu_DisplayCurrentlyLoadedLibraryArray
 end menu_DisplayCurrentlyLoadedLibraryArray
 
 on menu_DisplayLibraryArray ideScriptObject, librarySetName
-   put library_FetchSetArray (librarySetName) into setArray
+   put library_FetchProjectArray (librarySetName) into setArray
    
-   put merge ("library_FetchSetArray ('[[librarySetName]]')") into someTitle
+   put merge ("library_FetchProjectArray ('[[librarySetName]]')") into someTitle
    display_Array setArray, someTitle
 end menu_DisplayLibraryArray
 
 on menu_DisplayLibraryData
-   put library_FetchSetData () into setData
+   put library_FetchProjectData () into setData
    
-   put merge ("library_FetchSetData()") into someTitle
+   put merge ("library_FetchProjectData()") into someTitle
    display_Array setData, someTitle
 end menu_DisplayLibraryData
 
@@ -216,7 +216,7 @@ getprop stack_SetName [scriptObject]
 end stack_SetName
 
 getprop stack_SetNames
-   return library_ListSetNames()
+   return library_ListProjectNames()
 end stack_SetNames
 
 getprop back_SetName [scriptObject]
@@ -225,7 +225,7 @@ getprop back_SetName [scriptObject]
 end back_SetName
 
 getprop back_SetNames
-   return library_ListSetNames()
+   return library_ListProjectNames()
 end back_SetNames
 
 getprop front_SetName [scriptObject]
@@ -234,7 +234,7 @@ getprop front_SetName [scriptObject]
 end front_SetName
 
 getprop front_SetNames
-   return library_ListSetNames()
+   return library_ListProjectNames()
 end front_SetNames
 
 getprop set_Name
@@ -242,7 +242,7 @@ getprop set_Name
 end set_Name
 
 getprop set_Names
-   return library_ListSetNames () -- & ",-,Add"
+   return library_ListProjectNames () -- & ",-,Add"
 end set_Names
 
 getprop library_SetName
@@ -250,7 +250,7 @@ getprop library_SetName
 end library_SetName
 
 getprop library_SetNames
-   return library_ListSetNames (true)
+   return library_ListProjectNames() & CR & "None"
 end library_SetNames
 
 
@@ -357,7 +357,7 @@ on submenu_ReindexLibrary
 end submenu_ReindexLibrary
 
 on menu_AddExtraLibrariesTo ideScriptObject, setName
-   put library_FetchSetArray (setName) into setArray
+   put library_FetchProjectArray (setName) into setArray
    --
    put "Library Manager,View|Menu|Button" into stackNames
    repeat for each item stackName in stackNames
@@ -380,7 +380,7 @@ on menu_AddExtraLibrariesTo ideScriptObject, setName
       put empty into setArray ["data"]["back"][rObject]
    end repeat
    --
-   library_StoreSetArray setArray, setName
+   library_StoreProjectArray setName, setArray
    
    put merge ("Added stacks [[stackNames]], the stacks [[backNames]] + library_ListStandardBackScripts() to the back scripts, and the 'scriptEditor_CompileFrontScript()' to the frontscript of the library set '[[setName]]'!") into someComment
    opn_Notify someComment
@@ -388,14 +388,14 @@ on menu_AddExtraLibrariesTo ideScriptObject, setName
 end menu_AddExtraLibrariesTo
 
 on menu_AddStandardLibrariesTo ideScriptObject, setName
-   put library_FetchSetArray (setName) into setArray
+   put library_FetchProjectArray (setName) into setArray
    repeat for each item libType in "back,used,front,script only"
       put library_ConstructAllObjectTypeArray (libType) into allObjectArray
       put setArray ["data"][libType] into setObjectArray
       union setObjectArray with allObjectArray
       put setObjectArray into setArray ["data"][libType]
    end repeat
-   library_StoreSetArray setArray, setName
+   library_StoreProjectArray setName, setArray
    
    put merge ("Added standard libraries to the stored library set '[[setName]]'!") into someComment
    opn_Notify someComment
@@ -511,7 +511,7 @@ on menu_DisplayUsedLibraries ideScriptObject, setName
 end menu_DisplayUsedLibraries
 
 on menu_DisplayLibrarySet ideScriptObject, setName
-   put library_FetchSetArray (setName) into someArray
+   put library_FetchProjectArray (setName) into someArray
    put "Library set" && kwote(setName) into someTitle
    display_Array someArray, someTitle
 end menu_DisplayLibrarySet

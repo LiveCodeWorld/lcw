@@ -47,7 +47,7 @@ command script_JustCompiled scriptObject
       return false
    end if
    
-   script_UpdateAndExport scriptObject
+   script_UpdateAndExport scriptObject, true
    put the result into scriptFile
    
    /*

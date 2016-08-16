@@ -126,7 +126,7 @@ end library_PluginFolder
 --> Library | Add and Remove
 -
 command library_RemoveStackFromAllProjects stackObjects
-   put library_ListSetNames() into projectNames
+   put library_ListProjectNames() into projectNames
    repeat for each line projectName in projectNames
       if projectName is among the items of "All,None" then next repeat
       

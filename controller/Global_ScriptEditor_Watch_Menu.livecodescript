@@ -84,6 +84,10 @@ on menu_SaveEditedStacks mTarget, editedStackName
    ide_SaveEditedStacks editedStackName
 end menu_SaveEditedStacks
 
+on menu_IndexAndExportScript scriptObject
+   script_UpdateAndExport scriptObject, true
+end menu_IndexAndExportScript
+
 on _
 end _
 
@@ -118,8 +122,14 @@ on menu_Go scriptObject, whichStack
    end switch
 end menu_Go
 
+on _
+end _
+
+on menu_SetWorkingProject mTarget, projectName
+   project_SetCurrentName projectName
+end menu_SetWorkingProject
+
 on menu_DisplayProjectStacks scriptObject
-   -- put the view_Name of scriptObject into vName
    display_ProjectStacks
 end menu_DisplayProjectStacks
 
@@ -127,11 +137,50 @@ on menu_AddStackToProject scriptObject
    put the stack_Name of scriptObject into projectStackName
    project_AddStack projectStackName
    opn_Notify merge("Added stack '[[projectStackName]]' to the project array.")
+   display_ProjectStacks
 end menu_AddStackToProject
 
--- on menu_ProjectStack scriptObject, projectStackName
-   _safeGoProjectStack projectStackName
-end menu_ProjectStack
+on menu_StoreOpenStacks scriptObject, projectName
+   put the openstacks into stackNames
+   filter stackNames without "rev*"
+   stack_StripUnsaved stackNames
+   project_StoreImportantStacks stackNames, projectName
+   display_ProjectStacks
+end menu_StoreOpenStacks
+
+on menu_StoreLoadedStacks scriptObject, projectName
+   put revLoadedStacks() into stackNames
+   stack_StripUnsaved stackNames
+   project_StoreImportantStacks stackNames, projectName
+   display_ProjectStacks
+end menu_StoreLoadedStacks
+
+getprop project_Name
+   return project_GetCurrentName()
+end project_Name
+
+getprop project_Names
+   return library_ListProjectNames()
+end project_Names
+
+command stack_StripUnsaved @stackNames
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      if the filename of stack stackName is empty then next repeat
+      put stackName & CR after goodStackNames
+   end repeat
+   delete char -1 of goodStackNames
+   sort goodStackNames
+   put goodStackNames into stackNames
+end stack_StripUnsaved
+
+on menu_DisplayGlobalMenuArray
+   put menu_GetGlobalArray() into globalMenuArray
+   display_Array globalMenuArray, "menu_GetGlobalArray()", "Global | Menu | Global | Menu"
+end menu_DisplayGlobalMenuArray
+
+on _
+end _
 
 on submenu_Stack
    return "Global | Stack | Menu"

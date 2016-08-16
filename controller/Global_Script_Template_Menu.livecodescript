@@ -55,7 +55,7 @@ end _
 on menu_Save textDisplayView   
    put the title_Text of textDisplayView into templateName
    put the view_Text of textDisplayView into someScript
-      
+   
    script_SetTemplate templateName, someScript
    put the result into savedFile
    
@@ -81,13 +81,14 @@ end menu_SaveAs
 on _
 end _
 
-on menu_UnlockText textDisplayView, someBoolean
-   set the lock_Text of textDisplayView to (someBoolean is false)
+-- on menu_UnlockText textDisplayView, someBoolean
+set the lock_Text of textDisplayView to (someBoolean is false)
 end menu_UnlockText
 
-getprop unlock_Text [textDisplayView]
-   put the lock_Text of textDisplayView into someBoolean
-   return someBoolean is false
+-- getprop unlock_Text [textDisplayView]
+-- gives an error when called on a behavior by the "Global | Script | Template | Menu" menu
+put the lock_Text of textDisplayView into someBoolean
+return someBoolean is false
 end unlock_Text
 
 on submenu_Dev

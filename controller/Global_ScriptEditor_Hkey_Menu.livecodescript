@@ -4,7 +4,7 @@
 license: GPLv3
 name: Global_ScriptEditor_Hkey_Menu
 type: controller
-version: 0.5
+version: 0.7
 
 
 -->Variables

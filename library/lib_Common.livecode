@@ -9,10 +9,9 @@ type: deps
 
 --> Deps | actionCompile,c
 -
-setprop meta_Script [pDontExport] someScript
+-- setprop meta_Script [pDontExport] someScript
    put the long id of the target into someObject
-   put the object_Folder [pDontExport] of someObject into objectFolder
-   object_ExportScript objectFolder, someScript, pExportHandlers
+   object_ExportScript someObject, someScript, pExportHandlers
    put the result into someFile
    return someFile
 end meta_Script
@@ -1105,9 +1104,9 @@ command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCre
    
    put the rugged_ID of someObject into ruggedObject
    
-   put the object_Folder of someObject into objectFolder
-   object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport  -- here we can export the script
+   object_ExportScript someObject, someScript, pExportHandlers, pDontExport  -- here we can export the script
    put the result into scriptFile
+   --  put the object_Folder of someObject into objectFolder
    -- put the script_File of someObject into someFile
    file_SetHomeRelative scriptFile
    
@@ -1328,37 +1327,6 @@ command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCre
    end repeat
    return someScript
 end object_AddToArray
-
-command object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport
-   -- simply export the objects script to the right place (see also "exported_Script")
-   -- note use of binFile to avoid translating of LF to CR on Macs by Revolution (which causes difficulties for git)
-   
-   if there is not a folder objectFolder and pDontExport is true then
-      return empty
-   end if
-   
-   put objectFolder_ScriptFile (objectFolder) into someFile
-   
-   if pExportHandlers is not false then
-      script_ExportHandlersAndCalls someScript, objectFolder
-      put the result into mergeScript
-   else
-      if someScript is empty then
-         -- not really needed as everything is deleted before re-exporting
-         delete file someFile
-         put empty into someFile
-      else
-         put someFile into scriptFolder
-         set the itemdelimiter to "/"
-         delete item -1 of scriptFolder
-         folder_CreateNested scriptFolder
-         set the itemdelimiter to comma
-         
-         put someScript into url ("binfile:" & someFile)
-      end if
-   end if
-   return someFile
-end object_ExportScript
 
 function object_ExtractStack someObject
    -- old use the defaultstack when the target is correct

@@ -7,27 +7,6 @@ type: model
 version: 0.1
 
 
---> Overlay | Props
--
-getprop overlay_Folder [pDontCreate]
-   -- /metadata/objects/stack/overlay/ 
-   -- which is not the "project" metadata folder
-   -- it is the metadata for for a script object
-   
-   put the object_MetaDataFolder of the target into metadataFolder
-   put metadataFolder & "overlay/" into overlayFolder
-   if pDontCreate is not true then folder_CreateNested overlayFolder
-   return overlayFolder
-end overlay_Folder
-
-getprop textStackOverlay_Folder [pDontCreate]
-   put the textStack_Folder [pDontCreate] of the target into metadataFolder
-   put metadataFolder & "metadata/project/overlay/" into overlayFolder
-   if pDontCreate is false then folder_CreateNested overlayFolder
-   return overlayFolder
-end textStackOverlay_Folder
-
-
 --> OverlayArray | Hash
 -
 function overlayArray_GetMainStackHash overlayArray

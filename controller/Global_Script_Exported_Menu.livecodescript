@@ -92,35 +92,9 @@ end menu_AnalizeExportedScript
 on _
 end _
 
-on menu_RevealScriptFile mTarget
-   put the script_File of mTarget into someFile
-   finder_Reveal someFile
-end menu_RevealScriptFile
-
-on menu_DeleteScriptFile mTarget
-   put the script_File of mTarget into someFile
-   file_Delete someFile
-end menu_DeleteScriptFile
-
-on _
-end _
-
-on menu_RevealTextStackOverlayFolder scriptObject
-   put the textStackOverlay_Folder [false] of scriptObject into overlayFolder
-   finder_Reveal overlayFolder
-end menu_RevealTextStackOverlayFolder
-
-on menu_RevealTextStackFolder scriptObject
-   put the textStack_Folder of scriptObject into overlayFolder
-   finder_Reveal overlayFolder
-end menu_RevealTextStackFolder
-   
-on menu_RevealMainstackDotText scriptObject
-   put the textStackOverlay_Folder [true] of scriptObject into overlayFolder
-   put overlay_ConstructFile ("dot", overlayFolder, "Mainstack Structure") into someFile
-   
-   finder_Reveal someFile
-end menu_RevealMainstackDotText
+on submenu_ScriptFolders
+   return "Global | Script | Folders | Menu"
+end submenu_ScriptFolders
 
 
 --> Menu | Props

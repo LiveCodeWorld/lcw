@@ -273,9 +273,14 @@ end menu_Controller
 getprop menu_Table [pMenuTitle]
    if pMenuTitle is empty then put the menu_Title of the target into pMenuTitle
    if pMenuTitle is empty then return empty
-   put the menu_Controller [pMenuTitle] of the target into mController
    
-   put menu_GetTable (pMenuTitle, mController) into mTable
+   if word 1 of pMenuTitle = "Global" and word 2 of pMenuTitle = "|" then
+      put menu_GetGlobalTable (pMenuTitle) into mTable
+   else
+      put the menu_Controller [pMenuTitle] of the target into mController
+      put the menu_DataArray of mController into menuTableArray
+      put menuTableArray [pMenuTitle] into mTable
+   end if
    return mTable
 end menu_Table
 
@@ -1633,6 +1638,7 @@ function menu_ExtractTableFromScript mTitle, someScript, scriptObject
    put gTemp_ActiveMenuArray ["Recursion title Check"] into titlesSoFar
    if mTitle is among the lines of titlesSoFar then
       -- breakpoint called load fix the bug please ?
+      put merge ("Recursion title Check for '[[mTitle]]'") into errorMessage
       return errorMessage
    end if
    

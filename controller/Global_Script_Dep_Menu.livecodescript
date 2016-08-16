@@ -86,6 +86,6 @@ getprop project_Name
 end project_Name
 
 getprop project_Names
-   put library_ListSetNames() into projectNames
+   put library_ListProjectNames() into projectNames
    return projectNames
 end project_Names

@@ -122,7 +122,7 @@ getprop set_Name
 end set_Name
 
 getprop set_Names
-   return library_ListSetNames()
+   return library_ListProjectNames()
 end set_Names
 
 getprop include_HandlersFrom

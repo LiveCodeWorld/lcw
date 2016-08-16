@@ -1702,7 +1702,7 @@ function rev_ApplicationFolder
          return homeStack & "/"
          break
       case the version > 5.5
-         return revEnvironmentToolsPath()
+         return revEnvironmentToolsPath() & "/"
       default
          put the filename of stack "Home" into homeStack
          set the itemdelimiter to "/"

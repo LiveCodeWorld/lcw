@@ -4,7 +4,7 @@
 license: GPLv3
 name: Global_Array_Menu
 type: controller
-version: 0.1
+version: 0.7
 
 
 --> Menu | Props

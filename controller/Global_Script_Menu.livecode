@@ -17,6 +17,18 @@ and in particular either along side any of the more specific version control too
 
 --> Global | Script | Menu
 -
+on submenu_UploadScriptOnlyLibrary
+   -- need to change the target to stackObject
+   return "Global | Rig | Files | Menu"
+end submenu_UploadScriptOnlyLibrary
+
+on menu_IndexAndExportScript scriptObject
+   script_UpdateAndExport scriptObject, true
+end menu_IndexAndExportScript
+
+on _
+end _
+
 on menu_AnalizeScript scriptObject
    display_ScriptObject scriptObject
 end menu_AnalizeScript
@@ -68,4 +80,3 @@ on menu_ScriptGraphFolder scriptObject
    put the overlay_Folder of scriptObject into overlayFolder
    finder_Reveal overlayFolder
 end menu_ScriptGraphFolder
-

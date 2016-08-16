@@ -81,6 +81,16 @@ function _convertVersionToNumber someVersion
    return someNum
 end _convertVersionToNumber
 
+command display_GlobalValue gName
+   put global_GetValue (gName) into gValue
+   if gValue is an array then
+      put "Global:" && gName into someTitle
+      display_Array gValue, someTitle, "Global | Pref | Menu"
+   else
+      put gValue
+   end if
+end display_GlobalValue
+
 command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pCommandObject
    put "View|Tree|Widget with Title" into viewName
 
@@ -122,10 +132,8 @@ command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, 
 end display_Array
 
 command display_ProjectStacks
-   put project_FetchValue ("openStacks") into stackNames
-   sort stackNames
-
    put project_GetCurrentName() into projectName
+   put project_ListImportantStacks (projectName) into stackNames
    put projectName & ",Project" into displayTitle
    display_Index stackNames, displayTitle, "Global | Project | Menu", "Global | Project | Line | Menu", empty, "project_GoToStack"
    put the result into displayView
@@ -316,6 +324,12 @@ end display_HTML
 
 --> Deps
 -
+function script_CallingObject
+   get the executioncontexts
+   put item 1 of line -3 of it into callingObject
+   return callingObject
+end script_CallingObject
+
 command stack_CloneInvisible stackNameToClone, pCloneName
    if exists (stack stackNameToClone) is false then return empty
    if pCloneName is empty then put stackNameToClone into pCloneName

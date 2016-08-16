@@ -9,6 +9,28 @@ version: 0.1
 
 --> Global | IDE | Menu
 -
+
+on menu_BehaviorHack mTarget, ideBname
+   put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
+   edit the script of ideBehavior
+end menu_BehaviorHack
+
+on submenu_InterfaceScripts
+   return "IDE | Interface | Menu"
+end submenu_InterfaceScripts
+
+
+--> Global | IDE | Menu | Props
+-
+getprop ide_BNames
+   put hArray_ListBehaviorNames() into bNames
+   filter bNames with "behavior_Ide*"
+   return bNames
+end ide_BNames
+
+
+--> IDE | Interface | Menu
+-
 on menu_ScriptFieldHack
    put scriptEditor_ScriptFieldBehavior() into scriptFieldBehavior
    put rev_ScriptEditorField (0) into scriptEditorField
@@ -68,20 +90,3 @@ on menu_LaunchDocsHack
    edit the script of launchDocsBehavior
    edit the script of scriptEditorLaunchDocsButton
 end menu_LaunchDocsHack
-
-on _
-end _
-
-on menu_EditLivecodeBehaviorButton mTarget, ideBname
-   put hArray_GetNamedObjectType (ideBname, "behavior") into ideBehavior
-   edit the script of ideBehavior
-end menu_EditLivecodeBehaviorButton
-
-
---> Global | IDE | Menu | Props
--
-getprop ide_BNames
-   put hArray_ListBehaviorNames() into bNames
-   filter bNames with "behavior_Ide*"
-   return bNames
-end ide_BNames

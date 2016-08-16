@@ -19,6 +19,11 @@ Some basic tools for manipulating stacks, and windows.
 
 --> Global | Stack | Menu
 -
+on submenu_UploadScriptOnlyLibrary
+   -- need to change the target to stackObject
+   return "Global | Rig | Files | Menu"
+end submenu_UploadScriptOnlyLibrary
+
 on menu_SnapCard scriptObject
    put the card_Object of scriptObject into cardObject
    if exists (cardObject) is false then

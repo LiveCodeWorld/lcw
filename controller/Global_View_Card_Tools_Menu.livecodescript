@@ -17,17 +17,26 @@ on menu_Clone someView
    put it into clonedStack
 end menu_Clone
 
-on _
-end _
-
 on menu_ViewProperty someView, viewProp
    view_DoPropertyMenu viewProp, someView
 end menu_ViewProperty
+
+on _
+end _
 
 on menu_EditBehavior someView
    put the behavior of someView into bStackObject
    edit the script of bStackObject
 end menu_EditBehavior
+
+on menu_ResetBehavior someView
+   put the behavior of someView into bStackObject
+   set the behavior of someView to bStackObject
+end menu_ResetBehavior
+
+on menu_FixBehaviors someView
+   fix_Behaviors
+end menu_FixBehaviors
 
 on _
 end _
@@ -73,6 +82,15 @@ on menu_SetViewCardBehavior someView
    set the behavior of cardObject to bObject
 end menu_SetViewCardBehavior
 
+
+--> Global | View | Card | Tools | Menu | Disabled
+-
+getprop disabled_EditBehavior [someView]
+   put the behavior of someView into bObject
+   put exists (bObject) into bExists
+   return bExists is false
+end disabled_EditBehavior
+
 getprop disabled_SetViewCardBehavior [someView]
    put the card_Object of someView into cardObject
    put the behavior of cardObject into bObject
@@ -87,9 +105,6 @@ getprop disabled_EditViewCardBehavior [someView]
    return bExists is false
 end disabled_EditViewCardBehavior
 
-
---> Global | View | Card | Tools | Menu | Disabled
--
 getprop disabled_OpenSubstack [someView]
    put the stack_Object of someView into stackObject
    put the mainstack of stackObject into stackName

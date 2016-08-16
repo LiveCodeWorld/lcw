@@ -4,12 +4,15 @@
 license: GPLv3
 name: model_Prefs
 type: model
-version: 0.1
+version: 0.6
 
 
 --> Currently Working On
 -
 /*
+These are system wide user preferences.
+For project preferences use
+
 These utility handlers are for manipulating global variables when you only have there name,
 and this is passed to you in a script. Otherwise you can simply decalre the global in your script and do not need to use "do".
 */
@@ -26,32 +29,6 @@ command pref_StoreServerArray serverArray, pName
    put the result into dataArray
    return dataArray
 end pref_StoreServerArray
-
-command global_DisplayValue gName
-   put global_GetValue (gName) into gValue
-   if gValue is an array then
-      put "Global:" && gName into someTitle
-      display_Array gValue, someTitle, "Global | Pref | Menu"
-   else
-      put gValue
-   end if
-end global_DisplayValue
-
-function global_GetValue gName
-   put "global" && gName & CR & "put" && gName && "into gValue" into doScript
-   do doScript
-   return gValue
-end global_GetValue
-
-command global_SetValue gName, gValue
-   put "global" && gName & CR & "put" && gValue && "into gName" into doScript
-   do doScript
-end global_SetValue
-
-command global_Delete gName
-   put "global" && gName & CR & "delete variable" && gName into doScript
-   do doScript
-end global_Delete
 
 
 --> Pref | Shell
@@ -170,13 +147,6 @@ command pref_DeleteSet pProjectName
    delete variable dataArray [pProjectName]
    pref_StoreData dataArray
 end pref_DeleteSet
-
-function pref_FetchArray pProjectName
-   -- contains all the preference globals int the set with the keys as global names
-   if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put pref_FetchData() into dataArray
-   return dataArray [pProjectName]
-end pref_FetchArray
 
 
 --> Pref | Array

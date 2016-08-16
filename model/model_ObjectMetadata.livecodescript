@@ -2,6 +2,7 @@
 --> MetaData
 -
 license: GPLv3
+copyright: David Bovill
 name: model_ObjectMetadata
 type: model
 version: 0.8
@@ -11,11 +12,210 @@ Combines both the uRip value of the object and the script metadata of the object
 
 Prioritises the script value over the objects script metadata
 Sets both the uRip value of the object and the script of the object
+
+getprop stack_Folder [pDontCreate]
+   put the long ID of the target into someObject
+   
+   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
+   put the stack_Object of someObject into stackObject
+   put the short name of stackObject into stackName
+   put the mainstack of stackObject into mainStackName
+   
+   if stackName = mainStackName then
+      return textStackFolder
+   else
+      put textStackFolder & "objects/substacks/" & stackName & "/" into stackFolder
+      if pDontCreate is false then folder_CreateNested stackFolder
+      return stackFolder
+   end if
+end stack_Folder
 */
+
+
+--> Stack | Folder
+-
+getprop stackData_Folder [pDontCreate]
+   -- lazy, manifest is in inconsistant place, but prob best until merge into one mainstack manifest
+   put the long ID of the target into someObject
+   put the stack_Object of someObject into stackObject
+   put the short name of stackObject into stackName
+   put the mainstack of stackObject into mainStackName
+   
+   put stackData_GetFolder (someObject, stackName, mainStackName, pDontCreate) into stackDataFolder
+   return stackDataFolder
+end stackData_Folder
+
+getprop checkout_Folder [repoType]
+   -- important handler needs to be fast and work even if there is no version control
+   put the mainstack_File of the target into objectFile
+   put checkout_FindRoot (objectFile, repoType) into checkoutFolder
+   -- put checkout_ConstructDefaultFolder (objectFile) into checkoutFolder
+   return checkoutFolder
+end checkout_Folder
 
 
 --> Currently Working On
 -
+getprop script_File [pDontCreate]
+   put pDontCreate is not false into pDontCreate
+   put the object_Folder [pDontCreate] of the target into objectFolder
+   put objectFolder & "script.txt" into someFile
+   return someFile
+end script_File
+
+getprop object_Folder [pDontCreate]
+   put the long id of the target into someObject
+   put the stackDataObjects_Folder [pDontCreate] of someObject into objectFolder
+   folder_AddObjectBit objectFolder, someObject
+   if pDontCreate is not true then folder_CreateNested objectFolder
+   return objectFolder
+end object_Folder
+
+getprop stackDataObjects_Folder [pDontCreate]
+   put the long ID of the target into someObject
+   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
+   put folder_AddStackBit ("data", textStackFolder, someObject) into stackFolder
+   if pDontCreate is false then folder_CreateNested stackFolder
+   return stackFolder
+end stackDataObjects_Folder
+
+
+--> Older way to save important folders to array
+-
+function project_GetNamedFolder someName, projectName
+   -- this is the old way to store folders in the metadata array
+   put library_FetchProjectArray (projectName) into projectArray
+   put projectArray ["metadata"][someName]["folder"] into standardFolder
+   if char -1 of standardFolder is not slash then put slash after standardFolder
+   return standardFolder
+end project_GetNamedFolder
+
+command project_SetNamedFolder someName, projectName, someFolder
+   if char -1 of someFolder is not slash then put slash after someFolder
+   put library_FetchProjectArray (projectName) into setArray
+   put projectName into setArray ["metadata"]["library_SetName"] -- should be called "project_Name"
+   put someFolder into setArray ["metadata"][someName]["folder"]
+   library_StoreProjectArray projectName, setArray
+end project_SetNamedFolder
+
+
+--> Project | Metadata | Folder
+-
+getprop project_OverlayFolder
+   put the textStack_Folder of the target into textStackFolder
+   put textStackFolder & "metadata/project/overlay/" into projectOverlayFolder
+   return projectOverlayFolder
+end project_OverlayFolder
+
+
+--> Object | Folder
+-
+getprop overlay_Folder [pDontCreate]
+   -- /metadata/objects/stack/overlay/ 
+   -- which is not the "project" metadata folder
+   -- it is the metadata for for a script object
+   
+   put the object_MetaDataFolder of the target into metadataFolder
+   put metadataFolder & "overlay/" into overlayFolder
+   if pDontCreate is false then folder_CreateNested overlayFolder
+   return overlayFolder
+end overlay_Folder
+
+getprop textStackOverlay_Folder [pDontCreate]
+   put the textStack_Folder [pDontCreate] of the target into metadataFolder
+   put metadataFolder & "metadata/project/overlay/" into overlayFolder
+   if pDontCreate is false then folder_CreateNested overlayFolder
+   return overlayFolder
+end textStackOverlay_Folder
+
+getprop textStack_Folder [pDontCreate]
+   put the mainstack_File of the target into objectFile
+   put project_FolderAboveFile (objectFile) into textStackRoot
+   
+   if there is not a folder textStackRoot then
+      -- should not needed except in authoring
+      put textStack_FindRoot (objectFile) into textStackRoot
+      if there is not a folder textStackRoot then
+         return empty
+      else
+         -- add to library
+         put project_NameFromFolder (projectFolder) into projectName
+         library_StoreProjectFolder projectName, projectFolder
+      end if
+   end if
+   
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   put textStackRoot & mainStackName & "/" into stackFolder
+   if pDontCreate is false then folder_CreateNested stackFolder
+   return stackFolder
+end textStack_Folder
+
+getprop textStack_Root [repoType]
+   put the mainstack_File of the target into objectFile
+   put textStack_FindRoot (objectFile, repoType) into textStackRoot
+   return textStackRoot
+end textStack_Root
+
+getprop object_MetaDataFolder [pDontCreate]
+   -- inside the textStack_Folder
+   if pDontCreate is empty then put true into pDontCreate
+   put the long id of the target into someObject
+   put the stack_Object of the target into stackObject
+   put the mainstack of stackObject into mainStackName
+   
+   put the textStack_Folder of stack mainStackName into mainStackFolder
+   return mainstack_MetadataFolder (mainStackFolder, someObject, pDontCreate)
+ end object_MetaDataFolder
+
+getprop object_MetaDataFolder [pDontCreate]
+   -- metadata/objects/stack/
+   -- metadata/objects/button_1006/
+   -- this is badly named as it indicates the metadata folder
+   -- should be script_MetadataFolder or "object_MetadataFolder"
+   
+   put the long id of the target into tObject
+   put the textStack_Folder of tObject into textStackFolder
+   put folder_AddStackBit ("metadata", textStackFolder, tObject) into metadataFolder
+   folder_AddObjectBit metadataFolder, tObject
+   if pDontCreate is false then folder_CreateNested metadataFolder
+   return metadataFolder
+end object_MetaDataFolder
+
+
+
+--> Project | Folder | Functions
+-
+function textStack_FindRoot objectFile, repoType
+   -- put checkout_FindRoot (objectFile, repoType) into checkOutFolder
+   checkout_SetFolderAndRepotype objectFile, repoType
+   put the result into checkOutFolder
+   
+   switch
+      case checkoutFolder is empty
+         -- not in a repo
+         put checkout_ConstructDefaultFolder (objectFile) into textStackFolder
+         return textStackFolder
+      case checkoutFolder = rev_GetPluginFolder()
+         -- this legacy mammoth project is also in "git"
+         put checkoutFolder & "opn_Plugins/opn_Text/rev/object/" into textStackFolder
+         return textStackFolder
+      case (checkoutFolder is not empty and repoType = "fossil")
+         -- attempt at catering for legacy fossil projects
+         put checkoutFolder & "opn_TextStacks/" into textStackFolder
+         return textStackFolder
+      case checkoutFolder is not empty and repoType = "git"
+         -- it's a new git project
+         -- let's use the new folder name
+         put checkoutFolder & "liveworld/" into textStackFolder
+         return textStackFolder
+      case checkoutFolder is not empty
+         -- as strange type of repo :)
+         put checkoutFolder & "liveworld/" into textStackFolder
+         return textStackFolder
+   end switch
+end textStack_FindRoot
+
 
 --> Object | Metadata | Wrappers
 -
@@ -97,144 +297,6 @@ getprop object_MetaDataTable [keysToRemove]
     combine metaDataArray with CR and tab
     return metaDataArray
 end object_MetaDataTable
- 
-
-
---> Object | Folder
--
-getprop object_Folder [pDontCreate]
-   put the long id of the target into someObject
-   put the stackDataObjects_Folder [pDontCreate] of someObject into objectFolder
-   folder_AddObjectBit objectFolder, someObject
-   if pDontCreate is false then folder_CreateNested objectFolder
-   return objectFolder
-end object_Folder
-
-getprop object_Folder [pDontCreate]
-   put the long id of the target into someObject
-   
-   put the stack_Folder [pDontCreate] of someObject into objectFolder
-   put "objects/" after objectFolder
-   folder_AddObjectBit objectFolder, someObject
-   
-   if pDontCreate is not true then folder_CreateNested objectFolder
-   return objectFolder
-end object_Folder
-
-getprop object_Folder [pDontCreate]
-   put the long id of the target into someObject
-   put the stackDataObjects_Folder [pDontCreate] of someObject into objectFolder
-   folder_AddObjectBit objectFolder, someObject
-   if pDontCreate is false then folder_CreateNested objectFolder
-   return objectFolder
-end object_Folder
-
-getprop object_MetaDataFolder [pDontCreate]
-   -- inside the textStack_Folder
-   if pDontCreate is empty then put true into pDontCreate
-   put the long id of the target into someObject
-   put the stack_Object of the target into stackObject
-   put the mainstack of stackObject into mainStackName
-   
-   put the textStack_Folder of stack mainStackName into mainStackFolder
-   return mainstack_MetadataFolder (mainStackFolder, someObject, pDontCreate)
- end object_MetaDataFolder
-
-getprop object_MetaDataFolder [pDontCreate]
-   -- metadata/objects/stack/
-   -- metadata/objects/button_1006/
-   -- this is badly named as it indicates the metadata folder
-   -- should be script_MetadataFolder or "object_MetadataFolder"
-   
-   put the long id of the target into tObject
-   put the textStack_Folder of tObject into textStackFolder
-   put folder_AddStackBit ("metadata", textStackFolder, tObject) into metadataFolder
-   folder_AddObjectBit metadataFolder, tObject
-   if pDontCreate is false then folder_CreateNested metadataFolder
-   return metadataFolder
-end object_MetaDataFolder
-
-
---> TextStack | Folder
--
-getprop textStack_Folder [pDontCreate]
-   put the mainstack_File of the target into objectFile
-   put textStack_FindRoot (objectFile) into textStackRoot
-   
-   put the stack_Object of the target into stackObject
-   put the mainstack of stackObject into mainStackName
-   
-   put textStackRoot & mainStackName & "/" into stackFolder
-   if pDontCreate is false then folder_CreateNested stackFolder
-   return stackFolder
-end textStack_Folder
-
-getprop textStack_Folder [pDontCreate]
-   put the stack_Object of the target into stackObject
-   put the mainstack of stackObject into mainStackName
-   
-   put the textStack_Root [repoType] of the target into textStackRoot
-   
-   put textStackRoot & mainStackName & "/data/" into stackFolder
-   if pDontCreate is false then folder_CreateNested stackFolder
-   return stackFolder
-end textStack_Folder
-
-getprop textStack_Root [repoType]
-   put the mainstack_File of the target into objectFile
-   put textStack_FindRoot (objectFile, repoType) into textStackRoot
-   return textStackRoot
-end textStack_Root
-
-
---> Stack | Folder
--
-getprop stack_Folder [pDontCreate]
-   put the long ID of the target into someObject
-   
-   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
-   put the stack_Object of someObject into stackObject
-   put the short name of stackObject into stackName
-   put the mainstack of stackObject into mainStackName
-   
-   if stackName = mainStackName then
-      return textStackFolder
-   else
-      put textStackFolder & "objects/substacks/" & stackName & "/" into stackFolder
-      if pDontCreate is false then folder_CreateNested stackFolder
-      return stackFolder
-   end if
-end stack_Folder
-
-getprop stackData_Folder [pDontCreate]
-   -- lazy, manifest is in inconsistant place, but prob best until merge into one mainstack manifest
-   put the long ID of the target into someObject
-   put the stack_Object of someObject into stackObject
-   put the short name of stackObject into stackName
-   put the mainstack of stackObject into mainStackName
-   
-   put stackData_GetFolder (someObject, stackName, mainStackName, pDontCreate) into stackDataFolder
-   return stackDataFolder
-end stackData_Folder
-
-getprop stackDataObjects_Folder [pDontCreate]
-   put the long ID of the target into someObject
-   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
-   put folder_AddStackBit ("data", textStackFolder, someObject) into stackFolder
-   if pDontCreate is false then folder_CreateNested stackFolder
-   return stackFolder
-end stackDataObjects_Folder
-
-
---> Checkout | Folder
--
-getprop checkout_Folder [repoType]
-   -- important handler needs to be fast and work even if there is no version control
-   put the mainstack_File of the target into objectFile
-   put checkout_FindRoot (objectFile, repoType) into checkoutFolder
-   -- put checkout_ConstructDefaultFolder (objectFile) into checkoutFolder
-   return checkoutFolder
-end checkout_Folder
 
 
 --> Object | Props
@@ -293,36 +355,6 @@ end object_AddUripArray
 
 --> Checkout | Folders
 -
-function textStack_FindRoot objectFile, repoType
-   -- put checkout_FindRoot (objectFile, repoType) into checkOutFolder
-   checkout_SetFolderAndRepotype objectFile, repoType
-   put the result into checkOutFolder
-   
-   switch
-      case checkoutFolder is empty
-         -- not in a repo
-         put checkout_ConstructDefaultFolder (objectFile) into textStackFolder
-         return textStackFolder
-      case checkoutFolder = rev_GetPluginFolder()
-         -- this legacy mammoth project is also in "git"
-         put checkoutFolder & "opn_Plugins/opn_Text/rev/object/" into textStackFolder
-         return textStackFolder
-      case (checkoutFolder is not empty and repoType = "fossil")
-         -- attempt at catering for legacy fossil projects
-         put checkoutFolder & "opn_TextStacks/" into textStackFolder
-         return textStackFolder
-      case checkoutFolder is not empty and repoType = "git"
-         -- it's a new git project
-         -- let's use the new folder name
-         put checkoutFolder & "liveworld/" into textStackFolder
-         return textStackFolder
-      case checkoutFolder is not empty
-         -- as strange type of repo :)
-         put checkoutFolder & "liveworld/" into textStackFolder
-         return textStackFolder
-   end switch
-end textStack_FindRoot
-
 command checkout_SetFolderAndRepotype objectFile, @repoType
    -- ignoreCall: fossil_FindCheckoutFolder,f
    -- ignoreCall: git_GetCheckoutFolder,f

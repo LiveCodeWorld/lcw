@@ -4,7 +4,7 @@
 license: GPLv3
 name: model_Project
 type: model
-version: 0.6
+version: 0.7
 
 /*
 There are currently 5 active globals in use by the LiveCode environment.
@@ -53,16 +53,95 @@ See also "meta_StackArrayFile" for project level stackfile storage
 */
 
 
+command project_GuessHomeStack @projectHomeStack
+   if projectHomeStack is empty then
+      put the project_HomeStack of the target into projectHomeStack
+      if projectHomeStack is empty then
+         put the stack_Object of the target into projectHomeStack
+      end if
+   end if
+end project_GuessHomeStack
+
+
+--> Old | Library | Sets
+-
+function library_FetchSetsContaining ruggedObject, libType
+   put library_FetchProjectData() into modelArray
+   repeat for each key setName in modelArray
+      put modelArray [setName]["data"][libType] into libTypeArray
+      put keys (libTypeArray) into rObjects
+      if ruggedObject is among the lines of rObjects then
+         put setName & CR after setNames
+      end if
+   end repeat
+   delete char -1 of setNames
+   return setNames
+end library_FetchSetsContaining
+
+command library_RemoveSetNamesFromStore ruggedObject, libType, setNames
+   put library_FetchProjectData() into setData
+   repeat for each line setName in setNames
+      delete variable setData [setName]["data"][libType][ruggedObject]
+   end repeat
+   library_StoreProjectData setData
+   return setData
+end library_RemoveSetNamesFromStore
+
+command library_StoreSetNames ruggedObject, libType, setNames
+   put library_FetchProjectData() into modelArray
+   put keys(modelArray) into otherSetNames
+   -- add
+   repeat for each line setName in setNames
+      put empty into modelArray [setName]["data"][libType][ruggedObject]
+      line_Delete setName, otherSetNames
+   end repeat
+   -- remove from the rest
+   repeat for each line setName in otherSetNames
+      delete variable modelArray [setName]["data"][libType][ruggedObject]
+   end repeat
+   library_StoreProjectData modelArray
+   return modelArray
+end library_StoreSetNames
+
+
 --> Working on
 -
-command project_AddStack stackNames
-   put project_FetchValue ("openStacks") into oldProjectStackNames
-   put stackNames & CR & oldProjectStackNames into newProjectStackNames
-   sort newProjectStackNames
-   put word 1 to -1 of newProjectStackNames into newProjectStackNames
-   project_SaveValue "openStacks", newProjectStackNames
-   return newProjectStackNames
-end project_AddStack
+
+--> Project | List
+-
+function project_ListBehaviorStackNames pProjectNames
+   switch pProjectNames
+      case empty
+         put "LCW" into pProjectNames
+         break
+      case "All"
+         put library_ListProjectNames() into pProjectNames
+         break
+   end switch
+   
+   repeat for each line projectName in pProjectNames
+      if exists (stack projectName) is false then next repeat
+      put the project_StackNames ["behavior"] of stack projectName & CR after bNames
+   end repeat
+   sort bNames
+   put word 1 to -1 of bNames into bNames
+   return bNames
+end project_ListBehaviorStackNames
+
+
+--> Project | Stackfiles
+-
+function project_FetchStackFiles pProjectName
+   put library_FetchProjectArray (pProjectName) into projectArray
+   put projectArray ["data"]["stackfiles"] into stackFileTable
+   return stackFileTable
+end project_FetchStackFiles
+
+command project_StoreStackFiles stackFileTable, pProjectName
+   put library_FetchProjectArray (pProjectName) into projectArray
+   put stackFileTable into projectArray ["data"]["stackfiles"]
+   library_StoreProjectArray pProjectName, projectArray
+end project_StoreStackFiles
 
 
 --> Project | Files | Handler
@@ -92,211 +171,48 @@ getprop project_ProcessedHkeyArrayFile
    return someFile
 end project_ProcessedHkeyArrayFile
 
+function project_ListUsedStacks projectName
+   put the project_StackObjects ["library"] of stack projectName into usedStackObjects
+   put the project_StackObjects ["model"] of stack projectName & CR before usedStackObjects
+   sort usedStackObjects
+   return word 1 to -1 of usedStackObjects
+end project_ListUsedStacks
 
---> Project | Folders
--
-getprop project_OverlayFolder
-   put the textStack_Folder of the target into textStackFolder
-   put textStackFolder & "metadata/project/overlay/" into projectOverlayFolder
-   return projectOverlayFolder
-end project_OverlayFolder
+getprop project_StackNames [folderName]
+   put the project_Folder [folderName] of the target into standardFolder
+   if standardFolder is empty then return empty
+   put folder_ListStackNames (standardFolder) into stackNames
+   return stackNames
+end project_StackNames
 
-
---> Project | Array
--
-getprop project_DependencyStacks
-   put the project_DependencyStackArray of the target into objectArray
-   delete variable objectArray ["Missing"]
-   put the stack_Object of the target into longStackObject
-   delete variable objectArray ["revIgniter"]
-   put the name of longStackObject into myStackObject
-   delete variable objectArray [myStackObject]
-   put keys (objectArray) into dependencyStacks
-   return dependencyStacks
-end project_DependencyStacks
-
-getprop project_DependencyStackArray
-   put the project_ProcessedHkeyArray of the target into processedHkeyArray  
-   put hkeyArray_ConstructObjectArray (processedHkeyArray) into objectArray
-   return objectArray
-end project_DependencyStackArray
-
-getprop project_ProcessedHkeyArray
-   put the project_ProcessedHkeyArrayFile of the target into someFile
-   put array_Fetch (someFile) into rigHkeyArray
-   return rigHkeyArray
-end project_ProcessedHkeyArray
-
-setprop project_ProcessedHkeyArray rigHkeyArray
-   put the project_ProcessedHkeyArrayFile of the target into someFile
-   array_Save someFile, rigHkeyArray
-   return someFile
-end project_ProcessedHkeyArray
-
-
---> Project | Array | HkeyArray
--
-function project_FetchHkeyArray hKey, pOverlayName, pMainStackHash
-   -- fetch from hkey overlay
-   local overlayArray, mainstackHash
-   put project_HandlerMetadataFolder (hKey) into overlayFolder
-   project_FetchOverlayArrayAndHash hKey, pOverlayName, overlayArray, mainstackHash
-   if pMainStackHash is not empty and pMainStackHash is not mainstackHash then return empty
-   put overlayArray_GetLinkArray (overlayArray) into hkeyArray
-   return hkeyArray
-end project_FetchHkeyArray
-
-command project_StoreHkeyArray hKey, hkeyArray, pOverlayName, pMainstackHash, pGraphStyle
-   -- store hKeyArray in hkey project metadata folder
-   if pOverlayName is empty then put "hierarchical" into pOverlayName
-   put project_HandlerMetadataFolder (hKey) into overlayFolder
-   overlay_SetLinkArray overlayFolder, hkeyArray, pOverlayName, pGraphStyle, pMainstackHash
-   return hkeyArray
-end project_StoreHkeyArray
-
-command project_FetchOverlayArrayAndHash hKey, pOverlayName, @overlayArray, @mainstackHash
-   put project_HandlerMetadataFolder (hKey) into overlayFolder
-   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
-   put overlayArray_GetMainStackHash (overlayArray) into mainstackHash
-end project_FetchOverlayArrayAndHash
-
-
---> Project | Prefs | Model
--
-/*
-A project array stores everything a project depends on to function, as well as additional authoring metadata.
-It is equivalent to the older "library set", and is currently stored as part of the library array keyd under the project name.
-In the future we will split this out to metadata stored in the projects folder.
-*/
-
-function project_FetchPrefs pProjectName
-   put project_FetchValue ("projectPrefsArray", pProjectName) into projectPrefsArray
-   return projectPrefsArray
-end project_FetchPrefs
-
-command project_SavePrefs projectPrefsArray, pProjectName
-   project_SaveValue "projectPrefsArray", projectPrefsArray, pProjectName
-end project_SavePrefs
-
-
---> Project | Prefs | Global | Model
--
-command project_DeleteGlobalPrefs
-   put the globals into gNames
-   replace comma with CR in gNames
-   filter gNames with "gPrefs_*"
-   repeat for each line gName in gNames  
-      put "global" && gName & CR & "delete variable" && gName into doScript   
-      do doScript
-   end repeat
-   return gNames
-end project_DeleteGlobalPrefs
-
-command project_LoadGlobalArray pProjectName
-   global gLibrarySet_Array
-   put project_FetchArray (pProjectName) into gLibrarySet_Array
-   return gLibrarySet_Array
-end project_LoadGlobalArray
-
-command project_SaveGlobalArray pProjectName
-   global gLibrarySet_Array
-   project_SaveArray gLibrarySet_Array, pProjectName
-   put the result into librarySetData
-   return librarySetData
-end project_SaveGlobalArray
-
-
---> Project | Array | Model
--
-function project_FetchValue someKey, pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   put projectArray [someKey] into someValue
-   return someValue
-end project_FetchValue
-
-command project_SaveValue someKey, someValue, pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   put someValue into projectArray [someKey]
-   project_SaveArray projectArray, pProjectName
-   return projectArray
-end project_SaveValue
-
-function project_FetchArray pProjectName
-   if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put library_FetchSetData() into librarySetData
-   put librarySetData [pProjectName] into projectArray
-   return projectArray
-end project_FetchArray
-
-command project_SaveArray projectArray, pProjectName
-   if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   
-   put library_FetchSetData() into librarySetData
-   put projectArray into librarySetData [pProjectName]
-   library_StoreSetData librarySetData
-   return librarySetData
-end project_SaveArray
-
-command project_DeleteArray projectName
-   -- was "library_DeleteStoredSet"
-   -- maybe good idea to tidy globals here ???
-   put library_FetchSetData() into modelArray
-   delete variable modelArray [projectName]
-   library_StoreSetData modelArray
-   return modelArray
-end project_DeleteArray
-
-
---> Project | Array | Metadata | Model
--
-command project_StoreMetadata projectMetaData, projectName
-   if projectName is empty then put project_GetCurrentName() into projectName
-   put library_FetchSetData() into librarySetData
-   put projectMetaData into librarySetData [projectName]["metadata"]
-   library_StoreSetData librarySetData
-   return librarySetData
-end project_StoreMetadata
-
-function project_GetUsedStacks pProjectName
-   if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put project_GetObjectTypeArray ("used", pProjectName) into objectArray
-   put keys(objectArray) into stackObjects
+getprop project_StackObjects [folderName]
+   put the project_Folder [folderName] of the target into standardFolder
+   if standardFolder is empty then return empty
+   put folder_ListStackObjects (standardFolder) into stackObjects
    return stackObjects
-end project_GetUsedStacks
+end project_StackObjects
 
-command project_SetUsedStacks stackObjects, pProjectName
-   if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   repeat for each line stackObject in stackObjects
-      put empty into objectArray [stackObject]
-   end repeat
-   project_SetObjectTypeArray objectArray, "used", pProjectName
-   put the result into librarySetData
-   return librarySetData
-end project_SetUsedStacks
+getprop project_StackPaths [folderName]
+   -- if the folder does not exist this handler return empty
+   put the project_Folder [folderName] of the target into standardFolder
+   if standardFolder is empty then return empty
+   
+   -- ensures the returned long paths are valid references to stacks that exist
+   put folder_ListStackPaths (standardFolder) into stackPaths
+   return stackPaths
+end project_StackPaths
 
+getprop project_StackFiles
+   put the project_HomeStack of the target into projectHomeStack
+   put the stackfiles of projectHomeStack into stackFileTable
+   return stackFileTable
+end project_StackFiles
 
---> Project | Array | ObjectTypeArray | Model
--
-function project_GetObjectTypeArray libType, pProjectName
-   -- was "project_GetLibraryArray"
-   if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put library_FetchSetData() into librarySetData
-   put librarySetData [pProjectName]["data"][libType] into objectArray
-   return objectArray
-end project_GetObjectTypeArray
-
-command project_SetObjectTypeArray objectArray, libType, pProjectName
-   -- was "project_SetLibraryArray"
-   if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put library_FetchSetData() into librarySetData
-   if objectArray is an array then
-      put objectArray into librarySetData [pProjectName]["data"][libType]
-   else
-      delete variable librarySetData [pProjectName]["data"][libType]
-   end if
-   library_StoreSetData librarySetData
-   return librarySetData
-end project_SetObjectTypeArray
+setprop project_StackFiles stackFileTable
+   put the project_HomeStack of the target into projectHomeStack
+   set the stackfiles of projectHomeStack to stackFileTable
+   return projectHomeStack
+end project_StackFiles
 
 
 --> Project | Stackfiles
@@ -310,42 +226,6 @@ setprop project_StackFiles stackFileTable
    put the project_HomeStack of me into stackFileStack
    set the stackfiles of stackFileStack to stackFileTable
 end project_StackFiles
-
-
---> Project | Folder
--
-function project_GetFolder someName, projectName
-   put library_FetchSetArray (projectName) into setArray
-   put setArray ["metadata"][someName]["folder"] into someFolder
-   if char -1 of someFolder is not slash then put slash after someFolder
-   return someFolder
-end project_GetFolder
-
-command project_SetFolder someName, projectName, someFolder
-   if char -1 of someFolder is not slash then put slash after someFolder
-   put library_FetchSetArray (projectName) into setArray
-   put projectName into setArray ["metadata"]["library_SetName"] -- should be called "project_Name"
-   put someFolder into setArray ["metadata"][someName]["folder"]
-   library_StoreSetArray setArray, projectName
-end project_SetFolder
-
-
---> Project
--
-function project_GetCurrentName
-   -- was "project_GetCurrentName"
-   global gLibrarySet_Array
-   put gLibrarySet_Array ["metadata"]["library_SetName"] into setName
-   if setName is empty then put "Default" into setName
-   return setName
-end project_GetCurrentName
-
-command project_SetCurrentName pSetName
-   -- was "library_SetSetName"
-   global gLibrarySet_Array
-   if pSetName is empty then put "Default" into pSetName
-   put pSetName into gLibrarySet_Array ["metadata"]["library_SetName"]
-end project_SetCurrentName
 
 
 --> Project | Start and Stop
@@ -383,81 +263,6 @@ command project_StopEnvironment
 end project_StopEnvironment
 
 
---> Project | Environment
--
-command environment_Start
-   bash_AddSystemPathsToPATH
-end environment_Start
-
-command bash_AddSystemPathsToPATH
-   -- put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH
-   if the platform = "MacOS" then -- and it is recent ???
-      put url "file:/etc/paths" into systemPaths
-      if systemPaths is empty then return empty
-      
-      put token 1 to -1 of systemPaths into systemPathArray
-      
-      put $PATH into revPATH
-      replace ":" with CR in revPATH
-      put systemPathArray & CR & revPATH into combinedPath
-      sort combinedPath
-      put token 1 to -1 of combinedPath into combinedPath
-      split combinedPath with CR and ":"
-      put keys (combinedPath) into newPathIndex
-      replace CR with ":" in newPathIndex
-      put newPathIndex into $PATH
-   end if
-   return $PATH
-end bash_AddSystemPathsToPATH
-
-
---> Project | Globals | Load and unload
--
-command project_LoadGlobals projectName
-   -- we still need to deal with thing like password preferences
-   
-   environment_Start
-   project_LoadWorkingStackFiles projectName
-   -- project_RestoreGlobalPrefs projectName
-   project_LoadGlobalPrefs projectName
-   project_LoadGlobalHarray projectName 
-   project_LoadGlobalArray projectName 
-   
-   /*
-   library_CheckEssentialPrefs -- double check critical prefs like git path
-   project_ReloadCheckoutGlobals projectName  -- load non user globals
-   */
-end project_LoadGlobals
-
-command project_StoreGlobals pProjectName
-   if pProjectName is empty then put project_GetCurrentName() into projectName
-   
-   project_SaveGlobalHarray pProjectName
-   put the result into hArrayFile
-   
-   project_SaveGlobalPrefs pProjectName
-   
-   -- not sure we use this any more
-   project_SaveGlobalArray pProjectName
-   
-   -- don't do yet
-   -- wait till this is properly tested
-   -- project_ClearGlobals
-end project_StoreGlobals
-
-command project_ClearGlobals
-   global gTemp_ActiveMenuArray
-   global gLibrarySet_Array
-   global gHkey_Array
-   global gPrefs_Array
-   
-   delete variable gTemp_ActiveMenuArray
-   delete variable gLibrarySet_Array
-   delete variable gHkey_Array
-   delete variable gPrefs_Array
-end project_ClearGlobals
-
-
 --> Project | List
 -
 function project_ListStandardScriptOnlyFiles
@@ -482,125 +287,11 @@ end project_ListStandardFiles
 
 function project_ListViewStackObjects pProjectName
    if pProjectName is empty then put "Default" into pProjectName
-   put project_GetFolder ("Views", pProjectName) into viewFolder 
+   put project_GetNamedFolder ("Views", pProjectName) into viewFolder 
    put folder_ListShortStackFiles (viewFolder) into shortViewFiles
    put project_ConvertShortFilesToStackObjects (shortViewFiles, viewFolder) into viewStacks
    return viewStacks
 end project_ListViewStackObjects
-
-
---> Project | Stackfiles
--
-function project_FetchStackFiles pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   put projectArray ["data"]["stackfiles"] into stackFileTable
-   return stackFileTable
-end project_FetchStackFiles
-
-command project_StoreStackFiles stackFileTable, pProjectName
-   put project_FetchArray (pProjectName) into setArray
-   put stackFileTable into setArray ["data"]["stackfiles"]
-   project_SaveArray setArray, pProjectName
-end project_StoreStackFiles
-
-
---> Project | hArray
--
-/*
-For now we don't store this data seperately for each project. We may do this in the future.
-For now we just wrap the Library | Model | Array | gHkeyArray handlers
-*/
-
-command project_LoadGlobalHarray pProjectName
-   global gHkey_Array
-   put project_FetchHarray (pProjectName) into gHkey_Array
-   return gHkey_Array
-end project_LoadGlobalHarray
-
-command project_SaveGlobalHarray pProjectName
-   global gHkey_Array
-   project_SaveHarray gHkey_Array, pProjectName
-   put the result into arrayFile
-   return arrayFile
-end project_SaveGlobalHarray
-
-function project_FetchHarray pProjectName
-   -- if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put library_FetchArray ("Hkey_Data") into hArray
-   return hArray
-end project_FetchHarray
-
-command project_SaveHarray hArray, pProjectName
-   -- if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   library_StoreArray "Hkey_Data", hArray
-   put the result into arrayFile
-   return arrayFile
-end project_SaveHarray
-
-
---> Project | Globals
--
-command project_LoadWorkingStackFiles pProjectName, pProjectHomeStack
-   project_GuessHomeStack pProjectHomeStack
-   put project_FetchStackFiles (pProjectName) into stackFileTable
-   set the project_StackFiles of pProjectHomeStack to stackFileTable
-end project_LoadWorkingStackFiles
-
-command project_RestoreGlobalPrefs pProjectName
-   -- was "libary_RestoreGlobalPrefs"   
-   project_DeleteGlobalPrefs
-   project_LoadGlobalPrefs pProjectName
-   put the result into projectPrefsArray
-   return projectPrefsArray
-end project_RestoreGlobalPrefs
-
---> Project | Prefs
--
-function project_GatherGlobalPrefs
-   -- was "library_ConstructPrefsArray" then "project_GatherPrefsArray"
-   -- gathers all appropriately named globals into a single array for storage.
-   
-   put the globals into gNames
-   replace comma with CR in gNames
-   filter gNames with "gPrefs_*"
-   repeat for each line gName in gNames  
-      put "global" && gName & CR & "get" && gName into doScript   
-      do doScript
-      put it into prefsArray [gName]
-   end repeat
-   return prefsArray
-end project_GatherGlobalPrefs
-
-command project_LoadGlobalPrefs pProjectName
-   -- this loads the globals without clearing any of the others
-   put project_FetchPrefs (pProjectName) into projectPrefsArray
-   global_Load projectPrefsArray -- now let's load the globals
-   return projectPrefsArray
-end project_LoadGlobalPrefs
-
-command project_SaveGlobalPrefs pProjectName
-   /*
-   -- was "library_StoreGlobalPrefs"
-   Save the current globals beginning with "gPRefs_" to the project section of the library set array.
-   
-   Any global beginning with gPrefs_* is automatically stored in the project section of the library set array
-   It is no longer stored in the users preference folder (these are project preferences)
-   Do not store passwords or other sensitive information, as these may be checked out publicall on GitHub.
-   */
-   
-   put project_GatherGlobalPrefs () into projectPrefsArray
-   project_SavePrefs projectPrefsArray, pProjectName
-   return prefsArray
-end project_SaveGlobalPrefs
-
-command project_GuessHomeStack @projectHomeStack
-   if projectHomeStack is empty then
-      put the project_HomeStack of the target into projectHomeStack
-      if projectHomeStack is empty then
-         put the stack_Object of the target into projectHomeStack
-      end if
-   end if
-end project_GuessHomeStack
 
 
 --> Project | Start and Stop | Deps
@@ -656,16 +347,16 @@ end project_StopFront
 
 function project_GetRevHackStatus pSetName
    if pSetName is empty then put project_GetCurrentName() into pSetName
-   put library_FetchSetData() into librarySetData
+   put library_FetchProjectData() into librarySetData
    put librarySetData [pSetName]["data"]["rev_AddBehaviorHacks"] is true into someBoolean
    return someBoolean
 end project_GetRevHackStatus
 
 command project_SetRevHackStatus someBoolean, pSetName
    if pSetName is empty then put project_GetCurrentName() into pSetName
-   put library_FetchSetData() into librarySetData
+   put library_FetchProjectData() into librarySetData
    put someBoolean is true into librarySetData [pSetName]["data"]["rev_AddBehaviorHacks"]
-   library_StoreSetData librarySetData
+   library_StoreProjectData librarySetData
    return librarySetData
 end project_SetRevHackStatus
 
@@ -679,7 +370,7 @@ end project_FetchObjects
 
 function project_FetchObjectTypeArray libType, pProjectName
    -- renamed to project and removed switch complexity from "library_FetchObjectTypeArray"
-   put library_FetchSetData() into setData
+   put library_FetchProjectData() into setData
    put setData [pProjectName]["data"][libType] into libTypeArray
    return libTypeArray
 end project_FetchObjectTypeArray
@@ -799,14 +490,14 @@ end stack_StopUsed
 -
 function library_ListStackFileNames folderGroupName, pProjectName
    if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put project_GetFolder (folderGroupName, pProjectName) into someFolder 
+   put project_GetNamedFolder (folderGroupName, pProjectName) into someFolder 
    put folder_ListStackFileNames (someFolder) into stackFileNames
    return stackFileNames
 end library_ListStackFileNames
 
 function library_ListShortFiles folderGroupName, pProjectName
    if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put project_GetFolder (folderGroupName, pProjectName) into someFolder 
+   put project_GetNamedFolder (folderGroupName, pProjectName) into someFolder 
    put folder_ListShortStackFiles (someFolder) into goodShortFiles
    return goodShortFiles
 end library_ListShortFiles
@@ -850,44 +541,6 @@ command library_SetBackArray backArray, pSetName
 end library_SetBackArray
 
 
---> Library | Model | Array
--
-function library_FetchArray shortName
-   put library_ArrayFile (shortName) into someFile
-   put array_Fetch (someFile) into modelArray
-   return modelArray
-end library_FetchArray
-
-command library_StoreArray shortName, dataArray
-   put library_ArrayFile (shortName) into someFile
-   array_Save someFile, dataArray
-   return someFile
-end library_StoreArray
-
-function library_ArrayFile shortName, pDontCreate
-   put shortName & ".array" into shortFile
-   put library_ArrayFolder (shortFile, pDontCreate) into someFile
-   return someFile
-end library_ArrayFile
-
-function library_ArrayFolder shortFileBit, pDontCreate
-   return library_PluginFolder ("opn_Text/array/", pDontCreate) & shortFileBit
-end library_ArrayFolder
-
-function library_PluginFolder pSubFolder, pDontCreate
-   put revEnvironmentUserPluginsPath() & "/" into opnRootFolder
-   put opnRootFolder & "opn_Plugins/" into someFolder
-   
-   if pSubFolder is not empty then
-      text_AddTrailing pSubFolder, slash
-      put pSubFolder after someFolder
-   end if
-   
-   if pDontCreate is not true then folder_CreateNested someFolder
-   return someFolder
-end library_PluginFolder
-
-
 --> From older model_Project (all handlers below so some duplication with older versions below)
 -
 function project_GetUsedStacks pProjectName
@@ -910,7 +563,7 @@ end project_SetUsedStacks
 function project_GetObjectTypeArray libType, pProjectName
    -- was "project_GetLibraryArray"
    if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put library_FetchSetData() into librarySetData
+   put library_FetchProjectData() into librarySetData
    put librarySetData [pProjectName]["data"][libType] into objectArray
    return objectArray
 end project_GetObjectTypeArray
@@ -918,23 +571,16 @@ end project_GetObjectTypeArray
 command project_SetObjectTypeArray objectArray, libType, pProjectName
    -- was "project_SetLibraryArray"
    if pProjectName is empty then put project_GetCurrentName() into pProjectName
-   put library_FetchSetData() into librarySetData
+   put library_FetchProjectData() into librarySetData
    if objectArray is an array then
       put objectArray into librarySetData [pProjectName]["data"][libType]
    else
       delete variable librarySetData [pProjectName]["data"][libType]
    end if
-   library_StoreSetData librarySetData
+   library_StoreProjectData librarySetData
    return librarySetData
 end project_SetObjectTypeArray
 
-command project_StoreMetadata projectMetaData, pSetName
-   if pSetName is empty then put project_GetCurrentName() into pSetName
-   put library_FetchSetData() into librarySetData
-   put projectMetaData into librarySetData [pSetName]["metadata"]
-   library_StoreSetData librarySetData
-   return librarySetData
-end project_StoreMetadata
 
 --> Project | Objects
 -
@@ -948,7 +594,7 @@ end project_FetchObjects
 
 function project_FetchObjectTypeArray libType, pProjectName
    -- renamed to project and removed switch complexity from "library_FetchObjectTypeArray"
-   put library_FetchSetData() into setData
+   put library_FetchProjectData() into setData
    put setData [pProjectName]["data"][libType] into libTypeArray
    return libTypeArray
 end project_FetchObjectTypeArray
@@ -988,7 +634,7 @@ end project_StoreHandler
 -
 function project_ListViewStackObjects pProjectName
    if pProjectName is empty then put "Default" into pProjectName
-   put project_GetFolder ("Views", pProjectName) into viewFolder 
+   put project_GetNamedFolder ("Views", pProjectName) into viewFolder 
    put folder_ListShortStackFiles (viewFolder) into shortViewFiles
    put project_ConvertShortFilesToStackObjects (shortViewFiles, viewFolder) into viewStacks
    return viewStacks
@@ -1063,15 +709,6 @@ end project_GetHandlerFolder
 
 --> Deps
 -
-command global_Load globalDataArray
-   repeat for each key gName in globalDataArray
-      if the number of words of gName is not 1 then next repeat -- safety check
-      put globalDataArray [gName] into globalValue
-      put "global" && gName & CR & "put globalValue into" && gName into doScript
-      do doScript
-   end repeat
-end global_Load
-
 
 --> Currently Working On | Rename
 -

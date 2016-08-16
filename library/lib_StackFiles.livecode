@@ -63,6 +63,32 @@ getprop stackfile_FileArray
    return fileNameArray
 end stackfile_FileArray
 
+getprop stackfile_Path [stackName]
+   put the stack_Object of the target into stackObject
+   put the stackfiles of stackObject into stackFileTable
+   
+   put the effective filename of stackObject into stackFileRoot
+   set the itemdelimiter to slash
+   delete item -1 of stackFileRoot -- no trailing slash
+   
+   put stackFile_ToArray (stackFileTable) into stackFileArray
+   put stackfileArray [stackName] into relPath
+   if relPath begins with stackFileRoot then return relPath
+   
+   put stackFileRoot & relPath into stackfilePath
+   if exists (stack stackfilePath) then
+      return stackfilePath
+   else
+      return empty
+   end if
+end stackfile_Path
+
+getprop stackfile_RelativePath [stackName]
+   put the stackfile_Array of the target into stackfileArray
+   put stackfileArray [stackName] into relativePath
+   return relativePath
+end stackfile_RelativePath
+
 getprop stackfile_Array
    put the stack_Object of the target into someStack
    put the stackfiles of someStack into stackFileTable
@@ -344,15 +370,15 @@ end library_FetchShortStackFiles
 
 function library_FetchStackFiles pSetName
    -- see also "meta_StackArrayFile" for project level stackfile storage
-   put library_FetchSetArray (pSetName) into setArray
+   put library_FetchProjectArray (pSetName) into setArray
    put setArray ["data"]["stackfiles"] into stackFileTable
    return stackFileTable
 end library_FetchStackFiles
 
 command library_StoreStackFiles stackFileTable, pSetName
-   put library_FetchSetArray (pSetName) into setArray
+   put library_FetchProjectArray (pSetName) into setArray
    put stackFileTable into setArray ["data"]["stackfiles"]
-   library_StoreSetArray setArray, pSetName
+   library_StoreProjectArray pSetName, setArray
 end library_StoreStackFiles
 
 

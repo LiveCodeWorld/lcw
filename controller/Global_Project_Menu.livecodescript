@@ -9,6 +9,10 @@ version: 0.3
 
 --> Global | Project | Menu
 -
+on submenu_LibrarySet
+   return "Global | Project | Set | Menu"
+end submenu_LibrarySet
+
 on menu_DisplayProject mTarget
    put the index_View of mTarget into indexView
    if exists (indexView) is false then
@@ -21,9 +25,11 @@ on menu_DisplayProject mTarget
    set the view_Index of indexView to stackNames
 end menu_DisplayProject
 
-on menu_GoToStack mTarget, projectStackName
-   _safeGoProjectStack projectStackName
-end menu_GoToStack
+on menu_DisplayProjectArray mTarget, projectName
+   put library_FetchProjectArray (projectName) into projectArray
+   put merge ("library_FetchProjectArray (projectName),[[projectName]]") into someTitle
+   display_Array projectArray, someTitle, "Global | Project | Menu"
+end menu_DisplayProjectArray
 
 on _
 end _
@@ -108,6 +114,10 @@ end submenu_Dev
 
 --> Global | Project | Menu | Props
 -
+getprop project_Names
+   return library_ListProjectNames()
+end project_Names
+
 getprop project_StackNames
    put project_FetchValue ("openStacks") into stackNames
    return stackNames

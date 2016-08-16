@@ -1,0 +1,453 @@
+﻿script "model_ProjectArray"
+--> MetaData
+-
+license: GPLv3
+name: model_ProjectArray
+type: model
+version: 0.7
+
+/*
+
+*/
+
+--> Working On
+-
+command project_RestoreGlobals projectName, pDeleteAllGlobals
+   global gHkey_Array
+   
+   put project_FetchArray (projectName) into projectArray
+   if pDeleteAllGlobals is true then
+      global_DeleteAll
+   else
+      delete variable gHkey_Array
+   end if
+   lcw_AddProjectArrayToGlobal projectArray, false
+   return projectGlobalArray
+end project_RestoreGlobals
+
+command project_AddProjectGlobals projectName
+   put project_FetchArray (projectName) into projectArray
+   lcw_AddProjectArrayToGlobal projectArray, true
+   return projectGlobalArray
+end project_AddProjectGlobals
+
+command lcw_AddProjectArrayToGlobal projectArray, pRecursively
+   /*
+   by defualt (if pRecursively is false or empty), this command merges the all keys recursively, adding new items to gHkey_Array from projectArray
+   but keeping any old items that are not in projectArray.
+   Consequenlty this "adds" the contents of the projectArray to gHkey_Array with the exception of leaf contents which are updated or replaced.
+   So if you want a merge - store your data as an array not an index.
+   
+   if pRecursively is false then this command replaces items that are already there with the contents of projectArray
+   Consequenlty this adds or "sets" the contents of the variable
+   */
+   global gHkey_Array
+   
+   if pRecursively is not false then
+      union projectArray with gHkey_Array recursively
+   else
+      union projectArray with gHkey_Array
+   end if
+   put projectArray into gHkey_Array
+   return gHkey_Array
+end lcw_AddProjectArrayToGlobal
+
+
+--> Project | Initialise | After
+-
+command project_LoadAfterUsing projectFolder
+   -- the code below requires the above libraries to be used
+   -- should be stored as arrays in the projects folder
+   
+   put project_NameFromFolder (projectFolder) into projectName
+   project_LoadGlobalPrefs projectName
+   project_LoadGlobalHarray projectName -- this clobbers any previously loaded hArray
+   project_LoadGlobalArray projectName
+   
+   project_IndexAllScripts projectFolder
+   return the result
+end project_LoadAfterUsing
+
+command project_IndexAllScripts projectFolder, pExportHandlers
+   -- has lot's of dependencies (but wrapped in "try")
+   
+   put project_ListFolders (projectFolder) into standardFolders
+   set the itemdelimiter to slash
+   repeat for each line standardFolder in standardFolders
+      put folder_ListStackPaths (standardFolder) into stackPaths
+      repeat for each line stackPath in stackPaths
+         set the cursor to busy
+         put the long id of stack stackPath into stackObject
+         
+         switch item -1 of standardFolder
+            case "view"
+               -- let's just index the views script (so we can add it to hArray)
+               -- the assumption is teh view is the toplevel (ie control 1) of teh first card in the stack)
+               -- this is of course usually a group
+               if exists (control 1 of cd 1 of stackObject) then
+                  try
+                     put the long id of cd 1 of stackObject into viewTemplateCard
+                     if pExportHandlers is true then
+                        set the script_IsIndexed of viewTemplateCard to true -- may have a global menu on it
+                     else
+                        script_UpdateAndExport viewTemplateCard, false
+                     end if
+                     
+                     -- let's add the view to the index of views available
+                     put the long id of control 1 of viewTemplateCard into viewTemplate
+                     if pExportHandlers is true then
+                        set the script_IsIndexed of viewTemplate to true
+                     else
+                        script_UpdateAndExport viewTemplate, false
+                     end if
+                  catch e
+                     put viewTemplateCard
+                     -- answer "Error with view"
+                     breakpoint
+                     put viewTemplateCard & CR after stackPathProblems
+                  end try
+               end if
+               break
+            default
+               -- index the stack script
+               -- we should index all scripts for non-script only stacks
+               
+               try
+                  if pExportHandlers is true then
+                     set the script_IsIndexed of stackObject to true
+                  else
+                     script_UpdateAndExport stackObject, false
+                  end if
+               catch e
+                  -- put stackObject
+                  -- put the name of stackObject into stackObject
+                  -- answer warning merge ("Error with [[stackObject]]")
+                  breakpoint
+                  script_UpdateAndExport stackObject, false
+                  
+                  put stackPath & CR after stackPathProblems
+               end try
+         end switch
+      end repeat
+   end repeat
+   return stackPathProblems
+end project_IndexAllScripts
+
+
+--> Project | Prefs | Model
+-
+/*
+A project array stores everything a project depends on to function, as well as additional authoring metadata.
+It is equivalent to the older "library set", and is currently stored as part of the library array keyd under the project name.
+In the future we will split this out to metadata stored in the projects folder.
+*/
+
+function project_FetchPrefs pProjectName
+   put project_FetchValue ("projectPrefsArray", pProjectName) into projectPrefsArray
+   return projectPrefsArray
+end project_FetchPrefs
+
+command project_SavePrefs projectPrefsArray, pProjectName
+   project_SaveValue "projectPrefsArray", projectPrefsArray, pProjectName
+end project_SavePrefs
+
+
+--> Project | Important Stacks
+-
+command project_AddStack stackNames
+   put project_FetchValue ("openStacks") into oldProjectStackNames
+   put stackNames & CR & oldProjectStackNames into newProjectStackNames
+   sort newProjectStackNames
+   put word 1 to -1 of newProjectStackNames into newProjectStackNames
+   project_SaveValue "openStacks", newProjectStackNames
+   return newProjectStackNames
+end project_AddStack
+
+function project_ListImportantStacks pProjectName
+   put project_FetchValue ("openStacks", pProjectName) into stackNames
+   sort stackNames
+   return stackNames
+end project_ListImportantStacks
+
+command project_StoreImportantStacks stackNames, pProjectName
+   sort stackNames
+   project_SaveValue "openStacks", stackNames,  pProjectName
+   return the result
+end project_StoreImportantStacks
+
+
+--> Project | Array | Model
+-
+function project_FetchValue someKey, pProjectName
+   put project_FetchArray (pProjectName) into projectArray
+   put projectArray [someKey] into someValue
+   return someValue
+end project_FetchValue
+
+command project_SaveValue someKey, someValue, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_FetchArray (pProjectName) into projectArray
+   put someValue into projectArray [someKey]
+   project_StoreArray pProjectName, projectArray
+   return projectArray
+end project_SaveValue
+
+command project_DeleteValue someKey, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_FetchArray (pProjectName) into projectArray
+   delete variable projectArray [someKey]
+   project_StoreArray pProjectName, projectArray
+   return projectArray
+end project_DeleteValue
+
+function project_FetchArray pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_GetArrayFile (pProjectName) into projectArrayFile
+   put array_Fetch (projectArrayFile) into projectArray
+   return projectArray
+end project_FetchArray
+
+command project_StoreArray projectName, projectArray
+   put project_GetArrayFile (projectName) into projectArrayFile
+   array_Save projectArrayFile, projectArray
+   return projectArrayFile
+end project_StoreArray
+
+
+--> Project | Names
+-
+function project_GetCurrentName
+   -- was "project_GetCurrentName"
+   global gLibrarySet_Array
+   put gLibrarySet_Array ["metadata"]["library_SetName"] into projectName
+   if projectName is empty then put "Default" into projectName
+   return projectName
+end project_GetCurrentName
+
+command project_SetCurrentName pSetName
+   -- was "library_SetSetName"
+   global gLibrarySet_Array
+   if pSetName is empty then put "Default" into pSetName
+   put pSetName into gLibrarySet_Array ["metadata"]["library_SetName"]
+end project_SetCurrentName
+
+
+--> Project | Dependency | Stacks
+-
+getprop project_DependencyStacks
+   put the project_DependencyStackArray of the target into objectArray
+   delete variable objectArray ["Missing"]
+   put the stack_Object of the target into longStackObject
+   delete variable objectArray ["revIgniter"]
+   put the name of longStackObject into myStackObject
+   delete variable objectArray [myStackObject]
+   put keys (objectArray) into dependencyStacks
+   return dependencyStacks
+end project_DependencyStacks
+
+getprop project_DependencyStackArray
+   put the project_ProcessedHkeyArray of the target into processedHkeyArray  
+   put hkeyArray_ConstructObjectArray (processedHkeyArray) into objectArray
+   return objectArray
+end project_DependencyStackArray
+
+getprop project_ProcessedHkeyArray
+   put the project_ProcessedHkeyArrayFile of the target into someFile
+   put array_Fetch (someFile) into rigHkeyArray
+   return rigHkeyArray
+end project_ProcessedHkeyArray
+
+setprop project_ProcessedHkeyArray rigHkeyArray
+   put the project_ProcessedHkeyArrayFile of the target into someFile
+   array_Save someFile, rigHkeyArray
+   return someFile
+end project_ProcessedHkeyArray
+
+
+--> Project | Array | HkeyArray
+-
+function project_FetchHkeyArray hKey, pOverlayName, pMainStackHash
+   -- fetch from hkey overlay
+   local overlayArray, mainstackHash
+   put project_HandlerMetadataFolder (hKey) into overlayFolder
+   project_FetchOverlayArrayAndHash hKey, pOverlayName, overlayArray, mainstackHash
+   if pMainStackHash is not empty and pMainStackHash is not mainstackHash then return empty
+   put overlayArray_GetLinkArray (overlayArray) into hkeyArray
+   return hkeyArray
+end project_FetchHkeyArray
+
+command project_StoreHkeyArray hKey, hkeyArray, pOverlayName, pMainstackHash, pGraphStyle
+   -- store hKeyArray in hkey project metadata folder
+   if pOverlayName is empty then put "hierarchical" into pOverlayName
+   put project_HandlerMetadataFolder (hKey) into overlayFolder
+   overlay_SetLinkArray overlayFolder, hkeyArray, pOverlayName, pGraphStyle, pMainstackHash
+   return hkeyArray
+end project_StoreHkeyArray
+
+command project_FetchOverlayArrayAndHash hKey, pOverlayName, @overlayArray, @mainstackHash
+   put project_HandlerMetadataFolder (hKey) into overlayFolder
+   put overlay_GetArray (overlayFolder, pOverlayName) into overlayArray
+   put overlayArray_GetMainStackHash (overlayArray) into mainstackHash
+end project_FetchOverlayArrayAndHash
+
+
+--> Project | Array | Model | Used
+-
+function project_GetUsedStacks pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put project_GetObjectTypeArray ("used", pProjectName) into objectArray
+   put keys(objectArray) into stackObjects
+   return stackObjects
+end project_GetUsedStacks
+
+command project_SetUsedStacks stackObjects, pProjectName
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   repeat for each line stackObject in stackObjects
+      put empty into objectArray [stackObject]
+   end repeat
+   project_SetObjectTypeArray objectArray, "used", pProjectName
+   put the result into librarySetData
+   return librarySetData
+end project_SetUsedStacks
+
+
+--> Project | Array | ObjectTypeArray | Model
+-
+function project_GetObjectTypeArray libType, pProjectName
+   -- was "project_GetLibraryArray"
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchProjectData() into librarySetData
+   put librarySetData [pProjectName]["data"][libType] into objectArray
+   return objectArray
+end project_GetObjectTypeArray
+
+command project_SetObjectTypeArray objectArray, libType, pProjectName
+   -- was "project_SetLibraryArray"
+   if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchProjectData() into librarySetData
+   if objectArray is an array then
+      put objectArray into librarySetData [pProjectName]["data"][libType]
+   else
+      delete variable librarySetData [pProjectName]["data"][libType]
+   end if
+   library_StoreProjectData librarySetData
+   return librarySetData
+end project_SetObjectTypeArray
+
+
+--> Project | hArray
+-
+/*
+For now we don't store this data seperately for each project. We may do this in the future.
+For now we just wrap the Library | Model | Array | gHkeyArray handlers
+*/
+
+command project_LoadGlobalHarray pProjectName
+   global gHkey_Array
+   put project_FetchHarray (pProjectName) into gHkey_Array
+   return gHkey_Array
+end project_LoadGlobalHarray
+
+command project_SaveGlobalHarray pProjectName
+   global gHkey_Array
+   project_SaveHarray gHkey_Array, pProjectName
+   put the result into arrayFile
+   return arrayFile
+end project_SaveGlobalHarray
+
+function project_FetchHarray pProjectName
+   -- if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   put library_FetchArray ("Hkey_Data") into hArray
+   return hArray
+end project_FetchHarray
+
+command project_SaveHarray hArray, pProjectName
+   -- if pProjectName is empty then put project_GetCurrentName() into pProjectName
+   library_StoreArray "Hkey_Data", hArray
+   put the result into arrayFile
+   return arrayFile
+end project_SaveHarray
+
+
+--> Project | Globals
+-
+command project_LoadWorkingStackFiles pProjectName, pProjectHomeStack
+   project_GuessHomeStack pProjectHomeStack
+   put project_FetchStackFiles (pProjectName) into stackFileTable
+   set the project_StackFiles of pProjectHomeStack to stackFileTable
+end project_LoadWorkingStackFiles
+
+command project_RestoreGlobalPrefs pProjectName
+   -- was "libary_RestoreGlobalPrefs"   
+   project_DeleteGlobalPrefs
+   project_LoadGlobalPrefs pProjectName
+   put the result into projectPrefsArray
+   return projectPrefsArray
+end project_RestoreGlobalPrefs
+
+--> Project | Prefs
+-
+function project_GatherGlobalPrefs
+   -- was "library_ConstructPrefsArray" then "project_GatherPrefsArray"
+   -- gathers all appropriately named globals into a single array for storage.
+   
+   put the globals into gNames
+   replace comma with CR in gNames
+   filter gNames with "gPrefs_*"
+   repeat for each line gName in gNames  
+      put "global" && gName & CR & "get" && gName into doScript   
+      do doScript
+      put it into prefsArray [gName]
+   end repeat
+   return prefsArray
+end project_GatherGlobalPrefs
+
+command project_LoadGlobalPrefs pProjectName
+   -- this loads the globals without clearing any of the others
+   put project_FetchPrefs (pProjectName) into projectPrefsArray
+   global_Load projectPrefsArray -- now let's load the globals
+   return projectPrefsArray
+end project_LoadGlobalPrefs
+
+command project_SaveGlobalPrefs pProjectName
+   /*
+   -- was "library_StoreGlobalPrefs"
+   Save the current globals beginning with "gPRefs_" to the project section of the library set array.
+   
+   Any global beginning with gPrefs_* is automatically stored in the project section of the library set array
+   It is no longer stored in the users preference folder (these are project preferences)
+   Do not store passwords or other sensitive information, as these may be checked out publicall on GitHub.
+   */
+   
+   put project_GatherGlobalPrefs () into projectPrefsArray
+   project_SavePrefs projectPrefsArray, pProjectName
+   return prefsArray
+end project_SaveGlobalPrefs
+
+
+--> Project | Prefs | Global | Model
+-
+command project_DeleteGlobalPrefs
+   put the globals into gNames
+   replace comma with CR in gNames
+   filter gNames with "gPrefs_*"
+   repeat for each line gName in gNames  
+      put "global" && gName & CR & "delete variable" && gName into doScript   
+      do doScript
+   end repeat
+   return gNames
+end project_DeleteGlobalPrefs
+
+command project_LoadGlobalArray pProjectName
+   global gLibrarySet_Array
+   put library_FetchProjectArray (pProjectName) into gLibrarySet_Array
+   return gLibrarySet_Array
+end project_LoadGlobalArray
+
+command project_SaveGlobalArray pProjectName
+   global gLibrarySet_Array
+   library_StoreProjectArray pProjectName, gLibrarySet_Array
+   put the result into librarySetData
+   return librarySetData
+end project_SaveGlobalArray
+

@@ -29,7 +29,7 @@ For this we need to finsih the "Handler Library" with robust versioning and git 
 
 --> Working on
 -
-*/
+/*
 This is a global variable at the moment.
 Should be changed to use
 
@@ -46,14 +46,17 @@ end script_IncrementCompileCount
 
 --> Script Export
 -
-command script_UpdateAndExport scriptObject
+command script_UpdateAndExport scriptObject, pExportHandlersAndCalls
    -- merged with "script_IndexHarrayAndUpateMenus"
    -- this is a simple all in one command that updates and exports everything you need
    global gHkey_Array
    global gTemp_ActiveMenuArray
    delete variable gTemp_ActiveMenuArray
    
-   -- script_IndexHarrayAndUpateMenus scriptObject, true, true
+   if pExportHandlersAndCalls is empty then put false into pExportHandlersAndCalls
+   put pExportHandlersAndCalls is true into createHashArray
+   put false into forceIndexHandlerCalls
+   
    try
       put the script of scriptObject into someScript
    catch e
@@ -61,16 +64,10 @@ command script_UpdateAndExport scriptObject
    end try
    
    -- update the extensive metadata stored in gHkey_Array
-   put true into createHashArray
-   put false into forceIndexHandlerCalls
-   put false into dontExport
-   object_AddToArray gHkey_Array, scriptObject, someScript, createHashArray, forceIndexHandlerCalls, dontExport
+   object_AddToArray gHkey_Array, scriptObject, someScript, createHashArray, forceIndexHandlerCalls, pExportHandlersAndCalls
    put the result into scriptFile
-   
-   -- let's fix and index the menus 
-   -- may have been done above?
-   put the script_MenuTitleTableArray of scriptObject into mTitleTableArray      
-   menu_SetDataArray scriptObject, mTitleTableArray
+   set the menu_Update of scriptObject to true
+   put the result into mTitleTableArray
    
    -- let's set the uRipArray (no reason not to)
    -- this will be lost for script-only stacks
@@ -94,9 +91,9 @@ getprop exported_Script [pDontMerge]
    end if
 end exported_Script
 
-setprop exported_Script [pExportHandlers] someScript
+setprop exported_Script [pExportHandlersAndCalls] someScript
    put the long id of the target into scriptObject
-   script_UpdateAndExport scriptObject
+   script_UpdateAndExport scriptObject, pExportHandlersAndCalls
    put the result into someFile
    return someFile
 end exported_Script
@@ -146,77 +143,6 @@ end script_MenuTitleTableArray
 
 --> hArray | Status
 -
-function script_ConstructArray someScript, rObject, pIsExpanded
-   put pIsExpanded is true into pIsExpanded
-   local suiteTitle
-   put 1 into indexNum
-   put 1 into lineNum
-   put false into commentBlock
-   repeat for each line scriptLine in someScript
-      switch
-         case word 1 of scriptLine = "/*"
-            put true into commentBlock
-            break
-         case commentBlock is true
-            -- keep looping till end of block
-            if word -1 of scriptLine = "*/" then
-               -- could put this commented out section in the index?
-               put false into commentBlock
-            end if
-            break
-         case word 1 of scriptLine = "-->"
-            put word 2 to -1 of scriptLine into suiteTitle
-            
-            put "t" into dataArray [indexNum]["lineType"]
-            put lineNum into dataArray [indexNum]["startLineNum"]
-            put suiteTitle into dataArray [indexNum]["scriptLine"]
-            put true into dataArray [indexNum]["isExpanded"]
-            
-            add 1 to indexNum
-            break
-         case token 1 of scriptLine is among the items of "command,on,function,getprop,setprop,private"
-            if word 2 of scriptLine = "_" then break -- don't index divider handlers
-            
-            put char 1 of scriptLine into lineType
-            if hType = "o" then put "c" into lineType
-            
-            put word 2 of scriptLine into hName
-            -- put word 2 to -1 of scriptLine into hParams
-            
-            put countArray [hName][lineType] into hNum
-            add 1 to hNum
-            put hNum into countArray [hName][lineType]
-            
-            put hName,lineType,rObject,hNum into hKey
-            put lineNum into startLineNum
-            
-            put hKey into dataArray [indexNum]["hKey"]
-            put lineType into dataArray [indexNum]["lineType"]
-            put suiteTitle into dataArray [indexNum]["suiteTitle"]
-            put scriptLine into dataArray [indexNum]["scriptLine"]
-            put pIsExpanded into dataArray [indexNum]["isExpanded"]
-            
-            break
-         case token 1 of scriptLine = "end" and token 2 of scriptLine = hName
-            put lineNum into endLineNum
-            put startLineNum into dataArray [indexNum]["startLineNum"]
-            put endLineNum into dataArray [indexNum]["endLineNum"]
-            put line startLineNum to endLineNum of someScript into dataArray [indexNum]["handler"]
-            
-            add 1 to indexNum
-            break
-         case token 1 of scriptLine is empty
-            -- it's a comment or some junk
-            -- however script suites are also comments (so put at end of tests)!
-            -- not actually needed
-         default
-            -- should not happen ???
-      end switch
-      add 1 to lineNum
-   end repeat
-   return dataArray
-end script_ConstructArray
-
 command object_AddToGlobalArray someObject, pExportHandlers, pCreateHashArray
    -- also exports handlers
    global gHkey_Array
@@ -230,7 +156,7 @@ command object_AddToGlobalArray someObject, pExportHandlers, pCreateHashArray
    return someScript
 end object_AddToGlobalArray
 
-command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
+command object_AddToArray @hArray, someObject, someScript, pCreateHashArray, pForceIndexHandlerCalls, pExportHandlersAndCalls
    -- bug:  this means that fetching the object_Array also exports the script
    if pCreateHashArray is not true then
       delete variable hArray ["handlerHashArray"]
@@ -244,10 +170,14 @@ command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCre
    
    put the rugged_ID of someObject into ruggedObject
    
-   put the object_Folder [pDontExport] of someObject into objectFolder
-   object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport  -- here we can export the script
-   put the result into scriptFile
-   file_SetHomeRelative scriptFile
+   if pExportHandlersAndCalls is true then
+      object_ExportScript someObject, someScript, pExportHandlersAndCalls, false  -- here we can export the script
+      put the result into scriptFile
+      file_SetHomeRelative scriptFile
+   else
+      put the object_Folder [true] of someObject into objectFolder
+      put objectFolder_ScriptFile (objectFolder) into someFile
+   end if
    
    put the ticks into indexTime
    put sha1_Hash (someScript) into scriptHash
@@ -368,22 +298,24 @@ command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCre
             put sha1_Hash (someHandler) into handlerHash
             put handlerHash into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["sha1"]
             
-            
-            -- here we check to see if the handlerHash already exists for that mainstack object
-            -- this only happens if hArray ["handlerHashArray"] is added to hArray before walking
-            -- this can be initialised by adding a previously stored handlerHashArray from disk
-            -- or simply doing something like 'put empty into hArray ['"handlerHashArray"]["new"]'
+            /*
+            -- too slow
             if pCreateHashArray is true then
+               -- this is slow
+               -- here we check to see if the handlerHash already exists for that mainstack object
+               -- this only happens if hArray ["handlerHashArray"] is added to hArray before walking
+               -- this can be initialised by adding a previously stored handlerHashArray from disk
+               -- or simply doing something like 'put empty into hArray ['"handlerHashArray"]["new"]'
+               
                hArray_AddHandlerHash hArray, hKey, someHandler, handlerHash, indexTime, pForceIndexHandlerCalls
                put empty into hArray ["handlerHashArray"]["actual"][handlerHash]
             end if
-            
+            */
             
             -- now index unique global suites
-            -- if word 1 of suiteTitle = "Global" and word 2 of suiteTitle = "|" and word -2 of suiteTitle = "|" then
             if word -1 of suiteTitle = "Menu" and word -2 of suiteTitle = "|" then
                -- it's a menu
-               _addMenuToHarray hArray, suiteTitle, ruggedObject, ruggedMainStack, isOnMessage, lineType, handlerHash, scriptHash, shortkeySuiteArray, thisScriptsMenuArray
+               _addMenuToHarray hArray, suiteTitle, shortHkey, ruggedObject, ruggedMainStack, isOnMessage, lineType, handlerHash, scriptHash, shortkeySuiteArray, thisScriptsMenuArray
             end if
             
             -- now index first (not last!) hKeys of object
@@ -417,68 +349,69 @@ command object_AddToArray @hArray, someObject, someScript, pExportHandlers, pCre
    
    -- having gone through every line of the script we can do something like
    -- put the script_MenuTitleTableArray of stackObject into mTitleTableArray
-   -- menu_SetTitleTableArrayGlobal stackObject, mTitleTableArray
+   -- menu_SetTitleTableArrayGlobal stackObject, mTitleTableArray, suiteTitle
    
    return scriptFile
 end object_AddToArray
 
-private command _addMenuToHarray @hArray, suiteTitle, ruggedObject, ruggedMainStack, isOnMessage, lineType, handlerHash, scriptHash, @shortkeySuiteArray, @thisScriptsMenuArray
+private command _addMenuToHarray @hArray, suiteTitle, shortHkey, ruggedObject, ruggedMainStack, isOnMessage, lineType, handlerHash, scriptHash, @shortkeySuiteArray, @thisScriptsMenuArray
    -- here we want to look at automatically indexing and creating global menu_Table / array
    -- and then
-   -- menu_SetTitleTableArrayGlobal stackObject, mTitleTableArray
+   -- menu_SetTitleTableArrayGlobal stackObject, mTitleTableArray, suiteTitle
    
    switch
       case word 1 of suiteTitle = "Global" and word 2 of suiteTitle = "|"
-         if suiteTitle is not among the keys of thisScriptsMenuArray then
-            -- a new global menu for this script
-            -- delete and old ones in global
-            delete variable hArray ["Global Menus"][suiteTitle]
-            put empty into thisScriptsMenuArray [suiteTitle]
-         end if
-         
-         put ruggedObject into hArray ["Global Menus"][suiteTitle]["mController"]
-         -- put indexTime into hArray ["Global Menus"][suiteTitle]["indexTime"]
-         -- put scriptHash into hArray ["Global Menus"][suiteTitle]["scriptHash"]
-         
-         if isOnMessage is true and lineType = "c" then
-            put hArray ["Global Menus"][suiteTitle]["item"] into shortkeySuiteArray
-            if shortkeySuiteArray is not an array then
-               put 1 into itemNum
-            else
-               put (the number of elements of shortkeySuiteArray) + 1 into itemNum
-            end if
-            
-            put shortHkey into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["shortHkey"]
-            put handlerHash into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["sha1"]
-         end if
+         menu_AddGlobalHarray suiteTitle, shortHkey, ruggedObject, handlerHash, isOnMessage, lineType, thisScriptsMenuArray, hArray
          break
       default
-         -- store local menu with the mainstack section of the array
-         
-         if ruggedMainStack is not among the keys of thisScriptsMenuArray then
-            -- a new global menu for this script
-            -- delete and old ones in global
-            delete variable hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"]
-            put empty into thisScriptsMenuArray [ruggedMainStack]
-         end if
-         
-         put ruggedObject into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["mController"]
-         -- put indexTime into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["indexTime"]
-         put scriptHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["scriptHash"]
-         
-         if isOnMessage is true and lineType = "c" then
-            put hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"] into shortkeySuiteArray
-            if shortkeySuiteArray is not an array then
-               put 1 into itemNum
-            else
-               put (the number of elements of shortkeySuiteArray) + 1 into itemNum
-            end if
-            
-            put shortHkey into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["shortHkey"]
-            put handlerHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["sha1"]
-         end if                     
+         menu_AddLocalHarray suiteTitle, shortHkey, ruggedObject, ruggedMainStack, handlerHash, scriptHash, isOnMessage, lineType, thisScriptsMenuArray, hArray
    end switch
 end _addMenuToHarray
+
+private command menu_AddLocalHarray suiteTitle, shortHkey, ruggedObject, ruggedMainStack, handlerHash, scriptHash, isOnMessage, lineType, @thisScriptsMenuArray, @hArray
+   -- store local menu with the mainstack section of the array
+   
+   if ruggedMainStack is not among the keys of thisScriptsMenuArray then
+      delete variable hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"]
+      put empty into thisScriptsMenuArray [ruggedMainStack]
+   end if
+   
+   put ruggedObject into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["mController"]
+   put scriptHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["scriptHash"]
+   
+   if isOnMessage is true and lineType = "c" then
+      put hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"] into shortkeySuiteArray
+      if shortkeySuiteArray is not an array then
+         put 1 into itemNum
+      else
+         put (the number of elements of shortkeySuiteArray) + 1 into itemNum
+      end if
+      
+      put shortHkey into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["shortHkey"]
+      put handlerHash into hArray ["scriptArray"][ruggedMainStack]["data"]["menu_SuiteArray"][suiteTitle]["item"][itemNum]["sha1"]
+   end if            
+end menu_AddLocalHarray
+
+private command menu_AddGlobalHarray suiteTitle, shortHkey, ruggedObject, handlerHash, isOnMessage, lineType, @thisScriptsMenuArray, @hArray
+   -- updates hArray ["Global Menus"][suiteTitle]
+   
+   if suiteTitle is not among the keys of thisScriptsMenuArray then  -- a new global menu for this script
+      delete variable hArray ["Global Menus"][suiteTitle]
+      put empty into thisScriptsMenuArray [suiteTitle]
+   end if
+   
+   put ruggedObject into hArray ["Global Menus"][suiteTitle]["mController"]
+   if isOnMessage is true and lineType = "c" then
+      put hArray ["Global Menus"][suiteTitle]["item"] into shortkeySuiteArray
+      if shortkeySuiteArray is not an array then
+         put 1 into itemNum
+      else
+         put (the number of elements of shortkeySuiteArray) + 1 into itemNum
+      end if
+      put shortHkey into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["shortHkey"]
+      put handlerHash into hArray ["Global Menus"][suiteTitle]["item"][itemNum]["sha1"]
+   end if
+end menu_AddGlobalHarray
 
 command hkey_AddToKeyWordArray @hArray, hKey, handlerHash
    put hkey_ConstructKeywords (item 1 of hKey) into kWords
@@ -501,37 +434,32 @@ function object_FetchScript objectFolder
    return someScript
 end object_FetchScript
 
-command object_ExportScript objectFolder, someScript, pExportHandlers, pDontExport
+command object_ExportScript someObject, pSomeScript, pExportHandlersAndCalls, pDontExportScript
    -- simply export the objects script to the right place (see also "exported_Script")
    -- note use of binFile to avoid translating of LF to CR on Macs by Revolution (which causes difficulties for git)
-   if there is not a folder objectFolder then
-       folder_CreateNested objectFolder
-   end if
    
+   if pSomeScript is empty then put the script of someObject into pSomeScript
+   put the object_Folder of someObject into objectFolder
    put objectFolder_ScriptFile (objectFolder) into someFile
-   if pDontExport is true then return someFile
+   if pDontExportScript is true then return someFile
    
-   if pExportHandlers is not false then
-      script_ExportHandlersAndCalls someScript, objectFolder
+   if pExportHandlersAndCalls is not false then
+      script_ExportHandlersAndCalls pSomeScript, objectFolder, someObject
       put the result into someFile
    else
-      if someScript is empty then
-         -- not really needed as everything is deleted before re-exporting
+      if pSomeScript is empty then
          delete file someFile
          put empty into someFile
       else
-         put someScript into url ("binfile:" & someFile)
+         put pSomeScript into url ("binfile:" & someFile)
       end if
    end if
    return someFile
 end object_ExportScript
 
-command script_ExportHandlersAndCalls mergeScript, objectFolder
+command script_ExportHandlersAndCalls mergeScript, objectFolder, someObject
    -- here we export a script as a folder of handlers and calls
-   -- could speed up by not having to call revAivailablehandlers on object here and also fully index object script manually
-   put object_FromScriptFolder (objectFolder) into someObject
    if exists (someObject) is false then
-      -- error checking (should not be)
       breakpoint
       put object_FromScriptFolder (objectFolder) into someObject
       return empty
@@ -809,7 +737,7 @@ end script_ConstructMergeArray
 --> Deps
 -
 command folder_CreateNested @someFolder
-   folder_Format someFolder
+   text_AddTrailing someFolder, slash
    if there is a folder someFolder then return empty
    set the itemdelimiter to "/"
    repeat with itemNum = 1 to the number of items of someFolder

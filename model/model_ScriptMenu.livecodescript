@@ -7,7 +7,7 @@ type: model
 version: 0.9
 
 /*
-The menu model is in transition, and is still using the old "table" baes data structure.
+The menu model is in transition, and is still using the old "table" based data structure.
 Currently in the process of moving over to the new array based structure which should be more readable, maintainable and faster.
 
 A menu_Controller contains all the information needed to create a menu, and link each menu item to a handler.
@@ -39,105 +39,41 @@ The storage of the actual data differs slightly from a normal array based model 
 --> Menu | Models | MetaData
 -
 function menu_GetTable mTitle, mController
-   put menu_GetDataArray (mController) into dataArray
-   put dataArray [mTitle] into mTable
+   if word 1 of mTitle = "Global" and word 2 of pMenuTitle = "|" then
+      put menu_GetGlobalTable (mTitle) into mTable
+      menu_FixGlobalTitleArray mTable, mTitle
+   else
+      put the menu_DataArray of mController into menuTableArray
+      put menuTableArray [mTitle] into mTable
+   end if
    return mTable
 end menu_GetTable
 
 command menu_SetTable mTitle, mController, mTable
-   put menu_GetDataArray (mController) into dataArray
-   if mTable is empty then
-      delete local dataArray [mTitle]
+   put the menu_DataArray of mController into menuTableArray
+   if menuTableArray is empty then
+      delete local menuTableArray [mTitle]
    else
-      put mTable into dataArray [mTitle]
+      put mTable into menuTableArray [mTitle]
    end if
-   menu_SetDataArray mController, dataArray
-   return dataArray
+   set the menu_DataArray of mController to menuTableArray
+   return menuTableArray
 end menu_SetTable
 
-function menu_GetDataArray mController
-   -- we look at custom props first
-   -- then check the hArray
-   
-   put the customproperties ["menu_Table"] of mController into mTitleTableArray
-   if mTitleTableArray is empty then
-      put menu_GetTitleTableArrayGlobal (mController) into mTitleTableArray
-   else
-      -- here we could add it to hArray 
-   end if   
-   menu_SetTitleTableArrayGlobal mController, mTitleTableArray
+function menu_GetTableTitles mController
+   put the menu_DataArray of mController into menuTableArray
+   put keys (menuTableArray) into tableTitles
+   return tableTitles
+end menu_GetTableTitles
+
+getprop menu_DataArray
+   put the customproperties ["menu_Table"] of the target into mTitleTableArray
    return mTitleTableArray
-end menu_GetDataArray
+end menu_DataArray
 
-command menu_SetDataArray mController, mTitleTableArray
-   if mTitleTableArray is empty then return empty
-   
-   -- here we start creating a new global array model for menu tables
-   menu_SetTitleTableArrayGlobal mController, mTitleTableArray
-   
-   -- if it is a script-only stack then these changes won't stick
-   set the customproperties ["menu_Table"] of mController to mTitleTableArray
-   return mTitleTableArray
-end menu_SetDataArray
-
-function menu_GetTitleTableArrayGlobal mController
-   global gHkey_Array
-   
-   put the rugged_ID of mController into mController
-   
-   -- a temp hack
-   put gHkey_Array ["scriptArray"][mController]["data"]["menuDataArray"] into oldTitleTableArray
-   if oldTitleTableArray is an array then
-      -- update it
-      delete variable gHkey_Array ["scriptArray"][mController]["data"]["menuDataArray"]
-      menu_SetTitleTableArrayGlobal mController, oldTitleTableArray
-      return oldTitleTableArray
-   end if
-   
-   put gHkey_Array ["scriptArray"][mController]["data"]["mTitleTableArray"] into mTitleTableArray
-   return mTitleTableArray
-end menu_GetTitleTableArrayGlobal
-
-command menu_SetTitleTableArrayGlobal mController, mTitleTableArray
-   /*
-   mTitleTableArray is a simple array with keys corresponding to mTitles, and values corresponding to mControllers
-   */
-   global gHkey_Array
-   if mTitleTableArray is not an array then return gHkey_Array
-   
-   put the rugged_ID of mController into mController
-   put mTitleTableArray into gHkey_Array ["scriptArray"][mController]["data"]["mTitleTableArray"]
-   return gHkey_Array
-end menu_SetTitleTableArrayGlobal
-
-
---> Menu Model | Global
--
-function menu_GetGlobalController globalMenuTitle
-   -- was "menu_GlobalController"
-   put menu_GetGlobalArray() into gMenuHkeyArray
-   put gMenuHkeyArray [globalMenuTitle]["mController"] into mController
-   return mController
-end menu_GetGlobalController
-
-command menu_SetGlobalController globalMenuTitle, scriptObject
-   put menu_GetGlobalArray() into gMenuHkeyArray
-   put the rugged_ID of scriptObject into gMenuHkeyArray [globalMenuTitle]["mController"]
-   menu_SetGlobalArray gMenuHkeyArray
-   return the result
-end menu_SetGlobalController
-
-function menu_GetGlobalArray
-   global gHkey_Array
-   put gHkey_Array ["Global Menus"] into gMenuHkeyArray
-   return gMenuHkeyArray
-end menu_GetGlobalArray
-
-command menu_SetGlobalArray gMenuHkeyArray
-   global gHkey_Array
-   put gMenuHkeyArray into gHkey_Array ["Global Menus"]
-   return gHkey_Array ["Global Menus"]
-end menu_SetGlobalArray
+setprop menu_DataArray mTitleTableArray
+   set the customproperties ["menu_Table"] of the target to mTitleTableArray
+end menu_DataArray
 
 
 --> Menu Model | Props
@@ -176,18 +112,6 @@ setprop menu_MetaDataArray [mTitle] metaDataArray
    set the menu_Array of the target to mArray
    return mArray
 end menu_MetaDataArray
-
-getprop menu_DataArray
-   put the long id of the target into mController
-   put menu_GetDataArray (mController) into mDataArray
-   return mDataArray
-end menu_DataArray
-
-setprop menu_DataArray mDataArray
-   put the long id of the target into mController
-   menu_SetDataArray mController, mDataArray
-   return the result
-end menu_DataArray
 
 getprop script_MenuTitles
     put the script of the target into someScript
@@ -237,31 +161,6 @@ setprop menu_Help [mTitle] someHtml
    set the menu_Array of mController to mArray
 end menu_Help
 
-
---> Menu | Model
--
-function menu_GetTableTitles mController
-   put menu_GetDataArray (mController) into menuTableArray
-   put keys(menuTableArray) into tableTitles
-   return tableTitles
-end menu_GetTableTitles
-
-function menu_GetActiveText
-   global gTemp_ActiveMenuArray
-   return gTemp_ActiveMenuArray ["menu"]["text"]
-end menu_GetActiveText
-
-command menu_SetActiveText mText
-   global gTemp_ActiveMenuArray
-   put mText into gTemp_ActiveMenuArray ["menu"]["text"]
-end menu_SetActiveText
-
-function menu_GetTargetObject
-   global gTemp_ActiveMenuArray
-   put gTemp_ActiveMenuArray ["top"]["targetObject"] into targetObject
-   return targetObject
-end menu_GetTargetObject
-
 function menu_GetTargetOveride mTitlePath, mPath
    put menu_GetItemTargetOveride (mPath) into mTarget
    if exists (mTarget) then return mTarget
@@ -271,32 +170,11 @@ function menu_GetTargetOveride mTitlePath, mPath
 end menu_GetTargetOveride
 
 
---> Menu | Global | Titles
--
-function menu_GlobalTitles pFilter
-   put menu_ListGlobalNames() into globalTitles
-   if pFilter is not empty then filter globalTitles with pFilter
-   return globalTitles
-end menu_GlobalTitles
-
-function menu_GlobalControllers pFilter
-   put script_GetGlobalSuiteObjects ("Menu") into gMenuControllers
-   if pFilter is not empty then filter gMenuControllers with pFilter
-   return gMenuControllers
-end menu_GlobalControllers
-
-function menu_TitleIsGlobal mTitle
-   -- here in case we nee to change mTitle to start with "Menu" rather than end
-   set the itemDelimiter to "|"
-   return word 1 to -1 of item 1 of mTitle is "Global"
-end menu_TitleIsGlobal
-
-
 --> Menu | Model | Table | Titles
 -
 function menu_GetTableTitles mController
-   put menu_GetDataArray (mController) into menuTableArray
-   put keys(menuTableArray) into tableTitles
+   put the menu_DataArray of mController into menuTableArray
+   put keys (menuTableArray) into tableTitles
    return tableTitles
 end menu_GetTableTitles
 
@@ -362,7 +240,7 @@ end script_AddToGlobalSuiteArray
 
 on script_RemoveObjectFromSuiteArray scriptObject
    if exists(scriptObject) is false then
-      put merge("Error: cannot find object: [[scriptObject]]") into someError
+      put merge("Error: cannot find object: scriptObject") into someError
       return the script_Error [someError] of me
    end if
    

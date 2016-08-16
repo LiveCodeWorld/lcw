@@ -17,20 +17,25 @@ local LocalArray
 -
 on mouseDown pMenuButton
    if the shiftKey is "Down" then pass mouseDown
-   -- put "Global | Git | Watch | Menu" into mTitle
-   -- put "Blah | Menu" into mTitle -- bug: no idea why this does not work
-   put "Global | ScriptEditor | Watch | Menu" into mTitle
+   put _GetRecentChangesMenu() into mTitle
    menu_PullDown mTitle
 end mouseDown
 
-
---> Menu | Props
--
+private function _GetRecentChangesMenu
+   try
+      put env_GetRecentChangesMenu() into mTitle
+   catch e
+      put "Global | ScriptEditor | Watch | Menu" into mTitle
+   end try
+   return mTitle
+end _GetRecentChangesMenu
 
 
 --> Blah | Menu
 -
 /* Cannot get local menus to work here???
+
+No idea why you cannot place a working menu here?
 */
 
 on menu_ThisDoesNotWork mTarget

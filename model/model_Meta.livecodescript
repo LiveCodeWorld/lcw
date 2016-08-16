@@ -29,10 +29,9 @@ getprop meta_Script
    return someScript
 end meta_Script
 
-setprop meta_Script [pExportHandlers] someScript
+setprop meta_Script [pExportHandlersAndCalls] someScript
    put the long id of the target into someObject
-   put the object_Folder of someObject into objectFolder
-   object_ExportScript objectFolder, someScript, pExportHandlers
+   object_ExportScript someObject, someScript, pExportHandlersAndCalls
    put the result into someFile
    return someFile
 end meta_Script

@@ -129,10 +129,11 @@ getprop standard_BehaviorStackName [scriptObject]
 end standard_BehaviorStackName
 
 getprop standard_BehaviorStackNames
-   put lcw_ListStackNames ("Behavior") into stackNames
-   return "None,-" & CR & stackNames
+   put project_ListBehaviorStackNames ("all") into bNames
+   put "None,-" & CR before bNames
+   -- put lcw_ListStackNames ("Behavior") into bNames
+   return bNames
 end standard_BehaviorStackNames
-
 
 getprop ide_BNames
    put hArray_ListBehaviorNames() into bNames

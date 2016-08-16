@@ -48,6 +48,17 @@ end stack_Object
 
 --> Stack | Utilities
 -
+command stack_StripUnsaved @stackNames
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      if the filename of stack stackName is empty then next repeat
+      put stackName & CR after goodStackNames
+   end repeat
+   delete char -1 of goodStackNames
+   sort goodStackNames
+   put goodStackNames into stackNames
+end stack_StripUnsaved
+
 command stack_Drag stackObject
    if stackObject is empty then put the stack_Object of the target into stackObject
    put the rect of stackObject into oRect

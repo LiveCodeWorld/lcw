@@ -140,11 +140,11 @@ on _
 end _
 
 on menu_DisplayTempGlobal scriptObject, tempGlobal
-   global_DisplayValue gName
+   display_GlobalValue gName
 end menu_DisplayTempGlobal
 
 on menu_DeleteTempGlobal scriptObject, tempGlobal
-   global_DisplayValue tempGlobal
+   display_GlobalValue tempGlobal
    opn_Answer merge ("Are you sure you want to remove the global variable '[[tempGlobal]]' from memory?")
    global_Delete tempGlobal
    opn_Notify merge ("Removed the global variable '[[tempGlobal]]' from memory!")
@@ -251,7 +251,7 @@ getprop project_Name
 end project_Name
 
 getprop project_Names
-   put library_ListSetNames() into projectNames
+   put library_ListProjectNames() into projectNames
    return projectNames
 end project_Names
 
@@ -260,7 +260,7 @@ getprop pref_Names
 end pref_Names
 
 -- getprop pref_GlobalNames
-return library_ListPrefGlobals()
+return global_ListPrefs()
 end pref_GlobalNames
 
 -- getprop pref_ModelName
@@ -277,7 +277,7 @@ getprop full_SetName
 end full_SetName
 
 getprop full_SetNames
-   return library_ListSetNames (true)
+   return library_ListProjectNames (true) & CR & "None"
 end full_SetNames
 
 getprop set_Name
@@ -285,7 +285,7 @@ getprop set_Name
 end set_Name
 
 getprop set_Names
-   return library_ListSetNames ()
+   return library_ListProjectNames ()
 end set_Names
 
 /*
@@ -321,11 +321,11 @@ on opn_DeleteGlobalArray opnGlobalName
 end opn_DeleteGlobalArray
 
 getprop opn_Globals
-    return library_ListCheckoutGlobals()
+    return global_ListOpnNames()
 end opn_Globals
 
 getprop temp_Globals
-   return library_ListTempGlobals()
+   return global_ListOtherNames()
  end temp_Globals
 
 getprop opn_External
@@ -344,41 +344,8 @@ end opn_Externals
 */
 
 
---> Library | Globals
+--> Deps
 -
-/*
-These handlers are required for the menu, and came from lib_Manager library.
-They may be best here is a tool menu, or if found to be of more general use, moved to a library
-*/
-
-function library_ListTempGlobals
-   -- globals that are not part of the IDE, or the LCW (was OPN) environment.
-   get the globals
-   replace comma with CR in it
-   
-   filter it without "gREV*"
-   filter it without "$*"
-   line_Delete "each", it
-   line_Delete "msg", it
-   
-   filter it without "gOPN*"
-   filter it without "gPrefs_*"
-   return it
-end library_ListTempGlobals
-
-function library_ListPrefGlobals
-   get the globals
-   replace comma with CR in it
-   filter it with "gPrefs_*"
-   return it
-end library_ListPrefGlobals
-
-function library_ListCheckoutGlobals
-   get the globals
-   replace comma with CR in it
-   filter it with "gOPN*"
-   return it
-end library_ListCheckoutGlobals
 
 
 --> Dev | Menu
