@@ -17,7 +17,7 @@ local LocalArray
 -
 on mouseDown pMenuButton
    if the shiftKey is "Down" then pass mouseDown
-   put the ide_RecentChangesMenuMenuTitle of me into mTitle
+   put the ide_RecentChangesMenu of me into mTitle
    if mTitle is empty then put "Global | ScriptEditor | Basic | Menu" into mTitle
    menu_PullDown mTitle
 end mouseDown

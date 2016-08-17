@@ -26,7 +26,7 @@ gHkeyArray is broken down into:
 
 gLibrarySetArray is broken down to data and metadata:
 
--  data         = front, back, used arrays and information like whether to add the ide_AddBehaviorHacks
+-  data         = front, back, used arrays and information like whether to add the rev_AddBehaviorHacks
 - metadata  = the library set name
 
 gOPN at the moment contains just the active library_SetName
@@ -242,7 +242,7 @@ command project_StartEnvironment projectName
    project_StartFront projectName
    
    put project_GetRevHackStatus (projectName) into someBoolean
-   ide_AddBehaviorHacks someBoolean, true
+   rev_AddBehaviorHacks someBoolean, true
    
    put "Added the Livecode hacks to the environment!" into someComment
    opn_Notify someComment
@@ -251,7 +251,7 @@ end project_StartEnvironment
 command project_StopEnvironment
    put project_GetCurrentName() into projectName
    
-   ide_AddBehaviorHacks false
+   rev_AddBehaviorHacks false
    put "Removed the Livecode hacks from the environment!" into someComment
    opn_Notify someComment
    

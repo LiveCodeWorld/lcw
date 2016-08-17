@@ -294,7 +294,7 @@ getprop model_Folder [pDontCreate]
       put stack_ConstructFolderBit (longIDObject) after textStackRoot
    end if
    put "objects/" after objectFolder
-   folder_AddObjectBit objectFolder, longIDObject
+   object_AddStackOrObjectBit objectFolder, longIDObject
    if pDontCreate is not true then folder_CreateNested objectFolder
    return objectFolder
 end model_Folder

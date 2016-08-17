@@ -7,14 +7,21 @@ name: behavior_IdeScriptEditorField
 type: behavior
 
 
+--> Global | ScriptEditor | Script | Basic | Menu
+-
+on menu_Test
+ 
+end menu_Test
+
+
 --> Events
 -
 on mouseDown pMenuButton
-   if the shiftKey is "Down" then
-      menu_PopUp "Global | Script Editor | Extras | Menu"
-   else
-      menu_PopUp "Global | Script | Editor | Menu"
+   put the ide_ScriptFieldMenuTitle of me into mTitle
+   if mTitle is empty then
+      put "Global | ScriptEditor | Script | Basic | Menu" into mTitle
    end if
+   menu_PopUp mTitle
 end mouseDown
 
 on tabkey

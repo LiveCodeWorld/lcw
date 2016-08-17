@@ -26,8 +26,14 @@ The command "actionCompile pIgnoreErrors" can be found in the stack "revSEStackb
 -
 after mouseUp
    if the shiftKey is "Up" then
-      put rev_ScriptObject() into scriptObject   
-      script_JustCompiled scriptObject
+      put rev_ScriptObject() into scriptObject
+      
+      set the menu_Update of scriptObject to true
+      put the script of scriptObject into someScript
+      object_ExportScript scriptObject, someScript, true
+      put the result into scriptFile
+      
+      -- script_JustCompiled scriptObject
    end if
 end mouseUp
 
@@ -35,7 +41,7 @@ command script_JustCompiled scriptObject
    /*
    -- the IDE does this already
    put the stack_Name of scriptObject into stackName
-   rev_MarkStackEdited stackName
+   stack_MarkEdited stackName
    */
    
    put the stack_Object of scriptObject into stackObject

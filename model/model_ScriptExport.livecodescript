@@ -49,7 +49,7 @@ end script_IncrementCompileCount
 command script_UpdateAndExport scriptObject, pExportHandlersAndCalls
    -- merged with "script_IndexHarrayAndUpateMenus"
    -- this is a simple all in one command that updates and exports everything you need
-   global gHkey_Array
+   global gLCW
    global gTemp_ActiveMenuArray
    delete variable gTemp_ActiveMenuArray
    
@@ -63,8 +63,8 @@ command script_UpdateAndExport scriptObject, pExportHandlersAndCalls
       return merge ("error, [[scriptObject]] is probably a locked stack so can't index script.")
    end try
    
-   -- update the extensive metadata stored in gHkey_Array
-   object_AddToArray gHkey_Array, scriptObject, someScript, createHashArray, forceIndexHandlerCalls, pExportHandlersAndCalls
+   -- update the extensive metadata stored in gLCW
+   object_AddToArray gLCW, scriptObject, someScript, createHashArray, forceIndexHandlerCalls, pExportHandlersAndCalls
    put the result into scriptFile
    set the menu_Update of scriptObject to true
    put the result into mTitleTableArray
@@ -145,13 +145,13 @@ end script_MenuTitleTableArray
 -
 command object_AddToGlobalArray someObject, pExportHandlers, pCreateHashArray
    -- also exports handlers
-   global gHkey_Array
+   global gLCW
    try
       put the script of someObject into someScript
    catch e
       return merge ("error, [[someObject]] is probably a locked stack so can't index script.")
    end try
-   object_AddToArray gHkey_Array, someObject, someScript, pCreateHashArray, false, false
+   object_AddToArray gLCW, someObject, someScript, pCreateHashArray, false, false
    put the result into scriptFile
    return someScript
 end object_AddToGlobalArray
@@ -298,7 +298,6 @@ command object_AddToArray @hArray, someObject, someScript, pCreateHashArray, pFo
             put sha1_Hash (someHandler) into handlerHash
             put handlerHash into hArray ["scriptArray"][ruggedObject]["data"]["script_DataArray"][indexNum]["sha1"]
             
-            /*
             -- too slow
             if pCreateHashArray is true then
                -- this is slow
@@ -310,7 +309,6 @@ command object_AddToArray @hArray, someObject, someScript, pCreateHashArray, pFo
                hArray_AddHandlerHash hArray, hKey, someHandler, handlerHash, indexTime, pForceIndexHandlerCalls
                put empty into hArray ["handlerHashArray"]["actual"][handlerHash]
             end if
-            */
             
             -- now index unique global suites
             if word -1 of suiteTitle = "Menu" and word -2 of suiteTitle = "|" then

@@ -171,9 +171,9 @@ end menu_TitleIsGlobal
 --> Menu | Global | Model
 -
 function menu_ListGlobalTitles
-   global gHkey_Array
+   global gLCW
    
-   put keys (gHkey_Array ["Global Menus"]) into gMenuNames
+   put keys (gLCW ["Global Menus"]) into gMenuNames
    sort gMenuNames
    return gMenuNames
 end menu_ListGlobalTitles
@@ -201,6 +201,8 @@ setprop menu_Update someBoolean
    put the long id of the target into scriptObject
    
    put the script_MenuTitleTableArray of scriptObject into mTitleTableArray
+   if mTitleTableArray is not an array then return empty
+   
    if someBoolean is true then
       set the menu_DataArray of scriptObject to mTitleTableArray -- local
    end if
@@ -277,26 +279,26 @@ command menu_SetGlobalTitleArray gMenuTitle, gMenuTitleArray
    put menu_GetGlobalArray() into menuGlobalArray
    put gMenuTitleArray into menuGlobalArray [gMenuTitle]
    menu_SetGlobalArray menuGlobalArray
-   return gHkey_Array
+   return gLCW
 end menu_SetGlobalTitleArray
 
 function menu_GetGlobalArray
-   global gHkey_Array
-   put gHkey_Array ["Global Menus"] into menuGlobalArray
+   global gLCW
+   put gLCW ["Global Menus"] into menuGlobalArray
    return menuGlobalArray
 end menu_GetGlobalArray
 
 command menu_SetGlobalArray menuGlobalArray
-   global gHkey_Array
-   put menuGlobalArray into gHkey_Array ["Global Menus"]
-   return gHkey_Array ["Global Menus"]
+   global gLCW
+   put menuGlobalArray into gLCW ["Global Menus"]
+   return gLCW ["Global Menus"]
 end menu_SetGlobalArray
 
 function menu_GetTitleTableArrayGlobal mController
-   global gHkey_Array
+   global gLCW
    put the rugged_ID of mController into mController
    
-   put gHkey_Array ["scriptArray"][mController]["data"]["mTitleTableArray"] into mTitleTableArray
+   put gLCW ["scriptArray"][mController]["data"]["mTitleTableArray"] into mTitleTableArray
    return mTitleTableArray
 end menu_GetTitleTableArrayGlobal
 
@@ -304,25 +306,25 @@ command menu_SetTitleTableArrayGlobal mController, mTitleTableArray, suiteTitle
    /*
    mTitleTableArray is a simple array with keys corresponding to mTitles, and values corresponding to mControllers
    */
-   global gHkey_Array
-   if mTitleTableArray is not an array then return gHkey_Array
+   global gLCW
+   if mTitleTableArray is not an array then return gLCW
    put the rugged_ID of mController into mController
    
-   put mTitleTableArray into gHkey_Array ["scriptArray"][mController]["data"]["mTitleTableArray"]
-   put mTitleTableArray into gHkey_Array ["Global Menus"][suiteTitle]["data"]["mTitleTableArray"]
+   put mTitleTableArray into gLCW ["scriptArray"][mController]["data"]["mTitleTableArray"]
+   put mTitleTableArray into gLCW ["Global Menus"][suiteTitle]["data"]["mTitleTableArray"]
    
-   return gHkey_Array ["Global Menus"][suiteTitle]
-   return gHkey_Array ["scriptArray"][mController]
+   return gLCW ["Global Menus"][suiteTitle]
+   return gLCW ["scriptArray"][mController]
 end menu_SetTitleTableArrayGlobal
 
 private command _UpdateOldGlobalMenu mController
    -- a temp hack
-   put gHkey_Array ["scriptArray"][mController]["data"]["menuDataArray"] into oldTitleTableArray
+   put gLCW ["scriptArray"][mController]["data"]["menuDataArray"] into oldTitleTableArray
    if oldTitleTableArray is an array then
       breakpoint
       -- update it
       breakpoint
-      delete variable gHkey_Array ["scriptArray"][mController]["data"]["menuDataArray"]
+      delete variable gLCW ["scriptArray"][mController]["data"]["menuDataArray"]
       menu_SetTitleTableArrayGlobal mController, oldTitleTableArray
       return oldTitleTableArray
    end if

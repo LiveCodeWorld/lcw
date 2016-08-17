@@ -35,6 +35,134 @@ end setBehaviors
 */
 
 
+--> Variables
+-
+local LocalArray
+
+
+--> IDE | MenuTitle
+-
+command ide_EditMenu shortName
+   if word 1 of shortName is not "Global" then
+      put "Global | ScriptEditor |" && shortName && "| Menu" into mTitle
+   end if
+   menu_Edit mTitle
+end ide_EditMenu
+
+
+--> IDE | MenuTitle| Recent
+-
+getprop ide_RecentChangesMenu
+   put ide_GetMenuTitle ("Recent") into mTitle
+   if mTitle is empty then put "Global | ScriptEditor | Recent | Default | Menu" into mTitle
+   return mTitle
+end ide_RecentChangesMenu
+
+setprop ide_RecentChangesMenu shortTitle
+   ide_SetMenuTitle "Recent", shortTitle
+   return the result
+end ide_RecentChangesMenu
+
+function ide_RecentChangesShortTitle
+   set the itemdelimiter to " | "
+   put the ide_RecentChangesMenu of me into mTitle
+   put item 4 of mTitle into shortName
+   return shortName
+end ide_RecentChangesShortTitle
+
+function ide_RecentChangesShortTitles
+   put ide_ListShortMenuTitles ("Recent") into shortNames
+   return shortNames
+   
+   put menu_ListGlobalTitles() into gTitles
+   set the itemdelimiter to " | "
+   repeat for each line mTitle in gTitles
+      if item 2 of mTitle = "ScriptEditor" then
+         put item 3 of mTitle into shortName
+         if shortName = "Custom" then next repeat
+         put shortName & CR after shortNames
+      end if
+   end repeat
+   return shortNames
+end ide_RecentChangesShortTitles
+
+function ide_ListMenuTitles pIdeElement
+   put menu_ListGlobalTitles() into mTitles
+   put "Global | ScriptEditor |" into mTitleStem
+   if pIdeElement is not empty then
+      put space & pIdeElement && "|" after mTitleStem
+   end if
+   put mTitleStem & "*" into someFilter
+   filter mTitles with someFilter
+   return mTitles
+end ide_ListMenuTitles
+
+function ide_ListShortMenuTitles ideElement
+   set the itemdelimiter to " | "
+   put menu_ListGlobalTitles() into gTitles
+   put "Global | ScriptEditor |" && ideElement && "|" into mTitleStem
+   repeat for each line mTitle in gTitles
+      if mTitle begins with mTitleStem then
+         put item 4 of mTitle into shortName
+         if shortName = "Menu" or shortName = "Custom" then next repeat
+         put shortName & CR after shortNames
+      end if
+   end repeat
+   return shortNames
+end ide_ListShortMenuTitles
+
+
+--> IDE | MenuTitle | Model | Props
+-
+getprop ide_ScriptFieldMenuTitle
+   if the shiftKey is "Down" then
+      put "Global | Script Editor | Extras | Menu" into mTitle
+   else
+      put ide_GetMenuTitle ("scripteditor field") into mTitle
+      if mTitle is empty then
+         put "Global | ScriptEditor | Script | Basic | Menu" into mTitle
+      end if
+   end if
+   return mTitle
+end ide_ScriptFieldMenuTitle
+
+setprop ide_ScriptFieldMenuTitle shortName
+   if word 1 of shortName is not "Global" then
+      put "Global | ScriptEditor |" && shortName && "| Menu" into mTitle
+   end if
+   ide_SetMenuTitle "scripteditor field", mTitle
+   return the result
+end ide_ScriptFieldMenuTitle
+
+
+--> IDE | MenuTitle | Model
+-
+command ide_ResetMenuTitle
+   delete variable LocalArray ["environment"]["menu"]
+end ide_ResetMenuTitle
+
+function ide_GetMenuTitle ideElement
+   put LocalArray ["environment"]["menu"][ideElement] into mTitle
+   return mTitle
+end ide_GetMenuTitle
+
+command ide_SetMenuTitle ideElement, shortTitle
+   if shortTitle is empty or shortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
+      put "Default" into shortTitle
+   end if  
+   put ide_ConstructMenuTitle (shortTitle, ideElement) into mTitle
+   put mTitle into LocalArray ["environment"]["menu"][ideElement]
+   return shortTitle
+end ide_SetMenuTitle
+
+function ide_ConstructMenuTitle shortName, ideElement
+   if word 1 of shortName is "Global" then return shortName
+   
+   put "Global | ScriptEditor |" && ideElement && "|" && shortName && "| Menu" into mTitle
+   return mTitle
+end ide_ConstructMenuTitle
+
+
 --> Events
 -
 on libraryStack
@@ -42,36 +170,56 @@ on libraryStack
    put the short name of me into myName
    if targetStackName is not myName then pass libraryStack
    
-   ide_AddBehaviorHacks true
+   rev_AddBehaviorHacks true
 end libraryStack
 
 
---> IDE | Edited
+--> Stack | Edited
 -
 /*
 Marks whether or not a stack has been edited. Very useful for deciding what needs saving.
 */
 
-getprop edited_Flag
+getprop stack_IsEdited
    put the stack_Name of the target into stackName
-   put rev_ListEditedStackNames ("edited") into editedStackNames
+   put stack_ListEditedNames ("edited") into editedStackNames
    return stackName is among the lines of editedStackNames
-end edited_Flag
+end stack_IsEdited
 
-setprop edited_Flag someBoolean
+setprop stack_IsEdited someBoolean
    put the stack_Name of the target into stackName
    if someBoolean is true then
-      rev_MarkStackEdited stackName
+      stack_MarkEdited stackName
    else
-      rev_MarkStackSaved stackName
+      stack_MarkSaved stackName
    end if
-end edited_Flag
+end stack_IsEdited
 
-command ide_SaveEditedStacks editedStackName
+function stack_ListEditedNames pType
+   global gREVStackStatus
+   
+   repeat for each key stackName in gREVStackStatus
+      if exists (stack stackName) is false then next repeat
+      switch pType
+         case "saved"
+            if gREVStackStatus [stackName] = empty then
+               put "saved" into stackArray [stackName]
+            end if
+            break
+         default
+            if gREVStackStatus [stackName] = "edited" then
+               put "edited" into stackArray [stackName]
+            end if
+      end switch
+   end repeat
+   return keys (stackArray)
+end stack_ListEditedNames
+
+command stack_SaveEdited editedStackName
    global gREVStackStatus
    
    if editedStackName = "Save All" then
-      put rev_ListEditedStackNames() into stackNames
+      put stack_ListEditedNames() into stackNames
    else
       put editedStackName into stackNames
    end if
@@ -95,48 +243,30 @@ command ide_SaveEditedStacks editedStackName
    else
       opn_Notify "Saved all edited stacks!"
    end if
-end ide_SaveEditedStacks
+end stack_SaveEdited
 
-command rev_MarkStackSaved stackName
+command stack_MarkSaved stackName
+   -- was "rev_MarkStackSaved"
    global gREVStackStatus
    
    if stackName is empty then put the short name of this stack into stackName
    delete global gREVStackStatus [stackName]
-end rev_MarkStackSaved
+end stack_MarkSaved
 
-command rev_MarkStackEdited stackName
+command stack_MarkEdited stackName
+   -- was "rev_MarkStackEdited"
    global gREVStackStatus
    
    if stackName is empty then put the short name of this stack into stackName
    if char 1 to 3 of stackName is not "rev" then
       put "edited" into gREVStackStatus [stackName]
    end if
-end rev_MarkStackEdited
-
-function rev_ListEditedStackNames pType
-   global gREVStackStatus
-   
-   repeat for each key stackName in gREVStackStatus
-      if exists (stack stackName) is false then next repeat
-      switch pType
-         case "saved"
-            if gREVStackStatus [stackName] = empty then
-               put "saved" into stackArray [stackName]
-            end if
-            break
-         default
-            if gREVStackStatus [stackName] = "edited" then
-               put "edited" into stackArray [stackName]
-            end if
-      end switch
-   end repeat
-   return keys (stackArray)
-end rev_ListEditedStackNames
+end stack_MarkEdited
 
 
 --> IDE
 -
-command ide_AddBehaviorHacks pBoolean
+command rev_AddBehaviorHacks pBoolean
    /*
    -- was "rev_AddBehaviorHacks"
    
@@ -183,7 +313,7 @@ command ide_AddBehaviorHacks pBoolean
          set the behavior of launchDocsButton to empty
       end if
    end repeat
-end ide_AddBehaviorHacks
+end rev_AddBehaviorHacks
 
 
 --> IDE | Rev

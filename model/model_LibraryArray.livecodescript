@@ -197,14 +197,14 @@ end library_FetchAllObjects
 --> Library | List | Objects
 -
 function library_ListGlobalMenuNames
-   global gHkey_Array
-   put gHkey_Array ["Global Menus"] into menuArray
+   global gLCW
+   put gLCW ["Global Menus"] into menuArray
    return keys (menuArray)
 end library_ListGlobalMenuNames
 
 function library_ListGlobalMenuObjects
-   global gHkey_Array
-   put gHkey_Array ["Global Menus"] into menuArray
+   global gLCW
+   put gLCW ["Global Menus"] into menuArray
    repeat for each key mTitle in menuArray
       put menuArray [mTitle]["mController"] into mController
       put mController & CR after mControllers
@@ -282,7 +282,7 @@ function library_GetScriptLibArray
    put "script library" into objectType
    -- put library_FetchTypeArray (objectType, pSetName) into scriptLibs -- from stored set
    -- put library_ListNames (objectType, pSetName) into scriptLibs -- from stored set
-   put hArray_GetObjectTypeArray (objectType) into typeArray -- from global gHkey_Array
+   put hArray_GetObjectTypeArray (objectType) into typeArray -- from global gLCW
    return typeArray
 end library_GetScriptLibArray
 

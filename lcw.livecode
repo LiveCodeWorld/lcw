@@ -20,89 +20,6 @@ It should:
 -  a simple text stack that plays well with revision control
 
 This is a new beginning.
-
-function project_ConstructStackFileArray projectFolder
-   if the platform = "MacOS" then
-      put spotlight_ListStacks (projectFolder) into projectStackFiles
-      put stackfile_ArrayFromPaths (projectStackFiles, projectFolder) into projectStackFileArray
-   else
-      -- this is not recursive and only returns toplevel stacks
-      put project_ConstructNeededStackFileArray (projectFolder) into projectStackFileArray
-   end if
-   return projectStackFileArray
-end project_ConstructStackFileArray
-
-function project_ConstructStackFileArray projectFolder
-   put project_ConstructNeededStackFileArray (projectFolder) into projectStackFileArray
-   return projectStackFileArray
-end project_ConstructStackFileArray
-
-function stackfile_TableFromPaths stackPaths, baseFolder
-   put stackfile_ArrayFromPaths (stackPaths, baseFolder) into stackFileArray
-   put stackFile_FromArray (stackFileArray) into stackFileTable
-   return stackFileTable
-end stackfile_TableFromPaths
-
-function stackfile_ArrayFromPaths stackPaths, baseFolder
-   local stackFileArray
-   stackFile_AddToArray stackFileArray, stackPaths, baseFolder
-   return stackFileArray
-end stackfile_ArrayFromPaths
-
-function spotlight_ListStacks pInsideFolder
-   put "(kMDItemKind = 'LiveCode Stack')" into queryExpression
-   put "mdfind" && quote & queryExpression & quote into someShell
-   
-   if pInsideFolder is not empty then
-      -- shell_BashParamEscape pInsideFolder
-      put space & "-onlyin" && quote & pInsideFolder & quote after someShell
-   end if
-   
-   put shell (someShell) into shellResult
-   return shellResult
-end spotlight_ListStacks
-
-private command _CheckOrCreateProjectHome projectFolder, projectName
-   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
-   if exists (stack projectName) is false then
-      create script only stack projectName
-      set the filename of stack projectName to projectHomeStackPath
-      save stack projectName
-      edit the script of stack projectName
-   else   
-      put the filename of stack projectName into testHomeStackPath
-      if testHomeStackPath is not projectHomeStackPath then
-         put projectHomeStackPath & CR & testHomeStackPath
-         go to stack projectName
-         answer warning merge ("There already is a stack '[[projectName]]'  and it is not in the project folder!")
-         edit the script of stack projectName
-         exit to top
-      end if
-   end if
-end _CheckOrCreateProjectHome
-
-function project_ConstructHomeStackPath projectFolder
-   put project_NameFromFolder (projectFolder) into projectName
-   put projectFolder & projectName & ".livecode" into projectHomeStackPath
-   return projectHomeStackPath
-end project_ConstructHomeStackPath
-
-
--- command project_SetHomeStackFiles projectFolder
--- here we create a project home stack if it does not exist
-put project_NameFromFolder (projectFolder) into projectName
-_CheckOrCreateProjectHome projectFolder, projectName
-
-put project_ListAllStacks (projectFolder) into projectStackFiles
-set the stackfiles of stack projectName to projectStackFiles
-return projectStackFiles
-end project_SetHomeStackFiles
-
-function lcw_ListAllStackPaths
-   put lcw_GetRootFolder() into lcwRootFolder
-   put folder_ListNestedStackPaths (lcwRootFolder) into stackPaths
-   return stackPaths
-end lcw_ListAllStackPaths
 */
 
 
@@ -118,11 +35,17 @@ end lcw_BehaviorPaths
 --> Project | Save and Load
 -
 command project_SaveEnvironment
+   -- here we index any scripts and commit to git
 end project_SaveEnvironment
 
 
 --> Working on
 -
+command lcw_RestartEnvironment
+   ide_ResetMenuTitle
+   global_DeleteAll
+   _StartEnvironment
+end lcw_RestartEnvironment
 
 
 --> Initialise
@@ -135,6 +58,8 @@ private command _StartEnvironment
    set the project_InitialiseFolder of me to projectFolder
    
    _LoadCustomUserProject
+   
+   ide_SetMenuTitle "Recent"
    dispatch "project_IndexAfterUsed" with projectFolder
 end _StartEnvironment
 
@@ -142,6 +67,8 @@ command _LoadCustomUserProject
    put lcw_UserProjectFolder() into projectFolder
    put lcw_UserHomeStack() into lcwUserHomeStack
    set the project_InitialiseFolder of lcwUserHomeStack to projectFolder
+   
+   dispatch "init_Project" to lcwUserHomeStack
 end _LoadCustomUserProject
 
 setprop project_InitialiseFolder projectFolder
@@ -395,7 +322,7 @@ end stack_Folder
 
 function stackFile_FromArray stackFileArray
    combine stackFileArray using CR and comma
-   sort stackFileArray
+   sort stackFileArray by item 1 of each
    return stackFileArray
 end stackFile_FromArray
 
@@ -428,6 +355,11 @@ function lcw_UserHomeStack
    end if 
    return the name of stack lcwUserHomeStackName
 end lcw_UserHomeStack
+
+function lcw_UserMetadataFolder
+   put lcw_UserProjectFolder ("lcw_Metadata") into lcwUserMetadataFolder
+   return lcwUserMetadataFolder
+end lcw_UserMetadataFolder
 
 function lcw_UserHomePath
    put lcw_UserProjectFolder() into userFolder

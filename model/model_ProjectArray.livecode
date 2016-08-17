@@ -13,13 +13,13 @@ version: 0.7
 --> Working On
 -
 command project_RestoreGlobals projectName, pDeleteAllGlobals
-   global gHkey_Array
+   global gLCW
    
    put project_FetchArray (projectName) into projectArray
    if pDeleteAllGlobals is true then
       global_DeleteAll
    else
-      delete variable gHkey_Array
+      delete variable gLCW
    end if
    lcw_AddProjectArrayToGlobal projectArray, false
    return projectGlobalArray
@@ -33,23 +33,23 @@ end project_AddProjectGlobals
 
 command lcw_AddProjectArrayToGlobal projectArray, pRecursively
    /*
-   by defualt (if pRecursively is false or empty), this command merges the all keys recursively, adding new items to gHkey_Array from projectArray
+   by defualt (if pRecursively is false or empty), this command merges the all keys recursively, adding new items to gLCW from projectArray
    but keeping any old items that are not in projectArray.
-   Consequenlty this "adds" the contents of the projectArray to gHkey_Array with the exception of leaf contents which are updated or replaced.
+   Consequenlty this "adds" the contents of the projectArray to gLCW with the exception of leaf contents which are updated or replaced.
    So if you want a merge - store your data as an array not an index.
    
    if pRecursively is false then this command replaces items that are already there with the contents of projectArray
    Consequenlty this adds or "sets" the contents of the variable
    */
-   global gHkey_Array
+   global gLCW
    
    if pRecursively is not false then
-      union projectArray with gHkey_Array recursively
+      union projectArray with gLCW recursively
    else
-      union projectArray with gHkey_Array
+      union projectArray with gLCW
    end if
-   put projectArray into gHkey_Array
-   return gHkey_Array
+   put projectArray into gLCW
+   return gLCW
 end lcw_AddProjectArrayToGlobal
 
 
@@ -353,14 +353,14 @@ For now we just wrap the Library | Model | Array | gHkeyArray handlers
 */
 
 command project_LoadGlobalHarray pProjectName
-   global gHkey_Array
-   put project_FetchHarray (pProjectName) into gHkey_Array
-   return gHkey_Array
+   global gLCW
+   put project_FetchHarray (pProjectName) into gLCW
+   return gLCW
 end project_LoadGlobalHarray
 
 command project_SaveGlobalHarray pProjectName
-   global gHkey_Array
-   project_SaveHarray gHkey_Array, pProjectName
+   global gLCW
+   project_SaveHarray gLCW, pProjectName
    put the result into arrayFile
    return arrayFile
 end project_SaveGlobalHarray

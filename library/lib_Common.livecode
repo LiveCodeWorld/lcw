@@ -21,14 +21,14 @@ setprop object_UripArray uRipArray
    return uRipArray
 end object_UripArray
 
-command rev_MarkStackEdited stackName
+command stack_MarkEdited stackName
    global gREVStackStatus
    
    if stackName is empty then put the short name of this stack into stackName
    if char 1 to 3 of stackName is not "rev" then
       put "edited" into gREVStackStatus [stackName]
    end if
-end rev_MarkStackEdited
+end stack_MarkEdited
 
 function rev_ScriptEditorField pEditorNum
    put rev_ScriptEditorStack (pEditorNum) into editorStack
@@ -119,39 +119,6 @@ function addThenReturn mTarget
    end if
    return mTarget
 end addThenReturn
-
--- command addToMenuActiveArray mPath, mTitlePath, pigeon, mController, mView, mItemType, pMenuTarget
-   if mPath is empty then return empty -- an insert?
-   global gTemp_ActiveMenuArray
-   
-   if mItemType is among the items of "insert" then
-      -- may need to disable a submenu, and need gTemp_ActiveMenuArray to work out mTarget
-      return empty
-   end if
-   if pMenuTarget is not empty then
-      menu_SetItemTargetOveride mPath, pMenuTarget
-   end if
-   
-   -- lets set work in progress mPath, mTitlePath so that submenus etc can use them to automatically gather context
-   menu_SetTitlePath mTitlePath
-   menu_SetSentPath mPath
-   
-   put pigeon into gTemp_ActiveMenuArray ["mPath"][mPath]["pigeon"]
-   put mController into gTemp_ActiveMenuArray ["mPath"][mPath]["mController"]
-   put mItemType into gTemp_ActiveMenuArray ["mPath"][mPath]["mItemType"]
-   put mTitlePath into gTemp_ActiveMenuArray ["mPath"][mPath]["mTitlePath"]
-   
-   put mController into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mController"]
-   return empty
-   
-   put gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mPath"] into mPaths
-   line_Insert mPath, mPaths
-   put mPaths into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["mPath"]
-   
-   put gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["pigeon"] into menuCommands
-   line_Insert pigeon, menuCommands
-   put menuCommands into gTemp_ActiveMenuArray ["mTitlePath"][mTitlePath]["pigeon"]
-end addToMenuActiveArray
 
 function error_mTopController mTopController, mTopTitle, menuRecord
    if exists(mTopController) is false then
@@ -348,7 +315,7 @@ command file_SetHomeRelative @longFile
    end if
 end file_SetHomeRelative
 
-command folder_AddObjectBit @objectFolder, someObject
+command object_AddStackOrObjectBit @objectFolder, someObject
    put word 1 of someObject into objectType
    switch
       case objectType = "stack"
@@ -358,21 +325,7 @@ command folder_AddObjectBit @objectFolder, someObject
          put objectType & "_" & word 3 of someObject & "/" after objectFolder
          break
    end switch
-end folder_AddObjectBit
-
-function folder_AddStackBit dataOrMetadata, textStackFolder, someObject
-   put the stack_Object of someObject into stackObject
-   put the short name of stackObject into stackName
-   put the mainstack of stackObject into mainStackName
-   
-   if stackName = mainStackName then
-      put textStackFolder & dataOrMetadata & "/objects/" into stackFolder
-   else
-      put textStackFolder & dataOrMetadata & "/objects/substacks/" & stackName & "/" into stackFolder
-      -- put dataOrMetadata & "/objects/"  after stackFolder
-   end if
-   return stackFolder
-end folder_AddStackBit
+end object_AddStackOrObjectBit
 
 command folder_CreateNested @someFolder
    folder_Format someFolder
@@ -639,11 +592,11 @@ function hArray_GetObjectArray rObject, pHarray
          return pHarray ["scriptArray"][rObject]
       end if
    else
-      global gHkey_Array   
+      global gLCW   
       if rObject is empty then
-         return gHkey_Array ["scriptArray"]
+         return gLCW ["scriptArray"]
       else
-         return gHkey_Array ["scriptArray"][rObject]
+         return gLCW ["scriptArray"][rObject]
       end if
    end if
 end hArray_GetObjectArray
@@ -666,8 +619,8 @@ function hArray_GetObjectTypeData pHarray
    if pHarray is an array then
       return pHarray ["objectType"]
    else
-      global gHkey_Array
-      return gHkey_Array ["objectType"]
+      global gLCW
+      return gLCW ["objectType"]
    end if
 end hArray_GetObjectTypeData
 
@@ -687,7 +640,7 @@ function hArray_GetViewTemplate viewName
 end hArray_GetViewTemplate
 
 command hArray_RemoveObject someObject
-   global gHkey_Array
+   global gLCW
    if exists (someObject) then
       put revRuggedID (someObject) into rObject
       put the object_Metadata of rObject into uRipArray
@@ -696,8 +649,8 @@ command hArray_RemoveObject someObject
       put empty into uRipArray -- won;t strip same name / type objects
    end if
    
-   global gHkey_Array
-   hArray_RemoveObjectFromArray rObject, gHkey_Array, uRipArray
+   global gLCW
+   hArray_RemoveObjectFromArray rObject, gLCW, uRipArray
 end hArray_RemoveObject
 
 command hArray_RemoveObjectFromArray rObject, @hArray, pUripArray
@@ -1024,14 +977,14 @@ command object_AddToGlobalArray someObject, pExportHandlers, pDontExport
    put false into pCreateHashArray
    put false into pForceIndexHandlerCalls
    
-   global gHkey_Array
+   global gLCW
    try
       put the script of someObject into someScript
    catch e
       return merge ("error, [[someObject]] is probably a locked stack so can't index script.")
    end try
    
-   object_AddToArray gHkey_Array, someObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
+   object_AddToArray gLCW, someObject, someScript, pExportHandlers, pCreateHashArray, pForceIndexHandlerCalls, pDontExport
    put the result into someScript
    return someScript
 end object_AddToGlobalArray
@@ -2147,14 +2100,6 @@ getprop stack_SubName [subStackStem]
    put mainStackName & "|" & subStackStem into subStackName
    return subStackName
 end stack_SubName
-
-getprop stackDataObjects_Folder [pDontCreate]
-   put the long ID of the target into someObject
-   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
-   put folder_AddStackBit ("data", textStackFolder, someObject) into stackFolder
-   if pDontCreate is false then folder_CreateNested stackFolder
-   return stackFolder
-end stackDataObjects_Folder
 
 command text_EscapeRegularExpression @someString
    put "\" & tab & quote & "[]|*.?()" into specialChars

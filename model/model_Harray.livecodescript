@@ -8,7 +8,7 @@ version: 0.8
 
 /*
 This model wraps a complex multidimensional array that stores lot's of information about scripts, handlers and objects in the Livecode environment.
-It is mistakenly labeled and stored in the global variable gHkey_Array. It should ratehr be called gHarray (for "handler array" or simply gLiveCodeWorld.
+It is mistakenly labeled and stored in the global variable gLCW. It should ratehr be called gHarray (for "handler array" or simply gLiveCodeWorld.
 
 Most of the handelrs here have been designed to work with parameters rather than directly with the global variable.
 In the future we look to store this data in an sqlite, or possible graph database.
@@ -18,18 +18,18 @@ In the future we look to store this data in an sqlite, or possible graph databas
 --> hArray | Model
 -
 command hArray_LoadGlobal
-   global gHkey_Array
-   put hArray_FetchData() into gHkey_Array
+   global gLCW
+   put hArray_FetchData() into gLCW
 end hArray_LoadGlobal
 
 command hArray_StoreGlobal
-   global gHkey_Array
-   hArray_StoreData gHkey_Array
+   global gLCW
+   hArray_StoreData gLCW
 end hArray_StoreGlobal
 
 command hArray_DeleteArrayDatabase
-   global gHkey_Array
-   delete variable gHkey_Array
+   global gLCW
+   delete variable gLCW
 end hArray_DeleteArrayDatabase
 
 function hArray_FetchData
@@ -197,7 +197,7 @@ function hArray_ConstructNameObjectArray objectType
          hArray_SetObjectTypeArray objectType, objectTypeArray
          
          put the mobile_Name of rObject into mObject
-         put mObject && "has no uRIP ['name']." & CR & CR & "Removed it from gHkey_Array!" into someMessage
+         put mObject && "has no uRIP ['name']." & CR & CR & "Removed it from gLCW!" into someMessage
          opn_Notify someMessage, true
          next repeat
       else
@@ -227,8 +227,8 @@ function hArray_GetObjectTypeData pHarray
    if pHarray is an array then
       return pHarray ["objectType"]
    else
-      global gHkey_Array
-      return gHkey_Array ["objectType"]
+      global gLCW
+      return gLCW ["objectType"]
    end if
 end hArray_GetObjectTypeData
 
@@ -237,9 +237,9 @@ command hArray_SetObjectTypeData objectTypeData, pHarray
       put objectTypeData into pHarray ["objectType"]
       return pHarray
    else
-      global gHkey_Array
-      put objectTypeData into gHkey_Array ["objectType"]
-      return gHkey_Array
+      global gLCW
+      put objectTypeData into gLCW ["objectType"]
+      return gLCW
    end if
 end hArray_SetObjectTypeData
 
@@ -374,41 +374,41 @@ function hArray_GetFoundHkeyArray hKey, pHArray
    if pHArray is an array then
       return pHArray ["handlerArray"][shortHkey]
    else
-      global gHkey_Array
-      return gHkey_Array ["handlerArray"][shortHkey]
+      global gLCW
+      return gLCW ["handlerArray"][shortHkey]
    end if
 end hArray_GetFoundHkeyArray
 
 function hArray_ShortKeyHash hKey
-   global gHkey_Array
+   global gLCW
    put item 1 to 2 of hKey into shortHkey
-   put gHkey_Array ["handlerArray"][shortHkey]["handlerHash"] into latestShortkeyHash
+   put gLCW ["handlerArray"][shortHkey]["handlerHash"] into latestShortkeyHash
    return latestShortkeyHash
 end hArray_ShortKeyHash
 
 function hArray_GetKeywordArray pKWord
-   global gHkey_Array
+   global gLCW
    
    if pKWord is empty then
-      return gHkey_Array ["keywordArray"]
+      return gLCW ["keywordArray"]
    else
-      return gHkey_Array ["keywordArray"][pKWord]
+      return gLCW ["keywordArray"][pKWord]
    end if
 end hArray_GetKeywordArray
 
 command hArray_SetKeywordArray keywordArray, pKWord
-   global gHkey_Array
+   global gLCW
    if kWord is empty then
-      put keywordArray into gHkey_Array ["keywordArray"]
+      put keywordArray into gLCW ["keywordArray"]
    else
-      put keywordArray into gHkey_Array ["keywordArray"][pKWord]
+      put keywordArray into gLCW ["keywordArray"][pKWord]
    end if
 end hArray_SetKeywordArray
 
 function hArray_ListAllObjects pHarray
    if pHarray is an array then
-      global gHkey_Array
-      put gHkey_Array ["scriptArray"] into rObjectArray
+      global gLCW
+      put gLCW ["scriptArray"] into rObjectArray
    else
       put pHarray ["scriptArray"] into rObjectArray
    end if
@@ -431,11 +431,11 @@ function hArray_GetObjectArray rObject, pHarray
          return pHarray ["scriptArray"][rObject]
       end if
    else
-      global gHkey_Array   
+      global gLCW   
       if rObject is empty then
-         return gHkey_Array ["scriptArray"]
+         return gLCW ["scriptArray"]
       else
-         return gHkey_Array ["scriptArray"][rObject]
+         return gLCW ["scriptArray"][rObject]
       end if
    end if
 end hArray_GetObjectArray
@@ -445,36 +445,36 @@ command hArray_SetObjectArray rObject, objectArray, pHarray
       put objectArray into pHarray ["scriptArray"][rObject]
       return pHarray
    else
-      global gHkey_Array
-      put objectArray into gHkey_Array ["scriptArray"][rObject]
-      return gHkey_Array
+      global gLCW
+      put objectArray into gLCW ["scriptArray"][rObject]
+      return gLCW
    end if
 end hArray_SetObjectArray 
    
 function hArray_GetHandlerArray pHkey
-   global gHkey_Array
+   global gLCW
    put item 1 to 2 of pHkey into shortHkey
    if shortHkey is empty then
-      return gHkey_Array ["handlerArray"]
+      return gLCW ["handlerArray"]
    else
-      return gHkey_Array ["handlerArray"][shortHkey]
+      return gLCW ["handlerArray"][shortHkey]
    end if
 end hArray_GetHandlerArray
 
 command hArray_SetHandlerArray handlerArray, pHkey
-   global gHkey_Array
+   global gLCW
    put item 1 to 2 of pHkey into shortHkey
    if shortHkey is empty then
-      put handlerArray into gHkey_Array ["handlerArray"]
+      put handlerArray into gLCW ["handlerArray"]
    else
-      put handlerArray into gHkey_Array ["handlerArray"][shortHkey]
+      put handlerArray into gLCW ["handlerArray"][shortHkey]
    end if
 end hArray_SetHandlerArray
 
 function hArray_ListHkeys pShortHkey
    if pShortHkey is not empty then
-      global gHkey_Array
-      put gHkey_Array ["handlerArray"] into handlerArray
+      global gLCW
+      put gLCW ["handlerArray"] into handlerArray
       put handlerArray [pShortHkey] into hKeyArray
       put keys (hKeyArray) into hKeys
    else
@@ -486,10 +486,10 @@ function hArray_ListHkeys pShortHkey
 end hArray_ListHkeys
 
 function hArray_ConstructHkeyArray
-   global gHkey_Array
+   global gLCW
    local bigHKeyArray
    
-   put gHkey_Array ["handlerArray"] into handlerArray
+   put gLCW ["handlerArray"] into handlerArray
    repeat for each key shortHkey in handlerArray
       if shortHkey = "_,c" then next repeat
       put handlerArray [shortHkey] into hKeyArray
@@ -523,10 +523,10 @@ function hArray_ListDifferentHkeys hKey
 end hArray_ListDifferentHkeys
 
 command hArray_SetHkeyDifferences hKey, @identicalHkeys, @anotherHashArray
-   global gHkey_Array
+   global gLCW
    
    put item 1 to 2 of hKey into shortHkey 
-   put gHkey_Array ["handlerArray"][shortHkey] into hKeyArray
+   put gLCW ["handlerArray"][shortHkey] into hKeyArray
    put hKeyArray [hKey]["handlerHash"] into handlerHash
    
    repeat for each key anotherHkey in hKeyArray
@@ -548,10 +548,10 @@ function hArray_ListHandlerHashes
 end hArray_ListHandlerHashes
 
 function hArray_ConstructHkeyHashArray
-   global gHkey_Array
+   global gLCW
    
    -- timer_Start "hArray_ConstructHkeyHashArray"
-   put gHkey_Array ["handlerArray"] into handlerArray
+   put gLCW ["handlerArray"] into handlerArray
    repeat for each key shortHkey in handlerArray
       if shortHkey = "_,c" then next repeat
       put handlerArray [shortHkey] into hKeyArray
@@ -578,18 +578,18 @@ end hArray_KeywordHkeys
 
 function hArray_KeywordHkeyArray pKeyWordList
    -- see also "hArray_ListShortKeys"
-   global gHkey_Array
+   global gLCW
    
    if pKeyWordList is empty then
       -- put hArray_GetHandlerArray() into handlerArray
-      put gHkey_Array ["handlerArray"] into handlerArray
+      put gLCW ["handlerArray"] into handlerArray
       put keys(handlerArray) into shortHKeys
    else
       replace CR with comma in pKeyWordList -- hack to allow passing lines not just lists
       
       put word 1 to -1 of item 1 of pKeyWordList into firstKeyWord
       delete item 1 of pKeyWordList
-      put gHkey_Array ["keywordArray"][firstKeyWord] into keywordArray
+      put gLCW ["keywordArray"][firstKeyWord] into keywordArray
       
       repeat for each key shortHkey in keywordArray
          put keywordArray [shortHkey]["rugged_ID"] into ruggedID
@@ -602,22 +602,22 @@ function hArray_KeywordHkeyArray pKeyWordList
 end hArray_KeywordHkeyArray
 
 function hArray_ListShortKeys pKeyWordList
-   global gHkey_Array
+   global gLCW
    
    if pKeyWordList is empty then
       -- put hArray_GetHandlerArray() into handlerArray
-      put gHkey_Array ["handlerArray"] into handlerArray
+      put gLCW ["handlerArray"] into handlerArray
       put keys(handlerArray) into shortHKeys
    else
       replace CR with comma in pKeyWordList -- hack to allow passing lines not just lists
       
       put word 1 to -1 of item 1 of pKeyWordList into firstKeyWord
       delete item 1 of pKeyWordList
-      put gHkey_Array ["keywordArray"][firstKeyWord] into intersectArray
+      put gLCW ["keywordArray"][firstKeyWord] into intersectArray
       
       repeat for each item pKeyword in pKeyWordList
          put word 1 to -1 of pKeyword into pKeyword
-         put gHkey_Array ["keywordArray"][pKeyword] into keywordArray
+         put gLCW ["keywordArray"][pKeyword] into keywordArray
          intersect intersectArray with keywordArray
       end repeat
       
@@ -718,18 +718,18 @@ end hArray_ConstructDuplicateHkeyArray
 --> hArray | Tidy
 -
 command hArray_FindAndRemoveMissingObjects pDontNotify
-   global gHkey_Array
+   global gLCW
    
    put hArray_ListMissingObjects() into missingObjects
    repeat for each line rObject in missingObjects
-      hArray_RemoveObjectFromArray rObject, gHkey_Array 
+      hArray_RemoveObjectFromArray rObject, gLCW 
    end repeat
    
    if pDontNotify is true then return missingObjects
    if missingObjects is empty then
-      opn_Notify "Did not find any missing objects in the global gHkey_Array array!"
+      opn_Notify "Did not find any missing objects in the global gLCW array!"
    else
-      opn_Notify "Removed the following missing objects from the global gHkey_Array array!", true
+      opn_Notify "Removed the following missing objects from the global gLCW array!", true
       put missingObjects
    end if
    return missingObjects
@@ -747,7 +747,7 @@ function hArray_ListMissingObjects
 end hArray_ListMissingObjects
 
 command hArray_RemoveObject someObject
-   global gHkey_Array
+   global gLCW
    if exists (someObject) then
       put revRuggedID (someObject) into rObject
       put the object_Metadata of rObject into uRipArray
@@ -756,8 +756,8 @@ command hArray_RemoveObject someObject
       put empty into uRipArray -- won;t strip same name / type objects
    end if
    
-   global gHkey_Array
-   hArray_RemoveObjectFromArray rObject, gHkey_Array, uRipArray
+   global gLCW
+   hArray_RemoveObjectFromArray rObject, gLCW, uRipArray
 end hArray_RemoveObject
 
 command hArray_RemoveObjectFromArray rObject, @hArray, pUripArray

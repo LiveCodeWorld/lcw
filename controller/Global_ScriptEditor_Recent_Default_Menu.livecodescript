@@ -1,10 +1,10 @@
-﻿script "Global_ScriptEditor_Basic_Menu"
+﻿script "Global_ScriptEditor_Recent_Default_Menu"
 --> MetaData
 -
 license: GPLv3
-name: Global | ScriptEditor | Basic | Menu
+name: Global | ScriptEditor | Recent | Default | Menu
 type: controller
-version: 0.7
+version: 0.6
 
 
 local LocalArray
@@ -13,7 +13,7 @@ local LocalArray
 --> Menu | Props
 -
 on menu_Init
-   put rev_ListEditedStackNames() into editedStacks
+   put stack_ListEditedNames() into editedStacks
    repeat for each line stackName in editedStacks
       switch
          case exists (stack stackName) is false
@@ -33,7 +33,7 @@ getprop menu_Target [mTitlePath]
 end menu_Target
 
 
---> Global | ScriptEditor | Basic | Menu
+--> Global | ScriptEditor | Recent | Default | Menu
 -
 on menu_RecentScripts scriptObject, recentObject
    put LocalArray ["friendlyArray"][recentObject] into someObject
@@ -45,25 +45,41 @@ on menu_RecentScripts scriptObject, recentObject
 end menu_RecentScripts
 
 on menu_SaveEditedStacks mTarget, editedStackName
-   ide_SaveEditedStacks editedStackName
+   stack_SaveEdited editedStackName
 end menu_SaveEditedStacks
 
 on _
 end _
 
 on insert_MyCustomMenu
-   return "Global | ScriptEditor | Custom | Menu"
+   return "Global | ScriptEditor | Recent | Custom | Menu"
 end insert_MyCustomMenu
 
 on _
 end _
 
+on menu_CheckAvailableMenus
+   put url "https://gist.github.com/opn/1aee32a3796af1d1dc85ec5ad1566f5f/raw/d8e15f2e2a0797c2fc8e9e6535535b0b4f44ec35/index,Recent%2520Changes%2520Menus" into recentMenuList
+   -- display_Lines recentMenuList
+   
+   put recentMenuList into recentMenuArray
+   split recentMenuArray with CR and comma
+   
+   put recentMenuList into columnArray
+   set the columndel to comma
+   split columnArray by column
+   put columnArray [1] into mNames
+   put columnArray [1] into mURLs
+   
+   display_Array recentMenuArray
+end menu_CheckAvailableMenus
+
 on menu_SetMenu mTarget, mTitle
-   set the ide_RecentChangesMenuMenuTitle of mTarget to mTitle
+   set the ide_RecentChangesMenu of mTarget to mTitle
 end menu_SetMenu
 
 
---> Global | ScriptEditor | Basic | Menu | Props
+--> Global | ScriptEditor | Recent | Default | Menu | Props
 -
 getprop m_Title
    return ide_RecentChangesShortTitle()
@@ -83,13 +99,21 @@ getprop edited_StackNames
 end edited_StackNames
 
 
---> Global | ScriptEditor | Basic | Menu | Disabled
+--> Global | ScriptEditor | Recent | Default | Menu | Disabled
 -
+getprop disabled_SaveEditedStacks
+   put LocalArray ["editedStacks"] into editedStacks
+   if editedStacks is empty then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_SaveEditedStacks
 
 
 --> Deps
 -
-function rev_ListEditedStackNames pType
+function stack_ListEditedNames pType
    global gREVStackStatus
    
    repeat for each key stackName in gREVStackStatus
@@ -107,7 +131,7 @@ function rev_ListEditedStackNames pType
       end switch
    end repeat
    return keys (stackArray)
-end rev_ListEditedStackNames
+end stack_ListEditedNames
 
 getprop recent_Objects
    put rev_GetScriptEditorHistoryObjects() into historyObjects
