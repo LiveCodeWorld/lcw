@@ -1,0 +1,23 @@
+command scriptField_SetTokenInfo scriptLine, testScriptLine, @thisTokenNum, @nextTokenNum, @prevTokenNum, @thisToken, @nextToken, @previousToken
+   if word 1 of scriptLine is among the items of "--,#,/*" then
+      -- another hack to allow looking up words in comments
+      delete word 1 of scriptLine
+      delete word 1 of testScriptLine
+   end if
+   
+   -- hack in case a piece of quoted text is chopped in half
+   put quote after testScriptLine
+   
+   put the number of tokens of testScriptLine into thisTokenNum
+   put token thisTokenNum of scriptLine into thisToken
+   
+   put thisTokenNum + 1 into nextTokenNum
+   put token nextTokenNum of scriptLine into nextToken
+   
+   put thisTokenNum - 1 into prevTokenNum
+   if prevTokenNum = 0 then
+      put empty into previousToken -- LiveCode bug: token 0 = the whole line
+   else
+      put token prevTokenNum of scriptLine into previousToken
+   end if
+end scriptField_SetTokenInfo

@@ -1,0 +1,90 @@
+﻿script "lib_Behavior"
+--> MetaData
+-
+license: GPLv3
+name: lib_Behavior
+type: script library
+version: 0.4
+
+/*
+A library for script behaviors.
+*/
+
+
+--> Behavior | Handlers
+-
+getprop behavior_HandlerExists [hkeyLine]
+   put the behavior of the target into bObject
+   put the revAvailablehandlers of bObject into hTable
+   hkeyLine_FindInTable hkeyLine, hTable, startLineNum, endLineNum
+   return the result
+end behavior_HandlerExists
+
+getprop behavior_Handler [hkeyLine]
+   put the behavior of the target into bObject
+   put the revAvailablehandlers of bObject into hTable
+   hkeyLine_FindInTable hkeyLine, hTable, startLineNum, endLineNum
+   put line startLineNum to endLineNum of the script of bObject into behaviorHandler
+   return behaviorHandler
+end behavior_Handler
+
+
+--> Behavior | Hierarchy
+-
+getprop behavior_Objects
+   put the long id of the target into targetObject
+   put behavior_GetHierarchy (targetObject) into bObjects
+   return bObjects
+end behavior_Objects
+
+setprop behavior_Objects bObjects
+   put the long id of the target into targetObject
+   behavior_SetHierarchy targetObject,  bObjects
+   return the result
+end behavior_Objects
+
+getprop behavior_LastObject
+   return the last line of the behavior_Objects of the target
+end behavior_LastObject
+
+
+--> Behaviors
+-
+function behavior_GetHierarchy targetObject
+   repeat
+      put the behavior of targetObject into bObject
+      if exists(bObject) is false then exit repeat
+      put bObject & CR after bObjects
+      put bObject into targetObject
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_GetHierarchy
+
+command behavior_SetHierarchy targetObject,  bObjects
+   if bObjects is empty then
+      -- instead let's clear the existing behavior hierarchy
+      put behavior_GetHierarchy (targetObject) into bObjects
+      behavior_Clear bObjects
+      return empty
+   end if
+      
+   -- first we need to clear any behaviors (or we might casue a behavior loop)
+   behavior_Clear bObjects
+   
+   repeat for each line bObject in bObjects
+      set the behavior of targetObject to bObject
+      put bObject into targetObject
+   end repeat
+   return bObjects
+end behavior_SetHierarchy
+
+command behavior_Clear bObjects
+   repeat for each line bObject in bObjects
+      if exists (bObject) is false then
+         return bObject
+      end if
+      set the behavior of bObject to empty
+   end repeat
+   return empty
+end behavior_Clear

@@ -1,0 +1,6 @@
+command ide_EditMenu shortName
+   if word 1 of shortName is not "Global" then
+      put "Global | ScriptEditor |" && shortName && "| Menu" into mTitle
+   end if
+   menu_Edit mTitle
+end ide_EditMenu

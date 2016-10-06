@@ -1,0 +1,13 @@
+function ide_ListShortMenuTitles ideElement
+   set the itemdelimiter to " | "
+   put menu_ListGlobalTitles() into gTitles
+   put "Global | ScriptEditor |" && ideElement && "|" into mTitleStem
+   repeat for each line mTitle in gTitles
+      if mTitle begins with mTitleStem then
+         put item 4 of mTitle into shortName
+         if shortName = "Menu" or shortName = "Custom" then next repeat
+         put shortName & CR after shortNames
+      end if
+   end repeat
+   return word 1 to -1 of shortNames
+end ide_ListShortMenuTitles

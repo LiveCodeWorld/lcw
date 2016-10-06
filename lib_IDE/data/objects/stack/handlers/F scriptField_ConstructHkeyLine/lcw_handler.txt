@@ -1,0 +1,59 @@
+function scriptField_ConstructHkeyLine selText, someScript, lastCharNum, scriptObject
+   put char 1 to lastCharNum of someScript into testScript
+   put the number of lines of testScript into lineNum
+   put line lineNum of someScript into scriptLine
+   put line lineNum of testScript into testScriptLine
+   
+   scriptField_SetTokenInfo scriptLine, testScriptLine, thisTokenNum, nextTokenNum, prevTokenNum, thisToken, nextToken, previousToken
+   switch
+      case previousToken is among the items of "then,else"
+         delete token 1 to prevTokenNum of scriptLine
+         delete token 1 to prevTokenNum of testScriptLine
+         scriptField_SetTokenInfo scriptLine, testScriptLine, thisTokenNum, nextTokenNum, prevTokenNum, thisToken, nextToken, previousToken
+         break
+   end switch
+   
+   -- put selText into hName
+   put thisToken into hName
+   switch
+      case ide_IsDictionaryTerm (thisToken) is true
+         return empty
+      case previousToken = "command" and thisTokenNum = 2
+      case thisTokenNum = 1
+         -- maybe complete / incomplete command
+         put "c" into hType
+         break
+      case nextToken = "("
+         put "f" into hType
+         break
+      case previousToken = "the"
+         put token (thisTokenNum - 2) of line lineNum of someScript into setOrGetToken
+         if setOrGetToken = "set" then 
+            put "s" into hType
+         else
+            put "g" into hType
+         end if
+         break
+      case previousToken = "function" and thisTokenNum = 2
+      case previousToken = "put"
+         -- an unfinished function
+         put "f" into hType
+         break
+      case previousToken is among the items of "call,send,dispatch"
+         put token 1 of thisToken into hName
+         put "c" into hType
+         break 
+      case the number of words of thisToken > 1
+         -- it was a quoted string
+         return empty
+      default
+         return empty
+   end switch
+   
+   -- could search in heirarchy
+   -- simple search of libs for now
+   put hType && hName into shortHkey
+   put hkey_GetPlace (shortHkey) into hObject
+   put hKeyLine_FromTripple (hName, hType, hObject) into hkeyLine
+   return hkeyLine
+end scriptField_ConstructHkeyLine

@@ -1,0 +1,8 @@
+setprop stack_IsEdited someBoolean
+   put the stack_Name of the target into stackName
+   if someBoolean is true then
+      stack_MarkEdited stackName
+   else
+      stack_MarkSaved stackName
+   end if
+end stack_IsEdited

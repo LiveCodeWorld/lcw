@@ -1,0 +1,10 @@
+function ide_GetMenuController ideElement, pShortTitle
+   if pShortTitle is empty then
+      put ide_GetMenuTitle (ideElement) into mTitle
+   else
+      put ide_ConstructMenuTitle (pShortTitle, ideElement) into mTitle
+   end if
+   
+   put menu_GetGlobalController (mTitle) into mController
+   return mController
+end ide_GetMenuController

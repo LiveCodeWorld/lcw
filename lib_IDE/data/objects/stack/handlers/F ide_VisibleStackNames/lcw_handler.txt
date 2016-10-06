@@ -1,0 +1,10 @@
+function ide_VisibleStackNames
+   put the openstacks into stackNames
+   repeat for each line stackName in stackNames
+      if the visible of stack stackName is true then
+         put stackName & CR after visibleStackNames
+      end if
+   end repeat
+   delete char -1 of visibleStackNames
+   return visibleStackNames
+end ide_VisibleStackNames

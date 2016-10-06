@@ -1,0 +1,6 @@
+function ide_ConstructMenuTitle shortName, ideElement
+   if word 1 of shortName is "Global" then return shortName
+   
+   put "Global | ScriptEditor |" && ideElement && "|" && shortName && "| Menu" into mTitle
+   return mTitle
+end ide_ConstructMenuTitle

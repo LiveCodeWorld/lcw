@@ -1,0 +1,7 @@
+command stack_MarkSaved stackName
+   -- was "rev_MarkStackSaved"
+   global gREVStackStatus
+   
+   if stackName is empty then put the short name of this stack into stackName
+   delete global gREVStackStatus [stackName]
+end stack_MarkSaved

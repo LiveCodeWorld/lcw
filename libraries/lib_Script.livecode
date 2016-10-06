@@ -1,0 +1,839 @@
+﻿script "lib_Script"
+--> MetaData
+-
+license: GPLv3
+name: lib_Script
+type: script library
+version: 0.1
+
+/*
+A library for script analysis and processing.
+*/
+
+
+--> Currently Working On
+-
+
+
+--> Script | Props
+-
+getprop script_ContainsString [someString]
+   put the long id of the target into targetObject
+   try
+      put the script of targetObject into someScript
+      if someScript contains someString then
+         return true
+      else
+         return false
+      end if
+   catch someError
+      return false -- script may be protected
+   end try
+end script_ContainsString
+
+getprop script_ContainsToken [someToken]
+   put the long id of the target into targetObject
+   try
+      put the script of targetObject into someScript
+      if someScript is empty then return false
+      if someToken is among the tokens of someScript then
+         return true
+      else
+         return false
+      end if
+   catch someError
+      -- script may be protected
+      return false
+   end try
+end script_ContainsToken
+
+getprop script_Suite [suiteName]
+    put the script of the target into someScript
+    return script_GetSuite(suiteName, someScript)
+end script_Suite
+
+getprop object_ContainsMessageHandler [messageName]
+   put the script_AndBehavior of the target into someScript
+   return script_ContainsMessageHandler(someScript, messageName)
+end object_ContainsMessageHandler
+
+getprop script_OffestTable
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   return script_GetOffsetTable(someScript, scriptObject)
+end script_OffestTable
+
+getprop script_MessageHandlers
+   return the script_Events of the target
+end script_MessageHandlers
+
+getprop script_Events
+   put the long id of the target into scriptObject
+   put the script_AndBehavior of scriptObject into someScript
+   put script_ExtractMessageHandlers(someScript, scriptObject) into scriptEvents
+   return scriptEvents
+end script_Events
+
+getprop script_SetProp [handlerName]
+   put the script of the target into someScript
+   -- return script_ExtractSetPropHandlers(someScript)
+   put script_GetSetProp (handlerName, someScript) into someHandlers
+   return someHandlers
+end script_SetProp
+
+getprop script_GetProp [handlerName]
+   put the script of the target into someScript
+   put script_GetGetProp (handlerName, someScript) into someHandler
+   -- return script_ExtractGetPropHandlers (someScript, scriptObject)
+   return someHandler
+end script_GetProp
+
+getprop script_Command [cName]
+   put the script of the target into someScript
+   put script_GetCommand(cName, someScript) into commandHandler
+   return commandHandler
+end script_Command
+
+getprop script_CommandHandlers
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   return script_ExtractCommandHandlers(someScript, scriptObject)
+end script_CommandHandlers
+
+getprop script_CommandLines
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   return script_ExtractCommandLines(someScript, scriptObject)
+end script_CommandLines
+
+getprop script_Function [fName]
+   put the script of the target into someScript
+   return script_GetFunction (fName, someScript)
+end script_Function
+
+getprop script_FunctionHandlers
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   return script_ExtractFunctionHandlers (someScript, scriptObject)
+end script_FunctionHandlers
+
+getprop script_DuplicateKeys
+   put the script_Array of the target into scriptArray
+   repeat for each key indexNum in scriptArray
+      put scriptArray [indexNum]["hKey"] into hKey
+      if hKey is not empty then
+         hkey_Deconstruct hKey, handlerName, hType, scriptObject, handlerNum
+         if handlerNum > 1 then
+            put hKey & CR after duplicateKeys
+         end if
+      end if
+   end repeat
+   delete char -1 of duplicateKeys
+   return duplicateKeys
+end script_DuplicateKeys
+
+
+--> Checkout | Folders
+-
+command checkout_SetFolderAndRepotype objectFile, @repoType
+   -- ignoreCall: fossil_FindCheckoutFolder,f
+   -- ignoreCall: git_GetCheckoutFolder,f
+   
+   switch repoType
+      case "fossil"
+         try
+            put fossil_FindCheckoutFolder (objectFile) into checkoutFolder
+            put "fossil" into repoType
+            return checkoutFolder
+         catch e
+            return empty 
+         end try
+      case "git"
+         try
+            put git_GetCheckoutFolder (objectFile) into checkoutFolder
+            put "git" into repoType
+            return checkoutFolder
+         catch e
+            return empty 
+         end try
+      default
+         -- let's try to see if there is a repo
+         try
+            put git_GetCheckoutFolder (objectFile) into gitCheckoutFolder
+         catch e
+            put empty into gitCheckoutFolder
+         end try
+         
+         try
+            put fossil_FindCheckoutFolder (objectFile) into fossilCheckoutFolder
+         catch e
+            put empty into fossilCheckoutFolder
+         end try
+         
+         switch
+            case gitCheckoutFolder is empty and fossilCheckoutFolder is empty
+               put "" into repoType
+               return empty
+            case gitCheckoutFolder is empty and fossilCheckoutFolder is not empty
+               put "fossil" into repoType
+               return fossilCheckoutFolder
+            case gitCheckoutFolder is not empty and fossilCheckoutFolder is empty
+               put "git" into repoType
+               return gitCheckoutFolder
+            default -- case objectFile begins with gitCheckoutFolder and objectFile begins with fossilCheckoutFolder
+               -- it's both ?
+               -- let's just return the longest (usually the closest folder above objectFile)
+               if the number of chars of gitCheckoutFolder > the number of chars of fossilCheckoutFolder then
+                  put "git" into repoType
+                  return gitCheckoutFolder
+               else
+                  put "fossil" into repoType
+                  return fossilCheckoutFolder
+               end if
+         end switch
+   end switch
+end checkout_SetFolderAndRepotype
+
+
+--> Currently Working On
+-
+function script_Contains someToken, someScript, pHandlerType
+   switch char 1 of pHandlerType
+      case "h"
+         put script_ExtractHandler (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "c"
+         put script_GetCommand (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "f"
+         put script_GetFunction (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "g"
+         put script_GetGetProp(someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      case "s"
+         put script_GetSetProp (someToken, someScript) into someHandler
+         if someHandler is not empty then return true
+         break
+      default
+         if someScript contains someToken then
+            return true
+         end if
+   end switch
+   return false
+end script_Contains
+
+function hkey_ExportStatus hKey, pHandlerScript
+   put hkey_ExtractHandlerFromObject (hKey) into objectHandler
+   if pHandlerScript is empty then
+      put library_FetchHandler (hKey) into fileHandler
+   else
+      put script_ExtractHandler (hKey, pHandlerScript) into fileHandler
+   end if
+   
+   switch
+      case objectHandler = fileHandler
+         return "ok"
+      case objectHandler is not empty and fileHandler is not empty
+         return "different"
+      case fileHandler = empty
+         return "no file"
+      case objectHandler = empty
+         return "no object script"
+   end switch
+end hkey_ExportStatus
+
+
+--> Hkey | MetaData | Dot
+-
+function hKeyArray_ConstructNestedObjectDot hLinkArray, hIdArray, graphName, graphHeader, pTargetObject
+   dot_EscapeQuotes graphName
+   if graphName is empty then put "Test" into graphName
+   
+   put hKeyArray_DotNodeSubGraphDefs (hLinkArray, hIdArray, pTargetObject) into colourDefs
+   
+   put hKeyArray_DotNestedObjectClusters(hIdArray, hLinkArray) into clusterDefs
+   put colourDefs & CR & CR & clusterDefs into defSection
+   
+   put hKeyArray_DotNodeLinks (hLinkArray, empty, pTargetObject) into linkSection
+   if defSection is empty then
+      put linkSection into nodeSection
+   else
+      put defSection & CR & CR & linkSection into nodeSection
+   end if
+   put dot_Construct(graphName, nodeSection, graphHeader) into dotText
+   return dotText
+end hKeyArray_ConstructNestedObjectDot
+
+
+--> Script | Comments
+-
+function script_GetCommentAboveMe
+   get line -2 of the executioncontexts
+   put item -1 of it into lineNum
+   -- put item -2 of it into hName
+   put item 1 to -3 of it into scriptObject
+   put the script of scriptObject into someScript
+   
+   -- test until we find a line with content
+   repeat with testLineNum = (lineNum - 1) down to 1
+      put word 1 to -1 of line testLineNum of someScript into scriptLine
+      if scriptLine is not empty then exit repeat 
+   end repeat
+   if scriptLine is empty then return empty -- a blank script
+   
+   switch
+      case char 1 to 2 of scriptLine = "--"
+         delete char 1 to 2 of scriptLine
+         return word 1 to -1 of scriptLine
+      case char 1 of scriptLine = "#"
+         repeat while char 1 of scriptLine = "#"
+            delete char 1 ofscriptLine
+         end repeat
+         return word 1 to -1 of scriptLine
+      case char -2 to -1 of scriptLine = "*/"
+         -- a multiline comment
+         put testLineNum into lastLineNum
+         
+         -- test until we find a line with content
+         repeat with testLineNum = (lastLineNum - 1) down to 1
+            put word 1 to -1 of line testLineNum of someScript into scriptLine
+            if char 1 to 2 of scriptLine = "/*" then
+               put testLineNum into startLineNum
+               put line startLineNum to lastLineNum of someScript into multiComment
+               put word 1 to -1 of multiComment into multiComment
+               delete char 1 to 2 of multiComment
+               delete char -2 to -1 of multiComment
+               put word 1 to -1 of multiComment into multiComment
+               
+               repeat for each line cLine in multiComment
+                  put word 1 to -1 of cLine & CR after cleanMultiComment
+               end repeat
+               delete char -1 of cleanMultiComment
+               return cleanMultiComment
+            end if
+         end repeat
+         return empty -- no start of comment ???
+      default
+         return empty -- not a comment
+   end switch
+end script_GetCommentAboveMe
+
+function script_GetLineAboveMe
+   get line -2 of the executioncontexts
+   put item -1 of it into lineNum
+   -- put item -2 of it into hName
+   put item 1 to -3 of it into scriptObject
+   
+   put line (lineNum - 1) of the script of scriptObject into scriptLine
+   return word 1 to -1 of scriptLine
+end script_GetLineAboveMe
+
+function script_CallingObject
+   get the executioncontexts
+   put item 1 of line -3 of it into callingObject
+   return callingObject
+end script_CallingObject
+
+
+--> Script
+-
+command script_CreateAndEditHashCard someScript, pUniqueCardName
+   if pUniqueCardName is empty then
+      put text_Hash (someScript, "sha1") into pUniqueCardName
+   end if
+   script_CreateHashCard pUniqueCardName, someScript
+   put the result into cardObject
+   edit the script of cardObject
+   return cardObject
+end script_CreateAndEditHashCard
+
+command script_CreateHashCard commitHash, someScript
+   put "revTemporaryScriptCards" into stackName
+   if exists (stack stackName) is false then
+      put the tempname & ".livecode" into someFile
+      create invisible stack stackName
+      set the filename of stack stackName to someFile
+   end if
+   
+   if exists (card commitHash of stack stackName) is false then
+      put the defaultstack into oDefault
+      set the defaultstack to stackName
+      create card commitHash
+      
+      if someScript is not empty then
+         set the script of card commitHash of stack stackName to someScript
+      end if
+      set the defaultstack to oDefault
+   else
+      set the script of card commitHash of stack stackName to someScript
+   end if
+   return the rugged_ID of card commitHash of stack stackName
+end script_CreateHashCard
+
+
+--> Script | Comments
+-
+command script_ExtractAndStripMultiLineComments @someScript, @mulitLineComment
+   put empty into mulitLineComment
+   repeat
+      script_MultiLineCommentOffsets someScript, startChar, endChar
+      put the result into nextComment
+      if nextComment is empty then
+         exit repeat
+      else
+         put startChar,endChar & CR after commentOffsets
+         delete char 1 to 2 of nextComment
+         delete char -2 to -1 of nextComment
+         put word 1 to -1 of nextComment into nextComment
+         delete char startChar to (endChar + 1) of someScript   
+         
+         put nextComment & CR & CR after mulitLineComment
+      end if
+   end repeat
+   delete char -1 of commentOffsets
+   return commentOffsets
+end script_ExtractAndStripMultiLineComments
+
+command script_MultiLineCommentOffsets someScript, @startChar, @endChar
+   text_SetOffsets "/*", "*/", someScript, startChar, endChar
+   return the result
+end script_MultiLineCommentOffsets
+
+function script_StripComments someScript
+   put someScript into testScript
+   script_ExtractAndStripMultiLineComments testScript, mulitLineComment
+   put text_TempReplaceQuoted(testScript, offsetArray) into testScript
+   put text_Strip(testScript, "\", space) into testScript
+   
+   put "(--[^" & return & "]*)" & return into someReg
+   put replacetext(testScript, someReg, return) into testScript -- more junk
+   put "(#[^" & return & "]*)" & return into someReg
+   put replacetext(testScript, someReg, return) into testScript
+   
+   put text_ReReplaceQuoted(testScript, offsetArray) into testScript
+   return testScript
+end script_StripComments
+
+-- function script_StripComments someScript
+put 0 into commentLineNum
+repeat
+   put lineStartsWith("--", someScript, false, commentLineNum) into commentLineNum
+   if commentLineNum = 0 then
+      return someScript
+   else
+      delete line commentLineNum of someScript
+   end if
+end repeat
+end script_StripComments
+
+function script_ExtractHandlerLines someScript, scriptObject
+   -- best get rid of?
+   -- replace "[" with " [ " in someScript	#  -- hack ???
+   
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   return handlerArray ["handlerLines"]
+end script_ExtractHandlerLines
+
+
+--> Script | Command
+-
+function script_GetCommand cName, someScript, pNotPrivate
+   local startHandler, endHandler
+   if pNotPrivate is not true then
+      script_SetPrivateHandlerOffsets startHandler, endHandler, cName, "on", someScript
+      put the result into someHandler
+      if someHandler is not empty then return someHandler
+   end if
+   
+   script_SetHandlerOffsets startHandler, endHandler, cName, "on", someScript
+   put the result into someHandler
+   return someHandler
+end script_GetCommand
+
+function script_ExtractCommandHandlers someScript, scriptObject
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   return handlerArray ["command"]
+end script_ExtractCommandHandlers
+
+
+--> Script | Function
+-
+function script_GetFunction fName, someScript, pNotPrivate
+   -- return script_ExtractHandler (fName, "function", someScript, notPrivate)
+   local startHandler, endHandler
+   if pNotPrivate is not true then
+      script_SetPrivateHandlerOffsets startHandler, endHandler, fName, "function", someScript
+      put the result into someHandler
+      if someHandler is not empty then return someHandler
+   end if
+   
+   script_SetHandlerOffsets startHandler, endHandler, fName, "function", someScript
+   put the result into someHandler
+   return someHandler
+end script_GetFunction
+
+function script_ExtractFunctionHandlers someScript, scriptObject
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   return handlerArray ["function"]
+end script_ExtractFunctionHandlers
+
+
+--> Script | Getprop
+-
+function script_GetGetProp propName, someScript, pNotPrivate
+   local startHandler, endHandler
+   if pNotPrivate is not true then
+      script_SetPrivateHandlerOffsets startHandler, endHandler, propName, "getprop", someScript
+      put the result into someHandler
+      if someHandler is not empty then return someHandler
+   end if
+   
+   script_SetHandlerOffsets startHandler, endHandler, propName, "getprop", someScript
+   put the result into someHandler
+   return someHandler
+end script_GetGetProp
+
+function script_ExtractGetPropHandlers someScript
+   -- very important that this is fast for menus
+   filter someScript with "getprop *"
+   repeat for each line scriptLine in someScript
+      put word 2 of scriptLine into handlerName
+      put handlerName & CR after handlerNames
+   end repeat
+   delete char -1 of handlerNames
+   return handlerNames
+end script_ExtractGetPropHandlers
+
+function script_SlowExtractGetPropHandlers someScript, scriptObject
+   -- slower but talerant of white space
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   put handlerArray ["getprop"] into handlerNames
+   put handlerNames
+   return handlerNames
+end script_SlowExtractGetPropHandlers
+
+
+--> Script | Setprop
+-
+function script_GetSetProp propName, someScript, notPrivate
+   local startHandler, endHandler
+   if pNotPrivate is not true then
+      script_SetPrivateHandlerOffsets startHandler, endHandler, propName, "setprop", someScript
+      put the result into someHandler
+      if someHandler is not empty then return someHandler
+   end if
+   
+   script_SetHandlerOffsets startHandler, endHandler, propName, "setprop", someScript
+   put the result into someHandler
+   return someHandler
+end script_GetSetProp
+
+function script_ExtractSetPropHandlers someScript
+   filter someScript with "setprop *"
+   repeat for each line scriptLine in someScript
+      put word 2 of scriptLine into handlerName
+      put handlerName & CR after handlerNames
+   end repeat
+   delete char -1 of handlerNames
+   return handlerNames
+end script_ExtractSetPropHandlers
+
+function script_SlowExtractSetPropHandlers someScript, scriptObject
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   put handlerArray ["setprop"] into handlerNames
+   return handlerNames
+end script_SlowExtractSetPropHandlers
+
+
+--> Script | Events
+-
+function script_ExtractMessageHandlers someScript, scriptObject
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   return handlerArray ["message"]
+end script_ExtractMessageHandlers
+
+
+--> Script | Utilities
+-
+function script_GetOffsetTable someScript, scriptObject
+   local scriptOffestTable
+   -- put script_ExtractHandlerLines(someScript, scriptObject) into handlerLines
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   put handlerArray ["handlerLines"] into handlerLines
+   repeat for each line handlerLine in handlerLines
+      put word 1 of handlerLine into onWord
+      put word 2 of handlerLine into handlerName
+      script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+      put handler_GetType(handlerLine) into hType
+      
+      put handlerName,hType,startHandler,endHandler & CR after scriptOffestTable
+   end repeat
+   delete last char of scriptOffestTable
+   return scriptOffestTable
+end script_GetOffsetTable
+
+
+--> Handler
+-
+function handler_GetType handlerLine
+   if token 1 of handlerLine = "private" then
+      delete token 1 of handlerLine
+      put true into isPrivate
+   end if
+   
+   switch token 1 of handlerLine
+      case "on"
+         put rev_MessageNames() into revMessageNames
+         put token 2 of handlerLine into cName
+         if cName is among the lines of revMessageNames then
+            return _addPrivate ("m", isPrivate)    # message
+         else
+            return _addPrivate ("c", isPrivate)    # command
+         end if
+      case "command"
+         return _addPrivate ("c", isPrivate)    # command
+      case "function"
+         return _addPrivate ("f", isPrivate)    # function
+      case "getprop"
+         return "g"	# getprop
+      case "setprop"
+         return "s"	# setprop
+      default
+         return empty
+   end switch
+end handler_GetType
+
+private function _addPrivate hType, isPrivate
+   if isPrivate is true then put "p" before hType
+   return hType
+end _addPrivate
+
+function handler_ConvertType handlerType
+   switch char 1 of word 1 of handlerType
+      case "o"
+         return "on"
+      case "m"
+         return "on"
+      case "c"
+         return "command"
+      case "pc"
+         return "private command"
+      case "f"
+         return "function"
+      case "pf"
+         return "private function"
+      case "g"
+         return "getprop"
+      case "s"
+         return "setprop"
+      default
+         return empty
+   end switch
+end handler_ConvertType
+
+
+--> Script | Array | Offsets
+-
+command script_SetOffsetArrays someScript, @hKeyToOffsetArray, @offsetToCacheArray, scriptObject
+   -- this hander is a real mess (slow and duplicates effort)
+   -- as "script_ExtractHandlerLines" already parses every line (via "script_ConstructArraysFromScript")
+   
+   local handlerNumArray
+   
+   -- put the mobile_Name of scriptObject into scriptObject
+   
+   -- put script_ExtractHandlerLines(someScript) into handlerLines
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   put handlerArray ["handlerLines"] into handlerLines
+   
+   repeat for each line handlerLine in handlerLines
+      put word 1 of handlerLine into onWord
+      put word 2 of handlerLine into handlerName
+      script_SetHandlerOffsets startHandler, endHandler, handlerName, onWord, someScript
+      put char 1 of handler_GetType(handlerLine) into hType
+      
+      put handlerNumArray [handlerName,hType] into lastHandlerNum
+      put lastHandlerNum + 1 into handlerNum
+      put hkey_Construct(handlerName, hType, scriptObject, handlerNum) into handlerKey
+      put handlerNum into handlerNumArray [handlerName,hType]
+      
+      -- while we are at it cache the script?
+      put char startHandler to endHandler of someScript into someHandler
+      
+      put someHandler into offsetToCacheArray [startHandler,endHandler]
+      put startHandler,endHandler into hKeyToOffsetArray [handlerKey]
+      put handlerKey & CR after handlerKeys
+   end repeat
+   
+   -- "orderedHandlerKeys" allow "number" ie handler 2 or 3rd "getMe"
+   delete last char of handlerKeys
+   put handlerKeys into hKeyToOffsetArray ["orderedHandlerKeys"]
+   return handlerKeys
+end script_SetOffsetArrays
+
+function script_ContainsMessageHandler someScript, messageName
+   put "on" into onWord
+   put "(?mi)^\s*(" & onWord & " +" & messageName & ")\W" after regExp
+   return matchtext(someScript, regExp)
+end script_ContainsMessageHandler
+
+command script_SetPrivateHandlerOffsets @startHandler, @endHandler, handlerName, onWord, someScript
+   local startH, endHandlerName, startEndHandlerLine, endH
+   
+   put word 1 of handlerName into handlerName
+   text_EscapeRegularExpression handlerName  
+   
+   if onword is among the items of "command,on" then put "(command|on)" into onWord
+   put "(?mi)^(private +" & onWord & " +" & handlerName & ")\W" into regExp
+   
+   put CR & someScript & CR into someScript
+   if matchchunk (someScript, regExp, startHandler, endHandlerName, startEnd, endEnd) is true then
+      put script_MatchEnd (handlerName, startHandler, someScript) into endHandler
+      if endHandler is empty then
+         put 0 into startHandler
+         put 0 into endHandler
+         return empty
+      else
+         -- because of CR insertion around someScript
+         put char startHandler to endHandler of someScript into someHandler
+         subtract 1 from startHandler
+         subtract 1 from endHandler
+         return someHandler
+      end if
+   else
+      put 0 into startHandler
+      put 0 into endHandler
+      return empty
+   end if
+end script_SetPrivateHandlerOffsets
+
+command script_SetHandlerOffsets @startHandler, @endHandler, handlerName, onWord, someScript
+   local startH, endHandlerName, startEndHandlerLine, endH
+   
+   -- this will fail if the end has a space before it (can happen)
+   -- put "(?mi)^(" & onWord & " +" & handlerName & ")\W" after regExp
+   
+   -- lets not distinguish between "command" and "on" as they are functinally equivalent
+   if onword is among the items of "command,on" then put "(command|on)" into onWord
+   
+   put word 1 of handlerName into handlerName
+   text_EscapeRegularExpression handlerName
+   put "(?mi)^\s*(" & onWord & " +" & handlerName & ")\W" after regExp
+   
+   put CR & someScript & CR into someScript
+   if matchchunk (someScript, regExp, startHandler, endHandlerName, startEnd, endEnd) is true then
+      put script_MatchEnd (handlerName, startHandler, someScript) into endHandler
+      if endHandler is empty then
+         put 0 into startHandler
+         put 0 into endHandler
+         return empty
+      else
+         -- because of CR insertion around someScript
+         put char startHandler to endHandler of someScript into someHandler
+         subtract 1 from startHandler
+         subtract 1 from endHandler
+         return someHandler
+      end if
+   else
+      put 0 into startHandler
+      put 0 into endHandler
+      return empty
+   end if
+end script_SetHandlerOffsets
+
+function script_MatchEnd handlerName, startHandler, someScript
+   put CR after someScript -- in case handler is at end
+   put "(?mi)^\s*(" & "end" & " +" & handlerName & ")\W" into regExp
+   
+   -- this will fail if the end has a space before it (can happen)
+   -- put "(?mi)^(" & "end" & " +" & handlerName & ")\W" into regExp
+   
+   delete char 1 to startHandler of someScript
+   if matchchunk(someScript, regExp, startEndHandlerLine, endH) is true then
+      put startHandler + endH - 0 into endHandler
+      return endHandler
+   else
+      return empty
+   end if
+end script_MatchEnd
+
+command text_EscapeRegularExpression @someString
+   put "\" & tab & quote & "[]|*.?()" into specialChars
+   repeat for each char specialChar in specialChars
+      replace specialChar with "\" & specialChar in someString
+   end repeat
+end text_EscapeRegularExpression
+
+
+--> Script | Construction
+-
+function script_ConstructCommand pigeon, hBody, pUseOn
+   put tolower(char 1 of pigeon) into char 1 of pigeon
+   
+   set the itemdelimiter to "_"
+   get item 2 of pigeon
+   put toupper(char 1 of it) into char 1 of it
+   put it into item 2 of pigeon
+   
+   if pUseOn is true then
+      put "on" && pigeon into someHandler
+   else
+      put "command" && pigeon into someHandler
+   end if
+   put CR after someHandler
+   repeat for each line scriptLine in hBody
+      put "   " & scriptLine & CR after someHandler
+   end repeat
+   put "end" && word 1 of pigeon after someHandler
+   return someHandler
+end script_ConstructCommand
+
+command script_DeconstructCommandLine handlerLine, @handlerName, @handlerPrefix, @handlerSuffix, @firstParam
+   put token 1 of handlerLine into handlerName
+   put token 2 of handlerLine into firstParam
+   
+   set the itemdelimiter to "_"
+   put item 1 of handlerName into handlerPrefix
+   put item 2 of handlerName into handlerSuffix
+end script_DeconstructCommandLine
+
+function script_ExtractSetpropConditions someProp, viewBehaviorScript
+   put script_GetSetProp (someProp, viewBehaviorScript) into propHandler
+   if propHandler is empty then return empty
+   
+   script_DeconstructSetPropHandler propHandler, handlerName, setPropValue, setPropParam
+   put setPropValue into pSwitchParams
+   if setPropParam is not empty then put comma & setPropParam after pSwitchParams
+   
+   put handler_ExtractCaseConditions (propHandler, pSwitchParams) into caseConditions
+   sort caseConditions
+   return caseConditions
+end script_ExtractSetpropConditions
+
+command script_DeconstructSetPropHandler propHandler, @handlerName, @setPropValue, @setPropParam
+   get line 1 of propHandler
+   put word 2 of it into handlerName
+   put word -1 of it into setPropValue
+   
+   delete word 1 to 2 of it
+   delete word -1 of it
+   put token 2 of it into setPropParam
+end script_DeconstructSetPropHandler
+
+
+--> Script | Errors
+-
+function script_GetErrorDisplay
+    global OPN
+    return OPN ["Display Errors"]
+end script_GetErrorDisplay
+
+command script_SetErrorDisplay someBoolean
+    global OPN
+    put someBoolean into OPN ["Display Errors"]
+end script_SetErrorDisplay
