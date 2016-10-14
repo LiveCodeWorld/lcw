@@ -20,7 +20,7 @@ end stack_IsEdited
 command stack_SaveEdited editedStackName
    global gREVStackStatus
    
-   if editedStackName = "Save All" then
+   if editedStackName is among the items of "All,Save All" then
       put stack_ListEditedNames() into stackNames
    else
       put editedStackName into stackNames

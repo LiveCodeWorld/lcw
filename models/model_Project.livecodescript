@@ -73,7 +73,7 @@ See also "meta_StackArrayFile" for project level stackfile storage
 */
 
 
---> Project | Model | props
+--> Project | Model | Props
 -
 getprop model_Array [pArrayName]
    -- convenience utility that uses a file called "lcw_model.array" by default

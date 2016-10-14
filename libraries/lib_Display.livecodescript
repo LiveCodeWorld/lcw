@@ -43,28 +43,27 @@ on mDoubleUp_EditMenuScript arrayView, mControllerOrTable
 end mDoubleUp_EditMenuScript
 
 
---> Launch
--
-command atom_DisplayText someText
-   put the tempname into someFile
-   put someText into url ("file:" & someFile)
-   launch_Atom someFile
-end atom_DisplayText
-
-command launch_Atom someFile
-   put "atom" && kwote (someFile) into someShell
-   put shell (someShell) into shellResult
-   
-   -- /bin/sh: line 1: Atum: command not found
-   set the itemdelimiter to ":"
-   if word 1 to -1 of item -1 of shellResult = "command not found" then
-      display_Text someFile
-   end if
-end launch_Atom
-
-
 --> Working on
 -
+command display_Lines someIndex, pSomeTitle, pMouseDoubleUpCommand, pStackLabel, pPalette
+   -- simplified version of display_Index
+   local pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pDragCommand
+   
+   put pSomeTitle into pDisplayTitle
+   if pStackLabel is empty then put space into pStackLabel
+   put comma & pStackLabel after pDisplayTitle
+   
+   display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
+   put the result into indexView
+   put script_CallingObject() into callingObject
+   set the event_Target of indexView to callingObject
+   return indexView
+   
+   -- after displaying you can...
+   -- set the title_Menu of displayView to "Global | Test | Menu"
+   -- set the line_Menu of displayView to "Global | Test | Line | Menu"
+end display_Lines
+
 command display_Menus
    put menu_GetGlobalArray() into globalMenuArray
    put "mDoubleUp_EditMenuScript" into doubleCommand
@@ -118,6 +117,26 @@ end display_HkeyLines
 on mDoubleUp_HkeyLine displayView, hKeyLine
    hkey_Edit hKeyLine
 end mDoubleUp_HkeyLine
+
+
+--> Launch
+-
+command atom_DisplayText someText
+   put the tempname into someFile
+   put someText into url ("file:" & someFile)
+   launch_Atom someFile
+end atom_DisplayText
+
+command launch_Atom someFile
+   put "atom" && kwote (someFile) into someShell
+   put shell (someShell) into shellResult
+   
+   -- /bin/sh: line 1: Atum: command not found
+   set the itemdelimiter to ":"
+   if word 1 to -1 of item -1 of shellResult = "command not found" then
+      display_Text someFile
+   end if
+end launch_Atom
 
 
 --> Display
@@ -376,8 +395,11 @@ command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMe
    stack_CloneInvisible viewName, "Display Index"
    put the result into cloneStackName
    
-   -- set basic data
+   -- don't rely on this. It works only for handlers at the level of "display_Index"
+   -- best practice is to "set the event_Target of indexView to script_CallingObject()" after you call the display handler you write
    put script_CallingObject (2) into eventArray ["eventTarget"]
+   
+   -- set basic data  
    put pMouseUpCommand into eventArray ["mouseUp"]
    put pMouseDoubleUpCommand into eventArray ["mouseDoubleUp"]
    put pDragCommand into eventArray ["dragCommand"]

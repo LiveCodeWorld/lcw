@@ -148,6 +148,18 @@ function project_ListViewPaths projectName
    return viewPaths
 end project_ListViewPaths
 
+function project_ListFrontScriptPaths projectName
+   put library_FetchProjectFolder (projectName) into projectFolder
+   put project_ListPaths ("frontscripts", projectFolder) into viewPaths
+   return viewPaths
+end project_ListFrontScriptPaths
+
+function project_ListBackScriptPaths projectName
+   put library_FetchProjectFolder (projectName) into projectFolder
+   put project_ListPaths ("backscripts", projectFolder) into viewPaths
+   return viewPaths
+end project_ListBackScriptPaths
+
 
 --> Project | List | Custom
 -

@@ -4,7 +4,13 @@
 license: GPLv3
 name: behavior_HomeCard
 type: behaviors
-version: 0.1
+version: 0.2
+
+/*
+The idea here is to create a generric behavior for "home" stack displays.
+So that we can present easily new and different interactive content on a per-project basis.
+For now we simply show a borwser widget.
+*/
 
 
 --> Events

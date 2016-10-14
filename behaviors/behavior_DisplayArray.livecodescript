@@ -20,6 +20,13 @@ local LocalArray
 
 --> Working On
 -
+private function _getValue pathItems
+   put the displayed_Array of me into someArray
+   split pathItems with comma
+   put someArray [pathItems] into someValue
+   return someValue
+end _getValue
+
 private command _displaySelectedValue pTreeWidget
    -- if the optionkey is "Down" then breakpoint -- interferes with a menu option edit
    
@@ -36,17 +43,6 @@ private command _displaySelectedValue pTreeWidget
    end if
 end _displaySelectedValue
 
-getprop parent_Array
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into commaKeys
-   delete item -1 of commaKeys
-   put the arrayData of treeWidget into someArray
-   split commaKeys with comma
-   put someArray [commaKeys] into selectedValue
-   return selectedValue
-end parent_Array
-
 getprop selected_Value
    put _treeWidget() into treeWidget
    
@@ -62,6 +58,17 @@ getprop selected_Value
       return selectedValue
    end if
 end selected_Value
+
+getprop parent_Array
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   delete item -1 of commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   return selectedValue
+end parent_Array
 
 getprop hilited_Element
    put _treeWidget() into treeWidget
@@ -84,7 +91,10 @@ on mouseUp
    	
    switch tActionName
       case "cog"
-         doCogMenu
+         put the clickloc into pLocation
+         add 2 to item 1of pLocation
+         add 4 to item 2 of pLocation
+         menu_PopUp empty, pLocation
       default
          -- Execute script triggered by the given action
    end switch
@@ -112,8 +122,8 @@ on hiliteChanged
    end if
    
    if the controlKey is "Down" then
-      put the line_Menu of me into lineMenu
-      menu_PopUp lineMenu
+      -- put the line_Menu of me into lineMenu
+      menu_PopUp -- lineMenu
    else
       _displaySelectedValue treeWidget
    end if
@@ -132,13 +142,13 @@ on actionInspect pPath
 end actionInspect
 
 command actionDoubleClick pathItems
-   put _getValue (pathItems) into someValue
+   put the selected_Value of me into someValue
    put the action_DoubleClickCommand of me into mouseDoubleUpCommand
    if mouseDoubleUpCommand is empty then
       put someValue
    else
       put the display_MouseTarget of me into displayMouseTarget
-      put the long id of the target into treeWidget
+      put the long id of me into treeWidget
       replace comma with slash in pathItems
       dispatch mouseDoubleUpCommand to displayMouseTarget with treeWidget,someValue,pathItems
    end if
@@ -164,6 +174,59 @@ command LayoutControl cardRect
    set the rect of _footerWidget() to _footerRect (cardRect)
    unlock screen
 end LayoutControl
+
+
+--> Menus
+-
+getprop menu_Title
+   put the kind of the target into targetKind
+   switch targetKind
+      case "com.livecode.widget.treeView"
+         put the line_Menu of me into mTitle
+         return mTitle
+      case "com.livecode.widget.headerBar"
+         if the shiftKey is "Down" then
+            put "Global | Array | Menu" into mTitle
+         else if the optionKey is "Down" then
+            put "Local | Array | Menu" into mTitle
+         else
+            put the title_Menu of me into mTitle
+         end if
+         return mTitle
+      default
+         pass menu_Title
+   end switch
+end menu_Title
+
+getprop title_Menu
+   put LocalArray ["title_Menu"] into titleMenuName
+   if titleMenuName is empty then put "Global | Array | Menu" into titleMenuName
+   return titleMenuName
+end title_Menu
+
+setprop title_Menu titleMenuName
+   put titleMenuName into LocalArray ["title_Menu"]
+end title_Menu
+
+getprop line_Menu
+   put LocalArray ["line_Menu"] into lineMenuName
+   return lineMenuName
+end line_Menu
+
+setprop line_Menu lineMenuName
+   put lineMenuName into LocalArray ["line_Menu"]
+end line_Menu
+
+getprop view_MenuArray
+   put the title_Menu of me into menuArray ["title"]
+   put the line_Menu of me into menuArray ["line"]
+   return menuArray
+end view_MenuArray
+
+setprop view_MenuArray menuArray
+   set the title_Menu of me to menuArray ["title"]
+   set the line_Menu of me to menuArray ["line"]
+end view_MenuArray
 
 
 --> Title | Props
@@ -261,58 +324,6 @@ setprop view_Data [someKey] someData
       put someData into LocalArray ["view_Data"][someKey]
    end if
 end view_Data
-
-
---> Menus
--
-command doCogMenu
-   if the shiftKey is "Down" then
-      put "Global | Array | Menu" into titleMenuName
-   else if the optionKey is "Down" then
-      put "Local | Array | Menu" into titleMenuName
-   else
-      put the title_Menu of me into titleMenuName
-   end if
-   put the clickloc into pLocation
-   add 2 to item 1of pLocation
-   add 4 to item 2 of pLocation
-   
-   menu_PopUp titleMenuName, pLocation
-   if the result is not true then
-      put titleMenuName
-      answer warning "Cannot locate menu!"
-   end if
-end doCogMenu
-
-getprop view_MenuArray
-   put the title_Menu of me into menuArray ["title"]
-   put the line_Menu of me into menuArray ["line"]
-   return menuArray
-end view_MenuArray
-
-setprop view_MenuArray menuArray
-   set the title_Menu of me to menuArray ["title"]
-   set the line_Menu of me to menuArray ["line"]
-end view_MenuArray
-
-getprop title_Menu
-   put LocalArray ["title_Menu"] into titleMenuName
-   if titleMenuName is empty then put "Global | Array | Menu" into titleMenuName
-   return titleMenuName
-end title_Menu
-
-setprop title_Menu titleMenuName
-   put titleMenuName into LocalArray ["title_Menu"]
-end title_Menu
-
-getprop line_Menu
-   put LocalArray ["line_Menu"] into lineMenuName
-   return lineMenuName
-end line_Menu
-
-setprop line_Menu lineMenuName
-   put lineMenuName into LocalArray ["line_Menu"]
-end line_Menu
 
 
 --> EventArray
@@ -470,10 +481,3 @@ function colour_GetRandom
    put random(255) into item 3 of someColour
    return someColour
 end colour_GetRandom
-
-private function _getValue pathItems
-   put the displayed_Array of me into someArray
-   split pathItems with comma
-   put someArray [pathItems] into someValue
-   return someValue
-end _getValue

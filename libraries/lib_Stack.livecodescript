@@ -108,26 +108,37 @@ command stack_ConvertScriptOnly stackNameOrPath
       return empty
    end if
    
-   put the filename of stack stackNameOrPath into stackPath
-   put the short name of stack stackNameOrPath into stackName
-   put the script of stack stackPath into stackScript
-   put the rect of stack stackPath into oRect
+   put the short name of stack stackNameOrPath into oStackName
+   put the script of stack stackNameOrPath into oStackScript
+   put the rect of stack stackNameOrPath into oRect
    
-   set lockmessages to true
-   -- set the stack_IsKnown of stack stackName to false -- not needed
-   delete stack stackName
-   -- delete file stackPath -- we are overwriting with a save to the same stackpath instead
+   put the filename of stack stackNameOrPath into oFileName
+   set the itemdelimiter to slash
+   put item -1 of oFileName into shortFile
+   put the tempname & slash into tempFolder
+   folder_Createnested tempFolder
+   put tempFolder & shortFile into tempFileName
    
-   create invisible stack stackName
-   set the rect of stack stackName to oRect
-   show stack stackName
-   set the filename of stack stackName to stackPath
-   set the script of stack stackName to stackScript
-   save stack stackName
-   -- set the stack_IsKnown of stack stackName to true -- not needed
+   --
+   set lockmessages to true    
+   set the filename of stack oStackName to tempFileName
+   put "temp_" & oStackName into tempStackName
+   set the name of stack oStackName to tempStackName
+   
+   set the destroystack of stack tempStackName to true
+   set the destroywindow of stack tempStackName to true
+   save stack tempStackName
+   
+   create invisible stack oStackName
+   set the rect of stack oStackName to oRect
+   set the filename of stack oStackName to oFileName
+   set the script of stack oStackName to oStackScript
+   show stack oStackName
+   --
+   save stack oStackName
    set lockmessages to false
    
-   return stackPath
+   return tempFileName
 end stack_ConvertScriptOnly
 
 command stack_Shrink scriptObject, pScaleFactor

@@ -90,6 +90,13 @@ getprop module_Name
    return moduleName
 end module_Name
 
+getprop module_HomeStack [moduleName]
+   put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
+   if exists (stack moduleHomeStackPath) is false then return empty
+   put the name of stack moduleHomeStackPath into stackObject
+   return stackObject
+end module_HomeStack
+
 getprop module_View [moduleName]
    put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
    -- put the template_Object of stack moduleHomeStackPath into moduleView

@@ -20,11 +20,64 @@ on menuPick menuPath
    menu_SendMessage menuPath
 end menuPick
 
-which dispatches the appropriate commadn to the controller that handles the menu action.
+which dispatches the appropriate command to the controller that handles the menu action.
 */
 
 --> Working on
 -
+function menu_Exists mTitle
+   put menu_GetGlobalController (mTitle) into mController
+   return exists (mController)
+end menu_Exists
+
+command menu_Do mCommand, pMenuTitle, pMenuTarget, pSubMenuPath
+   -- if pMenuTitle is empty we search all loaded menus and return the first instance
+   if pMenuTarget is empty then put the long id of the target into pMenuTarget -- this is often the wrong target so set the right one with this parameter
+   
+   put menu_FindGlobalController (mCommand, pMenuTitle) into mController
+   if exists (mController) is false then
+      breakpoint
+      put menu_FindGlobalController (mCommand, pMenuTitle)
+      put menu_GetGlobalController (pMenuTitle) into mController
+      if exists (mController) then
+         edit the script of mController
+      end if
+      return empty
+   end if
+   
+   dispatch mCommand to mController with mTarget,pSubMenuPath
+   switch it
+      case "handled"
+         return it
+      case "passed"
+         return it
+      case "not handled"
+         breakpoint
+         -- menu_SendMessageError tError
+         return it
+   end switch
+end menu_Do
+
+function menu_FindGlobalController mCommand, pMenuTitle
+   global gLCW
+   if pMenuTitle is empty then
+      put gLCW ["Global Menus"] into gMenuArray
+   else
+      put gLCW ["Global Menus"][pMenuTitle] into gMenuArray [mTitle]
+   end if
+   
+   repeat for each key mTitle in gMenuArray
+      put gMenuArray [mTitle]["gMenuTable"] into gMenuTable
+      repeat for each line mTableLine in gMenuTable
+         menu_DeconstructTableLine mTableLine, mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp, mSendLine
+         if word 1 of pigeon = mCommand then
+            return mController
+         end if
+      end repeat
+   end repeat
+   return empty
+end menu_FindGlobalController
+
 getprop view_MenuTitle [useGlobalName]
    -- see also menu_DefaultTitle
    put the view_Name of the target into viewName
@@ -848,59 +901,10 @@ function menu_CheckTitleController mTitle, mController
 end menu_CheckTitleController
 
 
---> Deps | menu_SendMessage
+--> Menu | SendMessage
 -
 /*
 These handlers could be in the menu_Button's behavior.
-*/
-
-function menu_FindGlobalController mCommand, pMenuTitle
-   global gLCW
-   if pMenuTitle is empty then
-      put gLCW ["Global Menus"] into gMenuArray
-   else
-      put gLCW ["Global Menus"][mTitle] into gMenuArray [mTitle]
-   end if
-   
-   repeat for each key mTitle in gMenuArray
-      put gMenuArray [mTitle]["gMenuTable"] into gMenuTable
-      repeat for each line mTableLine in gMenuTable
-         menu_DeconstructTableLine mTableLine, mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp, mSendLine
-         if word 1 of pigeon = mCommand then
-            return mController
-         end if
-      end repeat
-   end repeat
-   return empty
-end menu_FindGlobalController
-
-command menu_Do mCommand, mTarget, pSubMenuPath, pMenuTitle
-   put menu_FindGlobalController (mCommand, pMenuTitle) into mController
-   if exists (mController) is false then return empty
-   
-   dispatch mCommand to mController with mTarget,pSubMenuPath
-   switch it
-      case "handled"
-         return it
-      case "passed"
-         return it
-      case "not handled"
-         -- menu_SendMessageError tError
-         return it
-   end switch
-end menu_Do
-
-/*
-default -- case empty
-   put mCommand && "mTarget, subMenuPath" into callCommand
-   try
-      call callCommand of mController -- does not change the defaultstack
-   catch e
-      -- handle here to offer some menu authoring / error checking
-      beep
-      -- breakpoint
-   end try
-end switch
 */
 
 command menu_SendMessage mPath, pMenuTarget, pCreateActiveArray

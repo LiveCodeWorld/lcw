@@ -23,19 +23,251 @@ It should:
 We are not (yet) indexing all nested stacks, rather just standard toplevel folders and modules
 Stacks within the assets folder will not be indexed (not done yet).
 Assets are supposed to be things like images. videos, javascript, css html, json or arrays?
+
+= To Do =
+At the moment we have a script only stack with a large and complex script.
+This is not a good minimal architecture.
+Instead we want to move over to a minimal initialisation script, and use a Livecode stack for the HomeStack
+That way we can store certain standard code as a behavior (for instance the card script),
+as well as give the HomeStack and interface and some useful functionality.
 */
+
+--> Working on
+-
+command project_Init
+   if the long id of the target is not the long id of me then pass project_Init
+   _LcwInitialize
+end project_Init
+
+command _LcwInitialize
+   -- for LCW only
+   -- ideally we don't use this stack as things like "preOpenStack" will be called every time
+   if env_GetProjectFolder ("lcw") is not empty then return false -- already loaded which should not happen but projects may do this by mistake
+   put the short name of me into lcwProjectName
+   
+   -- ideally we don't need this
+   start using me
+   
+   -- let's make it pretty
+   put the screenrect into stackRect
+   add 100 to item 1 of stackRect
+   add 100 to item 2 of stackRect
+   subtract 100 from item 3 of stackRect
+   subtract 100 from item 4 of stackRect
+   set the rect of me to stackRect
+   -- set the loc of me to the screenloc
+   
+   -- let's initialise the project
+   -- eventually we will aim to have no or minimal dependencies
+   -- and separate out menu tools from the basic environment
+   env_AddToBash
+   put the filename of me into lcwHomeStackFile
+   project_InitialiseFolder lcwHomeStackFile -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
+   project_LoadModules lcwHomeStackFile
+   
+   -- load the global dictionary for where handlers are
+   hkeyLine_LoadPlaceArray
+   
+   -- activate a default user project
+   _LoadCustomUserProject
+   
+   -- this is for the global menus to work. 
+   _CreateMenuButton
+   project_CreateHomeBrowser "lcw"
+   
+   -- The menu_Button needs to be in an open stack
+   -- set lockmessages to true -- we don't want to trigger "preOpenStack" and load this code twice
+   -- go to stack lcwProjectName
+   -- show stack lcwProjectName
+   -- set lockmessages to false
+   
+   -- activate the menus
+   -- edit the script of me
+   rev_AddBehaviorHacks
+   ide_AddRevEditScriptStack "LCW"
+   
+   -- custom
+   choose browse tool 
+   close stack "revTools"
+end _LcwInitialize
+
+-- setprop project_Start [goInvisible] someBoolean
+-- not sure if we should be using this or "project_Start"
+put the effective filename of the defaultstack into stackPath
+project_FindFromPath stackPath, homeStackName, projectFolder, projectHomeStackPath
+
+if someBoolean is true then
+   dispatch "project_Init" to stack projectHomeStackPath -- a project specific customised version of below
+   switch it
+      case "unhandled"
+         -- here we could initialise some basic things by default
+         breakpoint
+         project_InitialiseFolder projectFolder
+         project_LoadModules projectHomeStackPath
+      default
+         -- whatever happens let's register the project environment as "loaded"
+         env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
+   end switch
+   
+   if goInvisible is true then
+      go invisible stack homeStackName
+   else
+      go to stack homeStackName
+      -- show stack homeStackName
+   end if
+   return the result
+else
+   project_Stop tObject
+   return usedStackNames
+end if
+end project_Start
+
+
+--> Me
+-
+function lcw_HomeFolder
+   --  see "project_HomeFolder"
+   if the environment is "mobile" then
+      put specialFolderPath ("resources") into lcwHomeFolder
+      put slash after lcwHomeFolder
+   else  
+      -- rumour has it that this does not work on mobile?
+      put the stack_Folder of of stack "LCW" into lcwHomeFolder
+   end if
+   return lcwHomeFolder
+end lcw_HomeFolder
+
+getprop project_Name
+   -- could also be called project_HomeStackName
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into somePath
+   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
+   if exists (stack projectStackPath) is false then return empty
+   
+   set the itemdelimiter to slash
+   put project_GetName (projectFolder) into projectName
+   return projectName 
+end project_Name
+
+getprop project_HomeStack
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into somePath
+   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
+   if exists (stack projectStackPath) is false then return empty
+   
+   put the name of stack projectStackPath into stackObject
+   return stackObject 
+end project_HomeStack
+
+getprop project_HomeFolder
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into somePath
+   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
+   
+   return projectFolder
+end project_HomeFolder
+
+
+
+--> Working On | Messy
+-
+getprop project_UsedStackPaths
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackPaths (projectName) after stackPaths
+   
+   if projectName = "LCW" then
+      put the filename of me & CR & stackPaths into usedStackPaths
+      return word 1 to -1 of usedStackPaths
+   else
+      return stackPaths
+   end if
+end project_UsedStackPaths
+
+getprop project_UsedStackNames
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackNames (projectName) after stackNames
+   
+   if projectName = "LCW" then
+      -- here we add the root "LCW" stack
+      -- it may be better not to use the home stacks and instead have minmal scripts there.
+      put "LCW" & CR & stackNames into usedStackNames
+      return word 1 to -1 of usedStackNames
+   else
+      return stackNames
+   end if
+end project_UsedStackNames
+
+
+--> Events | revEditScript
+-
+/*
+For menus only. move to lcw_Tools
+*/
+
+on revEditScript
+   -- sent by Livecode to registered plugins
+   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
+   beep
+   rev_AddBehaviorHacks
+   pass revEditScript
+end revEditScript
+
+function ide_GetRevEditScriptStack stackName
+   global gREVMessageDispatch
+   put gREVMessageDispatch ["revEditScript"] into revEditControllerStackNames
+   put stackName is among the lines of revEditControllerStackNames into someBoolean
+   return someBoolean
+end ide_GetRevEditScriptStack
+
+command ide_AddRevEditScriptStack stackName
+   -- this adds the stack stackname to the list of stacks that receive the "revEditScript" command
+   -- send "revEditScript tObject" to this card of stack tPlugin
+   global gREVMessageDispatch
+   if stackName is among the lines of gREVMessageDispatch ["revEditScript"] then return false
+   
+   put stackName & CR before gREVMessageDispatch ["revEditScript"]
+   return true
+end ide_AddRevEditScriptStack
+
+command ide_RemoveRevEditScriptStack stackName
+   global gREVMessageDispatch
+   put gREVMessageDispatch ["revEditScript"] into stackNames
+   put lineoffset (stackName, stackNames) into lineNum
+   delete line lineNum of stackNames
+   put stackNames into gREVMessageDispatch ["revEditScript"]
+end ide_RemoveRevEditScriptStack
+
 
 --> Working On | Initialise
 -
-command project_Start projectName
-   put library_FetchProjectHomeStackObject (projectName) into homeStackObject
+command project_Start homeStackName
+   put library_FetchProjectHomeStackObject (homeStackName) into homeStackObject
+   put the short name of stack homeStackObject into homeStackName -- just in case ???
    
    display_Loading projectName
    --
+   -- could rely on sending "preOpenStack" ???
    dispatch "project_Init" to homeStackObject -- a project specific customised version of below
-   --  project_InitialiseFolder projectFolder
-   --  project_LoadModules projectHomeStackPath
-   --
+   
+   put the stack_Folder of stack homeStackObject into projectFolder -- just in case ???
+   switch it
+      case "unhandled"
+      case "passed"
+         -- it is "passed" because it is trapped but passed by the handler in "LCW"
+         -- here we could initialise some basic things by default
+         project_InitialiseFolder projectFolder
+         project_LoadModules homeStackName
+         break
+      default
+         -- whatever happens let's register the project environment as "loaded"
+         env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
+   end switch
+   
    put merge ("Finished project '[[projectName]]'!") into someComment
    display_Loading projectName, someComment
 end project_Start
@@ -56,28 +288,6 @@ command project_Stop tObject
    put merge ("Stopped project '[[projectName]]'!") into someComment
    display_Loading projectName, someComment
 end project_Stop
-
-setprop project_Start [goInvisible] someBoolean
-   -- not sure if we should be using this or "project_Start"
-   put the effective filename of the defaultstack into stackPath
-   project_FindFromPath stackPath, homeStackName, projectFolder, projectHomeStackPath
-   
-   if someBoolean is true then
-      dispatch "project_Init" to stack projectHomeStackPath -- a project specific customised version of below
-      -- project_InitialiseFolder projectFolder
-      -- project_LoadModules projectHomeStackPath
-      if goInvisible is true then
-         go invisible stack homeStackName
-      else
-         go to stack homeStackName
-         -- show stack homeStackName
-      end if
-      return the result
-   else
-      project_Stop tObject
-      return usedStackNames
-   end if
-end project_Start
 
 command project_InitialiseFolder projectFolderOrHomeStackFile
    -- does not initialise modules
@@ -115,29 +325,6 @@ command project_LoadDeps projectDeps, projectHomeStackFile
       -- go to stack sisterProjectHomeStackPath
    end repeat
 end project_LoadDeps
-
-on project_Init
-   -- each project home stack should have this handler
-   -- should it be a setprop ???
-   
-   if the short name of the defaultstack is the short name of me then
-     _LcwInitialize
-   end if
-end project_Init
-
-
---> Working On | Events
--
-/*
-For menus only. move to lcw_Tools
-*/
-
-on revEditScript
-   -- sent by Livecode to registered plugins
-   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
-   rev_AddBehaviorHacks
-   pass revEditScript
-end revEditScript
 
 
 --> Working On | Display
@@ -207,55 +394,6 @@ getprop project_ViewStackPaths
    filter stackPaths without "*/behavior_*"
    return stackPaths
 end project_ViewStackPaths
-
-getprop project_UsedStackPaths
-   local stackNames
-   put the project_Name of the target into projectName
-   put project_ListUsedStackPaths (projectName) after stackPaths
-   
-   if projectName = "LCW" then
-      put the filename of me & CR & stackPaths into usedStackPaths
-      return word 1 to -1 of usedStackPaths
-   else
-      return stackPaths
-   end if
-end project_UsedStackPaths
-
-getprop project_UsedStackNames
-   local stackNames
-   put the project_Name of the target into projectName
-   put project_ListUsedStackNames (projectName) after stackNames
-   
-   if projectName = "LCW" then
-      -- here we add the root "LCW" stack
-      -- it may be better not to use the home stacks and instead have minmal scripts there.
-      put "LCW" & CR & stackNames into usedStackNames
-      return word 1 to -1 of usedStackNames
-   else
-      return stackNames
-   end if
-end project_UsedStackNames
-
-getprop project_Name
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into somePath
-   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
-   if exists (stack projectStackPath) is false then return empty
-   
-   set the itemdelimiter to slash
-   put project_GetName (projectFolder) into projectName
-   return projectName 
-end project_Name
-
-getprop project_HomeStack
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into somePath
-   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
-   
-   if exists (stack projectStackPath) is false then return empty
-   put the name of stack projectStackPath into stackObject
-   return stackObject 
-end project_HomeStack
 
 getprop project_Folder [shortSubFolderName]
    put the stack_Object of the target into stackObject
@@ -480,9 +618,9 @@ command project_SetFoundStackFiles projectFolder
    if exists (stack projectHomeStackPath) is false then return empty
    
    put project_ConstructFoundStackFileArray (projectFolder) into projectStackFileArray
-   put stackFile_FromArray (projectStackFileArray) into lcwStackFiles
+   put stackFile_FromArray (projectStackFileArray) into projectStackFiles
    
-   set the stackfiles of stack projectHomeStackPath to lcwStackFiles
+   set the stackfiles of stack projectHomeStackPath to projectStackFiles
    return lcwStackFiles
 end project_SetFoundStackFiles
 
@@ -528,34 +666,70 @@ function folder_ConstructStackNameArray someFolder, pHomeFolder
    return stackFileArray
 end folder_ConstructStackNameArray
 
-command project_FindFromPath somePath, @homeStackName, @projectFolder, @homeStackStackPath
-   put somePath into projectFolder
+command project_FindFromPath fileOrFolder, @homeStackName, @projectFolder, @homeStackPath
+   put fileOrFolder into someFolder
+   switch
+      case fileOrFolder is empty
+         put empty into homeStackName
+         put empty into projectFolder
+         put empty into homeStackPath
+         return false
+      case there is a folder fileOrFolder
+         text_AddTrailing someFolder, slash
+         break
+      case there is a file fileOrFolder
+         set the itemdelimiter to slash
+         put empty into item -1 of someFolder
+         break
+      default
+         put fileOrFolder
+         display_ExecutionContexts
+         answer warning "Cannot locate a folder or file with this path. Would you like to create a folder?" with "Cancel" or "Create"
+         breakpoint
+         if it is "Cancel" then exit to top
+         
+         put empty into homeStackName
+         put empty into projectFolder
+         put empty into homeStackPath
+         return false
+         
+         put fileOrFolder into someFolder
+         if char -1 of someFolder is not slash then
+            -- we assume folders end with slash. So this is a file.
+            set the itemdelimiter to slash
+            put empty into item -1 of someFolder
+         end if
+         folder_CreateNested someFolder
+   end switch
    
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   put the result into someBoolean
+   return the result
+end project_FindFromPath
+
+command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
    set the itemdelimiter to slash
-   if char -1 of projectFolder is slash then
-      delete char -1 of projectFolder
-   else
-      delete item -1 of projectFolder
-   end if
-   put the number of items of projectFolder into maxItemNum
+   put the number of items of someFolder into maxItemNum
    repeat with itemNum = maxItemNum down to 1
       -- could look for lcw project array file
-      put item -1 of projectFolder into folderName
+      put item -1 of someFolder into folderName
       put folderName & ".livecode" into shortStackFile -- shame we must insist in this an not allow .livecodescript
-      put projectFolder & slash & shortStackFile into homeStackStackPath
+      put someFolder & shortStackFile into homeStackPath
       
-      if exists (stack homeStackStackPath) then
-         put the short name of stack homeStackStackPath into homeStackName
-         put slash after projectFolder
+      if exists (stack homeStackPath) then
+         put someFolder into projectFolder
+         put the short name of stack homeStackPath into homeStackName
          return true
+      else
+         delete item -1 of someFolder
       end if
-      delete item -1 of projectFolder
    end repeat
-   put empty into projectFolder
-   put empty into projectStackPath
+   
    put empty into homeStackName
+   put empty into projectFolder
+   put empty into homeStackPath
    return false
-end project_FindFromPath
+end project_FindFromFolder
 
 
 --> Project | List | Files
@@ -667,25 +841,13 @@ end env_SetProjectArray
 
 --> Modules
 -
-function ide_GetRevEditScriptStack
-   global gREVMessageDispatch
-   return gREVMessageDispatch ["revEditScript"]
-end ide_GetRevEditScriptStack
-
-command ide_AddRevEditScriptStack stackName
-   -- this adds the stack stackname to the list of stacks that receive the "revEditScript" command
-   -- send "revEditScript tObject" to this card of stack tPlugin
-   global gREVMessageDispatch
-   put stackName & CR before gREVMessageDispatch ["revEditScript"]
-end ide_AddRevEditScriptStack
-
-command project_LoadModules projectHomeStackFile
+command project_LoadModules homeStackNameOrPath
    -- modules can be loaded in the same way a project is loaded
    -- this can be slow as there are often a lot of modules with menus
-   put the module_Names of stack projectHomeStackFile into moduleNames
+   put the module_Names of stack homeStackNameOrPath into moduleNames
    repeat for each line moduleName in moduleNames
       -- could notify
-      put module_GetFolder (moduleName, projectHomeStackFile) into moduleFolder
+      put module_GetFolder (moduleName, homeStackNameOrPath) into moduleFolder
       project_InitialiseFolder moduleFolder
    end repeat
 end project_LoadModules
@@ -761,56 +923,6 @@ end project_IndexGlobalMenus
 
 --> Private
 -
-private command _LcwInitialize
-   -- for LCW only
-   -- ideally we don't use this stack as things like "preOpenStack" will be called every time
-   if env_GetProjectFolder ("lcw") is not empty then return false -- already loaded which should not happen but projects may do this by mistake
-   
-   put the short name of me into lcwProjectName
-   start using me 
-   
-   -- let's initialise the project
-   -- eventually we will aim to have no or minimal dependencies
-   -- and separate out menu tools from the basic environment
-   env_AddToBash
-   put the filename of me into lcwHomeStackFile
-   project_InitialiseFolder lcwHomeStackFile -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
-   project_LoadModules lcwHomeStackFile
-   
-   -- load the global dictionary for where handlers are
-   hkeyLine_LoadPlaceArray
-   
-   -- activate a default user project
-   _LoadCustomUserProject
-   
-   -- this is for the global menus to work. 
-   _CreateMenuButton
-   project_CreateHomeBrowser "lcw"
-   choose browse tool 
-   
-   -- The menu_Button needs to be in an open stack
-   put the screenrect into stackRect
-   add 100 to item 1 of stackRect
-   add 100 to item 2 of stackRect
-   subtract 100 from item 3 of stackRect
-   subtract 100 from item 4 of stackRect
-   set the rect of me to stackRect
-   -- set the loc of me to the screenloc
-   
-   set lockmessages to true -- we don't want to trigger "preOpencard" and load this code twice
-   go to stack lcwProjectName
-   -- go invisible to stack lcwProjectName
-   -- set the visible of me to true -- needed as it is a script only stack
-   set lockmessages to false
-   
-   -- activate the menus
-   edit the script of me
-   rev_AddBehaviorHacks
-   ide_AddRevEditScriptStack "LCW"
-   close stack "revTools"
-   -- send "rev_AddBehaviorHacks" to me in 10 ticks -- we need to send for this to stick - strange!
-end _LcwInitialize
-
 private command _AddToStackFileArray @stackFileArray, someFolder, pHomeFolder
    if there is not a folder someFolder then return false
    
@@ -825,8 +937,7 @@ private command _AddToStackFileArray @stackFileArray, someFolder, pHomeFolder
       if shortFile begins with "." then next repeat
       put someFolder & shortFile into stackFilePath
       if exists (stack stackFilePath) is false then
-         breakpoint
-         next repeat
+         next repeat -- no need to index things that aren't stacks
       end if
       
       put the short name of stack stackFilePath into stackName
@@ -931,7 +1042,6 @@ function folder_ListShort rootFolder
    put the folders into shortFolders
    set the defaultfolder to oDefault
    
-   -- delete line 1 of shortFolders
    filter shortFolders without ".*"
    return shortFolders
 end folder_ListShort
@@ -957,14 +1067,14 @@ function folder_ListLong rootFolder
 end folder_ListLong
 
 command folder_CreateNested @someFolder
-   text_AddTrailing someFolder, slash
-   if there is a folder someFolder then return empty
+   if there is a folder someFolder then return empty   
    set the itemdelimiter to "/"
    repeat with itemNum = 1 to the number of items of someFolder
       put item 1 to itemNum of someFolder & "/" into testFolder
       if there is a folder testFolder then next repeat
       create folder testFolder
    end repeat
+   text_AddTrailing someFolder, slash
 end folder_CreateNested
 
 function folder_GetSister shortFolder, someFileOrFolder

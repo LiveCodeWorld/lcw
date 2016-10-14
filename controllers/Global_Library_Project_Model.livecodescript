@@ -9,12 +9,12 @@ version: 0.1
 
 --> Global | Library | Project | Model | Menu
 -
-on menu_AddProject
+on menu_AddProject indexView
    answer folder "Select a folder containing a project..."
    put it into someFolder
    if it is empty then exit to top
    
-   project_FindFromPath someFolder, homeStackName, projectFolder, projectStackPath
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
    if the result is false then
       answer warning "This is not a working project folder!"
       finder_Reveal someFolder
@@ -22,8 +22,7 @@ on menu_AddProject
    end if
    
    library_StoreProjectFolder homeStackName, projectFolder
-   dispatch "preOpenStack" to stack projectStackPath
-   env_SetProjectFolder homeStackName, projectFolder
+   display_ProjectList empty, indexView
 end menu_AddProject
 
 on menu_AddGithubUrl
@@ -82,15 +81,3 @@ end menu_MassageArray
 on menu_EditBehavior treeView
    edit the script of the behavior of treeView
 end menu_EditBehavior
-
-
---> Global | Library | Project | Model | Line | Menu
--
-on menu_DeleteProjectArray treeView
-   put the hilited_Element of treeView into somePath
-   put item 1 of somePath into projectName
-   
-   library_DeleteProjectArray projectName
-   put library_FetchProjectData() into libraryProjectData
-   set the displayed_Array of treeView to libraryProjectData
-end menu_DeleteProjectArray
