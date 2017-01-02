@@ -231,6 +231,17 @@ We use the ".livecode" regardless of whether the stack is a script only stack to
 The short file of the homestack is in lower case (eg "lcw.livecode" not "LCW.livecode")
 */
 
+function project_GetHomeView projectName
+   if exists (stack projectName) is false then
+      put project_GetHomeStackPath (projectName) into homeStackPath
+      put homeStackPath into projectName
+   end if
+   if exists (control 1 of stack projectName) is false then return empty
+   
+   put the long id of control 1 of stack projectName into projectHomeView
+   return projectHomeView
+end project_GetHomeView
+
 function project_GetHomeStackPath projectName
    put library_FetchProjectFolder (projectName) into projectFolder
    if projectFolder is empty then return empty

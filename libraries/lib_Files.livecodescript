@@ -11,6 +11,14 @@ version: 0.6
 
 --> Currently Working On
 -
+function file_StripExtension shortFiles
+   set the columndelimiter to "."
+   split shortFiles by column
+   put shortFiles [1] into shortFileNames
+   sort shortFileNames
+   return shortFileNames
+end file_StripExtension
+
 command folder_Format @someFolder
    text_AddTrailing someFolder, slash
 end folder_Format
@@ -224,12 +232,6 @@ function folder_GetSister shortFolder, someFileOrFolder
    put someFileOrFolder & slash into sisterFolder
    return sisterFolder
 end folder_GetSister
-
-getprop stack_SisterFolder [projectName]
-   put the effective filename of the defaultstack into sisterFolder
-   put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
-   return sisterFolder
-end stack_SisterFolder
 
 
 --> File | Relative
@@ -571,6 +573,16 @@ command file_CreateImage someImage, imageFile
     file_CreateBinary someImage, imageFile, someFileType
     return the result
 end file_CreateImage
+
+command file_CreateText someText, pFile
+   if pFile is empty then
+      put the tempname into pFile
+   end if
+   put folder_Above (pFile) into someFolder
+   folder_CreateNested someFolder
+   put someText into url ("file:" & pFile)
+   return pFile
+end file_CreateText
 
 command file_CreateBinary binaryData, filePath, someFileType
     if filePath is empty then return the script_Error ["No such file"] of me

@@ -35,12 +35,12 @@ end hkeyLine_GetPlaces
 --> Script | HkeyPlaceArray | Model
 -
 function script_FetchHkeyPlaceArray
-   put library_FetchArray ("lcw_HkeyPlaceObject") into hkeyPlaceArray
+   put lcw_FetchArray ("lcw_HkeyPlaceObject.array") into hkeyPlaceArray
    return hkeyPlaceArray
 end script_FetchHkeyPlaceArray
 
 command script_StoreHkeyPlaceArray hkeyPlaceArray
-   library_StoreArray "lcw_HkeyPlaceObject", hkeyPlaceArray
+   lcw_StoreArray "lcw_HkeyPlaceObject.array", hkeyPlaceArray
    return the result
 end script_StoreHkeyPlaceArray
 

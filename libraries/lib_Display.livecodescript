@@ -74,7 +74,7 @@ command display_Menus
    sort globalMenuCardNames
    
    put "" into titleMenu
-   put "" into lineMenu
+   put "Global | Display | MenuIndex | Line | Menu" into lineMenu
    
    put "mDoubleUp_EditOldMenuScript" into doubleCommand
    put "" into dragCommand
@@ -131,7 +131,7 @@ command launch_Atom someFile
    put "atom" && kwote (someFile) into someShell
    put shell (someShell) into shellResult
    
-   -- /bin/sh: line 1: Atum: command not found
+   -- /bin/sh: line 1: Atom: command not found
    set the itemdelimiter to ":"
    if word 1 to -1 of item -1 of shellResult = "command not found" then
       display_Text someFile
@@ -179,23 +179,6 @@ command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMe
    set the search_Folder of treeWidget to pFolderToStrip
    return treeWidget
 end display_Files
-
-command display_Behaviors
-   put behavior_ListNames() into bNames
-   put hArray_ListViewBehaviorNames() into vbNames
-   put vbNames & CR & "-" & CR & bNames into bIndex
-
-   put "doDrag" into dragCommand
-   put empty into upCommand
-   put empty into doubleUpCommand
-
-   put "Global | Behavior | Display | Menu" into titleMenu
-   put "Global | Behavior | Display | Line | Menu" into lineMenu
-
-   display_Index bIndex, "Behaviors", titleMenu, lineMenu, upCommand, doubleUpCommand, dragCommand
-   put the result into displayView
-   set the multiple_Hilites of displayView to false
-end display_Behaviors
 
 command display_ScriptTemplate templateName
    put scaffold_GetFile (templateName) into someFile
@@ -292,8 +275,10 @@ command display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMe
    put pMouseDoubleUpCommand into eventArray ["mouseDoubleUp"]
    put pCommandObject into eventArray ["eventTarget"]
    
-   view_SetCloneData cloneStackName, someArray, menuArray, eventArray
-   put the result into displayView
+   put _displayView (cloneStackName) into displayView
+   set the displayed_Data of displayView to someArray
+   set the view_MenuArray of displayView to menuArray
+   set the view_EventArray of displayView to eventArray
    
    -- custom stuff
    set the card_Margin of displayView to 0
@@ -308,7 +293,7 @@ command display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMe
       set the tree_SortType of displayView to "numeric"
    end if
    
-    -- set the display
+   -- set the display
    set the label of stack cloneStackName to displayStackLabel
    set the title_Text of displayView to widgetDisplayTitle
    
@@ -371,7 +356,7 @@ command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, 
    replace comma with CR in someIndex
    put _GetLastIndexDisplayStackRect () into oRect
    --
-   display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+   display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
    put the result into displayView 
    put token -1 of displayView into cloneStackName
    --
@@ -407,8 +392,10 @@ command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMe
    put pTreeMenuTitle into menuArray ["title"]
    put pLineMenuTitle into menuArray ["line"]
    
-   view_SetCloneData cloneStackName, someIndex, menuArray, eventArray
-   put the result into displayView
+   put _displayView (cloneStackName) into displayView
+   set the view_Index of displayView to someIndex
+   set the view_MenuArray of displayView to menuArray
+   set the view_EventArray of displayView to eventArray
    
    -- set the geometry
    -- revIdeEnsureOnscreen cloneStackName -- we use our own version?
@@ -458,16 +445,6 @@ command stack_Clone stackNameToClone, pDestroyBoolean, pCloneName
    put the name of stack clonedStackName into clonedStack
    return clonedStack
 end stack_Clone
-
-command view_SetCloneData cloneStackName, pArray, pMenuArray, pEventArray
-   put _displayView (cloneStackName) into displayView
-   --  set the data
-   set the displayed_Data of displayView to pArray
-   set the view_MenuArray of displayView to pMenuArray
-   set the view_EventArray of displayView to pEventArray
-
-   return displayView
-end view_SetCloneData
 
 
 --> Private

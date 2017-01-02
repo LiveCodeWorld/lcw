@@ -270,6 +270,17 @@ end _templateView
 
 --> Events
 -
+on preOpenCard
+   -- occassionally behaviors can get broken
+   -- here for saftery we reset any top level bahavior that may exist
+   -- we hope that preOpenControl handlers will take care of fixing any nested behaviors
+   
+   put _templateView() into templateView
+   -- view_FixBehavior templateView -- too aggressive (can cause recursion if we display a view in this handler)
+   set the behavior of templateView to the behavior of templateView
+   pass preOpenCard
+end preOpenCard
+
 on mouseDown whichModifier
    put the long id of the target into tObject
    -- if tObject is not the long id of me then pass mouseDown
@@ -314,12 +325,6 @@ on resizeStack
    refresh
    pass resizeStack
 end resizeStack
-
-on preOpenCard
-   put _templateView() into templateView
-   view_FixBehavior templateView
-   pass preOpenCard
-end preOpenCard
 
 on openStack
    -- this is called for every view

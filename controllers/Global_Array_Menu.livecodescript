@@ -6,12 +6,17 @@ name: Global_Array_Menu
 type: controller
 version: 0.7
 
+--> Variables
+-
+local LocalArray
+
 
 --> Menu | Props
 -
--- getprop menu_Controller
-return the name of stack "behavior_DisplayArray"
-end menu_Controller
+on menu_Init tObject
+   put the array_View of tObject into LocalArray ["arrayView"]
+end menu_Init
+
 
 
 --> Global | Array | Menu
@@ -20,26 +25,30 @@ end menu_Controller
 Menus in behaviors are a bit odd - as "me" does not work
 */
 
-on menu_TestArray treeView
-   put the tree_Widget of treeView into treeWidget
+on menu_TestArray
+   put LocalArray ["arrayView"] into arrayView
+   put the tree_Widget of arrayView into treeWidget
    _displaySelectedValue treeWidget
 end menu_TestArray
 
 on _
 end _
 
-on menu_TreeBehavior treeView
-   put the behavior of treeView into bObject
+on menu_TreeBehavior
+   put LocalArray ["arrayView"] into arrayView
+   put the behavior of arrayView into bObject
    edit the script of bObject
 end menu_TreeBehavior
 
 on menu_Toplevel treeView
-   put the stack_Name of treeView into stackName
+   put LocalArray ["arrayView"] into arrayView
+   put the stack_Name of arrayView into stackName
    toplevel stack stackName
 end menu_Toplevel
 
-on menu_SortType treeView, treeSortType
-   put the tree_Widget of treeView into treeWidget
+on menu_SortType displayedObject, treeSortType
+   put LocalArray ["arrayView"] into arrayView
+   put the tree_Widget of arrayView into treeWidget
    if exists (treeWidget) is false then return empty
    
    set the sortType of treeWidget to treeSortType
@@ -48,8 +57,9 @@ end menu_SortType
 
 --> Global | Array | Menu | Props
 -
-getprop tree_SortType [treeView]
-   put the tree_Widget of treeView into treeWidget
+getprop tree_SortType
+   put LocalArray ["arrayView"] into arrayView
+   put the tree_Widget of arrayView into treeWidget
    if exists (treeWidget) is false then return empty
    put the sortType of treeWidget into treeSortType
    return treeSortType

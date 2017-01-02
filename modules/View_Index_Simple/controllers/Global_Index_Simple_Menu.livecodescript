@@ -162,6 +162,11 @@ end menu_EditLineMenu
 on _
 end _
 
+on menu_EditViewScript
+   put LocalArray ["indexView"] into indexView
+   edit the script of indexView
+end menu_EditViewScript
+
 on submenu_Dev
    return "Dev | Menu"
 end submenu_Dev

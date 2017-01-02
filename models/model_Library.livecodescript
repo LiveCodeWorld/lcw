@@ -43,209 +43,44 @@ Need to move the array to either the LCW project folder, or the revEnvironmentUs
 */
 
 
+--> Project | Model | Array
+-
+/*
+These handlers can be in a separate model library.
+
+Convenience handlers that uses a simple naming convention.
+in which a folder placed at the same level of a stack and named the smae as the short name of a stack 
+contains any number of named data files.
+
+The default model_DataFile of a stack "model_SivaSiva" in a path of the form /path/to/model_SivaSiva.livecode
+for instance would be a /path/to/model_SivaSiva/model_SivaSiva.array
+
+You can give alternative names by passing the param pShortFile. So
+- the model_Array ["test.array"] of stack "model_SivaSiva" would get or store an array in the file "/path/to/model_SivaSiva/test.array"
+*/
+
+
 --> Working on
 -
-function env_ListHomeArrayFiles
-   put env_GetHomeArrayFileData() into envProjectArrayFileArray
-   put envProjectArrayFileArray ["projectArrayFiles"] into projectArrayFiles
-   return projectArrayFiles 
-end env_ListHomeArrayFiles
-
-function env_GetHomeArrayFileData
-   put library_ListProjectNames() into projectNames
-   repeat for each line projectName in projectNames
-      put project_GetArrayFile (projectName) into projectArrayFile
-      if there is a file projectArrayFile then
-         put projectArrayFile into envProjectArrayFileArray ["projectNames"][projectName]
-         put projectName into envProjectArrayFileArray ["projectArrayFiles"][projectArrayFile]
-      end if
-   end repeat
-   return envProjectArrayFileArray
-end env_GetHomeArrayFileData
 
 
-
---> Library | Project | Model | Folders | Naming
+--> Model | Library
 -
-/*
-These handlers define the keys for the 
-*/
+getprop model_Names
+   put the stack_Name of the target into modelStackName
+   put the project_Folder of the target into projectFolder
+   put model_ListNames (modelStackName, projectFolder) into shortFiles
+   return shortFiles
+end model_Names
 
-function library_FetchProjectFolder homeStackName
-   put library_FetchProjectArray (homeStackName) into projectArray
-   put projectArray ["projectFolder"] into projectFolder
-   
-   if projectFolder is empty then return projectFolder
-   text_AddTrailing projectFolder, slash   
-   if there is a folder projectFolder then
-      return projectFolder
-   else
-      return empty
-   end if
-end library_FetchProjectFolder   
+function model_ListNames modelStackName, projectFolder
+   put projectFolder & "models/" & modelStackName & slash into modelDataFolder
+   put folder_ListShortFiles (modelDataFolder) into shortFiles
+   return shortFiles
+end model_ListNames
 
-command library_StoreProjectFolder homeStackName, projectFolder
-   put library_FetchProjectArray (homeStackName) into projectArray
-   --
-   put projectFolder into projectArray ["projectFolder"]
-   set the itemdelimiter to slash
-   if item - 2 of projectFolder = "modules" then
-      put "module" into projectArray ["projectType"]
-   else
-      put "project" into projectArray ["projectType"]
-   end if
-   --
-   library_StoreProjectArray homeStackName, projectArray
-end library_StoreProjectFolder
-
-function library_FetchProjectData
-   put library_FetchArray ("lcw_ProjectDataLibrary") into libraryProjectData
-   return libraryProjectData
-end library_FetchProjectData
-
-command library_StoreProjectData libraryProjectData
-   library_StoreArray "lcw_ProjectDataLibrary", libraryProjectData
-end library_StoreProjectData
-
-
---> Library | Project | Model | Folders
--
-function library_ListProjectModules
-   put library_FetchProjectData() into libraryProjectData
-   put _FilterLibraryProjectArray ("module", libraryProjectData) into moduleStackNames
-   return moduleStackNames
-end library_ListProjectModules
-
-function library_ListProjectNames pProjectType
-   put library_FetchProjectData() into libraryProjectData
-   switch pProjectType
-      case "all"
-         put keys (libraryProjectData) into projectNames
-         break
-      case "module"
-         put _FilterLibraryProjectArray ("module", libraryProjectData) into projectNames
-         break
-      default -- case "project"
-         put _FilterLibraryProjectArray ("project", libraryProjectData) into projectNames
-   end switch
-   sort projectNames
-   return projectNames
-end library_ListProjectNames
-
-function library_ListProjectFolders
-   put library_FetchProjectData() into libraryProjectArray
-   repeat for each key projectName in libraryProjectArray
-      put libraryProjectArray [projectName] into projectArray
-      put projectArray ["projectFolder"] into libraryRepoFolder
-      if there is not a folder libraryRepoFolder then
-         next repeat
-      end if
-      put projectName into libraryRepoFolderArray [libraryRepoFolder]
-   end repeat
-   put keys (libraryRepoFolderArray) into libraryRepoFolders
-   sort libraryRepoFolders
-   return word 1 to -1 of libraryRepoFolders
-end library_ListProjectFolders
-
-
---> Library | Project | Model | Stacks
--
-function library_FetchProjectHomeStackObject projectName
-   put library_FetchProjectHomeStackPath (projectName) into homeStackPath
-   if exists (stack homeStackPath) is false then return empty
-   return the long id of stack homeStackPath
-end library_FetchProjectHomeStackObject
-
-function library_FetchProjectHomeStackPath projectHomeStackName
-   put library_FetchProjectFolder (projectHomeStackName) into projectFolder
-   if projectFolder is empty then return empty
-   text_AddTrailing projectFolder, slash
-   put project_NameToShortFolder (projectHomeStackName) into projectShortFolder
-   put projectFolder & projectShortFolder & ".livecode" into homeStackPath
-   return homeStackPath
-end library_FetchProjectHomeStackPath
-
-
---> Library | Project | Model
--
-command library_TidyProjectModel
-   put library_FetchProjectData() into libraryProjectData
-   repeat for each key projectName in libraryProjectData
-      put libraryProjectData [projectName]["projectType"] into someType
-      put libraryProjectData [projectName]["projectFolder"] into someFolder
-      switch
-         case projectName is empty
-            delete variable libraryProjectData [projectName]
-            break
-         case someType is not among the items of "project,module"
-            delete variable libraryProjectData [projectName]
-            break
-         case there is not a folder someFolder
-            delete variable libraryProjectData [projectName]
-            break
-         default
-            -- all is fine
-      end switch
-   end repeat
-   library_StoreProjectData libraryProjectData
-end library_TidyProjectModel
-
-function library_FetchProjectValue someKey, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put library_FetchProjectArray (pProjectName) into projectArray
-   put projectArray [someKey] into someValue
-   return someValue
-end library_FetchProjectValue
-
-command library_SaveProjectValue someKey, someValue, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put library_FetchProjectArray (pProjectName) into projectArray
-   put someValue into projectArray [someKey]
-   library_StoreProjectArray pProjectName, projectArray
-   return projectArray
-end library_SaveProjectValue
-
-function library_FetchProjectArray pProjectName
-   -- was "library_FetchProjectArray"
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put library_FetchProjectData() into libraryProjectData
-   put libraryProjectData [pProjectName] into projectArray
-   return projectArray
-end library_FetchProjectArray
-
-command library_StoreProjectArray projectName, projectArray
-   put library_FetchProjectData() into libraryProjectData
-   put projectArray into libraryProjectData [projectName]
-   library_StoreProjectData libraryProjectData
-   return libraryProjectData
-end library_StoreProjectArray
-
-command library_DeleteProjectArray projectName
-   put library_FetchProjectData() into libraryProjectData
-   delete variable libraryProjectData [projectName]
-   library_StoreProjectData libraryProjectData
-end library_DeleteProjectArray
-
-
---> Library | Array | Model
--
-/*
-For storing arbitrary system wide named arrays.
-*/
-
-function library_ListArrayNames
-   put library_ListArrayFiles (true) into shortFiles
-   set the columndelimiter to "."
-   split shortFiles by column
-   put shortFiles [1] into libraryArrayNames
-   sort libraryArrayNames
-   return libraryArrayNames
-end library_ListArrayNames
-
-function library_ListArrayFiles pListShort
-   put shortName & ".array" into shortFile
-   put library_ArrayFolder () into libraryArrayFolder
-   -- put folder_ListFiles (someFolder)
+function model_ListModelFiles pListShort
+   put lcw_ArrayFolder() into libraryArrayFolder
    put files (libraryArrayFolder) into shortFiles
    filter shortFiles with "*.array"
    if pListShort is true then
@@ -254,148 +89,139 @@ function library_ListArrayFiles pListShort
       put file_AddFolderToPaths (shortFiles, libraryArrayFolder) into filePaths
       return filePaths
    end if
-end library_ListArrayFiles
+end model_ListModelFiles
 
-function library_FetchArray shortName
-   put library_GetArrayFile (shortName) into someFile
-   put array_Fetch (someFile) into modelArray
+
+--> Model | Array | Props
+-
+getprop model_Array [pShortFile]
+   -- assumes the target is a model stack
+   put the model_DataFile [pShortFile] of the target into modelDataFile
+   put array_FetchModel (modelDataFile) into modelArray
    return modelArray
-end library_FetchArray
+end model_Array
 
-command library_StoreArray shortName, dataArray
-   put library_GetArrayFile (shortName) into someFile
-   array_Save someFile, dataArray
-   return someFile
-end library_StoreArray
-
-command library_DeleteArray shortName
-   put library_GetArrayFile (shortName) into someFile
-   delete file someFile
-   return someFile
-end library_DeleteArray
+setprop model_Array [pShortFile] dataArray
+   -- assumes the target is a model stack
+   put the model_DataFile [pShortFile] of the target into modelDataFile
+   array_SaveModel modelDataFile, dataArray
+   return modelDataFile
+end model_Array
 
 
---> Project | Array | Model
+--> Model | Array
 -
-function project_FetchValue someKey, pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   put projectArray [someKey] into someValue
-   return someValue
-end project_FetchValue
+function model_FetchArray modelStackName, projectFolder, pShortFile 
+   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
+   put array_FetchModel (modelArrayFile) into modelArray
+   return modelArray
+end model_FetchArray
 
-command project_SaveValue someKey, someValue, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   put someValue into projectArray [someKey]
-   project_StoreArray pProjectName, projectArray
-   return projectArray
-end project_SaveValue
+command model_StoreArray modelStackName, projectFolder, modelArray, pShortFile
+   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
+   array_SaveModel modelArrayFile, modelArray
+   return modelArrayFile
+end model_StoreArray
 
-command project_DeleteValue someKey, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   delete variable projectArray [someKey]
-   project_StoreArray pProjectName, projectArray
-   return projectArray
-end project_DeleteValue
 
-command project_AddArrayToGlobal projectArray, pRecursively
-   /*
-   By default (if pRecursively is false or empty), this command merges the all keys recursively, adding new items to gLCW from projectArray
-   but keeping any old items that are not in projectArray.
-   Consequenlty this "adds" the contents of the projectArray to gLCW with the exception of leaf contents which are updated or replaced.
-   So if you want a merge - store your data as an array not an index.
-   
-   if pRecursively is false then this command replaces items that are already there with the contents of projectArray
-   Consequenlty this adds or "sets" the contents of the variable
-   */
-   global gLCW
-   
-   if pRecursively is not false then
-      union projectArray with gLCW recursively
+--> Model | Data Folder
+-
+function model_GetDataFolder modelStackName, projectFolder
+   put project_ConstructFolder ("models", projectFolder) into rootModelsFolder
+   put rootModelsFolder & modelStackName & slash into modelDataFolder
+   return modelDataFolder
+end model_GetDataFolder
+
+getprop model_DataFolder [modelStackName]
+   if modelStackName is empty then
+      -- we assume the target is a model stack in the "models/" folder
+      -- simple utitlity that looks for a sister folder to any stack
+      put the stack_Name of the target into modelName
+      put the stack_Folder of the target into stackFolder
+      put stackFolder & modelName & slash into modelDataFolder
    else
-      union projectArray with gLCW
+      -- will search for the model data folder in the "models/" folder of the project the target stack is in
+      put the project_Folder of the target into projectFolder
+      put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
    end if
-   put projectArray into gLCW
-   return gLCW
-end project_AddArrayToGlobal
-
-function project_FetchArray pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put project_GetArrayFile (pProjectName) into projectArrayFile
-   put array_Fetch (projectArrayFile) into projectArray
-   return projectArray
-end project_FetchArray
-
-command project_StoreArray projectName, projectArray
-   put project_GetArrayFile (projectName) into projectArrayFile
-   array_Save projectArrayFile, projectArray
-   return projectArrayFile
-end project_StoreArray
+   return modelDataFolder
+end model_DataFolder
 
 
---> Project | Array | Model | Files
+--> Model | Data File
 -
-function project_GetArrayFile projectName
-   put project_GetFolder (projectName) & "lcw_project.array" into projectArrayFile
-   return projectArrayFile
-end project_GetArrayFile
-
-function project_GetJsonFile projectName
-   put project_GetFolder (projectName) & "lcw_project.json" into arrayFile
-   return arrayFile
-end project_GetJsonFile
-
-
---> Model | Files
--
-function library_GetArrayFile shortName, pDontCreate
-   put shortName & ".array" into shortFile
-   put library_ArrayFolder (shortFile, pDontCreate) into someFile
-   return someFile
-end library_GetArrayFile
-
-function library_ArrayFolder shortFileBit, pDontCreate  
-   -- return library_PluginFolder ("opn_Text/array/", pDontCreate) & shortFileBit
+getprop model_DataFile [pShortFile]
+   -- assumes the target is a model stack
+   put the stack_Name of the target into modelStackName
+   put the stack_Folder of the target into stackFolder
+   put stackFolder & modelStackName & slash into modelDataFolder
    
-   put lcw_GetRootFolder() into projectFolder
-   put model_GetDataFolder ("model_Library", projectFolder) into libraryArrayFolder
-   put shortFileBit after libraryArrayFolder
-   return libraryArrayFolder
-end library_ArrayFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+   return modelDataFile
+end model_DataFile
+
+function model_GetDataFile modelStackName, projectFolder, pShortFile
+   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+   return modelDataFile
+end model_GetDataFile
 
 
---> Model | Props
+--> Array | Model
 -
-getprop project_Array
-   put the project_ArrayFile of the target into projectArrayFile
-   put array_Fetch (projectArrayFile) into projectArray
-   return projectArray
-end project_Array
+/*
+Modified versions of "array_Fetch" and "array_Save"
+Allows storing mmodels as json or other formats based on their file extensions.
 
-getprop project_ArrayFile
-   put the project_Folder of the target into projectFolder
-   put projectFolder & "lcw_project.array" into projectArrayFile
-   return projectArrayFile
-end project_ArrayFile
+The aim is to standarize different ways in which arrays can be stored and fetched,
+in order to make it easier to switch models from simple text files, json files, encoded arrays or databases.
+*/
 
-getprop project_JsonFile
-   put the stack_Name of the target into stackName
-   put project_GetJsonFile (stackName) into arrayFile
-   return arrayFile
-end project_JsonFile
+function array_FetchModel someFile
+   -- allows for simple switching of models
+   put url ("binfile:" & someFile) into someData
+   if someData is empty then return empty
+   set the itemdelimiter to "."
+   switch item -1 of someFile
+      case "json"
+         put jsonImport (someData) into modelArray
+         break
+      case "array"
+         put arraydecode (someData) into modelArray
+         break
+      default
+         -- here we can return an array from a database
+         -- someFile could contain items used in a query
+         -- or even an sql query
+   end switch
+   return modelArray
+end array_FetchModel
+
+command array_SaveModel someFile, modelArray
+   if modelArray is not an array then delete file someFile
+   set the itemdelimiter to "."
+   switch item -1 of someFile
+      case "json"
+         put jsonExport (modelArray) into encodedData
+         break
+      default -- case "array"
+         put arrayencode (modelArray) into encodedData
+         break
+   end switch
+   put encodedData into url ("binfile:" & someFile)
+end array_SaveModel
 
 
 --> Private
 -
-private function _FilterLibraryProjectArray projectType, libraryProjectData
-   repeat for each key projectName in libraryProjectData
-      put libraryProjectData [projectName]["projectType"] into someType
-      -- put libraryProjectData [projectName]["projectFolder"] into someFolder
-      if someType = projectType then
-         put projectName & CR after projectNames
-      end if
-   end repeat
-   delete char -1 of projectNames
-   return projectNames
-end _FilterLibraryProjectArray
+private function dataFolder_GetFile modelDataFolder, pShortFile
+   if pShortFile is empty then
+      set the itemdelimiter to slash
+      put item -1 of modelDataFolder into modelName
+      put modelName & ".array" into pShortFile
+   end if
+   put modelDataFolder & pShortFile into modelDataFile
+   return modelDataFile
+end dataFolder_GetFile

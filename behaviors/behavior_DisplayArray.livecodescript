@@ -86,17 +86,20 @@ end hilited_Element
 --> Events
 -
 on mouseUp
+   -- called only when the user click on the header as a tree widget does not send to mouseUp
    local tActionName
-   put the mouseAction of the target into tActionName
+   put the long id of the target into headerWidget
+   put the mouseAction of headerWidget into tActionName
    	
    switch tActionName
       case "cog"
          put the clickloc into pLocation
          add 2 to item 1of pLocation
          add 4 to item 2 of pLocation
-         menu_PopUp empty, pLocation
+         put the menu_Title of headerWidget into mTitle
+         menu_PopUp mTitle, pLocation
       default
-         -- Execute script triggered by the given action
+         -- clicked on the title
    end switch
 end mouseUp
 
@@ -178,6 +181,23 @@ end LayoutControl
 
 --> Menus
 -
+getprop menu_Target [mTitlePath]
+   put LocalArray ["menuTarget"] into mTarget
+   put the displayed_Object of me into displayedObject
+   switch 
+      case mTarget is not empty
+         return mTarget
+      case displayedObject is not empty
+         return displayedObject
+      default
+         return the long id of me
+   end switch
+end menu_Target
+
+setprop menu_Target [mTitlePath] mTarget
+   put mTarget into LocalArray ["menuTarget"]
+end menu_Target
+
 getprop menu_Title
    put the kind of the target into targetKind
    switch targetKind
@@ -185,7 +205,7 @@ getprop menu_Title
          put the line_Menu of me into mTitle
          return mTitle
       case "com.livecode.widget.headerBar"
-         if the shiftKey is "Down" then
+         if the controlKey is "Down" then
             put "Global | Array | Menu" into mTitle
          else if the optionKey is "Down" then
             put "Local | Array | Menu" into mTitle

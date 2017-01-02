@@ -15,27 +15,30 @@ This is not consistant yet?
 
 --> Working on
 -
+getprop project_Menu
+   put the project_Name of the target into stackName
+   put module_ConstructGlobalMenuTitle (stackName, true) into gMenuTitle 
+   return gMenuTitle
+end project_menu
+
+getprop view_GlobalMenuTitle
+   put the view_Name of the target into viewName
+   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
+   return globalMenuTitle
+end view_GlobalMenuTitle
+
 
 --> Module | Name | Utils
 -
-command menu_NormalizeName @mTitle
-   if word 1 of mTitle = "-->" then
-      delete word 1 of mTitle
-   end if
-   view_NormalizePiped mTitle
-   replace "|" with " | " in mTitle
-end menu_NormalizeName
-
 function module_FolderNameFromTitle gMenuTitle
    view_NormalizePiped gMenuTitle
    replace "|" with "_" in gMenuTitle
    return gMenuTitle
 end module_FolderNameFromTitle
 
-function module_ConstructGlobalMenuTitle moduleStackName
-   -- put menu_GlobalTitleFromViewName (viewName) into mTitle
+function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
    replace "_" with "|" in moduleStackName
-   menu_NormalizeTitle moduleStackName
+   menu_NormalizeTitle moduleStackName, pMakePretty
    set the itemdelimiter to " | "
    if item 1 of moduleStackName is not "Global" then put "Global | " before moduleStackName
    if item 2 of moduleStackName = "View" then delete item 2 of moduleStackName
@@ -47,6 +50,87 @@ function module_ViewNameToShortFolder moduleName
    replace "|" with "_" in moduleName -- hack
    return moduleName
 end module_ViewNameToShortFolder
+
+
+--> View and Menu Names
+-
+/*
+A collection of handlers that deal with view and menu (default) names.
+*/
+
+command menu_NormalizeTitle @mTitle, pMakePretty
+   set the itemdelimiter to "|"
+   repeat for each item someItem in mTitle
+      if pMakePretty is true then
+         put empty into prettyItem
+         repeat for each word someWord in someItem
+            put toUpper (char 1 of someWord) into char 1 of someWord
+            put someWord & space after prettyItem
+         end repeat
+         put char 1 to -2 of prettyItem into someText
+      else
+         put word 1 to -1 of someItem into someText
+      end if
+      put space & someText & space & "|" after normalizedMenuTitle
+   end repeat
+   delete char -2 to -1 of normalizedMenuTitle
+   delete char 1 of normalizedMenuTitle
+   put normalizedMenuTitle into mTitle
+end menu_NormalizeTitle
+
+command menu_NormalizeName @mTitle
+   if word 1 of mTitle = "-->" then
+      delete word 1 of mTitle
+   end if
+   view_NormalizePiped mTitle
+   replace "|" with " | " in mTitle
+end menu_NormalizeName
+
+command view_NormalizeName @viewPath
+   if viewPath is empty then return false
+   view_NormalizePiped viewPath
+   set the itemdelimiter to "|"
+   if item 1 of viewPath is not "View" then put "View|" before viewPath
+   return true
+end view_NormalizeName
+
+command view_NormalizePiped @viewPath, pMakePretty
+   if viewPath is empty then return false
+   put word 1 to -1 of viewPath into viewPath
+   
+   set the itemdelimiter to "|"
+   repeat with itemNum = 1 to the number of items of viewPath
+      put word 1 to -1 of item itemNum of viewPath into someItem
+      if pMakePretty is true then
+         repeat for each word someWord in someItem
+            put toUpper (char 1 of someWord) into char 1 of someWord
+            put someWord & space after prettyItem
+         end repeat
+         put char 1 to -2 of prettyItem into someItem
+      end if
+      put someItem into item itemNum of viewPath
+   end repeat
+   return true
+end view_NormalizePiped
+
+function menu_GlobalTitleFromViewName vName
+   put "Global |" && menu_TitleFromViewName (vName) into globalMenuTitle
+   return globalMenuTitle
+end menu_GlobalTitleFromViewName
+
+function view_FromModuleStackName moduleStackName
+   replace "_" with "|" in moduleStackName
+   return moduleStackName
+end view_FromModuleStackName
+
+function menu_TitleFromViewName viewName, pLevelAbove, pMakePretty
+   set the itemdelimiter to "|"
+   delete item 1 of viewName
+   if pLevelAbove is a number then delete item -1 to - pLevelAbove of viewName   
+   menu_NormalizeTitle viewName, pMakePretty
+   put viewName && "| Menu" after normalizedMenu
+   return normalizedMenu
+end menu_TitleFromViewName
 
 
 --> Module | Props
@@ -113,10 +197,7 @@ getprop module_ViewName [moduleName]
 end module_ViewName
 
 getprop module_Behaviors
-   put the module_Folder of the target into moduleFolder
-   put moduleFolder & "behaviors/" into moduleBehaviorFolder
-   put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
-   
+   put the module_BehaviorPaths of the target into stackPaths
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
       put the name of stack stackPath & CR after moduleBehaviors
@@ -124,6 +205,13 @@ getprop module_Behaviors
    delete char -1 of moduleBehaviors
    return moduleBehaviors
 end module_Behaviors
+
+getprop module_BehaviorPaths
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "behaviors/" into moduleBehaviorFolder
+   put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
+   return stackPaths
+end module_BehaviorPaths
 
 getprop module_Controllers
    put the module_Folder of the target into moduleFolder

@@ -17,6 +17,18 @@ See also "Old | Suite" of stack "model_ScriptMenu"
 */
 
 
+--> ScriptSuite | Model
+-
+function script_GetGlobalSuiteArray 
+   put lcw_FetchArray ("OPN_GlobalSuite.array") into modelArray
+   return modelArray
+end script_GetGlobalSuiteArray
+
+command script_SetGlobalSuiteArray dataArray
+   lcw_StoreArray "OPN_GlobalSuite.array", dataArray
+end script_SetGlobalSuiteArray
+
+
 --> Working on
 -
 /*
@@ -311,15 +323,6 @@ command script_SetGlobalObject suiteTitle, scriptObject
       return false
    end if
 end script_SetGlobalObject
-
-function script_GetGlobalSuiteArray 
-   put library_FetchArray ("OPN_GlobalSuite") into modelArray
-   return modelArray
-end script_GetGlobalSuiteArray
-
-command script_SetGlobalSuiteArray dataArray
-   library_StoreArray "OPN_GlobalSuite", dataArray
-end script_SetGlobalSuiteArray
 
 
 --> From libOPN_ScriptExtras

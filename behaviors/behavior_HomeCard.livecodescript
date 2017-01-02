@@ -7,9 +7,9 @@ type: behaviors
 version: 0.2
 
 /*
-The idea here is to create a generric behavior for "home" stack displays.
+The idea here is to create a generic behavior for "home" stack displays.
 So that we can present easily new and different interactive content on a per-project basis.
-For now we simply show a borwser widget.
+For now we simply show a browser widget.
 */
 
 

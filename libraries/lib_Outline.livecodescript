@@ -1178,4 +1178,15 @@ function outline_ConstructBranchSections someOutline, addDividers
     if word 1 to -1 of line 1 of newOutline = "-" then delete line 1 of newOutline
     -- put newOutline
     return newOutline
-end outline_ConstructBranchSections
+ end outline_ConstructBranchSections
+ 
+ 
+ --> Deps
+ -
+ private function text_RepeatString someString, repeatNum
+   -- was "text_GetRepeatString"
+   repeat repeatNum
+      put someString after repeatString
+   end repeat
+   return repeatString
+end text_RepeatString

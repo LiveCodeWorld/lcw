@@ -1,7 +1,0 @@
-function ide_ShortTitle shortName
-   set the itemdelimiter to " | "
-   put the ide_MenuTitle [shortName] of me into mTitle
-   put item 4 of mTitle into shortName
-   if shortName is empty then return "Default"
-   return shortName
-end ide_ShortTitle

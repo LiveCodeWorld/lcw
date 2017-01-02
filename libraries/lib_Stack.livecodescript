@@ -15,6 +15,12 @@ Todo:  separate out essentials and utilities => lib_StackExtras
 
 --> Stack | Memory
 -
+getprop stack_SisterFolder [projectName]
+   put the effective filename of the defaultstack into sisterFolder
+   put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
+   return sisterFolder
+end stack_SisterFolder
+
 command stack_CloseLoaded pDontSave
    put revLoadedStacks() into stackNames
    repeat for each line stackName in stackNames
@@ -140,6 +146,18 @@ command stack_ConvertScriptOnly stackNameOrPath
    
    return tempFileName
 end stack_ConvertScriptOnly
+
+command stack_ToggleShrink pStackObject
+   if pStackObject is empty then
+      put the topStack into pStackObject
+   end if
+   put the scalefactor of pStackObject into oFactor
+   if oFactor = 1 then
+      stack_Shrink pStackObject, 0.75
+   else
+      stack_Shrink pStackObject, 1
+   end if
+end stack_ToggleShrink
 
 command stack_Shrink scriptObject, pScaleFactor
    if pScaleFactor is empty then put 0.7 into pScaleFactor

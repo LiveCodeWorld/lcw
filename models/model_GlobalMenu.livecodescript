@@ -7,6 +7,55 @@ type: model
 version: 0.7
 
 
+--> Working on
+-
+/*
+"menu_GetTable" is used by "menu_IncludeMenuText" and "menu_IncludeMenuText", 
+and therefore "menu_PopUp" etc depends on them.
+
+ So moved this suite here for now from "model_ScriptMenu" to reduce dependencies
+*/
+
+function menu_GetTable mTitle, mController
+   if word 1 of mTitle = "Global" and word 2 of mTitle = "|" then
+      put menu_GetGlobalTable (mTitle) into mTable
+      menu_FixGlobalTitleArray mTable, mTitle
+   else
+      put the menu_DataArray of mController into menuTableArray
+      put menuTableArray [mTitle] into mTable
+   end if
+   return mTable
+end menu_GetTable
+
+command menu_SetTable mTitle, mController, mTable
+   put the menu_DataArray of mController into menuTableArray
+   if menuTableArray is empty then
+      delete local menuTableArray [mTitle]
+   else
+      put mTable into menuTableArray [mTitle]
+   end if
+   set the menu_DataArray of mController to menuTableArray
+   return menuTableArray
+end menu_SetTable
+
+function menu_GetTableTitles mController
+   put the menu_DataArray of mController into menuTableArray
+   put keys (menuTableArray) into tableTitles
+   return tableTitles
+end menu_GetTableTitles
+
+getprop menu_DataArray
+   -- the problem with this is if the target has been cloned or copied
+   -- the menu_Controller will have changed
+   put the customproperties ["menu_Table"] of the target into mTitleTableArray
+   return mTitleTableArray
+end menu_DataArray
+
+setprop menu_DataArray mTitleTableArray
+   set the customproperties ["menu_Table"] of the target to mTitleTableArray
+end menu_DataArray
+
+
 --> Menu | Array
 -
 function menu_GetTargetObject

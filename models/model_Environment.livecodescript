@@ -33,6 +33,12 @@ end env_LoadProjectGlobals
 
 --> Working on
 -
+getprop active_Projects
+   -- allows you to call "if myProject is among the lines of the active_Projects of me then"
+   -- even if this library is not in use (it just returns empty which is what we want)
+   return env_ListProjects()
+end active_Projects
+
 function project_IsActive projectName
    put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
    return projectIsLoaded

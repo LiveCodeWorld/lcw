@@ -34,6 +34,128 @@ as well as give the HomeStack and interface and some useful functionality.
 
 --> Working on
 -
+--> Project | Names
+-
+function project_GetHomeStackName projectFolder
+   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
+   if exists (stack projectHomeStackPath) is false then return empty
+   put the short name of stack projectHomeStackPath into projectName
+   return projectName
+end project_GetHomeStackName
+
+function project_NameToShortFolder moduleStackName
+   set the itemdelimiter to "|"
+   repeat for each item someItem in moduleStackName
+      put word 1 to -1 of someItem & "_" after shortFolder
+   end repeat
+   delete char -1 of shortFolder
+   return shortFolder
+end project_NameToShortFolder
+
+function project_FindHomeStackPath somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   return homeStackPath
+end project_FindHomeStackPath
+
+function project_FindFolder somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   -- returns the top module or "project folder"
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   return projectFolder
+end project_FindFolder
+
+function module_FindFolder somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   -- finds the first "module folder" above the path
+   -- will also return a toplevel project folder if called on a toplevel path
+   -- as "a project is also a module"
+   -- test for special cases where you want to distinguish
+   -- see "project_FindFolder" to get the top module or project folder
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   module_FindFromFolder someFolder, homeStackName, moduleFolder, homeStackPath
+   return moduleFolder
+end module_FindFolder
+
+function module_IsNotaProject moduleFolder
+   set the itemdelimiter to slash
+   if item -2 of moduleFolder = "modules" then
+      -- when within a modules folder it is considered a module
+      return true
+   else
+      -- otherwise it is a project
+      return false
+   end if
+end module_IsNotaProject
+
+command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
+   set the itemdelimiter to slash
+   put the number of items of someFolder into maxItemNum
+   repeat with itemNum = maxItemNum down to 1
+      -- could look for lcw project array file
+      put item -1 of someFolder into folderName
+      if module_IsNotaProject (someFolder) then
+         -- it's not a top level project folder
+         delete item -2 to -1 of someFolder
+         next repeat
+      end if
+      
+      put folderName & ".livecode" into shortStackFile -- shame we must insist in this an not allow .livecodescript
+      put someFolder & shortStackFile into homeStackPath
+      
+      if exists (stack homeStackPath) then
+         put someFolder into projectFolder
+         put the short name of stack homeStackPath into homeStackName
+         return true
+      else
+         delete item -1 of someFolder
+      end if
+   end repeat
+   
+   put empty into homeStackName
+   put empty into projectFolder
+   put empty into homeStackPath
+   return false
+end project_FindFromFolder
+
+command module_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
+   set the itemdelimiter to slash
+   put the number of items of someFolder into maxItemNum
+   repeat with itemNum = maxItemNum down to 1
+      -- could look for lcw project array file
+      put item -1 of someFolder into folderName
+      put folderName & ".livecode" into shortStackFile -- shame we must insist in this an not allow .livecodescript
+      put someFolder & shortStackFile into homeStackPath
+      
+      if exists (stack homeStackPath) then
+         put someFolder into projectFolder
+         put the short name of stack homeStackPath into homeStackName
+         return true
+      else
+         delete item -1 of someFolder
+      end if
+   end repeat
+   
+   put empty into homeStackName
+   put empty into projectFolder
+   put empty into homeStackPath
+   return false
+end module_FindFromFolder
+
+
+--> Project | Init
+-
 command project_Init
    if the long id of the target is not the long id of me then pass project_Init
    _LcwInitialize
@@ -91,37 +213,6 @@ command _LcwInitialize
    close stack "revTools"
 end _LcwInitialize
 
--- setprop project_Start [goInvisible] someBoolean
--- not sure if we should be using this or "project_Start"
-put the effective filename of the defaultstack into stackPath
-project_FindFromPath stackPath, homeStackName, projectFolder, projectHomeStackPath
-
-if someBoolean is true then
-   dispatch "project_Init" to stack projectHomeStackPath -- a project specific customised version of below
-   switch it
-      case "unhandled"
-         -- here we could initialise some basic things by default
-         breakpoint
-         project_InitialiseFolder projectFolder
-         project_LoadModules projectHomeStackPath
-      default
-         -- whatever happens let's register the project environment as "loaded"
-         env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
-   end switch
-   
-   if goInvisible is true then
-      go invisible stack homeStackName
-   else
-      go to stack homeStackName
-      -- show stack homeStackName
-   end if
-   return the result
-else
-   project_Stop tObject
-   return usedStackNames
-end if
-end project_Start
-
 
 --> Me
 -
@@ -141,34 +232,56 @@ getprop project_Name
    -- could also be called project_HomeStackName
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into somePath
-   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
-   if exists (stack projectStackPath) is false then return empty
+   put the effective filename of stackObject into stackPath
+   
+   put project_FindFolder (stackPath) into projectFolder
+   if projectFolder is empty then return empty
    
    set the itemdelimiter to slash
-   put project_GetName (projectFolder) into projectName
+   return item -1 of projectFolder -- assume folder name = project homestack name
+   
+   put project_GetHomeStackName (projectFolder) into projectName
    return projectName 
 end project_Name
 
 getprop project_HomeStack
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into somePath
-   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
-   if exists (stack projectStackPath) is false then return empty
+   put the effective filename of stackObject into stackPath
+   
+   put project_FindHomeStackPath (stackPath) into projectStackPath
+   if projectStackPath is empty then return empty
    
    put the name of stack projectStackPath into stackObject
    return stackObject 
 end project_HomeStack
 
-getprop project_HomeFolder
+-- getprop project_HomeFolder
+-- searches the disk based file hierearchy to find the project root
+put the stack_Object of the target into stackObject
+put the effective filename of stackObject into stackPath
+
+put project_FindFolder (stackPath) into projectFolder
+return projectFolder
+end project_HomeFolder
+
+getprop project_Folder [shortSubFolderName]
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into somePath
-   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
+   put the effective filename of stackObject into stackPath
    
-   return projectFolder
-end project_HomeFolder
+   put project_FindFolder (stackPath) into projectFolder
+   switch
+      case projectFolder is empty
+         return empty
+      case shortSubFolderName is not empty
+         if char 1 of shortSubFolderName = slash then delete char 1 of shortSubFolderName
+         put shortSubFolderName after projectFolder
+         if char -1 of shortSubFolderName is not slash then put slash after projectFolder
+      default
+         return projectFolder
+   end switch
+end project_Folder
 
 
 
@@ -249,7 +362,7 @@ command project_Start homeStackName
    put library_FetchProjectHomeStackObject (homeStackName) into homeStackObject
    put the short name of stack homeStackObject into homeStackName -- just in case ???
    
-   display_Loading projectName
+   display_Loading homeStackName
    --
    -- could rely on sending "preOpenStack" ???
    dispatch "project_Init" to homeStackObject -- a project specific customised version of below
@@ -268,8 +381,8 @@ command project_Start homeStackName
          env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
    end switch
    
-   put merge ("Finished project '[[projectName]]'!") into someComment
-   display_Loading projectName, someComment
+   put merge ("Finished project '[[homeStackName]]'!") into someComment
+   display_Loading homeStackName, someComment
 end project_Start
 
 command project_Stop tObject
@@ -303,7 +416,7 @@ command project_InitialiseFolder projectFolderOrHomeStackFile
    stack_StartUsedPaths usedStackPaths
    project_LoadMenus projectFolder
    
-   put project_GetName (projectFolder) into homeStackName
+   put project_GetHomeStackName (projectFolder) into homeStackName
    env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
    return homeStackName
 end project_InitialiseFolder
@@ -394,23 +507,6 @@ getprop project_ViewStackPaths
    filter stackPaths without "*/behavior_*"
    return stackPaths
 end project_ViewStackPaths
-
-getprop project_Folder [shortSubFolderName]
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into somePath
-   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
-   
-   switch
-      case projectFolder is empty
-         return empty
-      case shortSubFolderName is not empty
-         if char 1 of shortSubFolderName = slash then delete char 1 of shortSubFolderName
-         put shortSubFolderName after projectFolder
-         if char -1 of shortSubFolderName is not slash then put slash after projectFolder
-      default
-         return projectFolder
-   end switch
-end project_Folder
 
 getprop project_StackPaths [shortFolder]
    put the project_Folder of the target into projectFolder
@@ -524,25 +620,6 @@ command project_CreateHomeBrowser pHomeStackName
 end project_CreateHomeBrowser
 
 
---> Project | Names
--
-function project_GetName projectFolder
-   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
-   if exists (stack projectHomeStackPath) is false then return empty
-   put the short name of stack projectHomeStackPath into projectName
-   return projectName
-end project_GetName
-
-function project_NameToShortFolder moduleStackName
-   set the itemdelimiter to "|"
-   repeat for each item someItem in moduleStackName
-      put word 1 to -1 of someItem & "_" after shortFolder
-   end repeat
-   delete char -1 of shortFolder
-   return shortFolder
-end project_NameToShortFolder
-
-
 --> Project | Files
 -
 function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
@@ -577,7 +654,7 @@ end project_ConstructHomeStackPath
 
 function project_GetShortFolder projectFolder
    /*
-   You should use project_GetName(projectFolder)
+   You should use project_GetHomeStackName(projectFolder)
    
    While a projects folder should be named the same as the projects home stack,
    we do not guarantee this (work-in-progress).
@@ -665,71 +742,6 @@ function folder_ConstructStackNameArray someFolder, pHomeFolder
    _AddToStackFileArray stackFileArray, someFolder, pHomeFolder
    return stackFileArray
 end folder_ConstructStackNameArray
-
-command project_FindFromPath fileOrFolder, @homeStackName, @projectFolder, @homeStackPath
-   put fileOrFolder into someFolder
-   switch
-      case fileOrFolder is empty
-         put empty into homeStackName
-         put empty into projectFolder
-         put empty into homeStackPath
-         return false
-      case there is a folder fileOrFolder
-         text_AddTrailing someFolder, slash
-         break
-      case there is a file fileOrFolder
-         set the itemdelimiter to slash
-         put empty into item -1 of someFolder
-         break
-      default
-         put fileOrFolder
-         display_ExecutionContexts
-         answer warning "Cannot locate a folder or file with this path. Would you like to create a folder?" with "Cancel" or "Create"
-         breakpoint
-         if it is "Cancel" then exit to top
-         
-         put empty into homeStackName
-         put empty into projectFolder
-         put empty into homeStackPath
-         return false
-         
-         put fileOrFolder into someFolder
-         if char -1 of someFolder is not slash then
-            -- we assume folders end with slash. So this is a file.
-            set the itemdelimiter to slash
-            put empty into item -1 of someFolder
-         end if
-         folder_CreateNested someFolder
-   end switch
-   
-   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
-   put the result into someBoolean
-   return the result
-end project_FindFromPath
-
-command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
-   set the itemdelimiter to slash
-   put the number of items of someFolder into maxItemNum
-   repeat with itemNum = maxItemNum down to 1
-      -- could look for lcw project array file
-      put item -1 of someFolder into folderName
-      put folderName & ".livecode" into shortStackFile -- shame we must insist in this an not allow .livecodescript
-      put someFolder & shortStackFile into homeStackPath
-      
-      if exists (stack homeStackPath) then
-         put someFolder into projectFolder
-         put the short name of stack homeStackPath into homeStackName
-         return true
-      else
-         delete item -1 of someFolder
-      end if
-   end repeat
-   
-   put empty into homeStackName
-   put empty into projectFolder
-   put empty into homeStackPath
-   return false
-end project_FindFromFolder
 
 
 --> Project | List | Files
@@ -867,24 +879,21 @@ getprop module_HomeStackPath [moduleName]
 end module_HomeStackPath
 
 getprop module_Folder [moduleName]
-   -- put the project_Folder of the target into projectFolder
-   -- put module_GetFolder (moduleName, projectFolder) into moduleFolder
    put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into somePath
-   project_FindFromPath somePath, homeStackName, projectFolder, projectStackPath
+   put the effective filename of stackObject into stackPath
+   put module_FindFolder (stackPath) into maybeModuleFolder
    
    set the itemdelimiter to slash
-   put the number of items of projectFolder into startItemNum
+   put item -2 of maybeModuleFolder into testPathItem
    switch
-      case projectFolder is empty
+      case maybeModuleFolder is empty
          return empty
       case moduleName is not empty
-         put module_GetFolder (moduleName, projectFolder) into moduleFolder
+         put module_GetFolder (moduleName, maybeModuleFolder) into moduleFolder
          return moduleFolder
-      case item startItemNum - 1 of somePath = "modules"
-         -- the project folder is a module folder
-         -- here we could test that the module folder is inisde a project or similar
-         return projectFolder
+      case testPathItem = "modules"
+         -- asssume the found "project" folder is a module folder
+         return maybeModuleFolder
       default
          return empty
    end switch

@@ -1,8 +1,0 @@
-command scriptField_DoTabCompletion
-   scriptField_TabComplete shortHkey, firstCharNum, lastCharNum, selText, scriptObject, scriptField
-   if the result is empty then
-      put item 1 of shortHkey into hName
-      put empty into pTriggerHKey
-      hkey_DisplayHandlerKeywordIndex hName, pTriggerHKey
-   end if
-end scriptField_DoTabCompletion

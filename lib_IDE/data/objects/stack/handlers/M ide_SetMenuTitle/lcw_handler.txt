@@ -1,8 +1,0 @@
-command ide_SetMenuTitle ideElement, shortTitle
-   if shortTitle is empty or shortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
-      put "Default" into shortTitle
-   end if  
-   put ide_ConstructMenuTitle (shortTitle, ideElement) into mTitle
-   put mTitle into LocalArray ["environment"]["menu"][ideElement]
-   return shortTitle
-end ide_SetMenuTitle

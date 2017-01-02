@@ -8,10 +8,8 @@ type: view behavior
 version: 0.5
 
 /*
-Was "View|Index|Simple" - now moverd to this script-ony behavior.
 This view presents an index in a scrolling field, with full support for dynamic events.
 */
-
 
 --> Variables
 -
@@ -23,6 +21,28 @@ local LocalArray
 
 --> Index | Selected
 -
+getprop line_Colour [lineNum]
+   put _fieldObject() into fieldObject
+   if lineNum is empty then
+      put line 1 of the hilitedlines of fieldObject into lineNum
+   end if
+   put the textcolor of line lineNum of fieldObject into someColour
+   return someColour
+end line_Colour
+
+setprop line_Colour [lineNumList] someColour
+   put _fieldObject() into fieldObject
+   if lineNumList is empty then
+      put line 1 of the hilitedlines of fieldObject into lineNumList
+   end if
+   
+   lock screen
+   repeat for each item lineNum in lineNumList
+      set the textcolor of line lineNum of fieldObject to someColour
+   end repeat
+   unlock screen
+end line_Colour
+
 getprop hilited_Lines
    put the hilitedlines of _fieldObject() into lineNumList
    return lineNumList
@@ -33,6 +53,15 @@ setprop hilited_Lines lineNumList
    set the hilitedlines of _fieldObject() to lineNumList
    return lineNumList
 end hilited_Lines
+
+getprop selected_Line
+   put the selected_Index of _fieldObject() into someIndex
+   return line 1 of someIndex
+end selected_Line
+
+setprop selected_Line someLine
+   set the selected_Index of me to line 1 of someLine
+end selected_Line
 
 getprop selected_Index
    put the selectedtext of _fieldObject() into someIndex
@@ -212,7 +241,7 @@ getprop formatted_Rect
    put _fieldObject() into fieldObject
    put _titleView() into titleView
    put the rect of me into pRect
-     
+   
    put the effective height of titleView into titleHeight
    put the formattedheight of fieldObject into formattedFieldHeight
    add 45 to formattedFieldHeight
@@ -226,11 +255,11 @@ getprop formatted_Rect
    
    put item 1 of pRect + newWidth into newRight
    put item 2 of pRect + newHeight into newBottom
-    
+   
    put pRect into fRect
    put newRight into item 3 of fRect
    put newBottom into item 4 of fRect
- 
+   
    return fRect
 end formatted_Rect
 
@@ -275,8 +304,14 @@ setprop title_Menu titleMenuName
 end title_Menu
 
 getprop line_Menu
-   put LocalArray ["line_Menu"] into lineMenuName
-   return lineMenuName
+   put LocalArray ["line_Menu"] into lineMenuTitle
+   if lineMenuTitle is empty then
+      put "List | Menu" into lineMenuTitle -- a local menu to the field
+      put CR & "-" after lineMenuTitle
+      put CR & "Global | IndexView | Line | Menu" after lineMenuTitle -- a local menu to the field
+      put tab & "submenu" & tab & "Tools" after lineMenuTitle
+   end if
+   return lineMenuTitle
 end line_Menu
 
 setprop line_Menu lineMenuName
@@ -344,7 +379,7 @@ end view_Label
 
 -- setprop view_Label someLabel
 set the label of _titleView() to someLabel
- view_Label
+view_Label
 
 
 --> Field | Props
@@ -485,7 +520,6 @@ private command _doFieldDown
    if the controlkey is "Down" then
       set the hilitedlines of the target to cNum
       put the line_Menu of me into mTitle
-      if mTitle is empty then put "List | Menu" into mTitle
       menu_PopUp mTitle
    else
       put the drag_Command of me into dCommand
@@ -509,20 +543,29 @@ private command _doFieldDown
 end _doFieldDown
 
 
---> Index | Data
--
-getprop displayed_Data -- not needed???
-   put the view_Index of me into someIndex
-   return someIndex
-end displayed_Data
-
-setprop displayed_Data someIndex -- not needed???
-   set the view_Index of me to someIndex
-end displayed_Data
-
-
 --> Index | Displayed
 -
+getprop displayed_Object
+   -- put LocalArray ["displayedObject"] into displayedObject
+   put the displayed_Object of me into displayedObject -- so it is stored for each view
+   if exists (displayedObject) is false then return the long id of me
+   return displayedObject
+end displayed_Object
+
+setprop displayed_Object displayedObject
+   -- put displayedObject into LocalArray ["displayedObject"]
+   set the displayed_Object of me to displayedObject -- so it is stored for each view
+end displayed_Object
+
+-- getprop displayed_Data -- not needed???
+put the view_Index of me into someIndex
+return someIndex
+end displayed_Data
+
+-- setprop displayed_Data someIndex -- not needed???
+set the view_Index of me to someIndex
+end displayed_Data
+
 getprop displayed_Text
    return the view_Index of me
 end displayed_Text
@@ -681,16 +724,6 @@ end index_View
 getprop index_Field
    return _fieldObject()
 end index_Field
-
-getprop displayed_Object
-   put LocalArray ["displayedObject"] into displayedObject
-   if exists (displayedObject) is false then return the long id of me
-   return displayedObject
-end displayed_Object
-
-setprop displayed_Object displayedObject
-   put displayedObject into LocalArray ["displayedObject"]
-end displayed_Object
 
 
 --> Private

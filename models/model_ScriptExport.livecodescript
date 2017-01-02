@@ -106,6 +106,49 @@ function script_ExportedRootToObject somePath
    end switch
 end script_ExportedRootToObject
 
+private command project_FindFromPath fileOrFolder, @homeStackName, @projectFolder, @homeStackPath
+   -- this is overcomplicated (replace with spearate handlers)
+   -- only used by "script_ExportedRootToObject"
+   
+   put fileOrFolder into someFolder
+   switch
+      case fileOrFolder is empty
+         put empty into homeStackName
+         put empty into projectFolder
+         put empty into homeStackPath
+         return false
+      case there is a folder fileOrFolder
+         text_AddTrailing someFolder, slash
+         break
+      case there is a file fileOrFolder
+         set the itemdelimiter to slash
+         put empty into item -1 of someFolder
+         break
+      default
+         put fileOrFolder
+         answer warning "Cannot locate a folder or file with this path. Would you like to create a folder?" with "Cancel" or "Create"
+         breakpoint
+         if it is "Cancel" then exit to top
+         
+         put empty into homeStackName
+         put empty into projectFolder
+         put empty into homeStackPath
+         return false
+         
+         put fileOrFolder into someFolder
+         if char -1 of someFolder is not slash then
+            -- we assume folders end with slash. So this is a file.
+            set the itemdelimiter to slash
+            put empty into item -1 of someFolder
+         end if
+         folder_CreateNested someFolder
+   end switch
+   
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   put the result into someBoolean
+   return the result
+end project_FindFromPath
+
 
 --> Script | Export | Props
 -

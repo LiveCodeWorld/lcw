@@ -192,37 +192,12 @@ end pref_StoreData
 
 --> Pref | Files and Folders
 -
-command pref_RenameFile
-   put library_PrefFolder ("opn_pref.array") into someFile
-   put library_PrefFolder ("lcw_pref.array") into someFile
-   rename file someFile to newFile
-end pref_RenameFile
-
 function pref_File
-   put library_PrefFolder ("opn_pref.array") into someFile
-   return someFile
+   put specialfolderpath ("preferences") & "/lcw_Preferences.array" into prefFile
+   return prefFile
 end pref_File
 
-function library_PrefFolder shortFile
-   put pref_Folder() & "OPN/" into opnPreferenceFolder
-   folder_CreateNested opnPreferenceFolder
-   put shortFile after opnPreferenceFolder
-   return opnPreferenceFolder
-end library_PrefFolder
-
-function pref_Folder
-   -- "preference" folders are not standard on all operating systems.
-   -- In general it may be better, to avoid lot's of nested if thens and instead switch libraries and behaviors for different platform specific code.
-   
-   switch the platform
-      case "MacOS"
-         put specialfolderpath ("preferences") & "/" into prefFolder
-         break
-      case "Win32"
-         -- put pref_WindowsFolder() into prefFolder
-      default
-         -- put $HOME & "/Documents/"	# somewhere better?
-         put specialfolderpath ("Home") & "/.MyProgram/" into prefFolder
-   end switch
+function library_PrefFolder
+   put specialfolderpath ("preferences") & "/" into prefFolder
    return prefFolder
-end pref_Folder
+end library_PrefFolder

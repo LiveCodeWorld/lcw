@@ -61,12 +61,12 @@ function ide_ListExtraDicTerms
 end ide_ListExtraDicTerms
 
 function ide_FetchExtraDicTermArray
-   put library_FetchArray ("ideExtraDicTermArray") into ideExtraDicTermArray
+   put lcw_FetchArray ("ideExtraDicTermArray.array") into ideExtraDicTermArray
    return ideExtraDicTermArray
 end ide_FetchExtraDicTermArray
 
 command ide_StoreExtraDicTermArray ideExtraDicTermArray
-   library_StoreArray "ideExtraDicTermArray", ideExtraDicTermArray
+   lcw_StoreArray "ideExtraDicTermArray.array", ideExtraDicTermArray
    return the result
 end ide_StoreExtraDicTermArray
 

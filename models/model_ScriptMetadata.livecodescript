@@ -81,20 +81,20 @@ command script_DeconstructMetaDataSuite metaDataSuite, @metadataBit, @commentBit
    repeat with lineNum = 1 to the number of lines of metaDataSuite
       put line lineNum of metaDataSuite into someLine
       switch
-         case word 1 of scriptLine = "/*"
+         case word 1 of someLine = "/*"
             put true into commentBlock
             put lineNum into startCommentLine
             break
          case commentBlock is true
             -- keep looping till end of block
-            if word -1 of scriptLine = "*/" then
+            if word -1 of someLine = "*/" then
                -- could put this commented out section in the index?
                put lineNum into endCommentLine
                put line (startCommentLine + 1) to (endCommentLine - 1) of metaDataSuite into commentBit
                put false into commentBlock
             end if
             break
-         case token 1 of scriptLine is among the items of "on,command,function,getprop,setprop,private,local,constant,global"
+         case token 1 of someLine is among the items of "on,command,function,getprop,setprop,private,local,constant,global"
             put word 1 to -1 of line lineNum to -1 of metaDataSuite into handlerBit
             break
          case the number of items of someLine = 2
