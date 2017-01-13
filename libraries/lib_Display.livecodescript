@@ -87,7 +87,7 @@ command display_Menus
    go to stack longStackFile
 end display_Menus
 
-command display_RecentExports pHowLong
+command display_RecentExports pHowLong, pIndexView
    -- we should also check which exports are different from the objects script using "script_IsDifferent"
    
    if pHowLong is empty then put 20 into pHowLong
@@ -95,10 +95,14 @@ command display_RecentExports pHowLong
    put 60*someMin into someSec
    put spotlight_ListRecentlyExportedObjects (someSec) into rObjects
    
-   put merge ("In last [[someMin]] minutes,Changes") into someTitle
-   display_Index rObjects, someTitle, empty, empty, "mouse_EditObjectScript"
-   put the result into indexView
-   return indexView
+   if exists (pIndexView) is false then
+      put merge ("In last [[someMin]] minutes,Changes") into someTitle
+      display_Index rObjects, someTitle, "Global | Script | Changes | Menu", empty, "mouse_EditObjectScript"
+      return the result
+   else
+      set the view_Index of pIndexView to rObjects
+      return pIndexView
+   end if
 end display_RecentExports
 
 command mouse_EditObjectScript treeView, scriptObject
@@ -141,30 +145,6 @@ end launch_Atom
 
 --> Display
 -
-command display_SpotlightHandler hkeyLine
-   put spotlight_FindExportedHandler (hkeyLine) into foundFiles
-   if foundFiles is empty then
-      put hkeyLine
-      answer "Could not find handler!"
-      exit to top
-   end if
-   
-   put lcw_UserMetadataFolder() into lcwUserMetadataFolder
-   set the itemdelimiter to slash
-   put the number of items of lcwUserMetadataFolder into rootItemNum
-   repeat for each line foundFile in foundFiles
-      put item (rootItemNum + 1) of foundFile into mainStackName
-      put item -2 of foundFile into shortHkey
-      put hkeyLine_FromHandlerFile (foundFile) into hkeyLine
-      put hkeyLine & CR after hkeyLines
-   end repeat
-   delete char -1 of hkeyLines
-   
-   put merge ("[[shortHkey]],spotlight_FindExportedHandler()") into someTitle
-   display_HkeyLines hkeyLines, someTitle
-   put foundFiles
-end display_SpotlightHandler
-
 command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMenu, pTitle
    put empty into pPathFilter
    put file_ConstructFolderArray (filePaths, pPathFilter, pFolderToStrip) into pathArray
@@ -353,7 +333,7 @@ private function _GetNewIndexDisplayStackRect oRect, displayView
 end _GetNewIndexDisplayStackRect
    
 command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
-   replace comma with CR in someIndex
+   -- replace comma with CR in someIndex
    put _GetLastIndexDisplayStackRect () into oRect
    --
    display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
@@ -363,6 +343,8 @@ command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, 
    
    put _GetNewIndexDisplayStackRect (oRect, displayView) into newRect
    set the rect of stack cloneStackName to newRect
+   
+   revIDEEnsureOnscreen cloneStackName
    
    -- show and go
    show stack cloneStackName

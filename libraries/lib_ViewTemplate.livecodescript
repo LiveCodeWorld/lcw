@@ -12,44 +12,23 @@ It should not required for the functioning of the views to work.
 */
 
 
---> Working On
+--> Working on
 -
-command view_ExportTemplateBehaviorCardScripts viewName
-   put view_TemplateBehaviorButtons (viewName) into templateBehaviorButtons
-   repeat for each line templateBehaviorButton in templateBehaviorButtons
-      put the short name of templateBehaviorButton into scriptOnlyObject
-      
-      put the script of templateBehaviorButton into buttonScript
-      put the script of scriptOnlyObject into scriptOnlyScript
-      
-      -- now export
-      if scriptOnlyScript is not buttonScript then
-         display_Text scriptOnlyScript, scriptOnlyObject
-         display_Text buttonScript, "Button"
-         
-         answer "Do you want to export the button behavior and overwrite the scriptonly stack script?" with "Export" and "Cancel"
-         if it is "Cancel" then next repeat
-         
-         set the script of scriptOnlyObject to scriptOnlyScript
-         -- save scriptOnlyObject 
-      end if
-   end repeat   
-   return true
-end view_ExportTemplateBehaviorCardScripts
-
-command view_CreateImportedBehaviorButtons templateBehaviorCard
-   if exists (templateBehaviorCard) is false then return empty
-   go to templateBehaviorCard
+command view_CreateImportedBehaviorButtons viewObject, pUseBehaviorCard
+   view_CreateBehaviorGroup viewObject, true
+   put the result into behaviorGroup
    
-   put the stack_Object of templateBehaviorCard into viewTemplateStack
-   put the search_BehaviorArray of the target into stackBehaviorArray
-   
-   -- we must remove this
-   -- crash: as seting the behavior to something else while the behavior is running causes a reliable crash!
+   put the stack_Object of viewObject into viewStack
    put the name of stack "behavior_ViewTemplateCard" into templateCardBehavior
    
+   put view_GetBehaviorCard (viewObject) into bCardObject
+   lock screen
+   push cd
+   go to bCardObject
+   
+   put the search_BehaviorArray of the target into stackBehaviorArray
    repeat for each key foundBehavior in stackBehaviorArray
-      if foundBehavior ends with viewTemplateStack then
+      if foundBehavior ends with viewStack then
          -- it's already  a local behavior in this stack
          breakpoint
          next repeat
@@ -64,7 +43,7 @@ command view_CreateImportedBehaviorButtons templateBehaviorCard
       -- it's external
       -- put the short name of foundBehavior into bName
       if exists (btn foundBehavior) is false then
-         create button foundBehavior
+         create button foundBehavior in behaviorGroup
          put it into createdButton
       else
          put the long id of button foundBehavior into createdButton
@@ -85,70 +64,78 @@ command view_CreateImportedBehaviorButtons templateBehaviorCard
       end repeat
    end repeat
    choose browse tool
+   pop cd
+   unlock screen
    return stackBehaviorArray
 end view_CreateImportedBehaviorButtons
 
-command view_CreateTemplateBehaviorCard viewName
-   put "Imported View Behaviors" into bCardName
-   
-   put view_GetTemplateStackName (viewName) into templateStackName
-   if exists (card bCardName of stack templateStackName) is true then
-      put the long id of card bCardName of stack templateStackName into templateBehaviorCard
-      return templateBehaviorCard
-   end if
-   
-   set the defaultstack to viewName
-   create card bCardName
-   put it into templateBehaviorCard
-   return templateBehaviorCard
-end view_CreateTemplateBehaviorCard
 
-command view_DeleteTemplateBehaviorCard viewName
-   put view_TemplateBehaviorButtons (viewName) into templateBehaviorButtons
-   repeat for each line templateBehaviorButton in templateBehaviorButtons
-      put the short name of templateBehaviorButton into bObject
-      put the custom_Array ["objects_WithBehavior"] of templateBehaviorButton into objectsWithBehavior
+--> Template | Behaviors
+-
+setprop imported_ViewBehaviors [pUseBehaviorCard] someBoolean
+   put the view_Object of the target into viewObject
+   if exists (viewObject) is empty then return empty
+   
+   if someBoolean is true then
+      view_CreateImportedBehaviorButtons viewObject, pUseBehaviorCard
+   else
+      switch pUseBehaviorCard
+         case true
+            view_DeleteBehaviorCard viewObject
+            break
+         case false
+            view_DeleteBehaviorGroup viewObject
+            break
+         default
+            view_ResetImportedBehaviors viewObject
+      end switch
+   end if
+end imported_ViewBehaviors
+
+getprop imported_ViewBehaviors
+   put the view_BehaviorGroup of the target into viewBehaviorGroup
+   put exists (viewBehaviorGroup) into someBoolean
+   return someBoolean
+end imported_ViewBehaviors
+
+command view_ResetImportedBehaviors viewObject 
+   put the view_ImportedBehaviorButtons of viewObject into importedBehaviorButtons
+   repeat for each line importedBehaviorButton in importedBehaviorButtons
+      put the custom_Array ["objects_WithBehavior"] of importedBehaviorButton into objectsWithBehavior
       repeat for each line someObject in objectsWithBehavior
-         set the behavior of someObject to bObject
+         put the object_Metadata ["behavior"] of someObject into oBehavior
+         set the behavior of someObject to oBehavior
+         set the object_Metadata ["behavior"] of someObject to empty
       end repeat
    end repeat   
+end view_ResetImportedBehaviors
+
+
+--> Working On
+-
+command view_ExportTemplateBehaviorCardScripts viewName
+   put view_TemplateBehaviorButtons (viewName) into templateBehaviorButtons
    
-   put view_GetTemplateBehaviorCard (viewName) into bCardObject
-   delete bCardObject
+   repeat for each line templateBehaviorButton in templateBehaviorButtons
+      put the short name of templateBehaviorButton into scriptOnlyObject
+      
+      put the script of templateBehaviorButton into buttonScript
+      put the script of scriptOnlyObject into scriptOnlyScript
+      
+      -- now export
+      if scriptOnlyScript is not buttonScript then
+         display_Text scriptOnlyScript, scriptOnlyObject
+         display_Text buttonScript, "Button"
+         
+         answer "Do you want to export the button behavior and overwrite the scriptonly stack script?" with "Export" and "Cancel"
+         if it is "Cancel" then next repeat
+         
+         set the script of scriptOnlyObject to scriptOnlyScript
+         -- save scriptOnlyObject 
+      end if
+   end repeat   
    return true
-end view_DeleteTemplateBehaviorCard
-
-function view_TemplateBehaviorButtons viewName
-   put view_GetTemplateBehaviorCard (viewName) into bCardObject
-   if exists (bCardObject) is false then return false
-   
-   put the number of buttons of bCardObject into maxNum
-   repeat with btnNum = 1 to maxNum
-      put the long id of btn btnNum of bCardObject into templateBehaviorButton
-      put templateBehaviorButton & CR after templateBehaviorButtons
-   end repeat
-   delete char -1 of templateBehaviorButtons
-   return templateBehaviorButtons
-end view_TemplateBehaviorButtons
-
-function view_GetTemplateBehaviorCard viewName
-   put "Imported View Behaviors" into bCardName
-   put view_GetTemplateStackName (viewName) into templateStackName
-   if exists (card bCardName of stack templateStackName) is false then return empty
-   
-   put the long id of card bCardName of stack templateStackName into bCardObject
-   return bCardObject
-end view_GetTemplateBehaviorCard
-
-function view_GetTemplateStackName viewName
-   -- the templateStackName should be the same as viewName by default
-   
-   put view_GetTemplateObject (viewName) into templateObject
-   if exists (templateObject) is false then return empty
-   
-   put the stack_Name of templateObject into templateStackName
-   return templateStackName
-end view_GetTemplateStackName
+end view_ExportTemplateBehaviorCardScripts
 
 
 --> View | Template
@@ -173,6 +160,9 @@ command template_ConstructStackFromObject someObject, pCreateBehavior
 end template_ConstructStackFromObject
 
 command view_TemplateAddBehavior viewTemplate, pEditScripts
+   -- old way of imprting a behavior into a view button (before the use of view_BehaviorGroups
+   breakpoint
+   
    put the view_Name of viewTemplate into vName
    if vName is empty then
       put "The view template has not view_Name set!"
@@ -261,54 +251,3 @@ command view_TemplateAddBehavior viewTemplate, pEditScripts
    set the defaultstack to oDefaultStack
    return createdButton
 end view_TemplateAddBehavior
-
-
---> Props
--
-getprop template_Behavior
-   put the view_Name of the target into vName
-   put view_GetBehavior (vName) into bObject
-   return bObject
-end template_Behavior
-
-
---> View | Template
--
-getprop view_TemplateStack
-   put the view_Name of the target into viewName
-   if exists (stack viewName) is false then return empty
-   put the name of stack viewName into stackObject
-   return stackObject
-end view_TemplateStack
-
-function view_GetTemplateObject viewName
-   view_NormalizeName viewName
-   if exists (stack viewName) then
-      put the long id of control 1 of stack viewName into templateObject
-      return templateObject
-   end if
-   
-   put library_ListProjectModules() into moduleStackNames
-   put library_FetchProjectFolder (viewName) into moduleFolder
-   if moduleFolder is empty then return empty
-   
-   put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
-   if exists (control 1 of card 1 of stack moduleHomeStackPath) then
-      return the long id of control 1 of card 1 of stack moduleHomeStackPath
-   end if
-   
-   return empty
-end view_GetTemplateObject
-
-
---> Template | Objects
--
-getprop view_Template
-   put the view_Name of the target into vName
-   put view_GetTemplateObject (vName) into templateObject
-   return templateObject
-end view_Template
-
-getprop template_Object
-   return the view_Template of the target
-end template_Object

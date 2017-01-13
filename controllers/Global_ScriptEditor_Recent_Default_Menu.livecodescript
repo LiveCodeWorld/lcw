@@ -28,7 +28,7 @@ on menu_Init
 end menu_Init
 
 getprop menu_Target [mTitlePath]
-   put rev_ScriptObject() into scriptObject
+   put scriptEditor_Object() into scriptObject
    return scriptObject
 end menu_Target
 
@@ -135,17 +135,17 @@ function stack_ListEditedNames pType
 end stack_ListEditedNames
 
 getprop recent_Objects
-   put rev_GetScriptEditorHistoryObjects() into historyObjects
+   put scriptEditor_ListEditingObjects() into historyObjects
    objects_MakeFriendly historyObjects, orderedFriendlyObjects, friendlyArray
    put friendlyArray into LocalArray ["friendlyArray"]
    return orderedFriendlyObjects
 end recent_Objects
 
-function rev_GetScriptEditorHistoryObjects pEditorNum
+function scriptEditor_ListEditingObjects pEditorNum
    put rev_HistoryButton (pEditorNum) into historyButton
    put value ("seHistoryGet()", historyButton) into someObjects
    return someObjects
-end rev_GetScriptEditorHistoryObjects
+end scriptEditor_ListEditingObjects
 
 function rev_HistoryButton pEditorNum
    put rev_TopScriptEditor() into editorStack

@@ -31,17 +31,27 @@ on menu_TestArray
    _displaySelectedValue treeWidget
 end menu_TestArray
 
+on menu_SetMenuTitle mTarget
+   put LocalArray ["arrayView"] into arrayView
+   
+   put the title_Menu of arrayView into mTitle
+   put lcw_Ask ("What menu title do you want to attach to the tree_View?", mTitle) into mTitle
+   set the title_Menu of arrayView to mTitle
+end menu_SetMenuTitle
+
 on _
 end _
 
 on menu_TreeBehavior
    put LocalArray ["arrayView"] into arrayView
+   
    put the behavior of arrayView into bObject
    edit the script of bObject
 end menu_TreeBehavior
 
 on menu_Toplevel treeView
    put LocalArray ["arrayView"] into arrayView
+   
    put the stack_Name of arrayView into stackName
    toplevel stack stackName
 end menu_Toplevel

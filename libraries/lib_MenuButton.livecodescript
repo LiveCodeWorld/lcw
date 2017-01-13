@@ -25,6 +25,14 @@ which dispatches the appropriate command to the controller that handles the menu
 
 --> Working on
 -
+private function text_Indent someText
+   -- this is the minimal version of "outline_IncreaseIndent"
+   repeat with lineNum = 1 to the number of lines of someText
+      put tab before line lineNum of someText
+   end repeat
+   return someText
+end text_Indent
+
 private function _GetDefaultMenuTarget mPath, mTitlePath, targetObject
    -- a default can be dynamic and defined in the view using a "getprop menu_Target" handler
    put the menu_Target [mTitlePath] of targetObject into mTarget
@@ -50,61 +58,6 @@ private function view_FindAbove targetObject
    end repeat
    return empty
 end view_FindAbove
-
-
---> Menu | Basics
--
-command menu_PopUp pMenuTitle, pLocation, pTargetObject
-   if pTargetObject is empty then put the long id of the target into pTargetObject
-   if pMenuTitle is empty then put the menu_Title of pTargetObject into pMenuTitle
-   if pMenuTitle is empty then put "Menu" into pMenuTitle
-   
-   set the menu_TextFromTitle of pTargetObject to pMenuTitle
-   put the result into mText
-   if mText is empty then return "false"
-   
-   put the menu_Button of pTargetObject into mButton
-   if pLocation is not a point then
-      popup mButton
-   else
-      popup mButton at pLocation
-   end if
-   return true
-end menu_PopUp
-
-command menu_PullDown pMenuTitle, pLocation, pTargetObject
-   if pTargetObject is empty then put the long id of the target into pTargetObject
-   -- if pMenuTitle is empty then put the menu_ToolOrTitle of pTargetObject into pMenuTitle
-   if pMenuTitle is empty then put the menu_Title of pTargetObject into pMenuTitle
-   if pMenuTitle is empty then put "Menu" into pMenuTitle
-   
-   set the menu_TextFromTitle of pTargetObject to pMenuTitle
-   put the result into mText
-   if mText is empty then
-      -- lcw_Notify pMenuTitle -- often useful, but also annoying :)
-      return "false"
-   end if
-   
-   put the menu_Button of pTargetObject into mButton
-   if exists (mButton) is false then return false
-   
-   if pLocation is not a point then
-      put the bottomleft of pTargetObject into pLocation
-      add 3 to item 2 of pLocation
-   end if
-   if exists (mButton) is false then return false
-   popup mButton at pLocation
-   return true
-end menu_PullDown
-
-command menu_MouseDown pMenuTitleTable, pTargetObject
-   if exists(pTargetObject) is false then put the long id of the target into pTargetObject
-   if pMenuTitleTable is empty then put the menu_Title of pTargetObject into pMenuTitleTable
-   if pMenuTitleTable is empty then put "Menu" into pMenuTitleTable
-   set the menu_TextFromTitle of pTargetObject to pMenuTitleTable
-   put the result into mText
-   if mText is empty then return "false"
-end menu_MouseDown
 
 
 --> Menu | Utils
@@ -206,7 +159,7 @@ function menu_GetTextFromTitleTable mTitleTable, targetObject, pMenuTarget
                -- submenu is empty
             else
                put pTextPath  & CR after mText
-               put outline_IncreaseIndent (moreMenuText) & CR after mText
+               put text_Indent (moreMenuText) & CR after mText
             end if
             break
          case mType is not empty
@@ -691,8 +644,8 @@ function menu_GetDefaultController mTitle, targetObject, pSearchScript
    end if
    
    -- here we allow sub stack cards to override defaults
-   put the menu_SubStackCard [mTitle] of targetObject into mController
-   if exists (mController) then return mController
+   -- put the menu_SubStackCard [mTitle] of targetObject into mController
+   -- if exists (mController) then return mController
    
    put the menu_FindController [mTitle] of targetObject into mController
    if exists (mController) then return mController
@@ -984,7 +937,7 @@ command menu_AddBooleanLine @mText, mLine, paramProp, topMenuTarget, mController
       else
          put "true" & CR & "false" into subMenu
       end if
-      put outline_IncreaseIndent (subMenu) into subMenu
+      put text_Indent (subMenu) into subMenu
       put subMenu & CR after mText
       return empty
    catch tError
@@ -1190,7 +1143,7 @@ command menu_FetchCustomMenuItems @mText, mLine, submenuProp, mController, param
          -- check submenu
          replace comma with CR in subMenu
          menu_CheckSub subMenu, paramProp, mController, mTarget, mItemType
-         put outline_IncreaseIndent (subMenu, 1) into subMenu
+         put text_Indent (subMenu) into subMenu
          put subMenu & CR after mText
       end if
    catch someError
@@ -1282,7 +1235,7 @@ command menu_InsertFixed @mText, mLine, pigeon, mController, paramProp, topMenuT
    put the submenu_Fixed [mCommand] of mController into subMenu
    if subMenu is not empty then
       menu_CheckSub subMenu, paramProp, mController, topMenuTarget, mItemType
-      put outline_IncreaseIndent(subMenu) into subMenu
+      put text_Indent(subMenu) into subMenu
       put subMenu & CR after mText
    end if
 end menu_InsertFixed
@@ -1301,7 +1254,7 @@ command menu_InsertSubMenu @mText, mLine, subMenuTitle, mView, subMenuController
       -- don't do anything (ie also remove the submenu_Title "mLine"
    else
       put mLine & CR after mText
-      put outline_IncreaseIndent (subMenu, 1) into subMenu
+      put text_Indent (subMenu) into subMenu
       put subMenu & CR after mText
    end if
 end menu_InsertSubMenu
@@ -1420,145 +1373,8 @@ command menu_DeconstructCommandLine mVersion, handlerLine, @handlerName, @handle
    put item 2 of handlerName into handlerSuffix
 end menu_DeconstructCommandLine
 
-command menu_DefaultTableLine mVersion, comLine, mCommand, mSuffix, customParam, someScript, mController, mTitle, @mFormatProp, @mLine, @mTableLine, @mItemType, @submenuProp, @paramProp, @fixedSubMenu
-   -- ignoreCall: menu_Version
-   -- only add disabled_Prop if it exists in the menu_Controller (optional)
-   put "disabled_" & mSuffix into mFormatProp
-   
-   if script_GetGetProp (mFormatProp, someScript) is empty then put empty into mFormatProp
-   
-   put text_SplitCaps (mSuffix) into mLine
-   
-   -- new way (assumes mTarget is always passed as the ifirst param
-   if the number of items of comLine > 1 then
-      -- there is more than one param
-      menu_ConstructParamProp someScript, mCommand, customParam, mController, paramProp, submenuProp, fixedSubMenu
-      put the result into mItemType
-      put mCommand && "subMenuPath," && mTarget into pigeon
-      put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType, submenuProp, paramProp) into mTableLine
-   else
-      put mCommand && "mTarget" into pigeon
-      put menu_ConstructTableLine (mController, pigeon, mTitle, mLine, mFormatProp, mItemType) into mTableLine
-   end if
-   
-   return mTableLine
-end menu_DefaultTableLine
-
 command menu_DeleteTables mController
    put the custompropertysets of mController into setNames
    line_Delete "uOPN_MenuTable", setNames
    set the custompropertysets of mController to setNames
 end menu_DeleteTables
-
-
---> Deps
--
-private function outline_IncreaseIndent someOsSection, byIndentLevel
-   -- this is the unsafe minimal version
-   repeat byIndentLevel
-      put tab after indentWhiteSpace
-   end repeat
-   repeat with lineNum = 1 to the number of lines of someOsSection
-      put indentWhiteSpace before line lineNum of someOsSection
-   end repeat
-   return someOsSection
-end outline_IncreaseIndent
-
-
---> Deps | actionCompile,c
--
-command menu_ConstructParamProp someScript, mCommand, customParam, mController, @paramProp, @submenuProp, @fixedSubMenu
-   -- ignoreCall: submenuProperty,g
-   -- deps: script_GetCommand, handler_ExtractCaseConditions, line_Delete, script_GetGetProp, script_ParamToHandlerName
-   
-   /*
-   Some strange bugs that have been got around here.
-   Putting a cProp handler with a param into a variable works
-   But no space between handler and "["
-   Also no quotes around variable
-   */
-   
-   put empty into mFormatProp
-   put empty into submenuProp
-   put empty into paramProp
-   put empty into fixedSubMenu
-   
-   switch
-      case customParam is empty
-         return empty
-      case param_IsBoolean (customParam)
-         set the itemdelimiter to "_"
-         put item 2 of mCommand into commandBody
-         if commandBody is empty then return empty
-         
-         put script_ParamToHandlerName (commandBody) into paramProp
-         put "submenu_Boolean" into submenuProp
-         return "boolean"
-      default
-         -- not a special case
-         -- so it is either a fixed menu based on the "Case conditions"
-         -- or a "custom" menu based on a getprop submenuProp handler
-         
-         put script_ParamToHandlerName (customParam) into paramProp
-         if last char of paramProp = "y" then
-            put char 1 to -2 of paramProp & "ies" into submenuProp
-         else
-            put paramProp & "s" into submenuProp
-         end if
-         
-         put token 1 of submenuProp into getPropName
-         -- put getPropName & comma & "g" into shortHkey
-         -- put the script_Handler [shortHKey]
-         if script_GetGetProp (getPropName, someScript) is not empty then
-            -- there is a getprop submenuProp handler in the mController script
-            return "custom submenu"
-         else
-            -- this hack allows global submenu properties to be defined
-            try
-               -- should be same as menu_ConvertTable (but on compile I do not know mTarget)
-               put submenuProp into submenuProperty
-               put the submenuProperty of mController into testSubMenu
-               if testSubMenu is not empty then return "custom external"
-            catch tError
-               -- looks like submenuProperty could require mTarget param
-               put submenuProp & "[" & mTarget & "]" into submenuProperty
-               put "Error: with" && submenuProperty into someError
-               -- lcw_Notify someError
-               put someError
-            end try
-            
-            -- is there a "case" statement in the script?
-            put script_GetCommand (mCommand, someScript) into menuHandler
-            put handler_ExtractCaseConditions (menuHandler) into fixedSubMenu
-            line_Delete "default", fixedSubMenu
-            if fixedSubMenu is not empty then
-               put "submenu_Fixed[" & mCommand & "]" into submenuProp
-               return "fixed"
-            else if customParam is "menuChoice" then -- are you sure ???
-               put empty into paramProp
-               put empty into submenuProp
-               return empty
-            else
-               --in this case it can be useful to allow getprop handlers outside of the controller
-               return "custom external"
-            end if
-         end if
-   end switch
-end menu_ConstructParamProp
-
-private function script_ParamToHandlerName customParam
-   put word 1 of customParam into customParam
-   put tolower(char 1 of customParam) into char 1 of customParam
-   
-   repeat with charNum = 1 to the number of chars of customParam
-      if text_StartsWithCaps(char charNum of customParam) is true then
-         put "_" before char charNum of customParam
-         return customParam
-      end if
-   end repeat
-   return customParam
-end script_ParamToHandlerName
-
-private function param_IsBoolean customParam
-   return customParam is among the items of "boolean,someBoolean,isBoolean"
-end param_IsBoolean

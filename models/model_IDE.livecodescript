@@ -34,6 +34,23 @@ end setBehaviors
 */
 
 
+--> IDE | ScriptEditor | Pane | Model
+-
+function rev_ScriptEditorPanesGroup pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (group "Panes" of cd "Main" of editorStack) is false then return empty
+   put the long id of group "Panes" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_ScriptEditorPanesGroup
+
+function rev_ScriptEditorPaneTabsGroup pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (group "Pane Tabs" of cd "Main" of editorStack) is false then return empty
+   put the long id of group "Pane Tabs" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_ScriptEditorPaneTabsGroup
+
+
 --> IDE
 -
 command rev_AddBehaviorHacks pBoolean
@@ -86,25 +103,6 @@ command rev_AddBehaviorHacks pBoolean
 end rev_AddBehaviorHacks
 
 
---> IDE | Rev
--
-function rev_GetModifiedObjects pEditorNum
-   put rev_ScriptEditorStack (pEditorNum) into editorStack
-   dispatch "revSEGetModifiedObjects" to editorStack
-   return the result
-end rev_GetModifiedObjects
-
-function rev_GetScriptEditorHistoryObjects pEditorNum
-   put rev_HistoryButton (pEditorNum) into historyButton
-   put value ("seHistoryGet()", historyButton) into someObjects
-   return someObjects
-end rev_GetScriptEditorHistoryObjects
-
-function rev_ScriptEditorIsOpen
-   return rev_OpenScriptEditorNames() is not empty
-end rev_ScriptEditorIsOpen
-
-
 --> IDE | ScriptEditor | Rev
 -
 function rev_LaunchDocsButton pEditorNum
@@ -147,6 +145,10 @@ function rev_TopScriptEditor
    end if
 end rev_TopScriptEditor
 
+function scriptEditor_Object
+   return rev_ScriptObject()
+end scriptEditor_Object
+
 function rev_ScriptObject
    put rev_TopScriptEditor() into stackObject
    if exists(stackObject) is false then return empty
@@ -156,6 +158,8 @@ function rev_ScriptObject
 end rev_ScriptObject
 
 function rev_OpenScriptEditorNames
+   -- put revListScriptEditors()
+   
    put the openstacks into stackNames
    -- filter stackNames with "revscripteditor *" -- old version ???
    filter stackNames with "revNewScriptEditor *"
@@ -205,29 +209,27 @@ function rev_ScriptEditorDocField pEditorNum
 end rev_ScriptEditorDocField
 
 
---> IDE | ScriptEditor | Rev | Pane
+--> ScriptEditor
 -
-function rev_ListScriptEditorPaneNames pEditorNum
-   put rev_ScriptEditorPanesGroup (pEditorNum) into scriptEditorPanesGroup
-   return value ("seAvailablePanes()", scriptEditorPanesGroup)
-end rev_ListScriptEditorPaneNames
-
-function rev_ScriptEditorPaneTabsGroup pEditorNum
+function rev_GetModifiedObjects pEditorNum
    put rev_ScriptEditorStack (pEditorNum) into editorStack
-   if exists (group "Pane Tabs" of cd "Main" of editorStack) is false then return empty
-   put the long id of group "Pane Tabs" of cd "Main" of editorStack into someObject
-   return revRuggedID (someObject)
-end rev_ScriptEditorPaneTabsGroup
+   dispatch "revSEGetModifiedObjects" to editorStack
+   return the result
+end rev_GetModifiedObjects
 
-function rev_ScriptEditorPanesGroup pEditorNum
-   put rev_ScriptEditorStack (pEditorNum) into editorStack
-   if exists (group "Panes" of cd "Main" of editorStack) is false then return empty
-   put the long id of group "Panes" of cd "Main" of editorStack into someObject
-   return revRuggedID (someObject)
-end rev_ScriptEditorPanesGroup
+function scriptEditor_ListEditingObjects pEditorNum
+   -- see also "revIDEScriptEditingObjects()"
+   put rev_HistoryButton (pEditorNum) into historyButton
+   put value ("seHistoryGet()", historyButton) into someObjects
+   return someObjects
+end scriptEditor_ListEditingObjects
+
+function scriptEditor_IsOpen
+   return rev_OpenScriptEditorNames() is not empty
+end scriptEditor_IsOpen
 
 
---> IDE | Behavios
+--> ScriptEditor | Behaviors
 -
 /*
 We need a model for this.

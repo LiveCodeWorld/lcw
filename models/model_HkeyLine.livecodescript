@@ -19,28 +19,8 @@ and work-in-progress transitional handlers.
 
 --> Working on
 -
--- function hkeyLine_ExtractExternal hTableLines, hkeyPlaceArray
--- was "script_ExtractExternalHkeys"
-repeat for each line hTableLine in hTableLines
-   put hkey_GetPlace (hTableLine, hkeyPlaceArray) into cObject
-   put hTableLine,cObject into externalKey
-   put externalKey & CR after externalKeys
-end repeat
-delete char -1 of externalKeys
-return externalKeys
-end hkeyLine_ExtractExternal
 
-function hkeyline_MakeShort handlerTable
-   repeat for each line someLine in handlerTable
-      put word 1 to 2 of someLine into hTableLine
-      put hTableLine & CR after hTableLines
-   end repeat
-   delete char -1 of hTableLines
-   return hTableLines
-end hkeyline_MakeShort
-
-
---> Hkey
+--> Hkey | Edit
 -
 command hkey_Edit hKey
    -- use instead of "hkey_EditFoundHandler"   
@@ -100,9 +80,9 @@ command hkey_Edit hKey
    put line startLineNum to endLineNum of the script of hObject into foundHandler
    
    lock screen
-   put rev_ScriptEditorIsOpen() into wasAlreadyOpen
+   put scriptEditor_IsOpen() into wasAlreadyOpen
    if wasAlreadyOpen is true then
-      rev_ActivateScriptEditorTab hObject
+      scriptEditor_ActivateTab hObject
       if the result is false then
          edit the script of hObject
       end if
@@ -115,6 +95,122 @@ command hkey_Edit hKey
    unlock screen
    return true
 end hkey_Edit
+
+
+--> hKeyLine
+-
+function hKeyLine_Construct hkeyLine, hObject
+   put word 1 to 2 of hkeyLine && "of" && hObject into hKeyLine
+   return hKeyLine
+end hKeyLine_Construct
+
+command hKeyLine_Deconstruct hKeyLine, @hName, @hType, @hObject
+   put toUpper (word 1 of hKeyLine) into hType
+   put word 2 of hKeyLine into hName
+   put word 4 to -1 of hKeyLine into hObject
+   return hType && hName
+end hKeyLine_Deconstruct
+
+command hkeyLine_Normalise @hKey
+   put hkeyLine_FromHkey (hKey) into hKey
+   put word 1 to 2 of hKey into shortHkey
+   return shortHkey
+end hkeyLine_Normalise
+
+function hkeyLine_FromHkey hKey
+   hkey_Deconstruct hKey, hName, hType, hObject, hNum
+   put hKeyLine_FromTripple (hName, hType, hObject) into hkeyLine
+   return hkeyLine
+end hkeyLine_FromHkey
+
+function hkeyLine_ToHkey hKeyLine
+   -- was "hkey_TableLineToShort"
+   hKeyLine_Deconstruct hKeyLine, hName, hType, hObject
+   return hName,hType,hObject,1
+end hkeyLine_ToHkey
+
+function hKeyLine_FromTripple hName, hType, hObject
+   replace "c" with "M" in hType
+   put toUpper (hType) && hName into shortHkeyLine
+   if hObject is empty then return shortHkeyLine
+   
+   put hKeyLine_Construct (shortHkeyLine, hObject) into hkeyLine
+   return hkeyLine
+end hKeyLine_FromTripple
+
+function hkeyline_MakeShort hTable
+   repeat for each line someLine in hTable
+      put word 1 to 2 of someLine into hTableLine
+      put hTableLine & CR after hTableLines
+   end repeat
+   delete char -1 of hTableLines
+   return hTableLines
+end hkeyline_MakeShort
+
+
+--> hkeyLine | FindInTable
+-
+/*
+Work out if repeat of lineOffset is faster and standardize.
+*/
+
+command hkeyLine_FindInTable hkeyLine, hTable, @startLineNum, @endLineNum
+   -- see also "hkey_FindInTable"
+   -- uses lineOffset instead of repeat loop
+   
+   set the wholematches to false
+   put word 1 to 2 of hkeyLine & space into searchString
+   put lineOffset (searchString, hTable) into lineNum
+   if lineNum = 0 then
+      put 0 into startLineNum
+      put 0 into endLineNum
+      return false
+   end if
+   
+   put line lineNum of hTable into hTableLine
+   put word 3 of hTableLine into startLineNum
+   put word 4 of hTableLine into endLineNum
+   return true
+end hkeyLine_FindInTable
+
+command hkey_FindInTable shortHkey, hTable, @startLineNum, @endLineNum
+   -- see also "hkeyLine_FindInTable"
+   -- uses repeat instead of lineOffset
+   
+   if hTable is empty then
+      put 0 into startLineNum
+      put 0 into endLineNum
+      return false
+   end if
+   hkey_Deconstruct shortHkey, hName, hType, xObject, xNum
+   
+   switch char -1 of hType
+      case "c"
+         put "M" into char -1 of hType
+         break
+      case "o"
+         put "M" into char -1 of hType
+         break
+   end switch
+   
+   repeat for each line someLine in hTable      
+      put word 2 of someLine into hTableName
+      if hTableName is not hName then next repeat
+      
+      put word 1 of someLine into hTableType
+      switch
+         case hTableType = hType
+            put word 3 of someLine into startLineNum
+            put word 4 of someLine into endLineNum
+            return true
+      end switch
+      
+      add 1 to handlerLineNum
+   end repeat
+   put 0 into startLineNum
+   put 0 into endLineNum
+   return false
+end hkey_FindInTable
 
 function hkey_Construct hName, hType, hObject, pHandlerNum
    if exists (hObject) then
@@ -143,81 +239,6 @@ command hkey_Deconstruct hKey, @hName, @hType, @hObject, @hNum
    put hKeyLine_FromTripple (hName, hType, hObject) into hkeyLine
    return hkeyLine
 end hkey_Deconstruct
-
-
---> hKeyLine | Fetch
--
-function hkeyLine_FetchHandler hKeyLine
-   hKeyLine_Deconstruct hKeyLine, hName, hType, hObject
-   if exists (hObject) is false then return empty
-   put the data_Folder of hObject into dataFolder
-   put handler_Fetch (hKeyLine, dataFolder) into someHandler
-   return someHandler
-end hkeyLine_FetchHandler
-
-function hkeyLine_FetchCalls hKeyLine
-   hKeyLine_Deconstruct hKeyLine, hName, hType, hObject
-   if exists (hObject) is false then return empty
-   put the data_Folder of hObject into dataFolder
-   put handler_FetchCalls (hKeyLine, dataFolder) into shortCalls
-   return shortCalls
-end hkeyLine_FetchCalls
-
-command hkeyLine_FindInTable hkeyLine, hTable, @startLineNum, @endLineNum
-   set the wholematches to false
-   put word 1 to 2 of hkeyLine & space into searchString
-   put lineOffset (searchString, hTable) into lineNum
-   if lineNum = 0 then
-      put 0 into startLineNum
-      put 0 into endLineNum
-      return false
-   end if
-   
-   put line lineNun of hTable into hTableLine
-   put word 3 of hTableLine into startLineNum
-   put word 4 of hTableLine into endLineNum
-   return true
-end hkeyLine_FindInTable
-
-
---> hKeyLine
--
-function hkeyLine_ToHkey hKeyLine
-   -- was "hkey_TableLineToShort"
-   hKeyLine_Deconstruct hKeyLine, hName, hType, hObject
-   return hName,hType,hObject,1
-end hkeyLine_ToHkey
-
-function hKeyLine_FromTripple hName, hType, hObject
-   replace "c" with "M" in hType
-   put toUpper (hType) && hName into shortHkeyLine
-   if hObject is empty then return shortHkeyLine
-   
-   put hKeyLine_Construct (shortHkeyLine, hObject) into hkeyLine
-   return hkeyLine
-end hKeyLine_FromTripple
-
-function hKeyLine_Construct hkeyLine, hObject
-   put word 1 to 2 of hkeyLine && "of" && hObject into hKeyLine
-   return hKeyLine
-end hKeyLine_Construct
-
-command hKeyLine_Deconstruct hKeyLine, @hName, @hType, @hObject
-   put word 1 of hKeyLine into hType
-   put word 2 of hKeyLine into hName
-   put word 4 to -1 of hKeyLine into hObject
-   return hType && hName
-end hKeyLine_Deconstruct
-
-command hkeyLine_Normalise @hKey
-   put hkeyLine_FromHkey (hKey) into hKey
-end hkeyLine_Normalise
-
-function hkeyLine_FromHkey hKey
-   hkey_Deconstruct hKey, hName, hType, hObject, hNum
-   put hKeyLine_FromTripple (hName, hType, hObject) into hkeyLine
-   return hkeyLine
-end hkeyLine_FromHkey
 
 
 --> Handler | Construct

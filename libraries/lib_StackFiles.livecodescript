@@ -10,7 +10,34 @@ version: 0.8
 This is a library to manipulate and store stackfiles automatically.
 */
 
---> Workign on
+--> Working on
+-
+function stackFile_ConstructShortFileArray pSetName
+   -- really not sure if this is useful / broken / needed
+   put library_FetchStackFiles (pSetName) into stackFileTable
+   repeat for each line someLine in stackFileTable
+      set the itemdelimiter to comma
+      put item 1 of someLine into stackName
+      put item 2 of someLine into relativePath
+      
+      set the itemdelimiter to "/"
+      put item -1 of someLine into shortFile
+      
+      put stackName into shortStackArray [shortFile]["stackName"]
+      put relativePath into shortStackArray [shortFile]["relativePath"]
+   end repeat
+   return shortStackArray
+end stackFile_ConstructShortFileArray
+
+function library_FetchStackFiles pSetName
+   -- see also "meta_StackArrayFile" for project level stackfile storage
+   put library_FetchSetArray (pSetName) into setArray
+   put setArray ["data"]["stackfiles"] into stackFileTable
+   return stackFileTable
+end library_FetchStackFiles
+
+
+--> Stackfile | Paths
 -
 setprop stackFile_AddPaths someFiles
    put the stack_Object of the target into toStackObject
@@ -347,22 +374,6 @@ function stackFile_PathsFromShortFiles shortFileIndex, pSetName
    stackFile_DeconstructShortFileIndex shortFileIndex, shortStackArray, filteredStackNameArray, filteredShortStackArray, pSetName
    return keys (filteredStackNameArray)
 end stackFile_PathsFromShortFiles
-
-function stackFile_ConstructShortFileArray pSetName
-   put library_FetchStackFiles (pSetName) into stackFileTable
-   repeat for each line someLine in stackFileTable
-      set the itemdelimiter to comma
-      put item 1 of someLine into stackName
-      put item 2 of someLine into relativePath
-      
-      set the itemdelimiter to "/"
-      put item -1 of someLine into shortFile
-      
-      put stackName into shortStackArray [shortFile]["stackName"]
-      put relativePath into shortStackArray [shortFile]["relativePath"]
-   end repeat
-   return shortStackArray
-end stackFile_ConstructShortFileArray
 
 command stackFile_DeconstructShortFileIndex shortFileIndex, @shortStackArray, @filteredStackNameArray, @filteredShortStackArray, pSetName
    put stackFile_ConstructShortFileArray (pSetName) into shortStackArray

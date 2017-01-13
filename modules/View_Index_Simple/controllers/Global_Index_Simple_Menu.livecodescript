@@ -142,9 +142,16 @@ end menu_ReverseTitleColour
 on _
 end _
 
+on menu_SetTitleMenus displayedObject
+   put LocalArray ["indexView"] into indexView
+   put the title_Menu of indexView into mTitle   
+   put lcw_Ask ("Set the menu_Title to...", mTitle) into mTitle
+   set the title_Menu of indexView to mTitle   
+end menu_SetTitleMenus
+
 on menu_EditTitleMenus displayedObject
    put LocalArray ["indexView"] into indexView
-   put the title_Menu of indexView into mTitles
+   put the title_Menu of indexView into mTitles     
    set the itemdelimiter to tab
    repeat for each line titleLine in mTitles
       if titleLine = "-" then next repeat
@@ -202,6 +209,7 @@ end f_Style
 
 getprop f_Styles [displayedObject]
    put LocalArray ["indexView"] into indexView
+   if exists (indexView) is false then return empty
    put the field_Styles of indexView into fStyles
    return fStyles
 end f_Styles

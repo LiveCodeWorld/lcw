@@ -30,7 +30,7 @@ on returnInField
          put hArray_ListShortKeys (searchText) into hKeys
          
          if the shiftkey is "Up" then
-            put rev_ScriptObject() into scriptObject
+            put scriptEditor_Object() into scriptObject
             put rev_FormatHkeySearchResult (hKeys, scriptObject, searchText) into tFormattedResults
             rev_SetScriptEditorSearchResults tFormattedResults
          else

@@ -15,7 +15,7 @@ local LocalArray
 -
 on menu_Init
    put word 2 of the clickline into lineNum
-   put rev_ScriptObject() into hObject
+   put scriptEditor_Object() into hObject
    put the revAvailableHandlers of hObject into hTable
    sort numeric hTable by word 3 of each
    put line lineNum of hTable into hTableLine

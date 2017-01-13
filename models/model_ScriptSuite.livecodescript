@@ -17,6 +17,129 @@ See also "Old | Suite" of stack "model_ScriptMenu"
 */
 
 
+--> Script | Suite | Suite Array
+-
+/*
+This suite uses the "script_ConstructArraysFromScript" handler.
+*/
+
+function script_SplitIntoSuites someScript
+   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray
+   put handlerArray ["handlerLines"] into handlerLines
+   sort handlerLines by word 2 of each
+   
+   put line 1 of handlerLines into nextHandlerLine
+   handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
+   put handlerPrefix into oHandlerPrefix
+   
+   put empty into bigScript
+   put empty into suiteScript
+   repeat
+      set the cursor to busy
+      put line 1 of handlerLines into nextHandlerLine
+      handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
+      
+      if handlerPrefix = oHandlerPrefix then
+         put false into newSection
+         
+         script_AddNewHandler handlerType, handlerName, someScript, suiteScript
+      else
+         put true into newSection
+         
+         -- a new section, so first construct old suite and add it to end of bigScript
+         put toupper(char 1 of oHandlerPrefix) into char 1 of oHandlerPrefix
+         get script_ConstructSuite(oHandlerPrefix, suiteScript)
+         text_AddParagraph (it & CR), bigScript, CR
+         
+         -- now clear suiteScript and start new section by adding new handler to suiteScript
+         put handlerPrefix into oHandlerPrefix
+         put empty into suiteScript
+         script_AddNewHandler handlerType, handlerName, someScript, suiteScript
+      end if
+      
+      delete line 1 of handlerLines
+      if handlerLines is empty then exit repeat
+   end repeat
+   
+   if newSection is true then
+      -- suiteScript needs adding to end with a header
+      
+      put toupper(char 1 of oHandlerPrefix) into char 1 of oHandlerPrefix
+      get script_ConstructSuite(oHandlerPrefix, suiteScript)
+      text_AddParagraph (it & CR), bigScript, CR
+   else
+      -- suiteScript needs adding to end (no header)
+      
+      text_AddParagraph (suiteScript & CR), bigScript
+   end if
+   return word 1 to -1 of bigScript
+end script_SplitIntoSuites
+
+function script_SuiteNameLinkOutline someScript, scriptObject
+   put script_GetSuiteTitles(someScript) into suiteNames
+   
+   -- lets get the handlers before the first suite title
+   put line 1 of suiteNames into firstSuiteName
+   put lineoffset(firstSuiteName, someScript) into firstLineNum
+   put line 1 to (firstLineNum -1) of someScript into firstScriptBit
+   script_ConstructArraysFromScript firstScriptBit, sectionArray, uniqueArray, duplicateArray, scriptObject
+   put the result into noSuiteKeys
+   repeat for each line hKey in noSuiteKeys
+      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+      put html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
+   end repeat
+   
+   repeat for each line suiteName in suiteNames
+      put suiteName & CR after handlerOutline
+      
+      put script_GetSuite(suiteName, someScript) into suiteScript
+      script_ConstructArraysFromScript suiteScript, sectionArray, uniqueArray, duplicateArray, scriptObject
+      put the result into suiteKeys
+      
+      repeat for each line hKey in suiteKeys
+         hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
+         put tab & html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
+      end repeat
+   end repeat
+   delete last char of handlerOutline
+   return handlerOutline
+end script_SuiteNameLinkOutline
+
+function script_GetSuiteOutline someScript
+   -- plain outline (no html links)
+   -- see "script_ExtractObjectSuiteOutline"
+   -- check for private handlers
+   local handlerOutline
+   
+   script_TrimNonSuiteHandlers someScript, nonSuiteHandlers
+   if nonSuiteHandlers is not empty then
+      -- put script_ExtractHkeys (nonSuiteHandlers) into hKeys
+      script_ConstructArraysFromScript nonSuiteHandlers, handlerArray, uniqueArray, duplicateArray
+      put handlerArray ["orderedHandlers"] into handlerOutline
+   end if
+   
+   put script_GetSuiteTitles(someScript) into suiteNames
+   repeat for each line suiteName in suiteNames
+      get script_GetSuiteOrderedHandlerNames (suiteName, someScript)
+      if it is empty then next repeat
+      put suiteName & CR after handlerOutline
+      put outline_IncreaseIndent (it, 1) & CR after handlerOutline
+   end repeat
+   put word 1 to -1 of handlerOutline into handlerOutline
+   return handlerOutline
+end script_GetSuiteOutline
+
+function script_GetSuiteOrderedHandlerNames suiteName, someScript
+   -- was "script_GetSuiteHandlers"
+   put script_GetSuite (suiteName, someScript) into suiteScript
+   script_ConstructArraysFromScript suiteScript, handlerArray, uniqueArray, duplicateArray, scriptObject
+   
+   put script_GetSectionHandlerArray (suiteName, someScript) into handlerArray
+   put handlerArray ["orderedHandlers"] into handlerNames
+   return handlerNames
+end script_GetSuiteOrderedHandlerNames
+
+
 --> ScriptSuite | Model
 -
 function script_GetGlobalSuiteArray 
@@ -325,60 +448,6 @@ command script_SetGlobalObject suiteTitle, scriptObject
 end script_SetGlobalObject
 
 
---> From libOPN_ScriptExtras
--
-function script_SplitIntoSuites someScript
-   script_ConstructArraysFromScript someScript, handlerArray, uniqueArray, duplicateArray
-   put handlerArray ["handlerLines"] into handlerLines
-   sort handlerLines by word 2 of each
-   
-   put line 1 of handlerLines into nextHandlerLine
-   handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
-   put handlerPrefix into oHandlerPrefix
-   
-   put empty into bigScript
-   put empty into suiteScript
-   repeat
-      set the cursor to busy
-      put line 1 of handlerLines into nextHandlerLine
-      handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
-      
-      if handlerPrefix = oHandlerPrefix then
-         put false into newSection
-         
-         script_AddNewHandler handlerType, handlerName, someScript, suiteScript
-      else
-         put true into newSection
-         
-         -- a new section, so first construct old suite and add it to end of bigScript
-         put toupper(char 1 of oHandlerPrefix) into char 1 of oHandlerPrefix
-         get script_ConstructSuite(oHandlerPrefix, suiteScript)
-         text_AddParagraph (it & CR), bigScript, CR
-         
-         -- now clear suiteScript and start new section by adding new handler to suiteScript
-         put handlerPrefix into oHandlerPrefix
-         put empty into suiteScript
-         script_AddNewHandler handlerType, handlerName, someScript, suiteScript
-      end if
-      
-      delete line 1 of handlerLines
-      if handlerLines is empty then exit repeat
-   end repeat
-   
-   if newSection is true then
-      -- suiteScript needs adding to end with a header
-      
-      put toupper(char 1 of oHandlerPrefix) into char 1 of oHandlerPrefix
-      get script_ConstructSuite(oHandlerPrefix, suiteScript)
-      text_AddParagraph (it & CR), bigScript, CR
-   else
-      -- suiteScript needs adding to end (no header)
-      
-      text_AddParagraph (suiteScript & CR), bigScript
-   end if
-   return word 1 to -1 of bigScript
-end script_SplitIntoSuites
-
 function script_ConstructSuite suiteName, suiteScript
    put word 1 to -1 of suiteScript into suiteScript
    return script_ConstructSuiteHeader(suiteName) & CR & suiteScript
@@ -466,36 +535,9 @@ function script_ConstructNestedSuiteOutline someScript, scriptObject, sortHeader
    return handlerOutline
 end script_ConstructNestedSuiteOutline
 
-function script_SuiteNameLinkOutline someScript, scriptObject
-   put script_GetSuiteTitles(someScript) into suiteNames
-   
-   -- lets get the handlers before the first suite title
-   put line 1 of suiteNames into firstSuiteName
-   put lineoffset(firstSuiteName, someScript) into firstLineNum
-   put line 1 to (firstLineNum -1) of someScript into firstScriptBit
-   script_ConstructArraysFromScript firstScriptBit, sectionArray, uniqueArray, duplicateArray, scriptObject
-   put the result into noSuiteKeys
-   repeat for each line hKey in noSuiteKeys
-      hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
-      put html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
-   end repeat
-   
-   repeat for each line suiteName in suiteNames
-      put suiteName & CR after handlerOutline
-      
-      put script_GetSuite(suiteName, someScript) into suiteScript
-      script_ConstructArraysFromScript suiteScript, sectionArray, uniqueArray, duplicateArray, scriptObject
-      put the result into suiteKeys
-      
-      repeat for each line hKey in suiteKeys
-         hkey_Deconstruct hKey, handlerName, handlerType, scriptObject, handlerNum
-         put tab & html_ConstructNameLink(handlerName, hKey) & CR after handlerOutline
-      end repeat
-   end repeat
-   delete last char of handlerOutline
-   return handlerOutline
-end script_SuiteNameLinkOutline
 
+--> Script | Suite 
+-
 function script_SuiteNameToPath suiteName, someDelim
    if someDelim is emty then put "/" into someDelim
    set the itemdelimiter to "|"
@@ -505,40 +547,6 @@ function script_SuiteNameToPath suiteName, someDelim
    delete char -1 of suitePath
    return suitePath
 end script_SuiteNameToPath
-
-function script_GetSuiteOutline someScript
-   -- plain outline (no html links)
-   -- see "script_ExtractObjectSuiteOutline"
-   -- check for private handlers
-   local handlerOutline
-   
-   script_TrimNonSuiteHandlers someScript, nonSuiteHandlers
-   if nonSuiteHandlers is not empty then
-      -- put script_ExtractHkeys (nonSuiteHandlers) into hKeys
-      script_ConstructArraysFromScript nonSuiteHandlers, handlerArray, uniqueArray, duplicateArray
-      put handlerArray ["orderedHandlers"] into handlerOutline
-   end if
-   
-   put script_GetSuiteTitles(someScript) into suiteNames
-   repeat for each line suiteName in suiteNames
-      get script_GetSuiteOrderedHandlerNames (suiteName, someScript)
-      if it is empty then next repeat
-      put suiteName & CR after handlerOutline
-      put outline_IncreaseIndent (it, 1) & CR after handlerOutline
-   end repeat
-   put word 1 to -1 of handlerOutline into handlerOutline
-   return handlerOutline
-end script_GetSuiteOutline
-
-function script_GetSuiteOrderedHandlerNames suiteName, someScript
-   -- was "script_GetSuiteHandlers"
-   put script_GetSuite (suiteName, someScript) into suiteScript
-   script_ConstructArraysFromScript suiteScript, handlerArray, uniqueArray, duplicateArray, scriptObject
-   
-   put script_GetSectionHandlerArray (suiteName, someScript) into handlerArray
-   put handlerArray ["orderedHandlers"] into handlerNames
-   return handlerNames
-end script_GetSuiteOrderedHandlerNames
 
 command script_TrimNonSuiteHandlers @someScript, @nonSuiteHandlers
    put CR before someScript

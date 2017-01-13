@@ -1,33 +1,109 @@
-﻿script "lib_LCW"
+﻿script "behavior_InitLiveCodeWorld"
 --> MetaData
 -
 license: GPLv3
-name: lib_LCW
-type: library
+name: behavior_InitLiveCodeWorld
+type: behavior
 version: 0.7
 
+
 /*
-Here we place all the handlers that need to be in use before project initialisation.
+This is the script for Livecode World Home stack.
+We use a behavior so that we can use script-only stacks for the code and keep it under good version control *git).
+Except that LCW is already a scriptonly stack!
+
+Here we will place handlers from lcw.livcode" after we refactor the init scripts from the stuff we don;t need to laod the initial libraires.
+
+Here we experiment with a minimal script-only definition of a general project home stack.
+It should do everything that is needed to get the project up and running, but nothing more.
+It should:
+
+-  have no dependencies
+-  not depend on script introspection
+-  use robust file naming concentions
+-  human readable and easy to parse in any language
+-  a simple text stack that plays well with revision control
+
+We are not (yet) indexing all nested stacks, rather just standard toplevel folders and modules
+Stacks within the assets folder will not be indexed (not done yet).
+Assets are supposed to be things like images. videos, javascript, css html, json or arrays?
+
+= To Do =
+At the moment we have a script only stack with a large and complex script.
+This is not a good minimal architecture.
+Instead we want to move over to a minimal initialisation script, and use a Livecode stack for the HomeStack
+That way we can store certain standard code as a behavior (for instance the card script),
+as well as give the HomeStack and interface and some useful functionality.
 */
 
-
 --> Working on
--
 command project_LoadMenus projectFolder
    put project_ListPaths ("controllers", projectFolder) into stackPaths
    project_IndexGlobalMenus stackPaths
 end project_LoadMenus
 
 
---> Events
+--> LCW | Me
 -
-on revEditScript
-   -- sent by Livecode to registered plugins
-   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
-   -- beep
+command project_Init
+   if the long id of the target is not the long id of me then pass project_Init
+   _LcwInitialize
+end project_Init
+
+
+--> Project | Init
+-
+command _LcwInitialize
+   -- for LCW only
+   -- ideally we don't use this stack as things like "preOpenStack" will be called every time
+   
+   -- so we don't load it every time
+   -- if env_GetProjectFolder ("lcw") is not empty then return false -- already loaded which should not happen but projects may do this by mistake
+   put lcw_HomeStackName() into lcwProjectName
+   
+   -- ideally we don't need this
+   start using stack lcwProjectName
+   
+   -- let's make it pretty
+   put the screenrect into stackRect
+   add 100 to item 1 of stackRect
+   add 100 to item 2 of stackRect
+   subtract 100 from item 3 of stackRect
+   subtract 100 from item 4 of stackRect
+   set the rect of stack lcwProjectName to stackRect
+   
+   -- let's initialise the project
+   -- eventually we will aim to have no or minimal dependencies
+   -- and separate out menu tools from the basic environment
+   env_AddToBash
+   put the filename of stack lcwProjectName into lcwHomeStackFile
+   project_InitialiseFolder lcwHomeStackFile -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
+   project_LoadModules lcwHomeStackFile
+   
+   -- load the global dictionary for where handlers are
+   hkeyLine_LoadPlaceArray
+   
+   -- activate a default user project
+   _LoadCustomUserProject
+   
+   -- this is for the global menus to work. 
+   _CreateMenuButton
+   project_CreateHomeBrowser "lcw"
+   
+   -- The menu_Button needs to be in an open stack
+   -- set lockmessages to true -- we don't want to trigger "preOpenStack" and load this code twice
+   -- go to stack lcwProjectName
+   -- show stack lcwProjectName
+   -- set lockmessages to false
+   
+   -- activate the menus
    rev_AddBehaviorHacks
-   pass revEditScript
-end revEditScript
+   ide_AddRevEditScriptStack "LCW"
+   
+   -- custom
+   choose browse tool 
+   close stack "revTools"
+end _LcwInitialize
 
 
 --> Project | Stackfiles
@@ -312,6 +388,14 @@ end project_UsedStackNames
 /*
 For menus only. move to lcw_Tools
 */
+
+on revEditScript
+   -- sent by Livecode to registered plugins
+   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
+   beep
+   rev_AddBehaviorHacks
+   pass revEditScript
+end revEditScript
 
 function ide_GetRevEditScriptStack stackName
    global gREVMessageDispatch
@@ -900,9 +984,9 @@ private command _AddToStackFileArray @stackFileArray, someFolder, pHomeFolder
 end _AddToStackFileArray
 
 
---> LCW | Create
+--> Private | Create
 -
-command lcw_LoadCustomUserProject
+private command _LoadCustomUserProject
    put lcw_UserProjectFolder() into lcwUserProjectFolder
    project_InitialiseFolder lcwUserProjectFolder
    
@@ -911,9 +995,9 @@ command lcw_LoadCustomUserProject
    library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
    
    dispatch "project_Init" to stack userHomeStackName
-end lcw_LoadCustomUserProject
+end _LoadCustomUserProject
 
-command lcw_CreateMenuButton
+private command _CreateMenuButton
    -- this should be part of the new script-only  menu library 
    -- in case we call this handler more that once, do not create multiple buttons
    put lcw_HomeStackName() into lcwHomeStackName
@@ -931,7 +1015,7 @@ command lcw_CreateMenuButton
       put CR & "end menuPick" after someScript
       set the script of createdObject to someScript
    end if
-end lcw_CreateMenuButton
+end _CreateMenuButton
 
 
 --> Deps
@@ -1045,6 +1129,14 @@ end stack_SisterFolder
 
 --> Objects
 -
+getprop menu_Button
+   -- works but should probably be optimised
+   put lcw_HomeStackName() into lcwHomeStackName
+   
+   if exists (button "Global Menu Button" of cd 1 of stack lcwHomeStackName) is false then pass menu_Button
+   return the long id of button "Global Menu Button" of cd 1 of stack lcwHomeStackName
+end menu_Button
+
 getprop card_Object
    -- ideCoreCardOfcontrol§
    -- always returns an object

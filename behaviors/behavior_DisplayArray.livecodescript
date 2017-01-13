@@ -43,6 +43,20 @@ private command _displaySelectedValue pTreeWidget
    end if
 end _displaySelectedValue
 
+
+--> Props | Selected
+-
+getprop parent_Array
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   delete item -1 of commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   return selectedValue
+end parent_Array
+
 getprop selected_Value
    put _treeWidget() into treeWidget
    
@@ -59,16 +73,13 @@ getprop selected_Value
    end if
 end selected_Value
 
-getprop parent_Array
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into commaKeys
-   delete item -1 of commaKeys
-   put the arrayData of treeWidget into someArray
-   split commaKeys with comma
-   put someArray [commaKeys] into selectedValue
-   return selectedValue
-end parent_Array
+getprop selected_Path
+   return the hilited_Element of me
+end selected_Path
+
+setprop selected_Path commaPath
+   set the hilited_Element of me to commaPath
+end selected_Path
 
 getprop hilited_Element
    put _treeWidget() into treeWidget
@@ -199,6 +210,10 @@ setprop menu_Target [mTitlePath] mTarget
 end menu_Target
 
 getprop menu_Title
+   if word 1 of the target is not "widget" then
+      pass menu_Title
+   end if
+   
    put the kind of the target into targetKind
    switch targetKind
       case "com.livecode.widget.treeView"
@@ -249,7 +264,65 @@ setprop view_MenuArray menuArray
 end view_MenuArray
 
 
---> Title | Props
+--> Props | Events
+-
+getprop display_MouseTarget
+   -- should call this mouse_Target ???
+   put LocalArray ["display_MouseTarget"] into displayMouseTarget
+   return displayMouseTarget
+end display_MouseTarget
+    
+setprop display_MouseTarget displayMouseTarget
+   put displayMouseTarget into LocalArray ["display_MouseTarget"]
+end display_MouseTarget
+
+getprop view_EventArray eventArray   
+   put the display_MouseTarget of me into eventArray ["eventTarget"]
+   put the action_InspectCommand of me into eventArray ["mouseUp"]
+   put the action_DoubleClickCommand of me into eventArray ["mouseDoubleUp"]
+   return eventArray
+end view_EventArray
+
+setprop view_EventArray eventArray   
+   set the display_MouseTarget of me to eventArray ["eventTarget"]
+   set the action_InspectCommand of me to eventArray ["mouseUp"]
+   set the action_DoubleClickCommand of me to eventArray ["mouseDoubleUp"]
+end view_EventArray
+
+getprop action_InspectCommand
+   put LocalArray ["action_InspectCommand"] into mouseUpCommand
+   return mouseUpCommand
+end action_InspectCommand
+
+setprop action_InspectCommand mouseUpCommand
+   put mouseUpCommand into LocalArray ["action_InspectCommand"]
+end action_InspectCommand
+
+getprop action_DoubleClickCommand
+   put LocalArray ["action_DoubleClickCommand"] into mouseDoubleUpCommand
+   return mouseDoubleUpCommand
+end action_DoubleClickCommand
+
+setprop action_DoubleClickCommand mouseDoubleUpCommand
+   put mouseDoubleUpCommand into LocalArray ["action_DoubleClickCommand"]
+end action_DoubleClickCommand
+
+
+--> Props | Display
+-
+getprop footer_IsVisible
+   return the visible of _footerWidget()
+end footer_IsVisible
+
+setprop footer_IsVisible someBoolean
+   lock screen
+   set the visible of _footerWidget() to someBoolean
+   dispatch "refreshDisplay" to cd 1 of me
+   unlock screen
+end footer_IsVisible
+
+
+--> Props | Title
 -
 getprop tree_SortType
    put _treeWidget() into treeWidget
@@ -344,63 +417,6 @@ setprop view_Data [someKey] someData
       put someData into LocalArray ["view_Data"][someKey]
    end if
 end view_Data
-
-
---> EventArray
--
-getprop view_EventArray eventArray   
-   put the display_MouseTarget of me into eventArray ["eventTarget"]
-   put the action_InspectCommand of me into eventArray ["mouseUp"]
-   put the action_DoubleClickCommand of me into eventArray ["mouseDoubleUp"]
-   return eventArray
-end view_EventArray
-
-setprop view_EventArray eventArray   
-   set the display_MouseTarget of me to eventArray ["eventTarget"]
-   set the action_InspectCommand of me to eventArray ["mouseUp"]
-   set the action_DoubleClickCommand of me to eventArray ["mouseDoubleUp"]
-end view_EventArray
-
-getprop display_MouseTarget
-   put LocalArray ["display_MouseTarget"] into displayMouseTarget
-   return displayMouseTarget
-end display_MouseTarget
-    
-setprop display_MouseTarget displayMouseTarget
-   put displayMouseTarget into LocalArray ["display_MouseTarget"]
-end display_MouseTarget
-
-getprop action_InspectCommand
-   put LocalArray ["action_InspectCommand"] into mouseUpCommand
-   return mouseUpCommand
-end action_InspectCommand
-
-setprop action_InspectCommand mouseUpCommand
-   put mouseUpCommand into LocalArray ["action_InspectCommand"]
-end action_InspectCommand
-
-getprop action_DoubleClickCommand
-   put LocalArray ["action_DoubleClickCommand"] into mouseDoubleUpCommand
-   return mouseDoubleUpCommand
-end action_DoubleClickCommand
-
-setprop action_DoubleClickCommand mouseDoubleUpCommand
-   put mouseDoubleUpCommand into LocalArray ["action_DoubleClickCommand"]
-end action_DoubleClickCommand
-
-
---> Display | Props
--
-getprop footer_IsVisible
-   return the visible of _footerWidget()
-end footer_IsVisible
-
-setprop footer_IsVisible someBoolean
-   lock screen
-   set the visible of _footerWidget() to someBoolean
-   dispatch "refreshDisplay" to cd 1 of me
-   unlock screen
-end footer_IsVisible
 
 
 --> Geometry

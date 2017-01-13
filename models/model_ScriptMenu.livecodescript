@@ -35,8 +35,33 @@ The storage of the actual data differs slightly from a normal array based model 
 -  menu_MetaDataArray uses [mTitle]["MetaData"]
 */
 
---> Working on
+--> Menu | Test
 -
+command display_ActiveMenuArray mTitle
+   global gLCW
+   
+   put gLCW ["activeMenuArray"] into activeMenuArray
+   put "Recursion:" && mTitle & ",menu_CheckRecursionOnExtract" into someTitle
+   display_Array activeMenuArray, someTitle
+end display_ActiveMenuArray
+
+function menu_ListGlobalNames
+   global gLCW
+   put gLCW ["Global Menus"] into menuArray
+   return keys (menuArray)
+end menu_ListGlobalNames
+
+function menu_ListGlobalObjects
+   global gLCW
+   put gLCW ["Global Menus"] into menuArray
+   repeat for each key mTitle in menuArray
+      put menuArray [mTitle]["mController"] into mController
+      put mController & CR after mControllers
+   end repeat
+   delete char -1 of mControllers
+   return mControllers
+end menu_ListGlobalObjects
+
 getprop script_MenuTitles
    -- not used except "Global | Menu | Table | Menu" ?
    

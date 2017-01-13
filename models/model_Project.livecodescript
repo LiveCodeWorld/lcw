@@ -73,10 +73,55 @@ See also "meta_StackArrayFile" for project level stackfile storage
 */
 
 
---> Working on
+--> Working on (Project | Files | Convert)
 -
+/*
+These are generic stack functions?
+*/
 
---> Project | Array | 
+function project_ConvertStackNamesToShortFiles stackNames
+   set the itemdelimiter to slash
+   repeat for each line stackName in stackNames
+      put the filename of stack stackName into longFile
+      put item -1 of longFile into shortFile
+      put shortFile & CR after shortFiles
+   end repeat
+   return shortFiles
+end project_ConvertStackNamesToShortFiles
+
+function project_ConvertStackObjectsToShortFiles stackObjects
+   set the itemdelimiter to slash
+   repeat for each line stackObject in stackObjects
+      if exists (stackObject) is false then next repeat
+      
+      put the filename of stackObject into longFile
+      put item -1 of longFile into shortFile
+      put shortFile & CR after shortFiles
+   end repeat
+   return shortFiles
+end project_ConvertStackObjectsToShortFiles
+
+function project_ConvertShortFilesToStackObjects shortFiles, someFolder
+   local goodStackObjects, badStackFiles
+   project_ConvertShortFilesToStackObjects shortFiles, someFolder, goodStackObjects, badStackFiles
+   return goodStackObjects
+end project_ConvertShortFilesToStackObjects
+
+command project_ConvertShortFilesToStackObjects shortFiles, someFolder, @goodStackObjects, @badStackFiles
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into longStackFile
+      if there is not a file longStackFile then
+         put longStackFile & CR after badStackFiles
+         next repeat
+      end if
+      put the name of stack longStackFile & CR after goodStackObjects
+   end repeat
+   delete char -1 of badStackFiles
+   delete char -1 of goodStackObjects
+end project_ConvertShortFilesToStackObjects
+
+
+--> Project | Array
 -
 getprop project_Array
    -- put the project_ArrayFile of the target into projectArrayFile
@@ -161,70 +206,44 @@ function project_CurrentBackScripts
 end project_CurrentBackScripts
 
 
---> Project | Files | Convert
+--> Project | Delete
 -
-function project_ConvertStackNamesToShortFiles stackNames
-   set the itemdelimiter to slash
+command project_CloseAndDelete projectName
+   project_CloseOpenStacks projectName
+   put the result into closedStackNames
+   
+   put library_FetchProjectFolder (projectName) into projectFolder
+   revDeleteFolder projectFolder
+   
+   library_DeleteProjectArray projectName
+   return closedStackNames
+end project_CloseAndDelete
+
+command project_CloseOpenStacks projectName
+   put project_ListOpenStackNames (projectName) into stackNames
    repeat for each line stackName in stackNames
-      put the filename of stack stackName into longFile
-      put item -1 of longFile into shortFile
-      put shortFile & CR after shortFiles
+      save stack stackName
+      delete stack stackName
    end repeat
-   return shortFiles
-end project_ConvertStackNamesToShortFiles
-
-function project_ConvertStackObjectsToShortFiles stackObjects
-   set the itemdelimiter to slash
-   repeat for each line stackObject in stackObjects
-      if exists (stackObject) is false then next repeat
-      
-      put the filename of stackObject into longFile
-      put item -1 of longFile into shortFile
-      put shortFile & CR after shortFiles
-   end repeat
-   return shortFiles
-end project_ConvertStackObjectsToShortFiles
-
-function project_ConvertShortFilesToStackObjects shortFiles, someFolder
-   local goodStackObjects, badStackFiles
-   project_ConvertShortFilesToStackObjects shortFiles, someFolder, goodStackObjects, badStackFiles
-   return goodStackObjects
-end project_ConvertShortFilesToStackObjects
-
-command project_ConvertShortFilesToStackObjects shortFiles, someFolder, @goodStackObjects, @badStackFiles
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile into longStackFile
-      if there is not a file longStackFile then
-         put longStackFile & CR after badStackFiles
-         next repeat
-      end if
-      put the name of stack longStackFile & CR after goodStackObjects
-   end repeat
-   delete char -1 of badStackFiles
-   delete char -1 of goodStackObjects
-end project_ConvertShortFilesToStackObjects
-
-
---> Working on
--
-function env_ListHomeArrayFiles
-   put env_GetHomeArrayFileData() into envProjectArrayFileArray
-   put envProjectArrayFileArray ["projectArrayFiles"] into projectArrayFiles
-   return projectArrayFiles 
-end env_ListHomeArrayFiles
-
-function env_GetHomeArrayFileData
-   put library_ListProjectNames() into projectNames
-   repeat for each line projectName in projectNames
-      put project_GetArrayFile (projectName) into projectArrayFile
-      if there is a file projectArrayFile then
-         put projectArrayFile into envProjectArrayFileArray ["projectNames"][projectName]
-         put projectName into envProjectArrayFileArray ["projectArrayFiles"][projectArrayFile]
+   return stackNames
+end project_CloseOpenStacks
+   
+function project_ListOpenStackNames projectName
+   -- also works with modules
+   put library_FetchProjectFolder (projectName) into projectFolder
+   put project_ListAllStackPaths (projectFolder) into projectStackPaths
+   put revLoadedStacks ("application") into loadedStackNames
+   repeat for each line stackPath in projectStackPaths
+      if there is a stack stackPath then
+         put the short name of stack stackPath into shortName
+         if shortName is among the lines of loadedStackNames then
+            put shortName & CR after stackNames
+         end if
       end if
    end repeat
-   return envProjectArrayFileArray
-end env_GetHomeArrayFileData
-
+   delete char -1 of stackNames
+   return stackNames
+end project_ListOpenStackNames
 
 
 --> Library | Project | Model | Folders | Naming
@@ -367,11 +386,11 @@ command library_SaveProjectValue someKey, someValue, pProjectName
    return projectArray
 end library_SaveProjectValue
 
-function library_FetchProjectArray pProjectName
+function library_FetchProjectArray projectName
    -- was "library_FetchProjectArray"
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
+   -- if projectName is empty then put env_GetProjectFocus() into projectName
    put library_FetchProjectData() into libraryProjectData
-   put libraryProjectData [pProjectName] into projectArray
+   put libraryProjectData [projectName] into projectArray
    return projectArray
 end library_FetchProjectArray
 

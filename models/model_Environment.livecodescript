@@ -44,6 +44,24 @@ function project_IsActive projectName
    return projectIsLoaded
 end project_IsActive
 
+function env_ListHomeArrayFiles
+   put env_GetHomeArrayFileData() into envProjectArrayFileArray
+   put envProjectArrayFileArray ["projectArrayFiles"] into projectArrayFiles
+   return projectArrayFiles 
+end env_ListHomeArrayFiles
+
+function env_GetHomeArrayFileData
+   put library_ListProjectNames() into projectNames
+   repeat for each line projectName in projectNames
+      put project_GetArrayFile (projectName) into projectArrayFile
+      if there is a file projectArrayFile then
+         put projectArrayFile into envProjectArrayFileArray ["projectNames"][projectName]
+         put projectName into envProjectArrayFileArray ["projectArrayFiles"][projectArrayFile]
+      end if
+   end repeat
+   return envProjectArrayFileArray
+end env_GetHomeArrayFileData
+
 
 --> Environment | Project | Focus
 -
@@ -65,20 +83,6 @@ command env_SetProjectFocus currentProjectFocus
 end env_SetProjectFocus
 
 
---> Private
--
-private command _SetProjectNames @pProjectNames
-   switch pProjectNames
-      case "all"
-      case empty
-         put env_ListProjects() into pProjectNames
-         break
-      default
-         replace comma with CR in pProjectNames
-   end switch
-end _SetProjectNames
-
-
 --> Environment | List
 -
 function env_ListProjects pListAll
@@ -88,11 +92,19 @@ function env_ListProjects pListAll
          put library_ListProjectNames() into projectNames
          return projectNames
       case empty
+         -- this is the real default
+         -- not returned in order of loading
          put env_GetProjectArray() into envProjectArray
-         put keys (envProjectArray) into envProjectNames
-         filter envProjectNames without "View|*"
-         sort envProjectNames
-         return word 1 to -1 of envProjectNames
+         set the itemdelimiter to slash
+         repeat for each key projectName in envProjectArray
+            put envProjectArray [projectName] into projectFolder
+            if item -2 projectFolder is not "modules" then
+               put projectName & CR after loadedProjectNames
+            end if
+         end repeat
+         delete char -1 of loadedProjectNames
+         sort loadedProjectNames
+         return loadedProjectNames
       default -- case "with views"
          put env_GetProjectArray() into envProjectArray
          put keys (envProjectArray) into envProjectNames
@@ -345,3 +357,17 @@ command env_AddToBash
    end if
    return $PATH
 end env_AddToBash
+
+
+--> Private
+-
+private command _SetProjectNames @pProjectNames
+   switch pProjectNames
+      case "all"
+      case empty
+         put env_ListProjects() into pProjectNames
+         break
+      default
+         replace comma with CR in pProjectNames
+   end switch
+end _SetProjectNames

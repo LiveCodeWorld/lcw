@@ -13,8 +13,54 @@ They no longer refer to project-metadata folders, which are now called textstack
 Those older names are a bit of a mess.
 */
 
+--> Working on
+-
+function project_ListUsedDeps projectName
+   -- not in order of use?
+   put project_ListProjectDepNames (projectName) into depNames
+   repeat for each line projectName in depNames
+      put project_ListUsedStacks (projectName) & CR after usedStacks
+   end repeat
+   delete char -1 of usedStacks
+   return usedStacks
+end project_ListUsedDeps
+
+function project_ListFrontDeps projectName
+   -- not in order of use?
+   put project_ListProjectDepNames (projectName) into depNames
+   repeat for each line projectName in depNames
+      put project_ListFrontScripts (projectName) & CR after objectIndex
+   end repeat
+   delete char -1 of objectIndex
+   return objectIndex
+end project_ListFrontDeps
+
+function project_ListBackDeps projectName
+   -- not in order of use?
+   put project_ListProjectDepNames (projectName) into depNames
+   repeat for each line projectName in depNames
+      put project_ListBackScripts (projectName) & CR after objectIndex
+   end repeat
+   delete char -1 of objectIndex
+   return objectIndex
+end project_ListBackDeps
+
+function project_ListUsedStacks projectName
+   put project_ListUsedStackPaths (projectName) into stackPaths
+   return stack_PathsToObjects (stackPaths)
+end project_ListUsedStacks
+
+
 --> Project | Props
 -
+function project_ListProjectDepNames projectName
+   -- lazy: does not return things in the right order
+   local projectNameArray
+   _addProjectToDeps projectName, projectNameArray
+   put keys (projectNameArray) into projectNameIndex
+   return word 1 to -1 of projectNameIndex
+end project_ListProjectDepNames
+   
 getprop project_Folders [pIncludeInvisible]
    put the project_Folder of the target into projectFolder
    put folder_ListLong (projectFolder) into standardFolders
@@ -148,11 +194,21 @@ function project_ListViewPaths projectName
    return viewPaths
 end project_ListViewPaths
 
+function project_ListFrontScripts projectName
+   put project_ListFrontScriptPaths (projectName) into stackPaths
+   return stack_PathsToObjects (stackPaths)
+end project_ListFrontScripts
+
 function project_ListFrontScriptPaths projectName
    put library_FetchProjectFolder (projectName) into projectFolder
    put project_ListPaths ("frontscripts", projectFolder) into viewPaths
    return viewPaths
 end project_ListFrontScriptPaths
+
+function project_ListBackScripts projectName
+   put project_ListBackScriptPaths (projectName) into stackPaths
+   return stack_PathsToObjects (stackPaths)
+end project_ListBackScripts
 
 function project_ListBackScriptPaths projectName
    put library_FetchProjectFolder (projectName) into projectFolder
@@ -208,13 +264,7 @@ end project_ListUsedStackNames
 
 function project_ListUsedStacks projectName
    put project_ListUsedStackPaths (projectName) into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      put the name of stack stackPath & CR after usedStackObjects
-   end repeat
-   delete char -1 of usedStackObjects
-   sort usedStackObjects
-   return usedStackObjects
+   return stack_PathsToObjects (stackPaths)
 end project_ListUsedStacks
 
 
@@ -259,3 +309,21 @@ function project_FolderFromFile objectFile
    end repeat
    return empty
 end project_FolderFromFile
+
+
+--> Private
+-
+private command _addProjectToDeps projectName, @projectNameArray
+   -- recursive
+   if projectName is among the keys of projectNameArray then return false
+   
+   put empty into projectNameArray [projectName]
+   
+   put the project_Deps of stack projectName into projectDepItems
+   repeat for each item projectDepName in projectDepItems
+      if projectDepName is among the keys of projectNameArray then next repeat
+      
+      _addProjectToDeps projectDepName, projectNameArray
+   end repeat
+   return true
+end _addProjectToDeps

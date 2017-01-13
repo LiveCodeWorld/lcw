@@ -234,7 +234,8 @@ end stack_Object
 
 --> Stack | Utilities
 -
-function stack_ListUsed
+function stack_ListUsed pProjectName
+   -- should add functionalty for pProjectName (used by the script_Hierarchy [pProjectName])
    put the stacksinuse into usedStackNames
    put stack_PathsToObjects (usedStackNames) into stackObjects
    return stackObjects

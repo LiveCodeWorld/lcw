@@ -39,32 +39,6 @@ setprop card_Margin cardMargin
 end card_Margin
 
 
---> Template | Behaviors
--
-/*
-Requires "m" for "setprop imported_Behaviors"
-*/
-
-getprop imported_Behaviors
-   put the stack_Name of me into viewName
-   put view_GetTemplateBehaviorCard (viewName) into bCardObject
-   put exists (bCardObject) into someBoolean
-   return someBoolean
-end imported_Behaviors
-
-setprop imported_Behaviors someBoolean
-   -- should be called of a view_Template
-   put the stack_Name of me into viewName
-   if someBoolean is true then
-      view_CreateTemplateBehaviorCard viewName
-      put the result into templateBehaviorCard
-      view_CreateImportedBehaviorButtons templateBehaviorCard
-   else
-      view_DeleteTemplateBehaviorCard viewName
-   end if
-end imported_Behaviors
-
-
 --> Events | Drag
 -
 on dragEnd
@@ -276,8 +250,16 @@ on preOpenCard
    -- we hope that preOpenControl handlers will take care of fixing any nested behaviors
    
    put _templateView() into templateView
+   if exists (templateView) is false then pass preOpenCard
+   
    -- view_FixBehavior templateView -- too aggressive (can cause recursion if we display a view in this handler)
-   set the behavior of templateView to the behavior of templateView
+   put the behavior of templateView into bObject
+   if exists (bObject) is false then
+      breakpoint
+      set the behavior of templateView to empty
+   else
+      set the behavior of templateView to bObject
+   end if
    pass preOpenCard
 end preOpenCard
 
@@ -394,6 +376,7 @@ end view_RectOnCard
 
 getprop view_BehaviorStackName
    put the view_Name of the target into vName
+   replace "|" with empty in vName
    put "behavior_" & vName into stackName
    return stackName
 end view_BehaviorStackName

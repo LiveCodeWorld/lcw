@@ -33,9 +33,8 @@ local LocalArray
 
 --> Working on
 -
---> Script Export | Paths
--
 function hkeyLine_FromHandlerFile handlerPath
+   -- is this needed???
    -- lcw_User/lcw_Metadata/lib_Display/data/objects/stack/handlers/M display_SpotlightHandler/lcw_handler.txt
    
    set the itemdelimiter to slash
@@ -48,6 +47,9 @@ function hkeyLine_FromHandlerFile handlerPath
    return hkeyLine
 end hkeyLine_FromHandlerFile
 
+
+--> Script Export | Paths
+-
 function script_FileToObject somePaths
    -- /lcw_User/lcw_Metadata/Global_Project_Menu/data/objects/stack/lcw_script.txt
    -- /lcw_User/lcw_Metadata/Rescue Livecode World/data/objects/button_1209/lcw_script.txt
@@ -221,30 +223,6 @@ getprop script_Raw
    return rawScript
 end script_Raw
 
-function script_FetchRaw scriptFile
-   put url ("binfile:" & scriptFile) into someScript
-   -- hack_UpdateBinFile someScript, scriptFile
-   return someScript
-end script_FetchRaw
-
-command script_SaveRaw scriptFile, someScript
-   put scriptFile into scriptFolder
-   set the itemdelimiter to slash
-   put empty into item -1 of scriptFolder
-   folder_CreateNested scriptFolder
-   
-   put someScript into url ("binfile:" & scriptFile)
-   return the result
-end script_SaveRaw
-
-command hack_UpdateBinFile @someData, someFile
-   if someData contains numtochar (13) then
-      -- old "file" export
-      replace numtochar (13) with CR in someData
-      put someData into url ("binfile:" & someFile)
-   end if
-end hack_UpdateBinFile
-
 
 --> Script Export | Merge
 -
@@ -271,7 +249,7 @@ function object_ConstructMergeScriptArray tObject
    put the script of tObject into someScript
    return script_ConstructMergeArray (someScript)
 end object_ConstructMergeScriptArray
-   
+
 function script_ConstructMergeArray someScript
    -- 20% faster than not using revAvailableHandlers
    -- 50% slower than fetching from disk
@@ -337,3 +315,11 @@ command hkey_NormalizeType @hType
    replace "M" with "c" in hType
    put tolower (hType) into hType
 end hkey_NormalizeType
+
+-- command hack_UpdateBinFile @someData, someFile
+if someData contains numtochar (13) then
+   -- old "file" export
+   replace numtochar (13) with CR in someData
+   put someData into url ("binfile:" & someFile)
+end if
+end hack_UpdateBinFile

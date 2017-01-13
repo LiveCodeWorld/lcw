@@ -1,4 +1,4 @@
-﻿script "behavior_View|Index|Simple"
+﻿script "behavior_ViewIndexSimple"
 --> MetaData
 -
 copyright: David Bovill
@@ -18,155 +18,15 @@ local LocalArray
 
 --> Working on
 -
-
---> Index | Selected
--
-getprop line_Colour [lineNum]
-   put _fieldObject() into fieldObject
-   if lineNum is empty then
-      put line 1 of the hilitedlines of fieldObject into lineNum
-   end if
-   put the textcolor of line lineNum of fieldObject into someColour
-   return someColour
-end line_Colour
-
-setprop line_Colour [lineNumList] someColour
-   put _fieldObject() into fieldObject
-   if lineNumList is empty then
-      put line 1 of the hilitedlines of fieldObject into lineNumList
-   end if
-   
-   lock screen
-   repeat for each item lineNum in lineNumList
-      set the textcolor of line lineNum of fieldObject to someColour
-   end repeat
-   unlock screen
-end line_Colour
-
-getprop hilited_Lines
-   put the hilitedlines of _fieldObject() into lineNumList
-   return lineNumList
-end hilited_Lines
-
-setprop hilited_Lines lineNumList
-   replace CR with comma in lineNumList
-   set the hilitedlines of _fieldObject() to lineNumList
-   return lineNumList
-end hilited_Lines
-
-getprop selected_Line
-   put the selected_Index of _fieldObject() into someIndex
-   return line 1 of someIndex
-end selected_Line
-
-setprop selected_Line someLine
-   set the selected_Index of me to line 1 of someLine
-end selected_Line
-
-getprop selected_Index
-   put the selectedtext of _fieldObject() into someIndex
-   return someIndex
-end selected_Index
-
-setprop selected_Index someLines
-   put the view_Index of me into viewIndex
-   set the itemdelimiter to slash
-   repeat for each line someLine in someLines
-      put lineOffset (someLine, viewIndex) into lineNum
-      if lineNum > 0 then
-         put lineNum & comma after lineNumList
-      end if
-   end repeat
-   delete char -1 of lineNumList
-   
-   set the hilitedlines of _fieldObject() to lineNumList
-   return lineNumList
-end selected_Index
-
-
---> Working on | Files, folders and stacks
--
-/*
-Not gnerally needed so move to separate behavior
-*/
-
-getprop selected_ShortStackFiles
-   put the selected_Index of me into shortStackFiles 
-   return shortStackFiles
-end selected_ShortStackFiles
-
-getprop selected_StackObjects
-   put the selected_ShortStackFiles of me into shortStackFiles  
-   put _getStackObjects (shortStackFiles) into stackObjects
-   return stackObjects
-end selected_StackObjects
-
-getprop selected_StackNames
-   put the selected_ShortStackFiles of me into shortStackFiles  
-   put _getStackNames (shortStackFiles) into stackNames
-   return stackNames
-end selected_StackNames
-
-getprop selected_LongStackFiles
-   put the selected_ShortStackFiles of me into shortStackFiles  
-   put _getLongStackFiles (shortStackFiles) into longStackFiles
-   return longStackFiles
-end selected_LongStackFiles
-
-getprop index_StackObjects
-   put the index_ShortFiles of me into shortStackFiles  
-   put _getStackObjects (shortStackFiles) into stackObjects
-   return stackObjects
-end index_StackObjects
-
-getprop index_StackNames
-   put the index_ShortFiles of me into shortStackFiles  
-   put _getStackNames (shortStackFiles) into stackNames
-   return stackNames
-end index_StackNames
-
-getprop index_LongStackFiles
-   put the index_ShortFiles of me into shortStackFiles  
-   put _getLongStackFiles (shortStackFiles) into longStackFiles
-   return longStackFiles
-end index_LongStackFiles
-
-getprop index_ShortStackFiles
-   breakpoint
-   return the index_ShortFiles of me
-end index_ShortStackFiles
-
-getprop index_ShortFiles
-   put the view_Index of me into shortStackFiles  
-   return shortStackFiles
-end index_ShortFiles
-
-getprop index_Files
-   put the view_Index of me into shortStackFiles
-   put _getLongFiles (shortFiles) into longFiles
-   return longFiles
-end index_Files
-
-getprop index_Folder
-   put LocalArray ["index_Folder"] into indexFolder
-   return indexFolder 
-end index_Folder
-
-setprop index_Folder indexFolder
-   text_AddTrailing indexFolder, slash
-   put indexFolder into LocalArray ["index_Folder"]
-end index_Folder
-
-
 --> Events
 -
-on nameChanged oldName, newName
-   -- here we change field and button names
-   -- this will break any references to them by name
-   -- but you shouldn't do that lightly anyway as this view hides it's inner workings.
-   set the name of _titleView() to newName
-   set the label of _titleView() to empty
-   set the name of _fieldObject() to newName
+-- on nameChanged oldName, newName
+-- here we change field and button names
+-- this will break any references to them by name
+-- but you shouldn't do that lightly anyway as this view hides it's inner workings.
+set the name of _titleView() to newName
+set the label of _titleView() to empty
+set the name of _fieldObject() to newName
 end nameChanged
 
 on mouseDown
@@ -203,6 +63,10 @@ end mouseDoubleUp
 on preOpenControl
    local headerHeight
    _setDefaultHeight headerHeight
+   if there is a stack "behavior_ViewIndexFiles" then
+      put the name of stack "behavior_ViewIndexFiles" into bObject
+      set the behavior of stack "behavior_ViewIndexSimple" to bObject
+   end if
    pass preOpenControl
 end preOpenControl
 
@@ -325,7 +189,7 @@ getprop stack_Title
    put the title_Text of me into indexDisplayTitle
    put indexDisplayTitle into stackTitle
    
-   put the stack_Object of me into stackObject
+   put the defaultstack into stackObject
    put the label of stackObject into displayStackLabel
    if displayStackLabel is not empty then
       put displayStackLabel into item 2 of stackTitle
@@ -337,7 +201,7 @@ setprop stack_Title displayTitle
    put word 1 to -1 of item 1 of displayTitle into indexDisplayTitle
    put word 1 to -1 of item 2 of displayTitle into displayStackLabel
    
-   put the stack_Object of me into stackObject
+   put the defaultstack into stackObject
    set the label of stackObject to displayStackLabel
    set the title_Text of me to indexDisplayTitle
 end stack_Title
@@ -359,27 +223,70 @@ setprop title_Text [setName] someTitle
    unlock screen
 end title_Text
 
--- getprop view_Title
-breakpoint
--- rename to this as we sound like the view object not the text
--- also this is what we used more generally
-return the title_Text of me
-end view_Title
 
--- setprop view_Title [someColour] someTitle
--- rename to this as we sound like the view object not the text
--- also this is what we used more generally
-set the title_Text [someColour] of me to someTitle
-end view_Title
+--> Index | Selected
+-
+getprop line_Colour [lineNum]
+   put _fieldObject() into fieldObject
+   if lineNum is empty then
+      put line 1 of the hilitedlines of fieldObject into lineNum
+   end if
+   put the textcolor of line lineNum of fieldObject into someColour
+   return someColour
+end line_Colour
 
--- getprop view_Label
-put the label of _titleView() into someLabel
-return someLabel
-end view_Label
+setprop line_Colour [lineNumList] someColour
+   put _fieldObject() into fieldObject
+   if lineNumList is empty then
+      put line 1 of the hilitedlines of fieldObject into lineNumList
+   end if
+   
+   lock screen
+   repeat for each item lineNum in lineNumList
+      set the textcolor of line lineNum of fieldObject to someColour
+   end repeat
+   unlock screen
+end line_Colour
 
--- setprop view_Label someLabel
-set the label of _titleView() to someLabel
-view_Label
+getprop hilited_Lines
+   put the hilitedlines of _fieldObject() into lineNumList
+   return lineNumList
+end hilited_Lines
+
+setprop hilited_Lines lineNumList
+   replace CR with comma in lineNumList
+   set the hilitedlines of _fieldObject() to lineNumList
+   return lineNumList
+end hilited_Lines
+
+getprop selected_Line
+   put the selected_Index of _fieldObject() into someIndex
+   return line 1 of someIndex
+end selected_Line
+
+setprop selected_Line someLine
+   set the selected_Index of me to line 1 of someLine
+end selected_Line
+
+getprop selected_Index
+   put the selectedtext of _fieldObject() into someIndex
+   return someIndex
+end selected_Index
+
+setprop selected_Index someLines
+   put the view_Index of me into viewIndex
+   set the itemdelimiter to slash
+   repeat for each line someLine in someLines
+      put lineOffset (someLine, viewIndex) into lineNum
+      if lineNum > 0 then
+         put lineNum & comma after lineNumList
+      end if
+   end repeat
+   delete char -1 of lineNumList
+   
+   set the hilitedlines of _fieldObject() to lineNumList
+   return lineNumList
+end selected_Index
 
 
 --> Field | Props
@@ -762,96 +669,9 @@ private command _setDefaultHeight @headerHeight
    end if
 end _setDefaultHeight
 
-private function _getLongFiles shortFiles
-   put the index_Folder of me into indexFolder  
-   repeat for each line shortFile in shortFiles
-      put indexFolder & shortFile into longFile
-      put longFile & CR after longFiles
-   end repeat
-   delete char -1 of longFiles
-   return longFiles
-end _getLongFiles
-
-private function known_StackNames shortStackFiles
-   put stackFile_NamesFromShortFiles (shortStackFiles) into stackNames
-   return stackNames
-end known_StackNames
-
-private function known_StackObjects shortStackFiles
-   put stackFile_NamesFromShortFiles (shortStackFiles) into stackNames
-   repeat for each line stackName in stackNames
-      if exists (stack stackName) then
-         put the name of stack stackName into stackObject
-         put stackObject & CR after stackObjects
-      end if
-   end repeat
-   delete char -1 of stackObjects
-   return stackObjects
-end known_StackObjects
-
-private function _getStackObjects shortStackFiles
-   put the index_Folder of me into indexFolder 
-   if indexFolder is empty then
-      -- let's assume the stacks are known
-      put known_StackObjects (shortStackFiles) into stackObjects
-   else 
-      repeat for each line shortStackFile in shortStackFiles
-         put indexFolder & shortStackFile into longStackFile
-         if exists (stack longStackFile) then
-            put the name of stack longStackFile into stackObject
-            put stackObject & CR after stackObjects
-         end if
-      end repeat
-      delete char -1 of stackObjects
-   end if
-   return stackObjects
-end _getStackObjects
-
-private function _getStackNames shortStackFiles
-   put the index_Folder of me into indexFolder  
-   if indexFolder is empty then
-      -- let's assume the stacks are known
-      put stackFile_NamesFromShortFiles (shortStackFiles) into stackNames
-   else 
-      repeat for each line shortStackFile in shortStackFiles
-         put indexFolder & shortStackFile into longStackFile
-         if exists (stack longStackFile) then
-            put the short name of stack longStackFile into stackName
-            put stackName & CR after stackNames
-         end if
-      end repeat
-      delete char -1 of stackNames
-   end if
-   return stackNames
-end _getStackNames
-
-private function _getLongStackFiles shortStackFiles
-   put the index_Folder of me into indexFolder  
-   if indexFolder is empty then
-      -- let's assume the stacks are known
-      put stackFile_PathsFromShortFiles (shortStackFiles) into stackPaths
-      return stackPaths
-   else 
-      repeat for each line shortStackFile in shortStackFiles
-         put indexFolder & shortStackFile into longStackFile
-         if exists (stack longStackFile) then 
-            put longStackFile & CR after longStackFiles
-         end if
-      end repeat
-      delete char -1 of longStackFiles
-      return longStackFiles
-   end if
-end _getLongStackFiles
-
 
 --> Deps
 -
-command text_AddTrailing @someText, someChar
-   if char -1 of someText is not someChar then
-      put someChar after someText
-   end if
-end text_AddTrailing
-
 function colour_GetRandom
    put random(255) into item 1 of someColour
    put random(255) into item 2 of someColour
