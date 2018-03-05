@@ -199,6 +199,32 @@ function asset_GetJavascriptFile projectFolder, shortFile
 end asset_GetJavascriptFile
 
 
+--> Asset | Server | Model
+-
+function server_GetProjectFolder
+   put $_SERVER ["DOCUMENT_ROOT"] & slash into projectFolder
+   return projectFolder
+end server_GetProjectFolder
+
+function asset_GetJSON shortFile, pProjectFolder
+   if pProjectFolder is empty then put server_GetProjectFolder() into pProjectFolder
+   
+   put asset_GetFolder (pProjectFolder, "json") into assetFolder
+   put assetFolder & shortFile into jsonFile
+   put url ("file:" & jsonFile) into someJSON
+   return someJSON
+end asset_GetJSON
+
+command asset_SetJSON shortFile, someJSON, pProjectFolder
+   if pProjectFolder is empty then put server_GetProjectFolder() into pProjectFolder
+   
+   put asset_GetFolder (pProjectFolder, "json") into assetFolder
+   put assetFolder & shortFile into jsonFile
+   put someJSON into url ("file:" & jsonFile)
+   return jsonFile
+end asset_SetJSON
+
+
 --> Asset | Folders
 -
 function asset_GetJavascriptFile projectFolder

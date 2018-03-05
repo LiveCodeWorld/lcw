@@ -112,39 +112,6 @@ function rev_LaunchDocsButton pEditorNum
    return revRuggedID (someObject)
 end rev_LaunchDocsButton
 
-function rev_ScriptEditorStack pEditorNum
-   switch
-      case pEditorNum is empty
-         return rev_TopScriptEditor()
-      case pEditorNum = 0
-         put the long id of stack "revSETemplate" of stack "revNewScriptEditor" into stackObject
-         return revRuggedID (stackObject)
-      case pEditorNum is a number
-         put "revNewScriptEditor" && pEditorNum into stackName
-         if exists (stack stackName) is false then return empty
-         return the name stack stackName
-      default
-         return rev_TopScriptEditor()
-   end switch
-end rev_ScriptEditorStack
-
-function rev_TopScriptEditor
-   put the stack_Name of the target into stackName
-   if word 1 of stackName is "revNewScriptEditor" then
-      return the long id of stack stackName
-   else
-      -- put revListScriptEditors()
-      put the openstacks into stackNames
-      filter stackNames with "revNewScriptEditor*"
-      if stackNames is empty then return empty
-      put line 1 of stackNames into stackName
-      if exists(stack stackName) is false then
-         put the stack_Name of the target into stackName
-      end if
-      return the long id of stack stackName
-   end if
-end rev_TopScriptEditor
-
 function scriptEditor_Object
    return rev_ScriptObject()
 end scriptEditor_Object
@@ -156,15 +123,6 @@ function rev_ScriptObject
    put the result into someObject
    return someObject
 end rev_ScriptObject
-
-function rev_OpenScriptEditorNames
-   -- put revListScriptEditors()
-   
-   put the openstacks into stackNames
-   -- filter stackNames with "revscripteditor *" -- old version ???
-   filter stackNames with "revNewScriptEditor *"
-   return stackNames
-end rev_OpenScriptEditorNames
 
 function rev_ScriptEditorField pEditorNum
    put rev_ScriptEditorStack (pEditorNum) into editorStack
@@ -179,13 +137,6 @@ function rev_HistoryButton pEditorNum
    put the long id of btn "history" of group "Script Tabs" of cd "Main" of editorStack into someObject
    return revRuggedID (someObject)
 end rev_HistoryButton
-
-function rev_HandlerTreeField pEditorNum
-   put rev_ScriptEditorStack (pEditorNum) into editorStack
-   if exists (field "handlers" of group "Left Bar" of cd "Main" of editorStack) is false then return empty
-   put the long id of field "handlers" of group "Left Bar" of cd "Main" of editorStack into someObject
-   return revRuggedID (someObject)
-end rev_HandlerTreeField
 
 function rev_SimpleFindField pEditorNum
    put rev_ScriptEditorStack (pEditorNum) into editorStack
@@ -209,8 +160,21 @@ function rev_ScriptEditorDocField pEditorNum
 end rev_ScriptEditorDocField
 
 
---> ScriptEditor
+--> ScriptEditor | List
 -
+function rev_OpenScriptEditorNames
+   put revListScriptEditors() into stackObjects
+   repeat for each line stackObject in stackObjects
+      put the short name of stackObject & CR after stackNames
+   end repeat
+   delete char -1 of stackNames
+   /*
+   put the openstacks into stackNames
+   filter stackNames with "revNewScriptEditor *"
+   */
+   return stackNames
+end rev_OpenScriptEditorNames
+
 function rev_GetModifiedObjects pEditorNum
    put rev_ScriptEditorStack (pEditorNum) into editorStack
    dispatch "revSEGetModifiedObjects" to editorStack
@@ -231,10 +195,6 @@ end scriptEditor_IsOpen
 
 --> ScriptEditor | Behaviors
 -
-/*
-We need a model for this.
-*/
-
 function scriptEditor_Behavior bStackName
    if exists (stack bStackName) is false then return empty
    put the name of stack bStackName into bObject

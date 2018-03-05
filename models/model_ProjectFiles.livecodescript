@@ -45,11 +45,6 @@ function project_ListBackDeps projectName
    return objectIndex
 end project_ListBackDeps
 
-function project_ListUsedStacks projectName
-   put project_ListUsedStackPaths (projectName) into stackPaths
-   return stack_PathsToObjects (stackPaths)
-end project_ListUsedStacks
-
 
 --> Project | Props
 -
@@ -160,8 +155,9 @@ function project_ListControllerStackNames projectName
    return stackNames
 end project_ListControllerStackNames
 
-function project_ListControllerPaths homeStackName
-   put library_FetchProjectFolder (homeStackName) into projectFolder
+function project_ListControllerPaths projectName
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListPaths ("controllers", projectFolder) into controllerStackPaths
    return controllerStackPaths
 end project_ListControllerPaths
@@ -176,20 +172,23 @@ function project_ListBehaviorStackNames pProjectNames
    return bNames
 end project_ListBehaviorStackNames
 
-function project_ListBehaviorPaths homeStackName
-   put library_FetchProjectFolder (homeStackName) into projectFolder
+function project_ListBehaviorPaths projectName
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListPaths ("behaviors", projectFolder) into controllerStackPaths
    return controllerStackPaths
 end project_ListBehaviorPaths
 
-function project_ListStackPaths homeStackName
-   put library_FetchProjectFolder (homeStackName) into projectFolder
+function project_ListStackPaths projectName
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListPaths ("stacks", projectFolder) into stackStackPaths
    return stackStackPaths
 end project_ListStackPaths
 
 function project_ListViewPaths projectName
-   put library_FetchProjectFolder (projectName) into projectFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListPaths ("views", projectFolder) into viewPaths
    return viewPaths
 end project_ListViewPaths
@@ -200,7 +199,8 @@ function project_ListFrontScripts projectName
 end project_ListFrontScripts
 
 function project_ListFrontScriptPaths projectName
-   put library_FetchProjectFolder (projectName) into projectFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListPaths ("frontscripts", projectFolder) into viewPaths
    return viewPaths
 end project_ListFrontScriptPaths
@@ -211,7 +211,8 @@ function project_ListBackScripts projectName
 end project_ListBackScripts
 
 function project_ListBackScriptPaths projectName
-   put library_FetchProjectFolder (projectName) into projectFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListPaths ("backscripts", projectFolder) into viewPaths
    return viewPaths
 end project_ListBackScriptPaths
@@ -220,7 +221,8 @@ end project_ListBackScriptPaths
 --> Project | List | Custom
 -
 function project_ListModuleFolders projectName
-   put library_FetchProjectFolder (projectName) into projectFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ConstructFolder ("modules", projectFolder) into rootModuleFolder
    put folder_ListLong (rootModuleFolder) into moduleFolders
    return moduleFolders
@@ -235,7 +237,8 @@ function project_ListViewStackNames projectName
 end project_ListViewStackNames
 
 function project_GetViewStackArray projectName
-   put library_FetchProjectFolder (projectName) into projectFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListPaths ("views", projectFolder) into viewPaths
    put stack_PathsToNames (viewPaths) into stackNames
    repeat for each line stackName in stackNames
@@ -251,7 +254,8 @@ function project_GetViewStackArray projectName
 end project_GetViewStackArray
 
 function project_ListUsedStackPaths projectName
-   put library_FetchProjectFolder (projectName) into projectFolder  
+   -- put library_FetchProjectFolder (projectName) into projectFolder  
+   put the stack_Folder of stack projectName into projectFolder
    put project_ListUsedPathsFromFolder (projectFolder) into projectUsedStackPaths
    return projectUsedStackPaths
 end project_ListUsedStackPaths
@@ -293,7 +297,8 @@ function project_GetHomeView projectName
 end project_GetHomeView
 
 function project_GetHomeStackPath projectName
-   put library_FetchProjectFolder (projectName) into projectFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
    if projectFolder is empty then return empty
    put project_ConstructHomeStackPath (projectFolder) into homeStackPath
    if exists (stack homeStackPath) is false then return empty
@@ -327,3 +332,31 @@ private command _addProjectToDeps projectName, @projectNameArray
    end repeat
    return true
 end _addProjectToDeps
+
+
+--> Deps
+-
+function stack_ListUsed pProjectName
+   -- should add functionalty for pProjectName (used by the script_Hierarchy [pProjectName])
+   put the stacksinuse into usedStackNames
+   put stack_PathsToObjects (usedStackNames) into stackObjects
+   return stackObjects
+end stack_ListUsed
+
+function stack_PathsToNames stackNameOrPaths
+   repeat for each line stackName in stackNameOrPaths
+      if exists (stack stackName) is false then next repeat
+      put the short name of stack stackName & CR after stackNames
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end stack_PathsToNames
+
+function stack_PathsToObjects stackNameOrPaths
+   repeat for each line stackName in stackNameOrPaths
+      if exists (stack stackName) is false then next repeat
+      put the name of stack stackName & CR after stackObjects
+   end repeat
+   delete char -1 of stackObjects
+   return stackObjects
+end stack_PathsToObjects

@@ -46,17 +46,28 @@ end project_Init
 
 --> Project | Init
 -
+
+function lcw_DefaultLibPath lcwHomeStackFile
+   set the itemdelimiter to slash
+   put "libraries/lib_LCW.livecodescript" into item -1 of lcwHomeStackFile
+   return lcwHomeStackFile
+end lcw_DefaultLibPath
+
 command _LcwInitialize
    -- for LCW only
    -- ideally we don't use this stack as things like "preOpenStack" will be called every time
    
+   -- put lcw_HomeStackName() into lcwProjectName
+   put "LCW" into lcwProjectName
+   put the filename of stack lcwProjectName into lcwHomeStackFile
+   
+   put lcw_DefaultLibPath (lcwHomeStackFile) into lcwDefaultLibFile
    -- so we don't load it every time
    -- if env_GetProjectFolder ("lcw") is not empty then return false -- already loaded which should not happen but projects may do this by mistake
-   put lcw_HomeStackName() into lcwProjectName
-   
+   if lcwDefaultLibFile is among the lines of the stacksinuse then return false
    -- ideally we don't need this
-   start using stack "lib_LCW"
-   start using stack lcwProjectName
+   start using stack lcwDefaultLibFile
+   -- start using stack lcwProjectName
    
    -- let's make it pretty
    put the screenrect into stackRect
@@ -70,30 +81,12 @@ command _LcwInitialize
    -- eventually we will aim to have no or minimal dependencies
    -- and separate out menu tools from the basic environment
    env_AddToBash
-   put the filename of stack lcwProjectName into lcwHomeStackFile
    project_InitialiseFolder lcwHomeStackFile -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
    project_LoadModules lcwHomeStackFile
    
    -- load the global dictionary for where handlers are
    hkeyLine_LoadPlaceArray
-   
-   -- activate a default user project
-   lcw_LoadCustomUserProject
-   
-   -- this is for the global menus to work. 
-   lcw_CreateMenuButton
-   project_CreateHomeBrowser "lcw"
-   
-   -- The menu_Button needs to be in an open stack
-   -- set lockmessages to true -- we don't want to trigger "preOpenStack" and load this code twice
-   -- go to stack lcwProjectName
-   -- show stack lcwProjectName
-   -- set lockmessages to false
-   
-   -- activate the menus
-   rev_AddBehaviorHacks
-   ide_AddRevEditScriptStack "LCW"
-   
+      
    -- custom
    choose browse tool 
    close stack "revTools"

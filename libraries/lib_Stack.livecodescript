@@ -13,6 +13,54 @@ Todo:  separate out essentials and utilities => lib_StackExtras
 */
 
 
+--> Stack | Convert
+-
+function stack_ConvertNamesToShortPaths stackNames, @badNames
+   put empty into badNames
+   replace comma with CR in stackNames
+   set the itemdelimiter to slash
+   repeat for each line stackName in stackNames
+      if there is a stack stackName then
+         get the filename of stack stackName
+         put item -1 of it into shortPath
+         put shortPath & CR after shortPaths
+      else
+         put stackName & CR after badNames
+      end if
+   end repeat
+   delete char -1 of badNames
+   delete char -1 of shortPaths
+   return shortPaths
+end stack_ConvertNamesToShortPaths
+
+function stack_ConvertObjectsToShortPaths stackObjects
+   set the itemdelimiter to slash
+   repeat for each line stackObject in stackObjects
+      get the filename of stackObject
+      put item -1 of it into shortPath
+      put shortPath & CR after shortPaths
+   end repeat
+   delete char -1 of shortPaths
+   return shortPaths
+end stack_ConvertObjectsToShortPaths
+
+function stack_ConvertObjectsToPaths stackObjects
+   repeat for each line stackObject in stackObjects
+      get the filename of stackObject
+      put it & CR after stackPaths
+   end repeat
+   delete char -1 of stackPaths
+   return stackPaths
+end stack_ConvertObjectsToPaths
+
+function stack_ConvertPathsToNames stackPaths
+   put stack_ConstructNameNameArray (stackPaths) into nameArray
+   put keys (nameArray) into stackNames
+   sort stackNames
+   return stackNames
+end stack_ConvertPathsToNames
+
+
 --> Stack | Memory
 -
 getprop stack_SisterFolder [projectName]
@@ -221,7 +269,7 @@ getprop card_Object
          return word wNum to -1 of targetObject
    end switch
 end card_Object
-   
+
 getprop stack_Name
    return the short name of the defaultstack
 end stack_Name
@@ -234,31 +282,6 @@ end stack_Object
 
 --> Stack | Utilities
 -
-function stack_ListUsed pProjectName
-   -- should add functionalty for pProjectName (used by the script_Hierarchy [pProjectName])
-   put the stacksinuse into usedStackNames
-   put stack_PathsToObjects (usedStackNames) into stackObjects
-   return stackObjects
-end stack_ListUsed
-
-function stack_PathsToNames stackNameOrPaths
-   repeat for each line stackName in stackNameOrPaths
-      if exists (stack stackName) is false then next repeat
-      put the short name of stack stackName & CR after stackNames
-   end repeat
-   delete char -1 of stackNames
-   return stackNames
-end stack_PathsToNames
-
-function stack_PathsToObjects stackNameOrPaths
-   repeat for each line stackName in stackNameOrPaths
-      if exists (stack stackName) is false then next repeat
-      put the name of stack stackName & CR after stackObjects
-   end repeat
-   delete char -1 of stackObjects
-   return stackObjects
-end stack_PathsToObjects
-
 command stack_StripUnsaved @stackNames
    repeat for each line stackName in stackNames
       if exists (stack stackName) is false then next repeat
@@ -285,18 +308,18 @@ command stack_Drag stackObject
 end stack_Drag
 
 command stack_UseIfNeeded stackName
-    if exists(stack stackName) is false then
-        put merge("Error: Cannot locate library stack '[[stackName]]'") into someError
-        return someError
-    end if
-    
-    set the wholematches to true
-    if stackname is not among the lines of the stacksinuse then
-        start using stack stackName
-    end if
-    return empty
- end stack_UseIfNeeded
- 
+   if exists(stack stackName) is false then
+      put merge("Error: Cannot locate library stack '[[stackName]]'") into someError
+      return someError
+   end if
+   
+   set the wholematches to true
+   if stackname is not among the lines of the stacksinuse then
+      start using stack stackName
+   end if
+   return empty
+end stack_UseIfNeeded
+
 command rect_MoveTopLeft @someRect, newTopLeft
    put item 1 of newTopLeft - item 1 of someRect into xVector
    put item 2 of newTopLeft - item 2 of someRect into yVector
@@ -382,7 +405,7 @@ function stack_ConstructNewCloneName stackName
    put word -1 of realStackName into cloneNumber
    if cloneNumber is a number then
       add 1 to cloneNumber
-    else
+   else
       put 1 into cloneNumber
    end if
    
@@ -396,114 +419,114 @@ function stack_ConstructNewCloneName stackName
 end stack_ConstructNewCloneName
 
 function stack_ClonedStackNames stackName
-    put the mainstacks into stackNames
-    filter stackNames with (stackName & "*")
-    put word 1 to -1 of stackNames into stackNames
-    if stackNames is empty then return stackName
-    return stackNames
+   put the mainstacks into stackNames
+   filter stackNames with (stackName & "*")
+   put word 1 to -1 of stackNames into stackNames
+   if stackNames is empty then return stackName
+   return stackNames
 end stack_ClonedStackNames
 
 command stack_CreateFileFromBinaryData binaryData, newFile
-    put "binfile:" & newFile into newUrl
-    if the platform is "MacOs" then
-        --   Note:  Revolution's creator signature is 'Revo'. The file type for a stack file created by Revolution is 'RSTK'. 
-        -- The fileType is an eight-character string. The first four characters are the creator signature, and the last four are the file type. 
-         
-        put the filetype into oFileType
-        set the filetype to "RevoRSTK"
-    end if
-     
-    put binaryData into url newUrl
-    if the platform is "MacOs" then
-        set the filetype to oFileType
-    end if
+   put "binfile:" & newFile into newUrl
+   if the platform is "MacOs" then
+      --   Note:  Revolution's creator signature is 'Revo'. The file type for a stack file created by Revolution is 'RSTK'. 
+      -- The fileType is an eight-character string. The first four characters are the creator signature, and the last four are the file type. 
+      
+      put the filetype into oFileType
+      set the filetype to "RevoRSTK"
+   end if
+   
+   put binaryData into url newUrl
+   if the platform is "MacOs" then
+      set the filetype to oFileType
+   end if
 end stack_CreateFileFromBinaryData
 
 function stack_NotNeeded
-    -- they may be needed :)
-    local mainStackNames
-    
-    put revLoadedStacks("application") into stackNames
-    repeat for each line stackName in stackNames
-        get the mainstack of stack stackName
-        line_Add it, mainStackNames
-    end repeat
-    
-    repeat for each line usedStackName in the stacksinuse
-        put the mainstack of stack usedStackName into mainStackName
-        put the short name of stack mainStackName into stackName
-        line_Delete stackName, mainStackNames
-    end repeat
-     
-    repeat for each line someObject in the backscripts
-        put the stack_Object of someObject into someStack
-        put the short name of the mainstack of someStack into stackName
-        line_Delete stackName, mainStackNames
-    end repeat
-     
-    repeat for each line someObject in the frontscripts
-        put the stack_Object of someObject into someStack
-        put the short name of the mainstack of someStack into stackName
-        line_Delete stackName, mainStackNames
-    end repeat
-    return mainStackNames
+   -- they may be needed :)
+   local mainStackNames
+   
+   put revLoadedStacks("application") into stackNames
+   repeat for each line stackName in stackNames
+      get the mainstack of stack stackName
+      line_Add it, mainStackNames
+   end repeat
+   
+   repeat for each line usedStackName in the stacksinuse
+      put the mainstack of stack usedStackName into mainStackName
+      put the short name of stack mainStackName into stackName
+      line_Delete stackName, mainStackNames
+   end repeat
+   
+   repeat for each line someObject in the backscripts
+      put the stack_Object of someObject into someStack
+      put the short name of the mainstack of someStack into stackName
+      line_Delete stackName, mainStackNames
+   end repeat
+   
+   repeat for each line someObject in the frontscripts
+      put the stack_Object of someObject into someStack
+      put the short name of the mainstack of someStack into stackName
+      line_Delete stackName, mainStackNames
+   end repeat
+   return mainStackNames
 end stack_NotNeeded
 
 
 --> Stack | Props
 -
 getprop stack_IsPalette
-    put the stack_Object of the target into stackObject
-    return the style of stackObject = "palette"
+   put the stack_Object of the target into stackObject
+   return the style of stackObject = "palette"
 end stack_IsPalette
 
 setprop stack_IsPalette someBoolean
-    put the stack_Object of the target into stackObject
-    if someBoolean is true then
-        set the style of stackObject to "palette"
-    else
-        set the style of stackObject to "toplevel"
-    end if
+   put the stack_Object of the target into stackObject
+   if someBoolean is true then
+      set the style of stackObject to "palette"
+   else
+      set the style of stackObject to "toplevel"
+   end if
 end stack_IsPalette
 
 getprop stack_Resizable
-    put the stack_Object of the target into stackObject
-    if exists(stackObject) then
-        return the resizable of stackObject
-    else
-        return false
-    end if
+   put the stack_Object of the target into stackObject
+   if exists(stackObject) then
+      return the resizable of stackObject
+   else
+      return false
+   end if
 end stack_Resizable
-    
+
 setprop stack_Resizable someBoolean
-    put the stack_Object of the target into stackObject
-    set the resizable of stackObject to someBoolean
+   put the stack_Object of the target into stackObject
+   set the resizable of stackObject to someBoolean
 end stack_Resizable
 
 getprop stack_TitleStyle
-    put the stack_Object of the target into stackObject
-    switch the decorations of stackObject
-        case "default"
-            return "normal"
-        case "noShadow"
-            return "no title"
-    end switch
+   put the stack_Object of the target into stackObject
+   switch the decorations of stackObject
+      case "default"
+         return "normal"
+      case "noShadow"
+         return "no title"
+   end switch
 end stack_TitleStyle
 
 setprop stack_TitleStyle titleStyle
-    put the stack_Object of the target into stackObject
-    switch titleStyle
-        case "normal"
-            set the decorations of stackObject to default
-            break
-        case "no title"
-            set the decorations of stackObject to "noShadow"
-            break
-    end switch
+   put the stack_Object of the target into stackObject
+   switch titleStyle
+      case "normal"
+         set the decorations of stackObject to default
+         break
+      case "no title"
+         set the decorations of stackObject to "noShadow"
+         break
+   end switch
 end stack_TitleStyle
 
 getprop stack_TitleStyles
-    return "normal,no title"
+   return "normal,no title"
 end stack_TitleStyles
 
 
@@ -562,169 +585,169 @@ end stack_Type
 --> Stack | Visual Effects
 -
 command stack_Display someObject, someRect, fadeIn
-    put the stack_Object of someObject into stackObject
-    go invisible stackObject
-    if someRect is a rect then set the rect of stackObject to someRect
-    if fadeIn is true then
-        set the blendlevel of stackObject to 100
-        set the stack_Faded of stackObject to false
-    else
-        set the visible of stackObject to true
-    end if
+   put the stack_Object of someObject into stackObject
+   go invisible stackObject
+   if someRect is a rect then set the rect of stackObject to someRect
+   if fadeIn is true then
+      set the blendlevel of stackObject to 100
+      set the stack_Faded of stackObject to false
+   else
+      set the visible of stackObject to true
+   end if
 end stack_Display
 
 getprop stack_IsVisible
-    put the stack_Object of the target into stackObject
-    if the visible of stackObject is true then
-        if the blendlevel of stackObject > 5 then
-            return false
-        else
-            return true
-        end if
-    else
-        return false
-    end if
+   put the stack_Object of the target into stackObject
+   if the visible of stackObject is true then
+      if the blendlevel of stackObject > 5 then
+         return false
+      else
+         return true
+      end if
+   else
+      return false
+   end if
 end stack_IsVisible
 
 setprop stack_IsVisible someBoolean
-    put the stack_Object of the target into stackObject
-    set the visible of stackObject to someBoolean
-    if someBoolean is true then set the blendlevel of stackObject to 0
+   put the stack_Object of the target into stackObject
+   set the visible of stackObject to someBoolean
+   if someBoolean is true then set the blendlevel of stackObject to 0
 end stack_IsVisible
 
 getprop stack_Faded
-    put the stack_Object of the target into stackObject
-    if the blendlevel of stackObject > 95 then
-        return true
-    else if the blendlevel of stackObject < 5 then
-        return false
-    else
-        return empty
-    end if
+   put the stack_Object of the target into stackObject
+   if the blendlevel of stackObject > 95 then
+      return true
+   else if the blendlevel of stackObject < 5 then
+      return false
+   else
+      return empty
+   end if
 end stack_Faded
 
 setprop stack_Faded boolean
-    put the long id of the target into targetObject
-    put the stack_Name of targetObject into stackName
-    if boolean is false then
-        stack_BlendIn stackName
-    else
-        stack_BlendOut stackName
-    end if
+   put the long id of the target into targetObject
+   put the stack_Name of targetObject into stackName
+   if boolean is false then
+      stack_BlendIn stackName
+   else
+      stack_BlendOut stackName
+   end if
 end stack_Faded
 
 command stack_BlendIn stackName, someDelay
-    if someDelay is empty then put 5 into someDelay
-    if the visible of stack stackName is false then
-        set the blendlevel of stack stackName to 100
-        set the visible of stack stackName to true
-    end if
-     
-    put the blendlevel of stack stackName into someValue
-    subtract 1 from someValue
-    set the blendlevel of stack stackName to someValue
-    if someValue <= 0 then
-        set the blendlevel of stack stackName to 0
-        return true
-    else
-        put "stack_BlendIn" && kwote(stackName) into pigeon
-        send pigeon to me in someDelay milliseconds
-        return false
-    end if
+   if someDelay is empty then put 5 into someDelay
+   if the visible of stack stackName is false then
+      set the blendlevel of stack stackName to 100
+      set the visible of stack stackName to true
+   end if
+   
+   put the blendlevel of stack stackName into someValue
+   subtract 1 from someValue
+   set the blendlevel of stack stackName to someValue
+   if someValue <= 0 then
+      set the blendlevel of stack stackName to 0
+      return true
+   else
+      put "stack_BlendIn" && kwote(stackName) into pigeon
+      send pigeon to me in someDelay milliseconds
+      return false
+   end if
 end stack_BlendIn
 
 command stack_BlendOut stackName, someDelay
-    if someDelay is empty then put 5 into someDelay
-     
-    put the blendlevel of stack stackName into someValue
-    add 1 to someValue
-    set the blendlevel of stack stackName to someValue
-    if someValue >= 100 then
-        set the blendlevel of stack stackName to 100
-        return true
-    else
-        put "stack_BlendOut" && kwote(stackName) into pigeon
-        send pigeon to me in someDelay milliseconds
-        return false
-    end if
+   if someDelay is empty then put 5 into someDelay
+   
+   put the blendlevel of stack stackName into someValue
+   add 1 to someValue
+   set the blendlevel of stack stackName to someValue
+   if someValue >= 100 then
+      set the blendlevel of stack stackName to 100
+      return true
+   else
+      put "stack_BlendOut" && kwote(stackName) into pigeon
+      send pigeon to me in someDelay milliseconds
+      return false
+   end if
 end stack_BlendOut
 
 
 --> Stack | Utilities
 -
 command stack_SetViewSize someSize
-    switch someSize
-        case "Full screen"
-            put the loc of this stack into someLoc
-            repeat for each line someRect in the screenrects
-                if loc_WithinRect(someLoc, someRect) then
-                    set the rect of this stack to someRect
-                end if
-            end repeat
-            break
-        case "1280 x 800"
-            put the rect of this stack into someRect
-            if item 2 of someRect < 44 then put 44 into item 2 of someRect
-            put rect_FromWidthAndHeight(someRect, 1280, 800) into newRect
-            set the rect of this stack to newRect
-            break
-        case "1024 x 768"
-            put the rect of this stack into someRect
-            if item 2 of someRect < 44 then put 44 into item 2 of someRect
-            put rect_FromWidthAndHeight(someRect, 1024, 768) into newRect
-            set the rect of this stack to newRect
-            
-            break
-        case "800 x 600"
-            put the rect of this stack into someRect
-            if item 2 of someRect < 44 then put 44 into item 2 of someRect
-            put rect_FromWidthAndHeight(someRect, 800, 600) into newRect
-            set the rect of this stack to newRect
-            break
-    end switch
+   switch someSize
+      case "Full screen"
+         put the loc of this stack into someLoc
+         repeat for each line someRect in the screenrects
+            if loc_WithinRect(someLoc, someRect) then
+               set the rect of this stack to someRect
+            end if
+         end repeat
+         break
+      case "1280 x 800"
+         put the rect of this stack into someRect
+         if item 2 of someRect < 44 then put 44 into item 2 of someRect
+         put rect_FromWidthAndHeight(someRect, 1280, 800) into newRect
+         set the rect of this stack to newRect
+         break
+      case "1024 x 768"
+         put the rect of this stack into someRect
+         if item 2 of someRect < 44 then put 44 into item 2 of someRect
+         put rect_FromWidthAndHeight(someRect, 1024, 768) into newRect
+         set the rect of this stack to newRect
+         
+         break
+      case "800 x 600"
+         put the rect of this stack into someRect
+         if item 2 of someRect < 44 then put 44 into item 2 of someRect
+         put rect_FromWidthAndHeight(someRect, 800, 600) into newRect
+         set the rect of this stack to newRect
+         break
+   end switch
 end stack_SetViewSize
 
 command stack_PlaceGroupOnAllCards groupName, stackName
-    -- was "opn_PlaceGroupOnAllCards"
-    if stackName is empty then
-        put the long id of this stack into stackObject
-    else
-        put the long id of stack stackName into stackObject
-    end if
-    put the cardids of stackObject into idIndex
-    
-    put the defaultstack into oDefault
-    set the defaultstack to stackObject
-    set the wholematches to true
-    put empty into placedIDs
-    repeat for each line someID in idIndex
-        if groupName is not among the lines of (the groupnames of card id someID) then
-            place group groupName onto card id someID
-            put someID & return after placedIDs
-        end if
-    end repeat
-    delete last char of placedIDs
-    set the defaultstack to oDefault
-    return placedIDs
+   -- was "opn_PlaceGroupOnAllCards"
+   if stackName is empty then
+      put the long id of this stack into stackObject
+   else
+      put the long id of stack stackName into stackObject
+   end if
+   put the cardids of stackObject into idIndex
+   
+   put the defaultstack into oDefault
+   set the defaultstack to stackObject
+   set the wholematches to true
+   put empty into placedIDs
+   repeat for each line someID in idIndex
+      if groupName is not among the lines of (the groupnames of card id someID) then
+         place group groupName onto card id someID
+         put someID & return after placedIDs
+      end if
+   end repeat
+   delete last char of placedIDs
+   set the defaultstack to oDefault
+   return placedIDs
 end stack_PlaceGroupOnAllCards
 
 
 --> Stack | Data
 -
 getprop stack_CompressedData
-    put the effective filename of the target into someFile
-    put "file:" & someFile into someUrl
-    put url someUrl into stackData
-    return compress(stackData)
+   put the effective filename of the target into someFile
+   put "file:" & someFile into someUrl
+   put url someUrl into stackData
+   return compress(stackData)
 end stack_CompressedData
-    
+
 getprop stack_Data
-    put the effective filename of the target into someFile
-    put "binfile:" & someFile into someUrl
-    put url someUrl into stackData
-    return stackData
+   put the effective filename of the target into someFile
+   put "binfile:" & someFile into someUrl
+   put url someUrl into stackData
+   return stackData
 end stack_Data
-    
+
 
 --> Stack | Open, Close and Move
 -
@@ -788,47 +811,13 @@ command stack_Delete stackName
 end stack_Delete
 
 command stack_MoveFile fromFile, toFile
-    breakpoint
-    if exists(the svn_Library of me) then
-        svn_Move fromFile, toFile
-    else
-        rename file fromFile to toFile
-    end if
+   breakpoint
+   if exists(the svn_Library of me) then
+      svn_Move fromFile, toFile
+   else
+      rename file fromFile to toFile
+   end if
 end stack_MoveFile
-
-getprop stack_SubName [subStackStem]
-   if subStackStem is empty then put "OPN SubStack" into subStackStem
-   put the stack_Object of the target into stackObject
-   put the mainstack of stackObject into mainStackName
-   put mainStackName & "|" & subStackStem into subStackName
-   return subStackName
-end stack_SubName
-
-command stack_CreateSubStack someObject, subStackStem
-   put the main_Stack of someObject into mainStackObject
-   put the short name of mainStackObject into mainStackName
-   
-   put the stack_SubName [subStackStem] of mainStackObject into subStackName
-   -- could do extensive checking for a unique name
-   put exists (stack subStackName) is true into stackExists
-   put exists (stack subStackName of stack mainStackName) is true into subStackExists
-   
-   switch
-      case (stackExists is false) and (subStackExists is false)
-         create invisible stack subStackName
-         set the mainstack of stack subStackName to stackObject
-         break
-      case subStackExists is true
-         -- already created -- skip to copy over view_Template
-         return the long id of stack subStackName of stack mainStackName
-      case stackExists is true
-         -- there is a mainstack of this name
-         return the long id of stack subStackName
-      default
-         answer warning merge ("A stack named '[[subStackName]]' already exists! Be careful (check manually)!")
-         exit to top
-   end switch
-end stack_CreateSubStack
 
 command stack_Save someObject, pClean, pCleanGeometry, pFilePath, pMacStackFileType
    put the stack_Object of someObject into stackObject
@@ -866,18 +855,18 @@ command stack_Save someObject, pClean, pCleanGeometry, pFilePath, pMacStackFileT
 end stack_Save
 
 command stack_CopyFile oldStackFile, newStackFile
-    -- one way of doing it (using url's)
-    -- may be the most reliable?
-    -- revCopyFile longFile, opnArchiveFile (uses applescript etc)
-    -- put the result
-    
-    put "binfile:" & oldStackFile into oldStackUrl
-    put "binfile:" & newStackFile into newStackUrl
-    
-    put the filetype into oFileType
-    set the filetype to "revoRSTK"
-    put url oldStackUrl into url newStackUrl
-    set the filetype to oFileType
+   -- one way of doing it (using url's)
+   -- may be the most reliable?
+   -- revCopyFile longFile, opnArchiveFile (uses applescript etc)
+   -- put the result
+   
+   put "binfile:" & oldStackFile into oldStackUrl
+   put "binfile:" & newStackFile into newStackUrl
+   
+   put the filetype into oFileType
+   set the filetype to "revoRSTK"
+   put url oldStackUrl into url newStackUrl
+   set the filetype to oFileType
 end stack_CopyFile
 
 command stack_SaveBinaryData stackData, someFile
@@ -917,10 +906,10 @@ command stack_DeleteSubStackClones stackNameList, myStackName
 end stack_DeleteSubStackClones
 
 command stack_CloseSub stackName
-    put the substacks of stack stackName into theSubStacks
-    repeat for each line theSubStack in theSubStacks
-        send "stack_RemoveFromMemory stackName" to me in 10 millisecs
-    end repeat
+   put the substacks of stack stackName into theSubStacks
+   repeat for each line theSubStack in theSubStacks
+      send "stack_RemoveFromMemory stackName" to me in 10 millisecs
+   end repeat
 end stack_CloseSub
 
 
@@ -942,27 +931,27 @@ getprop stack_IsProtected
 end stack_IsProtected
 
 function stack_Exists someName
-    -- will not add stack to memory
-    
-    set lockmessages to true
-    put the mainstacks into stacksInMemory
-    put empty into shortStackName
-    if exists(stack someName) then
-        put true into safeExistence
-        put not(shortStackName is among the lines of stacksInMemory) into needToClose
-        if needToClose then
-            stack_RemoveFromMemory someFile
-        end if
-    else
-        put false into safeExistence
-    end if
-    set lockmessages to false
-    return safeExistence
+   -- will not add stack to memory
+   
+   set lockmessages to true
+   put the mainstacks into stacksInMemory
+   put empty into shortStackName
+   if exists(stack someName) then
+      put true into safeExistence
+      put not(shortStackName is among the lines of stacksInMemory) into needToClose
+      if needToClose then
+         stack_RemoveFromMemory someFile
+      end if
+   else
+      put false into safeExistence
+   end if
+   set lockmessages to false
+   return safeExistence
 end stack_Exists
 
 function stack_IsOpen stackName
-    set the wholematches to true
-    return stackName is among the lines of the openstacks
+   set the wholematches to true
+   return stackName is among the lines of the openstacks
 end stack_IsOpen
 
 getprop stack_IsLoaded
@@ -1013,9 +1002,9 @@ function stack_LoadedPaths
 end stack_LoadedPaths
 
 function stack_IsClosed stackName
-    set the wholematches to true
-    put stackName is not among the lines of the mainstacks into stackIsClosed
-    return stackIsClosed
+   set the wholematches to true
+   put stackName is not among the lines of the mainstacks into stackIsClosed
+   return stackIsClosed
 end stack_IsClosed
 
 
@@ -1031,13 +1020,6 @@ function stack_ConstructNameNameArray stackPaths
    end repeat
    return nameArray
 end stack_ConstructNameNameArray
-
-function stack_ConvertPathsToNames stackPaths
-   put stack_ConstructNameNameArray (stackPaths) into nameArray
-   put keys (nameArray) into stackNames
-   sort stackNames
-   return stackNames
-end stack_ConvertPathsToNames
 
 function stack_ListNames pWhichNames
    switch pWhichNames

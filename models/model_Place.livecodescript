@@ -18,6 +18,11 @@ The idea is that we should make it seriously easy to create a model for where st
 -
 function hkey_GetPlace hTableLine, pHkeyPlaceArray
    put hkeyLine_GetPlaces (hTableLine, pHkeyPlaceArray) into hKeyObjects
+   
+   -- hack to fix broken indexing due to not removing old places when a script moves
+   if the number of lines of hKeyObjects > 1 then
+      breakpoint
+   end if
    put line 1 of hKeyObjects into cObject
    return cObject
 end hkey_GetPlace
@@ -51,7 +56,7 @@ getprop script_HkeyPlaceArray
    -- make as fast as possible as we use to generate index for entire project
    local hkeyPlaceArray
    put the long id of the target into tObject
-   hkeyline_AddPlaceObject hkeyPlaceArray, someObject
+   hkeyline_AddPlaceObject hkeyPlaceArray, tObject
    return hkeyPlaceArray
 end script_HkeyPlaceArray
 
@@ -80,9 +85,7 @@ command hkeyLine_AddPlace handlerTableLine, rObject
 end hkeyLine_AddPlace
 
 command hkeyline_DeletePlaceObject someObject
-   -- needs to be as fast as possible (used on compile)
-   -- and it is very slow
-   -- see if a database is faster?
+   -- not called on compile anymore
    
    global gLCW
    put the long id of someObject into someObject

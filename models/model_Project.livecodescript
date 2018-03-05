@@ -121,6 +121,35 @@ command project_ConvertShortFilesToStackObjects shortFiles, someFolder, @goodSta
 end project_ConvertShortFilesToStackObjects
 
 
+--> Project | Array | Model
+-
+function project_FetchValue someKey, projectName
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
+   put project_FetchArray (projectFolder) into projectArray
+   put projectArray [someKey] into someValue
+   return someValue
+end project_FetchValue
+
+command project_SaveValue someKey, someValue, projectName
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
+   put project_FetchArray (projectFolder) into projectArray
+   put someValue into projectArray [someKey]
+   project_StoreArray projectFolder, projectArray
+   return projectArray
+end project_SaveValue
+
+command project_DeleteValue someKey, projectName
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put the stack_Folder of stack projectName into projectFolder
+   put project_FetchArray (projectFolder) into projectArray
+   delete variable projectArray [someKey]
+   project_StoreArray projectFolder, projectArray
+   return projectArray
+end project_DeleteValue
+
+
 --> Project | Array
 -
 getprop project_Array
@@ -137,20 +166,27 @@ setprop project_Array projectArray
    return modelDataFile
 end project_Array
 
+function project_FetchArray projectFolder
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   put array_FetchModel (projectJsonFile) into projectArray
+   return projectArray
+end project_FetchArray
+
+command project_StoreArray projectFolder, projectArray
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   array_SaveModel projectJsonFile, projectArray
+   return projectJsonFile
+end project_StoreArray
+
+command project_DeleteArray projectName
+   put project_GetJsonFile (projectName) into someFile
+   delete file someFile
+   return someFile
+end project_DeleteArray
 
 
 --> Project | Array | Files
 -
-function project_GetArrayFile projectName
-   put project_GetFolder (projectName) & "lcw_project.array" into projectArrayFile
-   return projectArrayFile
-end project_GetArrayFile
-
-function project_GetJsonFile projectName
-   put project_GetFolder (projectName) & "lcw_project.json" into projectArrayFile
-   return projectArrayFile
-end project_GetJsonFile
-
 getprop project_ArrayFile
    put the project_Name of the target into projectName
    put project_GetArrayFile (projectName) into projectArrayFile
@@ -163,26 +199,21 @@ getprop project_JsonFile
    return projectArrayFile
 end project_JsonFile
 
-
---> Project | Array | Model
--
-function project_FetchArray projectName
-   put project_GetArrayFile (projectName) into projectArrayFile
-   put array_Fetch (projectArrayFile) into projectArray
-   return projectArray
-end project_FetchArray
-
-command project_StoreArray projectName, projectArray
-   put project_GetArrayFile (projectName) into projectArrayFile
-   array_Save projectArrayFile, projectArray
+function project_GetArrayFile projectName
+   put project_GetFolder (projectName) & "lcw_project.array" into projectArrayFile
    return projectArrayFile
-end project_StoreArray
+end project_GetArrayFile
 
-command project_DeleteArray projectName
-   put project_GetArrayFile (projectName) into someFile
-   delete file someFile
-   return someFile
-end project_DeleteArray
+function project_GetJsonFile projectName
+   put project_GetFolder (projectName) into projectFolder
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   return projectJsonFile
+end project_GetJsonFile
+
+function project_ConstructJsonFile projectFolder
+   put projectFolder & "lcw_project.json" into projectJsonFile
+   return projectJsonFile
+end project_ConstructJsonFile
 
 
 --> Project | Set Array
@@ -252,7 +283,7 @@ end project_ListOpenStackNames
 These handlers define the keys for the 
 */
 
-function library_FetchProjectFolder homeStackName
+function library_FetchProjectFolder homeStackName  
    put library_FetchProjectArray (homeStackName) into projectArray
    put projectArray ["projectFolder"] into projectFolder
    
@@ -407,30 +438,6 @@ command library_DeleteProjectArray projectName
    library_StoreProjectData libraryProjectData
 end library_DeleteProjectArray
 
-
---> Project | Array | Model
--
-function project_FetchValue someKey, pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   put projectArray [someKey] into someValue
-   return someValue
-end project_FetchValue
-
-command project_SaveValue someKey, someValue, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   put someValue into projectArray [someKey]
-   project_StoreArray pProjectName, projectArray
-   return projectArray
-end project_SaveValue
-
-command project_DeleteValue someKey, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put project_FetchArray (pProjectName) into projectArray
-   delete variable projectArray [someKey]
-   project_StoreArray pProjectName, projectArray
-   return projectArray
-end project_DeleteValue
 
 command project_AddArrayToGlobal projectArray, pRecursively
    /*

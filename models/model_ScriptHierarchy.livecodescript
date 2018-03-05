@@ -7,21 +7,14 @@ type: model
 version: 0.2
 
 
---> Script | Hierarchy
+--> Working on
 -
 getprop script_Hierarchy [pProjectName]
+   -- surpisingly complex dependencies if we include pProjectName
    put the long id of the target into targetObject
    put the object_Hierarchy of targetObject into scriptHierarchy
-   hkey_AddDevelopmentHierarchy scriptHierarchy, pProjectName, targetObject
+   hkey_AddDevelopmentHierarchy scriptHierarchy, pProjectName
    return scriptHierarchy
-end script_Hierarchy
-
--- getprop script_Hierarchy [pProjectName]
-put object_ListFrontScripts (pProjectName) into hObjects
-put CR & the object_Hierarchy of the target after hObjects
-put CR & stack_ListUsed (pProjectName) after hObjects
-put CR & object_ListBackScripts (pProjectName) after hObjects
-return word 1 to -1 of hObjects
 end script_Hierarchy
 
 getprop object_Hierarchy
@@ -55,10 +48,8 @@ command hkey_AddDevelopmentHierarchy @scriptHierarchy, pProjectName
    switch pProjectName
       case empty
          put stack_PathsToObjects (the stacksinUse) into usedStacks
-         put the frontscripts into frontObjects
-         filter frontObjects without "*.app/Contents/Tools/*"
-         put the backscripts into backObjects
-         filter backObjects without "*.app/Contents/Tools/*"
+         put object_ListFrontScripts() into frontObjects
+         put object_ListBackScripts() into backObjects
          break
       case "none"
          break
@@ -75,14 +66,44 @@ command hkey_AddDevelopmentHierarchy @scriptHierarchy, pProjectName
    script_AddLibrariesToHierarchy scriptHierarchy, frontObjects, usedStacks, backObjects
 end hkey_AddDevelopmentHierarchy
 
-function object_ListFrontScripts pProjectName
+
+--> Hierarchy | List
+-
+function env_ListUsedHierarchy pProjectName
+   -- should list the objects in the order of the script heiarchy
+   local scriptHierarchy
+   hkey_AddDevelopmentHierarchy scriptHierarchy, pProjectName
+   return word 1 to -1 of scriptHierarchy
+end env_ListUsedHierarchy
+
+function env_ListLibraryStacks pListAll
+   -- not in any particular order (so not a real hierarchy)
+   local objectIndex
+   
+   put env_ListProjects ( pListAll) into projectNames
+   repeat for each line projectName in projectNames
+      hkey_AddDevelopmentHierarchy objectIndex, projectName
+   end repeat
+   return word 1 to -1 of objectIndex
+end env_ListLibraryStacks
+
+function project_ListLibraryHierarchy projectName
+   local scriptHierarchy
+   hkey_AddDevelopmentHierarchy scriptHierarchy, projectName
+   return word 1 to -1 of scriptHierarchy
+end project_ListLibraryHierarchy
+
+
+--> Script | Hierarchy
+-
+function object_ListFrontScripts
    -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
    put the frontscripts into longIDs
    ide_FilterOutStacks longIDs
    return longIDs
 end object_ListFrontScripts
 
-function object_ListBackScripts pProjectName
+function object_ListBackScripts
    -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
    put the backscripts into longIDs
    ide_FilterOutStacks longIDs

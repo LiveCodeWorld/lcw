@@ -30,5 +30,3 @@ after mouseUp
       dispatch "script_ExportAndIndexMenus" with scriptObject
    end if
 end mouseUp
-
-

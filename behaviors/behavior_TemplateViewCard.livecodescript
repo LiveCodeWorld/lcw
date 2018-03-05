@@ -41,6 +41,7 @@ end card_Margin
 
 --> Events | Drag
 -
+/*
 on dragEnd
    put the dragDestination into tObject
    put drop_Target (tObject) into dropTarget
@@ -71,7 +72,7 @@ on dragEnter
       pass dragEnter
    end if
    if exists (viewSource) is false then
-      put "the viewSource does not exist" 
+      -- put "the viewSource does not exist" 
       pass dragEnter
    end if
    
@@ -85,6 +86,7 @@ on dragLeave
       set the blendlevel of dropTarget to 0
    end if
 end dragLeave
+*/
 
 private function drop_Target tObject
    if exists (tObject) is false then

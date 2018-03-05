@@ -450,7 +450,8 @@ end script_SetGlobalObject
 
 function script_ConstructSuite suiteName, suiteScript
    put word 1 to -1 of suiteScript into suiteScript
-   return script_ConstructSuiteHeader(suiteName) & CR & suiteScript
+   put script_ConstructSuiteHeader(suiteName) & CR & suiteScript into scriptSuite
+   return scriptSuite
 end script_ConstructSuite
 
 function script_ConstructSuiteHeader suiteName

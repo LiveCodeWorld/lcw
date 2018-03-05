@@ -8,65 +8,50 @@ version: 0.3
 
 local LocalArray
 
+/*
+Gloabl gREVStackStatus is no longer used
+-- from stack revidelibrary
+put sStackEdited into editedStackArray
+*/
 
---> Stack
+
+--> Working on
+-
+
+
+--> Props
 -
 getprop stack_IsEdited
    put the stack_Name of the target into stackName
-   put stack_ListEditedNames ("edited") into editedStackNames
-   return stackName is among the lines of editedStackNames
+   -- put stack_ListEditedNames ("edited") into editedStackNames
+   --  put stackName is among the lines of editedStackNames into someBoolean
+   put revIDEStackIsEdited (stackName) into someBoolean
+   return someBoolean
 end stack_IsEdited
 
-command stack_SaveEdited editedStackName
-   global gREVStackStatus
-   
-   if editedStackName is among the items of "All,Save All" then
-      put stack_ListEditedNames() into stackNames
-   else
-      put editedStackName into stackNames
-   end if
-   
-   repeat for each line stackName in stackNames
-      try
-         put the effective fileName of stack stackName into pFilePath
-         save stack stackName
-         delete global gREVStackStatus [stackName]
-         
-         lcw_Notify merge ("Saved stack '[[stackName]]'!")
-      catch e
-         breakpoint
-         put stackName & CR after couldntSaveStackNames
-         answer warning merge ("Could not save stack '[[stackName]]'!")
-      end try
+getprop ide_MenuTitle [shortName]
+   put ide_GetMenuTitle (shortName) into mTitle
+   return mTitle
+end ide_MenuTitle
+
+
+--> Stack
+-
+function stack_ListEditedNames pFilterHow
+   put the mainstacks into stackNames
+   repeat for each line stackName in stackNames   
+      put revIDEStackIsEdited (stackName) into someBoolean
+      switch
+         case someBoolean is true
+            put stackName & CR after editedStackNames
+            break
+         default
+      end switch
    end repeat
+   delete char -1 of editedStackNames
+   return editedStackNames
    
-   if couldntSaveStackNames is not empty then
-      put couldntSaveStackNames
-   else
-      lcw_Notify "Saved all edited stacks!"
-   end if
-end stack_SaveEdited
-
-command stack_MarkSaved stackName
-   -- was "rev_MarkStackSaved"
-   global gREVStackStatus
-   
-   if stackName is empty then put the short name of this stack into stackName
-   delete global gREVStackStatus [stackName]
-end stack_MarkSaved
-
-command stack_MarkEdited stackName
-   -- was "rev_MarkStackEdited"
-   global gREVStackStatus
-   
-   if stackName is empty then put the short name of this stack into stackName
-   if char 1 to 3 of stackName is not "rev" then
-      put "edited" into gREVStackStatus [stackName]
-   end if
-end stack_MarkEdited
-
-
-function stack_ListEditedNames pType
+   /*
    global gREVStackStatus
    
    repeat for each key stackName in gREVStackStatus
@@ -84,7 +69,68 @@ function stack_ListEditedNames pType
       end switch
    end repeat
    return keys (stackArray)
+   */
 end stack_ListEditedNames
+
+command stack_SaveEdited editedStackName
+   global gREVStackStatus
+   
+   if editedStackName is among the items of "All,Save All" then
+      put stack_ListEditedNames() into stackNames
+   else
+      put editedStackName into stackNames
+   end if
+   
+   repeat for each line stackName in stackNames
+      try
+         put the effective fileName of stack stackName into pFilePath
+         save stack stackName
+         -- stack_MarkEdited stackName, false -- this is done by save
+         -- delete global gREVStackStatus [stackName]
+         
+         lcw_Notify merge ("Saved stack '[[stackName]]'!")
+      catch e
+         breakpoint
+         put stackName & CR after couldntSaveStackNames
+         answer warning merge ("Could not save stack '[[stackName]]'!")
+      end try
+   end repeat
+   
+   if couldntSaveStackNames is not empty then
+      put couldntSaveStackNames
+   else
+      lcw_Notify "Saved all edited stacks!"
+   end if
+end stack_SaveEdited
+
+command stack_MarkSaved stackName
+   if stackName is empty then put the short name of this stack into stackName
+   revIDESetUnedited stackName
+   
+   /*
+   -- was "rev_MarkStackSaved"
+   global gREVStackStatus
+   delete global gREVStackStatus [stackName]
+   */
+end stack_MarkSaved
+
+command stack_MarkEdited stackName, pBoolean
+   -- was "rev_MarkStackEdited"
+   if stackName is empty then put the short name of this stack into stackName
+   if pBoolean is false then
+      revIDESetUnedited stackName
+   else
+      revIDESetEdited stackName
+   end if 
+   /*
+   global gREVStackStatus
+   
+   if stackName is empty then put the short name of this stack into stackName
+   if char 1 to 3 of stackName is not "rev" then
+      put "edited" into gREVStackStatus [stackName]
+   end if
+   */
+end stack_MarkEdited
 
 
 --> IDE
@@ -172,11 +218,6 @@ function ide_VisibleStackNames pListWhich
    return visibleStackNames
 end ide_VisibleStackNames
 
-getprop ide_MenuTitle [shortName]
-   put ide_GetMenuTitle (shortName) into mTitle
-   return mTitle
-end ide_MenuTitle
-
 command ide_EditMenu shortName
    if word 1 of shortName is not "Global" then
       put "Global | ScriptEditor |" && shortName && "| Menu" into mTitle
@@ -210,6 +251,23 @@ command ide_ResetMenus
    rev_AddBehaviorHacks
 end ide_ResetMenus
 
+command ide_SetScriptEditorTitles shortTitle
+   -- doesn't work with "Authoring", "Default" and "Watch"
+   switch shortTitle
+      case "Authoring"
+      case "Watch"
+         ide_SetMenuTitle "Recent", "Watch"
+         ide_SetMenuTitle "List", "Authoring"
+         ide_SetMenuTitle "Script", "Authoring"
+         break
+      case"Default"
+      default
+         ide_SetMenuTitle "Recent", shortTitle
+         ide_SetMenuTitle "List", shortTitle
+         ide_SetMenuTitle "Script", shortTitle
+   end switch
+end ide_SetScriptEditorTitles
+
 command ide_SetMenuTitle ideElement, shortTitle
    if shortTitle is empty or shortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
       put "Default" into shortTitle
@@ -231,7 +289,9 @@ command scriptField_DoTabkey selText, scriptField
    put scriptEditor_Object() into scriptObject
    
    put scriptField_ConstructHkeyLine (selText, someScript, lastCharNum, scriptObject) into hkeyLine
-   if hkeyLine is empty then return false
+   if hkeyLine is empty then
+      return false
+   end if
    
    hkey_Edit hkeyLine
    return true
@@ -269,7 +329,8 @@ function scriptField_ConstructHkeyLine selText, someScript, lastCharNum, scriptO
       case previousToken = "command" and thisTokenNum = 2
       case thisTokenNum = 1
          -- maybe complete / incomplete command
-         put "c" into hType
+         -- put "c" into hType
+         put "M" into hType
          break
       case nextToken = "("
          put "f" into hType
@@ -289,7 +350,8 @@ function scriptField_ConstructHkeyLine selText, someScript, lastCharNum, scriptO
          break
       case previousToken is among the items of "call,send,dispatch"
          put token 1 of thisToken into hName
-         put "c" into hType
+         put "M" into hType
+         -- put "c" into hType
          break 
       case the number of words of thisToken > 1
          -- it was a quoted string
@@ -298,11 +360,13 @@ function scriptField_ConstructHkeyLine selText, someScript, lastCharNum, scriptO
          return empty
    end switch
    
-   -- could search in heirarchy
    -- simple search of libs for now
+   put hkeyline_Find (hName, hType) into hkeyLine
+   /*
    put hType && hName into shortHkey
    put hkey_GetPlace (shortHkey) into hObject
    put hKeyLine_FromTripple (hName, hType, hObject) into hkeyLine
+   */
    return hkeyLine
 end scriptField_ConstructHkeyLine
 

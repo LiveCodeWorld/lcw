@@ -11,12 +11,230 @@ Here we place all the handlers that need to be in use before project initialisat
 */
 
 
---> Working on
+--> Working On | Display
 -
-command project_LoadMenus projectFolder
+/*
+Move these to a separate library, or remove all platform dependencies.
+*/
+
+command display_Loading projectName, pComment
+   -- should change to display status in the home stack
+   if pComment is empty then
+      put merge ("Loading project '[[projectName]]'..."), "Loading projects" into pComment
+   end if
+   
+   try
+      lcw_Notify pComment
+   catch e
+      put pComment
+   end try
+end display_Loading
+   
+command lcw_Notify someMessage, pTitle
+   -- needs to work cross platform
+   try
+      if pTitle is empty then put "LiveCode World Notification" into pTitle
+      put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell
+      put "with title" && quote & pTitle & quote after someShell
+      put "'" after someShell
+      put shell (someShell) into shellResult
+   catch e
+      put someComment
+   end try
+end lcw_Notify
+   
+command lcw_WarnAndExit someComment
+   beep
+   answer warning somecomment
+   exit to top
+end lcw_WarnAndExit
+   
+command lcw_Answer someQuestion
+   -- was "opn_Answer"
+   -- removed complexity of "text_Merge"
+   answer someQuestion with "Cancel" or "OK"
+   put it into theResult
+   if theResult is "Cancel" then exit to top
+   return theResult
+end lcw_Answer
+   
+function lcw_Ask someQuestion, pDefault
+   -- was "opn_Ask"
+   -- removed complexity of "text_Merge"
+   replace "'" with quote in someQuestion
+   ask someQuestion with pDefault
+   put it into theResult
+   if the result is "Cancel" then exit to top
+   return theResult
+end lcw_Ask
+
+--> Working On | Download Projects
+-
+command github_DownloadProject projectName, lcwRoot
+   -- this should use git to clone a project to the lcwRoot folder
+   -- and return the path to the projects home stack folder
+   
+   -- stub for now
+   put empty into projectHomeStackPath
+   if projectHomeStackPath is empty then
+      put lcwRoot
+      answer warning merge ("Failed to download project '[[projectName]]'!")
+      exit to top
+   end if
+end github_DownloadProject
+
+
+--> Project | Load
+-
+command project_LoadMenus projectFolder, pCreateindex
+   put project_ListPaths ("controllers", projectFolder) into stackPaths
+   if pCreateindex is true then
+      project_IndexGlobalMenus stackPaths
+   else
+      -- here we should load from a stored array
+      -- project_IndexGlobalMenus stackPaths
+      breakpoint
+   end if
+end project_LoadMenus
+   
+command env_ExportMenusAndStackFiles pListAll
+   put env_ListProjects (pListAll) into projectNames
+   repeat for each line projectName in projectNames
+      set the cursor to busy
+      put project_GetFolder (projectName) into projectFolder
+      project_ExportMenusAndStackFiles projectFolder
+   end repeat
+end env_ExportMenusAndStackFiles
+   
+command env_LoadMenusAndStackFiles pListAll
+   put env_ListProjects (pListAll) into projectNames
+   repeat for each line projectName in projectNames
+      set the cursor to busy
+      put project_GetFolder (projectName) into projectFolder
+      project_LoadMenusAndStackFiles projectFolder
+   end repeat
+end env_LoadMenusAndStackFiles
+   
+command env_LoadMenus pListAll
+   put env_ListProjects (pListAll) into projectNames
+   repeat for each line projectName in projectNames
+      put project_GetFolder (projectName) into projectFolder
+      project_LoadMenus projectFolder, true
+   end repeat
+end env_LoadMenus
+   
+command project_InitialiseFolder projectFolderOrHomeStackFile
+   -- does not initialise modules
+   
+   put projectFolderOrHomeStackFile into projectFolder
+   if char -1 of projectFolderOrHomeStackFile is not slash then
+      set the itemdelimiter to slash
+      put empty into item -1 of projectFolder
+   end if
+   
+   put project_ListUsedPathsFromFolder (projectFolder) into usedStackPaths
+   stack_StartUsedPaths usedStackPaths
+   
+   -- this handler needs less dependencies
+   -- project_SetFoundStackFiles projectFolder -- constructs from folder structure
+   -- project_LoadMenus projectFolder  -- constructs from menu scripts of controllers
+   project_LoadMenusAndStackFiles projectFolder -- loads from stored project_Array
+   
+   put project_GetHomeStackName (projectFolder) into homeStackName
+   env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
+   return homeStackName
+end project_InitialiseFolder
+   
+command project_LoadMenusAndStackFiles projectFolder
+   global gLCW
+   put project_FetchArray (projectFolder) into projectArray
+   --
+   put projectArray ["Global Menus"] into projectGlobalMenuArray
+   put gLCW ["Global Menus"] into gMenuArray
+   union projectGlobalMenuArray with gMenuArray
+   put projectGlobalMenuArray into gLCW ["Global Menus"]
+   
+   put projectArray ["stackFileArray"] into projectStackFileArray
+   put stackFile_FromArray (projectStackFileArray) into projectStackFiles
+   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
+   if exists (stack projectHomeStackPath) is false then
+      put "project_LoadMenusAndStackFiles of stack lib_LCW" into gLCW ["Error"][projectHomeStackPath]
+      return empty
+   end if
+   set the stackfiles of stack projectHomeStackPath to projectStackFiles
+   return projectArray
+end project_LoadMenusAndStackFiles
+   
+command project_ExportMenusAndStackFiles projectFolder
+   put project_FetchArray (projectFolder) into projectArray
+   --
+   put project_ConstructFoundStackFileArray (projectFolder) into projectArray ["stackFileArray"]
+   
    put project_ListPaths ("controllers", projectFolder) into stackPaths
    project_IndexGlobalMenus stackPaths
-end project_LoadMenus
+   put the result into projectArray ["Global Menus"]
+   --
+   project_StoreArray projectFolder, projectArray
+end project_ExportMenusAndStackFiles
+   
+command project_SetFoundStackFiles projectFolder
+   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
+   if exists (stack projectHomeStackPath) is false then return empty
+   
+   put project_ConstructFoundStackFileArray (projectFolder) into projectStackFileArray
+   put stackFile_FromArray (projectStackFileArray) into projectStackFiles
+   
+   set the stackfiles of stack projectHomeStackPath to projectStackFiles
+   return lcwStackFiles
+end project_SetFoundStackFiles
+   
+function project_FetchStackFileArray projectName
+   put project_FetchValue ("stackFileArray", projectName) into stackFileArray
+   return stackFileArray
+end project_FetchStackFileArray
+   
+command project_StoreStackFileArray projectName, projectStackFileArray
+   put the stack_Folder of stack projectName into projectFolder
+   project_FetchValue someKey, projectName
+end project_StoreStackFileArray
+   
+function project_FetchStackFiles projectFolder
+   put project_FetchArray (projectFolder) into projectArray
+   put projectArray ["stackfiles"] into stackFileTable
+   return stackFileTable
+end project_FetchStackFiles
+   
+command project_StoreStackFiles projectName, stackFileTable
+   put project_FetchArray (projectFolder) into projectArray
+   put stackFileTable into projectArray ["data"]["stackfiles"]
+   project_StoreArray projectFolder, projectArray
+end project_StoreStackFiles
+   
+command project_IndexGlobalMenus longStackFiles
+   -- does not export handlers
+   local projectMenuTitleArray
+   repeat for each line longStackFile in longStackFiles
+      set the cursor to busy
+      
+      if exists (stack longStackFile) is false then
+         next repeat
+      end if
+      put the name of stack longStackFile into stackObject
+      try
+         set the menu_Update of stackObject to true -- false
+         put the result into mTitleArray
+         union projectMenuTitleArray with mTitleArray
+      catch e
+         put stackObject & CR after problemMenus
+      end try
+   end repeat
+   
+   if problemMenus is not empty then
+      put problemMenus
+      answer warning "The following menus have problems being indexed!"
+   end if
+   return projectMenuTitleArray
+end project_IndexGlobalMenus
 
 
 --> Events
@@ -36,17 +254,6 @@ end revEditScript
 Here we list the stackfiles based on the structure of a project.
 This should probably be changed to a recursive stack search (but has the advantage of enforcing structure).
 */
-
-command project_SetFoundStackFiles projectFolder
-   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
-   if exists (stack projectHomeStackPath) is false then return empty
-   
-   put project_ConstructFoundStackFileArray (projectFolder) into projectStackFileArray
-   put stackFile_FromArray (projectStackFileArray) into projectStackFiles
-   
-   set the stackfiles of stack projectHomeStackPath to projectStackFiles
-   return lcwStackFiles
-end project_SetFoundStackFiles
 
 function project_ConstructFoundStackFileArray projectFolder
    -- this gets all the stackfiles
@@ -93,7 +300,7 @@ function project_GetHomeStackName projectFolder
    put the short name of stack projectHomeStackPath into projectName
    return projectName
 end project_GetHomeStackName
-
+   
 function project_NameToShortFolder moduleStackName
    set the itemdelimiter to "|"
    repeat for each item someItem in moduleStackName
@@ -102,7 +309,7 @@ function project_NameToShortFolder moduleStackName
    delete char -1 of shortFolder
    return shortFolder
 end project_NameToShortFolder
-
+   
 function project_FindHomeStackPath somePath
    -- assumes somePath is a path to a stack or file and not a folder
    put somePath into someFolder
@@ -112,7 +319,7 @@ function project_FindHomeStackPath somePath
    project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
    return homeStackPath
 end project_FindHomeStackPath
-
+   
 function project_FindFolder somePath
    -- assumes somePath is a path to a stack or file and not a folder
    -- returns the top module or "project folder"
@@ -123,7 +330,7 @@ function project_FindFolder somePath
    project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
    return projectFolder
 end project_FindFolder
-
+   
 function module_FindFolder somePath
    -- assumes somePath is a path to a stack or file and not a folder
    -- finds the first "module folder" above the path
@@ -138,7 +345,7 @@ function module_FindFolder somePath
    module_FindFromFolder someFolder, homeStackName, moduleFolder, homeStackPath
    return moduleFolder
 end module_FindFolder
-
+   
 function module_IsNotaProject moduleFolder
    set the itemdelimiter to slash
    if item -2 of moduleFolder = "modules" then
@@ -149,7 +356,7 @@ function module_IsNotaProject moduleFolder
       return false
    end if
 end module_IsNotaProject
-
+   
 command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
    set the itemdelimiter to slash
    put the number of items of someFolder into maxItemNum
@@ -179,7 +386,7 @@ command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @home
    put empty into homeStackPath
    return false
 end project_FindFromFolder
-
+   
 command module_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
    set the itemdelimiter to slash
    put the number of items of someFolder into maxItemNum
@@ -218,7 +425,7 @@ function lcw_HomeFolder
    end if
    return lcwHomeFolder
 end lcw_HomeFolder
-
+   
 getprop project_Name
    -- could also be called project_HomeStackName
    -- searches the disk based file hierearchy to find the project root
@@ -234,7 +441,7 @@ getprop project_Name
    put project_GetHomeStackName (projectFolder) into projectName
    return projectName 
 end project_Name
-
+   
 getprop project_HomeStack
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
@@ -246,16 +453,7 @@ getprop project_HomeStack
    put the name of stack projectStackPath into stackObject
    return stackObject 
 end project_HomeStack
-
--- getprop project_HomeFolder
--- searches the disk based file hierearchy to find the project root
-put the stack_Object of the target into stackObject
-put the effective filename of stackObject into stackPath
-
-put project_FindFolder (stackPath) into projectFolder
-return projectFolder
-end project_HomeFolder
-
+   
 getprop project_Folder [shortSubFolderName]
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
@@ -273,7 +471,6 @@ getprop project_Folder [shortSubFolderName]
          return projectFolder
    end switch
 end project_Folder
-
 
 
 --> Working On | Messy
@@ -387,27 +584,6 @@ command project_Stop projectName
    display_Loading projectName, someComment
 end project_Stop
 
-command project_InitialiseFolder projectFolderOrHomeStackFile
-   -- does not initialise modules
-   
-   put projectFolderOrHomeStackFile into projectFolder
-   if char -1 of projectFolderOrHomeStackFile is not slash then
-      set the itemdelimiter to slash
-      put empty into item -1 of projectFolder
-   end if
-   
-   project_SetFoundStackFiles projectFolder
-   put project_ListUsedPathsFromFolder (projectFolder) into usedStackPaths
-   stack_StartUsedPaths usedStackPaths
-   
-   -- this handler needs less dependencies
-   project_LoadMenus projectFolder
-   
-   put project_GetHomeStackName (projectFolder) into homeStackName
-   env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
-   return homeStackName
-end project_InitialiseFolder
-
 command project_LoadDeps projectDeps, projectHomeStackFile
    replace comma with CR in projectDeps   
    repeat for each line sisterProjectName in projectDeps
@@ -425,55 +601,6 @@ command project_LoadDeps projectDeps, projectHomeStackFile
       -- go to stack sisterProjectHomeStackPath
    end repeat
 end project_LoadDeps
-
-
---> Working On | Display
---
-/*
-Try to move these to a separate library, or remove all platform dependencies.
-*/
-
-command display_Loading projectName, pComment
-   -- should change to display status in the home stack
-   if pComment is empty then
-      put merge ("Loading project '[[projectName]]'..."), "Loading projects" into pComment
-   end if
-   
-   try
-      lcw_Notify pComment
-   catch e
-      put pComment
-   end try
-end display_Loading
-
-command lcw_Notify someMessage, pTitle
-   -- needs to work cross platform
-   try
-      if pTitle is empty then put "LiveCode World Notification" into pTitle
-      put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell
-      put "with title" && quote & pTitle & quote after someShell
-      put "'" after someShell
-      put shell (someShell) into shellResult
-   catch e
-      put someComment
-   end try
-end lcw_Notify
-
-
---> Working On | Download Projects
--
-command github_DownloadProject projectName, lcwRoot
-   -- this should use git to clone a project to the lcwRoot folder
-   -- and return the path to the projects home stack folder
-   
-   -- stub for now
-   put empty into projectHomeStackPath
-   if projectHomeStackPath is empty then
-      put lcwRoot
-      answer warning merge ("Failed to download project '[[projectName]]'!")
-      exit to top
-   end if
-end github_DownloadProject
 
 
 --> Project | Props
@@ -749,14 +876,6 @@ end lcw_HomeStackName
 
 --> Env
 -
-command env_LoadMenus
-   put env_ListProjects() into projectNames
-   repeat for each line projectName in projectNames
-      put project_GetFolder (projectName) into projectFolder
-      project_LoadMenus projectFolder
-   end repeat
-end env_LoadMenus
-
 function env_GetProjectFolder homeStackName
    put env_GetProjectArray() into envProjectArray
    return envProjectArray [homeStackName]
@@ -841,32 +960,6 @@ function module_GetFolder moduleShortFolder, projectFolder
 end module_GetFolder
 
 
---> Working on
--
-command project_IndexGlobalMenus longStackFiles
-   -- does not export handlers   
-   repeat for each line longStackFile in longStackFiles
-      set the cursor to busy
-      
-      if exists (stack longStackFile) is false then
-         next repeat
-      end if
-      put the name of stack longStackFile into stackObject
-      try
-         set the menu_Update of stackObject to true -- false
-         put the result into mTitleArray
-      catch e
-         put stackObject & CR after problemMenus
-      end try
-   end repeat
-   
-   if problemMenus is not empty then
-      put problemMenus
-      answer warning "The following menus have problems being indexed!"
-   end if
-end project_IndexGlobalMenus
-
-
 --> Private
 -
 private command _AddToStackFileArray @stackFileArray, someFolder, pHomeFolder
@@ -912,26 +1005,6 @@ command lcw_LoadCustomUserProject
    
    dispatch "project_Init" to stack userHomeStackName
 end lcw_LoadCustomUserProject
-
-command lcw_CreateMenuButton
-   -- this should be part of the new script-only  menu library 
-   -- in case we call this handler more that once, do not create multiple buttons
-   put lcw_HomeStackName() into lcwHomeStackName
-   
-   if the menu_Button of stack lcwHomeStackName is empty then
-      -- this should be a "menu" button
-      create invisible button "Global Menu Button"
-      put it into createdObject
-      set the style of createdObject to "menu"
-      set the menumode of createdObject to "popup"
-      set the backgroundcolor of createdObject to "green" -- for no reason
-      
-      put "on menuPick menuPath" into someScript
-      put CR & "   menu_SendMessage menuPath" after someScript
-      put CR & "end menuPick" after someScript
-      set the script of createdObject to someScript
-   end if
-end lcw_CreateMenuButton
 
 
 --> Deps
@@ -1014,10 +1087,18 @@ function folder_ListLong rootFolder
    return longSubFolders
 end folder_ListLong
 
+command folder_CreateFromFile someFile
+   put someFile into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   folder_CreateNested someFolder
+   return someFolder
+end folder_CreateFromFile
+
 command folder_CreateNested @someFolder
    if there is a folder someFolder then return empty   
    set the itemdelimiter to "/"
-   repeat with itemNum = 1 to the number of items of someFolder
+   repeat with itemNum = 2 to the number of items of someFolder
       put item 1 to itemNum of someFolder & "/" into testFolder
       if there is a folder testFolder then next repeat
       create folder testFolder

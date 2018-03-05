@@ -12,8 +12,10 @@ version: 0.2
 This is the new version of the hKey syntax which does not use comma's.
 It is also more readable (at the cost of inserting "of' at word 3).
 
-here we start to collect handlers specifically created for this format, 
+Here we start to collect handlers specifically created for this format, 
 and work-in-progress transitional handlers.
+
+See also lib_FindHkey
 */
 
 
@@ -22,7 +24,7 @@ and work-in-progress transitional handlers.
 
 --> Hkey | Edit
 -
-command hkey_Edit hKey
+command hkey_FancyEdit hKey
    -- use instead of "hkey_EditFoundHandler"   
    hkey_Deconstruct hKey, hName, hType, hObject, hNum
    put the result into hkeyLine
@@ -50,7 +52,7 @@ command hkey_Edit hKey
       if exists (hObject) is false then
          put hObject & CR & hKey
          breakpoint
-         return fale
+         return false
       end if
    end if
    
@@ -62,13 +64,7 @@ command hkey_Edit hKey
    put word 1 to 2 of hkeyLine & space into searchString
    put lineoffset (searchString, hTable) into foundLineNum
    if foundLineNum = 0 then
-      display_ExecutionContexts
       breakpoint
-      
-      -- could find another version?
-      hkeyline_DeletePlaceArray hkeyLine
-      -- could remove old version?
-      
       put searchString
       edit the script of hObject
       return false
@@ -94,23 +90,11 @@ command hkey_Edit hKey
    rev_SetSelectedHandlerTreeLineNum foundLineNum   
    unlock screen
    return true
-end hkey_Edit
+end hkey_FancyEdit
 
 
 --> hKeyLine
 -
-function hKeyLine_Construct hkeyLine, hObject
-   put word 1 to 2 of hkeyLine && "of" && hObject into hKeyLine
-   return hKeyLine
-end hKeyLine_Construct
-
-command hKeyLine_Deconstruct hKeyLine, @hName, @hType, @hObject
-   put toUpper (word 1 of hKeyLine) into hType
-   put word 2 of hKeyLine into hName
-   put word 4 to -1 of hKeyLine into hObject
-   return hType && hName
-end hKeyLine_Deconstruct
-
 command hkeyLine_Normalise @hKey
    put hkeyLine_FromHkey (hKey) into hKey
    put word 1 to 2 of hKey into shortHkey
@@ -129,14 +113,15 @@ function hkeyLine_ToHkey hKeyLine
    return hName,hType,hObject,1
 end hkeyLine_ToHkey
 
-function hKeyLine_FromTripple hName, hType, hObject
-   replace "c" with "M" in hType
-   put toUpper (hType) && hName into shortHkeyLine
-   if hObject is empty then return shortHkeyLine
-   
-   put hKeyLine_Construct (shortHkeyLine, hObject) into hkeyLine
-   return hkeyLine
-end hKeyLine_FromTripple
+function hkey_FromShort shortHkeys, hObject
+   repeat for each line shortHkey in shortHkeys
+      hkey_Deconstruct shortHkey, hName, hType, xObject, xNum
+      put hKeyLine_FromTripple (hName, hType, hObject) into hkeyLine
+      put hkeyLine & CR after hkeyLines
+   end repeat
+   delete char -1 of hkeyLines
+   return hkeyLines
+end hkey_FromShort
 
 function hkeyline_MakeShort hTable
    repeat for each line someLine in hTable
@@ -153,25 +138,6 @@ end hkeyline_MakeShort
 /*
 Work out if repeat of lineOffset is faster and standardize.
 */
-
-command hkeyLine_FindInTable hkeyLine, hTable, @startLineNum, @endLineNum
-   -- see also "hkey_FindInTable"
-   -- uses lineOffset instead of repeat loop
-   
-   set the wholematches to false
-   put word 1 to 2 of hkeyLine & space into searchString
-   put lineOffset (searchString, hTable) into lineNum
-   if lineNum = 0 then
-      put 0 into startLineNum
-      put 0 into endLineNum
-      return false
-   end if
-   
-   put line lineNum of hTable into hTableLine
-   put word 3 of hTableLine into startLineNum
-   put word 4 of hTableLine into endLineNum
-   return true
-end hkeyLine_FindInTable
 
 command hkey_FindInTable shortHkey, hTable, @startLineNum, @endLineNum
    -- see also "hkeyLine_FindInTable"
@@ -211,34 +177,6 @@ command hkey_FindInTable shortHkey, hTable, @startLineNum, @endLineNum
    put 0 into endLineNum
    return false
 end hkey_FindInTable
-
-function hkey_Construct hName, hType, hObject, pHandlerNum
-   if exists (hObject) then
-      put revRuggedID (hObject) into hObject
-   else
-      put "Missing" into hObject
-   end if
-   if pHandlerNum is empty then put 1 into pHandlerNum
-   return hName,hType,hObject,pHandlerNum
-end hkey_Construct
-
-command hkey_Deconstruct hKey, @hName, @hType, @hObject, @hNum
-   if the number of items of hkey = 1 then
-      hKeyLine_Deconstruct hKey, hName, hType, hObject
-      put 1 into hNum
-   else
-      -- old version
-      put word 1 to -1 of item 1 of hKey into hName
-      put word 1 to -1 of item 2 of hKey into hType
-      if hType is empty then put "c" into hType
-      put word 1 to -1 of item 3 of hKey into hObject
-      put item 4 of hKey into hNum
-      if hNum is empty then put 1 into hNum
-   end if
-   
-   put hKeyLine_FromTripple (hName, hType, hObject) into hkeyLine
-   return hkeyLine
-end hkey_Deconstruct
 
 
 --> Handler | Construct

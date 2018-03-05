@@ -1007,7 +1007,7 @@ private command _CreateMenuButton
       create invisible button "Global Menu Button"
       put it into createdObject
       set the style of createdObject to "menu"
-      set the menumode of createdObject to "popup"
+      set the menumode of createdObject to "pulldown"
       set the backgroundcolor of createdObject to "green" -- for no reason
       
       put "on menuPick menuPath" into someScript

@@ -36,6 +36,11 @@ function module_FolderNameFromTitle gMenuTitle
    return gMenuTitle
 end module_FolderNameFromTitle
 
+function view_FromModuleStackName moduleStackName
+   replace "_" with "|" in moduleStackName
+   return moduleStackName
+end view_FromModuleStackName
+
 function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
    replace "_" with "|" in moduleStackName
    menu_NormalizeTitle moduleStackName, pMakePretty
@@ -117,11 +122,6 @@ function menu_GlobalTitleFromViewName vName
    put "Global |" && menu_TitleFromViewName (vName) into globalMenuTitle
    return globalMenuTitle
 end menu_GlobalTitleFromViewName
-
-function view_FromModuleStackName moduleStackName
-   replace "_" with "|" in moduleStackName
-   return moduleStackName
-end view_FromModuleStackName
 
 function menu_TitleFromViewName viewName, pLevelAbove, pMakePretty
    set the itemdelimiter to "|"
@@ -230,11 +230,16 @@ end module_Controllers
 --> Module
 -
 function module_GetHomeStackPath moduleFolderName, projectName
-   put library_FetchProjectFolder (projectName) into projectFolder
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   put project_GetModuleFolder (moduleFolderName, projectName) into moduleFolder
    put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
    return moduleHomeStackPath
 end module_GetHomeStackPath
+
+function project_GetModuleFolder moduleFolderName, projectName
+   put library_FetchProjectFolder (projectName) into projectFolder
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   return moduleFolder
+end project_GetModuleFolder
 
 
 --> Module | List

@@ -23,8 +23,9 @@ setprop script_MetaData uRIPArray
    put the long id of the target into tObject
    put the script of tObject into someScript   
    script_SetMetadataArray someScript, uRipArray
-   set the script of tObject to someScript
    set the customproperties ["uRIP"] of tObject to uRipArray
+   send "set the script of tObject to someScript" to tObject in 2 ticks
+   beep
 end script_MetaData
 
 function script_GetMetadataArray someScript

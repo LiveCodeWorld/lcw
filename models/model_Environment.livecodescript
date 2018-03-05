@@ -31,19 +31,8 @@ end env_LoadProjectGlobals
 
 */
 
---> Working on
+--> Environment | Files
 -
-getprop active_Projects
-   -- allows you to call "if myProject is among the lines of the active_Projects of me then"
-   -- even if this library is not in use (it just returns empty which is what we want)
-   return env_ListProjects()
-end active_Projects
-
-function project_IsActive projectName
-   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
-   return projectIsLoaded
-end project_IsActive
-
 function env_ListHomeArrayFiles
    put env_GetHomeArrayFileData() into envProjectArrayFileArray
    put envProjectArrayFileArray ["projectArrayFiles"] into projectArrayFiles
@@ -63,28 +52,19 @@ function env_GetHomeArrayFileData
 end env_GetHomeArrayFileData
 
 
---> Environment | Project | Focus
+--> Environment | List | Projects
 -
-/*
-An environment no longer has a single project.  Multiple projects can be loaded.
-But we may be interested in focussing on one. This utility fuction allows for that.
-*/
+getprop active_Projects
+   -- allows you to call "if myProject is among the lines of the active_Projects of me then"
+   -- even if this library is not in use (it just returns empty which is what we want)
+   return env_ListProjects()
+end active_Projects
 
-function env_GetProjectFocus
-   global gLCW
-   put gLCW ["environment"]["current project"] into currentProjectFocus
-   return currentProjectFocus
-end env_GetProjectFocus
+function project_IsActive projectName
+   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
+   return projectIsLoaded
+end project_IsActive
 
-command env_SetProjectFocus currentProjectFocus
-   global gLCW
-   put currentProjectFocus into gLCW ["environment"]["current project"]
-   return gLCW ["environment"]
-end env_SetProjectFocus
-
-
---> Environment | List
--
 function env_ListProjects pListAll
    switch pListAll
       case "true"
@@ -113,6 +93,9 @@ function env_ListProjects pListAll
    end switch
 end env_ListProjects
 
+
+--> Environment | List
+-
 function env_ListControllerStackNames pProjectNames
    put env_ListControllerPaths (pProjectNames) into activeControllerPaths
    put stack_PathsToNames (activeControllerPaths) into stackNames

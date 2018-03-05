@@ -292,6 +292,14 @@ function folder_Above fileOrFolder
    end if
 end folder_Above
 
+command folder_CreateFromFile someFile
+   put someFile into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   folder_CreateNested someFolder
+   return someFolder
+end folder_CreateFromFile
+
 command folder_CreateNested @someFolder
    text_AddTrailing someFolder, slash
    if there is a folder someFolder then return empty

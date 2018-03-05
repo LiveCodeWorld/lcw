@@ -9,6 +9,23 @@ version: 0.1
 
 --> Global | Script | Changes | Menu
 -
+on menu_LoadServer
+   server_LoadDetails "rest.livecode.world"
+   display_RigControllerArray
+end menu_LoadServer
+
+on menu_SetMenus
+   
+end menu_SetMenus
+
+on menu_DisplayLocalChanges indexView
+   put the selected_Index of indexView into scriptObject
+   
+   put the script of scriptObject into nowScript
+   put the exported_Script of scriptObject into exportedScript
+   terminal_Diff exportedScript, nowScript, "the exported_Script of mTarget", "the script of mTarget"
+end menu_DisplayLocalChanges
+
 on menu_FilterForChanged indexView
    put the displayed_Index of indexView into scriptObjects
    repeat for each line scriptObject in scriptObjects

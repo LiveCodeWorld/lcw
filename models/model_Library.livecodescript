@@ -64,8 +64,17 @@ You can give alternative names by passing the param pShortFile. So
 -
 
 
---> Model | Library
+--> Model | Props
 -
+/*
+Models are stored by default in a folder named after the short name of the stack at the same level as the stack
+
+Thinking of adding the ability to store models in a global space, possibly inside the prefences folder?
+-- put specialfolderpath ("preferences") & modelName...
+
+But at the moment everything is tied to the project_Folder and the interfaces do not allow for adding this option.
+*/
+
 getprop model_Names
    put the stack_Name of the target into modelStackName
    put the project_Folder of the target into projectFolder
@@ -73,6 +82,60 @@ getprop model_Names
    return shortFiles
 end model_Names
 
+getprop model_DataFile [pShortFile]
+   -- assumes the target is a model stack
+   put the stack_Name of the target into modelStackName
+   put the stack_Folder of the target into stackFolder
+   put stackFolder & modelStackName & slash into modelDataFolder
+   
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+   return modelDataFile
+end model_DataFile
+
+getprop model_DataFolder [modelStackName]
+   if modelStackName is empty then
+      -- we assume the target is a model stack in the "models/" folder
+      -- simple utitlity that looks for a sister folder to any stack
+      put the stack_Name of the target into modelName
+      put the stack_Folder of the target into stackFolder
+      put stackFolder & modelName & slash into modelDataFolder
+   else
+      -- will search for the model data folder in the "models/" folder of the project the target stack is in
+      put the project_Folder of the target into projectFolder
+      put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   end if
+   return modelDataFolder
+end model_DataFolder
+
+
+--> Model | Files
+-
+function model_GetDataFolder modelStackName, projectFolder
+   put project_ConstructFolder ("models", projectFolder) into rootModelsFolder
+   put rootModelsFolder & modelStackName & slash into modelDataFolder
+   return modelDataFolder
+end model_GetDataFolder
+
+function model_GetDataFile modelStackName, projectFolder, pShortFile
+   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+   return modelDataFile
+end model_GetDataFile
+
+private function dataFolder_GetFile modelDataFolder, pShortFile
+   if pShortFile is empty then
+      set the itemdelimiter to slash
+      put item -1 of modelDataFolder into modelName
+      put modelName & ".array" into pShortFile
+   end if
+   put modelDataFolder & pShortFile into modelDataFile
+   return modelDataFile
+end dataFolder_GetFile
+
+
+
+--> Model | List
+-
 function model_ListNames modelStackName, projectFolder
    put projectFolder & "models/" & modelStackName & slash into modelDataFolder
    put folder_ListShortFiles (modelDataFolder) into shortFiles
@@ -126,49 +189,6 @@ command model_StoreArray modelStackName, projectFolder, modelArray, pShortFile
 end model_StoreArray
 
 
---> Model | Data Folder
--
-function model_GetDataFolder modelStackName, projectFolder
-   put project_ConstructFolder ("models", projectFolder) into rootModelsFolder
-   put rootModelsFolder & modelStackName & slash into modelDataFolder
-   return modelDataFolder
-end model_GetDataFolder
-
-getprop model_DataFolder [modelStackName]
-   if modelStackName is empty then
-      -- we assume the target is a model stack in the "models/" folder
-      -- simple utitlity that looks for a sister folder to any stack
-      put the stack_Name of the target into modelName
-      put the stack_Folder of the target into stackFolder
-      put stackFolder & modelName & slash into modelDataFolder
-   else
-      -- will search for the model data folder in the "models/" folder of the project the target stack is in
-      put the project_Folder of the target into projectFolder
-      put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
-   end if
-   return modelDataFolder
-end model_DataFolder
-
-
---> Model | Data File
--
-getprop model_DataFile [pShortFile]
-   -- assumes the target is a model stack
-   put the stack_Name of the target into modelStackName
-   put the stack_Folder of the target into stackFolder
-   put stackFolder & modelStackName & slash into modelDataFolder
-   
-   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
-   return modelDataFile
-end model_DataFile
-
-function model_GetDataFile modelStackName, projectFolder, pShortFile
-   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
-   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
-   return modelDataFile
-end model_GetDataFile
-
-
 --> Array | Model
 -
 /*
@@ -210,18 +230,8 @@ command array_SaveModel someFile, modelArray
          put arrayencode (modelArray) into encodedData
          break
    end switch
+   -- create folder if it does not exist
+   folder_CreateFromFile someFile
+   --
    put encodedData into url ("binfile:" & someFile)
 end array_SaveModel
-
-
---> Private
--
-private function dataFolder_GetFile modelDataFolder, pShortFile
-   if pShortFile is empty then
-      set the itemdelimiter to slash
-      put item -1 of modelDataFolder into modelName
-      put modelName & ".array" into pShortFile
-   end if
-   put modelDataFolder & pShortFile into modelDataFile
-   return modelDataFile
-end dataFolder_GetFile

@@ -45,6 +45,53 @@ end mDoubleUp_EditMenuScript
 
 --> Working on
 -
+command atom_DisplayText someText, pFileExtension, pUseBinary
+   put the tempname into someFile
+   if pFileExtension is not empty then
+      put "." & pFileExtension after someFile
+   end if
+   if pUseBinary is true then
+      put someText into url ("binfile:" & someFile)
+   else
+      put someText into url ("file:" & someFile)
+   end if
+   --
+   atom_DisplayFile someFile
+   put the result into launchSuccess
+   return launchSuccess
+end atom_DisplayText
+
+command atom_DisplayFile someFile
+   -- not sure why
+   -- launch someFile with "Atom" does not work
+   
+   launch someFile with "/Applications/Atom.app" -- "Atom"
+   put the result into launchSuccess
+   return launchSuccess
+end atom_DisplayFile
+
+command display_ActiveMenuArray
+   global gLCW
+   
+   put gLCW ["activeMenuArray"] into activeMenuArray
+   -- put "Recursion:" && pMenuTitle & ",menu_CheckRecursionOnExtract" into someTitle
+   display_Array activeMenuArray, "gLCW ['activeMenuArray']"
+end display_ActiveMenuArray
+
+command display_RigControllerArray
+   server_LoadDetails "rest.livecode.world"
+   put rig_FetchControllerPathArray() into controllerPathArray
+   
+   put "Global | Revigniter | Display | Controller | Menu" into treeMenuTitle
+   put "Global | Revigniter | Display | Controller | Line | Menu" into lineMenuTitle
+   put server_GetURL() into serverURL
+   put serverURL & comma & "rig_FetchControllerPathArray()" into someTitle
+   --
+   display_Array controllerPathArray, someTitle, treeMenuTitle, lineMenuTitle
+   put the result into arrayView
+   return arrayView
+end display_RigControllerArray
+
 command display_Lines someIndex, pSomeTitle, pMouseDoubleUpCommand, pStackLabel, pPalette
    -- simplified version of display_Index
    local pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pDragCommand
@@ -97,7 +144,10 @@ command display_RecentExports pHowLong, pIndexView
    
    if exists (pIndexView) is false then
       put merge ("In last [[someMin]] minutes,Changes") into someTitle
-      display_Index rObjects, someTitle, "Global | Script | Changes | Menu", empty, "mouse_EditObjectScript"
+      put empty into mUp
+      put "mouse_EditObjectScript" into mDoubeUp
+      put "Global | Script | Changes | Menu" into lineMenuTitle
+      display_Index rObjects, someTitle, "Global | Script | Changes | Menu", lineMenuTitle, mUp, mDoubeUp
       return the result
    else
       set the view_Index of pIndexView to rObjects
@@ -121,26 +171,6 @@ end display_HkeyLines
 on mDoubleUp_HkeyLine displayView, hKeyLine
    hkey_Edit hKeyLine
 end mDoubleUp_HkeyLine
-
-
---> Launch
--
-command atom_DisplayText someText
-   put the tempname into someFile
-   put someText into url ("file:" & someFile)
-   launch_Atom someFile
-end atom_DisplayText
-
-command launch_Atom someFile
-   put "atom" && kwote (someFile) into someShell
-   put shell (someShell) into shellResult
-   
-   -- /bin/sh: line 1: Atom: command not found
-   set the itemdelimiter to ":"
-   if word 1 to -1 of item -1 of shellResult = "command not found" then
-      display_Text someFile
-   end if
-end launch_Atom
 
 
 --> Display
@@ -195,8 +225,9 @@ command display_GlobalValue gName
 end display_GlobalValue
 
 command display_Text textOrUrl, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
-   if pDisplayTitle is empty then put "Display,Text" into pDisplayTitle
    switch
+      case pDisplayTitle is empty 
+         put "Display,Text" into pDisplayTitle
       case textOrUrl begins with "file:///"
          -- this is how browsers display a file
          delete char 6 to 7 of textOrUrl
@@ -211,6 +242,10 @@ command display_Text textOrUrl, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, p
          -- this is for lazy convenience (separate out to "display_File")
          put url ("file:" & textOrUrl) into someText
          break
+      case pDisplayTitle is "atom" 
+         put textOrUrl into someText
+         atom_DisplayText someText
+         return the result
       default
          put textOrUrl into someText
    end switch
@@ -220,6 +255,24 @@ command display_Text textOrUrl, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, p
    set the field_Style of indexView to "text"
    return indexView
 end display_Text
+
+command display_Json jsonReply, pDisplayTitle, pMouseDoubleUpCommand
+   put json_ToArray (jsonReply) into jsonArray
+   switch
+      case pDisplayTitle is "atom"
+         atom_DisplayText jsonReply, "json"
+         return empty
+      case jsonArray is an array
+         local pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pCommandObject
+         display_Array jsonArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
+         break
+      case dafs
+         display_Lines jsonReply, pDisplayTitle
+         break
+   end switch
+   put the result into displayView
+   return displayView
+end display_Json
 
 command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
    display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
@@ -340,13 +393,10 @@ command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, 
    put the result into displayView 
    put token -1 of displayView into cloneStackName
    --
-   
    put _GetNewIndexDisplayStackRect (oRect, displayView) into newRect
-   set the rect of stack cloneStackName to newRect
-   
+   set the rect of stack cloneStackName to newRect --- this is not working in latest dp
    revIDEEnsureOnscreen cloneStackName
-   
-   -- show and go
+   --
    show stack cloneStackName
    go to stack cloneStackName
    return displayView
@@ -431,6 +481,14 @@ end stack_Clone
 
 --> Private
 -
+private function script_CallingObject pNum
+   if pNum is empty then put 1 into pNum
+   put (pNum + 2) * -1 into lineNum
+   get the executioncontexts
+   put item 1 of line lineNum of it into callingObject
+   return callingObject
+end script_CallingObject
+
 private function _displayView cloneStackName
    -- was "view_GetTemplateControl" and "view_GetTemplateObject"
    -- put view_GetTemplateControl (cloneStackName) into displayView

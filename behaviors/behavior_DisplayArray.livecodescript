@@ -46,6 +46,16 @@ end _displaySelectedValue
 
 --> Props | Selected
 -
+getprop top_Array
+   put the hilited_Element of me into hItems
+   if the number of items of hItems = 1 then
+      put the selected_Array of me into topArray
+   else
+      put the parent_Array of me into topArray
+   end if
+   return topArray
+end top_Array
+
 getprop parent_Array
    put _treeWidget() into treeWidget
    
@@ -56,6 +66,16 @@ getprop parent_Array
    put someArray [commaKeys] into selectedValue
    return selectedValue
 end parent_Array
+
+getprop selected_Array
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   return selectedValue
+end selected_Array
 
 getprop selected_Value
    put _treeWidget() into treeWidget
@@ -452,14 +472,16 @@ end _footerHeight
 
 --> Controls
 -
+getprop view_Object
+   return the long id of me
+end view_Object
+
 getprop array_View
-   put the long id of me into displayView
-   return displayView
+   return the long id of me
 end array_View
 
 getprop display_View
-   put the long id of me into displayView
-   return displayView
+   return the long id of me
 end display_View
 
 getprop tree_Widget

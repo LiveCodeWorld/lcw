@@ -10,25 +10,6 @@ version: 0.8
 
 --> Rename
 -
-command lcw_Answer someQuestion
-   -- was "opn_Answer"
-   -- removed complexity of "text_Merge"
-   answer someQuestion with "Cancel" or "OK"
-   put it into theResult
-   if theResult is "Cancel" then exit to top
-   return theResult
-end lcw_Answer
-
-function lcw_Ask someQuestion, pDefault
-   -- was "opn_Ask"
-   -- removed complexity of "text_Merge"
-   replace "'" with quote in someQuestion
-   ask someQuestion with pDefault
-   put it into theResult
-   if the result is "Cancel" then exit to top
-   return theResult
-end lcw_Ask
-
 function text_Merge mergeText, paramArray
    repeat for each key someKey in paramArray
       put paramArray [someKey] into someValue

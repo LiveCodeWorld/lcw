@@ -44,17 +44,6 @@ function menu_GetTableTitles mController
    return tableTitles
 end menu_GetTableTitles
 
-getprop menu_DataArray
-   -- the problem with this is if the target has been cloned or copied
-   -- the menu_Controller will have changed
-   put the customproperties ["menu_Table"] of the target into mTitleTableArray
-   return mTitleTableArray
-end menu_DataArray
-
-setprop menu_DataArray mTitleTableArray
-   set the customproperties ["menu_Table"] of the target to mTitleTableArray
-end menu_DataArray
-
 
 --> Menu | Array
 -
@@ -201,12 +190,6 @@ function menu_ConstructGlobalControllerArray pObjectFormat
    return menuObjectArray
 end menu_ConstructGlobalControllerArray
 
-function menu_TitleIsGlobal mTitle
-   -- here in case we nee to change mTitle to start with "Menu" rather than end
-   set the itemDelimiter to "|"
-   return word 1 to -1 of item 1 of mTitle is "Global"
-end menu_TitleIsGlobal
-
 
 --> Menu | Global | Model
 -
@@ -217,13 +200,6 @@ function menu_ListGlobalTitles
    sort gMenuNames
    return gMenuNames
 end menu_ListGlobalTitles
-
-function menu_GetGlobalController gMenuTitle
-   -- was "menu_GlobalController"
-   put menu_GetGlobalArray() into gMenuArray
-   put gMenuArray [gMenuTitle]["mController"] into mController
-   return mController
-end menu_GetGlobalController
 
 command menu_SetGlobalController gMenuTitle, scriptObject
    put menu_GetGlobalArray() into gMenuArray
@@ -273,18 +249,6 @@ command menu_SetGlobalTitleArray gMenuTitle, gMenuTitleArray
    menu_SetGlobalArray menuGlobalArray
    return gLCW
 end menu_SetGlobalTitleArray
-
-function menu_GetGlobalArray
-   global gLCW
-   put gLCW ["Global Menus"] into menuGlobalArray
-   return menuGlobalArray
-end menu_GetGlobalArray
-
-command menu_SetGlobalArray menuGlobalArray
-   global gLCW
-   put menuGlobalArray into gLCW ["Global Menus"]
-   return gLCW ["Global Menus"]
-end menu_SetGlobalArray
 
 function menu_GetTitleTableArrayGlobal mController
    global gLCW

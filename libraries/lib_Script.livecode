@@ -67,12 +67,6 @@ getprop object_ContainsMessageHandler [messageName]
    return script_ContainsMessageHandler(someScript, messageName)
 end object_ContainsMessageHandler
 
-getprop script_OffestTable
-   put the long id of the target into scriptObject
-   put the script of scriptObject into someScript
-   return script_GetOffsetTable (someScript, scriptObject)
-end script_OffestTable
-
 getprop script_DuplicateKeys
    put the script_Array of the target into scriptArray
    repeat for each key indexNum in scriptArray
@@ -302,38 +296,39 @@ end script_CallingObject
 
 --> Script
 -
-command script_CreateAndEditHashCard someScript, pUniqueCardName
-   if pUniqueCardName is empty then
-      put text_Hash (someScript, "sha1") into pUniqueCardName
-   end if
-   script_CreateHashCard pUniqueCardName, someScript
+command script_CreateAndEditHashCard someScript, pTempStackName
+   put text_Hash (someScript, "sha1") into pUniqueCardName
+   script_CreateTempCard pUniqueCardName, someScript, pTempStackName
    put the result into cardObject
    edit the script of cardObject
    return cardObject
 end script_CreateAndEditHashCard
 
-command script_CreateHashCard commitHash, someScript
-   put "revTemporaryScriptCards" into stackName
-   if exists (stack stackName) is false then
+command script_CreateTempCard cardName, someScript, pTempStackName
+   if pTempStackName is empty then
+      put "revTemporaryScriptCards" into pTempStackName
+   end if
+   if exists (stack pTempStackName) is false then
       put the tempname & ".livecode" into someFile
-      create invisible stack stackName
-      set the filename of stack stackName to someFile
+      create invisible stack pTempStackName
+      set the filename of stack pTempStackName to someFile
    end if
    
-   if exists (card commitHash of stack stackName) is false then
+   if exists (card cardName of stack pTempStackName) is false then
       put the defaultstack into oDefault
-      set the defaultstack to stackName
-      create card commitHash
+      set the defaultstack to pTempStackName
+      create card cardName
       
       if someScript is not empty then
-         set the script of card commitHash of stack stackName to someScript
+         set the script of card cardName of stack pTempStackName to someScript
       end if
       set the defaultstack to oDefault
    else
-      set the script of card commitHash of stack stackName to someScript
+      set the script of card cardName of stack pTempStackName to someScript
    end if
-   return the rugged_ID of card commitHash of stack stackName
-end script_CreateHashCard
+   put the rugged_ID of card cardName of stack pTempStackName into cardObject
+   return cardObject
+end script_CreateTempCard
 
 
 --> Script | Comments
