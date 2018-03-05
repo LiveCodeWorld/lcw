@@ -1,0 +1,160 @@
+﻿script "lib_LiveCodeDictionary"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_LiveCodeDictionary
+type: script library
+version: 0.3
+
+/*
+*/
+
+
+--> Handlers
+-
+function ide_IsDictionaryTerm someWord
+   -- was "script_DictionaryTerm"
+   if char 1 to 3 of someWord is "rev" and char 4 of someWord is not "_" then return true -- a bit risky to assume this!
+   
+   put ide_GetDictionaryTerms() into dictionaryTerms
+   -- set the wholematches to true
+   put someWord is among the lines of dictionaryTerms into someBoolean
+   return someBoolean
+end ide_IsDictionaryTerm
+
+command ide_LoadDictionaryTerms
+   put rev_FetchDictionaryTerms() into revDicTerms
+   put ide_ListExtraDicTerms() into extraDicTerms
+   put extraDicTerms & CR & revDicTerms into dTerms
+   ide_SetDictionaryTerms dTerms
+   return dTerms
+end ide_LoadDictionaryTerms
+
+
+--> Forget
+-
+-- role into gLCW ["Livecode Dictionary Terms"]
+
+command ide_AddExtraDicTerm newTerm, pHKeyUsingTerm
+   put ide_FetchExtraDicTermArray() into ideExtraDicTermArray
+   put pHKeyUsingTerm into ideExtraDicTermArray [newTerm]
+   ide_StoreExtraDicTermArray ideExtraDicTermArray
+   return ideExtraDicTermArray
+end ide_AddExtraDicTerm
+
+command ide_DeleteExtraDicTerms dicTerms
+   replace comma with CR in dicTerms
+   put ide_FetchExtraDicTermArray() into ideExtraDicTermArray
+   repeat for each line dicTerm in dicTerms
+      delete variable ideExtraDicTermArray [dicTerm]
+   end repeat
+   ide_StoreExtraDicTermArray ideExtraDicTermArray
+   return ideExtraDicTermArray
+end ide_DeleteExtraDicTerms
+
+function ide_ListExtraDicTerms
+   put ide_FetchExtraDicTermArray() into ideExtraDicTermArray
+   put keys (ideExtraDicTermArray) into extraDicTerms
+   sort extraDicTerms
+   return extraDicTerms
+end ide_ListExtraDicTerms
+
+function ide_FetchExtraDicTermArray
+   put lcw_FetchArray ("ideExtraDicTermArray.array") into ideExtraDicTermArray
+   return ideExtraDicTermArray
+end ide_FetchExtraDicTermArray
+
+command ide_StoreExtraDicTermArray ideExtraDicTermArray
+   lcw_StoreArray "ideExtraDicTermArray.array", ideExtraDicTermArray
+   return the result
+end ide_StoreExtraDicTermArray
+
+
+--> IDE | Libraries
+-
+function ide_ListScriptLibraries
+   put ide_LivecodeScriptFolder() into someFolder  
+   put folder_ShortFiles (someFolder) into shortFiles
+   return shortFiles
+end ide_ListScriptLibraries
+
+function ide_LivecodeScriptFolder
+   put revEnvironmentToolsPath() & "/Toolset/libraries/" into someFolder
+   return someFolder
+end ide_LivecodeScriptFolder
+
+
+--> IDE | Dictionary
+-
+/*
+These are handlers have been created to integrate with the > v8.0 Dictionary API.
+*/
+
+command ide_AddToDictionaryTerms newTerm, pHKeyUsingTerm
+   put ide_GetDictionaryTerms() into dTerms
+   if newTerm is not among the lines of dTerms then
+      put newTerm & CR before dTerms
+   end if
+   ide_SetDictionaryTerms dTerms
+   
+   -- now store this addition in an array in the library
+   ide_AddExtraDicTerm newTerm, pHKeyUsingTerm
+   return dTerms
+end ide_AddToDictionaryTerms
+
+function ide_GetDictionaryTerms
+   global gLCW
+   put gLCW ["Livecode Dictionary Terms"] into dTerms
+   return dTerms
+end ide_GetDictionaryTerms
+
+command ide_SetDictionaryTerms dTermIndex
+   global gLCW
+   put dTermIndex into gLCW ["Livecode Dictionary Terms"]
+   return dTermIndex
+end ide_SetDictionaryTerms
+
+function rev_FetchDictionaryTerms
+   local dictionaryTerms
+   
+   put ideDocsFetchLCSEntries() into scriptDictionaryArray
+   
+   -- some missing things from library (should get all synonyms)
+   put "char" & CR after dictionaryTerms
+   put "chars" & CR after dictionaryTerms
+   
+   _parseDictionary scriptDictionaryArray, dictionaryTerms, dicArray
+   return dictionaryTerms
+end rev_FetchDictionaryTerms
+
+private command _parseDictionary scriptDictionaryArray, @dictionaryTerms, @dicArray   
+   repeat for each key indexNum in scriptDictionaryArray
+      put scriptDictionaryArray [indexNum]["type"] into entryType 
+      put scriptDictionaryArray [indexNum]["display name"] into dictionaryTerm
+      if entryType is among the items of "message,function,command,property,keyword,object,operator,control structure,constant" then
+         put dictionaryTerm & CR after dictionaryTerms
+      end if
+      put indexNum into dicArray [entryType][dictionaryTerm]
+   end repeat
+   delete char -1 of dictionaryTerms
+   sort dictionaryTerms
+end _parseDictionary
+
+command rev_LookUpDictionary someText
+    /*
+    # Parameters
+    #   pTag : the filename of the xml file that contains the entry to display
+    #   pType : the type of the entry, eg "command"
+    #   pFolder : either "dictionary" or "glossary"
+    #   pDontUpdateHistory : if this is true, the entry will not be added to the history
+    # Description
+    #   Called when the user double-clicks in the dictionary grid / list. This displays the required dictionary
+    #   entry fullscreen on a separate card.
+     
+    entryGoto pTag, pType, pFolder, false
+    */
+     
+    -- version 3.0
+    revDocumentationGo someText
+end rev_LookUpDictionary

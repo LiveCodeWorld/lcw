@@ -1,0 +1,93 @@
+﻿script "LCW"
+--> Metadata
+-
+license: GPLv3
+name: LCW
+type: home
+version: 0.7
+
+/*
+This is the Livecode World Home stack.
+We should probably turn it into a normal stack, and add preOpenStack handlrs.
+*/
+
+/*
+Here we will place handlers from lcw.livcode" after we refactor the init scripts from the stuff we don;t need to laod the initial libraires.
+
+Here we experiment with a minimal script-only definition of a general project home stack.
+It should do everything that is needed to get the project up and running, but nothing more.
+It should:
+
+-  have no dependencies
+-  not depend on script introspection
+-  use robust file naming concentions
+-  human readable and easy to parse in any language
+-  a simple text stack that plays well with revision control
+
+We are not (yet) indexing all nested stacks, rather just standard toplevel folders and modules
+Stacks within the assets folder will not be indexed (not done yet).
+Assets are supposed to be things like images. videos, javascript, css html, json or arrays?
+
+= To Do =
+At the moment we have a script only stack with a large and complex script.
+This is not a good minimal architecture.
+Instead we want to move over to a minimal initialisation script, and use a Livecode stack for the HomeStack
+That way we can store certain standard code as a behavior (for instance the card script),
+as well as give the HomeStack and interface and some useful functionality.
+*/
+
+--> LCW | Me
+-
+command project_Init
+   if the long id of the target is not the long id of me then pass project_Init
+   _LcwInitialize
+end project_Init
+
+
+--> Project | Init
+-
+
+function lcw_DefaultLibPath lcwHomeStackFile
+   set the itemdelimiter to slash
+   put "libraries/lib_LCW.livecodescript" into item -1 of lcwHomeStackFile
+   return lcwHomeStackFile
+end lcw_DefaultLibPath
+
+command _LcwInitialize
+   -- for LCW only
+   -- ideally we don't use this stack as things like "preOpenStack" will be called every time
+   
+   -- put lcw_HomeStackName() into lcwProjectName
+   put "LCW" into lcwProjectName
+   put the filename of stack lcwProjectName into lcwHomeStackFile
+   
+   put lcw_DefaultLibPath (lcwHomeStackFile) into lcwDefaultLibFile
+   -- so we don't load it every time
+   -- if env_GetProjectFolder ("lcw") is not empty then return false -- already loaded which should not happen but projects may do this by mistake
+   if lcwDefaultLibFile is among the lines of the stacksinuse then return false
+   -- ideally we don't need this
+   start using stack lcwDefaultLibFile
+   -- start using stack lcwProjectName
+   
+   -- let's make it pretty
+   put the screenrect into stackRect
+   add 100 to item 1 of stackRect
+   add 100 to item 2 of stackRect
+   subtract 100 from item 3 of stackRect
+   subtract 100 from item 4 of stackRect
+   set the rect of stack lcwProjectName to stackRect
+   
+   -- let's initialise the project
+   -- eventually we will aim to have no or minimal dependencies
+   -- and separate out menu tools from the basic environment
+   env_AddToBash
+   project_InitialiseFolder lcwHomeStackFile -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
+   project_LoadModules lcwHomeStackFile
+   
+   -- load the global dictionary for where handlers are
+   hkeyLine_LoadPlaceArray
+      
+   -- custom
+   choose browse tool 
+   close stack "revTools"
+end _LcwInitialize

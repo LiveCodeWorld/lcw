@@ -1,0 +1,369 @@
+﻿script "lib_View"
+--> MetaData
+-
+license: GPLv3
+name: lib_View
+type: script library
+version: 0.8
+
+
+--> Working on
+-
+getprop module_ExternalBehaviors
+   -- this works for modules
+   put the view_Behaviors of the target into bObjects
+   put the module_Name of the target into thisProjectName
+   
+   set the itemdelimiter to slash
+   repeat for each line bObject in bObjects
+      put the module_Name of bObject into otherProjectName
+      if otherProjectName is not thisProjectName then
+         put bObject & CR after externalBehaviors
+      end if
+   end repeat
+   delete char -1 of externalBehaviors
+   return externalBehaviors
+end module_ExternalBehaviors
+ 
+
+--> View | Model
+-
+setprop view_Name [pComponentType] viewName
+   put the long id of the target into tObject
+   put the view_Object of tObject into viewObject
+   if exists (viewObject) is false then put tObject into viewObject
+   
+   view_NormalizeName viewName
+   component_SetName viewObject, viewName, pComponentType
+   put the result into someScript
+   return someScript
+end view_Name
+
+getprop view_Name
+   put the long id of the target into tObject
+   put the view_Object of tObject into viewObject
+   if viewObject is empty then return empty
+   
+   if the uRIP ["type"] of viewObject is not "view" then return empty
+   return the uRIP ["name"] of viewObject
+end view_Name
+
+getprop object_ViewName
+   put the long id of the target into tObject
+   if the uRIP ["type"] of tObject is not "view" then return empty
+   return the uRIP ["name"] of tObject
+   
+   /*
+   -- combines custom property and script metadata for safety
+   put the long id of the target into tObject
+   put the view_Object of tObject into viewObject
+   if exists (viewObject) is false then put tObject into viewObject
+   
+   put the object_MetaData of the target into mData
+   put mData ["type"] into oType
+   if oType is not "View" then return empty
+   put mData ["name"] into viewName
+   view_NormalizeName viewName
+   return viewName
+   */
+end object_ViewName
+
+getprop view_Object
+   -- a default (ideally this handler is present as a behavior of script of the view)
+   put the long id of the target into targetObject
+   return view_FindAbove (targetObject)
+end view_Object
+
+getprop view_Behavior
+   -- will usually be the same as "view_GetTemplateBehavior (viewName)"
+   put the view_Object of the target into viewObject
+   if exists (viewObject) is false then return empty
+   put the behavior of viewObject into bObject
+   return bObject
+end view_Behavior
+
+getprop view_BehaviorStackName
+   -- hack to remove "|" from stack names
+   put the view_Name of the target into vName
+   replace "|" with empty in vName
+   put "behavior_" & vName into stackName
+   return stackName
+end view_BehaviorStackName
+
+
+--> Working on
+-
+getprop top_View
+   -- this is the default value for a view
+   -- which is the top (highest) someView in the current layout
+   
+   put the long id of the target into testGroup
+   put view_HierarchyObjects (testGroup) into groupHierarchy
+   put line 1 of groupHierarchy into topView
+   return topView
+end top_View
+
+getprop top_ViewObjects
+   put the long id of the target into tObject
+   put the childControlIDs of tObject into topCardDs
+   repeat for each line cID in topCardDs
+      put the long id of control id cID into viewObject
+      put viewObject & CR after viewObjects
+   end repeat
+   delete char -1 of viewObjects
+   return viewObjects
+end top_ViewObjects
+
+getprop view_Objects
+   put the view_Object of the target into someView
+   if someView is empty then return empty
+   
+   put object_SearchGroup (someView, "object_IsView", true) into searchArray
+   put empty into viewObjects
+   repeat for each key someObject in searchArray
+      if searchArray [someObject] is true then
+         put someObject & CR after viewObjects
+      end if
+   end repeat
+   delete last char of viewObjects
+   return viewObjects
+end view_Objects
+
+getprop view_Objects
+   put the long id of the target into tObject
+   if word 1 of tObject = "card" then
+      put the childControlIDs of tObject into topCardDs
+      repeat for each line cID in topCardDs
+         put the view_Dictionary of control id cID into viewDictionary
+         put view_GetDictionaryObjects (viewDictionary) & CR after viewObjects
+      end repeat
+      delete char -1 of viewObjects
+   else
+      put the view_Dictionary of the target into viewDictionary
+      put view_GetDictionaryObjects (viewDictionary) into viewObjects
+   end if
+   return viewObjects
+end view_Objects
+
+getprop view_Objects
+   put the long ID of the target into targetObject
+   
+   put the view_FoundChildren of targetObject into viewObjects
+   if the object_IsView of targetObject is true then line_Insert targetObject, viewObjects, 1
+   return viewObjects
+end view_Objects
+
+getprop view_Behavior
+   put the view_Object of the target into someView
+   if exists (someView) then 
+      return the behavior of someView
+   else
+      return empty
+   end if
+end view_Behavior
+
+getprop view_Behaviors
+   put the view_Dictionary of the target into viewDictionary
+   put item 2 of the extents of viewDictionary into maxViewNum
+   repeat with lineNum = 1 to maxViewNum
+      put viewDictionary [lineNum]["behavior"] into bObject
+      put empty into objectArray [bObject]
+   end repeat
+  put keys (objectArray) into bObjects
+   return bObjects
+end view_Behaviors
+
+getprop rugged_Views
+   put the view_Dictionary of the target into viewDictionary
+   put item 2 of the extents of viewDictionary into maxViewNum
+   repeat with lineNum = 1 to maxViewNum
+      put viewDictionary [lineNum]["rObject"] into rObject
+      put rObject & CR after ruggedViews
+   end repeat
+   delete char -1 of ruggedViews
+   return ruggedViews
+end rugged_Views
+
+getprop view_Outline
+   -- can use "view_Dictionary" to translate lineNum to metadata
+   put the view_NestedArray of the target into nestedViewArray
+   put nestedViewArray ["viewOutline"] into viewOutline
+   return viewOutline
+end view_Outline
+
+getprop view_NameOutline
+   -- can use "view_Dictionary" to translate lineNum to metadata
+   put the view_NestedArray of the target into nestedViewArray
+   put nestedViewArray ["nameOutline"] into viewOutline
+   return viewOutline
+end view_NameOutline
+
+getprop view_Dictionary
+   put the view_NestedArray of the target into nestedViewArray
+   put nestedViewArray ["dictionary"] into viewDictionary
+   return viewDictionary
+end view_Dictionary
+
+getprop view_NestedArray
+   local nestedViewArray
+   put the view_Object of the target into vObject
+   if exists (vObject) is false then return empty
+   
+   put the view_Name of vObject into vName
+   put vName into vKeyArray [1]
+   iterate_NestedViewArray nestedViewArray, vObject, vKeyArray
+   return nestedViewArray
+end view_NestedArray
+
+
+--> Object | Refs
+-
+getprop rugged_ID
+   -- could also be called "rugged_Object"
+   put the long id of the target into pObject
+   put revRuggedId (pObject) into ruggedObject
+   return ruggedObject
+end rugged_ID
+
+
+--> View
+-
+getprop view_AboveTarget
+   -- use when you don't want a "view_Object" to trap things
+   -- like when a datagrid is within a view object
+   -- works even for datagrids, and objects without "view_Object" handlers
+   put the long id of the target into targetObject
+   return view_FindAbove (targetObject)
+end view_AboveTarget
+
+getprop view_Above
+    put the long id of the target into someObject
+    delete word 1 to 4 of someObject
+    if exists(someObject) is false then return empty
+    put the view_Object of someObject into someView
+    return someView
+end view_Above
+ 
+getprop view_Hierarchy
+    put the long id of the target into testGroup
+    put view_HierarchyObjects (testGroup) into groupHierarchy
+    return groupHierarchy
+end view_Hierarchy
+
+function rev_BehaviorID someObject
+   put the long id of someObject into longIDObject
+   put revRuggedID (longIDObject) into behaviorObject
+   put word 1 of longIDObject into word 1 of behaviorObject
+   return behaviorObject
+end rev_BehaviorID
+
+function view_GetDictionaryObjects viewDictionary
+   put item 2 of the extents of viewDictionary into maxViewNum
+   repeat with lineNum = 1 to maxViewNum
+      put viewDictionary [lineNum]["rObject"] into rObject
+      put the long id of rObject & CR after viewObjects
+   end repeat
+   delete char -1 of viewObjects
+   return viewObjects
+end view_GetDictionaryObjects
+
+private command iterate_NestedViewArray @nestedViewArray, vObject, vKeyArray
+   put item 2 of the extents of vKeyArray into thisDepth
+   
+   put the short id of vObject into shortID
+   put the name of vObject into objectName
+   put the behavior of vObject into bObject
+   
+   put revRuggedID (vObject) into rObject
+   put vKeyArray [thisDepth] into viewName
+   
+   -- nestedArray
+   put shortID into nestedViewArray ["nestedArray"][vKeyArray]["metadata"]["id"]
+   put rObject into nestedViewArray ["nestedArray"][vKeyArray]["metadata"]["rObject"]
+   put objectName into nestedViewArray ["nestedArray"][vKeyArray]["metadata"]["name"]
+   if bObject is not empty then
+      put bObject into nestedViewArray ["nestedArray"][vKeyArray]["metadata"]["behavior"]
+   end if
+   
+   put thisDepth - 1 into indentNum
+   put text_RepeatString (tab, indentNum) into someIndent
+   
+   -- viewOutline
+   put nestedViewArray ["viewOutline"] into viewOutline
+   put someIndent & viewName & CR after viewOutline
+   put viewOutline into nestedViewArray ["viewOutline"]
+   
+   -- nameOutline
+   put nestedViewArray ["nameOutline"] into nameOutline
+   put someIndent & objectName & CR after nameOutline
+   put nameOutline into nestedViewArray ["nameOutline"]
+   
+   put the number of lines of viewOutline into lineNum
+   put shortID into nestedViewArray ["dictionary"][lineNum]["id"]
+   put rObject into nestedViewArray ["dictionary"][lineNum]["rObject"]
+   put objectName into nestedViewArray ["dictionary"][lineNum]["name"]
+   put viewName into nestedViewArray ["dictionary"][lineNum]["view"]
+   if bObject is not empty then
+      put bObject into nestedViewArray ["dictionary"][lineNum]["behavior"]
+   end if
+   
+   if word 1 of vObject is not among the items of "card,group,background" then return false
+   
+   put thisDepth + 1 into nextDepth
+   put the childcontrolids of vObject into topIDs
+   repeat for each line shortID in topIDs
+      put the long id of control id shortID into childObject
+      put the object_ViewName of childObject into childViewName
+      if childViewName is empty then
+         next repeat
+      end if
+      put childViewName into vKeyArray [nextDepth]
+      iterate_NestedViewArray nestedViewArray, childObject, vKeyArray
+   end repeat
+   return true
+end iterate_NestedViewArray
+
+private function view_FindAbove targetObject
+   repeat
+      if the uRIP ["type"] of targetObject is "view" then return targetObject
+      if word 1 of targetObject = "group" and the selectGroupedControls of targetObject then return targetObject 
+      if word 1 of targetObject = "stack" or targetObject = empty then return empty
+      delete word 1 to 4 of targetObject -- does not work for substacks
+   end repeat
+   return empty
+end view_FindAbove
+
+function view_HierarchyObjects testGroup
+   put empty into groupHierarchy
+   repeat
+      -- background groups can cause infinite loops
+      -- so have to stop hierarchy check at the card level
+      -- which means this will not work for views etc which are at the card level or above!
+      
+      if word 1 of testGroup is "card" then
+         return word 1 to -1 of groupHierarchy
+      else
+         put the view_Object of testGroup into someView
+         put someView & CR before groupHierarchy
+         
+         put someView into testGroup
+         delete word 1 to 4 of testGroup
+         if testGroup is empty then
+            return word 1 to -1 of groupHierarchy
+         end if
+      end if
+   end repeat
+end view_HierarchyObjects
+
+command component_SetName tObject, uripName, pComponentType
+   if pComponentType is empty then put "view" into pComponentType
+   
+   put the script of tObject into someScript
+   
+   put the script_MetaData of tObject into uRipArray
+   put uripName into uRipArray ["name"]
+   put pComponentType into uRipArray ["type"]
+   set the script_MetaData of tObject to uRipArray
+   put the result into someScript
+   return someScript
+end component_SetName

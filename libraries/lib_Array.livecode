@@ -1,0 +1,604 @@
+﻿script "lib_Array"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_Array
+type: script library
+version: 0.5
+
+
+--> Working on
+-
+function array_FilterKeys someArray, includeKeyList
+   -- see new Livecode filter function
+   -- could use "intersect" ???
+   repeat for each item someKey in includeKeyList
+      put someArray [someKey] into filteredArray [someKey]
+   end repeat
+   return filteredArray
+end array_FilterKeys
+
+
+--> JSON
+-
+function json_ToArray pJSON
+   if pJSON is empty then return false
+   try -- as otherwise an error with non-json causes script to exit
+      local tArray,tKeys
+      if pJSON is empty then return empty
+      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
+         put json_ToArray(tArray[tKey]) into tArray[tKey]
+      end repeat
+      return tArray
+   catch e
+      return empty
+   end try
+end json_ToArray
+
+function json_FromArray pArray, pForceRootType, pPretty
+   repeat for each key tKey in pArray
+      if pArray[tKey] is an array then
+         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
+      end if
+   end repeat
+   return(mergJSONEncode("pArray",pForceRootType,pPretty))
+end json_FromArray
+
+
+--> New
+-
+command array_StripEmptyKeys @someArray
+   if someArray is empty then
+      return empty
+   end if
+   repeat for each key someKey in someArray
+      put someArray [someKey] into someValue
+      if someValue is empty then
+         delete variable someArray [someKey]
+      end if
+   end repeat
+end array_StripEmptyKeys
+
+
+--> Arrays
+-
+function array_Fetch someFile
+   put url ("binfile:" & someFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   return modelArray
+end array_Fetch
+
+command array_Save someFile, modelArray
+   if keys(modelArray) is empty then
+      delete file someFile
+   else
+      set the itemdelimiter to "/"
+      put item 1 to -2 of someFile into someFolder
+      folder_CreateNested someFolder
+      put arrayencode (modelArray) into url ("binfile:" & someFile)
+   end if
+end array_Save
+
+command array_ToFolder someFolder, someArray
+   folder_Format someFolder
+   folder_CreateNested someFolder
+   repeat for each key someKey in someArray
+      put someArray [someKey] into someValue
+      if someValue is an array then
+         -- recurse
+         put someFolder & someKey into subFolder
+         array_ToFolder subFolder, someValue
+      else
+         -- write out file
+         put someFolder & someKey into someFile
+         put someValue into url ("binfile:" & someFile)
+      end if
+   end repeat
+end array_ToFolder
+
+function array_FromFolder someFolder
+   if there is not a folder someFolder then return empty
+   folder_Format someFolder
+   set the itemdelimiter to "/"
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put item -1 of someFolder into shortFolder
+   
+   put the files into shortFiles
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFile = "." then next repeat
+      put someFolder & shortFile into someFile
+      put url ("binfile:" & someFile) into someValue
+      put someValue into someArray [shortFile]
+   end repeat
+   
+   put the folders into shortFolders
+   repeat for each line shortFolder in shortFolders
+      -- recurse subfolders
+      if char 1 of shortFolder = "." then next repeat
+      put someFolder & shortFolder & "/" into subFolder
+      put array_FromFolder (subFolder) into subArray
+      put subArray into someArray [shortFolder]
+   end repeat
+   return someArray
+end array_FromFolder
+
+function array_IsNumbered pArray pConsecutive
+   /*
+   was: rigIsNumberedArray ( from revIgniter script Common.lc )
+   
+   Check if array is numbered. 
+   Parameters: array <pArray>, bool <pConsecutive> flag for checking if numbers are consecutive
+   Return: list (bool,integer)
+   
+   copyright: Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
+   author: rabit@revigniter.com
+   license: http://www.apache.org/licenses/LICENSE-2.0
+   */
+   
+   if pConsecutive is "" then
+      put FALSE into tConsecutive
+   else
+      put pConsecutive into tConsecutive
+   end if
+   
+   # CHECK IF ARRAY IS NUMBERED
+   # SET DEFAULT RETURN VALUE
+   put TRUE into tNumbered
+   put the keys of pArray into tArrayKeys
+   
+   if tConsecutive is true then
+      sort lines of tArrayKeys numeric
+      
+      put 2 into tControlValue
+      
+      repeat for each line thisLine in tArrayKeys
+         if (thisLine is not an integer) or (thisLine + 1 <> tControlValue) then
+            put FALSE into tNumbered
+            exit repeat
+         end if
+         add 1 to tControlValue
+      end repeat
+   else
+      repeat for each line thisLine in tArrayKeys
+         if thisLine is not an integer then
+            put FALSE into tNumbered
+            exit repeat
+         end if
+      end repeat
+   end if
+   
+   put line 1 of tArrayKeys into tStartValue
+   
+   return tNumbered & "," & tStartValue
+end array_IsNumbered
+
+function array_PruneLeaves someArray
+   repeat for each key someKey in someArray
+      put someArray [someKey] into testLeaf
+      if testLeaf is an array then
+         put array_PruneLeaves (testLeaf) into prunedArray
+         put prunedArray into someArray [someKey]
+      else
+         delete variable someArray [someKey]
+      end if
+   end repeat
+   return someArray
+end array_PruneLeaves
+
+command array_Compare leftArray, rightArray, @commonArray, @leftWithoutArray, @rightWithoutArray
+   put leftArray into leftWithoutArray
+   put rightArray into rightWithoutArray
+   repeat for each key leftKey in leftArray
+      get rightArray [leftKey]
+      if it is an array or it is not empty then
+         put it into commonArray [leftKey]
+         delete variable leftWithoutArray [leftKey]
+      end if
+      delete variable rightWithoutArray [leftKey]
+   end repeat
+end array_Compare
+
+function array_Sample someArray, pHowMany
+   if pHowMany is empty then put 10 into pHowMany
+   put keys (someArray) into someKeys
+   repeat pHowMany
+      put any line of someKeys into someKey
+      put someArray [someKey] into sampleArray [someKey]
+      line_Delete someKey, someKeys
+   end repeat
+   return sampleArray
+end array_Sample
+
+function array_KeyFromPath somePath, pPathUpNum, pDelim
+   if pDelim is empty then put "/" into pDelim
+   set the itemdelimiter to pDelim
+   put the number of items of somePath - pPathUpNum into maxNum
+   repeat with itemNum = 1 to maxNum
+      put item itemNum of somePath into arrayKey [itemNum]
+   end repeat
+   return arrayKey
+end array_KeyFromPath
+
+command array_Union @mainArray, arrayToAdd
+   -- fixes bug in union when arrays are empty
+   -- only adds arrays
+   if mainArray is an array then
+      if arrayToAdd is an array then
+         union mainArray with arrayToAdd
+      else
+         -- do nothing
+      end if
+   else if arrayToAdd is an array then
+      put arrayToAdd into mainArray
+   else
+      put empty into mainArray
+   end if
+end array_Union
+
+command array_FlatUnion newArray, @someArray, keyStem
+   repeat for each key someKey in newArray
+      put newArray [someKey] into someValue
+      if someValue is not empty then
+         put keyStem & someKey into flatKey
+         put someValue into someArray [flatKey]
+      end if
+   end repeat
+end array_FlatUnion
+
+function array_MakeTwoWay someArray
+   put array_Reverse(someArray) into reversedArray
+   union someArray with reversedArray
+   return someArray
+end array_MakeTwoWay
+
+function array_Reverse someArray, pQuick, pStrip
+   local reversedArray
+   if pQuick is true then
+      repeat for each key someKey in someArray
+         put someArray [someKey] into newKeys
+         repeat for each line newKey in newKeys
+            put empty into reversedArray [newKey] [someKey]
+         end repeat
+      end repeat
+      if pStrip is true then
+         array_StripDeeperLevels reversedArray
+      end if
+   else
+      repeat for each key someKey in someArray
+         put someArray [someKey] into newKeys
+         repeat for each line newKey in newKeys
+            array_AddToIndex someKey, newKey, reversedArray
+         end repeat
+      end repeat
+   end if
+   return reversedArray
+end array_Reverse
+
+command array_StripDeeperLevels @someArray
+   repeat for each key someKey in someArray
+      put someArray [someKey] into nextLevel
+      if nextLevel is an array then
+         put keys (nextLevel) into someArray [someKey]
+      end if
+   end repeat
+end array_StripDeeperLevels
+
+function array_ConstructReverseDictionary idArray
+   -- for one-one dictionary arrays
+   -- put array_Reverse (idArray) into reverseArray
+   local reversedArray
+   repeat for each key someKey in idArray
+      put idArray [someKey] into reverseKey
+      put someKey into reversedArray [reverseKey] -- one-one dictionary
+   end repeat
+   return reversedArray
+end array_ConstructReverseDictionary
+
+command array_AddToIndex newLines, someKey, @someArray
+   -- if the number of lines of keys(someArray) > 5 and someKey contains "form_IsRed" then breakpoint
+   put someArray [someKey] into someIndex
+   line_AddToIndex newLines, someIndex
+   put word 1 to -1 of someIndex into someArray [someKey]
+   return the number of lines of someIndex
+end array_AddToIndex
+
+
+--> Array | More
+-
+function array_Difference someArray, anotherArray
+    put someArray into tempArray
+    intersect tempArray with anotherArray
+    repeat for each line someKey in (the keys of tempArray)
+        delete local someArray [someKey]
+        delete local anotherArray [someKey]
+    end repeat
+    union someArray with anotherArray
+    return anotherArray
+end array_Difference
+
+function array_Subtract someArray, fromThisArray
+    put fromThisArray into tempArray
+    intersect tempArray with someArray
+    repeat for each line someKey in (the keys of tempArray)
+        delete local fromThisArray [someKey]
+    end repeat
+    return fromThisArray
+end array_Subtract
+
+function array_DeleteKeys keyList, someArray
+    repeat for each item someItem in keyList
+        delete local someArray[someItem]
+    end repeat
+    return someArray
+end array_DeleteKeys
+
+command array_Add someArray, @toArray
+    -- why cant we just test if array is empty?
+    if keys(toArray) is empty then
+        -- why does "union" with an empty base array always result in empty?
+        put someArray into toArray
+    else
+        union toArray with someArray
+    end if
+end array_Add
+
+command array_AddNew newArray, @dataArray
+    put empty into addedKeys
+    repeat for each key someKey in newArray
+        put newArray [someKey] into newValue
+        put dataArray [someKey] into oldValue
+        if oldValue is not newValue then
+            put someKey & CR after addedKeys
+            put newValue into dataArray [someKey]
+        end if
+    end repeat
+    delete last char of addedKeys
+    return addedKeys
+end array_AddNew
+
+function array_GetSortByNumber someArray
+    combine someArray by CR and comma
+    sort someArray descending numeric by item 2 of each
+     
+    set the columndelimiter to comma
+    split someArray by column
+    put someArray [1] into sortedKeys
+    return sortedKeys
+end array_GetSortByNumber
+
+function array_ShortFileNames pFolder
+   if pFolder is empty then 
+      put lcw_ArrayFolder () into pFolder
+   else
+      folder_Format pFolder
+   end if
+   return folder_ShortFiles (pFolder) into shortFiles
+   return shortFiles
+end array_ShortFileNames
+
+
+--> Array | Search
+-
+function array_MatchContents searchValue, someArray
+    repeat for each key foundKey in someArray
+        put someArray [foundKey] into foundValue
+        if foundValue is searchValue then
+            return foundKey
+        end if
+    end repeat
+    return empty
+end array_MatchContents
+
+function array_FindContents searchValue, someArray, matchWhole
+    set the wholematches to (matchWhole is not false)
+    repeat for each key foundKey in someArray
+        put someArray [foundKey] into testIndex
+        if searchValue is among the lines of testIndex then
+            return foundKey
+        end if
+    end repeat
+    return empty
+end array_FindContents
+
+
+--> Array | Index
+-
+function array_ConstructSimpleKeys someKeyArray, @idArray, @keyArray, pNumberOnly
+   -- modified to use nested someKeyArray instead of just an index of keys
+   -- quick hack
+   if someKeyArray is an array then
+      put keys (someKeyArray) into someKeys
+   else
+      put someKeyArray into someKeys
+   end if
+   
+   -- a general technique for building incremental unique ids and their translations
+   -- as in a database id
+   -- for a single key key this returns the (new) or existing simlified translation
+   -- while building the two way arrays
+   -- will also add multiple keys if needed (as with childNodes)
+   
+   repeat for each line someKey in someKeys
+      put keyArray [someKey] into simpleID
+      if simpleID is empty then
+         -- not already indexed 
+         -- work out new incremental ID and add to idArray and keyArray
+         put the number of lines of keys(idArray) + 1 into keyNumber
+         if pNumberOnly is true then
+            put keyNumber into simpleID
+         else
+            put "n" & keyNumber into simpleID
+         end if
+         put simpleID into keyArray [someKey]
+         put someKey into idArray [simpleID]
+      end if
+      put simpleID & CR after simpleIDs
+   end repeat
+   delete char -1 of simpleIDs
+   return simpleIDs
+end array_ConstructSimpleKeys
+
+command array_InsertIntoIndex someValue, someKey, @someArray
+   put someArray[someKey] into oldIndex
+   line_Insert someValue, oldIndex
+   put oldIndex into someArray[someKey]
+end array_InsertIntoIndex
+
+command array_DeleteFromIndex someValue, someKey, @someArray
+   put someArray [someKey] into someIndex
+   line_Delete someValue, someIndex
+   if someIndex is empty then
+      delete local someArray [someKey]
+   else
+      put someIndex into someArray [someKey]
+   end if
+end array_DeleteFromIndex
+
+function array_TranslateIndex someArray, keyIndex, preFix, postFix
+    put empty into translatedIndex
+    repeat for each line someKey in keyIndex
+        put preFix & someArray[someKey] & postFix & return after translatedIndex
+    end repeat
+    delete last char of translatedIndex
+    return translatedIndex
+end array_TranslateIndex
+
+
+--> Array | Elements
+-
+/*
+These handlers work on both keys and values (treated as indexes or lines) of arrays.
+*/
+
+command array_ReplaceElement someElement, newElement, @someArray
+    repeat for each key testKey in someArray
+        put someArray [testKey] into testElements
+        
+        line_Replace someElement, newElement, testElements
+        if testKey = someElement then
+            put testElements into newArray [newElement]
+        else
+            put testElements into newArray [testKey]
+        end if
+    end repeat
+    -- return newArray
+end array_ReplaceElement
+
+function array_AllNodes someArray
+   -- unique index of all elements and keys in an array (not for nested arrays)
+   local indexArray
+   repeat for each key someKey in someArray
+      put empty into indexArray [someKey]
+      put someArray [someKey] into keyElements
+      if keyElements is an array then
+         repeat for each key keyElement in keyElements
+            if word 1 to -1 of keyElement is empty then next repeat
+            put empty into indexArray [keyElement]
+         end repeat
+      else if keyElements is not empty then
+         repeat for each line keyElement in keyElements
+            if word 1 to -1 of keyElement is empty then next repeat
+            put empty into indexArray [keyElement]
+         end repeat
+      end if
+   end repeat
+   return keys (indexArray)
+end array_AllNodes
+    
+function array_Elements someArray
+    -- thought there was a function or property for this?
+    local arrayElements
+    repeat for each key someKey in someArray
+        get someArray [someKey]
+        if it is not empty then put it & CR after arrayElements
+    end repeat
+    delete last char of arrayElements
+    return arrayElements
+end array_Elements
+
+function array_SortElements someArray, @arrayKeys
+    put keys(someArray) into arrayKeys
+    sort arrayKeys
+    put empty into arrayElements
+    repeat for each line someKey in arrayKeys
+        put someArray[someKey] & return after arrayElements
+    end repeat
+    delete last char of arrayElements
+    return arrayElements
+end array_SortElements
+
+
+--> Array | Outline
+-
+function array_FromOutline someOutline
+    return outline_ToArray (someOutline)
+end array_FromOutline
+
+function array_ToOutline someArray, pSortKeys
+    -- recursive version for nested arrays
+    local someOutline
+    
+    if pSortKeys is empty then
+        -- faster
+        repeat for each key someKey in someArray
+            put someKey & CR after someOutline
+            get someArray [someKey]
+            if it is an array then get array_ToOutline(it)
+            if it is not empty then
+                put outline_IncreaseIndent(it, 1) & CR after someOutline
+            end if
+        end repeat
+        delete last char of someOutline
+        return someOutline
+    else
+        put keys(someArray) into someKeys
+        sort someKeys
+        repeat for each line someKey in someKeys
+            put someKey & CR after someOutline
+            get someArray [someKey]
+            if it is an array then get array_ToOutline (it, pSortKeys)
+            if it is not empty then
+                put outline_IncreaseIndent (it) & CR after someOutline
+            end if
+        end repeat
+        delete last char of someOutline
+        return someOutline
+    end if
+end array_ToOutline
+
+function array_ExpandSorted someArray, sortKey, direction
+    -- was "expandArray" "array_GetExpanded"
+   put keys(someArray) into keyNames
+    if keyNames is empty then return someArray
+    if sortKey is empty then
+        sort keyNames
+    else if direction is empty then
+        put "sort keyNames" && sortKey into doScript
+        do doScript
+    else
+        put "sort keyNames" && direction && sortKey into doScript
+        do doScript
+    end if
+    put empty into someOutline
+    repeat for each line keyName in keyNames
+        line_Insert keyname, someOutline
+        put someArray[keyName] into someThread
+        if someThread is empty then next repeat
+        put outline_IncreaseIndent(someThread) into indentedThread
+        put CR & indentedThread after someOutline
+    end repeat
+    return someOutline
+end array_ExpandSorted
+
+function array_ToHtmlLinks someArray
+    local htmlLinks
+    repeat for each key someTitle in someArray
+        put someArray [someTitle] into someLink
+        put html_ConstructNameLink(someTitle, someLink) & CR after htmlLinks
+    end repeat
+    delete last char of htmlLinks
+    return htmlLinks
+end array_ToHtmlLinks
