@@ -10,6 +10,13 @@ version: 0.8
 
 --> Rename
 -
+command text_PrettyQuote @someText, pParamArray
+   if pParamArray is an array then
+      put text_Merge (someText, pParamArray) into someText
+   end if
+   replace "'" with quote in someText
+end text_PrettyQuote
+
 function text_Merge mergeText, paramArray
    repeat for each key someKey in paramArray
       put paramArray [someKey] into someValue
@@ -23,21 +30,44 @@ end text_Merge
 
 --> Lines and Indexes
 -
+command line_DeleteIndex @someIndex, someLines
+   repeat for each line someLine in someLines
+      line_Delete someLine, someIndex
+      if lineNum = 0 then
+         put lineNum & comma after missingLineList
+      end if
+   end repeat
+   delete char -1 of missingLineList
+   return missingLineList
+end line_DeleteIndex
+
+command line_Delete someLine, @someIndex
+   set the wholematches to true
+   put lineoffset (someLine, someIndex) into lineNum
+   delete line lineNum of someIndex
+   return lineNum
+end line_Delete
+
+function line_DeleteFromIndex someLines, someIndex
+   line_DeleteIndex someIndex, someLines
+   return line_DeleteIndex @someIndex, someLines
+end line_DeleteFromIndex
+
 command line_AddIndex someLines, @someIndex, beforeLineNum
-    -- was and see new simpler version "line_Add"
-    set the wholematches to true
-    repeat for each line someLine in someLines
-        get lineoffset(someLine, someIndex)
-        put the number of lines of someIndex into maxLine
-        if it is 0 then
-            if beforeLineNum is a number then
-                put someLine & CR before line beforeLineNum of someIndex
-            else
-                put someLine into line (maxLine + 1) of someIndex
-            end if
-        end if
-    end repeat
-    return the number of lines of someIndex
+   -- was and see new simpler version "line_Add"
+   set the wholematches to true
+   repeat for each line someLine in someLines
+      get lineoffset(someLine, someIndex)
+      put the number of lines of someIndex into maxLine
+      if it is 0 then
+         if beforeLineNum is a number then
+            put someLine & CR before line beforeLineNum of someIndex
+         else
+            put someLine into line (maxLine + 1) of someIndex
+         end if
+      end if
+   end repeat
+   return the number of lines of someIndex
 end line_AddIndex
 
 function line_LineNumberStartingWithWord someWord, someText
@@ -224,23 +254,12 @@ command line_Insert someLine, @someIndex, beforeLineNum
     end if
 end line_Insert
 
-command line_Delete someLine, @someIndex
-   set the wholematches to true
-   put lineoffset (someLine, someIndex) into lineNum
-   delete line lineNum of someIndex
-end line_Delete
-
 command line_DeleteEmpty @someLines
    put CR before someLines
    put CR & "[" & space & tab & "]*" & CR into emptyLineReg
    put replacetext (someLines, emptyLineReg, return) into someLines
    delete char 1 of someLines
 end line_DeleteEmpty
-
-function line_DeleteFromIndex someLines, indexOrOutline, partLine, lineAfter
-    line_Delete someLines, indexOrOutline, partLine, lineAfter
-    return indexOrOutline
-end line_DeleteFromIndex
 
 function line_FindInIndex someLine, container, partLine, lineAfter
     -- was "whichLine"

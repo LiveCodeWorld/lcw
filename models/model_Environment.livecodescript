@@ -52,7 +52,7 @@ function env_GetHomeArrayFileData
 end env_GetHomeArrayFileData
 
 
---> Environment | List | Projects
+--> Props
 -
 getprop active_Projects
    -- allows you to call "if myProject is among the lines of the active_Projects of me then"
@@ -65,6 +65,9 @@ function project_IsActive projectName
    return projectIsLoaded
 end project_IsActive
 
+
+--> Environment | List | Projects
+-
 function env_ListProjects pListAll
    switch pListAll
       case "true"

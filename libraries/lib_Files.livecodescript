@@ -31,12 +31,111 @@ function file_ShortNameArray someFiles
    return shortNameArray
 end file_ShortNameArray
 
-function folder_ListFiles someFolder, pShowInvisible, pSomeFilter
+
+--> File | List | Paths
+-
+/*
+Thinking of renaming thes to "path_***" when handlers return long file paths
+*/
+
+function path_ListLong someFolder, pShowInvisible, pSomeFilter
    if there is not a folder someFolder then return empty
-   
    put files (someFolder) into shortFiles
    put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
    return filePaths
+end path_ListLong
+
+function file_AddFolderToPaths shortFiles, someFolder, pShowInvisible
+   if pShowInvisible is not true then filter shortFiles without ".*"
+   text_AddTrailing someFolder, slash
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile & CR after filePaths
+   end repeat
+   delete last char of filePaths
+   return filePaths
+end file_AddFolderToPaths
+
+
+--> File | List | Short
+-
+/*
+These all do the same thing and should be reconciled
+*/
+
+function file_ListShort someFolder, pShowInvisible
+   if there is not a folder someFolder then return empty
+   put files (someFolder) into shortFiles
+   if pShowInvisible is not true then filter shortFiles without ".*"
+   return shortFiles
+end file_ListShort
+
+function folder_ListShortFiles someFolder, pShowInvisible
+   return file_ListShort (someFolder, pShowInvisible)
+end folder_ListShortFiles
+
+function folder_ShortFiles someFolder
+   return file_ListShort (someFolder)
+end folder_ShortFiles
+
+
+--> File | List | Utils
+-
+command file_SetRelativePath @filePath, baseFolder
+   if baseFolder is empty then put folder_Above (the filename of this stack) into baseFolder
+   put file_GetRelativePath (filePath, baseFolder, commonPath) into filePath
+   return commonPath
+end file_SetRelativePath
+
+function file_LongToShort someFile
+    -- was "file_ExtractShortFile" "extract_ShortFile"
+    file_SetPath someFile, someFolder, shortFile
+    return shortFile
+end file_LongToShort
+
+command file_ShortToLong @shortFiles, someFolder, pShowInvisible, pSomeFilter
+   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
+   put filePaths into shortFiles
+end file_ShortToLong
+  
+private function file_LinesToNames fileInfo
+   put file_LinesToArray (fileInfo) into fileArray
+   put keys (fileArray) into fileNames
+   return fileNames
+end file_LinesToNames
+
+private function file_LinesToArray fileInfo
+   repeat for each line fileLine in fileInfo
+      put item 1 of fileLine into fName 
+      -- put urldecode (item 1 of fileLine) into fName 
+      put item 2 of fileLine into fSize
+      put fSize into fileArray [fName]["fSize"]
+   end repeat
+   return fileArray
+end file_LinesToArray
+
+private command file_DeconstructLine fileLine, @fName, @fSize
+   -- not really used right now
+   put item 1 of fileLine into fName -- The file name is URL-encoded. To obtain the name as plain text, use the function.
+   put item 2 of fileLine into fSize -- in bytes. On OS X systems, this is the size of the data fork.
+   
+   /*
+   put item 3 of fileLine into fResource -- fork size, in bytes. (OS X only).
+   put item 4 of fileLine into fCreationDate -- , in seconds. (OS X and Windows only).
+   put item 5 of fileLine into fLastModied --  date, in seconds.
+   put item 6 of fileLine into fLastAccess --  date, in seconds.
+   put item 7 of fileLine into fLastBackup --  date, in seconds.
+   put item 8 of fileLine into fUser --  owner. (Linux and OS X only).
+   put item 9 of fileLine into fGroup --  owner. (Linux and OS X only).
+   put item 10 of fileLine into fPermissions -- . (Linux and OS X only; see note).
+   put item 11 of fileLine into fCreator --  and file type. (OS X only)
+   */
+end file_DeconstructLine
+
+
+--> File | List | Paths | Old
+-
+function folder_ListFiles someFolder, pShowInvisible, pSomeFilter
+   return path_ListLong (someFolder, pShowInvisible, pSomeFilter)
 end folder_ListFiles
 
 function folder_FilesInside pFolder, pFilter, pQuestion, pShowInvisible
@@ -61,55 +160,13 @@ function folder_FilesInside pFolder, pFilter, pQuestion, pShowInvisible
    end if
 end folder_FilesInside
 
-function folder_ListShortFiles someFolder, pShowInvisible, pSomeFilter
-   if there is not a folder someFolder then return empty
-   put files (someFolder) into shortFiles
-   filter shortFiles without ".*"
-   return shortFiles
-end folder_ListShortFiles
 
-function folder_ShortFiles someFolder, pFilter, pShowInvisible
-   put the defaultFolder into oDirectory
-   set the defaultFolder to someFolder
-   put the files into shortFiles
-   set the defaultFolder to oDirectory
-   if pFilter is not empty then filter shortFiles with pFilter
-   if pShowInvisible is not true then filter shortFiles without ".*"
-   return shortFiles
-end folder_ShortFiles
-
-command file_SetRelativePath @filePath, baseFolder
-   if baseFolder is empty then put folder_Above (the filename of this stack) into baseFolder
-   put file_GetRelativePath (filePath, baseFolder, commonPath) into filePath
-   return commonPath
-end file_SetRelativePath
-
-function file_LongToShort someFile
-    -- was "file_ExtractShortFile" "extract_ShortFile"
-    file_SetPath someFile, someFolder, shortFile
-    return shortFile
-end file_LongToShort
-
-command file_ShortToLong @shortFiles, someFolder, pShowInvisible, pSomeFilter
-   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
-   put filePaths into shortFiles
-end file_ShortToLong
- 
-function file_AddFolderToPaths shortFiles, someFolder, pShowInvisible, pSomeFilter
-   if pShowInvisible is not true then filter shortFiles without ".*"
-   if pSomeFilter is not empty then filter shortFiles with pSomeFilter
-   
-   text_AddTrailing someFolder, slash
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile & CR after filePaths
-   end repeat
-   delete last char of filePaths
-   return filePaths
-end file_AddFolderToPaths
- 
-
---> Folder | List
+--> File | List | Stacks
 -
+/*
+Should be renamed "file_***" as the return files, or stack fie info.
+*/
+
 function folder_ListStackNames someFolder
    -- wil load stacks into memory
    if there is not a folder someFolder then return empty
@@ -148,9 +205,8 @@ function folder_ListStackFileNames someFolder
    return stackFileNames
 end folder_ListStackFileNames
 
--- also in stack "LCW"
 function folder_ListStackPaths someFolder
-   -- wil load stacks into memory
+   -- will load stacks into memory
    if there is not a folder someFolder then return empty
    
    if char -1 of someFolder is not slash then put slash after someFolder
@@ -187,6 +243,13 @@ function folder_ListShortStackFiles someFolder
    return shortStackFiles
 end folder_ListShortStackFiles
 
+
+--> Folder | List
+-
+/*
+These handlers return folders.
+*/
+
 function folder_ListShort rootFolder
    -- rename as we tend to imagine this to be for files not folders
    if there is not a folder rootFolder then return empty
@@ -201,22 +264,14 @@ function folder_ListShort rootFolder
    return shortFolders
 end folder_ListShort
 
-function folder_ListLong rootFolder
-   -- rename as we tend to imagine this to be for files not folders
-   if there is not a folder rootFolder then return empty
+function folder_ListLong someFolder
+   if there is not a folder someFolder then return empty
+   text_AddTrailing someFolder, slash
    
-   if char -1 of rootFolder is not slash then put slash after rootFolder
-   put the defaultfolder into oDefault
-   set the defaultfolder to rootFolder
-   put the folders into shortFolders
-   set the defaultfolder to oDefault
+   put folders (someFolder) into shortFolders
    repeat for each line shortFolder in shortFolders
-      switch
-         case char 1 of shortFolder = "."
-            next repeat
-         default
-            put rootFolder & shortFolder & slash & CR after longSubFolders
-      end switch
+      if char 1 of shortFolder = "." then next repeat
+      put someFolder & shortFolder & slash & CR after longSubFolders
    end repeat
    delete char -1 of longSubFolders
    return longSubFolders

@@ -13,6 +13,227 @@ Todo:  separate out essentials and utilities => lib_StackExtras
 */
 
 
+--> Props
+-
+getprop card_Object
+   -- ideCoreCardOfcontrol§
+   -- always returns an object
+   put the long id of the target into targetObject
+   switch
+      case word 1 of targetObject = "card"
+         return targetObject
+      case word 1 of targetObject = "stack"
+         if the scriptonly of targetObject is true then
+            return the long id of card 1 of the defaultstack
+         else
+            put the currentcard of the defaultstack into cardName
+            put the long id of card cardName of the defaultstack into cardObject
+            return cardObject
+         end if
+      case word 1 of targetObject is among the items of "background,bkgnd,bg"
+         return empty  -- no such thing as a unique card_Object
+      default
+         put wordOffset ("card", targetObject) into wNum
+         return word wNum to -1 of targetObject
+   end switch
+end card_Object
+
+getprop stack_Name
+   return the short name of the defaultstack
+end stack_Name
+
+getprop stack_Object
+   -- revTargetStack
+   return the defaultstack
+end stack_Object
+
+getprop stack_Label
+   put the stack_Object of the target into stackObject
+   put the label of stackObject into someLabel
+   return someLabel
+end stack_Label
+
+setprop stack_Label someLabel
+   put the stack_Object of the target into stackObject
+   set the label of stackObject to someLabel
+   return stackObject
+end stack_Label
+
+getprop stack_CompressedData
+   put the effective filename of the target into someFile
+   put "file:" & someFile into someUrl
+   put url someUrl into stackData
+   return compress(stackData)
+end stack_CompressedData
+
+getprop stack_Data
+   put the effective filename of the target into someFile
+   put "binfile:" & someFile into someUrl
+   put url someUrl into stackData
+   return stackData
+end stack_Data
+
+getprop stack_SisterFolder [projectName]
+   put the effective filename of the defaultstack into sisterFolder
+   put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
+   return sisterFolder
+end stack_SisterFolder
+
+getprop stack_IsPalette
+   put the stack_Object of the target into stackObject
+   return the style of stackObject = "palette"
+end stack_IsPalette
+
+setprop stack_IsPalette someBoolean
+   put the stack_Object of the target into stackObject
+   if someBoolean is true then
+      set the style of stackObject to "palette"
+   else
+      set the style of stackObject to "toplevel"
+   end if
+end stack_IsPalette
+
+getprop stack_Resizable
+   put the stack_Object of the target into stackObject
+   if exists(stackObject) then
+      return the resizable of stackObject
+   else
+      return false
+   end if
+end stack_Resizable
+
+setprop stack_Resizable someBoolean
+   put the stack_Object of the target into stackObject
+   set the resizable of stackObject to someBoolean
+end stack_Resizable
+
+getprop stack_TitleStyle
+   put the stack_Object of the target into stackObject
+   switch the decorations of stackObject
+      case "default"
+         return "normal"
+      case "noShadow"
+         return "no title"
+   end switch
+end stack_TitleStyle
+
+setprop stack_TitleStyle titleStyle
+   put the stack_Object of the target into stackObject
+   switch titleStyle
+      case "normal"
+         set the decorations of stackObject to default
+         break
+      case "no title"
+         set the decorations of stackObject to "noShadow"
+         break
+   end switch
+end stack_TitleStyle
+
+getprop stack_TitleStyles
+   return "normal,no title"
+end stack_TitleStyles
+
+getprop stack_Type
+   put the stack_Object of the target into stackObject
+   return the uOPN ["stack_Type"] of stackObject
+end stack_Type
+
+setprop stack_Type typePath
+   put the stack_Object of the target into stackObject
+   set the uOPN ["stack_Type"] of stackObject to typePath
+end stack_Type
+
+getprop stack_IsVisible
+   put the stack_Object of the target into stackObject
+   if the visible of stackObject is true then
+      if the blendlevel of stackObject > 5 then
+         return false
+      else
+         return true
+      end if
+   else
+      return false
+   end if
+end stack_IsVisible
+
+setprop stack_IsVisible someBoolean
+   put the stack_Object of the target into stackObject
+   set the visible of stackObject to someBoolean
+   if someBoolean is true then set the blendlevel of stackObject to 0
+end stack_IsVisible
+
+getprop stack_Faded
+   put the stack_Object of the target into stackObject
+   if the blendlevel of stackObject > 95 then
+      return true
+   else if the blendlevel of stackObject < 5 then
+      return false
+   else
+      return empty
+   end if
+end stack_Faded
+
+setprop stack_Faded boolean
+   put the long id of the target into targetObject
+   put the stack_Name of targetObject into stackName
+   if boolean is false then
+      stack_BlendIn stackName
+   else
+      stack_BlendOut stackName
+   end if
+end stack_Faded
+
+getprop stack_Outline
+   put the short name of the stack_Object of the target into stackName
+   return stack_SubStackOutline(stackName)
+end stack_Outline
+
+
+--> Working on
+-
+command stack_RevealInFinder stackName
+   put the filename of stack stackName into someFile
+   finder_RevealFileOrFolder someFile
+   get the result
+   return it
+end stack_RevealInFinder
+
+function stack_ExtractScriptOnlyName stackData
+   -- put word 1 of "Ôªøscript "lib_Audioboom"
+   get line 1 of stackData
+   if word 1 of it is not "Ôªøscript" then return empty
+   put token 2 of stackData into stackName
+   return stackName
+end stack_ExtractScriptOnlyName
+
+command stack_SaveBinaryData stackData, someFile
+   put "binfile:" & someFile into stackUrl    
+   put the filetype into oFileType
+   set the filetype to "revoRSTK"
+   put stackData into url stackUrl
+   set the filetype to oFileType
+end stack_SaveBinaryData
+
+
+--> Stack | Data
+-
+command stack_CreateFileFromBinaryData binaryData, newFile
+   put "binfile:" & newFile into newUrl
+   if the platform is "MacOs" then
+      --   Note:  Revolution's creator signature is 'Revo'. The file type for a stack file created by Revolution is 'RSTK'. 
+      -- The fileType is an eight-character string. The first four characters are the creator signature, and the last four are the file type. 
+      
+      put the filetype into oFileType
+      set the filetype to "RevoRSTK"
+   end if
+   
+   put binaryData into url newUrl
+   if the platform is "MacOs" then
+      set the filetype to oFileType
+   end if
+end stack_CreateFileFromBinaryData
+
+
 --> Stack | Convert
 -
 function stack_ConvertNamesToShortPaths stackNames, @badNames
@@ -63,12 +284,6 @@ end stack_ConvertPathsToNames
 
 --> Stack | Memory
 -
-getprop stack_SisterFolder [projectName]
-   put the effective filename of the defaultstack into sisterFolder
-   put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
-   return sisterFolder
-end stack_SisterFolder
-
 command stack_CloseLoaded pDontSave
    put revLoadedStacks() into stackNames
    repeat for each line stackName in stackNames
@@ -245,41 +460,6 @@ command stack_SetToMainScreen stackNames, pScreenRect
 end stack_SetToMainScreen
 
 
---> Stack
--
-getprop card_Object
-   -- ideCoreCardOfcontrol§
-   -- always returns an object
-   put the long id of the target into targetObject
-   switch
-      case word 1 of targetObject = "card"
-         return targetObject
-      case word 1 of targetObject = "stack"
-         if the scriptonly of targetObject is true then
-            return the long id of card 1 of the defaultstack
-         else
-            put the currentcard of the defaultstack into cardName
-            put the long id of card cardName of the defaultstack into cardObject
-            return cardObject
-         end if
-      case word 1 of targetObject is among the items of "background,bkgnd,bg"
-         return empty  -- no such thing as a unique card_Object
-      default
-         put wordOffset ("card", targetObject) into wNum
-         return word wNum to -1 of targetObject
-   end switch
-end card_Object
-
-getprop stack_Name
-   return the short name of the defaultstack
-end stack_Name
-
-getprop stack_Object
-   -- revTargetStack
-   return the defaultstack
-end stack_Object
-
-
 --> Stack | Utilities
 -
 command stack_StripUnsaved @stackNames
@@ -426,22 +606,6 @@ function stack_ClonedStackNames stackName
    return stackNames
 end stack_ClonedStackNames
 
-command stack_CreateFileFromBinaryData binaryData, newFile
-   put "binfile:" & newFile into newUrl
-   if the platform is "MacOs" then
-      --   Note:  Revolution's creator signature is 'Revo'. The file type for a stack file created by Revolution is 'RSTK'. 
-      -- The fileType is an eight-character string. The first four characters are the creator signature, and the last four are the file type. 
-      
-      put the filetype into oFileType
-      set the filetype to "RevoRSTK"
-   end if
-   
-   put binaryData into url newUrl
-   if the platform is "MacOs" then
-      set the filetype to oFileType
-   end if
-end stack_CreateFileFromBinaryData
-
 function stack_NotNeeded
    -- they may be needed :)
    local mainStackNames
@@ -471,63 +635,6 @@ function stack_NotNeeded
    end repeat
    return mainStackNames
 end stack_NotNeeded
-
-
---> Stack | Props
--
-getprop stack_IsPalette
-   put the stack_Object of the target into stackObject
-   return the style of stackObject = "palette"
-end stack_IsPalette
-
-setprop stack_IsPalette someBoolean
-   put the stack_Object of the target into stackObject
-   if someBoolean is true then
-      set the style of stackObject to "palette"
-   else
-      set the style of stackObject to "toplevel"
-   end if
-end stack_IsPalette
-
-getprop stack_Resizable
-   put the stack_Object of the target into stackObject
-   if exists(stackObject) then
-      return the resizable of stackObject
-   else
-      return false
-   end if
-end stack_Resizable
-
-setprop stack_Resizable someBoolean
-   put the stack_Object of the target into stackObject
-   set the resizable of stackObject to someBoolean
-end stack_Resizable
-
-getprop stack_TitleStyle
-   put the stack_Object of the target into stackObject
-   switch the decorations of stackObject
-      case "default"
-         return "normal"
-      case "noShadow"
-         return "no title"
-   end switch
-end stack_TitleStyle
-
-setprop stack_TitleStyle titleStyle
-   put the stack_Object of the target into stackObject
-   switch titleStyle
-      case "normal"
-         set the decorations of stackObject to default
-         break
-      case "no title"
-         set the decorations of stackObject to "noShadow"
-         break
-   end switch
-end stack_TitleStyle
-
-getprop stack_TitleStyles
-   return "normal,no title"
-end stack_TitleStyles
 
 
 --> Stack | Delete
@@ -569,19 +676,6 @@ command stack_DeleteScriptFolder stackObject
 end stack_DeleteScriptFolder
 
 
---> Stack | Props
--
-getprop stack_Type
-   put the stack_Object of the target into stackObject
-   return the uOPN ["stack_Type"] of stackObject
-end stack_Type
-
-setprop stack_Type typePath
-   put the stack_Object of the target into stackObject
-   set the uOPN ["stack_Type"] of stackObject to typePath
-end stack_Type
-
-
 --> Stack | Visual Effects
 -
 command stack_Display someObject, someRect, fadeIn
@@ -595,46 +689,6 @@ command stack_Display someObject, someRect, fadeIn
       set the visible of stackObject to true
    end if
 end stack_Display
-
-getprop stack_IsVisible
-   put the stack_Object of the target into stackObject
-   if the visible of stackObject is true then
-      if the blendlevel of stackObject > 5 then
-         return false
-      else
-         return true
-      end if
-   else
-      return false
-   end if
-end stack_IsVisible
-
-setprop stack_IsVisible someBoolean
-   put the stack_Object of the target into stackObject
-   set the visible of stackObject to someBoolean
-   if someBoolean is true then set the blendlevel of stackObject to 0
-end stack_IsVisible
-
-getprop stack_Faded
-   put the stack_Object of the target into stackObject
-   if the blendlevel of stackObject > 95 then
-      return true
-   else if the blendlevel of stackObject < 5 then
-      return false
-   else
-      return empty
-   end if
-end stack_Faded
-
-setprop stack_Faded boolean
-   put the long id of the target into targetObject
-   put the stack_Name of targetObject into stackName
-   if boolean is false then
-      stack_BlendIn stackName
-   else
-      stack_BlendOut stackName
-   end if
-end stack_Faded
 
 command stack_BlendIn stackName, someDelay
    if someDelay is empty then put 5 into someDelay
@@ -730,23 +784,6 @@ command stack_PlaceGroupOnAllCards groupName, stackName
    set the defaultstack to oDefault
    return placedIDs
 end stack_PlaceGroupOnAllCards
-
-
---> Stack | Data
--
-getprop stack_CompressedData
-   put the effective filename of the target into someFile
-   put "file:" & someFile into someUrl
-   put url someUrl into stackData
-   return compress(stackData)
-end stack_CompressedData
-
-getprop stack_Data
-   put the effective filename of the target into someFile
-   put "binfile:" & someFile into someUrl
-   put url someUrl into stackData
-   return stackData
-end stack_Data
 
 
 --> Stack | Open, Close and Move
@@ -868,14 +905,6 @@ command stack_CopyFile oldStackFile, newStackFile
    put url oldStackUrl into url newStackUrl
    set the filetype to oFileType
 end stack_CopyFile
-
-command stack_SaveBinaryData stackData, someFile
-   put "binfile:" & someFile into stackUrl    
-   put the filetype into oFileType
-   set the filetype to "revoRSTK"
-   put stackData into url stackUrl
-   set the filetype to oFileType
-end stack_SaveBinaryData
 
 command stack_CloneAndMakeSubStack toCloneNames, pMyStackname
    if pMyStackname is empty then 
@@ -1110,11 +1139,6 @@ end stack_GetSubStacks
 
 --> Stack | Outlines
 -
-getprop stack_Outline
-    put the short name of the stack_Object of the target into stackName
-    return stack_SubStackOutline(stackName)
-end stack_Outline
-
 function stack_SubStackOutline stackNames
     put empty into stackNameOutline
     repeat for each line stackName in stackNames
@@ -1273,12 +1297,3 @@ function stack_OutlineFromObjectArray objectArray
     put array_ExpandSorted(stackArray, true) into stackOutline
     return stackOutline
 end stack_OutlineFromObjectArray
-
-
---> Stack | OSX
--
-command stack_RevealInFinder stackName
-    put the filename of stack stackName into someFile
-    put folder_Above(someFile) into someFolder
-    finder_Reveal someFolder
-end stack_RevealInFinder

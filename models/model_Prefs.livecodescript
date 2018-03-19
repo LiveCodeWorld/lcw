@@ -122,12 +122,14 @@ Also look at the relationship to storing project specific arrays to disk.
 --> Pref | Project | Model
 -
 function pref_FetchValue prefName, pPrefKey
-   -- pPrefKey used to be pProjectName
-   -- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
    if pPrefKey is empty then put "Default" into pPrefKey
    
    put pref_FetchArray (pPrefKey) into prefArray
    put prefArray [prefName] into someValue
+   
+   -- could automatically load the pref into cache here?
+   -- pref_SetValue prefName, someValue
+   
    return someValue
 end pref_FetchValue
 

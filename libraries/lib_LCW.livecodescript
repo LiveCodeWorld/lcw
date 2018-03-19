@@ -11,6 +11,44 @@ Here we place all the handlers that need to be in use before project initialisat
 */
 
 
+--> Working On
+-
+command lcw_LoadCustomUserProject
+   -- no longer seems to be called
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   project_InitialiseFolder lcwUserProjectFolder
+   
+   put lcw_UserHomeStackName() into userHomeStackName
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
+   
+   dispatch "project_Init" to stack userHomeStackName
+end lcw_LoadCustomUserProject
+
+function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
+   if char -1 of projectFolderOrHomeStackFile is not slash then
+      -- assumes if it does not end with "/" it is a file
+      -- should not need / do this
+      set the itemdelimiter to slash
+      put empty into item -1 of projectFolderOrHomeStackFile
+   end if
+   put projectFolderOrHomeStackFile into standardFolder
+   if shortFolder is not empty then put shortFolder & slash after standardFolder
+   return standardFolder
+end project_ConstructFolder
+
+
+--> Events
+-
+on revEditScript
+   -- sent by Livecode to registered plugins
+   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
+   -- beep
+   rev_AddBehaviorHacks
+   pass revEditScript
+end revEditScript
+
+
 --> Working On | Display
 -
 /*
@@ -29,7 +67,7 @@ command display_Loading projectName, pComment
       put pComment
    end try
 end display_Loading
-   
+
 command lcw_Notify someMessage, pTitle
    -- needs to work cross platform
    try
@@ -42,22 +80,52 @@ command lcw_Notify someMessage, pTitle
       put someComment
    end try
 end lcw_Notify
-   
-command lcw_WarnAndExit someComment
+
+command lcw_WarnAndExit someComment, pAsSheet
    beep
-   answer warning somecomment
+   if pAsSheet is false then
+      answer warning somecomment
+   else
+      answer warning somecomment as sheet
+   end if
+   
    exit to top
 end lcw_WarnAndExit
+
+command lcw_Answer someQuestion, pButtonName
+   if pButtonName is empty then put "OK" into pButtonName
    
-command lcw_Answer someQuestion
-   -- was "opn_Answer"
-   -- removed complexity of "text_Merge"
    answer someQuestion with "Cancel" or "OK"
    put it into theResult
    if theResult is "Cancel" then exit to top
    return theResult
 end lcw_Answer
+
+command lcw_AnswerWarning someQuestion, pButtonName
+   if pButtonName is empty then put "OK" into pButtonName
    
+   answer warning someQuestion with pButtonName as sheet
+   put it into theResult
+   if theResult is "Cancel" then exit to top
+   return theResult
+end lcw_AnswerWarning
+
+command lcw_AnswerSheet someQuestion, pButtonName, pWarning
+   -- can be used with dispatch
+   -- dispatch "lcw_AnswerSheet" to stack "Catcher" with "Works?"
+   if pButtonName is empty then put "OK" into pButtonName
+   
+   if pWarning is true then
+      beep
+      answer warning someQuestion with pButtonName as sheet
+   else
+      answer someQuestion with "Cancel" or pButtonName as sheet
+   end if
+   put it into theResult
+   if theResult is "Cancel" then exit to top
+   return theResult
+end lcw_AnswerSheet
+
 function lcw_Ask someQuestion, pDefault
    -- was "opn_Ask"
    -- removed complexity of "text_Merge"
@@ -96,7 +164,7 @@ command project_LoadMenus projectFolder, pCreateindex
       breakpoint
    end if
 end project_LoadMenus
-   
+
 command env_ExportMenusAndStackFiles pListAll
    put env_ListProjects (pListAll) into projectNames
    repeat for each line projectName in projectNames
@@ -105,7 +173,7 @@ command env_ExportMenusAndStackFiles pListAll
       project_ExportMenusAndStackFiles projectFolder
    end repeat
 end env_ExportMenusAndStackFiles
-   
+
 command env_LoadMenusAndStackFiles pListAll
    put env_ListProjects (pListAll) into projectNames
    repeat for each line projectName in projectNames
@@ -114,7 +182,7 @@ command env_LoadMenusAndStackFiles pListAll
       project_LoadMenusAndStackFiles projectFolder
    end repeat
 end env_LoadMenusAndStackFiles
-   
+
 command env_LoadMenus pListAll
    put env_ListProjects (pListAll) into projectNames
    repeat for each line projectName in projectNames
@@ -122,7 +190,7 @@ command env_LoadMenus pListAll
       project_LoadMenus projectFolder, true
    end repeat
 end env_LoadMenus
-   
+
 command project_InitialiseFolder projectFolderOrHomeStackFile
    -- does not initialise modules
    
@@ -144,7 +212,7 @@ command project_InitialiseFolder projectFolderOrHomeStackFile
    env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
    return homeStackName
 end project_InitialiseFolder
-   
+
 command project_LoadMenusAndStackFiles projectFolder
    global gLCW
    put project_FetchArray (projectFolder) into projectArray
@@ -164,7 +232,7 @@ command project_LoadMenusAndStackFiles projectFolder
    set the stackfiles of stack projectHomeStackPath to projectStackFiles
    return projectArray
 end project_LoadMenusAndStackFiles
-   
+
 command project_ExportMenusAndStackFiles projectFolder
    put project_FetchArray (projectFolder) into projectArray
    --
@@ -176,7 +244,7 @@ command project_ExportMenusAndStackFiles projectFolder
    --
    project_StoreArray projectFolder, projectArray
 end project_ExportMenusAndStackFiles
-   
+
 command project_SetFoundStackFiles projectFolder
    put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
    if exists (stack projectHomeStackPath) is false then return empty
@@ -187,29 +255,29 @@ command project_SetFoundStackFiles projectFolder
    set the stackfiles of stack projectHomeStackPath to projectStackFiles
    return lcwStackFiles
 end project_SetFoundStackFiles
-   
+
 function project_FetchStackFileArray projectName
    put project_FetchValue ("stackFileArray", projectName) into stackFileArray
    return stackFileArray
 end project_FetchStackFileArray
-   
+
 command project_StoreStackFileArray projectName, projectStackFileArray
    put the stack_Folder of stack projectName into projectFolder
    project_FetchValue someKey, projectName
 end project_StoreStackFileArray
-   
+
 function project_FetchStackFiles projectFolder
    put project_FetchArray (projectFolder) into projectArray
    put projectArray ["stackfiles"] into stackFileTable
    return stackFileTable
 end project_FetchStackFiles
-   
+
 command project_StoreStackFiles projectName, stackFileTable
    put project_FetchArray (projectFolder) into projectArray
    put stackFileTable into projectArray ["data"]["stackfiles"]
    project_StoreArray projectFolder, projectArray
 end project_StoreStackFiles
-   
+
 command project_IndexGlobalMenus longStackFiles
    -- does not export handlers
    local projectMenuTitleArray
@@ -235,17 +303,6 @@ command project_IndexGlobalMenus longStackFiles
    end if
    return projectMenuTitleArray
 end project_IndexGlobalMenus
-
-
---> Events
--
-on revEditScript
-   -- sent by Livecode to registered plugins
-   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
-   -- beep
-   rev_AddBehaviorHacks
-   pass revEditScript
-end revEditScript
 
 
 --> Project | Stackfiles
@@ -300,7 +357,7 @@ function project_GetHomeStackName projectFolder
    put the short name of stack projectHomeStackPath into projectName
    return projectName
 end project_GetHomeStackName
-   
+
 function project_NameToShortFolder moduleStackName
    set the itemdelimiter to "|"
    repeat for each item someItem in moduleStackName
@@ -309,7 +366,7 @@ function project_NameToShortFolder moduleStackName
    delete char -1 of shortFolder
    return shortFolder
 end project_NameToShortFolder
-   
+
 function project_FindHomeStackPath somePath
    -- assumes somePath is a path to a stack or file and not a folder
    put somePath into someFolder
@@ -319,7 +376,7 @@ function project_FindHomeStackPath somePath
    project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
    return homeStackPath
 end project_FindHomeStackPath
-   
+
 function project_FindFolder somePath
    -- assumes somePath is a path to a stack or file and not a folder
    -- returns the top module or "project folder"
@@ -330,7 +387,7 @@ function project_FindFolder somePath
    project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
    return projectFolder
 end project_FindFolder
-   
+
 function module_FindFolder somePath
    -- assumes somePath is a path to a stack or file and not a folder
    -- finds the first "module folder" above the path
@@ -345,7 +402,7 @@ function module_FindFolder somePath
    module_FindFromFolder someFolder, homeStackName, moduleFolder, homeStackPath
    return moduleFolder
 end module_FindFolder
-   
+
 function module_IsNotaProject moduleFolder
    set the itemdelimiter to slash
    if item -2 of moduleFolder = "modules" then
@@ -356,7 +413,7 @@ function module_IsNotaProject moduleFolder
       return false
    end if
 end module_IsNotaProject
-   
+
 command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
    set the itemdelimiter to slash
    put the number of items of someFolder into maxItemNum
@@ -386,7 +443,7 @@ command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @home
    put empty into homeStackPath
    return false
 end project_FindFromFolder
-   
+
 command module_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
    set the itemdelimiter to slash
    put the number of items of someFolder into maxItemNum
@@ -425,7 +482,7 @@ function lcw_HomeFolder
    end if
    return lcwHomeFolder
 end lcw_HomeFolder
-   
+
 getprop project_Name
    -- could also be called project_HomeStackName
    -- searches the disk based file hierearchy to find the project root
@@ -441,7 +498,7 @@ getprop project_Name
    put project_GetHomeStackName (projectFolder) into projectName
    return projectName 
 end project_Name
-   
+
 getprop project_HomeStack
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
@@ -453,7 +510,7 @@ getprop project_HomeStack
    put the name of stack projectStackPath into stackObject
    return stackObject 
 end project_HomeStack
-   
+
 getprop project_Folder [shortSubFolderName]
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
@@ -570,7 +627,6 @@ command project_Stop projectName
    put the project_UsedStackNames of stack projectName into usedStackNames
    put the project_Name of stack projectName into projectName
    
-   breakpoint
    repeat for each line usedStackName in usedStackNames
       set the cursor to busy
       if exists (stack usedStackName) is false then next repeat
@@ -736,16 +792,12 @@ end project_CreateHomeBrowser
 
 --> Project | Files
 -
-function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
-   if char -1 of projectFolderOrHomeStackFile is not slash then
-      -- assumes if it does not end with "/" it is a file
-      set the itemdelimiter to slash
-      put empty into item -1 of projectFolderOrHomeStackFile
-   end if
-   put projectFolderOrHomeStackFile into standardFolder
-   if shortFolder is not empty then put shortFolder & slash after standardFolder
+function project_FolderFromName shortFolder, projectName
+   if exists (stack projectName) is false then return empty
+   put the stack_Folder of stack projectName into projectFolder
+   put projectFolder & shortFolder & slash into standardFolder
    return standardFolder
-end project_ConstructFolder
+end project_FolderFromName
 
 function project_GetFolder projectName, pSubFolderPath
    put library_FetchProjectFolder (projectName) into projectFolder
@@ -876,6 +928,11 @@ end lcw_HomeStackName
 
 --> Env
 -
+function project_IsActive projectName
+   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
+   return projectIsLoaded
+end project_IsActive
+
 function env_GetProjectFolder homeStackName
    put env_GetProjectArray() into envProjectArray
    return envProjectArray [homeStackName]
@@ -993,20 +1050,6 @@ private command _AddToStackFileArray @stackFileArray, someFolder, pHomeFolder
 end _AddToStackFileArray
 
 
---> LCW | Create
--
-command lcw_LoadCustomUserProject
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   project_InitialiseFolder lcwUserProjectFolder
-   
-   put lcw_UserHomeStackName() into userHomeStackName
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
-   
-   dispatch "project_Init" to stack userHomeStackName
-end lcw_LoadCustomUserProject
-
-
 --> Deps
 -
 /*
@@ -1067,21 +1110,14 @@ function folder_ListShort rootFolder
    return shortFolders
 end folder_ListShort
 
-function folder_ListLong rootFolder
-   if there is not a folder rootFolder then return empty
+function folder_ListLong someFolder
+   if there is not a folder someFolder then return empty
+   text_AddTrailing someFolder, slash
    
-   if char -1 of rootFolder is not slash then put slash after rootFolder
-   put the defaultfolder into oDefault
-   set the defaultfolder to rootFolder
-   put the folders into shortFolders
-   set the defaultfolder to oDefault
+   put folders (someFolder) into shortFolders
    repeat for each line shortFolder in shortFolders
-      switch
-         case char 1 of shortFolder = "."
-            next repeat
-         default
-            put rootFolder & shortFolder & slash & CR after longSubFolders
-      end switch
+      if char 1 of shortFolder = "." then next repeat
+      put someFolder & shortFolder & slash & CR after longSubFolders
    end repeat
    delete char -1 of longSubFolders
    return longSubFolders

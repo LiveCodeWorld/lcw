@@ -258,7 +258,7 @@ on preOpenCard
    put the behavior of templateView into bObject
    if exists (bObject) is false then
       breakpoint
-      set the behavior of templateView to empty
+      -- set the behavior of templateView to empty
    else
       set the behavior of templateView to bObject
    end if

@@ -28,6 +28,12 @@ These handlers handle events from display views that are created from the code i
 They do not have to be here, as you can change their location by setting the "event_Target" property of the display_View.
 */
 
+command mouse_EditObjectScript treeView, scriptObject
+   if the optionKey is "Down" then breakpoint
+   
+   edit the script of scriptObject
+end mouse_EditObjectScript
+
 command mDoubleUp_EditOldMenuScript targetObject, globalMenuCardName
    put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Menus.rev" into longStackFile
    edit the script of card globalMenuCardName of stack longStackFile
@@ -42,8 +48,64 @@ on mDoubleUp_EditMenuScript arrayView, mControllerOrTable
    end if
 end mDoubleUp_EditMenuScript
 
+on mDoubleUp_HkeyLine displayView, hKeyLine
+   hkey_Edit hKeyLine
+end mDoubleUp_HkeyLine
+
 
 --> Working on
+-
+command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
+   display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
+   put the result into displayView 
+   put token -1 of displayView into cloneStackName
+   
+   -- show and go
+   show stack cloneStackName
+   go to stack cloneStackName
+   return displayView
+end display_Array
+
+command display_Lines someIndex, pSomeTitle, pMouseDoubleUpCommand, pStackLabel, pPalette
+   -- simplified version of display_Index
+   local pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pDragCommand
+   
+   put pSomeTitle into pDisplayTitle
+   if pStackLabel is empty then put space into pStackLabel
+   put comma & pStackLabel after pDisplayTitle
+   
+   display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
+   put the result into indexView
+   
+   set the field_Style of indexView to "click"
+   put script_CallingObject() into callingObject
+   set the event_Target of indexView to callingObject
+   return indexView
+   
+   -- after displaying you can...
+   -- set the title_Menu of displayView to "Global | Test | Menu"
+   -- set the line_Menu of displayView to "Global | Test | Line | Menu"
+end display_Lines
+
+command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
+   -- replace comma with CR in someIndex
+   put _GetLastIndexDisplayStackRect () into oRect
+   --
+   display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
+   put the result into displayView 
+   put token -1 of displayView into cloneStackName
+   --
+   put _GetNewIndexDisplayStackRect (oRect, displayView) into newRect
+   set the rect of stack cloneStackName to newRect --- this is not working in latest dp
+   revIDEEnsureOnscreen cloneStackName
+   --
+   show stack cloneStackName
+   go to stack cloneStackName
+   return displayView
+end display_Index
+
+
+--> Atom
 -
 command atom_DisplayText someText, pFileExtension, pUseBinary
    put the tempname into someFile
@@ -70,6 +132,9 @@ command atom_DisplayFile someFile
    return launchSuccess
 end atom_DisplayFile
 
+
+--> Display
+-
 command display_ActiveMenuArray
    global gLCW
    
@@ -77,39 +142,6 @@ command display_ActiveMenuArray
    -- put "Recursion:" && pMenuTitle & ",menu_CheckRecursionOnExtract" into someTitle
    display_Array activeMenuArray, "gLCW ['activeMenuArray']"
 end display_ActiveMenuArray
-
-command display_RigControllerArray
-   server_LoadDetails "rest.livecode.world"
-   put rig_FetchControllerPathArray() into controllerPathArray
-   
-   put "Global | Revigniter | Display | Controller | Menu" into treeMenuTitle
-   put "Global | Revigniter | Display | Controller | Line | Menu" into lineMenuTitle
-   put server_GetURL() into serverURL
-   put serverURL & comma & "rig_FetchControllerPathArray()" into someTitle
-   --
-   display_Array controllerPathArray, someTitle, treeMenuTitle, lineMenuTitle
-   put the result into arrayView
-   return arrayView
-end display_RigControllerArray
-
-command display_Lines someIndex, pSomeTitle, pMouseDoubleUpCommand, pStackLabel, pPalette
-   -- simplified version of display_Index
-   local pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pDragCommand
-   
-   put pSomeTitle into pDisplayTitle
-   if pStackLabel is empty then put space into pStackLabel
-   put comma & pStackLabel after pDisplayTitle
-   
-   display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
-   put the result into indexView
-   put script_CallingObject() into callingObject
-   set the event_Target of indexView to callingObject
-   return indexView
-   
-   -- after displaying you can...
-   -- set the title_Menu of displayView to "Global | Test | Menu"
-   -- set the line_Menu of displayView to "Global | Test | Line | Menu"
-end display_Lines
 
 command display_Menus
    put menu_GetGlobalArray() into globalMenuArray
@@ -155,22 +187,12 @@ command display_RecentExports pHowLong, pIndexView
    end if
 end display_RecentExports
 
-command mouse_EditObjectScript treeView, scriptObject
-   if the optionKey is "Down" then breakpoint
-   
-   edit the script of scriptObject
-end mouse_EditObjectScript
-
 command display_HkeyLines hkeyLines, someTitle
    local mTitle, mLineTitle, mUp
    display_Index hkeyLines, someTitle, mTitle, mLineTitle, mUp, "mDoubleUp_HkeyLine"
    put the result into indexView
    set the multiple_Hilites of indexView to false
 end display_HkeyLines
-
-on mDoubleUp_HkeyLine displayView, hKeyLine
-   hkey_Edit hKeyLine
-end mDoubleUp_HkeyLine
 
 
 --> Display
@@ -274,17 +296,6 @@ command display_Json jsonReply, pDisplayTitle, pMouseDoubleUpCommand
    return displayView
 end display_Json
 
-command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
-   display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
-   put the result into displayView 
-   put token -1 of displayView into cloneStackName
-   
-   -- show and go
-   show stack cloneStackName
-   go to stack cloneStackName
-   return displayView
-end display_Array
-
 command display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
    put "View|Tree|Widget with Title" into viewName
    
@@ -333,75 +344,6 @@ command display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMe
    return displayView
 end display_InvisibleArray
    
-function display_ListIndexStackNames
-   put the openstacks into indexStackNames
-   filter indexStackNames with "Display Index *"
-   sort indexStackNames by word -1 of each
-   return indexStackNames
-end display_ListIndexStackNames
-
-private function _GetLastIndexDisplayStackRect
-   -- put system_TopTarget() into topTarget
-   -- put the stack_Name of topTarget into sourceStackName
-   put line -1 of display_ListIndexStackNames() into sourceStackName
-   if sourceStackName is empty then
-      return empty
-   else
-      put the rect of stack sourceStackName into pRect
-   end if
-   return pRect   
-end _GetLastIndexDisplayStackRect
-
-private function _GetNewIndexDisplayStackRect oRect, displayView
-   if oRect is not a rect then
-      -- put 13,41,225,190 into pRect
-      put 13 into oLeft
-      put 41 into oBottom
-   else
-      put item 1 of oRect into oLeft
-      put item 4 of oRect into oBottom
-   end if
-   
-   put the formatted_Rect of displayView into fRect
-   put item 3 of fRect into newWidth
-   put item 4 of fRect into newHeight
-   
-   put the screen_Rect of displayView into displayScreenRect
-   put item 4 of displayScreenRect into screenBottom
-   put item 3 of displayScreenRect - item 1 of displayScreenRect - 60 into maxScreenWidth
-   put screenBottom - item 2 of displayScreenRect - 60 into maxScreenHeight
-   
-   put min (newWidth, maxScreenWidth) into newWidth
-   put min (newHeight, maxScreenHeight) into newHeight
-   
-   put 20 into tileBarHeight
-   put oLeft into newLeft
-   put tileBarHeight + oBottom into newTop
-   put newLeft + newWidth into newRight
-   put newTop + newHeight into newBottom
-   
-   -- if newBottom > screenBottom then -- here we could tile it across the screen
-   
-   return newLeft,newTop,newRight,newBottom
-end _GetNewIndexDisplayStackRect
-   
-command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
-   -- replace comma with CR in someIndex
-   put _GetLastIndexDisplayStackRect () into oRect
-   --
-   display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
-   put the result into displayView 
-   put token -1 of displayView into cloneStackName
-   --
-   put _GetNewIndexDisplayStackRect (oRect, displayView) into newRect
-   set the rect of stack cloneStackName to newRect --- this is not working in latest dp
-   revIDEEnsureOnscreen cloneStackName
-   --
-   show stack cloneStackName
-   go to stack cloneStackName
-   return displayView
-end display_Index
-
 command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
    put "View|Index|Simple" into viewName
    
@@ -489,6 +431,58 @@ private function script_CallingObject pNum
    return callingObject
 end script_CallingObject
 
+private function display_ListIndexStackNames
+   put the openstacks into indexStackNames
+   filter indexStackNames with "Display Index *"
+   sort indexStackNames by word -1 of each
+   return indexStackNames
+end display_ListIndexStackNames
+
+private function _GetLastIndexDisplayStackRect
+   -- put system_TopTarget() into topTarget
+   -- put the stack_Name of topTarget into sourceStackName
+   put line -1 of display_ListIndexStackNames() into sourceStackName
+   if sourceStackName is empty then
+      return empty
+   else
+      put the rect of stack sourceStackName into pRect
+   end if
+   return pRect   
+end _GetLastIndexDisplayStackRect
+
+private function _GetNewIndexDisplayStackRect oRect, displayView
+   if oRect is not a rect then
+      -- put 13,41,225,190 into pRect
+      put 13 into oLeft
+      put 41 into oBottom
+   else
+      put item 1 of oRect into oLeft
+      put item 4 of oRect into oBottom
+   end if
+   
+   put the formatted_Rect of displayView into fRect
+   put item 3 of fRect into newWidth
+   put item 4 of fRect into newHeight
+   
+   put the screen_Rect of displayView into displayScreenRect
+   put item 4 of displayScreenRect into screenBottom
+   put item 3 of displayScreenRect - item 1 of displayScreenRect - 60 into maxScreenWidth
+   put screenBottom - item 2 of displayScreenRect - 60 into maxScreenHeight
+   
+   put min (newWidth, maxScreenWidth) into newWidth
+   put min (newHeight, maxScreenHeight) into newHeight
+   
+   put 20 into tileBarHeight
+   put oLeft into newLeft
+   put tileBarHeight + oBottom into newTop
+   put newLeft + newWidth into newRight
+   put newTop + newHeight into newBottom
+   
+   -- if newBottom > screenBottom then -- here we could tile it across the screen
+   
+   return newLeft,newTop,newRight,newBottom
+end _GetNewIndexDisplayStackRect
+   
 private function _displayView cloneStackName
    -- was "view_GetTemplateControl" and "view_GetTemplateObject"
    -- put view_GetTemplateControl (cloneStackName) into displayView

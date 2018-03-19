@@ -9,6 +9,10 @@ version: 0.1
 
 --> Global | Library | Project | Model | Menu
 -
+on menu_CreateNewProject
+   project_AskCreate
+end menu_CreateNewProject
+
 on menu_AddProject indexView
    answer folder "Select a folder containing a project..."
    put it into someFolder
@@ -22,19 +26,8 @@ on menu_AddProject indexView
    end if
    
    library_StoreProjectFolder homeStackName, projectFolder
-   display_ProjectList empty, indexView
+   display_LcwProjectList
 end menu_AddProject
-
-on menu_AddGithubUrl
-   
-end menu_AddGithubUrl
-
-on _
-end _
-
-on menu_CreateNewProject
-   project_AskCreate
-end menu_CreateNewProject
 
 on _
 end _
@@ -81,3 +74,8 @@ end menu_MassageArray
 on menu_EditBehavior treeView
    edit the script of the behavior of treeView
 end menu_EditBehavior
+
+
+on reloadStack pStackName, pFileName
+   
+end reloadStack

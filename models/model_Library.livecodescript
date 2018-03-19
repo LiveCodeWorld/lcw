@@ -57,6 +57,9 @@ for instance would be a /path/to/model_SivaSiva/model_SivaSiva.array
 
 You can give alternative names by passing the param pShortFile. So
 - the model_Array ["test.array"] of stack "model_SivaSiva" would get or store an array in the file "/path/to/model_SivaSiva/test.array"
+
+A user_Model is like pref_FetchValue but stored in th lcw_User project 
+The lcw_User project should only be stored on GitHub as a private repository to avoid publishing work in progress, and sensitive data.
 */
 
 
@@ -68,12 +71,31 @@ You can give alternative names by passing the param pShortFile. So
 -
 /*
 Models are stored by default in a folder named after the short name of the stack at the same level as the stack
-
-Thinking of adding the ability to store models in a global space, possibly inside the prefences folder?
--- put specialfolderpath ("preferences") & modelName...
-
-But at the moment everything is tied to the project_Folder and the interfaces do not allow for adding this option.
 */
+
+getprop user_Array [pShortFile]
+   return user_GetArray (pShortFile)
+end user_Array
+
+setprop user_Array [pShortFile] modelArray
+   user_SetArray pShortFile, modelArray
+   put the result into modelDataFile
+   return modelDataFile
+end user_Array
+
+getprop model_Array [pShortFile]
+   -- assumes the target is a model stack
+   put the model_DataFile [pShortFile] of the target into modelDataFile
+   put array_FetchModel (modelDataFile) into modelArray
+   return modelArray
+end model_Array
+
+setprop model_Array [pShortFile] dataArray
+   -- assumes the target is a model stack
+   put the model_DataFile [pShortFile] of the target into modelDataFile
+   array_SaveModel modelDataFile, dataArray
+   return modelDataFile
+end model_Array
 
 getprop model_Names
    put the stack_Name of the target into modelStackName
@@ -85,10 +107,13 @@ end model_Names
 getprop model_DataFile [pShortFile]
    -- assumes the target is a model stack
    put the stack_Name of the target into modelStackName
-   put the stack_Folder of the target into stackFolder
-   put stackFolder & modelStackName & slash into modelDataFolder
+   put the stack_Folder of the target into projectFolder
+   -- put projectFolder & modelStackName & slash into modelDataFolder
+   -- put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
    
-   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+   put the project_Folder of the target into projectFolder
+   put model_GetDataFile (modelStackName, projectFolder, pShortFile) into modelDataFile
+   
    return modelDataFile
 end model_DataFile
 
@@ -108,6 +133,20 @@ getprop model_DataFolder [modelStackName]
 end model_DataFolder
 
 
+--> Model | User
+-
+function user_GetArray shortFile
+   put the model_Array [shortFile] of stack "lcw_User" into modelArray
+   return modelArray
+end user_GetArray
+
+command user_SetArray shortFile, modelArray
+   set the model_Array [shortFile] of stack "lcw_User" to modelArray
+   put the result into modelDataFile
+   return modelDataFile
+end user_SetArray
+   
+   
 --> Model | Files
 -
 function model_GetDataFolder modelStackName, projectFolder
@@ -155,23 +194,6 @@ function model_ListModelFiles pListShort
 end model_ListModelFiles
 
 
---> Model | Array | Props
--
-getprop model_Array [pShortFile]
-   -- assumes the target is a model stack
-   put the model_DataFile [pShortFile] of the target into modelDataFile
-   put array_FetchModel (modelDataFile) into modelArray
-   return modelArray
-end model_Array
-
-setprop model_Array [pShortFile] dataArray
-   -- assumes the target is a model stack
-   put the model_DataFile [pShortFile] of the target into modelDataFile
-   array_SaveModel modelDataFile, dataArray
-   return modelDataFile
-end model_Array
-
-
 --> Model | Array
 -
 function model_FetchArray modelStackName, projectFolder, pShortFile 
@@ -207,16 +229,13 @@ function array_FetchModel someFile
    switch item -1 of someFile
       case "json"
          put jsonImport (someData) into modelArray
-         break
+         return modelArray
       case "array"
          put arraydecode (someData) into modelArray
-         break
+         return modelArray
       default
-         -- here we can return an array from a database
-         -- someFile could contain items used in a query
-         -- or even an sql query
+         return someData
    end switch
-   return modelArray
 end array_FetchModel
 
 command array_SaveModel someFile, modelArray
@@ -226,12 +245,15 @@ command array_SaveModel someFile, modelArray
       case "json"
          put jsonExport (modelArray) into encodedData
          break
-      default -- case "array"
+      case "array"
          put arrayencode (modelArray) into encodedData
          break
+      default -- case "array"
+         put modelArray into encodedData
    end switch
-   -- create folder if it does not exist
-   folder_CreateFromFile someFile
-   --
+   
+   folder_CreateFromFile someFile -- create folder if it does not exist
    put encodedData into url ("binfile:" & someFile)
+   --
+   return encodedData
 end array_SaveModel

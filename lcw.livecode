@@ -40,13 +40,37 @@ as well as give the HomeStack and interface and some useful functionality.
 -
 command project_Init
    if the long id of the target is not the long id of me then pass project_Init
+   if project_IsActive ("LCW") is true then pass project_Init
+   
    _LcwInitialize
+   
+   -- load custom user stuff
+   -- not sure if it should be here on in menus stack as that is where it is useful???
+   lcw_LoadCustomUserProject
 end project_Init
+
+
+--> Env
+-
+function project_IsActive projectName
+   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
+   return projectIsLoaded
+end project_IsActive
+
+function env_GetProjectFolder projectName
+   put env_GetProjectArray() into envProjectArray
+   return envProjectArray [projectName]
+end env_GetProjectFolder
+
+function env_GetProjectArray
+   global gLCW
+   put gLCW ["environment"]["project"] into envProjectArray
+   return envProjectArray
+end env_GetProjectArray
 
 
 --> Project | Init
 -
-
 function lcw_DefaultLibPath lcwHomeStackFile
    set the itemdelimiter to slash
    put "libraries/lib_LCW.livecodescript" into item -1 of lcwHomeStackFile

@@ -29,6 +29,41 @@ function shell_ExecuteAtRoot someShell, pExecuteWhere, pShellCommandRoot
 end shell_ExecuteAtRoot
 
 
+--> Shell | SSH
+-
+command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell
+   -- requires public ssh key to be installed on server
+   -- would be better as a function
+   shell_BashParamEscape remoteShell -- maybe better to kwote()
+   
+   put "ssh" && sshUserName & "@" & serverAddress && remoteShell into someShell
+   put word 1 to -1 of shell (someShell) into shellResult
+   return shellResult
+end ssh_DoRemoteShell
+
+
+--> Shell | Delete
+-
+command shell_DeleteFile sshUser, remoteDomain, somePath
+   put "rm" && somePath into remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end shell_DeleteFile
+
+command shell_DeleteFolder sshUser, remoteDomain, relativePath
+   -- relative to the user specified in sshUser's $HOME directory
+   -- https://www.computerhope.com/issues/ch000798.htm
+   -- rm -rf mydir
+   -- put "rm -R" && relativePath into remoteCommand
+   
+   put "rm -rf" && relativePath into remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end shell_DeleteFolder
+
+
 --> Shell | Network
 -
 command terminal_Diff thisText, lastText, pThisShortFile, pLastShortFile
@@ -70,6 +105,9 @@ command diff_Files thisFile, lastFile
    return shellResult
 end diff_Files
 
+
+--> Bonjour
+-
 command bonjour_RegisterPortMapper pMapperPort
    put merge ("dns-sd -R 'LiveCode Port Mapper' _livecode._udp. . [[pMapperPort]] pdl=application/livecode") into someShell
    shell_ExecuteInBackground someShell
@@ -150,24 +188,9 @@ function shell_Tidy someHTML, pOptions
    return tidyResult
 end shell_Tidy
 
-command shell_DeleteFolder sshUser, remoteDomain, relativePath
-   -- relative to the user specified in sshUser's $HOME directory
-   put "rm -R" && relativePath into remoteCommand
-   shell_RemoteExecute sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end shell_DeleteFolder
-
-command shell_DeleteFile sshUser, remoteDomain, somePath
-   put "rm" && somePath into remoteCommand
-   shell_RemoteExecute sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end shell_DeleteFile
-
 function shell_FetchFile sshUser, remoteDomain, somePath
    put "cat" && somePath into remoteCommand
-   shell_RemoteExecute sshUser, remoteDomain, remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
    put the result into someData
    return someData
 end shell_FetchFile
@@ -187,16 +210,10 @@ command shell_StoreFile sshUser, remoteDomain, fullPath, localFile, pSshKeyPath
    end if
    put space & localFile && scpDestination after someShell
    
-   -- shell_RemoteExecute sshUser, remoteDomain, remoteCommand
+   -- ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
    put shell (someShell) into shellResult
    return shellResult
 end shell_StoreFile
-
-command shell_RemoteExecute sshUser, remoteDomain, remoteCommand
-   put "ssh" && sshUser & "@" & remoteDomain && remoteCommand into someShell
-   put shell (someShell) into someData
-   return someData
-end shell_RemoteExecute
 
 function shell_ConstructLSArray lsResult, pShowInvisible
    if word 1 of lsResult = "total" then

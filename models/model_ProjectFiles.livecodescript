@@ -55,7 +55,7 @@ function project_ListProjectDepNames projectName
    put keys (projectNameArray) into projectNameIndex
    return word 1 to -1 of projectNameIndex
 end project_ListProjectDepNames
-   
+
 getprop project_Folders [pIncludeInvisible]
    put the project_Folder of the target into projectFolder
    put folder_ListLong (projectFolder) into standardFolders
@@ -110,6 +110,84 @@ setprop project_StackFileTable stackFileTable
    return projectHomeStack
 end project_StackFileTable
 
+getprop project_Paths [shortFolder]
+   put the project_Name of the target into projectName
+   put project_ListSubfolderPaths (shortFolder, projectName) into filePaths
+   return filePaths
+end project_Paths
+
+
+--> Project | List | Paths
+-
+/*
+Here we try to sue standard names and be as fast and simple as possible.
+
+-- put library_FetchProjectFolder (projectName) into projectFolder
+-- put the stack_Folder of stack projectName into projectFolder
+-- put project_ListPaths ("controllers", projectFolder) into controllerStackPaths
+*/
+
+function project_ListLibraryPaths projectName
+   put project_ListSubfolderPaths ("libraries", projectName) into filePaths
+   return filePaths
+end project_ListLibraryPaths
+
+function project_ListControllerPaths projectName
+   put project_ListSubfolderPaths ("controllers", projectName) into filePaths
+   return filePaths
+end project_ListControllerPaths
+
+function project_ListModelPaths projectName
+   put project_ListSubfolderPaths ("models", projectName) into filePaths
+   return filePaths
+end project_ListModelPaths
+
+function project_ListBehaviorPaths projectName
+   put project_ListSubfolderPaths ("behaviors", projectName) into filePaths
+   return filePaths
+end project_ListBehaviorPaths
+
+function project_ListViewPaths projectName
+   put project_ListSubfolderPaths ("views", projectName) into filePaths
+   return filePaths
+end project_ListViewPaths
+
+function project_ListModulePaths projectName
+   put project_FolderFromName ("modules", projectName) into standardFolder
+   put folder_ListLong (standardFolder) into longFolders
+   return longFolders
+end project_ListModulePaths
+   
+
+--> Project | List
+-
+/*
+Tries to be as fast and minimal as possible.
+*/
+
+function project_ListSubfolderPaths shortFolder, projectName
+   put project_FolderFromName (shortFolder, projectName) into standardFolder
+   put path_ListLong (standardFolder, pShowInvisible) into filePaths
+   return filePaths
+end project_ListSubfolderPaths
+
+function project_ListStackNames shortFolder, projectName
+   put project_ListStackPaths (shortFolder, projectName) into longFiles
+   repeat for each line longFile in longFiles
+      if exists (stack longFile) is false then next repeat
+      put the short name of stack longFile into stackName
+      put stackName & CR after stackNames
+   end repeat
+   delete char -1 of stackNames
+   return longFiles
+end project_ListStackNames
+
+function project_ListShortFiles shortFolder, projectName
+   put the stack_Folder of stack projectName into standardFolder
+   put file_ListShort (standardFolder) into shortFiles
+   return shortFiles
+end project_ListShortFiles
+
 
 --> Project | Start
 -
@@ -150,17 +228,11 @@ They should work for modules as well as projects as they have the same structure
 */
 
 function project_ListControllerStackNames projectName
-   put project_ListControllerPaths (projectName) into controllerPaths
+   -- put project_ListControllerPaths (projectName) into controllerPaths
+   put project_ListPaths ("controllers", projectFolder) into controllerPaths
    put stack_PathsToNames (controllerPaths) into stackNames
    return stackNames
 end project_ListControllerStackNames
-
-function project_ListControllerPaths projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put the stack_Folder of stack projectName into projectFolder
-   put project_ListPaths ("controllers", projectFolder) into controllerStackPaths
-   return controllerStackPaths
-end project_ListControllerPaths
 
 function project_ListBehaviorStackNames pProjectNames  
    repeat for each line projectName in pProjectNames
@@ -297,7 +369,10 @@ function project_GetHomeView projectName
 end project_GetHomeView
 
 function project_GetHomeStackPath projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
+   if exists (stack projectName) is false then
+      return empty
+   end if
+   
    put the stack_Folder of stack projectName into projectFolder
    if projectFolder is empty then return empty
    put project_ConstructHomeStackPath (projectFolder) into homeStackPath
