@@ -4,7 +4,7 @@
 license: GPLv3
 name: model_OldLibrary
 type: model
-version: 0.1
+version: 0.2
 
 /*
 In order for the lcw environment to know where individual project folders are,
@@ -66,6 +66,43 @@ The lcw_User project should only be stored on GitHub as a private repository to 
 --> Working on
 -
 
+--> Model | User
+-
+function user_GetValue someKey, shortArrayFile
+   put user_GetArray (shortArrayFile) into userArray
+   put userArray [someKey] into someValue
+   return someValue
+end user_GetValue
+
+command user_SetValue someKey, shortArrayFile, someValue
+   put user_GetArray (shortArrayFile) into userArray
+   put someValue into userArray [someKey]
+   user_SetArray shortArrayFile, userArray
+   put the result into modelDataFile
+   return modelDataFile
+end user_SetValue
+
+function user_GetArray shortFile
+   if the environment = "server" then
+      -- put gConfig ["dropBoxAuthToken"] into dropBoxAuthToken
+      -- put rigFetchConfigItem ("dropBoxAuthToken") into dropBoxAuthToken
+      put rigLoadConfigFile (shortFile, TRUE) into modelArray
+   else
+      put the model_Array [shortFile] of stack "lcw_User" into modelArray
+   end if
+   return modelArray
+end user_GetArray
+
+command user_SetArray shortFile, modelArray
+   if the platform is "server" then
+      
+   else
+      set the model_Array [shortFile] of stack "lcw_User" to modelArray
+   end if
+   put the result into modelDataFile
+   return modelDataFile
+end user_SetArray
+
 
 --> Model | Props
 -
@@ -78,6 +115,9 @@ getprop user_Array [pShortFile]
 end user_Array
 
 setprop user_Array [pShortFile] modelArray
+   if modelArray is empty then
+      breakpoint
+   end if
    user_SetArray pShortFile, modelArray
    put the result into modelDataFile
    return modelDataFile
@@ -94,7 +134,7 @@ setprop model_Array [pShortFile] dataArray
    -- assumes the target is a model stack
    put the model_DataFile [pShortFile] of the target into modelDataFile
    array_SaveModel modelDataFile, dataArray
-   return modelDataFile
+   return the result
 end model_Array
 
 getprop model_Names
@@ -108,12 +148,9 @@ getprop model_DataFile [pShortFile]
    -- assumes the target is a model stack
    put the stack_Name of the target into modelStackName
    put the stack_Folder of the target into projectFolder
+   -- put the project_Folder of the target into projectFolder
    -- put projectFolder & modelStackName & slash into modelDataFolder
-   -- put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
-   
-   put the project_Folder of the target into projectFolder
    put model_GetDataFile (modelStackName, projectFolder, pShortFile) into modelDataFile
-   
    return modelDataFile
 end model_DataFile
 
@@ -133,20 +170,6 @@ getprop model_DataFolder [modelStackName]
 end model_DataFolder
 
 
---> Model | User
--
-function user_GetArray shortFile
-   put the model_Array [shortFile] of stack "lcw_User" into modelArray
-   return modelArray
-end user_GetArray
-
-command user_SetArray shortFile, modelArray
-   set the model_Array [shortFile] of stack "lcw_User" to modelArray
-   put the result into modelDataFile
-   return modelDataFile
-end user_SetArray
-   
-   
 --> Model | Files
 -
 function model_GetDataFolder modelStackName, projectFolder
@@ -160,16 +183,6 @@ function model_GetDataFile modelStackName, projectFolder, pShortFile
    put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
    return modelDataFile
 end model_GetDataFile
-
-private function dataFolder_GetFile modelDataFolder, pShortFile
-   if pShortFile is empty then
-      set the itemdelimiter to slash
-      put item -1 of modelDataFolder into modelName
-      put modelName & ".array" into pShortFile
-   end if
-   put modelDataFolder & pShortFile into modelDataFile
-   return modelDataFile
-end dataFolder_GetFile
 
 
 
@@ -239,7 +252,11 @@ function array_FetchModel someFile
 end array_FetchModel
 
 command array_SaveModel someFile, modelArray
-   if modelArray is not an array then delete file someFile
+   if modelArray is not an array then
+      delete file someFile
+      return "deleted" && someFile
+   end if
+   
    set the itemdelimiter to "."
    switch item -1 of someFile
       case "json"
@@ -255,5 +272,18 @@ command array_SaveModel someFile, modelArray
    folder_CreateFromFile someFile -- create folder if it does not exist
    put encodedData into url ("binfile:" & someFile)
    --
-   return encodedData
+   return someFile
 end array_SaveModel
+
+
+--> Private
+-
+private function dataFolder_GetFile modelDataFolder, pShortFile
+   if pShortFile is empty then
+      set the itemdelimiter to slash
+      put item -1 of modelDataFolder into modelName
+      put modelName & ".array" into pShortFile
+   end if
+   put modelDataFolder & pShortFile into modelDataFile
+   return modelDataFile
+end dataFolder_GetFile

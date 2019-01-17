@@ -16,14 +16,14 @@ A library for script behaviors.
 getprop behavior_HandlerExists [hkeyLine]
    put the behavior of the target into bObject
    put the revAvailablehandlers of bObject into hTable
-   hkeyLine_FindInTable hkeyLine, hTable, startLineNum, endLineNum
+   htable_ExactLineOffsets hkeyLine, hTable, startLineNum, endLineNum
    return the result
 end behavior_HandlerExists
 
 getprop behavior_Handler [hkeyLine]
    put the behavior of the target into bObject
    put the revAvailablehandlers of bObject into hTable
-   hkeyLine_FindInTable hkeyLine, hTable, startLineNum, endLineNum
+   htable_ExactLineOffsets hkeyLine, hTable, startLineNum, endLineNum
    put line startLineNum to endLineNum of the script of bObject into behaviorHandler
    return behaviorHandler
 end behavior_Handler

@@ -9,12 +9,26 @@ version: 0.6
 /*
 Project folders are the top-level LCW folders as stored in GitHub.
 
-They no longer refer to project-metadata folders, which are now called textstack_Folders, or things like "data_Folder".
+They no longer refer to project-metadata folders, which are now called textstack_Folders, or things like "dataObject_Folder".
 Those older names are a bit of a mess.
 */
 
 --> Working on
 -
+function project_ListMenus projectName
+   put project_ListControllerPaths (projectName) into controllerPaths
+   put stack_PathsToNames (controllerPaths) into stackNames
+   --
+   -- sorting is a mess due to confusion over naming
+   sort stackNames
+   set the itemdelimiter to "|"
+   sort stackNames by item 2 of each
+   set the itemdelimiter to "_"
+   sort stackNames by item 2 of each
+   --
+   return stackNames
+end project_ListMenus
+
 function project_ListUsedDeps projectName
    -- not in order of use?
    put project_ListProjectDepNames (projectName) into depNames
@@ -153,7 +167,7 @@ function project_ListViewPaths projectName
 end project_ListViewPaths
 
 function project_ListModulePaths projectName
-   put project_FolderFromName ("modules", projectName) into standardFolder
+   put project_FolderFromName (projectName, "modules") into standardFolder
    put folder_ListLong (standardFolder) into longFolders
    return longFolders
 end project_ListModulePaths
@@ -166,7 +180,7 @@ Tries to be as fast and minimal as possible.
 */
 
 function project_ListSubfolderPaths shortFolder, projectName
-   put project_FolderFromName (shortFolder, projectName) into standardFolder
+   put project_FolderFromName (projectName, shortFolder) into standardFolder
    put path_ListLong (standardFolder, pShowInvisible) into filePaths
    return filePaths
 end project_ListSubfolderPaths
@@ -326,7 +340,9 @@ function project_GetViewStackArray projectName
 end project_GetViewStackArray
 
 function project_ListUsedStackPaths projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder  
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   if exists (stack projectName) is false then return empty
+   --
    put the stack_Folder of stack projectName into projectFolder
    put project_ListUsedPathsFromFolder (projectFolder) into projectUsedStackPaths
    return projectUsedStackPaths
@@ -396,13 +412,16 @@ end project_FolderFromFile
 private command _addProjectToDeps projectName, @projectNameArray
    -- recursive
    if projectName is among the keys of projectNameArray then return false
-   
    put empty into projectNameArray [projectName]
+   
+   if exists (stack projectName) is false then
+      breakpoint -- pProjectName
+      return false
+   end if
    
    put the project_Deps of stack projectName into projectDepItems
    repeat for each item projectDepName in projectDepItems
       if projectDepName is among the keys of projectNameArray then next repeat
-      
       _addProjectToDeps projectDepName, projectNameArray
    end repeat
    return true

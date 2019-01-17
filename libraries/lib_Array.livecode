@@ -11,10 +11,18 @@ version: 0.6
 --> Working on
 -
 command array_AddToNumbered @indexedArray, someKey, someValue
-   -- this command adds a value to the end of an indexed array
-   -- value can be simple or an array
+   /*
+   Adds a value to the end of an indexed array.
+   Value can be simple or an array
+   If someKey is an array it adds the array
+   */
+   
    put item 2 of the extents of indexedArray + 1 into newIndexNum
-   put someValue into indexedArray [newIndexNum][someKey]
+   if someKey is an array then
+      put someKey into indexedArray [newIndexNum]
+   else
+      put someValue into indexedArray [newIndexNum][someKey]
+   end if
    return newIndexNum
 end array_AddToNumbered
 

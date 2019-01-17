@@ -55,6 +55,28 @@ end mDoubleUp_HkeyLine
 
 --> Working on
 -
+function display_FindView displayStackLabel, pDisplayViewTitle
+   -- looks for Dispay Array, and Display Index views
+   -- put the openstacks into dStackNames
+   put revLoadedStacks ("application") into dStackNames
+   repeat for each line dStackName in dStackNames
+      get word 1 to 2 of dStackName
+      if it is not among the items of "Display Index,Display Array" then next repeat
+      if the label of stack dStackName = displayStackLabel then
+         put the long id of group 1 of stack dStackName into pIndexView
+         if pDisplayViewTitle is empty then
+            return pIndexView
+         else if the title_text of pIndexView = pDisplayViewTitle then
+            return pIndexView
+         end if
+      end if
+   end repeat
+   return empty
+end display_FindView
+
+
+--> Display
+-
 command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
    display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
    put the result into displayView 
@@ -76,7 +98,6 @@ command display_Lines someIndex, pSomeTitle, pMouseDoubleUpCommand, pStackLabel,
    
    display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
    put the result into indexView
-   
    set the field_Style of indexView to "click"
    put script_CallingObject() into callingObject
    set the event_Target of indexView to callingObject
@@ -105,35 +126,7 @@ command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, 
 end display_Index
 
 
---> Atom
--
-command atom_DisplayText someText, pFileExtension, pUseBinary
-   put the tempname into someFile
-   if pFileExtension is not empty then
-      put "." & pFileExtension after someFile
-   end if
-   if pUseBinary is true then
-      put someText into url ("binfile:" & someFile)
-   else
-      put someText into url ("file:" & someFile)
-   end if
-   --
-   atom_DisplayFile someFile
-   put the result into launchSuccess
-   return launchSuccess
-end atom_DisplayText
-
-command atom_DisplayFile someFile
-   -- not sure why
-   -- launch someFile with "Atom" does not work
-   
-   launch someFile with "/Applications/Atom.app" -- "Atom"
-   put the result into launchSuccess
-   return launchSuccess
-end atom_DisplayFile
-
-
---> Display
+--> Display | More
 -
 command display_ActiveMenuArray
    global gLCW
@@ -367,7 +360,12 @@ command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMe
    put pLineMenuTitle into menuArray ["line"]
    
    put _displayView (cloneStackName) into displayView
-   set the view_Index of displayView to someIndex
+   --
+   if someIndex is an array then
+      set the displayed_Array of displayView to someIndex
+   else
+      set the view_Index of displayView to someIndex
+   end if
    set the view_MenuArray of displayView to menuArray
    set the view_EventArray of displayView to eventArray
    

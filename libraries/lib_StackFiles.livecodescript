@@ -31,6 +31,7 @@ end stackFile_ConstructShortFileArray
 
 function library_FetchStackFiles pSetName
    -- see also "meta_StackArrayFile" for project level stackfile storage
+   breakpoint
    put library_FetchSetArray (pSetName) into setArray
    put setArray ["data"]["stackfiles"] into stackFileTable
    return stackFileTable

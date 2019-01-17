@@ -9,15 +9,6 @@ version: 0.1
 
 --> Global | Script | Changes | Menu
 -
-on menu_LoadServer
-   server_LoadDetails "rest.livecode.world"
-   display_RigControllerArray
-end menu_LoadServer
-
-on menu_SetMenus
-   
-end menu_SetMenus
-
 on menu_DisplayLocalChanges indexView
    put the selected_Index of indexView into scriptObject
    

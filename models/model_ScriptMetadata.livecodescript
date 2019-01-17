@@ -4,7 +4,39 @@
 license: GPLv3
 name: model_ScriptMetadata
 type: model
-version: 0.1
+version: 0.2
+
+
+--> Script | Metadata | Wrappers
+-
+getprop script_Help
+   -- from the header bit of the script
+   put the script_MetaData ["script_Help"] of the target into scriptType
+   return scriptType
+end script_Help
+
+getprop script_Type
+   -- see also "stack_Type"
+   put the script_MetaData ["type"] of the target into scriptType
+   return scriptType
+end script_Type
+
+setprop script_Type scriptType
+   set the script_MetaData ["type"] of the target to scriptType
+   put the result into uRipArray
+   return uRipArray
+end script_Type
+
+getprop script_Name
+   put the script_MetaData ["name"] of the target into scriptName
+   return scriptName
+end script_Name
+
+setprop script_Name scriptName
+   set the script_MetaData ["name"] of the target to scriptName
+   put the result into uRipArray
+   return uRipArray
+end script_Name
 
 
 --> Script | Metadata

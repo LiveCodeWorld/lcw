@@ -5,7 +5,65 @@ copyright: David Bovill
 license: GPLv3
 name: lib_Text
 type: script library
-version: 0.8
+version: 0.9
+
+
+--> Working on
+-
+function line_BeginsWith startLineChars, someLines, pLinesToSkip
+   -- probably a faster way of doing this
+   -- find the first line starting with...
+   -- set the wholematches to false
+   -- put lineoffset ("{{", wikiText) into startLineNum -- though I could do this with wholematches
+   
+   if pLinesToSkip is a number then delete line 1 to pLinesToSkip of someLines
+   
+   put CR & startLineChars into startlineChars
+   put CR & someLines into testContainer
+   put offset (startlineChars, testContainer) into startCharNum
+   if startCharNum is 0 then
+      return 0
+   else
+      get char 2 to (startCharNum + the number of chars of startLineChars - 1) of testContainer
+      put the number of lines of it into lineNum
+      return lineNum
+   end if
+end line_BeginsWith
+   
+function line_FindInIndex someLine, container, partLine, lineAfter
+   -- was "whichLine"
+   
+   if someLine is empty then return 0
+   if lineAfter is empty then put 0 into lineAfter
+   delete line 1 to lineAfter of container
+   if partLine is true then
+      put container into testContainer
+      put someLine into testLine
+   else if partLine contains "start" or partLine contains "whole" then
+      put return & container & return into testContainer
+      put return & someLine into testLine
+   else
+      put return & container & return into testContainer
+      put return & someLine & return into testLine
+   end if
+   
+   put offset(testLine, testContainer) into start
+   if start is 0 then
+      return 0
+   else
+      put the number of lines of char 1 to start of container into line_FindInIndexNum
+      if partLine contains "whole" then
+         put line line_FindInIndexNum of container into testLine
+         if whichWord(someLine, testLine) = 0 then
+            return 0
+         else
+            return (line_FindInIndexNum + lineAfter)
+         end if
+      else
+         return (line_FindInIndexNum + lineAfter)
+      end if
+   end if
+end line_FindInIndex
 
 
 --> Rename
@@ -261,41 +319,6 @@ command line_DeleteEmpty @someLines
    delete char 1 of someLines
 end line_DeleteEmpty
 
-function line_FindInIndex someLine, container, partLine, lineAfter
-    -- was "whichLine"
-
-    if someLine is empty then return 0
-    if lineAfter is empty then put 0 into lineAfter
-    delete line 1 to lineAfter of container
-    if partLine is true then
-        put container into testContainer
-        put someLine into testLine
-    else if partLine contains "start" or partLine contains "whole" then
-        put return & container & return into testContainer
-        put return & someLine into testLine
-    else
-        put return & container & return into testContainer
-        put return & someLine & return into testLine
-    end if
-
-    put offset(testLine, testContainer) into start
-    if start is 0 then
-        return 0
-    else
-        put the number of lines of char 1 to start of container into line_FindInIndexNum
-        if partLine contains "whole" then
-            put line line_FindInIndexNum of container into testLine
-            if whichWord(someLine, testLine) = 0 then
-                return 0
-            else
-                return (line_FindInIndexNum + lineAfter)
-            end if
-        else
-            return (line_FindInIndexNum + lineAfter)
-        end if
-    end if
-end line_FindInIndex
-
 
 --> Lists
 -
@@ -432,32 +455,16 @@ function text_StripJunk someString
     return cleanText
 end text_StripJunk
 
+command text_ReQuote @someText
+   replace "'" with quote in someText
+end text_ReQuote
+
 function text_Strip someContainer, charsToStrip, replaceWith
-    repeat for each char someChar in charsToStrip
-        replace someChar with replaceWith in someContainer
-    end repeat
-    return someContainer
+   repeat for each char someChar in charsToStrip
+      replace someChar with replaceWith in someContainer
+   end repeat
+   return someContainer
 end text_Strip
-
-
---> Text | Quotes
--
-function kwote someText, pQuoteChar
-   if pQuoteChar is empty then put quote into pQuoteChar
-   return pQuoteChar & someText & pQuoteChar
-end kwote
-
-function text_ExtractQuoted someText
-    local quotedLines
-    put 0 into startAfterCharNum
-    repeat
-        text_SetOffsets quote, quote, someText, startChar, endChar, startAfterCharNum
-        if startChar = 0 or endChar = 0 then return quotedLines
-        put char (startChar + 1) to (endChar - 1) of someText into quotedText
-        line_Insert quotedText, quotedLines
-        put endChar into startAfterCharNum
-    end repeat
-end text_ExtractQuoted
 
 
 --> Text | lib
@@ -675,6 +682,23 @@ end text_StripAllTags
 
 --> Text | Quotes
 -
+function kwote someText, pQuoteChar
+   if pQuoteChar is empty then put quote into pQuoteChar
+   return pQuoteChar & someText & pQuoteChar
+end kwote
+
+function text_ExtractQuoted someText
+    local quotedLines
+    put 0 into startAfterCharNum
+    repeat
+        text_SetOffsets quote, quote, someText, startChar, endChar, startAfterCharNum
+        if startChar = 0 or endChar = 0 then return quotedLines
+        put char (startChar + 1) to (endChar - 1) of someText into quotedText
+        line_Insert quotedText, quotedLines
+        put endChar into startAfterCharNum
+    end repeat
+end text_ExtractQuoted
+
 function text_IsQuoted someText, pString
    local quotedText
    put "['" & quote & "]" into someQuote
@@ -723,9 +747,39 @@ function withinQuotes textOrOffset, someContainer
     end if
 end withinQuotes
 
+command text_StipQuoted @someText
+   put "(" & quote & "[^" & quote & "]*" & quote & ")" into quoteReg
+   text_StripReg someText, quoteReg, "•••"
+end text_StipQuoted
+
+command text_StripReg @wikiText, someReg, pReplaceText
+   local refStart, refEnd
+   put 0 into indexNum
+   repeat
+      get matchchunk (wikiText, someReg, sNum, eNum)
+      if sNum is not a number then
+         exit repeat -- regExp bug???
+      end if
+      
+      if it is true then
+         -- this bit not needed (remove for speed)
+         -- put char refStart to refEnd of wikiText into someTest
+         put sNum into stripResultArray [indexNum]["sNum"]
+         put eNum into stripResultArray [indexNum]["eNum"]
+         add 1 to indexNum
+         --
+         -- delete char sNum to eNum of wikiText
+         put pReplaceText into char sNum to eNum of wikiText
+      else
+         exit repeat
+      end if
+   end repeat
+   return stripResultArray
+end text_StripReg
+
 command text_StarQuoted @someText
    local replacedArray
-
+   
    put someText into replacedArray ["original text"]
    put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
    put 1 into indexNum

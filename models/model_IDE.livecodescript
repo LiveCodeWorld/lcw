@@ -33,6 +33,12 @@ on setBehaviors
 end setBehaviors
 */
 
+--> Working on
+-
+function scriptEditor_Object
+   return rev_ScriptObject()
+end scriptEditor_Object
+
 
 --> IDE | ScriptEditor | Pane | Model
 -
@@ -112,16 +118,48 @@ function rev_LaunchDocsButton pEditorNum
    return revRuggedID (someObject)
 end rev_LaunchDocsButton
 
-function scriptEditor_Object
-   return rev_ScriptObject()
-end scriptEditor_Object
+function rev_HandlerTreeField pEditorNum
+   put rev_ScriptEditorStack (pEditorNum) into editorStack
+   if exists (field "handlers" of group "Left Bar" of cd "Main" of editorStack) is false then return empty
+   put the long id of field "handlers" of group "Left Bar" of cd "Main" of editorStack into someObject
+   return revRuggedID (someObject)
+end rev_HandlerTreeField
+
+function rev_ScriptEditorStack pEditorNum
+   switch
+      case pEditorNum is empty
+         return rev_TopScriptEditor()
+      case pEditorNum = 0
+         put the long id of stack "revSETemplate" of stack "revNewScriptEditor" into stackObject
+         return revRuggedID (stackObject)
+      case pEditorNum is a number
+         put "revNewScriptEditor" && pEditorNum into stackName
+         if exists (stack stackName) is false then return empty
+         return the name stack stackName
+      default
+         return rev_TopScriptEditor()
+   end switch
+end rev_ScriptEditorStack
+
+function rev_TopScriptEditor
+   put the short name of the defaultstack into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      if stackNames is empty then return empty
+      put line 1 of stackNames into firstEditorStackName
+      return the long id of stack firstEditorStackName
+   end if
+end rev_TopScriptEditor
 
 function rev_ScriptObject
-   put rev_TopScriptEditor() into stackObject
-   if exists(stackObject) is false then return empty
-   dispatch "revSEGetCurrentObject" to stackObject
-   put the result into someObject
-   return someObject
+put rev_TopScriptEditor() into stackObject
+if exists(stackObject) is false then return empty
+dispatch "revSEGetCurrentObject" to stackObject
+put the result into someObject
+return someObject
 end rev_ScriptObject
 
 function rev_ScriptEditorField pEditorNum

@@ -21,12 +21,14 @@ on mouseDown pMenuButton
 end mouseDown
 
 on tabkey
+   if the shiftkey is "Up" then pass tabkey
+   
    put the long id of me into scriptField
    put the selectedText of scriptField into selText
-   if selText is empty then pass tabkey
+   -- if selText is empty then pass tabkey
    
    scriptField_DoTabkey selText, scriptField
    if the result is false then
-      -- pass tabkey
+      pass tabkey
    end if
 end tabkey

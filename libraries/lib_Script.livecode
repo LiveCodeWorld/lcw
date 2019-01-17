@@ -24,7 +24,6 @@ which in turn require handlers here
 --> Currently Working On
 -
 
-
 --> Script | Props
 -
 getprop script_ContainsString [someString]
@@ -62,11 +61,6 @@ getprop script_Suite [suiteName]
     return script_GetSuite (suiteName, someScript)
 end script_Suite
 
-getprop object_ContainsMessageHandler [messageName]
-   put the script_AndBehavior of the target into someScript
-   return script_ContainsMessageHandler(someScript, messageName)
-end object_ContainsMessageHandler
-
 getprop script_DuplicateKeys
    put the script_Array of the target into scriptArray
    repeat for each key indexNum in scriptArray
@@ -81,6 +75,17 @@ getprop script_DuplicateKeys
    delete char -1 of duplicateKeys
    return duplicateKeys
 end script_DuplicateKeys
+
+getprop object_ContainsMessageHandler [messageName]
+   put the script_AndBehavior of the target into someScript
+   return script_ContainsMessageHandler(someScript, messageName)
+end object_ContainsMessageHandler
+
+private function script_ContainsMessageHandler someScript, messageName
+   put "on" into onWord
+   put "(?mi)^\s*(" & onWord & " +" & messageName & ")\W" after regExp
+   return matchtext(someScript, regExp)
+end script_ContainsMessageHandler
 
 
 --> Script | Command
@@ -200,28 +205,6 @@ function script_Contains someToken, someScript, pHandlerType
    end switch
    return false
 end script_Contains
-
-
---> Hkey | MetaData | Dot
--
-function hKeyArray_ConstructNestedObjectDot hLinkArray, hIdArray, graphName, graphHeader, pTargetObject
-   dot_EscapeQuotes graphName
-   if graphName is empty then put "Test" into graphName
-   
-   put hKeyArray_DotNodeSubGraphDefs (hLinkArray, hIdArray, pTargetObject) into colourDefs
-   
-   put hKeyArray_DotNestedObjectClusters(hIdArray, hLinkArray) into clusterDefs
-   put colourDefs & CR & CR & clusterDefs into defSection
-   
-   put hKeyArray_DotNodeLinks (hLinkArray, empty, pTargetObject) into linkSection
-   if defSection is empty then
-      put linkSection into nodeSection
-   else
-      put defSection & CR & CR & linkSection into nodeSection
-   end if
-   put dot_Construct(graphName, nodeSection, graphHeader) into dotText
-   return dotText
-end hKeyArray_ConstructNestedObjectDot
 
 
 --> Script | Comments
@@ -373,83 +356,6 @@ function script_StripComments someScript
    put text_ReReplaceQuoted(testScript, offsetArray) into testScript
    return testScript
 end script_StripComments
-
--- function script_StripComments someScript
-put 0 into commentLineNum
-repeat
-   put lineStartsWith("--", someScript, false, commentLineNum) into commentLineNum
-   if commentLineNum = 0 then
-      return someScript
-   else
-      delete line commentLineNum of someScript
-   end if
-end repeat
-end script_StripComments
-
-
---> Handler
--
-function handler_GetType handlerLine
-   if token 1 of handlerLine = "private" then
-      delete token 1 of handlerLine
-      put true into isPrivate
-   end if
-   
-   switch token 1 of handlerLine
-      case "on"
-         put rev_MessageNames() into revMessageNames
-         put token 2 of handlerLine into cName
-         if cName is among the lines of revMessageNames then
-            return _addPrivate ("m", isPrivate)    # message
-         else
-            return _addPrivate ("c", isPrivate)    # command
-         end if
-      case "command"
-         return _addPrivate ("c", isPrivate)    # command
-      case "function"
-         return _addPrivate ("f", isPrivate)    # function
-      case "getprop"
-         return "g"	# getprop
-      case "setprop"
-         return "s"	# setprop
-      default
-         return empty
-   end switch
-end handler_GetType
-
-private function _addPrivate hType, isPrivate
-   if isPrivate is true then put "p" before hType
-   return hType
-end _addPrivate
-
-function handler_ConvertType handlerType
-   switch char 1 of word 1 of handlerType
-      case "o"
-         return "on"
-      case "m"
-         return "on"
-      case "c"
-         return "command"
-      case "pc"
-         return "private command"
-      case "f"
-         return "function"
-      case "pf"
-         return "private function"
-      case "g"
-         return "getprop"
-      case "s"
-         return "setprop"
-      default
-         return empty
-   end switch
-end handler_ConvertType
-
-function script_ContainsMessageHandler someScript, messageName
-   put "on" into onWord
-   put "(?mi)^\s*(" & onWord & " +" & messageName & ")\W" after regExp
-   return matchtext(someScript, regExp)
-end script_ContainsMessageHandler
 
 
 --> Script | Construction

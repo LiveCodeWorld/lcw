@@ -13,17 +13,32 @@ Here we place all the handlers that need to be in use before project initialisat
 
 --> Working On
 -
-command lcw_LoadCustomUserProject
-   -- no longer seems to be called
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   project_InitialiseFolder lcwUserProjectFolder
+getprop project_Folder [shortSubFolderName]
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into stackPath
    
-   put lcw_UserHomeStackName() into userHomeStackName
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
-   
-   dispatch "project_Init" to stack userHomeStackName
-end lcw_LoadCustomUserProject
+   put project_FindFolder (stackPath) into projectFolder
+   switch
+      case projectFolder is empty
+         return empty
+      case shortSubFolderName is not empty
+         if char 1 of shortSubFolderName = slash then delete char 1 of shortSubFolderName
+         put shortSubFolderName after projectFolder
+         if char -1 of shortSubFolderName is not slash then put slash after projectFolder
+      default
+         return projectFolder
+   end switch
+end project_Folder
+
+function project_FolderFromName projectName, pShortFolder
+   -- this does not do much checking
+   if exists (stack projectName) is false then return empty
+   put the stack_Folder of stack projectName into projectFolder
+   if pShortFolder is empty then return projectFolder
+   put projectFolder & pShortFolder & slash into standardFolder
+   return standardFolder
+end project_FolderFromName
 
 function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
    if char -1 of projectFolderOrHomeStackFile is not slash then
@@ -36,6 +51,30 @@ function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
    if shortFolder is not empty then put shortFolder & slash after standardFolder
    return standardFolder
 end project_ConstructFolder
+
+function project_GetFolder projectName, pSubFolderPath
+   put library_FetchProjectFolder (projectName) into projectFolder
+   if projectFolder is empty then return empty
+   
+   if pSubFolderPath is not empty then
+      if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
+      put pSubFolderPath after projectFolder
+      text_AddTrailing projectFolder, slash
+   end if
+   return projectFolder
+end project_GetFolder
+
+command lcw_LoadCustomUserProject
+   -- no longer seems to be called
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   project_InitialiseFolder lcwUserProjectFolder
+   
+   put lcw_UserHomeStackName() into userHomeStackName
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
+   
+   dispatch "project_Init" to stack userHomeStackName
+end lcw_LoadCustomUserProject
 
 
 --> Events
@@ -70,6 +109,7 @@ end display_Loading
 
 command lcw_Notify someMessage, pTitle
    -- needs to work cross platform
+   text_ReQuote someMessage
    try
       if pTitle is empty then put "LiveCode World Notification" into pTitle
       put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell
@@ -83,6 +123,7 @@ end lcw_Notify
 
 command lcw_WarnAndExit someComment, pAsSheet
    beep
+   text_ReQuote someComment
    if pAsSheet is false then
       answer warning somecomment
    else
@@ -94,6 +135,7 @@ end lcw_WarnAndExit
 
 command lcw_Answer someQuestion, pButtonName
    if pButtonName is empty then put "OK" into pButtonName
+   text_ReQuote someQuestion
    
    answer someQuestion with "Cancel" or "OK"
    put it into theResult
@@ -103,6 +145,7 @@ end lcw_Answer
 
 command lcw_AnswerWarning someQuestion, pButtonName
    if pButtonName is empty then put "OK" into pButtonName
+   text_ReQuote someQuestion
    
    answer warning someQuestion with pButtonName as sheet
    put it into theResult
@@ -114,6 +157,7 @@ command lcw_AnswerSheet someQuestion, pButtonName, pWarning
    -- can be used with dispatch
    -- dispatch "lcw_AnswerSheet" to stack "Catcher" with "Works?"
    if pButtonName is empty then put "OK" into pButtonName
+   text_ReQuote someQuestion
    
    if pWarning is true then
       beep
@@ -127,14 +171,13 @@ command lcw_AnswerSheet someQuestion, pButtonName, pWarning
 end lcw_AnswerSheet
 
 function lcw_Ask someQuestion, pDefault
-   -- was "opn_Ask"
-   -- removed complexity of "text_Merge"
-   replace "'" with quote in someQuestion
+   text_ReQuote someQuestion
    ask someQuestion with pDefault
    put it into theResult
    if the result is "Cancel" then exit to top
    return theResult
 end lcw_Ask
+
 
 --> Working On | Download Projects
 -
@@ -511,24 +554,6 @@ getprop project_HomeStack
    return stackObject 
 end project_HomeStack
 
-getprop project_Folder [shortSubFolderName]
-   -- searches the disk based file hierearchy to find the project root
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into stackPath
-   
-   put project_FindFolder (stackPath) into projectFolder
-   switch
-      case projectFolder is empty
-         return empty
-      case shortSubFolderName is not empty
-         if char 1 of shortSubFolderName = slash then delete char 1 of shortSubFolderName
-         put shortSubFolderName after projectFolder
-         if char -1 of shortSubFolderName is not slash then put slash after projectFolder
-      default
-         return projectFolder
-   end switch
-end project_Folder
-
 
 --> Working On | Messy
 -
@@ -792,25 +817,6 @@ end project_CreateHomeBrowser
 
 --> Project | Files
 -
-function project_FolderFromName shortFolder, projectName
-   if exists (stack projectName) is false then return empty
-   put the stack_Folder of stack projectName into projectFolder
-   put projectFolder & shortFolder & slash into standardFolder
-   return standardFolder
-end project_FolderFromName
-
-function project_GetFolder projectName, pSubFolderPath
-   put library_FetchProjectFolder (projectName) into projectFolder
-   if projectFolder is empty then return empty
-   
-   if pSubFolderPath is not empty then
-      if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
-      put pSubFolderPath after projectFolder
-      text_AddTrailing projectFolder, slash
-   end if
-   return projectFolder
-end project_GetFolder
-
 function project_ConstructHomeStackPath projectFolder
    text_AddTrailing projectFolder, slash
    put project_GetShortFolder (projectFolder) into projectShortFolder
@@ -934,6 +940,7 @@ function project_IsActive projectName
 end project_IsActive
 
 function env_GetProjectFolder homeStackName
+   -- if project_IsActive is empty it returns empty
    put env_GetProjectArray() into envProjectArray
    return envProjectArray [homeStackName]
 end env_GetProjectFolder
@@ -1235,6 +1242,10 @@ command stack_StopUsed stackObjects
       end if
    end repeat
 end stack_StopUsed
+
+command text_ReQuote @someText
+   replace "'" with quote in someText
+end text_ReQuote
 
 command text_AddTrailing @someText, someChar
    if char -1 of someText is not someChar then

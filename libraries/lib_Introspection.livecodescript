@@ -12,7 +12,7 @@ version: 0.3
 --> Update | Script
 -
 command script_ExportAndIndexMenus scriptObject, pExportCalls
-   -- this is watch the IDE compile button dispatches
+   -- this is what the IDE compile button dispatches
    -- so far nothing else calls this command
    -- it is designed to update the global menu index, and export handlers (but do nothing else)
    -- it can be optimised to ony loop through the script once (instead of twise as below)
@@ -37,8 +37,9 @@ command script_ExportHandlersAndCalls someObject, pExportCalls, pScript, pDataFo
    if handlerTable is empty then return empty -- everything is deleted before re-exporting
    
    if pDataFolder is empty then
-      put the data_Folder [true] of someObject into pDataFolder
-      if pDataFolder is empty then
+      put the dataObject_Folder [false] of someObject into pDataFolder
+      if there is not a folder pDataFolder is empty then
+         -- check
          breakpoint
       end if
    end if
@@ -46,7 +47,6 @@ command script_ExportHandlersAndCalls someObject, pExportCalls, pScript, pDataFo
    if pExportCalls is true then
       -- this also deletes the "lcw_calls.txt" files
       -- which is fine if we are rebuilding them
-      -- possible consider saving those files in a separate metadata folder
       revDeleteFolder pDataFolder
    end if
    

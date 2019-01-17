@@ -47,6 +47,14 @@ end _displaySelectedValue
 --> Props | Selected
 -
 getprop top_Array
+   put _treeWidget() into treeWidget
+   put the arrayData of treeWidget into someArray
+   put the hilitedElement of treeWidget into commaPath
+   --
+   put item 1 of commaPath into topItem
+   put someArray [topItem] into topArray
+   return topArray
+   
    put the hilited_Element of me into hItems
    if the number of items of hItems = 1 then
       put the selected_Array of me into topArray

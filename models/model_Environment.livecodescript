@@ -31,6 +31,40 @@ end env_LoadProjectGlobals
 
 */
 
+--> Props
+-
+getprop active_Projects
+   -- allows you to call "if myProject is among the lines of the active_Projects of me then"
+   -- even if this library is not in use (it just returns empty which is what we want)
+   return env_ListProjects()
+end active_Projects
+
+getprop project_IsActive
+   put the project_Name of the target into projectName
+   put project_IsActive (projectName) into someBoolean
+   return someBoolean
+end project_IsActive
+
+function project_IsActive projectName
+   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
+   return projectIsLoaded
+end project_IsActive
+
+
+-- Working on
+-
+function env_ListLibraryStacks pListAll
+   -- not in any particular order (so not a real hierarchy)
+   local objectIndex
+   
+   put env_ListProjects ( pListAll) into projectNames
+   repeat for each line projectName in projectNames
+      hkey_AddDevelopmentHierarchy objectIndex, projectName
+   end repeat
+   return word 1 to -1 of objectIndex
+end env_ListLibraryStacks
+
+
 --> Environment | Files
 -
 function env_ListHomeArrayFiles
@@ -52,18 +86,21 @@ function env_GetHomeArrayFileData
 end env_GetHomeArrayFileData
 
 
---> Props
+--> Environment | List
 -
-getprop active_Projects
-   -- allows you to call "if myProject is among the lines of the active_Projects of me then"
-   -- even if this library is not in use (it just returns empty which is what we want)
-   return env_ListProjects()
-end active_Projects
+function env_ListFrontScripts
+   -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
+   put the frontscripts into longIDs
+   ide_FilterOutStacks longIDs
+   return longIDs
+end env_ListFrontScripts
 
-function project_IsActive projectName
-   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
-   return projectIsLoaded
-end project_IsActive
+function env_ListBackScripts
+   -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
+   put the backscripts into longIDs
+   ide_FilterOutStacks longIDs
+   return longIDs
+end env_ListBackScripts
 
 
 --> Environment | List | Projects

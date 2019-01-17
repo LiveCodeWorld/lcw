@@ -4,7 +4,7 @@
 license: GPLv3
 name: model_ScriptSuite
 type: model
-version: 1.0
+version: 1.1
 
 /*
 This library stores reerences to all Global script suites
@@ -15,6 +15,177 @@ but for now this is one single flat array.
 
 See also "Old | Suite" of stack "model_ScriptMenu"
 */
+
+--> Working on
+-
+function index_ConstructUnique someIndex
+   set the itemdelimiter to tab
+   repeat for each line someLine in someIndex
+      if someLine contains tab then
+         -- not allowed
+         breakpoint
+         return empty
+      end if
+      
+      put uniqueArray [someLine] into repeatNum
+      --
+      if repeatNum is empty then
+         put someLine & CR after uniqueLines
+         put 1 into uniqueArray [someLine]
+      else
+         add 1 to repeatNum
+         put item 1 of someLine & tab & "(" & repeatNum & ")" into newLine
+         put newLine & CR after uniqueLines
+         put repeatNum into uniqueArray [someLine]
+      end if
+   end repeat
+   delete char -1 of uniqueLines
+   return uniqueLines
+end index_ConstructUnique
+
+
+--> Props
+-
+getprop script_SuiteArray
+   put the suite_NumberedArray of the target into suiteNumberedArray
+   put suiteNumberedArray ["suiteTitles"] into suiteTitles
+   put index_ConstructUnique (suiteTitles) into uniqueTitles
+   
+   put the revAvailablehandlers of the target into hTable
+   sort numeric hTable by word 3 of each -- makes table ordered
+   repeat for each line hLine in hTable
+      put word 1 to 2 of hLine into shortHkey
+      put char -1 of word 1 of hLine into publicType
+      put word 2 of hLine into hName
+      put word 3 of hLine into startLineNum
+      put word 4 of hLine into endLineNum
+      --
+      put suite_FindTitleNum (startLineNum, suiteNumberedArray) into suiteNum
+      if suiteNum = 0 then
+         put "No Suite" into suiteTitle
+      else
+         -- put line suiteNum of uniqueTitles into suiteTitles
+         put line suiteNum of uniqueTitles into uniqueSuiteTitle
+      end if
+      --
+      put empty into scriptSuiteArray [uniqueSuiteTitle][shortHkey]
+      -- put startLineNum into scriptSuiteArray [suiteNum]["title"][suiteTitle][shortHkey]["startLineNum"]
+      -- put endLineNum into scriptSuiteArray [suiteNum]["title"][suiteTitle][shortHkey]["startLineNum"]
+   end repeat
+   return scriptSuiteArray
+end script_SuiteArray
+
+function suite_FindTitle startLineNum, suiteNumberedArray
+   put suiteNumberedArray ["suiteTitles"] into suiteTitles
+   put suite_FindTitleNum (startLineNum, suiteNumberedArray) into suiteNum
+   put line suiteNum of suiteTitles into suiteTitle
+   return suiteTitle
+end suite_FindTitle
+
+function suite_FindTitleNum startLineNum, suiteNumberedArray
+   put suiteNumberedArray ["suiteLineNums"] into suiteLineNums
+   put the number of items of suiteLineNums into maxNum
+   repeat with suiteNum = 1 to maxNum
+      put item suiteNum of suiteLineNums into testLineNum
+      if testLineNum > startLineNum then
+         return suiteNum - 1
+      end if
+   end repeat
+   return maxNum
+end suite_FindTitleNum
+
+getprop suite_NumberedArray
+   put the object_ScriptArray of the target into scriptArray
+   put 1 into suiteNum
+   put item 2 of the extents of scriptArray into maxItem
+   repeat with itemNum = 1 to maxItem
+      put scriptArray [itemNum] into itemArray
+      put itemArray ["lineType"] into lineType
+      switch lineType
+         case "t"
+            put itemArray ["scriptLine"] into suiteTitle
+            put suiteTitle into suiteNumberedArray ["index"][suiteNum]["suite title"]
+            put itemArray ["startLineNum"] into startLineNum
+            put startLineNum into suiteNumberedArray ["index"][suiteNum]["lineNum"]
+            --
+            put startLineNum & comma after startLineNums
+            put suiteTitle & CR after suiteTitles
+            --
+            add 1 to suiteNum
+            break
+         default
+            -- it is a handler, so forget it (use revAvailablehandlers)
+      end switch
+   end repeat
+   delete char -1 of suiteTitles
+   delete char -1 of startLineNums
+   
+   put startLineNums into suiteNumberedArray ["suiteLineNums"]
+   put suiteTitles into suiteNumberedArray ["suiteTitles"]
+   --
+   return suiteNumberedArray
+end suite_NumberedArray
+
+getprop script_ObjectSuiteOutline
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   return script_ExtractObjectSuiteOutline (someScript, scriptObject)
+end script_ObjectSuiteOutline
+
+getprop script_SuiteOutline
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   -- put script_SuiteNameLinkOutline (someScript, scriptObject) into someOutline
+   -- put script_GetSuiteOutline (someScript) into someOutline
+   put script_ExtractObjectSuiteOutline (someScript, scriptObject) into someOutline
+   return someOutline
+   
+   return script_SuiteNameLinkOutline(someScript, scriptObject)
+   return script_GetSuiteOutline(someScript)
+end script_SuiteOutline
+
+getprop script_NestedSuiteOutline [sortHeaders]
+   put the long id of the target into scriptObject
+   put the script of the target into someScript
+   return script_ConstructNestedSuiteOutline(someScript, scriptObject, sortHeaders)
+end script_NestedSuiteOutline
+
+getprop object_MetaDataTable [keysToRemove]
+   breakpoint
+   put the long id of the target into scriptObject
+   put the object_MetaData of scriptObject into metaDataArray
+   repeat for each item someKey in keysToRemove
+      delete local metaDataArray [someKey]
+   end repeat
+   combine metaDataArray with CR and tab
+   return metaDataArray
+end object_MetaDataTable
+
+getprop script_GlobalTitles [suiteType]
+   put the script of the target into someScript
+   put script_ExtractGlobalTitles (someScript, suiteType) into globalMenuTitles
+   return globalMenuTitles
+end script_GlobalTitles
+
+getprop script_SuiteTitles
+   put the script of the target into someScript
+   return script_GetSuiteTitles (someScript)
+end script_SuiteTitles
+
+getprop script_SortedSuite [suiteName]
+   put the script_Suite [suiteName] of the target into someScript
+   put script_SortHandlers(someScript) into sortedHandlers
+   put script_ConstructSuite(suiteName, sortedHandlers) into sortedSuite
+   return sortedSuite
+end script_SortedSuite
+
+setprop script_Suite [suiteName] newSuite
+   put the long id of the target into targetObject
+   
+   put the script of targetObject into someScript
+   put script_ReplaceSuite (suiteName, someScript, newSuite) into newScript
+   set the script of targetObject to newScript
+end script_Suite
 
 
 --> Script | Suite | Suite Array
@@ -29,7 +200,7 @@ function script_SplitIntoSuites someScript
    sort handlerLines by word 2 of each
    
    put line 1 of handlerLines into nextHandlerLine
-   handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
+   hkeyLine_DeconstructStart nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
    put handlerPrefix into oHandlerPrefix
    
    put empty into bigScript
@@ -37,7 +208,7 @@ function script_SplitIntoSuites someScript
    repeat
       set the cursor to busy
       put line 1 of handlerLines into nextHandlerLine
-      handler_Deconstruct nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
+      hkeyLine_DeconstructStart nextHandlerLine, handlerType, handlerName, handlerPrefix, handlerSuffix
       
       if handlerPrefix = oHandlerPrefix then
          put false into newSection
@@ -152,35 +323,11 @@ command script_SetGlobalSuiteArray dataArray
 end script_SetGlobalSuiteArray
 
 
---> Working on
+--> Old
 -
 /*
 These script_SuiteOutline handlers are old and not needed?
 */
-
-getprop script_ObjectSuiteOutline
-   put the long id of the target into scriptObject
-   put the script of scriptObject into someScript
-   return script_ExtractObjectSuiteOutline (someScript, scriptObject)
-end script_ObjectSuiteOutline
-
-getprop script_SuiteOutline
-   put the long id of the target into scriptObject
-   put the script of scriptObject into someScript
-   -- put script_SuiteNameLinkOutline (someScript, scriptObject) into someOutline
-   -- put script_GetSuiteOutline (someScript) into someOutline
-   put script_ExtractObjectSuiteOutline (someScript, scriptObject) into someOutline
-   return someOutline
-   
-   return script_SuiteNameLinkOutline(someScript, scriptObject)
-   return script_GetSuiteOutline(someScript)
-end script_SuiteOutline
-
-getprop script_NestedSuiteOutline [sortHeaders]
-   put the long id of the target into scriptObject
-   put the script of the target into someScript
-   return script_ConstructNestedSuiteOutline(someScript, scriptObject, sortHeaders)
-end script_NestedSuiteOutline
 
 function script_ExtractObjectSuiteOutline someScript, scriptObject
    -- creates hKeyLinks
@@ -222,46 +369,6 @@ function script_ExtractObjectSuiteOutline someScript, scriptObject
    return handlerOutline
 end script_ExtractObjectSuiteOutline
 
-getprop object_MetaDataTable [keysToRemove]
-   breakpoint
-    put the long id of the target into scriptObject
-    put the object_MetaData of scriptObject into metaDataArray
-    repeat for each item someKey in keysToRemove
-        delete local metaDataArray [someKey]
-    end repeat
-    combine metaDataArray with CR and tab
-    return metaDataArray
-end object_MetaDataTable
-
-
---> Script | Suit | Props
--
-getprop script_GlobalTitles [suiteType]
-   put the script of the target into someScript
-   put script_ExtractGlobalTitles (someScript, suiteType) into globalMenuTitles
-   return globalMenuTitles
-end script_GlobalTitles
-
-getprop script_SuiteTitles
-   put the script of the target into someScript
-   return script_GetSuiteTitles (someScript)
-end script_SuiteTitles
-
-getprop script_SortedSuite [suiteName]
-   put the script_Suite [suiteName] of the target into someScript
-   put script_SortHandlers(someScript) into sortedHandlers
-   put script_ConstructSuite(suiteName, sortedHandlers) into sortedSuite
-   return sortedSuite
-end script_SortedSuite
-
-setprop script_Suite [suiteName] newSuite
-   put the long id of the target into targetObject
-   
-   put the script of targetObject into someScript
-   put script_ReplaceSuite (suiteName, someScript, newSuite) into newScript
-   set the script of targetObject to newScript
-end script_Suite
-
 
 --> Script | Suites
 -
@@ -276,80 +383,80 @@ function script_GetSuite suiteTitle, someScript
 end script_GetSuite
 
 function script_GetSuiteHandlers suiteTitle, someScript
-    get script_GetSuite (suiteTitle, someScript)
-    delete line 1 to 2 of it
-    return word 1 to -1 of it
+   get script_GetSuite (suiteTitle, someScript)
+   delete line 1 to 2 of it
+   return word 1 to -1 of it
 end script_GetSuiteHandlers
 
 function script_GetSuiteContents suiteTitle, someScript
-    put script_GetSuite (suiteTitle, someScript) into scriptSuite
-    delete line 1 of scriptSuite
-    switch char 1 of line 1 of scriptSuite
-        case "-"
-            delete line 1 of scriptSuite
-            break
-        case empty
-            delete line 1 of scriptSuite
-            break
-    end switch
-    return word 1 to -1 of scriptSuite
+   put script_GetSuite (suiteTitle, someScript) into scriptSuite
+   delete line 1 of scriptSuite
+   switch char 1 of line 1 of scriptSuite
+      case "-"
+         delete line 1 of scriptSuite
+         break
+      case empty
+         delete line 1 of scriptSuite
+         break
+   end switch
+   return word 1 to -1 of scriptSuite
 end script_GetSuiteContents
 
 function script_GetSuiteTitles someScript
-    put someScript into theHandlerGroups
-    filter theHandlerGroups with "-->*"
-    replace "--> " with empty in theHandlerGroups
-    replace "-->" with empty in theHandlerGroups
-    return theHandlerGroups
+   put someScript into theHandlerGroups
+   filter theHandlerGroups with "-->*"
+   replace "--> " with empty in theHandlerGroups
+   replace "-->" with empty in theHandlerGroups
+   return theHandlerGroups
 end script_GetSuiteTitles
 
 function script_DeleteSuite suiteTitle, someScript
-    script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
-    if the result is true then
-        delete line startLineNum to endLineNum of someScript
-        return someScript
-    else
-        return someScript
-    end if
+   script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
+   if the result is true then
+      delete line startLineNum to endLineNum of someScript
+      return someScript
+   else
+      return someScript
+   end if
 end script_DeleteSuite
- 
+
 function script_ReplaceSuite suiteTitle, someScript, newSuite
-    script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
-    if the result is true then
-        put word 1 to -1 of newSuite & CR & CR into line startLineNum to endLineNum of someScript
-        return someScript
-    else
-        text_AddParagraph newSuite, someScript
-        return someScript
-    end if
+   script_SetSuiteOffsets suiteTitle, someScript, startLineNum, endLineNum
+   if the result is true then
+      put word 1 to -1 of newSuite & CR & CR into line startLineNum to endLineNum of someScript
+      return someScript
+   else
+      text_AddParagraph newSuite, someScript
+      return someScript
+   end if
 end script_ReplaceSuite
 
 command script_SetSuiteOffsets suiteTitle, someScript, @startLineNum, @endLineNum
-    set wholematches to true
-    put 0 into startLineNum
-    put 0 into endLineNum
-    put lineoffset("-->" &&  suiteTitle, someScript) into startLineNum
-    if startLineNum is zero then
-        put lineoffset("-->" &  suiteTitle, someScript) into startLineNum
-    end if
-    if startLineNum is zero then return false
-    
-    put someScript into suiteTitleLines
-    filter suiteTitleLines with "-->*"
-    put lineoffset("-->" &&  suiteTitle, suiteTitleLines) into titleLineNum
-    put line titleLineNum + 1 of suiteTitleLines into nextTitleLine
-    if nextTitleLine is empty then
-        put the number of lines in someScript into endLineNum
-    else
-        put lineoffset(nextTitleLine, someScript, startLineNum) into afterStartlineNum
-         
-        if afterStartlineNum is zero then
-            put the number of lines in someScript into endLineNum
-        else
-            put startLineNum + afterStartlineNum - 1 into endLineNum
-        end if
-    end if
-    return true
+   set wholematches to true
+   put 0 into startLineNum
+   put 0 into endLineNum
+   put lineoffset("-->" &&  suiteTitle, someScript) into startLineNum
+   if startLineNum is zero then
+      put lineoffset("-->" &  suiteTitle, someScript) into startLineNum
+   end if
+   if startLineNum is zero then return false
+   
+   put someScript into suiteTitleLines
+   filter suiteTitleLines with "-->*"
+   put lineoffset("-->" &&  suiteTitle, suiteTitleLines) into titleLineNum
+   put line titleLineNum + 1 of suiteTitleLines into nextTitleLine
+   if nextTitleLine is empty then
+      put the number of lines in someScript into endLineNum
+   else
+      put lineoffset(nextTitleLine, someScript, startLineNum) into afterStartlineNum
+      
+      if afterStartlineNum is zero then
+         put the number of lines in someScript into endLineNum
+      else
+         put startLineNum + afterStartlineNum - 1 into endLineNum
+      end if
+   end if
+   return true
 end script_SetSuiteOffsets
 
 
@@ -402,30 +509,27 @@ function script_GetGlobalModelArray
    return script_ExtractGlobalSuiteArray("Model")
 end script_GetGlobalModelArray
 
-
---> Script  | Suite | Model (extract)
--
 function script_GetGlobalModelObject modelName
-    put script_ExtractGlobalSuiteArray("Model") into dataArray
-    put dataArray [modelName] into someObject
-    return someObject
+   put script_ExtractGlobalSuiteArray("Model") into dataArray
+   put dataArray [modelName] into someObject
+   return someObject
 end script_GetGlobalModelObject
 
 function script_ExtractGlobalSuiteArray suiteType
-    local newArray
-    put script_GetGlobalSuiteArray() into dataArray
-    
-    if suiteType is empty then return dataArray
-    repeat for each key suiteTitle in dataArray
-        if word -1 of suiteTitle is suiteType then
-            put dataArray [suiteTitle] into newArray [suiteTitle]
-        end if
-    end repeat
-    return newArray
+   local newArray
+   put script_GetGlobalSuiteArray() into dataArray
+   
+   if suiteType is empty then return dataArray
+   repeat for each key suiteTitle in dataArray
+      if word -1 of suiteTitle is suiteType then
+         put dataArray [suiteTitle] into newArray [suiteTitle]
+      end if
+   end repeat
+   return newArray
 end script_ExtractGlobalSuiteArray
 
 
---> Script  | Suite | Model
+--> Script  | Suite | Global | Model
 -
 function script_GetGlobalObject suiteTitle
    put script_GetGlobalSuiteArray() into dataArray
@@ -574,13 +678,13 @@ end script_TrimNonSuiteHandlers
 -
 -- function script_AddHandlerToSuite suiteTitle, someScript, newHandler
 -- not finished (tricky one)
-    put word 1 to -1 of newHandler into newHandler
-    put line 1 of newHandler into handlerLine
-    handler_Deconstruct handlerLine, handlerName, hType, privateBit
-    script_SetHandlerOffsets startFirstFunction, endFirstFunction, ".+", "function", someScript
-     
-    put script_GetSuite(suiteTitle, someScript) into oldSuite
-    text_AddParagraph newHandler, someScript
+put word 1 to -1 of newHandler into newHandler
+put line 1 of newHandler into handlerLine
+hkeyLine_DeconstructStart handlerLine, handlerName, hType, privateBit
+script_SetHandlerOffsets startFirstFunction, endFirstFunction, ".+", "function", someScript
+
+put script_GetSuite(suiteTitle, someScript) into oldSuite
+text_AddParagraph newHandler, someScript
 end script_AddHandlerToSuite
 
 private function addSuiteScripts suiteName, suiteScripts, oldObjectScript, scriptHierachy

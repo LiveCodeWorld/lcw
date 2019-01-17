@@ -8,27 +8,10 @@ type: model
 version: 0.8
 
 /*
-Combines both the uRip value of the object and the script metadata of the object
+A urip_Array is based on cutomo properties. This is an old technique.
+We use the properties of the script directly now, as we have script libraries that have no custom properties when loaded.
 
-Prioritises the script value over the objects script metadata
-Sets both the uRip value of the object and the script of the object
-
-getprop stack_Folder [pDontCreate]
-   put the long ID of the target into someObject
-   
-   put the textStack_Folder [pDontCreate] of someObject into textStackFolder
-   put the stack_Object of someObject into stackObject
-   put the short name of stackObject into stackName
-   put the mainstack of stackObject into mainStackName
-   
-   if stackName = mainStackName then
-      return textStackFolder
-   else
-      put textStackFolder & "objects/substacks/" & stackName & "/" into stackFolder
-      if pDontCreate is false then folder_CreateNested stackFolder
-      return stackFolder
-   end if
-end stack_Folder
+See "model_Meta" for text file based metadata of scripts.
 */
 
 
@@ -40,6 +23,45 @@ command urip_Update someObject, pSomeScript
    -- urip_AddDefaults uRipArray
    set the urip_Array of someObject to uRipArray
 end urip_Update
+
+
+--> Object | Metadata
+-
+/*
+Combines both the uRip value of the object and the script metadata of the object
+Prioritises the script value over the objects script metadata
+Sets both the uRip value of the object and the script of the object
+*/
+
+getprop object_MetaData [uRipKey]
+   -- a union of script_MetaData and an objects uRIP custom props
+   
+   put the long id of the target into scriptObject
+   put the script of scriptObject into someScript
+   put script_GetMetadataArray (someScript) into scriptMetaDataArray
+   put the customproperties ["uRIP"] of scriptObject into uRipArray
+   
+   union scriptMetaDataArray with uRipArray
+   if uRipKey is empty then
+      return scriptMetaDataArray
+   else
+      return scriptMetaDataArray [uRipKey]
+   end if
+end object_MetaData
+
+setprop object_MetaData [uRipKey] uRipArray
+   -- this also indexes using "object_AddToGlobalArray"
+   
+   if uRipKey is empty and uRipArray is an array then
+      set the script_MetaData of the target to uRipArray
+   else
+      put uRipArray into newValue
+      put the object_MetaData of the target into uRipArray
+      put newValue into uRipArray [uRipKey]
+      set the script_MetaData of the target to uRipArray
+   end if
+   return uRipArray
+end object_MetaData
 
 
 --> URIP | Metadata | Construct
@@ -93,40 +115,11 @@ setprop custom_Array [someKey] arrayOrValue
    end if
 end custom_Array
 
-getprop object_MetaData [uRipKey]
-   -- a union of script_MetaData and an objects uRIP custom props
-   
-   put the long id of the target into scriptObject
-   put the script of scriptObject into someScript
-   put script_GetMetadataArray (someScript) into scriptMetaDataArray
-   put the customproperties ["uRIP"] of scriptObject into uRipArray
-   
-   union scriptMetaDataArray with uRipArray
-   if uRipKey is empty then
-      return scriptMetaDataArray
-   else
-      return scriptMetaDataArray [uRipKey]
-   end if
-end object_MetaData
-
-setprop object_MetaData [uRipKey] uRipArray
-   -- this also indexes using "object_AddToGlobalArray"
-   
-   if uRipKey is empty and uRipArray is an array then
-      set the script_MetaData of the target to uRipArray
-   else
-      put uRipArray into newValue
-      put the object_MetaData of the target into uRipArray
-      put newValue into uRipArray [uRipKey]
-      set the script_MetaData of the target to uRipArray
-   end if
-   return uRipArray
-end object_MetaData
-
 
 --> URIP | Model
 -
 /*
+Based on custom properties. An olde technique.
 Difficult naming this well - setting an "object_Type" seems like setting a control_Type - ie swithching form a field to a button etc
 Changing back to urip for the name of stuff in the script of custom property.
 */

@@ -6,6 +6,53 @@ name: lib_Shell
 type: library
 version: 0.1
 
+/*
+This library is about interfacing with shell commands and utilities
+Aim to spilt out lib_SSH soon, but have to update transporter dependencies for that.
+
+command ssh_DeleteFolder sshUser, remoteDomain, relativePath
+   -- be super careful! 
+   -- Not used so far. Consider backing everything up to git before using
+   -- relative to the user specified in sshUser's $HOME directory
+   -- https://www.computerhope.com/issues/ch000798.htm
+   -- rm -rf mydir
+   -- put "rm -R" && relativePath into remoteCommand
+   
+   put "rm -rf" && relativePath into remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end ssh_DeleteFolder
+*/
+
+
+--> SSH
+-
+function ssh_FetchFile sshUser, remoteDomain, somePath
+   shell_BashParamEscape somePath
+   put "cat" && somePath into remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end ssh_FetchFile
+
+command ssh_DeleteFile sshUser, remoteDomain, somePath
+   -- can we ensure it only deletes a single file?
+   shell_BashParamEscape somePath
+   --
+   put "rm" && somePath into remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
+   put the result into shellResult
+   return shellResult
+end ssh_DeleteFile
+
+command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell
+   -- requires public ssh key to be installed on server
+   put "ssh" && sshUserName & "@" & serverAddress && remoteShell into someShell
+   put word 1 to -1 of shell (someShell) into shellResult
+   return shellResult
+end ssh_DoRemoteShell
+
 
 --> Working On
 -
@@ -28,40 +75,53 @@ function shell_ExecuteAtRoot someShell, pExecuteWhere, pShellCommandRoot
    return shellResult
 end shell_ExecuteAtRoot
 
-
---> Shell | SSH
--
-command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell
-   -- requires public ssh key to be installed on server
-   -- would be better as a function
-   shell_BashParamEscape remoteShell -- maybe better to kwote()
+function shell_ConstructLSArray lsResult, pShowInvisible
+   if word 1 of lsResult = "total" then
+      put word 2 of lsResult into totalEntries
+      delete line 1 of lsResult
+   end if
    
-   put "ssh" && sshUserName & "@" & serverAddress && remoteShell into someShell
-   put word 1 to -1 of shell (someShell) into shellResult
+   repeat for each line someLine in lsResult
+      shell_DeconstructLS someLine, shortFileName, filePermissions, ownerName, groupName, fSize, lastModified, lsType, numberOfLinks
+      put the result into typeExplanation
+      
+      if shortFileName is among the items of ".,.." then next repeat
+      if pShowInvisible is not true then
+         if char 1 of shortFileName = "." then next repeat
+      end if
+      
+      put filePermissions into lsArray [typeExplanation][shortFileName]["filePermissions"]
+      put ownerName into lsArray [typeExplanation][shortFileName]["ownerName"]
+      put groupName into lsArray [typeExplanation][shortFileName]["groupName"]
+      put fSize into lsArray [typeExplanation][shortFileName]["fileSize"]
+      put lastModified into lsArray [typeExplanation][shortFileName]["lastModified"]
+      put lsType into lsArray [typeExplanation][shortFileName]["lsType"]
+      put numberOfLinks into lsArray [typeExplanation][shortFileName]["numberOfLinks"]
+   end repeat
+   return lsArray
+end shell_ConstructLSArray
+
+
+--> Shell | Store and Fetch
+-
+command shell_StoreFile sshUser, remoteDomain, fullPath, localFile, pSshKeyPath
+   -- scp –P 40050 Desktop/url.txt yatri@192.168.1.50:~/Desktop/url.txt
+   -- scp hierarchical.png root@178.62.43.72:~/.wiki/actual.world/pages/hierarchical.png
+   
+   shell_BashParamEscape localFile
+   shell_BashParamEscape fullPath
+   
+   put sshUser & "@" & remoteDomain & ":" & fullPath into scpDestination
+   put "scp"  into someShell
+   if pSshKeyPath is not empty then
+      shell_BashParamEscape pSshKeyPath
+      put space & "-i " && pSshKeyPath after someShell
+   end if
+   put space & localFile && scpDestination after someShell
+   
+   put shell (someShell) into shellResult
    return shellResult
-end ssh_DoRemoteShell
-
-
---> Shell | Delete
--
-command shell_DeleteFile sshUser, remoteDomain, somePath
-   put "rm" && somePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end shell_DeleteFile
-
-command shell_DeleteFolder sshUser, remoteDomain, relativePath
-   -- relative to the user specified in sshUser's $HOME directory
-   -- https://www.computerhope.com/issues/ch000798.htm
-   -- rm -rf mydir
-   -- put "rm -R" && relativePath into remoteCommand
-   
-   put "rm -rf" && relativePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end shell_DeleteFolder
+end shell_StoreFile
 
 
 --> Shell | Network
@@ -187,59 +247,6 @@ function shell_Tidy someHTML, pOptions
    delete line 1 to emptyLineNum of tidyResult
    return tidyResult
 end shell_Tidy
-
-function shell_FetchFile sshUser, remoteDomain, somePath
-   put "cat" && somePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end shell_FetchFile
-
-command shell_StoreFile sshUser, remoteDomain, fullPath, localFile, pSshKeyPath
-   -- scp –P 40050 Desktop/url.txt yatri@192.168.1.50:~/Desktop/url.txt
-   -- scp hierarchical.png root@178.62.43.72:~/.wiki/actual.world/pages/hierarchical.png
-   
-   shell_BashParamEscape localFile
-   shell_BashParamEscape fullPath
-   
-   put sshUser & "@" & remoteDomain & ":" & fullPath into scpDestination
-   put "scp"  into someShell
-   if pSshKeyPath is not empty then
-      shell_BashParamEscape pSshKeyPath
-      put space & "-i " && pSshKeyPath after someShell
-   end if
-   put space & localFile && scpDestination after someShell
-   
-   -- ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put shell (someShell) into shellResult
-   return shellResult
-end shell_StoreFile
-
-function shell_ConstructLSArray lsResult, pShowInvisible
-   if word 1 of lsResult = "total" then
-      put word 2 of lsResult into totalEntries
-      delete line 1 of lsResult
-   end if
-   
-   repeat for each line someLine in lsResult
-      shell_DeconstructLS someLine, shortFileName, filePermissions, ownerName, groupName, fSize, lastModified, lsType, numberOfLinks
-      put the result into typeExplanation
-      
-      if shortFileName is among the items of ".,.." then next repeat
-      if pShowInvisible is not true then
-         if char 1 of shortFileName = "." then next repeat
-      end if
-      
-      put filePermissions into lsArray [typeExplanation][shortFileName]["filePermissions"]
-      put ownerName into lsArray [typeExplanation][shortFileName]["ownerName"]
-      put groupName into lsArray [typeExplanation][shortFileName]["groupName"]
-      put fSize into lsArray [typeExplanation][shortFileName]["fileSize"]
-      put lastModified into lsArray [typeExplanation][shortFileName]["lastModified"]
-      put lsType into lsArray [typeExplanation][shortFileName]["lsType"]
-      put numberOfLinks into lsArray [typeExplanation][shortFileName]["numberOfLinks"]
-   end repeat
-   return lsArray
-end shell_ConstructLSArray
 
 command shell_ExecuteInBackground someShell
    put the tempname & ".sh" into shellFile

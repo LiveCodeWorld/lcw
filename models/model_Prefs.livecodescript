@@ -12,21 +12,8 @@ version: 0.6
 /*
 These are system wide user preferences.
 
-There is a lot of use of:
-
--- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-
 These utility handlers are for manipulating global variables when you only have there name,
 and this is passed to you in a script. Otherwise you can simply declare the global in your script and do not need to use "do".
-*/
-
-
---> Working on
--
-/*
-An environment no longer has a single project.  Multiple projects can be loaded.
-But we may be interested in focussing on one. This utility fuction allows for that.
-*/
 
 function env_GetProjectFocus
    breakpoint -- no such thing any more
@@ -42,6 +29,11 @@ command env_SetProjectFocus currentProjectFocus
    return gLCW ["environment"]
 end env_SetProjectFocus
 
+*/
+
+
+--> Working on
+-
 
 --> Pref | Model | Files and Folders
 -
@@ -49,11 +41,6 @@ function pref_File
    put specialfolderpath ("preferences") & "/lcw_Preferences.array" into prefFile
    return prefFile
 end pref_File
-
-function library_PrefFolder
-   put specialfolderpath ("preferences") & "/" into prefFolder
-   return prefFolder
-end library_PrefFolder
 
 
 --> Pref | Model
@@ -152,7 +139,6 @@ end pref_RemoveValue
 
 function pref_ListStoredValues pPrefKey
    -- was "pref_GetValues"
-   -- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
    if pPrefKey is empty then put "Default" into pPrefKey
    
    put pref_FetchData() into libraryPreferenceArray
@@ -165,7 +151,6 @@ end pref_ListStoredValues
 function pref_FetchGlobal pPrefKey, pProjectName
    if pPrefKey is empty then put "gPrefs_Array" into pPrefKey
    
-   -- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
    if pProjectName is empty then put "Default" into pProjectName
    
    put pref_FetchData() into dataArray
@@ -174,8 +159,6 @@ end pref_FetchGlobal
 
 command pref_StoreGlobal prefValue, pPrefKey, pProjectName
    if pPrefKey is empty then put "gPrefs_Array" into pPrefKey
-   
-   -- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
    if pProjectName is empty then put "Default" into pProjectName
    
    put pref_FetchData() into dataArray
@@ -215,7 +198,6 @@ function pref_ListSetNames
 end pref_ListSetNames
 
 command pref_DeleteSet pProjectName
-   -- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
    if pProjectName is empty then put "Default" into pProjectName
    
    put pref_FetchData() into dataArray
@@ -228,7 +210,6 @@ end pref_DeleteSet
 -
 function pref_FetchArray pProjectName
    -- contains all the preference globals int the set with the keys as global names
-   -- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
    if pProjectName is empty then put "Default" into pProjectName
    put pref_FetchData() into dataArray
    return dataArray [pProjectName]
@@ -236,7 +217,6 @@ end pref_FetchArray
 
 command pref_StoreArray prefArray, pProjectName
    -- contains all the preference globals int the set with the keys as global names
-   -- if pProjectName is empty then put env_GetProjectFocus() into pProjectName
    if pProjectName is empty then put "Default" into pProjectName
    
    put pref_FetchData() into dataArray

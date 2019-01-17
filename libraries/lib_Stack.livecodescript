@@ -13,6 +13,68 @@ Todo:  separate out essentials and utilities => lib_StackExtras
 */
 
 
+--> Stack | Type
+-
+getprop stack_Type
+   -- see also "script_Type"
+   put the filename of the defaultstack into stackPath
+   put stack_TypeFromPath (stackPath) into stackType
+   return stackType
+end stack_Type
+
+function stack_TypeFromPath stackPath
+   set the itemdelimiter to slash
+   --
+   if stackPath is empty then return "stack"
+   put the project_Folder of stack stackPath into projectFolder
+   if projectFolder is empty then return "stack"
+   if not (stackPath begins with projectFolder) then return "stack"
+   
+   put the number of items of projectFolder into eNum
+   put stackPath into stackPathBit
+   delete item 1 to eNum of stackPathBit
+   put the number of items of stackPathBit into pathNum
+   if pathNum > 2 then return "stack"
+   if pathNum = 1 then
+      put item - 1 of projectFolder into projectName
+      put projectFolder & projectName & ".livecode" into testPath
+      if stackPath = testPath then
+         return "project"
+      else
+         return "stack"
+      end if
+   end if
+   
+   -- can only be 2 items
+   put item 1 of stackPathBit into stackTypes
+   -- put item 2 of stackPathBit into shortFile
+   put stack_NormalizeType (stackTypes) into stackType
+   return stackType
+end stack_TypeFromPath
+
+function stack_NormalizeType stackType
+   -- put "assets/behaviors/controllers/libraries/models/modules/views"
+   switch
+      case stackType = "libraries"
+         return "library"
+      case stackType is "assets"
+         return "asset"
+      case stackType = "behaviors"
+         return "behavior"
+      case stackType is "controllers"
+         return "menu"
+      case stackType is "models"
+         return "model"
+      case stackType = "modules"
+         return "module"
+      case stackType = "views"
+         return "view"
+      default
+         return "stack"
+   end switch
+end stack_NormalizeType
+
+
 --> Props
 -
 getprop card_Object
@@ -37,7 +99,7 @@ getprop card_Object
          return word wNum to -1 of targetObject
    end switch
 end card_Object
-
+   
 getprop stack_Name
    return the short name of the defaultstack
 end stack_Name
@@ -669,12 +731,6 @@ command stack_ClearFrontAndBackLibraries stackObject
    -- then remove from library database
 end stack_ClearFrontAndBackLibraries
 
-command stack_DeleteScriptFolder stackObject
-   -- used when deleting a stack
-   put the data_Folder of stackObject into scriptFolder
-   folder_Delete scriptFolder, true
-end stack_DeleteScriptFolder
-
 
 --> Stack | Visual Effects
 -
@@ -815,7 +871,7 @@ command stack_Rename oldName, pNewName, pDontRenameFile
    
    if pDontRenameFile is true then return oldFileName
    
-   put the data_Folder of stack oldName into sourceFolder
+   put the dataObject_Folder of stack oldName into sourceFolder
    
    ## Rename the stack
    git_RenameFile oldFileName, newFileName
@@ -824,7 +880,7 @@ command stack_Rename oldName, pNewName, pDontRenameFile
    set the filename of stack pNewName to newFileName
    save stack pNewName
    
-   put the data_Folder of stack pNewName into destFolder
+   put the dataObject_Folder of stack pNewName into destFolder
    
    ## Now if there is a object script folder for this stack rename
    git_RenameFolder sourceFolder, destFolder
@@ -842,19 +898,14 @@ command stack_Delete stackName
    put the name of stack stackName into oldStack
    library_RemoveStackFromKnown oldStack
    
-   -- opn_DeleteFromObjectIndex someName, objectType, someObject
-   -- opn_DeleteLibraryType libraryType
    return deleteResult
 end stack_Delete
 
-command stack_MoveFile fromFile, toFile
-   breakpoint
-   if exists(the svn_Library of me) then
-      svn_Move fromFile, toFile
-   else
-      rename file fromFile to toFile
-   end if
-end stack_MoveFile
+command stack_DeleteScriptFolder stackObject
+   -- used when deleting a stack
+   put the dataObject_Folder of stackObject into scriptFolder
+   folder_Delete scriptFolder, true
+end stack_DeleteScriptFolder
 
 command stack_Save someObject, pClean, pCleanGeometry, pFilePath, pMacStackFileType
    put the stack_Object of someObject into stackObject
