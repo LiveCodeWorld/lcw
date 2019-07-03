@@ -455,6 +455,52 @@ end display_InvisibleIndex
 
 --> Deps
 -
+function colour_GetDarkOrLight someColour
+   put colour_RgbToHSV (someColour) into someHSV
+   put item 3 of someHSV into howDark
+   if howDark > 66 then
+      return "10,10,10"
+   else
+      return "204,204,204"
+   end if
+end colour_GetDarkOrLight
+
+function colour_RgbToHSV rgbColour
+   -- was "rgb_2HSV"
+   if rgbColour is not a color then return empty
+   
+   local maxv, minv, diff, s, rc, gc, bc, h
+   
+   put item 1 of rgbColour into r
+   put item 2 of rgbColour into g
+   put item 3 of rgbColour into b
+   
+   set the numberformat to "0.###############"
+   put r / 255 into r
+   put g / 255 into g
+   put b / 255 into b
+   put max(r,g,b) into maxv
+   put min(r,g,b) into minv
+   put maxv - minv into diff
+   if maxv <> 0 and diff <> 0 then
+      put diff / maxv into s
+      put (maxv - r) / diff into rc
+      put (maxv - g) / diff into gc
+      put (maxv - b) / diff into bc
+      if r = maxv then put bc - gc into h
+      else if g = maxv then put 2 + rc - bc into h
+      else if b = maxv then put 4 + gc - rc into h
+      multiply h by 60
+      if h < 0 then
+         add 360 to h
+      end if
+   else
+      put 0 into s
+      put 0 into h
+   end if
+   return round(h),round(s * 100),round(maxv * 100)
+end colour_RgbToHSV
+
 command stack_CloneInvisible stackNameToClone, pCloneName, pDestroyBoolean
    if exists (stack stackNameToClone) is false then return empty
    if pCloneName is empty then put stackNameToClone into pCloneName
