@@ -33,6 +33,74 @@ getprop menu_Target [mTitlePath]
 end menu_Target
 
 
+--> Menu | Props | Old
+-
+getprop edited_StackNames
+   return _EditedStackMenu()
+end edited_StackNames
+
+getprop recent_Objects
+   -- old menu
+   return _RecentObjects()
+end recent_Objects
+
+getprop m_Title
+   -- old menu
+   return ide_ShortTitle ("Recent")
+end m_Title
+
+getprop m_Titles
+   return ide_ListShortMenuTitles ("Recent")
+end m_Titles
+
+
+--> Menu | Props | New
+-
+getprop setMenu_Param
+   return ide_ShortTitle ("Recent")
+end setMenu_Param
+
+getprop setMenu_Params
+   return ide_ListShortMenuTitles ("Recent")
+end setMenu_Params
+
+getprop saveEditedStacks_Params
+   return _EditedStackMenu()
+end saveEditedStacks_Params
+
+getprop recentScripts_Params
+   return _RecentObjects()
+end recentScripts_Params
+   
+getprop disabled_SaveEditedStacks
+   put LocalArray ["editedStacks"] into editedStacks
+   if editedStacks is empty then
+      return "delete"
+   else
+      return false
+   end if
+end disabled_SaveEditedStacks
+
+
+--> Menu | Props | Common
+-
+function _RecentObjects
+   put scriptEditor_ListEditingObjects() into historyObjects
+   objects_MakeFriendly historyObjects, orderedFriendlyObjects, friendlyArray
+   put friendlyArray into LocalArray ["friendlyArray"]
+   return orderedFriendlyObjects
+end _RecentObjects
+
+function _EditedStackMenu
+   put LocalArray ["editedStacks"] into editedStacks
+   if editedStacks is empty then
+      return empty
+   else
+      return editedStacks & ",-,Save All"
+   end if
+end _EditedStackMenu
+
+
 --> Global | ScriptEditor | Recent | Default | Menu
 -
 on menu_RecentScripts scriptObject, recentObject
@@ -58,62 +126,28 @@ end insert_MyCustomMenu
 on _
 end _
 
-on menu_CheckAvailableMenus
-   put url "https://gist.github.com/opn/1aee32a3796af1d1dc85ec5ad1566f5f/raw/d8e15f2e2a0797c2fc8e9e6535535b0b4f44ec35/index,Recent%2520Changes%2520Menus" into recentMenuList
-   -- display_Lines recentMenuList
-   
-   put recentMenuList into recentMenuArray
-   split recentMenuArray with CR and comma
-   
-   put recentMenuList into columnArray
-   set the columndel to comma
-   split columnArray by column
-   put columnArray [1] into mNames
-   put columnArray [1] into mURLs
-   
-   display_Array recentMenuArray
-end menu_CheckAvailableMenus
-
 on menu_SetMenu mTarget, mTitle
    ide_SetMenuTitle "Recent", mTitle
 end menu_SetMenu
 
 
---> Global | ScriptEditor | Recent | Default | Menu | Props
--
-getprop m_Title
-   return ide_ShortTitle ("Recent")
-end m_Title
-
-getprop m_Titles
-   put ide_ListShortMenuTitles ("Recent") into shortNames
-   return shortNames
-end m_Titles
-
-getprop edited_StackNames
-   put LocalArray ["editedStacks"] into editedStacks
-   if editedStacks is empty then
-      return empty
-   else
-      return editedStacks & ",-,Save All"
-   end if
-end edited_StackNames
-
-
---> Global | ScriptEditor | Recent | Default | Menu | Disabled
--
-getprop disabled_SaveEditedStacks
-   put LocalArray ["editedStacks"] into editedStacks
-   if editedStacks is empty then
-      return "delete"
-   else
-      return false
-   end if
-end disabled_SaveEditedStacks
-
-
 --> Deps
 -
+function stack_ListEditedNames
+   put the mainstacks into stackNames
+   repeat for each line stackName in stackNames   
+      put revIDEStackIsEdited (stackName) into someBoolean
+      switch
+         case someBoolean is true
+            put stackName & CR after editedStackNames
+            break
+         default
+      end switch
+   end repeat
+   delete char -1 of editedStackNames
+   return editedStackNames
+end stack_ListEditedNames
+
 function stack_ListEditedNames pType
    global gREVStackStatus
    
@@ -133,13 +167,6 @@ function stack_ListEditedNames pType
    end repeat
    return keys (stackArray)
 end stack_ListEditedNames
-
-getprop recent_Objects
-   put scriptEditor_ListEditingObjects() into historyObjects
-   objects_MakeFriendly historyObjects, orderedFriendlyObjects, friendlyArray
-   put friendlyArray into LocalArray ["friendlyArray"]
-   return orderedFriendlyObjects
-end recent_Objects
 
 function scriptEditor_ListEditingObjects pEditorNum
    put rev_HistoryButton (pEditorNum) into historyButton
@@ -185,3 +212,22 @@ function object_MakeFriendly scriptObject
    end if
    return tFriendlyName
 end object_MakeFriendly
+
+
+--> Dev | Menu
+-
+on menu_CheckAvailableMenus
+   put url "https://gist.github.com/opn/1aee32a3796af1d1dc85ec5ad1566f5f/raw/d8e15f2e2a0797c2fc8e9e6535535b0b4f44ec35/index,Recent%2520Changes%2520Menus" into recentMenuList
+   -- display_Lines recentMenuList
+   
+   put recentMenuList into recentMenuArray
+   split recentMenuArray with CR and comma
+   
+   put recentMenuList into columnArray
+   set the columndel to comma
+   split columnArray by column
+   put columnArray [1] into mNames
+   put columnArray [1] into mURLs
+   
+   display_Array recentMenuArray
+end menu_CheckAvailableMenus

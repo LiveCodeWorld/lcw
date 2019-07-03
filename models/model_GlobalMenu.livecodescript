@@ -13,13 +13,53 @@ version: 0.7
 "menu_GetTable" is used by "menu_IncludeMenuText" and "menu_IncludeMenuText", 
 and therefore "menu_PopUp" etc depends on them.
 
- So moved this suite here for now from "model_ScriptMenu" to reduce dependencies
+So moved this suite here for now from "model_ScriptMenu" to reduce dependencies
 */
+
+getprop menu_Table [pMenuTitle]
+   put the long id of the target into tObject
+   if pMenuTitle is empty then put the menu_Title of tObject into pMenuTitle
+   if pMenuTitle is empty then return empty
+   
+   if word 1 of pMenuTitle = "Global" and word 2 of pMenuTitle = "|" then
+      put menu_GetGlobalTable (pMenuTitle) into mTable
+      return mTable
+   else
+      put the menu_Controller [pMenuTitle] of tObject into mController
+      if exists (mController) is false then put tObject into mController
+      put the menu_DataArray of mController into menuTableArray
+      put menuTableArray [pMenuTitle] into mTable
+      
+      -- hack
+      -- fix local contrllers in cases where the object has been copied to another stack
+      set the itemdelimiter to tab
+      repeat for each line mTableLine in mTable
+         put mController into item 3 of mTableLine
+         put mTableLine & CR after fixedLocalMenuTable
+      end repeat
+      delete char -1 of fixedLocalMenuTable
+      return fixedLocalMenuTable
+   end if
+end menu_Table
+
+-- command  menu_FixGlobalTitleArray @gMenuTable, gMenuTitle
+put the long id of the target into tObject
+--
+if gMenuTable is empty then
+   put the menu_Controller [gMenuTitle] of tObject into mController
+   if exists (mController) is false then put tObject into mController
+   put the menu_DataArray of mController into gMenuTitleArray
+   put gMenuTitleArray [gMenuTitle] into gMenuTable
+   
+   -- now set it
+   menu_SetGlobalTable gMenuTitle, gMenuTable
+end if
+end menu_FixGlobalTitleArray
 
 function menu_GetTable mTitle, mController
    if word 1 of mTitle = "Global" and word 2 of mTitle = "|" then
       put menu_GetGlobalTable (mTitle) into mTable
-      menu_FixGlobalTitleArray mTable, mTitle
+      -- menu_FixGlobalTitleArray mTable, mTitle
    else
       put the menu_DataArray of mController into menuTableArray
       put menuTableArray [mTitle] into mTable
@@ -211,24 +251,24 @@ end menu_SetGlobalController
 
 --> Menu | Global | TitleTableArray | Model
 -
-command  menu_FixGlobalTitleArray @gMenuTable, gMenuTitle
-   if gMenuTable is empty then
-      put the menu_Controller [gMenuTitle] of the target into mController
-      put the menu_DataArray of mController into gMenuTitleArray
-      put gMenuTitleArray [gMenuTitle] into gMenuTable
-      
-      -- now set it
-      menu_SetGlobalTable gMenuTitle, gMenuTable
-   end if
-end menu_FixGlobalTitleArray
-
 function menu_GetGlobalTable gMenuTitle
    put menu_GetGlobalTitleArray (gMenuTitle) into gMenuTitleArray
    put gMenuTitleArray ["gMenuTable"] into gMenuTable
    
-   menu_FixGlobalTitleArray gMenuTable, gMenuTitle
+   -- menu_FixGlobalTitleArray gMenuTable, gMenuTitle
    return gMenuTable
 end menu_GetGlobalTable
+
+function menu_GetTable mTitle, mController
+   if word 1 of mTitle = "Global" and word 2 of mTitle = "|" then
+      put menu_GetGlobalTable (mTitle) into mTable
+      -- menu_FixGlobalTitleArray mTable, mTitle
+   else
+      put the menu_DataArray of mController into menuTableArray
+      put menuTableArray [mTitle] into mTable
+   end if
+   return mTable
+end menu_GetTable
 
 command menu_SetGlobalTable gMenuTitle, gMenuTable
    put menu_GetGlobalTitleArray (gMenuTitle) into gMenuTitleArray

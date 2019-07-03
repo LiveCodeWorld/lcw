@@ -10,6 +10,26 @@ version: 0.9
 
 --> Working on
 -
+function text_Type someText
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 1 of someText into firstItem
+   put word 1 to -1 of item -1 of someText into lastItem
+   switch
+      case word 3 of someText = "of" And word 1 of someText is among the items of "O|M|F|G|S|PF|PM"
+         return "hKey"
+         break
+      case firstItem = "Global" AND lastItem = "Menu"
+         return "menu"
+      case someText begins with "http"
+         return "url"
+      default
+         return "text"
+   end switch
+end text_Type
+
+
+--> Line
+-
 function line_BeginsWith startLineChars, someLines, pLinesToSkip
    -- probably a faster way of doing this
    -- find the first line starting with...
@@ -29,7 +49,7 @@ function line_BeginsWith startLineChars, someLines, pLinesToSkip
       return lineNum
    end if
 end line_BeginsWith
-   
+
 function line_FindInIndex someLine, container, partLine, lineAfter
    -- was "whichLine"
    
@@ -129,48 +149,48 @@ command line_AddIndex someLines, @someIndex, beforeLineNum
 end line_AddIndex
 
 function line_LineNumberStartingWithWord someWord, someText
-    -- gets the first line number
-
-    put word 1 to -1 of someWord into someWord
-    put someText into someLine
-    filter someLine with (someWord && "*")
-    if someLine is empty then return 0
-
-    put line 1 of someLine into someLine
-    set the wholematches to true
-    return lineoffset(someLine, someText)
+   -- gets the first line number
+   
+   put word 1 to -1 of someWord into someWord
+   put someText into someLine
+   filter someLine with (someWord && "*")
+   if someLine is empty then return 0
+   
+   put line 1 of someLine into someLine
+   set the wholematches to true
+   return lineoffset(someLine, someText)
 end line_LineNumberStartingWithWord
 
 command line_StripDoubleEmpty @someText
-    repeat while someText contains (CR & CR & CR)
-        replace (CR & CR & CR) with (CR & CR ) in someText
-    end repeat
+   repeat while someText contains (CR & CR & CR)
+      replace (CR & CR & CR) with (CR & CR ) in someText
+   end repeat
 end line_StripDoubleEmpty
 
 function line_ConstructDupicateArray someIndex
-    local badLineArray
-
-    set the wholematches to true
-    repeat while someIndex is not empty
-        put line 1 of someIndex into testLine
-        delete line 1 of someIndex
-
-        put badLineArray [testLine] into howManyBadLines
-        if howManyBadLines is empty then
-            -- not already a duplicate
-            -- see if it is the rest of the container
-            put lineoffset(testLine, someIndex) into lineNum
-            if lineNum > 0 then
-                -- first duplicate
-                delete line lineNum of someIndex
-                put 1 into badLineArray [testLine]
-            end if
-        else
-            put howManyBadLines + 1 into badLineArray [testLine]
-            next repeat
-        end if
-    end repeat
-    return badLineArray
+   local badLineArray
+   
+   set the wholematches to true
+   repeat while someIndex is not empty
+      put line 1 of someIndex into testLine
+      delete line 1 of someIndex
+      
+      put badLineArray [testLine] into howManyBadLines
+      if howManyBadLines is empty then
+         -- not already a duplicate
+         -- see if it is the rest of the container
+         put lineoffset(testLine, someIndex) into lineNum
+         if lineNum > 0 then
+            -- first duplicate
+            delete line lineNum of someIndex
+            put 1 into badLineArray [testLine]
+         end if
+      else
+         put howManyBadLines + 1 into badLineArray [testLine]
+         next repeat
+      end if
+   end repeat
+   return badLineArray
 end line_ConstructDupicateArray
 
 function line_UniqueIndex someIndex, pCaseSensitive
@@ -182,25 +202,27 @@ command line_SetUnique @someIndex, pCaseSensitive
    if pCaseSensitive is false then
       split someIndex by CR and tab
       put the keys of someIndex into uniqueIndex
-      return word 1 to -1 of uniqueIndex
+      put word 1 to -1 of uniqueIndex into someIndex
    else
       repeat for each line someLine in someIndex
+         put word 1 to -1 of someLine into someLine
+         if someLine is empty then next repeat
          put empty into indexArray [someLine]
       end repeat
-      return keys(indexArray)
+      put keys (indexArray) into someIndex
    end if
 end line_SetUnique
 
 command line_Replace replaceLine, newLine, @someIndex
-    -- only replaces if it is there
-    set the wholematches to true
-    put lineoffset(replaceLine, someIndex) into lineNum
-    if lineNum is 0 then
-        -- uncomment to leave unchanged or
-        line_Add newLine, someIndex
-    else
-        put newLine into line lineNum of someIndex
-    end if
+   -- only replaces if it is there
+   set the wholematches to true
+   put lineoffset(replaceLine, someIndex) into lineNum
+   if lineNum is 0 then
+      -- uncomment to leave unchanged or
+      line_Add newLine, someIndex
+   else
+      put newLine into line lineNum of someIndex
+   end if
 end line_Replace
 
 function line_InsertIntoIndex newLine, someIndex, beforeLine
@@ -209,27 +231,27 @@ function line_InsertIntoIndex newLine, someIndex, beforeLine
 end line_InsertIntoIndex
 
 command line_InsertBefore someLine, @someIndex
-    -- does not work for index with blank line at end
-    -- put the number of lines of someIndex into maxLine
-    if someIndex is empty then
-        put someLine into someIndex
-    else if someLine is not empty then
-        put someLine & return before someIndex
-    end if
+   -- does not work for index with blank line at end
+   -- put the number of lines of someIndex into maxLine
+   if someIndex is empty then
+      put someLine into someIndex
+   else if someLine is not empty then
+      put someLine & return before someIndex
+   end if
 end line_InsertBefore
 
 command line_AddToIndex newLines, @someIndex
-    repeat for each line someLine in newLines
-        line_Add someLine, someIndex
-    end repeat
-    if line 1 of someIndex is empty then delete line 1 of someIndex
+   repeat for each line someLine in newLines
+      line_Add someLine, someIndex
+   end repeat
+   if line 1 of someIndex is empty then delete line 1 of someIndex
 end line_AddToIndex
 
 function line_AddToIndex newLines, someIndex
-    repeat for each line someLine in newLines
-        line_Add someLine, someIndex
-    end repeat
-    return someIndex
+   repeat for each line someLine in newLines
+      line_Add someLine, someIndex
+   end repeat
+   return someIndex
 end line_AddToIndex
 
 function line_ConstructCompareArray leftLines, rightLines
@@ -241,18 +263,18 @@ function line_ConstructCompareArray leftLines, rightLines
       put lineoffset (someLine, rightLines) into rightLineLineNum
       if rightLineLineNum is not 0 then
          put someLine & CR after commonIndex
-
+         
          delete line leftLineLineNum of onlyLeft
          delete line rightLineLineNum of onlyRight
       end if
-
+      
    end repeat
    delete last char of commonIndex
-
+   
    sort commonIndex
    sort onlyLeft
    sort onlyRight
-
+   
    put commonIndex into compareArray ["common"]
    put onlyLeft into compareArray ["onlyLeft"]
    put onlyRight into compareArray ["onlyRight"]
@@ -260,27 +282,27 @@ function line_ConstructCompareArray leftLines, rightLines
 end line_ConstructCompareArray
 
 function line_GetCommon index1, index2
-    set the wholematches to true
-    put empty into commonIndex
-    repeat for each line someLine in index1
-        if someLine is among the lines of index2 then
-            put someLine & return after commonIndex
-        end if
-    end repeat
-    delete last char of commonIndex
-    return commonIndex
+   set the wholematches to true
+   put empty into commonIndex
+   repeat for each line someLine in index1
+      if someLine is among the lines of index2 then
+         put someLine & return after commonIndex
+      end if
+   end repeat
+   delete last char of commonIndex
+   return commonIndex
 end line_GetCommon
 
 function line_GetMissing testIndex, referenceIndex
-    set the wholematches to true
-    put empty into missingIndex
-    repeat for each line someLine in testIndex
-        if someLine is not among the lines of referenceIndex then
-            put someLine & return after missingIndex
-        end if
-    end repeat
-    delete last char of missingIndex
-    return missingIndex
+   set the wholematches to true
+   put empty into missingIndex
+   repeat for each line someLine in testIndex
+      if someLine is not among the lines of referenceIndex then
+         put someLine & return after missingIndex
+      end if
+   end repeat
+   delete last char of missingIndex
+   return missingIndex
 end line_GetMissing
 
 command line_Add someLines, @someIndex
@@ -301,15 +323,15 @@ command line_Add someLines, @someIndex
 end line_Add
 
 command line_Insert someLine, @someIndex, beforeLineNum
-    if someIndex is empty then
-        put someLine into someIndex
-    else if someLine is not empty then
-        if beforeLineNum is a number then
-            put someLine & CR before line beforeLineNum of someIndex
-        else
-            put CR & someLine after someIndex
-        end if
-    end if
+   if someIndex is empty then
+      put someLine into someIndex
+   else if someLine is not empty then
+      if beforeLineNum is a number then
+         put someLine & CR before line beforeLineNum of someIndex
+      else
+         put CR & someLine after someIndex
+      end if
+   end if
 end line_Insert
 
 command line_DeleteEmpty @someLines
@@ -354,22 +376,22 @@ command list_Delete someItems, @someList, pPartLine, pSkipLines
 end list_Delete
 
 command list_Tidy @someList
-    repeat for each item someItem in someList
-        get word 1 to -1 of someItem
-        if it is not empty then
-            put it & "," after tidyList
-        end if
-    end repeat
-    delete char -1 of tidyList
-    put tidyList into someList
+   repeat for each item someItem in someList
+      get word 1 to -1 of someItem
+      if it is not empty then
+         put it & "," after tidyList
+      end if
+   end repeat
+   delete char -1 of tidyList
+   put tidyList into someList
 end list_Tidy
 
 command list_MakePretty @someList
-    repeat for each item someItem in someList
-        put word 1 to -1 of someItem & ", " after prettyList
-    end repeat
-    delete char -2 to -1 of prettyList
-    put prettyList into someList
+   repeat for each item someItem in someList
+      put word 1 to -1 of someItem & ", " after prettyList
+   end repeat
+   delete char -2 to -1 of prettyList
+   put prettyList into someList
 end list_MakePretty
 
 function list_ToIndex someList
@@ -418,7 +440,7 @@ end text_OffsetBefore
 
 command text_SetOffsets startText, endText, someText, @startChar, @endChar, startAfterCharNum
    -- version whereIsText 8.9,30/4/02
-
+   
    delete char 1 to startAfterCharNum of someText
    put offset (startText, someText) into startChar
    if startChar is 0 then
@@ -438,21 +460,21 @@ command text_SetOffsets startText, endText, someText, @startChar, @endChar, star
       end if
       add the length of endText - 1 to endChar
    end if
-
+   
    add startAfterCharNum to startChar
    add startAfterCharNum to endChar
    return char startChar to endChar of someText
 end text_SetOffsets
 
 function text_StripJunk someString
-    -- was "makeNeat"
-    put "\" & tab & quote & "\[\]|*.?()" into specialChars
-    -- put empty into specialChars
-    put "[" && specialChars & ";/{}=#&_!,-]" into regEx
-    -- put someString
-    -- put regEx
-    put replacetext(someString, regEx, empty) into cleanText
-    return cleanText
+   -- was "makeNeat"
+   put "\" & tab & quote & "\[\]|*.?()" into specialChars
+   -- put empty into specialChars
+   put "[" && specialChars & ";/{}=#&_!,-]" into regEx
+   -- put someString
+   -- put regEx
+   put replacetext(someString, regEx, empty) into cleanText
+   return cleanText
 end text_StripJunk
 
 command text_ReQuote @someText
@@ -497,40 +519,51 @@ function text_ListFromIndex someIndex
    return list_FromIndex (someIndex)
 end text_ListFromIndex
 
-command text_StripLeadingSpaces @someText, multiLine
-    if multiLine is false then
-        put "^ *" into someReg -- may be faster?
-    else
-        put "(?m)^( +)" into someReg
-    end if
-    put replacetext(someText, someReg, empty) into someText
-end text_StripLeadingSpaces
+function text_WhiteChunk theText
+   -- thanx to Mark Schonewille <m.schonewille@economy-x-talk.com>
+   return "char 1 to" && (offset(word 1 of theText, theText) - 1)
+end text_WhiteChunk
 
-command text_StripTrailingSpaces @someText, multiLine
-    if multiLine is false then
-        put " *$" into someReg -- may be faster?
-    else
-        put "(?m)( +)$" into someReg
-    end if
+function text_RemoveEndWhiteSpace someLines
+   text_StripTrailingSpaces someLines
+   return someLines
+end text_RemoveEndWhiteSpace
+
+command text_StripTrailingSpaces @someText, pMultiLine
+   if pMultiLine is false then
+      put " *$" into someReg -- may be faster?
+   else
+      put "(?m)( +)$" into someReg
+   end if
+   put replacetext (someText, someReg, empty) into someText
 end text_StripTrailingSpaces
 
+command text_StripLeadingSpaces @someText, pMultiLine
+   if pMultiLine is false then
+      put "^ *" into someReg -- may be faster?
+   else
+      put "(?m)^( +)" into someReg
+   end if
+   put replacetext (someText, someReg, empty) into someText
+end text_StripLeadingSpaces
+
 command text_ReplaceMultipleSpaces @someText
-    put replacetext(someText, "(?m) +", space) into someText
+   put replacetext (someText, "(?m) +", space) into someText
 end text_ReplaceMultipleSpaces
 
 command text_ConstructLineChunk charNum, someText, @charOfLine, @wordOfLine, @itemOfLine, @lineNum
-    get char 1 to charNum of someText
-    if someText is empty then
-        put 1 into lineNum
-        put 1 into itemOfLine
-        put 1 into wordOfLine
-        put 1 into charOfLine
-    else
-        put the number of lines of it into lineNum
-        put the number of items of line lineNum of it into itemOfLine
-        put the number of words of item itemOfLine of line lineNum of it into wordOfLine
-        put the number of chars of line lineNum of it into charOfLine
-    end if
+   get char 1 to charNum of someText
+   if someText is empty then
+      put 1 into lineNum
+      put 1 into itemOfLine
+      put 1 into wordOfLine
+      put 1 into charOfLine
+   else
+      put the number of lines of it into lineNum
+      put the number of items of line lineNum of it into itemOfLine
+      put the number of words of item itemOfLine of line lineNum of it into wordOfLine
+      put the number of chars of line lineNum of it into charOfLine
+   end if
 end text_ConstructLineChunk
 
 function text_TokenOffset someString, someContainer
@@ -544,19 +577,14 @@ function text_TokenOffset someString, someContainer
 end text_TokenOffset
 
 function text_FirstLetter theText
-    return offset(word 1 of theText, theText)
+   return offset(word 1 of theText, theText)
 end text_FirstLetter
 
-function text_WhiteChunk theText
-    -- thanx to Mark Schonewille <m.schonewille@economy-x-talk.com>
-    return "char 1 to" && (offset(word 1 of theText, theText) - 1)
-end text_WhiteChunk
-
 function text_ContainsItem someText, itemList
-    repeat for each item testItem in itemList
-        if someText contains testItem then return true
-    end repeat
-    return false
+   repeat for each item testItem in itemList
+      if someText contains testItem then return true
+   end repeat
+   return false
 end text_ContainsItem
 
 function text_GetPlural someText
@@ -569,22 +597,22 @@ function text_GetPlural someText
 end text_GetPlural
 
 function text_GetSingular someText
-    switch char -1 of someText
-        case "ies"
-            put "y" into char -1 to -3 of someText
-            break
-        case "s"
-            delete char -1 of someText
-    end switch
-    return someText
+   switch char -1 of someText
+      case "ies"
+         put "y" into char -1 to -3 of someText
+         break
+      case "s"
+         delete char -1 of someText
+   end switch
+   return someText
 end text_GetSingular
 
 command text_AddParagraph newText, @someText, crNum
-    set the wholematches to true
-    if newText is among the lines of someText then return false
-    -- if newText is in someText then return false
-    text_InsertParagraph newText, someText, crNum
-    return true
+   set the wholematches to true
+   if newText is among the lines of someText then return false
+   -- if newText is in someText then return false
+   text_InsertParagraph newText, someText, crNum
+   return true
 end text_AddParagraph
 
 command text_InsertParagraph newText, @someText, pCrNum
@@ -597,7 +625,7 @@ command text_InsertParagraph newText, @someText, pCrNum
    else
       put crNum & CR & CR into crBit
    end if
-
+   
    if newText is not empty then
       if someText is empty then
          put newText into someText
@@ -630,41 +658,41 @@ function md5_Hash someText
 end md5_Hash
 
 function text_GetBetween startText, endText, someText, startAfterCharNum
-    -- was "getTextBetween"
-    text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
-    if startChar = 0 or endChar = 0 then return empty
-    add the number of chars of startText to startChar
-    subtract the number of chars of endText from endChar
-    return char startChar to endChar of someText
+   -- was "getTextBetween"
+   text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
+   if startChar = 0 or endChar = 0 then return empty
+   add the number of chars of startText to startChar
+   subtract the number of chars of endText from endChar
+   return char startChar to endChar of someText
 end text_GetBetween
 
 command text_SetBetween startText, endText, @someText, newSection, startAfterCharNum
-    text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
-    if startChar = 0 or endChar = 0 then return empty
-
-    put newSection into char startChar to endChar of someText
+   text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
+   if startChar = 0 or endChar = 0 then return empty
+   
+   put newSection into char startChar to endChar of someText
 end text_SetBetween
 
 function text_StringCount charOrString, someText
-    put 0 into startSearchHere
-    put 0 into charCount
-    repeat
-        put text_OffsetAfter(charOrString, someText, startSearchHere) into startSearchHere
-        if startSearchHere is 0 then
-            exit repeat
-        else
-            add 1 to charCount
-        end if
-    end repeat
-    return charCount
+   put 0 into startSearchHere
+   put 0 into charCount
+   repeat
+      put text_OffsetAfter(charOrString, someText, startSearchHere) into startSearchHere
+      if startSearchHere is 0 then
+         exit repeat
+      else
+         add 1 to charCount
+      end if
+   end repeat
+   return charCount
 end text_StringCount
 
 function text_RepeatString someString, repeatNum
-    -- was "text_GetRepeatString"
-    repeat repeatNum
-        put someString after repeatString
-    end repeat
-    return repeatString
+   -- was "text_GetRepeatString"
+   repeat repeatNum
+      put someString after repeatString
+   end repeat
+   return repeatString
 end text_RepeatString
 
 
@@ -688,15 +716,15 @@ function kwote someText, pQuoteChar
 end kwote
 
 function text_ExtractQuoted someText
-    local quotedLines
-    put 0 into startAfterCharNum
-    repeat
-        text_SetOffsets quote, quote, someText, startChar, endChar, startAfterCharNum
-        if startChar = 0 or endChar = 0 then return quotedLines
-        put char (startChar + 1) to (endChar - 1) of someText into quotedText
-        line_Insert quotedText, quotedLines
-        put endChar into startAfterCharNum
-    end repeat
+   local quotedLines
+   put 0 into startAfterCharNum
+   repeat
+      text_SetOffsets quote, quote, someText, startChar, endChar, startAfterCharNum
+      if startChar = 0 or endChar = 0 then return quotedLines
+      put char (startChar + 1) to (endChar - 1) of someText into quotedText
+      line_Insert quotedText, quotedLines
+      put endChar into startAfterCharNum
+   end repeat
 end text_ExtractQuoted
 
 function text_IsQuoted someText, pString
@@ -720,31 +748,31 @@ function text_GetQuoted someText
 end text_GetQuoted
 
 function withinQuotes textOrOffset, someContainer
-    -- version latest, 2/2/00
-
-    put item 1 of textOrOffset into startCharNum
-    put item 2 of textOrOffset into endCharNum
-    if endCharNum is empty then put startCharNum into endCharNum
-    if startCharNum is a number and endCharNum is a number then
-    else
-        put offset(textOrOffset, someContainer) into startCharNum
-        put startCharNum + the length of textOrOffset - 1 into endCharNum
-    end if
-
-    if startCharNum is 0 then
-        return "Not Found"
-    else
-        put char 1 to (startCharNum - 1) of someContainer into textBefore
-        put text_StringCount(quote, textBefore) into quotesBefore
-        put the number of chars of someContainer into lastCharNum
-        put char (endCharNum + 1) to lastCharNum of someContainer into textAfter
-        put text_StringCount(quote, textAfter) into quotesAfter
-        if math_IsOdd(quotesBefore) and quotesAfter >= 1 then
-            return true
-        else
-            return false
-        end if
-    end if
+   -- version latest, 2/2/00
+   
+   put item 1 of textOrOffset into startCharNum
+   put item 2 of textOrOffset into endCharNum
+   if endCharNum is empty then put startCharNum into endCharNum
+   if startCharNum is a number and endCharNum is a number then
+   else
+      put offset(textOrOffset, someContainer) into startCharNum
+      put startCharNum + the length of textOrOffset - 1 into endCharNum
+   end if
+   
+   if startCharNum is 0 then
+      return "Not Found"
+   else
+      put char 1 to (startCharNum - 1) of someContainer into textBefore
+      put text_StringCount(quote, textBefore) into quotesBefore
+      put the number of chars of someContainer into lastCharNum
+      put char (endCharNum + 1) to lastCharNum of someContainer into textAfter
+      put text_StringCount(quote, textAfter) into quotesAfter
+      if math_IsOdd(quotesBefore) and quotesAfter >= 1 then
+         return true
+      else
+         return false
+      end if
+   end if
 end withinQuotes
 
 command text_StipQuoted @someText
@@ -806,60 +834,60 @@ function text_StripQuoted someText
 end text_StripQuoted
 
 function text_TempReplaceQuoted someText, @offsetArray
-    -- was "temptext_StripQuoted"
-    -- version original,18/9/01
-
-    put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
-    put 1 into dummyNum
-    repeat
-        if matchchunk(someText, someReg, startChar, endChar) then
-            put char startChar to endChar of someText into quotedText
-            put "<dummy id=" & dummyNum & "/>" into safeReplaceMent
-            put safeReplaceMent into char startChar to endChar of someText
-            put quotedText into offsetArray[safeReplaceMent]
-            add 1 to dummyNum
-        else
-            return someText
-        end if
-    end repeat
+   -- was "temptext_StripQuoted"
+   -- version original,18/9/01
+   
+   put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
+   put 1 into dummyNum
+   repeat
+      if matchchunk(someText, someReg, startChar, endChar) then
+         put char startChar to endChar of someText into quotedText
+         put "<dummy id=" & dummyNum & "/>" into safeReplaceMent
+         put safeReplaceMent into char startChar to endChar of someText
+         put quotedText into offsetArray[safeReplaceMent]
+         add 1 to dummyNum
+      else
+         return someText
+      end if
+   end repeat
 end text_TempReplaceQuoted
 
 function text_ReReplaceQuoted someStrippedText, offsetArray
-    -- was "untext_StripQuoted"
-    -- version original,18/9/01
-
-    put keys(offsetArray) into dummyTags
-    repeat for each line dummyTag in dummyTags
-        put offsetArray[dummyTag] into quotedText
-        replace dummyTag with quotedText in someStrippedText
-    end repeat
-    return someStrippedText
+   -- was "untext_StripQuoted"
+   -- version original,18/9/01
+   
+   put keys(offsetArray) into dummyTags
+   repeat for each line dummyTag in dummyTags
+      put offsetArray[dummyTag] into quotedText
+      replace dummyTag with quotedText in someStrippedText
+   end repeat
+   return someStrippedText
 end text_ReReplaceQuoted
 
 function replaceQuotedItems someList
-    put "•|comma|•" into opfSafeComma
-    repeat
-        get whereIsText(quote, quote, someList)
-        if it is "Not Found" then
-            exit repeat
-        else
-            put item 1 of it into startChar
-            put item 2 of it into endChar
-            put char startChar to endChar of somelist into quotedItem
-            put replaceAll(",", quotedItem, opfSafeComma) into safeItem
-            if char 1 of safeItem is quote then delete char 1 of safeItem
-            if last char of safeItem is quote then delete last char of safeItem
-            put safeItem into char startChar to endChar of someList
-        end if
-    end repeat
-    return someList
+   put "•|comma|•" into opfSafeComma
+   repeat
+      get whereIsText(quote, quote, someList)
+      if it is "Not Found" then
+         exit repeat
+      else
+         put item 1 of it into startChar
+         put item 2 of it into endChar
+         put char startChar to endChar of somelist into quotedItem
+         put replaceAll(",", quotedItem, opfSafeComma) into safeItem
+         if char 1 of safeItem is quote then delete char 1 of safeItem
+         if last char of safeItem is quote then delete last char of safeItem
+         put safeItem into char startChar to endChar of someList
+      end if
+   end repeat
+   return someList
 end replaceQuotedItems
 
 command text_StripSurroundingQuotes @someText
    -- think this should work
    put token 1 of someText into someText
    return empty
-
+   
    get word 1 to -1 of someText
    put quote & "'" into quoteChars
    if char 1 of it is among the chars of quoteChars and char -1 of it is among the chars of quoteChars then
@@ -872,28 +900,28 @@ end text_StripSurroundingQuotes
 --> Text | Caps
 -
 function text_InitialCaps someText
-    repeat with wordNum = 1 to the number of words of someText
-        put tolower(word wordNum of someText) into someWord
-        put toupper(char 1 of someWord ) into char 1 of someWord
-        put someWord into word wordNum of someText
-    end repeat
-    return someText
+   repeat with wordNum = 1 to the number of words of someText
+      put tolower(word wordNum of someText) into someWord
+      put toupper(char 1 of someWord ) into char 1 of someWord
+      put someWord into word wordNum of someText
+   end repeat
+   return someText
 end text_InitialCaps
 
 function text_SplitCaps someWord
-    -- was "capsSplit"
-    put 1 into charNum
-    repeat the number of chars of someWord
-        put char charNum of someWord into someChar
-        if text_StartsWithCaps(someChar) is true then
-            put space before char charNum of someWord
-            add 2 to charNum
-        else
-            add 1 to charNum
-        end if
-    end repeat
-    put text_InitialCaps(word 1 of someWord) into word 1 of someWord
-    return word 1 to -1 of someWord
+   -- was "capsSplit"
+   put 1 into charNum
+   repeat the number of chars of someWord
+      put char charNum of someWord into someChar
+      if text_StartsWithCaps(someChar) is true then
+         put space before char charNum of someWord
+         add 2 to charNum
+      else
+         add 1 to charNum
+      end if
+   end repeat
+   put text_InitialCaps(word 1 of someWord) into word 1 of someWord
+   return word 1 to -1 of someWord
 end text_SplitCaps
 
 function text_StartsWithCaps someText
@@ -908,18 +936,18 @@ function text_StartsWithCaps someText
 end text_StartsWithCaps
 
 function text_StemCaps someText
-    put tolower(word 1 of someText) into stemCaps
-    delete word 1 of someText
-    get text_InitialCaps(someText)
-    replace space with empty in it
-    put it after stemCaps
-    return stemCaps
+   put tolower(word 1 of someText) into stemCaps
+   delete word 1 of someText
+   get text_InitialCaps(someText)
+   replace space with empty in it
+   put it after stemCaps
+   return stemCaps
 end text_StemCaps
 
 function text_IsCaps someText
    -- use casesensitive
    return matchtext (word 1 to -1 of someText, "\b[A-Z]+\b", anyThing)
-
+   
    repeat for each char testChar in someText
       put chartonum (testChar) into someCharNum
       if someCharNum >= 65 and someCharNum <= 90 then

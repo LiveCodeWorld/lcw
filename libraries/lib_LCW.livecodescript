@@ -8,29 +8,183 @@ version: 0.7
 
 /*
 Here we place all the handlers that need to be in use before project initialisation.
+
+-- getprop project_Folder [shortSubFolderName]
+-- searches the disk based file hierearchy to find the project root
+put the stack_Object of the target into stackObject
+put the effective filename of stackObject into stackPath
+
+put project_FindFolder (stackPath) into projectFolder
+switch
+   case projectFolder is empty
+      return empty
+   case shortSubFolderName is not empty
+      if char 1 of shortSubFolderName = slash then delete char 1 of shortSubFolderName
+      put shortSubFolderName after projectFolder
+      if char -1 of shortSubFolderName is not slash then put slash after projectFolder
+   default
+      return projectFolder
+end switch
+end project_Folder
 */
+
+
+--> Events
+-
+on revEditScript
+   -- sent by Livecode to registered plugins
+   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
+   -- beep
+   rev_AddBehaviorHacks
+   pass revEditScript
+end revEditScript
 
 
 --> Working On
 -
-getprop project_Folder [shortSubFolderName]
-   -- searches the disk based file hierearchy to find the project root
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into stackPath
-   
-   put project_FindFolder (stackPath) into projectFolder
-   switch
-      case projectFolder is empty
-         return empty
-      case shortSubFolderName is not empty
-         if char 1 of shortSubFolderName = slash then delete char 1 of shortSubFolderName
-         put shortSubFolderName after projectFolder
-         if char -1 of shortSubFolderName is not slash then put slash after projectFolder
-      default
-         return projectFolder
-   end switch
-end project_Folder
+command project_ExportMenusAndStackFiles projectFolder
+   put project_FetchArray (projectFolder) into projectArray
+   put project_ConstructFoundStackFileArray (projectFolder) into projectArray ["stackFileArray"]
+   --
+   put project_ListPaths ("all controllers", projectFolder) into stackPaths
+   project_IndexGlobalMenus stackPaths
+   put the result into projectArray ["Global Menus"]
+   --
+   project_StoreArray projectFolder, projectArray
+end project_ExportMenusAndStackFiles
 
+command project_LoadMenus projectFolder
+   put project_ListPaths ("all controllers", projectFolder) into stackPaths
+   project_IndexGlobalMenus stackPaths
+end project_LoadMenus
+
+
+--> Working On | Initialise
+-
+command env_RecursivelyLoadProjects pObject
+   -- think this does the same as old "project_Init" (which is a better name)
+   -- order of loading must not be unimportant
+   if pObject is empty then put the long id of the target into pObject
+   
+   put the project_DependencyArray of pObject into projectDepArray
+   --
+   set the itemdelimiter to slash
+   repeat for each key projectName in projectDepArray
+      set the cursor to busy
+      put projectDepArray [projectName]["path"] into homeStackPath
+      if homeStackPath is empty then
+         -- something like "lcw_User", but that is OK let's skip
+         next repeat
+      end if
+      env_SimpleLoadProject projectName, homeStackPath
+   end repeat        
+end env_RecursivelyLoadProjects
+
+command lcw_LoadCustomUserProject
+   -- initialises non-version controlled private project
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   project_InitialiseFolder lcwUserProjectFolder
+   
+   put lcw_UserHomeStackName() into userHomeStackName
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
+   
+   dispatch "env_RecursivelyLoadProjects" to stack userHomeStackName
+end lcw_LoadCustomUserProject
+
+command project_Start homeStackName
+   put library_FetchProjectHomeStackObject (homeStackName) into homeStackObject
+   put the short name of stack homeStackObject into homeStackName -- just in case ???
+   
+   display_Loading homeStackName
+   --
+   -- could rely on sending "preOpenStack" ???
+   dispatch "env_RecursivelyLoadProjects" to homeStackObject -- was "project_Init"
+   
+   put the stack_Folder of stack homeStackObject into projectFolder -- just in case ???
+   switch it
+      case "unhandled"
+      case "passed"
+         -- it is "passed" because it is trapped but passed by the handler in "LCW"
+         -- here we could initialise some basic things by default
+         project_InitialiseFolder projectFolder
+         project_LoadModules homeStackName
+         break
+      default
+         -- whatever happens let's register the project environment as "loaded"
+         env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
+   end switch
+   
+   put merge ("Finished project '[[homeStackName]]'!") into someComment
+   display_Loading homeStackName, someComment
+end project_Start
+
+command project_Stop projectName
+   -- with multiple projects that's a bit hard (as other projects 'could' use some of the stacks?)
+   put the project_UsedStackNames of stack projectName into usedStackNames
+   put the project_Name of stack projectName into projectName
+   
+   repeat for each line usedStackName in usedStackNames
+      set the cursor to busy
+      if exists (stack usedStackName) is false then next repeat
+      save stack usedStackName
+      stop using stack usedStackName
+      delete stack usedStackName
+   end repeat
+   env_RemoveProject projectName
+   --
+   put merge ("Stopped project '[[projectName]]'!") into someComment
+   display_Loading projectName, someComment
+end project_Stop
+
+command project_LoadDeps projectDeps, projectHomeStackFile
+   replace comma with CR in projectDeps   
+   repeat for each line sisterProjectName in projectDeps
+      put env_GetProjectFolder (sisterProjectName) into sisterProjectFolder
+      if sisterProjectFolder is not empty then next repeat -- already loaded
+      
+      display_Loading sisterProjectName
+      put project_ConstructSisterHomeStackPath (sisterProjectName, projectHomeStackFile) into sisterProjectHomeStackPath
+      
+      if exists (stack sisterProjectHomeStackPath) is false then
+         breakpoint
+         next repeat
+      end if
+      dispatch "env_RecursivelyLoadProjects" to stack sisterProjectHomeStackPath -- was "project_Init"
+      -- go to stack sisterProjectHomeStackPath
+   end repeat
+end project_LoadDeps
+
+
+--> Env | Load projects
+-
+command env_SimpleLoadProject projectName, homeStackHath, pForceLoad
+   -- just initialise the project itself (nothing recursive)
+   -- safe recusive collection of deps was handled with "env_ConstructProjectDepArray()"
+   
+   if project_IsActive (projectName) and pForceLoad is not true then
+      return merge ("Already loaded project [[projectName]]. Not re-laoding")
+   end if
+   --
+   project_InitialiseFolder homeStackHath
+   project_LoadModules homeStackHath
+   
+   -- opportunity to customise (see "lcw_Authoring")
+   dispatch "project_CustomInit" to stack homeStackHath
+   switch it
+      case "handled"
+      case "unhandled"
+      case "passed"
+   end switch
+   
+   -- prety display as everything is slow
+   env_DisplayLoading projectName
+   return empty
+end env_SimpleLoadProject
+
+
+--> Working on
+-
 function project_FolderFromName projectName, pShortFolder
    -- this does not do much checking
    if exists (stack projectName) is false then return empty
@@ -39,6 +193,196 @@ function project_FolderFromName projectName, pShortFolder
    put projectFolder & pShortFolder & slash into standardFolder
    return standardFolder
 end project_FolderFromName
+
+function project_ListActive projectNames
+   repeat for each item projectName in projectNames
+      if env_GetProjectFolder (projectName) is empty then
+         return false
+      end if
+   end repeat
+   return true
+end project_ListActive
+
+
+--> Props
+-
+getprop env_RepoFolder
+   -- latest simplest version based on naming conventions and folder structure
+   -- does not allow projects outside of the LCW reop folder 
+   -- we resuse the project_Folder to maintain less code
+   put the project_Folder of target into envRepoFolder
+   set the itemdelimiter to slash
+   delete item -1 of envRepoFolder
+   return envRepoFolder
+end env_RepoFolder
+
+command env_DeconstructProjectFolder projectFolder, @projectName, @repoFolder
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into projectName
+   put item 1 to -2 of projectFolder & slash into repoFolder
+end env_DeconstructProjectFolder
+
+function env_ConstructProjectDepArray projectName, repoFolder
+   local projectDepArray
+   env_CrawlProjectDeps projectDepArray, projectName, repoFolder
+   return projectDepArray
+end env_ConstructProjectDepArray
+
+command env_CrawlProjectDeps @projectDepArray, projectName, repoFolder
+   -- we do not assume the project home stack is loaded into memory
+   -- we base everything on naming conventions, and folder structure
+   
+   -- first we check for recursion
+   if projectDepArray [projectName] is an array then
+      return "Already added to projectDepArray"
+   end if
+   
+   -- now let's guess the projectHomeStackPath
+   put env_GuessProjectHome (projectName, repoFolder) into stackPath
+   if stackPath is empty then
+      put merge ("Project home stack does not exist!") into projectDepArray [projectName]["Error"]["msg"]
+      put projectName into projectDepArray [projectName]["Error"]["projectName"]
+      put stackPath into projectDepArray [projectName]["Error"]["path"]
+      return "Already indexed"
+   else
+      put stackPath into projectDepArray [projectName]["path"]
+   end if
+   
+   -- now recurse
+   put the project_Deps of stack projectName into projectDeps
+   repeat for each item nextProjectName in projectDeps
+      env_CrawlProjectDeps projectDepArray, nextProjectName, repoFolder
+   end repeat
+   return "Finished deps"
+end env_CrawlProjectDeps
+
+function env_GuessProjectHome projectName, repoFolder
+   -- assumes project is in the (repository) folder
+   put env_ConstructProjectPath (projectName, repoFolder) into projectFolder
+   put projectFolder & projectName & ".livecode" into projectHomeStackPath
+   if there is a stack projectHomeStackPath then
+      return projectHomeStackPath
+   else
+      return empty
+   end if
+end env_GuessProjectHome
+
+function env_ConstructProjectPath projectName, repoFolder
+   put repoFolder & projectName & slash into projectPath
+   return projectPath
+end env_ConstructProjectPath
+
+
+--> Env | Load projects | Display
+-
+command env_DisplayErrorLoading projectName, projectDepArray
+   try
+      put projectDepArray [projectName]["error"] into errorArray
+      display_Array errorArray, "LCW Dep Error"
+   catch e
+      put "Error loading dependency" && projectName
+   end try
+end env_DisplayErrorLoading
+
+command env_DisplayLoading projectName
+   -- tell the word we found project dependency
+   put "Loading project '[[projectName]]'..." into commentTemplate
+   put merge (commentTemplate) into someComment
+   dispatch "lcw_Notify" with someComment,"Loading projects"
+end env_DisplayLoading
+
+
+--> Props | Project
+-
+getprop project_Name
+   -- assume folder name = project name
+   -- only works now for top level stacks, libs, models etc
+   set the itemdelimiter to slash
+   put the project_Folder of the target into projectFolder
+   return item -1 of projectFolder
+end project_Name
+
+getprop project_Folder
+   -- latest simplest version based on naming conventions and folder structure
+   -- does not allow projects outside of the LCW reop folder   
+   -- only works now for top level stacks, libs, models etc
+   put the effective filename of the defaultstack into projectHomePath
+   put lcw_GetProjectFolder (projectHomePath) into projectFolder
+   return projectFolder
+end project_Folder
+
+getprop lcw_HomePath
+   -- only works now for top level stacks, libs, models etc
+   put lcw_GuessLcwHomePath() into lcwHomePath
+   return lcwHomePath
+end lcw_HomePath
+
+getprop project_DependencyArray
+   put the project_Folder of the target into projectFolder
+   env_DeconstructProjectFolder projectFolder, projectName, repoFolder
+   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
+   return projectDepArray
+end project_DependencyArray
+
+getprop active_Projects
+   -- allows you to call "if myProject is among the lines of the active_Projects of me then"
+   -- even if this library is not in use (it just returns empty which is what we want)
+   return env_ListProjects()
+end active_Projects
+
+getprop project_IsActive
+   put the project_Name of the target into projectName
+   put project_ListActive (projectName) into someBoolean
+   return someBoolean
+end project_IsActive
+
+
+--> LCW | Paths
+-
+function lcw_GuessLcwHomePath pHomePath
+   -- only works now for top level stacks, libs, models etc
+   if pHomePath is empty then put the effective filename of the defaultstack into pHomePath
+   set the itemdelimiter to slash
+   
+   -- hack (simple check "project_FindFolder()")
+   get item -2 of pHomePath
+   if it is among the items of "libraries/models/controllers/stacks/views/behaviors" then
+      -- not accounting for modules
+      put "lcw/lcw.livecode" into item -3 to -1 of pHomePath
+   else
+      put "lcw/lcw.livecode" into item -2 to -1 of pHomePath
+   end if
+   
+   return pHomePath
+end lcw_GuessLcwHomePath
+
+function lcw_GetProjectFolder projectHomePath
+   set the itemdelimiter to slash
+   put lcw_GuessLcwHomePath (projectHomePath) into lcwHomePath
+   
+   -- let's check that stack LCW.livecode is there (will load stack into memory but not initialise)
+   if there is a stack lcwHomePath then
+      put item 1 to (the number of items of lcwHomePath - 1) of projectHomePath into projectFolder
+      put slash after projectFolder
+      return projectFolder
+   else -- could check for the stack being a module here
+      return empty
+   end if
+end lcw_GetProjectFolder
+
+
+--> Project | Folder | Old
+-
+function project_FindFolder somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   -- returns the top module or "project folder"
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   return projectFolder
+end project_FindFolder
 
 function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
    if char -1 of projectFolderOrHomeStackFile is not slash then
@@ -63,29 +407,6 @@ function project_GetFolder projectName, pSubFolderPath
    end if
    return projectFolder
 end project_GetFolder
-
-command lcw_LoadCustomUserProject
-   -- no longer seems to be called
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   project_InitialiseFolder lcwUserProjectFolder
-   
-   put lcw_UserHomeStackName() into userHomeStackName
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
-   
-   dispatch "project_Init" to stack userHomeStackName
-end lcw_LoadCustomUserProject
-
-
---> Events
--
-on revEditScript
-   -- sent by Livecode to registered plugins
-   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
-   -- beep
-   rev_AddBehaviorHacks
-   pass revEditScript
-end revEditScript
 
 
 --> Working On | Display
@@ -133,24 +454,27 @@ command lcw_WarnAndExit someComment, pAsSheet
    exit to top
 end lcw_WarnAndExit
 
-command lcw_Answer someQuestion, pButtonName
-   if pButtonName is empty then put "OK" into pButtonName
-   text_ReQuote someQuestion
+command lcw_Answer someQuestion, pDisplayView
+   if exists (pDisplayView) then
+      dispatch "lcw_Answer" to pDisplayView with someQuestion
+      return the result
+   end if
    
-   answer someQuestion with "Cancel" or "OK"
-   put it into theResult
-   if theResult is "Cancel" then exit to top
-   return theResult
+   text_ReQuote someQuestion
+   answer someQuestion with "Cancel" or "OK" as sheet
+   if it is "Cancel" then exit to top
+   return it
 end lcw_Answer
 
-command lcw_AnswerWarning someQuestion, pButtonName
-   if pButtonName is empty then put "OK" into pButtonName
-   text_ReQuote someQuestion
+command lcw_AnswerWarning someQuestion, pDisplayView
+   if exists (pDisplayView) then
+      dispatch "lcw_AnswerWarning" to pDisplayView with someQuestion
+      exit to top
+   end if
    
-   answer warning someQuestion with pButtonName as sheet
-   put it into theResult
-   if theResult is "Cancel" then exit to top
-   return theResult
+   text_ReQuote someQuestion
+   answer warning someQuestion with "OK" as sheet
+   exit to top
 end lcw_AnswerWarning
 
 command lcw_AnswerSheet someQuestion, pButtonName, pWarning
@@ -197,17 +521,6 @@ end github_DownloadProject
 
 --> Project | Load
 -
-command project_LoadMenus projectFolder, pCreateindex
-   put project_ListPaths ("controllers", projectFolder) into stackPaths
-   if pCreateindex is true then
-      project_IndexGlobalMenus stackPaths
-   else
-      -- here we should load from a stored array
-      -- project_IndexGlobalMenus stackPaths
-      breakpoint
-   end if
-end project_LoadMenus
-
 command env_ExportMenusAndStackFiles pListAll
    put env_ListProjects (pListAll) into projectNames
    repeat for each line projectName in projectNames
@@ -275,18 +588,6 @@ command project_LoadMenusAndStackFiles projectFolder
    set the stackfiles of stack projectHomeStackPath to projectStackFiles
    return projectArray
 end project_LoadMenusAndStackFiles
-
-command project_ExportMenusAndStackFiles projectFolder
-   put project_FetchArray (projectFolder) into projectArray
-   --
-   put project_ConstructFoundStackFileArray (projectFolder) into projectArray ["stackFileArray"]
-   
-   put project_ListPaths ("controllers", projectFolder) into stackPaths
-   project_IndexGlobalMenus stackPaths
-   put the result into projectArray ["Global Menus"]
-   --
-   project_StoreArray projectFolder, projectArray
-end project_ExportMenusAndStackFiles
 
 command project_SetFoundStackFiles projectFolder
    put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
@@ -420,17 +721,6 @@ function project_FindHomeStackPath somePath
    return homeStackPath
 end project_FindHomeStackPath
 
-function project_FindFolder somePath
-   -- assumes somePath is a path to a stack or file and not a folder
-   -- returns the top module or "project folder"
-   put somePath into someFolder
-   set the itemdelimiter to slash
-   put empty into item -1 of someFolder
-   
-   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
-   return projectFolder
-end project_FindFolder
-
 function module_FindFolder somePath
    -- assumes somePath is a path to a stack or file and not a folder
    -- finds the first "module folder" above the path
@@ -526,22 +816,6 @@ function lcw_HomeFolder
    return lcwHomeFolder
 end lcw_HomeFolder
 
-getprop project_Name
-   -- could also be called project_HomeStackName
-   -- searches the disk based file hierearchy to find the project root
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into stackPath
-   
-   put project_FindFolder (stackPath) into projectFolder
-   if projectFolder is empty then return empty
-   
-   set the itemdelimiter to slash
-   return item -1 of projectFolder -- assume folder name = project homestack name
-   
-   put project_GetHomeStackName (projectFolder) into projectName
-   return projectName 
-end project_Name
-
 getprop project_HomeStack
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
@@ -618,72 +892,6 @@ command ide_RemoveRevEditScriptStack stackName
 end ide_RemoveRevEditScriptStack
 
 
---> Working On | Initialise
--
-command project_Start homeStackName
-   put library_FetchProjectHomeStackObject (homeStackName) into homeStackObject
-   put the short name of stack homeStackObject into homeStackName -- just in case ???
-   
-   display_Loading homeStackName
-   --
-   -- could rely on sending "preOpenStack" ???
-   dispatch "project_Init" to homeStackObject -- a project specific customised version of below
-   
-   put the stack_Folder of stack homeStackObject into projectFolder -- just in case ???
-   switch it
-      case "unhandled"
-      case "passed"
-         -- it is "passed" because it is trapped but passed by the handler in "LCW"
-         -- here we could initialise some basic things by default
-         project_InitialiseFolder projectFolder
-         project_LoadModules homeStackName
-         break
-      default
-         -- whatever happens let's register the project environment as "loaded"
-         env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
-   end switch
-   
-   put merge ("Finished project '[[homeStackName]]'!") into someComment
-   display_Loading homeStackName, someComment
-end project_Start
-
-command project_Stop projectName
-   -- with multiple projects that's a bit hard (as other projects 'could' use some of the stacks?)
-   put the project_UsedStackNames of stack projectName into usedStackNames
-   put the project_Name of stack projectName into projectName
-   
-   repeat for each line usedStackName in usedStackNames
-      set the cursor to busy
-      if exists (stack usedStackName) is false then next repeat
-      save stack usedStackName
-      stop using stack usedStackName
-      delete stack usedStackName
-   end repeat
-   env_RemoveProject projectName
-   --
-   put merge ("Stopped project '[[projectName]]'!") into someComment
-   display_Loading projectName, someComment
-end project_Stop
-
-command project_LoadDeps projectDeps, projectHomeStackFile
-   replace comma with CR in projectDeps   
-   repeat for each line sisterProjectName in projectDeps
-      put env_GetProjectFolder (sisterProjectName) into sisterProjectFolder
-      if sisterProjectFolder is not empty then next repeat -- already loaded
-      
-      display_Loading sisterProjectName
-      put project_ConstructSisterHomeStackPath (sisterProjectName, projectHomeStackFile) into sisterProjectHomeStackPath
-      
-      if exists (stack sisterProjectHomeStackPath) is false then
-         breakpoint
-         next repeat
-      end if
-      dispatch "project_Init" to stack sisterProjectHomeStackPath
-      -- go to stack sisterProjectHomeStackPath
-   end repeat
-end project_LoadDeps
-
-
 --> Project | Props
 -
 /*
@@ -747,16 +955,23 @@ function project_ListPaths shortFolder, projectFolder
             put stackPaths & CR after projectStackPaths
          end if
          return projectStackPaths
+      case "all controllers"
+         put project_ConstructFolder ("controllers", projectFolder) into standardFolder
+         put folder_ListStackPaths (standardFolder) into stackPaths
+         --
+         put projectFolder & "modules/" into modulesFolder
+         put folder_ListShort (modulesFolder) into moduleNames
+         repeat for each line moduleName in moduleNames
+            put module_ListControllerStackPaths (moduleName, projectFolder) into moduleControllerPaths
+            put CR & moduleControllerPaths after stackPaths
+         end repeat
+         put word 1 to -1 of stackPaths into stackPaths
+         return stackPaths
       default
          put project_ConstructFolder (shortFolder, projectFolder) into standardFolder
          put folder_ListStackPaths (standardFolder) into stackPaths
          return stackPaths
    end switch
-   
-   -- lists only the top-level stacks in the projectFolder
-   -- put project_ConstructFolder (shortFolder, projectFolder) into standardFolder
-   -- put folder_ListStackPaths (standardFolder) into stackPaths
-   -- return stackPaths
 end project_ListPaths
 
 function project_ListAllStackPaths projectFolder
@@ -773,7 +988,6 @@ function project_ListAllStackPaths projectFolder
             end if
          end repeat
       end if
-      
       put folder_ListStackPaths (standardFolder) into stackPaths
       if stackPaths is not empty then
          put stackPaths & CR after projectStackPaths
@@ -934,9 +1148,12 @@ end lcw_HomeStackName
 
 --> Env
 -
-function project_IsActive projectName
-   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
-   return projectIsLoaded
+function project_IsActive projectNames
+   repeat for each item projectName in projectNames
+      put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
+      if projectIsLoaded is false then return false
+   end repeat
+   return true
 end project_IsActive
 
 function env_GetProjectFolder homeStackName
@@ -1252,3 +1469,4 @@ command text_AddTrailing @someText, someChar
       put someChar after someText
    end if
 end text_AddTrailing
+

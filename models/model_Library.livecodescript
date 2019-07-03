@@ -138,7 +138,7 @@ setprop model_Array [pShortFile] dataArray
 end model_Array
 
 getprop model_Names
-   put the stack_Name of the target into modelStackName
+   put the short name of the defaultstack into modelStackName
    put the project_Folder of the target into projectFolder
    put model_ListNames (modelStackName, projectFolder) into shortFiles
    return shortFiles
@@ -146,7 +146,7 @@ end model_Names
 
 getprop model_DataFile [pShortFile]
    -- assumes the target is a model stack
-   put the stack_Name of the target into modelStackName
+   put the short name of the defaultstack into modelStackName
    put the stack_Folder of the target into projectFolder
    -- put the project_Folder of the target into projectFolder
    -- put projectFolder & modelStackName & slash into modelDataFolder
@@ -158,7 +158,7 @@ getprop model_DataFolder [modelStackName]
    if modelStackName is empty then
       -- we assume the target is a model stack in the "models/" folder
       -- simple utitlity that looks for a sister folder to any stack
-      put the stack_Name of the target into modelName
+      put the short name of the defaultstack into modelName
       put the stack_Folder of the target into stackFolder
       put stackFolder & modelName & slash into modelDataFolder
    else

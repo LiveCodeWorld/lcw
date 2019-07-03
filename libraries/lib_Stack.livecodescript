@@ -317,6 +317,7 @@ function stack_ConvertNamesToShortPaths stackNames, @badNames
 end stack_ConvertNamesToShortPaths
 
 function stack_ConvertObjectsToShortPaths stackObjects
+   replace comma with CR in stackObjects -- just in case
    set the itemdelimiter to slash
    repeat for each line stackObject in stackObjects
       get the filename of stackObject
@@ -335,6 +336,16 @@ function stack_ConvertObjectsToPaths stackObjects
    delete char -1 of stackPaths
    return stackPaths
 end stack_ConvertObjectsToPaths
+
+function stack_ConvertToNames stackObjects
+   repeat for each line stackObject in stackObjects
+      if exists (stackObject) then
+         put the short name of stackObject & CR after stackNames
+      end if
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end stack_ConvertToNames
 
 function stack_ConvertPathsToNames stackPaths
    put stack_ConstructNameNameArray (stackPaths) into nameArray

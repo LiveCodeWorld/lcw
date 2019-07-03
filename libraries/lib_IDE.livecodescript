@@ -15,9 +15,6 @@ put sStackEdited into editedStackArray
 */
 
 
---> Working on
--
-
 --> Props
 -
 getprop stack_IsEdited
@@ -30,6 +27,23 @@ getprop ide_MenuTitle [shortName]
    put ide_GetMenuTitle (shortName) into mTitle
    return mTitle
 end ide_MenuTitle
+
+
+--> Working on
+-
+function ide_GetMenuTitle ideElement
+   put LocalArray ["environment"]["menu"][ideElement] into mTitle
+   return mTitle
+end ide_GetMenuTitle
+
+command ide_SetMenuTitle ideElement, shortTitle
+   if shortTitle is empty or shortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
+      put "Default" into shortTitle
+   end if  
+   put ide_ConstructMenuTitle (shortTitle, ideElement) into mTitle
+   put mTitle into LocalArray ["environment"]["menu"][ideElement]
+   return shortTitle
+end ide_SetMenuTitle
 
 
 --> ScriptField
@@ -192,11 +206,6 @@ function ide_GetMenuController ideElement, pShortTitle
    return mController
 end ide_GetMenuController
 
-function ide_GetMenuTitle ideElement
-   put LocalArray ["environment"]["menu"][ideElement] into mTitle
-   return mTitle
-end ide_GetMenuTitle
-
 function ide_ListMenuTitles pIdeElement
    put menu_ListGlobalTitles() into mTitles
    put "Global | ScriptEditor |" into mTitleStem
@@ -306,12 +315,3 @@ command ide_SetScriptEditorTitles shortTitle
          ide_SetMenuTitle "Script", shortTitle
    end switch
 end ide_SetScriptEditorTitles
-
-command ide_SetMenuTitle ideElement, shortTitle
-   if shortTitle is empty or shortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
-      put "Default" into shortTitle
-   end if  
-   put ide_ConstructMenuTitle (shortTitle, ideElement) into mTitle
-   put mTitle into LocalArray ["environment"]["menu"][ideElement]
-   return shortTitle
-end ide_SetMenuTitle

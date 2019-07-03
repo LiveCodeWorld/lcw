@@ -15,11 +15,152 @@ Those older names are a bit of a mess.
 
 --> Working on
 -
+getprop controller_Folder
+   put the project_Folder of the target into projectFolder
+   if projectFolder is empty then return empty
+   put projectFolder & "controllers/" into cFolder
+   if there is not a folder cFolder then return empty
+   return cFolder
+end controller_Folder
+
+
+--> Project | Deps
+-
+function project_ListProjectDepNames projectName
+   -- used by hkey_AddDevelopmentHierarchy
+   -- lazy: does not return things in the right order
+   -- but order should not functionally matter
+   local projectNameArray
+   _addProjectToDeps projectName, projectNameArray
+   put keys (projectNameArray) into projectNameIndex
+   return word 1 to -1 of projectNameIndex
+end project_ListProjectDepNames
+
+private command _addProjectToDeps projectName, @projectNameArray
+   -- recursive
+   -- check not already there to avoid infnite recursion
+   if projectName is among the keys of projectNameArray then return false
+   put empty into projectNameArray [projectName]
+   
+   if exists (stack projectName) is false then
+      return false -- should never happen
+   end if
+   
+   put the project_Deps of stack projectName into projectDepItems
+   repeat for each item projectDepName in projectDepItems
+      if projectDepName is among the keys of projectNameArray then next repeat
+      _addProjectToDeps projectDepName, projectNameArray
+   end repeat
+   return true
+end _addProjectToDeps
+
+
+--> Project | Names
+-
+/*
+These should work with modules as well as they are considered to be subprojects with the same structure.
+
+A project or modules name is named after the home stacks name.
+So projectName of moduleName = homeStackname
+We look to naming folders the same, but allow (for now) stacks to use the pipe convention,
+which maps a stack name such as "View | Group | Test" or "View|Group|Test" <=> View_Group_Test
+The reasons for this are partly legacy and partly readability.
+*/
+
+getprop project_StackType
+   -- see also "script_Type"
+   put the effective filename of the target into stackPath
+   put lcw_GetProjectFolder (stackPath) into projectFolder
+   --
+   set the itemdelimiter to slash
+   put the number of items of projectFolder into pNum
+   put pNum + 2 into testNum
+   put the number of items of stackPath into sNum
+   --
+   switch
+      case sNum = pNum + 1
+         -- a project
+         return "project"
+      case sNum = testNum
+         put item (pNum + 1) of stackPath into projectType
+         project_MakeTypeSingular projectType
+         return projectType
+      default
+         return empty
+   end switch
+end project_StackType
+
+command project_MakeTypeSingular @projectType
+   -- this makes me angry :)
+   switch projectType
+      case "libraries"
+         put "library" into projectType
+         break
+      default
+         if char -1 of projectType = "s" then
+            delete char -1 of projectType
+         end if
+   end switch
+end project_MakeTypeSingular
+
+function project_ConstructSingularType shortFolder
+   project_MakeTypeSingular shortFolder
+   return shortFolder
+end project_ConstructSingularType
+
+function project_NameToShortFile moduleName
+   put project_NameToShortFolder (moduleName) into shortFolder
+   put shortFolder & ".livecodescript" into shortFile
+   return shortFile
+end project_NameToShortFile
+
+function project_ListSubfolderPaths shortFolder, projectName
+   -- used by everything
+   put project_FolderFromName (projectName, shortFolder) into standardFolder -- in lib_LCW
+   put path_ListLong (standardFolder, pShowInvisible) into filePaths
+   return filePaths
+end project_ListSubfolderPaths
+
+
+--> Project | Names
+-
+/*
+These should work with modules as well as they are considered to be subprojects with the same structure.
+
+A project or modules name is named after the home stacks name.
+So projectName of moduleName = homeStackname
+We look to naming folders the same, but allow (for now) stacks to use the pipe convention,
+which maps a stack name such as "View | Group | Test" or "View|Group|Test" <=> View_Group_Test
+The reasons for this are partly legacy and partly readability.
+*/
+
+function project_ConstructSingularType shortFolder
+   switch shortFolder
+      case "libraries"
+         return "library"
+      default
+         if char -1 of shortFolder = "s" then
+            delete char -1 of shortFolder
+         end if
+         return shortFolder
+   end switch
+end project_ConstructSingularType
+
+function project_NameToShortFile moduleName
+   put project_NameToShortFolder (moduleName) into shortFolder
+   put shortFolder & ".livecodescript" into shortFile
+   return shortFile
+end project_NameToShortFile
+
+
+--> Project | List | New
+-
 function project_ListMenus projectName
-   put project_ListControllerPaths (projectName) into controllerPaths
+   -- put project_ListControllerPaths (projectName) into controllerPaths
+   put project_GetFolder (projectName) into projectFolder
+   put project_ListPaths ("all controllers", projectFolder) into controllerPaths
    put stack_PathsToNames (controllerPaths) into stackNames
    --
-   -- sorting is a mess due to confusion over naming
    sort stackNames
    set the itemdelimiter to "|"
    sort stackNames by item 2 of each
@@ -62,14 +203,6 @@ end project_ListBackDeps
 
 --> Project | Props
 -
-function project_ListProjectDepNames projectName
-   -- lazy: does not return things in the right order
-   local projectNameArray
-   _addProjectToDeps projectName, projectNameArray
-   put keys (projectNameArray) into projectNameIndex
-   return word 1 to -1 of projectNameIndex
-end project_ListProjectDepNames
-
 getprop project_Folders [pIncludeInvisible]
    put the project_Folder of the target into projectFolder
    put folder_ListLong (projectFolder) into standardFolders
@@ -171,19 +304,13 @@ function project_ListModulePaths projectName
    put folder_ListLong (standardFolder) into longFolders
    return longFolders
 end project_ListModulePaths
-   
+
 
 --> Project | List
 -
 /*
 Tries to be as fast and minimal as possible.
 */
-
-function project_ListSubfolderPaths shortFolder, projectName
-   put project_FolderFromName (projectName, shortFolder) into standardFolder
-   put path_ListLong (standardFolder, pShowInvisible) into filePaths
-   return filePaths
-end project_ListSubfolderPaths
 
 function project_ListStackNames shortFolder, projectName
    put project_ListStackPaths (shortFolder, projectName) into longFiles
@@ -405,27 +532,6 @@ function project_FolderFromFile objectFile
    end repeat
    return empty
 end project_FolderFromFile
-
-
---> Private
--
-private command _addProjectToDeps projectName, @projectNameArray
-   -- recursive
-   if projectName is among the keys of projectNameArray then return false
-   put empty into projectNameArray [projectName]
-   
-   if exists (stack projectName) is false then
-      breakpoint -- pProjectName
-      return false
-   end if
-   
-   put the project_Deps of stack projectName into projectDepItems
-   repeat for each item projectDepName in projectDepItems
-      if projectDepName is among the keys of projectNameArray then next repeat
-      _addProjectToDeps projectDepName, projectNameArray
-   end repeat
-   return true
-end _addProjectToDeps
 
 
 --> Deps

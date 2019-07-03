@@ -4,7 +4,7 @@
 license: GPLv3
 name: model_Environment
 type: model
-version: 0.6
+version: 0.7
 
 /*
 An environment contains a list of projects that need to be loaded 
@@ -16,42 +16,13 @@ Therefore this model contains handlers that can load and merge multiple projects
 providing access to scripts that need it and instructions how to build it from individual projects.
 
 As handlers that work on a set of projects, stroing these in the global vairable gLCW,  we should rename these handlers "env_XXX"
-
-command env_LoadProjectGlobals projectList
-   was "environment_LoadProjectGlobals"
-   replace CR with comma in projectList
-   repeat for each item projectName in projectList
-      project_LoadWorkingStackFiles projectName
-      -- project_RestoreGlobalPrefs projectName
-      project_LoadGlobalPrefs projectName
-      project_LoadGlobalHarray projectName 
-      project_LoadGlobalArray projectName 
-   end repeat
-end env_LoadProjectGlobals
-
 */
-
---> Props
--
-getprop active_Projects
-   -- allows you to call "if myProject is among the lines of the active_Projects of me then"
-   -- even if this library is not in use (it just returns empty which is what we want)
-   return env_ListProjects()
-end active_Projects
-
-getprop project_IsActive
-   put the project_Name of the target into projectName
-   put project_IsActive (projectName) into someBoolean
-   return someBoolean
-end project_IsActive
-
-function project_IsActive projectName
-   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
-   return projectIsLoaded
-end project_IsActive
 
 
 -- Working on
+-
+
+--> Environment | Files
 -
 function env_ListLibraryStacks pListAll
    -- not in any particular order (so not a real hierarchy)
@@ -64,9 +35,6 @@ function env_ListLibraryStacks pListAll
    return word 1 to -1 of objectIndex
 end env_ListLibraryStacks
 
-
---> Environment | Files
--
 function env_ListHomeArrayFiles
    put env_GetHomeArrayFileData() into envProjectArrayFileArray
    put envProjectArrayFileArray ["projectArrayFiles"] into projectArrayFiles

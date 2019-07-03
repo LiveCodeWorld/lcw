@@ -23,6 +23,17 @@ local LocalArray
 
 --> Working on
 -
+-- getprop menu_Target [mTitlePath]
+put menu_GetTargetObject() into targetObject
+switch word 1 of targetObject
+   case "card"
+      return _templateView()
+   default
+      put the view_Object of targetObject into mTarget
+      return mTarget
+end switch
+end menu_Target
+
 getprop card_Margin
    -- save with stack for standalone testing and remembering the preference
    put the card_Margin of me into cardMargin
@@ -349,20 +360,6 @@ getprop view_IsTemplate
 end view_IsTemplate
 
 
---> Menu | Props
--
-getprop menu_Target [mTitlePath]
-   put menu_GetTargetObject() into targetObject
-   switch word 1 of targetObject
-      case "card"
-         return _templateView()
-      default
-         put the view_Object of targetObject into mTarget
-         return mTarget
-   end switch
-end menu_Target
-
-
 --> Template | Props
 -
 getprop view_RectOnCard [pMargin]
@@ -427,3 +424,4 @@ command margin_Normalize @someMargin, @leftM, @topM, @rightM, @bottomM
    end if
    put leftM,topM,rightM,bottomM into someMargin
 end margin_Normalize
+

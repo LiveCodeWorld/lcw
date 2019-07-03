@@ -3,7 +3,7 @@
 -
 license: GPLv3
 name: LCW
-type: home
+type: project
 version: 0.7
 
 /*
@@ -38,16 +38,16 @@ as well as give the HomeStack and interface and some useful functionality.
 
 --> LCW | Me
 -
-command project_Init
-   if the long id of the target is not the long id of me then pass project_Init
-   if project_IsActive ("LCW") is true then pass project_Init
+command lcw_Init
+   if the long id of the target is not the long id of me then pass lcw_Init
+   if project_IsActive ("LCW") is true then pass lcw_Init
    
    _LcwInitialize
    
    -- load custom user stuff
    -- not sure if it should be here on in menus stack as that is where it is useful???
    lcw_LoadCustomUserProject
-end project_Init
+end lcw_Init
 
 
 --> Env

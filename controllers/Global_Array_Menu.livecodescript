@@ -31,13 +31,28 @@ on menu_TestArray
    _displaySelectedValue treeWidget
 end menu_TestArray
 
-on menu_SetMenuTitle mTarget
+on menu_TestElement arrayView
+   put the selected_Line of arrayView
+end menu_TestElement
+
+on _
+end _
+
+on menu_SetTitleMenu mTarget
    put LocalArray ["arrayView"] into arrayView
    
    put the title_Menu of arrayView into mTitle
    put lcw_Ask ("What menu title do you want to attach to the tree_View?", mTitle) into mTitle
    set the title_Menu of arrayView to mTitle
-end menu_SetMenuTitle
+end menu_SetTitleMenu
+
+on menu_SetLineMenu mTarget
+   put LocalArray ["arrayView"] into arrayView
+   
+   put the line_Menu of arrayView into mTitle
+   put lcw_Ask ("What line-menu do you want to attach to the tree_Field?", mTitle) into mTitle
+   set the line_Menu of arrayView to mTitle
+end menu_SetLineMenu
 
 on _
 end _

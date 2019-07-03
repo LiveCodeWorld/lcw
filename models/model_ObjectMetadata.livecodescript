@@ -15,7 +15,7 @@ See "model_Meta" for text file based metadata of scripts.
 */
 
 
---> Currently Working On
+--> Working On
 -
 command urip_Update someObject, pSomeScript
    if pSomeScript is empty then put the script of someObject into pSomeScript
@@ -33,21 +33,31 @@ Prioritises the script value over the objects script metadata
 Sets both the uRip value of the object and the script of the object
 */
 
-getprop object_MetaData [uRipKey]
-   -- a union of script_MetaData and an objects uRIP custom props
-   
-   put the long id of the target into scriptObject
-   put the script of scriptObject into someScript
-   put script_GetMetadataArray (someScript) into scriptMetaDataArray
-   put the customproperties ["uRIP"] of scriptObject into uRipArray
-   
-   union scriptMetaDataArray with uRipArray
+--> Object | Metadata
+-
+getprop object_Yaml
+   put the object_Metadata of the target into metadataArray
+   delete variable metadataArray ["script_Help"]
+   put metadata_ArrayToYaml (metadataArray) into objectYaml
+   return objectYaml
+end object_Yaml
+
+getprop object_Metadata [uRipKey]
+   -- see also "meta_Data" of "model_Meta"
+   put the long id of the target into sObject
+   --
+   put the script_Metadata of sObject into metadataArray
+   -- _AddUrip metadataArray, sObject -- can phase this out
+   --
+   put the project_Name of sObject into metadataArray ["project"]
+   put the github_RelativePath of sObject into metadataArray ["github"]
+   --
    if uRipKey is empty then
-      return scriptMetaDataArray
+      return metadataArray
    else
-      return scriptMetaDataArray [uRipKey]
+      return metadataArray [uRipKey]
    end if
-end object_MetaData
+end object_Metadata
 
 setprop object_MetaData [uRipKey] uRipArray
    -- this also indexes using "object_AddToGlobalArray"
@@ -62,30 +72,6 @@ setprop object_MetaData [uRipKey] uRipArray
    end if
    return uRipArray
 end object_MetaData
-
-
---> URIP | Metadata | Construct
--
-function metadata_ConstructUripArray pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
-   urip_AddDefaults uRipArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
-   return uRipArray
-end metadata_ConstructUripArray
-
-command urip_AddDefaults @uRipArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense   
-   if pLibLicense is empty then put pref_GetValue ("userName") into pCopyrightHolder 
-   if pLibLicense is empty then put pref_GetValue ("default copyright license") into pLibLicense
-   if pLibLicense is empty then put "GPLv3" into pLibLicense
-   if pVersion is empty then put "0.1" into pVersion
-   
-   put pLibLicense into uRipArray ["license"]
-   put pVersion into uRipArray ["version"]
-   
-   if pScriptName is not empty then put pScriptName into uRipArray ["name"]
-   if pScriptType is not empty then put pScriptType into uRipArray ["type"]
-   if pCopyrightHolder is not empty then put pCopyrightHolder into uRipArray ["copyright"]
-   if pDeps is not empty then put pDeps into uRipArray ["deps"]
-   if pScriptHelp is not empty then put pScriptHelp into uRipArray ["script_Help"]
-end urip_AddDefaults
 
 
 --> Object | Metadata
@@ -177,3 +163,60 @@ setprop urip_Array [someKey] arrayOrValue
       return uRipArray
    end if
 end urip_Array
+
+
+--> URIP | Metadata | Construct
+-
+command urip_AddDefaults @uRipArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense   
+   if pLibLicense is empty then put pref_GetValue ("userName") into pCopyrightHolder 
+   if pLibLicense is empty then put pref_GetValue ("default copyright license") into pLibLicense
+   if pLibLicense is empty then put "GPLv3" into pLibLicense
+   if pVersion is empty then put "0.1" into pVersion
+   
+   put pLibLicense into uRipArray ["license"]
+   put pVersion into uRipArray ["version"]
+   
+   if pScriptName is not empty then put pScriptName into uRipArray ["name"]
+   if pScriptType is not empty then put pScriptType into uRipArray ["type"]
+   if pCopyrightHolder is not empty then put pCopyrightHolder into uRipArray ["copyright"]
+   if pDeps is not empty then put pDeps into uRipArray ["deps"]
+   if pScriptHelp is not empty then put pScriptHelp into uRipArray ["script_Help"]
+end urip_AddDefaults
+
+
+--> Meta
+-
+function metadata_ArrayToYaml metadataArray
+   put "name,type,project,license,version,deps" into firstMeta
+   repeat for each item someKey in firstMeta
+      put word 1 to -1 of metadataArray [someKey] into metaValue
+      if metaValue is not empty then
+         put someKey & ":" && metaValue & CR after metaYaml
+      end if
+      delete variable metadataArray [someKey]
+   end repeat
+   
+   put keys (metadataArray) into metaKeys
+   sort lines of metaKeys
+   repeat for each line someKey in metaKeys
+      put word 1 to -1 of metadataArray [someKey] into metaValue
+      if metaValue is not empty then
+         put someKey & ":" && metaValue & CR after metaYaml
+      end if
+   end repeat
+   delete char -1 of metaYaml
+   return metaYaml
+end metadata_ArrayToYaml
+
+function metadata_ConstructUripArray pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
+   urip_AddDefaults uRipArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
+   return uRipArray
+end metadata_ConstructUripArray
+
+
+--> Private
+-
+private command _AddUrip @metadataArray, sObject
+   put the customproperties ["uRIP"] of sObject into uRipArray
+   union metadataArray with uRipArray
+end _AddUrip

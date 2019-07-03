@@ -24,8 +24,7 @@ on menu_ScriptDefaultMenu mTarget
 end menu_ScriptDefaultMenu
 
 on menu_SpotlightHandler
-   -- put LocalArray ["clicktext"]
-   put the clicktext into hName
+   put LocalArray ["selectedtext"] into hName
    put spotlight_FindExportedHandler (hName)
 end menu_SpotlightHandler
 

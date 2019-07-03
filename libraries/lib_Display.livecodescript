@@ -21,6 +21,26 @@ You can "view" this library as contaminated :)
 */
 
 
+--> Working on
+-
+command display_SetView @displayView, displayStackLabel, pDisplayViewTitle
+   if exists (displayView) is false then
+      put display_FindView (displayStackLabel, pDisplayViewTitle) into displayView
+   end if
+end display_SetView
+
+function script_FilterChangedIndex scriptObjects
+   repeat for each line scriptObject in scriptObjects
+      set the cursor to busy
+      if the script_IsDifferent of scriptObject is true then
+         put scriptObject & CR after changedScriptObjects
+      end if
+   end repeat
+   delete char -1 of changedScriptObjects
+   return changedScriptObjects
+end script_FilterChangedIndex
+
+
 --> Display | Events
 -
 /*
@@ -55,6 +75,15 @@ end mDoubleUp_HkeyLine
 
 --> Working on
 -
+command display_Spin someLine, pIndexView
+   -- workds with index and array display views
+   set the cursor to busy
+   if exists (pIndexView) is false then return 0
+   set the selected_Line of pIndexView to someLine
+   put the result into lineNum
+   return lineNum
+end display_Spin
+
 function display_FindView displayStackLabel, pDisplayViewTitle
    -- looks for Dispay Array, and Display Index views
    -- put the openstacks into dStackNames
@@ -77,6 +106,15 @@ end display_FindView
 
 --> Display
 -
+command display_StoredAtopiaArray
+   put atopia_FetchFedray() into atopiaDomainArray
+   --
+   put "Global | Server | Atopia | Tree | Menu" into mTitle
+   put "Global | Server | Atopia | Tree | Line | Menu" into mLineTitle
+   display_Array atopiaDomainArray, "Stored Atopia Domains", mTitle, mLineTitle
+   return the result
+end display_StoredAtopiaArray
+
 command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
    display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
    put the result into displayView 
@@ -159,25 +197,45 @@ command display_Menus
    go to stack longStackFile
 end display_Menus
 
-command display_RecentExports pHowLong, pIndexView
-   -- we should also check which exports are different from the objects script using "script_IsDifferent"
-   
-   if pHowLong is empty then put 20 into pHowLong
-   put word 1 of pHowLong into someMin
-   put 60*someMin into someSec
-   put spotlight_ListRecentlyExportedObjects (someSec) into rObjects
-   
-   if exists (pIndexView) is false then
-      put merge ("In last [[someMin]] minutes,Changes") into someTitle
+
+--> Display | Handler | Exports
+-
+command display_RecentExports pSinceMin, pIndexView, pDontFilter
+   display_SetView pIndexView, "Script Changes"
+   --
+   if pSinceMin is empty then
+      if exists (pIndexView) then
+         put the title_Text of pIndexView into displayedTitle
+         put word -2 of displayedTitle into someMin
+      else
+         put 20 into someMin
+      end if
+   else
+      put word 1 of pSinceMin into someMin
+   end if
+   --
+   put merge ("In last [[someMin]] minutes") into someTitle
+   --
+   put 60 * someMin into someSec
+   put spotlight_ListRecentlyExportedObjects (someSec) into scriptObjects
+   if pDontFilter is not true then
+      put "Unsaved in" into word 1 of someTitle
+      put script_FilterChangedIndex (scriptObjects) into scriptObjects
+   else
+      put "Modified in" into word 1 of someTitle
+   end if
+   --  
+   if exists (pIndexView) then
+      set the view_Index [someTitle] of pIndexView to scriptObjects
+   else
+      put ",Script Changes" after someTitle
       put empty into mUp
       put "mouse_EditObjectScript" into mDoubeUp
-      put "Global | Script | Changes | Menu" into lineMenuTitle
-      display_Index rObjects, someTitle, "Global | Script | Changes | Menu", lineMenuTitle, mUp, mDoubeUp
-      return the result
-   else
-      set the view_Index of pIndexView to rObjects
-      return pIndexView
+      put "Global | Script | Changes | Line | Menu" into lineMenuTitle
+      display_Index scriptObjects, someTitle, "Global | Script | Changes | Menu", lineMenuTitle, mUp, mDoubeUp
+      put the result into pIndexView
    end if
+   return pIndexView
 end display_RecentExports
 
 command display_HkeyLines hkeyLines, someTitle
@@ -197,7 +255,7 @@ command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMe
       answer "I cannot find this handler anywhere!"
       exit to top
    end if
-
+   
    put script_CallingObject() into pCommandObject
    display_Array pathArray, pTitle, pTitleMenu, empty, pMouseDoubleUpHandler, pMouseDoubleUpHandler, pCommandObject
    put the result into treeWidget
@@ -214,15 +272,15 @@ end display_ScriptTemplate
 
 command display_TextFile someFile, pDisplayTitle, pMenuTitle, pStackName
    local pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
-
+   
    if pMenuTitle is empty then put "Global | Display | File | Menu" into pMenuTitle
    put "file:" & someFile into someUrl
    put url someUrl into someText
-
+   
    put pDisplayTitle,pStackName into displayTitle
    display_Index someText, displayTitle, pMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
    put the result into displayView
-
+   
    set the field_Style of displayView to "text"
    set the menu_Title of displayView to pMenuTitle
    set the displayed_File of displayView to someFile
@@ -270,6 +328,13 @@ command display_Text textOrUrl, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, p
    set the field_Style of indexView to "text"
    return indexView
 end display_Text
+
+command display_JsonRPC rpcURL, pDisplayTitle, pMouseDoubleUpCommand
+   -- put url rpcURL into jsonReply
+   put jsonrpc_GET (rpcURL) into jsonReply 
+   display_Json jsonReply, pDisplayTitle, pMouseDoubleUpCommand
+   return the result
+end display_JsonRPC
 
 command display_Json jsonReply, pDisplayTitle, pMouseDoubleUpCommand
    put json_ToArray (jsonReply) into jsonArray
@@ -336,7 +401,7 @@ command display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMe
    
    return displayView
 end display_InvisibleArray
-   
+
 command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
    put "View|Index|Simple" into viewName
    
@@ -400,6 +465,7 @@ command stack_CloneInvisible stackNameToClone, pCloneName, pDestroyBoolean
    if pDestroyBoolean is not false then
       set the destroyStack of clonedStack to true
       set the destroyWindow of clonedStack to true
+      -- set the cantmodify of clonedStack to true
    end if
    return newStackName -- used
 end stack_CloneInvisible
@@ -480,7 +546,7 @@ private function _GetNewIndexDisplayStackRect oRect, displayView
    
    return newLeft,newTop,newRight,newBottom
 end _GetNewIndexDisplayStackRect
-   
+
 private function _displayView cloneStackName
    -- was "view_GetTemplateControl" and "view_GetTemplateObject"
    -- put view_GetTemplateControl (cloneStackName) into displayView

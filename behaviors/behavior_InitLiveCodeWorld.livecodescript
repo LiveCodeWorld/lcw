@@ -37,18 +37,31 @@ as well as give the HomeStack and interface and some useful functionality.
 */
 
 --> Working on
+-
 command project_LoadMenus projectFolder
    put project_ListPaths ("controllers", projectFolder) into stackPaths
    project_IndexGlobalMenus stackPaths
 end project_LoadMenus
 
+private command _LoadCustomUserProject
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   project_InitialiseFolder lcwUserProjectFolder
+   
+   put lcw_UserHomeStackName() into userHomeStackName
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
+   
+   dispatch "env_RecursivelyLoadProjects" to stack userHomeStackName
+end _LoadCustomUserProject
+
 
 --> LCW | Me
 -
-command project_Init
-   if the long id of the target is not the long id of me then pass project_Init
+command lcw_Init
+   -- as "project_Init"
+   if the long id of the target is not the long id of me then pass lcw_Init
    _LcwInitialize
-end project_Init
+end lcw_Init
 
 
 --> Project | Init
@@ -283,6 +296,60 @@ end module_FindFromFolder
 
 --> LCW | Names
 -
+getprop project_Name
+   -- assume folder name = project name
+   set the itemdelimiter to slash
+   put the project_Folder of the target into projectFolder
+   
+   /*
+   -- could also be called project_HomeStackName
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into stackPath
+   
+   put project_FindFolder (stackPath) into projectFolder
+   if projectFolder is empty then return empty
+   */
+   return item -1 of projectFolder
+end project_Name
+
+getprop project_Folder
+   -- latest simplest version based on naming conventions and folder structure
+   -- does not allow projects outside of the LCW reop folder
+   set the itemdelimiter to slash
+   
+   -- otherwise we check to see if we are looking at a project home stack inside of a repo folder
+   put the long id of target into tObject
+   if word 1 of tObject is not "stack" then put the defaultstack into tObject -- ie the stack_Object
+   put the effective filename of tObject into tPath
+   
+   -- let's check that stack LCW.livecode is there
+   -- this will load LCW.livecode into memory, but does not initialise the project
+   put tPath into repoFolder
+   put empty into item -2 to -1 of repoFolder
+   put repoFolder & "lcw/lcw.livecode" into lcwHomePath
+   if there is a stack lcwHomePath then
+      put the number of items of lcwHomePath into itemNum
+      put item 1 to (itemNum - 1) of tPath into projectFolder
+      put slash after projectFolder
+      return projectFolder
+   else
+      -- could check for the stack being a module here
+      return empty
+   end if
+end project_Folder
+
+getprop env_RepoFolder
+   -- latest simplest version based on naming conventions and folder structure
+   -- does not allow projects outside of the LCW reop folder 
+   -- we resulte the project_Folder to maintain less code
+   put the project_Folder of target into envRepoFolder
+   
+   set the itemdelimiter to slash
+   delete item -1 of envRepoFolder
+   return envRepoFolder
+end env_RepoFolder
+
 function lcw_HomeFolder
    --  see "project_HomeFolder"
    if the environment is "mobile" then
@@ -295,22 +362,6 @@ function lcw_HomeFolder
    return lcwHomeFolder
 end lcw_HomeFolder
 
-getprop project_Name
-   -- could also be called project_HomeStackName
-   -- searches the disk based file hierearchy to find the project root
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into stackPath
-   
-   put project_FindFolder (stackPath) into projectFolder
-   if projectFolder is empty then return empty
-   
-   set the itemdelimiter to slash
-   return item -1 of projectFolder -- assume folder name = project homestack name
-   
-   put project_GetHomeStackName (projectFolder) into projectName
-   return projectName 
-end project_Name
-
 getprop project_HomeStack
    -- searches the disk based file hierearchy to find the project root
    put the stack_Object of the target into stackObject
@@ -322,34 +373,6 @@ getprop project_HomeStack
    put the name of stack projectStackPath into stackObject
    return stackObject 
 end project_HomeStack
-
--- getprop project_HomeFolder
--- searches the disk based file hierearchy to find the project root
-put the stack_Object of the target into stackObject
-put the effective filename of stackObject into stackPath
-
-put project_FindFolder (stackPath) into projectFolder
-return projectFolder
-end project_HomeFolder
-
-getprop project_Folder [shortSubFolderName]
-   -- searches the disk based file hierearchy to find the project root
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into stackPath
-   
-   put project_FindFolder (stackPath) into projectFolder
-   switch
-      case projectFolder is empty
-         return empty
-      case shortSubFolderName is not empty
-         if char 1 of shortSubFolderName = slash then delete char 1 of shortSubFolderName
-         put shortSubFolderName after projectFolder
-         if char -1 of shortSubFolderName is not slash then put slash after projectFolder
-      default
-         return projectFolder
-   end switch
-end project_Folder
-
 
 
 --> Working On | Messy
@@ -432,7 +455,7 @@ command project_Start homeStackName
    display_Loading homeStackName
    --
    -- could rely on sending "preOpenStack" ???
-   dispatch "project_Init" to homeStackObject -- a project specific customised version of below
+   dispatch "env_RecursivelyLoadProjects" to homeStackObject -- a project specific customised version of below
    
    put the stack_Folder of stack homeStackObject into projectFolder -- just in case ???
    switch it
@@ -505,7 +528,7 @@ command project_LoadDeps projectDeps, projectHomeStackFile
          breakpoint
          next repeat
       end if
-      dispatch "project_Init" to stack sisterProjectHomeStackPath
+      dispatch "env_RecursivelyLoadProjects" to stack sisterProjectHomeStackPath
       -- go to stack sisterProjectHomeStackPath
    end repeat
 end project_LoadDeps
@@ -986,17 +1009,6 @@ end _AddToStackFileArray
 
 --> Private | Create
 -
-private command _LoadCustomUserProject
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   project_InitialiseFolder lcwUserProjectFolder
-   
-   put lcw_UserHomeStackName() into userHomeStackName
-   put lcw_UserProjectFolder() into lcwUserProjectFolder
-   library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
-   
-   dispatch "project_Init" to stack userHomeStackName
-end _LoadCustomUserProject
-
 private command _CreateMenuButton
    -- this should be part of the new script-only  menu library 
    -- in case we call this handler more that once, do not create multiple buttons

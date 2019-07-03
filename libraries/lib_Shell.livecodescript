@@ -26,6 +26,23 @@ end ssh_DeleteFolder
 */
 
 
+--> Working on
+-
+command diff_Files thisFile, lastFile
+   -- can we open in background
+   -- put "sdiff" into someShell
+   put "opendiff" into someShell
+   put space & kwote(thisFile) && kwote(lastFile) after someShell
+   
+   -- try to run in the background
+   -- put "(" & someShell && "&)" into someShell -- makes no difference
+   -- put "screen" && someShell into someShell -- does not work (needs to attach screen)
+   
+   put shell (someShell) into shellResult
+   return shellResult
+end diff_Files
+
+
 --> SSH
 -
 function ssh_FetchFile sshUser, remoteDomain, somePath
@@ -156,14 +173,6 @@ command diff_CreateTempFile someText, shortFile
    put someText into url ("binfile:" & someFile)
    return someFile
 end diff_CreateTempFile
-
-command diff_Files thisFile, lastFile
-   put "opendiff" into someShell
-   -- put "sdiff" into someShell
-   put space & kwote(thisFile) && kwote(lastFile) after someShell
-   put shell (someShell) into shellResult
-   return shellResult
-end diff_Files
 
 
 --> Bonjour

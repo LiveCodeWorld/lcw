@@ -20,29 +20,45 @@ local LocalArray
 
 --> Working On
 -
-private function _getValue pathItems
-   put the displayed_Array of me into someArray
-   split pathItems with comma
-   put someArray [pathItems] into someValue
-   return someValue
-end _getValue
+getprop title_Text
+   put the label of _headerWidget() into displayTitle
+   return displayTitle
+end title_Text
 
-private command _displaySelectedValue pTreeWidget
-   -- if the optionkey is "Down" then breakpoint -- interferes with a menu option edit
-   
-   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
-   put the selected_Value of pTreeWidget into selectedValue
-   
-   if the shiftKey is "Up" then return selectedValue
-   
-   if selectedValue is an array then
-      display_Array selectedValue
-      -- put the hilitedElement of me into commaKeys
-   else
-      put selectedValue
-   end if
-end _displaySelectedValue
+setprop title_Text displayTitle
+   if displayTitle is empty then put "Array" into displayTitle
+   set the label of _headerWidget() to displayTitle
+end title_Text
 
+getprop stack_Title
+   put word 1 to -1 of the title_Text of me into stackTitle
+   put word 1 to -1 of the stack_Label of me into stackLabel
+   if stackLabel is not empty then put stackLabel into item 2 of stackTitle
+   return stackTitle
+end stack_Title
+
+setprop stack_Title stackTitle
+   put word 1 to -1 of item 1 of stackTitle into titleText
+   put word 1 to -1 of item 2 of stackTitle into stackLabel
+   --
+   lock screen
+   set the title_Text of me to titleText
+   set the stack_Label of me to stackLabel
+   unlock screen
+   --
+   return the long id of me
+end stack_Title
+
+getprop stack_Label
+   put the label of the defaultstack into stackLabel
+   return stackLabel
+end stack_Label
+
+getprop stack_Label stackLabel
+   put the defaultstack into myStackObject
+   set the label of myStackObject to stackLabel
+   return myStackObject
+end stack_Label
 
 --> Props | Selected
 -
@@ -53,14 +69,6 @@ getprop top_Array
    --
    put item 1 of commaPath into topItem
    put someArray [topItem] into topArray
-   return topArray
-   
-   put the hilited_Element of me into hItems
-   if the number of items of hItems = 1 then
-      put the selected_Array of me into topArray
-   else
-      put the parent_Array of me into topArray
-   end if
    return topArray
 end top_Array
 
@@ -108,6 +116,57 @@ end selected_Path
 setprop selected_Path commaPath
    set the hilited_Element of me to commaPath
 end selected_Path
+
+getprop selected_LineNum
+   -- just top-level lines and assume
+   put the selected_Line of me into topLine
+   
+   set the wholematches to true
+   put _SortedTopKeys() into topKeys
+   put lineoffset (topLine, topKeys) into topLineNum
+   
+   -- now we could look at subline and add
+   return topLineNum
+end selected_LineNum
+
+getprop selected_Line
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into commaPath
+   put the pathDelimiter of treeWidget into pDelim
+   set the itemdelimiter to pDelim
+   put item 1 of commaPath into topLine
+   return topLine
+end selected_Line
+
+setprop selected_Line someLine
+   set the hilited_Element of me to someLine
+end selected_Line
+
+function _SortedTopKeys
+   put the displayed_Data of me into myData
+   put keys (myData) into topKeys
+   
+   put _treeWidget() into treeWidget
+   put the sortOrder of treeWidget into sOrder
+   put the sortType of treeWidget into sType
+   
+   switch sType
+      case "numeric"
+         if sOrder = "ascending" then
+            sort numeric ascending topKeys
+         else
+            sort numeric descending topKeys
+         end if
+         break
+      default
+         if sOrder = "ascending" then
+            sort ascending topKeys
+         else
+            sort descending topKeys
+         end if
+   end switch
+   return topKeys
+end _SortedTopKeys
 
 getprop hilited_Element
    put _treeWidget() into treeWidget
@@ -299,7 +358,7 @@ getprop display_MouseTarget
    put LocalArray ["display_MouseTarget"] into displayMouseTarget
    return displayMouseTarget
 end display_MouseTarget
-    
+
 setprop display_MouseTarget displayMouseTarget
    put displayMouseTarget into LocalArray ["display_MouseTarget"]
 end display_MouseTarget
@@ -368,16 +427,6 @@ getprop tree_SortTypes
    return "text,numeric"
 end tree_SortTypes
 
-getprop title_Text
-   put the label of _headerWidget() into displayTitle
-   return displayTitle
-end title_Text
-
-setprop title_Text displayTitle
-   if displayTitle is empty then put "Array" into displayTitle
-   set the label of _headerWidget() to displayTitle
-end title_Text
-
 getprop title_Colour
    put the backgroundcolor of _headerWidget() into someColour
    return someColour
@@ -418,9 +467,9 @@ getprop displayed_Array [pathItems]
    return someValue
 end displayed_Array
 
-setprop displayed_Array someArray
+setprop displayed_Array [someTitle] someArray
    -- compatibility with old treeView
-   set the displayed_Data of me to someArray
+   set the displayed_Data [someTitle] of me to someArray
 end displayed_Array
 
 getprop displayed_Data
@@ -428,8 +477,13 @@ getprop displayed_Data
    return someArray
 end displayed_Data
 
-setprop displayed_Data someArray
+setprop displayed_Data [someTitle] someArray
+   lock screen
    set the arrayData of _treeWidget() to someArray
+   if someTitle is not empty then
+      set the stack_Title of me to someTitle
+   end if
+   unlock screen
 end displayed_Data
 
 getprop view_Data [someKey]
@@ -537,6 +591,29 @@ private function _footerWidget
    put the long id of widget "Array Footer" of me into footerWidget
    return footerWidget
 end _footerWidget
+
+private function _getValue pathItems
+   put the displayed_Array of me into someArray
+   split pathItems with comma
+   put someArray [pathItems] into someValue
+   return someValue
+end _getValue
+
+private command _displaySelectedValue pTreeWidget
+   -- if the optionkey is "Down" then breakpoint -- interferes with a menu option edit
+   
+   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
+   put the selected_Value of pTreeWidget into selectedValue
+   
+   if the shiftKey is "Up" then return selectedValue
+   
+   if selectedValue is an array then
+      display_Array selectedValue
+      -- put the hilitedElement of me into commaKeys
+   else
+      put selectedValue
+   end if
+end _displaySelectedValue
 
 
 --> Deps
