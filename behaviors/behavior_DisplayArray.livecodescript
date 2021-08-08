@@ -1,6 +1,7 @@
 ﻿script "behavior_DisplayArray"
 --> MetaData
 -
+copyright: David Bovill
 license: GPLv3
 name: behavior_DisplayArray
 type: behavior
@@ -18,8 +19,429 @@ so that if the view is cloned and not the whole stack the view keeps working.
 local LocalArray
 
 
---> Working On
+--> Working on
 -
+on hiliteChanged
+   -- hack - cant stop the flicker when selecting line that is already selected
+   -- called twice due to "set the hilitedElement"
+   -- lock messages makes no difference
+   if LocalArray ["just set hilitedElement"] is true then
+      put false into LocalArray ["just set hilitedElement"]
+      return empty
+   end if
+   
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into pathItems
+   if pathItems is empty then
+      put LocalArray ["previousHilitedElement"] into pathItems
+      set the hilitedElement of treeWidget to pathItems
+      put true into LocalArray ["just set hilitedElement"]
+   else
+      put pathItems into LocalArray ["previousHilitedElement"]
+      put false into LocalArray ["just set hilitedElement"]
+   end if
+   
+   if the controlKey is "Down" then
+      -- put the line_Menu of me into lineMenu
+      menu_PopUp -- lineMenu
+   else
+      _displaySelectedValue treeWidget
+   end if
+end hiliteChanged
+
+on mouseUp
+   -- called only when the user click on the header as a tree widget does not send to mouseUp
+   local tActionName
+   put the long id of the target into headerWidget
+   put the mouseAction of headerWidget into tActionName
+   	
+   switch tActionName
+      case "cog"
+         put the clickloc into pLocation
+         add 2 to item 1of pLocation
+         add 4 to item 2 of pLocation
+         put the menu_Title of headerWidget into mTitle
+         --
+         if the menu_Style of me is "array" then
+            put the menu_Button of me into mButton
+            mArray_PopUp mTitle, mButton
+         else
+            menu_PopUp mTitle, pLocation
+         end if
+      default
+         -- clicked on the title
+   end switch
+end mouseUp
+
+
+--> Props
+-
+getprop expanded_Paths
+   put the foldState of _treeWidget() into foldedArray
+   repeat for each key someKey in foldedArray
+      if foldedArray [someKey]["folded"] is false then
+         put someKey & comma after ePaths
+      end if 
+   end repeat
+   delete char -1 of ePaths
+   return ePaths
+end expanded_Paths
+
+setprop expanded_Paths ePaths
+   put display_ConstructFoldState (ePaths) into foldedArray
+   set the foldState of _treeWidget() to foldedArray
+   return foldedArray
+end expanded_Paths
+
+getprop fold_State
+   put the foldState of _treeWidget() into foldedArray
+   return foldedArray 
+end fold_State
+
+setprop fold_State foldedArray
+   -- sensitive to capitalisation
+   set the foldState of _treeWidget() to foldedArray
+   return the result
+end fold_State
+
+getprop top_Array [pKey]
+   put _treeWidget() into treeWidget
+   put the arrayData of treeWidget into aData
+   put the hilitedElement of treeWidget into commaPath
+   --
+   put item 1 of commaPath into topKey
+   if pKey is empty then
+      return aData [topKey]
+   else
+      return aData [topKey][pKey]
+   end if
+end top_Array
+
+getprop top_Data
+   -- was "top_Array" 
+   -- returns the topKey and not just the contents of the array
+   
+   put _treeWidget() into treeWidget
+   put the arrayData of treeWidget into aData
+   put the hilitedElement of treeWidget into commaPath
+   --
+   put item 1 of commaPath into topKey
+   put aData [topKey] into topData [topKey]
+   return topData
+end top_Data
+
+getprop parent_Array [someKey]
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   if the number of items of commaKeys = 1 then
+      return the displayed_Array of me
+   end if
+   --
+   delete item -1 of commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into pArray
+   --
+   if someKey is empty then
+      return pArray
+   else
+      return pArray [someKey]
+   end if
+end parent_Array
+
+getprop selected_Line
+   put _treeWidget() into treeWidget
+   --
+   put the hilitedElement of treeWidget into commaPath
+   put the pathDelimiter of treeWidget into pDelim
+   --
+   set the itemdelimiter to pDelim
+   put item -1 of commaPath into sLine
+   return sLine
+end selected_Line
+
+setprop selected_Line commaPath
+   put _treeWidget() into treeWidget
+   set the scrollHilitedElementIntoView of treeWidget to true
+   set the hilitedElement of treeWidget to commaPath
+   --
+   put item 1 of commaPath into topLine
+   set the wholematches to true
+   put _SortedTopKeys() into topKeys
+   put lineoffset (topLine, topKeys) into topLineNum
+   --
+   return topLineNum -- only works for top lines
+end selected_Line
+
+getprop selected_Value
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   put item -1 of commaKeys into lastComma
+   
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   if selectedValue is empty then
+      return lastComma
+   else
+      return selectedValue
+   end if
+end selected_Value
+
+getprop top_Lines
+   put _treeWidget() into treeWidget
+   --
+   put the arrayData of treeWidget into someData
+   --
+   put keys (someData) into topLines
+   if the sortType of treeWidget is "text" then
+      if the sortOrder of treeWidget is "ascending" then
+         sort ascending lines of topLines
+      else
+         sort descending lines of topLines
+      end if
+   else
+      sort numeric lines of topLines
+   end if
+   return topLines
+end top_Lines
+
+setprop deleted_Line somePath
+   put _treeWidget() into treeWidget
+   --
+   put the arrayData of treeWidget into someData
+   split somePath by comma
+   put someData [somePath] into testData
+   delete variable someData [somePath]
+   --
+   set the arrayData of treeWidget to someData
+   --
+   return someData
+end deleted_Line
+
+getprop displayed_Index
+   put the arrayData of _treeWidget() into someArray
+   put keys (someArray) into someIndex
+   sort lines of someIndex
+   return someIndex
+end displayed_Index
+
+setprop displayed_Index [someTitle] someIndex
+   lock screen
+   repeat for each line someLine in someIndex
+      put empty into someArray [someLine]
+   end repeat
+   
+   set the arrayData of _treeWidget() to someArray
+   if someTitle is not empty then
+      set the stack_Title of me to someTitle
+   end if
+   unlock screen
+end displayed_Index
+
+
+--> Drag Drop
+-
+on dragDrop
+   put the drop_Command of me into dropCommand
+   --
+   -- put the dragdata ["files"] into someValue
+   put the dragdata ["text"] into someValue
+   --
+   if dropCommand is empty then
+      put someValue
+   else
+      put the long id of the target into displayView
+      put the mouse_Target of me into mouseTarget
+      if exists (mouseTarget) is false then put displayView into mouseTarget
+      dispatch dropCommand to mouseTarget with displayView,someValue
+   end if
+   --
+   pass dragDrop -- needed for drop to occur
+end dragDrop
+
+on dragEnter -- show a green outline around the drop target
+   set the allowableDragActions to "link"
+   set the dragAction to "Link"
+   pass dragEnter
+end dragEnter
+
+on dragLeave
+   -- set the borderColor of the target to ""
+   pass dragLeave
+end dragLeave
+
+
+--> Props | Events
+-
+getprop mouse_Target
+   put LocalArray ["mouse_Target"] into displayMouseTarget
+   return displayMouseTarget
+end mouse_Target
+
+setprop mouse_Target displayMouseTarget
+   put displayMouseTarget into LocalArray ["mouse_Target"]
+end mouse_Target
+
+getprop drop_Command
+   put LocalArray ["drop_Command"] into dropCommand
+   return dropCommand
+end drop_Command
+
+setprop drop_Command dropCommand
+   put dropCommand into LocalArray ["drop_Command"]
+end drop_Command
+
+getprop mouse_Up
+   put LocalArray ["mouse_Up"] into mouseUpCommand
+   return mouseUpCommand
+end mouse_Up
+
+setprop mouse_Up mouseUpCommand
+   put mouseUpCommand into LocalArray ["mouse_Up"]
+end mouse_Up
+
+getprop mouse_DoubleUp
+   put LocalArray ["mouse_DoubleUp"] into mouseDoubleUpCommand
+   return mouseDoubleUpCommand
+end mouse_DoubleUp
+
+setprop mouse_DoubleUp mouseDoubleUpCommand
+   put mouseDoubleUpCommand into LocalArray ["mouse_DoubleUp"]
+end mouse_DoubleUp
+
+getprop view_EventArray eventArray   
+   put the mouse_Target of me into eventArray ["eventTarget"]
+   put the mouse_Up of me into eventArray ["mouseUp"]
+   put the mouse_DoubleUp of me into eventArray ["mouseDoubleUp"]
+   return eventArray
+end view_EventArray
+
+setprop view_EventArray eventArray   
+   set the mouse_Target of me to eventArray ["eventTarget"]
+   set the mouse_Up of me to eventArray ["mouseUp"]
+   set the mouse_DoubleUp of me to eventArray ["mouseDoubleUp"]
+end view_EventArray
+
+
+--> Events
+-
+on actionInspect pPath
+   put _getValue (pathItems) into someValue
+   put the mouse_Up of me into mouseUpCommand
+   if mouseUpCommand is empty then
+      put someValue
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      dispatch mouseUpCommand to mouseTarget with displayView,someValue
+   end if
+end actionInspect
+
+command actionDoubleClick pathItems
+   put the selected_Value of me into someValue
+   put the mouse_DoubleUp of me into mouseDoubleUpCommand
+   if mouseDoubleUpCommand is empty then
+      put someValue
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      replace comma with CR in pathItems
+      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
+   end if
+end actionDoubleClick
+
+private command _SetMouseTargets @tObject, @displayView, @mouseTarget
+   put the long id of the target into tObject
+   put the long id of me into displayView
+   put the mouse_Target of me into mouseTarget
+   if exists (mouseTarget) is false then put tObject into mouseTarget
+end _SetMouseTargets 
+
+on resizeControl
+   put the rect of me into viewRect
+   LayoutControl viewRect
+end resizeControl
+
+on refreshDisplay
+   put the rect of this card into cardRect
+   LayoutControl cardRect
+end refreshDisplay
+
+command LayoutControl cardRect
+   lock screen
+   put the inner_Rect [cardRect] of me into cardRect
+   rect_SubtractMargins cardRect
+   
+   set the rect of _headerWidget() to _headerRect (cardRect)
+   set the rect of _treeWidget() to _fieldRect (cardRect)
+   set the rect of _footerWidget() to _footerRect (cardRect)
+   unlock screen
+end LayoutControl
+
+
+--> Props | Top
+-
+getprop top_Line [pathItemNum]
+   put _treeWidget() into treeWidget
+   if pathItemNum is empty then put 1 into pathItemNum
+   --
+   put the hilitedElement of treeWidget into commaPath
+   put item pathItemNum of commaPath into topLine
+   return topLine
+end top_Line
+
+getprop top_LineKeys
+   -- sorts alphabetically the keys
+   -- assumes the display does the same?
+   
+   put the top_Data of me into topArray
+   put the keys of topArray into topKeys
+   sort topKeys
+   return topKeys
+end top_LineKeys
+
+
+--> Props | Menu
+-
+getprop menu_Controller [pMenuTitle]
+   put menu_GetGlobalController (pMenuTitle) into mController
+   if exists (mController) is true then return mController
+   
+   put LocalArray ["mController"] into mController
+   if exists (mController) is true then return mController
+   
+   return empty
+end menu_Controller
+
+setprop menu_Controller mController
+   if exists (mController) is false then return empty
+   --
+   put mController into LocalArray ["mController"]
+   --
+   put the script_MenuTitles of mController into mTitles
+   set the title_Menu of me to mTitles
+   return mTitles
+end menu_Controller
+
+getprop menu_Style
+   put LocalArray ["menu_Style"] into mStyle
+   if mStyle is empty then pass menu_Style
+   return mStyle
+end menu_Style
+
+setprop menu_Style mStyle
+   put mStyle into LocalArray ["menu_Style"]
+   return LocalArray 
+end menu_Style
+
+getprop title_Controller
+   put the long id of me into tObject
+   put the title_Menu of me into mTitle
+   put menu_FindController (tObject, mTitle) into mController
+   return mController
+end title_Controller
+
 getprop title_Text
    put the label of _headerWidget() into displayTitle
    return displayTitle
@@ -43,7 +465,9 @@ setprop stack_Title stackTitle
    --
    lock screen
    set the title_Text of me to titleText
-   set the stack_Label of me to stackLabel
+   if stackLabel is not empty then
+      set the stack_Label of me to stackLabel
+   end if
    unlock screen
    --
    return the long id of me
@@ -60,29 +484,9 @@ getprop stack_Label stackLabel
    return myStackObject
 end stack_Label
 
+
 --> Props | Selected
 -
-getprop top_Array
-   put _treeWidget() into treeWidget
-   put the arrayData of treeWidget into someArray
-   put the hilitedElement of treeWidget into commaPath
-   --
-   put item 1 of commaPath into topItem
-   put someArray [topItem] into topArray
-   return topArray
-end top_Array
-
-getprop parent_Array
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into commaKeys
-   delete item -1 of commaKeys
-   put the arrayData of treeWidget into someArray
-   split commaKeys with comma
-   put someArray [commaKeys] into selectedValue
-   return selectedValue
-end parent_Array
-
 getprop selected_Array
    put _treeWidget() into treeWidget
    
@@ -93,29 +497,26 @@ getprop selected_Array
    return selectedValue
 end selected_Array
 
-getprop selected_Value
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into commaKeys
-   put item -1 of commaKeys into lastComma
-   
-   put the arrayData of treeWidget into someArray
-   split commaKeys with comma
-   put someArray [commaKeys] into selectedValue
-   if selectedValue is empty then
-      return lastComma
-   else
-      return selectedValue
-   end if
-end selected_Value
-
 getprop selected_Path
-   return the hilited_Element of me
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into commaPath
+   if char -1 of commaPath is comma then delete char -1 of commaPath
+   return commaPath
 end selected_Path
 
 setprop selected_Path commaPath
-   set the hilited_Element of me to commaPath
+   put _treeWidget() into treeWidget
+   set the hilitedElement of treeWidget to commaPath
+   return treeWidget
 end selected_Path
+
+getprop hilited_Element
+   return the selected_Path of me
+end hilited_Element
+
+setprop hilited_Element commaPath
+   set the selected_Path of me to commaPath
+end hilited_Element
 
 getprop selected_LineNum
    -- just top-level lines and assume
@@ -125,22 +526,12 @@ getprop selected_LineNum
    put _SortedTopKeys() into topKeys
    put lineoffset (topLine, topKeys) into topLineNum
    
-   -- now we could look at subline and add
    return topLineNum
 end selected_LineNum
 
-getprop selected_Line
-   put _treeWidget() into treeWidget
-   put the hilitedElement of treeWidget into commaPath
-   put the pathDelimiter of treeWidget into pDelim
-   set the itemdelimiter to pDelim
-   put item 1 of commaPath into topLine
-   return topLine
-end selected_Line
-
-setprop selected_Line someLine
-   set the hilited_Element of me to someLine
-end selected_Line
+setprop selected_LineNum lineNum
+   set the hilited_Element of me to lineNum
+end selected_LineNum
 
 function _SortedTopKeys
    put the displayed_Data of me into myData
@@ -167,114 +558,6 @@ function _SortedTopKeys
    end switch
    return topKeys
 end _SortedTopKeys
-
-getprop hilited_Element
-   put _treeWidget() into treeWidget
-   put the hilitedElement of treeWidget into commaPath
-   return commaPath
-end hilited_Element
-
-setprop hilited_Element commaPath
-   put _treeWidget() into treeWidget
-   set the hilitedElement of treeWidget to commaPath
-   return treeWidget
-end hilited_Element
-
-
---> Events
--
-on mouseUp
-   -- called only when the user click on the header as a tree widget does not send to mouseUp
-   local tActionName
-   put the long id of the target into headerWidget
-   put the mouseAction of headerWidget into tActionName
-   	
-   switch tActionName
-      case "cog"
-         put the clickloc into pLocation
-         add 2 to item 1of pLocation
-         add 4 to item 2 of pLocation
-         put the menu_Title of headerWidget into mTitle
-         menu_PopUp mTitle, pLocation
-      default
-         -- clicked on the title
-   end switch
-end mouseUp
-
-on hiliteChanged
-   -- hack
-   -- called twice due to "set the hilitedElement"
-   -- lock messages makes no difference
-   if LocalArray ["just set hilitedElement"] is true then
-      put false into LocalArray ["just set hilitedElement"]
-      return empty
-   end if
-   
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into pathItems
-   if pathItems is empty then
-      put LocalArray ["previousHilitedElement"] into pathItems
-      set the hilitedElement of treeWidget to pathItems
-      put true into LocalArray ["just set hilitedElement"]
-   else
-      put pathItems into LocalArray ["previousHilitedElement"]
-      put false into LocalArray ["just set hilitedElement"]
-   end if
-   
-   if the controlKey is "Down" then
-      -- put the line_Menu of me into lineMenu
-      menu_PopUp -- lineMenu
-   else
-      _displaySelectedValue treeWidget
-   end if
-end hiliteChanged
-
-on actionInspect pPath
-   put _getValue (pathItems) into someValue
-   put the action_InspectCommand of me into mouseUpCommand
-   if mouseUpCommand is empty then
-      put someValue
-   else
-      put the display_MouseTarget of me into displayMouseTarget
-      put the long id of the target into treeWidget
-      dispatch mouseUpCommand to displayMouseTarget with treeWidget,someValue
-   end if
-end actionInspect
-
-command actionDoubleClick pathItems
-   put the selected_Value of me into someValue
-   put the action_DoubleClickCommand of me into mouseDoubleUpCommand
-   if mouseDoubleUpCommand is empty then
-      put someValue
-   else
-      put the display_MouseTarget of me into displayMouseTarget
-      put the long id of me into treeWidget
-      replace comma with slash in pathItems
-      dispatch mouseDoubleUpCommand to displayMouseTarget with treeWidget,someValue,pathItems
-   end if
-end actionDoubleClick
-
-on resizeControl
-   put the rect of me into viewRect
-   LayoutControl viewRect
-end resizeControl
-
-on refreshDisplay
-   put the rect of this card into cardRect
-   LayoutControl cardRect
-end refreshDisplay
-
-command LayoutControl cardRect
-   lock screen
-   put the inner_Rect [cardRect] of me into cardRect
-   rect_SubtractMargins cardRect
-   
-   set the rect of _headerWidget() to _headerRect (cardRect)
-   set the rect of _treeWidget() to _fieldRect (cardRect)
-   set the rect of _footerWidget() to _footerRect (cardRect)
-   unlock screen
-end LayoutControl
 
 
 --> Menus
@@ -351,50 +634,6 @@ setprop view_MenuArray menuArray
 end view_MenuArray
 
 
---> Props | Events
--
-getprop display_MouseTarget
-   -- should call this mouse_Target ???
-   put LocalArray ["display_MouseTarget"] into displayMouseTarget
-   return displayMouseTarget
-end display_MouseTarget
-
-setprop display_MouseTarget displayMouseTarget
-   put displayMouseTarget into LocalArray ["display_MouseTarget"]
-end display_MouseTarget
-
-getprop view_EventArray eventArray   
-   put the display_MouseTarget of me into eventArray ["eventTarget"]
-   put the action_InspectCommand of me into eventArray ["mouseUp"]
-   put the action_DoubleClickCommand of me into eventArray ["mouseDoubleUp"]
-   return eventArray
-end view_EventArray
-
-setprop view_EventArray eventArray   
-   set the display_MouseTarget of me to eventArray ["eventTarget"]
-   set the action_InspectCommand of me to eventArray ["mouseUp"]
-   set the action_DoubleClickCommand of me to eventArray ["mouseDoubleUp"]
-end view_EventArray
-
-getprop action_InspectCommand
-   put LocalArray ["action_InspectCommand"] into mouseUpCommand
-   return mouseUpCommand
-end action_InspectCommand
-
-setprop action_InspectCommand mouseUpCommand
-   put mouseUpCommand into LocalArray ["action_InspectCommand"]
-end action_InspectCommand
-
-getprop action_DoubleClickCommand
-   put LocalArray ["action_DoubleClickCommand"] into mouseDoubleUpCommand
-   return mouseDoubleUpCommand
-end action_DoubleClickCommand
-
-setprop action_DoubleClickCommand mouseDoubleUpCommand
-   put mouseDoubleUpCommand into LocalArray ["action_DoubleClickCommand"]
-end action_DoubleClickCommand
-
-
 --> Props | Display
 -
 getprop footer_IsVisible
@@ -454,9 +693,16 @@ setprop title_TextColour someColour
 end title_TextColour
 
 
-
 --> Data
 -
+getprop displayed_Object
+   return the displayed_Object of me
+end displayed_Object
+
+setprop displayed_Object sObject
+   set the displayed_Object of me to sObject
+end displayed_Object
+
 getprop displayed_Array [pathItems]
    -- compatibility with old treeView
    put the displayed_Data of me into someArray
@@ -481,7 +727,7 @@ setprop displayed_Data [someTitle] someArray
    lock screen
    set the arrayData of _treeWidget() to someArray
    if someTitle is not empty then
-      set the stack_Title of me to someTitle
+      set the title_Text of me to someTitle
    end if
    unlock screen
 end displayed_Data

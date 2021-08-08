@@ -26,7 +26,7 @@ on menu_AddProject indexView
    end if
    
    library_StoreProjectFolder homeStackName, projectFolder
-   display_LcwProjectList
+   display_Environment
 end menu_AddProject
 
 on _

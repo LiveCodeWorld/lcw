@@ -4,25 +4,25 @@
 license: GPLv3
 name: model_LCW
 type: model
-version: 0.1
+version: 0.2
 
-
---> Library | Array | Model | List
--
 /*
 For storing arbitrary system wide named arrays.
 */
 
-function lcw_ListModelNames pListShort
+
+--> LCW | Model | List
+-
+function lcw_ListModelNames
    -- the short file names of files in the "model_Library" folder
    put "model_Library" into modelName
-   put project_GetFolder ("lcw") into projectFolder
+   put lcw_GetRootFolder() into projectFolder
    put model_ListNames (modelName, projectFolder) into shortFiles
    return shortFiles
 end lcw_ListModelNames
 
 
---> Library | Array | Model
+--> LCW | Model
 -
 function lcw_FetchArray pShortFile
    set the itemdelimiter to "."
@@ -64,10 +64,16 @@ function lcw_GetArrayFile shortName, pDontCreate
    return someFile
 end lcw_GetArrayFile
 
-function lcw_ArrayFolder shortFileBit, pDontCreate
-   -- was "library_ArrayFolder"
+function lcw_ArrayFolder pShortFile
    put lcw_GetRootFolder() into projectFolder
    put model_GetDataFolder ("model_Library", projectFolder) into libraryArrayFolder
-   put shortFileBit after libraryArrayFolder
+   put pShortFile after libraryArrayFolder
    return libraryArrayFolder
 end lcw_ArrayFolder
+
+function lcw_GetRootFolder
+   -- put env_GetRepoFolder() & "lcw/" into lcwGetRootFolder
+   put lcw_HomeStackName() into lcwHomeStackName
+   put the stack_Folder of stack lcwHomeStackName into lcwGetRootFolder
+   return lcwGetRootFolder
+end lcw_GetRootFolder

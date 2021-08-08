@@ -100,7 +100,7 @@ command hkeyline_DeletePlaceObject someObject
          
          put the long id of tObject into testLongObject
          if testLongObject = someObject then
-            put hKeyLine_Construct (shortHkeyLine, tObject) into hKeyLine
+            put hKeyLine_AddObject (shortHkeyLine, tObject) into hKeyLine
             put lineNumWords into deletedHkeyArray [hKeyLine][shortHkeyLine][tObject]
             delete variable gLCW ["Hkey Place Array"][shortHkeyLine][tObject]
          end if

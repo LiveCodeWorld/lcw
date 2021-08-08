@@ -11,10 +11,67 @@ A library for script behaviors.
 */
 
 
---> Behavior | Handlers
+--> Behavior | StackName
+-
+getprop behavior_StackName
+   put the behavior of the target into bObject
+   switch
+      case word 1 of bObject is not "stack"
+      case exists (bObject) is false
+         return empty
+      default
+         put the stack_Name of bObject into behaviorStackName
+         return behaviorStackName
+   end switch
+end behavior_StackName
+
+setprop behavior_StackName stackName
+   if exists (stack stackName) is false then return empty
+   put the name of stack stackName into stackObject
+   set the behavior of the target to stackObject
+   return stackObject
+end behavior_StackName
+
+getprop behavior_StackNames
+   put the long id of the target into tObject
+   repeat
+      put the behavior of tObject into bObject
+      switch
+         case word 1 of bObject is not "stack"
+         case exists (bObject) is false
+            delete char -1 of bStackNames
+            return bStackNames
+         default
+            put the stack_Name of bObject into bStackName
+            put bStackName & CR after bStackNames
+            put bObject into tObject
+      end switch
+   end repeat
+end behavior_StackNames
+
+setprop behavior_StackNames bStackNames
+   -- test and refactor
+   put the long id of the target into tObject
+   --
+   replace comma with CR in bStackNames
+   repeat for each line stackName in bStackNames
+      if exists (stack stackName) is false then exit repeat
+      put the stack_Object of stack stackName & CR after bObjects
+   end repeat
+   delete char -1 of bObjects
+   --
+   behavior_SetHierarchy tObject,  bObjects
+   return the result
+end behavior_StackNames
+
+
+
+--> Behavior
 -
 getprop behavior_HandlerExists [hkeyLine]
    put the behavior of the target into bObject
+   if exists (bObject) is false then return empty
+   --
    put the revAvailablehandlers of bObject into hTable
    htable_ExactLineOffsets hkeyLine, hTable, startLineNum, endLineNum
    return the result
@@ -22,6 +79,8 @@ end behavior_HandlerExists
 
 getprop behavior_Handler [hkeyLine]
    put the behavior of the target into bObject
+   if exists (bObject) is false then return empty
+   --
    put the revAvailablehandlers of bObject into hTable
    htable_ExactLineOffsets hkeyLine, hTable, startLineNum, endLineNum
    put line startLineNum to endLineNum of the script of bObject into behaviorHandler

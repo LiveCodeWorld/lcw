@@ -4,12 +4,125 @@
 copyright: David Bovill
 license: GPLv3
 name: lib_Text
-type: script library
+type: library
 version: 0.9
+
+/*
+Basic library of utilities for working with text, lines and indexes.
+Currently refactoring as many handlers are very old and predate the introduction of arrays to the language.
+Beginning to rename handlers that deal with indexes in a modern way to "index_XXX"
+*/
 
 
 --> Working on
 -
+command index_Filter @someIndex, filterItems
+   put index_GetSortedAndFiltered (someIndex, filterItems) into someIndex
+end index_Filter
+
+function index_GetSortedAndFiltered someIndex, pFilterItems
+   local filteredIndex
+   if pFilterItems is empty then return someIndex
+   --
+   repeat for each item fItem in pFilterItems
+      put someIndex into fIndex
+      if fItem contains "*" is false then
+         put "*" & fItem & "*" into fItem
+      end if 
+      filter fIndex with fItem
+      split fIndex by CR as set
+      union filteredIndex with fIndex
+   end repeat
+   put the keys of filteredIndex into sortedAndFiltered
+   sort lines of sortedAndFiltered
+   return sortedAndFiltered
+end index_GetSortedAndFiltered
+
+command text_StripReg @wikiText, someReg, pReplaceText
+   if matchText (someReg, "\(.*\)") is false then
+      -- someReg requires "()" in order to return sNum, eNum
+      put "(" & word 1 to -1 of someReg & ")" into someReg
+   end if
+   
+   local refStart, refEnd
+   put 0 into indexNum
+   repeat
+      get matchchunk (wikiText, someReg, sNum, eNum)
+      if it is false then exit repeat
+      if sNum is not a number then exit repeat -- should not happen (see above)
+      
+      -- this bit not needed (remove for speed)
+      put sNum into stripResultArray [indexNum]["sNum"]
+      put eNum into stripResultArray [indexNum]["eNum"]
+      add 1 to indexNum
+      --
+      put pReplaceText into char sNum to eNum of wikiText
+   end repeat
+   return stripResultArray
+end text_StripReg
+
+
+--> Text | Hash
+-
+function sha1_Hash someData
+   local hexDigest
+   put sha1digest (someData) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end sha1_Hash
+
+function md5_Hash someText
+   local hexDigest
+   put md5digest (someText) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end md5_Hash
+
+function text_IsCaps someText
+   put "^[^a-z]*$" into someReg
+   -- put "\b[A-Z]+\b" into someReg
+   get matchtext (word 1 to -1 of someText, someReg)
+   return it 
+   
+   repeat for each char testChar in someText
+      put chartonum (testChar) into someCharNum
+      if someCharNum >= 65 and someCharNum <= 90 then
+         return false
+      end if
+   end repeat
+   return true
+end text_IsCaps
+
+
+--> Text
+-
+function text_GetMergeVars mergeText
+   -- put text_GetBetween ("[[", "]]", someText, startAfterCharNum)
+   put "\[\[" into someReg
+   put "[^\]]*" into notaSquareClosingBracket
+   put "(" & notaSquareClosingBracket & ")" after someReg
+   put "\]\]" after someReg
+   --
+   repeat 100 -- for safety
+      if matchChunk (mergeText, someReg , startMatch, endMatch) is true then
+         put char startMatch to endMatch of mergeText into varName
+         put varName & CR after varNames
+         delete char 1 to (endMatch + 2) of mergeText
+      else
+         delete char -1 of varNames
+         return varNames
+      end if
+   end repeat
+end text_GetMergeVars
+
+function text_Hash someData, pWhichDigest
+   if pWhichDigest = "sha1" then
+      return sha1_Hash (someData)
+   else
+      return md5_Hash (someData)
+   end if
+end text_Hash
+
 function text_Type someText
    set the itemdelimiter to "|"
    put word 1 to -1 of item 1 of someText into firstItem
@@ -28,8 +141,98 @@ function text_Type someText
 end text_Type
 
 
+--> Text
+-
+function text_IsEmpty someText
+   return text_IsNotEmpty (someText) is false
+end text_IsEmpty
+
+function text_IsNotEmpty someText
+   switch someText
+      case "null"
+      case empty
+         return false
+      default
+         return true
+   end switch
+end text_IsNotEmpty
+
+command text_ClearNull @someText
+   if someText is "null" then put empty into someText
+end text_ClearNull
+
+
+--> Text | Caps
+-
+function text_MakePipeTitle someWord
+   put word 1 to -1 of someWord into someWord
+   put char 1 of someWord into pipeTitle
+   repeat with charNum = 2 to the number of chars of someWord
+      put char charNum of someWord into someChar
+      if text_StartsWithCaps (someChar) is true then
+         put " | "after pipeTitle
+      end if
+      put someChar after pipeTitle
+   end repeat
+   return pipeTitle
+end text_MakePipeTitle
+
+function text_InitialCaps someText
+   repeat with wordNum = 1 to the number of words of someText
+      put tolower (word wordNum of someText) into someWord
+      put toupper (char 1 of someWord ) into char 1 of someWord
+      put someWord into word wordNum of someText
+   end repeat
+   return someText
+end text_InitialCaps
+
+function text_SplitCaps someWord
+   -- was "capsSplit"
+   put 1 into charNum
+   repeat the number of chars of someWord
+      put char charNum of someWord into someChar
+      if text_StartsWithCaps(someChar) is true then
+         put space before char charNum of someWord
+         add 2 to charNum
+      else
+         add 1 to charNum
+      end if
+   end repeat
+   put text_InitialCaps(word 1 of someWord) into word 1 of someWord
+   return word 1 to -1 of someWord
+end text_SplitCaps
+
+function text_StartsWithCaps someText
+   put char 1 of sometext into testChar
+   put chartonum (testChar) into someCharNum
+   if someCharNum >= 97 and someCharNum <= 122 then
+      return false
+   else
+      return true
+   end if
+end text_StartsWithCaps
+
+function text_StemCaps someText
+   put tolower(word 1 of someText) into stemCaps
+   delete word 1 of someText
+   get text_InitialCaps(someText)
+   replace space with empty in it
+   put it after stemCaps
+   return stemCaps
+end text_StemCaps
+
+
 --> Line
 -
+command line_DeleteTail @someIndex
+   repeat the number of lines of someIndex
+      get word 1 to -1 of line -1 of someIndex
+      if it is empty then
+         delete line -1 of someIndex
+      end if
+   end repeat
+end line_DeleteTail
+
 function line_BeginsWith startLineChars, someLines, pLinesToSkip
    -- probably a faster way of doing this
    -- find the first line starting with...
@@ -108,6 +311,27 @@ end text_Merge
 
 --> Lines and Indexes
 -
+command line_Indent @sLines, pTabChars
+   -- see "outline_IncreaseIndent"
+   if pTabChars is empty then put tab into pTabChars
+   --
+   repeat with lineNum = 1 to the number of lines of sLines
+      put pTabChars before line lineNum of sLines
+   end repeat
+end line_Indent
+
+command line_CommonDifference @someIndex, linesToDelete
+   split someIndex by CR as set
+   split linesToDelete by CR as set
+   --
+   put someIndex into commonArray
+   intersect commonArray with linesToDelete
+   difference someIndex with linesToDelete
+   --
+   put the keys of commonArray into someIndex
+   return the keys of someIndex
+end line_CommonDifference
+
 command line_DeleteIndex @someIndex, someLines
    repeat for each line someLine in someLines
       line_Delete someLine, someIndex
@@ -128,7 +352,7 @@ end line_Delete
 
 function line_DeleteFromIndex someLines, someIndex
    line_DeleteIndex someIndex, someLines
-   return line_DeleteIndex @someIndex, someLines
+   return someIndex
 end line_DeleteFromIndex
 
 command line_AddIndex someLines, @someIndex, beforeLineNum
@@ -161,11 +385,11 @@ function line_LineNumberStartingWithWord someWord, someText
    return lineoffset(someLine, someText)
 end line_LineNumberStartingWithWord
 
-command line_StripDoubleEmpty @someText
+command line_StripDoublempty @someText
    repeat while someText contains (CR & CR & CR)
       replace (CR & CR & CR) with (CR & CR ) in someText
    end repeat
-end line_StripDoubleEmpty
+end line_StripDoublempty
 
 function line_ConstructDupicateArray someIndex
    local badLineArray
@@ -334,12 +558,12 @@ command line_Insert someLine, @someIndex, beforeLineNum
    end if
 end line_Insert
 
-command line_DeleteEmpty @someLines
+command line_Deletempty @someLines
    put CR before someLines
    put CR & "[" & space & tab & "]*" & CR into emptyLineReg
    put replacetext (someLines, emptyLineReg, return) into someLines
    delete char 1 of someLines
-end line_DeleteEmpty
+end line_Deletempty
 
 
 --> Lists
@@ -615,48 +839,6 @@ command text_AddParagraph newText, @someText, crNum
    return true
 end text_AddParagraph
 
-command text_InsertParagraph newText, @someText, pCrNum
-   put word 1 to -1 of newText into newText
-   put word 1 to -1 of someText into someText
-   if pCrNum is empty then
-      put CR & CR into crBit
-   else if pCrNum is a number then
-      put text_RepeatString (CR, pCrNum) into crBit
-   else
-      put crNum & CR & CR into crBit
-   end if
-   
-   if newText is not empty then
-      if someText is empty then
-         put newText into someText
-      else
-         put crBit & newText after someText
-      end if
-   end if
-end text_InsertParagraph
-
-function text_Hash someData, pWhichDigest
-   if pWhichDigest = "sha1" then
-      return sha1_Hash (someData)
-   else
-      return md5_Hash (someData)
-   end if
-end text_Hash
-
-function sha1_Hash someData
-   local hexDigest
-   put sha1digest (someData) into someBinaryData
-   get binarydecode ("H*", someBinaryData, hexDigest)
-   return hexDigest
-end sha1_Hash
-
-function md5_Hash someText
-   local hexDigest
-   put md5digest (someText) into someBinaryData
-   get binarydecode ("H*", someBinaryData, hexDigest)
-   return hexDigest
-end md5_Hash
-
 function text_GetBetween startText, endText, someText, startAfterCharNum
    -- was "getTextBetween"
    text_SetOffsets startText, endText, someText, startChar, endChar, startAfterCharNum
@@ -687,8 +869,27 @@ function text_StringCount charOrString, someText
    return charCount
 end text_StringCount
 
+command text_InsertParagraph newText, @someText, pCrNum
+   put word 1 to -1 of newText into newText
+   put word 1 to -1 of someText into someText
+   if pCrNum is empty then
+      put CR & CR into crBit
+   else if pCrNum is a number then
+      put text_RepeatString (CR, pCrNum) into crBit
+   else
+      put crNum & CR & CR into crBit
+   end if
+   
+   if newText is not empty then
+      if someText is empty then
+         put newText into someText
+      else
+         put crBit & newText after someText
+      end if
+   end if
+end text_InsertParagraph
+
 function text_RepeatString someString, repeatNum
-   -- was "text_GetRepeatString"
    repeat repeatNum
       put someString after repeatString
    end repeat
@@ -780,38 +981,14 @@ command text_StipQuoted @someText
    text_StripReg someText, quoteReg, "•••"
 end text_StipQuoted
 
-command text_StripReg @wikiText, someReg, pReplaceText
-   local refStart, refEnd
-   put 0 into indexNum
-   repeat
-      get matchchunk (wikiText, someReg, sNum, eNum)
-      if sNum is not a number then
-         exit repeat -- regExp bug???
-      end if
-      
-      if it is true then
-         -- this bit not needed (remove for speed)
-         -- put char refStart to refEnd of wikiText into someTest
-         put sNum into stripResultArray [indexNum]["sNum"]
-         put eNum into stripResultArray [indexNum]["eNum"]
-         add 1 to indexNum
-         --
-         -- delete char sNum to eNum of wikiText
-         put pReplaceText into char sNum to eNum of wikiText
-      else
-         exit repeat
-      end if
-   end repeat
-   return stripResultArray
-end text_StripReg
-
 command text_StarQuoted @someText
    local replacedArray
    
    put someText into replacedArray ["original text"]
+   -- put _ConstructQuoteReg() into someReg
    put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
    put 1 into indexNum
-   repeat
+   repeat 100
       if matchchunk (someText, someReg, startChar, endChar) is false then
          exit repeat
       else
@@ -828,10 +1005,17 @@ command text_StarQuoted @someText
 end text_StarQuoted
 
 function text_StripQuoted someText
-   put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
+   put _ConstructQuoteReg() into someReg
    put replaceText (someText, someReg, "•••") into strippedText
    return strippedText
 end text_StripQuoted
+
+private function _ConstructQuoteReg
+   -- put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
+   get "•([^•\\]|\\.)*•|'([^'\\]|\\.)*'"
+   replace "•" with quote in it
+   return it
+end _ConstructQuoteReg
 
 function text_TempReplaceQuoted someText, @offsetArray
    -- was "temptext_StripQuoted"
@@ -895,64 +1079,3 @@ command text_StripSurroundingQuotes @someText
       delete char -1 of someText
    end if
 end text_StripSurroundingQuotes
-
-
---> Text | Caps
--
-function text_InitialCaps someText
-   repeat with wordNum = 1 to the number of words of someText
-      put tolower(word wordNum of someText) into someWord
-      put toupper(char 1 of someWord ) into char 1 of someWord
-      put someWord into word wordNum of someText
-   end repeat
-   return someText
-end text_InitialCaps
-
-function text_SplitCaps someWord
-   -- was "capsSplit"
-   put 1 into charNum
-   repeat the number of chars of someWord
-      put char charNum of someWord into someChar
-      if text_StartsWithCaps(someChar) is true then
-         put space before char charNum of someWord
-         add 2 to charNum
-      else
-         add 1 to charNum
-      end if
-   end repeat
-   put text_InitialCaps(word 1 of someWord) into word 1 of someWord
-   return word 1 to -1 of someWord
-end text_SplitCaps
-
-function text_StartsWithCaps someText
-   -- was "startsWithCaps"
-   put char 1 of sometext into testChar
-   put chartonum(testChar) into someCharNum
-   if someCharNum >= 97 and someCharNum <= 122 then
-      return false
-   else
-      return true
-   end if
-end text_StartsWithCaps
-
-function text_StemCaps someText
-   put tolower(word 1 of someText) into stemCaps
-   delete word 1 of someText
-   get text_InitialCaps(someText)
-   replace space with empty in it
-   put it after stemCaps
-   return stemCaps
-end text_StemCaps
-
-function text_IsCaps someText
-   -- use casesensitive
-   return matchtext (word 1 to -1 of someText, "\b[A-Z]+\b", anyThing)
-   
-   repeat for each char testChar in someText
-      put chartonum (testChar) into someCharNum
-      if someCharNum >= 65 and someCharNum <= 90 then
-         return false
-      end if
-   end repeat
-   return true
-end text_IsCaps

@@ -4,17 +4,27 @@
 license: GPLv3
 name: behavior_IdeHandlerListField
 type: behavior
-version: 0.3
+version: 0.5
 
+/*
+Can't get drag handlers working with fields
+
+on dragEnter
+   set the dragAction to "link"
+   pass dragEnter
+end dragEnter
+
+on dragDrop
+   put the dragData ["text"]
+end dragDrop
+*/
 
 --> Events
 -
 on mouseDown pMenuButton
-   -- Global | ScriptEditor | List | Menu
    if pMenuButton = 3 then
       select the clickline
-      put the ide_MenuTitle ["List"] of me into mTitle
-      if mTitle is empty then put "Global | ScriptEditor | List | Default | Menu" into mTitle
+      put ide_GetMenuTitle ("List") into mTitle
       menu_PopUp mTitle
    else
       pass mouseDown

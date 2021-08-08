@@ -17,10 +17,50 @@ See "model_Meta" for text file based metadata of scripts.
 
 --> Working On
 -
+function metadata_ConstructArray pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense
+   local metadataArray
+   metadata_AddDefaults metadataArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
+   return metadataArray
+end metadata_ConstructArray
+
+command metadata_AddDefaults @metadataArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense   
+   if pLibLicense is empty then
+      put lcw_GetAuthor() into pCopyrightHolder
+   end if
+   put pCopyrightHolder into metadataArray ["copyright"]
+   --
+   if pLibLicense is empty then put metadata_FetchDefaultLicense() into pLibLicense
+   put pLibLicense into metadataArray ["license"]
+   --
+   if pVersion is empty then put "0.1" into pVersion
+   put pVersion into metadataArray ["version"]
+   --
+   if pScriptName is empty then put "lib_NameMe" into pScriptName
+   put pScriptName into metadataArray ["name"]
+   
+   if pScriptType is empty then
+      set the itemdelimiter to "_"
+      put item 1 of pScriptName into pScriptType
+      if pScriptType = "lib" then
+         put "library" into pScriptType
+      end if
+   end if
+   put pScriptType into metadataArray ["type"]
+   
+   if pDeps is not empty then put pDeps into metadataArray ["deps"]
+   if pScriptHelp is not empty then put pScriptHelp into metadataArray ["script_Help"]
+end metadata_AddDefaults
+
+function metadata_FetchDefaultLicense
+   put pref_GetValue ("default copyright license") into someLicense
+   if someLicense is empty then put "GPLv3" into someLicense
+   return someLicense
+end metadata_FetchDefaultLicense
+
 command urip_Update someObject, pSomeScript
    if pSomeScript is empty then put the script of someObject into pSomeScript
    put script_GetMetadataArray (pSomeScript) into uRipArray
-   -- urip_AddDefaults uRipArray
+   -- metadata_AddDefaults uRipArray
    set the urip_Array of someObject to uRipArray
 end urip_Update
 
@@ -165,25 +205,6 @@ setprop urip_Array [someKey] arrayOrValue
 end urip_Array
 
 
---> URIP | Metadata | Construct
--
-command urip_AddDefaults @uRipArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense   
-   if pLibLicense is empty then put pref_GetValue ("userName") into pCopyrightHolder 
-   if pLibLicense is empty then put pref_GetValue ("default copyright license") into pLibLicense
-   if pLibLicense is empty then put "GPLv3" into pLibLicense
-   if pVersion is empty then put "0.1" into pVersion
-   
-   put pLibLicense into uRipArray ["license"]
-   put pVersion into uRipArray ["version"]
-   
-   if pScriptName is not empty then put pScriptName into uRipArray ["name"]
-   if pScriptType is not empty then put pScriptType into uRipArray ["type"]
-   if pCopyrightHolder is not empty then put pCopyrightHolder into uRipArray ["copyright"]
-   if pDeps is not empty then put pDeps into uRipArray ["deps"]
-   if pScriptHelp is not empty then put pScriptHelp into uRipArray ["script_Help"]
-end urip_AddDefaults
-
-
 --> Meta
 -
 function metadata_ArrayToYaml metadataArray
@@ -207,11 +228,6 @@ function metadata_ArrayToYaml metadataArray
    delete char -1 of metaYaml
    return metaYaml
 end metadata_ArrayToYaml
-
-function metadata_ConstructUripArray pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
-   urip_AddDefaults uRipArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
-   return uRipArray
-end metadata_ConstructUripArray
 
 
 --> Private

@@ -19,16 +19,79 @@ As handlers that work on a set of projects, stroing these in the global vairable
 */
 
 
--- Working on
+--> Working on
 -
+/*
+The following is a bit of a mess - wether to use the library models
+There is the global on - env_GetActiveProjectArray() 
+and library_FetchProjectData() -- uses lcw_FetchArray ("lcw_ProjectDataLibrary.array") which is stored in the lcw project.
+It's all a bit of a mess - tryig to move over to listing project folder names where possible
+-- consider replacing with "env_ListProjectFolders()"
+*/
+
+function library_ListProjectFolders
+   put library_FetchProjectData() into libraryProjectArray
+   repeat for each key projectName in libraryProjectArray
+      put libraryProjectArray [projectName] into projectArray
+      put projectArray ["projectFolder"] into libraryRepoFolder
+      if there is not a folder libraryRepoFolder then
+         next repeat
+      end if
+      put projectName into libraryRepoFolderArray [libraryRepoFolder]
+   end repeat
+   put keys (libraryRepoFolderArray) into libraryRepoFolders
+   sort libraryRepoFolders
+   return word 1 to -1 of libraryRepoFolders
+end library_ListProjectFolders
+
+function library_ListProjectNames pProjectType
+   put library_FetchProjectData() into libraryProjectData
+   switch pProjectType
+      case "all"
+         put keys (libraryProjectData) into projectNames
+         break
+      case "module"
+         put _FilterLibraryProjectArray ("module", libraryProjectData) into projectNames
+         break
+      default -- case "project"
+         put _FilterLibraryProjectArray ("project", libraryProjectData) into projectNames
+   end switch
+   sort projectNames
+   return projectNames
+end library_ListProjectNames
+
+
+--> Library | Env
+-
+/*
+Env information is also stored in the LCW library.
+*/
+
+command library_DeleteProjectArray projectName
+   put library_FetchProjectData() into libraryProjectData
+   delete variable libraryProjectData [projectName]
+   library_StoreProjectData libraryProjectData
+end library_DeleteProjectArray
+
+
+--> Props
+-
+getprop env_RepoFolder
+   -- latest simplest version based on naming conventions and folder structure
+   set the itemdelimiter to slash
+   put the project_Folder of target into rootFolder
+   delete item -1 of rootFolder
+   return rootFolder
+end env_RepoFolder
+
 
 --> Environment | Files
 -
-function env_ListLibraryStacks pListAll
+function env_ListLibraryStacks
    -- not in any particular order (so not a real hierarchy)
    local objectIndex
    
-   put env_ListProjects ( pListAll) into projectNames
+   put env_ListActiveProjects() into projectNames
    repeat for each line projectName in projectNames
       hkey_AddDevelopmentHierarchy objectIndex, projectName
    end repeat
@@ -56,12 +119,23 @@ end env_GetHomeArrayFileData
 
 --> Environment | List
 -
-function env_ListFrontScripts
-   -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
-   put the frontscripts into longIDs
-   ide_FilterOutStacks longIDs
-   return longIDs
-end env_ListFrontScripts
+function env_ScriptHierarchy pRemoveTransportBehavior
+   put env_ListFrontScripts() into frontObjects
+   _RemoveTransporterTools frontObjects, pRemoveTransportBehavior
+   --
+   put env_ListBackScripts() into backObjects
+   put stack_PathsToObjects (the stacksinUse) into usedStacks
+   --
+   object_AddBehaviors usedStacks
+   object_AddBehaviors frontObjects
+   object_AddBehaviors backObjects
+   --
+   if usedStacks is not empty then put usedStacks into scriptHierarchy
+   if backObjects is not empty then put backObjects & CR before scriptHierarchy
+   if frontObjects is not empty then put CR & frontObjects after scriptHierarchy
+   --
+   return scriptHierarchy
+end env_ScriptHierarchy
 
 function env_ListBackScripts
    -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
@@ -70,36 +144,21 @@ function env_ListBackScripts
    return longIDs
 end env_ListBackScripts
 
+private command _RemoveTransporterTools @frontObjects, pRemoveTransportBehavior
+   if pRemoveTransportBehavior is false then return empty
+   if exists (stack "behavior_RigLocalOveride") is false then return empty
+   
+   put the name of stack "behavior_RigLocalOveride" into transportFrontScript
+   line_Delete transportFrontScript, frontObjects
+   return transportFrontScript
+end _RemoveTransporterTools
 
---> Environment | List | Projects
--
-function env_ListProjects pListAll
-   switch pListAll
-      case "true"
-      case "all"
-         put library_ListProjectNames() into projectNames
-         return projectNames
-      case empty
-         -- this is the real default
-         -- not returned in order of loading
-         put env_GetProjectArray() into envProjectArray
-         set the itemdelimiter to slash
-         repeat for each key projectName in envProjectArray
-            put envProjectArray [projectName] into projectFolder
-            if item -2 projectFolder is not "modules" then
-               put projectName & CR after loadedProjectNames
-            end if
-         end repeat
-         delete char -1 of loadedProjectNames
-         sort loadedProjectNames
-         return loadedProjectNames
-      default -- case "with views"
-         put env_GetProjectArray() into envProjectArray
-         put keys (envProjectArray) into envProjectNames
-         sort envProjectNames
-         return word 1 to -1 of envProjectNames
-   end switch
-end env_ListProjects
+function env_ListFrontScripts
+   -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
+   put the frontscripts into longIDs
+   ide_FilterOutStacks longIDs
+   return longIDs
+end env_ListFrontScripts
 
 
 --> Environment | List
@@ -111,17 +170,19 @@ function env_ListControllerStackNames pProjectNames
    return stackNames
 end env_ListControllerStackNames
 
-function env_ListControllerPaths pProjectNames
+function env_ListControllerPaths pProjectNames, pRepoFolder
    _SetProjectNames pProjectNames
    repeat for each line projectName in pProjectNames
       -- put project_ListControllerPaths (projectName) into projectControllerPaths
-      put library_FetchProjectFolder (projectName) into projectFolder
+      -- put library_FetchProjectFolder (projectName) into projectFolder
+      put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+      --
       put project_ListPaths ("controllers", projectFolder) into projectControllerPaths
       if projectControllerPaths is not empty then
          put projectControllerPaths & CR after environmentControllerPaths
       end if
       
-      put project_ListModules (projectName) into moduleNames
+      put project_ListModuleShortFolders (projectName) into moduleNames
       repeat for each line moduleName in moduleNames
          put module_ListControllerStackNames (moduleName, projectFolder) into moduleControllerPaths
          if moduleControllerPaths is not empty then
@@ -141,16 +202,32 @@ function env_ListBehaviorStackNames pProjectNames
    return stackNames
 end env_ListBehaviorStackNames
 
-function env_ListBehaviorPaths pProjectNames
+function env_ListIdeBehaviorStackNames
+   put env_ListBehaviorPaths() into bPaths
+   set the itemdelimiter to slash
+   repeat for each line bPath in bPaths
+      if exists (stack bPath) is false then next repeat
+      if item -1 of bPath begins with "behavior_Ide" then
+         put the short name of stack bPath into bName
+         put bName & CR after bNames
+      end if
+   end repeat
+   delete char -1 of bNames
+   return bNames
+end env_ListIdeBehaviorStackNames
+
+function env_ListBehaviorPaths pProjectNames, pRepoFolder
    _SetProjectNames pProjectNames
    repeat for each line projectName in pProjectNames
-      put library_FetchProjectFolder (projectName) into projectFolder
+      -- put library_FetchProjectFolder (projectName) into projectFolder
+      put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+      --
       put project_ListPaths ("behaviors", projectFolder) into projectBehaviorPaths
       if projectBehaviorPaths is not empty then
          put projectBehaviorPaths & CR after environmentBehaviorPaths
       end if
       
-      put project_ListModules (projectName) into moduleNames
+      put project_ListModuleShortFolders (projectName) into moduleNames
       repeat for each line moduleName in moduleNames
          put module_ListBehaviorStackNames (moduleName, projectFolder) into moduleBehaviorPaths
          if moduleBehaviorPaths is not empty then 
@@ -180,22 +257,6 @@ function env_ListViewStackPaths pProjectNames
    sort envViewStackPaths
    return word 1 to -1 of envViewStackPaths
 end env_ListViewStackPaths
-
--- function env_ListUsedStackNames pProjectNames
-if pProjectNames is empty then
-   put library_ListProjectNames() into pProjectNames
-   -- put env_ListProjects() into pProjectNames
-end if
-
-repeat for each line projectName in pProjectNames
-   put library_FetchProjectHomeStackPath (projectName) into homeStackPath  
-   if exists (stack homeStackPath) is false then next repeat
-   put the project_UsedStackNames of stack homeStackPath into stackNames
-   put stackNames & CR after envUsedStackNames
-end repeat
-sort envUsedStackNames
-return word 1 to -1 of envUsedStackNames
-end env_ListUsedStackNames
 
 function env_ListUsedStackNames pProjectNames
    put env_ListUsedStackPaths (pProjectNames) into stackPaths
@@ -227,53 +288,46 @@ function env_ListModuleHomeStackNames pProjectNames
 end env_ListModuleHomeStackNames
 
 function env_ListModuleHomeStackPaths pProjectNames
+   local activeStackPaths
+   put env_GetModuleArray (pProjectNames) into envModuleArray
+   put envModuleArray ["lists"]["homeStackPaths"] into homeStackPathArray
+   put the keys of homeStackPathArray into homeStackPaths
+   sort homeStackPaths
+   return homeStackPaths
+end env_ListModuleHomeStackPaths
+
+function env_ListShortModuleFolders pProjectNames
+   put env_GetModuleArray (pProjectNames) into envModuleArray
+   put envModuleArray ["active"] into activeModuleArray
+   put the keys of activeModuleArray into activeModuleNames
+   sort activeModuleNames
+   return activeModuleNames
+end env_ListShortModuleFolders
+
+function env_GetModuleArray pProjectNames
    _SetProjectNames pProjectNames
+   set the itemdelimiter to slash
    repeat for each line projectName in pProjectNames
       put project_ListModuleFolders (projectName) into moduleFolders
       repeat for each line moduleFolder in moduleFolders
+         put item -1 of moduleFolder into moduleName
+         --
          put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
          if exists (stack moduleHomeStackPath) is false then
-            breakpoint
-            next repeat
+            put projectName into envModuleArray ["broken"][moduleName]["projectName"]
+            put moduleFolder into envModuleArray ["broken"][moduleName]["moduleFolder"]
+            put moduleHomeStackPath into envModuleArray ["broken"][moduleName]["homeStackPath"]
+         else
+            put projectName into envModuleArray ["active"][moduleName]["projectName"]
+            put moduleFolder into envModuleArray ["active"][moduleName]["moduleFolder"]
+            put moduleHomeStackPath into envModuleArray ["active"][moduleName]["homeStackPath"]
+            --
+            put projectName into envModuleArray ["lists"]["homeStackPaths"][moduleHomeStackPath]
          end if
-         put moduleHomeStackPath & CR after activeModuleHomeStackPaths
       end repeat
    end repeat
-   delete char -1 of activeModuleHomeStackPaths
-   sort activeModuleHomeStackPaths
-   return word 1 to -1 of activeModuleHomeStackPaths
-end env_ListModuleHomeStackPaths
-
-
---> Environment | Model
--
-function env_ListProjects
-   put env_GetProjectArray() into envProjectArray
-   return keys (envProjectArray)
-end env_ListProjects
-
-command env_AddProject homeStackName, pProjectFolder
-   if exists (stack homeStackName) is false then return false
-   if pProjectFolder is empty then
-      put library_FetchProjectFolder (homeStackName) into pProjectFolder
-   else
-      if there is not a folder pProjectFolder then
-         return false
-      else
-         library_StoreProjectFolder homeStackName, pProjectFolder
-      end if
-   end if
-   if there is not a folder pProjectFolder then return false
-   
-   env_SetProjectFolder homeStackName, pProjectFolder
-   return true
-end env_AddProject
-
-command env_RemoveProject projectName
-   put env_GetProjectArray() into envProjectArray
-   delete variable envProjectArray [projectName]
-   env_SetProjectArray envProjectArray
-end env_RemoveProject
+   return envModuleArray
+end env_GetModuleArray
 
 
 --> Env | Export
@@ -301,9 +355,11 @@ command env_CreateNewPlaceArray pStackPaths
    return hkeyPlaceArray
 end env_CreateNewPlaceArray
 
-command env_ExportAndIndexProject projectName
+command env_ExportAndIndexProject projectName, pRepoFolder
    local bigPlaceArray
-   put library_FetchProjectFolder (projectName) into projectFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   --
    put project_ListAllStackPaths (projectFolder) into stackPaths
    repeat for each line stackPath in stackPaths
       set the cursor to watch
@@ -315,14 +371,16 @@ command env_ExportAndIndexProject projectName
    return bigPlaceArray
 end env_ExportAndIndexProject
 
-command env_ReLoadMenus pProjectNames
+command env_ReLoadMenus pProjectNames, pRepoFolder
    if pProjectNames is empty then
       put library_ListProjectNames() into pProjectNames
    else
       replace comma with CR in pProjectNames
    end if
    repeat for each line projectName in pProjectNames
-      put library_FetchProjectFolder (projectName) into projectFolder
+      -- put library_FetchProjectFolder (projectName) into projectFolder
+      put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+      --
       if there is not a folder projectFolder then next repeat
       project_LoadMenus projectFolder
    end repeat
@@ -352,13 +410,25 @@ end env_AddToBash
 
 --> Private
 -
+private function _FilterLibraryProjectArray projectType, libraryProjectData
+   repeat for each key projectName in libraryProjectData
+      put libraryProjectData [projectName]["projectType"] into someType
+      if someType = projectType then
+         put projectName & CR after projectNames
+      end if
+   end repeat
+   delete char -1 of projectNames
+   return projectNames
+end _FilterLibraryProjectArray
+
 private command _SetProjectNames @pProjectNames
    switch pProjectNames
       case "all"
       case empty
-         put env_ListProjects() into pProjectNames
+         put env_ListActiveProjects() into pProjectNames
          break
       default
          replace comma with CR in pProjectNames
    end switch
 end _SetProjectNames
+

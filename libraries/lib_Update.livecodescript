@@ -14,31 +14,80 @@ Used by the behavior (if running LCW), of the ScriptEditor Apply button. This be
 
 --> Working on
 -
+command menu_UpdateGlobalArray mController, mTitleTableArray
+   global gLCW
+   menu_DeleteActiveArray
+   
+   put revRuggedId (mController) into mController
+   --
+   repeat for each key gMenuTile in mTitleTableArray
+      if word 1 of gMenuTile = "Global" and word 2 of gMenuTile = "|" then
+         put mTitleTableArray [gMenuTile] into gMenuTable
+         
+         -- menu_NormalizeTitle gMenuTile
+         put gMenuTable into gLCW ["Global Menus"][gMenuTile]["gMenuTable"]
+         put mController into gLCW ["Global Menus"][gMenuTile]["mController"]
+         
+         -- probably not really needed
+         put gMenuTable into menuTitleArray [gMenuTile]["gMenuTable"]
+         put mController into menuTitleArray [gMenuTile]["mController"]
+      end if
+   end repeat
+   --
+   return menuTitleArray
+end menu_UpdateGlobalArray
+
 command script_ExportAndIndexMenus scriptObject, pDeleteOldExports
    -- this is what the IDE compile button dispatches
-   -- so far nothing else calls this command
    -- it is designed to update the global menu index, and export handlers (but do nothing else)
-   -- it can be optimised to ony loop through the script once (instead of twise as below)
    
    dispatch "script_Compile" to scriptObject with scriptObject,pDeleteOldExports
    switch it
-      case "passed"
       case "unhandled"
-         set the menu_Update of scriptObject to true
+         -- a default
          script_ExportHandlersAndCalls scriptObject, pDeleteOldExports
-         put the script_File of scriptObject into scriptFile
+         put the result into scriptPlaceArray
+         put the uRIP["type"] of scriptObject into scriptType
+         --
+         if scriptType = "controller" then
+            menu_UpdateFromController scriptObject
+            put the result into projectArray
+         end if
          break
+      case "passed"
       case "handled"
-      default
-         -- skip as we assume it is already handled at script level
-         break
    end switch
-   return scriptFile
 end script_ExportAndIndexMenus
 
 
---> Update | Script
+--> Menu | Update
 -
+setprop menu_Update someBoolean
+   -- called by "script_ExportAndIndexMenus" every time we apps (compile) a scriptField 
+   put the long id of the target into mController
+   -- menu_LoadFromScript mController
+   menu_UpdateFromController mController
+   put the result into projectArray
+   return projectArray
+end menu_Update
+
+command menu_UpdateFromController mController
+   -- New simple version     
+   global gLCW
+   
+   put line 1 of the menu_GlobalTitle of mController into gMenuTitle -- could be got from "menu_UpdateFromController"
+   put the project_Name of mController into projectName -- not needed (yet). For information only
+   controller_AddToArray gLCW, gMenuTitle, mController, projectName
+   
+   # Now update project array
+   put the project_JsonFile of mController into projectArrayFile
+   put array_FetchModel (projectArrayFile) into projectArray
+   controller_AddToArray projectArray, gMenuTitle, mController, projectName
+   array_SaveModel projectArrayFile, projectArray
+   --
+   return projectArray
+end menu_UpdateFromController
+
 command script_ExportHandlersAndCalls someObject, pDeleteOldExports, pScript, pDataFolder
    global gLCW
    -- if the optionKey is "Down" then hkeyline_DeletePlaceObject someObject -- this is too slow
@@ -100,54 +149,3 @@ command script_UpdatePlaceArray someObject
    script_StoreHkeyPlaceArray hkeyPlaceArray
    return hkeyPlaceArray
 end script_UpdatePlaceArray
-
-
---> Old
--
-/*
-function menu_GetDefaultController mTitle, targetObject, pSearchScript
-   -- key handler in menu_Authoring used by the menu_Update
-   -- careful to avoid recursion 
-   
-   -- check if it is a global menu
-   if menu_TitleIsGlobal (mTitle) then
-      put menu_GetGlobalController (mTitle) into mController
-      if exists (mController) is true then
-         return mController
-      end if
-   end if
-   
-   -- here we allow sub stack cards to override defaults
-   -- put the menu_SubStackCard [mTitle] of targetObject into mController
-   -- if exists (mController) then return mController
-   
-   -- look up menu in script hierarchy (adds a lot of complexity)
-   -- put the menu_FindController [mTitle] of targetObject into mController
-   -- if exists (mController) then return mController
-   
-   -- only look in targetObject (not needed as default is targetObject)
-   -- put the script of targetObject into mControllerScript
-   -- put "-->" && mTitle into mTitleLine
-   -- if mTitleLine is among the lines of mControllerScript then return targetObject
-   
-   return targetObject
-end menu_GetDefaultController
-
-getprop menu_FindController [mTitle]
-   -- not used for simple "menu_GetDefaultController"
-   put the long id of the target into targetObejct
-   
-   put the script_Hierarchy of targetObejct into scriptHierarchy
-   repeat for each line mController in scriptHierarchy
-      -- put the menu_Titles of mController into mTitles
-      put the script of mController into mControllerScript
-      put "-->" && mTitle into mTitleLine
-      
-      -- should be made fuzzy ussing a regular expression
-      if mTitleLine is among the lines of mControllerScript then
-         return mController
-      end if
-   end repeat
-   return empty
-end menu_FindController
-*/

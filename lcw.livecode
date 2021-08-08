@@ -34,13 +34,30 @@ This is not a good minimal architecture.
 Instead we want to move over to a minimal initialisation script, and use a Livecode stack for the HomeStack
 That way we can store certain standard code as a behavior (for instance the card script),
 as well as give the HomeStack and interface and some useful functionality.
+
+-- function env_GetProjectFolder projectName
+put env_GetActiveProjectArray() into envProjectArray
+return envProjectArray [projectName]
+end env_GetProjectFolder
+
+-- function env_GetActiveProjectArray
+global gLCW
+put gLCW ["environment"]["project"] into activeProjectArray
+return activeProjectArray
+end env_GetActiveProjectArray
+
+-- function lcw_DefaultLibPath lcwHomeStackFile
+set the itemdelimiter to slash
+put "libraries/lib_LCW.livecodescript" into item -1 of lcwHomeStackFile
+return lcwHomeStackFile
+end lcw_DefaultLibPath
 */
 
 --> LCW | Me
 -
 command lcw_Init
    if the long id of the target is not the long id of me then pass lcw_Init
-   if project_IsActive ("LCW") is true then pass lcw_Init
+   -- if env_ProjectIsActive ("LCW") is true then pass lcw_Init
    
    _LcwInitialize
    
@@ -52,31 +69,14 @@ end lcw_Init
 
 --> Env
 -
-function project_IsActive projectName
-   put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
+-- function env_ProjectIsActive projectName
+   put env_ConstructProjectFolder (projectName) is not empty into projectIsLoaded
    return projectIsLoaded
-end project_IsActive
-
-function env_GetProjectFolder projectName
-   put env_GetProjectArray() into envProjectArray
-   return envProjectArray [projectName]
-end env_GetProjectFolder
-
-function env_GetProjectArray
-   global gLCW
-   put gLCW ["environment"]["project"] into envProjectArray
-   return envProjectArray
-end env_GetProjectArray
+end env_ProjectIsActive
 
 
 --> Project | Init
 -
-function lcw_DefaultLibPath lcwHomeStackFile
-   set the itemdelimiter to slash
-   put "libraries/lib_LCW.livecodescript" into item -1 of lcwHomeStackFile
-   return lcwHomeStackFile
-end lcw_DefaultLibPath
-
 command _LcwInitialize
    -- for LCW only
    -- ideally we don't use this stack as things like "preOpenStack" will be called every time
@@ -85,13 +85,16 @@ command _LcwInitialize
    put "LCW" into lcwProjectName
    put the filename of stack lcwProjectName into lcwHomeStackFile
    
-   put lcw_DefaultLibPath (lcwHomeStackFile) into lcwDefaultLibFile
+   -- put lcw_DefaultLibPath (lcwHomeStackFile) into lcwDefaultLibFile
+   set the itemdelimiter to slash
+   put lcwHomeStackFile into lcwDefaultLibFile
+   put "libraries/lib_LCW.livecodescript" into item -1 of lcwDefaultLibFile
+   set the itemdelimiter to comma
+   
    -- so we don't load it every time
-   -- if env_GetProjectFolder ("lcw") is not empty then return false -- already loaded which should not happen but projects may do this by mistake
    if lcwDefaultLibFile is among the lines of the stacksinuse then return false
    -- ideally we don't need this
    start using stack lcwDefaultLibFile
-   -- start using stack lcwProjectName
    
    -- let's make it pretty
    put the screenrect into stackRect
@@ -110,7 +113,7 @@ command _LcwInitialize
    
    -- load the global dictionary for where handlers are
    hkeyLine_LoadPlaceArray
-      
+   
    -- custom
    choose browse tool 
    close stack "revTools"

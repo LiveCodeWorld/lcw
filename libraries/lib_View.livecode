@@ -3,12 +3,24 @@
 -
 license: GPLv3
 name: lib_View
-type: script library
+type: library
 version: 0.8
 
 
 --> Working on
 -
+function view_ListOpen pMoreItems
+   -- quick hack
+   put the openStacks into stackNames
+   filter stackNames with "View|*"
+   --
+   if stackNames is empty then
+      return pMoreItems
+   else
+      return stackNames & ",-," & pMoreItems
+   end if
+end view_ListOpen
+
 getprop module_ExternalBehaviors
    -- this works for modules
    put the view_Behaviors of the target into bObjects
@@ -30,22 +42,23 @@ end module_ExternalBehaviors
 -
 setprop view_Name [pComponentType] viewName
    put the long id of the target into tObject
-   put the view_Object of tObject into viewObject
-   if exists (viewObject) is false then put tObject into viewObject
+   -- put the view_Object of tObject into viewObject
+   -- if exists (viewObject) is false then put tObject into viewObject
    
    view_NormalizeName viewName
-   component_SetName viewObject, viewName, pComponentType
+   component_SetName tObject, viewName, pComponentType
    put the result into someScript
    return someScript
 end view_Name
 
 getprop view_Name
    put the long id of the target into tObject
-   put the view_Object of tObject into viewObject
-   if viewObject is empty then return empty
+   -- put the view_Object of tObject into viewObject
+   -- if viewObject is empty then return empty
    
-   if the uRIP ["type"] of viewObject is not "view" then return empty
-   return the uRIP ["name"] of viewObject
+   if the uRIP ["type"] of tObject is not "view" then return empty
+   put the uRIP ["name"] of tObject into viewName
+   return viewName
 end view_Name
 
 getprop object_ViewName
@@ -93,27 +106,6 @@ end view_BehaviorStackName
 
 --> Working on
 -
-getprop top_View
-   -- this is the default value for a view
-   -- which is the top (highest) someView in the current layout
-   
-   put the long id of the target into testGroup
-   put view_HierarchyObjects (testGroup) into groupHierarchy
-   put line 1 of groupHierarchy into topView
-   return topView
-end top_View
-
-getprop top_ViewObjects
-   put the long id of the target into tObject
-   put the childControlIDs of tObject into topCardDs
-   repeat for each line cID in topCardDs
-      put the long id of control id cID into viewObject
-      put viewObject & CR after viewObjects
-   end repeat
-   delete char -1 of viewObjects
-   return viewObjects
-end top_ViewObjects
-
 getprop view_Objects
    put the view_Object of the target into someView
    if someView is empty then return empty
@@ -365,5 +357,5 @@ command component_SetName tObject, uripName, pComponentType
    put pComponentType into uRipArray ["type"]
    set the script_MetaData of tObject to uRipArray
    put the result into someScript
-   return someScript
+   return uRipArray
 end component_SetName

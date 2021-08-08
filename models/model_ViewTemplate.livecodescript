@@ -228,15 +228,16 @@ getprop view_TemplateStack
    return stackObject
 end view_TemplateStack
 
-function view_GetTemplateObject viewName
+function view_GetTemplateObject viewName, pRepoFolder
    view_NormalizeName viewName
-   if exists (stack viewName) then
+   if exists (control 1 of stack viewName) then
       put the long id of control 1 of stack viewName into templateObject
       return templateObject
    end if
    
    put library_ListProjectModules() into moduleStackNames
-   put library_FetchProjectFolder (viewName) into moduleFolder
+   put env_ConstructProjectFolder (viewName, pRepoFolder) into moduleFolder
+   -- put library_FetchProjectFolder (viewName) into moduleFolder
    if moduleFolder is empty then return empty
    
    put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath

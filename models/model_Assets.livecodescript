@@ -175,9 +175,9 @@ function asset_ListFiles projectFolder, shortFolder, pListShort, pSomeFilter
 end asset_ListFiles
 
 function asset_GetFile projectFolder, shortFile, pShortAssetFolder
-   put asset_GetFolder (projectFolder, pShortAssetFolder) into htmlFolder
-   put htmlFolder & shortFile into htmlFile
-   return htmlFile
+   put asset_GetFolder (projectFolder, pShortAssetFolder) into assetFolder
+   put assetFolder & shortFile into assetFile
+   return assetFile
 end asset_GetFile
 
 function asset_GetImageFile projectFolder, shortFile

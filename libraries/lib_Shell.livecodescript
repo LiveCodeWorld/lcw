@@ -26,9 +26,141 @@ end ssh_DeleteFolder
 */
 
 
+--> Terminal
+-
+command terminal_PasteScript shellScript, pDelayTime
+   if pDelayTime is empty then put 0.25 into pDelayTime
+   --
+   put "tell application 'Terminal'" into tScript
+   put CR & "activate" after tScript
+   put CR & "delay [[pDelayTime]]" after tScript
+   put CR & "tell application 'System Events'" after tScript
+   put CR & "keystroke '[[shellScript]]'" after tScript
+   put CR & "end tell" after tScript
+   put CR & "end tell" after tScript
+   --
+   put merge (tScript) into  mScript
+   replace "'" with quote in mScript
+   --
+   do mScript as AppleScript
+   put the result into someText
+   --
+   return mScript
+end terminal_PasteScript
+
+command terminal_PasteInNewTab shellScript, pDelayTime
+   if pDelayTime is empty then put 0.25 into pDelayTime
+   --
+   put "tell application 'Terminal'" into tScript
+   put CR & "activate" after tScript
+   put CR & "delay [[pDelayTime]]" after tScript
+   --
+   put CR & "tell application 'System Events'" after tScript
+   put CR & "keystroke 't' using {command down}" after tScript
+   --
+   put CR & "keystroke '[[shellScript]]'" after tScript
+   put CR & "end tell" after tScript
+   put CR & "end tell" after tScript
+   --
+   replace "'" with quote in tScript
+   put merge (tScript) into  mScript
+   --
+   do mScript as AppleScript
+   put the result into someText
+   --
+   return mScript
+end terminal_PasteInNewTab
+
+
 --> Working on
 -
+function shell_TreeSearch filePattern, pFolder, pNotPattern
+   -- was "shell_GetGoodNestedFiles"
+   -- put "*.html|*.xml" into filePattern
+   -- put ""*-sidebar.html"" into pNotPattern
+   
+   put the defaultFolder into oFolder
+   if there is a folder pFolder then set the defaultFolder to pFolder
+   put shell_ConstructTreeCommand (filePattern, pNotPattern) into someShell
+   --
+   put shell (someShell) into someFiles
+   set the defaultFolder to oFolder
+   return someFiles
+end shell_TreeSearch
+
+function shell_ConstructTreeCommand filePattern, pNotPattern
+   -- put "tree -afi --noreport --prune -P '*.html|*.xml' -I *-sidebar.html" into someShell
+   put merge ("tree -afi --noreport --prune -P '[[filePattern]]'") into someShell
+   if pNotPattern is not empty then
+      put space & "-I" && notPattern after someShell
+   end if
+   return someShell
+end shell_ConstructTreeCommand
+
+function ssh_ConstructRemoteShell remoteShell, serverAddress, sshUserName, pWhichKey
+   -- allows complex multi-command single line remoteShell shell scripts
+   -- as remoteShell is quoted with "'"
+   -- means that the script should not use "'" quoting
+   if remoteShell contains "'" then
+      breakpoint
+      return "error, remoteShell contains '"
+   end if
+   
+   put "ssh" into someShell
+   if pWhichKey is not empty then
+      breakpoint -- not tested
+      put the defaultfolder into oFolder
+      set the defaultfolder to "~/.ssh"
+      put space & "-i" && pWhichKey after someShell
+   end if
+   
+   -- in case remoteShell is multiple lines separated by something like ";"
+   put "'" before remoteShell
+   put "'" after remoteShell
+   --
+   put space & sshUserName & "@" & serverAddress && remoteShell after someShell
+   --
+   return someShell
+end ssh_ConstructRemoteShell
+
+command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell, pWhichKey
+   -- requires public ssh key to be installed on server
+   put "ssh" into someShell
+   if pWhichKey is not empty then
+      breakpoint -- not tested
+      put the defaultfolder into oFolder
+      set the defaultfolder to "~/.ssh"
+      put space & "-i" && pWhichKey after someShell
+   end if
+   --
+   put space & sshUserName & "@" & serverAddress && remoteShell after someShell
+   --
+   put word 1 to -1 of shell (someShell) into shellResult
+   --
+   if pWhichKey is not empty then
+      set the defaultfolder to oFolder
+   end if
+   return shellResult
+end ssh_DoRemoteShell
+
+
+--> Shell | Hash
+-
+function shell_Md5Hash someFile
+   -- On Linux you can use the "md5sum" utility, 
+   -- on OSX the "md5" command 
+   -- On Win you may need to build your own utility 
+   -- but there are many very simple, single file sources available, with no library dependencies, 
+   -- so you could build and distribute your own executable for Win32.
+   -- (Or you could download the Microsoft utility to do this - fciv - from http://support.microsoft.com/?kbid=841290 )
+   
+   put "md5 -q" && shell_EscapeFile (someFile) into someShell
+   put shell (someShell) into fileHash
+   return fileHash
+end shell_Md5Hash
+
 command diff_Files thisFile, lastFile
+   -- this fixed upgrade error -- https://stackoverflow.com/questions/17980759/xcode-select-active-developer-directory-error
    -- can we open in background
    -- put "sdiff" into someShell
    put "opendiff" into someShell
@@ -62,13 +194,6 @@ command ssh_DeleteFile sshUser, remoteDomain, somePath
    put the result into shellResult
    return shellResult
 end ssh_DeleteFile
-
-command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell
-   -- requires public ssh key to be installed on server
-   put "ssh" && sshUserName & "@" & serverAddress && remoteShell into someShell
-   put word 1 to -1 of shell (someShell) into shellResult
-   return shellResult
-end ssh_DoRemoteShell
 
 
 --> Working On
@@ -121,14 +246,29 @@ end shell_ConstructLSArray
 
 --> Shell | Store and Fetch
 -
-command shell_StoreFile sshUser, remoteDomain, fullPath, localFile, pSshKeyPath
-   -- scp –P 40050 Desktop/url.txt yatri@192.168.1.50:~/Desktop/url.txt
-   -- scp hierarchical.png root@178.62.43.72:~/.wiki/actual.world/pages/hierarchical.png
+command shell_StoreFile sshUser, remoteDomain, remotePath, localFile, pSshKeyPath
+   /*
+   scp –P 40050 Desktop/url.txt yatri@192.168.1.50:~/Desktop/url.txt
+   scp hierarchical.png root@178.62.43.72:~/.wiki/actual.world/pages/hierarchical.png
    
-   shell_BashParamEscape localFile
-   shell_BashParamEscape fullPath
+   -- https://superuser.com/questions/1022976/scp-copy-has-error-ambiguous-target
+   If you have white space in a path, you have to escape the characters by using double backslashes \\ and enclosing the entire path in quotes:
+         scp myfile.txt user@192.168.1.100:"/file\\ path\\ with\\ spaces/myfile.txt"
    
-   put sshUser & "@" & remoteDomain & ":" & fullPath into scpDestination
+   */
+   
+   -- shell_BashParamEscape localFile
+   put kwote (word 1 to -1 of localFile) into localFile
+   
+   -- shell_BashParamEscape fullPath
+   -- The outside set of quotes are for the local shell, and the inside quotes are for the remote shell.
+   --    scp "my local file.txt" user@192.168.1.100:"'/folder/my spacey folder name/'"
+   put word 1 to -1 of remotePath into remotePath
+   put "'" before remotePath
+   put "'" after remotePath
+   put kwote (remotePath) into remotePath
+   
+   put sshUser & "@" & remoteDomain & ":" & remotePath into scpDestination
    put "scp"  into someShell
    if pSshKeyPath is not empty then
       shell_BashParamEscape pSshKeyPath
@@ -173,62 +313,6 @@ command diff_CreateTempFile someText, shortFile
    put someText into url ("binfile:" & someFile)
    return someFile
 end diff_CreateTempFile
-
-
---> Bonjour
--
-command bonjour_RegisterPortMapper pMapperPort
-   put merge ("dns-sd -R 'LiveCode Port Mapper' _livecode._udp. . [[pMapperPort]] pdl=application/livecode") into someShell
-   shell_ExecuteInBackground someShell
-   put the result into shellResult
-   return shellResult
-end bonjour_RegisterPortMapper
-
-function socket_ListUsedPorts
-   -- On Linux you can use netstat -atp | grep -i "listen")
-   -- To show all open ports applications on your machine are listening to you can use this workaround
-   
-   if the platform is "MacOS" then
-      put osx_DaemonArray() into daemonArray
-      return keys(daemonArray)
-   else
-      -- ???
-      return empty
-   end if
-end socket_ListUsedPorts
-
-function osx_DaemonArray
-   put "lsof -i -P | grep -i 'listen'" into someShell
-   put shell (someShell) into shellResult
-   repeat for each line someLine in shellResult
-      /*
-      1) the `^' (negated) login name or user ID (UID), specified with the -u option;
-      2) the `^' (negated) process ID (PID), specified with the -p option;
-      3) the `^' (negated) process group ID (PGID), specified with the -g option;
-      4) the `^' (negated) command, specified with the -c option;
-      5) the (`^') negated TCP or UDP protocol state names, specified with the -s [p:s] option.
-      */
-      
-      put word 1 of someLine into appName
-      put word 2 of someLine into pID
-      put word 3 of someLine into uName
-      put word 4 of someLine into noIdea
-      put word 5 of someLine into ipWhat
-      put word 6 of someLine into someHex
-      put word 7 of someLine into someThingElse
-      put word 8 of someLine into pCol
-      put word 9 to -1 of someLine into urlBit
-      if word -1 of urlBit = "(LISTEN)" then put word 1 to -2 of urlBit into urlBit
-      set the itemdelimiter to ":"
-      put item 1 of urlBit into someHost
-      put item 2 of urlBit into somePort
-      
-      put appName into daemonArray [somePort]["appName"]
-      put someHost into daemonArray [somePort]["host"]
-      put pID into daemonArray [somePort]["process id"]
-   end repeat
-   return daemonArray
-end osx_DaemonArray
 
 
 --> Shell
@@ -302,17 +386,6 @@ function shell_ManPage someShell
    put shell ("man " & someShell & " | col -b") into manpage
    return manpage
 end shell_ManPage
-
-function shell_Md5Hash someFile
-  -- On Linux you can use the "md5sum" utility, 
-  -- on OSX the "md5" command 
-  -- On Win you may need to build your own utility 
-  -- but there are many very simple, single file sources available, with no library dependencies, 
-  -- so you could build and distribute your own executable for Win32.
-  -- (Or you could download the Microsoft utility to do this - fciv - from http://support.microsoft.com/?kbid=841290 )
-  put "md5 -q" && shell_EscapeFile(someFile) into someShell
-  return shell(someShell)
-end shell_Md5Hash
 
 command shell_BashParamEscape @someParam
    put word 1 to -1 of someParam into someParam

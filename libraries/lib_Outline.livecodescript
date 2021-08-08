@@ -46,41 +46,51 @@ function outline_FilterTabLevel osSection, domainTabLevel
     return osSection
 end outline_FilterTabLevel
 
-function outline_SetIndent someOsSection, toIndentLevel
-    put outline_TabLevel(line 1 of someOsSection) + 1 into osStartLevel
-    put toIndentLevel - osStartLevel into byIndentLevel
-    put outline_IncreaseIndent (someOsSection, byIndentLevel) into someOsSection
-    return someOsSection
-end outline_SetIndent
+command line_Indent @sLines, pTabChars
+   -- see "outline_IncreaseIndent"
+   if pTabChars is empty then put tab into pTabChars
+   --
+   repeat with lineNum = 1 to the number of lines of sLines
+      put pTabChars before line lineNum of sLines
+   end repeat
+end line_Indent
 
-function outline_DecreaseIndent someOsSection, byIndentLevel
-    --was "outline_DecreaseIndent"
-    if byIndentLevel = 0 then return someOsSection
-    repeat with ii = 1 to the number of lines of someOsSection
-        put line ii of someOsSection into osTitle
-        repeat byIndentlevel
-            if char 1 of osTitle is tab then
-                delete char 1 of osTitle
-            else
-                exit repeat
-            end if
-        end repeat
-        put osTitle into line ii of someOsSection
-    end repeat
-    return someOsSection
-end outline_DecreaseIndent
+function outline_SetIndent someOsSection, toIndentLevel
+   put outline_TabLevel(line 1 of someOsSection) + 1 into osStartLevel
+   put toIndentLevel - osStartLevel into byIndentLevel
+   put outline_IncreaseIndent (someOsSection, byIndentLevel) into someOsSection
+   return someOsSection
+end outline_SetIndent
 
 function outline_IncreaseIndent someOsSection, byIndentLevel, indentString
    if indentString is empty then put tab into indentString
    if byIndentLevel is not a number then put 1 into byIndentLevel
    if byIndentLevel = 0 then return someOsSection
-   if byIndentLevel < 0 then return outline_DecreaseIndent(someOsSection, abs(byIndentLevel))
-   put text_RepeatString(indentString, byIndentLevel) into indentWhiteSpace
+   if byIndentLevel < 0 then
+      return outline_DecreaseIndent (someOsSection, abs(byIndentLevel))
+   end if
+   put text_RepeatString (indentString, byIndentLevel) into indentWhiteSpace
    repeat with ii = 1 to the number of lines of someOsSection
       put indentWhiteSpace before line ii of someOsSection
    end repeat
    return someOsSection
 end outline_IncreaseIndent
+
+function outline_DecreaseIndent someOsSection, byIndentLevel
+   if byIndentLevel = 0 then return someOsSection
+   repeat with ii = 1 to the number of lines of someOsSection
+      put line ii of someOsSection into osTitle
+      repeat byIndentlevel
+         if char 1 of osTitle is tab then
+            delete char 1 of osTitle
+         else
+            exit repeat
+         end if
+      end repeat
+      put osTitle into line ii of someOsSection
+   end repeat
+   return someOsSection
+end outline_DecreaseIndent
 
 
 --> Outline | Arrays
@@ -458,7 +468,7 @@ function outline_FromPathIndex pathIndex, pDelim, pUsePathLinks, pTitleAtEnd
       if pUsePathLinks is true then
          outline_AddHtmlPathLinksPath somePath, tabbedOutline, linkedOutline, pDelim, beforeTag, afterTag, pTitleAtEnd
       else
-         put outline_AddPath(somePath, tabbedOutline, pDelim, beforeTag, afterTag, pTitleAtEnd) into tabbedOutline
+         put outline_AddPath (somePath, tabbedOutline, pDelim, beforeTag, afterTag, pTitleAtEnd) into tabbedOutline
       end if
    end repeat
    if pUsePathLinks is true then

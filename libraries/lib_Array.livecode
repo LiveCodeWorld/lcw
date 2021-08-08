@@ -4,98 +4,29 @@
 copyright: David Bovill
 license: GPLv3
 name: lib_Array
-type: script library
+type: library
 version: 0.6
 
 
 --> Working on
 -
-
-
---> Array | Index
--
-command array_AddToNumbered @indexedArray, someKey, someValue
-   /*
-   Adds a value to the end of an indexed array.
-   Value can be simple or an array
-   If someKey is an array it adds the array
-   */
+function json_FromArray pArray, pForceRootType, pPretty
+   -- put jsonExport (pArray) into someJSON -- not the same
    
-   put item 2 of the extents of indexedArray + 1 into newIndexNum
-   if someKey is an array then
-      put someKey into indexedArray [newIndexNum]
-   else
-      put someValue into indexedArray [newIndexNum][someKey]
-   end if
-   return newIndexNum
-end array_AddToNumbered
-
-function array_IsNumbered pArray pConsecutive
-   /*
-   was: rigIsNumberedArray ( from revIgniter script Common.lc )
-   
-   Check if array is numbered. 
-   Parameters: array <pArray>, bool <pConsecutive> flag for checking if numbers are consecutive
-   Return: list (bool,integer)
-   
-   copyright: Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
-   author: rabit@revigniter.com
-   license: http://www.apache.org/licenses/LICENSE-2.0
-   */
-   
-   if pConsecutive is "" then
-      put FALSE into tConsecutive
-   else
-      put pConsecutive into tConsecutive
-   end if
-   
-   # CHECK IF ARRAY IS NUMBERED
-   # SET DEFAULT RETURN VALUE
-   put TRUE into tNumbered
-   put the keys of pArray into tArrayKeys
-   
-   if tConsecutive is true then
-      sort lines of tArrayKeys numeric
-      
-      put 2 into tControlValue
-      
-      repeat for each line thisLine in tArrayKeys
-         if (thisLine is not an integer) or (thisLine + 1 <> tControlValue) then
-            put FALSE into tNumbered
-            exit repeat
-         end if
-         add 1 to tControlValue
-      end repeat
-   else
-      repeat for each line thisLine in tArrayKeys
-         if thisLine is not an integer then
-            put FALSE into tNumbered
-            exit repeat
-         end if
-      end repeat
-   end if
-   
-   put line 1 of tArrayKeys into tStartValue
-   
-   return tNumbered & "," & tStartValue
-end array_IsNumbered
-
-function array_FilterKeys someArray, includeKeyList
-   -- see new Livecode filter function
-   -- could use "intersect" ???
-   repeat for each item someKey in includeKeyList
-      put someArray [someKey] into filteredArray [someKey]
+   repeat for each key tKey in pArray
+      if pArray[tKey] is an array then
+         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
+      end if
    end repeat
-   return filteredArray
-end array_FilterKeys
+   return (mergJSONEncode("pArray",pForceRootType,pPretty))
+end json_FromArray
 
-
---> JSON
--
 function json_ToArray pJSON
+   local tArray,tKeys
    if pJSON is empty then return false
+   -- put jsonImport (pJSON) into tArray -- not the same
+   
    try -- as otherwise an error with non-json causes script to exit
-      local tArray,tKeys
       if pJSON is empty then return empty
       repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
          put json_ToArray(tArray[tKey]) into tArray[tKey]
@@ -106,14 +37,65 @@ function json_ToArray pJSON
    end try
 end json_ToArray
 
-function json_FromArray pArray, pForceRootType, pPretty
-   repeat for each key tKey in pArray
-      if pArray[tKey] is an array then
-         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
+
+--> Array
+-
+command array_ToFolder someFolder, someArray
+   folder_Format someFolder
+   folder_CreateNested someFolder
+   repeat for each key someKey in someArray
+      put someArray [someKey] into someValue
+      if someValue is an array then
+         -- recurse
+         put someFolder & someKey into subFolder
+         array_ToFolder subFolder, someValue
+      else
+         -- write out file
+         put someFolder & someKey into someFile
+         put someValue into url ("binfile:" & someFile)
       end if
    end repeat
-   return(mergJSONEncode("pArray",pForceRootType,pPretty))
-end json_FromArray
+end array_ToFolder
+
+function array_FromFolder someFolder, pNoContents
+   if there is not a folder someFolder then return empty
+   folder_Format someFolder
+   set the itemdelimiter to "/"
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put item -1 of someFolder into shortFolder
+   
+   put the files into shortFiles
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFile = "." then next repeat
+      if pNoContents is true then
+         put empty into someValue
+      else
+         put someFolder & shortFile into someFile
+         put url ("binfile:" & someFile) into someValue
+      end if 
+      put someValue into someArray [shortFile]
+   end repeat
+   
+   put the folders into shortFolders
+   repeat for each line shortFolder in shortFolders
+      -- recurse subfolders
+      if char 1 of shortFolder = "." then next repeat
+      put someFolder & shortFolder & "/" into subFolder
+      put array_FromFolder (subFolder, pNoContents) into subArray
+      put subArray into someArray [shortFolder]
+   end repeat
+   return someArray
+end array_FromFolder
+
+function array_FilterKeys someArray, includeKeyList
+   -- see new Livecode filter function
+   -- could use "intersect" ???
+   repeat for each item someKey in includeKeyList
+      put someArray [someKey] into filteredArray [someKey]
+   end repeat
+   return filteredArray
+end array_FilterKeys
 
 
 --> New
@@ -150,50 +132,6 @@ command array_Save someFile, modelArray
       put arrayencode (modelArray) into url ("binfile:" & someFile)
    end if
 end array_Save
-
-command array_ToFolder someFolder, someArray
-   folder_Format someFolder
-   folder_CreateNested someFolder
-   repeat for each key someKey in someArray
-      put someArray [someKey] into someValue
-      if someValue is an array then
-         -- recurse
-         put someFolder & someKey into subFolder
-         array_ToFolder subFolder, someValue
-      else
-         -- write out file
-         put someFolder & someKey into someFile
-         put someValue into url ("binfile:" & someFile)
-      end if
-   end repeat
-end array_ToFolder
-
-function array_FromFolder someFolder
-   if there is not a folder someFolder then return empty
-   folder_Format someFolder
-   set the itemdelimiter to "/"
-   put the defaultfolder into oFolder
-   set the defaultfolder to someFolder
-   put item -1 of someFolder into shortFolder
-   
-   put the files into shortFiles
-   repeat for each line shortFile in shortFiles
-      if char 1 of shortFile = "." then next repeat
-      put someFolder & shortFile into someFile
-      put url ("binfile:" & someFile) into someValue
-      put someValue into someArray [shortFile]
-   end repeat
-   
-   put the folders into shortFolders
-   repeat for each line shortFolder in shortFolders
-      -- recurse subfolders
-      if char 1 of shortFolder = "." then next repeat
-      put someFolder & shortFolder & "/" into subFolder
-      put array_FromFolder (subFolder) into subArray
-      put subArray into someArray [shortFolder]
-   end repeat
-   return someArray
-end array_FromFolder
 
 function array_PruneLeaves someArray
    repeat for each key someKey in someArray

@@ -127,7 +127,8 @@ on _
 end _
 
 on menu_SetMenu mTarget, mTitle
-   ide_SetMenuTitle "Recent", mTitle
+   -- ide_SetMenuTitle "Recent", mTitle
+   ide_SetScriptEditorTitles mTitle
 end menu_SetMenu
 
 

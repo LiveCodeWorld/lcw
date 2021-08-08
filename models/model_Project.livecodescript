@@ -73,8 +73,57 @@ See also "meta_StackArrayFile" for project level stackfile storage
 */
 
 
---> Working on (Project | Files | Convert)
+--> Working on
 -
+
+--> Props
+-
+getprop project_Array
+   put the project_JsonFile of the target into projectArrayFile
+   put array_FetchModel (projectArrayFile) into projectArray
+   return projectArray
+end project_Array
+
+setprop project_Array projectArray
+   put the project_JsonFile of the target into projectArrayFile
+   array_SaveModel projectArrayFile, projectArray
+   return modelDataFile
+end project_Array
+
+getprop project_ArrayFile
+   put the project_Name of the target into projectName
+   put project_GetArrayFile (projectName) into projectArrayFile
+   return projectArrayFile
+end project_ArrayFile
+
+getprop project_JsonFile
+   put the project_Name of the target into projectName
+   put project_GetJsonFile (projectName) into projectArrayFile
+   return projectArrayFile
+end project_JsonFile
+
+
+--> Library | Project | Model | Stacks
+-
+function library_FetchProjectHomeStackObject projectName
+   put library_FetchProjectHomeStackPath (projectName) into homeStackPath
+   if exists (stack homeStackPath) is false then return empty
+   return the long id of stack homeStackPath
+end library_FetchProjectHomeStackObject
+
+function library_FetchProjectHomeStackPath projectName, pRepoFolder
+   -- put library_FetchProjectFolder (projectName) into projectFolder
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   if projectFolder is empty then return empty
+   --
+   text_AddTrailing projectFolder, slash
+   put project_NameToShortFolder (projectName) into projectShortFolder
+   put projectFolder & projectShortFolder & ".livecode" into homeStackPath
+   return homeStackPath
+end library_FetchProjectHomeStackPath
+
+
+--> Project | Files | Convert
 /*
 These are generic stack functions?
 */
@@ -152,20 +201,6 @@ end project_DeleteValue
 
 --> Project | Array
 -
-getprop project_Array
-   -- put the project_ArrayFile of the target into projectArrayFile
-   put the project_JsonFile of the target into projectArrayFile
-   -- put array_Fetch (projectArrayFile) into projectArray
-   put array_FetchModel (projectArrayFile) into projectArray
-   return projectArray
-end project_Array
-
-setprop project_Array projectArray
-   put the project_JsonFile of the target into projectArrayFile
-   array_SaveModel projectArrayFile, projectArray
-   return modelDataFile
-end project_Array
-
 function project_FetchArray projectFolder
    put project_ConstructJsonFile (projectFolder) into projectJsonFile
    put array_FetchModel (projectJsonFile) into projectArray
@@ -187,18 +222,6 @@ end project_DeleteArray
 
 --> Project | Array | Files
 -
-getprop project_ArrayFile
-   put the project_Name of the target into projectName
-   put project_GetArrayFile (projectName) into projectArrayFile
-   return projectArrayFile
-end project_ArrayFile
-
-getprop project_JsonFile
-   put the project_Name of the target into projectName
-   put project_GetJsonFile (projectName) into projectArrayFile
-   return projectArrayFile
-end project_JsonFile
-
 function project_GetArrayFile projectName
    put project_GetFolder (projectName) & "lcw_project.array" into projectArrayFile
    return projectArrayFile
@@ -239,11 +262,11 @@ end project_CurrentBackScripts
 
 --> Project | Delete
 -
-command project_CloseAndDelete projectName
+command project_CloseAndDelete projectName, pRepoFolder
    project_CloseOpenStacks projectName
    put the result into closedStackNames
    
-   put library_FetchProjectFolder (projectName) into projectFolder
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
    revDeleteFolder projectFolder
    
    library_DeleteProjectArray projectName
@@ -258,10 +281,11 @@ command project_CloseOpenStacks projectName
    end repeat
    return stackNames
 end project_CloseOpenStacks
-   
-function project_ListOpenStackNames projectName
+
+function project_ListOpenStackNames projectName, pRepoFolder
    -- also works with modules
-   put library_FetchProjectFolder (projectName) into projectFolder
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   --
    put project_ListAllStackPaths (projectFolder) into projectStackPaths
    put revLoadedStacks ("application") into loadedStackNames
    repeat for each line stackPath in projectStackPaths
@@ -277,27 +301,14 @@ function project_ListOpenStackNames projectName
 end project_ListOpenStackNames
 
 
---> Library | Project | Model | Folders | Naming
+--> Library
 -
 /*
-These handlers define the keys for the 
+These handlers store LCW project folders s00 that they can be in various places.
 */
 
-function library_FetchProjectFolder homeStackName  
-   put library_FetchProjectArray (homeStackName) into projectArray
-   put projectArray ["projectFolder"] into projectFolder
-   
-   if projectFolder is empty then return projectFolder
-   text_AddTrailing projectFolder, slash   
-   if there is a folder projectFolder then
-      return projectFolder
-   else
-      return empty
-   end if
-end library_FetchProjectFolder   
-
-command library_StoreProjectFolder homeStackName, projectFolder
-   put library_FetchProjectArray (homeStackName) into projectArray
+command library_StoreProjectFolder projectName, projectFolder
+   put library_FetchProjectArray (projectName) into projectArray
    --
    put projectFolder into projectArray ["projectFolder"]
    set the itemdelimiter to slash
@@ -307,7 +318,7 @@ command library_StoreProjectFolder homeStackName, projectFolder
       put "project" into projectArray ["projectType"]
    end if
    --
-   library_StoreProjectArray homeStackName, projectArray
+   library_StoreProjectArray projectName, projectArray
 end library_StoreProjectFolder
 
 function library_FetchProjectData
@@ -324,58 +335,17 @@ end library_StoreProjectData
 -
 function library_ListProjectModules
    put library_FetchProjectData() into libraryProjectData
-   put _FilterLibraryProjectArray ("module", libraryProjectData) into moduleStackNames
-   return moduleStackNames
-end library_ListProjectModules
-
-function library_ListProjectNames pProjectType
-   put library_FetchProjectData() into libraryProjectData
-   switch pProjectType
-      case "all"
-         put keys (libraryProjectData) into projectNames
-         break
-      case "module"
-         put _FilterLibraryProjectArray ("module", libraryProjectData) into projectNames
-         break
-      default -- case "project"
-         put _FilterLibraryProjectArray ("project", libraryProjectData) into projectNames
-   end switch
-   sort projectNames
-   return projectNames
-end library_ListProjectNames
-
-function library_ListProjectFolders
-   put library_FetchProjectData() into libraryProjectArray
-   repeat for each key projectName in libraryProjectArray
-      put libraryProjectArray [projectName] into projectArray
-      put projectArray ["projectFolder"] into libraryRepoFolder
-      if there is not a folder libraryRepoFolder then
-         next repeat
+   put "module" into projectType
+   repeat for each key projectName in libraryProjectData
+      put libraryProjectData [projectName]["projectType"] into someType
+      -- put libraryProjectData [projectName]["projectFolder"] into someFolder
+      if someType = projectType then
+         put projectName & CR after projectNames
       end if
-      put projectName into libraryRepoFolderArray [libraryRepoFolder]
    end repeat
-   put keys (libraryRepoFolderArray) into libraryRepoFolders
-   sort libraryRepoFolders
-   return word 1 to -1 of libraryRepoFolders
-end library_ListProjectFolders
-
-
---> Library | Project | Model | Stacks
--
-function library_FetchProjectHomeStackObject projectName
-   put library_FetchProjectHomeStackPath (projectName) into homeStackPath
-   if exists (stack homeStackPath) is false then return empty
-   return the long id of stack homeStackPath
-end library_FetchProjectHomeStackObject
-
-function library_FetchProjectHomeStackPath projectHomeStackName
-   put library_FetchProjectFolder (projectHomeStackName) into projectFolder
-   if projectFolder is empty then return empty
-   text_AddTrailing projectFolder, slash
-   put project_NameToShortFolder (projectHomeStackName) into projectShortFolder
-   put projectFolder & projectShortFolder & ".livecode" into homeStackPath
-   return homeStackPath
-end library_FetchProjectHomeStackPath
+   delete char -1 of projectNames
+   return projectNames
+end library_ListProjectModules
 
 
 --> Library | Project | Model
@@ -432,45 +402,3 @@ command library_StoreProjectArray projectName, projectArray
    return libraryProjectData
 end library_StoreProjectArray
 
-command library_DeleteProjectArray projectName
-   put library_FetchProjectData() into libraryProjectData
-   delete variable libraryProjectData [projectName]
-   library_StoreProjectData libraryProjectData
-end library_DeleteProjectArray
-
-
-command project_AddArrayToGlobal projectArray, pRecursively
-   /*
-   By default (if pRecursively is false or empty), this command merges the all keys recursively, adding new items to gLCW from projectArray
-   but keeping any old items that are not in projectArray.
-   Consequenlty this "adds" the contents of the projectArray to gLCW with the exception of leaf contents which are updated or replaced.
-   So if you want a merge - store your data as an array not an index.
-   
-   if pRecursively is false then this command replaces items that are already there with the contents of projectArray
-   Consequenlty this adds or "sets" the contents of the variable
-   */
-   global gLCW
-   
-   if pRecursively is not false then
-      union projectArray with gLCW recursively
-   else
-      union projectArray with gLCW
-   end if
-   put projectArray into gLCW
-   return gLCW
-end project_AddArrayToGlobal
-
-
---> Private
--
-private function _FilterLibraryProjectArray projectType, libraryProjectData
-   repeat for each key projectName in libraryProjectData
-      put libraryProjectData [projectName]["projectType"] into someType
-      -- put libraryProjectData [projectName]["projectFolder"] into someFolder
-      if someType = projectType then
-         put projectName & CR after projectNames
-      end if
-   end repeat
-   delete char -1 of projectNames
-   return projectNames
-end _FilterLibraryProjectArray

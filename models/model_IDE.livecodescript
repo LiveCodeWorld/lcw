@@ -12,6 +12,8 @@ This library is for customising the livecode IDE, through understandig it's stru
 We can then attach and remove our own behaviors to the IDE, and the Script Editor in particular.
 This is not using the official API, so it's brittle but has proven remarkably stable over time.
 
+See stack "lib_ScriptEditor" for code related to script editor tabs.
+
 This model abstracts, both key controls within the Livecode IDE, and behaviors that we can attach to them.
 
 on setBehaviors
@@ -35,9 +37,63 @@ end setBehaviors
 
 --> Working on
 -
+function scriptEditor_GetSelectedText
+   put rev_ScriptEditorField() into scriptEditorField
+   put the selectedtext of scriptEditorField into someText
+   return someText
+end scriptEditor_GetSelectedText
+
+
+--> ScriptEditor | Hkey
+-
+function scriptEditor_GetHkey
+   put scriptEditor_Object() into sObject
+   put rev_HandlerTreeField() into handlerField
+   put the hilitedLine of handlerField into lineNum
+   --
+   put the cHandlers of handlerField into hTable
+   put line lineNum of hTable into hKeyLine
+   --
+   hkeyLine_Deconstruct hKeyLine, hName, hType, emptyObject
+   put hKeyLine_Construct (hName, hType, sObject) into hkey
+   --
+   return hkey
+end scriptEditor_GetHkey
+
+function scriptEditor_GetHkeyLine
+   -- was "rev_GetHandlerTreeSelectedInfo"
+   put rev_HandlerTreeField() into handlerField
+   put the hilitedLine of handlerField into lineNum
+   --
+   put the cHandlers of handlerField into hTable
+   put line lineNum of hTable into hKeyLine
+   --
+   return hKeyLine
+end scriptEditor_GetHkeyLine
+
 function scriptEditor_Object
-   return rev_ScriptObject()
+   -- was "rev_ScriptObject"
+   put scriptEditor_GetTop() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
 end scriptEditor_Object
+
+function scriptEditor_GetTop
+   -- was "scriptEditor_GetTop()"
+   
+   put the short name of the defaultstack into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      if stackNames is empty then return empty
+      put line 1 of stackNames into firstEditorStackName
+      return the long id of stack firstEditorStackName
+   end if
+end scriptEditor_GetTop
 
 
 --> IDE | ScriptEditor | Pane | Model
@@ -128,7 +184,7 @@ end rev_HandlerTreeField
 function rev_ScriptEditorStack pEditorNum
    switch
       case pEditorNum is empty
-         return rev_TopScriptEditor()
+         return scriptEditor_GetTop()
       case pEditorNum = 0
          put the long id of stack "revSETemplate" of stack "revNewScriptEditor" into stackObject
          return revRuggedID (stackObject)
@@ -137,30 +193,9 @@ function rev_ScriptEditorStack pEditorNum
          if exists (stack stackName) is false then return empty
          return the name stack stackName
       default
-         return rev_TopScriptEditor()
+         return scriptEditor_GetTop()
    end switch
 end rev_ScriptEditorStack
-
-function rev_TopScriptEditor
-   put the short name of the defaultstack into stackName
-   if word 1 of stackName is "revNewScriptEditor" then
-      return the long id of stack stackName
-   else
-      put the openstacks into stackNames
-      filter stackNames with "revNewScriptEditor*"
-      if stackNames is empty then return empty
-      put line 1 of stackNames into firstEditorStackName
-      return the long id of stack firstEditorStackName
-   end if
-end rev_TopScriptEditor
-
-function rev_ScriptObject
-put rev_TopScriptEditor() into stackObject
-if exists(stackObject) is false then return empty
-dispatch "revSEGetCurrentObject" to stackObject
-put the result into someObject
-return someObject
-end rev_ScriptObject
 
 function rev_ScriptEditorField pEditorNum
    put rev_ScriptEditorStack (pEditorNum) into editorStack

@@ -5,13 +5,23 @@ copyright: David Bovill
 license: GPLv3
 name: lib_LiveCodeDictionary
 type: script library
-version: 0.3
+version: 0.4
 
 /*
+This library gives us access to the built in Livecode Dictionary
+We use it to esatblish a comprhensive list of terms used in the language
+This allows us to filter out noise with regard to handler_Calls
+
+-- gLCW ["Livecode Dictionary Terms"]
+
 */
 
+--> Variables
+-
+local LivecodeDictionaryTerms
 
---> Dictionary
+
+--> Working on
 -
 function dict_TermDescription someText
    put ideDocsFetchLCSData (someText) into tArray
@@ -19,21 +29,22 @@ function dict_TermDescription someText
    return someDescription
 end dict_TermDescription
 
+function ide_ListScriptLibraries
+   put ide_LivecodeScriptFolder() into someFolder  
+   put folder_ShortFiles (someFolder) into shortFiles
+   return shortFiles
+end ide_ListScriptLibraries
 
---> IDE | Handlers
+function ide_LivecodeScriptFolder
+   put revEnvironmentToolsPath() & "/Toolset/libraries/" into someFolder
+   return someFolder
+end ide_LivecodeScriptFolder
+
+
+--> Events
 -
-function ide_IsDictionaryTerm someWord
-   -- was "script_DictionaryTerm"
-   if char 1 to 3 of someWord is "rev" and char 4 of someWord is not "_" then return true -- a bit risky to assume this!
-   
-   put ide_GetDictionaryTerms() into dictionaryTerms
-   -- set the wholematches to true
-   put someWord is among the lines of dictionaryTerms into someBoolean
-   return someBoolean
-end ide_IsDictionaryTerm
-
 command ide_LoadDictionaryTerms
-   put rev_FetchDictionaryTerms() into revDicTerms
+   put ide_FetchDictionaryTerms() into revDicTerms
    put ide_ListExtraDicTerms() into extraDicTerms
    put extraDicTerms & CR & revDicTerms into dTerms
    ide_SetDictionaryTerms dTerms
@@ -41,9 +52,51 @@ command ide_LoadDictionaryTerms
 end ide_LoadDictionaryTerms
 
 
---> Forget
+--> IDE | Dictionary | Model | Cached
 -
--- role into gLCW ["Livecode Dictionary Terms"]
+function ide_GetDictionaryTerms
+   return LivecodeDictionaryTerms
+end ide_GetDictionaryTerms
+
+command ide_SetDictionaryTerms dTermIndex
+   put dTermIndex into LivecodeDictionaryTerms
+   return dTermIndex
+end ide_SetDictionaryTerms
+
+
+--> IDE | Dictionary | Model
+-
+function ide_FetchDictionaryTerms
+   local dictionaryTerms
+   
+   put ideDocsFetchLCSEntries() into scriptDictionaryArray
+   --
+   -- some missing things from library (should get all synonyms)
+   put "char" & CR after dictionaryTerms
+   put "chars" & CR after dictionaryTerms
+   put "jsonImport" & CR after dictionaryTerms
+   put "jsonExport" & CR after dictionaryTerms
+   
+   -- Time Zone library
+   put "TimeZones" & CR after dictionaryTerms
+   put "FromUniversalTime" & CR after dictionaryTerms
+   put "ToUniversalTime" & CR after dictionaryTerms
+   --
+   _parseDictionary scriptDictionaryArray, dictionaryTerms, dicArray
+   return dictionaryTerms
+end ide_FetchDictionaryTerms
+
+command ide_AddToDictionaryTerms newTerm, pHKeyUsingTerm
+   put ide_GetDictionaryTerms() into dTerms
+   if newTerm is not among the lines of dTerms then
+      put newTerm & CR before dTerms
+   end if
+   ide_SetDictionaryTerms dTerms
+   
+   -- now store this addition in an array in the library
+   ide_AddExtraDicTerm newTerm, pHKeyUsingTerm
+   return dTerms
+end ide_AddToDictionaryTerms
 
 command ide_AddExtraDicTerm newTerm, pHKeyUsingTerm
    put ide_FetchExtraDicTermArray() into ideExtraDicTermArray
@@ -80,66 +133,21 @@ command ide_StoreExtraDicTermArray ideExtraDicTermArray
 end ide_StoreExtraDicTermArray
 
 
---> IDE | Libraries
--
-function ide_ListScriptLibraries
-   put ide_LivecodeScriptFolder() into someFolder  
-   put folder_ShortFiles (someFolder) into shortFiles
-   return shortFiles
-end ide_ListScriptLibraries
-
-function ide_LivecodeScriptFolder
-   put revEnvironmentToolsPath() & "/Toolset/libraries/" into someFolder
-   return someFolder
-end ide_LivecodeScriptFolder
-
-
 --> IDE | Dictionary
 -
-/*
-These are handlers have been created to integrate with the > v8.0 Dictionary API.
-*/
-
-command ide_AddToDictionaryTerms newTerm, pHKeyUsingTerm
-   put ide_GetDictionaryTerms() into dTerms
-   if newTerm is not among the lines of dTerms then
-      put newTerm & CR before dTerms
-   end if
-   ide_SetDictionaryTerms dTerms
+function ide_IsDictionaryTerm someWord
+   -- was "script_DictionaryTerm"
+   if char 1 to 3 of someWord is "rev" and char 4 of someWord is not "_" then return true -- a bit risky to assume this!
    
-   -- now store this addition in an array in the library
-   ide_AddExtraDicTerm newTerm, pHKeyUsingTerm
-   return dTerms
-end ide_AddToDictionaryTerms
-
-function ide_GetDictionaryTerms
-   global gLCW
-   put gLCW ["Livecode Dictionary Terms"] into dTerms
-   return dTerms
-end ide_GetDictionaryTerms
-
-command ide_SetDictionaryTerms dTermIndex
-   global gLCW
-   put dTermIndex into gLCW ["Livecode Dictionary Terms"]
-   return dTermIndex
-end ide_SetDictionaryTerms
+   put ide_GetDictionaryTerms() into dictionaryTerms
+   -- set the wholematches to true
+   put someWord is among the lines of dictionaryTerms into someBoolean
+   return someBoolean
+end ide_IsDictionaryTerm
 
 
 --> Rev | Dictionary
 -
-function rev_FetchDictionaryTerms
-   local dictionaryTerms
-   
-   put ideDocsFetchLCSEntries() into scriptDictionaryArray
-   
-   -- some missing things from library (should get all synonyms)
-   put "char" & CR after dictionaryTerms
-   put "chars" & CR after dictionaryTerms
-   
-   _parseDictionary scriptDictionaryArray, dictionaryTerms, dicArray
-   return dictionaryTerms
-end rev_FetchDictionaryTerms
-
 command rev_LookUpDictionary someText
    /*
    # Parameters
@@ -172,7 +180,7 @@ function rev_XmlDocToArray theXML
    --note: as of 3.5 that stack does not exist in the ide, instead it's "revDocumentationLibrary"
    put the DTD of card 1 of this stack after char offset(">",theXML) of theXML
    
-   put revcreatexmltree(theXML,true,true,false) into theID
+   put revXMLCreateTree(theXML,true,true,false) into theID
    replace "><" with ">" & return & "<" in theXML
    set the XMLtext of this stack to theXML
    if theID is not a number then
@@ -233,7 +241,7 @@ function rev_XmlDocToArray theXML
    put rev_DocCleanup(revxmltext(theID, "doc/example"),false, "example") into content["example"]
    put rev_DocCleanup(revxmltext(theID, "doc/description"),false, "description") into content["description"]
    
-   revdeleteXMLtree theID
+   revXMLDeleteTree theID
    return content
 end rev_XmlDocToArray
 

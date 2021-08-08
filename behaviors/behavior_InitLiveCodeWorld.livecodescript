@@ -55,6 +55,77 @@ private command _LoadCustomUserProject
 end _LoadCustomUserProject
 
 
+--> Project | StackFileArray
+-
+function project_FetchStackFileArray projectFolder
+   put directory_NestedStackFileArray (projectFolder) into stackFileArray
+   
+   # No need to add path to home stack file
+   put project_ConstructHomeFromFolder (projectFolder) into homeStackPath
+   put the short name of stack homeStackPath into homeStackName
+   --
+   delete variable stackFileArray [homeStackName]
+   return stackFileArray
+end project_FetchStackFileArray
+
+function directory_NestedStackFileArray someFolder
+   put the project_Folder of stack lcw_Tools into someFolder
+   --
+   set the itemdelimiter to slash
+   put the number of items of someFolder into baseFolderNum
+   --
+   put directory_ListNestedPaths (someFolder) into nPaths
+   repeat for each line sFile in nPaths
+      if exists (stack sFile) then
+         put the short name of stack sFile into stackName
+         delete item 1 to baseFolderNum of sFile
+         put sFile into sFileArray [stackName]
+      end if
+   end repeat
+   return sFileArray
+end directory_NestedStackFileArray 
+
+function directory_ListNestedPaths someFolder, pSetRelative
+   local NestedPaths
+   --
+   set the itemdelimiter to slash
+   text_AddTrailing someFolder, slash
+   if pSetRelative is true then
+      put the number of items of someFolder into baseFolderNum
+      _WalkAndList NestedPaths, someFolder, baseFolderNum
+   else
+      _WalkAndList NestedPaths, someFolder, baseFolderNum
+   end if
+   delete char -1 of NestedPaths
+   return NestedPaths
+end directory_ListNestedPaths 
+
+command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
+   put files (someFolder) into shortFiles
+   put someFolder into pathFolder
+   if pBaseFolderNum is a number then
+      set the itemdelimiter to slash
+      delete item 1 to pBaseFolderNum of pathFolder
+   end if
+   
+   # Add files (not folders) to NestedPaths
+   filter shortFiles without ".*"
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFile = "." then next repeat
+      put pathFolder & shortFile into foundPath
+      put foundPath & CR after NestedPaths
+   end repeat
+   
+   # Recurse
+   put folders (someFolder) into shortChildFolders
+   repeat for each line shortChildFolder in shortChildFolders
+      if char 1 of shortChildFolder = "." then next repeat
+      put someFolder & shortChildFolder & slash into childFolder
+      _WalkAndList NestedPaths, childFolder, pBaseFolderNum
+   end repeat
+end _WalkAndList
+
+
 --> LCW | Me
 -
 command lcw_Init
@@ -130,48 +201,12 @@ command project_SetFoundStackFiles projectFolder
    put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
    if exists (stack projectHomeStackPath) is false then return empty
    
-   put project_ConstructFoundStackFileArray (projectFolder) into projectStackFileArray
+   put project_FetchStackFileArray (projectFolder) into projectStackFileArray
    put stackFile_FromArray (projectStackFileArray) into projectStackFiles
    
    set the stackfiles of stack projectHomeStackPath to projectStackFiles
    return lcwStackFiles
 end project_SetFoundStackFiles
-
-function project_ConstructFoundStackFileArray projectFolder
-   -- this gets all the stackfiles
-   -- should use a recursive folder search
-   -- but we use modules as inner module home stacks at the moment ?
-   
-   local stackFileArray
-   put folder_ListLong (projectFolder) into standardFolders
-   repeat for each line standardFolder in standardFolders
-      switch
-         case standardFolder ends with "/assets/"
-            next repeat  -- stacks within the assets folder will not be indexed
-         case standardFolder ends with "/modules/"
-            put folder_ListLong (standardFolder) into moduleFolders
-            repeat for each line moduleFolder in moduleFolders
-               -- use a recursive search or
-               -- put project_ConstructFoundStackFileArray (moduleFolder) into moduleFoundStackFileArray -- relative to modulefolder not projectFolder
-               
-               -- here we are only looking at homeStacks, behaviors and controller
-               -- libraries an other folders will not be indexed
-               _AddToStackFileArray stackFileArray, moduleFolder, projectFolder
-               
-               -- add the module controllers
-               put moduleFolder & "controllers/" into moduleControllerFolder
-               _AddToStackFileArray stackFileArray, moduleControllerFolder, projectFolder
-               
-               -- add the module behaviors
-               put moduleFolder & "behaviors/" into moduleBehaviorFolder
-               _AddToStackFileArray stackFileArray, moduleBehaviorFolder, projectFolder
-            end repeat
-         default      
-            _AddToStackFileArray stackFileArray, standardFolder, projectFolder 
-      end switch
-   end repeat
-   return stackFileArray
-end project_ConstructFoundStackFileArray
 
 
 --> Project | Names
@@ -614,15 +649,6 @@ getprop project_HomeStackBrowser
    return browserWidget
 end project_HomeStackBrowser
 
-getprop project_FoundStackFiles
-   -- not needed
-   put the project_Folder of the target into projectFolder
-   if projectFolder is empty then return empty
-   put project_ConstructFoundStackFileArray (projectFolder) into projectStackFileArray
-   put stackFile_FromArray (projectStackFileArray) into projectStackFiles
-   return projectStackFiles
-end project_FoundStackFiles
-
 
 --> Project | List
 -
@@ -632,7 +658,7 @@ function project_ListPaths shortFolder, projectFolder
          put project_ListAllStackPaths (projectFolder) into stackPaths
          return stackPaths
       case "modules"
-         put project_ConstructFolder ("modules", projectFolder) into viewFolder
+         put _ConstructProjectFolder ("modules", projectFolder) into viewFolder
          put folder_ListLong (viewFolder) into subViewFolders
          repeat for each line subViewFolder in subViewFolders
             put folder_ListStackPaths (subViewFolder) into stackPaths
@@ -647,13 +673,13 @@ function project_ListPaths shortFolder, projectFolder
          end if
          return projectStackPaths
       default
-         put project_ConstructFolder (shortFolder, projectFolder) into standardFolder
+         put _ConstructProjectFolder (shortFolder, projectFolder) into standardFolder
          put folder_ListStackPaths (standardFolder) into stackPaths
          return stackPaths
    end switch
    
    -- lists only the top-level stacks in the projectFolder
-   -- put project_ConstructFolder (shortFolder, projectFolder) into standardFolder
+   -- put _ConstructProjectFolder (shortFolder, projectFolder) into standardFolder
    -- put folder_ListStackPaths (standardFolder) into stackPaths
    -- return stackPaths
 end project_ListPaths
@@ -716,7 +742,7 @@ end project_CreateHomeBrowser
 
 --> Project | Files
 -
-function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
+function _ConstructProjectFolder shortFolder, projectFolderOrHomeStackFile
    if char -1 of projectFolderOrHomeStackFile is not slash then
       -- assumes if it does not end with "/" it is a file
       set the itemdelimiter to slash
@@ -725,10 +751,14 @@ function project_ConstructFolder shortFolder, projectFolderOrHomeStackFile
    put projectFolderOrHomeStackFile into standardFolder
    if shortFolder is not empty then put shortFolder & slash after standardFolder
    return standardFolder
-end project_ConstructFolder
+end _ConstructProjectFolder
 
-function project_GetFolder projectName, pSubFolderPath
-   put library_FetchProjectFolder (projectName) into projectFolder
+private function project_GetFolder projectName, pSubFolderPath
+   if exists (stack projectName) is true then
+      put the project_Folder of stack projectName into projectFolder
+   else
+      put env_ConstructProjectFolder (projectName) into projectFolder
+   end if
    if projectFolder is empty then return empty
    
    if pSubFolderPath is not empty then
@@ -782,7 +812,7 @@ end project_ConstructSisterHomeStackPath
 function project_ListUsedPathsFromFolder projectFolder
    local projectUsedStackPaths
    repeat for each item shortFolder in "libraries,models"
-      put project_ConstructFolder (shortFolder, projectFolder) into standardFolder
+      put _ConstructProjectFolder (shortFolder, projectFolder) into standardFolder
       if there is not a folder standardFolder then next repeat
       put folder_ListStackPaths (standardFolder) into stackPaths
       put stackPaths & CR after projectUsedStackPaths
@@ -839,7 +869,7 @@ end lcw_UserProjectFolder
 
 function lcw_GetStandardFolder shortFolder
    put lcw_GetRootFolder() into lcwRootFolder
-   put project_ConstructFolder (shortFolder, lcwRootFolder) into lcwStandardFolder
+   put _ConstructProjectFolder (shortFolder, lcwRootFolder) into lcwStandardFolder
    return lcwStandardFolder
 end lcw_GetStandardFolder
 
@@ -857,7 +887,7 @@ end lcw_HomeStackName
 --> Env
 -
 command env_LoadMenus
-   put env_ListProjects() into projectNames
+   put env_ListActiveProjects() into projectNames
    repeat for each line projectName in projectNames
       put project_GetFolder (projectName) into projectFolder
       project_LoadMenus projectFolder
@@ -865,32 +895,32 @@ command env_LoadMenus
 end env_LoadMenus
 
 function env_GetProjectFolder homeStackName
-   put env_GetProjectArray() into envProjectArray
+   put env_GetActiveProjectArray() into envProjectArray
    return envProjectArray [homeStackName]
 end env_GetProjectFolder
 
 command env_SetProjectFolder homeStackName, pProjectFolder
-   put env_GetProjectArray() into envProjectArray
+   put env_GetActiveProjectArray() into envProjectArray
    if pProjectFolder is empty then
       delete variable envProjectArray [homeStackName]
    else
       put pProjectFolder into envProjectArray [homeStackName]
    end if
-   env_SetProjectArray envProjectArray
+   env_SetActiveProjectArray envProjectArray
    return envProjectArray
 end env_SetProjectFolder
 
-function env_GetProjectArray
+function env_GetActiveProjectArray
    global gLCW
    put gLCW ["environment"]["project"] into envProjectArray
    return envProjectArray
-end env_GetProjectArray
+end env_GetActiveProjectArray
 
-command env_SetProjectArray envProjectArray
+command env_SetActiveProjectArray envProjectArray
    global gLCW
    put envProjectArray into gLCW ["environment"]["project"]
    return LocalArray
-end env_SetProjectArray
+end env_SetActiveProjectArray
 
 
 --> Modules
@@ -942,36 +972,10 @@ getprop module_Folder [moduleName]
 end module_Folder
 
 function module_GetFolder moduleShortFolder, projectFolder
-   put project_ConstructFolder ("modules", projectFolder) into rootModuleFolder
+   put _ConstructProjectFolder ("modules", projectFolder) into rootModuleFolder
    put rootModuleFolder & moduleShortFolder & slash into moduleFolder
    return moduleFolder
 end module_GetFolder
-
-
---> Working on
--
-command project_IndexGlobalMenus longStackFiles
-   -- does not export handlers   
-   repeat for each line longStackFile in longStackFiles
-      set the cursor to busy
-      
-      if exists (stack longStackFile) is false then
-         next repeat
-      end if
-      put the name of stack longStackFile into stackObject
-      try
-         set the menu_Update of stackObject to true -- false
-         put the result into mTitleArray
-      catch e
-         put stackObject & CR after problemMenus
-      end try
-   end repeat
-   
-   if problemMenus is not empty then
-      put problemMenus
-      answer warning "The following menus have problems being indexed!"
-   end if
-end project_IndexGlobalMenus
 
 
 --> Private
@@ -1110,15 +1114,16 @@ function folder_ListLong rootFolder
    return longSubFolders
 end folder_ListLong
 
-command folder_CreateNested @someFolder
+command folder_CreateNested someFolder
    if there is a folder someFolder then return empty   
    set the itemdelimiter to "/"
-   repeat with itemNum = 1 to the number of items of someFolder
+   repeat with itemNum = 2 to the number of items of someFolder
       put item 1 to itemNum of someFolder & "/" into testFolder
       if there is a folder testFolder then next repeat
       create folder testFolder
    end repeat
    text_AddTrailing someFolder, slash
+   return someFolder
 end folder_CreateNested
 
 function folder_GetSister shortFolder, someFileOrFolder

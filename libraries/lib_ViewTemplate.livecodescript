@@ -191,10 +191,10 @@ command view_TemplateAddBehavior viewTemplate, pEditScripts
       if the revAvailableHandlers of viewTemplate is empty then
          put the template_DefaultScript ["view behavior"] of viewTemplate into templateBehaviorScript
          put script_GetMetadataArray (templateBehaviorScript) into uRipArray -- ugly, could get from above
-         urip_AddDefaults uRipArray, vName, "view behavior"
+         metadata_AddDefaults uRipArray, vName, "view behavior"
       else
          put script_GetMetadataArray (templateBehaviorScript) into uRipArray
-         urip_AddDefaults uRipArray, vName, "view behavior"
+         metadata_AddDefaults uRipArray, vName, "view behavior"
          script_SetMetadataArray templateBehaviorScript, uRipArray
       end if
    end if

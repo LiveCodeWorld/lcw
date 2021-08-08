@@ -26,6 +26,7 @@ The command "actionCompile pIgnoreErrors" can be found in the stack "revSEStackb
 -
 after mouseUp
    if the shiftKey is "Up" then
+      set the cursor to watch
       put scriptEditor_Object() into scriptObject
       dispatch "script_ExportAndIndexMenus" with scriptObject
    end if

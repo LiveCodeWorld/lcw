@@ -65,6 +65,53 @@ The lcw_User project should only be stored on GitHub as a private repository to 
 
 --> Working on
 -
+command display_Secrets pArrayKey
+   put tolower(pArrayKey) & "_Authentication.array" into shortArrayFile
+   put user_GetArray (shortArrayFile) into userArray
+   --
+   display_Data userArray, "Hubspot", "Secrets"
+end display_Secrets
+
+private function _ConstructShortArrayFile pArrayKey
+   -- "pinterest_Authentication.array" or "secret_Authentication.array" (default)
+   if pArrayKey is empty then put "secret" into pArrayKey
+   put tolower(pArrayKey) & "_Authentication.array" into shortFile
+   return shortFile
+end _ConstructShortArrayFile
+
+
+--> Model | Data
+-
+getprop model_Data [modelStackNames]
+   local modelData
+   if modelStackNames is empty then
+      put the model_Folder of the target into modelFolder
+      put folders (modelFolder) into modelStackNames 
+   end if
+   --
+   repeat for each line modelStackName in modelStackNames
+      if char 1 of modelStackName = "." then next repeat
+      put the model_DataFolder [modelStackName] of the target into modelDataFolder
+      model_AddData modelData, modelDataFolder
+   end repeat
+   return modelData
+end model_Data
+
+function model_GetData modelDataFolder
+   local modelData
+   model_AddData modelData, modelDataFolder
+   return modelData   
+end model_GetData
+
+private command model_AddData @modelData, modelDataFolder
+   put files (modelDataFolder) into shortFiles
+   repeat for each line shortFile in shortFiles
+      put dataFolder_GetFile (modelDataFolder, shortFile) into modelDataFile
+      put array_FetchModel (modelDataFile) into modelArray
+      put modelArray into modelData [shortFile]
+   end repeat
+end model_AddData
+
 
 --> Model | User
 -
@@ -169,11 +216,17 @@ getprop model_DataFolder [modelStackName]
    return modelDataFolder
 end model_DataFolder
 
+getprop model_Folder
+   put the project_Folder of the target into projectFolder
+   put folder_AddShort (projectFolder, "models") into rootModelsFolder
+   return rootModelsFolder
+end model_Folder
+
 
 --> Model | Files
 -
 function model_GetDataFolder modelStackName, projectFolder
-   put project_ConstructFolder ("models", projectFolder) into rootModelsFolder
+   put folder_AddShort (projectFolder, "models") into rootModelsFolder
    put rootModelsFolder & modelStackName & slash into modelDataFolder
    return modelDataFolder
 end model_GetDataFolder

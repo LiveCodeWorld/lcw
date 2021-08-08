@@ -9,109 +9,94 @@ license: GPLv3
 version: 0.6
 
 
---> Currently Working On
+--> Working On
 -
-function file_StripExtension shortFiles
-   set the columndelimiter to "."
-   split shortFiles by column
-   put shortFiles [1] into shortFileNames
-   sort shortFileNames
-   return shortFileNames
-end file_StripExtension
+command folder_Add @someFolder, pSubFolderPath
+   switch
+      case someFolder is empty
+         return "Error, folder is empty"
+      case pSubFolderPath is not empty
+         if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
+         put pSubFolderPath after someFolder
+         text_AddTrailing someFolder, slash
+   end switch
+   return empty
+end folder_Add
 
-command folder_Format @someFolder
-   text_AddTrailing someFolder, slash
-end folder_Format
+command lcw_AnswerStack pComment
+   if pComment is empty then put "Select a stack..." into pComment
+   --
+   lcw_AnswerFile pComment, "LiveCode Stacks|rev|RSTK"
+   put the result into stackPath
+   return stackPath
+end lcw_AnswerStack
 
-function file_ShortNameArray someFiles
+command lcw_AnswerFile pComment, pFileTypes
+   if pComment is empty then put "Select a stack..." into pComment
+   --
+   if pFileTypes is empty then
+      answer file pComment
+   else
+      answer file pComment with type pFileTypes
+   end if
+   put it into stackPath
+   if stackPath is empty then exit to top
+   
+   return stackPath
+end lcw_AnswerFile
+
+getprop short_File
+   put the stack_Name of the target into sName
+   put the filename of stack sName into stackPath
    set the itemdelimiter to slash
-   repeat for each line someFile in someFiles
-      put someFile into shortNameArray [item -1 of someFile]
-   end repeat
-   return shortNameArray
-end file_ShortNameArray
+   return item -1 of stackPath
+end short_File
 
 
---> File | List | Paths
+--> File
 -
-/*
-Thinking of renaming thes to "path_***" when handlers return long file paths
-*/
+function file_NewShortPath shortFile, sPath
+   set the itemdelimiter to slash
+   put shortFile into item -1 of sPath
+   return sPath
+end file_NewShortPath
 
-function path_ListLong someFolder, pShowInvisible, pSomeFilter
-   if there is not a folder someFolder then return empty
-   put files (someFolder) into shortFiles
-   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
-   return filePaths
-end path_ListLong
+function file_GetShort someFile
+   -- was "file_LongToShort", "file_ExtractShortFile", "extract_ShortFile"
+   set the itemdelimiter to slash
+   put item -1 of someFile into shortFile
+   return shortFile
+end file_GetShort
 
-function file_AddFolderToPaths shortFiles, someFolder, pShowInvisible
-   if pShowInvisible is not true then filter shortFiles without ".*"
-   text_AddTrailing someFolder, slash
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile & CR after filePaths
-   end repeat
-   delete last char of filePaths
-   return filePaths
-end file_AddFolderToPaths
+command file_SetShort @sPath, shortFile
+   set the itemdelimiter to slash
+   put shortFile into item -1 of sPath
+end file_SetShort
 
 
---> File | List | Short
+--> File | Props
 -
-/*
-These all do the same thing and should be reconciled
-*/
+function file_GetSize filePath
+   get file_DetailedInfo (filePath)
+   return item 2 of it
+end file_GetSize
 
-function file_ListShort someFolder, pShowInvisible
-   if there is not a folder someFolder then return empty
-   put files (someFolder) into shortFiles
-   if pShowInvisible is not true then filter shortFiles without ".*"
-   return shortFiles
-end file_ListShort
+function file_LastModifed filePath
+   -- version original,27/12/02
+   return item 5 of file_DetailedInfo (filePath)
+end file_LastModifed
 
-function folder_ListShortFiles someFolder, pShowInvisible
-   return file_ListShort (someFolder, pShowInvisible)
-end folder_ListShortFiles
+function file_CreationDate filePath, pConvertToUTC
+   -- Creation date, in seconds. (OS X and Windows only).
+   put item 4 of file_DetailedInfo (filePath) into creationDate
+   return creationDate
+end file_CreationDate
 
-function folder_ShortFiles someFolder
-   return file_ListShort (someFolder)
-end folder_ShortFiles
-
-
---> File | List | Utils
--
-command file_SetRelativePath @filePath, baseFolder
-   if baseFolder is empty then put folder_Above (the filename of this stack) into baseFolder
-   put file_GetRelativePath (filePath, baseFolder, commonPath) into filePath
-   return commonPath
-end file_SetRelativePath
-
-function file_LongToShort someFile
-    -- was "file_ExtractShortFile" "extract_ShortFile"
-    file_SetPath someFile, someFolder, shortFile
-    return shortFile
-end file_LongToShort
-
-command file_ShortToLong @shortFiles, someFolder, pShowInvisible, pSomeFilter
-   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
-   put filePaths into shortFiles
-end file_ShortToLong
-  
-private function file_LinesToNames fileInfo
-   put file_LinesToArray (fileInfo) into fileArray
-   put keys (fileArray) into fileNames
-   return fileNames
-end file_LinesToNames
-
-private function file_LinesToArray fileInfo
-   repeat for each line fileLine in fileInfo
-      put item 1 of fileLine into fName 
-      -- put urldecode (item 1 of fileLine) into fName 
-      put item 2 of fileLine into fSize
-      put fSize into fileArray [fName]["fSize"]
-   end repeat
-   return fileArray
-end file_LinesToArray
+function file_CreatorAndType filePath
+   -- only useful on MacOS
+   get file_DetailedInfo(filePath)
+   return item 11 of it
+end file_CreatorAndType
 
 private command file_DeconstructLine fileLine, @fName, @fSize
    -- not really used right now
@@ -131,11 +116,287 @@ private command file_DeconstructLine fileLine, @fName, @fSize
    */
 end file_DeconstructLine
 
+function file_DetailedInfo filePath
+   if filePath is empty then return empty
+   put filePath into someDirectory
+   if there is a file filePath then
+      set the itemdelimiter to "/"
+      put last item of filePath into shortFileName
+      delete last item of someDirectory
+      
+      put the directory into oDirectory
+      set the directory to someDirectory
+      put the detailed files into detailedFileTable     
+      set the directory to oDirectory
+      
+      put urlencode (shortFileName) into shortFileName -- seems to need it again???
+      filter detailedFileTable with (shortFileName & ",*")
+      return detailedFileTable
+   else if there is a folder filePath then
+      put the directory into oDirectory
+      set the directory to someDirectory
+      put the detailed files into detailedFileTable     
+      set the directory to oDirectory
+      return detailedFileTable
+   else
+      return empty
+   end if
+end file_DetailedInfo
+
+function file_ChooseStack pComment
+   lcw_AnswerStack pComment
+   return the result
+end file_ChooseStack
+
+function file_Choose pComment, pFileTypes
+   lcw_AnswerFile pComment, pFileTypes
+   return the result
+end file_Choose
+
+function file_StripExtension shortFiles
+   set the columndelimiter to "."
+   split shortFiles by column
+   put shortFiles [1] into shortFileNames
+   sort shortFileNames
+   return shortFileNames
+end file_StripExtension
+
+function file_ShortNameArray someFiles
+   set the itemdelimiter to slash
+   repeat for each line someFile in someFiles
+      put someFile into shortNameArray [item -1 of someFile]
+   end repeat
+   return shortNameArray
+end file_ShortNameArray
+
+
+--> File | Hashes
+-
+function melt_GetShotCutHash movieFile
+   put file_GetSize (movieFile) into someSize
+   if someSize > 200000000 then
+      put file_GetHead (movieFile) into fileBit
+      put file_GetTail (movieFile) after fileBit
+      put text_Hash (fileBit) into fileHash
+   else
+      -- put line 1 of shell_Md5Hash (movieFile) into fileHash
+      -- put url ("file:" & movieFile) into someData
+      put url ("binfile:" & movieFile) into someData
+      put text_Hash (someData) into fileHash
+   end if
+   return fileHash
+end melt_GetShotCutHash
+
+function file_GetTail someFile, pMbNum
+   if pMbNum is empty then put 1 into pMbNum
+   put pMbNum * 1024 * 1024 into bitNum
+   --
+   put "tail -c" && bitNum && kwote (someFile) into someShell
+   --
+   put shell (someShell) into lastMB
+   return lastMB
+end file_GetTail
+
+function file_GetHead someFile, pMbNum
+   if pMbNum is empty then put 1 into pMbNum
+   put pMbNum * 1024 * 1024 into bitNum
+   --
+   put "head -c" && bitNum && kwote (someFile) into someShell
+   --
+   put shell (someShell) into firstMB
+   return firstMB
+end file_GetHead
+
+function file_Md5Hash filePath
+   put file_GetSize (filePath) into someSize
+   if someSize > 200000000 then
+      breakpoint
+      put shell_Md5Hash (filePath) into fileHash
+   else
+      put url ("binfile:" & filePath) into someData
+      put text_Hash (someData) into fileHash
+   end if
+   return fileHash
+end file_Md5Hash
+
+function file_HashName someText, pFolder, pExtension
+   if pExtension is empty then put "txt" into pExtension
+   if pFolder is empty then
+      put the the tempname into tempFolder
+      set the itemdelimiter to "/"
+      delete item -1 of tempFolder
+      put tempFolder & "/" into pFolder
+   end if
+   text_AddTrailing pFolder, slash
+   put text_Hash (someText) into hashName
+   put pFolder & hashName & "." & pExtension into someFile
+   return someFile
+end file_HashName
+
+
+function file_FastHashGuess filePath
+   -- for now just uses short file
+   -- thought is that if you name the file "hash_SomeHash"
+   -- then can use fileName except for the first time
+   -- when you need to run md5 command line tool over it.
+   
+   deconstruct_File filePath, someFolder, shortName, someExtension
+   return shortName
+   put extract_ShortFile(filePath) into shortFile
+   return shortFile
+   
+   -- get binaryEncode("H*", someBinaryData, tHexDigest)
+   put the number of chars of shortFile into howLong
+   if howLong > 20 then
+      return shortFile
+   else
+      put file_Md5Hash (filePath) into hashFile
+      -- rename file?
+      return hashFile
+   end if
+end file_FastHashGuess
+
+function file_SafeHashName filePath
+    -- need to check. Not tested
+    set the cursor to watch
+    deconstruct_File filePath, someFolder, shortName, someExtension
+    put line 1 of shell_Md5Hash(filePath) into tHexDigest
+    -- get binaryDecode("H*", someBinaryData, tHexDigest)
+    put "hash_" & tHexDigest into hashName
+    put someFolder & "/" & hashName into hashFile
+    if someExtension is not empty then put "." & someExtension after hashFile
+    return hashFile
+end file_SafeHashName
+
+function file_IsHashName filePath
+    -- need to check. Not tested
+    deconstruct_File filePath, someFolder, shortName, someExtension
+    if char 1 to 5 of shortName is "hash_" then
+        put shortName into tHexDigest
+        delete char 1 to 5 of tHexDigest
+        put binaryencode("H*", tHexDigest) into someBinaryData
+        if the number of chars of someBinaryData = 16 then
+            return true
+        else
+            return false
+        end if
+    else
+        return false
+    end if
+end file_IsHashName
+
+function file_CheckHashName filePath
+    -- need to check. Not tested
+    deconstruct_File filePath, someFolder, shortName, someExtension
+    put file_SafeHashName(filePath, someExtension) into realHashName
+    put shortName into shortFile
+    if someExtension is not empty then put "." & someExtension after shortFile
+    if realHashName is shortFile then
+        return true
+    else
+        return false
+    end if
+end file_CheckHashName
+
+
+--> File | List | Paths
+-
+/*
+Thinking of renaming thes to "path_***" when handlers return long file paths
+*/
+
+function file_AddFolderToPaths shortFiles, someFolder, pShowInvisible
+   if pShowInvisible is not true then filter shortFiles without ".*"
+   text_AddTrailing someFolder, slash
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile & CR after filePaths
+   end repeat
+   delete last char of filePaths
+   return filePaths
+end file_AddFolderToPaths
+
+command file_ShortToLong @shortFiles, someFolder, pShowInvisible, pSomeFilter
+   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
+   put filePaths into shortFiles
+end file_ShortToLong
+
+
+--> File | List | Short
+-
+function file_ListLong someFolder, pShowInvisible, pSomeFilter
+   if there is not a folder someFolder then return empty
+   put files (someFolder) into shortFiles
+   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
+   return filePaths
+end file_ListLong
+
+function file_ListShort someFolder, pShowInvisible
+   if there is not a folder someFolder then return empty
+   put files (someFolder) into shortFiles
+   if pShowInvisible is not true then filter shortFiles without ".*"
+   return shortFiles
+end file_ListShort
+
+
+--> File | List | Utils
+-
+command file_SetRelativePath @filePath, baseFolder
+   if baseFolder is empty then put folder_Above (the filename of this stack) into baseFolder
+   put file_GetRelativePath (filePath, baseFolder, commonPath) into filePath
+   return commonPath
+end file_SetRelativePath
+
+private function file_LinesToNames fileInfo
+   put file_LinesToArray (fileInfo) into fileArray
+   put keys (fileArray) into fileNames
+   return fileNames
+end file_LinesToNames
+
+private function file_LinesToArray fileInfo
+   repeat for each line fileLine in fileInfo
+      put item 1 of fileLine into fName 
+      -- put urldecode (item 1 of fileLine) into fName 
+      put item 2 of fileLine into fSize
+      put fSize into fileArray [fName]["fSize"]
+   end repeat
+   return fileArray
+end file_LinesToArray
+
+
+command folder_Format @someFolder
+   text_AddTrailing someFolder, slash
+end folder_Format
+
+function folder_GetDefault
+   put the tempname & slash into tempFolder
+   create folder tempFolder
+   return tempFolder
+end folder_GetDefault
+
+function folder_ListShortFiles someFolder, pShowInvisible
+   return file_ListShort (someFolder, pShowInvisible)
+end folder_ListShortFiles
+
+function folder_ShortFiles someFolder
+   return file_ListShort (someFolder)
+end folder_ShortFiles
+
+function folder_Above fileOrFolder
+   set the itemdelimiter to "/"
+   if char -1 of fileOrFolder is "/" then delete char -1 of fileOrFolder
+   delete last item of fileOrFolder
+   if fileOrFolder is empty then 
+      return "."
+   else
+      return fileOrFolder & "/"
+   end if
+end folder_Above
+
 
 --> File | List | Paths | Old
 -
 function folder_ListFiles someFolder, pShowInvisible, pSomeFilter
-   return path_ListLong (someFolder, pShowInvisible, pSomeFilter)
+   return file_ListLong (someFolder, pShowInvisible, pSomeFilter)
 end folder_ListFiles
 
 function folder_FilesInside pFolder, pFilter, pQuestion, pShowInvisible
@@ -159,89 +420,6 @@ function folder_FilesInside pFolder, pFilter, pQuestion, pShowInvisible
       return empty
    end if
 end folder_FilesInside
-
-
---> File | List | Stacks
--
-/*
-Should be renamed "file_***" as the return files, or stack fie info.
-*/
-
-function folder_ListStackNames someFolder
-   -- wil load stacks into memory
-   if there is not a folder someFolder then return empty
-   text_AddTrailing someFolder, slash
-   put the defaultfolder into oFolder
-   set the defaultfolder to someFolder
-   put the files into shortFiles
-   
-   set the itemdelimiter to "."
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile into stackFilePath
-      if there is a stack stackFilePath then
-         put the short name of stack stackFilePath & CR after stackNames
-      end if
-   end repeat
-   delete char -1 of stackNames
-   set the defaultfolder to oFolder
-   return stackNames
-end folder_ListStackNames
-
-function folder_ListStackFileNames someFolder
-   -- wil load stacks into memory
-   if there is not a folder someFolder then return empty
-   
-   if char -1 of someFolder is not slash then put slash after someFolder
-   put the defaultfolder into oFolder
-   set the defaultfolder to someFolder
-   put the files into shortFiles
-   repeat for each line shortFile in shortFiles
-      if there is a stack shortFile then
-         put someFolder & shortFile & CR after stackFileNames
-      end if
-   end repeat
-   delete char -1 of stackFileNames
-   set the defaultfolder to oFolder
-   return stackFileNames
-end folder_ListStackFileNames
-
-function folder_ListStackPaths someFolder
-   -- will load stacks into memory
-   if there is not a folder someFolder then return empty
-   
-   if char -1 of someFolder is not slash then put slash after someFolder
-   put the defaultfolder into oFolder
-   set the defaultfolder to someFolder
-   put the files into shortFiles
-   
-   set the itemdelimiter to "."
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile into stackFilePath
-      if there is a stack stackFilePath then
-         put stackFilePath & CR after stackFilePaths
-      end if
-   end repeat
-   delete char -1 of stackFilePaths
-   set the defaultfolder to oFolder
-   return stackFilePaths
-end folder_ListStackPaths
-
-function folder_ListShortStackFiles someFolder
-    -- wil load stacks into memory
-   if there is not a folder someFolder then return empty
-   
-   put the defaultfolder into oFolder
-   set the defaultfolder to someFolder
-   put the files into shortFiles
-   repeat for each line shortFile in shortFiles
-      if there is a stack shortFile then
-         put shortFile & CR after shortStackFiles
-      end if
-   end repeat
-   delete char -1 of shortStackFiles
-   set the defaultfolder to oFolder
-   return shortStackFiles
-end folder_ListShortStackFiles
 
 
 --> Folder | List
@@ -336,17 +514,6 @@ function file_FromRelativeRoot relativeFile, relativeRoot
    return relativeRoot & "/" & relativeFile
 end file_FromRelativeRoot
 
-function folder_Above fileOrFolder
-   set the itemdelimiter to "/"
-   if char -1 of fileOrFolder is "/" then delete char -1 of fileOrFolder
-   delete last item of fileOrFolder
-   if fileOrFolder is empty then 
-      return "."
-   else
-      return fileOrFolder & "/"
-   end if
-end folder_Above
-
 command folder_CreateFromFile someFile
    put someFile into someFolder
    set the itemdelimiter to slash
@@ -355,15 +522,16 @@ command folder_CreateFromFile someFile
    return someFolder
 end folder_CreateFromFile
 
-command folder_CreateNested @someFolder
-   text_AddTrailing someFolder, slash
-   if there is a folder someFolder then return empty
+command folder_CreateNested someFolder
+   if there is a folder someFolder then return empty   
    set the itemdelimiter to "/"
-   repeat with itemNum = 1 to the number of items of someFolder
+   repeat with itemNum = 2 to the number of items of someFolder
       put item 1 to itemNum of someFolder & "/" into testFolder
       if there is a folder testFolder then next repeat
       create folder testFolder
    end repeat
+   text_AddTrailing someFolder, slash
+   return someFolder
 end folder_CreateNested
 
 
@@ -445,12 +613,6 @@ function file_ExtensionToRevFormat someExtension
             return "text"
     end switch
 end file_ExtensionToRevFormat
-
-command file_SetPath someFile, @someFolder, @shortFile
-    set the itemdelimiter to "/"
-    put item 1 to -2 of someFile into someFolder
-    put item -1 of someFile into shortFile
-end file_SetPath
 
 function file_ConstructSafeName someName, someExtension
     -- was "construct_SafeFileName"
@@ -558,49 +720,6 @@ function file_FromRelativeRoot relativeFile, relativeRoot
     return relativeRoot & "/" & relativeFile
 end file_FromRelativeRoot
 
-function file_DetailedInfo filePath
-   if filePath is empty then return empty
-   put filePath into someDirectory
-   if there is a file filePath then
-      set the itemdelimiter to "/"
-      put last item of filePath into shortFileName
-      delete last item of someDirectory
-      
-      put the directory into oDirectory
-      set the directory to someDirectory
-      put the detailed files into detailedFileTable     
-      set the directory to oDirectory
-      
-      put urlencode(shortFileName) into shortFileName -- seems to need it again???
-      filter detailedFileTable with (shortFileName & ",*")
-      return detailedFileTable
-   else if there is a folder filePath then
-      put the directory into oDirectory
-      set the directory to someDirectory
-      put the detailed files into detailedFileTable     
-      set the directory to oDirectory
-      return detailedFileTable
-   else
-      return empty
-   end if
-end file_DetailedInfo
-
-function file_GetSize filePath
-   get file_DetailedInfo (filePath)
-   return item 2 of it
-end file_GetSize
-
-function file_LastModifed filePath
-    -- version original,27/12/02
-    return item 5 of file_DetailedInfo(filePath)
-end file_LastModifed
-
-function file_CreatorAndType filePath
-    -- only useful on MacOS
-    get file_DetailedInfo(filePath)
-    return item 11 of it
-end file_CreatorAndType
-
 function file_GetMostRecent fileNames
     -- version original,27/12/02
     -- <scott> Would be nice to have "detailed fileName property modifier" </scott>
@@ -638,9 +757,8 @@ command file_CreateImage someImage, imageFile
 end file_CreateImage
 
 command file_CreateText someText, pFile
-   if pFile is empty then
-      put the tempname into pFile
-   end if
+   if pFile is empty then put the tempname into pFile
+   --
    put folder_Above (pFile) into someFolder
    folder_CreateNested someFolder
    put someText into url ("file:" & pFile)
@@ -688,100 +806,6 @@ command file_SetHomeRelative @longFile
 end file_SetHomeRelative
 
 
---> File | Hashes
--
-function file_HashName someText, pFolder, pExtension
-   if pExtension is empty then put "txt" into pExtension
-   if pFolder is empty then put file_TemporaryFolder() into pFolder
-   text_AddTrailing pFolder, slash
-   put text_Hash (someText) into hashName
-   put pFolder & hashName & "." & pExtension into someFile
-   return someFile
-end file_HashName
-
-function file_TemporaryFolder
-   put the the tempname into tempFolder
-   set the itemdelimiter to "/"
-   delete item -1 of tempFolder
-   return tempFolder & "/"
-end file_TemporaryFolder
-
-function file_FastHashGuess filePath
-    -- for now just uses short file
-    -- thought is that if you name the file "hash_SomeHash"
-    -- then can use fileName except for the first time
-    -- when you need to run md5 command line tool over it.
-     
-    deconstruct_File filePath, someFolder, shortName, someExtension
-    return shortName
-    put extract_ShortFile(filePath) into shortFile
-    return shortFile
-     
-    -- get binaryEncode("H*", someBinaryData, tHexDigest)
-    put the number of chars of shortFile into howLong
-    if howLong > 20 then
-        return shortFile
-    else
-        put file_Md5Hash(filePath) into hashFile
-        -- rename file?
-        return hashFile
-    end if
-end file_FastHashGuess
-
-function file_Md5Hash filePath
-    put file_GetSize(filePath) into someSize
-    if someSize > 200000000 then
-        breakpoint
-        return shell_Md5Hash(filePath)
-    else
-        put url ("binfile:" & filePath) into someData
-        return text_Hash(someData)
-    end if
-end file_Md5Hash
-
-function file_SafeHashName filePath
-    -- need to check. Not tested
-    set the cursor to watch
-    deconstruct_File filePath, someFolder, shortName, someExtension
-    put line 1 of shell_Md5Hash(filePath) into tHexDigest
-    -- get binaryDecode("H*", someBinaryData, tHexDigest)
-    put "hash_" & tHexDigest into hashName
-    put someFolder & "/" & hashName into hashFile
-    if someExtension is not empty then put "." & someExtension after hashFile
-    return hashFile
-end file_SafeHashName
-
-function file_IsHashName filePath
-    -- need to check. Not tested
-    deconstruct_File filePath, someFolder, shortName, someExtension
-    if char 1 to 5 of shortName is "hash_" then
-        put shortName into tHexDigest
-        delete char 1 to 5 of tHexDigest
-        put binaryencode("H*", tHexDigest) into someBinaryData
-        if the number of chars of someBinaryData = 16 then
-            return true
-        else
-            return false
-        end if
-    else
-        return false
-    end if
-end file_IsHashName
-
-function file_CheckHashName filePath
-    -- need to check. Not tested
-    deconstruct_File filePath, someFolder, shortName, someExtension
-    put file_SafeHashName(filePath, someExtension) into realHashName
-    put shortName into shortFile
-    if someExtension is not empty then put "." & someExtension after shortFile
-    if realHashName is shortFile then
-        return true
-    else
-        return false
-    end if
-end file_CheckHashName
-
-
 --> File | Choose
 -
 function file_ChooseImage preferredFolder, anyFile, someType, comment
@@ -813,21 +837,6 @@ function file_ChooseAny preferredFolder, comment
     if the result is "Cancel" then exit to top
     return it
 end file_ChooseAny
-
-function file_ChooseStack comment
-    -- was "askStack"
-    
-    if comment is empty then put "Select a stack..." into comment
-    if the platform is "MacOS" then
-        answer file comment of type "MSTK"
-    else if the platform is "Linux" then
-        answer file comment with filter "*.mc"
-    else if the platform is "Windows" then
-    else
-    end if
-    put line 1 of it into longStackName
-    return longStackName
-end file_ChooseStack
 
 function _askLinuxImage someType, preferredFolder, comment
     if someType is empty then put _getLinuxImageTypes() into someType
@@ -919,17 +928,6 @@ function folder_GetDocuments
     end if
 end folder_GetDocuments
 
-command folder_CreateNested @someFolder
-   text_AddTrailing someFolder, slash
-   if there is a folder someFolder then return empty
-   set the itemdelimiter to "/"
-   repeat with itemNum = 1 to the number of items of someFolder
-      put item 1 to itemNum of someFolder & "/" into testFolder
-      if there is a folder testFolder then next repeat
-      create folder testFolder
-   end repeat
-end folder_CreateNested
-
 function folder_Above fileOrFolder
     set the itemdelimiter to "/"
     if char -1 of fileOrFolder is "/" then delete char -1 of fileOrFolder
@@ -942,13 +940,8 @@ function folder_Above fileOrFolder
 end folder_Above
 
 command folder_Rename fromFolder, toFolder, someMessage
-    svn_Move fromFolder, toFolder, someMessage
-    if matchchunk(the result, "svn: '(.*)' is not a working copy") then
-        rename folder fromFolder to toFolder
-        return the result
-    else
-        return the result
-    end if
+   rename folder fromFolder to toFolder
+   return the result
 end folder_Rename
 
 command folder_Delete someFolder
@@ -1076,142 +1069,6 @@ function folder_ShortNameAboveFile filePath
     return last item of filePath
 end folder_ShortNameAboveFile
 
-function folder_ConstructArray someFolder
-   local dataArray
-   text_AddTrailing someFolder, slash
-   put the directory into oDirectory
-   set the directory to someFolder
-   
-   put the folders into newShortFolders
-   if includeInvisible is not false then filter newShortFolders without ".*"
-   -- what else needs escaping?
-   replace "/" with ":" in newShortFolders
-   
-   repeat for each line shortFolder in newShortFolders
-      put someFolder & shortFolder & "/" into nestedFolder
-      set the directory to nestedFolder
-      put the files into shortFiles
-      if includeInvisible is not false then filter shortFiles without ".*"
-      repeat for each line shortFile in shortFiles
-         put nestedFolder & shortFile into filePath
-         
-         put dataArray [shortFolder] into fileIndex
-         line_Insert shortFile, fileIndex
-         put fileIndex into dataArray [shortFolder]
-      end repeat
-   end repeat
-   set the directory to someFolder
-   return dataArray
-end folder_ConstructArray
-
-function folder_ConstructDatagridArray someFolder, pIsExpanded
-   local dgArray
-   text_AddTrailing someFolder, slash
-   put the directory into oDirectory
-   set the directory to someFolder
-   
-   put the folders into newShortFolders
-   if includeInvisible is not false then filter newShortFolders without ".*"
-   -- what else needs escaping?
-   replace "/" with ":" in newShortFolders
-   
-   repeat with lineNum = 1 to the number of lines of newShortFolders
-      put pIsExpanded is true into dgArray [lineNum]["isExpanded"]
-      put line lineNum of newShortFolders into shortFolder
-      put shortFolder into dgArray [lineNum]["title"]
-      
-      put someFolder & shortFolder & "/" into nestedFolder
-      put nestedFolder into dgArray [lineNum]["folder"]
-      
-      set the directory to nestedFolder
-      put the files into shortFiles
-      if includeInvisible is not false then filter shortFiles without ".*"
-      repeat for each line shortFile in shortFiles
-         put nestedFolder & shortFile into filePath
-         
-         put dgArray [lineNum]["files"] into fileIndex
-         line_Insert shortFile, fileIndex
-         put fileIndex into dgArray [lineNum]["files"]
-      end repeat
-   end repeat
-   set the directory to someFolder
-   return dgArray
-end folder_ConstructDatagridArray
-
-function folder_ConstructFileOutline someFolder, @infoArray, excludeFolderList, includeInvisible, tabBit, pUseHtmlLinks
-   local shortFileOutline
-   
-   if there is not a folder someFolder then return empty
-   text_AddTrailing someFolder, slash
-   put infoArray["FolderIndex"] into folderIndex 
-   put infoArray["FileIndex"] into fileIndex 
-   line_Insert someFolder, folderIndex
-   put folderIndex into infoArray["FolderIndex"]
-   
-   put the directory into oDirectory
-   set the directory to someFolder
-   put the files into shortFiles
-   if includeInvisible is not false then filter shortFiles without ".*"
-   
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile into filePath
-      line_Insert filePath, fileIndex
-      
-      if pUseHtmlLinks is not true then
-         put tabBit & shortFile into osTitle
-      else
-         put tabBit & html_ConstructNameLink(shortFile, filePath) into osTitle
-      end if
-      line_Insert osTitle, shortFileOutline
-   end repeat
-   put fileIndex into infoArray["FileIndex"]
-   
-   put the folders into newShortFolders
-   if includeInvisible is not false then filter newShortFolders without ".*"
-   
-   -- what else needs escaping?
-   replace "/" with ":" in newShortFolders
-   
-   repeat for each line shortFolder in newShortFolders
-      if shortFolder is among the items of excludeFolderList then next repeat
-      put someFolder & shortFolder & "/" into nestedFolder
-      
-      if pUseHtmlLinks is not true then
-         put tabBit & shortFolder into osTitle
-      else
-         put tabBit & html_ConstructNameLink (shortFolder, nestedFolder) into osTitle
-      end if
-      line_Insert osTitle, shortFileOutline
-      
-      put tabBit & tab into nextTabBit
-      put folder_ConstructFileOutline (nestedFolder, infoArray, excludeFolderList, includeInvisible, nextTabBit, pUseHtmlLinks) into nestedOutline
-      line_Insert nestedOutline, shortFileOutline
-   end repeat
-   
-   set the directory to oDirectory
-   return shortFileOutline
-end folder_ConstructFileOutline
-
-function folder_GetNestedIndex someFolder
-   -- a nested index of folders
-   local foundFolders
-   
-   text_AddTrailing someFolder, slash
-   put someFolder & return after foundFolders
-   
-   put the directory into oFolder
-   set the directory to someFolder
-   put the folders into folderIndex
-   filter folderIndex without ".*"
-   repeat for each line shortFolder in folderIndex
-      put someFolder & shortFolder & "/" into nestedFolder
-      put folder_GetNestedIndex (nestedFolder) & CR after foundFolders
-   end repeat
-   set the directory to oFolder
-   delete last char of foundFolders
-   return foundFolders
-end folder_GetNestedIndex
-
 
 --> Folder | Search
 -
@@ -1309,76 +1166,3 @@ function folder_SearchForStacks someFolder, searchString, recurseFolders, skipAr
    set the directory to oFolder
    return foundFiles
 end folder_SearchForStacks
-
-command folder_ConstructStackArrays @stackNameArray, @bigFileIndex, someFolder, searchNested, skipArchives, excludedFolderList	# recursive function
-   -- was "file_RecursiveStackSearch"
-   -- seems to look at files several times ???
-   if excludedFolderList is empty then put "CVS,retired,archive" into excludedFolderList
-   if skipArchives is not false and (char 1 of someFolder is "." or someFolder is among the items of excludedFolderList) then
-      return empty	# skip CVS folders
-   end if
-   
-   put the directory into oFolder
-   set the directory to someFolder
-   put the files into shortFiles
-   
-   text_AddTrailing someFolder, slash
-   _FilterAndAddStacks shortFiles, someFolder, stackNameArray, bigFileIndex
-   
-   if searchNested is not false then
-      put the folders into tFolderList
-      delete line 1 of tFolderList
-      repeat for each line tFolder in tFolderList
-         if the controlkey is "Down" then return foundFiles	# allow an exit?
-         if skipArchives is not false and (char 1 of tFolder is "." or tFolder is among the items of excludedFolderList) then
-            next repeat	# skip CVS folders
-         end if
-         
-         put someFolder & tFolder & "/" into tNuFolder
-         folder_ConstructStackArrays stackNameArray, bigFileIndex, tNuFolder, searchNested, skipArchives, excludedFolderList
-      end repeat
-   end if
-   
-   set the directory to oFolder
-   return ""
-end folder_ConstructStackArrays
-
-private command _FilterAndAddStacks shortFiles, someFolder, @stackNameArray, @bigFileIndex
-    local filteredFiles
-    
-    put shortFiles into mcFiles
-    filter mcFiles with "*.mc"
-    line_Insert mcFiles, filteredFiles
-     
-    put shortFiles into revFiles
-    filter revFiles with "*.rev"
-    line_Insert revFiles, filteredFiles
-     
-    if filteredFiles is not empty then
-        repeat for each line filePath in filteredFiles
-            put someFolder & filePath into tFilePath
-             
-            -- this is where you can test individual files
-            set lockmessages to true
-            if exists(stack tFilePath) then
-                put the short name of stack tFilePath into stackName
-                put the long name of stack tFilePath into mainStackObject
-                 
-                array_AddToIndex mainStackObject, stackName, stackNameArray
-                
-                put the substacks of stack tFilePath into subStackNames
-                repeat for each line subStackName in subStackNames
-                    put the long name of stack subStackName of stack tFilePath into subStackObject
-                     
-                    array_AddToIndex subStackObject, subStackName, stackNameArray
-                end repeat
-                 
-                put tFilePath & return after foundFiles
-            end if
-            set lockmessages to false
-        end repeat
-         
-        put foundFiles after bigFileIndex
-    end if
-    return foundFiles
-end _FilterAndAddStacks

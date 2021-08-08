@@ -38,6 +38,63 @@ function library_FetchStackFiles pSetName
 end library_FetchStackFiles
 
 
+--> StackFile | Link
+-
+setprop stackFile_LinkObject sObject
+   if exists (sObject) is false then
+      return "Error, object does not exist:" && sObject
+   end if
+   
+   put the stack_Name of sObject into stackName
+   set the stackFile_Link of the target to stackName
+   put the result into stackFileArray
+   return stackFileArray
+end stackFile_LinkObject
+
+setprop stackFile_Link stackName
+   -- see also "stack_IsKnown"
+   if exists (stack stackName) is false then return "Error, stack does not exist:" && stackName
+   put the stackfile_Array of the target into stackFileArray
+   put the stack_Folder of the target into baseFolder
+   --
+   put the effective filename of stack stackName into linkFile
+   put file_GetRelativePath (linkFile, baseFolder, commonPath) into linkRelativeFile
+   put linkRelativeFile into stackFileArray [stackName]
+   --
+   set the stackfile_Array of the target to stackFileArray
+   return stackFileArray
+end stackFile_Link
+
+
+--> StackFile
+-
+getprop stackfile_Path [stackName]
+   put the stack_Object of the target into stackObject
+   put the stackfiles of stackObject into stackFileTable
+   
+   put the effective filename of stackObject into stackFileRoot
+   set the itemdelimiter to slash
+   delete item -1 of stackFileRoot -- no trailing slash
+   
+   put stackFile_ToArray (stackFileTable) into stackFileArray
+   put stackfileArray [stackName] into relPath
+   if relPath begins with stackFileRoot then return relPath
+   
+   put stackFileRoot & relPath into stackfilePath
+   if exists (stack stackfilePath) then
+      return stackfilePath
+   else
+      return empty
+   end if
+end stackfile_Path
+
+getprop stackfile_RelativePath [stackName]
+   put the stackfile_Array of the target into stackfileArray
+   put stackfileArray [stackName] into relativePath
+   return relativePath
+end stackfile_RelativePath
+
+
 --> Stackfile | Paths
 -
 setprop stackFile_AddPaths someFiles
@@ -214,36 +271,10 @@ getprop stackfile_FileArray
    return fileNameArray
 end stackfile_FileArray
 
-getprop stackfile_Path [stackName]
-   put the stack_Object of the target into stackObject
-   put the stackfiles of stackObject into stackFileTable
-   
-   put the effective filename of stackObject into stackFileRoot
-   set the itemdelimiter to slash
-   delete item -1 of stackFileRoot -- no trailing slash
-   
-   put stackFile_ToArray (stackFileTable) into stackFileArray
-   put stackfileArray [stackName] into relPath
-   if relPath begins with stackFileRoot then return relPath
-   
-   put stackFileRoot & relPath into stackfilePath
-   if exists (stack stackfilePath) then
-      return stackfilePath
-   else
-      return empty
-   end if
-end stackfile_Path
-
-getprop stackfile_RelativePath [stackName]
-   put the stackfile_Array of the target into stackfileArray
-   put stackfileArray [stackName] into relativePath
-   return relativePath
-end stackfile_RelativePath
-
 getprop stackfile_Array
    put the stack_Object of the target into someStack
-   put the stackfiles of someStack into stackFileTable
-   put stackFile_ToArray (stackFileTable) into stackFileArray
+   put the stackfiles of someStack into stackFileArray
+   split stackFileArray by CR and comma
    return stackFileArray
 end stackfile_Array
 

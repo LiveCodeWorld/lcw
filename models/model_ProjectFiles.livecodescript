@@ -15,6 +15,67 @@ Those older names are a bit of a mess.
 
 --> Working on
 -
+function project_GetFolder projectName, pSubFolderPath
+   -- utility to get a project folder from a project name for loaded or unloaded projects
+   -- returns empty if the folder does not exist or there is another problem
+   if exists (stack projectName) is true then
+      put the project_Folder of stack projectName into projectFolder
+   else
+      put env_ConstructProjectFolder (projectName) into projectFolder
+   end if
+   folder_Add projectFolder, pSubFolderPath
+   if there is not a folder projectFolder then return empty
+   --
+   return projectFolder
+end project_GetFolder
+
+
+--> Project | List | Behaviors
+-
+function project_ListBehaviorStackNames pProjectNames  
+   repeat for each line projectName in pProjectNames
+      if exists (stack projectName) is false then next repeat
+      put the project_StackNames ["behaviors"] of stack projectName & CR after bNames
+   end repeat
+   sort bNames
+   put word 1 to -1 of bNames into bNames
+   return bNames
+end project_ListBehaviorStackNames
+
+function project_ListBehaviorPaths projectName
+   put project_ListSubfolderPaths ("behaviors", projectName) into filePaths
+   return filePaths
+end project_ListBehaviorPaths
+
+getprop project_StackNames [folderName]
+   put the project_Name of the target into projectName
+   if folderName is empty then
+      put the stackfile_Names of stack projectName into projectStackNames
+   else
+      put project_GetFolder (projectName, folderName) into standardFolder
+      if standardFolder is empty then return empty
+      put folder_ListStackNames (standardFolder) into projectStackNames
+   end if
+   return projectStackNames
+end project_StackNames
+
+getprop controller_File [shortFile]
+   put the controller_Folder of the target into cFolder
+   return cFolder & shortFile
+end controller_File
+
+getprop menu_ControllerPath [gMenuTitle]
+   put the long id of the target into tObject
+   --
+   put the project_Name of tObject into projectName
+   if exists (stack projectName) is false then return empty
+   if gMenuTitle is empty then put the stack_Name of tObject into gMenuTitle
+   --
+   put the project_Folder of stack projectName into projectFolder
+   put project_ConstructStandardFile (gMenuTitle, projectFolder, "controllers") into controllerPath
+   return controllerPath
+end menu_ControllerPath
+
 getprop controller_Folder
    put the project_Folder of the target into projectFolder
    if projectFolder is empty then return empty
@@ -22,6 +83,38 @@ getprop controller_Folder
    if there is not a folder cFolder then return empty
    return cFolder
 end controller_Folder
+
+
+--> Project | List | Modules
+-
+function project_ListModules projectName
+   -- was "module_ListHomeStackNames"
+   put project_ListModuleFolders (projectName) into moduleFolders
+   repeat for each line moduleFolder in moduleFolders
+      put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
+      if exists (stack moduleHomeStackPath) is false then next repeat
+      
+      put the short name of stack moduleHomeStackPath into stackName
+      put stackName & CR after moduleStackNames
+   end repeat
+   delete char -1 of moduleStackNames
+   sort moduleStackNames
+   return moduleStackNames
+end project_ListModules
+
+function project_ListModuleFolders projectName
+   put project_FolderFromName (projectName, "modules") into standardFolder
+   put folder_ListLong (standardFolder) into longFolders
+   return longFolders
+end project_ListModuleFolders
+
+function project_ListModuleShortFolders projectName, pRepoFolder
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   --
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
+   put folder_ListShort (rootModuleFolder) into moduleNames
+   return moduleNames
+end project_ListModuleShortFolders
 
 
 --> Project | Deps
@@ -117,7 +210,7 @@ end project_NameToShortFile
 function project_ListSubfolderPaths shortFolder, projectName
    -- used by everything
    put project_FolderFromName (projectName, shortFolder) into standardFolder -- in lib_LCW
-   put path_ListLong (standardFolder, pShowInvisible) into filePaths
+   put file_ListLong (standardFolder, pShowInvisible) into filePaths
    return filePaths
 end project_ListSubfolderPaths
 
@@ -215,18 +308,6 @@ getprop project_ArrayFile
    return projectArrayFile
 end project_ArrayFile
 
-getprop project_StackNames [folderName]
-   if folderName is empty then
-      put the project_Name of the target into projectName
-      put the stackfile_Names of stack projectName into projectStackNames
-   else
-      put the project_Folder [folderName] of the target into standardFolder
-      if standardFolder is empty then return empty
-      put folder_ListStackNames (standardFolder) into projectStackNames
-   end if
-   return projectStackNames
-end project_StackNames
-
 getprop project_StackObjects [folderName]
    if folderName is empty then
       put the project_Name of the target into projectName
@@ -267,7 +348,7 @@ end project_Paths
 --> Project | List | Paths
 -
 /*
-Here we try to sue standard names and be as fast and simple as possible.
+Here we try to use standard names and be as fast and simple as possible.
 
 -- put library_FetchProjectFolder (projectName) into projectFolder
 -- put the stack_Folder of stack projectName into projectFolder
@@ -289,21 +370,10 @@ function project_ListModelPaths projectName
    return filePaths
 end project_ListModelPaths
 
-function project_ListBehaviorPaths projectName
-   put project_ListSubfolderPaths ("behaviors", projectName) into filePaths
-   return filePaths
-end project_ListBehaviorPaths
-
 function project_ListViewPaths projectName
    put project_ListSubfolderPaths ("views", projectName) into filePaths
    return filePaths
 end project_ListViewPaths
-
-function project_ListModulePaths projectName
-   put project_FolderFromName (projectName, "modules") into standardFolder
-   put folder_ListLong (standardFolder) into longFolders
-   return longFolders
-end project_ListModulePaths
 
 
 --> Project | List
@@ -375,23 +445,6 @@ function project_ListControllerStackNames projectName
    return stackNames
 end project_ListControllerStackNames
 
-function project_ListBehaviorStackNames pProjectNames  
-   repeat for each line projectName in pProjectNames
-      if exists (stack projectName) is false then next repeat
-      put the project_StackNames ["behaviors"] of stack projectName & CR after bNames
-   end repeat
-   sort bNames
-   put word 1 to -1 of bNames into bNames
-   return bNames
-end project_ListBehaviorStackNames
-
-function project_ListBehaviorPaths projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put the stack_Folder of stack projectName into projectFolder
-   put project_ListPaths ("behaviors", projectFolder) into controllerStackPaths
-   return controllerStackPaths
-end project_ListBehaviorPaths
-
 function project_ListStackPaths projectName
    -- put library_FetchProjectFolder (projectName) into projectFolder
    put the stack_Folder of stack projectName into projectFolder
@@ -434,9 +487,8 @@ end project_ListBackScriptPaths
 --> Project | List | Custom
 -
 function project_ListModuleFolders projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
    put the stack_Folder of stack projectName into projectFolder
-   put project_ConstructFolder ("modules", projectFolder) into rootModuleFolder
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
    put folder_ListLong (rootModuleFolder) into moduleFolders
    return moduleFolders
 end project_ListModuleFolders
@@ -512,9 +564,7 @@ function project_GetHomeView projectName
 end project_GetHomeView
 
 function project_GetHomeStackPath projectName
-   if exists (stack projectName) is false then
-      return empty
-   end if
+   if exists (stack projectName) is false then return empty
    
    put the stack_Folder of stack projectName into projectFolder
    if projectFolder is empty then return empty
@@ -522,16 +572,6 @@ function project_GetHomeStackPath projectName
    if exists (stack homeStackPath) is false then return empty
    return homeStackPath
 end project_GetHomeStackPath
-
-function project_FolderFromFile objectFile
-   put library_ListProjectFolders() into projectFolders
-   repeat for each line projectFolder in projectFolders
-      if objectFile begins with projectFolder then
-         return projectFolder
-      end if
-   end repeat
-   return empty
-end project_FolderFromFile
 
 
 --> Deps

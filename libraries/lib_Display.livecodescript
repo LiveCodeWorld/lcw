@@ -1,6 +1,7 @@
 ﻿script "lib_Display"
 --> MetaData
 -
+copyright: David Bovill
 license: GPLv3
 name: lib_Display
 type: library
@@ -21,37 +22,320 @@ You can "view" this library as contaminated :)
 */
 
 
---> Working on
+--> Display | Ask
 -
-command display_SetView @displayView, displayStackLabel, pDisplayViewTitle
-   if exists (displayView) is false then
-      put display_FindView (displayStackLabel, pDisplayViewTitle) into displayView
+command display_SetMenu displayView, gMenuTitle, pMenuProp
+   if not (gMenuTitle begins with "Global | ") then 
+      put "Global | " before gMenuTitle
    end if
-end display_SetView
+   if not (gMenuTitle ends with " | Menu") then 
+      put  "| Menu" after gMenuTitle
+   end if
+   --
+   if pMenuProp is empty then put "title_Menu" into pMenuProp
+   --
+   set the pMenuProp of displayView to gMenuTitle
+   put debug_GetCallingObject(1) into libObject
+   ask_CreateMenuFromObject gMenuTitle, libObject
+   --
+   return libObject
+end display_SetMenu
 
-function script_FilterChangedIndex scriptObjects
-   repeat for each line scriptObject in scriptObjects
-      set the cursor to busy
-      if the script_IsDifferent of scriptObject is true then
-         put scriptObject & CR after changedScriptObjects
-      end if
+command ask_CreateToolMenus menuBit, pProjectName, pDoubleUp
+   put "Global |" && menuBit && "| Menu" into titleMenu
+   put "Global |" && menuBit && "| Line | Menu" into lineMenu
+   --
+   if pDoubleUp is empty then
+      replace "|" with empty in menuBit
+      replace space with empty in menuBit
+      put "mDoubleUp_" & menuBit into pDoubleUp
+   end if
+   --
+   if there is a stack pProjectName then
+      put the name of stack pProjectName into libObject
+   else
+      put debug_GetCallingObject(2) into libObject
+   end if
+   --
+   ask_CreateMenuFromObject titleMenu, libObject
+   ask_CreateMenuFromObject lineMenu, libObject
+   ask_CreateMouseDoubleUpHandler pDoubleUp, libObject
+end ask_CreateToolMenus
+
+command ask_CreateMouseDoubleUpHandler mDoubleUp, titleController
+   put "M" && mDoubleUp into shortHKey
+   -- put the script_HandlerExists [shortHKey] of libObject into handlerExists
+   put the found_Hkey [shortHKey] of titleController is not empty into handlerExists
+   if handlerExists is true then return empty
+   
+   put "on" && mDoubleUp into mDoubleUpHandler
+   put space & "displayView, someLine" after mDoubleUpHandler
+   put CR & "    put the title_Text of displayView into someTitle" after mDoubleUpHandler
+   put CR & "    return displayView" after mDoubleUpHandler
+   put CR & "end" && mDoubleUp after mDoubleUpHandler
+   --
+   display_Handler mDoubleUp, mDoubleUpHandler, "DoubleUp Handler"
+   put the result into indexView
+   return indexView
+end ask_CreateMouseDoubleUpHandler
+
+on mDoubleUp_DisplayHelp displayView, someLine
+   put the title_Text of displayView into someTitle
+   return displayView
+end mDoubleUp_DisplayHelp DisplayHelp
+
+command display_SetInteractions displayView, menuBit, pDoubleUp
+   put "Global |" && menuBit && "| Menu" into titleMenu
+   put "Global |" && menuBit && "| Line | Menu" into lineMenu
+   --
+   set the title_Menu of displayView to titleMenu
+   set the line_Menu of displayView to lineMenu
+   --
+   put debug_GetCallingObject(1) into libObject
+   ask_CreateMenuFromObject titleMenu, libObject
+   ask_CreateMenuFromObject lineMenu, libObject
+   --
+   set the mouse_DoubleUp of displayView to pDoubleUp
+   put menu_GetGlobalController (titleMenu) into titleController
+   if pDoubleUp is empty then return displayView
+   
+   if exists (titleController) then
+      set the mouse_Target of displayView to titleController
+      ask_CreateMouseDoubleUpHandler pDoubleUp, titleController
+   end if
+   return displayView
+end display_SetInteractions
+
+
+--> Props
+-
+getprop view_StackRect [lastStackRect]
+   put the long id of the target into newViewObject
+   put the formatted_Rect of newViewObject into fRect
+   put the screen_Rect of newViewObject into displayScreenRect
+   --
+   if lastStackRect is empty then
+      put stack_GetLastRect() into lastStackRect
+   end if
+   --
+   put display_GetNewStackRect (lastStackRect, fRect, displayScreenRect) into newRect
+   return newRect
+end view_StackRect
+
+getprop display_BelowRect [fRect]
+   put the long id of the target into tObject
+   --
+   if fRect is empty then
+      put the formatted_Rect of tObject into fRect
+   end if
+   put the rect of tObject into oRect
+   put the screen_Rect of tObject into displayScreenRect
+   --
+   put display_GetNewStackRect (oRect, fRect, displayScreenRect) into newStackRect
+   return newStackRect
+end display_BelowRect
+
+getprop stack_IsDisplay
+   put the stack_Name of the target into stackName
+   switch
+      case word 1 to 2 of stackName is not among the items of "Display Index,Display Array"
+      case exists (control 1 of card 1 of stack stackName) is false
+         return false
+      default
+         put the view_Name of control 1 of card 1 of stack stackName into viewName
+         --
+         put "View|Tree|Widget with Title,View|Index|Simple" into displayViewNames
+         if viewName is among the items of displayViewNames then
+            return true
+         else
+            return false
+         end if
+   end switch
+end stack_IsDisplay
+
+getprop stack_BelowRect [fRect]
+   put the long id of the target into tObject
+   put the stack_Name of the target into stackName
+   --
+   put the rect of stack stackName into oRect
+   put the screen_Rect of tObject into displayScreenRect
+   --
+   if fRect is empty then
+      put the formatted_Rect of tObject into fRect
+      if fRect is empty then put the rect of tObject into fRect
+   end if
+   --
+   put display_GetNewStackRect (oRect, fRect, displayScreenRect) into newStackRect
+   return newStackRect
+end stack_BelowRect
+
+
+--> Display | Exists
+-
+function display_GetObject tObject
+   -- a utility function to allow general listing of a script object
+   -- whether directly from the script editor or an index or array dispayView
+   
+   put the display_View of tObject into displayView
+   put the stack_Name of tObject into stackName
+   switch
+      case word 1 of stackName = "revNewScriptEditor"
+         -- revNewScriptEditor 1
+         put scriptEditor_Object() into sObject
+         return sObject         
+         break
+      default
+         put the displayed_Object of displayView into sObject
+         if exists (sObject) is false then return empty
+         return sObject
+   end switch
+end display_GetObject
+
+
+--> Display | Specialised
+-
+command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette, pTopLeft
+   -- phase out and use "display_Lines" instead
+   put empty into oRect
+   --
+   display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
+   put the result into displayView 
+   put token -1 of displayView into cloneStackName
+   --
+   put the view_StackRect [oRect] of displayView into newRect
+   stack_Position cloneStackName, newRect
+   --
+   show stack cloneStackName
+   go to stack cloneStackName
+   return displayView
+end display_Index
+
+function stack_GetLastRect
+   put line -1 of display_ListIndexStackNames() into lastIndexStackName
+   if lastIndexStackName is empty then
+      put stack_GetTop (true) into stackName 
+      if exists (stack stackName) is false then return empty
+      put the rect of stack stackName into pRect
+   else
+      put the rect of stack lastIndexStackName into pRect
+   end if
+   return pRect   
+end stack_GetLastRect
+
+function stack_GetTop pWithoutDisplay
+   put the openstacks into stackList
+   --
+   if pWithoutDisplay is not false then
+      filter stackList without "Display*"
+   end if
+   --
+   filter stackList without "rev*"
+   filter stackList without "Message Box"
+   filter stackList without "com.*"
+   filter stackList without "Global |*"
+   sort stackList
+   put line 1 of stackList into stackName
+   return stackName
+end stack_GetTop
+
+function display_ListIndexStackNames
+   put the openstacks into indexStackNames
+   filter indexStackNames with "Display Index *"
+   sort indexStackNames by word -1 of each
+   return indexStackNames
+end display_ListIndexStackNames
+
+command stack_ShowAndGo viewObject, cloneStackName, pStackLabel, pStackStyle, pLocORRect
+   if pStackStyle is empty then put "toplevel" into pStackStyle
+   set the stack_Style of stack cloneStackName to pStackStyle
+   if pStackLabel is not empty then set the label of stack cloneStackName to pStackLabel
+   --
+   stack_Position cloneStackName, pLocOrRect
+   dispatch "LayoutControl" to viewObject
+   --
+   show stack cloneStackName
+   return pStackLabel
+end stack_ShowAndGo
+
+command stack_Position stackName, pLocOrRect
+   switch
+      case pLocOrRect = "click"
+      case pLocOrRect = "mouse"
+         -- put globalLoc (the mouseloc) into mGlobalLoc
+         put the screenmouseloc into mGlobalLoc
+         set the topLeft of stack stackName to mGlobalLoc
+         break
+      case pLocOrRect is a point
+         set the topLeft of stack stackName to pLocOrRect
+         break
+      case pLocOrRect is a rect
+         set the rect of stack stackName to pLocOrRect
+         break
+      default
+         revIDEEnsureOnscreen stackName
+   end switch
+end stack_Position
+
+function display_GetNewStackRect oStackRect, fRect, displayScreenRect
+   if oStackRect is not a rect then
+      put 13 into oLeft
+      put 41 into oBottom
+   else
+      put item 1 of oStackRect into oLeft
+      put item 4 of oStackRect into oBottom
+   end if
+   
+   put item 3 of fRect into newWidth
+   put item 4 of fRect into newHeight
+   
+   put item 4 of displayScreenRect into screenBottom
+   put item 3 of displayScreenRect - item 1 of displayScreenRect - 60 into maxScreenWidth
+   put screenBottom - item 2 of displayScreenRect - 60 into maxScreenHeight
+   
+   put min (newWidth, maxScreenWidth) into newWidth
+   put min (newHeight, maxScreenHeight) into newHeight
+   
+   put 20 into tileBarHeight
+   put oLeft into newLeft
+   put tileBarHeight + oBottom into newTop
+   put newLeft + newWidth into newRight
+   put newTop + newHeight into newBottom
+   
+   -- if newBottom > screenBottom then -- here we could tile it across the screen
+   
+   return newLeft,newTop,newRight,newBottom
+end display_GetNewStackRect
+
+function display_ConstructFoldState ePaths
+   repeat for each item someKey in ePaths
+      put false into foldedArray [someKey]["folded"]
    end repeat
-   delete char -1 of changedScriptObjects
-   return changedScriptObjects
-end script_FilterChangedIndex
+   return foldedArray
+end display_ConstructFoldState
 
 
 --> Display | Events
 -
 /*
 These handlers handle events from display views that are created from the code in this library.
-They do not have to be here, as you can change their location by setting the "event_Target" property of the display_View.
+They do not have to be here, as you can change their location by setting the "mouse_Target" property of the display_View.
 */
+
+on mDoubleUp_LocateDisplayView treeWidget, displayView, pathItems
+   object_GoTo displayView, true
+   --
+   put the clickloc into sLoc
+   put the globalLoc of sLoc into gLoc
+   put the stack_Name of displayView into stackName
+   --
+   set the topleft of stack stackName to gLoc
+end mDoubleUp_LocateDisplayView
 
 command mouse_EditObjectScript treeView, scriptObject
    if the optionKey is "Down" then breakpoint
-   
-   edit the script of scriptObject
+   if exists (scriptObject) then
+      edit the script of scriptObject
+   end if
 end mouse_EditObjectScript
 
 command mDoubleUp_EditOldMenuScript targetObject, globalMenuCardName
@@ -59,157 +343,31 @@ command mDoubleUp_EditOldMenuScript targetObject, globalMenuCardName
    edit the script of card globalMenuCardName of stack longStackFile
 end mDoubleUp_EditOldMenuScript
 
-on mDoubleUp_EditMenuScript arrayView, mControllerOrTable
-   if exists (mControllerOrTable) is true then
-      put mControllerOrTable into mController
-      edit the script of mControllerOrTable
-   else
-      put mControllerOrTable
-   end if
-end mDoubleUp_EditMenuScript
-
 on mDoubleUp_HkeyLine displayView, hKeyLine
    hkey_Edit hKeyLine
 end mDoubleUp_HkeyLine
 
+on mDouble_EditStack displayView, stackName
+   edit the script of stack stackName
+end mDouble_EditStack
 
---> Working on
+
+--> Display | Edited
 -
-command display_Spin someLine, pIndexView
-   -- workds with index and array display views
-   set the cursor to busy
-   if exists (pIndexView) is false then return 0
-   set the selected_Line of pIndexView to someLine
-   put the result into lineNum
-   return lineNum
-end display_Spin
-
-function display_FindView displayStackLabel, pDisplayViewTitle
-   -- looks for Dispay Array, and Display Index views
-   -- put the openstacks into dStackNames
-   put revLoadedStacks ("application") into dStackNames
-   repeat for each line dStackName in dStackNames
-      get word 1 to 2 of dStackName
-      if it is not among the items of "Display Index,Display Array" then next repeat
-      if the label of stack dStackName = displayStackLabel then
-         put the long id of group 1 of stack dStackName into pIndexView
-         if pDisplayViewTitle is empty then
-            return pIndexView
-         else if the title_text of pIndexView = pDisplayViewTitle then
-            return pIndexView
-         end if
-      end if
-   end repeat
-   return empty
-end display_FindView
-
-
---> Display
--
-command display_StoredAtopiaArray
-   put atopia_FetchFedray() into atopiaDomainArray
-   --
-   put "Global | Server | Atopia | Tree | Menu" into mTitle
-   put "Global | Server | Atopia | Tree | Line | Menu" into mLineTitle
-   display_Array atopiaDomainArray, "Stored Atopia Domains", mTitle, mLineTitle
-   return the result
-end display_StoredAtopiaArray
-
-command display_Array someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
-   display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
-   put the result into displayView 
-   put token -1 of displayView into cloneStackName
-   
-   -- show and go
-   show stack cloneStackName
-   go to stack cloneStackName
-   return displayView
-end display_Array
-
-command display_Lines someIndex, pSomeTitle, pMouseDoubleUpCommand, pStackLabel, pPalette
-   -- simplified version of display_Index
-   local pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pDragCommand
-   
-   put pSomeTitle into pDisplayTitle
-   if pStackLabel is empty then put space into pStackLabel
-   put comma & pStackLabel after pDisplayTitle
-   
-   display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
-   put the result into indexView
-   set the field_Style of indexView to "click"
-   put script_CallingObject() into callingObject
-   set the event_Target of indexView to callingObject
-   return indexView
-   
-   -- after displaying you can...
-   -- set the title_Menu of displayView to "Global | Test | Menu"
-   -- set the line_Menu of displayView to "Global | Test | Line | Menu"
-end display_Lines
-
-command display_Index someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
-   -- replace comma with CR in someIndex
-   put _GetLastIndexDisplayStackRect () into oRect
-   --
-   display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
-   put the result into displayView 
-   put token -1 of displayView into cloneStackName
-   --
-   put _GetNewIndexDisplayStackRect (oRect, displayView) into newRect
-   set the rect of stack cloneStackName to newRect --- this is not working in latest dp
-   revIDEEnsureOnscreen cloneStackName
-   --
-   show stack cloneStackName
-   go to stack cloneStackName
-   return displayView
-end display_Index
-
-
---> Display | More
--
-command display_ActiveMenuArray
-   global gLCW
-   
-   put gLCW ["activeMenuArray"] into activeMenuArray
-   -- put "Recursion:" && pMenuTitle & ",menu_CheckRecursionOnExtract" into someTitle
-   display_Array activeMenuArray, "gLCW ['activeMenuArray']"
-end display_ActiveMenuArray
-
-command display_Menus
-   put menu_GetGlobalArray() into globalMenuArray
-   put "mDoubleUp_EditMenuScript" into doubleCommand
-   display_Array globalMenuArray, "menu_GetGlobalArray(),Global Menus", "Global | Menu | Global | Menu", empty, empty, doubleCommand
-   
-   put "/Users/BabyBlue/Documents/My Revolution Enterprise/Plugins/opn_Plugins/opn_Libraries/libOPN_Menus.rev" into longStackFile
-   put the cardnames of stack longStackFile into globalMenuCardNames
-   sort globalMenuCardNames
-   
-   put "" into titleMenu
-   put "Global | Display | MenuIndex | Line | Menu" into lineMenu
-   
-   put "mDoubleUp_EditOldMenuScript" into doubleCommand
-   put "" into dragCommand
-   
-   put "Old Global Menus,libOPN_Menus" into displayTitle
-   display_Index globalMenuCardNames, displayTitle, titleMenu, lineMenu, empty, doubleCommand, dragCommand
+command display_EditedStacks
+   put stack_ListEditedNames() into stackNames
+   display_Data stackNames, "Stacks", "Edited"
    put the result into displayView
-   set the multiple_Hilites of displayView to false
-   
-   go to stack longStackFile
-end display_Menus
+   display_SetInteractions displayView, "Edited | Tree", "mDouble_EditStack"
+   return displayView
+end display_EditedStacks
 
 
 --> Display | Handler | Exports
 -
 command display_RecentExports pSinceMin, pIndexView, pDontFilter
-   display_SetView pIndexView, "Script Changes"
-   --
    if pSinceMin is empty then
-      if exists (pIndexView) then
-         put the title_Text of pIndexView into displayedTitle
-         put word -2 of displayedTitle into someMin
-      else
-         put 20 into someMin
-      end if
+      put 60*60 into someMin
    else
       put word 1 of pSinceMin into someMin
    end if
@@ -224,18 +382,11 @@ command display_RecentExports pSinceMin, pIndexView, pDontFilter
    else
       put "Modified in" into word 1 of someTitle
    end if
-   --  
-   if exists (pIndexView) then
-      set the view_Index [someTitle] of pIndexView to scriptObjects
-   else
-      put ",Script Changes" after someTitle
-      put empty into mUp
-      put "mouse_EditObjectScript" into mDoubeUp
-      put "Global | Script | Changes | Line | Menu" into lineMenuTitle
-      display_Index scriptObjects, someTitle, "Global | Script | Changes | Menu", lineMenuTitle, mUp, mDoubeUp
-      put the result into pIndexView
-   end if
-   return pIndexView
+   
+   display_Data scriptObjects, "Script Changes", "Script Changes"
+   put the result into displayView
+   display_SetInteractions displayView, "Script | Changes", "mouse_EditObjectScript"
+   return displayView
 end display_RecentExports
 
 command display_HkeyLines hkeyLines, someTitle
@@ -246,61 +397,10 @@ command display_HkeyLines hkeyLines, someTitle
 end display_HkeyLines
 
 
---> Display
+--> Display | Text
 -
-command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMenu, pTitle
-   put empty into pPathFilter
-   put file_ConstructFolderArray (filePaths, pPathFilter, pFolderToStrip) into pathArray
-   if pathArray is not an array then
-      answer "I cannot find this handler anywhere!"
-      exit to top
-   end if
-   
-   put script_CallingObject() into pCommandObject
-   display_Array pathArray, pTitle, pTitleMenu, empty, pMouseDoubleUpHandler, pMouseDoubleUpHandler, pCommandObject
-   put the result into treeWidget
-   set the search_Folder of treeWidget to pFolderToStrip
-   return treeWidget
-end display_Files
-
-command display_ScriptTemplate templateName
-   put scaffold_GetFile (templateName) into someFile
-   display_TextFile someFile, templateName, "Global | Script | Template | Menu", "Script Template"
-   put the result into textDisplayView
-   return textDisplayView
-end display_ScriptTemplate
-
-command display_TextFile someFile, pDisplayTitle, pMenuTitle, pStackName
-   local pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
-   
-   if pMenuTitle is empty then put "Global | Display | File | Menu" into pMenuTitle
-   put "file:" & someFile into someUrl
-   put url someUrl into someText
-   
-   put pDisplayTitle,pStackName into displayTitle
-   display_Index someText, displayTitle, pMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
-   put the result into displayView
-   
-   set the field_Style of displayView to "text"
-   set the menu_Title of displayView to pMenuTitle
-   set the displayed_File of displayView to someFile
-   return displayView
-end display_TextFile
-
-command display_GlobalValue gName
-   put global_GetValue (gName) into gValue
-   if gValue is an array then
-      put "Global:" && gName into someTitle
-      display_Array gValue, someTitle, "Global | Pref | Menu"
-   else
-      put gValue
-   end if
-end display_GlobalValue
-
 command display_Text textOrUrl, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
    switch
-      case pDisplayTitle is empty 
-         put "Display,Text" into pDisplayTitle
       case textOrUrl begins with "file:///"
          -- this is how browsers display a file
          delete char 6 to 7 of textOrUrl
@@ -329,6 +429,186 @@ command display_Text textOrUrl, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, p
    return indexView
 end display_Text
 
+command display_ListDataViews
+   put display_FindStackNameArray (empty, empty, true) into displayViewArray
+   --
+   display_Data displayViewArray, "Views", "Find Displays"
+   put the result into displayView
+   display_SetInteractions displayView, "Display | View", "mDoubleUp_LocateDisplayView"
+   --
+   return displayView
+end display_ListDataViews
+
+command display_Handler hName, someHandler, stackLabel
+   -- display_Text
+   display_Data someHandler, hName, stackLabel
+   put the result into indexView
+   set the field_Style of indexView to "text"
+   return indexView
+end display_Handler
+
+
+--> Display | Data | Older
+-
+command display_Lines someIndex, pTitle, pDoubleUp, pStackLabel, pPalette, pTopLeft
+   local pTitleMenu, pLineMenu, pMouseUp, pDragCommand
+   
+   if pStackLabel is empty then
+      put space into pStackLabel
+   else
+      put comma & pStackLabel after pTitle
+   end if
+   --
+   display_Index someIndex, pTitle, pTitleMenu, pLineMenu, pMouseUp, pDoubleUp, pDragCommand, pPalette, pTopLeft
+   put the result into indexView
+   --
+   set the field_Style of indexView to "click"
+   --
+   put debug_GetCallingObject() into callingObject
+   set the mouse_Target of indexView to callingObject
+   --
+   return indexView
+   -- after displaying you can...
+   -- set the title_Menu of displayView to "Global | Test | Menu"
+   -- set the line_Menu of displayView to "Global | Test | Line | Menu"
+end display_Lines
+
+
+--> Display | Utilities
+-
+function display_ListStackNames pSearchStackLabel, pSearchViewTitle
+   put display_FindStackNameArray (pSearchStackLabel, pSearchViewTitle) into displayViewArray
+   --
+   put keys (displayViewArray) into displayStackNames
+   sort displayStackNames
+   return displayStackNames
+end display_ListStackNames
+
+function display_ListViews pSearchStackLabel, pSearchViewTitle
+   put display_FindStackNameArray (pSearchStackLabel, pSearchViewTitle) into displayViewArray
+   repeat for each key stackLabel in displayViewArray
+      put displayViewArray [stackLabel]["displayView"] into dView
+      put dView & CR after displayViews
+   end repeat
+   delete char -1 of displayViews
+   return displayViews
+end display_ListViews
+
+function display_FindStackNameArray pSearchStackLabel, pSearchViewTitle, pPretty
+   -- looks for Dispay Array, and Display Index views
+   put revLoadedStacks ("application") into dStackNames
+   repeat for each line dStackName in dStackNames
+      get word 1 to 2 of dStackName
+      if it is not among the items of "Display Index,Display Array" then next repeat
+      
+      put the long id of group 1 of stack dStackName into displayView
+      --
+      put the title_text of displayView into titleText
+      put the label of stack dStackName into stackLabel
+      
+      -- skip unless the following conditions are met
+      if pSearchStackLabel is empty then
+         put displayView into displayViewArray [dStackName]["displayView"]
+         put stackLabel into displayViewArray [dStackName]["stackLabel"]
+         put titleText into displayViewArray [dStackName]["titleText"]
+      else if stackLabel = pSearchStackLabel then
+         if pSearchViewTitle is empty then
+            put displayView into displayViewArray [dStackName]["displayView"]
+            put stackLabel into displayViewArray [dStackName]["stackLabel"]
+            put titleText into displayViewArray [dStackName]["titleText"]
+         else if titleText = pSearchViewTitle then
+            put displayView into displayViewArray [dStackName]["displayView"]
+            put stackLabel into displayViewArray [dStackName]["stackLabel"]
+            put titleText into displayViewArray [dStackName]["titleText"]
+         end if
+      end if
+   end repeat
+   --
+   if pPretty is true then
+      put _MakeStackNameArrayPretty (displayViewArray) into prettyArray
+      return prettyArray
+   else
+      return displayViewArray
+   end if
+end display_FindStackNameArray
+
+command display_Spin someLine, pIndexView, pLineColour
+   set the cursor to busy
+   if exists (pIndexView) is false then
+      set the cursor to busy
+      return 0
+   end if
+   
+   # Spin (works with index and array display views)
+   lock screen
+   set the selected_Line of pIndexView to someLine
+   put the result into lineNum
+   --
+   switch pLineColour
+      case "delete"
+         set the deleted_Line of pIndexView to lineNum
+         break
+      case empty
+         break
+      default
+         set the line_Colour [lineNum] of pIndexView to pLineColour
+   end switch
+   unlock screen
+   return lineNum
+end display_Spin
+
+
+--> Display
+-
+command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMenu, pTitle
+   put empty into pPathFilter
+   put file_ConstructFolderArray (filePaths, pPathFilter, pFolderToStrip) into pathArray
+   if pathArray is not an array then
+      answer "I cannot find this handler anywhere!"
+      exit to top
+   end if
+   
+   put debug_GetCallingObject() into pCommandObject
+   display_Array pathArray, pTitle
+   put the result into displayView
+   set the title_Menu of displayView to pTitleMenu
+   set the mouse_DoubleUp of displayView to pMouseDoubleUpHandler
+   set the mouse_Target of displayView to pCommandObject
+   --   
+   set the search_Folder of displayView to pFolderToStrip
+   return displayView
+end display_Files
+
+command display_TextFile someFile, pDisplayTitle, pMenuTitle, pStackName
+   local pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand
+   
+   if pMenuTitle is empty then put "Global | Display | File | Menu" into pMenuTitle
+   put "file:" & someFile into someUrl
+   put url someUrl into someText
+   
+   put pDisplayTitle,pStackName into displayTitle
+   display_Index someText, displayTitle, pMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, true
+   put the result into displayView
+   --
+   put the stack_Name of displayView into stackName
+   -- set the cantmodify of stack stackName to true
+   --
+   set the field_Style of displayView to "text"
+   set the title_Menu of displayView to pMenuTitle
+   set the displayed_File of displayView to someFile
+   return displayView
+end display_TextFile
+
+command display_GlobalValue gName
+   put global_GetValue (gName) into gValue
+   if gValue is an array then
+      put "Global:" && gName into someTitle
+      display_Array gValue, someTitle, "Global | Pref | Menu"
+   else
+      put gValue
+   end if
+end display_GlobalValue
+
 command display_JsonRPC rpcURL, pDisplayTitle, pMouseDoubleUpCommand
    -- put url rpcURL into jsonReply
    put jsonrpc_GET (rpcURL) into jsonReply 
@@ -344,63 +624,20 @@ command display_Json jsonReply, pDisplayTitle, pMouseDoubleUpCommand
          return empty
       case jsonArray is an array
          local pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pCommandObject
-         display_Array jsonArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
+         display_Array jsonArray, pDisplayTitle
+         put the result into displayView
+         set the title_Menu of displayView to pTreeMenuTitle
+         set the line_Menu of displayView to pLineMenuTitle
+         set the mouse_DoubleUp of displayView to pMouseDoubleUpCommand
+         set the mouse_Target of displayView to pCommandObject
          break
-      case dafs
+      default
          display_Lines jsonReply, pDisplayTitle
          break
    end switch
    put the result into displayView
    return displayView
 end display_Json
-
-command display_InvisibleArray someArray, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pInspectCommand, pMouseDoubleUpCommand, pCommandObject
-   put "View|Tree|Widget with Title" into viewName
-   
-   -- new feature for specifying widget and stack label titles using a comma
-   if pDisplayTitle is empty then put "Array" into pDisplayTitle
-   put word 1 to -1 of item 1 of pDisplayTitle into widgetDisplayTitle
-   put word 1 to -1 of item 2 of pDisplayTitle into displayStackLabel
-   
-   -- clone invisible
-   stack_CloneInvisible viewName, "Display Array"
-   put the result into cloneStackName
-   
-   -- set basic data
-   put pTreeMenuTitle into menuArray ["title"]
-   put pLineMenuTitle into menuArray ["line"]
-   
-   if pCommandObject is empty then
-      put script_CallingObject (2) into pCommandObject
-   end if
-   put pInspectCommand into eventArray ["mouseUp"]
-   put pMouseDoubleUpCommand into eventArray ["mouseDoubleUp"]
-   put pCommandObject into eventArray ["eventTarget"]
-   
-   put _displayView (cloneStackName) into displayView
-   set the displayed_Data of displayView to someArray
-   set the view_MenuArray of displayView to menuArray
-   set the view_EventArray of displayView to eventArray
-   
-   -- custom stuff
-   set the card_Margin of displayView to 0
-   set the title_Colour of displayView to "random"
-   put the result into titleColour
-   put colour_GetDarkOrLight (titleColour) into titleTextColour
-   set the title_TextColour of displayView to titleTextColour
-   
-   set the style of stack cloneStackName to "palette"
-   
-   if line 1 of keys (someArray) is a number then
-      set the tree_SortType of displayView to "numeric"
-   end if
-   
-   -- set the display
-   set the label of stack cloneStackName to displayStackLabel
-   set the title_Text of displayView to widgetDisplayTitle
-   
-   return displayView
-end display_InvisibleArray
 
 command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMenuTitle, pMouseUpCommand, pMouseDoubleUpCommand, pDragCommand, pPalette
    put "View|Index|Simple" into viewName
@@ -413,8 +650,8 @@ command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMe
    put the result into cloneStackName
    
    -- don't rely on this. It works only for handlers at the level of "display_Index"
-   -- best practice is to "set the event_Target of indexView to script_CallingObject()" after you call the display handler you write
-   put script_CallingObject (2) into eventArray ["eventTarget"]
+   -- best practice is to "set the mouse_Target of indexView to debug_GetCallingObject()" after you call the display handler you write
+   put debug_GetCallingObject (2) into eventArray ["eventTarget"]
    
    -- set basic data  
    put pMouseUpCommand into eventArray ["mouseUp"]
@@ -424,7 +661,7 @@ command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMe
    put pTreeMenuTitle into menuArray ["title"]
    put pLineMenuTitle into menuArray ["line"]
    
-   put _displayView (cloneStackName) into displayView
+   put the long id of control 1 of cd 1 of stack cloneStackName into displayView
    --
    if someIndex is an array then
       set the displayed_Array of displayView to someIndex
@@ -444,11 +681,22 @@ command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMe
    put colour_GetDarkOrLight (titleColour) into titleTextColour
    set the title_TextColour of displayView to titleTextColour
    
-   if pPalette is true then set the style of stack cloneStackName to "palette"
    set the label of stack cloneStackName to displayStackLabel
    set the title_Text of displayView to widgetDisplayTitle
    set the multiple_Hilites of displayView to false -- the most common default
-   
+   --
+   switch pPalette
+      case "system"
+         set the systemWindow of stack cloneStackName to true
+         break
+      case false
+         break
+         -- case empty
+         -- case true
+      default
+         set the style of stack cloneStackName to "palette"
+   end switch
+   --
    return displayView
 end display_InvisibleIndex
 
@@ -501,108 +749,41 @@ function colour_RgbToHSV rgbColour
    return round(h),round(s * 100),round(maxv * 100)
 end colour_RgbToHSV
 
-command stack_CloneInvisible stackNameToClone, pCloneName, pDestroyBoolean
-   if exists (stack stackNameToClone) is false then return empty
-   if pCloneName is empty then put stackNameToClone into pCloneName
-   
-   put stack_ConstructNewCloneName (pCloneName) into newStackName
-   clone invisible stack stackNameToClone as newStackName
-   put it into clonedStack
-   if pDestroyBoolean is not false then
-      set the destroyStack of clonedStack to true
-      set the destroyWindow of clonedStack to true
-      -- set the cantmodify of clonedStack to true
-   end if
-   return newStackName -- used
-end stack_CloneInvisible
-
-command stack_Clone stackNameToClone, pDestroyBoolean, pCloneName
-   if exists (stack stackNameToClone) is false then return empty
-   if pCloneName is empty then put stackNameToClone into pCloneName
-   
-   stack_CloneInvisible stackNameToClone
-   put the result into clonedStackName
-   
-   stack_SetToMainScreen clonedStackName
-   set the visible of stack clonedStackName to true
-   
-   put the name of stack clonedStackName into clonedStack
-   return clonedStack
-end stack_Clone
-
 
 --> Private
 -
-private function script_CallingObject pNum
+private function script_FilterChangedIndex scriptObjects
+   repeat for each line scriptObject in scriptObjects
+      set the cursor to busy
+      if the script_IsDifferent of scriptObject is true then
+         put scriptObject & CR after changedScriptObjects
+      end if
+   end repeat
+   delete char -1 of changedScriptObjects
+   return changedScriptObjects
+end script_FilterChangedIndex
+
+private function _MakeStackNameArrayPretty displayViewArray
+   repeat for each key dStackName in displayViewArray
+      put displayViewArray [dStackName]["stackLabel"] into stackLabel
+      if word 1 to -1 of stackLabel is empty then
+         put "Space" into stackLabel
+      end if
+      put displayViewArray [dStackName]["displayView"] into displayView
+      put displayViewArray [dStackName]["titleText"] into titleText
+      --
+      put displayView into prettyArray [stackLabel][titleText]
+   end repeat
+   return prettyArray
+end _MakeStackNameArrayPretty
+
+private function debug_GetCallingObject pNum
    if pNum is empty then put 1 into pNum
    put (pNum + 2) * -1 into lineNum
    get the executioncontexts
    put item 1 of line lineNum of it into callingObject
    return callingObject
-end script_CallingObject
-
-private function display_ListIndexStackNames
-   put the openstacks into indexStackNames
-   filter indexStackNames with "Display Index *"
-   sort indexStackNames by word -1 of each
-   return indexStackNames
-end display_ListIndexStackNames
-
-private function _GetLastIndexDisplayStackRect
-   -- put system_TopTarget() into topTarget
-   -- put the stack_Name of topTarget into sourceStackName
-   put line -1 of display_ListIndexStackNames() into sourceStackName
-   if sourceStackName is empty then
-      return empty
-   else
-      put the rect of stack sourceStackName into pRect
-   end if
-   return pRect   
-end _GetLastIndexDisplayStackRect
-
-private function _GetNewIndexDisplayStackRect oRect, displayView
-   if oRect is not a rect then
-      -- put 13,41,225,190 into pRect
-      put 13 into oLeft
-      put 41 into oBottom
-   else
-      put item 1 of oRect into oLeft
-      put item 4 of oRect into oBottom
-   end if
-   
-   put the formatted_Rect of displayView into fRect
-   put item 3 of fRect into newWidth
-   put item 4 of fRect into newHeight
-   
-   put the screen_Rect of displayView into displayScreenRect
-   put item 4 of displayScreenRect into screenBottom
-   put item 3 of displayScreenRect - item 1 of displayScreenRect - 60 into maxScreenWidth
-   put screenBottom - item 2 of displayScreenRect - 60 into maxScreenHeight
-   
-   put min (newWidth, maxScreenWidth) into newWidth
-   put min (newHeight, maxScreenHeight) into newHeight
-   
-   put 20 into tileBarHeight
-   put oLeft into newLeft
-   put tileBarHeight + oBottom into newTop
-   put newLeft + newWidth into newRight
-   put newTop + newHeight into newBottom
-   
-   -- if newBottom > screenBottom then -- here we could tile it across the screen
-   
-   return newLeft,newTop,newRight,newBottom
-end _GetNewIndexDisplayStackRect
-
-private function _displayView cloneStackName
-   -- was "view_GetTemplateControl" and "view_GetTemplateObject"
-   -- put view_GetTemplateControl (cloneStackName) into displayView
-   if exists (control 1 of cd 1 of stack cloneStackName) is false then
-      breakpoint
-      return empty
-   end if
-   put the long id of control 1 of cd 1 of stack cloneStackName into displayView
-   return displayView
-end _displayView
+end debug_GetCallingObject
 
 private command _setTitles @widgetDisplayTitle, @displayStackLabel, pDisplayTitle, pDefault
    if pDisplayTitle is empty then
