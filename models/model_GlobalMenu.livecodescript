@@ -45,10 +45,91 @@ end menu_Table
 
 --> Menu | Global | Model
 -
-function menu_ListGlobalTitles
+function menu_GetGlobalController gMenuTitle
+   put menu_GetModel() into gMenuModel
+   put gMenuModel [gMenuTitle]["mController"] into mController
+   return mController
+end menu_GetGlobalController
+
+command menu_SetGlobalController gMenuTitle, scriptObject
+   put menu_GetModel() into gMenuModel
+   put the rugged_ID of scriptObject into gMenuModel [gMenuTitle]["mController"]
+   menu_SetModel gMenuModel
+   return the result
+end menu_SetGlobalController
+
+command menu_RemoveGlobalController gMenuTitle
+   put menu_GetModel() into gMenuModel
+   put gMenuModel [gMenuTitle]["mController"] into mController
+   delete variable gMenuModel [gMenuTitle]
+   menu_SetModel gMenuModel
+   return mController
+end menu_RemoveGlobalController
+
+
+--> Menu | Global | Model | Array
+-
+function menu_GetGlobalData pFilterText
+   put menu_GetModel() into mGlobalArray
+   --
+   set the itemdelimiter to "|"
+   repeat for each key gMenuTitle in mGlobalArray
+      set the cursor to busy
+      --
+      if pFilterText is not empty then
+         put item 2 to -2 of gMenuTitle into mBit
+         put mBit contains pFilterText into isGood
+         if isGood is false then
+            next repeat
+         end if
+      end if
+      
+      put mGlobalArray [gMenuTitle] into mData [gMenuTitle]
+      put mData [gMenuTitle]["mController"] into mController
+      if exists (mController) is false then
+         put empty into mData [gMenuTitle]["stack name"]
+      else
+         put the project_Name of mController into mData [gMenuTitle]["project_Name"]
+         put the short name of mController into mData [gMenuTitle]["stack name"]
+      end if
+   end repeat
+   --
+   return mData
+end menu_GetGlobalData
+
+function menu_GetGlobalTitleArray gMenuTitle
+   -- should rename menu_GetArray
+   put menu_GetModel() into gMenuModel
+   put gMenuModel [gMenuTitle] into gMenuArray
+   return gMenuArray
+end menu_GetGlobalTitleArray
+
+command menu_SetGlobalTitleArray gMenuTitle, gMenuArray
+   -- should rename menu_SetArray
+   put menu_GetModel() into gMenuModel
+   put gMenuArray into gMenuModel [gMenuTitle]
+   menu_SetModel gMenuModel
+   return gMenuModel
+end menu_SetGlobalTitleArray
+
+function menu_GetModel
    global gLCW
-   
-   put keys (gLCW ["Global Menus"]) into gMenuNames
+   put gLCW ["Global Menus"] into menuGlobalArray
+   return menuGlobalArray
+end menu_GetModel
+
+command menu_SetModel menuGlobalArray
+   global gLCW
+   put menuGlobalArray into gLCW ["Global Menus"]
+   return gLCW ["Global Menus"]
+end menu_SetModel
+
+
+--> Menu | Global | Model | Utils
+-
+function menu_ListGlobalTitles
+   put menu_GetModel() into gMenuModel
+   put keys (gMenuModel) into gMenuNames
    sort gMenuNames
    return gMenuNames
 end menu_ListGlobalTitles
@@ -57,58 +138,6 @@ function menu_GlobalControllerExists gMenuTitle
    put menu_GetGlobalController (gMenuTitle) into mController
    return exists (mController)
 end menu_GlobalControllerExists
-
-function menu_GetGlobalController gMenuTitle
-   -- used to find a Global Menu
-   put menu_GetGlobalArray() into gMenuArray
-   put gMenuArray [gMenuTitle]["mController"] into mController
-   return mController
-end menu_GetGlobalController
-
-command menu_SetGlobalController gMenuTitle, scriptObject
-   put menu_GetGlobalArray() into gMenuArray
-   put the rugged_ID of scriptObject into gMenuArray [gMenuTitle]["mController"]
-   menu_SetGlobalArray gMenuArray
-   return the result
-end menu_SetGlobalController
-
-command menu_RemoveGlobalController gMenuTitle
-   put menu_GetGlobalArray() into gMenuArray
-   put gMenuArray [gMenuTitle]["mController"] into mController
-   delete variable gMenuArray [gMenuTitle]
-   return mController
-end menu_RemoveGlobalController
-
-function menu_GetGlobalArray
-   global gLCW
-   put gLCW ["Global Menus"] into menuGlobalArray
-   return menuGlobalArray
-end menu_GetGlobalArray
-
-command menu_SetGlobalArray menuGlobalArray
-   global gLCW
-   put menuGlobalArray into gLCW ["Global Menus"]
-   return gLCW ["Global Menus"]
-end menu_SetGlobalArray
-
-
---> Menu | Array | Top
--
-command menu_SetTopController mTopController
-   global gLCW
-   put mTopController into gLCW ["activeMenuArray"]["top"]["mController"]
-end menu_SetTopController
-
-function menu_GetTopTitle
-   global gLCW
-   put gLCW ["activeMenuArray"]["top"]["mTitlePath"] into mTopTitle
-   return mTopTitle
-end menu_GetTopTitle
-
-command menu_SetTopTitle mTopTitle
-   global gLCW
-   put mTopTitle into gLCW ["activeMenuArray"]["top"]["mTitlePath"]
-end menu_SetTopTitle
 
 
 --> Menu | Global | Table
@@ -140,67 +169,6 @@ function menu_ListCustomPropertyTitles mController
    put keys (menuTableArray) into tableTitles
    return tableTitles
 end menu_ListCustomPropertyTitles
-
-
---> Menu | Array
--
-function menu_ControllerFromTitlePath mTitlePath
-   global gLCW
-   put gLCW ["activeMenuArray"]["mTitlePath"][mTitlePath]["mController"] into mController
-   return mController
-end menu_ControllerFromTitlePath
-
-
---> Menu | Array | Sent
--
-function menu_GetSentPath
-   global gLCW
-   put gLCW ["activeMenuArray"]["sent"]["mPath"] into mPath
-   return mPath
-end menu_GetSentPath
-
-command menu_SetSentPath mPath
-   global gLCW
-   put mPath into gLCW ["activeMenuArray"]["sent"]["mPath"]
-end menu_SetSentPath
-
-function menu_GetSentTitlePath
-   global gLCW
-   put gLCW ["activeMenuArray"]["sent"]["mTitlePath"] into sentMenuPath
-   return sentMenuPath
-end menu_GetSentTitlePath
-
-command menu_SetTitlePath mTitlePath
-   global gLCW
-   put mTitlePath into gLCW ["activeMenuArray"]["sent"]["mTitlePath"]
-end menu_SetTitlePath
-
-function menu_GetSentArray mPath
-   -- utility function (not really needed)
-   menu_DeconstructPath mPath, foundPath, subMenuPath, pigeon, mController, mTitlePath, mItemType
-   put mPath into tArray ["mPath"]
-   put foundPath into tArray ["foundPath"]
-   put mTitlePath into tArray ["mTitlePath"]
-   put mController into tArray ["mController"]
-   put mItemType into tArray ["mItemType"]
-   put pigeon into tArray ["pigeon"]
-   
-   put menu_GetTopTargetObject() into targetObject
-   put targetObject into tArray ["targetObject"]
-end menu_GetSentArray
-
-
---> Menu | Active | Model
--
-function menu_GetActiveText
-   global gLCW
-   return gLCW ["activeMenuArray"]["menu"]["text"]
-end menu_GetActiveText
-
-command menu_SetActiveText mText
-   global gLCW
-   put mText into gLCW ["activeMenuArray"]["menu"]["text"]
-end menu_SetActiveText
 
 
 --> Menu | Global | Titles
@@ -264,42 +232,6 @@ command menu_SetGlobalTable gMenuTitle, gMenuTable
    menu_SetGlobalTitleArray gMenuTitle, gMenuTitleArray
    return mTitleTable
 end menu_SetGlobalTable
-
-function menu_GetGlobalTitleArray gMenuTitle
-   put menu_GetGlobalArray() into menuGlobalArray
-   put menuGlobalArray [gMenuTitle] into gMenuTitleArray
-   return gMenuTitleArray
-end menu_GetGlobalTitleArray
-
-command menu_SetGlobalTitleArray gMenuTitle, gMenuTitleArray
-   put menu_GetGlobalArray() into menuGlobalArray
-   put gMenuTitleArray into menuGlobalArray [gMenuTitle]
-   menu_SetGlobalArray menuGlobalArray
-   return gLCW
-end menu_SetGlobalTitleArray
-
-function menu_GetTitleTableArrayGlobal mController
-   global gLCW
-   put the rugged_ID of mController into mController
-   
-   put gLCW ["scriptArray"][mController]["data"]["mTitleTableArray"] into mTitleTableArray
-   return mTitleTableArray
-end menu_GetTitleTableArrayGlobal
-
-command menu_SetTitleTableArrayGlobal mController, mTitleTableArray, suiteTitle
-   /*
-   mTitleTableArray is a simple array with keys corresponding to mTitles, and values corresponding to mControllers
-   */
-   global gLCW
-   if mTitleTableArray is not an array then return gLCW
-   put revRuggedID (mController) into mController
-   
-   put mTitleTableArray into gLCW ["scriptArray"][mController]["data"]["mTitleTableArray"]
-   put mTitleTableArray into gLCW ["Global Menus"][suiteTitle]["data"]["mTitleTableArray"]
-   
-   return gLCW ["Global Menus"][suiteTitle]
-   return gLCW ["scriptArray"][mController]
-end menu_SetTitleTableArrayGlobal
 
 
 --> Menu | Global | Model | Utils
