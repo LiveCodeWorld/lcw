@@ -1257,7 +1257,10 @@ end display_Loading
 
 command lcw_Notify someMessage, pTitle
    -- needs to work cross platform
-   text_ReQuote someMessage
+   -- text_ReQuote someMessage
+   replace quote with empty in someMessage
+   replace "'" with empty in someMessage
+   --
    try
       if pTitle is empty then put "LiveCode World Notification" into pTitle
       put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell

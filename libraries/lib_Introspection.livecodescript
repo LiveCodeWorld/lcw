@@ -93,7 +93,6 @@ function script_OrderedMenuTitles someScript
 end script_OrderedMenuTitles
 
 function script_GetSuiteTitles someScript
-   -- get rid of
    put someScript into theHandlerGroups
    filter theHandlerGroups with "-->*"
    replace "--> " with empty in theHandlerGroups

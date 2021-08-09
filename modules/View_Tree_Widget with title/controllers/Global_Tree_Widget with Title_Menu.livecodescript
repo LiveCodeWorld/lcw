@@ -49,7 +49,7 @@ end disabled_Test
 --> Menu | Target
 -
 getprop menu_Target [mTitlePath]
-   put menu_GetTargetObject() into tObject
+   put menu_GetTopTargetObject() into tObject
    switch
       case mTitlePath contains "Some|Path|To|Menu"
          break

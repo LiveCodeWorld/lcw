@@ -79,11 +79,6 @@ command ask_CreateMouseDoubleUpHandler mDoubleUp, titleController
    return indexView
 end ask_CreateMouseDoubleUpHandler
 
-on mDoubleUp_DisplayHelp displayView, someLine
-   put the title_Text of displayView into someTitle
-   return displayView
-end mDoubleUp_DisplayHelp DisplayHelp
-
 command display_SetInteractions displayView, menuBit, pDoubleUp
    put "Global |" && menuBit && "| Menu" into titleMenu
    put "Global |" && menuBit && "| Line | Menu" into lineMenu
@@ -594,7 +589,7 @@ command display_TextFile someFile, pDisplayTitle, pMenuTitle, pStackName
    -- set the cantmodify of stack stackName to true
    --
    set the field_Style of displayView to "text"
-   set the title_Menu of displayView to pMenuTitle
+   set the menu_Title of displayView to pMenuTitle
    set the displayed_File of displayView to someFile
    return displayView
 end display_TextFile

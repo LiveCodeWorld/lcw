@@ -144,18 +144,6 @@ end menu_ListCustomPropertyTitles
 
 --> Menu | Array
 -
-function menu_GetTargetObject
-   global gLCW
-   put gLCW ["activeMenuArray"]["top"]["targetObject"] into targetObject
-   return targetObject
-end menu_GetTargetObject
-
-command menu_SetTargetObject targetObject
-   -- the target clicked on by the user
-   global gLCW
-   put targetObject into gLCW ["activeMenuArray"]["top"]["targetObject"]
-end menu_SetTargetObject
-
 function menu_ControllerFromTitlePath mTitlePath
    global gLCW
    put gLCW ["activeMenuArray"]["mTitlePath"][mTitlePath]["mController"] into mController
@@ -197,7 +185,7 @@ function menu_GetSentArray mPath
    put mItemType into tArray ["mItemType"]
    put pigeon into tArray ["pigeon"]
    
-   put menu_GetTargetObject() into targetObject
+   put menu_GetTopTargetObject() into targetObject
    put targetObject into tArray ["targetObject"]
 end menu_GetSentArray
 
@@ -213,12 +201,6 @@ command menu_SetActiveText mText
    global gLCW
    put mText into gLCW ["activeMenuArray"]["menu"]["text"]
 end menu_SetActiveText
-
-function menu_GetTargetObject
-   global gLCW
-   put gLCW ["activeMenuArray"]["top"]["targetObject"] into targetObject
-   return targetObject
-end menu_GetTargetObject
 
 
 --> Menu | Global | Titles
