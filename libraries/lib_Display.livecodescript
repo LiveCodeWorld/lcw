@@ -41,44 +41,6 @@ command display_SetMenu displayView, gMenuTitle, pMenuProp
    return libObject
 end display_SetMenu
 
-command ask_CreateToolMenus menuBit, pProjectName, pDoubleUp
-   put "Global |" && menuBit && "| Menu" into titleMenu
-   put "Global |" && menuBit && "| Line | Menu" into lineMenu
-   --
-   if pDoubleUp is empty then
-      replace "|" with empty in menuBit
-      replace space with empty in menuBit
-      put "mDoubleUp_" & menuBit into pDoubleUp
-   end if
-   --
-   if there is a stack pProjectName then
-      put the name of stack pProjectName into libObject
-   else
-      put debug_GetCallingObject(2) into libObject
-   end if
-   --
-   ask_CreateMenuFromObject titleMenu, libObject
-   ask_CreateMenuFromObject lineMenu, libObject
-   ask_CreateMouseDoubleUpHandler pDoubleUp, libObject
-end ask_CreateToolMenus
-
-command ask_CreateMouseDoubleUpHandler mDoubleUp, titleController
-   put "M" && mDoubleUp into shortHKey
-   -- put the script_HandlerExists [shortHKey] of libObject into handlerExists
-   put the found_Hkey [shortHKey] of titleController is not empty into handlerExists
-   if handlerExists is true then return empty
-   
-   put "on" && mDoubleUp into mDoubleUpHandler
-   put space & "displayView, someLine" after mDoubleUpHandler
-   put CR & "    put the title_Text of displayView into someTitle" after mDoubleUpHandler
-   put CR & "    return displayView" after mDoubleUpHandler
-   put CR & "end" && mDoubleUp after mDoubleUpHandler
-   --
-   display_Handler mDoubleUp, mDoubleUpHandler, "DoubleUp Handler"
-   put the result into indexView
-   return indexView
-end ask_CreateMouseDoubleUpHandler
-
 command display_SetInteractions displayView, menuBit, pDoubleUp
    put "Global |" && menuBit && "| Menu" into titleMenu
    put "Global |" && menuBit && "| Line | Menu" into lineMenu

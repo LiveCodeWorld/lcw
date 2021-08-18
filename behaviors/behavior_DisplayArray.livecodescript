@@ -21,6 +21,19 @@ local LocalArray
 
 --> Working on
 -
+getprop tool_Menus
+   -- return the tool_Menus name = menuBit
+   get the title_Menu of me
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 2 to -2 of it into menuBit
+   return menuBit
+end tool_Menus
+
+setprop tool_Menus [projectName] menuBit
+   put the long id of me into displayView
+   display_SetToolMenus menuBit, displayView, projectName
+end tool_Menus
+
 on hiliteChanged
    -- hack - cant stop the flicker when selecting line that is already selected
    -- called twice due to "set the hilitedElement"

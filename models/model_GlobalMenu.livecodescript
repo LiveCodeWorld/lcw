@@ -7,6 +7,25 @@ type: model
 version: 0.7
 
 
+--> Menu | Global | Model
+-
+/*
+This is the only place in model_GlobalMenu that reference gLCW
+*/
+
+function menu_GetModel
+   global gLCW
+   put gLCW ["Global Menus"] into menuGlobalArray
+   return menuGlobalArray
+end menu_GetModel
+
+command menu_SetModel menuGlobalArray
+   global gLCW
+   put menuGlobalArray into gLCW ["Global Menus"]
+   return gLCW ["Global Menus"]
+end menu_SetModel
+
+
 --> Working on
 -
 /*
@@ -43,7 +62,28 @@ getprop menu_Table [pMenuTitle]
 end menu_Table
 
 
---> Menu | Global | Model
+--> Menu | Global | Model | List
+-
+function menu_ListGlobalTitles pFilter
+   put menu_GetModel() into gMenuModel
+   put keys (gMenuModel) into globalTitles
+   sort globalTitles
+   if pFilter is not empty then filter globalTitles with pFilter
+   return globalTitles
+end menu_ListGlobalTitles
+
+function menu_ListGlobalObjects
+   put menu_GetModel() into gMenuModel
+   repeat for each key mTitle in gMenuModel
+      put menuArray [mTitle]["mController"] into mController
+      put mController & CR after mControllers
+   end repeat
+   delete char -1 of mControllers
+   return mControllers
+end menu_ListGlobalObjects
+
+
+--> Menu | Global | Model | Controller
 -
 function menu_GetGlobalController gMenuTitle
    put menu_GetModel() into gMenuModel
@@ -112,28 +152,9 @@ command menu_SetGlobalTitleArray gMenuTitle, gMenuArray
    return gMenuModel
 end menu_SetGlobalTitleArray
 
-function menu_GetModel
-   global gLCW
-   put gLCW ["Global Menus"] into menuGlobalArray
-   return menuGlobalArray
-end menu_GetModel
-
-command menu_SetModel menuGlobalArray
-   global gLCW
-   put menuGlobalArray into gLCW ["Global Menus"]
-   return gLCW ["Global Menus"]
-end menu_SetModel
-
 
 --> Menu | Global | Model | Utils
 -
-function menu_ListGlobalTitles
-   put menu_GetModel() into gMenuModel
-   put keys (gMenuModel) into gMenuNames
-   sort gMenuNames
-   return gMenuNames
-end menu_ListGlobalTitles
-
 function menu_GlobalControllerExists gMenuTitle
    put menu_GetGlobalController (gMenuTitle) into mController
    return exists (mController)
@@ -173,12 +194,6 @@ end menu_ListCustomPropertyTitles
 
 --> Menu | Global | Titles
 -
-function menu_GlobalTitles pFilter
-   put menu_ListGlobalTitles() into globalTitles
-   if pFilter is not empty then filter globalTitles with pFilter
-   return globalTitles
-end menu_GlobalTitles
-
 function menu_GlobalControllers pFilter
    put script_GetGlobalSuiteObjects ("Menu") into gMenuControllers
    if pFilter is not empty then filter gMenuControllers with pFilter
@@ -191,7 +206,7 @@ function menu_GlobalControllers pObjectFormat
 end menu_GlobalControllers
 
 function menu_ConstructGlobalControllerArray pObjectFormat
-   put menu_GlobalTitles() into globalTitles
+   put menu_ListGlobalTitles() into globalTitles
    repeat for each line globalTitle in globalTitles
       put menu_GetGlobalController (globalTitle) into someObject
       if exists (someObject) then

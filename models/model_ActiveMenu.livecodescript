@@ -8,13 +8,26 @@ type: model
 version: 0.1
 
 /*
-Most of the handlers in this menu can be retired.
+Most of the handlers in this menu can be retired. It's a bit of a dumping ground for old hhandlers.
 
 This model stores teh state of an active menu. It is old and uses the gLCW global.
 We have now started using lib_MenuArray which deals with representing individual menus as arrays (mArray), and stores temporary active state.
 The model also stores "paths" to the active menu.
 We no longer do this as it is complicated, and we get most of the benefits by using menu properties.
 */
+
+--> Menu | Props | Old
+-
+getprop menu_Style
+   put LocalArray ["menu_Style"] into mStyle
+   if mStyle is empty then return "array"
+   return mStyle
+end menu_Style
+
+setprop menu_Style mStyle
+   put mStyle into LocalArray ["menu_Style"]
+end menu_Style
+
 
 --> Menu | Active | Model
 -

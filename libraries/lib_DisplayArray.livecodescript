@@ -12,15 +12,77 @@ version: 0.1
 
 --> Working on
 -
-command display_Tools someData, pTitle, pToolPath, pStackLabel, pPalette, pTopLeft, pFoldedArray, pDisplayView
+
+--> Display | Tools
+-
+command display_Tools someData, pTitle, pToolPath, pStackLabel, pProjectName, pPalette, pTopLeft, pFoldedArray
    # Display data depending on ducktyping of content
-   display_Data someData, pTitle, pStackLabel, pDisplayView, pPalette, pTopLeft, pFoldedArray
+   display_Data someData, pTitle, pStackLabel, "", pPalette, pTopLeft, pFoldedArray
    put the result into displayView
    
    # Set menus and mouse_DoubleUp
-   set the tool_Menus of displayView to pToolPath
+   set the tool_Menus [pProjectName] of displayView to pToolPath
    return displayView
 end display_Tools
+
+command display_SetToolMenus menuBit, displayView, pProjectName
+   -- usually called by the tool_Menus of displayView
+   dispatch "ask_CreateToolMenus" with menuBit,pProjectName
+   --
+   put "Global |" && menuBit && "| Menu" into titleMenu
+   put "Global |" && menuBit && "| Line | Menu" into lineMenu
+   --
+   replace "|" with empty in menuBit
+   replace space with empty in menuBit
+   put "mDoubleUp_" & menuBit into pDoubleUp
+   --
+   set the title_Menu of displayView to titleMenu
+   set the line_Menu of displayView to lineMenu
+   set the mouse_DoubleUp of displayView to pDoubleUp
+   --
+   put menu_GetGlobalController (titleMenu)  into mController
+   if exists (mController) then
+      set the mouse_Target of displayView to mController
+   end if
+end display_SetToolMenus
+
+command ask_CreateToolMenus menuBit, pProjectName, pDoubleUp
+   put "Global |" && menuBit && "| Menu" into titleMenu
+   put "Global |" && menuBit && "| Line | Menu" into lineMenu
+   --
+   if pDoubleUp is empty then
+      replace "|" with empty in menuBit
+      replace space with empty in menuBit
+      put "mDoubleUp_" & menuBit into pDoubleUp
+   end if
+   --
+   if there is a stack pProjectName then
+      put the name of stack pProjectName into libObject
+   else
+      put debug_GetCallingObject(2) into libObject
+   end if
+   --
+   ask_CreateMenuFromObject titleMenu, libObject
+   ask_CreateMenuFromObject lineMenu, libObject
+   ask_CreateMouseDoubleUpHandler pDoubleUp, libObject
+end ask_CreateToolMenus
+
+command ask_CreateMouseDoubleUpHandler mDoubleUp, titleController
+   put "M" && mDoubleUp into shortHKey
+   -- put the script_HandlerExists [shortHKey] of libObject into handlerExists
+   put the found_Hkey [shortHKey] of titleController is not empty into handlerExists
+   if handlerExists is true then return empty
+   
+   put "on" && mDoubleUp into mDoubleUpHandler
+   put space & "displayView, someLine" after mDoubleUpHandler
+   put CR & "    put the title_Text of displayView into someTitle" after mDoubleUpHandler
+   put CR & "    return displayView" after mDoubleUpHandler
+   put CR & "end" && mDoubleUp after mDoubleUpHandler
+   --
+   display_Handler mDoubleUp, mDoubleUpHandler, "DoubleUp Handler"
+   put the result into indexView
+   return indexView
+end ask_CreateMouseDoubleUpHandler
 
 
 --> Display | Data

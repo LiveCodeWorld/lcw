@@ -10,6 +10,65 @@ version: 0.7
 Here we place all the handlers that need to be in use before project initialisation.
 */
 
+--> Working on | gLCW
+-
+command mArray_UpdateGlobal mController
+   global gLCW
+   if exists (mController) is false then
+      return "Error, global menu does not exist:" & gMenuTitle,mController,projectName
+   end if
+   
+   # Update gLCW
+   put the project_Name of mController into projectName
+   put the script_GlobalTitles of mController into gMenuTitles
+   repeat for each line gMenuTitle in gMenuTitles
+      controller_AddToArray gLCW, gMenuTitle, mController, projectName
+      put gLCW ["Global Menus"][gMenuTitle] into resultArray [gMenuTitle]
+   end repeat
+   return resultArray
+end mArray_UpdateGlobal
+
+command project_AddProjectArrayToGlobal projectArray
+   global gLCW
+   
+   put projectArray ["Global Menus"] into projectGlobalMenuArray
+   put gLCW ["Global Menus"] into gMenuArray
+   union projectGlobalMenuArray with gMenuArray
+   put projectGlobalMenuArray into gLCW ["Global Menus"]
+end project_AddProjectArrayToGlobal
+
+command project_LoadMenusAndStackFiles projectFolder
+   put project_FetchArray (projectFolder) into projectArray
+   
+   # Add found menus to global gLCW 
+   project_AddProjectArrayToGlobal projectArray
+   
+   # Seet stackfiles
+   put projectArray ["stackFileArray"] into projectStackFileArray
+   put stackFile_FromArray (projectStackFileArray) into projectStackFiles
+   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
+   if exists (stack projectHomeStackPath) is false then
+      put "project_LoadMenusAndStackFiles of stack lib_LCW" into gLCW ["Error"][projectHomeStackPath]
+      return empty
+   end if
+   set the stackfiles of stack projectHomeStackPath to projectStackFiles
+   --
+   return projectArray
+end project_LoadMenusAndStackFiles
+
+function env_GetActiveProjectArray
+   global gLCW
+   put gLCW ["environment"]["project"] into activeProjectArray
+   return activeProjectArray
+end env_GetActiveProjectArray
+
+command env_SetActiveProjectArray activeProjectArray
+   global gLCW
+   put activeProjectArray into gLCW ["environment"]["project"]
+   return gLCW
+end env_SetActiveProjectArray
+
+
 --> Working on
 -
 command project_ExportMenusAndStackFiles projectFolder, pIndexView, pSaveStack
@@ -57,15 +116,6 @@ private command _AddToProjectAndGlobalArray @projectArray, projectFolder, contro
    end repeat
    return projectControllerArray
 end _AddToProjectAndGlobalArray
-
-command project_AddProjectArrayToGlobal projectArray
-   global gLCW
-   
-   put projectArray ["Global Menus"] into projectGlobalMenuArray
-   put gLCW ["Global Menus"] into gMenuArray
-   union projectGlobalMenuArray with gMenuArray
-   put projectGlobalMenuArray into gLCW ["Global Menus"]
-end project_AddProjectArrayToGlobal
 
 
 --> Project | StackFileArray
@@ -139,22 +189,6 @@ end _WalkAndList
 
 --> Working on
 -
-command mArray_UpdateGlobal mController
-   global gLCW
-   if exists (mController) is false then
-      return "Error, global menu does not exist:" & gMenuTitle,mController,projectName
-   end if
-   
-   # Update gLCW
-   put the project_Name of mController into projectName
-   put the script_GlobalTitles of mController into gMenuTitles
-   repeat for each line gMenuTitle in gMenuTitles
-      controller_AddToArray gLCW, gMenuTitle, mController, projectName
-      put gLCW ["Global Menus"][gMenuTitle] into resultArray [gMenuTitle]
-   end repeat
-   return resultArray
-end mArray_UpdateGlobal
-
 command controller_AddToArray @projectArray, gMenuTitle, mController, projectName
    -- used by "menu_UpdateFromController" and LCW
    delete variable projectArray ["Global Menus"][gMenuTitle] -- just for tyding old stuff
@@ -169,25 +203,6 @@ command project_Load projectName
    put project_GetFolder (projectName) into projectFolder
    project_LoadMenusAndStackFiles projectFolder
 end project_Load
-
-command project_LoadMenusAndStackFiles projectFolder
-   put project_FetchArray (projectFolder) into projectArray
-   
-   # Add found menus to global gLCW 
-   project_AddProjectArrayToGlobal projectArray
-   
-   # Seet stackfiles
-   put projectArray ["stackFileArray"] into projectStackFileArray
-   put stackFile_FromArray (projectStackFileArray) into projectStackFiles
-   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
-   if exists (stack projectHomeStackPath) is false then
-      put "project_LoadMenusAndStackFiles of stack lib_LCW" into gLCW ["Error"][projectHomeStackPath]
-      return empty
-   end if
-   set the stackfiles of stack projectHomeStackPath to projectStackFiles
-   --
-   return projectArray
-end project_LoadMenusAndStackFiles
 
 
 --> Module | Export
@@ -868,18 +883,6 @@ command env_RemoveProject projectName
    delete variable envProjectArray [projectName]
    env_SetActiveProjectArray envProjectArray
 end env_RemoveProject
-
-function env_GetActiveProjectArray
-   global gLCW
-   put gLCW ["environment"]["project"] into activeProjectArray
-   return activeProjectArray
-end env_GetActiveProjectArray
-
-command env_SetActiveProjectArray activeProjectArray
-   global gLCW
-   put activeProjectArray into gLCW ["environment"]["project"]
-   return gLCW
-end env_SetActiveProjectArray
 
 
 --> Project
