@@ -10,6 +10,17 @@ version: 0.7
 Here we place all the handlers that need to be in use before project initialisation.
 */
 
+--> Events
+-
+-- on revEditScript
+-- sent by Livecode to registered plugins
+-- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
+-- beep
+ide_AddBehaviorHacks
+pass revEditScript
+end revEditScript
+
+
 --> Working on | gLCW
 -
 command project_AddProjectArrayToGlobal projectArray
@@ -797,17 +808,6 @@ function project_Exists projectName, pRepoFolder
       return true
    end if
 end project_Exists
-
-
---> Events
--
-on revEditScript
-   -- sent by Livecode to registered plugins
-   -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
-   -- beep
-   rev_AddBehaviorHacks
-   pass revEditScript
-end revEditScript
 
 
 --> Props | Project

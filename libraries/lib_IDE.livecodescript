@@ -31,110 +31,85 @@ end ide_MenuTitle
 
 --> Working on
 -
-function ide_ListMenuElements
-   -- return "Recent,List,Script"
-   put LocalArray ["environment"]["menu"] into ideMenuElements
-   put keys(ideMenuElements) into mElements
-   sort mElements
-   return mElements
-end ide_ListMenuElements
+command ide_ResetMenus
+   delete variable LocalArray ["environment"]["menu"]
+   _ReIndexLocalIdeMenus
+   ide_AddBehaviorHacks
+end ide_ResetMenus
 
-command ide_EditMenu shortName
-   put ide_GetMenuController (shortName) into mController
-   edit the script of mController
-end ide_EditMenu
-
-command ide_ReIndexLocalIdeMenus
+private command _ReIndexLocalIdeMenus
    -- for when things go wrong
    delete variable LocalArray ["environment"]["menu"]
    repeat for each item ideElement in "List,Script,Recent"
       repeat for each item shortTitle in "Default,Authoring, Watch"
-         _UpdateAndSet ideElement, shortTitle
+         put ide_ConstructMenuController (ideElement, shortTitle) into mController
+         if exists (mController) is true then
+            set the menu_Update of mController to true
+            ide_SetMenuTitle ideElement, shortTitle
+         end if
       end repeat
    end repeat
    put LocalArray ["environment"]["menu"] into localEnvMenuArray
    return localEnvMenuArray
-end ide_ReIndexLocalIdeMenus
+end _ReIndexLocalIdeMenus
 
-private command _UpdateAndSet ideElement, shortTitle
-   put ide_ConstructMenuController (ideElement, shortTitle) into mController
-   if exists (mController) is true then
-      set the menu_Update of mController to true
-      ide_SetMenuTitle ideElement, shortTitle
-   end if
-   return mController
-end _UpdateAndSet
-
-
---> IDE | Menu | Model
--
-function ide_GetMenuTitle pElement
-   if pElement is empty then put "Recent" into pElement
-   put LocalArray ["environment"]["menu"][pElement] into mTitle
-   return mTitle
-end ide_GetMenuTitle
-
-command ide_SetMenuTitle ideElement, pShortTitle
-   if pShortTitle is empty or pShortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
-      put "Default" into pShortTitle
-   end if  
-   put ide_ConstructMenuTitle (ideElement, pShortTitle) into mTitle
-   put mTitle into LocalArray ["environment"]["menu"][ideElement]
-   return shortTitle
-end ide_SetMenuTitle
-
-command ide_ResetMenus
-   delete variable LocalArray ["environment"]["menu"]
-   ide_ReIndexMenus
-   rev_AddBehaviorHacks
-end ide_ResetMenus
-
-
---> IDE | Menu
--
-function ide_ConstructMenuTitle pIdeElement, pShortName
-   if pElement is empty then put "Recent" into pElement
-   if pShortName is empty then put "Watch" into pShortName
-   --
-   put "Global | ScriptEditor |" && pIdeElement && "|" && pShortName && "| Menu" into mTitle
-   return mTitle
-end ide_ConstructMenuTitle
-
-
---> IDE | Menu | Global | Set
--
-command ide_SetScriptEditorTitles shortTitle
-   -- doesn't work with "Authoring", "Default" and "Watch"
-   switch shortTitle
-      case "Authoring"
-      case "Watch"
-         ide_SetMenuTitle "Recent", "Watch"
-         ide_SetMenuTitle "List", "Authoring"
-         ide_SetMenuTitle "Script", "Authoring"
-         break
-      case"Default"
-      default
-         ide_SetLocalMenus shortTitle
-         /*
-         ide_SetMenuTitle "Recent", shortTitle
-         ide_SetMenuTitle "List", shortTitle
-         ide_SetMenuTitle "Script", shortTitle
-         */
-   end switch
-end ide_SetScriptEditorTitles
-
-command ide_SetLocalMenus shortTitle
-   if shortTitle is empty then put "default" into pIdeElement
-   --
-   put ide_ListMenuElements() into pIdeElements
-   repeat for each item pIdeElement in pIdeElements
-      ide_SetMenuTitle pIdeElement, shortTitle
-   end repeat 
-end ide_SetLocalMenus
+command ide_AddBehaviorHacks pBoolean
+   /*
+   -- was "rev_AddBehaviorHacks"
+   This handler turns on and off the behavior based IDE menu hacks.
+   */
+   put pBoolean is not false into someBoolean
+   
+   put scriptEditor_HandlerListBehavior() into handlerBehavior
+   put scriptEditor_ScriptFieldBehavior() into scriptFieldBehavior
+   put scriptEditor_HistoryButtonBehavior() into historyBehavior
+   put scriptEditor_FindFieldBehavior() into simpleFindBehavior
+   put scriptEditor_CompileButtonBehavior() into compileButtonBehavior
+   put scriptEditor_DocumentationFieldBehavior() into documentationFieldBehavior
+   put scriptEditor_LaunchDocsBehavior() into launchDocsBehavior
+   
+   put rev_OpenScriptEditorNames() into editorNames
+   repeat with someNum = 0 to the number of lines of editorNames
+      put rev_ScriptEditorField (someNum) into scriptField
+      if exists (scriptField) is false then next repeat
+      
+      put rev_HistoryButton (someNum) into historyButton
+      put rev_HandlerTreeField (someNum) into handlerTreeField
+      put rev_SimpleFindField (someNum) into simpleFindField
+      put rev_CompileButton (someNum) into compileButton
+      put rev_ScriptEditorDocField (someNum) into scriptEditorDocField
+      put rev_LaunchDocsButton (someNum) into launchDocsButton
+      
+      if someBoolean is true then
+         set the behavior of scriptField to scriptFieldBehavior
+         set the behavior of historyButton to historyBehavior
+         set the behavior of handlerTreeField to handlerBehavior
+         set the behavior of simpleFindField to simpleFindBehavior
+         set the behavior of compileButton to compileButtonBehavior
+         set the behavior of scriptEditorDocField to documentationFieldBehavior
+         set the behavior of launchDocsButton to launchDocsBehavior
+      else
+         set the behavior of scriptField to empty
+         set the behavior of historyButton to empty
+         set the behavior of handlerTreeField to empty
+         set the behavior of simpleFindField to empty
+         set the behavior of compileButton to empty
+         set the behavior of scriptEditorDocField to empty
+         set the behavior of launchDocsButton to empty
+      end if
+   end repeat
+end ide_AddBehaviorHacks
 
 
 --> IDE | Menu | List
 -
+function ide_ListMenuElements
+   put LocalArray ["environment"]["menu"] into ideMenuElements
+   put keys (ideMenuElements) into mElements
+   sort mElements
+   return mElements
+end ide_ListMenuElements
+
 function ide_ListFixedShortTitles
    return "Default,Revigniter,Watch"
 end ide_ListFixedShortTitles
@@ -163,6 +138,61 @@ function ide_ListMenuTitles ideElement
    filter mTitles with someFilter
    return word 1 to -1 of mTitles
 end ide_ListMenuTitles
+
+
+--> IDE
+-
+command ide_EditMenu shortName
+   put ide_GetMenuController (shortName) into mController
+   edit the script of mController
+end ide_EditMenu
+
+
+--> IDE | Menu | Model
+-
+command ide_SetScriptEditorTitles shortTitle
+   -- doesn't work with "Authoring", "Default" and "Watch"
+   switch shortTitle
+      case "Authoring"
+      case "Watch"
+         -- let's renamme these menus?
+         ide_SetMenuTitle "Recent", "Watch"
+         ide_SetMenuTitle "List", "Watch"
+         ide_SetMenuTitle "Script", "Authoring"
+         break
+      default -- "Default"
+         put ide_ListMenuElements() into ideElements
+         repeat for each line ideElement in ideElements
+            ide_SetMenuTitle ideElement, shortTitle
+         end repeat 
+   end switch
+end ide_SetScriptEditorTitles
+
+function ide_GetMenuTitle pElement
+   if pElement is empty then put "Recent" into pElement
+   put LocalArray ["environment"]["menu"][pElement] into mTitle
+   return mTitle
+end ide_GetMenuTitle
+
+command ide_SetMenuTitle ideElement, pShortTitle
+   if pShortTitle is empty or pShortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
+      put "Default" into pShortTitle
+   end if  
+   put ide_ConstructMenuTitle (ideElement, pShortTitle) into mTitle
+   put mTitle into LocalArray ["environment"]["menu"][ideElement]
+   return shortTitle
+end ide_SetMenuTitle
+
+
+--> IDE | Menu
+-
+function ide_ConstructMenuTitle pIdeElement, pShortName
+   if pElement is empty then put "Recent" into pElement
+   if pShortName is empty then put "Watch" into pShortName
+   --
+   put "Global | ScriptEditor |" && pIdeElement && "|" && pShortName && "| Menu" into mTitle
+   return mTitle
+end ide_ConstructMenuTitle
 
 
 --> IDE | Menu | Global

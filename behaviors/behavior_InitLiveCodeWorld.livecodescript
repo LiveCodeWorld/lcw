@@ -181,7 +181,7 @@ command _LcwInitialize
    -- set lockmessages to false
    
    -- activate the menus
-   rev_AddBehaviorHacks
+   ide_AddBehaviorHacks
    ide_AddRevEditScriptStack "LCW"
    
    -- custom
@@ -451,7 +451,7 @@ on revEditScript
    -- sent by Livecode to registered plugins
    -- this is a hack to fix the losing of the behavior we add to the script editor handler list field.
    beep
-   rev_AddBehaviorHacks
+   ide_AddBehaviorHacks
    pass revEditScript
 end revEditScript
 
