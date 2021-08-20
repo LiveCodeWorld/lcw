@@ -14,29 +14,6 @@ Used by the behavior (if running LCW), of the ScriptEditor Apply button. This be
 
 --> Working on
 -
-command menu_UpdateGlobalArray mController, mTitleTableArray
-   global gLCW
-   menu_DeleteActiveArray
-   
-   put revRuggedId (mController) into mController
-   --
-   repeat for each key gMenuTile in mTitleTableArray
-      if word 1 of gMenuTile = "Global" and word 2 of gMenuTile = "|" then
-         put mTitleTableArray [gMenuTile] into gMenuTable
-         
-         -- menu_NormalizeTitle gMenuTile
-         put gMenuTable into gLCW ["Global Menus"][gMenuTile]["gMenuTable"]
-         put mController into gLCW ["Global Menus"][gMenuTile]["mController"]
-         
-         -- probably not really needed
-         put gMenuTable into menuTitleArray [gMenuTile]["gMenuTable"]
-         put mController into menuTitleArray [gMenuTile]["mController"]
-      end if
-   end repeat
-   --
-   return menuTitleArray
-end menu_UpdateGlobalArray
-
 command script_ExportAndIndexMenus scriptObject, pDeleteOldExports
    -- this is what the IDE compile button dispatches
    -- it is designed to update the global menu index, and export handlers (but do nothing else)
@@ -58,6 +35,39 @@ command script_ExportAndIndexMenus scriptObject, pDeleteOldExports
       case "handled"
    end switch
 end script_ExportAndIndexMenus
+
+command mArray_UpdateGlobal mController
+   global gLCW
+   if exists (mController) is false then
+      return "Error, global menu does not exist:" & gMenuTitle,mController,projectName
+   end if
+   
+   # Update gLCW
+   put the project_Name of mController into projectName
+   put the script_GlobalTitles of mController into gMenuTitles
+   repeat for each line gMenuTitle in gMenuTitles
+      controller_AddToArray gLCW, gMenuTitle, mController, projectName
+      put gLCW ["Global Menus"][gMenuTitle] into resultArray [gMenuTitle]
+   end repeat
+   return resultArray
+end mArray_UpdateGlobal
+
+command menu_ReIndexController mController
+   put the menu_GlobalTitle of mController into gMenuTitle
+   if gMenuTitle is empty then return "Error, gMenuTitle for mController is faulty:" && mController
+   
+   project_AddToKnown mController
+   mArray_UpdateGlobal mController
+   --
+   put the project_Name of mController into projectName
+   put the project_JsonFile of the target into projectArrayFile
+   --
+   put array_FetchModel (projectArrayFile) into projectArray
+   controller_AddToArray projectArray, gMenuTitle, mController, projectName
+   array_SaveModel projectArrayFile, projectArray
+   --
+   return resultArray
+end menu_ReIndexController
 
 
 --> Menu | Update

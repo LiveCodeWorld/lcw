@@ -31,13 +31,66 @@ end ide_MenuTitle
 
 --> Working on
 -
-command ide_EditMenu pIdeElement, pShortName
-   put ide_ConstructMenuTitle (pIdeElement, pShortName) into mTitle
-   menu_Edit mTitle
+function ide_ListMenuElements
+   -- return "Recent,List,Script"
+   put LocalArray ["environment"]["menu"] into ideMenuElements
+   put keys(ideMenuElements) into mElements
+   sort mElements
+   return mElements
+end ide_ListMenuElements
+
+command ide_EditMenu shortName
+   put ide_GetMenuController (shortName) into mController
+   edit the script of mController
 end ide_EditMenu
 
+command ide_ReIndexLocalIdeMenus
+   -- for when things go wrong
+   delete variable LocalArray ["environment"]["menu"]
+   repeat for each item ideElement in "List,Script,Recent"
+      repeat for each item shortTitle in "Default,Authoring, Watch"
+         _UpdateAndSet ideElement, shortTitle
+      end repeat
+   end repeat
+   put LocalArray ["environment"]["menu"] into localEnvMenuArray
+   return localEnvMenuArray
+end ide_ReIndexLocalIdeMenus
 
---> IDE | Menu | Construct
+private command _UpdateAndSet ideElement, shortTitle
+   put ide_ConstructMenuController (ideElement, shortTitle) into mController
+   if exists (mController) is true then
+      set the menu_Update of mController to true
+      ide_SetMenuTitle ideElement, shortTitle
+   end if
+   return mController
+end _UpdateAndSet
+
+
+--> IDE | Menu | Model
+-
+function ide_GetMenuTitle pElement
+   if pElement is empty then put "Recent" into pElement
+   put LocalArray ["environment"]["menu"][pElement] into mTitle
+   return mTitle
+end ide_GetMenuTitle
+
+command ide_SetMenuTitle ideElement, pShortTitle
+   if pShortTitle is empty or pShortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
+      put "Default" into pShortTitle
+   end if  
+   put ide_ConstructMenuTitle (ideElement, pShortTitle) into mTitle
+   put mTitle into LocalArray ["environment"]["menu"][ideElement]
+   return shortTitle
+end ide_SetMenuTitle
+
+command ide_ResetMenus
+   delete variable LocalArray ["environment"]["menu"]
+   ide_ReIndexMenus
+   rev_AddBehaviorHacks
+end ide_ResetMenus
+
+
+--> IDE | Menu
 -
 function ide_ConstructMenuTitle pIdeElement, pShortName
    if pElement is empty then put "Recent" into pElement
@@ -79,35 +132,6 @@ command ide_SetLocalMenus shortTitle
    end repeat 
 end ide_SetLocalMenus
 
-command ide_ReIndexLocalIdeMenus
-   delete variable LocalArray ["environment"]["menu"]
-   repeat for each item ideElement in "List,Script,Recent"
-      repeat for each item shortTitle in "Default,Authoring, Watch"
-         ide_UpdateAndSet ideElement, shortTitle
-      end repeat
-   end repeat
-   put LocalArray ["environment"]["menu"] into localEnvMenuArray
-   return localEnvMenuArray
-end ide_ReIndexLocalIdeMenus
-
-function ide_ListMenuElements
-   return "Recent,List,Script"
-   
-   put LocalArray ["environment"]["menu"] into ideMenuElements
-   put keys(ideMenuElements) into mElements
-   sort mElements
-   return mElements
-end ide_ListMenuElements
-
-command ide_UpdateAndSet ideElement, shortTitle
-   put ide_ConstructMenuController (ideElement, shortTitle) into mController
-   if exists (mController) is true then
-      set the menu_Update of mController to true
-      ide_SetMenuTitle ideElement, shortTitle
-   end if
-   return mController
-end ide_UpdateAndSet
-
 
 --> IDE | Menu | List
 -
@@ -143,21 +167,6 @@ end ide_ListMenuTitles
 
 --> IDE | Menu | Global
 -
-function ide_GetMenuTitle pElement
-   if pElement is empty then put "Recent" into pElement
-   put LocalArray ["environment"]["menu"][pElement] into mTitle
-   return mTitle
-end ide_GetMenuTitle
-
-command ide_SetMenuTitle ideElement, pShortTitle
-   if pShortTitle is empty or pShortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
-      put "Default" into pShortTitle
-   end if  
-   put ide_ConstructMenuTitle (ideElement, pShortTitle) into mTitle
-   put mTitle into LocalArray ["environment"]["menu"][ideElement]
-   return shortTitle
-end ide_SetMenuTitle
-
 function ide_GetMenuController ideElement, pShortTitle
    if pShortTitle is empty then
       put ide_GetMenuTitle (ideElement) into mTitle
@@ -168,11 +177,6 @@ function ide_GetMenuController ideElement, pShortTitle
    put menu_GetGlobalController (mTitle) into mController
    return mController
 end ide_GetMenuController
-
-command ide_EditMenu shortName
-   put ide_GetMenuController (shortName) into mController
-   edit the script of mController
-end ide_EditMenu
 
 function ide_GetMenuController pElement
    put ide_GetMenuTitle (pElement) into mTitle
@@ -198,15 +202,6 @@ function ide_ShortTitle shortName
    if shortName is empty then return "Default"
    return shortName
 end ide_ShortTitle
-
-
---> IDE | Menu | Local
--
-command ide_ResetMenus
-   delete variable LocalArray ["environment"]["menu"]
-   ide_ReIndexMenus
-   rev_AddBehaviorHacks
-end ide_ResetMenus
 
 
 --> IDE | Other

@@ -1,10 +1,11 @@
-﻿script "Global_ScriptEditor_List_Default_Menu"
+﻿script "Global | ScriptEditor | List | Default | Menu"
 --> MetaData
 -
 license: GPLv3
-name: Global_ScriptEditor_List_Default_Menu
+name: Global | ScriptEditor | List | Default | Menu
 type: controller
 version: 0.2
+
 
 --> Variables
 -
@@ -13,7 +14,7 @@ local LocalArray
 
 --> Menu | Props
 -
-on menu_Init
+command _Init
    put word 2 of the clickline into lineNum
    put scriptEditor_Object() into hObject
    put the revAvailableHandlers of hObject into hTable
@@ -22,11 +23,21 @@ on menu_Init
    put hKeyLine_Construct (hTableLine, hObject) into hkeyLine
    
    put hkeyLine into LocalArray ["hkeyLine"]
-end menu_Init
+end _Init
 
 getprop menu_Target
+   _Init
    return LocalArray ["hkeyLine"]
 end menu_Target
+
+getprop m_Title
+   return ide_ShortTitle ("List")
+end m_Title
+
+getprop m_Titles
+   put ide_ListShortMenuTitles ("List") into shortNames
+   return shortNames
+end m_Titles
 
 
 --> Global | ScriptEditor | List | Default | Menu
@@ -41,15 +52,3 @@ end _
 on menu_SetMenu mTarget, mTitle
    ide_SetMenuTitle "List", mTitle
 end menu_SetMenu
-
-
---> Global | ScriptEditor | Recent | Default | Menu | Props
--
-getprop m_Title
-   return ide_ShortTitle ("List")
-end m_Title
-
-getprop m_Titles
-   put ide_ListShortMenuTitles ("List") into shortNames
-   return shortNames
-end m_Titles

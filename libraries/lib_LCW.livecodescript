@@ -12,22 +12,6 @@ Here we place all the handlers that need to be in use before project initialisat
 
 --> Working on | gLCW
 -
-command mArray_UpdateGlobal mController
-   global gLCW
-   if exists (mController) is false then
-      return "Error, global menu does not exist:" & gMenuTitle,mController,projectName
-   end if
-   
-   # Update gLCW
-   put the project_Name of mController into projectName
-   put the script_GlobalTitles of mController into gMenuTitles
-   repeat for each line gMenuTitle in gMenuTitles
-      controller_AddToArray gLCW, gMenuTitle, mController, projectName
-      put gLCW ["Global Menus"][gMenuTitle] into resultArray [gMenuTitle]
-   end repeat
-   return resultArray
-end mArray_UpdateGlobal
-
 command project_AddProjectArrayToGlobal projectArray
    global gLCW
    
