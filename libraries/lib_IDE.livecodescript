@@ -58,6 +58,8 @@ command ide_AddBehaviorHacks pBoolean
    -- was "rev_AddBehaviorHacks"
    This handler turns on and off the behavior based IDE menu hacks.
    */
+   _ReIndexLocalIdeMenus
+   
    put pBoolean is not false into someBoolean
    
    put scriptEditor_HandlerListBehavior() into handlerBehavior
@@ -104,11 +106,19 @@ end ide_AddBehaviorHacks
 --> IDE | Menu | List
 -
 function ide_ListMenuElements
+   return ide_ListDefaultMenuElements()
+   
    put LocalArray ["environment"]["menu"] into ideMenuElements
    put keys (ideMenuElements) into mElements
    sort mElements
    return mElements
 end ide_ListMenuElements
+
+function ide_ListDefaultMenuElements
+   get "List,Script,Recent"
+   replace comma with CR in it
+   return it
+end ide_ListDefaultMenuElements
 
 function ide_ListFixedShortTitles
    return "Default,Revigniter,Watch"
@@ -151,21 +161,10 @@ end ide_EditMenu
 --> IDE | Menu | Model
 -
 command ide_SetScriptEditorTitles shortTitle
-   -- doesn't work with "Authoring", "Default" and "Watch"
-   switch shortTitle
-      case "Authoring"
-      case "Watch"
-         -- let's renamme these menus?
-         ide_SetMenuTitle "Recent", "Watch"
-         ide_SetMenuTitle "List", "Watch"
-         ide_SetMenuTitle "Script", "Authoring"
-         break
-      default -- "Default"
-         put ide_ListMenuElements() into ideElements
-         repeat for each line ideElement in ideElements
-            ide_SetMenuTitle ideElement, shortTitle
-         end repeat 
-   end switch
+   put ide_ListMenuElements() into ideElements
+   repeat for each line ideElement in ideElements
+      ide_SetMenuTitle ideElement, shortTitle
+   end repeat 
 end ide_SetScriptEditorTitles
 
 function ide_GetMenuTitle pElement

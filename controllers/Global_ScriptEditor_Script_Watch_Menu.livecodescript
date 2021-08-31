@@ -1,21 +1,18 @@
-﻿script "Global | ScriptEditor | Script | Authoring | Menu"
+﻿script "Global | ScriptEditor | Script | Watch | Menu"
 --> MetaData
 -
 copyright: David Bovill
 license: GPLv3
-name: Global | ScriptEditor | Script | Authoring | Menu
+name: Global | ScriptEditor | Script | Watch | Menu
 type: controller
 version: 0.1
-
-/*Here you can describe this menu.
-Full help text should be provided on the linked wiki.*/
 
 
 --> Variables
 -
 local LocalArray
 
---> Global | ScriptEditor | Script | Authoring | Menu
+--> Global | ScriptEditor | Script | Watch | Menu
 -
 on menu_AuthoringMenu mTarget
    put mTarget

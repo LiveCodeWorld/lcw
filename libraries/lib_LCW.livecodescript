@@ -21,15 +21,121 @@ pass revEditScript
 end revEditScript
 
 
+--> Working on
+--
+command controller_AddToArray @projectArray, gMenuTitle, mController, projectName
+   -- used by "menu_ReIndexController" and LCW
+   delete variable projectArray ["Global Menus"][gMenuTitle] -- just for tyding old stuff
+   --
+   put revRuggedId (mController) into mController
+   put mController into projectArray ["Global Menus"][gMenuTitle]["mController"]
+   put projectName into projectArray ["Global Menus"][gMenuTitle]["projectName"]
+   -- put projectFolder into projectArray ["Global Menus"][gMenuTitle]["projectFolder"]
+end controller_AddToArray
+
+
+--> LCW | Dialogues
+-
+function ask_Question someQuestion, pDefault, pTitle, pQVar, pIcon
+   put lcw_Question (someQuestion, pQVar) into someQuestion
+   switch pIcon
+      -- as sheet has no effect
+      case "information"
+         ask information someQuestion with pDefault titled pTitle as sheet
+         break
+      case "error"
+         ask error someQuestion with pDefault titled pTitle as sheet
+         break
+      case "warning"
+         ask warning someQuestion with pDefault titled pTitle as sheet
+         break
+      default
+         ask question someQuestion with pDefault titled pTitle as sheet
+   end switch
+   if the result is "Cancel" then exit to top
+   return it
+end ask_Question
+
+function lcw_Ask someQuestion, pDefault, pTitle, pDisplayView
+   text_ReQuote someQuestion
+   if exists (pDisplayView) then
+      -- bug: sheet not working
+      ask someQuestion with pDefault as sheet
+   else
+      ask someQuestion with pDefault
+   end if
+   put it into theResult
+   if the result is "Cancel" then exit to top
+   return theResult
+end lcw_Ask
+
+command lcw_Answer someQuestion, pDisplayView, pQVar
+   put param (4) into pQVar2
+   put param (5) into pQVar3
+   --
+   if exists (pDisplayView) then
+      dispatch "lcw_Answer" to pDisplayView with someQuestion, empty, pQVar, pQVar2, pQVar3
+      return the result
+   end if
+   put lcw_Question (someQuestion, pQVar, pQVar2, pQVar3) into someQuestion
+   --
+   answer someQuestion with "Cancel" or "OK" as sheet
+   if it is "Cancel" then exit to top
+   return it
+end lcw_Answer
+
+command lcw_AnswerWarning someQuestion, pDisplayView, pQVar
+   put param (4) into pQVar2
+   put param (5) into pQVar3
+   --
+   if exists (pDisplayView) then
+      -- this is an ugly hack to change the target to pDisplayView
+      dispatch "lcw_AnswerWarning" to pDisplayView with someQuestion, empty, pQVar, pQVar2, pQVar3
+      exit to top
+   end if
+   --
+   put lcw_Question (someQuestion, pQVar, pQVar2, pQVar3) into someQuestion
+   answer warning someQuestion with "OK" as sheet
+   exit to top
+end lcw_AnswerWarning
+
+function lcw_Question someQuestion, pQVar
+   put param (4) into pQVar2
+   put param (5) into pQVar3
+   --
+   put _ConstructDoScript (someQuestion, pQVar, pQVar2, pQVar3) into doScript
+   if doScript is not empty then
+      do doScript
+      put merge (someQuestion) into someQuestion
+   end if
+   text_ReQuote someQuestion
+   return someQuestion
+end lcw_Question
+
+private function _ConstructDoScript someQuestion, pQVar, pQVar2, pQVar3
+   put text_GetMergeVars (someQuestion) into mergeVars
+   repeat with lineNum = 1 to the number of lines of mergeVars
+      put line lineNum of mergeVars into varName
+      put lineNum + 1 into pNum
+      put param (pNum) into pValue
+      replace quote with "'" in pValue
+      --
+      if pValue is not empty then
+         put "put" && kwote (pValue) && "into" && varName & CR after doScript
+      end if
+   end repeat
+   delete char -1 of doScript
+   return doScript
+end _ConstructDoScript
+
+
 --> Working on | gLCW
 -
 command project_AddProjectArrayToGlobal projectArray
-   global gLCW
-   
+   put menu_GetModel() into gMenuArray
    put projectArray ["Global Menus"] into projectGlobalMenuArray
-   put gLCW ["Global Menus"] into gMenuArray
    union projectGlobalMenuArray with gMenuArray
-   put projectGlobalMenuArray into gLCW ["Global Menus"]
+   menu_SetModel projectGlobalMenuArray
 end project_AddProjectArrayToGlobal
 
 command project_LoadMenusAndStackFiles projectFolder
@@ -93,25 +199,36 @@ function project_ConstructArray projectFolder, pDontUpdateGlobal
 end project_ConstructArray
 
 private command _AddToProjectAndGlobalArray @projectArray, projectFolder, controllerPaths, pDontUpdateGlobal
-   -- compatible with both project arrays and gLCW
    set the itemdelimiter to slash
    put item -1 of projectFolder into projectName
+   put menu_GetModel() into menuGlobalArray
    repeat for each line controllerPath in controllerPaths
       set the cursor to busy  
       if exists (stack controllerPath) is false then next repeat
-      
       put the name of stack controllerPath into mController
-      put the short name of mController into gMenuTitle
+      --
+      put line 1 of the menu_GlobalTitle of mController into gMenuTitle
+      -- put the short name of mController into gMenuTitle
+      if gMenuTitle is empty then
+         put empty into badMenuArray [mController] 
+         next repeat
+      end if
       --
       controller_AddToArray projectArray, gMenuTitle, mController, projectName
       --
       if pDontUpdateGlobal is not true then
-         mArray_UpdateGlobal gMenuTitle, mController, projectName
+         menu_AddToGlobalArray menuGlobalArray, gMenuTitle, mController, projectName
       end if
    end repeat
-   return projectControllerArray
+   menu_SetModel menuGlobalArray
+   return badMenuArray
 end _AddToProjectAndGlobalArray
 
+--
+
+--
+put the project_Name of mController into projectName -- not needed (yet). For information only
+--
 
 --> Project | StackFileArray
 -
@@ -184,16 +301,6 @@ end _WalkAndList
 
 --> Working on
 -
-command controller_AddToArray @projectArray, gMenuTitle, mController, projectName
-   -- used by "menu_UpdateFromController" and LCW
-   delete variable projectArray ["Global Menus"][gMenuTitle] -- just for tyding old stuff
-   --
-   put revRuggedId (mController) into mController
-   put mController into projectArray ["Global Menus"][gMenuTitle]["mController"]
-   put projectName into projectArray ["Global Menus"][gMenuTitle]["projectName"]
-   -- put projectFolder into projectArray ["Global Menus"][gMenuTitle]["projectFolder"]
-end controller_AddToArray
-
 command project_Load projectName
    put project_GetFolder (projectName) into projectFolder
    project_LoadMenusAndStackFiles projectFolder
@@ -237,8 +344,7 @@ function project_ListAllControllers projectFolder
       put module_ListControllerStackPaths (moduleName, projectFolder) into moduleControllerPaths
       put CR & moduleControllerPaths after controllerPaths
    end repeat
-   delete char -1 of controllerPaths
-   return controllerPaths
+   return word 1 to -1 of controllerPaths
 end project_ListAllControllers
 
 command project_SetFoundStackFiles projectFolder
@@ -611,73 +717,6 @@ function project_ListPathSortedControllerNames projectName
    delete char -1 of gMenuTitles
    return gMenuTitles
 end project_ListPathSortedControllerNames
-
-
---> LCW | Dialogues
--
-command lcw_Answer someQuestion, pDisplayView, pQVar, pQVar2, pQVar3
-   if exists (pDisplayView) then
-      dispatch "lcw_Answer" to pDisplayView with someQuestion, empty, pQVar, pQVar2, pQVar3
-      return the result
-   end if
-   put _ConstructDoScript (someQuestion, pQVar, pQVar2, pQVar3) into doScript
-   if doScript is not empty then
-      do doScript
-      put merge (someQuestion) into someQuestion
-   end if
-   text_ReQuote someQuestion
-   --
-   answer someQuestion with "Cancel" or "OK" as sheet
-   if it is "Cancel" then exit to top
-   return it
-end lcw_Answer
-
-command lcw_AnswerWarning someQuestion, pDisplayView, pQVar, pQVar2, pQVar3
-   -- this is an ugly hack to change the target to pDisplayView
-   -- and easily make a mered someQuestion for answer dialogue
-   if exists (pDisplayView) then
-      dispatch "lcw_AnswerWarning" to pDisplayView with someQuestion, empty, pQVar, pQVar2, pQVar3
-      exit to top
-   end if
-   put _ConstructDoScript (someQuestion, pQVar, pQVar2, pQVar3) into doScript
-   if doScript is not empty then
-      do doScript
-      put merge (someQuestion) into someQuestion
-   end if
-   text_ReQuote someQuestion
-   --
-   answer warning someQuestion with "OK" as sheet
-   exit to top
-end lcw_AnswerWarning
-
-private function _ConstructDoScript someQuestion, pQVar, pQVar2, pQVar3
-   put text_GetMergeVars (someQuestion) into mergeVars
-   repeat with lineNum = 1 to the number of lines of mergeVars
-      put line lineNum of mergeVars into varName
-      put lineNum + 1 into pNum
-      put param (pNum) into pValue
-      replace quote with "'" in pValue
-      --
-      if pValue is not empty then
-         put "put" && kwote (pValue) && "into" && varName & CR after doScript
-      end if
-   end repeat
-   delete char -1 of doScript
-   return doScript
-end _ConstructDoScript
-
-function lcw_Ask someQuestion, pDefault, pDisplayView
-   text_ReQuote someQuestion
-   if exists (pDisplayView) then
-      -- bug: sheet not working
-      ask someQuestion with pDefault as sheet
-   else
-      ask someQuestion with pDefault
-   end if
-   put it into theResult
-   if the result is "Cancel" then exit to top
-   return theResult
-end lcw_Ask
 
 function module_ConstructFolder moduleName, projectName
    put module_ViewNameToShortFolder (moduleName) into moduleFolderName

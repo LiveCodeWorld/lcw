@@ -12,6 +12,22 @@ version: 0.1
 
 --> Working on
 -
+command ask_CreateMouseDoubleUpHandler mDoubleUp, titleController
+   put "M" && mDoubleUp into shortHKey
+   put the found_Hkey [shortHKey] of titleController is not empty into handlerExists
+   if handlerExists is true then return empty
+   
+   put "on" && mDoubleUp into mDoubleUpHandler
+   put space & "displayView, someLine" after mDoubleUpHandler
+   put CR & "    breakpoint" after mDoubleUpHandler
+   put CR & "    put the title_Text of displayView into someTitle" after mDoubleUpHandler
+   put CR & "end" && mDoubleUp after mDoubleUpHandler
+   --
+   display_Handler mDoubleUp, mDoubleUpHandler, "DoubleUp Handler"
+   put the result into indexView
+   return indexView
+end ask_CreateMouseDoubleUpHandler
+
 
 --> Display | Tools
 -
@@ -34,44 +50,27 @@ command display_SetToolMenus menuBit, dView, pProjectName
    replace space with empty in menuBit
    put "mDoubleUp_" & menuBit into pDoubleUp
    
-   # Create mDoubleUp handler if needed
-   put menu_GetGlobalController (titleMenu) into mController
-   ask_CreateMouseDoubleUpHandler pDoubleUp, mController
-   
    # Create menus if needed
    if there is a stack pProjectName then
       put the name of stack pProjectName into libObject
    else
-      put debug_GetCallingObject(2) into libObject
+      put debug_CallingObject(2) into libObject
    end if
    ask_CreateMenuFromObject titleMenu, libObject
    ask_CreateMenuFromObject lineMenu, libObject
+   
+   # Create mDoubleUp handler if needed
+   put menu_GetGlobalController (titleMenu) into mController
+   ask_CreateMouseDoubleUpHandler pDoubleUp, mController
+   set the mouse_Target of dView to mController
    
    # Set menus and mouse
    set the title_Menu of dView to titleMenu
    set the line_Menu of dView to lineMenu
    set the mouse_DoubleUp of dView to pDoubleUp
-   set the mouse_Target of dView to mController
    --
    return it
 end display_SetToolMenus
-
-
-command ask_CreateMouseDoubleUpHandler mDoubleUp, titleController
-   put "M" && mDoubleUp into shortHKey
-   put the found_Hkey [shortHKey] of titleController is not empty into handlerExists
-   if handlerExists is true then return empty
-   
-   put "on" && mDoubleUp into mDoubleUpHandler
-   put space & "displayView, someLine" after mDoubleUpHandler
-   put CR & "    put the title_Text of displayView into someTitle" after mDoubleUpHandler
-   put CR & "    return displayView" after mDoubleUpHandler
-   put CR & "end" && mDoubleUp after mDoubleUpHandler
-   --
-   display_Handler mDoubleUp, mDoubleUpHandler, "DoubleUp Handler"
-   put the result into indexView
-   return indexView
-end ask_CreateMouseDoubleUpHandler
 
 
 --> Display | Data
@@ -153,6 +152,14 @@ function display_ViewExists displayStackLabel, pDisplayViewTitle
    put exists (displayView) into displayViewExists
    return displayViewExists
 end display_ViewExists
+
+function display_FindArrayView displayStackLabel, pDisplayViewTitle
+   return display_FindView (displayStackLabel, pDisplayViewTitle, "Display Array")
+end display_FindArrayView
+
+function display_FindIndexView displayStackLabel, pDisplayViewTitle
+   return display_FindView (displayStackLabel, pDisplayViewTitle, "Display Index")
+end display_FindIndexView
 
 function display_FindView displayStackLabel, pDisplayViewTitle, pTypes
    -- Looks for Display Array, and Display Index views depending on pTypes

@@ -11,93 +11,42 @@ Used by the behavior (if running LCW), of the ScriptEditor Apply button. This be
 */
 
 
-
---> Working on
--
-command script_ExportAndIndexMenus scriptObject, pDeleteOldExports
-   -- this is what the IDE compile button dispatches
-   -- it is designed to update the global menu index, and export handlers (but do nothing else)
-   
-   dispatch "script_Compile" to scriptObject with scriptObject,pDeleteOldExports
-   switch it
-      case "unhandled"
-         -- a default
-         script_ExportHandlersAndCalls scriptObject, pDeleteOldExports
-         put the result into scriptPlaceArray
-         put the uRIP["type"] of scriptObject into scriptType
-         --
-         if scriptType = "controller" then
-            menu_UpdateFromController scriptObject
-            put the result into projectArray
-         end if
-         break
-      case "passed"
-      case "handled"
-   end switch
-end script_ExportAndIndexMenus
-
-command mArray_UpdateGlobal mController
-   global gLCW
-   if exists (mController) is false then
-      return "Error, global menu does not exist:" & gMenuTitle,mController,projectName
-   end if
-   
-   # Update gLCW
-   put the project_Name of mController into projectName
-   put the script_GlobalTitles of mController into gMenuTitles
-   repeat for each line gMenuTitle in gMenuTitles
-      controller_AddToArray gLCW, gMenuTitle, mController, projectName
-      put gLCW ["Global Menus"][gMenuTitle] into resultArray [gMenuTitle]
-   end repeat
-   return resultArray
-end mArray_UpdateGlobal
-
-command menu_ReIndexController mController
-   put the menu_GlobalTitle of mController into gMenuTitle
-   if gMenuTitle is empty then return "Error, gMenuTitle for mController is faulty:" && mController
-   
-   project_AddToKnown mController
-   mArray_UpdateGlobal mController
-   --
-   put the project_Name of mController into projectName
-   put the project_JsonFile of the target into projectArrayFile
-   --
-   put array_FetchModel (projectArrayFile) into projectArray
-   controller_AddToArray projectArray, gMenuTitle, mController, projectName
-   array_SaveModel projectArrayFile, projectArray
-   --
-   return resultArray
-end menu_ReIndexController
-
-
---> Menu | Update
+--> Props
 -
 setprop menu_Update someBoolean
    -- called by "script_ExportAndIndexMenus" every time we apps (compile) a scriptField 
    put the long id of the target into mController
-   -- menu_LoadFromScript mController
-   menu_UpdateFromController mController
+   menu_ReIndexController mController
    put the result into projectArray
    return projectArray
 end menu_Update
 
-command menu_UpdateFromController mController
-   -- New simple version     
-   global gLCW
-   
-   put line 1 of the menu_GlobalTitle of mController into gMenuTitle -- could be got from "menu_UpdateFromController"
-   put the project_Name of mController into projectName -- not needed (yet). For information only
-   controller_AddToArray gLCW, gMenuTitle, mController, projectName
-   
-   # Now update project array
+
+--> Working on
+-
+command menu_ReIndexController mController
+   project_AddToKnown mController
+   menu_AddToProjectArray mController
+   menu_AddToModel mController
+   return projectArray
+end menu_ReIndexController
+
+command menu_AddToProjectArray mController
+   put the menu_GlobalTitle of mController into gMenuTitle
+   if gMenuTitle is empty then return "Error, gMenuTitle for mController is faulty:" && mController
+   --
+   put the project_Name of mController into projectName
    put the project_JsonFile of mController into projectArrayFile
    put array_FetchModel (projectArrayFile) into projectArray
    controller_AddToArray projectArray, gMenuTitle, mController, projectName
    array_SaveModel projectArrayFile, projectArray
    --
    return projectArray
-end menu_UpdateFromController
+end menu_AddToProjectArray
+ 
 
+--> Script
+-
 command script_ExportHandlersAndCalls someObject, pDeleteOldExports, pScript, pDataFolder
    global gLCW
    -- if the optionKey is "Down" then hkeyline_DeletePlaceObject someObject -- this is too slow
@@ -149,6 +98,31 @@ command script_ExportHandlersAndCalls someObject, pDeleteOldExports, pScript, pD
    return scriptPlaceArray
 end script_ExportHandlersAndCalls
 
+command script_ExportAndIndexMenus scriptObject, pDeleteOldExports
+   -- this is what the IDE compile button dispatches
+   -- it is designed to update the global menu index, and export handlers (but do nothing else)
+   
+   dispatch "script_Compile" to scriptObject with scriptObject,pDeleteOldExports
+   switch it
+      case "unhandled"
+         -- a default
+         script_ExportHandlersAndCalls scriptObject, pDeleteOldExports
+         put the result into scriptPlaceArray
+         put the uRIP["type"] of scriptObject into scriptType
+         --
+         if scriptType = "controller" then
+            menu_ReIndexController scriptObject
+            put the result into projectArray
+         end if
+         break
+      case "passed"
+      case "handled"
+   end switch
+end script_ExportAndIndexMenus
+
+
+--> Menu | Update
+-
 command script_UpdatePlaceArray someObject
    -- brute force (not optimised for speed)
    hkeyLine_LoadPlaceArray

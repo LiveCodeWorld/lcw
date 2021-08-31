@@ -234,26 +234,6 @@ setprop deleted_Line somePath
    return someData
 end deleted_Line
 
-getprop displayed_Index
-   put the arrayData of _treeWidget() into someArray
-   put keys (someArray) into someIndex
-   sort lines of someIndex
-   return someIndex
-end displayed_Index
-
-setprop displayed_Index [someTitle] someIndex
-   lock screen
-   repeat for each line someLine in someIndex
-      put empty into someArray [someLine]
-   end repeat
-   
-   set the arrayData of _treeWidget() to someArray
-   if someTitle is not empty then
-      set the stack_Title of me to someTitle
-   end if
-   unlock screen
-end displayed_Index
-
 
 --> Drag Drop
 -
@@ -733,17 +713,47 @@ end displayed_Array
 
 getprop displayed_Data
    put the arrayData of _treeWidget() into someArray
-   return someArray
+   if LocalArray ["isIndex"] is true then
+      return the displayed_Index of me
+   else
+      return someArray
+   end if
 end displayed_Data
 
-setprop displayed_Data [someTitle] someArray
+setprop displayed_Data [someTitle] sData
    lock screen
-   set the arrayData of _treeWidget() to someArray
+   if sData is an array then
+      set the arrayData of _treeWidget() to sData
+      put false into LocalArray ["isIndex"]
+   else
+      set the displayed_Index of me to sData
+   end if
    if someTitle is not empty then
       set the title_Text of me to someTitle
    end if
    unlock screen
 end displayed_Data
+
+getprop displayed_Index
+   put the arrayData of _treeWidget() into someArray
+   put keys (someArray) into someIndex
+   sort lines of someIndex
+   return someIndex
+end displayed_Index
+
+setprop displayed_Index [someTitle] someIndex
+   lock screen
+   repeat for each line someLine in someIndex
+      put empty into someArray [someLine]
+   end repeat
+   set the arrayData of _treeWidget() to someArray
+   --
+   if someTitle is not empty then
+      set the stack_Title of me to someTitle
+   end if
+   unlock screen
+   put true into LocalArray ["isIndex"]
+end displayed_Index
 
 getprop view_Data [someKey]
    put LocalArray ["view_Data"] into viewData

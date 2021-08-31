@@ -35,7 +35,7 @@ command display_SetMenu displayView, gMenuTitle, pMenuProp
    if pMenuProp is empty then put "title_Menu" into pMenuProp
    --
    set the pMenuProp of displayView to gMenuTitle
-   put debug_GetCallingObject(1) into libObject
+   put debug_CallingObject (2) into libObject
    ask_CreateMenuFromObject gMenuTitle, libObject
    --
    return libObject
@@ -48,7 +48,7 @@ command display_SetInteractions displayView, menuBit, pDoubleUp
    set the title_Menu of displayView to titleMenu
    set the line_Menu of displayView to lineMenu
    --
-   put debug_GetCallingObject(1) into libObject
+   put debug_CallingObject (2) into libObject
    ask_CreateMenuFromObject titleMenu, libObject
    ask_CreateMenuFromObject lineMenu, libObject
    --
@@ -134,13 +134,14 @@ function display_GetObject tObject
    -- whether directly from the script editor or an index or array dispayView
    
    put the display_View of tObject into displayView
+   if exists (displayView) is false then  return empty
+   
    put the stack_Name of tObject into stackName
    switch
       case word 1 of stackName = "revNewScriptEditor"
          -- revNewScriptEditor 1
          put scriptEditor_Object() into sObject
          return sObject         
-         break
       default
          put the displayed_Object of displayView into sObject
          if exists (sObject) is false then return empty
@@ -421,7 +422,7 @@ command display_Lines someIndex, pTitle, pDoubleUp, pStackLabel, pPalette, pTopL
    --
    set the field_Style of indexView to "click"
    --
-   put debug_GetCallingObject() into callingObject
+   put debug_CallingObject() into callingObject
    set the mouse_Target of indexView to callingObject
    --
    return indexView
@@ -525,7 +526,7 @@ command display_Files filePaths, pFolderToStrip, pMouseDoubleUpHandler, pTitleMe
       exit to top
    end if
    
-   put debug_GetCallingObject() into pCommandObject
+   put debug_CallingObject (2) into pCommandObject
    display_Array pathArray, pTitle
    put the result into displayView
    set the title_Menu of displayView to pTitleMenu
@@ -607,8 +608,8 @@ command display_InvisibleIndex someIndex, pDisplayTitle, pTreeMenuTitle, pLineMe
    put the result into cloneStackName
    
    -- don't rely on this. It works only for handlers at the level of "display_Index"
-   -- best practice is to "set the mouse_Target of indexView to debug_GetCallingObject()" after you call the display handler you write
-   put debug_GetCallingObject (2) into eventArray ["eventTarget"]
+   -- best practice is to "set the mouse_Target of indexView to debug_CallingObject()" after you call the display handler you write
+   put debug_CallingObject (3) into eventArray ["eventTarget"]
    
    -- set basic data  
    put pMouseUpCommand into eventArray ["mouseUp"]
@@ -734,13 +735,13 @@ private function _MakeStackNameArrayPretty displayViewArray
    return prettyArray
 end _MakeStackNameArrayPretty
 
-private function debug_GetCallingObject pNum
-   if pNum is empty then put 1 into pNum
+private function debug_CallingObject pNum
+   if pNum is empty then put 2 into pNum
    put (pNum + 2) * -1 into lineNum
    get the executioncontexts
    put item 1 of line lineNum of it into callingObject
    return callingObject
-end debug_GetCallingObject
+end debug_CallingObject
 
 private command _setTitles @widgetDisplayTitle, @displayStackLabel, pDisplayTitle, pDefault
    if pDisplayTitle is empty then

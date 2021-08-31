@@ -35,6 +35,27 @@ and therefore "menu_PopUp" etc depends on them.
 So moved this suite here for now from "model_ScriptMenu" to reduce dependencies
 */
 
+command menu_AddToModel mController
+   put menu_GetModel() into menuGlobalArray
+   --
+   put the menu_GlobalTitle of mController into gMenuTitle
+   if gMenuTitle is empty then return empty
+   --
+   put the project_Name of mController into projectName -- not needed (yet). For information only
+   menu_AddToGlobalArray menuGlobalArray, gMenuTitle, mController, projectName
+   --
+   menu_SetModel menuGlobalArray
+   return gMenuTitle,projectName
+end menu_AddToModel
+
+command menu_AddToGlobalArray @menuGlobalArray, gMenuTitle, mController, projectName
+   delete variable menuGlobalArray [gMenuTitle] -- just for tyding old stuff
+   --
+   put revRuggedId (mController) into mController
+   put mController into menuGlobalArray [gMenuTitle]["mController"]
+   put projectName into menuGlobalArray [gMenuTitle]["projectName"]
+end menu_AddToGlobalArray
+
 getprop menu_Table [pMenuTitle]
    put the long id of the target into tObject
    if pMenuTitle is empty then put the menu_Title of tObject into pMenuTitle
@@ -112,18 +133,12 @@ end menu_RemoveGlobalController
 function menu_GetGlobalData pFilterText
    put menu_GetModel() into mGlobalArray
    --
-   set the itemdelimiter to "|"
+   if pFilterText is not empty then
+      filter keys of mGlobalArray with pFilterText
+   end if
    repeat for each key gMenuTitle in mGlobalArray
       set the cursor to busy
       --
-      if pFilterText is not empty then
-         put item 2 to -2 of gMenuTitle into mBit
-         put mBit contains pFilterText into isGood
-         if isGood is false then
-            next repeat
-         end if
-      end if
-      
       put mGlobalArray [gMenuTitle] into mData [gMenuTitle]
       put mData [gMenuTitle]["mController"] into mController
       if exists (mController) is false then
