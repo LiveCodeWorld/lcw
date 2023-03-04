@@ -56,8 +56,7 @@ end lcw_DefaultLibPath
 --> LCW | Me
 -
 command lcw_Init
-   if the long id of the target is not the long id of me then pass lcw_Init
-   -- if env_ProjectIsActive ("LCW") is true then pass lcw_Init
+   -- if the long id of the target is not the long id of me then pass lcw_Init
    
    _LcwInitialize
    
@@ -96,6 +95,26 @@ command _LcwInitialize
    -- ideally we don't need this
    start using stack lcwDefaultLibFile
    
+   -- let's initialise the project
+   -- eventually we will aim to have no or minimal dependencies
+   -- and separate out menu tools from the basic environment
+   env_AddToBash
+   
+   put lcwHomeStackFile into lcwHomeFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of lcwHomeFolder
+   set the itemdelimiter to comma
+   --
+   project_InitialiseFolder lcwHomeFolder
+   
+   -- project_LoadModules lcwHomeStackFile
+   -- load the global dictionary for where handlers are
+   -- hkeyLine_LoadPlaceArray
+   
+   -- custom
+   choose browse tool 
+   close stack "revTools"
+   
    -- let's make it pretty
    put the screenrect into stackRect
    add 100 to item 1 of stackRect
@@ -104,17 +123,6 @@ command _LcwInitialize
    subtract 100 from item 4 of stackRect
    set the rect of stack lcwProjectName to stackRect
    
-   -- let's initialise the project
-   -- eventually we will aim to have no or minimal dependencies
-   -- and separate out menu tools from the basic environment
-   env_AddToBash
-   project_InitialiseFolder lcwHomeStackFile -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
-   project_LoadModules lcwHomeStackFile
-   
-   -- load the global dictionary for where handlers are
-   hkeyLine_LoadPlaceArray
-   
-   -- custom
-   choose browse tool 
-   close stack "revTools"
+   -- to initialise stackfiles
+   -- go to stack lcwProjectName (not needed now stackfiles is sset properly)
 end _LcwInitialize

@@ -355,6 +355,11 @@ Here we try to use standard names and be as fast and simple as possible.
 -- put project_ListPaths ("controllers", projectFolder) into controllerStackPaths
 */
 
+function project_ListBehaviorPaths projectName
+   put project_ListSubfolderPaths ("behaviors", projectName) into filePaths
+   return filePaths
+end project_ListBehaviorPaths
+
 function project_ListLibraryPaths projectName
    put project_ListSubfolderPaths ("libraries", projectName) into filePaths
    return filePaths
@@ -383,14 +388,15 @@ Tries to be as fast and minimal as possible.
 */
 
 function project_ListStackNames shortFolder, projectName
-   put project_ListStackPaths (shortFolder, projectName) into longFiles
+   put the project_Folder of stack projectName into projectFolder
+   put project_ListPaths (shortFolder, projectFolder) into longFiles
    repeat for each line longFile in longFiles
       if exists (stack longFile) is false then next repeat
       put the short name of stack longFile into stackName
       put stackName & CR after stackNames
    end repeat
    delete char -1 of stackNames
-   return longFiles
+   return stackNames
 end project_ListStackNames
 
 function project_ListShortFiles shortFolder, projectName

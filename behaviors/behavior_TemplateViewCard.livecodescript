@@ -127,7 +127,15 @@ on refresh
    if exists (viewObject) is false then return empty
    
    put the view_RectOnCard of me into viewRect
-   set the rect of viewObject to viewRect
+   dispatch "LayoutControl" to viewObject with viewRect
+   switch it
+      case "unhandled"
+         -- for views that do not have LayoutControl
+         set the rect of viewObject to viewRect
+         break
+      default
+         -- resized with LayoutControl
+   end switch
    return templateRect
 end refresh
 
@@ -261,20 +269,17 @@ end mouseDown
 
 on mouseStillDown
    put the long id of the target into tObject
-   -- if tObject is not the long id of me then pass mouseDown
    switch
       case word 1 of tObject = "card"
+         put _templateView() into tView
+         if exists (tView) is false then pass mouseStillDown
+         
          set the dragAction to "link"
          -- set the dragImage to 3137
-         -- put "card stilldown" & CR & the mouseControl & CR & tObject
-         
-         -- put "View|Layout|Placeholder" into vName
-         put the view_Name of _templateView() into vName
-         --
+         put the view_Name of tView into vName
          set the dragData ["private"] to vName
          break
       default
-         -- put the params & CR & tObject
          pass mouseStillDown
    end switch
 end mouseStillDown
@@ -360,12 +365,18 @@ end view_Name
 getprop view_Object
    /*
    This returns the long id of the view on this card.
-   This is not nececerraly the template_View (if the stack was cloned for instance)
+   This may not be the template_View (if the stack was cloned for instance)
    */
    
    if exists (control 1 of me) is false then return empty
+   
    -- could check for the view_Name here?
-   return the long id of control 1 of me
+   put the view_Name of control 1 of me into vName
+   if vName is empty then
+      return empty
+   else
+      return the long id of control 1 of me
+   end if
 end view_Object
 
 getprop view_Template
@@ -461,3 +472,4 @@ command margin_Normalize @someMargin, @leftM, @topM, @rightM, @bottomM
    end if
    put leftM,topM,rightM,bottomM into someMargin
 end margin_Normalize
+

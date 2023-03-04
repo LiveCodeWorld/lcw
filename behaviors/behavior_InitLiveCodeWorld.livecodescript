@@ -38,6 +38,33 @@ as well as give the HomeStack and interface and some useful functionality.
 
 --> Working on
 -
+getprop module_Folder [pModuleName]
+   put the template_Object of the target into templateObject
+   if exists (templateObject) is false then return empty
+   put the stack_Object of templateObject into stackObject
+   put the effective filename of stackObject into stackPath
+   if stackPath is empty then return empty
+   
+   put module_FindFolder (stackPath) into maybeModuleFolder
+   
+   set the itemdelimiter to slash
+   put item -2 of maybeModuleFolder into testPathItem
+   switch
+      case maybeModuleFolder is empty
+         return empty
+      case pModuleName is not empty
+         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
+         return moduleFolder
+      case testPathItem = "modules"
+         return maybeModuleFolder
+      default
+         return empty
+   end switch
+end module_Folder
+
+
+--> Init
+-
 command project_LoadMenus projectFolder
    put project_ListPaths ("controllers", projectFolder) into stackPaths
    project_IndexGlobalMenus stackPaths
@@ -57,17 +84,6 @@ end _LoadCustomUserProject
 
 --> Project | StackFileArray
 -
-function project_FetchStackFileArray projectFolder
-   put directory_NestedStackFileArray (projectFolder) into stackFileArray
-   
-   # No need to add path to home stack file
-   put project_ConstructHomeFromFolder (projectFolder) into homeStackPath
-   put the short name of stack homeStackPath into homeStackName
-   --
-   delete variable stackFileArray [homeStackName]
-   return stackFileArray
-end project_FetchStackFileArray
-
 function directory_NestedStackFileArray someFolder
    put the project_Folder of stack lcw_Tools into someFolder
    --
@@ -83,7 +99,7 @@ function directory_NestedStackFileArray someFolder
       end if
    end repeat
    return sFileArray
-end directory_NestedStackFileArray 
+end directory_NestedStackFileArray
 
 function directory_ListNestedPaths someFolder, pSetRelative
    local NestedPaths
@@ -98,7 +114,7 @@ function directory_ListNestedPaths someFolder, pSetRelative
    end if
    delete char -1 of NestedPaths
    return NestedPaths
-end directory_ListNestedPaths 
+end directory_ListNestedPaths
 
 command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
    put files (someFolder) into shortFiles
@@ -161,8 +177,12 @@ command _LcwInitialize
    -- and separate out menu tools from the basic environment
    env_AddToBash
    put the filename of stack lcwProjectName into lcwHomeStackFile
-   project_InitialiseFolder lcwHomeStackFile -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
-   project_LoadModules lcwHomeStackFile
+   
+   set the itemdelimiter to slash
+   put lcwHomeStackFile into lcwHomeFolder
+   put empty into item -1 of lcwHomeFolder
+   project_InitialiseFolder lcwHomeFolder -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
+   -- project_LoadModules lcwHomeStackFile
    
    -- load the global dictionary for where handlers are
    hkeyLine_LoadPlaceArray
@@ -201,7 +221,7 @@ command project_SetFoundStackFiles projectFolder
    put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
    if exists (stack projectHomeStackPath) is false then return empty
    
-   put project_FetchStackFileArray (projectFolder) into projectStackFileArray
+   put project_ConstructStackFileArrayFromFolder (projectFolder) into projectStackFileArray
    put stackFile_FromArray (projectStackFileArray) into projectStackFiles
    
    set the stackfiles of stack projectHomeStackPath to projectStackFiles
@@ -499,7 +519,7 @@ command project_Start homeStackName
          -- it is "passed" because it is trapped but passed by the handler in "LCW"
          -- here we could initialise some basic things by default
          project_InitialiseFolder projectFolder
-         project_LoadModules homeStackName
+         -- project_LoadModules homeStackName
          break
       default
          -- whatever happens let's register the project environment as "loaded"
@@ -570,11 +590,9 @@ end project_LoadDeps
 
 
 --> Working On | Display
---
-/*
-Try to move these to a separate library, or remove all platform dependencies.
-*/
-
+-
+/*Try to move these to a separate library, or remove all platform dependencies*/
+   
 command display_Loading projectName, pComment
    -- should change to display status in the home stack
    if pComment is empty then
@@ -636,13 +654,13 @@ getprop project_ViewStackPaths
    filter stackPaths without "*/behavior_*"
    return stackPaths
 end project_ViewStackPaths
-
+   
 getprop project_StackPaths [shortFolder]
    put the project_Folder of the target into projectFolder
    put project_ListPaths (shortFolder, projectFolder) into projectStackPaths
    return projectStackPaths
 end project_StackPaths
-
+   
 getprop project_HomeStackBrowser
    put the project_Name of the target into pHomeStackName
    put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
@@ -683,7 +701,7 @@ function project_ListPaths shortFolder, projectFolder
    -- put folder_ListStackPaths (standardFolder) into stackPaths
    -- return stackPaths
 end project_ListPaths
-
+   
 function project_ListAllStackPaths projectFolder
    put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
    put folder_ListLong (projectFolder) into standardFolders
@@ -707,16 +725,16 @@ function project_ListAllStackPaths projectFolder
    delete char -1 of projectStackPaths
    return projectStackPaths
 end project_ListAllStackPaths
-
-
---> Project | Home
--
+   
+   
+   --> Project | Home
+   -
 function project_GetHomeStackBrowser pHomeStackName
    if exists (widget "Home Browser" of cd 1 of stack pHomeStackName) is false then return empty
    put the long id of widget "Home Browser" of cd 1 of stack pHomeStackName into browserWidget
    return browserWidget
 end project_GetHomeStackBrowser
-
+   
 command project_CreateHomeBrowser pHomeStackName
    if pHomeStackName is empty then put the short name of the target into pHomeStackName
    if exists (widget "Home Browser" of cd 1 of stack pHomeStackName) is true then return empty
@@ -738,10 +756,10 @@ command project_CreateHomeBrowser pHomeStackName
    set the url of createdObject to "http://google.com"
    return createdObject
 end project_CreateHomeBrowser
-
-
---> Project | Files
--
+   
+   
+   --> Project | Files
+   -
 function _ConstructProjectFolder shortFolder, projectFolderOrHomeStackFile
    if char -1 of projectFolderOrHomeStackFile is not slash then
       -- assumes if it does not end with "/" it is a file
@@ -752,7 +770,7 @@ function _ConstructProjectFolder shortFolder, projectFolderOrHomeStackFile
    if shortFolder is not empty then put shortFolder & slash after standardFolder
    return standardFolder
 end _ConstructProjectFolder
-
+   
 private function project_GetFolder projectName, pSubFolderPath
    if exists (stack projectName) is true then
       put the project_Folder of stack projectName into projectFolder
@@ -768,14 +786,14 @@ private function project_GetFolder projectName, pSubFolderPath
    end if
    return projectFolder
 end project_GetFolder
-
+   
 function project_ConstructHomeStackPath projectFolder
    text_AddTrailing projectFolder, slash
    put project_GetShortFolder (projectFolder) into projectShortFolder
    put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
    return projectHomeStackPath
 end project_ConstructHomeStackPath
-
+   
 function project_GetShortFolder projectFolder
    /*
    You should use project_GetHomeStackName(projectFolder)
@@ -788,7 +806,7 @@ function project_GetShortFolder projectFolder
    put item -1 of projectFolder into projectName
    return projectName
 end project_GetShortFolder
-
+   
 function project_ConstructSisterHomeStackPath sisterProjectName, projectHomeStackFile
    put projectHomeStackFile into sisterFolder
    
@@ -806,9 +824,6 @@ function project_ConstructSisterHomeStackPath sisterProjectName, projectHomeStac
    return sisterProjectHomeStackPath
 end project_ConstructSisterHomeStackPath
 
-
---> Project | List | Files
--
 function project_ListUsedPathsFromFolder projectFolder
    local projectUsedStackPaths
    repeat for each item shortFolder in "libraries,models"
@@ -821,10 +836,10 @@ function project_ListUsedPathsFromFolder projectFolder
    put word 1 to -1 of projectUsedStackPaths into projectUsedStackPaths
    return projectUsedStackPaths
 end project_ListUsedPathsFromFolder
-
-
---> LCW | Folder
--
+   
+   
+   --> LCW | Folder
+   -
 function lcw_UserHomeStack
    put lcw_UserProjectFolder() into userFolder
    put lcw_UserHomeStackName() into lcwUserHomeStackName
@@ -839,23 +854,23 @@ function lcw_UserHomeStack
    put the name of stack lcwUserHomeStackName into stackObject
    return stackObject
 end lcw_UserHomeStack
-
+   
 function lcw_UserMetadataFolder
    put lcw_UserProjectFolder ("lcw_Metadata") into lcwUserMetadataFolder
    return lcwUserMetadataFolder
 end lcw_UserMetadataFolder
-
+   
 function lcw_UserHomePath
    put lcw_UserProjectFolder() into userFolder
    put lcw_UserHomeStackName() into lcwUserHomeStackName
    put userFolder & lcwUserHomeStackName & ".livecode" into userHomePath
    return userHomePath
 end lcw_UserHomePath
-
+   
 function lcw_UserHomeStackName
    return "lcw_User"
 end lcw_UserHomeStackName
-
+   
 function lcw_UserProjectFolder pSubFolder
    put revEnvironmentUserPluginsPath() & "/lcw_User/" into userProjectFolder
    if pSubFolder is not empty then
@@ -872,33 +887,25 @@ function lcw_GetStandardFolder shortFolder
    put _ConstructProjectFolder (shortFolder, lcwRootFolder) into lcwStandardFolder
    return lcwStandardFolder
 end lcw_GetStandardFolder
-
+   
 function lcw_GetRootFolder
    put lcw_HomeStackName() into lcwHomeStackName
    put the stack_Folder of stack lcwHomeStackName into lcwGetRootFolder
    return lcwGetRootFolder
 end lcw_GetRootFolder
-
+   
 function lcw_HomeStackName
    return "LCW"
 end lcw_HomeStackName
-
-
---> Env
--
-command env_LoadMenus
-   put env_ListActiveProjects() into projectNames
-   repeat for each line projectName in projectNames
-      put project_GetFolder (projectName) into projectFolder
-      project_LoadMenus projectFolder
-   end repeat
-end env_LoadMenus
-
+   
+   
+   --> Env
+   -
 function env_GetProjectFolder homeStackName
    put env_GetActiveProjectArray() into envProjectArray
    return envProjectArray [homeStackName]
 end env_GetProjectFolder
-
+   
 command env_SetProjectFolder homeStackName, pProjectFolder
    put env_GetActiveProjectArray() into envProjectArray
    if pProjectFolder is empty then
@@ -909,13 +916,13 @@ command env_SetProjectFolder homeStackName, pProjectFolder
    env_SetActiveProjectArray envProjectArray
    return envProjectArray
 end env_SetProjectFolder
-
+   
 function env_GetActiveProjectArray
    global gLCW
    put gLCW ["environment"]["project"] into envProjectArray
    return envProjectArray
 end env_GetActiveProjectArray
-
+   
 command env_SetActiveProjectArray envProjectArray
    global gLCW
    put envProjectArray into gLCW ["environment"]["project"]
@@ -925,15 +932,15 @@ end env_SetActiveProjectArray
 
 --> Modules
 -
-command project_LoadModules homeStackNameOrPath
-   -- modules can be loaded in the same way a project is loaded
-   -- this can be slow as there are often a lot of modules with menus
-   put the module_Names of stack homeStackNameOrPath into moduleNames
-   repeat for each line moduleName in moduleNames
-      -- could notify
-      put module_GetFolder (moduleName, homeStackNameOrPath) into moduleFolder
-      project_InitialiseFolder moduleFolder
-   end repeat
+-- command project_LoadModules homeStackNameOrPath
+-- modules can be loaded in the same way a project is loaded
+-- this can be slow as there are often a lot of modules with menus
+put the module_Names of stack homeStackNameOrPath into moduleNames
+repeat for each line moduleName in moduleNames
+   -- could notify
+   put module_GetFolder (moduleName, homeStackNameOrPath) into moduleFolder
+   project_InitialiseFolder moduleFolder
+end repeat
 end project_LoadModules
 
 getprop module_Names
@@ -949,27 +956,6 @@ getprop module_HomeStackPath [moduleName]
    if exists (stack moduleHomeStackPath) is false then return empty
    return moduleHomeStackPath
 end module_HomeStackPath
-
-getprop module_Folder [moduleName]
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into stackPath
-   put module_FindFolder (stackPath) into maybeModuleFolder
-   
-   set the itemdelimiter to slash
-   put item -2 of maybeModuleFolder into testPathItem
-   switch
-      case maybeModuleFolder is empty
-         return empty
-      case moduleName is not empty
-         put module_GetFolder (moduleName, maybeModuleFolder) into moduleFolder
-         return moduleFolder
-      case testPathItem = "modules"
-         -- asssume the found "project" folder is a module folder
-         return maybeModuleFolder
-      default
-         return empty
-   end switch
-end module_Folder
 
 function module_GetFolder moduleShortFolder, projectFolder
    put _ConstructProjectFolder ("modules", projectFolder) into rootModuleFolder

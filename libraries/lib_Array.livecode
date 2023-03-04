@@ -10,6 +10,54 @@ version: 0.6
 
 --> Working on
 -
+function linkArray_Reverse someArray, pStrip
+   local reversedArray
+   repeat for each key someKey in someArray
+      put someArray [someKey] into newKeyArray
+      repeat for each key newKey in newKeyArray
+         put newKeyArray [newKey] into reversedArray [newKey][someKey]
+      end repeat
+   end repeat
+   return reversedArray
+end linkArray_Reverse
+
+function array_Reverse someArray, pQuick, pStrip
+   local reversedArray
+   if pQuick is not false then
+      repeat for each key someKey in someArray
+         put someArray [someKey] into newKeys
+         repeat for each line newKey in newKeys
+            put empty into reversedArray [newKey] [someKey]
+         end repeat
+      end repeat
+      if pStrip is true then
+         array_StripDeeperLevels reversedArray
+      end if
+   else
+      repeat for each key someKey in someArray
+         put someArray [someKey] into newKeys
+         repeat for each line newKey in newKeys
+            array_AddToIndex someKey, newKey, reversedArray
+         end repeat
+      end repeat
+   end if
+   return reversedArray
+end array_Reverse
+
+function array_ConstructReverseDictionary idArray
+   -- for one-one dictionary arrays
+   -- put array_Reverse (idArray) into reverseArray
+   local reversedArray
+   repeat for each key someKey in idArray
+      put idArray [someKey] into reverseKey
+      put someKey into reversedArray [reverseKey] -- one-one dictionary
+   end repeat
+   return reversedArray
+end array_ConstructReverseDictionary
+
+
+--> JSON
+-
 function json_FromArray pArray, pForceRootType, pPretty
    -- put jsonExport (pArray) into someJSON -- not the same
    
@@ -36,6 +84,38 @@ function json_ToArray pJSON
       return empty
    end try
 end json_ToArray
+
+
+--> Array | Index
+-
+function array_IndexFind sArray, sKey, sValue
+   repeat with itemNum = 1 to item 2 of the extents of sArray
+      put sArray [itemNum][sKey] into foundKey
+      if foundKey = sValue then
+         return itemNum
+      end if
+   end repeat
+   return 0
+end array_IndexFind
+
+command array_IndexDelete @sArray, itemNumToDelete
+   put sArray [ItemNumToDelete] into deletedItemArray
+   put item 2 of the extents of sArray into maxItem
+   if maxItem is not a number then return empty
+   repeat with itemNumToMove = (itemNumToDelete + 1) to maxItem
+      put itemNumToMove - 1 into itemNumDestination
+      put sArray [itemNumToMove] into sArray [itemNumDestination]
+   end repeat
+   delete variable sArray [maxItem]
+   return deletedItemArray
+end array_IndexDelete
+
+command array_IndexAddToEnd @sArray, itemArray
+   put item 2 of the extents of sArray into maxItem
+   add 1 to maxItem
+   put itemArray into sArray [maxItem]
+   return maxItem
+end array_IndexAddToEnd
 
 
 --> Array
@@ -212,29 +292,6 @@ function array_MakeTwoWay someArray
    return someArray
 end array_MakeTwoWay
 
-function array_Reverse someArray, pQuick, pStrip
-   local reversedArray
-   if pQuick is true then
-      repeat for each key someKey in someArray
-         put someArray [someKey] into newKeys
-         repeat for each line newKey in newKeys
-            put empty into reversedArray [newKey] [someKey]
-         end repeat
-      end repeat
-      if pStrip is true then
-         array_StripDeeperLevels reversedArray
-      end if
-   else
-      repeat for each key someKey in someArray
-         put someArray [someKey] into newKeys
-         repeat for each line newKey in newKeys
-            array_AddToIndex someKey, newKey, reversedArray
-         end repeat
-      end repeat
-   end if
-   return reversedArray
-end array_Reverse
-
 command array_StripDeeperLevels @someArray
    repeat for each key someKey in someArray
       put someArray [someKey] into nextLevel
@@ -243,17 +300,6 @@ command array_StripDeeperLevels @someArray
       end if
    end repeat
 end array_StripDeeperLevels
-
-function array_ConstructReverseDictionary idArray
-   -- for one-one dictionary arrays
-   -- put array_Reverse (idArray) into reverseArray
-   local reversedArray
-   repeat for each key someKey in idArray
-      put idArray [someKey] into reverseKey
-      put someKey into reversedArray [reverseKey] -- one-one dictionary
-   end repeat
-   return reversedArray
-end array_ConstructReverseDictionary
 
 command array_AddToIndex newLines, someKey, @someArray
    -- if the number of lines of keys(someArray) > 5 and someKey contains "form_IsRed" then breakpoint

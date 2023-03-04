@@ -80,6 +80,54 @@ private function _ConstructShortArrayFile pArrayKey
 end _ConstructShortArrayFile
 
 
+--> Model | Array | Data
+-
+/*
+This is correct version of model_Array
+*/
+
+getprop array_Models [pModelName]
+   if pModelName is empty then
+      put the model_Name of the target into pModelName
+   end if
+   
+   put the project_Folder of the target into projectFolder
+   put model_ListNames (pModelName, projectFolder) into modelNames
+   return modelNames
+end array_Models
+
+getprop array_Data [modelNameItems]
+   put the model_ArrayFile [modelNameItems] of the target into modelArrayFile
+   put array_FetchModel (modelArrayFile) into modelArray
+   return modelArray
+end array_Data
+
+setprop array_Data [modelNameItems] modelArray
+   put the model_ArrayFile [modelNameItems] of the target into modelArrayFile
+   array_SaveModel modelArrayFile, modelArray
+   return modelArrayFile
+end array_Data
+
+getprop model_ArrayFile [modelNameItems]
+   put the project_Folder of the target into projectFolder
+   --
+   put item 1 of modelNameItems into arrayName
+   put item 2 of modelNameItems into modelName
+   if modelName is empty then
+      put the model_Name of the target into modelName
+   end if
+   --
+   return model_GetFile (arrayName, modelName, projectFolder)
+end model_ArrayFile
+
+getprop model_Name
+   put the stack_Name of the target into modelName
+   set the itemdelimiter to "_"
+   put item -1 of modelName into modelName
+   return modelName
+end model_Name
+
+
 --> Model | Data
 -
 getprop model_Data [modelStackNames]
@@ -195,8 +243,6 @@ getprop model_DataFile [pShortFile]
    -- assumes the target is a model stack
    put the short name of the defaultstack into modelStackName
    put the stack_Folder of the target into projectFolder
-   -- put the project_Folder of the target into projectFolder
-   -- put projectFolder & modelStackName & slash into modelDataFolder
    put model_GetDataFile (modelStackName, projectFolder, pShortFile) into modelDataFile
    return modelDataFile
 end model_DataFile
@@ -262,6 +308,12 @@ end model_ListModelFiles
 
 --> Model | Array
 -
+function model_GetFile arrayName, modelName, projectFolder
+   put arrayName & ".array" into shortFile
+   put model_GetDataFile (modelName, projectFolder, shortFile) into modelArrayFile
+   return modelArrayFile
+end model_GetFile
+
 function model_FetchArray modelStackName, projectFolder, pShortFile 
    put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
    put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
@@ -328,10 +380,7 @@ command array_SaveModel someFile, modelArray
    return someFile
 end array_SaveModel
 
-
---> Private
--
-private function dataFolder_GetFile modelDataFolder, pShortFile
+function dataFolder_GetFile modelDataFolder, pShortFile
    if pShortFile is empty then
       set the itemdelimiter to slash
       put item -1 of modelDataFolder into modelName

@@ -35,10 +35,10 @@ and therefore "menu_PopUp" etc depends on them.
 So moved this suite here for now from "model_ScriptMenu" to reduce dependencies
 */
 
-command menu_AddToModel mController
+command menu_AddToModel mController, pChecks
    put menu_GetModel() into menuGlobalArray
    --
-   put the menu_GlobalTitle of mController into gMenuTitle
+   put the menu_GlobalTitle [pChecks] of mController into gMenuTitle
    if gMenuTitle is empty then return empty
    --
    put the project_Name of mController into projectName -- not needed (yet). For information only

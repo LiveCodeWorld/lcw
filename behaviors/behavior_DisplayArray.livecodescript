@@ -21,6 +21,130 @@ local LocalArray
 
 --> Working on
 -
+getprop top_Array [pKey]
+   -- selected_TopArray
+   _SetTop topKey, aData
+   if pKey is empty then
+      return aData [topKey]
+   else
+      return aData [topKey][pKey]
+   end if
+end top_Array
+
+setprop top_Array [pPath] sArray
+   put _GetTopKey() into topKey
+   tree_SetArray sArray, topKey
+   --
+   put the result into arrayData
+   return arrayData
+end top_Array
+
+setprop tree_Array [pPath] sArray
+   tree_SetArray sArray, pPath
+   --
+   put the result into arrayData
+   return arrayData
+end tree_Array
+
+private command tree_SetArray sArray, pPath
+   put _treeWidget() into treeWidget
+   if pPath is empty then
+      put the hilitedElement of treeWidget into pPath
+   end if
+   --
+   put the arrayData of treeWidget into treeData
+   treeData_SetArray treeData, pPath, sArray
+   set the arrayData of treeWidget to treeData
+   --
+   return arrayData
+end tree_SetArray
+
+getprop top_Data
+   -- selected_TopData
+   -- was "top_Array" 
+   -- returns the topKey and not just the contents of the array
+   
+   _SetTop topKey, aData
+   put aData [topKey] into topData [topKey]
+   return topData
+end top_Data
+
+getprop top_Key
+   -- selected_TopKey
+   return _GetTopKey()
+end top_Key
+
+private function _GetTopKey
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into commaPath
+   put item 1 of commaPath into topKey
+   return topKey
+end _GetTopKey
+
+private command _SetTop @topKey, @aData
+   put _treeWidget() into treeWidget
+   put the arrayData of treeWidget into aData
+   put the hilitedElement of treeWidget into commaPath
+   --
+   put item 1 of commaPath into topKey
+   return commaPath
+end _SetTop
+
+setprop deleted_Path somePath
+   tree_DeletePath somePath
+end deleted_Path
+
+setprop deleted_Line somePath
+   tree_DeletePath somePath
+end deleted_Line
+
+
+--> Tree
+-
+private function tree_GetData
+   put the arrayData of _treeWidget() into treeData
+   return treeData
+end tree_GetData
+
+private command tree_SetData treeData
+   set the arrayData of _treeWidget() to treeData
+end tree_SetData
+
+private command tree_DeletePath somePath
+   put _treeWidget() into treeWidget
+   --
+   put the arrayData of treeWidget into treeData
+   treeData_Delete treeData, somePath
+   put the result into deletedData
+   set the arrayData of treeWidget to treeData
+   --
+   return deletedData
+end tree_DeletePath
+
+
+--> TreeData
+-
+private function treeData_GetArray treeData, somePath
+   split somePath by comma
+   put treeData [somePath] into sArray
+   return sArray
+end treeData_GetArray
+
+private command treeData_SetArray @treeData, somePath, sArray
+   split somePath by comma
+   put sArray into treeData [somePath]
+end treeData_SetArray
+
+private command treeData_Delete @treeData, somePath
+   split somePath by comma
+   put treeData [somePath] into deletedData
+   delete variable treeData [somePath]
+   return deletedData
+end treeData_Delete
+
+
+--> Tools
+-
 getprop tool_Menus
    -- return the tool_Menus name = menuBit
    get the title_Menu of me
@@ -61,6 +185,10 @@ on hiliteChanged
       _displaySelectedValue treeWidget
    end if
 end hiliteChanged
+
+on mouseDown
+   breakpoint
+end mouseDown
 
 on mouseUp
    -- called only when the user click on the header as a tree widget does not send to mouseUp
@@ -117,32 +245,6 @@ setprop fold_State foldedArray
    return the result
 end fold_State
 
-getprop top_Array [pKey]
-   put _treeWidget() into treeWidget
-   put the arrayData of treeWidget into aData
-   put the hilitedElement of treeWidget into commaPath
-   --
-   put item 1 of commaPath into topKey
-   if pKey is empty then
-      return aData [topKey]
-   else
-      return aData [topKey][pKey]
-   end if
-end top_Array
-
-getprop top_Data
-   -- was "top_Array" 
-   -- returns the topKey and not just the contents of the array
-   
-   put _treeWidget() into treeWidget
-   put the arrayData of treeWidget into aData
-   put the hilitedElement of treeWidget into commaPath
-   --
-   put item 1 of commaPath into topKey
-   put aData [topKey] into topData [topKey]
-   return topData
-end top_Data
-
 getprop parent_Array [someKey]
    put _treeWidget() into treeWidget
    
@@ -162,6 +264,32 @@ getprop parent_Array [someKey]
       return pArray [someKey]
    end if
 end parent_Array
+
+
+--> Props | Selected
+-
+getprop selected_Array
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   return selectedValue
+end selected_Array
+
+getprop selected_Path
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into commaPath
+   if char -1 of commaPath is comma then delete char -1 of commaPath
+   return commaPath
+end selected_Path
+
+setprop selected_Path commaPath
+   put _treeWidget() into treeWidget
+   set the hilitedElement of treeWidget to commaPath
+   return treeWidget
+end selected_Path
 
 getprop selected_Line
    put _treeWidget() into treeWidget
@@ -220,19 +348,6 @@ getprop top_Lines
    end if
    return topLines
 end top_Lines
-
-setprop deleted_Line somePath
-   put _treeWidget() into treeWidget
-   --
-   put the arrayData of treeWidget into someData
-   split somePath by comma
-   put someData [somePath] into testData
-   delete variable someData [somePath]
-   --
-   set the arrayData of treeWidget to someData
-   --
-   return someData
-end deleted_Line
 
 
 --> Drag Drop
@@ -478,31 +593,8 @@ getprop stack_Label stackLabel
 end stack_Label
 
 
---> Props | Selected
+--> Props | Hilited
 -
-getprop selected_Array
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into commaKeys
-   put the arrayData of treeWidget into someArray
-   split commaKeys with comma
-   put someArray [commaKeys] into selectedValue
-   return selectedValue
-end selected_Array
-
-getprop selected_Path
-   put _treeWidget() into treeWidget
-   put the hilitedElement of treeWidget into commaPath
-   if char -1 of commaPath is comma then delete char -1 of commaPath
-   return commaPath
-end selected_Path
-
-setprop selected_Path commaPath
-   put _treeWidget() into treeWidget
-   set the hilitedElement of treeWidget to commaPath
-   return treeWidget
-end selected_Path
-
 getprop hilited_Element
    return the selected_Path of me
 end hilited_Element
@@ -712,11 +804,11 @@ setprop displayed_Array [someTitle] someArray
 end displayed_Array
 
 getprop displayed_Data
-   put the arrayData of _treeWidget() into someArray
    if LocalArray ["isIndex"] is true then
       return the displayed_Index of me
    else
-      return someArray
+      put tree_GetData() into treeData
+      return treeData
    end if
 end displayed_Data
 

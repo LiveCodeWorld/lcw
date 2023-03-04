@@ -10,6 +10,74 @@ version: 0.4
 A library for script behaviors.
 */
 
+--> Working on
+-
+command card_CreateBehavior bStackName
+   put "lcw_Display" into projectName
+   --
+   put the project_Folder of stack projectName into projectFolder
+   if bStackName is empty then
+      ask_CreateProjectBehavior projectName
+      put the result into bStackPath
+      --
+      display_Project projectName
+      return bStackPath
+   end if
+   
+   put project_Construct (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
+   if exists (stack newStackPath) then
+      ask_CreateProjectBehavior projectName
+      put the result into bStackPath
+   else
+      project_CreateBehavior bName, projectName
+      put the result into bStackPath
+   end if
+   --
+   display_Project projectName
+   return bStackPath
+end card_CreateBehavior
+
+
+--> Props
+-
+function card_ListBehaviorNames
+   get project_ListStackNames ("behaviors", "lcw_Display")
+   replace "behavior_Card" with empty in it
+   return it
+end card_ListBehaviorNames
+
+getprop card_BehaviorName
+   put the card_Object of the target into cObject
+   if exists (cObject) is false then return empty
+   put the behavior of cObject into bObject
+   if exists (bObject) is false then return empty
+   
+   put the short name of bObject into sName
+   if char 1 to 13 of sName is "behavior_Card" then
+      delete char 1 to 13 of sName
+      return sName
+   else
+      return empty
+   end if
+end card_BehaviorName
+
+setprop card_BehaviorName sName
+   put "behavior_Card" & sName into stackName
+   if exists (stack stackName) is false then
+      put "behavior_CardMargin" into stackName
+      if exists (stack stackName) is false then
+         return empty
+      end if
+   end if
+   put the long id of stack stackName into bObject
+   --
+   put the card_Object of the target into cObject
+   if exists (cObject) is false then return empty
+   --
+   set the behavior of cObject to bObject
+   return bObject
+end card_BehaviorName
+
 
 --> Behavior | StackName
 -
@@ -127,7 +195,7 @@ command behavior_SetHierarchy targetObject,  bObjects
       behavior_Clear bObjects
       return empty
    end if
-      
+   
    -- first we need to clear any behaviors (or we might casue a behavior loop)
    behavior_Clear bObjects
    
