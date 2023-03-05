@@ -21,6 +21,34 @@ local LocalArray
 
 --> Working on
 -
+getprop expanded_Paths
+   put the foldState of _treeWidget() into foldedArray
+   repeat for each key someKey in foldedArray
+      if foldedArray [someKey]["folded"] is false then
+         put someKey & comma after ePaths
+      end if 
+   end repeat
+   delete char -1 of ePaths
+   return ePaths
+end expanded_Paths
+
+setprop expanded_Paths ePaths
+   put display_ConstructFoldState (ePaths) into foldedArray
+   set the foldState of _treeWidget() to foldedArray
+   return foldedArray
+end expanded_Paths
+
+getprop fold_State
+   put the foldState of _treeWidget() into foldedArray
+   return foldedArray 
+end fold_State
+
+setprop fold_State foldedArray
+   -- sensitive to capitalisation
+   set the foldState of _treeWidget() to foldedArray
+   return the result
+end fold_State
+
 getprop top_Array [pKey]
    -- selected_TopArray
    _SetTop topKey, aData
@@ -215,36 +243,8 @@ on mouseUp
 end mouseUp
 
 
---> Props
+--> parent | old?
 -
-getprop expanded_Paths
-   put the foldState of _treeWidget() into foldedArray
-   repeat for each key someKey in foldedArray
-      if foldedArray [someKey]["folded"] is false then
-         put someKey & comma after ePaths
-      end if 
-   end repeat
-   delete char -1 of ePaths
-   return ePaths
-end expanded_Paths
-
-setprop expanded_Paths ePaths
-   put display_ConstructFoldState (ePaths) into foldedArray
-   set the foldState of _treeWidget() to foldedArray
-   return foldedArray
-end expanded_Paths
-
-getprop fold_State
-   put the foldState of _treeWidget() into foldedArray
-   return foldedArray 
-end fold_State
-
-setprop fold_State foldedArray
-   -- sensitive to capitalisation
-   set the foldState of _treeWidget() to foldedArray
-   return the result
-end fold_State
-
 getprop parent_Array [someKey]
    put _treeWidget() into treeWidget
    
