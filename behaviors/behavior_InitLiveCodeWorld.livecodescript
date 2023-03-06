@@ -573,7 +573,7 @@ end project_InitialiseFolder
 command project_LoadDeps projectDeps, projectHomeStackFile
    replace comma with CR in projectDeps   
    repeat for each line sisterProjectName in projectDeps
-      put env_GetProjectFolder (sisterProjectName) into sisterProjectFolder
+      put env_ConstructHomePath (sisterProjectName) into sisterProjectFolder
       if sisterProjectFolder is not empty then next repeat -- already loaded
       
       display_Loading sisterProjectName
@@ -592,7 +592,7 @@ end project_LoadDeps
 --> Working On | Display
 -
 /*Try to move these to a separate library, or remove all platform dependencies*/
-   
+
 command display_Loading projectName, pComment
    -- should change to display status in the home stack
    if pComment is empty then
@@ -654,13 +654,13 @@ getprop project_ViewStackPaths
    filter stackPaths without "*/behavior_*"
    return stackPaths
 end project_ViewStackPaths
-   
+
 getprop project_StackPaths [shortFolder]
    put the project_Folder of the target into projectFolder
    put project_ListPaths (shortFolder, projectFolder) into projectStackPaths
    return projectStackPaths
 end project_StackPaths
-   
+
 getprop project_HomeStackBrowser
    put the project_Name of the target into pHomeStackName
    put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
@@ -701,7 +701,7 @@ function project_ListPaths shortFolder, projectFolder
    -- put folder_ListStackPaths (standardFolder) into stackPaths
    -- return stackPaths
 end project_ListPaths
-   
+
 function project_ListAllStackPaths projectFolder
    put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
    put folder_ListLong (projectFolder) into standardFolders
@@ -725,16 +725,16 @@ function project_ListAllStackPaths projectFolder
    delete char -1 of projectStackPaths
    return projectStackPaths
 end project_ListAllStackPaths
-   
-   
-   --> Project | Home
-   -
+
+
+--> Project | Home
+-
 function project_GetHomeStackBrowser pHomeStackName
    if exists (widget "Home Browser" of cd 1 of stack pHomeStackName) is false then return empty
    put the long id of widget "Home Browser" of cd 1 of stack pHomeStackName into browserWidget
    return browserWidget
 end project_GetHomeStackBrowser
-   
+
 command project_CreateHomeBrowser pHomeStackName
    if pHomeStackName is empty then put the short name of the target into pHomeStackName
    if exists (widget "Home Browser" of cd 1 of stack pHomeStackName) is true then return empty
@@ -756,10 +756,10 @@ command project_CreateHomeBrowser pHomeStackName
    set the url of createdObject to "http://google.com"
    return createdObject
 end project_CreateHomeBrowser
-   
-   
-   --> Project | Files
-   -
+
+
+--> Project | Files
+-
 function _ConstructProjectFolder shortFolder, projectFolderOrHomeStackFile
    if char -1 of projectFolderOrHomeStackFile is not slash then
       -- assumes if it does not end with "/" it is a file
@@ -770,7 +770,7 @@ function _ConstructProjectFolder shortFolder, projectFolderOrHomeStackFile
    if shortFolder is not empty then put shortFolder & slash after standardFolder
    return standardFolder
 end _ConstructProjectFolder
-   
+
 private function project_GetFolder projectName, pSubFolderPath
    if exists (stack projectName) is true then
       put the project_Folder of stack projectName into projectFolder
@@ -786,14 +786,14 @@ private function project_GetFolder projectName, pSubFolderPath
    end if
    return projectFolder
 end project_GetFolder
-   
+
 function project_ConstructHomeStackPath projectFolder
    text_AddTrailing projectFolder, slash
    put project_GetShortFolder (projectFolder) into projectShortFolder
    put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
    return projectHomeStackPath
 end project_ConstructHomeStackPath
-   
+
 function project_GetShortFolder projectFolder
    /*
    You should use project_GetHomeStackName(projectFolder)
@@ -806,7 +806,7 @@ function project_GetShortFolder projectFolder
    put item -1 of projectFolder into projectName
    return projectName
 end project_GetShortFolder
-   
+
 function project_ConstructSisterHomeStackPath sisterProjectName, projectHomeStackFile
    put projectHomeStackFile into sisterFolder
    
@@ -836,10 +836,10 @@ function project_ListUsedPathsFromFolder projectFolder
    put word 1 to -1 of projectUsedStackPaths into projectUsedStackPaths
    return projectUsedStackPaths
 end project_ListUsedPathsFromFolder
-   
-   
-   --> LCW | Folder
-   -
+
+
+--> LCW | Folder
+-
 function lcw_UserHomeStack
    put lcw_UserProjectFolder() into userFolder
    put lcw_UserHomeStackName() into lcwUserHomeStackName
@@ -854,23 +854,23 @@ function lcw_UserHomeStack
    put the name of stack lcwUserHomeStackName into stackObject
    return stackObject
 end lcw_UserHomeStack
-   
+
 function lcw_UserMetadataFolder
    put lcw_UserProjectFolder ("lcw_Metadata") into lcwUserMetadataFolder
    return lcwUserMetadataFolder
 end lcw_UserMetadataFolder
-   
+
 function lcw_UserHomePath
    put lcw_UserProjectFolder() into userFolder
    put lcw_UserHomeStackName() into lcwUserHomeStackName
    put userFolder & lcwUserHomeStackName & ".livecode" into userHomePath
    return userHomePath
 end lcw_UserHomePath
-   
+
 function lcw_UserHomeStackName
    return "lcw_User"
 end lcw_UserHomeStackName
-   
+
 function lcw_UserProjectFolder pSubFolder
    put revEnvironmentUserPluginsPath() & "/lcw_User/" into userProjectFolder
    if pSubFolder is not empty then
@@ -887,25 +887,25 @@ function lcw_GetStandardFolder shortFolder
    put _ConstructProjectFolder (shortFolder, lcwRootFolder) into lcwStandardFolder
    return lcwStandardFolder
 end lcw_GetStandardFolder
-   
+
 function lcw_GetRootFolder
    put lcw_HomeStackName() into lcwHomeStackName
    put the stack_Folder of stack lcwHomeStackName into lcwGetRootFolder
    return lcwGetRootFolder
 end lcw_GetRootFolder
-   
+
 function lcw_HomeStackName
    return "LCW"
 end lcw_HomeStackName
-   
-   
-   --> Env
-   -
-function env_GetProjectFolder homeStackName
-   put env_GetActiveProjectArray() into envProjectArray
-   return envProjectArray [homeStackName]
+
+
+--> Env
+-
+-- function env_GetProjectFolder homeStackName
+put env_GetActiveProjectArray() into envProjectArray
+return envProjectArray [homeStackName]
 end env_GetProjectFolder
-   
+
 command env_SetProjectFolder homeStackName, pProjectFolder
    put env_GetActiveProjectArray() into envProjectArray
    if pProjectFolder is empty then
@@ -916,13 +916,13 @@ command env_SetProjectFolder homeStackName, pProjectFolder
    env_SetActiveProjectArray envProjectArray
    return envProjectArray
 end env_SetProjectFolder
-   
+
 function env_GetActiveProjectArray
    global gLCW
    put gLCW ["environment"]["project"] into envProjectArray
    return envProjectArray
 end env_GetActiveProjectArray
-   
+
 command env_SetActiveProjectArray envProjectArray
    global gLCW
    put envProjectArray into gLCW ["environment"]["project"]

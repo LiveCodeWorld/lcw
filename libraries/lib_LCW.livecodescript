@@ -42,6 +42,105 @@ getprop module_Folder [pModuleName]
 end module_Folder
 
 
+--> Env
+-
+-- function env_GetProjectFolder projectName
+-- not used
+-- prefer to use env_ConstructProjectFolder() now
+-- this fuction allows folders to be stored anywhere
+-- not just in a standardised repo folder.
+put env_GetActiveProjectArray() into envProjectArray
+return envProjectArray [projectName]
+end env_GetProjectFolder
+
+function env_ConstructHomePath projectName, pRepoFolder
+   -- old version was "env_GetProjectFolder"
+   -- here we assume we have only one repoFolder with all project at top level
+   -- see also "env_GetProjectHomePath"
+   if pRepoFolder is empty then put env_GetRepoFolder() into pRepoFolder
+   --
+   put pRepoFolder & projectName & slash & projectName & ".livecode" into homePath
+   return homePath
+end env_ConstructHomePath
+
+function env_ConstructProjectFolder projectName, pRepoFolder
+   -- rename to env_GetFolder
+   if pRepoFolder is empty then put env_GetRepoFolder() into pRepoFolder
+   --
+   put folder_AddShort (pRepoFolder, projectName) into projectFolder
+   if there is a folder projectFolder then
+      return projectFolder
+   else
+      return empty
+   end if
+end env_ConstructProjectFolder
+
+function env_GetRepoFolder
+   -- always loaded
+   set the itemdelimiter to slash
+   put the stack_Folder of stack "LCW" into envRootFolder
+   delete item -1 of envRootFolder
+   return envRootFolder
+end env_GetRepoFolder
+
+command env_SetProjectFolder homeStackName, pProjectFolder
+   put env_GetActiveProjectArray() into envProjectArray
+   if pProjectFolder is empty then
+      delete variable envProjectArray [homeStackName]
+   else
+      put pProjectFolder into envProjectArray [homeStackName]
+   end if
+   env_SetActiveProjectArray envProjectArray
+   return envProjectArray
+end env_SetProjectFolder
+
+
+--> Project | Files
+-
+function project_ConstructHomeStackPath projectFolder
+   -- project_FirstStackPath() is more robust
+   text_AddTrailing projectFolder, slash
+   put project_GetShortFolder (projectFolder) into projectShortFolder
+   put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
+   return projectHomeStackPath
+end project_ConstructHomeStackPath
+
+function project_GetShortFolder projectFolder
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into projectName
+   return projectName
+end project_GetShortFolder
+
+function project_ConstructHomeStackPath projectFolder
+   -- project_FirstStackPath() is more robust
+   text_AddTrailing projectFolder, slash
+   put project_GetShortFolder (projectFolder) into projectShortFolder
+   put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
+   return projectHomeStackPath
+end project_ConstructHomeStackPath
+
+function project_ConstructSisterHomeStackPath sisterProjectName, projectHomeStackFile
+   put projectHomeStackFile into sisterFolder
+   
+   set the itemdelimiter to slash
+   put sisterProjectName into item -2 to -1 of sisterFolder
+   put slash after sisterFolder
+   put sisterFolder & sisterProjectName & ".livecode" into sisterProjectHomeStackPath
+   /*
+   if exists (stack sisterProjectHomeStackPath) is false then
+      -- and if it is not there download from github
+      github_DownloadProject sisterProjectName
+      put the result into sisterProjectHomeStackPath
+   end if
+   */
+   return sisterProjectHomeStackPath
+end project_ConstructSisterHomeStackPath
+
+function lcw_HomeStackName
+   return "LCW"
+end lcw_HomeStackName
+
+
 --> Init
 -
 command project_InitialiseFolder projectFolder
@@ -55,6 +154,7 @@ command project_InitialiseFolder projectFolder
    
    -- put the project_Folder of stack projectName into projectFolder
    put project_GetHomeStackName (projectFolder) into projectName
+   if projectName is empty then return empty -- no home stack so skip
    
    put project_FetchArray (projectFolder) into projectArray
    
@@ -470,26 +570,6 @@ getprop project_UsedStackNames
    end if
 end project_UsedStackNames
 
-function env_ConstructProjectFolder projectName, pRepoFolder
-   -- rename to env_GetFolder
-   if pRepoFolder is empty then put env_GetRepoFolder() into pRepoFolder
-   --
-   put folder_AddShort (pRepoFolder, projectName) into projectFolder
-   if there is a folder projectFolder then
-      return projectFolder
-   else
-      return empty
-   end if
-end env_ConstructProjectFolder
-
-function env_GetRepoFolder
-   -- always loaded
-   set the itemdelimiter to slash
-   put the stack_Folder of stack "LCW" into envRootFolder
-   delete item -1 of envRootFolder
-   return envRootFolder
-end env_GetRepoFolder
-
 function folder_AddShort projectFolder, shortFolder
    text_AddTrailing projectFolder, slash
    if shortFolder is not empty then put shortFolder & slash after projectFolder
@@ -540,44 +620,6 @@ function project_FirstStackPath projectFolder
    get folder_ListStackPaths (projectFolder)
    return line 1 of it
 end project_FirstStackPath
-
-
---> Project | Files
--
-function project_ConstructHomeStackPath projectFolder
-   -- project_FirstStackPath() is more robust
-   text_AddTrailing projectFolder, slash
-   put project_GetShortFolder (projectFolder) into projectShortFolder
-   put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
-   return projectHomeStackPath
-end project_ConstructHomeStackPath
-
-function project_GetShortFolder projectFolder
-   set the itemdelimiter to slash
-   put item -1 of projectFolder into projectName
-   return projectName
-end project_GetShortFolder
-
-function project_ConstructSisterHomeStackPath sisterProjectName, projectHomeStackFile
-   put projectHomeStackFile into sisterFolder
-   
-   set the itemdelimiter to slash
-   put sisterProjectName into item -2 to -1 of sisterFolder
-   put slash after sisterFolder
-   put sisterFolder & sisterProjectName & ".livecode" into sisterProjectHomeStackPath
-   /*
-   if exists (stack sisterProjectHomeStackPath) is false then
-      -- and if it is not there download from github
-      github_DownloadProject sisterProjectName
-      put the result into sisterProjectHomeStackPath
-   end if
-   */
-   return sisterProjectHomeStackPath
-end project_ConstructSisterHomeStackPath
-
-function lcw_HomeStackName
-   return "LCW"
-end lcw_HomeStackName
 
 
 --> Private
@@ -662,38 +704,6 @@ function library_FetchProjectFolder projectName, pRepoFolder
       return empty
    end if
 end library_FetchProjectFolder
-
-
---> Env
--
-function env_GetProjectFolder projectName
-   -- not used
-   -- prefer to use env_ConstructProjectFolder() now
-   -- this fuction allows folders to be stored anywhere
-   -- not just in a standardised repo folder.
-   put env_GetActiveProjectArray() into envProjectArray
-   return envProjectArray [projectName]
-end env_GetProjectFolder
-
-function env_ConstructHomePath projectName, pRepoFolder
-   -- here we assume we have only one repoFolder with all project at top level
-   -- see also "env_GetProjectHomePath"
-   if pRepoFolder is empty then put env_GetRepoFolder() into pRepoFolder
-   --
-   put pRepoFolder & projectName & slash & projectName & ".livecode" into homePath
-   return homePath
-end env_ConstructHomePath
-
-command env_SetProjectFolder homeStackName, pProjectFolder
-   put env_GetActiveProjectArray() into envProjectArray
-   if pProjectFolder is empty then
-      delete variable envProjectArray [homeStackName]
-   else
-      put pProjectFolder into envProjectArray [homeStackName]
-   end if
-   env_SetActiveProjectArray envProjectArray
-   return envProjectArray
-end env_SetProjectFolder
 
 
 --> Project | Menus

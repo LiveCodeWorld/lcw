@@ -15,6 +15,16 @@ Those older names are a bit of a mess.
 
 --> Working on
 -
+function project_GetHomeStackPath projectName
+   if exists (stack projectName) is false then return empty
+   
+   put the stack_Folder of stack projectName into projectFolder
+   if projectFolder is empty then return empty
+   put project_ConstructHomeStackPath (projectFolder) into homeStackPath
+   if exists (stack homeStackPath) is false then return empty
+   return homeStackPath
+end project_GetHomeStackPath
+
 function project_GetFolder projectName, pSubFolderPath
    -- utility to get a project folder from a project name for loaded or unloaded projects
    -- returns empty if the folder does not exist or there is another problem
@@ -568,16 +578,6 @@ function project_GetHomeView projectName
    put the long id of control 1 of stack projectName into projectHomeView
    return projectHomeView
 end project_GetHomeView
-
-function project_GetHomeStackPath projectName
-   if exists (stack projectName) is false then return empty
-   
-   put the stack_Folder of stack projectName into projectFolder
-   if projectFolder is empty then return empty
-   put project_ConstructHomeStackPath (projectFolder) into homeStackPath
-   if exists (stack homeStackPath) is false then return empty
-   return homeStackPath
-end project_GetHomeStackPath
 
 
 --> Deps

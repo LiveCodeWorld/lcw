@@ -46,7 +46,7 @@ on menu_StackStyle displayView, someStyle
    set the stack_Style of displayView to someStyle
 end menu_StackStyle
 
-on _
+private command _
 end _
 
 on menu_MouseDoubleupHandler displayView
@@ -57,8 +57,8 @@ on menu_MouseDoubleupHandler displayView
    hKey_Edit hKey
 end menu_MouseDoubleupHandler
 
-on _
-end _
+private command __
+end __
 
 on menu_SetTitleMenu displayView
    put the title_Menu of displayView into mTitle
@@ -72,8 +72,8 @@ on menu_EditTitleMenu displayView
    menu_Edit mTitle
 end menu_EditTitleMenu
 
-on _
-end _
+private command ___
+end ___
 
 on menu_SetLineMenu displayView   
    put the line_Menu of displayView into mTitle
@@ -87,8 +87,8 @@ on menu_EditLineMenu displayView
    menu_Edit mTitle
 end menu_EditLineMenu
 
-on _
-end _
+private command ____
+end ____
 
 on menu_TreeBehavior displayView   
    put the behavior of displayView into bObject
@@ -106,54 +106,3 @@ on menu_SortType displayView, treeSortType
    
    set the sortType of treeWidget to treeSortType
 end menu_SortType
-
-on _
-end _
-
-on submenu_Dev
-   return "Dev | Menu"
-end submenu_Dev
-
-
---> Dev | Menu | Props
--
-getprop menuStyle_Param [displayView]
-   return the menu_Style of displayView
-end menuStyle_Param
-
-getprop menuStyle_Params
-   return "Array,Old"
-end menuStyle_Params
-
-
---> Dev | Menu
--
-on menu_MenuStyle displayView, mStyle
-   set the menu_Style of displayView to mStyle
-end menu_MenuStyle
-
-on menu_UpdateMenu displayView
-   put the title_Menu of displayView into mTitle
-   put the title_Controller of displayView into mController
-   --
-   set the menu_Update of mController to true
-   --
-   put merge ("Updated menu '[[mTitle]]' in case it needed one :)") into someComment
-   lcw_Notify someComment
-end menu_UpdateMenu
-
-on menu_UpdateProjectMenus displayView
-   put the title_Menu of displayView into mTitle
-   put the title_Controller of displayView into mController
-   --
-   put the project_Name of mController into projectName
-   put the project_Folder of mController into projectFolder
-   --
-   put merge ("Update and export all menus in the project '[[projectName]]'") into someQuestion
-   lcw_Answer someQuestion, displayView
-   --
-   project_ExportMenusAndStackFiles projectFolder
-   --
-   put merge ("Updated all menus' in project '[[projectName]]'") into someComment
-   lcw_Notify someComment
-end menu_UpdateProjectMenus
