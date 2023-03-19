@@ -11,6 +11,9 @@ Used by the behavior (if running LCW), of the ScriptEditor Apply button. This be
 */
 
 
+--> Working on
+-
+
 --> Props
 -
 setprop menu_Update someBoolean
@@ -55,6 +58,26 @@ end env_LoadMenus
 
 --> Project | Fix
 -
+command project_UseStackFiles projectName, pFixFirst
+   if exists (stack projectName) is false then
+      breakpoint
+      return empty
+   end if
+   
+   put the project_Folder of stack projectName into projectFolder
+   if pFixFirst is true then
+      project_FixStackFiles projectName
+      put the result into projectArray
+   else
+      put project_ConstructArrayFromFolder (projectFolder) into projectArray
+   end if
+   --
+   put project_ListUsedPathsFromArray (projectArray, projectFolder) into usedStackPaths
+   stack_StartUsedPaths usedStackPaths
+   --
+   return projectArray
+end project_UseStackFiles
+
 command project_FixStackFiles projectName
    if exists (stack projectName) is false then
       breakpoint

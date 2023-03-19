@@ -86,38 +86,6 @@ function json_ToArray pJSON
 end json_ToArray
 
 
---> Array | Index
--
-function array_IndexFind sArray, sKey, sValue
-   repeat with itemNum = 1 to item 2 of the extents of sArray
-      put sArray [itemNum][sKey] into foundKey
-      if foundKey = sValue then
-         return itemNum
-      end if
-   end repeat
-   return 0
-end array_IndexFind
-
-command array_IndexDelete @sArray, itemNumToDelete
-   put sArray [ItemNumToDelete] into deletedItemArray
-   put item 2 of the extents of sArray into maxItem
-   if maxItem is not a number then return empty
-   repeat with itemNumToMove = (itemNumToDelete + 1) to maxItem
-      put itemNumToMove - 1 into itemNumDestination
-      put sArray [itemNumToMove] into sArray [itemNumDestination]
-   end repeat
-   delete variable sArray [maxItem]
-   return deletedItemArray
-end array_IndexDelete
-
-command array_IndexAddToEnd @sArray, itemArray
-   put item 2 of the extents of sArray into maxItem
-   add 1 to maxItem
-   put itemArray into sArray [maxItem]
-   return maxItem
-end array_IndexAddToEnd
-
-
 --> Array
 -
 command array_ToFolder someFolder, someArray
@@ -301,76 +269,68 @@ command array_StripDeeperLevels @someArray
    end repeat
 end array_StripDeeperLevels
 
-command array_AddToIndex newLines, someKey, @someArray
-   -- if the number of lines of keys(someArray) > 5 and someKey contains "form_IsRed" then breakpoint
-   put someArray [someKey] into someIndex
-   line_AddToIndex newLines, someIndex
-   put word 1 to -1 of someIndex into someArray [someKey]
-   return the number of lines of someIndex
-end array_AddToIndex
-
 
 --> Array | More
 -
 function array_Difference someArray, anotherArray
-    put someArray into tempArray
-    intersect tempArray with anotherArray
-    repeat for each line someKey in (the keys of tempArray)
-        delete local someArray [someKey]
-        delete local anotherArray [someKey]
-    end repeat
-    union someArray with anotherArray
-    return anotherArray
+   put someArray into tempArray
+   intersect tempArray with anotherArray
+   repeat for each line someKey in (the keys of tempArray)
+      delete local someArray [someKey]
+      delete local anotherArray [someKey]
+   end repeat
+   union someArray with anotherArray
+   return anotherArray
 end array_Difference
 
 function array_Subtract someArray, fromThisArray
-    put fromThisArray into tempArray
-    intersect tempArray with someArray
-    repeat for each line someKey in (the keys of tempArray)
-        delete local fromThisArray [someKey]
-    end repeat
-    return fromThisArray
+   put fromThisArray into tempArray
+   intersect tempArray with someArray
+   repeat for each line someKey in (the keys of tempArray)
+      delete local fromThisArray [someKey]
+   end repeat
+   return fromThisArray
 end array_Subtract
 
 function array_DeleteKeys keyList, someArray
-    repeat for each item someItem in keyList
-        delete local someArray[someItem]
-    end repeat
-    return someArray
+   repeat for each item someItem in keyList
+      delete local someArray[someItem]
+   end repeat
+   return someArray
 end array_DeleteKeys
 
 command array_Add someArray, @toArray
-    -- why cant we just test if array is empty?
-    if keys(toArray) is empty then
-        -- why does "union" with an empty base array always result in empty?
-        put someArray into toArray
-    else
-        union toArray with someArray
-    end if
+   -- why cant we just test if array is empty?
+   if keys(toArray) is empty then
+      -- why does "union" with an empty base array always result in empty?
+      put someArray into toArray
+   else
+      union toArray with someArray
+   end if
 end array_Add
 
 command array_AddNew newArray, @dataArray
-    put empty into addedKeys
-    repeat for each key someKey in newArray
-        put newArray [someKey] into newValue
-        put dataArray [someKey] into oldValue
-        if oldValue is not newValue then
-            put someKey & CR after addedKeys
-            put newValue into dataArray [someKey]
-        end if
-    end repeat
-    delete last char of addedKeys
-    return addedKeys
+   put empty into addedKeys
+   repeat for each key someKey in newArray
+      put newArray [someKey] into newValue
+      put dataArray [someKey] into oldValue
+      if oldValue is not newValue then
+         put someKey & CR after addedKeys
+         put newValue into dataArray [someKey]
+      end if
+   end repeat
+   delete last char of addedKeys
+   return addedKeys
 end array_AddNew
 
 function array_GetSortByNumber someArray
-    combine someArray by CR and comma
-    sort someArray descending numeric by item 2 of each
-     
-    set the columndelimiter to comma
-    split someArray by column
-    put someArray [1] into sortedKeys
-    return sortedKeys
+   combine someArray by CR and comma
+   sort someArray descending numeric by item 2 of each
+   
+   set the columndelimiter to comma
+   split someArray by column
+   put someArray [1] into sortedKeys
+   return sortedKeys
 end array_GetSortByNumber
 
 function array_ShortFileNames pFolder
@@ -387,24 +347,24 @@ end array_ShortFileNames
 --> Array | Search
 -
 function array_MatchContents searchValue, someArray
-    repeat for each key foundKey in someArray
-        put someArray [foundKey] into foundValue
-        if foundValue is searchValue then
-            return foundKey
-        end if
-    end repeat
-    return empty
+   repeat for each key foundKey in someArray
+      put someArray [foundKey] into foundValue
+      if foundValue is searchValue then
+         return foundKey
+      end if
+   end repeat
+   return empty
 end array_MatchContents
 
 function array_FindContents searchValue, someArray, matchWhole
-    set the wholematches to (matchWhole is not false)
-    repeat for each key foundKey in someArray
-        put someArray [foundKey] into testIndex
-        if searchValue is among the lines of testIndex then
-            return foundKey
-        end if
-    end repeat
-    return empty
+   set the wholematches to (matchWhole is not false)
+   repeat for each key foundKey in someArray
+      put someArray [foundKey] into testIndex
+      if searchValue is among the lines of testIndex then
+         return foundKey
+      end if
+   end repeat
+   return empty
 end array_FindContents
 
 
@@ -427,12 +387,12 @@ command array_DeleteFromIndex someValue, someKey, @someArray
 end array_DeleteFromIndex
 
 function array_TranslateIndex someArray, keyIndex, preFix, postFix
-    put empty into translatedIndex
-    repeat for each line someKey in keyIndex
-        put preFix & someArray[someKey] & postFix & return after translatedIndex
-    end repeat
-    delete last char of translatedIndex
-    return translatedIndex
+   put empty into translatedIndex
+   repeat for each line someKey in keyIndex
+      put preFix & someArray[someKey] & postFix & return after translatedIndex
+   end repeat
+   delete last char of translatedIndex
+   return translatedIndex
 end array_TranslateIndex
 
 
@@ -443,17 +403,17 @@ These handlers work on both keys and values (treated as indexes or lines) of arr
 */
 
 command array_ReplaceElement someElement, newElement, @someArray
-    repeat for each key testKey in someArray
-        put someArray [testKey] into testElements
-        
-        line_Replace someElement, newElement, testElements
-        if testKey = someElement then
-            put testElements into newArray [newElement]
-        else
-            put testElements into newArray [testKey]
-        end if
-    end repeat
-    -- return newArray
+   repeat for each key testKey in someArray
+      put someArray [testKey] into testElements
+      
+      line_Replace someElement, newElement, testElements
+      if testKey = someElement then
+         put testElements into newArray [newElement]
+      else
+         put testElements into newArray [testKey]
+      end if
+   end repeat
+   -- return newArray
 end array_ReplaceElement
 
 function array_AllNodes someArray
@@ -476,98 +436,98 @@ function array_AllNodes someArray
    end repeat
    return keys (indexArray)
 end array_AllNodes
-    
+
 function array_Elements someArray
-    -- thought there was a function or property for this?
-    local arrayElements
-    repeat for each key someKey in someArray
-        get someArray [someKey]
-        if it is not empty then put it & CR after arrayElements
-    end repeat
-    delete last char of arrayElements
-    return arrayElements
+   -- thought there was a function or property for this?
+   local arrayElements
+   repeat for each key someKey in someArray
+      get someArray [someKey]
+      if it is not empty then put it & CR after arrayElements
+   end repeat
+   delete last char of arrayElements
+   return arrayElements
 end array_Elements
 
 function array_SortElements someArray, @arrayKeys
-    put keys(someArray) into arrayKeys
-    sort arrayKeys
-    put empty into arrayElements
-    repeat for each line someKey in arrayKeys
-        put someArray[someKey] & return after arrayElements
-    end repeat
-    delete last char of arrayElements
-    return arrayElements
+   put keys(someArray) into arrayKeys
+   sort arrayKeys
+   put empty into arrayElements
+   repeat for each line someKey in arrayKeys
+      put someArray[someKey] & return after arrayElements
+   end repeat
+   delete last char of arrayElements
+   return arrayElements
 end array_SortElements
 
 
 --> Array | Outline
 -
 function array_FromOutline someOutline
-    return outline_ToArray (someOutline)
+   return outline_ToArray (someOutline)
 end array_FromOutline
 
 function array_ToOutline someArray, pSortKeys
-    -- recursive version for nested arrays
-    local someOutline
-    
-    if pSortKeys is empty then
-        -- faster
-        repeat for each key someKey in someArray
-            put someKey & CR after someOutline
-            get someArray [someKey]
-            if it is an array then get array_ToOutline(it)
-            if it is not empty then
-                put outline_IncreaseIndent(it, 1) & CR after someOutline
-            end if
-        end repeat
-        delete last char of someOutline
-        return someOutline
-    else
-        put keys(someArray) into someKeys
-        sort someKeys
-        repeat for each line someKey in someKeys
-            put someKey & CR after someOutline
-            get someArray [someKey]
-            if it is an array then get array_ToOutline (it, pSortKeys)
-            if it is not empty then
-                put outline_IncreaseIndent (it) & CR after someOutline
-            end if
-        end repeat
-        delete last char of someOutline
-        return someOutline
-    end if
+   -- recursive version for nested arrays
+   local someOutline
+   
+   if pSortKeys is empty then
+      -- faster
+      repeat for each key someKey in someArray
+         put someKey & CR after someOutline
+         get someArray [someKey]
+         if it is an array then get array_ToOutline(it)
+         if it is not empty then
+            put outline_IncreaseIndent(it, 1) & CR after someOutline
+         end if
+      end repeat
+      delete last char of someOutline
+      return someOutline
+   else
+      put keys(someArray) into someKeys
+      sort someKeys
+      repeat for each line someKey in someKeys
+         put someKey & CR after someOutline
+         get someArray [someKey]
+         if it is an array then get array_ToOutline (it, pSortKeys)
+         if it is not empty then
+            put outline_IncreaseIndent (it) & CR after someOutline
+         end if
+      end repeat
+      delete last char of someOutline
+      return someOutline
+   end if
 end array_ToOutline
 
 function array_ExpandSorted someArray, sortKey, direction
-    -- was "expandArray" "array_GetExpanded"
+   -- was "expandArray" "array_GetExpanded"
    put keys(someArray) into keyNames
-    if keyNames is empty then return someArray
-    if sortKey is empty then
-        sort keyNames
-    else if direction is empty then
-        put "sort keyNames" && sortKey into doScript
-        do doScript
-    else
-        put "sort keyNames" && direction && sortKey into doScript
-        do doScript
-    end if
-    put empty into someOutline
-    repeat for each line keyName in keyNames
-        line_Insert keyname, someOutline
-        put someArray[keyName] into someThread
-        if someThread is empty then next repeat
-        put outline_IncreaseIndent(someThread) into indentedThread
-        put CR & indentedThread after someOutline
-    end repeat
-    return someOutline
+   if keyNames is empty then return someArray
+   if sortKey is empty then
+      sort keyNames
+   else if direction is empty then
+      put "sort keyNames" && sortKey into doScript
+      do doScript
+   else
+      put "sort keyNames" && direction && sortKey into doScript
+      do doScript
+   end if
+   put empty into someOutline
+   repeat for each line keyName in keyNames
+      line_Insert keyname, someOutline
+      put someArray[keyName] into someThread
+      if someThread is empty then next repeat
+      put outline_IncreaseIndent(someThread) into indentedThread
+      put CR & indentedThread after someOutline
+   end repeat
+   return someOutline
 end array_ExpandSorted
 
 function array_ToHtmlLinks someArray
-    local htmlLinks
-    repeat for each key someTitle in someArray
-        put someArray [someTitle] into someLink
-        put html_ConstructNameLink(someTitle, someLink) & CR after htmlLinks
-    end repeat
-    delete last char of htmlLinks
-    return htmlLinks
+   local htmlLinks
+   repeat for each key someTitle in someArray
+      put someArray [someTitle] into someLink
+      put html_ConstructNameLink(someTitle, someLink) & CR after htmlLinks
+   end repeat
+   delete last char of htmlLinks
+   return htmlLinks
 end array_ToHtmlLinks

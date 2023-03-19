@@ -261,6 +261,7 @@ end env_ListViewStackPaths
 function env_ListUsedStackNames pProjectNames
    put env_ListUsedStackPaths (pProjectNames) into stackPaths
    put stack_PathsToNames (stackPaths) into stackNames
+   sort stackNames
    return stackNames
 end env_ListUsedStackNames
 

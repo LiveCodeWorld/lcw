@@ -32,9 +32,9 @@ getprop expanded_Paths
    return ePaths
 end expanded_Paths
 
-setprop expanded_Paths ePaths
+setprop expanded_Paths [pAddState] ePaths
    put display_ConstructFoldState (ePaths) into foldedArray
-   set the foldState of _treeWidget() to foldedArray
+   set the fold_State [pAddState] of me to foldedArray
    return foldedArray
 end expanded_Paths
 
@@ -43,12 +43,142 @@ getprop fold_State
    return foldedArray 
 end fold_State
 
-setprop fold_State foldedArray
+setprop fold_State [pAddState] foldedArray
    -- sensitive to capitalisation
-   set the foldState of _treeWidget() to foldedArray
+   put _treeWidget() into tWidget
+   --
+   if pAddState is true then
+      get the foldState of tWidget
+      union foldedArray with it
+   end if
+   --
+   -- put the autoFoldStateReset of tWidget
+   set the foldState of tWidget to foldedArray
    return the result
 end fold_State
 
+
+--> Events
+-
+on actionInspect pPath
+   put _getValue (pathItems) into someValue
+   put the mouse_Up of me into mouseUpCommand
+   if mouseUpCommand is empty then
+      pass actionInspect
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      dispatch mouseUpCommand to mouseTarget with displayView,someValue
+   end if
+end actionInspect
+
+command actionDoubleClick pathItems
+   put the selected_Value of me into someValue
+   put the mouse_DoubleUp of me into mouseDoubleUpCommand
+   if mouseDoubleUpCommand is empty then
+      pass actionDoubleClick
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      replace comma with CR in pathItems
+      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
+   end if
+end actionDoubleClick
+
+on resizeControl
+   put the rect of me into viewRect
+   LayoutControl viewRect
+end resizeControl
+
+on hiliteChanged
+   -- hack - cant stop the flicker when selecting line that is already selected
+   -- called twice due to "set the hilitedElement"
+   -- lock messages makes no difference
+   if LocalArray ["just set hilitedElement"] is true then
+      put false into LocalArray ["just set hilitedElement"]
+      return empty
+   end if
+   
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into pathItems
+   if pathItems is empty then
+      put LocalArray ["previousHilitedElement"] into pathItems
+      set the hilitedElement of treeWidget to pathItems
+      put true into LocalArray ["just set hilitedElement"]
+   else
+      put pathItems into LocalArray ["previousHilitedElement"]
+      put false into LocalArray ["just set hilitedElement"]
+   end if
+   
+   if the controlKey is "Down" then
+      -- put the line_Menu of me into lineMenu
+      menu_PopUp -- lineMenu
+   else
+      _displaySelectedValue treeWidget
+   end if
+end hiliteChanged
+
+on mouseDown
+   breakpoint
+end mouseDown
+
+on mouseUp
+   -- called only when the user click on the header as a tree widget does not send to mouseUp
+   local tActionName
+   put the long id of the target into headerWidget
+   put the mouseAction of headerWidget into tActionName
+   	
+   switch tActionName
+      case "cog"
+         put the clickloc into pLocation
+         add 2 to item 1of pLocation
+         add 4 to item 2 of pLocation
+         put the menu_Title of headerWidget into mTitle
+         --
+         if the menu_Style of me is "array" then
+            put the menu_Button of me into mButton
+            mArray_PopUp mTitle, mButton
+         else
+            menu_PopUp mTitle, pLocation
+         end if
+      default
+         -- clicked on the title
+   end switch
+end mouseUp
+
+
+--> Events | Drag Drop
+-
+on dragDrop
+   put the drop_Command of me into dropCommand
+   --
+   -- put the dragdata ["files"] into someValue
+   put the dragdata ["text"] into someValue
+   --
+   if dropCommand is empty then
+      pass dragDrop
+   else
+      put the long id of the target into displayView
+      put the mouse_Target of me into mouseTarget
+      if exists (mouseTarget) is false then put displayView into mouseTarget
+      dispatch dropCommand to mouseTarget with displayView,someValue
+   end if
+   --
+   pass dragDrop -- needed for drop to occur
+end dragDrop
+
+on dragEnter -- show a green outline around the drop target
+   set the allowableDragActions to "link"
+   set the dragAction to "Link"
+   pass dragEnter
+end dragEnter
+
+on dragLeave
+   -- set the borderColor of the target to ""
+   pass dragLeave
+end dragLeave
+
+
+--> Top | Array
+-
 getprop top_Array [pKey]
    -- selected_TopArray
    _SetTop topKey, aData
@@ -186,62 +316,6 @@ setprop tool_Menus [projectName] menuBit
    display_SetToolMenus menuBit, displayView, projectName
 end tool_Menus
 
-on hiliteChanged
-   -- hack - cant stop the flicker when selecting line that is already selected
-   -- called twice due to "set the hilitedElement"
-   -- lock messages makes no difference
-   if LocalArray ["just set hilitedElement"] is true then
-      put false into LocalArray ["just set hilitedElement"]
-      return empty
-   end if
-   
-   put _treeWidget() into treeWidget
-   put the hilitedElement of treeWidget into pathItems
-   if pathItems is empty then
-      put LocalArray ["previousHilitedElement"] into pathItems
-      set the hilitedElement of treeWidget to pathItems
-      put true into LocalArray ["just set hilitedElement"]
-   else
-      put pathItems into LocalArray ["previousHilitedElement"]
-      put false into LocalArray ["just set hilitedElement"]
-   end if
-   
-   if the controlKey is "Down" then
-      -- put the line_Menu of me into lineMenu
-      menu_PopUp -- lineMenu
-   else
-      _displaySelectedValue treeWidget
-   end if
-end hiliteChanged
-
-on mouseDown
-   breakpoint
-end mouseDown
-
-on mouseUp
-   -- called only when the user click on the header as a tree widget does not send to mouseUp
-   local tActionName
-   put the long id of the target into headerWidget
-   put the mouseAction of headerWidget into tActionName
-   	
-   switch tActionName
-      case "cog"
-         put the clickloc into pLocation
-         add 2 to item 1of pLocation
-         add 4 to item 2 of pLocation
-         put the menu_Title of headerWidget into mTitle
-         --
-         if the menu_Style of me is "array" then
-            put the menu_Button of me into mButton
-            mArray_PopUp mTitle, mButton
-         else
-            menu_PopUp mTitle, pLocation
-         end if
-      default
-         -- clicked on the title
-   end switch
-end mouseUp
-
 
 --> parent | old?
 -
@@ -350,38 +424,6 @@ getprop top_Lines
 end top_Lines
 
 
---> Drag Drop
--
-on dragDrop
-   put the drop_Command of me into dropCommand
-   --
-   -- put the dragdata ["files"] into someValue
-   put the dragdata ["text"] into someValue
-   --
-   if dropCommand is empty then
-      put someValue
-   else
-      put the long id of the target into displayView
-      put the mouse_Target of me into mouseTarget
-      if exists (mouseTarget) is false then put displayView into mouseTarget
-      dispatch dropCommand to mouseTarget with displayView,someValue
-   end if
-   --
-   pass dragDrop -- needed for drop to occur
-end dragDrop
-
-on dragEnter -- show a green outline around the drop target
-   set the allowableDragActions to "link"
-   set the dragAction to "Link"
-   pass dragEnter
-end dragEnter
-
-on dragLeave
-   -- set the borderColor of the target to ""
-   pass dragLeave
-end dragLeave
-
-
 --> Props | Events
 -
 getprop mouse_Target
@@ -434,43 +476,8 @@ setprop view_EventArray eventArray
 end view_EventArray
 
 
---> Events
+--> Layout
 -
-on actionInspect pPath
-   put _getValue (pathItems) into someValue
-   put the mouse_Up of me into mouseUpCommand
-   if mouseUpCommand is empty then
-      put someValue
-   else
-      _SetMouseTargets tObject, displayView, mouseTarget
-      dispatch mouseUpCommand to mouseTarget with displayView,someValue
-   end if
-end actionInspect
-
-command actionDoubleClick pathItems
-   put the selected_Value of me into someValue
-   put the mouse_DoubleUp of me into mouseDoubleUpCommand
-   if mouseDoubleUpCommand is empty then
-      put someValue
-   else
-      _SetMouseTargets tObject, displayView, mouseTarget
-      replace comma with CR in pathItems
-      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
-   end if
-end actionDoubleClick
-
-private command _SetMouseTargets @tObject, @displayView, @mouseTarget
-   put the long id of the target into tObject
-   put the long id of me into displayView
-   put the mouse_Target of me into mouseTarget
-   if exists (mouseTarget) is false then put tObject into mouseTarget
-end _SetMouseTargets 
-
-on resizeControl
-   put the rect of me into viewRect
-   LayoutControl viewRect
-end resizeControl
-
 on refreshDisplay
    put the rect of this card into cardRect
    LayoutControl cardRect
@@ -486,6 +493,13 @@ command LayoutControl cardRect
    set the rect of _footerWidget() to _footerRect (cardRect)
    unlock screen
 end LayoutControl
+
+private command _SetMouseTargets @tObject, @displayView, @mouseTarget
+   put the long id of the target into tObject
+   put the long id of me into displayView
+   put the mouse_Target of me into mouseTarget
+   if exists (mouseTarget) is false then put tObject into mouseTarget
+end _SetMouseTargets 
 
 
 --> Props | Top

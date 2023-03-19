@@ -11,10 +11,131 @@ See basic module handlers in LCW
 
 These hacks convert (view) module names to folder names.
 This is not consistant yet?
+
+-- getprop module_Array
+put the module_Folder of the target into moduleFolder
+if moduleFolder is empty then return empty
+
+set the itemdelimiter to slash
+put item -1 of moduleFolder into moduleArray ["moduleFolderName"]
+if item -2 of moduleFolder is not "modules" then return empty
+put item -3 of moduleFolder into moduleArray ["projectName"]
+
+put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
+if exists (stack moduleHomeStackPath) is false then return empty
+put moduleHomeStackPath into moduleArray ["moduleHomeStackPath"]
+
+if exists (control 1 of cd 1 of stack moduleHomeStackPath) is false then return empty
+put the long id of control 1 of cd 1 of stack moduleHomeStackPath into viewObject
+put revRuggedID (viewObject) into moduleArray ["viewObject"]
+
+put the view_Name of viewObject into viewName
+if viewName is empty then return empty
+put viewName into moduleArray ["viewName"]
+
+put moduleFolder & "behaviors/" into moduleBehaviorFolder
+put folder_ListStackPaths (moduleBehaviorFolder) into moduleArray ["moduleBehaviorPaths"]
+put moduleBehaviorFolder into moduleArray ["moduleBehaviorFolder"]
+
+put moduleFolder & "controllers/" into moduleControllerFolder
+put folder_ListStackPaths (moduleControllerFolder) into moduleArray ["moduleControllerPaths"]
+put moduleControllerFolder into moduleArray ["moduleControllerFolder"]
+
+return moduleArray
+end module_Array
 */
+
 
 --> Working on
 -
+
+
+--> Module | Name | Utils
+-
+function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
+   replace "_" with "|" in moduleStackName
+   menu_NormalizeTitle moduleStackName, pMakePretty
+   set the itemdelimiter to " | "
+   if item 1 of moduleStackName is not "Global" then put "Global | " before moduleStackName
+   if item 2 of moduleStackName = "View" then delete item 2 of moduleStackName
+   if item -1 of moduleStackName is not "Menu" then put " | Menu" after moduleStackName
+   return moduleStackName
+end module_ConstructGlobalMenuTitle
+
+function module_ViewNameToShortFolder moduleStackName
+   put project_NameToShortFolder (moduleStackName) into shortModuleFolder
+   return shortModuleFolder
+   
+   replace "|" with "_" in moduleStackName -- hack
+   return shortModuleFolder
+end module_ViewNameToShortFolder
+
+
+--> Module | Model | Names
+-
+getprop view_ModelName [pModelName]
+   if pModelName is empty then put the short name of the target into pModelName
+   
+   if char 1 to 5 of pModelName = "View|" then
+      delete char 1 to 5 of pModelName
+   end if
+   return pModelName
+end view_ModelName
+
+getprop view_ModelShortFile [pModelName]
+   put the view_ModelName [pModelName] of me into pModelName
+   put model_ConstructShortFile (pModelName) into shortFile
+   return shortFile
+end view_ModelShortFile
+
+function model_ConstructShortFile sName
+   set the itemdelimiter to "."
+   if the number of items of sName = 1 then
+      return sName & ".array"
+   else
+      return sName
+   end if
+end model_ConstructShortFile
+
+
+--> Working on
+-
+getprop view_GlobalMenuTitle
+   put the view_Name of the target into viewName
+   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
+   return globalMenuTitle
+end view_GlobalMenuTitle
+
+getprop project_Menu
+   put the project_Name of the target into stackName
+   put module_ConstructGlobalMenuTitle (stackName, true) into gMenuTitle 
+   return gMenuTitle
+end project_menu
+
+function project_GetModuleFolder moduleFolderName, projectName, pRepoFolder
+   if projectName is empty then return empty
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   --
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   return moduleFolder
+end project_GetModuleFolder
+
+command stack_Close stackPaths
+   -- saves them before closing
+   repeat for each line stackPath in stackPaths
+      set the cursor to busy
+      if there is a stack stackPath then
+         save stack stackPath
+         delete stack stackPath
+      else
+         put stackPath & CR after badStackPaths
+      end if
+   end repeat
+   delete char -1 of badStackPaths
+   return badStackPaths
+end stack_Close
+
+
 on module_Rename oldModuleStackName, newModuleStackName, projectName
    -- do a whole bunch of safety checks
    if exists (stack oldModuleStackName) is false then
@@ -87,195 +208,9 @@ command module_CloseStacks moduleStackName
    return badStackPaths
 end module_CloseStacks
 
-command stack_Close stackPaths
-   -- saves them before closing
-   repeat for each line stackPath in stackPaths
-      set the cursor to busy
-      if there is a stack stackPath then
-         save stack stackPath
-         delete stack stackPath
-      else
-         put stackPath & CR after badStackPaths
-      end if
-   end repeat
-   delete char -1 of badStackPaths
-   return badStackPaths
-end stack_Close
 
-function module_ListStackNames moduleName, projectFolder
-   -- loads them all into memory
-   put module_ListStackPaths (moduleName, projectFolder) into allStackPaths
-   repeat for each line stackPath in allStackPaths
-      set the cursor to busy
-      if there is a stack stackPath then
-         put the short name of stack stackPath & CR after stackNames
-      end if
-   end repeat
-   delete char -1 of stackNames
-   return stackNames
-end module_ListStackNames
-
-getprop module_View [moduleName]
-   put module_GetTemplateObject (moduleName) into moduleView
-   return moduleView
-end module_View
-
-function module_GetTemplateObject moduleName, pProjectFolder
-   put module_ConstructHomeStackPath (moduleName, pProjectFolder) into moduleHomeStackPath
-   if exists (control 1 of cd 1 of stack moduleHomeStackPath) is false then return empty
-   --
-   put the long id of control 1 of cd 1 of stack moduleHomeStackPath into moduleView
-   return moduleView
-end module_GetTemplateObject
-
-command module_RemoveFromMemory moduleName, projectFolder
-   put module_ListStackPaths (moduleName, projectFolder) into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) then
-         delete stack stackPath
-         put stackPath & CR into removedStackPaths
-      end if
-   end repeat
-   delete char -1 of removedStackPaths
-   return removedStackPaths
-end module_RemoveFromMemory
-
-getprop project_Menu
-   put the project_Name of the target into stackName
-   put module_ConstructGlobalMenuTitle (stackName, true) into gMenuTitle 
-   return gMenuTitle
-end project_menu
-
-getprop view_GlobalMenuTitle
-   put the view_Name of the target into viewName
-   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
-   return globalMenuTitle
-end view_GlobalMenuTitle
-
-
---> Module | Name | Utils
+--> Module | Names
 -
-function view_FromModuleStackName moduleStackName
-   replace "_" with "|" in moduleStackName
-   return moduleStackName
-end view_FromModuleStackName
-
-function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
-   replace "_" with "|" in moduleStackName
-   menu_NormalizeTitle moduleStackName, pMakePretty
-   set the itemdelimiter to " | "
-   if item 1 of moduleStackName is not "Global" then put "Global | " before moduleStackName
-   if item 2 of moduleStackName = "View" then delete item 2 of moduleStackName
-   if item -1 of moduleStackName is not "Menu" then put " | Menu" after moduleStackName
-   return moduleStackName
-end module_ConstructGlobalMenuTitle
-
-function module_ViewNameToShortFolder moduleStackName
-   put project_NameToShortFolder (moduleStackName) into shortModuleFolder
-   return shortModuleFolder
-   
-   replace "|" with "_" in moduleStackName -- hack
-   return shortModuleFolder
-end module_ViewNameToShortFolder
-
-
---> View and Menu Names
--
-/*
-A collection of handlers that deal with view and menu (default) names.
-*/
-
-command menu_NormalizeTitle @mTitle, pMakePretty
-   set the itemdelimiter to "|"
-   repeat for each item someItem in mTitle
-      if pMakePretty is true then
-         put empty into prettyItem
-         repeat for each word someWord in someItem
-            put toUpper (char 1 of someWord) into char 1 of someWord
-            put someWord & space after prettyItem
-         end repeat
-         put char 1 to -2 of prettyItem into someText
-      else
-         put word 1 to -1 of someItem into someText
-      end if
-      put space & someText & space & "|" after normalizedMenuTitle
-   end repeat
-   delete char -2 to -1 of normalizedMenuTitle
-   delete char 1 of normalizedMenuTitle
-   put normalizedMenuTitle into mTitle
-end menu_NormalizeTitle
-
-command menu_NormalizeName @mTitle
-   if word 1 of mTitle = "-->" then
-      delete word 1 of mTitle
-   end if
-   view_NormalizePiped mTitle
-   replace "|" with " | " in mTitle
-end menu_NormalizeName
-
-command view_NormalizeName @viewPath
-   if viewPath is empty then return false
-   view_NormalizePiped viewPath
-   
-   set the itemdelimiter to "|"
-   if item 1 of viewPath is not among the items of "View|Layout" then put "View|" before viewPath
-   return true
-end view_NormalizeName
-
-command view_NormalizePiped @viewPath, pMakePretty
-   if viewPath is empty then return false
-   put word 1 to -1 of viewPath into viewPath
-   
-   set the itemdelimiter to "|"
-   repeat with itemNum = 1 to the number of items of viewPath
-      put word 1 to -1 of item itemNum of viewPath into someItem
-      if pMakePretty is true then
-         repeat for each word someWord in someItem
-            put toUpper (char 1 of someWord) into char 1 of someWord
-            put someWord & space after prettyItem
-         end repeat
-         put char 1 to -2 of prettyItem into someItem
-      end if
-      put someItem into item itemNum of viewPath
-   end repeat
-   return true
-end view_NormalizePiped
-
-
---> Module | Props
--
-getprop module_Array
-   put the module_Folder of the target into moduleFolder
-   if moduleFolder is empty then return empty
-   
-   set the itemdelimiter to slash
-   put item -1 of moduleFolder into moduleArray ["moduleFolderName"]
-   if item -2 of moduleFolder is not "modules" then return empty
-   put item -3 of moduleFolder into moduleArray ["projectName"]
-   
-   put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
-   if exists (stack moduleHomeStackPath) is false then return empty
-   put moduleHomeStackPath into moduleArray ["moduleHomeStackPath"]
-   
-   if exists (control 1 of cd 1 of stack moduleHomeStackPath) is false then return empty
-   put the long id of control 1 of cd 1 of stack moduleHomeStackPath into viewObject
-   put revRuggedID (viewObject) into moduleArray ["viewObject"]
-   
-   put the view_Name of viewObject into viewName
-   if viewName is empty then return empty
-   put viewName into moduleArray ["viewName"]
-   
-   put moduleFolder & "behaviors/" into moduleBehaviorFolder
-   put folder_ListStackPaths (moduleBehaviorFolder) into moduleArray ["moduleBehaviorPaths"]
-   put moduleBehaviorFolder into moduleArray ["moduleBehaviorFolder"]
-   
-   put moduleFolder & "controllers/" into moduleControllerFolder
-   put folder_ListStackPaths (moduleControllerFolder) into moduleArray ["moduleControllerPaths"]
-   put moduleControllerFolder into moduleArray ["moduleControllerFolder"]
-   
-   return moduleArray
-end module_Array
-
 getprop module_Name
    put the module_Folder of the target into moduleFolder
    set the itemdelimiter to slash
@@ -283,19 +218,22 @@ getprop module_Name
    return moduleName
 end module_Name
 
-getprop module_HomeStack [moduleName]
-   put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
-   if exists (stack moduleHomeStackPath) is false then return empty
-   put the name of stack moduleHomeStackPath into stackObject
-   return stackObject
-end module_HomeStack
-
 getprop module_ViewName [moduleName]
    put the module_View [moduleName] of the target into moduleView
    if exists (moduleView) is false then return empty
    put the view_Name of moduleView into viewName
    return viewName
 end module_ViewName
+
+
+--> Module | Props
+-
+getprop module_HomeStack [moduleName]
+   put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
+   if exists (stack moduleHomeStackPath) is false then return empty
+   put the name of stack moduleHomeStackPath into stackObject
+   return stackObject
+end module_HomeStack
 
 getprop module_Behavior
    return the module_Behaviors of the target
@@ -343,6 +281,114 @@ getprop module_ControllerStackNames
    return cNames
 end module_ControllerStackNames
 
+getprop module_StackPaths
+   put the stack_Name of the target into moduleName
+   if exists (stack moduleName) is falee then return empty
+   --
+   put the effective filename of stack moduleName into moduleStackPath
+   put _GetModuleStackPaths (moduleStackPath) into stackPaths
+   return stackPaths
+end module_StackPaths
+
+
+--> Module | Ojects
+-
+getprop module_View [moduleName]
+   put module_GetTemplateObject (moduleName) into moduleView
+   return moduleView
+end module_View
+
+function module_GetTemplateObject moduleName, pProjectFolder
+   put module_ConstructHomeStackPath (moduleName, pProjectFolder) into moduleHomeStackPath
+   if exists (control 1 of cd 1 of stack moduleHomeStackPath) is false then return empty
+   --
+   put the long id of control 1 of cd 1 of stack moduleHomeStackPath into moduleView
+   return moduleView
+end module_GetTemplateObject
+
+command module_RemoveFromMemory moduleName, projectFolder
+   put module_ListStackPaths (moduleName, projectFolder) into stackPaths
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) then
+         delete stack stackPath
+         put stackPath & CR into removedStackPaths
+      end if
+   end repeat
+   delete char -1 of removedStackPaths
+   return removedStackPaths
+end module_RemoveFromMemory
+
+
+--> View | Name | Utils
+-
+function view_FromModuleStackName moduleStackName
+   replace "_" with "|" in moduleStackName
+   return moduleStackName
+end view_FromModuleStackName
+
+command view_NormalizeName @viewPath
+   if viewPath is empty then return false
+   view_NormalizePiped viewPath
+   
+   set the itemdelimiter to "|"
+   if item 1 of viewPath is not among the items of "View|Layout" then put "View|" before viewPath
+   return true
+end view_NormalizeName
+
+command view_NormalizePiped @viewPath, pMakePretty
+   if viewPath is empty then return false
+   put word 1 to -1 of viewPath into viewPath
+   
+   set the itemdelimiter to "|"
+   repeat with itemNum = 1 to the number of items of viewPath
+      put word 1 to -1 of item itemNum of viewPath into someItem
+      if pMakePretty is true then
+         repeat for each word someWord in someItem
+            put toUpper (char 1 of someWord) into char 1 of someWord
+            put someWord & space after prettyItem
+         end repeat
+         put char 1 to -2 of prettyItem into someItem
+      end if
+      put someItem into item itemNum of viewPath
+   end repeat
+   return true
+end view_NormalizePiped
+
+
+--> Menu | Names
+-
+/*
+A collection of handlers that deal with view and menu (default) names.
+*/
+
+command menu_NormalizeTitle @mTitle, pMakePretty
+   set the itemdelimiter to "|"
+   repeat for each item someItem in mTitle
+      if pMakePretty is true then
+         put empty into prettyItem
+         repeat for each word someWord in someItem
+            put toUpper (char 1 of someWord) into char 1 of someWord
+            put someWord & space after prettyItem
+         end repeat
+         put char 1 to -2 of prettyItem into someText
+      else
+         put word 1 to -1 of someItem into someText
+      end if
+      put space & someText & space & "|" after normalizedMenuTitle
+   end repeat
+   delete char -2 to -1 of normalizedMenuTitle
+   delete char 1 of normalizedMenuTitle
+   put normalizedMenuTitle into mTitle
+end menu_NormalizeTitle
+
+command menu_NormalizeName @mTitle
+   if word 1 of mTitle = "-->" then
+      delete word 1 of mTitle
+   end if
+   view_NormalizePiped mTitle
+   replace "|" with " | " in mTitle
+end menu_NormalizeName
+
 
 --> Module
 -
@@ -358,14 +404,6 @@ function module_GetHomeStackPath moduleFolderName, projectName
    put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
    return moduleHomeStackPath
 end module_GetHomeStackPath
-
-function project_GetModuleFolder moduleFolderName, projectName, pRepoFolder
-   if projectName is empty then return empty
-   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
-   --
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   return moduleFolder
-end project_GetModuleFolder
 
 
 --> Module | Find
@@ -398,14 +436,18 @@ end module_GetArray
 
 --> Module | List
 -
-getprop module_StackPaths
-   put the stack_Name of the target into moduleName
-   if exists (stack moduleName) is falee then return empty
-   --
-   put the effective filename of stack moduleName into moduleStackPath
-   put _GetModuleStackPaths (moduleStackPath) into stackPaths
-   return stackPaths
-end module_StackPaths
+function module_ListStackNames moduleName, projectFolder
+   -- loads them all into memory
+   put module_ListStackPaths (moduleName, projectFolder) into allStackPaths
+   repeat for each line stackPath in allStackPaths
+      set the cursor to busy
+      if there is a stack stackPath then
+         put the short name of stack stackPath & CR after stackNames
+      end if
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end module_ListStackNames
 
 function module_ListStackPaths moduleName, projectFolder
    put module_ConstructHomeStackPath (moduleName, projectFolder) into moduleStackpath
@@ -413,22 +455,6 @@ function module_ListStackPaths moduleName, projectFolder
    put _GetModuleStackPaths (moduleStackPath) into stackPaths
    return stackPaths
 end module_ListStackPaths
-
-private function _GetModuleStackPaths moduleStackPath
-   set the itemdelimiter to slash
-   put item 1 to -3 of moduleStackPath into projectFolder
-   put item -2 of moduleStackPath into shortModuleFolder
-   
-   put moduleStackPath & CR into stackPaths
-   --
-   get module_ListBehaviorStackPaths (shortModuleFolder, projectFolder)
-   if it is not empty then put it & CR after stackPaths
-   --
-   get module_ListControllerStackPaths (shortModuleFolder, projectFolder)
-   if it is not empty then put it & CR after stackPaths
-   --
-   return word 1 to -1 of stackPaths
-end _GetModuleStackPaths
 
 function module_ListBehaviorStackNames moduleName, projectFolder
    put module_ListBehaviorStackPaths (moduleName, projectFolder) into stackPaths
@@ -474,6 +500,23 @@ end module_GetBehaviorFolder
 
 --> Private
 -
+private function _GetModuleStackPaths moduleStackPath
+   set the itemdelimiter to slash
+   -- put item 1 to -3 of moduleStackPath & slash into moduleFolder
+   put item 1 to -4 of moduleStackPath & slash into projectFolder
+   put item -2 of moduleStackPath into shortModuleFolder
+   
+   put moduleStackPath & CR into stackPaths
+   --
+   get module_ListBehaviorStackPaths (shortModuleFolder, projectFolder)
+   if it is not empty then put it & CR after stackPaths
+   --
+   get module_ListControllerStackPaths (shortModuleFolder, projectFolder)
+   if it is not empty then put it & CR after stackPaths
+   --
+   return word 1 to -1 of stackPaths
+end _GetModuleStackPaths
+
 private function _ProjectStackExists stackPath
    if exists (stack stackPath) is false then return false
    
