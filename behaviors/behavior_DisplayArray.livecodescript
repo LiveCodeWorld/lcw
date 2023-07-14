@@ -21,6 +21,84 @@ local LocalArray
 
 --> Working on
 -
+private command _displaySelectedValue pTreeWidget
+   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
+   put the selected_Value of pTreeWidget into selectedValue
+   
+   dispatch "tree_HilightChanged" to me with selectedValue
+end _displaySelectedValue
+
+
+--> Props | Events
+-
+getprop mouse_Target
+   return the mouse_Target of me
+end mouse_Target
+
+setprop mouse_Target mTarget
+   set the mouse_Target of me to mTarget
+end mouse_Target
+
+getprop drop_Command
+   return the drop_Command of me
+end drop_Command
+
+setprop drop_Command dropCommand
+   set the drop_Command of me to dropCommand
+end drop_Command
+
+getprop mouse_Up
+   return the mouse_Up of me
+end mouse_Up
+
+setprop mouse_Up mUp
+   set the drop_Command of me to mUp
+end mouse_Up
+
+getprop mouse_DoubleUp
+   return the mouse_DoubleUp of me
+end mouse_DoubleUp
+
+setprop mouse_DoubleUp mDoubleUp
+   set the mouse_DoubleUp of me to mDoubleUp
+end mouse_DoubleUp
+
+getprop view_EventArray eventArray   
+   put the mouse_Target of me into eventArray ["eventTarget"]
+   put the mouse_Up of me into eventArray ["mouseUp"]
+   put the mouse_DoubleUp of me into eventArray ["mouseDoubleUp"]
+   return eventArray
+end view_EventArray
+
+setprop view_EventArray eventArray   
+   set the mouse_Target of me to eventArray ["eventTarget"]
+   set the mouse_Up of me to eventArray ["mouseUp"]
+   set the mouse_DoubleUp of me to eventArray ["mouseDoubleUp"]
+end view_EventArray
+
+
+--> ViewData | Model
+-
+getprop view_Data [someKey]
+   -- put LocalArray ["view_Data"] into viewData
+   put the view_Data of me into viewData
+   if someKey is empty then return viewData
+   return viewData [someKey]
+end view_Data
+
+setprop view_Data [someKey] someData   
+   if someKey is empty then
+      set the view_Data of me to someData
+   else
+      put the view_Data of me into viewData
+      put someData into viewData [someKey]
+      set the view_Data of me to viewData
+   end if
+end view_Data
+
+
+--> Expanded
+-
 getprop expanded_Paths
    put the foldState of _treeWidget() into foldedArray
    repeat for each key someKey in foldedArray
@@ -116,10 +194,6 @@ on hiliteChanged
    end if
 end hiliteChanged
 
-on mouseDown
-   breakpoint
-end mouseDown
-
 on mouseUp
    -- called only when the user click on the header as a tree widget does not send to mouseUp
    local tActionName
@@ -143,6 +217,162 @@ on mouseUp
          -- clicked on the title
    end switch
 end mouseUp
+
+
+--> Props | Menu | Model
+-
+getprop title_Menu
+   -- put LocalArray ["title_Menu"] into mName
+   put the title_Menu of me into mName
+   if mName is empty then 
+      return "Global | Array | Menu"
+   else
+      return mName
+   end if
+end title_Menu
+
+setprop title_Menu mName
+   -- put mName into LocalArray ["title_Menu"]
+   set the title_Menu of me to mName
+end title_Menu
+
+getprop line_Menu
+   -- put LocalArray ["line_Menu"] into mName
+   put the line_Menu of me into mName
+   if mName is empty then 
+      return "Global | Array | Line | Menu"
+   else
+      return mName
+   end if
+end line_Menu
+
+setprop line_Menu mName
+   -- put mName into LocalArray ["line_Menu"]
+   set the line_Menu of me to mName
+end line_Menu
+
+getprop menu_Target [mTitlePath]
+   -- put LocalArray ["menuTarget"] into mTarget
+   put the menu_Target of me into mTarget
+   --
+   put the displayed_Object of me into displayedObject
+   switch 
+      case mTarget is not empty
+         return mTarget
+      case displayedObject is not empty
+         return displayedObject
+      default
+         return the long id of me
+   end switch
+end menu_Target
+
+setprop menu_Target [mTitlePath] mTarget
+   -- put mTarget into LocalArray ["menuTarget"]
+   set the menu_Target of me to mTarget
+end menu_Target
+
+
+--> Props | Menu
+-
+getprop menu_Title
+   if word 1 of the target is not "widget" then
+      pass menu_Title
+   end if
+   
+   put the kind of the target into targetKind
+   switch targetKind
+      case "com.livecode.widget.treeView"
+         put the line_Menu of me into mTitle
+         return mTitle
+      case "com.livecode.widget.headerBar"
+         if the controlKey is "Down" then
+            put "Global | Array | Menu" into mTitle
+         else if the optionKey is "Down" then
+            put "Local | Array | Menu" into mTitle
+         else
+            put the title_Menu of me into mTitle
+         end if
+         return mTitle
+      default
+         pass menu_Title
+   end switch
+end menu_Title
+
+getprop view_MenuArray
+   put the title_Menu of me into menuArray ["title"]
+   put the line_Menu of me into menuArray ["line"]
+   return menuArray
+end view_MenuArray
+
+setprop view_MenuArray menuArray
+   set the title_Menu of me to menuArray ["title"]
+   set the line_Menu of me to menuArray ["line"]
+end view_MenuArray
+
+getprop menu_Controller [pMenuTitle]
+   put menu_GetGlobalController (pMenuTitle) into mController
+   if exists (mController) is true then return mController
+   
+   put LocalArray ["mController"] into mController
+   if exists (mController) is true then return mController
+   
+   return empty
+end menu_Controller
+
+setprop menu_Controller mController
+   if exists (mController) is false then return empty
+   --
+   put mController into LocalArray ["mController"]
+   --
+   put the script_MenuTitles of mController into mTitles
+   set the title_Menu of me to mTitles
+   return mTitles
+end menu_Controller
+
+getprop title_Controller
+   put the long id of me into tObject
+   put the title_Menu of me into mTitle
+   put menu_FindController (tObject, mTitle) into mController
+   return mController
+end title_Controller
+
+
+--> Model | ArrayIndex
+-
+setprop display_Interactions [mDoubleUp] menuBit
+   if mDoubleUp is empty then
+      put menuBit into mDoubleUp
+      replace "|" with empty in mDoubleUp 
+      replace space with empty in mDoubleUp
+      put "mDoubleUp_" before mDoubleUp
+   end if
+   set the mouse_DoubleUp of me to mDoubleUp
+   --
+   put "Global |" && menuBit && "| Menu" into titleMenu
+   put "Global |" && menuBit && "| Line | Menu" into lineMenu
+   --
+   set the title_Menu of me to titleMenu
+   set the line_Menu of me to lineMenu
+   --
+   put menu_GetGlobalController (titleMenu) into titleController
+   if exists (titleController) then
+      set the mouse_Target of me to titleController
+   end if
+end display_Interactions
+   
+getprop index_Array
+   put the view_Data of me into indexArray
+   return indexArray
+end index_Array
+
+setprop index_Array [pIndexKey] indexArray
+   put indexArray_Names (indexArray, pIndexKey) into sLines
+   -- 
+   set the displayed_Index of me to sLines
+   set the view_Data of me to indexArray
+   --
+   return sLines
+end index_Array
 
 
 --> Events | Drag Drop
@@ -424,58 +654,6 @@ getprop top_Lines
 end top_Lines
 
 
---> Props | Events
--
-getprop mouse_Target
-   put LocalArray ["mouse_Target"] into displayMouseTarget
-   return displayMouseTarget
-end mouse_Target
-
-setprop mouse_Target displayMouseTarget
-   put displayMouseTarget into LocalArray ["mouse_Target"]
-end mouse_Target
-
-getprop drop_Command
-   put LocalArray ["drop_Command"] into dropCommand
-   return dropCommand
-end drop_Command
-
-setprop drop_Command dropCommand
-   put dropCommand into LocalArray ["drop_Command"]
-end drop_Command
-
-getprop mouse_Up
-   put LocalArray ["mouse_Up"] into mouseUpCommand
-   return mouseUpCommand
-end mouse_Up
-
-setprop mouse_Up mouseUpCommand
-   put mouseUpCommand into LocalArray ["mouse_Up"]
-end mouse_Up
-
-getprop mouse_DoubleUp
-   put LocalArray ["mouse_DoubleUp"] into mouseDoubleUpCommand
-   return mouseDoubleUpCommand
-end mouse_DoubleUp
-
-setprop mouse_DoubleUp mouseDoubleUpCommand
-   put mouseDoubleUpCommand into LocalArray ["mouse_DoubleUp"]
-end mouse_DoubleUp
-
-getprop view_EventArray eventArray   
-   put the mouse_Target of me into eventArray ["eventTarget"]
-   put the mouse_Up of me into eventArray ["mouseUp"]
-   put the mouse_DoubleUp of me into eventArray ["mouseDoubleUp"]
-   return eventArray
-end view_EventArray
-
-setprop view_EventArray eventArray   
-   set the mouse_Target of me to eventArray ["eventTarget"]
-   set the mouse_Up of me to eventArray ["mouseUp"]
-   set the mouse_DoubleUp of me to eventArray ["mouseDoubleUp"]
-end view_EventArray
-
-
 --> Layout
 -
 on refreshDisplay
@@ -499,7 +677,7 @@ private command _SetMouseTargets @tObject, @displayView, @mouseTarget
    put the long id of me into displayView
    put the mouse_Target of me into mouseTarget
    if exists (mouseTarget) is false then put tObject into mouseTarget
-end _SetMouseTargets 
+end _SetMouseTargets
 
 
 --> Props | Top
@@ -524,46 +702,8 @@ getprop top_LineKeys
 end top_LineKeys
 
 
---> Props | Menu
+--> Props | Title
 -
-getprop menu_Controller [pMenuTitle]
-   put menu_GetGlobalController (pMenuTitle) into mController
-   if exists (mController) is true then return mController
-   
-   put LocalArray ["mController"] into mController
-   if exists (mController) is true then return mController
-   
-   return empty
-end menu_Controller
-
-setprop menu_Controller mController
-   if exists (mController) is false then return empty
-   --
-   put mController into LocalArray ["mController"]
-   --
-   put the script_MenuTitles of mController into mTitles
-   set the title_Menu of me to mTitles
-   return mTitles
-end menu_Controller
-
-getprop menu_Style
-   put LocalArray ["menu_Style"] into mStyle
-   if mStyle is empty then pass menu_Style
-   return mStyle
-end menu_Style
-
-setprop menu_Style mStyle
-   put mStyle into LocalArray ["menu_Style"]
-   return LocalArray 
-end menu_Style
-
-getprop title_Controller
-   put the long id of me into tObject
-   put the title_Menu of me into mTitle
-   put menu_FindController (tObject, mTitle) into mController
-   return mController
-end title_Controller
-
 getprop title_Text
    put the label of _headerWidget() into displayTitle
    return displayTitle
@@ -617,6 +757,14 @@ setprop hilited_Element commaPath
    set the selected_Path of me to commaPath
 end hilited_Element
 
+getprop hilited_Line
+   return the selected_LineNum of me
+end hilited_Line
+
+setprop hilited_Line lineNum
+   set the hilited_Element of me to lineNum
+end hilited_Line
+
 getprop selected_LineNum
    -- just top-level lines and assume
    put the selected_Line of me into topLine
@@ -657,80 +805,6 @@ function _SortedTopKeys
    end switch
    return topKeys
 end _SortedTopKeys
-
-
---> Menus
--
-getprop menu_Target [mTitlePath]
-   put LocalArray ["menuTarget"] into mTarget
-   put the displayed_Object of me into displayedObject
-   switch 
-      case mTarget is not empty
-         return mTarget
-      case displayedObject is not empty
-         return displayedObject
-      default
-         return the long id of me
-   end switch
-end menu_Target
-
-setprop menu_Target [mTitlePath] mTarget
-   put mTarget into LocalArray ["menuTarget"]
-end menu_Target
-
-getprop menu_Title
-   if word 1 of the target is not "widget" then
-      pass menu_Title
-   end if
-   
-   put the kind of the target into targetKind
-   switch targetKind
-      case "com.livecode.widget.treeView"
-         put the line_Menu of me into mTitle
-         return mTitle
-      case "com.livecode.widget.headerBar"
-         if the controlKey is "Down" then
-            put "Global | Array | Menu" into mTitle
-         else if the optionKey is "Down" then
-            put "Local | Array | Menu" into mTitle
-         else
-            put the title_Menu of me into mTitle
-         end if
-         return mTitle
-      default
-         pass menu_Title
-   end switch
-end menu_Title
-
-getprop title_Menu
-   put LocalArray ["title_Menu"] into titleMenuName
-   if titleMenuName is empty then put "Global | Array | Menu" into titleMenuName
-   return titleMenuName
-end title_Menu
-
-setprop title_Menu titleMenuName
-   put titleMenuName into LocalArray ["title_Menu"]
-end title_Menu
-
-getprop line_Menu
-   put LocalArray ["line_Menu"] into lineMenuName
-   return lineMenuName
-end line_Menu
-
-setprop line_Menu lineMenuName
-   put lineMenuName into LocalArray ["line_Menu"]
-end line_Menu
-
-getprop view_MenuArray
-   put the title_Menu of me into menuArray ["title"]
-   put the line_Menu of me into menuArray ["line"]
-   return menuArray
-end view_MenuArray
-
-setprop view_MenuArray menuArray
-   set the title_Menu of me to menuArray ["title"]
-   set the line_Menu of me to menuArray ["line"]
-end view_MenuArray
 
 
 --> Props | Display
@@ -861,20 +935,6 @@ setprop displayed_Index [someTitle] someIndex
    put true into LocalArray ["isIndex"]
 end displayed_Index
 
-getprop view_Data [someKey]
-   put LocalArray ["view_Data"] into viewData
-   if someKey is empty then return viewData
-   return viewData [someKey]
-end view_Data
-
-setprop view_Data [someKey] someData
-   if someKey is empty then
-      put someData into LocalArray ["view_Data"]
-   else   
-      put someData into LocalArray ["view_Data"][someKey]
-   end if
-end view_Data
-
 
 --> Geometry
 -
@@ -941,7 +1001,7 @@ end header_Widget
 -
 getprop tree_Field
    -- for compatibility (experimental)
-   return _treeWidget
+   return _treeWidget()
 end tree_Field
 
 getprop tree_View
@@ -973,22 +1033,6 @@ private function _getValue pathItems
    put someArray [pathItems] into someValue
    return someValue
 end _getValue
-
-private command _displaySelectedValue pTreeWidget
-   -- if the optionkey is "Down" then breakpoint -- interferes with a menu option edit
-   
-   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
-   put the selected_Value of pTreeWidget into selectedValue
-   
-   if the shiftKey is "Up" then return selectedValue
-   
-   if selectedValue is an array then
-      display_Array selectedValue
-      -- put the hilitedElement of me into commaKeys
-   else
-      put selectedValue
-   end if
-end _displaySelectedValue
 
 
 --> Deps

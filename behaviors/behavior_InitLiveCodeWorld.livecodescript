@@ -1028,6 +1028,8 @@ These could be in a backscript named after the project like: back_LcwCommon or l
 */
 
 command env_AddToBash
+   shell_AddBashProfileToPath
+   /*
    -- put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH
    if the platform = "MacOS" then -- and it is recent ???
       put url "file:/etc/paths" into systemPaths
@@ -1045,6 +1047,7 @@ command env_AddToBash
       replace CR with ":" in newPathIndex
       put newPathIndex into $PATH
    end if
+   */
    return $PATH
 end env_AddToBash
 

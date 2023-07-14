@@ -46,7 +46,7 @@ on menu_StackStyle displayView, someStyle
    set the stack_Style of displayView to someStyle
 end menu_StackStyle
 
-private command _
+private on _
 end _
 
 on menu_MouseDoubleupHandler displayView
@@ -57,7 +57,7 @@ on menu_MouseDoubleupHandler displayView
    hKey_Edit hKey
 end menu_MouseDoubleupHandler
 
-private command __
+private on __
 end __
 
 on menu_SetTitleMenu displayView
@@ -72,7 +72,7 @@ on menu_EditTitleMenu displayView
    menu_Edit mTitle
 end menu_EditTitleMenu
 
-private command ___
+private on ___
 end ___
 
 on menu_SetLineMenu displayView   
@@ -87,7 +87,7 @@ on menu_EditLineMenu displayView
    menu_Edit mTitle
 end menu_EditLineMenu
 
-private command ____
+private on ____
 end ____
 
 on menu_TreeBehavior displayView   
@@ -95,10 +95,10 @@ on menu_TreeBehavior displayView
    edit the script of bObject
 end menu_TreeBehavior
 
-on menu_Toplevel displayView   
-   put the stack_Name of displayView into stackName
-   toplevel stack stackName
-end menu_Toplevel
+on menu_FoldState displayView   
+   put the fold_State of displayView into fState
+   display_Data fState, "fold_State", "Tree"
+end menu_FoldState
 
 on menu_SortType displayView, treeSortType
    put the tree_Widget of displayView into treeWidget

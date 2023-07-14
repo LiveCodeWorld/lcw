@@ -141,6 +141,14 @@ getprop project_AssetFolder [shortAssetFolder]
    return assetFolder
 end project_AssetFolder
 
+getprop module_AssetFolder [shortAssetFolder]
+   put the module_Folder of the target into moduleFolder
+   if there is not a folder moduleFolder then return empty
+   
+   put asset_GetFolder (moduleFolder, shortAssetFolder) into assetFolder
+   return assetFolder
+end module_AssetFolder
+
 
 --> Asset | Model
 -

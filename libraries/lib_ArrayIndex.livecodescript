@@ -12,6 +12,24 @@ version: 0.1
 
 --> Working on
 -
+function indexArray_GetNumbered indexArray, pNameKey
+   if pNameKey is empty then put "name" into pNameKey
+   repeat with indexNum = 1 to item 2 of the extents of indexArray
+      put indexArray [indexNum][pNameKey] into numArray [indexNum]
+   end repeat
+   return numArray
+end indexArray_GetNumbered
+
+function indexArray_Names indexArray, pIndexKey
+   if pIndexKey is empty then put "name" into pIndexKey
+   repeat with indexNum = 1 to item 2 of the extents of indexArray
+      put indexArray [indexNum][pIndexKey] into sLine
+      put sLine & CR after sLines
+   end repeat
+   delete char -1 of sLines
+   return sLines
+end indexArray_Names
+
 command array_AddToIndex newLines, someKey, @someArray
    -- if the number of lines of keys(someArray) > 5 and someKey contains "form_IsRed" then breakpoint
    put someArray [someKey] into someIndex

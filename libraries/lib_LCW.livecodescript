@@ -12,6 +12,29 @@ Here we place all the handlers that need to be in use before project initialisat
 
 --> Working on
 -
+command env_AddToBash
+   put shell_GetMergedPath (pNewItems) into $PATH
+   return $PATH
+end env_AddToBash
+
+function shell_GetMergedPath pNewItems
+   -- copied from Terminal using "echo $PATH"
+   get "/Users/david/.nvm/versions/node/v19.8.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin"
+   split it by ":" as set
+   --
+   put $Path into pathArray
+   split pathArray by ":" as set
+   union pathArray with it 
+   --
+   if pNewItems is not empty then
+      split pNewItems by ":" as set
+      union pathArray with pNewItems 
+   end if
+   --
+   combine pathArray with ":" as set
+   return pathArray
+end shell_GetMergedPath
+
 getprop module_Folder [pModuleName]
    put the template_Object of the target into tObject
    if exists (tObject) is true then
@@ -529,6 +552,10 @@ end project_Start
 
 command project_Stop projectName
    -- with multiple projects that's a bit hard (as other projects 'could' use some of the stacks?)
+   if exists (stack projectName) is false then
+      return false
+   end if
+   --
    put the project_UsedStackNames of stack projectName into usedStackNames
    put the project_Name of stack projectName into projectName
    
@@ -543,6 +570,7 @@ command project_Stop projectName
    --
    put merge ("Stopped project '[[projectName]]'!") into someComment
    display_Loading projectName, someComment
+   return true
 end project_Stop
 
 
@@ -1474,28 +1502,6 @@ end module_HomeStackPath
 Here we put deps that the project needs.
 These could be in a backscript named after the project like: back_LcwCommon or lib_LcwCommon
 */
-
-command env_AddToBash
-   -- put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH
-   if the platform = "MacOS" then -- and it is recent ???
-      put url "file:/etc/paths" into systemPaths
-      if systemPaths is empty then return empty
-      
-      put token 1 to -1 of systemPaths into systemPathArray
-      
-      put $PATH into revPATH
-      replace ":" with CR in revPATH
-      put systemPathArray & CR & revPATH into combinedPath
-      sort combinedPath
-      put token 1 to -1 of combinedPath into combinedPath
-      split combinedPath with CR and ":"
-      put keys (combinedPath) into newPathIndex
-      replace CR with ":" in newPathIndex
-      put newPathIndex into $PATH
-   end if
-   return $PATH
-end env_AddToBash
-
 function folder_ListStackPaths someFolder
    if there is not a folder someFolder then return empty
    

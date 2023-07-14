@@ -71,33 +71,6 @@ function module_ViewNameToShortFolder moduleStackName
 end module_ViewNameToShortFolder
 
 
---> Module | Model | Names
--
-getprop view_ModelName [pModelName]
-   if pModelName is empty then put the short name of the target into pModelName
-   
-   if char 1 to 5 of pModelName = "View|" then
-      delete char 1 to 5 of pModelName
-   end if
-   return pModelName
-end view_ModelName
-
-getprop view_ModelShortFile [pModelName]
-   put the view_ModelName [pModelName] of me into pModelName
-   put model_ConstructShortFile (pModelName) into shortFile
-   return shortFile
-end view_ModelShortFile
-
-function model_ConstructShortFile sName
-   set the itemdelimiter to "."
-   if the number of items of sName = 1 then
-      return sName & ".array"
-   else
-      return sName
-   end if
-end model_ConstructShortFile
-
-
 --> Working on
 -
 getprop view_GlobalMenuTitle
@@ -160,7 +133,8 @@ on module_Rename oldModuleStackName, newModuleStackName, projectName
    end if
    -- check in all module names
    if newModuleStackName is among the lines of allModuleNames then
-      display_ListModules
+      -- display_ListModules
+      display_ModuleArray
       lcw_AnswerWarning "Module already exists!"
    end if
    

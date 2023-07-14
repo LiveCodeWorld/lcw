@@ -7,8 +7,63 @@ name: model_ModuleData
 type: model
 version: 0.1
 
---> View | Model | Props
+
+--> Layout | Object | Model
 -
+getprop layout_ObjectData [nameOrID]
+   if nameOrID is empty then
+      
+   end if
+   --
+   put _GetModelData (nameOrID) into modelArray
+   return modelArray
+end layout_ObjectData
+
+private function _GetModelData modelName
+   put the module_ModelFile [modelName] of the target into modelDataFile
+   if modelDataFile is empty then return empty
+   -- 
+   put array_FetchModel (modelDataFile) into modelArray
+   put modelName into modelArray ["modelName"]
+   return modelArray
+end _GetModelData
+
+
+--> Module | Model
+-
+getprop module_Model [pModelName]
+   put the view_ModelName [pModelName] of me into modelName
+   -- 
+   put _GetModelData (modelName) into modelArray
+   return modelArray
+end module_Model
+
+setprop module_Model [pModelName] dataArray
+   put the module_ModelFile [pModelName] of the target into mFile   
+   if mFile is empty then return empty
+   -- 
+   array_SaveModel mFile, dataArray
+   return mFile
+end module_Model
+
+
+--> Module | Model | Names
+-
+getprop view_ModelName [pModelName]
+   if pModelName is empty then put the short name of the target into pModelName
+   
+   if char 1 to 5 of pModelName = "View|" then
+      delete char 1 to 5 of pModelName
+   end if
+   return pModelName
+end view_ModelName
+
+getprop view_ModelShortFile [pModelName]
+   put the view_ModelName [pModelName] of me into pModelName
+   put model_ConstructShortFile (pModelName) into shortFile
+   return shortFile
+end view_ModelShortFile
+
 getprop module_ModelFile [pModelName]
    put the view_ModelShortFile [pModelName] of the target into shortFile
    put the template_Object of the target into templateObject
@@ -24,22 +79,6 @@ getprop module_ModelFolder
    put folder_AddShort (moduleFolder, "models") into moduleModelFolder
    return moduleModelFolder
 end module_ModelFolder
-
-getprop module_Model [pModelName]
-   put the module_ModelFile [pModelName] of the target into modelDataFile
-   if modelDataFile is empty then return empty
-   -- 
-   put array_FetchModel (modelDataFile) into modelArray
-   return modelArray
-end module_Model
-
-setprop module_Model [pModelName] dataArray
-   put the module_ModelFile [pModelName] of the target into mFile   
-   if mFile is empty then return empty
-   -- 
-   array_SaveModel mFile, dataArray
-   return mFile
-end module_Model
 
 getprop module_ModelNames [listShortFiles]
    put the module_ModelFolder of the target into modelDataFolder
@@ -101,6 +140,15 @@ end module_DeleteModel
 
 --> View | Model | Files
 -
+function model_ConstructShortFile sName
+   set the itemdelimiter to "."
+   if the number of items of sName = 1 then
+      return sName & ".array"
+   else
+      return sName
+   end if
+end model_ConstructShortFile
+
 function module_ConstructModelFile shortNameOrFile, moduleStackName, projectName
    if shortNameOrFile contains "." then
       put shortNameOrFile into shortFile

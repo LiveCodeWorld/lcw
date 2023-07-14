@@ -29,6 +29,30 @@ It's all a bit of a mess - tryig to move over to listing project folder names wh
 -- consider replacing with "env_ListProjectFolders()"
 */
 
+command env_AddToBash
+   shell_AddBashProfileToPath
+   /*
+   -- put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH
+   if the platform = "MacOS" then -- and it is recent ???
+      put url "file:/etc/paths" into systemPaths
+      if systemPaths is empty then return empty
+      
+      put token 1 to -1 of systemPaths into systemPathArray
+      
+      put $PATH into revPATH
+      replace ":" with CR in revPATH
+      put systemPathArray & CR & revPATH into combinedPath
+      sort combinedPath
+      put token 1 to -1 of combinedPath into combinedPath
+      split combinedPath with CR and ":"
+      put keys (combinedPath) into newPathIndex
+      replace CR with ":" in newPathIndex
+      put newPathIndex into $PATH
+   end if
+   */
+   return $PATH
+end env_AddToBash
+
 function library_ListProjectFolders
    put library_FetchProjectData() into libraryProjectArray
    repeat for each key projectName in libraryProjectArray
@@ -59,6 +83,58 @@ function library_ListProjectNames pProjectType
    sort projectNames
    return projectNames
 end library_ListProjectNames
+
+
+--> Env | Model
+-
+function env_GetShortModuleArray pModuleNames
+   -- different from env_GetModuleArray
+   -- add "default"" to names to protect array overwriting
+   
+   if pModuleNames is empty then
+      put env_ListShortModuleFolders() into pModuleNames
+   end if
+   --
+   set the itemdelimiter to "_"
+   repeat for each line moduleName in pModuleNames
+      put moduleName into aKey
+      split aKey by "_"
+      
+      get pModuleNames
+      filter it with (moduleName & "_*")
+      if it is empty then
+         put "" into moduleArray [aKey]
+      else
+         put "" into moduleArray [aKey]["Default"]
+      end if
+   end repeat
+   return moduleArray
+end env_GetShortModuleArray
+
+function env_GetModuleArray pProjectNames
+   _SetProjectNames pProjectNames
+   set the itemdelimiter to slash
+   repeat for each line projectName in pProjectNames
+      put project_ListModuleFolders (projectName) into moduleFolders
+      repeat for each line moduleFolder in moduleFolders
+         put item -1 of moduleFolder into moduleName
+         --
+         put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
+         if exists (stack moduleHomeStackPath) is false then
+            put projectName into envModuleArray ["broken"][moduleName]["projectName"]
+            put moduleFolder into envModuleArray ["broken"][moduleName]["moduleFolder"]
+            put moduleHomeStackPath into envModuleArray ["broken"][moduleName]["homeStackPath"]
+         else
+            put projectName into envModuleArray ["active"][moduleName]["projectName"]
+            put moduleFolder into envModuleArray ["active"][moduleName]["moduleFolder"]
+            put moduleHomeStackPath into envModuleArray ["active"][moduleName]["homeStackPath"]
+            --
+            put projectName into envModuleArray ["lists"]["homeStackPaths"][moduleHomeStackPath]
+         end if
+      end repeat
+   end repeat
+   return envModuleArray
+end env_GetModuleArray
 
 
 --> Library | Env
@@ -305,31 +381,6 @@ function env_ListShortModuleFolders pProjectNames
    return activeModuleNames
 end env_ListShortModuleFolders
 
-function env_GetModuleArray pProjectNames
-   _SetProjectNames pProjectNames
-   set the itemdelimiter to slash
-   repeat for each line projectName in pProjectNames
-      put project_ListModuleFolders (projectName) into moduleFolders
-      repeat for each line moduleFolder in moduleFolders
-         put item -1 of moduleFolder into moduleName
-         --
-         put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
-         if exists (stack moduleHomeStackPath) is false then
-            put projectName into envModuleArray ["broken"][moduleName]["projectName"]
-            put moduleFolder into envModuleArray ["broken"][moduleName]["moduleFolder"]
-            put moduleHomeStackPath into envModuleArray ["broken"][moduleName]["homeStackPath"]
-         else
-            put projectName into envModuleArray ["active"][moduleName]["projectName"]
-            put moduleFolder into envModuleArray ["active"][moduleName]["moduleFolder"]
-            put moduleHomeStackPath into envModuleArray ["active"][moduleName]["homeStackPath"]
-            --
-            put projectName into envModuleArray ["lists"]["homeStackPaths"][moduleHomeStackPath]
-         end if
-      end repeat
-   end repeat
-   return envModuleArray
-end env_GetModuleArray
-
 
 --> Env | Export
 -
@@ -386,27 +437,6 @@ command env_ReLoadMenus pProjectNames, pRepoFolder
       project_LoadMenus projectFolder
    end repeat
 end env_ReLoadMenus
-
-command env_AddToBash
-   -- put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH
-   if the platform = "MacOS" then -- and it is recent ???
-      put url "file:/etc/paths" into systemPaths
-      if systemPaths is empty then return empty
-      
-      put token 1 to -1 of systemPaths into systemPathArray
-      
-      put $PATH into revPATH
-      replace ":" with CR in revPATH
-      put systemPathArray & CR & revPATH into combinedPath
-      sort combinedPath
-      put token 1 to -1 of combinedPath into combinedPath
-      split combinedPath with CR and ":"
-      put keys (combinedPath) into newPathIndex
-      replace CR with ":" in newPathIndex
-      put newPathIndex into $PATH
-   end if
-   return $PATH
-end env_AddToBash
 
 
 --> Private

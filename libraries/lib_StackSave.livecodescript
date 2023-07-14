@@ -194,7 +194,12 @@ command stack_SaveEdited pStackNames, pIndexView, pLineColour
    
    # Save them
    repeat for each line stackName in pStackNames
-      display_Spin stackName, pIndexView, pLineColour
+      try
+         display_Spin stackName, pIndexView, pLineColour
+      catch e
+         -- not important
+      end try
+      --
       try
          put the effective fileName of stack stackName into pFilePath
          save stack stackName
