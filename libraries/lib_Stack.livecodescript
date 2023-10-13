@@ -47,7 +47,7 @@ end card_Object
 getprop stack_File
    return the effective filename of the defaultstack
 end stack_File
-   
+
 getprop stack_RelativeFile [baseStackName]
    if exists (stack baseStackName) is false then
       return merge ("error, stack '[[baseStackName]]' does not exist")
@@ -59,6 +59,31 @@ getprop stack_RelativeFile [baseStackName]
    put file_GetRelativePath (linkFile, baseFolder, commonPath) into stackRelativeFile
    return stackRelativeFile
 end stack_RelativeFile
+
+getprop stack_Rect
+   put the stack_name of the target into sName
+   put the rect of stack sName into gStackRect
+   return gStackRect
+end stack_Rect
+
+setprop stack_Rect gStackRect
+   -- screen_ProportionalStackRect
+   put the stack_name of the target into sName
+   set the rect of stack sName to gStackRect
+   return sName
+end stack_Rect
+
+getprop stack_Loc
+   put the stack_name of the target into sName
+   put the loc of stack sName into gStackLoc
+   return gStackLoc
+end stack_Loc
+
+setprop stack_Loc gStackLoc
+   put the stack_name of the target into sName
+   set the loc of stack sName to gStackLoc
+   return sName
+end stack_Loc
 
 getprop stack_Name
    return the short name of the defaultstack

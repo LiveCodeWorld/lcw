@@ -249,11 +249,8 @@ end env_ListControllerStackNames
 function env_ListControllerPaths pProjectNames, pRepoFolder
    _SetProjectNames pProjectNames
    repeat for each line projectName in pProjectNames
-      -- put project_ListControllerPaths (projectName) into projectControllerPaths
-      -- put library_FetchProjectFolder (projectName) into projectFolder
-      put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
-      --
-      put project_ListPaths ("controllers", projectFolder) into projectControllerPaths
+      put project_ListStandardStackPaths ("controllers", projectName) into projectControllerPaths
+      
       if projectControllerPaths is not empty then
          put projectControllerPaths & CR after environmentControllerPaths
       end if
@@ -298,7 +295,7 @@ function env_ListBehaviorPaths pProjectNames, pRepoFolder
       -- put library_FetchProjectFolder (projectName) into projectFolder
       put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
       --
-      put project_ListPaths ("behaviors", projectFolder) into projectBehaviorPaths
+      put project_ListPathsOfType ("behaviors", projectFolder) into projectBehaviorPaths
       if projectBehaviorPaths is not empty then
          put projectBehaviorPaths & CR after environmentBehaviorPaths
       end if

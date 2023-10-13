@@ -24,7 +24,7 @@ command card_CreateBehavior bStackName
       return bStackPath
    end if
    
-   put project_Construct (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
+   put project_ConstructStackPath (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
    if exists (stack newStackPath) then
       ask_CreateProjectBehavior projectName
       put the result into bStackPath

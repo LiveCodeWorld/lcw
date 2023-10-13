@@ -37,7 +37,7 @@ function array_Reverse someArray, pQuick, pStrip
       repeat for each key someKey in someArray
          put someArray [someKey] into newKeys
          repeat for each line newKey in newKeys
-            array_AddToIndex someKey, newKey, reversedArray
+            indexArray_Add someKey, newKey, reversedArray
          end repeat
       end repeat
    end if

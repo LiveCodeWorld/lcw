@@ -48,6 +48,50 @@ end module_Array
 
 --> Working on
 -
+getprop is_Module
+   put the module_Folder of the target into mFolder -- lib_LCW
+   return mFolder is not empty
+end is_Module
+
+
+--> Module | StackPaths
+-
+getprop module_StackPaths
+   put the module_Folder of the target into moduleFolder
+   put directory_ListNestedPaths (moduleFolder) into stackPaths
+   /*
+   put the stack_Name of the target into moduleName
+   if exists (stack moduleName) is falee then return empty
+   --   
+   put the effective filename of stack moduleName into moduleStackPath
+   put _GetModuleStackPaths (moduleStackPath) into stackPaths
+   */
+   return stackPaths
+end module_StackPaths
+
+function module_ListStackPaths moduleName, projectFolder
+   put module_ConstructHomeStackPath (moduleName, projectFolder) into moduleStackpath
+   if exists (stack moduleStackpath) is false then return empty
+   put _GetModuleStackPaths (moduleStackPath) into stackPaths
+   return stackPaths
+end module_ListStackPaths
+
+private function _GetModuleStackPaths moduleStackPath
+   set the itemdelimiter to slash
+   -- put item 1 to -3 of moduleStackPath & slash into moduleFolder
+   put item 1 to -4 of moduleStackPath & slash into projectFolder
+   put item -2 of moduleStackPath into shortModuleFolder
+   
+   put moduleStackPath & CR into stackPaths
+   --
+   get module_ListBehaviorStackPaths (shortModuleFolder, projectFolder)
+   if it is not empty then put it & CR after stackPaths
+   --
+   get module_ListControllerStackPaths (shortModuleFolder, projectFolder)
+   if it is not empty then put it & CR after stackPaths
+   --
+   return word 1 to -1 of stackPaths
+end _GetModuleStackPaths
 
 
 --> Module | Name | Utils
@@ -255,15 +299,6 @@ getprop module_ControllerStackNames
    return cNames
 end module_ControllerStackNames
 
-getprop module_StackPaths
-   put the stack_Name of the target into moduleName
-   if exists (stack moduleName) is falee then return empty
-   --
-   put the effective filename of stack moduleName into moduleStackPath
-   put _GetModuleStackPaths (moduleStackPath) into stackPaths
-   return stackPaths
-end module_StackPaths
-
 
 --> Module | Ojects
 -
@@ -279,18 +314,6 @@ function module_GetTemplateObject moduleName, pProjectFolder
    put the long id of control 1 of cd 1 of stack moduleHomeStackPath into moduleView
    return moduleView
 end module_GetTemplateObject
-
-command module_RemoveFromMemory moduleName, projectFolder
-   put module_ListStackPaths (moduleName, projectFolder) into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) then
-         delete stack stackPath
-         put stackPath & CR into removedStackPaths
-      end if
-   end repeat
-   delete char -1 of removedStackPaths
-   return removedStackPaths
-end module_RemoveFromMemory
 
 
 --> View | Name | Utils
@@ -423,13 +446,6 @@ function module_ListStackNames moduleName, projectFolder
    return stackNames
 end module_ListStackNames
 
-function module_ListStackPaths moduleName, projectFolder
-   put module_ConstructHomeStackPath (moduleName, projectFolder) into moduleStackpath
-   if exists (stack moduleStackpath) is false then return empty
-   put _GetModuleStackPaths (moduleStackPath) into stackPaths
-   return stackPaths
-end module_ListStackPaths
-
 function module_ListBehaviorStackNames moduleName, projectFolder
    put module_ListBehaviorStackPaths (moduleName, projectFolder) into stackPaths
    put stack_PathsToNames (stackPaths) into stackNames
@@ -474,23 +490,6 @@ end module_GetBehaviorFolder
 
 --> Private
 -
-private function _GetModuleStackPaths moduleStackPath
-   set the itemdelimiter to slash
-   -- put item 1 to -3 of moduleStackPath & slash into moduleFolder
-   put item 1 to -4 of moduleStackPath & slash into projectFolder
-   put item -2 of moduleStackPath into shortModuleFolder
-   
-   put moduleStackPath & CR into stackPaths
-   --
-   get module_ListBehaviorStackPaths (shortModuleFolder, projectFolder)
-   if it is not empty then put it & CR after stackPaths
-   --
-   get module_ListControllerStackPaths (shortModuleFolder, projectFolder)
-   if it is not empty then put it & CR after stackPaths
-   --
-   return word 1 to -1 of stackPaths
-end _GetModuleStackPaths
-
 private function _ProjectStackExists stackPath
    if exists (stack stackPath) is false then return false
    

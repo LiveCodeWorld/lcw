@@ -568,6 +568,11 @@ end line_Deletempty
 
 --> Lists
 -
+function item_Add someItems, someList, pPartLine, pSkipLines
+   list_Add someItems, someList, pPartLine, pSkipLines
+   return someList
+end item_Add
+
 command list_Add someItems, @someList, pPartLine, pSkipLines
    set the wholematches to (pPartLine is empty)
    repeat for each item someItem in someItems

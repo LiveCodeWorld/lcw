@@ -80,14 +80,18 @@ end project_UseStackFiles
 
 command project_FixStackFiles projectName
    if exists (stack projectName) is false then
-      breakpoint
-      return empty
+      put project_FolderFromName (projectName) into projectFolder
+      if there is not a folder projectFolder then
+         breakpoint
+         return empty
+      end if
+   else
+      put the project_Folder of stack projectName into projectFolder
    end if
    
-   put the project_Folder of stack projectName into projectFolder
    _FixStackFiles projectFolder, projectName
-   put the result into projectArray
    
+   put the result into projectArray
    return projectArray
 end project_FixStackFiles
 
@@ -182,8 +186,6 @@ function project_ConstructStackFileArrayFromFolder projectFolder
    # No need to add path to home stack file
    set the itemdelimiter to slash
    put item -1 of projectFolder into homeStackName
-   -- put project_ConstructHomeFromFolder (projectFolder) into homeStackPath
-   -- put the short name of stack homeStackPath into homeStackName
    --
    delete variable stackFileArray [homeStackName]
    return stackFileArray

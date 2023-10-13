@@ -8,33 +8,85 @@ version: 0.7
 
 /*
 Here we place all the handlers that need to be in use before project initialisation.
+
+getprop project_StackPaths [shortFolder]
+   put the project_Folder of the target into projectFolder
+   -- put project_ListPathsOfType (shortFolder, projectFolder) into stackPaths
+   put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   return stackPaths
+end project_StackPaths
+
+function project_ListAllStackPaths projectName
+   put the stack_Folder of stack projectName into projectFolder
+   put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   return stackPaths
+end project_ListAllStackPaths
+
+-- function project_ListAllStackPaths projectFolder
+put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
+put folder_ListLong (projectFolder) into standardFolders
+repeat for each line standardFolder in standardFolders
+   if standardFolder ends with "/assets/" then next repeat
+   if standardFolder ends with "/modules/" then
+      put folder_ListLong (standardFolder) into viewFolders
+      repeat for each line viewFolder in viewFolders
+         put folder_ListStackPaths (viewFolder) into stackPaths
+         if stackPaths is not empty then
+            put stackPaths & CR after projectStackPaths
+         end if
+      end repeat
+   end if
+   put folder_ListStackPaths (standardFolder) into stackPaths
+   if stackPaths is not empty then
+      put stackPaths & CR after projectStackPaths
+   end if
+end repeat
+delete char -1 of projectStackPaths
+return projectStackPaths
+end project_ListAllStackPaths
+
+function project_ListPathsOfType shortFolder, projectFolder
+   switch shortFolder
+      case empty
+         put project_ListAllStackPaths (projectFolder) into stackPaths
+         return stackPaths
+      case "modules"
+         put folder_AddShort (projectFolder, "modules") into viewFolder
+         put folder_ListLong (viewFolder) into subViewFolders
+         repeat for each line subViewFolder in subViewFolders
+            put folder_ListStackPaths (subViewFolder) into stackPaths
+            if stackPaths is not empty then
+               put stackPaths & CR after projectStackPaths
+            end if
+         end repeat
+         
+         put folder_ListStackPaths (viewFolder) into stackPaths
+         if stackPaths is not empty then
+            put stackPaths & CR after projectStackPaths
+         end if
+         return projectStackPaths
+      case "all controllers"
+         put project_ListAllControllers (projectFolder) into stackPaths
+         return stackPaths
+      default
+         put folder_AddShort (projectFolder, shortFolder) into standardFolder
+         put folder_ListStackPaths (standardFolder) into stackPaths
+         return stackPaths
+   end switch
+end project_ListPathsOfType
+
+getprop project_ViewStackPaths
+   put the project_StackPaths ["views"] of the target into stackPaths
+   filter stackPaths without "*/behavior_*"
+   return stackPaths
+end project_ViewStackPaths
 */
 
 --> Working on
 -
-command env_AddToBash
-   put shell_GetMergedPath (pNewItems) into $PATH
-   return $PATH
-end env_AddToBash
 
-function shell_GetMergedPath pNewItems
-   -- copied from Terminal using "echo $PATH"
-   get "/Users/david/.nvm/versions/node/v19.8.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin"
-   split it by ":" as set
-   --
-   put $Path into pathArray
-   split pathArray by ":" as set
-   union pathArray with it 
-   --
-   if pNewItems is not empty then
-      split pNewItems by ":" as set
-      union pathArray with pNewItems 
-   end if
-   --
-   combine pathArray with ":" as set
-   return pathArray
-end shell_GetMergedPath
-
+--> Props
+-
 getprop module_Folder [pModuleName]
    put the template_Object of the target into tObject
    if exists (tObject) is true then
@@ -64,17 +116,40 @@ getprop module_Folder [pModuleName]
    end switch
 end module_Folder
 
+getprop project_HomeStackBrowser
+   put the project_Name of the target into pHomeStackName
+   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
+   return browserWidget
+end project_HomeStackBrowser
+
+
+--> Shell
+-
+function shell_GetMergedPath pNewItems
+   -- copied from Terminal using "echo $PATH"
+   get "/Users/david/.nvm/versions/node/v19.8.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin"
+   split it by ":" as set
+   --
+   put $Path into pathArray
+   split pathArray by ":" as set
+   union pathArray with it 
+   --
+   if pNewItems is not empty then
+      split pNewItems by ":" as set
+      union pathArray with pNewItems 
+   end if
+   --
+   combine pathArray with ":" as set
+   return pathArray
+end shell_GetMergedPath
+
 
 --> Env
 -
--- function env_GetProjectFolder projectName
--- not used
--- prefer to use env_ConstructProjectFolder() now
--- this fuction allows folders to be stored anywhere
--- not just in a standardised repo folder.
-put env_GetActiveProjectArray() into envProjectArray
-return envProjectArray [projectName]
-end env_GetProjectFolder
+command env_AddToBash
+   put shell_GetMergedPath (pNewItems) into $PATH
+   return $PATH
+end env_AddToBash
 
 function env_ConstructHomePath projectName, pRepoFolder
    -- old version was "env_GetProjectFolder"
@@ -604,36 +679,6 @@ function folder_AddShort projectFolder, shortFolder
    return projectFolder
 end folder_AddShort
 
-function project_ListPaths shortFolder, projectFolder
-   switch shortFolder
-      case empty
-         put project_ListAllStackPaths (projectFolder) into stackPaths
-         return stackPaths
-      case "modules"
-         put folder_AddShort (projectFolder, "modules") into viewFolder
-         put folder_ListLong (viewFolder) into subViewFolders
-         repeat for each line subViewFolder in subViewFolders
-            put folder_ListStackPaths (subViewFolder) into stackPaths
-            if stackPaths is not empty then
-               put stackPaths & CR after projectStackPaths
-            end if
-         end repeat
-         
-         put folder_ListStackPaths (viewFolder) into stackPaths
-         if stackPaths is not empty then
-            put stackPaths & CR after projectStackPaths
-         end if
-         return projectStackPaths
-      case "all controllers"
-         put project_ListAllControllers (projectFolder) into stackPaths
-         return stackPaths
-      default
-         put folder_AddShort (projectFolder, shortFolder) into standardFolder
-         put folder_ListStackPaths (standardFolder) into stackPaths
-         return stackPaths
-   end switch
-end project_ListPaths
-
 function lcw_GetAuthor
    put pref_GetValue ("userName") into authorName
    if authorName is empty then put "David Bovill" into authorName
@@ -806,18 +851,6 @@ function env_CheckLcwProject projectName, pRepoFolder
    put there is a file homePath into projectExists
    return projectExists
 end env_CheckLcwProject
-
-
---> Not a good way
--
-function project_FolderFromName projectName, pShortFolder
-   -- this does not do much checking
-   if exists (stack projectName) is false then return empty
-   put the stack_Folder of stack projectName into projectFolder
-   if pShortFolder is empty then return projectFolder
-   put projectFolder & pShortFolder & slash into standardFolder
-   return standardFolder
-end project_FolderFromName
 
 
 --> Environment | List
@@ -1342,64 +1375,6 @@ command ide_RemoveRevEditScriptStack stackName
 end ide_RemoveRevEditScriptStack
 
 
---> Project | Props
--
-/*
-Here is a list of naming conventions we use for projects:
-
-A project has a home stack.
-The home stack is often a script only stack, but this is not required.
-The short name of the homestack is the name of the project.
-The short file of the homestack is the name of the project followed by ".livecode" (eg "lcw.livecode").
-We use the ".livecode" regardless of whether the stack is a script only stack to make it easier to derive the path from the project name and therfore locate.
-The short file of the homestack is in lower case (eg "lcw.livecode" not "LCW.livecode")
-*/
-
-getprop project_ViewStackPaths
-   put the project_StackPaths ["views"] of the target into stackPaths
-   filter stackPaths without "*/behavior_*"
-   return stackPaths
-end project_ViewStackPaths
-
-getprop project_StackPaths [shortFolder]
-   put the project_Folder of the target into projectFolder
-   put project_ListPaths (shortFolder, projectFolder) into projectStackPaths
-   return projectStackPaths
-end project_StackPaths
-
-getprop project_HomeStackBrowser
-   put the project_Name of the target into pHomeStackName
-   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
-   return browserWidget
-end project_HomeStackBrowser
-
-
---> Project | List
--
-function project_ListAllStackPaths projectFolder
-   put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
-   put folder_ListLong (projectFolder) into standardFolders
-   repeat for each line standardFolder in standardFolders
-      if standardFolder ends with "/assets/" then next repeat
-      if standardFolder ends with "/modules/" then
-         put folder_ListLong (standardFolder) into viewFolders
-         repeat for each line viewFolder in viewFolders
-            put folder_ListStackPaths (viewFolder) into stackPaths
-            if stackPaths is not empty then
-               put stackPaths & CR after projectStackPaths
-            end if
-         end repeat
-      end if
-      put folder_ListStackPaths (standardFolder) into stackPaths
-      if stackPaths is not empty then
-         put stackPaths & CR after projectStackPaths
-      end if
-   end repeat
-   delete char -1 of projectStackPaths
-   return projectStackPaths
-end project_ListAllStackPaths
-
-
 --> Project | Home
 -
 function project_GetHomeStackBrowser pHomeStackName
@@ -1494,7 +1469,6 @@ getprop module_HomeStackPath [moduleName]
    if exists (stack moduleHomeStackPath) is false then return empty
    return moduleHomeStackPath
 end module_HomeStackPath
-
 
 --> Deps
 -

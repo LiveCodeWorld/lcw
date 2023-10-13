@@ -62,7 +62,6 @@ function file_NewShortPath shortFile, sPath
 end file_NewShortPath
 
 function file_GetShort someFile
-   -- was "file_LongToShort", "file_ExtractShortFile", "extract_ShortFile"
    set the itemdelimiter to slash
    put item -1 of someFile into shortFile
    return shortFile
@@ -1005,7 +1004,7 @@ return tableLine
 end folder_ConstructInfoTableLine
 
 function folder_NestedFilesInside someFolder
-    put folder_ConstructFileOutline(someFolder, outlineArray) into fileOutline
+    put folder_ConstructFileOutline (someFolder, outlineArray) into fileOutline
     return outlineArray ["FileIndex"]
 end folder_NestedFilesInside
 

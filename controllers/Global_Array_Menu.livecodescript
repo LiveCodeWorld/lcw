@@ -39,6 +39,14 @@ getprop stackStyle_Params
    return "toplevel,palette,system"
 end stackStyle_Params
 
+getprop checked_ShowNumbers [displayView]
+   return the show_Numbers of displayView
+end checked_ShowNumbers
+
+getprop checked_ShowValues [displayView]
+   return the show_Values of displayView
+end checked_ShowValues
+
 
 --> Global | Array | Menu
 -
@@ -60,17 +68,17 @@ end menu_MouseDoubleupHandler
 private on __
 end __
 
-on menu_SetTitleMenu displayView
+on menu_SetMenu displayView
    put the title_Menu of displayView into mTitle
    put lcw_Ask ("What menu title do you want to attach to the tree_View?", mTitle) into mTitle
    set the title_Menu of displayView to mTitle
-end menu_SetTitleMenu
+end menu_SetMenu
 
-on menu_EditTitleMenu displayView
+on menu_EditMenuScript displayView
    put the title_Menu of displayView into mTitle
    --
    menu_Edit mTitle
-end menu_EditTitleMenu
+end menu_EditMenuScript
 
 private on ___
 end ___
@@ -81,21 +89,26 @@ on menu_SetLineMenu displayView
    set the line_Menu of displayView to mTitle
 end menu_SetLineMenu
 
-on menu_EditLineMenu displayView
+on menu_LineMenuScript displayView
    put the line_Menu of displayView into mTitle
    --
    menu_Edit mTitle
-end menu_EditLineMenu
+end menu_LineMenuScript
 
 private on ____
 end ____
 
-on menu_TreeBehavior displayView   
-   put the behavior of displayView into bObject
-   edit the script of bObject
-end menu_TreeBehavior
+on menu_ShowNumbers displayView
+   put the show_Numbers of displayView into sBoolean
+   set the show_Numbers of displayView to (sBoolean is false)
+end menu_ShowNumbers
 
-on menu_FoldState displayView   
+on menu_ShowValues displayView
+   put the show_Values of displayView into sBoolean
+   set the show_Values of displayView to (sBoolean is false)
+end menu_ShowValues
+
+on menu_FoldState displayView
    put the fold_State of displayView into fState
    display_Data fState, "fold_State", "Tree"
 end menu_FoldState
@@ -106,3 +119,19 @@ on menu_SortType displayView, treeSortType
    
    set the sortType of treeWidget to treeSortType
 end menu_SortType
+
+private on _____
+end _____
+
+on menu_TreeBehavior displayView   
+   put the behavior of displayView into bObject
+   edit the script of bObject
+end menu_TreeBehavior
+
+on menu_TreeInspector displayView
+   display_ObjectProperties displayView
+end menu_TreeInspector
+
+on submenu_Dev
+   return menu_DevTitle()
+end submenu_Dev

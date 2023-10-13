@@ -11,10 +11,171 @@ Project folders are the top-level LCW folders as stored in GitHub.
 
 They no longer refer to project-metadata folders, which are now called textstack_Folders, or things like "dataObject_Folder".
 Those older names are a bit of a mess.
+
+-- function project_ListAllStackPaths projectFolder
+put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
+put folder_ListLong (projectFolder) into standardFolders
+repeat for each line standardFolder in standardFolders
+   if standardFolder ends with "/assets/" then next repeat
+   if standardFolder ends with "/modules/" then
+      put folder_ListLong (standardFolder) into viewFolders
+      repeat for each line viewFolder in viewFolders
+         put folder_ListStackPaths (viewFolder) into stackPaths
+         if stackPaths is not empty then
+            put stackPaths & CR after projectStackPaths
+         end if
+      end repeat
+   end if
+   put folder_ListStackPaths (standardFolder) into stackPaths
+   if stackPaths is not empty then
+      put stackPaths & CR after projectStackPaths
+   end if
+end repeat
+delete char -1 of projectStackPaths
+return projectStackPaths
+project_ListAllStackPaths
+
+function project_ListSubfolderPaths shortFolder, projectName
+   -- not nested. Files not stack paths (replaced by project_ListStandardStackPaths)
+   put project_FolderFromName (projectName, shortFolder) into standardFolder -- in lib_LCW
+   put file_ListLong (standardFolder, pShowInvisible) into filePaths
+   return filePaths
+end project_ListSubfolderPaths
 */
 
 --> Working on
 -
+function project_ListStandardStackPaths shortFolder, projectName, pListNested
+   put project_FolderFromName (projectName, shortFolder) into standardFolder
+   --
+   if pListNested is not false then
+      put directory_ListNestedStackFiles (standardFolder) into stackPaths
+   else
+      put folder_ListStackPaths (standardFolder) into stackPaths
+   end if
+   return stackPaths
+end project_ListStandardStackPaths
+
+function project_FolderFromName projectName, pShortFolder
+   if exists (stack projectName) is false then
+      put env_ConstructProjectFolder (projectName) into projectFolder
+      if there is not a folder projectFolder then
+         return empty
+      end if
+   else
+      put the stack_Folder of stack projectName into projectFolder
+   end if
+   
+   if pShortFolder is empty then return projectFolder
+   put projectFolder & pShortFolder & slash into standardFolder
+   return standardFolder
+end project_FolderFromName
+
+function project_ListAllStackPaths projectName
+   put env_ConstructProjectFolder (projectName) into projectFolder
+   if there is not a folder projectFolder then
+      return empty
+   end if
+   --
+   put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   return stackPaths
+end project_ListAllStackPaths
+
+function project_ListPathsOfType shortFolder, projectFolder
+   -- old 
+   switch shortFolder
+      case empty
+         put project_ListAllStackPaths (projectFolder) into stackPaths
+         return stackPaths
+      case "modules"
+         put folder_AddShort (projectFolder, "modules") into viewFolder
+         put folder_ListLong (viewFolder) into subViewFolders
+         repeat for each line subViewFolder in subViewFolders
+            put folder_ListStackPaths (subViewFolder) into stackPaths
+            if stackPaths is not empty then
+               put stackPaths & CR after projectStackPaths
+            end if
+         end repeat
+         
+         put folder_ListStackPaths (viewFolder) into stackPaths
+         if stackPaths is not empty then
+            put stackPaths & CR after projectStackPaths
+         end if
+         return projectStackPaths
+      case "all controllers"
+         put project_ListAllControllers (projectFolder) into stackPaths
+         return stackPaths
+      default
+         put folder_AddShort (projectFolder, shortFolder) into standardFolder
+         put folder_ListStackPaths (standardFolder) into stackPaths
+         return stackPaths
+   end switch
+end project_ListPathsOfType
+
+function project_ListStackNames shortFolder, projectName
+   put the project_Folder of stack projectName into projectFolder
+   
+   repeat for each line longFile in longFiles
+      if exists (stack longFile) is false then next repeat
+      put the short name of stack longFile into stackName
+      put stackName & CR after stackNames
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end project_ListStackNames
+
+function project_ListShortFiles shortFolder, projectName
+   put the stack_Folder of stack projectName into standardFolder
+   put file_ListShort (standardFolder) into shortFiles
+   return shortFiles
+end project_ListShortFiles
+
+
+--> Props
+-
+getprop project_StackPaths
+   put the project_Folder of the target into projectFolder
+   put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   return stackPaths
+end project_StackPaths
+
+getprop project_StackNames [folderName]
+   put the project_Name of the target into projectName
+   if folderName is empty then
+      put the stackfile_Names of stack projectName into projectStackNames
+   else
+      put project_GetFolder (projectName, folderName) into standardFolder
+      if standardFolder is empty then return empty
+      put folder_ListStackNames (standardFolder) into projectStackNames
+   end if
+   return projectStackNames
+end project_StackNames
+
+getprop controller_File [shortFile]
+   put the controller_Folder of the target into cFolder
+   return cFolder & shortFile
+end controller_File
+
+getprop menu_ControllerPath [gMenuTitle]
+   put the long id of the target into tObject
+   --
+   put the project_Name of tObject into projectName
+   if exists (stack projectName) is false then return empty
+   if gMenuTitle is empty then put the stack_Name of tObject into gMenuTitle
+   --
+   put the project_Folder of stack projectName into projectFolder
+   put project_ConstructStandardFile (gMenuTitle, projectFolder, "controllers") into controllerPath
+   return controllerPath
+end menu_ControllerPath
+
+getprop controller_Folder
+   put the project_Folder of the target into projectFolder
+   if projectFolder is empty then return empty
+   put projectFolder & "controllers/" into cFolder
+   if there is not a folder cFolder then return empty
+   return cFolder
+end controller_Folder
+
 function project_GetHomeStackPath projectName
    if exists (stack projectName) is false then return empty
    
@@ -53,46 +214,9 @@ function project_ListBehaviorStackNames pProjectNames
 end project_ListBehaviorStackNames
 
 function project_ListBehaviorPaths projectName
-   put project_ListSubfolderPaths ("behaviors", projectName) into filePaths
+   put project_ListStandardStackPaths ("behaviors", projectName) into filePaths
    return filePaths
 end project_ListBehaviorPaths
-
-getprop project_StackNames [folderName]
-   put the project_Name of the target into projectName
-   if folderName is empty then
-      put the stackfile_Names of stack projectName into projectStackNames
-   else
-      put project_GetFolder (projectName, folderName) into standardFolder
-      if standardFolder is empty then return empty
-      put folder_ListStackNames (standardFolder) into projectStackNames
-   end if
-   return projectStackNames
-end project_StackNames
-
-getprop controller_File [shortFile]
-   put the controller_Folder of the target into cFolder
-   return cFolder & shortFile
-end controller_File
-
-getprop menu_ControllerPath [gMenuTitle]
-   put the long id of the target into tObject
-   --
-   put the project_Name of tObject into projectName
-   if exists (stack projectName) is false then return empty
-   if gMenuTitle is empty then put the stack_Name of tObject into gMenuTitle
-   --
-   put the project_Folder of stack projectName into projectFolder
-   put project_ConstructStandardFile (gMenuTitle, projectFolder, "controllers") into controllerPath
-   return controllerPath
-end menu_ControllerPath
-
-getprop controller_Folder
-   put the project_Folder of the target into projectFolder
-   if projectFolder is empty then return empty
-   put projectFolder & "controllers/" into cFolder
-   if there is not a folder cFolder then return empty
-   return cFolder
-end controller_Folder
 
 
 --> Project | List | Modules
@@ -217,13 +341,6 @@ function project_NameToShortFile moduleName
    return shortFile
 end project_NameToShortFile
 
-function project_ListSubfolderPaths shortFolder, projectName
-   -- used by everything
-   put project_FolderFromName (projectName, shortFolder) into standardFolder -- in lib_LCW
-   put file_ListLong (standardFolder, pShowInvisible) into filePaths
-   return filePaths
-end project_ListSubfolderPaths
-
 
 --> Project | Names
 -
@@ -258,21 +375,6 @@ end project_NameToShortFile
 
 --> Project | List | New
 -
-function project_ListMenus projectName
-   -- put project_ListControllerPaths (projectName) into controllerPaths
-   put project_GetFolder (projectName) into projectFolder
-   put project_ListPaths ("all controllers", projectFolder) into controllerPaths
-   put stack_PathsToNames (controllerPaths) into stackNames
-   --
-   sort stackNames
-   set the itemdelimiter to "|"
-   sort stackNames by item 2 of each
-   set the itemdelimiter to "_"
-   sort stackNames by item 2 of each
-   --
-   return stackNames
-end project_ListMenus
-
 function project_ListUsedDeps projectName
    -- not in order of use?
    put project_ListProjectDepNames (projectName) into depNames
@@ -350,70 +452,9 @@ end project_StackFileTable
 
 getprop project_Paths [shortFolder]
    put the project_Name of the target into projectName
-   put project_ListSubfolderPaths (shortFolder, projectName) into filePaths
+   put project_ListStandardStackPaths (shortFolder, projectName) into filePaths
    return filePaths
 end project_Paths
-
-
---> Project | List | Paths
--
-/*
-Here we try to use standard names and be as fast and simple as possible.
-
--- put library_FetchProjectFolder (projectName) into projectFolder
--- put the stack_Folder of stack projectName into projectFolder
--- put project_ListPaths ("controllers", projectFolder) into controllerStackPaths
-*/
-
-function project_ListBehaviorPaths projectName
-   put project_ListSubfolderPaths ("behaviors", projectName) into filePaths
-   return filePaths
-end project_ListBehaviorPaths
-
-function project_ListLibraryPaths projectName
-   put project_ListSubfolderPaths ("libraries", projectName) into filePaths
-   return filePaths
-end project_ListLibraryPaths
-
-function project_ListControllerPaths projectName
-   put project_ListSubfolderPaths ("controllers", projectName) into filePaths
-   return filePaths
-end project_ListControllerPaths
-
-function project_ListModelPaths projectName
-   put project_ListSubfolderPaths ("models", projectName) into filePaths
-   return filePaths
-end project_ListModelPaths
-
-function project_ListViewPaths projectName
-   put project_ListSubfolderPaths ("views", projectName) into filePaths
-   return filePaths
-end project_ListViewPaths
-
-
---> Project | List
--
-/*
-Tries to be as fast and minimal as possible.
-*/
-
-function project_ListStackNames shortFolder, projectName
-   put the project_Folder of stack projectName into projectFolder
-   put project_ListPaths (shortFolder, projectFolder) into longFiles
-   repeat for each line longFile in longFiles
-      if exists (stack longFile) is false then next repeat
-      put the short name of stack longFile into stackName
-      put stackName & CR after stackNames
-   end repeat
-   delete char -1 of stackNames
-   return stackNames
-end project_ListStackNames
-
-function project_ListShortFiles shortFolder, projectName
-   put the stack_Folder of stack projectName into standardFolder
-   put file_ListShort (standardFolder) into shortFiles
-   return shortFiles
-end project_ListShortFiles
 
 
 --> Project | Start
@@ -454,24 +495,63 @@ These functions return the paths to stacks in standard toplevel project folders.
 They should work for modules as well as projects as they have the same structure.
 */
 
-function project_ListControllerStackNames projectName
+function project_ListMenus projectName
    -- put project_ListControllerPaths (projectName) into controllerPaths
-   put project_ListPaths ("controllers", projectFolder) into controllerPaths
+   put project_GetFolder (projectName) into projectFolder
+   put project_ListAllControllers (projectFolder) into controllerPaths
+   --
+   put stack_PathsToNames (controllerPaths) into stackNames
+   --
+   sort stackNames
+   set the itemdelimiter to "|"
+   sort stackNames by item 2 of each
+   set the itemdelimiter to "_"
+   sort stackNames by item 2 of each
+   --
+   return stackNames
+end project_ListMenus
+
+--> Project | List | Paths
+-
+function project_ListBehaviorPaths projectName
+   put project_ListStandardStackPaths ("behaviors", projectName) into filePaths
+   return filePaths
+end project_ListBehaviorPaths
+
+function project_ListLibraryPaths projectName
+   put project_ListStandardStackPaths ("libraries", projectName) into filePaths
+   return filePaths
+end project_ListLibraryPaths
+
+function project_ListControllerPaths projectName
+   put project_ListStandardStackPaths ("controllers", projectName) into filePaths
+   return filePaths
+end project_ListControllerPaths
+
+function project_ListModelPaths projectName
+   put project_ListStandardStackPaths ("models", projectName) into filePaths
+   return filePaths
+end project_ListModelPaths
+
+function project_ListViewPaths projectName
+   put project_ListStandardStackPaths ("views", projectName) into filePaths
+   return filePaths
+end project_ListViewPaths
+
+function project_ListControllerStackNames projectName
+   put the stack_Folder of stack projectName into projectFolder
+   put project_ListAllControllers (projectFolder) into controllerPaths
    put stack_PathsToNames (controllerPaths) into stackNames
    return stackNames
 end project_ListControllerStackNames
 
-function project_ListStackPaths projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put the stack_Folder of stack projectName into projectFolder
-   put project_ListPaths ("stacks", projectFolder) into stackStackPaths
+function project_ListStackPaths projectName   
+   put project_ListStandardStackPaths ("stacks", projectName) into stackPaths
    return stackStackPaths
 end project_ListStackPaths
 
 function project_ListViewPaths projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put the stack_Folder of stack projectName into projectFolder
-   put project_ListPaths ("views", projectFolder) into viewPaths
+   put project_ListStandardStackPaths ("views", projectName) into stackPaths
    return viewPaths
 end project_ListViewPaths
 
@@ -481,9 +561,7 @@ function project_ListFrontScripts projectName
 end project_ListFrontScripts
 
 function project_ListFrontScriptPaths projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put the stack_Folder of stack projectName into projectFolder
-   put project_ListPaths ("frontscripts", projectFolder) into viewPaths
+   put project_ListStandardStackPaths ("frontscripts", projectName) into stackPaths
    return viewPaths
 end project_ListFrontScriptPaths
 
@@ -493,9 +571,7 @@ function project_ListBackScripts projectName
 end project_ListBackScripts
 
 function project_ListBackScriptPaths projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put the stack_Folder of stack projectName into projectFolder
-   put project_ListPaths ("backscripts", projectFolder) into viewPaths
+   put project_ListStandardStackPaths ("backscripts", projectName) into stackPaths
    return viewPaths
 end project_ListBackScriptPaths
 
@@ -516,23 +592,6 @@ function project_ListViewStackNames projectName
    -- filter stackNames with "View|*"
    return stackNames
 end project_ListViewStackNames
-
-function project_GetViewStackArray projectName
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put the stack_Folder of stack projectName into projectFolder
-   put project_ListPaths ("views", projectFolder) into viewPaths
-   put stack_PathsToNames (viewPaths) into stackNames
-   repeat for each line stackName in stackNames
-      put the object_MetaData ["type"] of stack stackName into objectType
-      switch
-         -- case 
-      end switch
-   end repeat
-   
-   -- filter stackNames without "behavior_*"
-   filter stackNames with "View|*"
-   return stackNames
-end project_GetViewStackArray
 
 function project_ListUsedStackPaths projectName
    -- put library_FetchProjectFolder (projectName) into projectFolder
@@ -606,3 +665,62 @@ function stack_PathsToObjects stackNameOrPaths
    delete char -1 of stackObjects
    return stackObjects
 end stack_PathsToObjects
+
+
+--> Deps | lib_DirectoryWalker
+-
+function directory_ListNestedStackFiles someFolder
+   if there is not a folder someFolder then return empty
+   
+   put directory_ListNestedPaths (someFolder) into nPaths
+   repeat for each line sFile in nPaths
+      if exists (stack sFile) then
+         put sFile & CR after sFiles
+      end if
+   end repeat
+   delete char -1 of sFiles
+   return sFiles
+end directory_ListNestedStackFiles 
+
+function directory_ListNestedPaths someFolder, pSetRelative
+   local NestedPaths
+   if there is not a folder someFolder then return empty
+   
+   # Walk
+   set the itemdelimiter to slash
+   text_AddTrailing someFolder, slash
+   if pSetRelative is true then
+      put the number of items of someFolder into baseFolderNum
+      _WalkAndList NestedPaths, someFolder, baseFolderNum
+   else
+      _WalkAndList NestedPaths, someFolder, baseFolderNum
+   end if
+   delete char -1 of NestedPaths
+   return NestedPaths
+end directory_ListNestedPaths 
+
+private command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
+   -- recursive
+   put files (someFolder) into shortFiles
+   put someFolder into pathFolder
+   if pBaseFolderNum is a number then
+      set the itemdelimiter to slash
+      delete item 1 to pBaseFolderNum of pathFolder
+   end if
+   
+   # Add files (not folders) to NestedPaths
+   filter shortFiles without ".*"
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFile = "." then next repeat
+      put pathFolder & shortFile into foundPath
+      put foundPath & CR after NestedPaths
+   end repeat
+   
+   # Recurse
+   put folders (someFolder) into shortChildFolders
+   repeat for each line shortChildFolder in shortChildFolders
+      if char 1 of shortChildFolder = "." then next repeat
+      put someFolder & shortChildFolder & slash into childFolder
+      _WalkAndList NestedPaths, childFolder, pBaseFolderNum
+   end repeat
+end _WalkAndList

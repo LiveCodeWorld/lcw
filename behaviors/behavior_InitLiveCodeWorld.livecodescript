@@ -38,6 +38,79 @@ as well as give the HomeStack and interface and some useful functionality.
 
 --> Working on
 -
+function project_ListAllStackPaths projectFolder
+   -- old
+   put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
+   put folder_ListLong (projectFolder) into standardFolders
+   repeat for each line standardFolder in standardFolders
+      if standardFolder ends with "/assets/" then next repeat
+      if standardFolder ends with "/modules/" then
+         put folder_ListLong (standardFolder) into viewFolders
+         repeat for each line viewFolder in viewFolders
+            put folder_ListStackPaths (viewFolder) into stackPaths
+            if stackPaths is not empty then
+               put stackPaths & CR after projectStackPaths
+            end if
+         end repeat
+      end if
+      
+      put folder_ListStackPaths (standardFolder) into stackPaths
+      if stackPaths is not empty then
+         put stackPaths & CR after projectStackPaths
+      end if
+   end repeat
+   delete char -1 of projectStackPaths
+   return projectStackPaths
+end project_ListAllStackPaths
+
+function project_ListPathsOfType shortFolder, projectFolder
+   switch shortFolder
+      case empty
+         put project_ListAllStackPaths (projectFolder) into stackPaths
+         return stackPaths
+      case "modules"
+         put _ConstructProjectFolder ("modules", projectFolder) into viewFolder
+         put folder_ListLong (viewFolder) into subViewFolders
+         repeat for each line subViewFolder in subViewFolders
+            put folder_ListStackPaths (subViewFolder) into stackPaths
+            if stackPaths is not empty then
+               put stackPaths & CR after projectStackPaths
+            end if
+         end repeat
+         
+         put folder_ListStackPaths (viewFolder) into stackPaths
+         if stackPaths is not empty then
+            put stackPaths & CR after projectStackPaths
+         end if
+         return projectStackPaths
+      default
+         put _ConstructProjectFolder (shortFolder, projectFolder) into standardFolder
+         put folder_ListStackPaths (standardFolder) into stackPaths
+         return stackPaths
+   end switch
+end project_ListPathsOfType
+
+
+--> Props
+-
+getprop project_ViewStackPaths
+   put the project_StackPaths ["views"] of the target into stackPaths
+   filter stackPaths without "*/behavior_*"
+   return stackPaths
+end project_ViewStackPaths
+
+getprop project_StackPaths [shortFolder]
+   put the project_Folder of the target into projectFolder
+   put project_ListPathsOfType (shortFolder, projectFolder) into projectStackPaths
+   return projectStackPaths
+end project_StackPaths
+
+getprop project_HomeStackBrowser
+   put the project_Name of the target into pHomeStackName
+   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
+   return browserWidget
+end project_HomeStackBrowser
+
 getprop module_Folder [pModuleName]
    put the template_Object of the target into templateObject
    if exists (templateObject) is false then return empty
@@ -66,7 +139,7 @@ end module_Folder
 --> Init
 -
 command project_LoadMenus projectFolder
-   put project_ListPaths ("controllers", projectFolder) into stackPaths
+   put project_ListPathsOfType ("controllers", projectFolder) into stackPaths
    project_IndexGlobalMenus stackPaths
 end project_LoadMenus
 
@@ -634,97 +707,6 @@ command github_DownloadProject projectName, lcwRoot
       exit to top
    end if
 end github_DownloadProject
-
-
---> Project | Props
--
-/*
-Here is a list of naming conventions we use for projects:
-
-A project has a home stack.
-The home stack is often a script only stack, but this is not required.
-The short name of the homestack is the name of the project.
-The short file of the homestack is the name of the project followed by ".livecode" (eg "lcw.livecode").
-We use the ".livecode" regardless of whether the stack is a script only stack to make it easier to derive the path from the project name and therfore locate.
-The short file of the homestack is in lower case (eg "lcw.livecode" not "LCW.livecode")
-*/
-
-getprop project_ViewStackPaths
-   put the project_StackPaths ["views"] of the target into stackPaths
-   filter stackPaths without "*/behavior_*"
-   return stackPaths
-end project_ViewStackPaths
-
-getprop project_StackPaths [shortFolder]
-   put the project_Folder of the target into projectFolder
-   put project_ListPaths (shortFolder, projectFolder) into projectStackPaths
-   return projectStackPaths
-end project_StackPaths
-
-getprop project_HomeStackBrowser
-   put the project_Name of the target into pHomeStackName
-   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
-   return browserWidget
-end project_HomeStackBrowser
-
-
---> Project | List
--
-function project_ListPaths shortFolder, projectFolder
-   switch shortFolder
-      case empty
-         put project_ListAllStackPaths (projectFolder) into stackPaths
-         return stackPaths
-      case "modules"
-         put _ConstructProjectFolder ("modules", projectFolder) into viewFolder
-         put folder_ListLong (viewFolder) into subViewFolders
-         repeat for each line subViewFolder in subViewFolders
-            put folder_ListStackPaths (subViewFolder) into stackPaths
-            if stackPaths is not empty then
-               put stackPaths & CR after projectStackPaths
-            end if
-         end repeat
-         
-         put folder_ListStackPaths (viewFolder) into stackPaths
-         if stackPaths is not empty then
-            put stackPaths & CR after projectStackPaths
-         end if
-         return projectStackPaths
-      default
-         put _ConstructProjectFolder (shortFolder, projectFolder) into standardFolder
-         put folder_ListStackPaths (standardFolder) into stackPaths
-         return stackPaths
-   end switch
-   
-   -- lists only the top-level stacks in the projectFolder
-   -- put _ConstructProjectFolder (shortFolder, projectFolder) into standardFolder
-   -- put folder_ListStackPaths (standardFolder) into stackPaths
-   -- return stackPaths
-end project_ListPaths
-
-function project_ListAllStackPaths projectFolder
-   put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
-   put folder_ListLong (projectFolder) into standardFolders
-   repeat for each line standardFolder in standardFolders
-      if standardFolder ends with "/assets/" then next repeat
-      if standardFolder ends with "/modules/" then
-         put folder_ListLong (standardFolder) into viewFolders
-         repeat for each line viewFolder in viewFolders
-            put folder_ListStackPaths (viewFolder) into stackPaths
-            if stackPaths is not empty then
-               put stackPaths & CR after projectStackPaths
-            end if
-         end repeat
-      end if
-      
-      put folder_ListStackPaths (standardFolder) into stackPaths
-      if stackPaths is not empty then
-         put stackPaths & CR after projectStackPaths
-      end if
-   end repeat
-   delete char -1 of projectStackPaths
-   return projectStackPaths
-end project_ListAllStackPaths
 
 
 --> Project | Home

@@ -228,7 +228,7 @@ function menu_ConstructGlobalControllerArray pObjectFormat
          if pObjectFormat is not empty then
             put the pObjectFormat of someObject into someObject
          end if
-         array_AddToIndex globalTitle, someObject, menuObjectArray
+         indexArray_Add globalTitle, someObject, menuObjectArray
       end if
    end repeat
    return menuObjectArray

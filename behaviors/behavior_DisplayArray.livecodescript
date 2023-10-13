@@ -12,6 +12,25 @@ This behavior_DisplayArray script only stack behavior controls the properties of
 
 To do: Should consider moving it to the behavior of the view rather than the stack -,
 so that if the view is cloned and not the whole stack the view keeps working.
+
+getprop menu_Controller [pMenuTitle]
+   put menu_GetGlobalController (pMenuTitle) into mController
+   if exists (mController) is true then return mController
+   
+   put the menu_Controller of me into mController
+   if exists (mController) is true then return mController
+   return empty
+end menu_Controller
+
+setprop menu_Controller mController
+   if exists (mController) is false then return empty
+   --
+   set the menu_Controller of me to mController
+   --
+   put the script_MenuTitles of mController into mTitles
+   set the title_Menu of me to mTitles
+   return mTitles
+end menu_Controller
 */
 
 --> Variables
@@ -21,12 +40,188 @@ local LocalArray
 
 --> Working on
 -
-private command _displaySelectedValue pTreeWidget
-   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
-   put the selected_Value of pTreeWidget into selectedValue
+getprop show_Separator
+   put _treeWidget() into treeWidget
+   return the showSeparator of treeWidget
+end show_Separator
+
+setprop show_Separator sBoolean
+   put _treeWidget() into treeWidget
+   set the showSeparator of treeWidget to sBoolean
+   return treeWidget
+end show_Separator
+
+getprop show_Values
+   put _treeWidget() into treeWidget
+   return the showValues of treeWidget
+end show_Values
+
+setprop show_Values sBoolean
+   put _treeWidget() into treeWidget
+   set the showValues of treeWidget to sBoolean
+   return treeWidget
+end show_Values
+
+getprop show_Numbers
+   put _treeWidget() into treeWidget
+   put the charsToTrimFromKey of treeWidget into sNum
+   return sNum = 0
+end show_Numbers
+
+setprop show_Numbers sBoolean
+   put _treeWidget() into treeWidget
    
-   dispatch "tree_HilightChanged" to me with selectedValue
-end _displaySelectedValue
+   lock screen
+   if sBoolean is true then
+      set the charsToTrimFromKey of treeWidget to 0
+      set the separatorRatio of treeWidget to 0.3
+   else
+      set the charsToTrimFromKey of treeWidget to 2
+      set the separatorRatio of treeWidget to 0
+   end if
+   unlock screen
+end show_Numbers
+
+getprop trim_Num
+   get the charsToTrimFromKey of _treeWidget()
+   return it
+end trim_Num
+
+setprop trim_Num sNum
+   set the charsToTrimFromKey of _treeWidget() to sNum
+end trim_Num
+
+getprop max_LineNum
+   put the displayed_Index of me into dLines
+   return the number of lines of dLines
+end max_LineNum
+
+
+--> Props | Menu | Model
+-
+/*
+Changed from LocalArray to setting custom props
+*/
+
+getprop title_Menu
+   put the title_Menu of me into mName
+   if mName is empty then 
+      return "Global | Array | Menu"
+   else
+      return mName
+   end if
+end title_Menu
+
+setprop title_Menu mName
+   set the title_Menu of me to mName
+end title_Menu
+
+getprop line_Menu
+   put the line_Menu of me into mName
+   if mName is empty then 
+      return "Global | Array | Line | Menu"
+   else
+      return mName
+   end if
+end line_Menu
+
+setprop line_Menu mName
+   set the line_Menu of me to mName
+end line_Menu
+
+getprop menu_Target [mTitlePath]
+   put the menu_Target of me into mTarget
+   --
+   put the displayed_Object of me into displayedObject
+   switch 
+      case mTarget is not empty
+         return mTarget
+      case displayedObject is not empty
+         return displayedObject
+      default
+         return the long id of me
+   end switch
+end menu_Target
+
+setprop menu_Target [mTitlePath] mTarget
+   set the menu_Target of me to mTarget
+end menu_Target
+
+getprop title_Controller
+   put the title_Controller of me into mController
+   if exists (mController) then
+      return mController
+   end if
+   
+   ## Default
+   put the title_Menu of me into mTitle
+   put menu_GetGlobalController (mTitle) into mController
+   return mController
+end title_Controller
+
+getprop line_Controller
+   put the line_Controller of me into mController
+   if exists (mController) then
+      return mController
+   end if
+   
+   ## Default
+   put the line_Menu of me into mTitle
+   put menu_GetGlobalController (mTitle) into mController
+   return mController
+end line_Controller
+
+
+--> Model
+-
+getprop displayed_Data
+   if LocalArray ["isIndex"] is true then
+      return the displayed_Index of me
+   else
+      put tree_GetData() into treeData
+      return treeData
+   end if
+end displayed_Data
+
+setprop displayed_Data [someTitle] sData
+   lock screen
+   if sData is an array then
+      set the arrayData of _treeWidget() to sData
+      set the show_Values of me to true
+      set the show_Numbers of me to true
+      put false into LocalArray ["isIndex"]
+   else
+      set the displayed_Index of me to sData
+   end if
+   if someTitle is not empty then
+      set the title_Text of me to someTitle
+   end if
+   unlock screen
+end displayed_Data
+
+getprop displayed_Index
+   put the arrayData of _treeWidget() into someArray
+   put keys (someArray) into someIndex
+   sort lines of someIndex
+   return someIndex
+end displayed_Index
+
+setprop displayed_Index [someTitle] someIndex
+   lock screen
+   repeat for each line someLine in someIndex
+      put empty into someArray [someLine]
+   end repeat
+   --
+   set the arrayData of _treeWidget() to someArray
+   set the show_Values of me to false
+   set the show_Numbers of me to true
+   --
+   if someTitle is not empty then
+      set the stack_Title of me to someTitle
+   end if
+   unlock screen
+   put true into LocalArray ["isIndex"]
+end displayed_Index
 
 
 --> Props | Events
@@ -138,6 +333,27 @@ end fold_State
 
 --> Events
 -
+on mouseUp
+   ## Only when the user click on the header
+   -- tree widget does not send to mouseUp
+   local tActionName
+   put the long id of the target into headerWidget
+   put the mouseAction of headerWidget into tActionName
+   	
+   switch tActionName
+      case "cog"
+         put the clickloc into pLocation
+         add 2 to item 1of pLocation
+         add 4 to item 2 of pLocation
+         put the menu_Title of headerWidget into mTitle
+         --
+         put the menu_Button of me into mButton
+         mArray_PopUp mTitle, mButton
+      default
+         -- clicked on the title
+   end switch
+end mouseUp
+
 on actionInspect pPath
    put _getValue (pathItems) into someValue
    put the mouse_Up of me into mouseUpCommand
@@ -194,82 +410,12 @@ on hiliteChanged
    end if
 end hiliteChanged
 
-on mouseUp
-   -- called only when the user click on the header as a tree widget does not send to mouseUp
-   local tActionName
-   put the long id of the target into headerWidget
-   put the mouseAction of headerWidget into tActionName
-   	
-   switch tActionName
-      case "cog"
-         put the clickloc into pLocation
-         add 2 to item 1of pLocation
-         add 4 to item 2 of pLocation
-         put the menu_Title of headerWidget into mTitle
-         --
-         if the menu_Style of me is "array" then
-            put the menu_Button of me into mButton
-            mArray_PopUp mTitle, mButton
-         else
-            menu_PopUp mTitle, pLocation
-         end if
-      default
-         -- clicked on the title
-   end switch
-end mouseUp
-
-
---> Props | Menu | Model
--
-getprop title_Menu
-   -- put LocalArray ["title_Menu"] into mName
-   put the title_Menu of me into mName
-   if mName is empty then 
-      return "Global | Array | Menu"
-   else
-      return mName
-   end if
-end title_Menu
-
-setprop title_Menu mName
-   -- put mName into LocalArray ["title_Menu"]
-   set the title_Menu of me to mName
-end title_Menu
-
-getprop line_Menu
-   -- put LocalArray ["line_Menu"] into mName
-   put the line_Menu of me into mName
-   if mName is empty then 
-      return "Global | Array | Line | Menu"
-   else
-      return mName
-   end if
-end line_Menu
-
-setprop line_Menu mName
-   -- put mName into LocalArray ["line_Menu"]
-   set the line_Menu of me to mName
-end line_Menu
-
-getprop menu_Target [mTitlePath]
-   -- put LocalArray ["menuTarget"] into mTarget
-   put the menu_Target of me into mTarget
-   --
-   put the displayed_Object of me into displayedObject
-   switch 
-      case mTarget is not empty
-         return mTarget
-      case displayedObject is not empty
-         return displayedObject
-      default
-         return the long id of me
-   end switch
-end menu_Target
-
-setprop menu_Target [mTitlePath] mTarget
-   -- put mTarget into LocalArray ["menuTarget"]
-   set the menu_Target of me to mTarget
-end menu_Target
+private command _displaySelectedValue pTreeWidget
+   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
+   put the selected_Value of pTreeWidget into selectedValue
+   
+   dispatch "tree_HilightChanged" to me with selectedValue
+end _displaySelectedValue
 
 
 --> Props | Menu
@@ -309,33 +455,6 @@ setprop view_MenuArray menuArray
    set the line_Menu of me to menuArray ["line"]
 end view_MenuArray
 
-getprop menu_Controller [pMenuTitle]
-   put menu_GetGlobalController (pMenuTitle) into mController
-   if exists (mController) is true then return mController
-   
-   put LocalArray ["mController"] into mController
-   if exists (mController) is true then return mController
-   
-   return empty
-end menu_Controller
-
-setprop menu_Controller mController
-   if exists (mController) is false then return empty
-   --
-   put mController into LocalArray ["mController"]
-   --
-   put the script_MenuTitles of mController into mTitles
-   set the title_Menu of me to mTitles
-   return mTitles
-end menu_Controller
-
-getprop title_Controller
-   put the long id of me into tObject
-   put the title_Menu of me into mTitle
-   put menu_FindController (tObject, mTitle) into mController
-   return mController
-end title_Controller
-
 
 --> Model | ArrayIndex
 -
@@ -359,7 +478,7 @@ setprop display_Interactions [mDoubleUp] menuBit
       set the mouse_Target of me to titleController
    end if
 end display_Interactions
-   
+
 getprop index_Array
    put the view_Data of me into indexArray
    return indexArray
@@ -572,6 +691,29 @@ end parent_Array
 
 --> Props | Selected
 -
+getprop selected_LineNumber
+   return the selected_LineNum of me
+end selected_LineNumber
+
+setprop selected_LineNumber lineNum
+   set the selected_LineNum of me to lineNum
+end selected_LineNumber
+
+getprop selected_LineNum
+   -- just top-level lines and assume
+   put the selected_Line of me into topLine
+   
+   set the wholematches to true
+   put _SortedTopKeys() into topKeys
+   put lineoffset (topLine, topKeys) into topLineNum
+   
+   return topLineNum
+end selected_LineNum
+
+setprop selected_LineNum lineNum
+   set the hilited_Element of me to lineNum
+end selected_LineNum
+
 getprop selected_Array
    put _treeWidget() into treeWidget
    
@@ -765,21 +907,6 @@ setprop hilited_Line lineNum
    set the hilited_Element of me to lineNum
 end hilited_Line
 
-getprop selected_LineNum
-   -- just top-level lines and assume
-   put the selected_Line of me into topLine
-   
-   set the wholematches to true
-   put _SortedTopKeys() into topKeys
-   put lineoffset (topLine, topKeys) into topLineNum
-   
-   return topLineNum
-end selected_LineNum
-
-setprop selected_LineNum lineNum
-   set the hilited_Element of me to lineNum
-end selected_LineNum
-
 function _SortedTopKeys
    put the displayed_Data of me into myData
    put keys (myData) into topKeys
@@ -890,50 +1017,6 @@ setprop displayed_Array [someTitle] someArray
    -- compatibility with old treeView
    set the displayed_Data [someTitle] of me to someArray
 end displayed_Array
-
-getprop displayed_Data
-   if LocalArray ["isIndex"] is true then
-      return the displayed_Index of me
-   else
-      put tree_GetData() into treeData
-      return treeData
-   end if
-end displayed_Data
-
-setprop displayed_Data [someTitle] sData
-   lock screen
-   if sData is an array then
-      set the arrayData of _treeWidget() to sData
-      put false into LocalArray ["isIndex"]
-   else
-      set the displayed_Index of me to sData
-   end if
-   if someTitle is not empty then
-      set the title_Text of me to someTitle
-   end if
-   unlock screen
-end displayed_Data
-
-getprop displayed_Index
-   put the arrayData of _treeWidget() into someArray
-   put keys (someArray) into someIndex
-   sort lines of someIndex
-   return someIndex
-end displayed_Index
-
-setprop displayed_Index [someTitle] someIndex
-   lock screen
-   repeat for each line someLine in someIndex
-      put empty into someArray [someLine]
-   end repeat
-   set the arrayData of _treeWidget() to someArray
-   --
-   if someTitle is not empty then
-      set the stack_Title of me to someTitle
-   end if
-   unlock screen
-   put true into LocalArray ["isIndex"]
-end displayed_Index
 
 
 --> Geometry
