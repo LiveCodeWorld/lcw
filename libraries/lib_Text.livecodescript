@@ -177,15 +177,6 @@ function text_MakePipeTitle someWord
    return pipeTitle
 end text_MakePipeTitle
 
-function text_InitialCaps someText
-   repeat with wordNum = 1 to the number of words of someText
-      put tolower (word wordNum of someText) into someWord
-      put toupper (char 1 of someWord ) into char 1 of someWord
-      put someWord into word wordNum of someText
-   end repeat
-   return someText
-end text_InitialCaps
-
 function text_SplitCaps someWord
    -- was "capsSplit"
    put 1 into charNum
@@ -201,6 +192,15 @@ function text_SplitCaps someWord
    put text_InitialCaps(word 1 of someWord) into word 1 of someWord
    return word 1 to -1 of someWord
 end text_SplitCaps
+
+function text_InitialCaps someText
+   repeat with wordNum = 1 to the number of words of someText
+      put tolower (word wordNum of someText) into someWord
+      put toupper (char 1 of someWord ) into char 1 of someWord
+      put someWord into word wordNum of someText
+   end repeat
+   return someText
+end text_InitialCaps
 
 function text_StartsWithCaps someText
    put char 1 of sometext into testChar

@@ -31,6 +31,42 @@ end ide_MenuTitle
 
 --> Working on
 -
+function ide_DefaultMenubar
+   put the defaultMenuBar into dBar
+   put the long id of group "revMenuBar" of stack revIDEPaletteToStackName("menubar") into revBar
+   return revBar = dBar
+end ide_DefaultMenubar
+
+command ide_ResetDefaultMenubar
+   put menuManager_DefaultMenuGroup() into mmGroup
+   set the defaultMenuBar to mmGroup
+end ide_ResetDefaultMenubar
+
+function menuManager_GetArray
+   put revIDEPaletteToStackName("menubar") into mmStackName
+   put the customKeys of stack mmStackName into mmArray
+   return mmStackName
+end menuManager_GetArray
+
+function menuManager_MenuGroup
+   -- currently selected
+   put revIDEPaletteToStackName("menubar") into mmStackName
+   put the cREVMenuID of stack mmStackName into sMenuID
+   put the cREVDefaultStack of stack mmStackName into sMenuStack
+   --
+   put the long id of bg id sMenuID of stack sMenuStack into sMenuGroup
+   return sMenuGroup
+end menuManager_MenuGroup
+
+function menuManager_DefaultMenuGroup
+   put revIDEPaletteToStackName("menubar") into menuManagerStackName
+   put the long id of group "revMenuBar" of stack menuManagerStackName into mmGroup
+   return mmGroup
+end menuManager_DefaultMenuGroup
+
+
+--> IDE | Hack
+-
 command ide_ResetMenus
    delete variable LocalArray ["environment"]["menu"]
    _ReIndexLocalIdeMenus

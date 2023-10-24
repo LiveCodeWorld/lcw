@@ -9,21 +9,89 @@ version: 0.1
 /*
 This library is about interfacing with shell commands and utilities
 Aim to spilt out lib_SSH soon, but have to update transporter dependencies for that.
-
-command ssh_DeleteFolder sshUser, remoteDomain, relativePath
-   -- be super careful! 
-   -- Not used so far. Consider backing everything up to git before using
-   -- relative to the user specified in sshUser's $HOME directory
-   -- https://www.computerhope.com/issues/ch000798.htm
-   -- rm -rf mydir
-   -- put "rm -R" && relativePath into remoteCommand
-   
-   put "rm -rf" && relativePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end ssh_DeleteFolder
 */
+
+--> Variables
+-
+local LocalArray
+
+
+--> Working on
+-
+command terminal_Diff thisText, lastText, pThisShortFile, pLastShortFile
+   if pThisShortFile is empty then put "this.txt" into pThisShortFile
+   if pLastShortFile is empty then put "last.txt" into pLastShortFile
+   
+   put specialfolderpath ("Desktop") into desktopFolder
+   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
+   folder_CreateNested compareFolder
+   
+   put compareFolder & pThisShortFile into thisFile
+   put compareFolder & pLastShortFile into lastFile
+   
+   diff_CreateTempFile thisText, pThisShortFile
+   put the result into thisFile
+   
+   diff_CreateTempFile lastText, pLastShortFile
+   put the result into lastFile
+   
+   if the shiftkey is "Down" then
+      put "opendiff" into someShell
+      put space & kwote(thisFile, "'") && kwote(lastFile, "'") after someShell
+      terminal_PasteScript someShell
+      put the result into shellResult
+   else
+      set the defaultfolder to compareFolder
+      put "opendiff" && pThisShortFile && pLastShortFile into someShell
+      put shell (someShell) into shellResult
+      
+      /*
+      put "opendiff" into someShell
+      put space & kwote(thisFile, "'") && kwote(lastFile, "'") after someShell
+      --
+      open process someShell for neither
+      put the result into sResult
+      put someShell into LocalArray ["opendiffProcessName"]
+      
+      -- diff_Files pThisShortFile, pLastShortFile
+      */
+   end if
+   return shellResult
+end terminal_Diff
+
+command terminal_KillOpenDiff
+   put LocalArray ["opendiffProcessName"] into opendiffProcessName
+   put the openProcesses into oNames
+   put the openProcessIDs into oIDs
+   --
+   close process opendiffProcessName
+   delete variable LocalArray ["opendiffProcessName"]
+end terminal_KillOpenDiff
+
+command diff_Files thisFile, lastFile
+   -- this fixed upgrade error -- https://stackoverflow.com/questions/17980759/xcode-select-active-developer-directory-error
+   -- can we open in background
+   -- put "sdiff" into someShell
+   
+   -- try to run in the background
+   -- put "(" & someShell && "&)" into someShell -- makes no difference
+   -- put "screen" && someShell into someShell -- does not work (needs to attach screen)
+   
+   put "opendiff" into someShell
+   put space & kwote(thisFile, "'") && kwote(lastFile, "'") after someShell
+   put shell (someShell) into shellResult
+   return shellResult
+end diff_Files
+
+command diff_CreateTempFile someText, shortFile
+   put specialfolderpath ("Desktop") into desktopFolder
+   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
+   folder_CreateNested compareFolder
+   
+   put compareFolder & shortFile into someFile
+   put someText into url ("binfile:" & someFile)
+   return someFile
+end diff_CreateTempFile
 
 
 --> Terminal
@@ -39,8 +107,8 @@ command terminal_PasteScript shellScript, pDelayTime
    put CR & "end tell" after tScript
    put CR & "end tell" after tScript
    --
+   replace "'" with quote in tScript
    put merge (tScript) into  mScript
-   replace "'" with quote in mScript
    --
    do mScript as AppleScript
    put the result into someText
@@ -159,21 +227,6 @@ function shell_Md5Hash someFile
    return fileHash
 end shell_Md5Hash
 
-command diff_Files thisFile, lastFile
-   -- this fixed upgrade error -- https://stackoverflow.com/questions/17980759/xcode-select-active-developer-directory-error
-   -- can we open in background
-   -- put "sdiff" into someShell
-   put "opendiff" into someShell
-   put space & kwote(thisFile) && kwote(lastFile) after someShell
-   
-   -- try to run in the background
-   -- put "(" & someShell && "&)" into someShell -- makes no difference
-   -- put "screen" && someShell into someShell -- does not work (needs to attach screen)
-   
-   put shell (someShell) into shellResult
-   return shellResult
-end diff_Files
-
 
 --> SSH
 -
@@ -279,40 +332,6 @@ command shell_StoreFile sshUser, remoteDomain, remotePath, localFile, pSshKeyPat
    put shell (someShell) into shellResult
    return shellResult
 end shell_StoreFile
-
-
---> Shell | Network
--
-command terminal_Diff thisText, lastText, pThisShortFile, pLastShortFile
-   if pThisShortFile is empty then put "this.txt" into pThisShortFile
-   if pLastShortFile is empty then put "last.txt" into pLastShortFile
-   
-   put specialfolderpath ("Desktop") into desktopFolder
-   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
-   folder_CreateNested compareFolder
-   
-   put compareFolder & pThisShortFile into thisFile
-   put compareFolder & pLastShortFile into lastFile
-   
-   diff_CreateTempFile thisText, pThisShortFile
-   put the result into thisFile
-   
-   diff_CreateTempFile lastText, pLastShortFile
-   put the result into lastFile
-   
-   diff_Files thisFile, lastFile
-   return the result
-end terminal_Diff
-
-command diff_CreateTempFile someText, shortFile
-   put specialfolderpath ("Desktop") into desktopFolder
-   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
-   folder_CreateNested compareFolder
-   
-   put compareFolder & shortFile into someFile
-   put someText into url ("binfile:" & someFile)
-   return someFile
-end diff_CreateTempFile
 
 
 --> Shell

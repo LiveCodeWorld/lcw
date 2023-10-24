@@ -45,6 +45,18 @@ end project_ListSubfolderPaths
 
 --> Working on
 -
+function project_ListStackNames shortFolder, projectName, pListNested
+   -- put the project_Folder of stack projectName into projectFolder
+   put project_ListStandardStackPaths (shortFolder, projectName, pListNested) into longFiles
+   repeat for each line longFile in longFiles
+      if exists (stack longFile) is false then next repeat
+      put the short name of stack longFile into stackName
+      put stackName & CR after stackNames
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end project_ListStackNames
+
 function project_ListStandardStackPaths shortFolder, projectName, pListNested
    put project_FolderFromName (projectName, shortFolder) into standardFolder
    --
@@ -111,18 +123,6 @@ function project_ListPathsOfType shortFolder, projectFolder
          return stackPaths
    end switch
 end project_ListPathsOfType
-
-function project_ListStackNames shortFolder, projectName
-   put the project_Folder of stack projectName into projectFolder
-   
-   repeat for each line longFile in longFiles
-      if exists (stack longFile) is false then next repeat
-      put the short name of stack longFile into stackName
-      put stackName & CR after stackNames
-   end repeat
-   delete char -1 of stackNames
-   return stackNames
-end project_ListStackNames
 
 function project_ListShortFiles shortFolder, projectName
    put the stack_Folder of stack projectName into standardFolder

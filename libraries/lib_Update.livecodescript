@@ -7,12 +7,28 @@ type: library
 version: 0.2
 
 /*
-Used by the behavior (if running LCW), of the ScriptEditor Apply button. This behavior is the LCW Project stack behavior_IdeCompileButton.
+Used by the behavior (if running LCW), of the ScriptEditor Apply button. 
+This behavior is the LCW Project stack behavior_IdeCompileButton.
 */
 
 
 --> Working on
 -
+command script_ExportAndIndexMenus scriptObject
+   -- IDE compile button dispatches "script_ExportAndIndexMenus"
+   
+   ## Export Handlers to text files
+   script_ExportHandlersAndCalls scriptObject
+   put the result into scriptPlaceArray
+   put the uRIP["type"] of scriptObject into scriptType
+   
+   ## Update Global Menu Index
+   if scriptType = "controller" then
+      dispatch "menu_ReIndexController" with scriptObject
+      put the result into projectArray
+   end if
+end script_ExportAndIndexMenus
+
 
 --> Props
 -
@@ -94,17 +110,6 @@ command project_FixStackFiles projectName
    put the result into projectArray
    return projectArray
 end project_FixStackFiles
-
-private command _FixStackFiles projectFolder, projectName
-   project_ExportMenusAndStackFiles projectFolder
-   put the result into projectArray
-   
-   # Set project home stackfiles (requires lib_StackFiles)
-   put projectArray ["stackFileArray"] into stackFileArray
-   set the stackfile_Array of stack projectName to stackFileArray
-   
-   return projectArray
-end _FixStackFiles
 
 command project_ExportMenusAndStackFiles projectFolder
    # Construct project array and update global menu array
@@ -250,6 +255,7 @@ end module_ConstructArray
 command menu_ReIndexController mController
    project_AddToKnown mController
    menu_AddToProjectArray mController
+   put the result into projectArray
    menu_AddToModel mController
    return projectArray
 end menu_ReIndexController
@@ -320,28 +326,6 @@ command script_ExportHandlersAndCalls someObject, pDeleteOldExports, pScript, pD
    text_Set scriptFile, mergeScript
    return scriptPlaceArray
 end script_ExportHandlersAndCalls
-
-command script_ExportAndIndexMenus scriptObject, pDeleteOldExports
-   -- this is what the IDE compile button dispatches
-   -- it is designed to update the global menu index, and export handlers (but do nothing else)
-   
-   dispatch "script_Compile" to scriptObject with scriptObject,pDeleteOldExports
-   switch it
-      case "unhandled"
-         -- a default
-         script_ExportHandlersAndCalls scriptObject, pDeleteOldExports
-         put the result into scriptPlaceArray
-         put the uRIP["type"] of scriptObject into scriptType
-         --
-         if scriptType = "controller" then
-            menu_ReIndexController scriptObject
-            put the result into projectArray
-         end if
-         break
-      case "passed"
-      case "handled"
-   end switch
-end script_ExportAndIndexMenus
 
 
 --> Menu | Update
@@ -427,6 +411,17 @@ private command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
       _WalkAndList NestedPaths, childFolder, pBaseFolderNum
    end repeat
 end _WalkAndList
+
+private command _FixStackFiles projectFolder, projectName
+   project_ExportMenusAndStackFiles projectFolder
+   put the result into projectArray
+   
+   # Set project home stackfiles (requires lib_StackFiles)
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the stackfile_Array of stack projectName to stackFileArray
+   
+   return projectArray
+end _FixStackFiles
 
 private command _AddControllersToProjectArray @projectArray, projectFolder, controllerPaths, pDontUpdateGlobal
    put menu_GetModel() into menuGlobalArray
