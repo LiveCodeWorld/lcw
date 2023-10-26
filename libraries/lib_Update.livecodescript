@@ -4,23 +4,61 @@
 license: GPLv3
 name: lib_Update
 type: library
-version: 0.2
+version: 0.4
 
 /*
 Used by the behavior (if running LCW), of the ScriptEditor Apply button. 
 This behavior is the LCW Project stack behavior_IdeCompileButton.
+
+Consider simplifying the export to make it a streaight unicode script.
+We can split into handlers later when we need.
 */
 
 
 --> Working on
 -
+getprop script_Diff [pContextLineNums]
+   if pContextLineNums is not a number then put 0 into pContextLineNums
+   --
+   put the script of the target into controlScript
+   put the exported_Script of the target into exportedScript
+   --
+   put DiffCompare (controlScript, exportedScript, pContextLineNums) into uDiff
+   return uDiff
+end script_Diff
+
+command display_ScriptDiff scriptObject, pContextLineNums
+   put the script_Diff [pContextLineNums] of scriptObject into uDiff
+   --
+   put the name of scriptObject into sTitle
+   display_Data uDiff, sTitle, "UnifiedDiff"
+   display_Text uDiff, sTitle, "UnifiedDiff"
+   return the result
+end display_ScriptDiff
+
+command display_ScriptIsDifferent scriptObject, pDiffAlso
+   if pDiffAlso is true then
+      display_ScriptDiff scriptObject
+   end if
+   --
+   put the script of scriptObject into controlScript
+   put the exported_Script of scriptObject into exportedScript
+   terminal_Diff exportedScript, controlScript, "exported.txt", "control.txt"
+   return the result
+end display_ScriptIsDifferent
+
 command script_ExportAndIndexMenus scriptObject
    -- IDE compile button dispatches "script_ExportAndIndexMenus"
+   -- Must be sent after the script is pplied.
    
    ## Export Handlers to text files
    script_ExportHandlersAndCalls scriptObject
    put the result into scriptPlaceArray
    put the uRIP["type"] of scriptObject into scriptType
+   --
+   if the script_IsDifferent of scriptObject is true then
+      put the script_Diff of scriptObject 
+   end if
    
    ## Update Global Menu Index
    if scriptType = "controller" then
@@ -28,6 +66,58 @@ command script_ExportAndIndexMenus scriptObject
       put the result into projectArray
    end if
 end script_ExportAndIndexMenus
+
+command script_ExportHandlersAndCalls someObject, pDeleteOldExports, pScript, pDataFolder
+   -- old and used in a few random places lib_MainStack and model_Environment + some menus
+   global gLCW
+   -- if the optionKey is "Down" then hkeyline_DeletePlaceObject someObject -- this is too slow
+   if pScript is empty then put the script of someObject into pScript
+   urip_Update someObject, pScript
+   
+   put the revAvailableHandlers of someObject into handlerTable
+   sort numeric handlerTable by word 3 of each
+   if handlerTable is empty then return empty -- everything is deleted before re-exporting
+   
+   if pDataFolder is empty then
+      put the dataObject_Folder [false] of someObject into pDataFolder
+      if there is not a folder pDataFolder is empty then
+         -- check
+         breakpoint
+      end if
+   end if
+   
+   if pDeleteOldExports is true then
+      -- this also deletes the "lcw_calls.txt" files
+      -- which is fine if we are rebuilding them
+      revDeleteFolder pDataFolder
+   end if
+   
+   put textStack_ScriptFile (pDataFolder, false) into scriptFile -- dep in authoring
+   put pScript into mergeScript
+   put revRuggedID (someObject) into rObject
+   sort numeric descending handlerTable by word 3 of each -- from bottom up
+   repeat for each line handlerTableLine in handlerTable
+      set the cursor to busy
+      put word 1 of handlerTableLine into hType
+      put word 2 of handlerTableLine into hName
+      if hName = "_" then next repeat -- could check handler is empty
+      put word 3 of handlerTableLine into startLineNum
+      put word 4 of handlerTableLine into endLineNum
+      put line startLineNum to endLineNum of pScript into someHandler
+      handler_Save handlerTableLine, pDataFolder, someHandler, pDeleteOldExports
+      put "[[ _FetchHandler (" & hName, hType & ") ]]" into line startLineNum to endLineNum of mergeScript
+      
+      put word 1 to 2 of handlerTableLine into shortHkeyLine
+      put word 3 to 4 of handlerTableLine into hkeyLineNums
+      put hkeyLineNums into gLCW ["Hkey Place Array"][shortHkeyLine][rObject]
+      
+      -- as we may wish to know the local place array
+      put hkeyLineNums into scriptPlaceArray [shortHkeyLine][rObject]
+   end repeat
+   
+   text_Set scriptFile, mergeScript
+   return scriptPlaceArray
+end script_ExportHandlersAndCalls
 
 
 --> Props
@@ -274,60 +364,6 @@ command menu_AddToProjectArray mController, pChecks
 end menu_AddToProjectArray
 
 
---> Script
--
-command script_ExportHandlersAndCalls someObject, pDeleteOldExports, pScript, pDataFolder
-   global gLCW
-   -- if the optionKey is "Down" then hkeyline_DeletePlaceObject someObject -- this is too slow
-   if pScript is empty then put the script of someObject into pScript
-   urip_Update someObject, pScript
-   
-   put the revAvailableHandlers of someObject into handlerTable
-   sort numeric handlerTable by word 3 of each
-   if handlerTable is empty then return empty -- everything is deleted before re-exporting
-   
-   if pDataFolder is empty then
-      put the dataObject_Folder [false] of someObject into pDataFolder
-      if there is not a folder pDataFolder is empty then
-         -- check
-         breakpoint
-      end if
-   end if
-   
-   if pDeleteOldExports is true then
-      -- this also deletes the "lcw_calls.txt" files
-      -- which is fine if we are rebuilding them
-      revDeleteFolder pDataFolder
-   end if
-   
-   put textStack_ScriptFile (pDataFolder, false) into scriptFile -- dep in authoring
-   put pScript into mergeScript
-   put revRuggedID (someObject) into rObject
-   sort numeric descending handlerTable by word 3 of each -- from bottom up
-   repeat for each line handlerTableLine in handlerTable
-      set the cursor to busy
-      put word 1 of handlerTableLine into hType
-      put word 2 of handlerTableLine into hName
-      if hName = "_" then next repeat -- could check handler is empty
-      put word 3 of handlerTableLine into startLineNum
-      put word 4 of handlerTableLine into endLineNum
-      put line startLineNum to endLineNum of pScript into someHandler
-      handler_Save handlerTableLine, pDataFolder, someHandler, pDeleteOldExports
-      put "[[ _FetchHandler (" & hName, hType & ") ]]" into line startLineNum to endLineNum of mergeScript
-      
-      put word 1 to 2 of handlerTableLine into shortHkeyLine
-      put word 3 to 4 of handlerTableLine into hkeyLineNums
-      put hkeyLineNums into gLCW ["Hkey Place Array"][shortHkeyLine][rObject]
-      
-      -- as we may wish to know the local place array
-      put hkeyLineNums into scriptPlaceArray [shortHkeyLine][rObject]
-   end repeat
-   
-   text_Set scriptFile, mergeScript
-   return scriptPlaceArray
-end script_ExportHandlersAndCalls
-
-
 --> Menu | Update
 -
 command script_UpdatePlaceArray someObject
@@ -367,7 +403,7 @@ function directory_NestedStackFileArray someFolder
       end if
    end repeat
    return sFileArray
-end directory_NestedStackFileArray 
+end directory_NestedStackFileArray
 
 function directory_ListNestedPaths someFolder, pSetRelative
    local NestedPaths
@@ -382,7 +418,7 @@ function directory_ListNestedPaths someFolder, pSetRelative
    end if
    delete char -1 of NestedPaths
    return NestedPaths
-end directory_ListNestedPaths 
+end directory_ListNestedPaths
 
 
 --> Private 

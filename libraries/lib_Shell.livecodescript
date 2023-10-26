@@ -42,9 +42,8 @@ command terminal_Diff thisText, lastText, pThisShortFile, pLastShortFile
       put the result into shellResult
    else
       set the defaultfolder to compareFolder
-      put "opendiff" && pThisShortFile && pLastShortFile into someShell
+      put "opendiff" && kwote(pThisShortFile) && kwote(pLastShortFile) into someShell
       put shell (someShell) into shellResult
-      
       /*
       put "opendiff" into someShell
       put space & kwote(thisFile, "'") && kwote(lastFile, "'") after someShell

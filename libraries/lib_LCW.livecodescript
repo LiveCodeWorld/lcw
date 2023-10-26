@@ -4,82 +4,9 @@
 license: GPLv3
 name: lib_LCW
 type: library
-version: 0.7
+version: 0.8
 
 /*
-Here we place all the handlers that need to be in use before project initialisation.
-
-getprop project_StackPaths [shortFolder]
-   put the project_Folder of the target into projectFolder
-   -- put project_ListPathsOfType (shortFolder, projectFolder) into stackPaths
-   put directory_ListNestedStackFiles (projectFolder) into stackPaths
-   return stackPaths
-end project_StackPaths
-
-function project_ListAllStackPaths projectName
-   put the stack_Folder of stack projectName into projectFolder
-   put directory_ListNestedStackFiles (projectFolder) into stackPaths
-   return stackPaths
-end project_ListAllStackPaths
-
--- function project_ListAllStackPaths projectFolder
-put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
-put folder_ListLong (projectFolder) into standardFolders
-repeat for each line standardFolder in standardFolders
-   if standardFolder ends with "/assets/" then next repeat
-   if standardFolder ends with "/modules/" then
-      put folder_ListLong (standardFolder) into viewFolders
-      repeat for each line viewFolder in viewFolders
-         put folder_ListStackPaths (viewFolder) into stackPaths
-         if stackPaths is not empty then
-            put stackPaths & CR after projectStackPaths
-         end if
-      end repeat
-   end if
-   put folder_ListStackPaths (standardFolder) into stackPaths
-   if stackPaths is not empty then
-      put stackPaths & CR after projectStackPaths
-   end if
-end repeat
-delete char -1 of projectStackPaths
-return projectStackPaths
-end project_ListAllStackPaths
-
-function project_ListPathsOfType shortFolder, projectFolder
-   switch shortFolder
-      case empty
-         put project_ListAllStackPaths (projectFolder) into stackPaths
-         return stackPaths
-      case "modules"
-         put folder_AddShort (projectFolder, "modules") into viewFolder
-         put folder_ListLong (viewFolder) into subViewFolders
-         repeat for each line subViewFolder in subViewFolders
-            put folder_ListStackPaths (subViewFolder) into stackPaths
-            if stackPaths is not empty then
-               put stackPaths & CR after projectStackPaths
-            end if
-         end repeat
-         
-         put folder_ListStackPaths (viewFolder) into stackPaths
-         if stackPaths is not empty then
-            put stackPaths & CR after projectStackPaths
-         end if
-         return projectStackPaths
-      case "all controllers"
-         put project_ListAllControllers (projectFolder) into stackPaths
-         return stackPaths
-      default
-         put folder_AddShort (projectFolder, shortFolder) into standardFolder
-         put folder_ListStackPaths (standardFolder) into stackPaths
-         return stackPaths
-   end switch
-end project_ListPathsOfType
-
-getprop project_ViewStackPaths
-   put the project_StackPaths ["views"] of the target into stackPaths
-   filter stackPaths without "*/behavior_*"
-   return stackPaths
-end project_ViewStackPaths
 */
 
 --> Working on
@@ -1562,7 +1489,7 @@ end stack_SisterFolder
 --> Objects
 -
 getprop card_Object
-   -- ideCoreCardOfcontrol§
+   -- ideCoreCardOfcontrol
    -- always returns an object
    put the long id of the target into targetObject
    switch
@@ -1573,7 +1500,13 @@ getprop card_Object
             return the long id of card 1 of the defaultstack
          else
             put the currentcard of the defaultstack into cardName
-            put the long id of card cardName of the defaultstack into cardObject
+            if cardName begins with "card id" then
+               put word 3 of cardName into cardID
+               put the long id of card id cardID of the defaultstack into cardObject
+            else
+               put the currentcard of the defaultstack into cardName
+               put the long id of card cardName of the defaultstack into cardObject
+            end if
             return cardObject
          end if
       case word 1 of targetObject is among the items of "background,bkgnd,bg"

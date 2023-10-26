@@ -13,35 +13,169 @@ We can then attach and remove our own behaviors to the IDE, and the Script Edito
 This is not using the official API, so it's brittle but has proven remarkably stable over time.
 
 See stack "lib_ScriptEditor" for code related to script editor tabs.
-
 This model abstracts, both key controls within the Livecode IDE, and behaviors that we can attach to them.
-
-on setBehaviors
-   -- from stack "revSEStackbehavior"
-   set the behavior of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("editor")
-   set the behavior of group "Menubar" of me to the long id of stack revIDEScriptEditorBehavior("menubar")
-   set the behavior of group "Script Tabs" me to the long id of stack revIDEScriptEditorBehavior("scripttabs")
-   set the behavior of group "Toolbar" of me to the long id of stack revIDEScriptEditorBehavior("toolbar")
-   set the behavior of group "Handler List" of me to the long id of stack revIDEScriptEditorBehavior("handlerlist")
-   set the behavior of group "Left Bar" of me to the long id of stack revIDEScriptEditorBehavior("leftbar")
-   set the behavior of field "Filter" of group "Left Bar" of me to the long id of stack revIDEScriptEditorBehavior("filterfield")
-   set the behavior of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablespane")
-   set the behavior of group "Documentation" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("documentationpane")
-   set the behavior of field "Filter" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("filterfield")
-   set the behavior of button "Show Globals" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablescheckbox")
-   set the behavior of button "Show Environment Vars" of group "Variables" of group "Panes" of me to the long id of stack revIDEScriptEditorBehavior("variablescheckbox")
-   set the behavior of group "Gutter" of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("gutter")
-   set the behavior of group "Interactive Find" of group "Editor" of me to the long id of stack revIDEScriptEditorBehavior("interactive find")
-end setBehaviors
 */
 
 --> Working on
 -
-function scriptEditor_GetSelectedText
-   put rev_ScriptEditorField() into scriptEditorField
-   put the selectedtext of scriptEditorField into someText
-   return someText
+
+--> SE
+-
+getprop se_DisplayedObject
+   put the se_Name of the target into seName
+   if exists (stack seName) is false then return empty
+   --
+   dispatch "revSEGetCurrentObject" to stack seName
+   put the result into someObject
+   return someObject
+end se_DisplayedObject
+
+getprop se_Stack
+   put the se_Name of the target into seName
+   if exists (stack seName) is false then return empty
+   --
+   return the name of stack seName
+end se_Stack
+
+getprop se_Name
+   -- must be a control in a revScripteditor
+   put the stack_Name of the target into seName
+   if word 1 of seName is "revNewScriptEditor" then
+      return seName
+   else
+      return empty
+   end if
+end se_Name
+
+getprop se_Script
+   put the se_Name of the target into seName
+   if exists (stack seName) is false then return empty
+   --
+   dispatch function "revSEGetScript" to stack seName
+   put the result into seScript
+   return seScript
+end se_Script
+
+setprop se_Script seScript
+   put the se_Name of the target into seName
+   if exists (stack seName) is false then return empty
+   --
+   put word 1 to -1 of seScript into seScript
+   put CR after seScript
+   --
+   dispatch "revSESetScript" to stack seName with seScript
+   return seName
+end se_Script
+
+getprop se_AvailableHandlers
+   put the se_Name of the target into seName
+   if exists (stack seName) is false then return empty
+   --
+   dispatch "revSEGetHandlerList" to stack seName
+   put the result into aHandlers
+   return aHandlers
+end se_AvailableHandlers
+
+command se_Clean seName, pFormat, pApply
+   if exists (stack seName) is false then return empty
+   --
+   if pFormat is true then
+      dispatch "revSEIndentScript" to stack seName
+   end if
+   --
+   put the se_Script of stack seName into seScript
+   put the se_AvailableHandlers of stack seName into hTable
+   
+   ## Tidy first and last lines of each handler
+   repeat for each line hKeyLine in hTable
+      htable_ExactLineOffsets hkeyLine, hTable, startLineNum, endLineNum
+      --
+      _TidyScriptLine seScript, startLineNum
+      _TidyScriptLine seScript, endLineNum
+   end repeat
+   --
+   set the se_Script of stack seName to seScript
+   --
+   if pApply is true then
+      try
+         dispatch "revSEApply" to stack seName
+      catch e
+         breakpoint
+      end try
+   end if
+   return seScript
+end se_Clean
+
+command se_FormatAndApply seName
+   if exists (stack seName) is false then return empty
+   --
+   dispatch "revSEIndentScript" to stack seName
+   try
+      dispatch "revSEApply" to stack seName
+   catch e
+      breakpoint
+   end try
+end se_FormatAndApply
+
+private command _TidyScriptLine @seScript, sLineNum
+   get line sLineNum of seScript
+   --
+   repeat for each word sWord in it
+      put sWord & space after goodline
+   end repeat
+   delete char -1 of goodline
+   -- put word 1 to -1 of it into goodLine
+   -- put (word 1 of goodLine && word 2 of goodLine) into word 1 to 2 of goodLine
+   --
+   if goodLine = it then
+      -- all good
+   else
+      put goodLine into line sLineNum of seScript
+   end if 
+end _TidyScriptLine
+
+
+--> ScriptEditor
+-
+function scriptEditor_GetSelectedText pScriptEditorName
+   if exists (stack pScriptEditorName) then
+      put pScriptEditorName into seName
+   else
+      put rev_ScriptEditorField() into scriptEditorField
+      put the se_Name of scriptEditorField into seName
+   end if
+   
+   dispatch function "revSEGetSelectedText" to stack seName
+   put the result into sText   
+   return sText
+   
+   put the selectedtext of scriptEditorField into sText
+   return sText
 end scriptEditor_GetSelectedText
+
+function scriptEditor_Object
+   -- was "rev_ScriptObject"
+   put scriptEditor_GetTop() into stackObject
+   if exists(stackObject) is false then return empty
+   dispatch "revSEGetCurrentObject" to stackObject
+   put the result into someObject
+   return someObject
+end scriptEditor_Object
+
+function scriptEditor_GetTop
+   -- was "scriptEditor_GetTop()"
+   
+   put the short name of the defaultstack into stackName
+   if word 1 of stackName is "revNewScriptEditor" then
+      return the long id of stack stackName
+   else
+      put the openstacks into stackNames
+      filter stackNames with "revNewScriptEditor*"
+      if stackNames is empty then return empty
+      put line 1 of stackNames into firstEditorStackName
+      return the long id of stack firstEditorStackName
+   end if
+end scriptEditor_GetTop
 
 
 --> ScriptEditor | Hkey
@@ -70,30 +204,6 @@ function scriptEditor_GetHkeyLine
    --
    return hKeyLine
 end scriptEditor_GetHkeyLine
-
-function scriptEditor_Object
-   -- was "rev_ScriptObject"
-   put scriptEditor_GetTop() into stackObject
-   if exists(stackObject) is false then return empty
-   dispatch "revSEGetCurrentObject" to stackObject
-   put the result into someObject
-   return someObject
-end scriptEditor_Object
-
-function scriptEditor_GetTop
-   -- was "scriptEditor_GetTop()"
-   
-   put the short name of the defaultstack into stackName
-   if word 1 of stackName is "revNewScriptEditor" then
-      return the long id of stack stackName
-   else
-      put the openstacks into stackNames
-      filter stackNames with "revNewScriptEditor*"
-      if stackNames is empty then return empty
-      put line 1 of stackNames into firstEditorStackName
-      return the long id of stack firstEditorStackName
-   end if
-end scriptEditor_GetTop
 
 
 --> IDE | ScriptEditor | Pane | Model

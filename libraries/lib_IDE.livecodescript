@@ -12,6 +12,30 @@ local LocalArray
 Gloabl gREVStackStatus is no longer used
 -- from stack revidelibrary
 put sStackEdited into editedStackArray
+
+put revTargetStack(pObject) into tStack
+
+on revSESetScript pScript
+   dispatch "textSetScript" to field "Script" of me with pScript
+end revSESetScript
+
+function revSEGetScript pScript
+   dispatch function "textGetScript" to field "Script" of me
+   return the result
+end revSEGetScript
+
+on revSEIndentScript
+   dispatch "scriptFormat" to field "Script" of me with "script"
+end revSEIndentScript
+
+on revSEApply pIgnoreErrors
+   actionCompile pIgnoreErrors
+end revSEApply
+
+function revSEGetSelectedText
+   return the selectedText of field "Script" of me
+end revSEGetSelectedText
+
 */
 
 
@@ -31,6 +55,78 @@ end ide_MenuTitle
 
 --> Working on
 -
+command ide_AddBehaviorHacks pBoolean
+   -- This handler turns on and off the behavior based IDE menu hacks.
+   _ReIndexLocalIdeMenus
+   
+   put pBoolean is not false into someBoolean
+   
+   put scriptEditor_HandlerListBehavior() into handlerBehavior
+   put scriptEditor_ScriptFieldBehavior() into scriptFieldBehavior
+   put scriptEditor_HistoryButtonBehavior() into historyBehavior
+   put scriptEditor_FindFieldBehavior() into simpleFindBehavior
+   put scriptEditor_CompileButtonBehavior() into compileButtonBehavior
+   put scriptEditor_DocumentationFieldBehavior() into documentationFieldBehavior
+   put scriptEditor_LaunchDocsBehavior() into launchDocsBehavior
+   
+   put rev_OpenScriptEditorNames() into editorNames
+   repeat with someNum = 0 to the number of lines of editorNames
+      put rev_ScriptEditorField (someNum) into scriptField
+      if exists (scriptField) is false then next repeat
+      
+      put rev_HistoryButton (someNum) into historyButton
+      put rev_HandlerTreeField (someNum) into handlerTreeField
+      put rev_SimpleFindField (someNum) into simpleFindField
+      put rev_CompileButton (someNum) into compileButton
+      put rev_ScriptEditorDocField (someNum) into scriptEditorDocField
+      put rev_LaunchDocsButton (someNum) into launchDocsButton
+      
+      if someBoolean is true then
+         ide_AddAfterCompile true
+         set the behavior of compileButton to compileButtonBehavior
+         --
+         set the behavior of scriptField to scriptFieldBehavior
+         set the behavior of historyButton to historyBehavior
+         set the behavior of handlerTreeField to handlerBehavior
+         set the behavior of simpleFindField to simpleFindBehavior        
+         set the behavior of scriptEditorDocField to documentationFieldBehavior
+         set the behavior of launchDocsButton to launchDocsBehavior
+      else
+         ide_AddAfterCompile false
+         set the behavior of compileButton to empty
+         --
+         set the behavior of scriptField to empty
+         set the behavior of historyButton to empty
+         set the behavior of handlerTreeField to empty
+         set the behavior of simpleFindField to empty
+         set the behavior of scriptEditorDocField to empty
+         set the behavior of launchDocsButton to empty
+      end if
+   end repeat
+end ide_AddBehaviorHacks
+
+command ide_AddAfterCompile pBoolean
+   if exists (stack "behavior_RevSEStackBehavior") is false then return empty
+   --
+   put the name of stack "behavior_RevSEStackBehavior" into actionBehavior
+   put the behavior of stack "revSEStackBehavior" into bObject
+   if pBoolean is false then
+      set the behavior of stack "revSEStackBehavior" to empty
+   else
+      set the behavior of stack "revSEStackBehavior" to actionBehavior
+   end if
+   return actionBehavior
+end ide_AddAfterCompile
+
+
+--> IDE | Menubar
+-
+function ide_ListToolBarBehaviorNames
+   put the stack_Folder of stack "revSEToolbarBehavior" into toolbarBehaviorFolder
+   put folder_ListStackNames (toolbarBehaviorFolder) into bNames
+   return bNames
+end ide_ListToolBarBehaviorNames
+
 function ide_DefaultMenubar
    put the defaultMenuBar into dBar
    put the long id of group "revMenuBar" of stack revIDEPaletteToStackName("menubar") into revBar
@@ -88,55 +184,6 @@ private command _ReIndexLocalIdeMenus
    put LocalArray ["environment"]["menu"] into localEnvMenuArray
    return localEnvMenuArray
 end _ReIndexLocalIdeMenus
-
-command ide_AddBehaviorHacks pBoolean
-   /*
-   -- was "rev_AddBehaviorHacks"
-   This handler turns on and off the behavior based IDE menu hacks.
-   */
-   _ReIndexLocalIdeMenus
-   
-   put pBoolean is not false into someBoolean
-   
-   put scriptEditor_HandlerListBehavior() into handlerBehavior
-   put scriptEditor_ScriptFieldBehavior() into scriptFieldBehavior
-   put scriptEditor_HistoryButtonBehavior() into historyBehavior
-   put scriptEditor_FindFieldBehavior() into simpleFindBehavior
-   put scriptEditor_CompileButtonBehavior() into compileButtonBehavior
-   put scriptEditor_DocumentationFieldBehavior() into documentationFieldBehavior
-   put scriptEditor_LaunchDocsBehavior() into launchDocsBehavior
-   
-   put rev_OpenScriptEditorNames() into editorNames
-   repeat with someNum = 0 to the number of lines of editorNames
-      put rev_ScriptEditorField (someNum) into scriptField
-      if exists (scriptField) is false then next repeat
-      
-      put rev_HistoryButton (someNum) into historyButton
-      put rev_HandlerTreeField (someNum) into handlerTreeField
-      put rev_SimpleFindField (someNum) into simpleFindField
-      put rev_CompileButton (someNum) into compileButton
-      put rev_ScriptEditorDocField (someNum) into scriptEditorDocField
-      put rev_LaunchDocsButton (someNum) into launchDocsButton
-      
-      if someBoolean is true then
-         set the behavior of scriptField to scriptFieldBehavior
-         set the behavior of historyButton to historyBehavior
-         set the behavior of handlerTreeField to handlerBehavior
-         set the behavior of simpleFindField to simpleFindBehavior
-         set the behavior of compileButton to compileButtonBehavior
-         set the behavior of scriptEditorDocField to documentationFieldBehavior
-         set the behavior of launchDocsButton to launchDocsBehavior
-      else
-         set the behavior of scriptField to empty
-         set the behavior of historyButton to empty
-         set the behavior of handlerTreeField to empty
-         set the behavior of simpleFindField to empty
-         set the behavior of compileButton to empty
-         set the behavior of scriptEditorDocField to empty
-         set the behavior of launchDocsButton to empty
-      end if
-   end repeat
-end ide_AddBehaviorHacks
 
 
 --> IDE | Menu | List
@@ -451,3 +498,4 @@ command scriptField_SetTokenInfo scriptLine, testScriptLine, @thisTokenNum, @nex
       put token prevTokenNum of scriptLine into previousToken
    end if
 end scriptField_SetTokenInfo
+
