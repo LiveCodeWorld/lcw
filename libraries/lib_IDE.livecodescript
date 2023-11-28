@@ -55,6 +55,12 @@ end ide_MenuTitle
 
 --> Working on
 -
+command ide_InitLcw
+   ide_LoadDictionaryTerms
+   ide_SetScriptEditorTitles "watch"
+   ide_AddBehaviorHacks true
+end ide_InitLcw
+
 command ide_AddBehaviorHacks pBoolean
    -- This handler turns on and off the behavior based IDE menu hacks.
    _ReIndexLocalIdeMenus
@@ -82,7 +88,7 @@ command ide_AddBehaviorHacks pBoolean
       put rev_LaunchDocsButton (someNum) into launchDocsButton
       
       if someBoolean is true then
-         ide_AddAfterCompile true
+         ide_SetAfterActionCompile true
          set the behavior of compileButton to compileButtonBehavior
          --
          set the behavior of scriptField to scriptFieldBehavior
@@ -92,7 +98,7 @@ command ide_AddBehaviorHacks pBoolean
          set the behavior of scriptEditorDocField to documentationFieldBehavior
          set the behavior of launchDocsButton to launchDocsBehavior
       else
-         ide_AddAfterCompile false
+         ide_SetAfterActionCompile false
          set the behavior of compileButton to empty
          --
          set the behavior of scriptField to empty
@@ -105,7 +111,13 @@ command ide_AddBehaviorHacks pBoolean
    end repeat
 end ide_AddBehaviorHacks
 
-command ide_AddAfterCompile pBoolean
+function ide_GetAfterActionCompile
+   put the name of stack "behavior_RevSEStackBehavior" into actionBehavior
+   put the behavior of stack "revSEStackBehavior" into bObject
+   return actionBehavior = bObject
+end ide_GetAfterActionCompile
+   
+command ide_SetAfterActionCompile pBoolean
    if exists (stack "behavior_RevSEStackBehavior") is false then return empty
    --
    put the name of stack "behavior_RevSEStackBehavior" into actionBehavior
@@ -116,7 +128,7 @@ command ide_AddAfterCompile pBoolean
       set the behavior of stack "revSEStackBehavior" to actionBehavior
    end if
    return actionBehavior
-end ide_AddAfterCompile
+end ide_SetAfterActionCompile
 
 
 --> IDE | Menubar
@@ -129,7 +141,7 @@ end ide_ListToolBarBehaviorNames
 
 function ide_DefaultMenubar
    put the defaultMenuBar into dBar
-   put the long id of group "revMenuBar" of stack revIDEPaletteToStackName("menubar") into revBar
+   put the long name of group "revMenuBar" of stack revIDEPaletteToStackName("menubar") into revBar
    return revBar = dBar
 end ide_DefaultMenubar
 
@@ -148,8 +160,9 @@ function menuManager_MenuGroup
    -- currently selected
    put revIDEPaletteToStackName("menubar") into mmStackName
    put the cREVMenuID of stack mmStackName into sMenuID
+   if sMenuID is empty then return empty
+   
    put the cREVDefaultStack of stack mmStackName into sMenuStack
-   --
    put the long id of bg id sMenuID of stack sMenuStack into sMenuGroup
    return sMenuGroup
 end menuManager_MenuGroup

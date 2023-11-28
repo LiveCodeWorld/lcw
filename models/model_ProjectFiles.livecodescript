@@ -11,40 +11,45 @@ Project folders are the top-level LCW folders as stored in GitHub.
 
 They no longer refer to project-metadata folders, which are now called textstack_Folders, or things like "dataObject_Folder".
 Those older names are a bit of a mess.
-
--- function project_ListAllStackPaths projectFolder
-put project_ConstructHomeStackPath (projectFolder) & CR into projectStackPaths
-put folder_ListLong (projectFolder) into standardFolders
-repeat for each line standardFolder in standardFolders
-   if standardFolder ends with "/assets/" then next repeat
-   if standardFolder ends with "/modules/" then
-      put folder_ListLong (standardFolder) into viewFolders
-      repeat for each line viewFolder in viewFolders
-         put folder_ListStackPaths (viewFolder) into stackPaths
-         if stackPaths is not empty then
-            put stackPaths & CR after projectStackPaths
-         end if
-      end repeat
-   end if
-   put folder_ListStackPaths (standardFolder) into stackPaths
-   if stackPaths is not empty then
-      put stackPaths & CR after projectStackPaths
-   end if
-end repeat
-delete char -1 of projectStackPaths
-return projectStackPaths
-project_ListAllStackPaths
-
-function project_ListSubfolderPaths shortFolder, projectName
-   -- not nested. Files not stack paths (replaced by project_ListStandardStackPaths)
-   put project_FolderFromName (projectName, shortFolder) into standardFolder -- in lib_LCW
-   put file_ListLong (standardFolder, pShowInvisible) into filePaths
-   return filePaths
-end project_ListSubfolderPaths
 */
 
 --> Working on
 -
+function project_ListStackNames shortFolder, projectName, pListNested
+   put project_ListStandardStackPaths (shortFolder, projectName, pListNested) into longFiles
+   repeat for each line longFile in longFiles
+      if exists (stack longFile) is false then next repeat
+      put the short name of stack longFile into stackName
+      put stackName & CR after stackNames
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end project_ListStackNames
+
+function project_GetHomeStackPath projectName
+   if exists (stack projectName) is false then return empty
+   
+   put the stack_Folder of stack projectName into projectFolder
+   if projectFolder is empty then return empty
+   put project_PathFromFolder (projectFolder) into homeStackPath
+   if exists (stack homeStackPath) is false then return empty
+   return homeStackPath
+end project_GetHomeStackPath
+
+function project_GetFolder projectName, pSubFolderPath
+   -- utility to get a project folder from a project name for loaded or unloaded projects
+   -- returns empty if the folder does not exist or there is another problem
+   if exists (stack projectName) is true then
+      put the project_Folder of stack projectName into projectFolder
+   else
+      put env_ConstructProjectFolder (projectName) into projectFolder
+   end if
+   folder_Add projectFolder, pSubFolderPath
+   if there is not a folder projectFolder then return empty
+   --
+   return projectFolder
+end project_GetFolder
+
 function project_ListStandardStackPaths shortFolder, projectName, pListNested
    put project_FolderFromName (projectName, shortFolder) into standardFolder
    --
@@ -112,18 +117,6 @@ function project_ListPathsOfType shortFolder, projectFolder
    end switch
 end project_ListPathsOfType
 
-function project_ListStackNames shortFolder, projectName
-   put the project_Folder of stack projectName into projectFolder
-   
-   repeat for each line longFile in longFiles
-      if exists (stack longFile) is false then next repeat
-      put the short name of stack longFile into stackName
-      put stackName & CR after stackNames
-   end repeat
-   delete char -1 of stackNames
-   return stackNames
-end project_ListStackNames
-
 function project_ListShortFiles shortFolder, projectName
    put the stack_Folder of stack projectName into standardFolder
    put file_ListShort (standardFolder) into shortFiles
@@ -176,30 +169,6 @@ getprop controller_Folder
    return cFolder
 end controller_Folder
 
-function project_GetHomeStackPath projectName
-   if exists (stack projectName) is false then return empty
-   
-   put the stack_Folder of stack projectName into projectFolder
-   if projectFolder is empty then return empty
-   put project_ConstructHomeStackPath (projectFolder) into homeStackPath
-   if exists (stack homeStackPath) is false then return empty
-   return homeStackPath
-end project_GetHomeStackPath
-
-function project_GetFolder projectName, pSubFolderPath
-   -- utility to get a project folder from a project name for loaded or unloaded projects
-   -- returns empty if the folder does not exist or there is another problem
-   if exists (stack projectName) is true then
-      put the project_Folder of stack projectName into projectFolder
-   else
-      put env_ConstructProjectFolder (projectName) into projectFolder
-   end if
-   folder_Add projectFolder, pSubFolderPath
-   if there is not a folder projectFolder then return empty
-   --
-   return projectFolder
-end project_GetFolder
-
 
 --> Project | List | Behaviors
 -
@@ -225,7 +194,7 @@ function project_ListModules projectName
    -- was "module_ListHomeStackNames"
    put project_ListModuleFolders (projectName) into moduleFolders
    repeat for each line moduleFolder in moduleFolders
-      put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
+      put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
       if exists (stack moduleHomeStackPath) is false then next repeat
       
       put the short name of stack moduleHomeStackPath into stackName

@@ -76,15 +76,22 @@ end dragLeave
 
 --> Default Menus for Card
 -
-getprop menu_Title
-   put LocalArray ["mTitle"] into mTitle
+getprop menu_Title [viewName]
+   -- put LocalArray ["mTitle"] into mTitle
+   put the menu_Title of me into mTitle
    if mTitle is not empty then return mTitle
+   --
+   put menu_GlobalTitleFromViewName (viewName) into mTitle
+   set the menu_Title of me to mTitle
+   --
+   return mTitle
    --
    return "Global | View | Card | Tools | Menu"
 end menu_Title
 
 setprop menu_Title mTitle
-   put mTitle into LocalArray ["mTitle"]
+   set the menu_Title of me to mTitle
+   -- put mTitle into LocalArray ["mTitle"]
 end menu_Title
 
 private command _doViewMenu
@@ -101,7 +108,7 @@ private command _doViewMenu
    switch 
       case shortModuleFolder is empty
       case viewName = testViewName
-         put the menu_Title of me into mTitle
+         put the menu_Title [viewName] of me into mTitle
          menu_PopUp mTitle, empty, viewObject
          break
       default
@@ -344,22 +351,22 @@ getprop menu_Target
 end menu_Target
 
 -- getprop view_Name
-   put the long id of the target into tObject
-   put the view_Object of me into viewObject
-   --
-   switch
-      case viewObject is empty
-         return empty
-      case viewObject = tObject
-         put the stack_Name of viewObject into vName
-         return vName
-      default 
-        return empty
-   end switch
-   
-   -- old
-   if the uRIP ["type"] of viewObject is not "view" then return empty
-   return the uRIP ["name"] of viewObject
+put the long id of the target into tObject
+put the view_Object of me into viewObject
+--
+switch
+   case viewObject is empty
+      return empty
+   case viewObject = tObject
+      put the stack_Name of viewObject into vName
+      return vName
+   default 
+      return empty
+end switch
+
+-- old
+if the uRIP ["type"] of viewObject is not "view" then return empty
+return the uRIP ["name"] of viewObject
 end view_Name
 
 getprop view_Object

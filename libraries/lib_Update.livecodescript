@@ -17,6 +17,35 @@ We can split into handlers later when we need.
 
 --> Working on
 -
+on display_FixProjectStackFiles projectName
+   project_FixStackFiles projectName
+   put the result into projectArray
+   --
+   display_Project projectName, true
+   display_EnvironmentMenus true
+   display_GitRefreshProjectName projectName
+end display_FixProjectStackFiles
+
+command project_FixStackFiles projectName
+   if exists (stack projectName) is false then
+      put project_FolderFromName (projectName) into projectFolder
+      if there is not a folder projectFolder then
+         breakpoint
+         return empty
+      end if
+   else
+      put the project_Folder of stack projectName into projectFolder
+   end if
+   
+   _FixStackFiles projectFolder, projectName
+   
+   put the result into projectArray
+   return projectArray
+end project_FixStackFiles
+
+
+--> Script | Diff
+-
 getprop script_Diff [pContextLineNums]
    if pContextLineNums is not a number then put 0 into pContextLineNums
    --
@@ -183,23 +212,6 @@ command project_UseStackFiles projectName, pFixFirst
    --
    return projectArray
 end project_UseStackFiles
-
-command project_FixStackFiles projectName
-   if exists (stack projectName) is false then
-      put project_FolderFromName (projectName) into projectFolder
-      if there is not a folder projectFolder then
-         breakpoint
-         return empty
-      end if
-   else
-      put the project_Folder of stack projectName into projectFolder
-   end if
-   
-   _FixStackFiles projectFolder, projectName
-   
-   put the result into projectArray
-   return projectArray
-end project_FixStackFiles
 
 command project_ExportMenusAndStackFiles projectFolder
    # Construct project array and update global menu array

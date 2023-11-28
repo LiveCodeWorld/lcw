@@ -15,6 +15,18 @@ Todo:  separate out essentials and utilities => lib_StackExtras
 
 --> Props
 -
+getprop current_Card
+   -- relies on a unique card name (but simpler than card_Object)
+   put the currentcard of the defaultstack into cardName
+   put the long id of card cardName of the defaultstack  into cardObject
+   return cardObject
+end current_Card
+
+getprop current_CardName
+   put the currentcard of the defaultstack into cardName
+   return cardName
+end current_CardName
+
 getprop card_Object
    -- ideCoreCardOfcontrol§
    -- always returns an object
@@ -37,6 +49,15 @@ getprop card_Object
          return word wNum to -1 of targetObject
    end switch
 end card_Object
+
+getprop stack_Name
+   return the short name of the defaultstack
+end stack_Name
+
+getprop stack_Object
+   -- revTargetStack
+   return the defaultstack
+end stack_Object
 
 
 --> Working on
@@ -84,15 +105,6 @@ setprop stack_Loc gStackLoc
    set the loc of stack sName to gStackLoc
    return sName
 end stack_Loc
-
-getprop stack_Name
-   return the short name of the defaultstack
-end stack_Name
-
-getprop stack_Object
-   -- revTargetStack
-   return the defaultstack
-end stack_Object
 
 getprop stack_Label
    put the stack_Object of the target into stackObject

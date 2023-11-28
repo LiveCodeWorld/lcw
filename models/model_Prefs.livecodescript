@@ -110,13 +110,9 @@ Also look at the relationship to storing project specific arrays to disk.
 -
 function pref_FetchValue prefName, pPrefKey
    if pPrefKey is empty then put "Default" into pPrefKey
-   
+   --
    put pref_FetchArray (pPrefKey) into prefArray
    put prefArray [prefName] into someValue
-   
-   -- could automatically load the pref into cache here?
-   -- pref_SetValue prefName, someValue
-   
    return someValue
 end pref_FetchValue
 

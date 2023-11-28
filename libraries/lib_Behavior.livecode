@@ -41,9 +41,9 @@ end card_CreateBehavior
 --> Props
 -
 function card_ListBehaviorNames
-   get project_ListStackNames ("behaviors", "lcw_Display")
-   replace "behavior_Card" with empty in it
-   return it
+   put project_ListStackNames ("behaviors", "lcw_Display") into sNames
+   filter sNames with "behavior_Card*"
+   return sNames
 end card_ListBehaviorNames
 
 getprop card_BehaviorName

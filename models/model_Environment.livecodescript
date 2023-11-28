@@ -29,6 +29,64 @@ It's all a bit of a mess - tryig to move over to listing project folder names wh
 -- consider replacing with "env_ListProjectFolders()"
 */
 
+command env_GoToStart
+   put pref_FetchValue ("lcwFolder") into lcwFolder
+   put env_FetchProjectStartName() into projectName
+   --
+   put env_ConstructHomePath (projectName, lcwFolder) into homePath
+   go to stack homePath
+   return homePath 
+end env_GoToStart
+
+getprop env_RepoFolder
+   set the itemdelimiter to slash
+   put the project_Folder of target into rootFolder
+   delete item -1 of rootFolder
+   return rootFolder
+end env_RepoFolder
+
+function env_GetRepoFolder
+   put env_GetLcwFolder() into pLcwFolder
+   --
+   set the itemdelimiter to slash
+   delete item -1 of pLcwFolder
+   return pLcwFolder
+end env_GetRepoFolder
+
+function env_GetLcwFolder
+   global gLCW
+   put "lcwFolder" into prefName
+   --
+   put pref_GetValue (prefName) into lcwFolder
+   if lcwFolder is not empty then return lcwFolder
+   
+   put pref_FetchValue (prefName) into lcwFolder
+   return lcwFolder
+end env_GetLcwFolder
+
+command env_SetLcwFolder pLcwFolder
+   if pLcwFolder is empty then
+      put the stack_Folder of stack "LCW" into pLcwFolder
+      if pLcwFolder is empty then
+         breakpoint -- not saved yet
+         exit to top
+      end if
+   end if
+   --
+   pref_SaveValue "lcwFolder", pLcwFolder
+   put the result into prefData
+   return prefData
+end env_SetLcwFolder
+
+function env_FetchProjectStartName
+   put pref_FetchValue ("Name of project to start") into projectName
+   return projectName
+end env_FetchProjectStartName
+
+command env_SaveProjectStartName projectName
+   pref_SaveValue "Name of project to start", projectName
+end env_SaveProjectStartName
+
 command env_AddToBash
    shell_AddBashProfileToPath
    /*
@@ -119,7 +177,7 @@ function env_GetModuleArray pProjectNames
       repeat for each line moduleFolder in moduleFolders
          put item -1 of moduleFolder into moduleName
          --
-         put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
+         put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
          if exists (stack moduleHomeStackPath) is false then
             put projectName into envModuleArray ["broken"][moduleName]["projectName"]
             put moduleFolder into envModuleArray ["broken"][moduleName]["moduleFolder"]
@@ -148,17 +206,6 @@ command library_DeleteProjectArray projectName
    delete variable libraryProjectData [projectName]
    library_StoreProjectData libraryProjectData
 end library_DeleteProjectArray
-
-
---> Props
--
-getprop env_RepoFolder
-   -- latest simplest version based on naming conventions and folder structure
-   set the itemdelimiter to slash
-   put the project_Folder of target into rootFolder
-   delete item -1 of rootFolder
-   return rootFolder
-end env_RepoFolder
 
 
 --> Environment | Files
@@ -338,20 +385,6 @@ function env_ListUsedStackNames pProjectNames
    return stackNames
 end env_ListUsedStackNames
 
-function env_ListUsedStackPaths pProjectNames
-   _SetProjectNames pProjectNames
-   repeat for each line projectName in pProjectNames
-      put library_FetchProjectHomeStackPath (projectName) into homeStackPath  -- this should already be added?
-      if exists (stack homeStackPath) is false then next repeat
-      put the project_UsedStackPaths of stack homeStackPath into stackPaths
-      if stackPaths is not empty then
-         put stackPaths & CR after envUsedStackPaths
-      end if
-   end repeat
-   sort envUsedStackPaths
-   return word 1 to -1 of envUsedStackPaths
-end env_ListUsedStackPaths
-
 function env_ListModuleHomeStackNames pProjectNames
    -- searches folders
    -- see : put library_ListProjectModules() into stackNames for extracting from global project array
@@ -435,6 +468,20 @@ command env_ReLoadMenus pProjectNames, pRepoFolder
    end repeat
 end env_ReLoadMenus
 
+function env_ListUsedStackPaths pProjectNames
+   _SetProjectNames pProjectNames
+   repeat for each line projectName in pProjectNames
+      put env_ConstructHomePath (projectName) into homeStackPath
+      if exists (stack homeStackPath) is false then next repeat
+      --
+      put the project_UsedStackPaths of stack homeStackPath into stackPaths
+      if stackPaths is not empty then
+         put stackPaths & CR after envUsedStackPaths
+      end if
+   end repeat
+   sort envUsedStackPaths
+   return word 1 to -1 of envUsedStackPaths
+end env_ListUsedStackPaths
 
 --> Private
 -

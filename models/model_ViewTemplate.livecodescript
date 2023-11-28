@@ -240,7 +240,7 @@ function view_GetTemplateObject viewName, pRepoFolder
    -- put library_FetchProjectFolder (viewName) into moduleFolder
    if moduleFolder is empty then return empty
    
-   put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
    if exists (control 1 of card 1 of stack moduleHomeStackPath) then
       return the long id of control 1 of card 1 of stack moduleHomeStackPath
    end if

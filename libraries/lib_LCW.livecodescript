@@ -11,6 +11,82 @@ version: 0.8
 
 --> Working on
 -
+getprop project_DependencyArray
+   put the project_Name of the target into projectName
+   put env_GetRepoFolder() into repoFolder
+   --
+   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
+   return projectDepArray
+end project_DependencyArray
+
+command project_Start projectName, pForceLoad
+   -- added forceload
+   if exists (stack projectName) then
+      put the name of stack projectName into homeStackObject
+   else
+      put env_GetProjectHomePath (projectName) into homeStackpath
+      --
+      if exists (homeStackObject) is false then
+         breakpoint
+         display_DebugHistory "project_Start"
+         return empty
+      end if
+   end if
+   put the stack_Folder of stack projectName into projectFolder
+   --
+   display_Loading projectName
+   --
+   env_RecursivelyLoadProjects homeStackObject, pForceLoad -- not dispatching any more
+   --
+   project_InitialiseFolder projectFolder
+   -- project_LoadModules projectName
+   env_AddProject projectName, projectFolder -- here we could add modules in a different way
+   --
+   put merge ("Finished project '[[projectName]]'!") into someComment
+   display_Loading projectName, someComment
+   --
+   return homeStackObject
+end project_Start
+
+function env_GetProjectHomePath projectName, pLcwFolder
+   put env_ConstructHomePath (projectName, pLcwFolder) into projectHomeStackPath
+   if there is a stack projectHomeStackPath then -- loads into memory
+      return projectHomeStackPath
+   else
+      return empty
+   end if
+end env_GetProjectHomePath
+
+function env_ConstructHomePath projectName, pLcwFolder
+   if pLcwFolder is empty then put env_GetLcwFolder() into pLcwFolder
+   --
+   set the itemdelimiter to slash
+   put pLcwFolder into repoFolder
+   delete item -1 of repoFolder
+   put projectName & ".livecode" into shortFile
+   put repoFolder & projectName & slash & shortFile into homePath
+   return homePath
+end env_ConstructHomePath
+
+function env_GetRepoFolder
+   put env_GetLcwFolder() into pLcwFolder
+   --
+   set the itemdelimiter to slash
+   delete item -1 of pLcwFolder
+   return pLcwFolder
+end env_GetRepoFolder
+
+function env_GetLcwFolder
+   global gLCW
+   put "lcwFolder" into prefName
+   --
+   put pref_GetValue (prefName) into lcwFolder
+   if lcwFolder is not empty then return lcwFolder
+   
+   put pref_FetchValue (prefName) into lcwFolder
+   return lcwFolder
+end env_GetLcwFolder
+
 
 --> Props
 -
@@ -43,11 +119,32 @@ getprop module_Folder [pModuleName]
    end switch
 end module_Folder
 
+getprop module_HomeStackPath [moduleName]
+   put the module_Folder [moduleName] of the target into moduleFolder
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
+   if exists (stack moduleHomeStackPath) is false then return empty
+   return moduleHomeStackPath
+end module_HomeStackPath
+
 getprop project_HomeStackBrowser
    put the project_Name of the target into pHomeStackName
    put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
    return browserWidget
 end project_HomeStackBrowser
+
+function project_GetHomeStackName projectFolder
+   put project_PathFromFolder (projectFolder) into projectHomeStackPath
+   if exists (stack projectHomeStackPath) is false then return empty
+   put the short name of stack projectHomeStackPath into projectName
+   return projectName
+end project_GetHomeStackName
+
+function project_PathFromFolder projectFolder
+   text_AddTrailing projectFolder, slash
+   put project_GetShortFolder (projectFolder) into projectShortFolder
+   put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
+   return projectHomeStackPath
+end project_PathFromFolder
 
 
 --> Shell
@@ -78,18 +175,7 @@ command env_AddToBash
    return $PATH
 end env_AddToBash
 
-function env_ConstructHomePath projectName, pRepoFolder
-   -- old version was "env_GetProjectFolder"
-   -- here we assume we have only one repoFolder with all project at top level
-   -- see also "env_GetProjectHomePath"
-   if pRepoFolder is empty then put env_GetRepoFolder() into pRepoFolder
-   --
-   put pRepoFolder & projectName & slash & projectName & ".livecode" into homePath
-   return homePath
-end env_ConstructHomePath
-
 function env_ConstructProjectFolder projectName, pRepoFolder
-   -- rename to env_GetFolder
    if pRepoFolder is empty then put env_GetRepoFolder() into pRepoFolder
    --
    put folder_AddShort (pRepoFolder, projectName) into projectFolder
@@ -99,14 +185,6 @@ function env_ConstructProjectFolder projectName, pRepoFolder
       return empty
    end if
 end env_ConstructProjectFolder
-
-function env_GetRepoFolder
-   -- always loaded
-   set the itemdelimiter to slash
-   put the stack_Folder of stack "LCW" into envRootFolder
-   delete item -1 of envRootFolder
-   return envRootFolder
-end env_GetRepoFolder
 
 command env_SetProjectFolder homeStackName, pProjectFolder
    put env_GetActiveProjectArray() into envProjectArray
@@ -122,27 +200,11 @@ end env_SetProjectFolder
 
 --> Project | Files
 -
-function project_ConstructHomeStackPath projectFolder
-   -- project_FirstStackPath() is more robust
-   text_AddTrailing projectFolder, slash
-   put project_GetShortFolder (projectFolder) into projectShortFolder
-   put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
-   return projectHomeStackPath
-end project_ConstructHomeStackPath
-
 function project_GetShortFolder projectFolder
    set the itemdelimiter to slash
    put item -1 of projectFolder into projectName
    return projectName
 end project_GetShortFolder
-
-function project_ConstructHomeStackPath projectFolder
-   -- project_FirstStackPath() is more robust
-   text_AddTrailing projectFolder, slash
-   put project_GetShortFolder (projectFolder) into projectShortFolder
-   put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
-   return projectHomeStackPath
-end project_ConstructHomeStackPath
 
 function project_ConstructSisterHomeStackPath sisterProjectName, projectHomeStackFile
    put projectHomeStackFile into sisterFolder
@@ -523,35 +585,6 @@ end folder_Add
 Used by display_Environmmeent project env menus
 */
 
-command project_Start projectName, pForceLoad
-   -- added forceload
-   if exists (stack projectName) then
-      put the name of stack projectName into homeStackObject
-   else
-      -- put env_GetProjectHomePath (projectName) into homeStackpath
-      put library_FetchProjectHomeStackObject (projectName) into homeStackObject
-      if exists (homeStackObject) is false then
-         breakpoint
-         display_DebugHistory "project_Start"
-         return empty
-      end if
-   end if
-   put the stack_Folder of stack projectName into projectFolder
-   --
-   display_Loading projectName
-   --
-   env_RecursivelyLoadProjects homeStackObject, pForceLoad -- not dispatching any more
-   --
-   project_InitialiseFolder projectFolder
-   -- project_LoadModules projectName
-   env_AddProject projectName, projectFolder -- here we could add modules in a different way
-   --
-   put merge ("Finished project '[[projectName]]'!") into someComment
-   display_Loading projectName, someComment
-   --
-   return homeStackObject
-end project_Start
-
 command project_Stop projectName
    -- with multiple projects that's a bit hard (as other projects 'could' use some of the stacks?)
    if exists (stack projectName) is false then
@@ -615,11 +648,6 @@ end lcw_GetAuthor
 command lcw_SetAuthor authorName
    pref_SetValue "userName", authorName
 end lcw_SetAuthor
-
-function project_FirstStackPath projectFolder
-   get folder_ListStackPaths (projectFolder)
-   return line 1 of it
-end project_FirstStackPath
 
 
 --> Private
@@ -748,33 +776,10 @@ function env_CheckLcwProject projectName
    return projectExists
 end env_CheckLcwProject
 
-function env_GetProjectHomePath projectName, pRepoFolder
-   -- see also "env_ConstructHomePath"
-   -- return empty if the project does not exist
-   if pRepoFolder is empty then
-      put env_GetRepoFolder() into pRepoFolder
-   end if
-   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
-   --
-   put projectFolder & projectName & ".livecode" into projectHomeStackPath
-   if there is a stack projectHomeStackPath then -- loads into memory
-      return projectHomeStackPath
-   else
-      return empty
-   end if
-end env_GetProjectHomePath
-
-function project_GetHomeStackName projectFolder
-   put project_ConstructHomeStackPath (projectFolder) into projectHomeStackPath
-   if exists (stack projectHomeStackPath) is false then return empty
-   put the short name of stack projectHomeStackPath into projectName
-   return projectName
-end project_GetHomeStackName
-
-function env_CheckLcwProject projectName, pRepoFolder
+function env_CheckLcwProject projectName, pLcwFolder
    -- here we assume we have only one repoFolder with all project at top level
    
-   put env_GetProjectHomePath (projectName, pRepoFolder) into homePath
+   put env_GetProjectHomePath (projectName, pLcwFolder) into homePath
    put there is a file homePath into projectExists
    return projectExists
 end env_CheckLcwProject
@@ -842,16 +847,6 @@ function project_Exists projectName, pRepoFolder
       return true
    end if
 end project_Exists
-
-
---> Props | Project
--
-getprop project_DependencyArray
-   put the project_Folder of the target into projectFolder
-   env_DeconstructProjectFolder projectFolder, projectName, repoFolder
-   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
-   return projectDepArray
-end project_DependencyArray
 
 
 --> LCW | Folders | List
@@ -1002,7 +997,7 @@ function env_ConstructProjectDepArray projectName, repoFolder
    return projectDepArray
 end env_ConstructProjectDepArray
 
-command env_CrawlProjectDeps @projectDepArray, projectName, repoFolder
+command env_CrawlProjectDeps @projectDepArray, projectName
    -- we do not assume the project home stack is loaded into memory
    -- we base everything on naming conventions, and folder structure
    
@@ -1012,7 +1007,7 @@ command env_CrawlProjectDeps @projectDepArray, projectName, repoFolder
    end if
    
    -- now let's guess the projectHomeStackPath
-   put env_GetProjectHomePath (projectName, repoFolder) into stackPath
+   put env_GetProjectHomePath (projectName) into stackPath
    if stackPath is empty then
       put merge ("Project home stack does not exist!") into projectDepArray [projectName]["Error"]["msg"]
       put projectName into projectDepArray [projectName]["Error"]["projectName"]
@@ -1025,7 +1020,7 @@ command env_CrawlProjectDeps @projectDepArray, projectName, repoFolder
    -- now recurse
    put the project_Deps of stack projectName into projectDeps
    repeat for each item nextProjectName in projectDeps
-      env_CrawlProjectDeps projectDepArray, nextProjectName, repoFolder
+      env_CrawlProjectDeps projectDepArray, nextProjectName
    end repeat
    return "Finished deps"
 end env_CrawlProjectDeps
@@ -1377,26 +1372,6 @@ function lcw_UserProjectFolder pSubFolder
 end lcw_UserProjectFolder
 
 
---> Modules
--
--- command project_LoadModules homeStackNameOrPath
--- modules can be loaded in the same way a project is loaded
--- this can be slow as there are often a lot of modules with menus
-put the module_Names of stack homeStackNameOrPath into moduleNames
-repeat for each line moduleName in moduleNames
-   -- could notify
-   put module_GetFolder (moduleName, homeStackNameOrPath) into moduleFolder
-   project_InitialiseFolder moduleFolder
-end repeat
-end project_LoadModules
-
-getprop module_HomeStackPath [moduleName]
-   put the module_Folder [moduleName] of the target into moduleFolder
-   put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
-   if exists (stack moduleHomeStackPath) is false then return empty
-   return moduleHomeStackPath
-end module_HomeStackPath
-
 --> Deps
 -
 /*
@@ -1603,3 +1578,43 @@ function text_GetMergeVars mergeText
       end if
    end repeat
 end text_GetMergeVars
+
+
+--> Pref | Value | Get
+-
+function pref_GetValue prefName
+   global gLCW
+   return gLCW ["prefsArray"][prefName]
+end pref_GetValue
+
+function pref_FetchValue prefName, pPrefKey
+   if pPrefKey is empty then put "Default" into pPrefKey
+   --
+   put pref_FetchArray (pPrefKey) into prefArray
+   put prefArray [prefName] into someValue
+   return someValue
+end pref_FetchValue
+
+function pref_FetchArray pProjectName
+   if pProjectName is empty then put "Default" into pProjectName
+   put pref_FetchData() into dataArray
+   return dataArray [pProjectName]
+end pref_FetchArray
+
+function pref_FetchData
+   put pref_File() into someFile
+   put array_Fetch (someFile) into dataArray
+   return dataArray
+end pref_FetchData
+
+function array_Fetch someFile
+   put url ("binfile:" & someFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   return modelArray
+end array_Fetch
+
+function pref_File
+   put specialfolderpath ("preferences") & "/lcw_Preferences.array" into prefFile
+   return prefFile
+end pref_File

@@ -40,6 +40,66 @@ local LocalArray
 
 --> Working on
 -
+getprop parent_Array [someKey]
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   if the number of items of commaKeys = 1 then
+      return the displayed_Array of me
+   end if
+   --
+   delete item -1 of commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into pArray
+   --
+   if someKey is empty then
+      return pArray
+   else
+      return pArray [someKey]
+   end if
+end parent_Array
+
+
+--> Props | Top
+-
+getprop selected_TopData
+   -- returns the topKey and not just the contents of the array
+   _SetTop topKey, aData
+   put aData [topKey] into topData [topKey]
+   return topData
+end selected_TopData
+
+getprop top_Data
+   return the selected_TopData of me
+end top_Data
+
+getprop top_Key
+   return _GetTopKey()
+end top_Key
+
+getprop top_Line [pathItemNum]
+   put _treeWidget() into treeWidget
+   if pathItemNum is empty then put 1 into pathItemNum
+   --
+   put the hilitedElement of treeWidget into commaPath
+   put item pathItemNum of commaPath into topLine
+   return topLine
+end top_Line
+
+getprop top_LineKeys
+   -- sorts alphabetically the keys
+   -- assumes the display does the same?
+   
+   put the top_Data of me into topArray
+   put the keys of topArray into topKeys
+   sort topKeys
+   return topKeys
+end top_LineKeys
+
+
+--> Props | Show
+=
 getprop show_Separator
    put _treeWidget() into treeWidget
    return the showSeparator of treeWidget
@@ -566,21 +626,6 @@ private command tree_SetArray sArray, pPath
    return arrayData
 end tree_SetArray
 
-getprop top_Data
-   -- selected_TopData
-   -- was "top_Array" 
-   -- returns the topKey and not just the contents of the array
-   
-   _SetTop topKey, aData
-   put aData [topKey] into topData [topKey]
-   return topData
-end top_Data
-
-getprop top_Key
-   -- selected_TopKey
-   return _GetTopKey()
-end top_Key
-
 private function _GetTopKey
    put _treeWidget() into treeWidget
    put the hilitedElement of treeWidget into commaPath
@@ -664,29 +709,6 @@ setprop tool_Menus [projectName] menuBit
    put the long id of me into displayView
    display_SetToolMenus menuBit, displayView, projectName
 end tool_Menus
-
-
---> parent | old?
--
-getprop parent_Array [someKey]
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into commaKeys
-   if the number of items of commaKeys = 1 then
-      return the displayed_Array of me
-   end if
-   --
-   delete item -1 of commaKeys
-   put the arrayData of treeWidget into someArray
-   split commaKeys with comma
-   put someArray [commaKeys] into pArray
-   --
-   if someKey is empty then
-      return pArray
-   else
-      return pArray [someKey]
-   end if
-end parent_Array
 
 
 --> Props | Selected
@@ -820,28 +842,6 @@ private command _SetMouseTargets @tObject, @displayView, @mouseTarget
    put the mouse_Target of me into mouseTarget
    if exists (mouseTarget) is false then put tObject into mouseTarget
 end _SetMouseTargets
-
-
---> Props | Top
--
-getprop top_Line [pathItemNum]
-   put _treeWidget() into treeWidget
-   if pathItemNum is empty then put 1 into pathItemNum
-   --
-   put the hilitedElement of treeWidget into commaPath
-   put item pathItemNum of commaPath into topLine
-   return topLine
-end top_Line
-
-getprop top_LineKeys
-   -- sorts alphabetically the keys
-   -- assumes the display does the same?
-   
-   put the top_Data of me into topArray
-   put the keys of topArray into topKeys
-   sort topKeys
-   return topKeys
-end top_LineKeys
 
 
 --> Props | Title

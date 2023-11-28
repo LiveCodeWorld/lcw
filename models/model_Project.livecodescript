@@ -105,12 +105,6 @@ end project_JsonFile
 
 --> Library | Project | Model | Stacks
 -
-function library_FetchProjectHomeStackObject projectName
-   put library_FetchProjectHomeStackPath (projectName) into homeStackPath
-   if exists (stack homeStackPath) is false then return empty
-   return the long id of stack homeStackPath
-end library_FetchProjectHomeStackObject
-
 function library_FetchProjectHomeStackPath projectName, pRepoFolder
    -- put library_FetchProjectFolder (projectName) into projectFolder
    put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder

@@ -242,6 +242,21 @@ setprop user_Array [pShortFile] modelArray
    return modelDataFile
 end user_Array
 
+getprop model_Value [pKey]
+   if pKey is empty then put "default" into pKey
+   put the model_Array of the target into mArray
+   put mArray [pKey] into sValue
+   return sValue
+end model_Value
+
+setprop model_Value [pKey] sValue
+   if pKey is empty then put "default" into pKey
+   put the model_Array of the target into mArray
+   put sValue into mArray [pKey]
+   set the model_Array of the target to mArray
+   return the result
+end model_Value
+
 getprop model_Array [pShortFile]
    -- assumes the target is a model stack
    put the model_DataFile [pShortFile] of the target into modelDataFile

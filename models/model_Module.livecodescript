@@ -7,42 +7,6 @@ type: models
 version: 0.2
 
 /*
-See basic module handlers in LCW
-
-These hacks convert (view) module names to folder names.
-This is not consistant yet?
-
--- getprop module_Array
-put the module_Folder of the target into moduleFolder
-if moduleFolder is empty then return empty
-
-set the itemdelimiter to slash
-put item -1 of moduleFolder into moduleArray ["moduleFolderName"]
-if item -2 of moduleFolder is not "modules" then return empty
-put item -3 of moduleFolder into moduleArray ["projectName"]
-
-put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
-if exists (stack moduleHomeStackPath) is false then return empty
-put moduleHomeStackPath into moduleArray ["moduleHomeStackPath"]
-
-if exists (control 1 of cd 1 of stack moduleHomeStackPath) is false then return empty
-put the long id of control 1 of cd 1 of stack moduleHomeStackPath into viewObject
-put revRuggedID (viewObject) into moduleArray ["viewObject"]
-
-put the view_Name of viewObject into viewName
-if viewName is empty then return empty
-put viewName into moduleArray ["viewName"]
-
-put moduleFolder & "behaviors/" into moduleBehaviorFolder
-put folder_ListStackPaths (moduleBehaviorFolder) into moduleArray ["moduleBehaviorPaths"]
-put moduleBehaviorFolder into moduleArray ["moduleBehaviorFolder"]
-
-put moduleFolder & "controllers/" into moduleControllerFolder
-put folder_ListStackPaths (moduleControllerFolder) into moduleArray ["moduleControllerPaths"]
-put moduleControllerFolder into moduleArray ["moduleControllerFolder"]
-
-return moduleArray
-end module_Array
 */
 
 
@@ -392,13 +356,13 @@ end menu_NormalizeName
 function module_ConstructHomeStackPath moduleName, projectFolder
    put project_NameToShortFolder (moduleName) into moduleFolderName
    put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   put project_ConstructHomeStackPath (moduleFolder) into stackPath
+   put project_PathFromFolder (moduleFolder) into stackPath
    return stackPath
 end module_ConstructHomeStackPath
 
 function module_GetHomeStackPath moduleFolderName, projectName
    put project_GetModuleFolder (moduleFolderName, projectName) into moduleFolder
-   put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
    return moduleHomeStackPath
 end module_GetHomeStackPath
 

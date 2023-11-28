@@ -17,6 +17,77 @@ See "model_Meta" for text file based metadata of scripts.
 
 --> Working On
 -
+getprop menu_Array [pMenuTitle]
+   -- not used much
+   put the long id of the target into tObject
+   if pMenuTitle is empty then
+      put line 1 of the script_MenuTitles of tObject into pMenuTitle
+   end if
+   put mArray_FromTitleTable (pMenuTitle, tObject) into mArray
+   return mArray
+end menu_Array
+
+
+--> Menu | Metadata
+-
+/*
+The menu_Name is the name value of the script metadata of the controller
+It "should"" be the same as the stack name and the namme of the first menu script suite
+*/
+
+getprop menu_Name
+   put the long id of the target into tObject
+   --
+   put the script_MetaData of tObject into scriptMetaData
+   put scriptMetaData ["type"] into scriptType
+   if scriptType is not "controller" then return empty
+   put scriptMetaData ["name"] into mName
+   return mName
+end menu_Name
+
+setprop menu_Name mName
+   put the long id of the target into tObject
+   --
+   put the script_MetaData of tObject into scriptMetaData
+   put scriptMetaData ["type"] into scriptType
+   if scriptType is not "controller" then
+      return empty
+   end if
+   --
+   put scriptMetaData ["name"] into oldName
+   if oldName = mName then
+      -- no need to reset. We're good.
+      return scriptMetaData
+   end if
+   
+   put mName into scriptMetaData ["name"]
+   set the script_MetaData of tObject to scriptMetaData
+   --
+   return scriptMetaData
+end menu_Name
+
+getprop menu_GlobalTitle [check]
+   put the long id of the target into mController
+   put line 1 of the script_GlobalMenuTitles of mController into gMenuTitle
+   if check is false then return gMenuTitle
+   
+   # Checks
+   get the stack_Name of mController
+   if it is not gMenuTitle then return empty
+   --
+   get the script_MetaData ["name"] of mController
+   if it is not gMenuTitle then return empty
+   --
+   put project_NameToShortFolder (gMenuTitle) & ".livecodescript" into goodShortFile
+   get the short_File of mController
+   if it is not goodShortFile then return empty
+   
+   return gMenuTitle
+end menu_GlobalTitle
+
+
+--> Metadata
+-
 function metadata_ConstructArray pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense
    local metadataArray
    metadata_AddDefaults metadataArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  
@@ -112,76 +183,6 @@ setprop object_MetaData [uRipKey] uRipArray
    end if
    return uRipArray
 end object_MetaData
-
-
---> Menu | Props
--
-getprop menu_GlobalTitle [check]
-   put the long id of the target into mController
-   put line 1 of the script_GlobalMenuTitles of mController into gMenuTitle
-   if check is false then return gMenuTitle
-   
-   # Checks
-   get the stack_Name of mController
-   if it is not gMenuTitle then return empty
-   --
-   get the script_MetaData ["name"] of mController
-   if it is not gMenuTitle then return empty
-   --
-   put project_NameToShortFolder (gMenuTitle) & ".livecodescript" into goodShortFile
-   get the short_File of mController
-   if it is not goodShortFile then return empty
-   
-   return gMenuTitle
-end menu_GlobalTitle
-
-getprop menu_Array [pMenuTitle]
-   put the long id of the target into tObject
-   if pMenuTitle is empty then
-      put line 1 of the script_MenuTitles of tObject into pMenuTitle
-   end if
-   put mArray_FromTitleTable (pMenuTitle, tObject) into mArray
-   return mArray
-end menu_Array
-
-
---> Menu | Metadata
--
-/*
-The menu_Name is the name value of the script metadata of the controller
-It "should"" be the same as the stack name and the namme of the first menu script suite
-*/
-
-getprop menu_Name
-   put the long id of the target into tObject
-   --
-   put the script_MetaData of tObject into scriptMetaData
-   put scriptMetaData ["type"] into scriptType
-   if scriptType is not "controller" then return empty
-   put scriptMetaData ["name"] into mName
-   return mName
-end menu_Name
-
-setprop menu_Name mName
-   put the long id of the target into tObject
-   --
-   put the script_MetaData of tObject into scriptMetaData
-   put scriptMetaData ["type"] into scriptType
-   if scriptType is not "controller" then
-      return empty
-   end if
-   --
-   put scriptMetaData ["name"] into oldName
-   if oldName = mName then
-      -- no need to reset. We're good.
-      return scriptMetaData
-   end if
-   
-   put mName into scriptMetaData ["name"]
-   set the script_MetaData of tObject to scriptMetaData
-   --
-   return scriptMetaData
-end menu_Name
 
 
 --> Object | Metadata

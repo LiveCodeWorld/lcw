@@ -4,7 +4,7 @@
 license: GPLv3
 name: lib_Shell
 type: library
-version: 0.1
+version: 0.2
 
 /*
 This library is about interfacing with shell commands and utilities
@@ -18,151 +18,67 @@ local LocalArray
 
 --> Working on
 -
-command terminal_Diff thisText, lastText, pThisShortFile, pLastShortFile
-   if pThisShortFile is empty then put "this.txt" into pThisShortFile
-   if pLastShortFile is empty then put "last.txt" into pLastShortFile
-   
-   put specialfolderpath ("Desktop") into desktopFolder
-   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
-   folder_CreateNested compareFolder
-   
-   put compareFolder & pThisShortFile into thisFile
-   put compareFolder & pLastShortFile into lastFile
-   
-   diff_CreateTempFile thisText, pThisShortFile
-   put the result into thisFile
-   
-   diff_CreateTempFile lastText, pLastShortFile
-   put the result into lastFile
-   
-   if the shiftkey is "Down" then
-      put "opendiff" into someShell
-      put space & kwote(thisFile, "'") && kwote(lastFile, "'") after someShell
-      terminal_PasteScript someShell
-      put the result into shellResult
-   else
-      set the defaultfolder to compareFolder
-      put "opendiff" && kwote(pThisShortFile) && kwote(pLastShortFile) into someShell
-      put shell (someShell) into shellResult
-      /*
-      put "opendiff" into someShell
-      put space & kwote(thisFile, "'") && kwote(lastFile, "'") after someShell
-      --
-      open process someShell for neither
-      put the result into sResult
-      put someShell into LocalArray ["opendiffProcessName"]
-      
-      -- diff_Files pThisShortFile, pLastShortFile
-      */
-   end if
-   return shellResult
-end terminal_Diff
-
-command terminal_KillOpenDiff
-   put LocalArray ["opendiffProcessName"] into opendiffProcessName
-   put the openProcesses into oNames
-   put the openProcessIDs into oIDs
-   --
-   close process opendiffProcessName
-   delete variable LocalArray ["opendiffProcessName"]
-end terminal_KillOpenDiff
-
-command diff_Files thisFile, lastFile
-   -- this fixed upgrade error -- https://stackoverflow.com/questions/17980759/xcode-select-active-developer-directory-error
-   -- can we open in background
-   -- put "sdiff" into someShell
-   
-   -- try to run in the background
-   -- put "(" & someShell && "&)" into someShell -- makes no difference
-   -- put "screen" && someShell into someShell -- does not work (needs to attach screen)
-   
-   put "opendiff" into someShell
-   put space & kwote(thisFile, "'") && kwote(lastFile, "'") after someShell
+function shell_ListProcessIds bashCommand
+   put merge ("ps aux | grep '[[bashCommand]]'") into someShell
    put shell (someShell) into shellResult
+   
+   get "grep" && bashCommand
+   put lineOffset (it, shellResult) into lineNum
+   delete line lineNum of shellResult
+   --
+   repeat for each line sLine in shellResult
+      put word 2 of sLine into pid
+      put pid & comma after pids
+   end repeat
+   delete char -1 of pids
+   return pids
+end shell_ListProcessIds
+
+command shell_Do someShell, pSomeHow, pBrowserView
+   switch pSomeHow
+      case "execute"
+      case "xterm"
+         if pBrowserView is empty then put xterm_FindView() into pBrowserView
+         --          
+         ttyd_Execute someShell, pBrowserView
+         put the result into someJS
+         return someJS
+      case "paste"
+         if pBrowserView is empty then put xterm_FindView() into pBrowserView
+         --          
+         ttyd_Paste someShell, pBrowserView
+         put the result into someJS
+         return someJS
+      case "nohup"
+         nohup_DoShell someShell
+         put the result into pID
+         return pID
+      default
+         put shell (someShell) into shellResult
+         return shellResult
+   end switch
+end shell_Do
+
+
+--> SSH
+-
+function ssh_FetchFile sshUser, remoteDomain, somePath
+   shell_BashParamEscape somePath
+   put "cat" && somePath into remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
+   put the result into someData
+   return someData
+end ssh_FetchFile
+
+command ssh_DeleteFile sshUser, remoteDomain, somePath
+   -- can we ensure it only deletes a single file?
+   shell_BashParamEscape somePath
+   --
+   put "rm" && somePath into remoteCommand
+   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
+   put the result into shellResult
    return shellResult
-end diff_Files
-
-command diff_CreateTempFile someText, shortFile
-   put specialfolderpath ("Desktop") into desktopFolder
-   put desktopFolder & "/OPN/Temp/Compare/" into compareFolder
-   folder_CreateNested compareFolder
-   
-   put compareFolder & shortFile into someFile
-   put someText into url ("binfile:" & someFile)
-   return someFile
-end diff_CreateTempFile
-
-
---> Terminal
--
-command terminal_PasteScript shellScript, pDelayTime
-   if pDelayTime is empty then put 0.25 into pDelayTime
-   --
-   put "tell application 'Terminal'" into tScript
-   put CR & "activate" after tScript
-   put CR & "delay [[pDelayTime]]" after tScript
-   put CR & "tell application 'System Events'" after tScript
-   put CR & "keystroke '[[shellScript]]'" after tScript
-   put CR & "end tell" after tScript
-   put CR & "end tell" after tScript
-   --
-   replace "'" with quote in tScript
-   put merge (tScript) into  mScript
-   --
-   do mScript as AppleScript
-   put the result into someText
-   --
-   return mScript
-end terminal_PasteScript
-
-command terminal_PasteInNewTab shellScript, pDelayTime
-   if pDelayTime is empty then put 0.25 into pDelayTime
-   --
-   put "tell application 'Terminal'" into tScript
-   put CR & "activate" after tScript
-   put CR & "delay [[pDelayTime]]" after tScript
-   --
-   put CR & "tell application 'System Events'" after tScript
-   put CR & "keystroke 't' using {command down}" after tScript
-   --
-   put CR & "keystroke '[[shellScript]]'" after tScript
-   put CR & "end tell" after tScript
-   put CR & "end tell" after tScript
-   --
-   replace "'" with quote in tScript
-   put merge (tScript) into  mScript
-   --
-   do mScript as AppleScript
-   put the result into someText
-   --
-   return mScript
-end terminal_PasteInNewTab
-
-
---> Working on
--
-function shell_TreeSearch filePattern, pFolder, pNotPattern
-   -- was "shell_GetGoodNestedFiles"
-   -- put "*.html|*.xml" into filePattern
-   -- put ""*-sidebar.html"" into pNotPattern
-   
-   put the defaultFolder into oFolder
-   if there is a folder pFolder then set the defaultFolder to pFolder
-   put shell_ConstructTreeCommand (filePattern, pNotPattern) into someShell
-   --
-   put shell (someShell) into someFiles
-   set the defaultFolder to oFolder
-   return someFiles
-end shell_TreeSearch
-
-function shell_ConstructTreeCommand filePattern, pNotPattern
-   -- put "tree -afi --noreport --prune -P '*.html|*.xml' -I *-sidebar.html" into someShell
-   put merge ("tree -afi --noreport --prune -P '[[filePattern]]'") into someShell
-   if pNotPattern is not empty then
-      put space & "-I" && notPattern after someShell
-   end if
-   return someShell
-end shell_ConstructTreeCommand
+end ssh_DeleteFile
 
 function ssh_ConstructRemoteShell remoteShell, serverAddress, sshUserName, pWhichKey
    -- allows complex multi-command single line remoteShell shell scripts
@@ -210,6 +126,64 @@ command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell, pWhichKey
    return shellResult
 end ssh_DoRemoteShell
 
+on sudo_Kill
+   put "#!/bin/sh" & cr into tScript
+   put "pw="&tPassword & cr after tScript
+   put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
+   return shell(tScript)
+end sudo_Kill
+
+
+--> Linux
+-
+on linux_Sudo
+   put "#!/bin/sh" & cr into tScript
+   put "pw="&tPassword & cr into tScript
+   put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
+   get shell(tScript)
+end linux_Sudo
+
+on linux_Mount mountPath
+   if linux_CheckMounted() contains mountPath then
+      return "Already Mounted"
+   else
+      put "mount" && mountPath into someShellCommand
+      put shell(someShellCommand) into shellResult
+      return shellResult
+   end if
+end linux_Mount
+
+function linux_CheckMounted
+   put url "file:/etc/mtab" into mountedFiles
+   return mountedFiles
+end linux_CheckMounted
+
+
+--> Shell | Tree
+-
+function shell_TreeSearch filePattern, pFolder, pNotPattern
+   -- was "shell_GetGoodNestedFiles"
+   -- put "*.html|*.xml" into filePattern
+   -- put ""*-sidebar.html"" into pNotPattern
+   
+   put the defaultFolder into oFolder
+   if there is a folder pFolder then set the defaultFolder to pFolder
+   put shell_ConstructTreeCommand (filePattern, pNotPattern) into someShell
+   --
+   put shell (someShell) into someFiles
+   set the defaultFolder to oFolder
+   return someFiles
+end shell_TreeSearch
+
+function shell_ConstructTreeCommand filePattern, pNotPattern
+   -- put "tree -afi --noreport --prune -P '*.html|*.xml' -I *-sidebar.html" into someShell
+   put merge ("tree -afi --noreport --prune -P '[[filePattern]]'") into someShell
+   if pNotPattern is not empty then
+      put space & "-I" && notPattern after someShell
+   end if
+   return someShell
+end shell_ConstructTreeCommand
+
 
 --> Shell | Hash
 -
@@ -227,28 +201,7 @@ function shell_Md5Hash someFile
 end shell_Md5Hash
 
 
---> SSH
--
-function ssh_FetchFile sshUser, remoteDomain, somePath
-   shell_BashParamEscape somePath
-   put "cat" && somePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end ssh_FetchFile
-
-command ssh_DeleteFile sshUser, remoteDomain, somePath
-   -- can we ensure it only deletes a single file?
-   shell_BashParamEscape somePath
-   --
-   put "rm" && somePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into shellResult
-   return shellResult
-end ssh_DeleteFile
-
-
---> Working On
+--> Shell | Execute
 -
 function shell_ExecuteAtRoot someShell, pExecuteWhere, pShellCommandRoot
    if pExecuteWhere is empty then put library_PluginFolder() into pExecuteWhere
@@ -387,7 +340,7 @@ function shell_ListProcesses grepFilter
    which now displays processes belonging to the specified username(s). 
    Thus, "ps -aux" will fail (unless you want to know about user "x"). 
    As a convenience, however, "ps aux" still works as it did in Mac OS X v.10.4.
-*/
+   */
    put "grep" && grepFilter into filterBit
    
    shell_BashParamEscape grepFilter
@@ -415,56 +368,24 @@ command shell_BashParamEscape @someParam
 end shell_BashParamEscape
 
 command shell_AddBashParam @someShell, paramContents, paramFlag
-    if paramFlag is not empty then put space & paramFlag after someShell
-    if paramContents is not empty then
-        shell_BashParamEscape paramContents
-        put space & paramContents after someShell
-    end if
+   if paramFlag is not empty then put space & paramFlag after someShell
+   if paramContents is not empty then
+      shell_BashParamEscape paramContents
+      put space & paramContents after someShell
+   end if
 end shell_AddBashParam
 
 function shell_EscapeFile someFile
-    replace space with "\ " in someFile
-    replace "(" with "\(" in someFile
-    replace ")" with "\)" in someFile
-    return someFile
+   replace space with "\ " in someFile
+   replace "(" with "\(" in someFile
+   replace ")" with "\)" in someFile
+   return someFile
 end shell_EscapeFile
 
 command shell_BashParamEscape @someParam
-    replace space with ("\" & space) in someParam
-    replace "|" with ("\" & "|") in someParam
+   replace space with ("\" & space) in someParam
+   replace "|" with ("\" & "|") in someParam
 end shell_BashParamEscape
-
-on sudo_Kill
-    put "#!/bin/sh" & cr into tScript
-    put "pw="&tPassword & cr after tScript
-    put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
-    return shell(tScript)
-end sudo_Kill
-
-
---> Linux
--
-on linux_Sudo
-    put "#!/bin/sh" & cr into tScript
-    put "pw="&tPassword & cr into tScript
-    put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
-    get shell(tScript)
-end linux_Sudo
-
-on linux_Mount mountPath
-  if linux_CheckMounted() contains mountPath then
-    return "Already Mounted"
-  else
-    put "mount" && mountPath into someShellCommand
-    put shell(someShellCommand) into shellResult
-    return shellResult
-  end if
-end linux_Mount
-
-function linux_CheckMounted
-  put url "file:/etc/mtab" into mountedFiles
-  return mountedFiles
-end linux_CheckMounted
 
 
 --> Shell | To Sort
@@ -475,15 +396,15 @@ function sha1_HashFile pPath
 end sha1_HashFile
 
 function sha1_HashString pText
-    -- Other hashes are available --> man pages sha1
-    -- Option to sign a file by adding a flag --> man pages sha1
-    -- Other services of openssl --> man pages openssl
-    
-    put the tempName&".tmp" into tPath
-    put pText into url ("file:"&tPath)
-    ## adapt time  according to rig (may be not necessary)
-    wait 0 with messages
-    return word -1 of shell("openssl dgst -sha1" &&tPath)
+   -- Other hashes are available --> man pages sha1
+   -- Option to sign a file by adding a flag --> man pages sha1
+   -- Other services of openssl --> man pages openssl
+   
+   put the tempName&".tmp" into tPath
+   put pText into url ("file:"&tPath)
+   ## adapt time  according to rig (may be not necessary)
+   wait 0 with messages
+   return word -1 of shell("openssl dgst -sha1" &&tPath)
 end sha1_HashString
 
 command shell_DeconstructLS someLine, @shortFileName, @filePermissions, @ownerName, @groupName, @fileSize, @lastModified, @lsType, @numberOfLinks
@@ -581,46 +502,46 @@ end shell_DeconstructLS
 --> Deps
 -
 function ijwAPLIB_MakeOSXShellPath tPath
-    -- Ian Wood <revlist@azurevision.co.uk>
-    put "set tOut to POSIX path of tPath" into tScript
-    replace "tPath" with quote & revMacFromUnixPath(tPath) & quote in tScript
-    do tScript as applescript
-    
-    put the result into tNewPath
-    delete char 1 of tNewPath
-    delete last char of tNewPath
-    replace space with "\" & space in tNewPath
-    replace quote with "\" & quote in tNewPath
-    replace "'" with "\" & "'" in tNewPath
-    replace "*" with "\" & "*" in tNewPath
-    replace "?" with "\" & "?" in tNewPath
-    replace "[" with "\" & "[" in tNewPath
-    replace "]" with "\" & "]" in tNewPath
-    replace "{" with "\" & "{" in tNewPath
-    replace "}" with "\" & "}" in tNewPath
-    replace "$" with "\" & "$" in tNewPath
-    replace "!" with "\" & "!" in tNewPath
-    replace "&" with "\" & "&" in tNewPath
-    replace "|" with "\" & "|" in tNewPath
-    replace ">" with "\" & ">" in tNewPath
-    replace "<" with "\" & "<" in tNewPath
-    replace ";" with "\" & ";" in tNewPath
-    replace "(" with "\" & "(" in tNewPath
-    replace "(" with "\" & ")" in tNewPath
-    return tNewPath
+   -- Ian Wood <revlist@azurevision.co.uk>
+   put "set tOut to POSIX path of tPath" into tScript
+   replace "tPath" with quote & revMacFromUnixPath(tPath) & quote in tScript
+   do tScript as applescript
+   
+   put the result into tNewPath
+   delete char 1 of tNewPath
+   delete last char of tNewPath
+   replace space with "\" & space in tNewPath
+   replace quote with "\" & quote in tNewPath
+   replace "'" with "\" & "'" in tNewPath
+   replace "*" with "\" & "*" in tNewPath
+   replace "?" with "\" & "?" in tNewPath
+   replace "[" with "\" & "[" in tNewPath
+   replace "]" with "\" & "]" in tNewPath
+   replace "{" with "\" & "{" in tNewPath
+   replace "}" with "\" & "}" in tNewPath
+   replace "$" with "\" & "$" in tNewPath
+   replace "!" with "\" & "!" in tNewPath
+   replace "&" with "\" & "&" in tNewPath
+   replace "|" with "\" & "|" in tNewPath
+   replace ">" with "\" & ">" in tNewPath
+   replace "<" with "\" & "<" in tNewPath
+   replace ";" with "\" & ";" in tNewPath
+   replace "(" with "\" & "(" in tNewPath
+   replace "(" with "\" & ")" in tNewPath
+   return tNewPath
 end ijwAPLIB_MakeOSXShellPath
 
 function date_MonthToMonthNumber monthName
-    -- "Oct 10, 2006"
-    put char 1 to 3 of monthName into shortMonth
-    set the wholematches to true
-    return itemoffset(shortMonth, "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec")
-    
-    put the date into testDate
-    convert testDate to abbreviated date
-    put char 1 to 3 of monthName into word 1 of item 2 of testDate
-    convert testDate to dateItems
-    return item 2 of testDate
+   -- "Oct 10, 2006"
+   put char 1 to 3 of monthName into shortMonth
+   set the wholematches to true
+   return itemoffset(shortMonth, "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec")
+   
+   put the date into testDate
+   convert testDate to abbreviated date
+   put char 1 to 3 of monthName into word 1 of item 2 of testDate
+   convert testDate to dateItems
+   return item 2 of testDate
 end date_MonthToMonthNumber
 
 

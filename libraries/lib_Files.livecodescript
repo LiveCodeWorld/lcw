@@ -3,14 +3,169 @@
 -
 license: GPLv3
 name: lib_Files
-type: script library
+type: library
 copyright: David Bovill
 license: GPLv3
-version: 0.6
+version: 0.7
 
 
 --> Working On
 -
+function folder_ListShortNonSymLinked sFolder
+   put folder_ShortList (sFolder) into notSymLinkedFolderNames
+   return notSymLinkedFolderNames
+   
+   # Bash
+   put merge ("find '[[sFolder]]' -maxdepth 1 -type d ! -lname '*' -exec basename {} \;") into someShell
+   put shell (someShell) into notSymLinkedFolderNames
+   delete line 1 of notSymLinkedFolderNames -- sFolder name
+   return notSymLinkedFolderNames
+end folder_ListShortNonSymLinked
+
+function folder_ListNonSymLinked sFolder, pListShort
+   put folder_ListShortSymLinked (sFolder) into shortSymLinked
+   put folder_ListShortAll (sFolder) into allLocal
+   put line_DeleteFromIndex (shortSymLinked, allLocal) into notSymShortFolders
+   --
+   if pListShort is true then
+      return notSymShortFolders
+   end if
+   --
+   repeat for each line shortFolder in notSymShortFolders
+      if char 1 of shortFolder = "." then next repeat
+      put sFolder & shortFolder & slash & CR after notSymLinkedFolders
+   end repeat
+   return notSymLinkedFolders
+   
+   -- contains "//"
+   put merge ("find '[[sFolder]]' -maxdepth 1 -type d ! -lname '*'") into someShell
+   put shell (someShell) into notSymLinkedFolders
+   delete line 1 of notSymLinkedFolders
+   return notSymLinkedFolders
+end folder_ListNonSymLinked
+
+function folder_IsSymLink sFolder
+   /*
+   set the itemdelimiter to slash
+   put item -1 of sFolder into shortFolder
+   put sFolder into folderAbove
+   delete item -1 of folderAbove
+   put folders (folderAbove, "detailed") into fIndex
+   set the itemdelimiter to comma
+   repeat for each line fLine in fIndex
+      put item 1 of fLine into testShortFolder
+      if testShortFolder = shortFolder then
+         put fLine into foundFolderLine
+         exit repeat
+      end if
+   end repeat
+   -- status,0,0,1700984306,1701006534,1701006966,0,501,20,755,????????
+   put item 10 of foundFolderLine into sPerm
+   put item 11 of foundFolderLine into creatorAndFileType
+   */
+   
+   put merge ("[ -L '[[sFolder]]' ] && echo true || echo false") into someShell
+   put line 1 of shell (someshell) into sBoolean
+   return sBoolean
+end folder_IsSymLink
+
+
+--> Foler | List
+-
+function folder_ListShortAll sFolder
+   /*
+   Note: The second find command lists all types of symlinks, not just those linking to directories. 
+   To filter only symlinks that point to directories, a more complex command would be required, 
+   typically involving additional scripting to test each symlink's target.
+   */
+   get merge ("find '[[sFolder]]' -maxdepth 1 -type d -exec basename {} \; && find '[[sFolder]]' -maxdepth 1 -type l -exec basename {} \;")
+   put shell (it) into allFolderNames
+   --
+   delete line 1 of allFolderNames
+   --
+   sort allFolderNames
+   return allFolderNames
+end folder_ListShortAll
+
+function folder_ListSymLinked sFolder
+   put merge ("find '[[sFolder]]' -maxdepth 1 -type l") into someShell
+   put shell (someShell) into notSymLinkedFolders
+   return notSymLinkedFolders
+end folder_ListSymLinked
+
+function folder_ListShortSymLinked sFolder
+   put merge ("find '[[sFolder]]' -maxdepth 1 -type l -exec basename {} \;") into someShell
+   put shell (someShell) into notSymLinkedFolderNames
+   return notSymLinkedFolderNames
+end folder_ListShortSymLinked
+
+function file_IsSymLink sFile
+   set the itemdelimiter to slash
+   put item 1 to -2 of sFile into sFolder
+   put files (sFolder, outputKind) into dFiles
+   return dFiles
+end file_IsSymLink
+
+command folder_CreateSymLink fromFolder, toSymFolder, pSomeHow, pXtermView
+   if there is not a folder fromFolder then return "Error," && fromFolder && "does not exist."
+   
+   # Tidy for shell
+   if char -1 of fromFolder is slash then delete char -1 of fromFolder
+   if char -1 of toSymFolder is slash then delete char -1 of toSymFolder
+   --
+   put merge ("ln -s '[[fromFolder]]' '[[toSymFolder]]'") into someShell
+   replace "'" with quote in someShell
+   --
+   shell_Do someShell, pSomeHow, pXtermView
+   return the result
+end folder_CreateSymLink
+
+function folder_ShortList rootFolder, pWhich
+   switch pWhich
+      case "sym"
+         put folder_ListSymShort (rootFolder) into shortFolders
+         break
+      case "all"
+         put folder_ListAllShort (rootFolder) into shortFolders
+         break
+      default
+         put folder_ListShort (rootFolder) into shortFolders
+   end switch
+   return shortFolders
+end folder_ShortList
+
+function folder_ListAllShort rootFolder
+   -- including sym linked folders
+   put _ListFolder (rootFolder, "ls -d */", true) into shortFolders
+   return shortFolders
+end folder_ListAllShort
+
+function folder_ListSymShort rootFolder
+   put "find . -maxdepth 1 -type l -exec test -d '{}' \; -print" into lsShell
+   put _ListFolder (rootFolder, lsShell, false) into shortSymFolders
+   --
+   repeat with lineNum = 1 to the number of lines of shortSymFolders
+      delete char 1 to 2 of line lineNum of shortSymFolders
+   end repeat
+   return shortSymFolders
+end folder_ListSymShort
+
+private function _ListFolder rootFolder, lsShell, pStripLast
+   if there is not a folder rootFolder then return empty
+   --
+   put the defaultfolder into oDefault
+   set the defaultfolder to rootFolder
+   put shell (lsShell) into shortFolders
+   set the defaultfolder to oDefault
+   
+   if pStripLast is true then
+      repeat with lineNum = 1 to the number of lines of shortFolders
+         delete char -1 of line lineNum of shortFolders
+      end repeat
+   end if
+   return shortFolders
+end _ListFolder
+
 command folder_Add @someFolder, pSubFolderPath
    switch
       case someFolder is empty
