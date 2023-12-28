@@ -15,6 +15,28 @@ Those older names are a bit of a mess.
 
 --> Working on
 -
+getprop module_ControllerFolder
+   put the module_Folder of the target into mFolder
+   if there is not a folder mFolder then
+      breakpoint
+      return empty
+   end if
+   --
+   put mFolder & "controllers/" into cFolder
+   if there is not a folder cFolder then
+      folder_CreateNested cFolder
+   end if
+   return cFolder
+end module_ControllerFolder
+
+getprop controller_Folder
+   put the project_Folder of the target into projectFolder
+   if projectFolder is empty then return empty
+   put projectFolder & "controllers/" into cFolder
+   if there is not a folder cFolder then return empty
+   return cFolder
+end controller_Folder
+
 function project_ListStackNames shortFolder, projectName, pListNested
    put project_ListStandardStackPaths (shortFolder, projectName, pListNested) into longFiles
    repeat for each line longFile in longFiles
@@ -160,14 +182,6 @@ getprop menu_ControllerPath [gMenuTitle]
    put project_ConstructStandardFile (gMenuTitle, projectFolder, "controllers") into controllerPath
    return controllerPath
 end menu_ControllerPath
-
-getprop controller_Folder
-   put the project_Folder of the target into projectFolder
-   if projectFolder is empty then return empty
-   put projectFolder & "controllers/" into cFolder
-   if there is not a folder cFolder then return empty
-   return cFolder
-end controller_Folder
 
 
 --> Project | List | Behaviors

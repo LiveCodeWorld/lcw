@@ -12,10 +12,108 @@ version: 0.2
 
 --> Working on
 -
+getprop module_BahaviorFolder
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "behaviors/" into moduleBehaviorFolder
+   if there is a folder moduleBehaviorFolder then
+      return moduleBehaviorFolder
+   else
+      return empty
+   end if
+end module_BahaviorFolder
+
 getprop is_Module
    put the module_Folder of the target into mFolder -- lib_LCW
    return mFolder is not empty
 end is_Module
+
+getprop module_Behavior [useDefault]
+   breakpoint
+   if useDefault is true then
+      return the module_DefaultBehavior of the target
+   else
+      put the module_Behaviors of the target into bObjects
+      return line 1 of bObjects
+   end if
+end module_Behavior
+
+getprop module_DefaultBehavior
+   -- put the module_Folder of the target into moduleFolder
+   put the view_Name of the target into viewName
+   if viewName is empty then return empty
+   put the stack_Folder of the target into moduleFolder
+   --
+   put module_ConstructBehaviorPath (viewName, moduleFolder) into bPath
+   if there is a stack bPath then
+      return the long name of stack bPath
+   else
+      return empty
+   end if
+end module_DefaultBehavior
+
+
+--> Module | Names
+-
+function module_BehaviorPathFromFolder moduleFolder
+   # Module Behavior folder
+   put folder_AddShort (moduleFolder, "behaviors") into moduleBehaviorFolder
+   
+   # Construct short file for behavior
+   set the itemdelimiter to slash
+   put item -1 of moduleFolder into moduleShortFolder
+   put module_ConstructBehaviorShortFile (moduleShortFolder) into bShortFile
+   
+   # Construct behavior path
+   put moduleBehaviorFolder & bShortFile into moduleBehaviorPath
+   return moduleBehaviorPath
+end module_BehaviorPathFromFolder
+
+function module_ConstructBehaviorPath viewName, moduleFolder, pShortFile
+   put project_NameToShortFolder (viewName) into moduleName
+   if pShortFile is empty then
+      put module_ConstructBehaviorShortFile (moduleName) into pShortFile
+   end if
+   put folder_AddShort (moduleFolder, "behaviors") into moduleControllerFolder
+   put moduleControllerFolder & pShortFile into moduleControllerPath
+   return moduleControllerPath
+end module_ConstructBehaviorPath
+
+function module_GetBehaviorStackPath behaviorStackName, rootModuleFolder
+   put behaviorStackName & ".livecodescript" into shortBehaviorPath
+   put rootModuleFolder & "behaviors/" & shortBehaviorPath into moduleBehaviorStackPath
+   return moduleBehaviorStackPath
+end module_GetBehaviorStackPath
+
+function module_ConstructBehaviorName viewName
+   put project_NameToShortFolder (viewName) into moduleFolderName
+   put project_DefaultBehaviorName (moduleFolderName) into bStackName
+   return bStackName
+end module_ConstructBehaviorName
+
+function module_ViewNameToShortFolder viewName
+   put project_NameToShortFolder (viewName) into moduleShortFolder
+   return moduleShortFolder
+end module_ViewNameToShortFolder
+
+function module_ConstructBehaviorShortFile moduleStackName
+   put project_DefaultBehaviorName (moduleStackName) & ".livecodescript" into shortFile
+   return shortFile
+end module_ConstructBehaviorShortFile
+
+function project_DefaultBehaviorName moduleStackName
+   view_NormalizePiped moduleStackName -- just in case
+   replace "|" with empty in moduleStackName
+   replace "_" with empty in moduleStackName
+   --
+   put "behavior_" & moduleStackName into behaviorStackName
+   return behaviorStackName
+end project_DefaultBehaviorName
+
+function module_GetControllerStackPath controllerStackName, rootModuleFolder
+   put controllerStackName & ".livecodescript" into shortControllerPath
+   put rootModuleFolder & "controllers/" & shortControllerPath into moduleControllerStackPath
+   return moduleControllerStackPath
+end module_GetControllerStackPath
 
 
 --> Module | StackPaths
@@ -44,14 +142,14 @@ private function _GetModuleStackPaths moduleStackPath
    set the itemdelimiter to slash
    -- put item 1 to -3 of moduleStackPath & slash into moduleFolder
    put item 1 to -4 of moduleStackPath & slash into projectFolder
-   put item -2 of moduleStackPath into shortModuleFolder
+   put item -2 of moduleStackPath into moduleShortFolder
    
    put moduleStackPath & CR into stackPaths
    --
-   get module_ListBehaviorStackPaths (shortModuleFolder, projectFolder)
+   get module_ListBehaviorStackPaths (moduleShortFolder, projectFolder)
    if it is not empty then put it & CR after stackPaths
    --
-   get module_ListControllerStackPaths (shortModuleFolder, projectFolder)
+   get module_ListControllerStackPaths (moduleShortFolder, projectFolder)
    if it is not empty then put it & CR after stackPaths
    --
    return word 1 to -1 of stackPaths
@@ -69,14 +167,6 @@ function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
    if item -1 of moduleStackName is not "Menu" then put " | Menu" after moduleStackName
    return moduleStackName
 end module_ConstructGlobalMenuTitle
-
-function module_ViewNameToShortFolder moduleStackName
-   put project_NameToShortFolder (moduleStackName) into shortModuleFolder
-   return shortModuleFolder
-   
-   replace "|" with "_" in moduleStackName -- hack
-   return shortModuleFolder
-end module_ViewNameToShortFolder
 
 
 --> Working on
@@ -217,10 +307,6 @@ getprop module_HomeStack [moduleName]
    return stackObject
 end module_HomeStack
 
-getprop module_Behavior
-   return the module_Behaviors of the target
-end module_Behavior
-
 getprop module_Behaviors
    put the module_BehaviorPaths of the target into stackPaths
    repeat for each line stackPath in stackPaths
@@ -232,6 +318,11 @@ getprop module_Behaviors
 end module_Behaviors
 
 getprop module_BehaviorPaths
+   put the stack_Name of the target into moduleName
+   put the project_Folder of the target into projectFolder
+   put module_ListBehaviorStackPaths (moduleName, projectFolder) into bObjects
+   return bObjects
+   
    put the module_Folder of the target into moduleFolder
    put moduleFolder & "behaviors/" into moduleBehaviorFolder
    put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
@@ -314,41 +405,6 @@ command view_NormalizePiped @viewPath, pMakePretty
    end repeat
    return true
 end view_NormalizePiped
-
-
---> Menu | Names
--
-/*
-A collection of handlers that deal with view and menu (default) names.
-*/
-
-command menu_NormalizeTitle @mTitle, pMakePretty
-   set the itemdelimiter to "|"
-   repeat for each item someItem in mTitle
-      if pMakePretty is true then
-         put empty into prettyItem
-         repeat for each word someWord in someItem
-            put toUpper (char 1 of someWord) into char 1 of someWord
-            put someWord & space after prettyItem
-         end repeat
-         put char 1 to -2 of prettyItem into someText
-      else
-         put word 1 to -1 of someItem into someText
-      end if
-      put space & someText & space & "|" after normalizedMenuTitle
-   end repeat
-   delete char -2 to -1 of normalizedMenuTitle
-   delete char 1 of normalizedMenuTitle
-   put normalizedMenuTitle into mTitle
-end menu_NormalizeTitle
-
-command menu_NormalizeName @mTitle
-   if word 1 of mTitle = "-->" then
-      delete word 1 of mTitle
-   end if
-   view_NormalizePiped mTitle
-   replace "|" with " | " in mTitle
-end menu_NormalizeName
 
 
 --> Module

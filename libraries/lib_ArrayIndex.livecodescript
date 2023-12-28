@@ -24,7 +24,7 @@ command display_IndexArray indexArray, pTitle, pStackLabel, pOrdered, pNameKey, 
       set the show_Numbers of displayView to false
       set the show_Separator of displayView to true
    else
-      put indexArray_Names (indexArray, pNameKey) into sLines
+      put indexArray_List (indexArray, pNameKey) into sLines
       display_Data sLines, pTitle, pStackLabel, pDisplayView
       put the result into displayView
    end if
@@ -36,6 +36,10 @@ end display_IndexArray
 
 --> IndexArray
 -
+function arrayIndex_List
+   
+end arrayIndex_List
+
 function indexArray_GetNamed indexArray, sName, sKey, pNameKey
    if pNameKey is empty then put "name" into pNameKey
    --
@@ -62,7 +66,7 @@ function indexArray_GetNumbered indexArray, pNameKey
    return numArray
 end indexArray_GetNumbered
 
-function indexArray_Names indexArray, pNameKey
+function indexArray_List indexArray, pNameKey
    if pNameKey is empty then put "name" into pNameKey
    repeat with indexNum = 1 to item 2 of the extents of indexArray
       put indexArray [indexNum][pNameKey] into sLine
@@ -70,7 +74,7 @@ function indexArray_Names indexArray, pNameKey
    end repeat
    delete char -1 of sLines
    return sLines
-end indexArray_Names
+end indexArray_List
 
 command indexArray_Add newLines, someKey, @someArray
    -- if the number of lines of keys(someArray) > 5 and someKey contains "form_IsRed" then breakpoint
@@ -103,6 +107,31 @@ command indexArray_Insert @sArray, intoNum, itemArray
    put itemArray into sArray [intoNum]
 end indexArray_Insert
 
+function indexArray_FindArray sArray, sKey, sValue
+   put indexArray_Find (sArray, sKey, sValue) into itemNum
+   return sArray [itemNum]
+end indexArray_FindArray
+
+function indexArray_FindContains sArray, sKey, sValue
+   repeat with itemNum = 1 to item 2 of the extents of sArray
+      put sArray [itemNum][sKey] into foundKey
+      if foundKey contains sValue then
+         return itemNum
+      end if
+   end repeat
+   return 0
+end indexArray_FindContains
+
+function indexArray_FindEndsWith sArray, sKey, sValue
+   repeat with itemNum = 1 to item 2 of the extents of sArray
+      put sArray [itemNum][sKey] into foundKey
+      if foundKey ends with sValue then
+         return itemNum
+      end if
+   end repeat
+   return 0
+end indexArray_FindEndsWith
+
 function indexArray_Find sArray, sKey, sValue
    repeat with itemNum = 1 to item 2 of the extents of sArray
       put sArray [itemNum][sKey] into foundKey
@@ -131,3 +160,4 @@ command indexArray_AddToEnd @sArray, itemArray
    put itemArray into sArray [maxItem]
    return maxItem
 end indexArray_AddToEnd
+

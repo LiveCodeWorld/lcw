@@ -545,7 +545,7 @@ getprop index_Array
 end index_Array
 
 setprop index_Array [pIndexKey] indexArray
-   put indexArray_Names (indexArray, pIndexKey) into sLines
+   put indexArray_List (indexArray, pIndexKey) into sLines
    -- 
    set the displayed_Index of me to sLines
    set the view_Data of me to indexArray

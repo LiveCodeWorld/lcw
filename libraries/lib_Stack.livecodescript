@@ -15,10 +15,16 @@ Todo:  separate out essentials and utilities => lib_StackExtras
 
 --> Props
 -
+getprop card_Rect
+   -- relies on a unique card name (but simpler than card_Object)
+   put the currentcard of the defaultstack into cardName
+   return the rect of card cardName of the defaultstack
+end card_Rect
+
 getprop current_Card
    -- relies on a unique card name (but simpler than card_Object)
    put the currentcard of the defaultstack into cardName
-   put the long id of card cardName of the defaultstack  into cardObject
+   put the long id of card cardName of the defaultstack into cardObject
    return cardObject
 end current_Card
 

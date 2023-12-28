@@ -12,6 +12,76 @@ A library for script behaviors.
 
 --> Working on
 -
+getprop behavior_StackNames
+   put the long id of the target into tObject
+   repeat
+      put the behavior of tObject into bObject
+      switch
+         case word 1 of bObject is not "stack"
+         case exists (bObject) is false
+            delete char -1 of bStackNames
+            return bStackNames
+         default
+            put the stack_Name of bObject into bStackName
+            put bStackName & CR after bStackNames
+            put bObject into tObject
+      end switch
+   end repeat
+end behavior_StackNames
+
+setprop behavior_StackNames stackNames
+   replace comma with CR in stackNames
+   put the long id of the target into tObject
+   
+   # Clear any behaviors (or we might cause a loop)
+   put behavior_GetHierarchy (tObject) into oObjects
+   behavior_Clear oObjects
+   
+   if stackNames is empty then return empty
+   
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      --
+      put the name of stack stackName into bObject
+      set the behavior of tObject to bObject
+      --
+      put bObject into tObject
+      put bObject & CR after bObjects
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_StackNames
+
+setprop behavior_StackNames bStackNames
+   -- test and refactor
+   put the long id of the target into tObject
+   --
+   replace comma with CR in bStackNames
+   repeat for each line stackName in bStackNames
+      if exists (stack stackName) is false then exit repeat
+      put the stack_Object of stack stackName & CR after bObjects
+   end repeat
+   delete char -1 of bObjects
+   --
+   behavior_SetHierarchy tObject,  bObjects
+   return the result
+end behavior_StackNames
+
+setprop behavior_AddStack stackName
+   if exists (stack stackName) is false then
+      return merge ("Error, stack '[[stackName]]' does nto exists.")
+   end if
+   --
+   put the long id of the target into targetObject
+   put behavior_GetHierarchy (targetObject) into bObjects
+   --
+   put the name of stack stackName into stackObject
+   line_Add stackObject, bObjects
+   --
+   behavior_SetHierarchy targetObject,  bObjects
+   return the result
+end behavior_AddStack
+
 command card_CreateBehavior bStackName
    put "lcw_Display" into projectName
    --
@@ -99,39 +169,6 @@ setprop behavior_StackName stackName
    set the behavior of the target to stackObject
    return stackObject
 end behavior_StackName
-
-getprop behavior_StackNames
-   put the long id of the target into tObject
-   repeat
-      put the behavior of tObject into bObject
-      switch
-         case word 1 of bObject is not "stack"
-         case exists (bObject) is false
-            delete char -1 of bStackNames
-            return bStackNames
-         default
-            put the stack_Name of bObject into bStackName
-            put bStackName & CR after bStackNames
-            put bObject into tObject
-      end switch
-   end repeat
-end behavior_StackNames
-
-setprop behavior_StackNames bStackNames
-   -- test and refactor
-   put the long id of the target into tObject
-   --
-   replace comma with CR in bStackNames
-   repeat for each line stackName in bStackNames
-      if exists (stack stackName) is false then exit repeat
-      put the stack_Object of stack stackName & CR after bObjects
-   end repeat
-   delete char -1 of bObjects
-   --
-   behavior_SetHierarchy tObject,  bObjects
-   return the result
-end behavior_StackNames
-
 
 
 --> Behavior

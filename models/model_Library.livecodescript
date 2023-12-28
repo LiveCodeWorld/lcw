@@ -129,6 +129,17 @@ function user_GetArray shortFile
    return modelArray
 end user_GetArray
 
+command user_AddArray shortFile, newArray
+   put user_GetArray (shortFile) into userArray
+   --
+   difference userArray with newArray
+   union userArray with newArray
+   --
+   user_SetArray shortFile, userArray
+   put the result into modelFile
+   return modelFile
+end user_AddArray
+
 command user_SetArray shortFile, modelArray
    if the platform is "server" then
       

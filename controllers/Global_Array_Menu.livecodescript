@@ -65,6 +65,12 @@ on menu_MouseDoubleupHandler displayView
    hKey_Edit hKey
 end menu_MouseDoubleupHandler
 
+on menu_SetDropCommand displayView
+   put the drop_Command of displayView into dropCommand
+   put lcw_Ask ("Set the drop_Command...", dropCommand, "Drop Command", displayView) into dropCommand
+   set the drop_Command of displayView to dropCommand
+end menu_SetDropCommand
+
 private on __
 end __
 

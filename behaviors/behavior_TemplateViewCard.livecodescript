@@ -6,7 +6,6 @@ copyright: David Bovill
 name: behavior_ViewTemplateCard
 type: behavior
 
-
 /*
 Was "Card View Behavior" and moved to this script-only behavior.
 
@@ -105,16 +104,39 @@ private command _doViewMenu
    put shortModuleFolder into testViewName
    replace "_" with "|" in testViewName
    --
-   switch 
+   put the stack_Name of viewObject into stackName
+   put the short name of viewObject into shortName
+   --
+   switch
+      -- case viewName is not stackName -- modules are often cloned
+      case the optionKey is "Down"
+         _ViewProblemMenu
+         break
+      case viewName is not shortName
+         _ViewProblemMenu
+         break
       case shortModuleFolder is empty
       case viewName = testViewName
-         put the menu_Title [viewName] of me into mTitle
-         menu_PopUp mTitle, empty, viewObject
+         _ViewGoodMenu viewObject, viewName
          break
       default
          _ViewProblemMenu
    end switch
 end _doViewMenu
+
+private command _ViewGoodMenu viewObject, viewName
+   put the menu_Title [viewName] of me into mTitle
+   --
+   put menu_GetGlobalController (mTitle) into mController
+   if exists (mController) is false then
+      put the module_ControllerFolder of viewObject into mFolder
+      --
+      put merge ("Menu '[[mTitle]]' not created yet. Create it?") into sQuestion
+      menu_CreateController mTitle, mFolder, sQuestion, viewObject
+   end if
+   --
+   menu_PopUp mTitle, empty, viewObject
+end _ViewGoodMenu
 
 private command _ViewProblemMenu
    menu_PopUp "Global | View | Card | Create | Menu"

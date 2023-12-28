@@ -53,6 +53,25 @@ getprop ide_MenuTitle [shortName]
 end ide_MenuTitle
 
 
+--> IDE | Menubar
+-
+command ide_ResetDefaultMenubar
+   put ide_DefaultMenubar() into defaultMenuBarGroup
+   set the defaultMenuBar to defaultMenuBarGroup
+end ide_ResetDefaultMenubar
+
+function ide_DefaultMenubar
+   put ide_DefaultMenubarStackName() into defaultMenubarStackName
+   put the long id of group "revMenuBar" of stack defaultMenubarStackName into defaultMenuBarGroup
+   return defaultMenuBarGroup
+end ide_DefaultMenubar
+
+function ide_DefaultMenubarStackName
+   put revIDEPaletteToStackName("menubar") into menubarManagerName
+   return menubarManagerName
+end ide_DefaultMenubarStackName
+
+
 --> Working on
 -
 command ide_InitLcw
@@ -130,48 +149,11 @@ command ide_SetAfterActionCompile pBoolean
    return actionBehavior
 end ide_SetAfterActionCompile
 
-
---> IDE | Menubar
--
 function ide_ListToolBarBehaviorNames
    put the stack_Folder of stack "revSEToolbarBehavior" into toolbarBehaviorFolder
    put folder_ListStackNames (toolbarBehaviorFolder) into bNames
    return bNames
 end ide_ListToolBarBehaviorNames
-
-function ide_DefaultMenubar
-   put the defaultMenuBar into dBar
-   put the long name of group "revMenuBar" of stack revIDEPaletteToStackName("menubar") into revBar
-   return revBar = dBar
-end ide_DefaultMenubar
-
-command ide_ResetDefaultMenubar
-   put menuManager_DefaultMenuGroup() into mmGroup
-   set the defaultMenuBar to mmGroup
-end ide_ResetDefaultMenubar
-
-function menuManager_GetArray
-   put revIDEPaletteToStackName("menubar") into mmStackName
-   put the customKeys of stack mmStackName into mmArray
-   return mmStackName
-end menuManager_GetArray
-
-function menuManager_MenuGroup
-   -- currently selected
-   put revIDEPaletteToStackName("menubar") into mmStackName
-   put the cREVMenuID of stack mmStackName into sMenuID
-   if sMenuID is empty then return empty
-   
-   put the cREVDefaultStack of stack mmStackName into sMenuStack
-   put the long id of bg id sMenuID of stack sMenuStack into sMenuGroup
-   return sMenuGroup
-end menuManager_MenuGroup
-
-function menuManager_DefaultMenuGroup
-   put revIDEPaletteToStackName("menubar") into menuManagerStackName
-   put the long id of group "revMenuBar" of stack menuManagerStackName into mmGroup
-   return mmGroup
-end menuManager_DefaultMenuGroup
 
 
 --> IDE | Hack

@@ -11,6 +11,40 @@ version: 0.8
 
 --> Working on
 -
+function env_ProjectFolder projectName, pSubFolderPath
+   put env_ConstructProjectFolder (projectName) into projectFolder
+   folder_Add projectFolder, pSubFolderPath
+   if there is not a folder projectFolder then return empty
+   --
+   return projectFolder
+end env_ProjectFolder
+
+function project_GetFolder projectName, pSubFolderPath
+   -- utility to get a project folder from a project name for loaded or unloaded projects
+   -- returns empty if the folder does not exist or there is another problem
+   if exists (stack projectName) is true then
+      put the project_Folder of stack projectName into projectFolder
+   else
+      put env_ConstructProjectFolder (projectName) into projectFolder
+   end if
+   folder_Add projectFolder, pSubFolderPath
+   if there is not a folder projectFolder then return empty
+   --
+   return projectFolder
+end project_GetFolder
+
+command folder_Add @someFolder, pSubFolderPath
+   switch
+      case someFolder is empty
+         return "Error, folder is empty"
+      case pSubFolderPath is not empty
+         if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
+         put pSubFolderPath after someFolder
+         text_AddTrailing someFolder, slash
+   end switch
+   return empty
+end folder_Add
+
 getprop project_DependencyArray
    put the project_Name of the target into projectName
    put env_GetRepoFolder() into repoFolder
@@ -24,9 +58,9 @@ command project_Start projectName, pForceLoad
    if exists (stack projectName) then
       put the name of stack projectName into homeStackObject
    else
-      put env_GetProjectHomePath (projectName) into homeStackpath
+      put env_GetProjectHomePath (projectName) into homeStackPath
       --
-      if exists (homeStackObject) is false then
+      if exists (stack homeStackPath) is false then
          breakpoint
          display_DebugHistory "project_Start"
          return empty
@@ -550,35 +584,6 @@ function project_ListAllControllers projectFolder
 end project_ListAllControllers
 
 
---> Recent
--
-function project_GetFolder projectName, pSubFolderPath
-   -- utility to get a project folder from a project name for loaded or unloaded projects
-   -- returns empty if the folder does not exist or there is another problem
-   if exists (stack projectName) is true then
-      put the project_Folder of stack projectName into projectFolder
-   else
-      put env_ConstructProjectFolder (projectName) into projectFolder
-   end if
-   folder_Add projectFolder, pSubFolderPath
-   if there is not a folder projectFolder then return empty
-   --
-   return projectFolder
-end project_GetFolder
-
-command folder_Add @someFolder, pSubFolderPath
-   switch
-      case someFolder is empty
-         return "Error, folder is empty"
-      case pSubFolderPath is not empty
-         if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
-         put pSubFolderPath after someFolder
-         text_AddTrailing someFolder, slash
-   end switch
-   return empty
-end folder_Add
-
-
 --> Project | Start
 -
 /*
@@ -830,10 +835,11 @@ getprop project_IsActive
 end project_IsActive
 
 function env_ProjectIsActive projectName, pRepoFolder
-   put env_GetActiveProjectArray() into activeProjectArray
-   put activeProjectArray [projectName] is not empty into projectIsLoaded
    -- put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
    -- put env_ConstructProjectFolder (projectName, pRepoFolder) is not empty into projectIsLoaded
+   
+   put env_GetActiveProjectArray() into activeProjectArray
+   put activeProjectArray [projectName] is not empty into projectIsLoaded
    return projectIsLoaded
 end env_ProjectIsActive
 
