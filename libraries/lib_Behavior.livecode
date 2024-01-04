@@ -29,15 +29,27 @@ getprop behavior_StackNames
    end repeat
 end behavior_StackNames
 
+setprop behavior_ClearNames stackNames
+   if stackNames is empty then return empty
+   replace comma with CR in stackNames
+   put the long id of the target into tObject
+   --
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      --
+      put the name of stack stackName into sObject
+      set the behavior of sObject to empty
+   end repeat
+end behavior_ClearNames
+
 setprop behavior_StackNames stackNames
+   if stackNames is empty then return empty
    replace comma with CR in stackNames
    put the long id of the target into tObject
    
    # Clear any behaviors (or we might cause a loop)
    put behavior_GetHierarchy (tObject) into oObjects
    behavior_Clear oObjects
-   
-   if stackNames is empty then return empty
    
    repeat for each line stackName in stackNames
       if exists (stack stackName) is false then next repeat

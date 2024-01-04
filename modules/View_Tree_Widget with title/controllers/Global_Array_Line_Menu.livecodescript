@@ -36,9 +36,11 @@ end menu_SelectedValue
 private on _
 end _
 
-on menu_MenuEdit displayView
-   menu_Edit "Global | Array | Line | Menu"
-end menu_MenuEdit
+on menu_Fetch displayView
+   put the top_Line of displayView into someRoute
+   put "http://localhost" & someRoute into someURL
+   put someURL 
+end menu_Fetch
 
 on submenu_Dev
    return menu_DevTitle ("Global | Array | Line | Menu")
