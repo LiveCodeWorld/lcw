@@ -16,6 +16,16 @@ Therefore this model contains handlers that can load and merge multiple projects
 providing access to scripts that need it and instructions how to build it from individual projects.
 
 As handlers that work on a set of projects, stroing these in the global vairable gLCW,  we should rename these handlers "env_XXX"
+
+private command _RemoveTransporterTools @frontObjects, pRemoveTransportBehavior
+   if pRemoveTransportBehavior is false then return empty
+   if exists (stack "behavior_RigLocalOveride") is false then return empty
+   
+   put the name of stack "behavior_RigLocalOveride" into transportFrontScript
+   line_Delete transportFrontScript, frontObjects
+   return transportFrontScript
+end _RemoveTransporterTools
+
 */
 
 
@@ -244,7 +254,7 @@ end env_GetHomeArrayFileData
 -
 function env_ScriptHierarchy pRemoveTransportBehavior
    put env_ListFrontScripts() into frontObjects
-   _RemoveTransporterTools frontObjects, pRemoveTransportBehavior
+   -- _RemoveTransporterTools frontObjects, pRemoveTransportBehavior
    --
    put env_ListBackScripts() into backObjects
    put stack_PathsToObjects (the stacksinUse) into usedStacks
@@ -266,15 +276,6 @@ function env_ListBackScripts
    ide_FilterOutStacks longIDs
    return longIDs
 end env_ListBackScripts
-
-private command _RemoveTransporterTools @frontObjects, pRemoveTransportBehavior
-   if pRemoveTransportBehavior is false then return empty
-   if exists (stack "behavior_RigLocalOveride") is false then return empty
-   
-   put the name of stack "behavior_RigLocalOveride" into transportFrontScript
-   line_Delete transportFrontScript, frontObjects
-   return transportFrontScript
-end _RemoveTransporterTools
 
 function env_ListFrontScripts
    -- /Applications/LiveCode Community 8.1.0 (dp 3).app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript

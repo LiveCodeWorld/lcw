@@ -339,7 +339,7 @@ function array_ShortFileNames pFolder
    else
       folder_Format pFolder
    end if
-   return folder_ShortFiles (pFolder) into shortFiles
+   return file_ListShort (pFolder) into shortFiles
    return shortFiles
 end array_ShortFileNames
 

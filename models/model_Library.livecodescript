@@ -339,7 +339,7 @@ end model_GetDataFile
 -
 function model_ListNames modelStackName, projectFolder
    put projectFolder & "models/" & modelStackName & slash into modelDataFolder
-   put folder_ListShortFiles (modelDataFolder) into shortFiles
+   put file_ListShort (modelDataFolder) into shortFiles
    return shortFiles
 end model_ListNames
 

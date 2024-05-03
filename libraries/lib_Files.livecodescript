@@ -11,6 +11,30 @@ version: 0.7
 
 --> Working On
 -
+-- function folder_ListShortFiles someFolder, pShowInvisible
+   return file_ListShort (someFolder, pShowInvisible)
+end folder_ListShortFiles
+
+-- function folder_ShortFiles someFolder
+return file_ListShort (someFolder)
+end folder_ShortFiles
+
+
+--> File | List | Short
+-
+function file_ListShort someFolder, pShowInvisible
+   if there is not a folder someFolder then return empty
+   put files (someFolder) into shortFiles
+   if pShowInvisible is not true then filter shortFiles without ".*"
+   return shortFiles
+end file_ListShort
+
+function file_ListLong someFolder, pShowInvisible, pSomeFilter
+   if there is not a folder someFolder then return empty
+   put files (someFolder) into shortFiles
+   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
+   return filePaths
+end file_ListLong
 
 
 --> Foler | List
@@ -260,45 +284,45 @@ function file_FastHashGuess filePath
 end file_FastHashGuess
 
 function file_SafeHashName filePath
-    -- need to check. Not tested
-    set the cursor to watch
-    deconstruct_File filePath, someFolder, shortName, someExtension
-    put line 1 of shell_Md5Hash(filePath) into tHexDigest
-    -- get binaryDecode("H*", someBinaryData, tHexDigest)
-    put "hash_" & tHexDigest into hashName
-    put someFolder & "/" & hashName into hashFile
-    if someExtension is not empty then put "." & someExtension after hashFile
-    return hashFile
+   -- need to check. Not tested
+   set the cursor to watch
+   deconstruct_File filePath, someFolder, shortName, someExtension
+   put line 1 of shell_Md5Hash(filePath) into tHexDigest
+   -- get binaryDecode("H*", someBinaryData, tHexDigest)
+   put "hash_" & tHexDigest into hashName
+   put someFolder & "/" & hashName into hashFile
+   if someExtension is not empty then put "." & someExtension after hashFile
+   return hashFile
 end file_SafeHashName
 
 function file_IsHashName filePath
-    -- need to check. Not tested
-    deconstruct_File filePath, someFolder, shortName, someExtension
-    if char 1 to 5 of shortName is "hash_" then
-        put shortName into tHexDigest
-        delete char 1 to 5 of tHexDigest
-        put binaryencode("H*", tHexDigest) into someBinaryData
-        if the number of chars of someBinaryData = 16 then
-            return true
-        else
-            return false
-        end if
-    else
-        return false
-    end if
+   -- need to check. Not tested
+   deconstruct_File filePath, someFolder, shortName, someExtension
+   if char 1 to 5 of shortName is "hash_" then
+      put shortName into tHexDigest
+      delete char 1 to 5 of tHexDigest
+      put binaryencode("H*", tHexDigest) into someBinaryData
+      if the number of chars of someBinaryData = 16 then
+         return true
+      else
+         return false
+      end if
+   else
+      return false
+   end if
 end file_IsHashName
 
 function file_CheckHashName filePath
-    -- need to check. Not tested
-    deconstruct_File filePath, someFolder, shortName, someExtension
-    put file_SafeHashName(filePath, someExtension) into realHashName
-    put shortName into shortFile
-    if someExtension is not empty then put "." & someExtension after shortFile
-    if realHashName is shortFile then
-        return true
-    else
-        return false
-    end if
+   -- need to check. Not tested
+   deconstruct_File filePath, someFolder, shortName, someExtension
+   put file_SafeHashName(filePath, someExtension) into realHashName
+   put shortName into shortFile
+   if someExtension is not empty then put "." & someExtension after shortFile
+   if realHashName is shortFile then
+      return true
+   else
+      return false
+   end if
 end file_CheckHashName
 
 
@@ -323,22 +347,6 @@ command file_ShortToLong @shortFiles, someFolder, pShowInvisible, pSomeFilter
    put filePaths into shortFiles
 end file_ShortToLong
 
-
---> File | List | Short
--
-function file_ListLong someFolder, pShowInvisible, pSomeFilter
-   if there is not a folder someFolder then return empty
-   put files (someFolder) into shortFiles
-   put file_AddFolderToPaths (shortFiles, someFolder, pShowInvisible, pSomeFilter) into filePaths
-   return filePaths
-end file_ListLong
-
-function file_ListShort someFolder, pShowInvisible
-   if there is not a folder someFolder then return empty
-   put files (someFolder) into shortFiles
-   if pShowInvisible is not true then filter shortFiles without ".*"
-   return shortFiles
-end file_ListShort
 
 
 --> File | List | Utils
@@ -375,14 +383,6 @@ function folder_GetDefault
    create folder tempFolder
    return tempFolder
 end folder_GetDefault
-
-function folder_ListShortFiles someFolder, pShowInvisible
-   return file_ListShort (someFolder, pShowInvisible)
-end folder_ListShortFiles
-
-function folder_ShortFiles someFolder
-   return file_ListShort (someFolder)
-end folder_ShortFiles
 
 function folder_Above fileOrFolder
    set the itemdelimiter to "/"
@@ -586,86 +586,86 @@ function file_GetType filePath
 end file_GetType
 
 function file_IsAlias someFile
-    put the aliasreference of someFile into testAlias
-    return someFile is not testAlias or testAlias is empty
+   put the aliasreference of someFile into testAlias
+   return someFile is not testAlias or testAlias is empty
 end file_IsAlias
 
 function file_ExtensionFromRevFormat dataType
-    -- was "revDataFormat_ToExtension"
-    switch dataType
-        case "rtf"
-            return "rtfText"
-        case "htm"
-            return "htmlText"
-        case "html"
-            return "htmlText"
-        default
-            return "text"
-    end switch
+   -- was "revDataFormat_ToExtension"
+   switch dataType
+      case "rtf"
+         return "rtfText"
+      case "htm"
+         return "htmlText"
+      case "html"
+         return "htmlText"
+      default
+         return "text"
+   end switch
 end file_ExtensionFromRevFormat
 
 function file_ExtensionToRevFormat someExtension
-    switch someExtension
-        case "rtf"
-            return "rtfText"
-        case "htm"
-            return "htmlText"
-        case "html"
-            return "htmlText"
-        default
-            return "text"
-    end switch
+   switch someExtension
+      case "rtf"
+         return "rtfText"
+      case "htm"
+         return "htmlText"
+      case "html"
+         return "htmlText"
+      default
+         return "text"
+   end switch
 end file_ExtensionToRevFormat
 
 function file_ConstructSafeName someName, someExtension
-    -- was "construct_SafeFileName"
-    put wiki_ConstructID(someName) into sname
-    if someExtension is not empty then put "." & someExtension after sname
-    return sname
-     
-    -- lifted from "Metacard Menu Bar" stack script for compatibility
-    -- <renamed frome="MCfixpath shortname"/>
-    put tolower(someName) into sname
-    if someExtension is not empty then put "." & someExtension after sname
-    repeat with c = 1 to the length of sname
-        if char c of sname is in " :?*<>/\()[]{}|'`" & quote & tab
-        then put "_" into char c of sname
-    end repeat
-    return sname
+   -- was "construct_SafeFileName"
+   put wiki_ConstructID(someName) into sname
+   if someExtension is not empty then put "." & someExtension after sname
+   return sname
+   
+   -- lifted from "Metacard Menu Bar" stack script for compatibility
+   -- <renamed frome="MCfixpath shortname"/>
+   put tolower(someName) into sname
+   if someExtension is not empty then put "." & someExtension after sname
+   repeat with c = 1 to the length of sname
+      if char c of sname is in " :?*<>/\()[]{}|'`" & quote & tab
+      then put "_" into char c of sname
+   end repeat
+   return sname
 end file_ConstructSafeName
 
 function file_FixNasPath filePath
-    put file_SafeNameReg() into someReg
-    return replacetext(filePath, someReg,"_")
+   put file_SafeNameReg() into someReg
+   return replacetext(filePath, someReg,"_")
 end file_FixNasPath
 
 function file_PathIsSafe filePath, maxLength
-    if maxLength is empty then 
-        -- put 28 into maxLength
-        put 255 into maxLength
-    end if
-    
-    set the itemdelimiter to "/"
-    put file_SafeNameReg() into someReg
-    repeat for each item testItem in filePath
-        if the number of chars of testItem > maxLength then
-            return false
-        else if matchtext(testItem, someReg) then
-            return false
-        end if
-    end repeat
-    return true
+   if maxLength is empty then 
+      -- put 28 into maxLength
+      put 255 into maxLength
+   end if
+   
+   set the itemdelimiter to "/"
+   put file_SafeNameReg() into someReg
+   repeat for each item testItem in filePath
+      if the number of chars of testItem > maxLength then
+         return false
+      else if matchtext(testItem, someReg) then
+         return false
+      end if
+   end repeat
+   return true
 end file_PathIsSafe
 
 function file_SafeNameReg
-    put "[:/?<>/|/*" & quote into someReg
-    
-    -- how do you escape "\" ???
-    -- put "\" after someReg
-    -- put "/\" after someReg
-    
-    put "]" after someReg
-    return someReg
+   put "[:/?<>/|/*" & quote into someReg
+   
+   -- how do you escape "\" ???
+   -- put "\" after someReg
+   -- put "/\" after someReg
+   
+   put "]" after someReg
+   return someReg
 end file_SafeNameReg
 
 function file_IndexToOutline filePaths, pType
@@ -686,77 +686,77 @@ function file_IndexToOutline filePaths, pType
 end file_IndexToOutline
 
 function file_ExtractFileSuffix filePath
-    -- was "extract_FileSuffix"
-    put file_LongToShort(filePath) into shortFile
-    if shortFile contains "." then
-        put the itemdelimiter into oDelim
-        set the itemdelimiter to "."
-        put last item of shortFile into someSuffix
-        set the itemdelimiter to oDelim
-        return someSuffix
-    else
-        return empty
-    end if
+   -- was "extract_FileSuffix"
+   put file_LongToShort(filePath) into shortFile
+   if shortFile contains "." then
+      put the itemdelimiter into oDelim
+      set the itemdelimiter to "."
+      put last item of shortFile into someSuffix
+      set the itemdelimiter to oDelim
+      return someSuffix
+   else
+      return empty
+   end if
 end file_ExtractFileSuffix
 
 command file_UrlEncode @someFile
-    set the itemdelimiter to "/"
-    repeat with itemNum = 1 to the number of items of someFile
-        put item itemNum of someFile into pathItem
-        -- replace "|" with "%7C" in pathItem
-        put urlencode(pathItem) into pathItem
-        replace "+" with "%20" in pathItem
-        put pathItem into item itemNum of someFile
-    end repeat
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of someFile
+      put item itemNum of someFile into pathItem
+      -- replace "|" with "%7C" in pathItem
+      put urlencode(pathItem) into pathItem
+      replace "+" with "%20" in pathItem
+      put pathItem into item itemNum of someFile
+   end repeat
 end file_UrlEncode
 
 function file_FromRelativeRoot relativeFile, relativeRoot
-    -- was "getFile_FromRelativeRoot"
-    if last char of relativeRoot is "/" then delete last char of relativeRoot -- it is :)
-    put the itemdelimiter into oDelim
-    set the itemdelimiter to "/"
-    repeat while item 1 of relativeFile is ".."
-        delete item 1 of relativeFile
-        delete last item of relativeRoot
-    end repeat
-    set the itemdelimiter to oDelim
-    return relativeRoot & "/" & relativeFile
+   -- was "getFile_FromRelativeRoot"
+   if last char of relativeRoot is "/" then delete last char of relativeRoot -- it is :)
+   put the itemdelimiter into oDelim
+   set the itemdelimiter to "/"
+   repeat while item 1 of relativeFile is ".."
+      delete item 1 of relativeFile
+      delete last item of relativeRoot
+   end repeat
+   set the itemdelimiter to oDelim
+   return relativeRoot & "/" & relativeFile
 end file_FromRelativeRoot
 
 function file_GetMostRecent fileNames
-    -- version original,27/12/02
-    -- <scott> Would be nice to have "detailed fileName property modifier" </scott>
-    set the itemdelimiter to "/"
-    repeat for each line filePath in fileNames
-        get file_LastModifed(filePath)
-        put filePath & "," & it & return after fileTable
-    end repeat
-    delete last char of fileTable
-    set the itemdelimiter to ","
-    sort lines of fileTable numeric descending by item 2 of each
-    put urldecode(item 1 of line 1 of fileTable) into filePath
-    return filePath
+   -- version original,27/12/02
+   -- <scott> Would be nice to have "detailed fileName property modifier" </scott>
+   set the itemdelimiter to "/"
+   repeat for each line filePath in fileNames
+      get file_LastModifed(filePath)
+      put filePath & "," & it & return after fileTable
+   end repeat
+   delete last char of fileTable
+   set the itemdelimiter to ","
+   sort lines of fileTable numeric descending by item 2 of each
+   put urldecode(item 1 of line 1 of fileTable) into filePath
+   return filePath
 end file_GetMostRecent
 
 
 --> File | Change
 -
 command file_Copy filePath, newFile, isText	# if the file exists it does not copy anything???
-    -- rename file filePath to newFile
-     
-    if isText is false then	# does not copy fileTypes and resources / bundles.
-        put url ("binfile:" & filePath) into binaryData
-        file_CreateBinary binaryData, newFile
-    else
-        put url ("file:" & filePath) into someText
-        file_CreateText someText, filePath
-    end if
+   -- rename file filePath to newFile
+   
+   if isText is false then	# does not copy fileTypes and resources / bundles.
+      put url ("binfile:" & filePath) into binaryData
+      file_CreateBinary binaryData, newFile
+   else
+      put url ("file:" & filePath) into someText
+      file_CreateText someText, filePath
+   end if
 end file_Copy
- 
+
 command file_CreateImage someImage, imageFile
-    put image_FileTypeFromPath(imageFile) into someFileType
-    file_CreateBinary someImage, imageFile, someFileType
-    return the result
+   put image_FileTypeFromPath(imageFile) into someFileType
+   file_CreateBinary someImage, imageFile, someFileType
+   return the result
 end file_CreateImage
 
 command file_CreateText someText, pFile
@@ -769,24 +769,24 @@ command file_CreateText someText, pFile
 end file_CreateText
 
 command file_CreateBinary binaryData, filePath, someFileType
-    if filePath is empty then return the script_Error ["No such file"] of me
-    put folder_Above(filePath) into someFolder
-    folder_CreateNested someFolder
-     
-    put there is a file filePath into fileExists
-    if someFileType is not empty then
-        put the filetype into oFileType
-        set the filetype to someFileType
-    end if
-    put binaryData into url ("binfile:" & filePath)
-    if someFileType is not empty then
-        set the filetype to oFileType
-    end if
-    if fileExists is false then
-        if file_IsVersioned (filePath) then
-            svn_Add filePath
-        end if
-    end if
+   if filePath is empty then return the script_Error ["No such file"] of me
+   put folder_Above(filePath) into someFolder
+   folder_CreateNested someFolder
+   
+   put there is a file filePath into fileExists
+   if someFileType is not empty then
+      put the filetype into oFileType
+      set the filetype to someFileType
+   end if
+   put binaryData into url ("binfile:" & filePath)
+   if someFileType is not empty then
+      set the filetype to oFileType
+   end if
+   if fileExists is false then
+      if file_IsVersioned (filePath) then
+         svn_Add filePath
+      end if
+   end if
 end file_CreateBinary
 
 
@@ -801,96 +801,96 @@ command file_ReplaceHome @fileOrFolder
 end file_ReplaceHome
 
 command file_SetHomeRelative @longFile
-    put $HOME into myHome
-    put the number of chars of myHome into maxNum
-    if char 1 to maxNum of longFile is myHome then
-        put "~" into char 1 to maxNum of longFile
-    end if
+   put $HOME into myHome
+   put the number of chars of myHome into maxNum
+   if char 1 to maxNum of longFile is myHome then
+      put "~" into char 1 to maxNum of longFile
+   end if
 end file_SetHomeRelative
 
 
 --> File | Choose
 -
 function file_ChooseImage preferredFolder, anyFile, someType, comment
-    -- was "ask_ImageFile" (param order changed)
-    
-    if comment is empty then put "Select an image..." into comment
-     
-    if anyFile is true then
-        put file_ChooseAny(preferredFolder, comment) into imageFile
-        -- now could do a check to see if it is an image?
-    else if the platform is "MacOs" then
-        put _askMacImage(someType, preferredFolder, comment) into imageFile
-    else if the platform is "Linux" then
-        put _askLinuxImage(someType, preferredFolder, comment) into imageFile
-    else
-        put _askWindowsImage(someType, preferredFolder, comment) into imageFile
-    end if
-     
-    if imageFile is empty then
-        exit to top
-    else
-        return imageFile
-    end if
+   -- was "ask_ImageFile" (param order changed)
+   
+   if comment is empty then put "Select an image..." into comment
+   
+   if anyFile is true then
+      put file_ChooseAny(preferredFolder, comment) into imageFile
+      -- now could do a check to see if it is an image?
+   else if the platform is "MacOs" then
+      put _askMacImage(someType, preferredFolder, comment) into imageFile
+   else if the platform is "Linux" then
+      put _askLinuxImage(someType, preferredFolder, comment) into imageFile
+   else
+      put _askWindowsImage(someType, preferredFolder, comment) into imageFile
+   end if
+   
+   if imageFile is empty then
+      exit to top
+   else
+      return imageFile
+   end if
 end file_ChooseImage
 
 function file_ChooseAny preferredFolder, comment
-    if comment is empty then put "Select a file..." into comment
-    answer file comment with preferredFolder
-    if the result is "Cancel" then exit to top
-    return it
+   if comment is empty then put "Select a file..." into comment
+   answer file comment with preferredFolder
+   if the result is "Cancel" then exit to top
+   return it
 end file_ChooseAny
 
 function _askLinuxImage someType, preferredFolder, comment
-    if someType is empty then put _getLinuxImageTypes() into someType
-    
-    answer file comment with preferredFolder with filter someType
-    if the result is "Cancel" then exit to top
-    return it
+   if someType is empty then put _getLinuxImageTypes() into someType
+   
+   answer file comment with preferredFolder with filter someType
+   if the result is "Cancel" then exit to top
+   return it
 end _askLinuxImage
 
 function _askMacImage someType, preferredFolder, comment
-    if someType is empty then put _getMacImageTypes() into someType
-    if preferredFolder is empty then
-        answer file comment of type someType titled "Choose an Image"
-    else
-        answer file comment with preferredFolder of type someType titled "Choose an Image"
-    end if
-    put it into filePath
-    if filePath is empty then
-        exit to top
-    else
-        return filePath
-    end if
+   if someType is empty then put _getMacImageTypes() into someType
+   if preferredFolder is empty then
+      answer file comment of type someType titled "Choose an Image"
+   else
+      answer file comment with preferredFolder of type someType titled "Choose an Image"
+   end if
+   put it into filePath
+   if filePath is empty then
+      exit to top
+   else
+      return filePath
+   end if
 end _askMacImage
 
 function _askWindowsImage someType, preferredFolder, comment
-    if someType is empty then put _getWindowsImageTypes() into someType
-    if preferredFolder is empty then
-        answer file comment with filter someType
-    else
-        answer file comment with preferredFolder with filter someType
-    end if
-    put it into filePath
-    if filePath is empty then
-        exit to top
-    else
-        return filePath
-    end if
+   if someType is empty then put _getWindowsImageTypes() into someType
+   if preferredFolder is empty then
+      answer file comment with filter someType
+   else
+      answer file comment with preferredFolder with filter someType
+   end if
+   put it into filePath
+   if filePath is empty then
+      exit to top
+   else
+      return filePath
+   end if
 end _askWindowsImage
 
 function _getMacImageTypes
-    -- there are others like PBM...
-    return "JPEGPNGfGIFfPICTBMP "
+   -- there are others like PBM...
+   return "JPEGPNGfGIFfPICTBMP "
 end _getMacImageTypes
 
 function _getLinuxImageTypes
-    -- there are others like PBM...
-    return "*.jpg"
+   -- there are others like PBM...
+   return "*.jpg"
 end _getLinuxImageTypes
- 
+
 function _getWindowsImageTypes
-    return "Images (*.jpg,*.gif,*.png),*.jpg,*.gif,*.png"
+   return "Images (*.jpg,*.gif,*.png),*.jpg,*.gif,*.png"
 end _getWindowsImageTypes
 
 
@@ -913,33 +913,33 @@ function folder_DetailedInfo folderPath
 end folder_DetailedInfo
 
 function folder_GetDocuments
-    if the platform is "MacOS" then
-        if the systemversion >=10 then
-            return specialfolderpath("docs") & "/"
-        else
-            return specialfolderpath("Desktop") & "/"	# somewhere better?
-        end if
-    else if the platform is "Win32" then
-        /*
-        CSIDL_MYDOCUMENTS (0x000c)
-        version 6.0. The virtual folder representing the My Documents desktop item.
-        return specialfolderpath(baseconvert("0x000c",16,10))
-        */
-        return specialfolderpath("Documents") & "/"
-    else
-        return $HOME & "/Documents/"	# somewhere better?
-    end if
+   if the platform is "MacOS" then
+      if the systemversion >=10 then
+         return specialfolderpath("docs") & "/"
+      else
+         return specialfolderpath("Desktop") & "/"	# somewhere better?
+      end if
+   else if the platform is "Win32" then
+      /*
+      CSIDL_MYDOCUMENTS (0x000c)
+      version 6.0. The virtual folder representing the My Documents desktop item.
+      return specialfolderpath(baseconvert("0x000c",16,10))
+      */
+      return specialfolderpath("Documents") & "/"
+   else
+      return $HOME & "/Documents/"	# somewhere better?
+   end if
 end folder_GetDocuments
 
 function folder_Above fileOrFolder
-    set the itemdelimiter to "/"
-    if char -1 of fileOrFolder is "/" then delete char -1 of fileOrFolder
-    delete last item of fileOrFolder
-    if fileOrFolder is empty then 
-        return "."
-    else
-        return fileOrFolder & "/"
-    end if
+   set the itemdelimiter to "/"
+   if char -1 of fileOrFolder is "/" then delete char -1 of fileOrFolder
+   delete last item of fileOrFolder
+   if fileOrFolder is empty then 
+      return "."
+   else
+      return fileOrFolder & "/"
+   end if
 end folder_Above
 
 command folder_Rename fromFolder, toFolder, someMessage
@@ -996,20 +996,20 @@ command folder_ConstructInfoTable @infoTable, someFolder, baseItemNum, maxFileSi
 end folder_ConstructInfoTable
 
 private function folder_ConstructInfoTableLine someFile, fileSize, creationDate, fileHash, baseItemNum
-set the itemdelimiter to "/"
-put "." into item 1 to baseItemNum of someFile
- 
-put someFile & tab after tableLine
-put fileSize & tab after tableLine
-put creationDate & tab after tableLine
-put fileHash after tableLine
- 
-return tableLine
+   set the itemdelimiter to "/"
+   put "." into item 1 to baseItemNum of someFile
+   
+   put someFile & tab after tableLine
+   put fileSize & tab after tableLine
+   put creationDate & tab after tableLine
+   put fileHash after tableLine
+   
+   return tableLine
 end folder_ConstructInfoTableLine
 
 function folder_NestedFilesInside someFolder
-    put folder_ConstructFileOutline (someFolder, outlineArray) into fileOutline
-    return outlineArray ["FileIndex"]
+   put folder_ConstructFileOutline (someFolder, outlineArray) into fileOutline
+   return outlineArray ["FileIndex"]
 end folder_NestedFilesInside
 
 function folder_ShortFoldersInside someFolder
@@ -1062,14 +1062,14 @@ function folder_ExtensionFiles someFolder, pExtension
 end folder_ExtensionFiles
 
 function folder_ShortNameAboveFile filePath
-    -- was "extract_ShortFolder"
-     
-    if filePath is empty then
-        put the effective filename of this stack into filePath
-    end if
-    set the itemdelimiter to "/"
-    delete last item of filePath
-    return last item of filePath
+   -- was "extract_ShortFolder"
+   
+   if filePath is empty then
+      put the effective filename of this stack into filePath
+   end if
+   set the itemdelimiter to "/"
+   delete last item of filePath
+   return last item of filePath
 end folder_ShortNameAboveFile
 
 

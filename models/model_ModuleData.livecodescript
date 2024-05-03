@@ -82,7 +82,7 @@ end module_ModelFolder
 
 getprop module_ModelNames [listShortFiles]
    put the module_ModelFolder of the target into modelDataFolder
-   put folder_ListShortFiles (modelDataFolder) into shortFiles
+   put file_ListShort (modelDataFolder) into shortFiles
    if listShortFiles is not true then
       replace ".array" with empty in shortFiles
    end if
@@ -100,7 +100,7 @@ end module_ListModelNames
 
 function module_ListModelShortFiles moduleStackName, projectName
    put module_ConstructModelFolder (moduleStackName, projectName) into moduleModelFolder
-   put folder_ListShortFiles (moduleModelFolder) into shortFiles
+   put file_ListShort (moduleModelFolder) into shortFiles
    return shortFiles
 end module_ListModelShortFiles
 

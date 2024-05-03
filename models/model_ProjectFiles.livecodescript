@@ -73,7 +73,7 @@ function project_GetFolder projectName, pSubFolderPath
 end project_GetFolder
 
 function project_ListStandardStackPaths shortFolder, projectName, pListNested
-   put project_FolderFromName (projectName, shortFolder) into standardFolder
+   put project_GetFolder (projectName, shortFolder) into standardFolder
    --
    if pListNested is not false then
       put directory_ListNestedStackFiles (standardFolder) into stackPaths
@@ -82,21 +82,6 @@ function project_ListStandardStackPaths shortFolder, projectName, pListNested
    end if
    return stackPaths
 end project_ListStandardStackPaths
-
-function project_FolderFromName projectName, pShortFolder
-   if exists (stack projectName) is false then
-      put env_ConstructProjectFolder (projectName) into projectFolder
-      if there is not a folder projectFolder then
-         return empty
-      end if
-   else
-      put the stack_Folder of stack projectName into projectFolder
-   end if
-   
-   if pShortFolder is empty then return projectFolder
-   put projectFolder & pShortFolder & slash into standardFolder
-   return standardFolder
-end project_FolderFromName
 
 function project_ListAllStackPaths projectName
    put env_ConstructProjectFolder (projectName) into projectFolder
@@ -220,7 +205,7 @@ function project_ListModules projectName
 end project_ListModules
 
 function project_ListModuleFolders projectName
-   put project_FolderFromName (projectName, "modules") into standardFolder
+   put project_GetFolder (projectName, "modules") into standardFolder
    put folder_ListLong (standardFolder) into longFolders
    return longFolders
 end project_ListModuleFolders
@@ -707,4 +692,3 @@ private command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
       _WalkAndList NestedPaths, childFolder, pBaseFolderNum
    end repeat
 end _WalkAndList
-

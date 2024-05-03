@@ -129,7 +129,7 @@ getprop project_ShortAssetFiles [shortAssetFolder]
    put the project_AssetFolder [shortAssetFolder] of the target into assetFolder
    if there is not a folder assetFolder then return empty
    
-   put folder_ListShortFiles (assetFolder) into assetFiles
+   put file_ListShort (assetFolder) into assetFiles
    return assetFiles
 end project_ShortAssetFiles
 

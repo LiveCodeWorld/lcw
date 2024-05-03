@@ -40,6 +40,94 @@ local LocalArray
 
 --> Working on
 -
+-- Sent when a leaf node of the tree view is double-clicked
+-- pPathToNode is a comma-delimited list of keys in the underlying array
+--> Events
+-
+on mouseUp
+   ## Only when the user click on the header
+   -- tree widget does not send to mouseUp
+   local tActionName
+   put the long id of the target into headerWidget
+   put the mouseAction of headerWidget into tActionName
+   	
+   switch tActionName
+      case "cog"
+         put the clickloc into pLocation
+         add 2 to item 1of pLocation
+         add 4 to item 2 of pLocation
+         put the menu_Title of headerWidget into mTitle
+         --
+         put the menu_Button of me into mButton
+         mArray_PopUp mTitle, mButton
+      default
+         -- clicked on the title
+   end switch
+end mouseUp
+
+on actionInspect pPath
+   put _getValue (pathItems) into someValue
+   put the mouse_Up of me into mouseUpCommand
+   if mouseUpCommand is empty then
+      pass actionInspect
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      dispatch mouseUpCommand to mouseTarget with displayView,someValue
+   end if
+end actionInspect
+
+command actionDoubleClick pathItems
+   put the selected_Value of me into someValue
+   put the mouse_DoubleUp of me into mouseDoubleUpCommand
+   if mouseDoubleUpCommand is empty then
+      pass actionDoubleClick
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      replace comma with CR in pathItems
+      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
+   end if
+end actionDoubleClick
+
+on resizeControl
+   put the rect of me into viewRect
+   LayoutControl viewRect
+end resizeControl
+
+on hiliteChanged
+   -- hack - cant stop the flicker when selecting line that is already selected
+   -- called twice due to "set the hilitedElement"
+   -- lock messages makes no difference
+   if LocalArray ["just set hilitedElement"] is true then
+      put false into LocalArray ["just set hilitedElement"]
+      return empty
+   end if
+   
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into pathItems
+   if pathItems is empty then
+      put LocalArray ["previousHilitedElement"] into pathItems
+      set the hilitedElement of treeWidget to pathItems
+      put true into LocalArray ["just set hilitedElement"]
+   else
+      put pathItems into LocalArray ["previousHilitedElement"]
+      put false into LocalArray ["just set hilitedElement"]
+   end if
+   
+   if the controlKey is "Down" then
+      -- put the line_Menu of me into lineMenu
+      menu_PopUp -- lineMenu
+   else
+      _displaySelectedValue treeWidget
+   end if
+end hiliteChanged
+
+private command _displaySelectedValue pTreeWidget
+   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
+   put the selected_Value of pTreeWidget into selectedValue
+   
+   dispatch "tree_HilightChanged" to me with selectedValue
+end _displaySelectedValue
+
 getprop parent_Array [someKey]
    put _treeWidget() into treeWidget
    
@@ -389,93 +477,6 @@ setprop fold_State [pAddState] foldedArray
    set the foldState of tWidget to foldedArray
    return the result
 end fold_State
-
-
---> Events
--
-on mouseUp
-   ## Only when the user click on the header
-   -- tree widget does not send to mouseUp
-   local tActionName
-   put the long id of the target into headerWidget
-   put the mouseAction of headerWidget into tActionName
-   	
-   switch tActionName
-      case "cog"
-         put the clickloc into pLocation
-         add 2 to item 1of pLocation
-         add 4 to item 2 of pLocation
-         put the menu_Title of headerWidget into mTitle
-         --
-         put the menu_Button of me into mButton
-         mArray_PopUp mTitle, mButton
-      default
-         -- clicked on the title
-   end switch
-end mouseUp
-
-on actionInspect pPath
-   put _getValue (pathItems) into someValue
-   put the mouse_Up of me into mouseUpCommand
-   if mouseUpCommand is empty then
-      pass actionInspect
-   else
-      _SetMouseTargets tObject, displayView, mouseTarget
-      dispatch mouseUpCommand to mouseTarget with displayView,someValue
-   end if
-end actionInspect
-
-command actionDoubleClick pathItems
-   put the selected_Value of me into someValue
-   put the mouse_DoubleUp of me into mouseDoubleUpCommand
-   if mouseDoubleUpCommand is empty then
-      pass actionDoubleClick
-   else
-      _SetMouseTargets tObject, displayView, mouseTarget
-      replace comma with CR in pathItems
-      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
-   end if
-end actionDoubleClick
-
-on resizeControl
-   put the rect of me into viewRect
-   LayoutControl viewRect
-end resizeControl
-
-on hiliteChanged
-   -- hack - cant stop the flicker when selecting line that is already selected
-   -- called twice due to "set the hilitedElement"
-   -- lock messages makes no difference
-   if LocalArray ["just set hilitedElement"] is true then
-      put false into LocalArray ["just set hilitedElement"]
-      return empty
-   end if
-   
-   put _treeWidget() into treeWidget
-   put the hilitedElement of treeWidget into pathItems
-   if pathItems is empty then
-      put LocalArray ["previousHilitedElement"] into pathItems
-      set the hilitedElement of treeWidget to pathItems
-      put true into LocalArray ["just set hilitedElement"]
-   else
-      put pathItems into LocalArray ["previousHilitedElement"]
-      put false into LocalArray ["just set hilitedElement"]
-   end if
-   
-   if the controlKey is "Down" then
-      -- put the line_Menu of me into lineMenu
-      menu_PopUp -- lineMenu
-   else
-      _displaySelectedValue treeWidget
-   end if
-end hiliteChanged
-
-private command _displaySelectedValue pTreeWidget
-   if pTreeWidget is empty then put _treeWidget() into pTreeWidget
-   put the selected_Value of pTreeWidget into selectedValue
-   
-   dispatch "tree_HilightChanged" to me with selectedValue
-end _displaySelectedValue
 
 
 --> Props | Menu

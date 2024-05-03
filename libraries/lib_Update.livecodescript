@@ -28,7 +28,7 @@ end display_FixProjectStackFiles
 
 command project_FixStackFiles projectName
    if exists (stack projectName) is false then
-      put project_FolderFromName (projectName) into projectFolder
+      put project_GetFolder (projectName) into projectFolder
       if there is not a folder projectFolder then
          breakpoint
          return empty
