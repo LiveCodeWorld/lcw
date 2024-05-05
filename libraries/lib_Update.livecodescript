@@ -15,46 +15,20 @@ We can split into handlers later when we need.
 */
 
 
---> Working on
+--> Display
 -
-on display_FixProjectStackFiles projectName
-   project_FixStackFiles projectName
-   put the result into projectArray
+on display_ProjectArray projectName, pReconstruct
+   if pReconstruct is true then
+      project_FixStackFiles projectName
+      put the result into projectArray
+   else
+      put project_GetArray (projectName) into projectArray
+   end if
    --
    display_Project projectName, true
    display_EnvironmentMenus true
    display_GitRefreshProjectName projectName
-end display_FixProjectStackFiles
-
-command project_FixStackFiles projectName
-   if exists (stack projectName) is false then
-      put project_GetFolder (projectName) into projectFolder
-      if there is not a folder projectFolder then
-         breakpoint
-         return empty
-      end if
-   else
-      put the project_Folder of stack projectName into projectFolder
-   end if
-   
-   _FixStackFiles projectFolder, projectName
-   
-   put the result into projectArray
-   return projectArray
-end project_FixStackFiles
-
-
---> Script | Diff
--
-getprop script_Diff [pContextLineNums]
-   if pContextLineNums is not a number then put 0 into pContextLineNums
-   --
-   put the script of the target into controlScript
-   put the exported_Script of the target into exportedScript
-   --
-   put DiffCompare (controlScript, exportedScript, pContextLineNums) into uDiff
-   return uDiff
-end script_Diff
+end display_ProjectArray
 
 command display_ScriptDiff scriptObject, pContextLineNums
    put the script_Diff [pContextLineNums] of scriptObject into uDiff
@@ -75,6 +49,329 @@ command display_ScriptIsDifferent scriptObject, pDiffAlso
    terminal_Diff exportedScript, controlScript, "exported.txt", "control.txt"
    return the result
 end display_ScriptIsDifferent
+
+
+--> Module and Project Arrays
+-
+command module_ExportMenusAndStackFiles moduleFolder
+   put module_ConstructArray (moduleFolder) into moduleArray
+   
+   # Store ModuleArray
+   project_StoreArray moduleFolder, moduleArray
+   return moduleArray
+end module_ExportMenusAndStackFiles
+
+function module_ConstructArray moduleFolder
+   local projectArray
+   put directory_NestedStackFileArray (moduleFolder) into stackFileArray
+   if stackFileArray is empty then
+      return empty
+   else
+      put stackFileArray into moduleArray ["stackFileArray"]
+   end if
+   
+   # Add controllers to array
+   put folder_AddShort (moduleFolder, "controllers") into controllerFolder
+   put folder_ListStackPaths (controllerFolder) into controllerPaths
+   --
+   _AddControllersToProjectArray moduleArray, moduleFolder, controllerPaths
+   --
+   return moduleArray
+end module_ConstructArray
+
+command env_ExportMenusAndStackFiles pListAll
+   put env_ListActiveProjects (pListAll) into projectNames
+   repeat for each line projectName in projectNames
+      set the cursor to busy
+      project_FixStackFiles projectName
+      if the result is empty then
+         lcw_Notify "problem locatig project!", projectName
+      end if
+   end repeat
+end env_ExportMenusAndStackFiles
+
+command project_FixStackFiles projectName
+   if exists (stack projectName) is false then return empty
+   
+   # Construct projectArray (including modules)
+   put the project_Folder of stack projectName into projectFolder
+   put project_ConstructArrayFromFolder (projectFolder) into projectArray
+   
+   # Set project home stackfiles (requires lib_StackFiles)
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the stackfile_Array of stack projectName to stackFileArray
+   
+   # Save
+   project_StoreArray projectFolder, projectArray
+   save stack projectName
+   
+   return projectArray
+end project_FixStackFiles
+
+function project_ConstructArray projectName
+   if exists (stack projectName) is false then return empty
+   
+   put the project_Folder of stack projectName into projectFolder
+   put project_ConstructArrayFromFolder (projectFolder) into projectArray
+   return projectArray
+end project_ConstructArray
+
+function project_ConstructArrayFromFolder projectFolder
+   # Add stackFiles
+   put project_ConstructStackFileArrayFromFolder (projectFolder) into stackFileArray
+   put stackFileArray into projectArray ["stackFileArray"]
+   
+   # Add controllers (includes modules)
+   put project_ListAllControllers (projectFolder) into controllerPaths
+   _AddControllersToProjectArray projectArray, projectFolder, controllerPaths
+   
+   return projectArray
+end project_ConstructArrayFromFolder
+
+
+--> Module | Update
+-
+private command _AddControllersToProjectArray @projectArray, projectFolder, controllerPaths, pDontUpdateGlobal
+   put menu_GetModel() into menuGlobalArray
+   --
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into projectName
+   repeat for each line controllerPath in controllerPaths
+      set the cursor to busy  
+      if exists (stack controllerPath) is false then next repeat
+      put the name of stack controllerPath into mController
+      
+      # Check mController Nad get gMenuTitle
+      put line 1 of the menu_GlobalTitle [false] of mController into gMenuTitle
+      if gMenuTitle is empty then
+         put empty into badMenuArray [mController] 
+         next repeat
+      end if
+      
+      # Add gMenuTitle to projectArray of project projectName
+      _AddMenuTile projectArray, gMenuTitle, mController, projectName
+      
+      # Add to Old global 
+      if pDontUpdateGlobal is not true then
+         menu_AddToGlobalArray menuGlobalArray, gMenuTitle, mController, projectName
+      end if
+   end repeat
+   --
+   menu_SetModel menuGlobalArray
+   return badMenuArray
+end _AddControllersToProjectArray
+
+private command _AddMenuTile @projectArray, gMenuTitle, mController, projectName
+   -- delete variable projectArray ["Global Menus"][gMenuTitle] -- just for tyding old stuff
+   --
+   put revRuggedId (mController) into mController
+   put mController into projectArray ["Global Menus"][gMenuTitle]["mController"]
+   put projectName into projectArray ["Global Menus"][gMenuTitle]["projectName"]
+end _AddMenuTile
+
+on module_Rename oldModuleStackName, newModuleStackName, projectName
+   -- do a whole bunch of safety checks
+   if exists (stack oldModuleStackName) is false then
+      lcw_AnswerWarning "Cannot locate module stack to rename!"
+   end if
+   
+   put the filename of stack oldModuleStackName into oldFilePath
+   put the project_Folder of stack oldModuleStackName into projectFolder
+   put the module_Folder of stack oldModuleStackName into oldModuleFolder
+   --
+   if there is not a folder projectFolder then
+      lcw_AnswerWarning "Project folder does not exist!"
+   end if
+   if there is not a folder oldModuleFolder then
+      lcw_AnswerWarning "Module folder does not exist!"
+   end if
+   
+   put env_ListShortModuleFolders() into allModuleNames
+   if exists (stack newModuleStackName) then
+      go to stack newModuleStackName
+      lcw_AnswerWarning "Stack already exists!"
+   end if
+   -- check in all module names
+   if newModuleStackName is among the lines of allModuleNames then
+      -- display_ListModules
+      display_ModuleArray
+      lcw_AnswerWarning "Module already exists!"
+   end if
+   
+   put project_NameToShortFolder (newModuleStackName) into newShortModuleFolder
+   put oldModuleFolder & newShortModuleFolder & ".livecode" into tempModulePath
+   put project_GetModuleFolder (newShortModuleFolder, projectName) into newModuleFolder
+   put the long id of control 1 of cd 1 of stack oldModuleStackName into viewObject
+   
+   -- rename view and stack, then save before closing
+   set lockmessages to true
+   set the view_Name of viewObject to newModuleStackName
+   set the filename of stack oldModuleStackName to tempModulePath
+   set the name of stack oldModuleStackName to newModuleStackName
+   save stack newModuleStackName
+   set lockmessages to false
+   
+   put the module_StackPaths of stack newModuleStackName into stackPaths
+   --
+   stack_Close stackPaths
+   rename folder oldModuleFolder to newModuleFolder
+   project_LoadFromFolder newModuleFolder
+   go to stack newModuleStackName
+   --
+   -- reindex project and just in case newModuleFolder
+   -- project_ExportMenusAndStackFiles projectFolder
+   
+   # Construct project array and Store it
+   put project_ConstructArrayFromFolder (newModuleFolder) into projectArray
+   project_StoreArray newModuleFolder, projectArray
+end module_Rename
+
+
+--> Props
+-
+setprop menu_Update someBoolean
+   -- called by "script_ExportAndIndexMenus" every time we apps (compile) a scriptField 
+   put the long id of the target into mController
+   menu_ReIndexController mController
+   put the result into projectArray
+   return projectArray
+end menu_Update
+
+
+--> Menu | Working on
+-
+command menu_ReIndexController mController
+   project_AddToKnown mController
+   menu_AddToProjectArray mController
+   put the result into projectArray
+   menu_AddToModel mController
+   return projectArray
+end menu_ReIndexController
+
+command menu_AddToProjectArray mController, pChecks
+   put the menu_GlobalTitle of mController into gMenuTitle
+   if gMenuTitle is empty then return "Error, gMenuTitle for mController is faulty:" && mController
+   --
+   put the project_Name of mController into projectName
+   put the project_JsonFile of mController into projectArrayFile
+   put array_FetchModel (projectArrayFile) into projectArray
+   _AddMenuTile projectArray, gMenuTitle, mController, projectName
+   array_SaveModel projectArrayFile, projectArray
+   --
+   return projectArray
+end menu_AddToProjectArray
+
+
+--> Env | Fix
+-
+command env_LoadMenusAndStackFiles
+   put env_ListActiveProjects() into projectNames
+   repeat for each line projectName in projectNames
+      set the cursor to busy
+      put project_GetFolder (projectName) into projectFolder
+      project_LoadFromFolder projectFolder
+   end repeat
+end env_LoadMenusAndStackFiles
+
+
+--> Project | Update
+-
+function project_ListControllersFromArray projectArray, projectFolder
+   text_AddTrailing projectFolder, slash
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the itemdelimiter to slash
+   repeat for each key stackName in stackFileArray
+      put stackFileArray [stackName] into relPath
+      if "controllers" is among the items of relPath then
+         put projectFolder & relPath & CR after controllerPaths 
+      end if
+   end repeat
+   delete char -1 of controllerPaths
+   return controllerPaths
+end project_ListControllersFromArray
+
+
+--> Project | Fix
+-
+command project_UseStackFiles projectName, pFixFirst
+   if exists (stack projectName) is false then
+      breakpoint
+      return empty
+   end if
+   
+   put the project_Folder of stack projectName into projectFolder
+   if pFixFirst is true then
+      project_FixStackFiles projectName
+      put the result into projectArray
+   else
+      put project_ConstructArrayFromFolder (projectFolder) into projectArray
+   end if
+   --
+   put project_ListUsedPathsFromArray (projectArray, projectFolder) into usedStackPaths
+   stack_StartUsedPaths usedStackPaths
+   --
+   return projectArray
+end project_UseStackFiles
+
+command stackFile_FixStackFiles projectName
+   put project_ConstructStackFileArray (projectName) into stackFileArray
+   set the stackfile_Array of stackFileStack to stackFileArray
+   put the result into stackFileTable
+   --
+   put stackFileTable into resultArray ["stackFileTable"]
+   return resultArray
+end stackFile_FixStackFiles
+
+
+--> Project | StackFileArray
+-
+function project_ConstructStackFileArray projectName
+   if exists (stack projectName) is false then
+      breakpoint
+      return empty
+   end if
+   
+   put the project_Folder of stack projectName into projectFolder
+   put project_ConstructStackFileArrayFromFolder (projectFolder)into stackFileArray
+   return stackFileArray
+end project_ConstructStackFileArray
+
+function project_ConstructStackFileArrayFromFolder projectFolder
+   put directory_NestedStackFileArray (projectFolder) into stackFileArray
+   if stackFileArray is empty then return empty
+   
+   # No need to add path to home stack file
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into homeStackName
+   --
+   delete variable stackFileArray [homeStackName]
+   return stackFileArray
+end project_ConstructStackFileArrayFromFolder
+
+function project_FetchStackFileArray projectFolder
+   put directory_NestedStackFileArray (projectFolder) into stackFileArray
+   if stackFileArray is empty then return empty
+   
+   # No need to add path to home stack file
+   put project_ConstructHomeFromFolder (projectFolder) into homeStackPath
+   put the short name of stack homeStackPath into homeStackName
+   --
+   delete variable stackFileArray [homeStackName]
+   return stackFileArray
+end project_FetchStackFileArray
+
+
+--> Script | Diff
+-
+getprop script_Diff [pContextLineNums]
+   if pContextLineNums is not a number then put 0 into pContextLineNums
+   --
+   put the script of the target into controlScript
+   put the exported_Script of the target into exportedScript
+   --
+   put DiffCompare (controlScript, exportedScript, pContextLineNums) into uDiff
+   return uDiff
+end script_Diff
 
 command script_ExportAndIndexMenus scriptObject
    -- IDE compile button dispatches "script_ExportAndIndexMenus"
@@ -148,236 +445,6 @@ command script_ExportHandlersAndCalls someObject, pDeleteOldExports, pScript, pD
    return scriptPlaceArray
 end script_ExportHandlersAndCalls
 
-
---> Props
--
-setprop menu_Update someBoolean
-   -- called by "script_ExportAndIndexMenus" every time we apps (compile) a scriptField 
-   put the long id of the target into mController
-   menu_ReIndexController mController
-   put the result into projectArray
-   return projectArray
-end menu_Update
-
-
---> Env | Fix
--
-command env_ExportMenusAndStackFiles pListAll
-   put env_ListActiveProjects (pListAll) into projectNames
-   repeat for each line projectName in projectNames
-      set the cursor to busy
-      put project_GetFolder (projectName) into projectFolder
-      --
-      _FixStackFiles projectFolder, projectName
-      put the result into projectArray
-   end repeat
-end env_ExportMenusAndStackFiles
-
-command env_LoadMenusAndStackFiles
-   put env_ListActiveProjects() into projectNames
-   repeat for each line projectName in projectNames
-      set the cursor to busy
-      put project_GetFolder (projectName) into projectFolder
-      project_LoadMenusAndStackFiles projectFolder
-   end repeat
-end env_LoadMenusAndStackFiles
-
-command env_LoadMenus
-   put env_ListActiveProjects() into projectNames
-   repeat for each line projectName in projectNames
-      put project_GetFolder (projectName) into projectFolder
-      project_LoadMenus projectFolder, true
-   end repeat
-end env_LoadMenus
-
-
---> Project | Fix
--
-command project_UseStackFiles projectName, pFixFirst
-   if exists (stack projectName) is false then
-      breakpoint
-      return empty
-   end if
-   
-   put the project_Folder of stack projectName into projectFolder
-   if pFixFirst is true then
-      project_FixStackFiles projectName
-      put the result into projectArray
-   else
-      put project_ConstructArrayFromFolder (projectFolder) into projectArray
-   end if
-   --
-   put project_ListUsedPathsFromArray (projectArray, projectFolder) into usedStackPaths
-   stack_StartUsedPaths usedStackPaths
-   --
-   return projectArray
-end project_UseStackFiles
-
-command project_ExportMenusAndStackFiles projectFolder
-   # Construct project array and update global menu array
-   put project_ConstructArrayFromFolder (projectFolder) into projectArray
-   
-   # Store project array
-   project_StoreArray projectFolder, projectArray
-   
-   # Could set stackfiles from the result
-   return projectArray
-end project_ExportMenusAndStackFiles
-
-function project_ConstructArrayFromFolder projectFolder
-   put project_ConstructStackFileArrayFromFolder (projectFolder)into stackFileArray
-   put stackFileArray into projectArray ["stackFileArray"]
-   
-   # Add controllers to array 
-   -- put project_ListAllControllers (projectFolder) into controllerPaths
-   put project_ListControllersFromArray (projectArray, projectFolder) into controllerPaths -- includes module stacks
-   
-   _AddControllersToProjectArray projectArray, projectFolder, controllerPaths
-   
-   return projectArray
-end project_ConstructArrayFromFolder
-
-function project_ListControllersFromArray projectArray, projectFolder
-   text_AddTrailing projectFolder, slash
-   put projectArray ["stackFileArray"] into stackFileArray
-   set the itemdelimiter to slash
-   repeat for each key stackName in stackFileArray
-      put stackFileArray [stackName] into relPath
-      if "controllers" is among the items of relPath then
-         put projectFolder & relPath & CR after controllerPaths 
-      end if
-   end repeat
-   delete char -1 of controllerPaths
-   return controllerPaths
-end project_ListControllersFromArray
-
-command stackFile_FixStackFiles projectName
-   put project_ConstructStackFileArray (projectName) into stackFileArray
-   set the stackfile_Array of stackFileStack to stackFileArray
-   put the result into stackFileTable
-   --
-   put stackFileTable into resultArray ["stackFileTable"]
-   return resultArray
-end stackFile_FixStackFiles
-
-
---> Project | StackFileArray
--
-function project_ConstructArray projectName
-   local projectArray
-   if exists (stack projectName) is false then
-      breakpoint
-      return empty
-   end if
-   
-   put the project_Folder of stack projectName into projectFolder
-   put project_ConstructArrayFromFolder (projectFolder) into projectArray
-   return projectArray
-end project_ConstructArray
-
-function project_ConstructStackFileArray projectName
-   if exists (stack projectName) is false then
-      breakpoint
-      return empty
-   end if
-   
-   put the project_Folder of stack projectName into projectFolder
-   put project_ConstructStackFileArrayFromFolder (projectFolder)into stackFileArray
-   return stackFileArray
-end project_ConstructStackFileArray
-
-function project_ConstructStackFileArrayFromFolder projectFolder
-   put directory_NestedStackFileArray (projectFolder) into stackFileArray
-   if stackFileArray is empty then return empty
-   
-   # No need to add path to home stack file
-   set the itemdelimiter to slash
-   put item -1 of projectFolder into homeStackName
-   --
-   delete variable stackFileArray [homeStackName]
-   return stackFileArray
-end project_ConstructStackFileArrayFromFolder
-
-function project_FetchStackFileArray projectFolder
-   put directory_NestedStackFileArray (projectFolder) into stackFileArray
-   if stackFileArray is empty then return empty
-   
-   # No need to add path to home stack file
-   put project_ConstructHomeFromFolder (projectFolder) into homeStackPath
-   put the short name of stack homeStackPath into homeStackName
-   --
-   delete variable stackFileArray [homeStackName]
-   return stackFileArray
-end project_FetchStackFileArray
-
-command controller_AddToArray @projectArray, gMenuTitle, mController, projectName
-   -- used by "menu_ReIndexController" and LCW
-   delete variable projectArray ["Global Menus"][gMenuTitle] -- just for tyding old stuff
-   --
-   put revRuggedId (mController) into mController
-   put mController into projectArray ["Global Menus"][gMenuTitle]["mController"]
-   put projectName into projectArray ["Global Menus"][gMenuTitle]["projectName"]
-   -- put projectFolder into projectArray ["Global Menus"][gMenuTitle]["projectFolder"]
-end controller_AddToArray
-
-command project_LoadMenus projectFolder
-   put project_FetchArray (projectFolder) into projectArray
-   project_AddProjectArrayToGlobal projectArray
-   return projectArray
-end project_LoadMenus
-
-command module_ExportMenusAndStackFiles moduleFolder
-   put module_ConstructArray (moduleFolder) into moduleArray
-   --
-   project_StoreArray moduleFolder, moduleArray
-   return moduleArray
-end module_ExportMenusAndStackFiles
-
-function module_ConstructArray moduleFolder
-   local projectArray
-   put directory_NestedStackFileArray (moduleFolder) into stackFileArray
-   if stackFileArray is empty then
-      return empty
-   else
-      put stackFileArray into moduleArray ["stackFileArray"]
-   end if
-   
-   # Add controllers to array
-   put folder_AddShort (moduleFolder, "controllers") into controllerFolder
-   put folder_ListStackPaths (controllerFolder) into controllerPaths
-   --
-   _AddControllersToProjectArray moduleArray, moduleFolder, controllerPaths
-   --
-   return moduleArray
-end module_ConstructArray
-
-
---> Menu | Working on
--
-command menu_ReIndexController mController
-   project_AddToKnown mController
-   menu_AddToProjectArray mController
-   put the result into projectArray
-   menu_AddToModel mController
-   return projectArray
-end menu_ReIndexController
-
-command menu_AddToProjectArray mController, pChecks
-   put the menu_GlobalTitle of mController into gMenuTitle
-   if gMenuTitle is empty then return "Error, gMenuTitle for mController is faulty:" && mController
-   --
-   put the project_Name of mController into projectName
-   put the project_JsonFile of mController into projectArrayFile
-   put array_FetchModel (projectArrayFile) into projectArray
-   controller_AddToArray projectArray, gMenuTitle, mController, projectName
-   array_SaveModel projectArrayFile, projectArray
-   --
-   return projectArray
-end menu_AddToProjectArray
-
-
---> Menu | Update
--
 command script_UpdatePlaceArray someObject
    -- brute force (not optimised for speed)
    hkeyLine_LoadPlaceArray
@@ -459,42 +526,3 @@ private command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
       _WalkAndList NestedPaths, childFolder, pBaseFolderNum
    end repeat
 end _WalkAndList
-
-private command _FixStackFiles projectFolder, projectName
-   project_ExportMenusAndStackFiles projectFolder
-   put the result into projectArray
-   
-   # Set project home stackfiles (requires lib_StackFiles)
-   put projectArray ["stackFileArray"] into stackFileArray
-   set the stackfile_Array of stack projectName to stackFileArray
-   
-   return projectArray
-end _FixStackFiles
-
-private command _AddControllersToProjectArray @projectArray, projectFolder, controllerPaths, pDontUpdateGlobal
-   put menu_GetModel() into menuGlobalArray
-   --
-   set the itemdelimiter to slash
-   put item -1 of projectFolder into projectName
-   repeat for each line controllerPath in controllerPaths
-      set the cursor to busy  
-      if exists (stack controllerPath) is false then next repeat
-      put the name of stack controllerPath into mController
-      --
-      put line 1 of the menu_GlobalTitle [false] of mController into gMenuTitle
-      -- put the short name of mController into gMenuTitle
-      if gMenuTitle is empty then
-         put empty into badMenuArray [mController] 
-         next repeat
-      end if
-      --
-      controller_AddToArray projectArray, gMenuTitle, mController, projectName
-      --
-      if pDontUpdateGlobal is not true then
-         menu_AddToGlobalArray menuGlobalArray, gMenuTitle, mController, projectName
-      end if
-   end repeat
-   --
-   menu_SetModel menuGlobalArray
-   return badMenuArray
-end _AddControllersToProjectArray

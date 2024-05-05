@@ -105,7 +105,7 @@ command _LcwInitialize
    put empty into item -1 of lcwHomeFolder
    set the itemdelimiter to comma
    --
-   project_InitialiseFolder lcwHomeFolder
+   project_LoadFromFolder lcwHomeFolder
    
    -- project_LoadModules lcwHomeStackFile
    -- load the global dictionary for where handlers are

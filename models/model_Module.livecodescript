@@ -4,14 +4,77 @@
 license: GPLv3
 name: model_Module
 type: models
-version: 0.2
+version: 0.3
 
 /*
 */
 
-
 --> Working on
 -
+-- get module_ListControllerStackPaths (moduleShortFolder, projectFolder)
+
+getprop module_Controllers
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "controllers/" into moduleControllerFolder
+   put folder_ListStackPaths (moduleControllerFolder) into stackPaths
+   
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the name of stack stackPath & CR after moduleControllers
+   end repeat
+   delete char -1 of moduleControllers
+   return moduleControllers
+end module_Controllers
+
+function module_ListControllerStackPaths moduleName, projectFolder
+   put module_GetControllerFolder (moduleName, projectFolder) into moduleControllerFolder
+   put folder_ListStackPaths (moduleControllerFolder) into stackPaths
+   return stackPaths
+end module_ListControllerStackPaths
+
+command module_Initialise moduleName, projectName
+   -- for convenience
+   put project_GetModuleFolder (moduleName, projectName) into moduleFolder
+   if there is not a folder moduleFoldeer then return false
+   project_LoadFromFolder moduleFolder
+   return true
+end module_Initialise
+
+
+--> Move
+-
+getprop view_GlobalMenuTitle
+   put the view_Name of the target into viewName
+   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
+   return globalMenuTitle
+end view_GlobalMenuTitle
+
+getprop project_Menu
+   put the project_Name of the target into stackName
+   put module_ConstructGlobalMenuTitle (stackName, true) into gMenuTitle 
+   return gMenuTitle
+end project_menu
+
+
+--> Module | Props
+-
+getprop is_Module
+   put the module_Folder of the target into mFolder -- lib_LCW
+   return mFolder is not empty
+end is_Module
+
+getprop module_ControllerStackNames
+   put the long id of the target into tObject
+   put the module_Controllers of tObject into cObjects
+   repeat for each line cObject in cObjects
+      put the short name of cObject into cName
+      put cName & CR after cNames 
+   end repeat
+   delete char -1 of cNames
+   sort cNames
+   return cNames
+end module_ControllerStackNames
+
 getprop module_BahaviorFolder
    put the module_Folder of the target into moduleFolder
    put moduleFolder & "behaviors/" into moduleBehaviorFolder
@@ -21,11 +84,6 @@ getprop module_BahaviorFolder
       return empty
    end if
 end module_BahaviorFolder
-
-getprop is_Module
-   put the module_Folder of the target into mFolder -- lib_LCW
-   return mFolder is not empty
-end is_Module
 
 getprop module_Behavior [useDefault]
    breakpoint
@@ -50,6 +108,152 @@ getprop module_DefaultBehavior
       return empty
    end if
 end module_DefaultBehavior
+
+getprop module_Name
+   put the module_Folder of the target into moduleFolder
+   set the itemdelimiter to slash
+   put item -1 of moduleFolder into moduleName
+   return moduleName
+end module_Name
+
+getprop module_ViewName [moduleName]
+   put the module_View [moduleName] of the target into moduleView
+   if exists (moduleView) is false then return empty
+   put the view_Name of moduleView into viewName
+   return viewName
+end module_ViewName
+
+getprop module_HomeStack [moduleName]
+   put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
+   if exists (stack moduleHomeStackPath) is false then return empty
+   put the name of stack moduleHomeStackPath into stackObject
+   return stackObject
+end module_HomeStack
+
+getprop module_Behaviors
+   put the module_BehaviorPaths of the target into stackPaths
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the name of stack stackPath & CR after moduleBehaviors
+   end repeat
+   delete char -1 of moduleBehaviors
+   return moduleBehaviors
+end module_Behaviors
+
+getprop module_BehaviorPaths
+   put the stack_Name of the target into moduleName
+   put the project_Folder of the target into projectFolder
+   put module_ListBehaviorStackPaths (moduleName, projectFolder) into bObjects
+   return bObjects
+   
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "behaviors/" into moduleBehaviorFolder
+   put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
+   return stackPaths
+end module_BehaviorPaths
+
+getprop module_View [moduleName]
+   put module_GetTemplateObject (moduleName) into moduleView
+   return moduleView
+end module_View
+
+getprop module_StackPaths
+   put the module_Folder of the target into moduleFolder
+   put directory_ListNestedPaths (moduleFolder) into stackPaths
+   /*
+   put the stack_Name of the target into moduleName
+   if exists (stack moduleName) is falee then return empty
+   --   
+   put the effective filename of stack moduleName into moduleStackPath
+   put _GetModuleStackPaths (moduleStackPath) into stackPaths
+   */
+   return stackPaths
+end module_StackPaths
+
+
+--> Project
+-
+function project_GetModuleFolder moduleFolderName, projectName, pRepoFolder
+   if projectName is empty then return empty
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   --
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   return moduleFolder
+end project_GetModuleFolder
+
+function project_DefaultBehaviorName moduleStackName
+   view_NormalizePiped moduleStackName -- just in case
+   replace "|" with empty in moduleStackName
+   replace "_" with empty in moduleStackName
+   --
+   put "behavior_" & moduleStackName into behaviorStackName
+   return behaviorStackName
+end project_DefaultBehaviorName
+
+
+--> Module | List
+-
+function module_ListControllerStackNames moduleName, projectFolder
+   put module_ListControllerStackPaths (moduleName, projectFolder) into stackPaths
+   put stack_PathsToNames (stackPaths) into stackNames
+   return stackNames
+end module_ListControllerStackNames
+
+function module_ListStackPaths moduleName, projectFolder
+   put module_ConstructHomeStackPath (moduleName, projectFolder) into moduleStackpath
+   if exists (stack moduleStackpath) is false then return empty
+   put _GetModuleStackPaths (moduleStackPath) into stackPaths
+   return stackPaths
+end module_ListStackPaths
+
+function module_ListStackNames moduleName, projectFolder
+   -- loads them all into memory
+   put module_ListStackPaths (moduleName, projectFolder) into allStackPaths
+   repeat for each line stackPath in allStackPaths
+      set the cursor to busy
+      if there is a stack stackPath then
+         put the short name of stack stackPath & CR after stackNames
+      end if
+   end repeat
+   delete char -1 of stackNames
+   return stackNames
+end module_ListStackNames
+
+function module_ListBehaviorStackNames moduleName, projectFolder
+   put module_ListBehaviorStackPaths (moduleName, projectFolder) into stackPaths
+   put stack_PathsToNames (stackPaths) into stackNames
+   return stackNames
+end module_ListBehaviorStackNames
+
+function module_ListBehaviorStackPaths moduleName, projectFolder
+   put module_GetBehaviorFolder (moduleName, projectFolder) into moduleBehaviorFolder
+   put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
+   return stackPaths
+end module_ListBehaviorStackPaths
+
+
+--> Module | Ojects
+-
+function module_GetTemplateObject moduleName, pProjectFolder
+   put module_ConstructHomeStackPath (moduleName, pProjectFolder) into moduleHomeStackPath
+   if exists (control 1 of cd 1 of stack moduleHomeStackPath) is false then return empty
+   --
+   put the long id of control 1 of cd 1 of stack moduleHomeStackPath into moduleView
+   return moduleView
+end module_GetTemplateObject
+
+function module_ConstructHomeStackPath moduleName, projectFolder
+   put project_NameToShortFolder (moduleName) into moduleFolderName
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   put project_PathFromFolder (moduleFolder) into stackPath
+   return stackPath
+end module_ConstructHomeStackPath
+
+function module_GetHomeStackPath moduleFolderName, projectName
+   put project_GetModuleFolder (moduleFolderName, projectName) into moduleFolder
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
+   return moduleHomeStackPath
+end module_GetHomeStackPath
 
 
 --> Module | Names
@@ -100,60 +304,11 @@ function module_ConstructBehaviorShortFile moduleStackName
    return shortFile
 end module_ConstructBehaviorShortFile
 
-function project_DefaultBehaviorName moduleStackName
-   view_NormalizePiped moduleStackName -- just in case
-   replace "|" with empty in moduleStackName
-   replace "_" with empty in moduleStackName
-   --
-   put "behavior_" & moduleStackName into behaviorStackName
-   return behaviorStackName
-end project_DefaultBehaviorName
-
 function module_GetControllerStackPath controllerStackName, rootModuleFolder
    put controllerStackName & ".livecodescript" into shortControllerPath
    put rootModuleFolder & "controllers/" & shortControllerPath into moduleControllerStackPath
    return moduleControllerStackPath
 end module_GetControllerStackPath
-
-
---> Module | StackPaths
--
-getprop module_StackPaths
-   put the module_Folder of the target into moduleFolder
-   put directory_ListNestedPaths (moduleFolder) into stackPaths
-   /*
-   put the stack_Name of the target into moduleName
-   if exists (stack moduleName) is falee then return empty
-   --   
-   put the effective filename of stack moduleName into moduleStackPath
-   put _GetModuleStackPaths (moduleStackPath) into stackPaths
-   */
-   return stackPaths
-end module_StackPaths
-
-function module_ListStackPaths moduleName, projectFolder
-   put module_ConstructHomeStackPath (moduleName, projectFolder) into moduleStackpath
-   if exists (stack moduleStackpath) is false then return empty
-   put _GetModuleStackPaths (moduleStackPath) into stackPaths
-   return stackPaths
-end module_ListStackPaths
-
-private function _GetModuleStackPaths moduleStackPath
-   set the itemdelimiter to slash
-   -- put item 1 to -3 of moduleStackPath & slash into moduleFolder
-   put item 1 to -4 of moduleStackPath & slash into projectFolder
-   put item -2 of moduleStackPath into moduleShortFolder
-   
-   put moduleStackPath & CR into stackPaths
-   --
-   get module_ListBehaviorStackPaths (moduleShortFolder, projectFolder)
-   if it is not empty then put it & CR after stackPaths
-   --
-   get module_ListControllerStackPaths (moduleShortFolder, projectFolder)
-   if it is not empty then put it & CR after stackPaths
-   --
-   return word 1 to -1 of stackPaths
-end _GetModuleStackPaths
 
 
 --> Module | Name | Utils
@@ -168,107 +323,6 @@ function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
    return moduleStackName
 end module_ConstructGlobalMenuTitle
 
-
---> Working on
--
-getprop view_GlobalMenuTitle
-   put the view_Name of the target into viewName
-   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
-   return globalMenuTitle
-end view_GlobalMenuTitle
-
-getprop project_Menu
-   put the project_Name of the target into stackName
-   put module_ConstructGlobalMenuTitle (stackName, true) into gMenuTitle 
-   return gMenuTitle
-end project_menu
-
-function project_GetModuleFolder moduleFolderName, projectName, pRepoFolder
-   if projectName is empty then return empty
-   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
-   --
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   return moduleFolder
-end project_GetModuleFolder
-
-command stack_Close stackPaths
-   -- saves them before closing
-   repeat for each line stackPath in stackPaths
-      set the cursor to busy
-      if there is a stack stackPath then
-         save stack stackPath
-         delete stack stackPath
-      else
-         put stackPath & CR after badStackPaths
-      end if
-   end repeat
-   delete char -1 of badStackPaths
-   return badStackPaths
-end stack_Close
-
-
-on module_Rename oldModuleStackName, newModuleStackName, projectName
-   -- do a whole bunch of safety checks
-   if exists (stack oldModuleStackName) is false then
-      lcw_AnswerWarning "Cannot locate module stack to rename!"
-   end if
-   
-   put the filename of stack oldModuleStackName into oldFilePath
-   put the project_Folder of stack oldModuleStackName into projectFolder
-   put the module_Folder of stack oldModuleStackName into oldModuleFolder
-   --
-   if there is not a folder projectFolder then
-      lcw_AnswerWarning "Project folder does not exist!"
-   end if
-   if there is not a folder oldModuleFolder then
-      lcw_AnswerWarning "Module folder does not exist!"
-   end if
-   
-   put env_ListShortModuleFolders() into allModuleNames
-   if exists (stack newModuleStackName) then
-      go to stack newModuleStackName
-      lcw_AnswerWarning "Stack already exists!"
-   end if
-   -- check in all module names
-   if newModuleStackName is among the lines of allModuleNames then
-      -- display_ListModules
-      display_ModuleArray
-      lcw_AnswerWarning "Module already exists!"
-   end if
-   
-   put project_NameToShortFolder (newModuleStackName) into newShortModuleFolder
-   put oldModuleFolder & newShortModuleFolder & ".livecode" into tempModulePath
-   put project_GetModuleFolder (newShortModuleFolder, projectName) into newModuleFolder
-   put the long id of control 1 of cd 1 of stack oldModuleStackName into viewObject
-   
-   -- rename view and stack, then save before closing
-   set lockmessages to true
-   set the view_Name of viewObject to newModuleStackName
-   set the filename of stack oldModuleStackName to tempModulePath
-   set the name of stack oldModuleStackName to newModuleStackName
-   save stack newModuleStackName
-   set lockmessages to false
-   
-   put the module_StackPaths of stack newModuleStackName into stackPaths
-   --
-   stack_Close stackPaths
-   rename folder oldModuleFolder to newModuleFolder
-   project_InitialiseFolder newModuleFolder
-   go to stack newModuleStackName
-   --
-   -- reindex project and just in case newModuleFolder
-   -- project_ExportMenusAndStackFiles projectFolder
-   project_ExportMenusAndStackFiles newModuleFolder
-end module_Rename
-
-command module_Initialise moduleName, projectName
-   -- for convenience
-   put project_GetModuleFolder (moduleName, projectName) into moduleFolder
-   if there is not a folder moduleFoldeer then return false
-   project_InitialiseFolder moduleFolder
-   return true
-end module_Initialise
-
 command module_CloseStacks moduleStackName
    if exists (stack moduleStackName) is false then
       throw "Error, cannot locate module stack:" && moduleName
@@ -281,97 +335,52 @@ command module_CloseStacks moduleStackName
 end module_CloseStacks
 
 
---> Module | Names
+--> Module | Find
 -
-getprop module_Name
-   put the module_Folder of the target into moduleFolder
-   set the itemdelimiter to slash
-   put item -1 of moduleFolder into moduleName
-   return moduleName
-end module_Name
+function module_FindFolder moduleName
+   put module_GetArray (moduleName) into moduleArray
+   put moduleArray ["moduleFolder"] into moduleFolder
+   return moduleFolder
+end module_FindFolder
 
-getprop module_ViewName [moduleName]
-   put the module_View [moduleName] of the target into moduleView
-   if exists (moduleView) is false then return empty
-   put the view_Name of moduleView into viewName
-   return viewName
-end module_ViewName
+function module_FindStackPath moduleName
+   put module_GetArray (moduleName) into moduleArray
+   put moduleArray ["moduleStackath"] into moduleStackath
+   return moduleStackath
+end module_FindStackPath
+
+function module_FindProject moduleName
+   put module_GetArray (moduleName) into moduleArray
+   put moduleArray ["projectName"] into projectName
+   return projectName
+end module_FindProject
+
+function module_GetArray moduleName
+   put env_GetModuleArray() into envModuleArray
+   put module_ViewNameToShortFolder (moduleName) into moduleFolderName
+   put envModuleArray ["active"][moduleFolderName] into moduleArray
+   return moduleArray
+end module_GetArray
 
 
---> Module | Props
+--> Module | Files
 -
-getprop module_HomeStack [moduleName]
-   put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
-   if exists (stack moduleHomeStackPath) is false then return empty
-   put the name of stack moduleHomeStackPath into stackObject
-   return stackObject
-end module_HomeStack
+function module_GetControllerFolder moduleName, projectFolder
+   put project_NameToShortFolder (moduleName) into moduleFolderName
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   put folder_AddShort (moduleFolder, "controllers") into moduleControllerFolder
+   return moduleControllerFolder
+end module_GetControllerFolder
 
-getprop module_Behaviors
-   put the module_BehaviorPaths of the target into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      put the name of stack stackPath & CR after moduleBehaviors
-   end repeat
-   delete char -1 of moduleBehaviors
-   return moduleBehaviors
-end module_Behaviors
-
-getprop module_BehaviorPaths
-   put the stack_Name of the target into moduleName
-   put the project_Folder of the target into projectFolder
-   put module_ListBehaviorStackPaths (moduleName, projectFolder) into bObjects
-   return bObjects
-   
-   put the module_Folder of the target into moduleFolder
-   put moduleFolder & "behaviors/" into moduleBehaviorFolder
-   put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
-   return stackPaths
-end module_BehaviorPaths
-
-getprop module_Controllers
-   put the module_Folder of the target into moduleFolder
-   put moduleFolder & "controllers/" into moduleControllerFolder
-   put folder_ListStackPaths (moduleControllerFolder) into stackPaths
-   
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      put the name of stack stackPath & CR after moduleControllers
-   end repeat
-   delete char -1 of moduleControllers
-   return moduleControllers
-end module_Controllers
-
-getprop module_ControllerStackNames
-   put the long id of the target into tObject
-   put the module_Controllers of tObject into cObjects
-   repeat for each line cObject in cObjects
-      put the short name of cObject into cName
-      put cName & CR after cNames 
-   end repeat
-   delete char -1 of cNames
-   sort cNames
-   return cNames
-end module_ControllerStackNames
+function module_GetBehaviorFolder moduleName, projectFolder
+   put project_NameToShortFolder (moduleName) into moduleFolderName
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   put folder_AddShort (moduleFolder, "behaviors") into moduleBehaviorFolder
+   return moduleBehaviorFolder
+end module_GetBehaviorFolder
 
 
---> Module | Ojects
--
-getprop module_View [moduleName]
-   put module_GetTemplateObject (moduleName) into moduleView
-   return moduleView
-end module_View
-
-function module_GetTemplateObject moduleName, pProjectFolder
-   put module_ConstructHomeStackPath (moduleName, pProjectFolder) into moduleHomeStackPath
-   if exists (control 1 of cd 1 of stack moduleHomeStackPath) is false then return empty
-   --
-   put the long id of control 1 of cd 1 of stack moduleHomeStackPath into moduleView
-   return moduleView
-end module_GetTemplateObject
-
-
---> View | Name | Utils
+--> Deps
 -
 function view_FromModuleStackName moduleStackName
    replace "_" with "|" in moduleStackName
@@ -406,110 +415,41 @@ command view_NormalizePiped @viewPath, pMakePretty
    return true
 end view_NormalizePiped
 
-
---> Module
--
-function module_ConstructHomeStackPath moduleName, projectFolder
-   put project_NameToShortFolder (moduleName) into moduleFolderName
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   put project_PathFromFolder (moduleFolder) into stackPath
-   return stackPath
-end module_ConstructHomeStackPath
-
-function module_GetHomeStackPath moduleFolderName, projectName
-   put project_GetModuleFolder (moduleFolderName, projectName) into moduleFolder
-   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
-   return moduleHomeStackPath
-end module_GetHomeStackPath
-
-
---> Module | Find
--
-function module_FindFolder moduleName
-   put module_GetArray (moduleName) into moduleArray
-   put moduleArray ["moduleFolder"] into moduleFolder
-   return moduleFolder
-end module_FindFolder
-
-function module_FindStackPath moduleName
-   put module_GetArray (moduleName) into moduleArray
-   put moduleArray ["moduleStackath"] into moduleStackath
-   return moduleStackath
-end module_FindStackPath
-
-function module_FindProject moduleName
-   put module_GetArray (moduleName) into moduleArray
-   put moduleArray ["projectName"] into projectName
-   return projectName
-end module_FindProject
-
-function module_GetArray moduleName
-   put env_GetModuleArray() into envModuleArray
-   put module_ViewNameToShortFolder (moduleName) into moduleFolderName
-   put envModuleArray ["active"][moduleFolderName] into moduleArray
-   return moduleArray
-end module_GetArray
-
-
---> Module | List
--
-function module_ListStackNames moduleName, projectFolder
-   -- loads them all into memory
-   put module_ListStackPaths (moduleName, projectFolder) into allStackPaths
-   repeat for each line stackPath in allStackPaths
+command stack_Close stackPaths
+   -- saves them before closing
+   repeat for each line stackPath in stackPaths
       set the cursor to busy
       if there is a stack stackPath then
-         put the short name of stack stackPath & CR after stackNames
+         save stack stackPath
+         delete stack stackPath
+      else
+         put stackPath & CR after badStackPaths
       end if
    end repeat
-   delete char -1 of stackNames
-   return stackNames
-end module_ListStackNames
-
-function module_ListBehaviorStackNames moduleName, projectFolder
-   put module_ListBehaviorStackPaths (moduleName, projectFolder) into stackPaths
-   put stack_PathsToNames (stackPaths) into stackNames
-   return stackNames
-end module_ListBehaviorStackNames
-
-function module_ListBehaviorStackPaths moduleName, projectFolder
-   put module_GetBehaviorFolder (moduleName, projectFolder) into moduleBehaviorFolder
-   put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
-   return stackPaths
-end module_ListBehaviorStackPaths
-
-function module_ListControllerStackNames moduleName, projectFolder
-   put module_ListControllerStackPaths (moduleName, projectFolder) into stackPaths
-   put stack_PathsToNames (stackPaths) into stackNames
-   return stackNames
-end module_ListControllerStackNames
-
-function module_ListControllerStackPaths moduleName, projectFolder
-   put module_GetControllerFolder (moduleName, projectFolder) into moduleControllerFolder
-   put folder_ListStackPaths (moduleControllerFolder) into stackPaths
-   return stackPaths
-end module_ListControllerStackPaths
-
-
---> Module | Files
--
-function module_GetControllerFolder moduleName, projectFolder
-   put project_NameToShortFolder (moduleName) into moduleFolderName
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   put folder_AddShort (moduleFolder, "controllers") into moduleControllerFolder
-   return moduleControllerFolder
-end module_GetControllerFolder
-
-function module_GetBehaviorFolder moduleName, projectFolder
-   put project_NameToShortFolder (moduleName) into moduleFolderName
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   put folder_AddShort (moduleFolder, "behaviors") into moduleBehaviorFolder
-   return moduleBehaviorFolder
-end module_GetBehaviorFolder
+   delete char -1 of badStackPaths
+   return badStackPaths
+end stack_Close
 
 
 --> Private
 -
+private function _GetModuleStackPaths moduleStackPath
+   set the itemdelimiter to slash
+   -- put item 1 to -3 of moduleStackPath & slash into moduleFolder
+   put item 1 to -4 of moduleStackPath & slash into projectFolder
+   put item -2 of moduleStackPath into moduleShortFolder
+   
+   put moduleStackPath & CR into stackPaths
+   --
+   get module_ListBehaviorStackPaths (moduleShortFolder, projectFolder)
+   if it is not empty then put it & CR after stackPaths
+   --
+   get module_ListControllerStackPaths (moduleShortFolder, projectFolder)
+   if it is not empty then put it & CR after stackPaths
+   --
+   return word 1 to -1 of stackPaths
+end _GetModuleStackPaths
+
 private function _ProjectStackExists stackPath
    if exists (stack stackPath) is false then return false
    

@@ -169,7 +169,7 @@ end project_ConvertShortFilesToStackObjects
 function project_FetchValue someKey, projectName
    -- put library_FetchProjectFolder (projectName) into projectFolder
    put the stack_Folder of stack projectName into projectFolder
-   put project_FetchArray (projectFolder) into projectArray
+   put project_GetArrayFromFolder (projectFolder) into projectArray
    put projectArray [someKey] into someValue
    return someValue
 end project_FetchValue
@@ -177,7 +177,7 @@ end project_FetchValue
 command project_SaveValue someKey, someValue, projectName
    -- put library_FetchProjectFolder (projectName) into projectFolder
    put the stack_Folder of stack projectName into projectFolder
-   put project_FetchArray (projectFolder) into projectArray
+   put project_GetArrayFromFolder (projectFolder) into projectArray
    put someValue into projectArray [someKey]
    project_StoreArray projectFolder, projectArray
    return projectArray
@@ -186,7 +186,7 @@ end project_SaveValue
 command project_DeleteValue someKey, projectName
    -- put library_FetchProjectFolder (projectName) into projectFolder
    put the stack_Folder of stack projectName into projectFolder
-   put project_FetchArray (projectFolder) into projectArray
+   put project_GetArrayFromFolder (projectFolder) into projectArray
    delete variable projectArray [someKey]
    project_StoreArray projectFolder, projectArray
    return projectArray
@@ -195,11 +195,11 @@ end project_DeleteValue
 
 --> Project | Array
 -
-function project_FetchArray projectFolder
+function project_GetArrayFromFolder projectFolder
    put project_ConstructJsonFile (projectFolder) into projectJsonFile
    put array_FetchModel (projectJsonFile) into projectArray
    return projectArray
-end project_FetchArray
+end project_GetArrayFromFolder
 
 command project_StoreArray projectFolder, projectArray
    put project_ConstructJsonFile (projectFolder) into projectJsonFile
