@@ -36,7 +36,7 @@ command module_Initialise moduleName, projectName
    -- for convenience
    put project_GetModuleFolder (moduleName, projectName) into moduleFolder
    if there is not a folder moduleFoldeer then return false
-   project_LoadFromFolder moduleFolder
+   project_InitialiseFolder moduleFolder
    return true
 end module_Initialise
 

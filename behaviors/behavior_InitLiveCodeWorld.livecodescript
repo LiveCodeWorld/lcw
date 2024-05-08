@@ -36,6 +36,88 @@ That way we can store certain standard code as a behavior (for instance the card
 as well as give the HomeStack and interface and some useful functionality.
 */
 
+--> Init
+-
+command project_SimpleInit projectFolderOrHomeStackFile
+   -- does not initialise modules
+   -- see also "project_LoadFromFolder" project_UpdateArray
+   breakpoint
+   
+   # Construct projectFolder
+   put projectFolderOrHomeStackFile into projectFolder
+   if char -1 of projectFolderOrHomeStackFile is not slash then
+      set the itemdelimiter to slash
+      put empty into item -1 of projectFolder
+   end if
+   
+   # Set Stackfiles
+   project_SetFoundStackFiles projectFolder
+   
+   # Use stacks
+   put project_ListUsedPathsFromFolder (projectFolder) into usedStackPaths
+   stack_StartUsedPaths usedStackPaths
+   
+   # Load Menus
+   project_LoadMenus projectFolder -- this handler needs less dependencies
+   
+   # Add to Env
+   put project_GetHomeStackName (projectFolder) into homeStackName
+   env_AddProject homeStackName, projectFolder
+   
+   return homeStackName
+end project_SimpleInit
+
+command project_LoadMenus projectFolder
+   -- put project_ListPathsOfType ("controllers", projectFolder) into stackPaths
+   -- project_IndexGlobalMenus stackPaths
+   
+   put project_GetArrayFromFolder (projectFolder) into projectArray
+   project_AddToMenuModel projectArray
+   return projectArray
+end project_LoadMenus
+
+function project_GetArrayFromFolder projectFolder
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   put array_GetModel (projectJsonFile) into projectArray
+   return projectArray
+end project_GetArrayFromFolder
+
+
+-- command project_IndexGlobalMenus mControllerPaths
+/*
+Does not export handlers
+Found on desktop. Not sure if this is still needed or called.
+*/
+local projectMenuArray
+local projectMenuTitleArray
+
+repeat for each line longStackFile in mControllerPaths
+   set the cursor to busy
+   if exists (stack longStackFile) is false then next repeat -- just in case
+   
+   put the name of stack longStackFile into mController
+   try
+      # Construct from script of mController 
+      put the script_MenuTitleTableArray of mController into mTableArray
+      
+      # Now update Global menus in gLCW
+      menu_UpdateGlobalArray mController, mTableArray
+      put the result into mTitleArray
+      -- 
+      union projectMenuArray with mTitleArray
+   catch e
+      put stackObject & CR after problemMenus
+   end try
+end repeat
+
+if problemMenus is not empty then
+   put problemMenus
+   answer warning "The following menus have problems being indexed!"
+end if
+return projectMenuArray
+end project_IndexGlobalMenus
+
+
 --> Working on
 -
 function project_ListAllStackPaths projectFolder
@@ -138,14 +220,9 @@ end module_Folder
 
 --> Init
 -
-command project_LoadMenus projectFolder
-   put project_ListPathsOfType ("controllers", projectFolder) into stackPaths
-   project_IndexGlobalMenus stackPaths
-end project_LoadMenus
-
 private command _LoadCustomUserProject
    put lcw_UserProjectFolder() into lcwUserProjectFolder
-   project_InitialiseFolder lcwUserProjectFolder
+   project_SimpleInit lcwUserProjectFolder
    
    put lcw_UserHomeStackName() into userHomeStackName
    put lcw_UserProjectFolder() into lcwUserProjectFolder
@@ -254,7 +331,7 @@ command _LcwInitialize
    set the itemdelimiter to slash
    put lcwHomeStackFile into lcwHomeFolder
    put empty into item -1 of lcwHomeFolder
-   project_InitialiseFolder lcwHomeFolder -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
+   project_SimpleInit lcwHomeFolder -- we reverse the order here as "project_LoadModules" requires some handers from libraries.
    -- project_LoadModules lcwHomeStackFile
    
    -- load the global dictionary for where handlers are
@@ -591,7 +668,7 @@ command project_Start homeStackName
       case "passed"
          -- it is "passed" because it is trapped but passed by the handler in "LCW"
          -- here we could initialise some basic things by default
-         project_InitialiseFolder projectFolder
+         project_SimpleInit projectFolder
          -- project_LoadModules homeStackName
          break
       default
@@ -621,27 +698,6 @@ command project_Stop projectName
    put merge ("Stopped project '[[projectName]]'!") into someComment
    display_Loading projectName, someComment
 end project_Stop
-
-command project_InitialiseFolder projectFolderOrHomeStackFile
-   -- does not initialise modules
-   
-   put projectFolderOrHomeStackFile into projectFolder
-   if char -1 of projectFolderOrHomeStackFile is not slash then
-      set the itemdelimiter to slash
-      put empty into item -1 of projectFolder
-   end if
-   
-   project_SetFoundStackFiles projectFolder
-   put project_ListUsedPathsFromFolder (projectFolder) into usedStackPaths
-   stack_StartUsedPaths usedStackPaths
-   
-   -- this handler needs less dependencies
-   project_LoadMenus projectFolder
-   
-   put project_GetHomeStackName (projectFolder) into homeStackName
-   env_AddProject homeStackName, projectFolder -- here we could add modules in a different way
-   return homeStackName
-end project_InitialiseFolder
 
 command project_LoadDeps projectDeps, projectHomeStackFile
    replace comma with CR in projectDeps   
@@ -865,16 +921,16 @@ function lcw_UserProjectFolder pSubFolder
 end lcw_UserProjectFolder
 
 function lcw_GetStandardFolder shortFolder
-   put lcw_GetRootFolder() into lcwRootFolder
+   put env_GetLcwFolder() into lcwRootFolder
    put _ConstructProjectFolder (shortFolder, lcwRootFolder) into lcwStandardFolder
    return lcwStandardFolder
 end lcw_GetStandardFolder
 
-function lcw_GetRootFolder
+function env_GetLcwFolder
    put lcw_HomeStackName() into lcwHomeStackName
    put the stack_Folder of stack lcwHomeStackName into lcwGetRootFolder
    return lcwGetRootFolder
-end lcw_GetRootFolder
+end env_GetLcwFolder
 
 function lcw_HomeStackName
    return "LCW"
@@ -921,7 +977,7 @@ put the module_Names of stack homeStackNameOrPath into moduleNames
 repeat for each line moduleName in moduleNames
    -- could notify
    put module_GetFolder (moduleName, homeStackNameOrPath) into moduleFolder
-   project_InitialiseFolder moduleFolder
+   project_SimpleInit moduleFolder
 end repeat
 end project_LoadModules
 

@@ -40,8 +40,31 @@ local LocalArray
 
 --> Working on
 -
--- Sent when a leaf node of the tree view is double-clicked
--- pPathToNode is a comma-delimited list of keys in the underlying array
+
+
+--> Tools
+-
+getprop mouse_DoubleUp
+   return the mouse_DoubleUp of me
+end mouse_DoubleUp
+
+setprop mouse_DoubleUp mDoubleUp
+   set the mouse_DoubleUp of me to mDoubleUp
+end mouse_DoubleUp
+
+getprop data_MenuBit
+   get the title_Menu of me
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 2 to -2 of it into menuBit
+   return menuBit
+end data_MenuBit
+
+setprop data_MenuBit [projectName] menuBit
+   put the long id of me into displayView
+   display_SetToolMenus menuBit, displayView, projectName
+end data_MenuBit
+
+
 --> Events
 -
 on mouseUp
@@ -398,14 +421,6 @@ setprop mouse_Up mUp
    set the drop_Command of me to mUp
 end mouse_Up
 
-getprop mouse_DoubleUp
-   return the mouse_DoubleUp of me
-end mouse_DoubleUp
-
-setprop mouse_DoubleUp mDoubleUp
-   set the mouse_DoubleUp of me to mDoubleUp
-end mouse_DoubleUp
-
 getprop view_EventArray eventArray   
    put the mouse_Target of me into eventArray ["eventTarget"]
    put the mouse_Up of me into eventArray ["mouseUp"]
@@ -694,22 +709,6 @@ private command treeData_Delete @treeData, somePath
    delete variable treeData [somePath]
    return deletedData
 end treeData_Delete
-
-
---> Tools
--
-getprop tool_Menus
-   -- return the tool_Menus name = menuBit
-   get the title_Menu of me
-   set the itemdelimiter to "|"
-   put word 1 to -1 of item 2 to -2 of it into menuBit
-   return menuBit
-end tool_Menus
-
-setprop tool_Menus [projectName] menuBit
-   put the long id of me into displayView
-   display_SetToolMenus menuBit, displayView, projectName
-end tool_Menus
 
 
 --> Props | Selected

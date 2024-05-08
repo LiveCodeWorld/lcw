@@ -62,95 +62,133 @@ A user_Model is like pref_FetchValue but stored in th lcw_User project
 The lcw_User project should only be stored on GitHub as a private repository to avoid publishing work in progress, and sensitive data.
 */
 
-
 --> Working on
 -
-function user_GetFolder
-   /*
-   Updated this function so that it should work without stack "lcw_user" existing or known.
-   Still probably a good idea to create a project and store it for use customisation.
-   When starting a nre LCW project we cannot reply on having data in lcw_User project as it is usr specific.
-   */
-   -- /Users/david/Documents/My Revolution Enterprise/lcw_User/
-   -- Should it be "revUserPluginsFolder" or "revMyDocumentsFolder"?
-   -- put the stack_Folder of stack "lcw_User" into projectFolder
-   put the documents folder & "/My Revolution Enterprise/lcw_User/" into projectFolder
-   return projectFolder
-end user_GetFolder
 
-command display_Secrets pArrayKey
-   put tolower(pArrayKey) & "_Authentication.array" into shortArrayFile
-   put user_GetArray (shortArrayFile) into userArray
-   --
-   display_Data userArray, "Hubspot", "Secrets"
-end display_Secrets
-
-private function _ConstructShortArrayFile pArrayKey
-   -- "pinterest_Authentication.array" or "secret_Authentication.array" (default)
-   if pArrayKey is empty then put "secret" into pArrayKey
-   put tolower(pArrayKey) & "_Authentication.array" into shortFile
-   return shortFile
-end _ConstructShortArrayFile
-
-
---> Model | User
+--> Library
 -
-function user_GetValue someKey, shortArrayFile
-   put user_GetArray (shortArrayFile) into userArray
-   put userArray [someKey] into someValue
+/*
+These handlers store LCW project folders so that they can be in various places.
+*/
+
+function library_ListProjectModules
+   put library_FetchProjectData() into libraryProjectData
+   put "module" into projectType
+   repeat for each key projectName in libraryProjectData
+      put libraryProjectData [projectName]["projectType"] into someType
+      -- put libraryProjectData [projectName]["projectFolder"] into someFolder
+      if someType = projectType then
+         put projectName & CR after projectNames
+      end if
+   end repeat
+   delete char -1 of projectNames
+   return projectNames
+end library_ListProjectModules
+
+
+--> Library | Project | Model | Utils
+-
+command library_TidyProjectModel
+   put library_FetchProjectData() into libraryProjectData
+   repeat for each key projectName in libraryProjectData
+      put libraryProjectData [projectName]["projectType"] into someType
+      put libraryProjectData [projectName]["projectFolder"] into someFolder
+      switch
+         case projectName is empty
+            delete variable libraryProjectData [projectName]
+            break
+         case someType is not among the items of "project,module"
+            delete variable libraryProjectData [projectName]
+            break
+         case there is not a folder someFolder
+            delete variable libraryProjectData [projectName]
+            break
+         default
+            -- all is fine
+      end switch
+   end repeat
+   library_StoreProjectData libraryProjectData
+end library_TidyProjectModel
+
+function library_FetchProjectValue someKey, pProjectName
+   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
+   put library_FetchProjectArray (pProjectName) into projectArray
+   put projectArray [someKey] into someValue
    return someValue
-end user_GetValue
+end library_FetchProjectValue
 
-command user_SetValue someKey, shortArrayFile, someValue
-   put user_GetArray (shortArrayFile) into userArray
-   put someValue into userArray [someKey]
-   user_SetArray shortArrayFile, userArray
-   put the result into modelDataFile
-   return modelDataFile
-end user_SetValue
+command library_SaveProjectValue someKey, someValue, pProjectName
+   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
+   put library_FetchProjectArray (pProjectName) into projectArray
+   put someValue into projectArray [someKey]
+   library_StoreProjectArray pProjectName, projectArray
+   return projectArray
+end library_SaveProjectValue
 
-function user_GetModelFile shortFile
-   put user_GetFolder() into projectFolder
-   put model_GetDataFile ("lcw_User", projectFolder, shortFile) into modelFile
-   return modelFile
-end user_GetModelFile
 
-function user_GetArray shortFile
-   if the environment = "server" then
-      -- put gConfig ["dropBoxAuthToken"] into dropBoxAuthToken
-      -- put rigFetchConfigItem ("dropBoxAuthToken") into dropBoxAuthToken
-      put rigLoadConfigFile (shortFile, TRUE) into modelArray
+--> Library | Env
+-
+/*
+Env information is also stored in the LCW library.
+*/
+
+function library_ListProjectFolders
+   put library_FetchProjectData() into libraryProjectArray
+   repeat for each key projectName in libraryProjectArray
+      put libraryProjectArray [projectName] into projectArray
+      put projectArray ["projectFolder"] into libraryRepoFolder
+      if there is not a folder libraryRepoFolder then
+         next repeat
+      end if
+      put projectName into libraryRepoFolderArray [libraryRepoFolder]
+   end repeat
+   put keys (libraryRepoFolderArray) into libraryRepoFolders
+   sort libraryRepoFolders
+   return word 1 to -1 of libraryRepoFolders
+end library_ListProjectFolders
+
+function library_ListProjectNames pProjectType
+   put library_FetchProjectData() into libraryProjectData
+   switch pProjectType
+      case "all"
+         put keys (libraryProjectData) into projectNames
+         break
+      case "module"
+         put _FilterLibraryProjectArray ("module", libraryProjectData) into projectNames
+         break
+      default -- case "project"
+         put _FilterLibraryProjectArray ("project", libraryProjectData) into projectNames
+   end switch
+   sort projectNames
+   return projectNames
+end library_ListProjectNames
+
+command library_DeleteProjectArray projectName
+   put library_FetchProjectData() into libraryProjectData
+   delete variable libraryProjectData [projectName]
+   library_StoreProjectData libraryProjectData
+end library_DeleteProjectArray
+
+
+--> Model | List
+-
+function model_ListNames modelStackName, projectFolder
+   put projectFolder & "models/" & modelStackName & slash into modelDataFolder
+   put file_ListShort (modelDataFolder) into shortFiles
+   return shortFiles
+end model_ListNames
+
+function model_ListModelFiles pListShort
+   put lcw_ArrayFolder() into libraryArrayFolder
+   put files (libraryArrayFolder) into shortFiles
+   filter shortFiles with "*.array"
+   if pListShort is true then
+      return shortFiles
    else
-      -- put the model_Array [shortFile] of stack "lcw_User" into modelArray
-      
-      put user_GetModelFile (shortFile) into modelFile
-      put array_FetchModel (modelFile) into modelArray
+      put file_AddFolderToPaths (shortFiles, libraryArrayFolder) into filePaths
+      return filePaths
    end if
-   return modelArray
-end user_GetArray
-
-command user_AddArray shortFile, newArray
-   put user_GetArray (shortFile) into userArray
-   --
-   difference userArray with newArray
-   union userArray with newArray
-   --
-   user_SetArray shortFile, userArray
-   put the result into modelFile
-   return modelFile
-end user_AddArray
-
-command user_SetArray shortFile, modelArray
-   if the platform is "server" then
-      
-   else
-      -- set the model_Array [shortFile] of stack "lcw_User" to modelArray
-      -- put the result into modelFile
-      put user_GetModelFile (shortFile) into modelFile
-      array_SaveModel modelFile, modelArray
-   end if
-   return modelFile
-end user_SetArray
+end model_ListModelFiles
 
 
 --> Model | Array | Data
@@ -158,28 +196,6 @@ end user_SetArray
 /*
 This is correct version of model_Array
 */
-
-getprop array_Models [pModelName]
-   if pModelName is empty then
-      put the model_Name of the target into pModelName
-   end if
-   
-   put the project_Folder of the target into projectFolder
-   put model_ListNames (pModelName, projectFolder) into modelNames
-   return modelNames
-end array_Models
-
-getprop array_Data [modelNameItems]
-   put the model_ArrayFile [modelNameItems] of the target into modelArrayFile
-   put array_FetchModel (modelArrayFile) into modelArray
-   return modelArray
-end array_Data
-
-setprop array_Data [modelNameItems] modelArray
-   put the model_ArrayFile [modelNameItems] of the target into modelArrayFile
-   array_SaveModel modelArrayFile, modelArray
-   return modelArrayFile
-end array_Data
 
 getprop model_ArrayFile [modelNameItems]
    put the project_Folder of the target into projectFolder
@@ -213,25 +229,16 @@ getprop model_Data [modelStackNames]
    repeat for each line modelStackName in modelStackNames
       if char 1 of modelStackName = "." then next repeat
       put the model_DataFolder [modelStackName] of the target into modelDataFolder
-      model_AddData modelData, modelDataFolder
+      _AddFolderToModel modelData, modelDataFolder
    end repeat
    return modelData
 end model_Data
 
 function model_GetData modelDataFolder
    local modelData
-   model_AddData modelData, modelDataFolder
+   _AddFolderToModel modelData, modelDataFolder
    return modelData   
 end model_GetData
-
-private command model_AddData @modelData, modelDataFolder
-   put files (modelDataFolder) into shortFiles
-   repeat for each line shortFile in shortFiles
-      put dataFolder_GetFile (modelDataFolder, shortFile) into modelDataFile
-      put array_FetchModel (modelDataFile) into modelArray
-      put modelArray into modelData [shortFile]
-   end repeat
-end model_AddData
 
 
 --> Model | Props
@@ -239,19 +246,6 @@ end model_AddData
 /*
 Models are stored by default in a folder named after the short name of the stack at the same level as the stack
 */
-
-getprop user_Array [pShortFile]
-   return user_GetArray (pShortFile)
-end user_Array
-
-setprop user_Array [pShortFile] modelArray
-   if modelArray is empty then
-      breakpoint
-   end if
-   user_SetArray pShortFile, modelArray
-   put the result into modelDataFile
-   return modelDataFile
-end user_Array
 
 getprop model_Value [pKey]
    if pKey is empty then put "default" into pKey
@@ -271,14 +265,14 @@ end model_Value
 getprop model_Array [pShortFile]
    -- assumes the target is a model stack
    put the model_DataFile [pShortFile] of the target into modelDataFile
-   put array_FetchModel (modelDataFile) into modelArray
+   put array_FromFile (modelDataFile) into modelArray
    return modelArray
 end model_Array
 
 setprop model_Array [pShortFile] dataArray
    -- assumes the target is a model stack
    put the model_DataFile [pShortFile] of the target into modelDataFile
-   array_SaveModel modelDataFile, dataArray
+   array_ToFile modelDataFile, dataArray
    return the result
 end model_Array
 
@@ -319,118 +313,99 @@ getprop model_Folder
 end model_Folder
 
 
---> Model | Files
+--> User
 -
-function model_GetDataFolder modelStackName, projectFolder
-   put folder_AddShort (projectFolder, "models") into rootModelsFolder
-   put rootModelsFolder & modelStackName & slash into modelDataFolder
-   return modelDataFolder
-end model_GetDataFolder
+getprop user_Array [pShortFile]
+   return user_GetArray (pShortFile)
+end user_Array
 
-function model_GetDataFile modelStackName, projectFolder, pShortFile
-   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
-   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+setprop user_Array [pShortFile] modelArray
+   if modelArray is empty then
+      breakpoint
+   end if
+   user_SetArray pShortFile, modelArray
+   put the result into modelDataFile
    return modelDataFile
-end model_GetDataFile
+end user_Array
+
+function user_GetFolder
+   /*
+   Updated this function so that it should work without stack "lcw_user" existing or known.
+   Still probably a good idea to create a project and store it for use customisation.
+   When starting a nre LCW project we cannot reply on having data in lcw_User project as it is usr specific.
+   */
+   -- /Users/david/Documents/My Revolution Enterprise/lcw_User/
+   -- Should it be "revUserPluginsFolder" or "revMyDocumentsFolder"?
+   -- put the stack_Folder of stack "lcw_User" into projectFolder
+   put the documents folder & "/My Revolution Enterprise/lcw_User/" into projectFolder
+   return projectFolder
+end user_GetFolder
 
 
-
---> Model | List
+--> Model | User
 -
-function model_ListNames modelStackName, projectFolder
-   put projectFolder & "models/" & modelStackName & slash into modelDataFolder
-   put file_ListShort (modelDataFolder) into shortFiles
-   return shortFiles
-end model_ListNames
+function user_GetValue someKey, shortArrayFile
+   put user_GetArray (shortArrayFile) into userArray
+   put userArray [someKey] into someValue
+   return someValue
+end user_GetValue
 
-function model_ListModelFiles pListShort
-   put lcw_ArrayFolder() into libraryArrayFolder
-   put files (libraryArrayFolder) into shortFiles
-   filter shortFiles with "*.array"
-   if pListShort is true then
-      return shortFiles
+command user_SetValue someKey, shortArrayFile, someValue
+   put user_GetArray (shortArrayFile) into userArray
+   put someValue into userArray [someKey]
+   user_SetArray shortArrayFile, userArray
+   put the result into modelDataFile
+   return modelDataFile
+end user_SetValue
+
+function user_GetModelFile shortFile
+   put user_GetFolder() into projectFolder
+   put model_GetDataFile ("lcw_User", projectFolder, shortFile) into modelFile
+   return modelFile
+end user_GetModelFile
+
+function user_GetArray shortFile
+   if the environment = "server" then
+      -- put gConfig ["dropBoxAuthToken"] into dropBoxAuthToken
+      -- put rigFetchConfigItem ("dropBoxAuthToken") into dropBoxAuthToken
+      put rigLoadConfigFile (shortFile, TRUE) into modelArray
    else
-      put file_AddFolderToPaths (shortFiles, libraryArrayFolder) into filePaths
-      return filePaths
+      -- put the model_Array [shortFile] of stack "lcw_User" into modelArray
+      
+      put user_GetModelFile (shortFile) into modelFile
+      put array_FromFile (modelFile) into modelArray
    end if
-end model_ListModelFiles
-
-
---> Model | Array
--
-function model_GetFile arrayName, modelName, projectFolder
-   put arrayName & ".array" into shortFile
-   put model_GetDataFile (modelName, projectFolder, shortFile) into modelArrayFile
-   return modelArrayFile
-end model_GetFile
-
-function model_FetchArray modelStackName, projectFolder, pShortFile 
-   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
-   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
-   put array_FetchModel (modelArrayFile) into modelArray
    return modelArray
-end model_FetchArray
+end user_GetArray
 
-command model_StoreArray modelStackName, projectFolder, modelArray, pShortFile
-   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
-   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
-   array_SaveModel modelArrayFile, modelArray
-   return modelArrayFile
-end model_StoreArray
-
-
---> Array | Model
--
-/*
-Modified versions of "array_Fetch" and "array_Save"
-Allows storing mmodels as json or other formats based on their file extensions.
-
-The aim is to standarize different ways in which arrays can be stored and fetched,
-in order to make it easier to switch models from simple text files, json files, encoded arrays or databases.
-*/
-
-function array_FetchModel someFile
-   -- allows for simple switching of models
-   put url ("binfile:" & someFile) into someData
-   if someData is empty then return empty
-   set the itemdelimiter to "."
-   switch item -1 of someFile
-      case "json"
-         put jsonImport (someData) into modelArray
-         return modelArray
-      case "array"
-         put arraydecode (someData) into modelArray
-         return modelArray
-      default
-         return someData
-   end switch
-end array_FetchModel
-
-command array_SaveModel someFile, modelArray
-   if modelArray is not an array then
-      delete file someFile
-      return "deleted" && someFile
-   end if
-   
-   set the itemdelimiter to "."
-   switch item -1 of someFile
-      case "json"
-         put jsonExport (modelArray) into encodedData
-         break
-      case "array"
-         put arrayencode (modelArray) into encodedData
-         break
-      default -- case "array"
-         put modelArray into encodedData
-   end switch
-   
-   folder_CreateFromFile someFile -- create folder if it does not exist
-   put encodedData into url ("binfile:" & someFile)
+command user_AddArray shortFile, newArray
+   put user_GetArray (shortFile) into userArray
    --
-   return someFile
-end array_SaveModel
+   difference userArray with newArray
+   union userArray with newArray
+   --
+   user_SetArray shortFile, userArray
+   put the result into modelFile
+   return modelFile
+end user_AddArray
 
-function dataFolder_GetFile modelDataFolder, pShortFile
+command user_SetArray shortFile, modelArray
+   if the platform is "server" then
+      
+   else
+      -- set the model_Array [shortFile] of stack "lcw_User" to modelArray
+      -- put the result into modelFile
+      put user_GetModelFile (shortFile) into modelFile
+      array_ToFile modelFile, modelArray
+   end if
+   return modelFile
+end user_SetArray
+
+
+--> Private
+-
+private function _ConstructModelDataFile modelDataFolder, pShortFile
+   -- rename / replace
    if pShortFile is empty then
       set the itemdelimiter to slash
       put item -1 of modelDataFolder into modelName
@@ -438,4 +413,15 @@ function dataFolder_GetFile modelDataFolder, pShortFile
    end if
    put modelDataFolder & pShortFile into modelDataFile
    return modelDataFile
-end dataFolder_GetFile
+end _ConstructModelDataFile
+
+private command _AddFolderToModel @modelData, modelDataFolder
+   put files (modelDataFolder) into shortFiles
+   repeat for each line shortFile in shortFiles
+      put _ConstructModelDataFile (modelDataFolder, shortFile) into modelDataFile
+      put array_FromFile (modelDataFile) into modelArray
+      put modelArray into modelData [shortFile]
+   end repeat
+end _AddFolderToModel
+
+

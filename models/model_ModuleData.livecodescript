@@ -11,22 +11,13 @@ version: 0.1
 --> Layout | Object | Model
 -
 getprop layout_ObjectData [nameOrID]
+   breakpoint
    if nameOrID is empty then
-      
    end if
    --
    put _GetModelData (nameOrID) into modelArray
    return modelArray
 end layout_ObjectData
-
-private function _GetModelData modelName
-   put the module_ModelFile [modelName] of the target into modelDataFile
-   if modelDataFile is empty then return empty
-   -- 
-   put array_FetchModel (modelDataFile) into modelArray
-   put modelName into modelArray ["modelName"]
-   return modelArray
-end _GetModelData
 
 
 --> Module | Model
@@ -42,7 +33,7 @@ setprop module_Model [pModelName] dataArray
    put the module_ModelFile [pModelName] of the target into mFile   
    if mFile is empty then return empty
    -- 
-   array_SaveModel mFile, dataArray
+   array_ToFile mFile, dataArray
    return mFile
 end module_Model
 
@@ -70,7 +61,7 @@ getprop module_ModelFile [pModelName]
    if exists (templateObject) is false then return empty
    --
    put the module_ModelFolder of templateObject into modelDataFolder
-   put dataFolder_GetFile (modelDataFolder, shortFile) into mFile
+   put _ConstructModelDataFile (modelDataFolder, shortFile) into mFile
    return mFile
 end module_ModelFile
 
@@ -110,7 +101,7 @@ end module_ListModelShortFiles
 function module_GetModel shortNameOrFile, moduleStackName, projectName
    put module_ConstructModelFile (shortNameOrFile, moduleStackName, projectName) into mFile
    if there is a file mFile then
-      put array_FetchModel (mFile) into modelArray
+      put array_FromFile (mFile) into modelArray
       return modelArray
    else
       return empty
@@ -119,7 +110,7 @@ end module_GetModel
 
 command module_SetModel shortNameOrFile, moduleStackName, projectName, modelArray
    put module_ConstructModelFile (shortNameOrFile, moduleStackName, projectName) into mFile
-   array_SaveModel mFile, modelArray
+   array_ToFile mFile, modelArray
    return mFile
 end module_SetModel
 
@@ -156,7 +147,7 @@ function module_ConstructModelFile shortNameOrFile, moduleStackName, projectName
       put model_ConstructShortFile (shortNameOrFile) into shortFile
    end if
    put module_ConstructModelFolder (moduleStackName, projectName) into moduleModelFolder
-   put dataFolder_GetFile (moduleModelFolder, shortFile) into mFile
+   put _ConstructModelDataFile (moduleModelFolder, shortFile) into mFile
    return mFile
 end module_ConstructModelFile
 
@@ -168,3 +159,24 @@ function module_ConstructModelFolder moduleStackName, projectName
 end module_ConstructModelFolder
 
 
+--> Private
+-
+private function _GetModelData modelName
+   put the module_ModelFile [modelName] of the target into modelDataFile
+   if modelDataFile is empty then return empty
+   -- 
+   put array_FromFile (modelDataFile) into modelArray
+   put modelName into modelArray ["modelName"]
+   return modelArray
+end _GetModelData
+
+private function _ConstructModelDataFile modelDataFolder, pShortFile
+   -- rename / replace
+   if pShortFile is empty then
+      set the itemdelimiter to slash
+      put item -1 of modelDataFolder into modelName
+      put modelName & ".array" into pShortFile
+   end if
+   put modelDataFolder & pShortFile into modelDataFile
+   return modelDataFile
+end _ConstructModelDataFile

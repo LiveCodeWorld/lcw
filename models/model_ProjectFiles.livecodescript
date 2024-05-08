@@ -15,6 +15,56 @@ Those older names are a bit of a mess.
 
 --> Working on
 -
+
+
+--> Project | Model | Files
+-
+-- getprop project_ArrayFile
+-- put the project_Name of the target into projectName
+-- put project_ArrayFile (projectName) into projectArrayFile
+put the project_Folder of the target into projectFolder
+put projectFolder & "lcw_project.array" into projectArrayFile
+return projectArrayFile
+end project_ArrayFile
+
+getprop project_JsonFile
+   put the project_Name of the target into projectName
+   put project_JsonFile (projectName) into projectArrayFile
+   return projectArrayFile
+end project_JsonFile
+
+function project_ArrayFile projectName
+   put project_ConstructArrayFile (projectName) into projectArrayFile
+   if there is a file projectArrayFile then
+      return projectArrayFile
+   else
+      return empty
+   end if
+end project_ArrayFile
+
+function project_ConstructArrayFile projectName
+   put project_GetFolder (projectName) & "lcw_project.array" into projectArrayFile
+   return projectArrayFile
+end project_ConstructArrayFile
+   
+function project_JsonFile projectName
+   put project_ConstructJsonFile (projectName) into projectJsonFile
+   if there is a file projectJsonFile then
+      return projectJsonFile
+   else
+      return empty
+   end if
+end project_JsonFile
+
+function project_ConstructJsonFile projectName
+   put project_GetFolder (projectName) into projectFolder
+   put projectFolder & "lcw_project.json" into projectJsonFile
+   return projectJsonFile
+end project_ConstructJsonFile
+
+
+--> Props
+-
 getprop module_ControllerFolder
    put the module_Folder of the target into mFolder
    if there is not a folder mFolder then
@@ -29,6 +79,18 @@ getprop module_ControllerFolder
    return cFolder
 end module_ControllerFolder
 
+getprop menu_ControllerPath [gMenuTitle]
+   put the long id of the target into tObject
+   --
+   put the project_Name of tObject into projectName
+   if exists (stack projectName) is false then return empty
+   if gMenuTitle is empty then put the stack_Name of tObject into gMenuTitle
+   --
+   put the project_Folder of stack projectName into projectFolder
+   put project_ConstructStandardFile (gMenuTitle, projectFolder, "controllers") into controllerPath
+   return controllerPath
+end menu_ControllerPath
+
 getprop controller_Folder
    put the project_Folder of the target into projectFolder
    if projectFolder is empty then return empty
@@ -37,6 +99,100 @@ getprop controller_Folder
    return cFolder
 end controller_Folder
 
+getprop controller_File [shortFile]
+   put the controller_Folder of the target into cFolder
+   return cFolder & shortFile
+end controller_File
+
+
+--> Project | Props
+-
+getprop project_Folders [pIncludeInvisible]
+   put the project_Folder of the target into projectFolder
+   put folder_ListLong (projectFolder) into standardFolders
+   return standardFolders
+end project_Folders
+
+getprop project_StackObjects [folderName]
+   if folderName is empty then
+      put the project_Name of the target into projectName
+      put the stackfile_Names of stack projectName into projectStackNames
+      repeat for each line stackName in projectStackNames
+         if exists (stack stackName) is false then next repeat
+         put the name of stack stackName & CR after stackObjects
+      end repeat
+      delete char -1 of stackObjects
+      return stackObjects
+   else
+      put the project_Folder [folderName] of the target into standardFolder
+      if standardFolder is empty then return empty
+      put folder_ListStackObjects (standardFolder) into stackObjects
+   end if
+   return stackObjects
+end project_StackObjects
+
+getprop project_StackFileTable
+   put the project_HomeStack of the target into projectHomeStack
+   put the stackfiles of projectHomeStack into stackFileTable
+   return stackFileTable
+end project_StackFileTable
+
+setprop project_StackFileTable stackFileTable
+   put the project_HomeStack of the target into projectHomeStack
+   set the stackfiles of projectHomeStack to stackFileTable
+   return projectHomeStack
+end project_StackFileTable
+
+getprop project_Paths [shortFolder]
+   put the project_Name of the target into projectName
+   put project_ListStandardStackPaths (shortFolder, projectName) into filePaths
+   return filePaths
+end project_Paths
+
+getprop project_StackPaths
+   put the project_Folder of the target into projectFolder
+   put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   return stackPaths
+end project_StackPaths
+
+getprop project_StackNames [folderName]
+   put the project_Name of the target into projectName
+   if folderName is empty then
+      put the stackfile_Names of stack projectName into projectStackNames
+   else
+      put project_GetFolder (projectName, folderName) into standardFolder
+      if standardFolder is empty then return empty
+      put folder_ListStackNames (standardFolder) into projectStackNames
+   end if
+   return projectStackNames
+end project_StackNames
+
+getprop project_StackType
+   -- see also "script_Type"
+   put the effective filename of the target into stackPath
+   put lcw_GetProjectFolder (stackPath) into projectFolder
+   --
+   set the itemdelimiter to slash
+   put the number of items of projectFolder into pNum
+   put pNum + 2 into testNum
+   put the number of items of stackPath into sNum
+   --
+   switch
+      case sNum = pNum + 1
+         -- a project
+         return "project"
+      case sNum = testNum
+         put item (pNum + 1) of stackPath into projectType
+         project_MakeTypeSingular projectType
+         return projectType
+      default
+         return empty
+   end switch
+end project_StackType
+
+
+--> Project | List
+-
 function project_ListStackNames shortFolder, projectName, pListNested
    put project_ListStandardStackPaths (shortFolder, projectName, pListNested) into longFiles
    repeat for each line longFile in longFiles
@@ -131,44 +287,6 @@ function project_ListShortFiles shortFolder, projectName
 end project_ListShortFiles
 
 
---> Props
--
-getprop project_StackPaths
-   put the project_Folder of the target into projectFolder
-   put directory_ListNestedStackFiles (projectFolder) into stackPaths
-   return stackPaths
-end project_StackPaths
-
-getprop project_StackNames [folderName]
-   put the project_Name of the target into projectName
-   if folderName is empty then
-      put the stackfile_Names of stack projectName into projectStackNames
-   else
-      put project_GetFolder (projectName, folderName) into standardFolder
-      if standardFolder is empty then return empty
-      put folder_ListStackNames (standardFolder) into projectStackNames
-   end if
-   return projectStackNames
-end project_StackNames
-
-getprop controller_File [shortFile]
-   put the controller_Folder of the target into cFolder
-   return cFolder & shortFile
-end controller_File
-
-getprop menu_ControllerPath [gMenuTitle]
-   put the long id of the target into tObject
-   --
-   put the project_Name of tObject into projectName
-   if exists (stack projectName) is false then return empty
-   if gMenuTitle is empty then put the stack_Name of tObject into gMenuTitle
-   --
-   put the project_Folder of stack projectName into projectFolder
-   put project_ConstructStandardFile (gMenuTitle, projectFolder, "controllers") into controllerPath
-   return controllerPath
-end menu_ControllerPath
-
-
 --> Project | List | Behaviors
 -
 function project_ListBehaviorStackNames pProjectNames  
@@ -231,24 +349,6 @@ function project_ListProjectDepNames projectName
    return word 1 to -1 of projectNameIndex
 end project_ListProjectDepNames
 
-private command _addProjectToDeps projectName, @projectNameArray
-   -- recursive
-   -- check not already there to avoid infnite recursion
-   if projectName is among the keys of projectNameArray then return false
-   put empty into projectNameArray [projectName]
-   
-   if exists (stack projectName) is false then
-      return false -- should never happen
-   end if
-   
-   put the project_Deps of stack projectName into projectDepItems
-   repeat for each item projectDepName in projectDepItems
-      if projectDepName is among the keys of projectNameArray then next repeat
-      _addProjectToDeps projectDepName, projectNameArray
-   end repeat
-   return true
-end _addProjectToDeps
-
 
 --> Project | Names
 -
@@ -261,29 +361,6 @@ We look to naming folders the same, but allow (for now) stacks to use the pipe c
 which maps a stack name such as "View | Group | Test" or "View|Group|Test" <=> View_Group_Test
 The reasons for this are partly legacy and partly readability.
 */
-
-getprop project_StackType
-   -- see also "script_Type"
-   put the effective filename of the target into stackPath
-   put lcw_GetProjectFolder (stackPath) into projectFolder
-   --
-   set the itemdelimiter to slash
-   put the number of items of projectFolder into pNum
-   put pNum + 2 into testNum
-   put the number of items of stackPath into sNum
-   --
-   switch
-      case sNum = pNum + 1
-         -- a project
-         return "project"
-      case sNum = testNum
-         put item (pNum + 1) of stackPath into projectType
-         project_MakeTypeSingular projectType
-         return projectType
-      default
-         return empty
-   end switch
-end project_StackType
 
 command project_MakeTypeSingular @projectType
    -- this makes me angry :)
@@ -372,57 +449,6 @@ function project_ListBackDeps projectName
    delete char -1 of objectIndex
    return objectIndex
 end project_ListBackDeps
-
-
---> Project | Props
--
-getprop project_Folders [pIncludeInvisible]
-   put the project_Folder of the target into projectFolder
-   put folder_ListLong (projectFolder) into standardFolders
-   return standardFolders
-end project_Folders
-
-getprop project_ArrayFile
-   put the project_Folder of the target into projectFolder
-   put projectFolder & "lcw_project.array" into projectArrayFile
-   return projectArrayFile
-end project_ArrayFile
-
-getprop project_StackObjects [folderName]
-   if folderName is empty then
-      put the project_Name of the target into projectName
-      put the stackfile_Names of stack projectName into projectStackNames
-      repeat for each line stackName in projectStackNames
-         if exists (stack stackName) is false then next repeat
-         put the name of stack stackName & CR after stackObjects
-      end repeat
-      delete char -1 of stackObjects
-      return stackObjects
-   else
-      put the project_Folder [folderName] of the target into standardFolder
-      if standardFolder is empty then return empty
-      put folder_ListStackObjects (standardFolder) into stackObjects
-   end if
-   return stackObjects
-end project_StackObjects
-
-getprop project_StackFileTable
-   put the project_HomeStack of the target into projectHomeStack
-   put the stackfiles of projectHomeStack into stackFileTable
-   return stackFileTable
-end project_StackFileTable
-
-setprop project_StackFileTable stackFileTable
-   put the project_HomeStack of the target into projectHomeStack
-   set the stackfiles of projectHomeStack to stackFileTable
-   return projectHomeStack
-end project_StackFileTable
-
-getprop project_Paths [shortFolder]
-   put the project_Name of the target into projectName
-   put project_ListStandardStackPaths (shortFolder, projectName) into filePaths
-   return filePaths
-end project_Paths
 
 
 --> Project | Start
@@ -666,6 +692,27 @@ function directory_ListNestedPaths someFolder, pSetRelative
    delete char -1 of NestedPaths
    return NestedPaths
 end directory_ListNestedPaths
+
+
+--> Private
+-
+private command _addProjectToDeps projectName, @projectNameArray
+   -- recursive
+   -- check not already there to avoid infnite recursion
+   if projectName is among the keys of projectNameArray then return false
+   put empty into projectNameArray [projectName]
+   
+   if exists (stack projectName) is false then
+      return false -- should never happen
+   end if
+   
+   put the project_Deps of stack projectName into projectDepItems
+   repeat for each item projectDepName in projectDepItems
+      if projectDepName is among the keys of projectNameArray then next repeat
+      _addProjectToDeps projectDepName, projectNameArray
+   end repeat
+   return true
+end _addProjectToDeps
 
 private command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
    -- recursive

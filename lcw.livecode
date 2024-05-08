@@ -56,73 +56,82 @@ end lcw_DefaultLibPath
 --> LCW | Me
 -
 command lcw_Init
+   -- First Init on startup
    -- if the long id of the target is not the long id of me then pass lcw_Init
+   -- if "lib_LCW" is among the lines of the stacksinuse then return false
    
-   _LcwInitialize
+   # Based on filename for LCW 
+   put "LCW" into lcwProjectName
+   put the filename of stack lcwProjectName into lcwHomeStackFile
    
-   -- load custom user stuff
-   -- not sure if it should be here on in menus stack as that is where it is useful???
-   lcw_LoadCustomUserProject
+   # Use Deps
+   put lcw_LibraryFile (lcwHomeStackFile) into libLcwFile
+   put lcw_ModelFile (lcwHomeStackFile) into modelLcwFile
+   --
+   start using stack libLcwFile
+   start using stack modelLcwFile
+   
+   # Initialise Environment
+   env_AddToBash -- in "lib_LCW"
+   
+   # Load LCW
+   put lcw_HomeFolder (lcwHomeStackFile) into lcwHomeFolder
+   project_LoadFromFolder lcwHomeFolder
+   
+   # Not needed?
+   -- project_LoadModules lcwHomeStackFile
+   -- hkeyLine_LoadPlaceArray
+   --  lcw_LoadCustomUserProject
+   
+   _MakePretty lcwProjectName   
 end lcw_Init
-
-
---> Env
--
--- function env_ProjectIsActive projectName
-   put env_ConstructProjectFolder (projectName) is not empty into projectIsLoaded
-   return projectIsLoaded
-end env_ProjectIsActive
 
 
 --> Project | Init
 -
-command _LcwInitialize
-   -- for LCW only
-   -- ideally we don't use this stack as things like "preOpenStack" will be called every time
-   
-   -- put lcw_HomeStackName() into lcwProjectName
-   put "LCW" into lcwProjectName
-   put the filename of stack lcwProjectName into lcwHomeStackFile
-   
-   -- put lcw_DefaultLibPath (lcwHomeStackFile) into lcwDefaultLibFile
-   set the itemdelimiter to slash
-   put lcwHomeStackFile into lcwDefaultLibFile
-   put "libraries/lib_LCW.livecodescript" into item -1 of lcwDefaultLibFile
-   set the itemdelimiter to comma
-   
-   -- so we don't load it every time
-   if lcwDefaultLibFile is among the lines of the stacksinuse then return false
-   -- ideally we don't need this
-   start using stack lcwDefaultLibFile
-   
-   -- let's initialise the project
-   -- eventually we will aim to have no or minimal dependencies
-   -- and separate out menu tools from the basic environment
-   env_AddToBash
-   
-   put lcwHomeStackFile into lcwHomeFolder
-   set the itemdelimiter to slash
-   put empty into item -1 of lcwHomeFolder
-   set the itemdelimiter to comma
-   --
-   project_LoadFromFolder lcwHomeFolder
-   
-   -- project_LoadModules lcwHomeStackFile
-   -- load the global dictionary for where handlers are
-   -- hkeyLine_LoadPlaceArray
-   
-   -- custom
+private command _MakePretty lcwProjectName
+   # Utility
    choose browse tool 
    close stack "revTools"
    
-   -- let's make it pretty
+   # Make it pretty
    put the screenrect into stackRect
    add 100 to item 1 of stackRect
    add 100 to item 2 of stackRect
    subtract 100 from item 3 of stackRect
    subtract 100 from item 4 of stackRect
-   set the rect of stack lcwProjectName to stackRect
    
-   -- to initialise stackfiles
-   -- go to stack lcwProjectName (not needed now stackfiles is sset properly)
-end _LcwInitialize
+   set the rect of stack lcwProjectName to stackRect
+end _MakePretty
+
+
+--> Deps | For Standalone
+-
+function lcw_LibraryFile lcwHomeStackFile
+   -- "lib_LCW" file
+   set the itemdelimiter to slash
+   put lcwHomeStackFile into libLcwFile
+   put "libraries/lib_LCW.livecodescript" into item -1 of libLcwFile
+   set the itemdelimiter to comma
+   return libLcwFile
+end lcw_LibraryFile
+
+function lcw_ModelFile lcwHomeStackFile
+   -- "model_LCW" file
+   set the itemdelimiter to slash
+   put lcwHomeStackFile into modelLcwFile
+   put "models/model_LCW.livecodescript" into item -1 of modelLcwFile
+   set the itemdelimiter to comma
+   return modelLcwFile
+end lcw_ModelFile
+
+
+--> Deps
+-
+function lcw_HomeFolder lcwHomeStackFile
+   put lcwHomeStackFile into lcwHomeFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of lcwHomeFolder
+   set the itemdelimiter to comma
+   return lcwHomeFolder
+end lcw_HomeFolder

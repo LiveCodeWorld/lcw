@@ -16,18 +16,7 @@ Therefore this model contains handlers that can load and merge multiple projects
 providing access to scripts that need it and instructions how to build it from individual projects.
 
 As handlers that work on a set of projects, stroing these in the global vairable gLCW,  we should rename these handlers "env_XXX"
-
-private command _RemoveTransporterTools @frontObjects, pRemoveTransportBehavior
-   if pRemoveTransportBehavior is false then return empty
-   if exists (stack "behavior_RigLocalOveride") is false then return empty
-   
-   put the name of stack "behavior_RigLocalOveride" into transportFrontScript
-   line_Delete transportFrontScript, frontObjects
-   return transportFrontScript
-end _RemoveTransporterTools
-
 */
-
 
 --> Working on
 -
@@ -121,37 +110,6 @@ command env_AddToBash
    return $PATH
 end env_AddToBash
 
-function library_ListProjectFolders
-   put library_FetchProjectData() into libraryProjectArray
-   repeat for each key projectName in libraryProjectArray
-      put libraryProjectArray [projectName] into projectArray
-      put projectArray ["projectFolder"] into libraryRepoFolder
-      if there is not a folder libraryRepoFolder then
-         next repeat
-      end if
-      put projectName into libraryRepoFolderArray [libraryRepoFolder]
-   end repeat
-   put keys (libraryRepoFolderArray) into libraryRepoFolders
-   sort libraryRepoFolders
-   return word 1 to -1 of libraryRepoFolders
-end library_ListProjectFolders
-
-function library_ListProjectNames pProjectType
-   put library_FetchProjectData() into libraryProjectData
-   switch pProjectType
-      case "all"
-         put keys (libraryProjectData) into projectNames
-         break
-      case "module"
-         put _FilterLibraryProjectArray ("module", libraryProjectData) into projectNames
-         break
-      default -- case "project"
-         put _FilterLibraryProjectArray ("project", libraryProjectData) into projectNames
-   end switch
-   sort projectNames
-   return projectNames
-end library_ListProjectNames
-
 
 --> Env | Model
 -
@@ -203,19 +161,6 @@ function env_GetModuleArray pProjectNames
    end repeat
    return envModuleArray
 end env_GetModuleArray
-
-
---> Library | Env
--
-/*
-Env information is also stored in the LCW library.
-*/
-
-command library_DeleteProjectArray projectName
-   put library_FetchProjectData() into libraryProjectData
-   delete variable libraryProjectData [projectName]
-   library_StoreProjectData libraryProjectData
-end library_DeleteProjectArray
 
 
 --> Environment | Files

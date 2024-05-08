@@ -80,41 +80,44 @@ See also "meta_StackArrayFile" for project level stackfile storage
 -
 getprop project_Array
    put the project_JsonFile of the target into projectArrayFile
-   put array_FetchModel (projectArrayFile) into projectArray
+   put array_FromFile (projectArrayFile) into projectArray
    return projectArray
 end project_Array
 
 setprop project_Array projectArray
    put the project_JsonFile of the target into projectArrayFile
-   array_SaveModel projectArrayFile, projectArray
+   array_ToFile projectArrayFile, projectArray
    return modelDataFile
 end project_Array
 
-getprop project_ArrayFile
-   put the project_Name of the target into projectName
-   put project_GetArrayFile (projectName) into projectArrayFile
-   return projectArrayFile
-end project_ArrayFile
 
-getprop project_JsonFile
-   put the project_Name of the target into projectName
-   put project_GetJsonFile (projectName) into projectArrayFile
-   return projectArrayFile
-end project_JsonFile
-
-
---> Library | Project | Model | Stacks
+--> Project | Array | Model
 -
-function library_FetchProjectHomeStackPath projectName, pRepoFolder
-   -- put library_FetchProjectFolder (projectName) into projectFolder
-   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
-   if projectFolder is empty then return empty
+function project_GetArray projectName
+   if exists (stack projectName) is false then return empty
+   put the project_Folder of stack projectName into projectFolder
    --
-   text_AddTrailing projectFolder, slash
-   put project_NameToShortFolder (projectName) into projectShortFolder
-   put projectFolder & projectShortFolder & ".livecode" into homeStackPath
-   return homeStackPath
-end library_FetchProjectHomeStackPath
+   put project_GetArrayFromFolder (projectFolder) into projectArray
+   return projectArray
+end project_GetArray
+
+function project_GetArrayFromFolder projectFolder
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   put array_FromFile (projectJsonFile) into projectArray
+   return projectArray
+end project_GetArrayFromFolder
+
+command project_StoreArray projectFolder, projectArray
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   array_ToFile projectJsonFile, projectArray
+   return projectJsonFile
+end project_StoreArray
+
+command project_DeleteArray projectName
+   put project_JsonFile (projectName) into someFile
+   delete file someFile
+   return someFile
+end project_DeleteArray
 
 
 --> Project | Files | Convert
@@ -193,46 +196,6 @@ command project_DeleteValue someKey, projectName
 end project_DeleteValue
 
 
---> Project | Array
--
-function project_GetArrayFromFolder projectFolder
-   put project_ConstructJsonFile (projectFolder) into projectJsonFile
-   put array_FetchModel (projectJsonFile) into projectArray
-   return projectArray
-end project_GetArrayFromFolder
-
-command project_StoreArray projectFolder, projectArray
-   put project_ConstructJsonFile (projectFolder) into projectJsonFile
-   array_SaveModel projectJsonFile, projectArray
-   return projectJsonFile
-end project_StoreArray
-
-command project_DeleteArray projectName
-   put project_GetJsonFile (projectName) into someFile
-   delete file someFile
-   return someFile
-end project_DeleteArray
-
-
---> Project | Array | Files
--
-function project_GetArrayFile projectName
-   put project_GetFolder (projectName) & "lcw_project.array" into projectArrayFile
-   return projectArrayFile
-end project_GetArrayFile
-
-function project_GetJsonFile projectName
-   put project_GetFolder (projectName) into projectFolder
-   put project_ConstructJsonFile (projectFolder) into projectJsonFile
-   return projectJsonFile
-end project_GetJsonFile
-
-function project_ConstructJsonFile projectFolder
-   put projectFolder & "lcw_project.json" into projectJsonFile
-   return projectJsonFile
-end project_ConstructJsonFile
-
-
 --> Project | Set Array
 -
 function project_CurrentFrontScripts
@@ -293,105 +256,3 @@ function project_ListOpenStackNames projectName, pRepoFolder
    delete char -1 of stackNames
    return stackNames
 end project_ListOpenStackNames
-
-
---> Library
--
-/*
-These handlers store LCW project folders s00 that they can be in various places.
-*/
-
-command library_StoreProjectFolder projectName, projectFolder
-   put library_FetchProjectArray (projectName) into projectArray
-   --
-   put projectFolder into projectArray ["projectFolder"]
-   set the itemdelimiter to slash
-   if item - 2 of projectFolder = "modules" then
-      put "module" into projectArray ["projectType"]
-   else
-      put "project" into projectArray ["projectType"]
-   end if
-   --
-   library_StoreProjectArray projectName, projectArray
-end library_StoreProjectFolder
-
-function library_FetchProjectData
-   put lcw_FetchArray ("lcw_ProjectDataLibrary.array") into libraryProjectData
-   return libraryProjectData
-end library_FetchProjectData
-
-command library_StoreProjectData libraryProjectData
-   lcw_StoreArray "lcw_ProjectDataLibrary.array", libraryProjectData
-end library_StoreProjectData
-
-
---> Library | Project | Model | Folders
--
-function library_ListProjectModules
-   put library_FetchProjectData() into libraryProjectData
-   put "module" into projectType
-   repeat for each key projectName in libraryProjectData
-      put libraryProjectData [projectName]["projectType"] into someType
-      -- put libraryProjectData [projectName]["projectFolder"] into someFolder
-      if someType = projectType then
-         put projectName & CR after projectNames
-      end if
-   end repeat
-   delete char -1 of projectNames
-   return projectNames
-end library_ListProjectModules
-
-
---> Library | Project | Model
--
-command library_TidyProjectModel
-   put library_FetchProjectData() into libraryProjectData
-   repeat for each key projectName in libraryProjectData
-      put libraryProjectData [projectName]["projectType"] into someType
-      put libraryProjectData [projectName]["projectFolder"] into someFolder
-      switch
-         case projectName is empty
-            delete variable libraryProjectData [projectName]
-            break
-         case someType is not among the items of "project,module"
-            delete variable libraryProjectData [projectName]
-            break
-         case there is not a folder someFolder
-            delete variable libraryProjectData [projectName]
-            break
-         default
-            -- all is fine
-      end switch
-   end repeat
-   library_StoreProjectData libraryProjectData
-end library_TidyProjectModel
-
-function library_FetchProjectValue someKey, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put library_FetchProjectArray (pProjectName) into projectArray
-   put projectArray [someKey] into someValue
-   return someValue
-end library_FetchProjectValue
-
-command library_SaveProjectValue someKey, someValue, pProjectName
-   if pProjectName is empty then put env_GetProjectFocus() into pProjectName
-   put library_FetchProjectArray (pProjectName) into projectArray
-   put someValue into projectArray [someKey]
-   library_StoreProjectArray pProjectName, projectArray
-   return projectArray
-end library_SaveProjectValue
-
-function library_FetchProjectArray projectName
-   -- was "library_FetchProjectArray"
-   -- if projectName is empty then put env_GetProjectFocus() into projectName
-   put library_FetchProjectData() into libraryProjectData
-   put libraryProjectData [projectName] into projectArray
-   return projectArray
-end library_FetchProjectArray
-
-command library_StoreProjectArray projectName, projectArray
-   put library_FetchProjectData() into libraryProjectData
-   put projectArray into libraryProjectData [projectName]
-   library_StoreProjectData libraryProjectData
-   return libraryProjectData
-end library_StoreProjectArray

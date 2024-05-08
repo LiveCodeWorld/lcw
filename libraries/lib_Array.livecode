@@ -10,6 +10,9 @@ version: 0.6
 
 --> Working on
 -
+
+--> Move
+-
 function linkArray_Reverse someArray, pStrip
    local reversedArray
    repeat for each key someKey in someArray
@@ -21,6 +24,9 @@ function linkArray_Reverse someArray, pStrip
    return reversedArray
 end linkArray_Reverse
 
+
+--> Array | Reverse
+-
 function array_Reverse someArray, pQuick, pStrip
    local reversedArray
    if pQuick is not false then
@@ -54,36 +60,6 @@ function array_ConstructReverseDictionary idArray
    end repeat
    return reversedArray
 end array_ConstructReverseDictionary
-
-
---> JSON
--
-function json_FromArray pArray, pForceRootType, pPretty
-   -- put jsonExport (pArray) into someJSON -- not the same
-   
-   repeat for each key tKey in pArray
-      if pArray[tKey] is an array then
-         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
-      end if
-   end repeat
-   return (mergJSONEncode("pArray",pForceRootType,pPretty))
-end json_FromArray
-
-function json_ToArray pJSON
-   local tArray,tKeys
-   if pJSON is empty then return false
-   -- put jsonImport (pJSON) into tArray -- not the same
-   
-   try -- as otherwise an error with non-json causes script to exit
-      if pJSON is empty then return empty
-      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
-         put json_ToArray(tArray[tKey]) into tArray[tKey]
-      end repeat
-      return tArray
-   catch e
-      return empty
-   end try
-end json_ToArray
 
 
 --> Array
@@ -163,24 +139,6 @@ end array_StripEmptyKeys
 
 --> Arrays
 -
-function array_Fetch someFile
-   put url ("binfile:" & someFile) into encodedDataArray
-   if encodedDataArray is empty then return empty
-   put arraydecode (encodedDataArray) into modelArray
-   return modelArray
-end array_Fetch
-
-command array_Save someFile, modelArray
-   if keys(modelArray) is empty then
-      delete file someFile
-   else
-      set the itemdelimiter to "/"
-      put item 1 to -2 of someFile into someFolder
-      folder_CreateNested someFolder
-      put arrayencode (modelArray) into url ("binfile:" & someFile)
-   end if
-end array_Save
-
 function array_PruneLeaves someArray
    repeat for each key someKey in someArray
       put someArray [someKey] into testLeaf

@@ -51,13 +51,13 @@ Preferences stored in a standard single file as an array
 
 function pref_FetchData
    put pref_File() into someFile
-   put array_Fetch (someFile) into dataArray
+   put array_Get (someFile) into dataArray
    return dataArray
 end pref_FetchData
 
 command pref_StoreData dataArray
    put pref_File() into someFile
-   array_Save someFile, dataArray
+   array_Set someFile, dataArray
    return someFile
 end pref_StoreData
 
