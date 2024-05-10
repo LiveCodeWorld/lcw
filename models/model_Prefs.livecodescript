@@ -15,20 +15,7 @@ These are system wide user preferences.
 These utility handlers are for manipulating global variables when you only have there name,
 and this is passed to you in a script. Otherwise you can simply declare the global in your script and do not need to use "do".
 
-function env_GetProjectFocus
-   breakpoint -- no such thing any more
-   global gLCW
-   put gLCW ["environment"]["current project"] into currentProjectFocus
-   return currentProjectFocus
-end env_GetProjectFocus
-
-command env_SetProjectFocus currentProjectFocus
-   breakpoint -- no such thing any more
-   global gLCW
-   put currentProjectFocus into gLCW ["environment"]["current project"]
-   return gLCW ["environment"]
-end env_SetProjectFocus
-
+Preferences stored as an array in a global variable gLCW ["prefsArray"]
 */
 
 
@@ -64,10 +51,6 @@ end pref_StoreData
 
 --> Pref | Global | Model
 -
-/*
-Preferences stored as an array in a global variable gLCW ["prefsArray"]
-*/
-
 function pref_GetValue prefName
    global gLCW
    return gLCW ["prefsArray"][prefName]

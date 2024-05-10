@@ -17,6 +17,31 @@ We can split into handlers later when we need.
 
 --> Working on
 -
+command project_UpdateArray projectName
+   if exists (stack projectName) is false then return empty
+   
+   # Construct projectArray and save (including modules)
+   put the project_Folder of stack projectName into projectFolder
+   project_ExportMenusAndStackFiles projectFolder
+   
+   # Set project home stackfiles (requires lib_StackFiles)
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the stackfile_Array of stack projectName to stackFileArray
+   save stack projectName
+   
+   return projectArray
+end project_UpdateArray
+
+command project_ExportMenusAndStackFiles projectFolder 
+   # Construct project array and update global menu array
+   put project_ConstructArrayFromFolder (projectFolder) into projectArray
+   
+   # Store project array
+   project_StoreArray projectFolder, projectArray
+   
+   return projectArray
+end project_ExportMenusAndStackFiles
+
 command stackFile_FixStackFiles projectName
    put project_ConstructStackFileArray (projectName) into stackFileArray
    set the stackfile_Array of stackFileStack to stackFileArray
@@ -26,6 +51,30 @@ command stackFile_FixStackFiles projectName
    return resultArray
 end stackFile_FixStackFiles
 
+
+--> Props
+-
+setprop menu_Update someBoolean
+   -- called by "script_ExportAndIndexMenus" every time we apps (compile) a scriptField 
+   put the long id of the target into mController
+   menu_ReIndexController mController
+   put the result into projectArray
+   return projectArray
+end menu_Update
+
+getprop script_Diff [pContextLineNums]
+   if pContextLineNums is not a number then put 0 into pContextLineNums
+   --
+   put the script of the target into controlScript
+   put the exported_Script of the target into exportedScript
+   --
+   put DiffCompare (controlScript, exportedScript, pContextLineNums) into uDiff
+   return uDiff
+end script_Diff
+
+
+--> Tidy
+-
 command env_ExportMenusAndStackFiles pListAll
    put env_ListActiveProjects (pListAll) into projectNames
    repeat for each line projectName in projectNames
@@ -36,25 +85,6 @@ command env_ExportMenusAndStackFiles pListAll
       end if
    end repeat
 end env_ExportMenusAndStackFiles
-
-command project_UpdateArray projectName
-   if exists (stack projectName) is false then return empty
-   
-   put project_StoreArray
-   # Construct projectArray (including modules)
-   put the project_Folder of stack projectName into projectFolder
-   put project_ConstructArrayFromFolder (projectFolder) into projectArray
-   
-   # Set project home stackfiles (requires lib_StackFiles)
-   put projectArray ["stackFileArray"] into stackFileArray
-   set the stackfile_Array of stack projectName to stackFileArray
-   
-   # Save
-   project_StoreArray projectFolder, projectArray
-   save stack projectName
-   
-   return projectArray
-end project_UpdateArray
 
 command project_UseStackFiles projectName, pFixFirst
    if exists (stack projectName) is false then
@@ -235,17 +265,6 @@ on module_Rename oldModuleStackName, newModuleStackName, projectName
 end module_Rename
 
 
---> Props
--
-setprop menu_Update someBoolean
-   -- called by "script_ExportAndIndexMenus" every time we apps (compile) a scriptField 
-   put the long id of the target into mController
-   menu_ReIndexController mController
-   put the result into projectArray
-   return projectArray
-end menu_Update
-
-
 --> Menu | Working on
 -
 command menu_ReIndexController mController
@@ -282,18 +301,8 @@ command env_LoadMenusAndStackFiles
 end env_LoadMenusAndStackFiles
 
 
---> Script | Diff
+--> Script
 -
-getprop script_Diff [pContextLineNums]
-   if pContextLineNums is not a number then put 0 into pContextLineNums
-   --
-   put the script of the target into controlScript
-   put the exported_Script of the target into exportedScript
-   --
-   put DiffCompare (controlScript, exportedScript, pContextLineNums) into uDiff
-   return uDiff
-end script_Diff
-
 command script_ExportAndIndexMenus scriptObject
    -- IDE compile button dispatches "script_ExportAndIndexMenus"
    -- Must be sent after the script is pplied.

@@ -42,6 +42,154 @@ command lcw_LoadCustomUserProject pForceLoad
 end lcw_LoadCustomUserProject
 
 
+--> Props
+-
+getprop module_Folder [pModuleName]
+   put the template_Object of the target into tObject
+   if exists (tObject) is true then
+      -- we are asking about a view
+      put the stack_Object of tObject into stackObject
+   else
+      put the stack_Object of the target into stackObject
+   end if
+   put the effective filename of stackObject into stackPath
+   if stackPath is empty then return empty
+   
+   ## Find
+   put module_FindFolder (stackPath) into maybeModuleFolder
+   --
+   set the itemdelimiter to slash
+   put item -2 of maybeModuleFolder into testPathItem
+   switch
+      case maybeModuleFolder is empty
+         return empty
+      case pModuleName is not empty
+         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
+         return moduleFolder
+      case testPathItem = "modules"
+         return maybeModuleFolder
+      default
+         return empty
+   end switch
+end module_Folder
+
+getprop module_HomeStackPath [moduleName]
+   put the module_Folder [moduleName] of the target into moduleFolder
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
+   if exists (stack moduleHomeStackPath) is false then return empty
+   return moduleHomeStackPath
+end module_HomeStackPath
+
+getprop module_Names
+   put the project_Folder of the target into projectFolder
+   put projectFolder & "modules/" into modulesFolder
+   put folder_ListShort (modulesFolder) into moduleNames
+   return moduleNames
+end module_Names
+
+getprop project_UsedStackNames
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackNames (projectName) after stackNames
+   
+   if projectName = "LCW" then
+      -- here we add the root "LCW" stack
+      -- it may be better not to use the home stacks and instead have minmal scripts there.
+      put "LCW" & CR & stackNames into usedStackNames
+      return word 1 to -1 of usedStackNames
+   else
+      return stackNames
+   end if
+end project_UsedStackNames
+
+getprop project_Name
+   -- assume folder name = project name
+   -- only works now for top level stacks, libs, models etc
+   set the itemdelimiter to slash
+   put the project_Folder of the target into projectFolder
+   return item -1 of projectFolder
+end project_Name
+
+getprop project_Folder
+   -- latest simplest version based on naming conventions and folder structure
+   -- does not allow projects outside of the LCW reop folder  
+   
+   put the effective filename of the defaultstack into stackPath
+   --
+   set the itemdelimiter to slash
+   put env_GetRepoFolder() into repoFolder
+   put the number of items of repoFolder + 1 into itemNum
+   put item 1 to itemNum of stackPath & slash into projectFolder
+   --
+   return projectFolder
+end project_Folder
+
+getprop project_IsActive
+   put the project_Name of the target into projectName
+   put env_ProjectIsActive (projectName) into someBoolean
+   return someBoolean
+end project_IsActive
+
+getprop project_HomeStack
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into stackPath
+   
+   put project_FindHomeStackPath (stackPath) into projectStackPath
+   if projectStackPath is empty then return empty
+   
+   put the name of stack projectStackPath into stackObject
+   return stackObject 
+end project_HomeStack
+
+getprop project_UsedStackPaths
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackPaths (projectName) after stackPaths
+   
+   if projectName = "LCW" then
+      put the filename of stack projectName & CR & stackPaths into usedStackPaths
+      return word 1 to -1 of usedStackPaths
+   else
+      return stackPaths
+   end if
+end project_UsedStackPaths
+
+getprop project_DependencyArray
+   put the project_Name of the target into projectName
+   put env_GetRepoFolder() into repoFolder
+   --
+   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
+   return projectDepArray
+end project_DependencyArray
+
+getprop project_HomeStackBrowser
+   put the project_Name of the target into pHomeStackName
+   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
+   return browserWidget
+end project_HomeStackBrowser
+
+getprop stack_SisterFolder [projectName]
+   put the effective filename of the defaultstack into sisterFolder
+   put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
+   return sisterFolder
+end stack_SisterFolder
+
+getprop stack_Folder
+   put the effective filename of the defaultstack into stackFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of stackFolder
+   return stackFolder
+end stack_Folder
+
+getprop stackfile_Array
+   put the stack_Object of the target into someStack
+   put the stackfiles of someStack into stackFileArray
+   split stackFileArray by CR and comma
+   return stackFileArray
+end stackfile_Array
+
+
 --> Env | Model
 -
 function env_GetActiveProjectArray
@@ -334,136 +482,6 @@ command project_AddToMenuModel projectArray
    union projectGlobalMenuArray with gMenuArray
    menu_SetModel projectGlobalMenuArray
 end project_AddToMenuModel
-
-
---> Props | Module
--
-getprop module_Folder [pModuleName]
-   put the template_Object of the target into tObject
-   if exists (tObject) is true then
-      -- we are asking about a view
-      put the stack_Object of tObject into stackObject
-   else
-      put the stack_Object of the target into stackObject
-   end if
-   put the effective filename of stackObject into stackPath
-   if stackPath is empty then return empty
-   
-   ## Find
-   put module_FindFolder (stackPath) into maybeModuleFolder
-   --
-   set the itemdelimiter to slash
-   put item -2 of maybeModuleFolder into testPathItem
-   switch
-      case maybeModuleFolder is empty
-         return empty
-      case pModuleName is not empty
-         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
-         return moduleFolder
-      case testPathItem = "modules"
-         return maybeModuleFolder
-      default
-         return empty
-   end switch
-end module_Folder
-
-getprop module_HomeStackPath [moduleName]
-   put the module_Folder [moduleName] of the target into moduleFolder
-   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
-   if exists (stack moduleHomeStackPath) is false then return empty
-   return moduleHomeStackPath
-end module_HomeStackPath
-
-getprop module_Names
-   put the project_Folder of the target into projectFolder
-   put projectFolder & "modules/" into modulesFolder
-   put folder_ListShort (modulesFolder) into moduleNames
-   return moduleNames
-end module_Names
-
---> Props
--
-getprop project_UsedStackNames
-   local stackNames
-   put the project_Name of the target into projectName
-   put project_ListUsedStackNames (projectName) after stackNames
-   
-   if projectName = "LCW" then
-      -- here we add the root "LCW" stack
-      -- it may be better not to use the home stacks and instead have minmal scripts there.
-      put "LCW" & CR & stackNames into usedStackNames
-      return word 1 to -1 of usedStackNames
-   else
-      return stackNames
-   end if
-end project_UsedStackNames
-
-getprop project_Name
-   -- assume folder name = project name
-   -- only works now for top level stacks, libs, models etc
-   set the itemdelimiter to slash
-   put the project_Folder of the target into projectFolder
-   return item -1 of projectFolder
-end project_Name
-
-getprop project_Folder
-   -- latest simplest version based on naming conventions and folder structure
-   -- does not allow projects outside of the LCW reop folder  
-   
-   put the effective filename of the defaultstack into stackPath
-   --
-   set the itemdelimiter to slash
-   put env_GetRepoFolder() into repoFolder
-   put the number of items of repoFolder + 1 into itemNum
-   put item 1 to itemNum of stackPath & slash into projectFolder
-   --
-   return projectFolder
-end project_Folder
-
-getprop project_IsActive
-   put the project_Name of the target into projectName
-   put env_ProjectIsActive (projectName) into someBoolean
-   return someBoolean
-end project_IsActive
-
-getprop project_HomeStack
-   -- searches the disk based file hierearchy to find the project root
-   put the stack_Object of the target into stackObject
-   put the effective filename of stackObject into stackPath
-   
-   put project_FindHomeStackPath (stackPath) into projectStackPath
-   if projectStackPath is empty then return empty
-   
-   put the name of stack projectStackPath into stackObject
-   return stackObject 
-end project_HomeStack
-
-getprop project_UsedStackPaths
-   local stackNames
-   put the project_Name of the target into projectName
-   put project_ListUsedStackPaths (projectName) after stackPaths
-   
-   if projectName = "LCW" then
-      put the filename of stack projectName & CR & stackPaths into usedStackPaths
-      return word 1 to -1 of usedStackPaths
-   else
-      return stackPaths
-   end if
-end project_UsedStackPaths
-
-getprop project_DependencyArray
-   put the project_Name of the target into projectName
-   put env_GetRepoFolder() into repoFolder
-   --
-   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
-   return projectDepArray
-end project_DependencyArray
-
-getprop project_HomeStackBrowser
-   put the project_Name of the target into pHomeStackName
-   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
-   return browserWidget
-end project_HomeStackBrowser
 
 
 --> Project | Array
@@ -1319,12 +1337,6 @@ function folder_GetSister shortFolder, someFileOrFolder
    return sisterFolder
 end folder_GetSister
 
-getprop stack_SisterFolder [projectName]
-   put the effective filename of the defaultstack into sisterFolder
-   put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
-   return sisterFolder
-end stack_SisterFolder
-
 
 --> Objects
 -
@@ -1365,20 +1377,9 @@ getprop stack_Object
    return the defaultstack
 end stack_Object
 
-getprop stack_Folder
-   put the effective filename of the defaultstack into stackFolder
-   set the itemdelimiter to slash
-   put empty into item -1 of stackFolder
-   return stackFolder
-end stack_Folder
 
-getprop stackfile_Array
-   put the stack_Object of the target into someStack
-   put the stackfiles of someStack into stackFileArray
-   split stackFileArray by CR and comma
-   return stackFileArray
-end stackfile_Array
-
+--> Deps
+-
 function stackFile_FromArray stackFileArray
    combine stackFileArray using CR and comma
    sort stackFileArray by item 1 of each
