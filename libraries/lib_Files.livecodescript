@@ -896,6 +896,17 @@ end _getWindowsImageTypes
 
 --> Folder
 -
+function folder_Within someFolder, sFolders
+   text_AddTrailing someFolder, slash
+   repeat for each line testFolder in sFolders
+      text_AddTrailing testFolder, slash
+      if testFolder begins with someFolder then
+         return true
+      end if
+   end repeat
+   return false
+end folder_Within
+
 function folder_GetSize folderPath
    get folder_DetailedInfo (folderPath)
    put item 2 of it into someSize

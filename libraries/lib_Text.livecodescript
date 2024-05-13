@@ -14,8 +14,16 @@ Beginning to rename handlers that deal with indexes in a modern way to "index_XX
 */
 
 
---> Working on
+--> Index
 -
+function index_CheckSameItems index1, index2
+   sort lines of index1
+   sort lines of index2
+   put word 1 to -1 of index1 into index1
+   put word 1 to -1 of index2 into index2
+   return index1 = index2
+end index_CheckSameItems
+
 command index_Filter @someIndex, filterItems
    put index_GetSortedAndFiltered (someIndex, filterItems) into someIndex
 end index_Filter
@@ -37,6 +45,54 @@ function index_GetSortedAndFiltered someIndex, pFilterItems
    sort lines of sortedAndFiltered
    return sortedAndFiltered
 end index_GetSortedAndFiltered
+
+
+--> Working on
+-
+command text_PrettyQuote @someText, pParamArray
+   if pParamArray is an array then
+      put text_Merge (someText, pParamArray) into someText
+   end if
+   replace "'" with quote in someText
+end text_PrettyQuote
+
+function text_Merge mergeText, paramArray
+   repeat for each key someKey in paramArray
+      put paramArray [someKey] into someValue
+      put "put someValue into" && someKey into doScript
+      do doScript
+   end repeat
+   put merge (mergeText) into translatedText
+   return translatedText
+end text_Merge
+
+
+--> Text | Hash
+-
+function sha1_Hash someData
+   local hexDigest
+   put sha1digest (someData) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end sha1_Hash
+
+function md5_Hash someText
+   local hexDigest
+   put md5digest (someText) into someBinaryData
+   get binarydecode ("H*", someBinaryData, hexDigest)
+   return hexDigest
+end md5_Hash
+
+
+--> Text
+-
+function text_Hash someData, pWhichDigest
+   if pWhichDigest = "sha1" then
+      return sha1_Hash (someData)
+   else
+      return md5_Hash (someData)
+   end if
+end text_Hash
 
 command text_StripReg @wikiText, someReg, pReplaceText
    if matchText (someReg, "\(.*\)") is false then
@@ -61,23 +117,6 @@ command text_StripReg @wikiText, someReg, pReplaceText
    return stripResultArray
 end text_StripReg
 
-
---> Text | Hash
--
-function sha1_Hash someData
-   local hexDigest
-   put sha1digest (someData) into someBinaryData
-   get binarydecode ("H*", someBinaryData, hexDigest)
-   return hexDigest
-end sha1_Hash
-
-function md5_Hash someText
-   local hexDigest
-   put md5digest (someText) into someBinaryData
-   get binarydecode ("H*", someBinaryData, hexDigest)
-   return hexDigest
-end md5_Hash
-
 function text_IsCaps someText
    put "^[^a-z]*$" into someReg
    -- put "\b[A-Z]+\b" into someReg
@@ -93,9 +132,6 @@ function text_IsCaps someText
    return true
 end text_IsCaps
 
-
---> Text
--
 function text_GetMergeVars mergeText
    -- put text_GetBetween ("[[", "]]", someText, startAfterCharNum)
    put "\[\[" into someReg
@@ -114,14 +150,6 @@ function text_GetMergeVars mergeText
       end if
    end repeat
 end text_GetMergeVars
-
-function text_Hash someData, pWhichDigest
-   if pWhichDigest = "sha1" then
-      return sha1_Hash (someData)
-   else
-      return md5_Hash (someData)
-   end if
-end text_Hash
 
 function text_Type someText
    set the itemdelimiter to "|"
@@ -287,26 +315,6 @@ function line_FindInIndex someLine, container, partLine, lineAfter
       end if
    end if
 end line_FindInIndex
-
-
---> Rename
--
-command text_PrettyQuote @someText, pParamArray
-   if pParamArray is an array then
-      put text_Merge (someText, pParamArray) into someText
-   end if
-   replace "'" with quote in someText
-end text_PrettyQuote
-
-function text_Merge mergeText, paramArray
-   repeat for each key someKey in paramArray
-      put paramArray [someKey] into someValue
-      put "put someValue into" && someKey into doScript
-      do doScript
-   end repeat
-   put merge (mergeText) into translatedText
-   return translatedText
-end text_Merge
 
 
 --> Lines and Indexes
@@ -558,12 +566,12 @@ command line_Insert someLine, @someIndex, beforeLineNum
    end if
 end line_Insert
 
-command line_Deletempty @someLines
+command line_DeleteEmpty @someLines
    put CR before someLines
    put CR & "[" & space & tab & "]*" & CR into emptyLineReg
    put replacetext (someLines, emptyLineReg, return) into someLines
    delete char 1 of someLines
-end line_Deletempty
+end line_DeleteEmpty
 
 
 --> Lists

@@ -52,24 +52,30 @@ getprop ide_MenuTitle [shortName]
    return mTitle
 end ide_MenuTitle
 
+function ide_DefaultMenuBarStack
+   put ide_DefaultMenubarStackName() into defaultMenubarStackName
+   put the name of stack defaultMenubarStackName into revMenuBarStack
+   return revMenuBarStack
+end ide_DefaultMenuBarStack
+
+function ide_DefaultMenuGroup
+   put ide_DefaultMenuBarStack() into revMenuBarStack
+   put the long id of  group "revMenuBar" of revMenuBarStack into revMenuGroup
+   return revMenuGroup
+end ide_DefaultMenuGroup
+
+function ide_DefaultMenubarStackName
+   put revIDEPaletteToStackName ("menubar") into revMenuBarStackName
+   return revMenuBarStackName
+end ide_DefaultMenubarStackName
+
 
 --> IDE | Menubar
 -
 command ide_ResetDefaultMenubar
-   put ide_DefaultMenubar() into defaultMenuBarGroup
+   put ide_DefaultMenuGroup() into defaultMenuBarGroup
    set the defaultMenuBar to defaultMenuBarGroup
 end ide_ResetDefaultMenubar
-
-function ide_DefaultMenubar
-   put ide_DefaultMenubarStackName() into defaultMenubarStackName
-   put the long id of group "revMenuBar" of stack defaultMenubarStackName into defaultMenuBarGroup
-   return defaultMenuBarGroup
-end ide_DefaultMenubar
-
-function ide_DefaultMenubarStackName
-   put revIDEPaletteToStackName("menubar") into menubarManagerName
-   return menubarManagerName
-end ide_DefaultMenubarStackName
 
 
 --> Working on

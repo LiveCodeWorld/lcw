@@ -40,6 +40,33 @@ local LocalArray
 
 --> Working on
 -
+on hiliteChanged
+   -- hack - cant stop the flicker when selecting line that is already selected
+   -- called twice due to "set the hilitedElement"
+   -- lock messages makes no difference
+   if LocalArray ["just set hilitedElement"] is true then
+      put false into LocalArray ["just set hilitedElement"]
+      return empty
+   end if
+   
+   put _treeWidget() into treeWidget
+   put the hilitedElement of treeWidget into pathItems
+   if pathItems is empty then
+      put LocalArray ["previousHilitedElement"] into pathItems
+      set the hilitedElement of treeWidget to pathItems
+      put true into LocalArray ["just set hilitedElement"]
+   else
+      put pathItems into LocalArray ["previousHilitedElement"]
+      put false into LocalArray ["just set hilitedElement"]
+   end if
+   
+   if the controlKey is "Down" then
+      -- put the line_Menu of me into lineMenu
+      menu_PopUp -- lineMenu
+   else
+      _displaySelectedValue treeWidget
+   end if
+end hiliteChanged
 
 
 --> Tools
@@ -82,7 +109,16 @@ on mouseUp
          put the menu_Title of headerWidget into mTitle
          --
          put the menu_Button of me into mButton
-         mArray_PopUp mTitle, mButton
+         try
+            mArray_PopUp mTitle, mButton
+         catch sError
+            mArray_PopUp "Global | Module | Tree | Menu", mButton
+            
+            put the title_Text of me into viewName
+            put menu_GlobalTitleFromViewName (viewName) into moduleMenuTitle
+            put "Error with menu_Edit" && kwote (moduleMenuTitle)
+            -- lcw_Notify ("Error with menu" && moduleMenuTitle)
+         end try
       default
          -- clicked on the title
    end switch
@@ -100,6 +136,7 @@ on actionInspect pPath
 end actionInspect
 
 command actionDoubleClick pathItems
+   -- not called
    put the selected_Value of me into someValue
    put the mouse_DoubleUp of me into mouseDoubleUpCommand
    if mouseDoubleUpCommand is empty then
@@ -115,34 +152,6 @@ on resizeControl
    put the rect of me into viewRect
    LayoutControl viewRect
 end resizeControl
-
-on hiliteChanged
-   -- hack - cant stop the flicker when selecting line that is already selected
-   -- called twice due to "set the hilitedElement"
-   -- lock messages makes no difference
-   if LocalArray ["just set hilitedElement"] is true then
-      put false into LocalArray ["just set hilitedElement"]
-      return empty
-   end if
-   
-   put _treeWidget() into treeWidget
-   put the hilitedElement of treeWidget into pathItems
-   if pathItems is empty then
-      put LocalArray ["previousHilitedElement"] into pathItems
-      set the hilitedElement of treeWidget to pathItems
-      put true into LocalArray ["just set hilitedElement"]
-   else
-      put pathItems into LocalArray ["previousHilitedElement"]
-      put false into LocalArray ["just set hilitedElement"]
-   end if
-   
-   if the controlKey is "Down" then
-      -- put the line_Menu of me into lineMenu
-      menu_PopUp -- lineMenu
-   else
-      _displaySelectedValue treeWidget
-   end if
-end hiliteChanged
 
 private command _displaySelectedValue pTreeWidget
    if pTreeWidget is empty then put _treeWidget() into pTreeWidget
