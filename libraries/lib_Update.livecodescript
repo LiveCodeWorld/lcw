@@ -23,6 +23,7 @@ command project_UpdateArray projectName
    # Construct projectArray and save (including modules)
    put the project_Folder of stack projectName into projectFolder
    project_ExportMenusAndStackFiles projectFolder
+   put the result into projectArray
    
    # Set project home stackfiles (requires lib_StackFiles)
    put projectArray ["stackFileArray"] into stackFileArray

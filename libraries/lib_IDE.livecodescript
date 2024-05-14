@@ -60,7 +60,7 @@ end ide_DefaultMenuBarStack
 
 function ide_DefaultMenuGroup
    put ide_DefaultMenuBarStack() into revMenuBarStack
-   put the long id of  group "revMenuBar" of revMenuBarStack into revMenuGroup
+   put the long id of group "revMenuBar" of revMenuBarStack into revMenuGroup
    return revMenuGroup
 end ide_DefaultMenuGroup
 
@@ -169,22 +169,6 @@ command ide_ResetMenus
    _ReIndexLocalIdeMenus
    ide_AddBehaviorHacks
 end ide_ResetMenus
-
-private command _ReIndexLocalIdeMenus
-   -- for when things go wrong
-   delete variable LocalArray ["environment"]["menu"]
-   repeat for each item ideElement in "List,Script,Recent"
-      repeat for each item shortTitle in "Default,Authoring, Watch"
-         put ide_ConstructMenuController (ideElement, shortTitle) into mController
-         if exists (mController) is true then
-            set the menu_Update of mController to true
-            ide_SetMenuTitle ideElement, shortTitle
-         end if
-      end repeat
-   end repeat
-   put LocalArray ["environment"]["menu"] into localEnvMenuArray
-   return localEnvMenuArray
-end _ReIndexLocalIdeMenus
 
 
 --> IDE | Menu | List
@@ -500,3 +484,21 @@ command scriptField_SetTokenInfo scriptLine, testScriptLine, @thisTokenNum, @nex
    end if
 end scriptField_SetTokenInfo
 
+
+--> Private
+-
+private command _ReIndexLocalIdeMenus
+   -- for when things go wrong
+   delete variable LocalArray ["environment"]["menu"]
+   repeat for each item ideElement in "List,Script,Recent"
+      repeat for each item shortTitle in "Default,Authoring, Watch"
+         put ide_ConstructMenuController (ideElement, shortTitle) into mController
+         if exists (mController) is true then
+            set the menu_Update of mController to true
+            ide_SetMenuTitle ideElement, shortTitle
+         end if
+      end repeat
+   end repeat
+   put LocalArray ["environment"]["menu"] into localEnvMenuArray
+   return localEnvMenuArray
+end _ReIndexLocalIdeMenus
