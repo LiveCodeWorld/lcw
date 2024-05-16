@@ -4,14 +4,41 @@
 license: GPLv3
 name: model_GlobalMenu
 type: model
-version: 0.7
+version: 0.8
 
-
---> Menu | Global | Model
--
 /*
-This is the only place in model_GlobalMenu that reference gLCW
+This is the model for staring the arrays that are used my LCW menu-tools.
+
+Currently still using global variable gLCW
+Should be able to move this to local variable here in this model without issue as the global variable is not accessed directly.
 */
+
+--> Menu  | Model | Props
+-
+getprop menu_Controller mTitle
+   return menu_GetGlobalController (mTitle)
+end menu_Controller
+
+setprop menu_Controller [mTitle] mController
+   menu_SetGlobalController mTitle, mController
+   return the result
+end menu_Controller
+
+
+--> Menu | Model
+-
+function menu_GetGlobalController gMenuTitle
+   put menu_GetModel() into gMenuModel
+   put gMenuModel [gMenuTitle]["mController"] into mController
+   return mController
+end menu_GetGlobalController
+
+command menu_SetGlobalController gMenuTitle, scriptObject
+   put menu_GetModel() into gMenuModel
+   put the rugged_ID of scriptObject into gMenuModel [gMenuTitle]["mController"]
+   menu_SetModel gMenuModel
+   return the result
+end menu_SetGlobalController
 
 function menu_GetModel
    global gLCW
@@ -102,22 +129,6 @@ function menu_ListGlobalObjects
    delete char -1 of mControllers
    return mControllers
 end menu_ListGlobalObjects
-
-
---> Menu | Global | Model | Controller
--
-function menu_GetGlobalController gMenuTitle
-   put menu_GetModel() into gMenuModel
-   put gMenuModel [gMenuTitle]["mController"] into mController
-   return mController
-end menu_GetGlobalController
-
-command menu_SetGlobalController gMenuTitle, scriptObject
-   put menu_GetModel() into gMenuModel
-   put the rugged_ID of scriptObject into gMenuModel [gMenuTitle]["mController"]
-   menu_SetModel gMenuModel
-   return the result
-end menu_SetGlobalController
 
 command menu_RemoveGlobalController gMenuTitle
    put menu_GetModel() into gMenuModel

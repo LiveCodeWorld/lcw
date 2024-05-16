@@ -53,6 +53,14 @@ command user_SetValue someKey, shortArrayFile, someValue
    return modelDataFile
 end user_SetValue
 
+command user_DeleteValue someKey, shortArrayFile
+   put user_GetArray (shortArrayFile) into userArray
+   delete variable userArray [someKey]
+   user_SetArray shortArrayFile, userArray
+   put the result into modelDataFile
+   return modelDataFile
+end user_DeleteValue
+
 function user_GetModelFile shortFile
    put user_GetFolder() into projectFolder
    put model_GetDataFile ("lcw_User", projectFolder, shortFile) into modelFile

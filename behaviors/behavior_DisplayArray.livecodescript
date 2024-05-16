@@ -9,28 +9,6 @@ version: 0.5
 
 /*
 This behavior_DisplayArray script only stack behavior controls the properties of the stack "Display Array".
-
-To do: Should consider moving it to the behavior of the view rather than the stack -,
-so that if the view is cloned and not the whole stack the view keeps working.
-
-getprop menu_Controller [pMenuTitle]
-   put menu_GetGlobalController (pMenuTitle) into mController
-   if exists (mController) is true then return mController
-   
-   put the menu_Controller of me into mController
-   if exists (mController) is true then return mController
-   return empty
-end menu_Controller
-
-setprop menu_Controller mController
-   if exists (mController) is false then return empty
-   --
-   set the menu_Controller of me to mController
-   --
-   put the script_MenuTitles of mController into mTitles
-   set the title_Menu of me to mTitles
-   return mTitles
-end menu_Controller
 */
 
 --> Variables
@@ -40,6 +18,39 @@ local LocalArray
 
 --> Working on
 -
+setprop tool_MenuBit [projectName] menuBit
+   -- used to use "display_SetToolMenus"
+   put the menu_Button of me into mButton
+   --
+   set the menumode of mButton to "pulldown"
+   set the style of mButton to "menu"
+   
+   # Construct Menu Titles
+   get "Global |" && menuBit
+   put it && "| Menu" into titleMenu
+   put it && "| Line | Menu" into lineMenu
+   
+   # Construct mDoubleUp
+   replace "|" with empty in menuBit
+   replace space with empty in menuBit
+   put "mDoubleUp_" & menuBit into mDoubleUp
+   
+   # Set menus and mouse
+   set the title_Menu of me to titleMenu
+   set the line_Menu of me to lineMenu
+   set the mouse_DoubleUp of me to mDoubleUp
+   
+   # Create menus if needed
+   dispatch "ask_CreateMenuFromObject" to me with titleMenu,projectName
+   
+   if the shiftKey is "Down" then
+      dispatch "ask_CreateMenuFromObject" to me with lineMenu,projectName
+      dispatch "ask_CreateMouseDoubleUpHandler" to me with mDoubleUp
+   end if
+   --
+   return titleMenu
+end tool_MenuBit
+
 on hiliteChanged
    -- hack - cant stop the flicker when selecting line that is already selected
    -- called twice due to "set the hilitedElement"
@@ -79,17 +90,61 @@ setprop mouse_DoubleUp mDoubleUp
    set the mouse_DoubleUp of me to mDoubleUp
 end mouse_DoubleUp
 
-getprop data_MenuBit
+getprop tool_MenuBit
    get the title_Menu of me
    set the itemdelimiter to "|"
    put word 1 to -1 of item 2 to -2 of it into menuBit
    return menuBit
-end data_MenuBit
+end tool_MenuBit
 
-setprop data_MenuBit [projectName] menuBit
-   put the long id of me into displayView
-   display_SetToolMenus menuBit, displayView, projectName
-end data_MenuBit
+
+--> Props | Target
+-
+getprop mouse_Target
+   return the mouse_Target of me
+end mouse_Target
+
+setprop mouse_Target mTarget
+   set the mouse_Target of me to mTarget
+end mouse_Target
+
+getprop menu_Target [mTitlePath]
+   put the menu_Target of me into mTarget
+   --
+   put the displayed_Object of me into displayedObject
+   switch 
+      case mTarget is not empty
+         return mTarget
+      case displayedObject is not empty
+         return displayedObject
+      default
+         return the long id of me
+   end switch
+end menu_Target
+
+setprop menu_Target [mTitlePath] mTarget
+   set the menu_Target of me to mTarget
+end menu_Target
+
+getprop title_Controller
+   put the title_Controller of me into mController
+   if exists (mController) then return mController
+   
+   ## Default
+   put the title_Menu of me into titleMenu
+   set the menu_Controller [titleMenu] of me to mController
+   return mController
+end title_Controller
+
+getprop line_Controller
+   put the line_Controller of me into mController
+   if exists (mController) then return mController
+   
+   ## Default
+   put the line_Menu of me into lineMenu
+   set the menu_Controller [lineMenu] of me to mController
+   return mController
+end line_Controller
 
 
 --> Events
@@ -309,48 +364,6 @@ setprop line_Menu mName
    set the line_Menu of me to mName
 end line_Menu
 
-getprop menu_Target [mTitlePath]
-   put the menu_Target of me into mTarget
-   --
-   put the displayed_Object of me into displayedObject
-   switch 
-      case mTarget is not empty
-         return mTarget
-      case displayedObject is not empty
-         return displayedObject
-      default
-         return the long id of me
-   end switch
-end menu_Target
-
-setprop menu_Target [mTitlePath] mTarget
-   set the menu_Target of me to mTarget
-end menu_Target
-
-getprop title_Controller
-   put the title_Controller of me into mController
-   if exists (mController) then
-      return mController
-   end if
-   
-   ## Default
-   put the title_Menu of me into mTitle
-   put menu_GetGlobalController (mTitle) into mController
-   return mController
-end title_Controller
-
-getprop line_Controller
-   put the line_Controller of me into mController
-   if exists (mController) then
-      return mController
-   end if
-   
-   ## Default
-   put the line_Menu of me into mTitle
-   put menu_GetGlobalController (mTitle) into mController
-   return mController
-end line_Controller
-
 
 --> Model
 -
@@ -404,16 +417,8 @@ setprop displayed_Index [someTitle] someIndex
 end displayed_Index
 
 
---> Props | Events
+--> Props | Events | Custom
 -
-getprop mouse_Target
-   return the mouse_Target of me
-end mouse_Target
-
-setprop mouse_Target mTarget
-   set the mouse_Target of me to mTarget
-end mouse_Target
-
 getprop drop_Command
    return the drop_Command of me
 end drop_Command
@@ -543,27 +548,6 @@ end view_MenuArray
 
 --> Model | ArrayIndex
 -
-setprop display_Interactions [mDoubleUp] menuBit
-   if mDoubleUp is empty then
-      put menuBit into mDoubleUp
-      replace "|" with empty in mDoubleUp 
-      replace space with empty in mDoubleUp
-      put "mDoubleUp_" before mDoubleUp
-   end if
-   set the mouse_DoubleUp of me to mDoubleUp
-   --
-   put "Global |" && menuBit && "| Menu" into titleMenu
-   put "Global |" && menuBit && "| Line | Menu" into lineMenu
-   --
-   set the title_Menu of me to titleMenu
-   set the line_Menu of me to lineMenu
-   --
-   put menu_GetGlobalController (titleMenu) into titleController
-   if exists (titleController) then
-      set the mouse_Target of me to titleController
-   end if
-end display_Interactions
-
 getprop index_Array
    put the view_Data of me into indexArray
    return indexArray
