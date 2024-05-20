@@ -1119,11 +1119,15 @@ function lcw_HomeStackName
    return "LCW"
 end lcw_HomeStackName
 
-function lcw_Ask someQuestion, pDefault, pTitle, pDisplayView
-   text_ReQuote someQuestion
+function lcw_Ask someQuestion, pDefault, pDisplayView, pVarValue
+   text_ReQuote someText, pVarValue
+   --
    if exists (pDisplayView) then
-      -- bug: sheet not working
-      ask someQuestion with pDefault as sheet
+      if pTitle is not empty then -- makes no difference on MacOS
+         ask someQuestion with pDefault titled pTitle as sheet
+      else
+         ask someQuestion with pDefault as sheet
+      end if
    else
       ask someQuestion with pDefault
    end if
@@ -1416,8 +1420,13 @@ command stack_StopUsed stackObjects
    end repeat
 end stack_StopUsed
 
-command text_ReQuote @someText
+command text_ReQuote @someText, pMergeValue, pMergeKey
    replace "'" with quote in someText
+   if pMergeValue is not empty then
+      if pMergeKey is empty then put "var" into pMergeKey
+      do "put pMergeValue into pMergeKey"
+      put merge (someText) into someText
+   end if
 end text_ReQuote
 
 command text_AddTrailing @someText, someChar

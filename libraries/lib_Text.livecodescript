@@ -714,8 +714,13 @@ function text_StripJunk someString
    return cleanText
 end text_StripJunk
 
-command text_ReQuote @someText
+command text_ReQuote @someText, pMergeValue, pMergeKey
    replace "'" with quote in someText
+   if pMergeValue is not empty then
+      if pMergeKey is empty then put "var" into pMergeKey
+      do "put pMergeValue into pMergeKey"
+      put merge (someText) into someText
+   end if
 end text_ReQuote
 
 function text_Strip someContainer, charsToStrip, replaceWith
