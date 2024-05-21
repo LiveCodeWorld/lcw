@@ -11,13 +11,26 @@ version: 0.7
 
 --> Working On
 -
--- function folder_ListShortFiles someFolder, pShowInvisible
-   return file_ListShort (someFolder, pShowInvisible)
-end folder_ListShortFiles
 
--- function folder_ShortFiles someFolder
-return file_ListShort (someFolder)
-end folder_ShortFiles
+--> File | Home
+-
+command file_SetHome @longFile
+   put $HOME into myHome
+   put the number of chars of myHome into maxNum
+   if char 1 to maxNum of longFile is myHome then
+      put "~" into char 1 to maxNum of longFile
+   end if
+end file_SetHome
+
+command file_ReplaceHome @fileOrFolder
+   if fileOrFolder begins with $HOME then
+      set the itemdelimiter to "/"
+      put the number of items of $HOME into itemNum
+      put "~" into item 1 to itemNum of fileOrFolder
+   else
+      file_SetHome longFile
+   end if
+end file_ReplaceHome
 
 
 --> File | List | Short
@@ -788,25 +801,6 @@ command file_CreateBinary binaryData, filePath, someFileType
       end if
    end if
 end file_CreateBinary
-
-
---> File | Standard Paths
--
-command file_ReplaceHome @fileOrFolder
-   if fileOrFolder begins with $HOME then
-      set the itemdelimiter to "/"
-      put the number of items of $HOME into itemNum
-      put "~" into item 1 to itemNum of fileOrFolder
-   end if
-end file_ReplaceHome
-
-command file_SetHomeRelative @longFile
-   put $HOME into myHome
-   put the number of chars of myHome into maxNum
-   if char 1 to maxNum of longFile is myHome then
-      put "~" into char 1 to maxNum of longFile
-   end if
-end file_SetHomeRelative
 
 
 --> File | Choose

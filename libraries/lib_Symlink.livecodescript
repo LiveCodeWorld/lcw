@@ -99,6 +99,7 @@ end symlink_Destination
 
 function folder_ListShortAll sFolder
    /*
+   Does not work with "~/folder"
    Note: The second find command lists all types of symlinks, not just those linking to directories. 
    To filter only symlinks that point to directories, a more complex command would be required, 
    typically involving additional scripting to test each symlink's target.
