@@ -14,13 +14,21 @@ version: 0.7
 
 --> File | Home
 -
-command file_SetHome @longFile
+command file_AddHome @fileOrFolder, pDontStrip
+   if pDontStrip is false then
+      file_StripHome fileOrFolder
+   else if char 1 of fileOrFolder = "~" then
+      put $HOME into char 1 of fileOrFolder
+   end if
+end file_AddHome
+
+command file_StripHome @fileOrFolder
    put $HOME into myHome
    put the number of chars of myHome into maxNum
-   if char 1 to maxNum of longFile is myHome then
-      put "~" into char 1 to maxNum of longFile
+   if char 1 to maxNum of fileOrFolder is myHome then
+      put "~" into char 1 to maxNum of fileOrFolder
    end if
-end file_SetHome
+end file_StripHome
 
 command file_ReplaceHome @fileOrFolder
    if fileOrFolder begins with $HOME then
@@ -28,7 +36,7 @@ command file_ReplaceHome @fileOrFolder
       put the number of items of $HOME into itemNum
       put "~" into item 1 to itemNum of fileOrFolder
    else
-      file_SetHome longFile
+      file_StripHome longFile
    end if
 end file_ReplaceHome
 

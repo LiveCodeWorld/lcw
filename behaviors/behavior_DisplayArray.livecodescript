@@ -100,7 +100,25 @@ end tool_MenuBit
 
 --> Props | Target
 -
+private command _SetMouseTargets @tObject, @displayView, @mouseTarget
+   put the long id of the target into tObject
+   put the long id of me into displayView
+   put the mouse_Target of me into mouseTarget
+   if exists (mouseTarget) is false then
+      put _DefaultMouseTarget (tObject) into mouseTarget
+   end if
+end _SetMouseTargets
+
+private function _DefaultMouseTarget tObject
+   put the line_Controller of me into mouseTarget
+   if exists (mouseTarget) is false then
+      put tObject into mouseTarget
+   end if
+   return mouseTarget
+end _DefaultMouseTarget
+
 getprop mouse_Target
+   -- set the mouse_Target of me to empty
    return the mouse_Target of me
 end mouse_Target
 
@@ -142,7 +160,7 @@ getprop line_Controller
    
    ## Default
    put the line_Menu of me into lineMenu
-   set the menu_Controller [lineMenu] of me to mController
+   put the menu_Controller [lineMenu] of me into mController
    return mController
 end line_Controller
 
@@ -828,13 +846,6 @@ command LayoutControl cardRect
    set the rect of _footerWidget() to _footerRect (cardRect)
    unlock screen
 end LayoutControl
-
-private command _SetMouseTargets @tObject, @displayView, @mouseTarget
-   put the long id of the target into tObject
-   put the long id of me into displayView
-   put the mouse_Target of me into mouseTarget
-   if exists (mouseTarget) is false then put tObject into mouseTarget
-end _SetMouseTargets
 
 
 --> Props | Title

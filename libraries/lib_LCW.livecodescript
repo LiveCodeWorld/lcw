@@ -11,21 +11,35 @@ version: 0.8
 
 --> Working on
 -
-command display_Loading projectName, pComment
-   env_DisplayLoading projectName, pComment
-   
-   /*
+
+
+--> Display
+-
+command display_LoadProject projectName, pComment
+   -- tell the word we found project dependency
    if pComment is empty then
-      put merge ("Loading project '[[projectName]]'..."), "Loading projects" into pComment
+      put "Loading project '[[projectName]]'..." into commentTemplate
    end if
-   
+   put merge (commentTemplate) into someComment
+   dispatch "lcw_Notify" with someComment,"Loading projects"
+end display_LoadProject
+
+command lcw_Notify someMessage, pTitle, pMergeValue
+   -- needs to work cross platform
+   replace quote with empty in someMessage
+   replace "'" with empty in someMessage
+   text_ReQuote someMessage, pMergeValue
+   --
    try
-      lcw_Notify pComment
+      if pTitle is empty then put "LiveCode World Notification" into pTitle
+      put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell
+      put "with title" && quote & pTitle & quote after someShell
+      put "'" after someShell
+      put shell (someShell) into shellResult
    catch e
-      put pComment
+      put someMessage
    end try
-   */
-end display_Loading
+end lcw_Notify
 
 command lcw_LoadCustomUserProject pForceLoad
    -- initialises non-version controlled private project
@@ -205,18 +219,6 @@ command env_SetActiveProjectArray activeProjectArray
 end env_SetActiveProjectArray
 
 
---> Display
--
-command env_DisplayLoading projectName, pComment
-   -- tell the word we found project dependency
-   if pComment is empty then
-      put "Loading project '[[projectName]]'..." into commentTemplate
-   end if
-   put merge (commentTemplate) into someComment
-   dispatch "lcw_Notify" with someComment,"Loading projects"
-end env_DisplayLoading
-
-
 --> Env
 -
 command env_SetProjectFolder homeStackName, pProjectFolder
@@ -311,7 +313,7 @@ command env_SimpleLoadProject projectName, homeStackPath, pForceLoad
    dispatch "project_PostInit" to stack homeStackPath
    
    -- prety display as everything is slow
-   env_DisplayLoading projectName
+   display_LoadProject projectName
    return empty
 end env_SimpleLoadProject
 
@@ -350,7 +352,7 @@ repeat for each line sisterProjectName in projectDeps
    put env_ConstructProjectFolder (sisterProjectName) into sisterProjectFolder
    if sisterProjectFolder is not empty then next repeat -- already loaded
    
-   display_Loading sisterProjectName
+   display_LoadProject sisterProjectName
    put project_ConstructSisterHomeStackPath (sisterProjectName, projectHomeStackFile) into sisterProjectHomeStackPath
    
    if exists (stack sisterProjectHomeStackPath) is false then
@@ -537,14 +539,14 @@ command project_Start projectName, pForceLoad
    end if
    put the stack_Folder of stack projectName into projectFolder
    --
-   display_Loading projectName
+   display_LoadProject projectName
    --
    env_RecursivelyLoadProjects homeStackObject, pForceLoad -- not dispatching any more
    --
    project_LoadFromFolder projectFolder
    --
    put merge ("Finished project '[[projectName]]'!") into someComment
-   display_Loading projectName, someComment
+   display_LoadProject projectName, someComment
    --
    return homeStackObject
 end project_Start
@@ -910,7 +912,7 @@ command project_Stop projectName
    env_RemoveProject projectName
    --
    put merge ("Stopped project '[[projectName]]'!") into someComment
-   display_Loading projectName, someComment
+   display_LoadProject projectName, someComment
    return true
 end project_Stop
 
@@ -1098,29 +1100,12 @@ command lcw_SetAuthor authorName
    pref_SetValue "userName", authorName
 end lcw_SetAuthor
 
-command lcw_Notify someMessage, pTitle
-   -- needs to work cross platform
-   -- text_ReQuote someMessage
-   replace quote with empty in someMessage
-   replace "'" with empty in someMessage
-   --
-   try
-      if pTitle is empty then put "LiveCode World Notification" into pTitle
-      put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell
-      put "with title" && quote & pTitle & quote after someShell
-      put "'" after someShell
-      put shell (someShell) into shellResult
-   catch e
-      put someComment
-   end try
-end lcw_Notify
-
 function lcw_HomeStackName
    return "LCW"
 end lcw_HomeStackName
 
 function lcw_Ask someQuestion, pDefault, pDisplayView, pVarValue
-   text_ReQuote someText, pVarValue
+   text_ReQuote someQuestion, pVarValue
    --
    if exists (pDisplayView) then
       if pTitle is not empty then -- makes no difference on MacOS
@@ -1420,11 +1405,10 @@ command stack_StopUsed stackObjects
    end repeat
 end stack_StopUsed
 
-command text_ReQuote @someText, pMergeValue, pMergeKey
+command text_ReQuote @someText, pMergeValue
    replace "'" with quote in someText
    if pMergeValue is not empty then
-      if pMergeKey is empty then put "var" into pMergeKey
-      do "put pMergeValue into pMergeKey"
+      put pMergeValue into var
       put merge (someText) into someText
    end if
 end text_ReQuote

@@ -724,7 +724,7 @@ command project_Start homeStackName
    put library_FetchProjectHomeStackObject (homeStackName) into homeStackObject
    put the short name of stack homeStackObject into homeStackName -- just in case ???
    
-   display_Loading homeStackName
+   display_LoadProject homeStackName
    --
    -- could rely on sending "preOpenStack" ???
    dispatch "env_RecursivelyLoadProjects" to homeStackObject -- a project specific customised version of below
@@ -744,7 +744,7 @@ command project_Start homeStackName
    end switch
    
    put merge ("Finished project '[[homeStackName]]'!") into someComment
-   display_Loading homeStackName, someComment
+   display_LoadProject homeStackName, someComment
 end project_Start
 
 command project_Stop projectName
@@ -763,7 +763,7 @@ command project_Stop projectName
    env_RemoveProject projectName
    --
    put merge ("Stopped project '[[projectName]]'!") into someComment
-   display_Loading projectName, someComment
+   display_LoadProject projectName, someComment
 end project_Stop
 
 command project_LoadDeps projectDeps, projectHomeStackFile
@@ -772,7 +772,7 @@ command project_LoadDeps projectDeps, projectHomeStackFile
       put env_ConstructHomePath (sisterProjectName) into sisterProjectFolder
       if sisterProjectFolder is not empty then next repeat -- already loaded
       
-      display_Loading sisterProjectName
+      display_LoadProject sisterProjectName
       put project_ConstructSisterHomeStackPath (sisterProjectName, projectHomeStackFile) into sisterProjectHomeStackPath
       
       if exists (stack sisterProjectHomeStackPath) is false then
@@ -789,7 +789,7 @@ end project_LoadDeps
 -
 /*Try to move these to a separate library, or remove all platform dependencies*/
 
-command display_Loading projectName, pComment
+command display_LoadProject projectName, pComment
    -- should change to display status in the home stack
    if pComment is empty then
       put merge ("Loading project '[[projectName]]'..."), "Loading projects" into pComment
@@ -800,7 +800,7 @@ command display_Loading projectName, pComment
    catch e
       put pComment
    end try
-end display_Loading
+end display_LoadProject
 
 command lcw_Notify someMessage, pTitle
    -- needs to work cross platform
