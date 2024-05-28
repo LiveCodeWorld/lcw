@@ -429,19 +429,9 @@ function env_ListUsedStackPaths pProjectNames
    return word 1 to -1 of envUsedStackPaths
 end env_ListUsedStackPaths
 
+
 --> Private
 -
-private function _FilterLibraryProjectArray projectType, libraryProjectData
-   repeat for each key projectName in libraryProjectData
-      put libraryProjectData [projectName]["projectType"] into someType
-      if someType = projectType then
-         put projectName & CR after projectNames
-      end if
-   end repeat
-   delete char -1 of projectNames
-   return projectNames
-end _FilterLibraryProjectArray
-
 private command _SetProjectNames @pProjectNames
    switch pProjectNames
       case "all"

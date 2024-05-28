@@ -22,6 +22,11 @@ getprop menu_Target [tObject]
    return the display_View of tObject
 end menu_Target
 
+on mDoubleUp_DisplayShortHkey displayView, someLine
+   breakpoint
+   put the title_Text of displayView into someTitle
+end mDoubleUp_DisplayShortHkey
+
 
 --> Global | Array | Line | Menu
 -
@@ -36,11 +41,26 @@ end menu_SelectedValue
 private on _
 end _
 
-on menu_Fetch displayView
-   put the top_Line of displayView into someRoute
-   put "http://localhost" & someRoute into someURL
-   put someURL 
-end menu_Fetch
+getprop checked_CreateLineMenu [arrayView]
+   put the line_Menu of arrayView into mTitle
+   switch mTitle
+      case empty
+         return false
+      case "Global | Array | Line | Menu"
+        return false
+      default
+         return true
+   end switch
+end checked_CreateLineMenu
+
+on menu_CreateLineMenu arrayView
+   put the line_Menu of arrayView into mTitle
+   put the displayed_Object of arrayView into linkedView
+   put the project_Name of linkedView into libName
+   --
+   breakpoint
+   ask_CreateMenuFromObject mTitle, libName
+end menu_CreateLineMenu
 
 on submenu_Dev
    return menu_DevTitle ("Global | Array | Line | Menu")

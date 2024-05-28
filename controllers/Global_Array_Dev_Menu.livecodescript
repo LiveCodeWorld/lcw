@@ -30,10 +30,17 @@ end menu_IsSimple
 
 --> Global | Array | Dev | Menu
 -
-on menu_Behavior displayView
-   put the behavior of displayView into bObject
-   edit the script of bObject
-end menu_Behavior
+on menu_AddMenuButton arrayView
+   put menu_SimpleButton() into simpleMenuButton
+   put the name of simpleMenuButton
+   --
+   copy simpleMenuButton to arrayView
+   put it into newButton
+   set the label of newButton to empty
+   set the name of newButton to "_Menu Button"
+   set the visible of newButton to false
+   dispatch "LayoutControl" to arrayView
+end menu_AddMenuButton
 
 private on _
 end _

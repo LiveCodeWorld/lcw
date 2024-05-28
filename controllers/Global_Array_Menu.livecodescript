@@ -138,6 +138,16 @@ on menu_TreeInspector displayView
    display_ObjectProperties displayView
 end menu_TreeInspector
 
+private on ______
+end ______
+
+on menu_DisplayTemplate arrayView
+   put the view_Name of arrayView into vName
+   put view_GetTemplateObject (vName) into tObject
+   --
+   object_GoTo tObject, true
+end menu_DisplayTemplate
+
 on submenu_Dev
    return menu_DevTitle()
 end submenu_Dev

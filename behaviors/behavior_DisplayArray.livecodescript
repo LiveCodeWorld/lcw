@@ -18,9 +18,71 @@ local LocalArray
 
 --> Working on
 -
+getprop top_Data [pathNum]
+   -- put the selected_TopData of me into topData
+   put _treeWidget() into treeWidget
+   --
+   put the arrayData of treeWidget into aData
+   put the hilitedElement of treeWidget into commaPath
+   if pathNum is a number then
+      subtract 1 from pathNum
+      put item 1 to pathNum of commaPath into topPath
+      split topPath with comma
+      put aData [topPath] into topData
+   else
+      put item 1 of commaPath into topKey
+      put aData [topKey] into topData [topKey]
+   end if
+   return topData
+end top_Data
+
+getprop selected_TopData
+   -- returns the topKey and not just the contents of the array
+   _SetTop topKey, aData
+   put aData [topKey] into topData [topKey]
+   return topData
+end selected_TopData
+
+getprop selected_Array
+   put _treeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   return selectedValue
+end selected_Array
+
+getprop menu_Button
+   return _MenuButton()
+end menu_Button
+
+private function _MyMenuButton
+   if there is a btn "_Menu Button" of me then
+      return the long id of btn "_Menu Button" of me
+   else
+      return empty    
+   end if
+end _MyMenuButton
+
+private function _MenuButton
+   put _MyMenuButton() into myMenuButton
+   if exists (myMenuButton) then
+      return myMenuButton
+   else
+      return menu_SimpleButton()      
+   end if
+end _MenuButton
+
+function menu_SimpleButton
+   if exists (stack "View|Index|Simple") is false then return empty
+   put the long id of btn 1 of cd 1 of stack "View|Index|Simple" into mButton
+   return mButton
+end menu_SimpleButton
+
 setprop tool_MenuBit [projectName] menuBit
    -- used to use "display_SetToolMenus"
-   put the menu_Button of me into mButton
+   put _MenuButton() into mButton
    --
    set the menumode of mButton to "pulldown"
    set the style of mButton to "menu"
@@ -72,8 +134,18 @@ on hiliteChanged
    end if
    
    if the controlKey is "Down" then
-      -- put the line_Menu of me into lineMenu
-      menu_PopUp -- lineMenu
+      put the line_Menu of me into mTitle
+      _NormalizeLineMenu mTitle
+      --
+      if the shiftKey is "Down" then
+         put "Global | Array | Line | Menu" into defaultLineMenu
+         if mTitle is not defaultLineMenu then
+            put defaultLineMenu & tab & "submenu" & tab & "Error" & CR & "-" & CR before mTitle
+         end if
+      end if
+      --
+      put _MenuButton() into mButton
+      mArray_PopUp mTitle, mButton
    else
       _displaySelectedValue treeWidget
    end if
@@ -164,6 +236,33 @@ getprop line_Controller
    return mController
 end line_Controller
 
+getprop line_Menu
+   put the line_Menu of me into mTitle
+   return mTitle
+end line_Menu
+
+private command _NormalizeLineMenu @lineMenuTitle
+   switch
+      case lineMenuTitle is empty
+         put "Global | Array | Line | Menu" into lineMenuTitle
+         break
+      case _LineMenuControllerExists (lineMenuTitle)
+         break
+      default
+         put "Global | Array | Line | Menu" into lineMenuTitle
+         
+         # Ask to create here
+   end switch
+end _NormalizeLineMenu
+
+private function _LineMenuControllerExists lineMenuTitle
+   put the menu_Controller [lineMenuTitle] of me into mController
+   return exists (mController)
+end _LineMenuControllerExists
+
+setprop line_Menu mName
+   set the line_Menu of me to mName
+end line_Menu
 
 --> Events
 -
@@ -181,16 +280,12 @@ on mouseUp
          add 4 to item 2 of pLocation
          put the menu_Title of headerWidget into mTitle
          --
-         put the menu_Button of me into mButton
+         put _MenuButton() into mButton
          try
             mArray_PopUp mTitle, mButton
          catch sError
+            -- show an error-menu
             mArray_PopUp "Global | Module | Tree | Menu", mButton
-            
-            put the title_Text of me into viewName
-            put menu_GlobalTitleFromViewName (viewName) into moduleMenuTitle
-            put "Error with menu_Edit" && kwote (moduleMenuTitle)
-            -- lcw_Notify ("Error with menu" && moduleMenuTitle)
          end try
       default
          -- clicked on the title
@@ -256,17 +351,6 @@ end parent_Array
 
 --> Props | Top
 -
-getprop selected_TopData
-   -- returns the topKey and not just the contents of the array
-   _SetTop topKey, aData
-   put aData [topKey] into topData [topKey]
-   return topData
-end selected_TopData
-
-getprop top_Data
-   return the selected_TopData of me
-end top_Data
-
 getprop top_Key
    return _GetTopKey()
 end top_Key
@@ -368,19 +452,6 @@ end title_Menu
 setprop title_Menu mName
    set the title_Menu of me to mName
 end title_Menu
-
-getprop line_Menu
-   put the line_Menu of me into mName
-   if mName is empty then 
-      return "Global | Array | Line | Menu"
-   else
-      return mName
-   end if
-end line_Menu
-
-setprop line_Menu mName
-   set the line_Menu of me to mName
-end line_Menu
 
 
 --> Model
@@ -537,6 +608,7 @@ getprop menu_Title
    switch targetKind
       case "com.livecode.widget.treeView"
          put the line_Menu of me into mTitle
+         _NormalizeLineMenu mTitle
          return mTitle
       case "com.livecode.widget.headerBar"
          if the controlKey is "Down" then
@@ -747,16 +819,6 @@ setprop selected_LineNum lineNum
    set the hilited_Element of me to lineNum
 end selected_LineNum
 
-getprop selected_Array
-   put _treeWidget() into treeWidget
-   
-   put the hilitedElement of treeWidget into commaKeys
-   put the arrayData of treeWidget into someArray
-   split commaKeys with comma
-   put someArray [commaKeys] into selectedValue
-   return selectedValue
-end selected_Array
-
 getprop selected_Path
    put _treeWidget() into treeWidget
    put the hilitedElement of treeWidget into commaPath
@@ -837,11 +899,18 @@ on refreshDisplay
 end refreshDisplay
 
 command LayoutControl cardRect
+   put _MyMenuButton() into myMenuButton
+   
    lock screen
    put the inner_Rect [cardRect] of me into cardRect
    rect_SubtractMargins cardRect
    
-   set the rect of _headerWidget() to _headerRect (cardRect)
+   put _headerRect (cardRect) into headerRect
+   set the rect of _headerWidget() to headerRect
+   if exists (myMenuButton) then
+      set the rect of myMenuButton to headerRect
+   end if
+   --
    set the rect of _treeWidget() to _fieldRect (cardRect)
    set the rect of _footerWidget() to _footerRect (cardRect)
    unlock screen
@@ -1124,9 +1193,104 @@ end _getValue
 
 --> Deps
 -
+function display_ConstructFoldState ePaths
+   repeat for each item someKey in ePaths
+      put false into foldedArray [someKey]["folded"]
+   end repeat
+   return foldedArray
+end display_ConstructFoldState
+
 function colour_GetRandom
    put random(255) into item 1 of someColour
    put random(255) into item 2 of someColour
    put random(255) into item 3 of someColour
    return someColour
 end colour_GetRandom
+
+
+--> Deps | Geometry
+-
+getprop inner_Rect [groupRect]
+   put the long id of the target into someGroup
+   if groupRect is empty then put the rect of someGroup into groupRect
+   if word 1 of someGroup is not "group" then return groupRect -- only for groups
+   
+   put rect_GetInner (groupRect, someGroup) into innerRect
+   return innerRect
+end inner_Rect
+
+command rect_SubtractMargins @someRect, pMargin
+   margin_Normalize pMargin, leftM, topM, rightM, bottomM
+   put the result into nMargins
+   --
+   add leftM to item 1 of someRect
+   add topM to item 2 of someRect
+   subtract rightM from item 3 of someRect
+   subtract bottomM from item 4 of someRect
+   --
+   return nMargins
+end rect_SubtractMargins
+
+command margin_Normalize someMargin, @leftM, @topM, @rightM, @bottomM
+   if the number of items of someMargin < 4 then
+      put item 1 of someMargin into defaultMargin
+      put defaultMargin into leftM
+      
+      put item 2 of someMargin into actualMargin
+      if actualMargin is empty then
+         put leftM into topM
+      else
+         put actualMargin into topM
+      end if
+      
+      put item 3 of someMargin into actualMargin
+      if actualMargin is empty then
+         put leftM into rightM
+      else
+         put actualMargin into rightM
+      end if
+      
+      put item 4 of someMargin into actualMargin
+      if actualMargin is empty then
+         put topM into bottomM
+      else
+         put actualMargin into bottomM
+      end if
+   else
+      put item 1 of someMargin into leftM
+      put item 2 of someMargin into topM
+      put item 3 of someMargin into rightM
+      put item 4 of someMargin into bottomM
+   end if
+   return leftM,topM,rightM,bottomM
+end margin_Normalize
+
+function rect_GetInner groupRect, someGroup, pMargin
+   if exists (someGroup) is false then return empty
+   if pMargin is empty then
+      put the margins of someGroup into pMargin
+   end if
+   rect_SubtractMargins groupRect, pMargin
+   put the result into nMargins
+   --
+   if the showborder of someGroup is true then
+      put the borderwidth of someGroup into bWidth
+      rect_SubtractMargins groupRect, bWidth
+   end if
+   
+   if the showname of someGroup is true then
+      put the effective textheight of someGroup - bWidth into someBit
+      subtract 2 from someBit
+      add someBit to item 2 of groupRect
+   end if
+   
+   put the scrollbarwidth of someGroup into scrollBarMargin
+   if the vscrollbar of someGroup is true then 
+      subtract scrollBarMargin from item 3 of groupRect
+   end if
+   if the hscrollbar of someGroup is true then
+      subtract scrollBarMargin from item 4 of groupRect
+   end if
+   --
+   return groupRect
+end rect_GetInner

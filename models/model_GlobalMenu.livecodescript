@@ -15,6 +15,12 @@ Should be able to move this to local variable here in this model without issue a
 
 --> Menu  | Model | Props
 -
+function menu_SimpleButton
+   if exists (stack "View|Index|Simple") is false then return empty
+   put the long id of btn 1 of cd 1 of stack "View|Index|Simple" into mButton
+   return mButton
+end menu_SimpleButton
+
 getprop menu_Controller mTitle
    return menu_GetGlobalController (mTitle)
 end menu_Controller
@@ -35,7 +41,7 @@ end menu_GetGlobalController
 
 command menu_SetGlobalController gMenuTitle, scriptObject
    put menu_GetModel() into gMenuModel
-   put the rugged_ID of scriptObject into gMenuModel [gMenuTitle]["mController"]
+   put revRuggedID (scriptObject) into gMenuModel [gMenuTitle]["mController"]
    menu_SetModel gMenuModel
    return the result
 end menu_SetGlobalController
