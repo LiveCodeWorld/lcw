@@ -18,6 +18,10 @@ local LocalArray
 
 --> Working on
 -
+on menuPick menuPath
+   menu_DispatchTextPick menuPath
+end menuPick
+
 getprop top_Data [pathNum]
    -- put the selected_TopData of me into topData
    put _treeWidget() into treeWidget
