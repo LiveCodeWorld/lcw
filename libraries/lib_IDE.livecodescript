@@ -81,9 +81,9 @@ end ide_ResetDefaultMenubar
 --> Working on
 -
 command ide_InitLcw
+   ide_AddBehaviorHacks true
    ide_LoadDictionaryTerms
    ide_SetScriptEditorTitles "watch"
-   ide_AddBehaviorHacks true
 end ide_InitLcw
 
 command ide_AddBehaviorHacks pBoolean
@@ -112,7 +112,7 @@ command ide_AddBehaviorHacks pBoolean
       put rev_ScriptEditorDocField (someNum) into scriptEditorDocField
       put rev_LaunchDocsButton (someNum) into launchDocsButton
       
-      if someBoolean is true then
+      if someBoolean is not false then
          ide_SetAfterActionCompile true
          set the behavior of compileButton to compileButtonBehavior
          --
