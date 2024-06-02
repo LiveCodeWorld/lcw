@@ -9,9 +9,45 @@ version: 0.3
 /*
 */
 
+--> Replace
+-
+function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
+   -- see "menu_GlobalTitleFromViewName"
+   
+   replace "_" with "|" in moduleStackName
+   menu_NormalizeTitle moduleStackName, pMakePretty
+   set the itemdelimiter to " | "
+   if item 1 of moduleStackName is not "Global" then put "Global | " before moduleStackName
+   if item 2 of moduleStackName = "View" then delete item 2 of moduleStackName
+   if item -1 of moduleStackName is not "Menu" then put " | Menu" after moduleStackName
+   return moduleStackName
+end module_ConstructGlobalMenuTitle
+
+
 --> Working on
 -
--- get module_ListControllerStackPaths (moduleShortFolder, projectFolder)
+getprop module_Controller [menuBit]
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "controllers/" into cFolder
+   --
+   put the module_MenuTitle [menuBit] of the target into mTitle
+   put lcw_PipesToUnderscore (mTitle) & ".livecodescript" into shortFile
+   --
+   put cFolder & shortFile into cPath
+   return cPath
+end module_Controller
+
+getprop module_MenuTitle [menuBit]
+   put the view_Name of the target into moduleName
+   if viewName is empty then return empty
+   --
+   if menuBit is not empty then
+      put space & "|" && menuBit after moduleName
+   end if
+   put menu_GlobalTitleFromViewName (moduleName) into globalMenuTitle
+   put module_ConstructGlobalMenuTitle (moduleName, true) into globalMenuTitle
+   return globalMenuTitle
+end module_MenuTitle
 
 getprop module_Controllers
    put the module_Folder of the target into moduleFolder
@@ -26,11 +62,40 @@ getprop module_Controllers
    return moduleControllers
 end module_Controllers
 
+getprop module_ControllerStackNames
+   put the long id of the target into tObject
+   put the module_Controllers of tObject into cObjects
+   repeat for each line cObject in cObjects
+      put the stack_Name of cObject into cName
+      put cName & CR after cNames 
+   end repeat
+   delete char -1 of cNames
+   sort cNames
+   return cNames
+end module_ControllerStackNames
+
 function module_ListControllerStackPaths moduleName, projectFolder
    put module_GetControllerFolder (moduleName, projectFolder) into moduleControllerFolder
    put folder_ListStackPaths (moduleControllerFolder) into stackPaths
    return stackPaths
 end module_ListControllerStackPaths
+
+getprop module_View
+   -- a lazy default 
+   -- should have specific handler in card script or behavior
+   
+   put the short name of the defaultstack into stackName
+   put the long id of cd 1 of stack stackName into cardObject
+   
+   if exists (control 1 of cardObject) then
+      put the view_Name of control 1 of cardObject into viewName
+      if viewName = stackName then
+         return the long id of control 1 of cardObject
+      end if
+   end if
+   
+   return empty
+end module_View
 
 command module_Initialise moduleName, projectName
    -- for convenience
@@ -62,18 +127,6 @@ getprop is_Module
    put the module_Folder of the target into mFolder -- lib_LCW
    return mFolder is not empty
 end is_Module
-
-getprop module_ControllerStackNames
-   put the long id of the target into tObject
-   put the module_Controllers of tObject into cObjects
-   repeat for each line cObject in cObjects
-      put the short name of cObject into cName
-      put cName & CR after cNames 
-   end repeat
-   delete char -1 of cNames
-   sort cNames
-   return cNames
-end module_ControllerStackNames
 
 getprop module_BahaviorFolder
    put the module_Folder of the target into moduleFolder
@@ -243,7 +296,7 @@ function module_GetTemplateObject moduleName, pProjectFolder
 end module_GetTemplateObject
 
 function module_ConstructHomeStackPath moduleName, projectFolder
-   put project_NameToShortFolder (moduleName) into moduleFolderName
+   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
    put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
    put project_PathFromFolder (moduleFolder) into stackPath
    return stackPath
@@ -273,7 +326,7 @@ function module_BehaviorPathFromFolder moduleFolder
 end module_BehaviorPathFromFolder
 
 function module_ConstructBehaviorPath viewName, moduleFolder, pShortFile
-   put project_NameToShortFolder (viewName) into moduleName
+   put lcw_PipesToUnderscore (viewName) into moduleName
    if pShortFile is empty then
       put module_ConstructBehaviorShortFile (moduleName) into pShortFile
    end if
@@ -289,39 +342,15 @@ function module_GetBehaviorStackPath behaviorStackName, rootModuleFolder
 end module_GetBehaviorStackPath
 
 function module_ConstructBehaviorName viewName
-   put project_NameToShortFolder (viewName) into moduleFolderName
+   put lcw_PipesToUnderscore (viewName) into moduleFolderName
    put project_DefaultBehaviorName (moduleFolderName) into bStackName
    return bStackName
 end module_ConstructBehaviorName
-
-function module_ViewNameToShortFolder viewName
-   put project_NameToShortFolder (viewName) into moduleShortFolder
-   return moduleShortFolder
-end module_ViewNameToShortFolder
 
 function module_ConstructBehaviorShortFile moduleStackName
    put project_DefaultBehaviorName (moduleStackName) & ".livecodescript" into shortFile
    return shortFile
 end module_ConstructBehaviorShortFile
-
-function module_GetControllerStackPath controllerStackName, rootModuleFolder
-   put controllerStackName & ".livecodescript" into shortControllerPath
-   put rootModuleFolder & "controllers/" & shortControllerPath into moduleControllerStackPath
-   return moduleControllerStackPath
-end module_GetControllerStackPath
-
-
---> Module | Name | Utils
--
-function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
-   replace "_" with "|" in moduleStackName
-   menu_NormalizeTitle moduleStackName, pMakePretty
-   set the itemdelimiter to " | "
-   if item 1 of moduleStackName is not "Global" then put "Global | " before moduleStackName
-   if item 2 of moduleStackName = "View" then delete item 2 of moduleStackName
-   if item -1 of moduleStackName is not "Menu" then put " | Menu" after moduleStackName
-   return moduleStackName
-end module_ConstructGlobalMenuTitle
 
 command module_CloseStacks moduleStackName
    if exists (stack moduleStackName) is false then
@@ -357,7 +386,7 @@ end module_FindProject
 
 function module_GetArray moduleName
    put env_GetModuleArray() into envModuleArray
-   put module_ViewNameToShortFolder (moduleName) into moduleFolderName
+   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
    put envModuleArray ["active"][moduleFolderName] into moduleArray
    return moduleArray
 end module_GetArray
@@ -366,14 +395,14 @@ end module_GetArray
 --> Module | Files
 -
 function module_GetControllerFolder moduleName, projectFolder
-   put project_NameToShortFolder (moduleName) into moduleFolderName
+   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
    put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
    put folder_AddShort (moduleFolder, "controllers") into moduleControllerFolder
    return moduleControllerFolder
 end module_GetControllerFolder
 
 function module_GetBehaviorFolder moduleName, projectFolder
-   put project_NameToShortFolder (moduleName) into moduleFolderName
+   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
    put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
    put folder_AddShort (moduleFolder, "behaviors") into moduleBehaviorFolder
    return moduleBehaviorFolder

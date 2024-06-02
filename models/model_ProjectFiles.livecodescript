@@ -15,6 +15,56 @@ Those older names are a bit of a mess.
 
 --> Working on
 -
+function project_NameToShortFile moduleName
+   put lcw_PipesToUnderscore (moduleName) into shortFolder
+   put shortFolder & ".livecodescript" into shortFile
+   return shortFile
+end project_NameToShortFile
+
+getprop project_Modules
+   put the project_Name of the target into projectName
+   put project_ListModules (projectName) into projectModules
+   return projectModules
+end project_Modules
+
+getprop project_KeyWords
+   put the project_Name of the target into projectName
+   put project_ConstructKeywords (projectName) into kWords
+   return kWords
+end project_KeyWords
+
+getprop project_KeyWordLinks
+   put the project_Name of the target into projectName
+   put project_ConstructKeyWordLinks (projectName) into keyWordLinks
+   return keyWordLinks
+end project_KeyWordLinks
+
+function project_ConstructKeyWordLinks projectName
+   put project_ConstructKeywords (projectName) into tagItems
+   put markdown_TagItems (tagItems) into keyWordLinks
+   replace CR with ", " in keyWordLinks
+   return keyWordLinks
+end project_ConstructKeyWordLinks
+
+function project_ConstructKeywords projectName
+   local kWordArray
+   put project_ListUsedStackNames (projectName) into stackNames
+   repeat for each line stackName in stackNames
+      put text_SplitIntoWords (stackName) into kWords
+      put toLower (kWords) into kWords
+      split kWords with CR as set
+      union kWordArray with kWords 
+   end repeat
+   --
+   delete variable kWordArray ["lib"]
+   delete variable kWordArray ["model"]
+   delete variable kWordArray ["behavior"]
+   delete variable kWordArray ["view"]
+   --
+   put keys (kWordArray) into kWords
+   sort kWords
+   return kWords
+end project_ConstructKeywords
 
 
 --> Project | Model | Files
@@ -380,12 +430,6 @@ function project_ConstructSingularType shortFolder
    return shortFolder
 end project_ConstructSingularType
 
-function project_NameToShortFile moduleName
-   put project_NameToShortFolder (moduleName) into shortFolder
-   put shortFolder & ".livecodescript" into shortFile
-   return shortFile
-end project_NameToShortFile
-
 
 --> Project | Names
 -
@@ -412,7 +456,7 @@ function project_ConstructSingularType shortFolder
 end project_ConstructSingularType
 
 function project_NameToShortFile moduleName
-   put project_NameToShortFolder (moduleName) into shortFolder
+   put lcw_PipesToUnderscore (moduleName) into shortFolder
    put shortFolder & ".livecodescript" into shortFile
    return shortFile
 end project_NameToShortFile

@@ -13,6 +13,37 @@ version: 0.8
 -
 
 
+--> Project | Names
+-
+function lcw_UnderscoreToPipes shortFolder, pPretty
+   if pPretty is true then
+      replace "_" with " | " in shortFolder
+   else
+      replace "_" with "|" in shortFolder
+   end if
+   return shortFolder
+end lcw_UnderscoreToPipes
+
+function lcw_PipesToUnderscore moduleName
+   set the itemdelimiter to "|"
+   repeat for each item someItem in moduleName
+      put word 1 to -1 of someItem & "_" after shortFolder
+   end repeat
+   delete char -1 of shortFolder
+   return shortFolder
+end lcw_PipesToUnderscore
+
+function project_FindHomeStackPath somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   return homeStackPath
+end project_FindHomeStackPath
+
+
 --> Display
 -
 command display_LoadProject projectName, pComment
@@ -722,7 +753,7 @@ end env_ListStoppedProjects
 --> Module
 -
 function module_ConstructFolder moduleName, projectName
-   put module_ViewNameToShortFolder (moduleName) into moduleFolderName
+   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
    put project_GetFolder (projectName) into projectFolder
    put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
    return moduleFolder
@@ -1021,28 +1052,6 @@ command env_DisplayErrorLoading projectName, projectDepArray
       put "Error loading dependency" && projectName
    end try
 end env_DisplayErrorLoading
-
-
---> Project | Names
--
-function project_NameToShortFolder moduleStackName
-   set the itemdelimiter to "|"
-   repeat for each item someItem in moduleStackName
-      put word 1 to -1 of someItem & "_" after shortFolder
-   end repeat
-   delete char -1 of shortFolder
-   return shortFolder
-end project_NameToShortFolder
-
-function project_FindHomeStackPath somePath
-   -- assumes somePath is a path to a stack or file and not a folder
-   put somePath into someFolder
-   set the itemdelimiter to slash
-   put empty into item -1 of someFolder
-   
-   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
-   return homeStackPath
-end project_FindHomeStackPath
 
 
 --> Project | Home

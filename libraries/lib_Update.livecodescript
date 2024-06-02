@@ -237,7 +237,7 @@ on module_Rename oldModuleStackName, newModuleStackName, projectName
       lcw_AnswerWarning "Module already exists!"
    end if
    
-   put project_NameToShortFolder (newModuleStackName) into newShortModuleFolder
+   put lcw_PipesToUnderscore (newModuleStackName) into newShortModuleFolder
    put oldModuleFolder & newShortModuleFolder & ".livecode" into tempModulePath
    put project_GetModuleFolder (newShortModuleFolder, projectName) into newModuleFolder
    put the long id of control 1 of cd 1 of stack oldModuleStackName into viewObject

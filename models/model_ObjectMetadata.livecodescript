@@ -78,7 +78,7 @@ getprop menu_GlobalTitle [check]
    get the script_MetaData ["name"] of mController
    if it is not gMenuTitle then return empty
    --
-   put project_NameToShortFolder (gMenuTitle) & ".livecodescript" into goodShortFile
+   put lcw_PipesToUnderscore (gMenuTitle) & ".livecodescript" into goodShortFile
    get the short_File of mController
    if it is not goodShortFile then return empty
    

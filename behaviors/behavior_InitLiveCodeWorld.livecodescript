@@ -552,14 +552,14 @@ function project_GetHomeStackName projectFolder
    return projectName
 end project_GetHomeStackName
 
-function project_NameToShortFolder moduleStackName
+function lcw_PipesToUnderscore moduleStackName
    set the itemdelimiter to "|"
    repeat for each item someItem in moduleStackName
       put word 1 to -1 of someItem & "_" after shortFolder
    end repeat
    delete char -1 of shortFolder
    return shortFolder
-end project_NameToShortFolder
+end lcw_PipesToUnderscore
 
 function project_FindHomeStackPath somePath
    -- assumes somePath is a path to a stack or file and not a folder

@@ -3,7 +3,7 @@
 -
 license: GPLv3
 name: lib_Behavior
-type: script library
+type: library
 version: 0.4
 
 /*
@@ -12,6 +12,92 @@ A library for script behaviors.
 
 --> Working on
 -
+
+--> Card | Behavior
+-
+command card_CreateBehavior bStackName
+   put "lcw_Display" into projectName
+   --
+   put the project_Folder of stack projectName into projectFolder
+   if bStackName is empty then
+      ask_CreateProjectBehavior projectName
+      put the result into bStackPath
+      --
+      display_Project projectName
+      return bStackPath
+   end if
+   
+   put project_ConstructStackPath (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
+   if exists (stack newStackPath) then
+      ask_CreateProjectBehavior projectName
+      put the result into bStackPath
+   else
+      project_CreateBehavior bName, projectName
+      put the result into bStackPath
+   end if
+   --
+   display_Project projectName
+   return bStackPath
+end card_CreateBehavior
+
+function card_ListBehaviorNames
+   put project_ListStackNames ("behaviors", "lcw_Display") into sNames
+   filter sNames with "behavior_Card*"
+   return sNames
+end card_ListBehaviorNames
+
+
+--> Props
+-
+getprop card_BehaviorName
+   put the card_Object of the target into cObject
+   if exists (cObject) is false then return empty
+   put the behavior of cObject into bObject
+   if exists (bObject) is false then return empty
+   
+   put the short name of bObject into sName
+   if char 1 to 13 of sName is "behavior_Card" then
+      delete char 1 to 13 of sName
+      return sName
+   else
+      return empty
+   end if
+end card_BehaviorName
+
+setprop card_BehaviorName sName
+   put "behavior_Card" & sName into stackName
+   if exists (stack stackName) is false then
+      put "behavior_CardMargin" into stackName
+      if exists (stack stackName) is false then
+         return empty
+      end if
+   end if
+   put the long id of stack stackName into bObject
+   --
+   put the card_Object of the target into cObject
+   if exists (cObject) is false then return empty
+   --
+   set the behavior of cObject to bObject
+   return bObject
+end card_BehaviorName
+
+
+
+--> Behavior
+-
+setprop behavior_ClearNames stackNames
+   if stackNames is empty then return empty
+   replace comma with CR in stackNames
+   put the long id of the target into tObject
+   --
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      --
+      put the name of stack stackName into sObject
+      set the behavior of sObject to empty
+   end repeat
+end behavior_ClearNames
+
 getprop behavior_StackNames
    put the long id of the target into tObject
    repeat
@@ -29,19 +115,6 @@ getprop behavior_StackNames
    end repeat
 end behavior_StackNames
 
-setprop behavior_ClearNames stackNames
-   if stackNames is empty then return empty
-   replace comma with CR in stackNames
-   put the long id of the target into tObject
-   --
-   repeat for each line stackName in stackNames
-      if exists (stack stackName) is false then next repeat
-      --
-      put the name of stack stackName into sObject
-      set the behavior of sObject to empty
-   end repeat
-end behavior_ClearNames
-
 setprop behavior_StackNames stackNames
    if stackNames is empty then return empty
    replace comma with CR in stackNames
@@ -53,10 +126,12 @@ setprop behavior_StackNames stackNames
    
    repeat for each line stackName in stackNames
       if exists (stack stackName) is false then next repeat
-      --
-      put the name of stack stackName into bObject
+      put the long id of stack stackName into bObject
+      if tObject = bObject then
+         next repeat
+      end if
+      
       set the behavior of tObject to bObject
-      --
       put bObject into tObject
       put bObject & CR after bObjects
    end repeat
@@ -93,72 +168,6 @@ setprop behavior_AddStack stackName
    behavior_SetHierarchy targetObject,  bObjects
    return the result
 end behavior_AddStack
-
-command card_CreateBehavior bStackName
-   put "lcw_Display" into projectName
-   --
-   put the project_Folder of stack projectName into projectFolder
-   if bStackName is empty then
-      ask_CreateProjectBehavior projectName
-      put the result into bStackPath
-      --
-      display_Project projectName
-      return bStackPath
-   end if
-   
-   put project_ConstructStackPath (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
-   if exists (stack newStackPath) then
-      ask_CreateProjectBehavior projectName
-      put the result into bStackPath
-   else
-      project_CreateBehavior bName, projectName
-      put the result into bStackPath
-   end if
-   --
-   display_Project projectName
-   return bStackPath
-end card_CreateBehavior
-
-
---> Props
--
-function card_ListBehaviorNames
-   put project_ListStackNames ("behaviors", "lcw_Display") into sNames
-   filter sNames with "behavior_Card*"
-   return sNames
-end card_ListBehaviorNames
-
-getprop card_BehaviorName
-   put the card_Object of the target into cObject
-   if exists (cObject) is false then return empty
-   put the behavior of cObject into bObject
-   if exists (bObject) is false then return empty
-   
-   put the short name of bObject into sName
-   if char 1 to 13 of sName is "behavior_Card" then
-      delete char 1 to 13 of sName
-      return sName
-   else
-      return empty
-   end if
-end card_BehaviorName
-
-setprop card_BehaviorName sName
-   put "behavior_Card" & sName into stackName
-   if exists (stack stackName) is false then
-      put "behavior_CardMargin" into stackName
-      if exists (stack stackName) is false then
-         return empty
-      end if
-   end if
-   put the long id of stack stackName into bObject
-   --
-   put the card_Object of the target into cObject
-   if exists (cObject) is false then return empty
-   --
-   set the behavior of cObject to bObject
-   return bObject
-end card_BehaviorName
 
 
 --> Behavior | StackName
@@ -226,6 +235,16 @@ end behavior_LastObject
 
 --> Behaviors
 -
+command behavior_Clear bObjects
+   repeat for each line bObject in bObjects
+      if exists (bObject) is false then
+         return bObject
+      end if
+      set the behavior of bObject to empty
+   end repeat
+   return empty
+end behavior_Clear
+
 function behavior_GetHierarchy targetObject
    repeat
       put the behavior of targetObject into bObject
@@ -254,13 +273,3 @@ command behavior_SetHierarchy targetObject,  bObjects
    end repeat
    return bObjects
 end behavior_SetHierarchy
-
-command behavior_Clear bObjects
-   repeat for each line bObject in bObjects
-      if exists (bObject) is false then
-         return bObject
-      end if
-      set the behavior of bObject to empty
-   end repeat
-   return empty
-end behavior_Clear

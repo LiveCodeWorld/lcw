@@ -152,7 +152,7 @@ function module_ConstructModelFile shortNameOrFile, moduleStackName, projectName
 end module_ConstructModelFile
 
 function module_ConstructModelFolder moduleStackName, projectName
-   put project_NameToShortFolder (moduleStackName) into shortModuleFolder
+   put lcw_PipesToUnderscore (moduleStackName) into shortModuleFolder
    put project_GetModuleFolder (shortModuleFolder, projectName) into moduleFolder
    put folder_AddShort (moduleFolder, "models") into moduleModelFolder
    return moduleModelFolder
