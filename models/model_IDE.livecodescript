@@ -16,8 +16,27 @@ See stack "lib_ScriptEditor" for code related to script editor tabs.
 This model abstracts, both key controls within the Livecode IDE, and behaviors that we can attach to them.
 */
 
+local Rev_MenuNameList = "File,Edit,Tools,Object,Text,Development,View,Window,Help"
+
 --> Working on
 -
+function rev_CheckMenuName revName, pConstruct
+   put rev_GetMenuNameList (pConstruct) into revMenuNameList
+   set the wholematches to true
+   return revName is among the items of revMenuNameList
+end rev_CheckMenuName
+
+function rev_GetMenuNameList pConstruct
+   if (pConstruct is true) OR (Rev_MenuNameList is empty) then
+      -- we store the values in teh scripts case conditions
+      put "behavior_ViewMenuGroup" into bName
+      if exists (stack bName) is false then return empty
+      put the hkey_CaseConditions ["M ide_RevMenubarMenuPick"] of stack bName into Rev_MenuNameList
+      replace CR with comma in Rev_MenuNameList
+   end if
+   return Rev_MenuNameList
+end rev_GetMenuNameList
+
 
 --> SE
 -

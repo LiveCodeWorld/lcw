@@ -56,30 +56,6 @@ getprop project_HomeStackBrowser
    return browserWidget
 end project_HomeStackBrowser
 
-getprop module_Folder [pModuleName]
-   put the template_Object of the target into templateObject
-   if exists (templateObject) is false then return empty
-   put the stack_Object of templateObject into stackObject
-   put the effective filename of stackObject into stackPath
-   if stackPath is empty then return empty
-   
-   put module_FindFolder (stackPath) into maybeModuleFolder
-   
-   set the itemdelimiter to slash
-   put item -2 of maybeModuleFolder into testPathItem
-   switch
-      case maybeModuleFolder is empty
-         return empty
-      case pModuleName is not empty
-         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
-         return moduleFolder
-      case testPathItem = "modules"
-         return maybeModuleFolder
-      default
-         return empty
-   end switch
-end module_Folder
-
 getprop module_Names
    -- a module_Name is the same as a (sub) project_Name
    put the project_Folder ["modules"] of the target into modulesFolder
@@ -88,7 +64,7 @@ getprop module_Names
 end module_Names
 
 getprop module_HomeStackPath [moduleName]
-   put the module_Folder [moduleName] of the target into moduleFolder
+   put the project_ModuleFolder [moduleName] of the target into moduleFolder
    put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
    if exists (stack moduleHomeStackPath) is false then return empty
    return moduleHomeStackPath

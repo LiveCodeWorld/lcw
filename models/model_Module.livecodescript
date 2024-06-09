@@ -9,8 +9,70 @@ version: 0.3
 /*
 */
 
---> Replace
+--> Working on
 -
+function menu_TitleFromController mController
+   -- Caution: we assume that the stack is named the same as the global menu
+   put the stack_Name of mController into stack_Name
+   put the short name of  mController into mTitle
+   return mTitle
+end menu_TitleFromController
+
+
+--> Module | Name and Short Folder
+-
+getprop module_Name
+   put the module_ShortFolder of the target into moduleName
+   replace "_" with "|" in moduleName
+   return moduleName
+end module_Name
+
+getprop module_ShortFolder
+   put the module_Folder of the target into moduleFolder
+   set the itemdelimiter to slash
+   put item -1 of moduleFolder into shortFolder
+   return shortFolder
+end module_ShortFolder
+
+getprop module_Controller [menuBit]
+   put the module_ControllerPath [menuBit] of the target into mPath
+   if there is a stack mPath then
+      return the long id of stack mPath
+   else
+      return empty
+   end if
+end module_Controller
+
+getprop module_ControllerPath [menuBit]
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "controllers/" into cFolder
+   --
+   put the module_MenuTitle [menuBit] of the target into mTitle
+   put lcw_PipesToUnderscore (mTitle) & ".livecodescript" into shortFile
+   --
+   put cFolder & shortFile into cPath
+   return cPath
+end module_ControllerPath
+
+getprop module_MenuTitle [menuBit]
+   if menu_IsGlobal (menuBit) then return menuBit
+   
+   put the module_Name of the target into moduleName
+   if moduleName is empty then
+      put the view_Name of the target into moduleName
+   end if
+   if moduleName is empty then return empty
+   
+   if menuBit is empty then
+      put moduleName into vName
+   else
+      put moduleName & "|" & menuBit into vName
+   end if
+   
+   put menu_GlobalTitleFromViewName (vName) into globalMenuTitle
+   return globalMenuTitle
+end module_MenuTitle
+
 function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
    -- see "menu_GlobalTitleFromViewName"
    
@@ -26,29 +88,6 @@ end module_ConstructGlobalMenuTitle
 
 --> Working on
 -
-getprop module_Controller [menuBit]
-   put the module_Folder of the target into moduleFolder
-   put moduleFolder & "controllers/" into cFolder
-   --
-   put the module_MenuTitle [menuBit] of the target into mTitle
-   put lcw_PipesToUnderscore (mTitle) & ".livecodescript" into shortFile
-   --
-   put cFolder & shortFile into cPath
-   return cPath
-end module_Controller
-
-getprop module_MenuTitle [menuBit]
-   put the view_Name of the target into moduleName
-   if viewName is empty then return empty
-   --
-   if menuBit is not empty then
-      put space & "|" && menuBit after moduleName
-   end if
-   put menu_GlobalTitleFromViewName (moduleName) into globalMenuTitle
-   put module_ConstructGlobalMenuTitle (moduleName, true) into globalMenuTitle
-   return globalMenuTitle
-end module_MenuTitle
-
 getprop module_Controllers
    put the module_Folder of the target into moduleFolder
    put moduleFolder & "controllers/" into moduleControllerFolder
@@ -162,13 +201,6 @@ getprop module_DefaultBehavior
    end if
 end module_DefaultBehavior
 
-getprop module_Name
-   put the module_Folder of the target into moduleFolder
-   set the itemdelimiter to slash
-   put item -1 of moduleFolder into moduleName
-   return moduleName
-end module_Name
-
 getprop module_ViewName [moduleName]
    put the module_View [moduleName] of the target into moduleView
    if exists (moduleView) is false then return empty
@@ -182,6 +214,16 @@ getprop module_HomeStack [moduleName]
    put the name of stack moduleHomeStackPath into stackObject
    return stackObject
 end module_HomeStack
+
+getprop module_BehaviorStackNames
+   put the module_BehaviorPaths of the target into stackPaths
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the short name of stack stackPath & CR after sNames
+   end repeat
+   delete char -1 of sNames
+   return sNames
+end module_BehaviorStackNames
 
 getprop module_Behaviors
    put the module_BehaviorPaths of the target into stackPaths

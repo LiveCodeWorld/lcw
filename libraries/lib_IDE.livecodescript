@@ -53,106 +53,14 @@ getprop ide_MenuTitle [shortName]
 end ide_MenuTitle
 
 
---> Working on
+--> IDE | Hack
 -
-command ide_RevMenubarMenuPick mName, mItem
-   put the name of stack "revMenuBar" into revMbar
-   --
-   switch mName
-      case "File"
-         dispatch "revMenubarFileMenuPick" to revMbar with mItem
-         break
-      case "Edit"
-         dispatch "revMenubarEditMenuPick" to revMbar with mItem
-         break
-      case "Tools"
-         dispatch "revMenubarToolsMenuPick" to revMbar with mItem
-         break
-      case "Object"
-         dispatch "revMenubarObjectMenuPick" to revMbar with mItem
-         break
-      case "Text"
-         dispatch "revMenubarTextMenuPick" to revMbar with mItem
-         break
-      case "Development"
-         dispatch "revMenubarDevelopmentMenuPick" to revMbar with mItem
-         break
-      case "View"
-         dispatch "revMenubarViewMenuPick" to revMbar with mItem
-         break
-      case "Window"
-         dispatch "revMenubarWindowMenuPick" to revMbar with mItem
-         break
-      case "Help"
-         dispatch "revMenubarHelpMenuPick" to revMbar with mItem
-         break
-   end switch
-end ide_RevMenubarMenuPick
-
-function ide_RevMenubarText mName, pContext
-   put the name of stack "revMenuBar" into revMbar
-   --
-   switch mName
-      case "File"
-         return value ("revMenubarFileMenu(pContext)" , revMbar)
-      case "Edit"
-         return value ("revMenubarEditMenu(pContext)" , revMbar)
-      case "Tools"
-         return value ("revMenubarToolsMenu(pContext)" , revMbar)
-      case "Object"
-         return value ("revMenubarObjectMenu(pContext)" , revMbar)
-      case "Text"
-         return value ("revMenubarTextMenu(pContext)" , revMbar)
-      case "Development"         
-         return value ("revMenubarDevelopmentMenu(pContext)" , revMbar)
-      case "View"
-         return value ("revMenubarViewMenu(pContext)" , revMbar)
-      case "Window"
-         return value ("revMenubarWindowMenu(pContext)" , revMbar)
-      case "Help"
-         return value ("revMenubarHelpMenu(pContext)" , revMbar)
-      default
-         break
-   end switch
-   
-   return mText
-end ide_RevMenubarText
-
-
---> Ide
--
-function ide_DefaultMenuBarStack
-   put ide_DefaultMenubarStackName() into defaultMenubarStackName
-   put the name of stack defaultMenubarStackName into revMenuBarStack
-   return revMenuBarStack
-end ide_DefaultMenuBarStack
-
-function ide_DefaultMenuGroup
-   put ide_DefaultMenuBarStack() into revMenuBarStack
-   put the long id of group "revMenuBar" of revMenuBarStack into revMenuGroup
-   return revMenuGroup
-end ide_DefaultMenuGroup
-
-function ide_DefaultMenubarStackName
-   put revIDEPaletteToStackName ("menubar") into revMenuBarStackName
-   return revMenuBarStackName
-end ide_DefaultMenubarStackName
-
-
---> IDE | Menubar
--
-command ide_ResetDefaultMenubar
-   put ide_DefaultMenuGroup() into defaultMenuBarGroup
-   set the defaultMenuBar to defaultMenuBarGroup
-end ide_ResetDefaultMenubar
-
-
 --> Working on
 -
 command ide_InitLcw
-   ide_AddBehaviorHacks true
    ide_LoadDictionaryTerms
    ide_SetScriptEditorTitles "watch"
+   ide_AddBehaviorHacks true
 end ide_InitLcw
 
 command ide_AddBehaviorHacks pBoolean
@@ -224,20 +132,127 @@ command ide_SetAfterActionCompile pBoolean
    return actionBehavior
 end ide_SetAfterActionCompile
 
-function ide_ListToolBarBehaviorNames
-   put the stack_Folder of stack "revSEToolbarBehavior" into toolbarBehaviorFolder
-   put folder_ListStackNames (toolbarBehaviorFolder) into bNames
-   return bNames
-end ide_ListToolBarBehaviorNames
-
-
---> IDE | Hack
--
 command ide_ResetMenus
    delete variable LocalArray ["environment"]["menu"]
    _ReIndexLocalIdeMenus
    ide_AddBehaviorHacks
 end ide_ResetMenus
+
+
+--> IDE | Menubar
+-
+command ide_SaveStack pStackName
+   -- dispatch "revIDESaveStack" to stack "revIdeLibrary" with sObject
+   -- dispatch "revMenubarFileMenuPick" to stack "revMenuBar" with "Save"
+   
+   switch
+      case pStackName is empty
+         put the long id of the topstack into sObject
+         break
+      case exists (stack pStackName) is false
+         return "Error, stack does not exist:" && pStackName
+      default
+         put the long id of stack pStackName into sObject
+   end switch
+   
+   revIDESaveStack sObject
+   return the result
+end ide_SaveStack
+
+command ide_RevMenubarMenuPick mName, mItem
+   switch mName
+      case "File"
+         dispatch "revMenubarFileMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "Edit"
+         dispatch "revMenubarEditMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "Tools"
+         dispatch "revMenubarToolsMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "Object"
+         dispatch "revMenubarObjectMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "Text"
+         dispatch "revMenubarTextMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "Development"
+         dispatch "revMenubarDevelopmentMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "View"
+         dispatch "revMenubarViewMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "Window"
+         dispatch "revMenubarWindowMenuPick" to stack "revMenuBar" with mItem
+         break
+      case "Help"
+         dispatch "revMenubarHelpMenuPick" to stack "revMenuBar" with mItem
+         break
+   end switch
+end ide_RevMenubarMenuPick
+
+function ide_RevMenubarText mName, pContext
+   put the name of stack "revMenuBar" into revMbar
+   --
+   switch mName
+      case "File"
+         return value ("revMenubarFileMenu(pContext)" , revMbar)
+      case "Edit"
+         return value ("revMenubarEditMenu(pContext)" , revMbar)
+      case "Tools"
+         return value ("revMenubarToolsMenu(pContext)" , revMbar)
+      case "Object"
+         return value ("revMenubarObjectMenu(pContext)" , revMbar)
+      case "Text"
+         return value ("revMenubarTextMenu(pContext)" , revMbar)
+      case "Development"         
+         return value ("revMenubarDevelopmentMenu(pContext)" , revMbar)
+      case "View"
+         return value ("revMenubarViewMenu(pContext)" , revMbar)
+      case "Window"
+         return value ("revMenubarWindowMenu(pContext)" , revMbar)
+      case "Help"
+         return value ("revMenubarHelpMenu(pContext)" , revMbar)
+      default
+         break
+   end switch
+   
+   return empty
+end ide_RevMenubarText
+
+
+--> Ide
+-
+function ide_DefaultMenuBarStack
+   put ide_DefaultMenubarStackName() into defaultMenubarStackName
+   put the name of stack defaultMenubarStackName into revMenuBarStack
+   return revMenuBarStack
+end ide_DefaultMenuBarStack
+
+function ide_DefaultMenuGroup
+   put ide_DefaultMenuBarStack() into revMenuBarStack
+   put the long id of group "revMenuBar" of revMenuBarStack into revMenuGroup
+   return revMenuGroup
+end ide_DefaultMenuGroup
+
+function ide_DefaultMenubarStackName
+   put revIDEPaletteToStackName ("menubar") into revMenuBarStackName
+   return revMenuBarStackName
+end ide_DefaultMenubarStackName
+
+
+--> IDE | Menubar
+-
+command ide_ResetDefaultMenubar
+   put ide_DefaultMenuGroup() into defaultMenuBarGroup
+   set the defaultMenuBar to defaultMenuBarGroup
+end ide_ResetDefaultMenubar
+
+function ide_ListToolBarBehaviorNames
+   put the stack_Folder of stack "revSEToolbarBehavior" into toolbarBehaviorFolder
+   put folder_ListStackNames (toolbarBehaviorFolder) into bNames
+   return bNames
+end ide_ListToolBarBehaviorNames
 
 
 --> IDE | Menu | List

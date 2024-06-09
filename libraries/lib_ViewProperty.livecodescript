@@ -4,7 +4,59 @@
 license: GPLv3
 name: lib_ViewProperty
 type: library
-version: 0.1
+version: 0.2
+
+
+--> Working on
+-
+function view_AskPublicValue someProp, someView, pQuestion
+   if pQuestion is empty then put merge ("Change public property '[[someProp]]'?") into pQuestion
+   switch
+      case someProp contains "file"
+         answer file "Choose a file..."
+         return it
+      case someProp contains "colour" or someProp contains "color"
+         put the someProp of someView into oldColour
+         answer color with oldColour
+         return it
+      default
+         put the someProp of someView into oldValue
+         if oldValue is a boolean then
+            answer pQuestion with "True" or "False" as sheet
+            put it into newValue
+            return newValue
+         end if
+         
+         ask pQuestion with oldValue
+         if the result is "Cancel" then exit to top
+         put it into publicValue
+   end switch
+   return publicValue
+end view_AskPublicValue
+
+command view_DoPropertyMenu viewPropPath, someView
+   _SetChoice viewPropPath, publicProp, publicValue
+   if publicValue is empty then
+      put view_AskPublicValue (publicProp, someView) into publicValue
+      set the publicProp of someView to publicValue
+   else
+      -- if publicValue is not an "s", or perhaps a switch
+      -- lets check by introspecting the script and checking the name of the param
+      put the view_BehaviorScript of someView into viewBehaviorScript
+      put script_GetSetProp (publicProp, viewBehaviorScript) into propHandler
+      if propHandler is empty then
+         -- check to see if it is OK, then continue
+         breakPoint
+      end if
+      
+      script_DeconstructSetPropHandler propHandler, handlerName, setPropValue, setPropParam
+      if setPropParam = empty then
+         set the publicProp of someView to publicValue
+      else
+         view_DoParamProp someView, publicProp, publicValue
+      end if
+   end if
+end view_DoPropertyMenu
 
 
 --> Template | Property Menu
@@ -13,7 +65,7 @@ getprop template_PropertyMenu [pFetchLive]
    if pFetchLive is true then
       local liveMenu, publicProps
       put the view_Template of the target into templateObject
-      extractViewPropertyMenu templateObject, liveMenu, publicProps
+      _ExtractMenu templateObject, liveMenu, publicProps
       return liveMenu
    else
       put the template_Array of the target into templateArray
@@ -41,7 +93,7 @@ function template_GetPropertyMenu vName, pFetchLive
    if cachedMenu is empty or pFetchLive is true then
       local liveMenu, publicProps
       put view_GetTemplateObject (vName) into templateObject
-      extractViewPropertyMenu templateObject, liveMenu, publicProps
+      _ExtractMenu templateObject, liveMenu, publicProps
       return liveMenu
    else
       return cachedMenu
@@ -58,7 +110,7 @@ getprop view_Props [fetchLive]
    if cachedProps is empty or fetchLive is true then
       local liveMenu, publicProps
       put the long id of the target into targetObject
-      extractViewPropertyMenu targetObject, liveMenu, publicProps
+      _ExtractMenu targetObject, liveMenu, publicProps
       return publicProps
    else
       return cachedProps
@@ -75,7 +127,7 @@ getprop view_PropertyMenu [fetchLive]
    if cachedMenu is empty or fetchLive is true then
       local liveMenu, publicProps
       put the long id of the target into targetObject
-      extractViewPropertyMenu targetObject, liveMenu, publicProps
+      _ExtractMenu targetObject, liveMenu, publicProps
       return liveMenu
    else
       return cachedMenu
@@ -90,7 +142,7 @@ end view_PropertyMenu
 getprop view_LivePropertyMenu
    put the long id of the target into targetObject
    local liveMenu, publicProps
-   extractViewPropertyMenu targetObject, liveMenu, publicProps
+   _ExtractMenu targetObject, liveMenu, publicProps
    return liveMenu
 end view_LivePropertyMenu
 
@@ -106,7 +158,7 @@ setprop view_PropertyMenuIsCached someBoolean
    put the long id of the target into targetObject
    if someBoolean is true then
       local liveMenu, publicProps
-      extractViewPropertyMenu targetObject, liveMenu, publicProps
+      _ExtractMenu targetObject, liveMenu, publicProps
       set the view_Props of the target to publicProps
       set the template_MetaData ["view_PropertyMenu"] of targetObject to liveMenu
       return liveMenu
@@ -122,36 +174,15 @@ getprop script_PublicProps
    local propMenu, publicProps
    put the long id of the target into scriptObject
    
-   extractViewPropertyMenu scriptObject, propMenu, publicProps
+   _ExtractMenu scriptObject, propMenu, publicProps
    sort publicProps
    return publicProps
 end script_PublicProps
 
-command view_DoPropertyMenu viewPropPath, someView
-   menu_SetChoice viewPropPath, publicProp, publicValue
-   if publicValue is empty then
-      put view_AskPublicValue (publicProp, someView) into publicValue
-      set the publicProp of someView to publicValue
-   else
-      -- if publicValue is not an "s", or perhaps a switch
-      -- lets check by introspecting the script and checking the name of the param
-      put the view_BehaviorScript of someView into viewBehaviorScript
-      put script_GetSetProp (publicProp, viewBehaviorScript) into propHandler
-      if propHandler is empty then
-         -- check to see if it is OK, then continue
-         breakPoint
-      end if
-      
-      script_DeconstructSetPropHandler propHandler, handlerName, setPropValue, setPropParam
-      if setPropParam = empty then
-         set the publicProp of someView to publicValue
-      else
-         view_DoParamProp someView, publicProp, publicValue
-      end if
-   end if
-end view_DoPropertyMenu
 
-command menu_SetChoice menuChoice, @mainChoice, @secondChoice
+--> Private
+-
+private command _SetChoice menuChoice, @mainChoice, @secondChoice
    -- bug - needs to take account of quoted things like stack names with "|" in their name.
    text_StarQuoted menuChoice
    put the result into replacedArray
@@ -164,12 +195,9 @@ command menu_SetChoice menuChoice, @mainChoice, @secondChoice
    
    put firstLength + 2 into secondStart
    put char secondStart to -1 of oText into secondChoice
-end menu_SetChoice
+end _SetChoice
 
-
---> Private
--
-private command extractViewPropertyMenu someView, @propMenu, @publicProps  
+private command _ExtractMenu someView, @propMenu, @publicProps  
    put empty into propMenu
    put empty into publicProps
    put the view_BehaviorScript of someView into viewBehaviorScript
@@ -236,4 +264,4 @@ private command extractViewPropertyMenu someView, @propMenu, @publicProps
    delete char -1 of propMenu
    delete char -1 of publicProps
    return propMenu
-end extractViewPropertyMenu
+end _ExtractMenu

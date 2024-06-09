@@ -21,7 +21,7 @@ function menu_SimpleButton
    return mButton
 end menu_SimpleButton
 
-getprop menu_Controller mTitle
+getprop menu_Controller [mTitle]
    return menu_GetGlobalController (mTitle)
 end menu_Controller
 

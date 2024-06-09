@@ -11,6 +11,48 @@ version: 0.8
 
 --> Working on
 -
+getprop module_Folder
+   put the project_Folder of the target into projectFolder
+   if there is not a folder projectFolder then return empty
+   
+   put the effective filename of the defaultstack into sPath
+   set the itemdelimiter to slash
+   put the number of items of projectFolder into pNum
+   if item (pNum + 1) of sPath is not "Modules" then return empty
+   
+   put item 1 to (pNum + 2) of sPath & slash into moduleFolder
+   return moduleFolder
+end module_Folder
+
+getprop project_ModuleFolder [pModuleName]
+   put the template_Object of the target into tObject
+   if exists (tObject) is true then
+      -- we are asking about a view
+      put the stack_Object of tObject into stackObject
+   else
+      put the stack_Object of the target into stackObject
+   end if
+   put the effective filename of stackObject into stackPath
+   if stackPath is empty then return empty
+   
+   ## Find
+   put module_FindFolder (stackPath) into maybeModuleFolder
+   --
+   set the itemdelimiter to slash
+   put item -2 of maybeModuleFolder into testPathItem
+   switch
+      case maybeModuleFolder is empty
+         return empty
+      case pModuleName is not empty
+         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
+         return moduleFolder
+      case testPathItem = "modules"
+         return maybeModuleFolder
+      default
+         return empty
+   end switch
+end project_ModuleFolder
+
 
 
 --> Project | Names
@@ -89,37 +131,8 @@ end lcw_LoadCustomUserProject
 
 --> Props
 -
-getprop module_Folder [pModuleName]
-   put the template_Object of the target into tObject
-   if exists (tObject) is true then
-      -- we are asking about a view
-      put the stack_Object of tObject into stackObject
-   else
-      put the stack_Object of the target into stackObject
-   end if
-   put the effective filename of stackObject into stackPath
-   if stackPath is empty then return empty
-   
-   ## Find
-   put module_FindFolder (stackPath) into maybeModuleFolder
-   --
-   set the itemdelimiter to slash
-   put item -2 of maybeModuleFolder into testPathItem
-   switch
-      case maybeModuleFolder is empty
-         return empty
-      case pModuleName is not empty
-         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
-         return moduleFolder
-      case testPathItem = "modules"
-         return maybeModuleFolder
-      default
-         return empty
-   end switch
-end module_Folder
-
 getprop module_HomeStackPath [moduleName]
-   put the module_Folder [moduleName] of the target into moduleFolder
+   put the project_ModuleFolder [moduleName] of the target into moduleFolder
    put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
    if exists (stack moduleHomeStackPath) is false then return empty
    return moduleHomeStackPath

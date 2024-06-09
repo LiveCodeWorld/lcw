@@ -15,31 +15,83 @@ version: 0.1
 
 --> Display
 -
-command display_IndexArray indexArray, pTitle, pStackLabel, pOrdered, pNameKey, pDisplayView
-   -- see lib_ArrayIndex
-   if pOrdered is true then
-      put indexArray_GetNumbered (indexArray, pNameKey) into nArray
-      display_Data nArray, pTitle, pStackLabel, pDisplayView
-      put the result into displayView
-      set the show_Numbers of displayView to false
-      set the show_Separator of displayView to true
-   else
-      put indexArray_List (indexArray, pNameKey) into sLines
-      display_Data sLines, pTitle, pStackLabel, pDisplayView
-      put the result into displayView
-   end if
+command display_IndexArray indexArray, pTitle, pStackLabel, pOrdered, pNameKey, pPadNum, pDisplayView
+   switch
+      case pOrdered is true
+         put indexArray_GetNumbered (indexArray, pNameKey) into nArray
+         display_Data nArray, pTitle, pStackLabel, pDisplayView
+         put the result into dView
+         --
+         set the show_Numbers of dView to false
+         set the show_Separator of dView to true
+         break
+      case pPadNum is a number
+         put indexArray_ConstructNameArray (indexArray, pNameKey, pPadNum) into nameArray
+         --
+         if exists (pDisplayView) then
+            put pDisplayView into dView
+            --
+            set the displayed_Data [pTitle] of dView to nameArray
+            set the chars_ToTrim of dView to pPadNum
+            set the tree_SortType of dView to "numeric"
+            --
+            if pStackLabel is not empty then
+               put the stack_Name of dView into stackName
+               set the label of stack stackName to pStackLabel
+            end if
+         else
+            display_CloneInvisible pTitle, pStackLabel
+            put the result into dView
+            --
+            set the tree_SortType of dView to "numeric"
+            set the displayed_Data of dView to nameArray
+            set the chars_ToTrim of dView to pPadNum
+            
+            put the stack_Name of dView into stackName
+            -- stack_SetStyle stackName, pPalette
+            -- stack_Position stackName, pLocOrRect
+            show stack stackName
+         end if
+         break
+      default
+         put indexArray_List (indexArray, pNameKey) into sLines
+         display_Data sLines, pTitle, pStackLabel, pDisplayView
+         put the result into dView
+   end switch
    --
-   set the view_Data of displayView to indexArray
-   return displayView
+   set the view_Data of dView to indexArray
+   return dView
 end display_IndexArray
+
+
+--> IndexArray | Transform
+-
+function indexArray_ConstructNameArray indexArray, pNameKey, pPadNum
+   if pPadNum is empty then put 2 into pPadNum
+   if pNameKey is empty then put "name" into pNameKey
+   repeat with indexNum = 1 to item 2 of the extents of indexArray
+      put indexArray [indexNum] into itemArray
+      put itemArray [pNameKey] into sNameValue
+      --
+      number_PadLeft indexNum, pPadNum
+      put indexNum && sNameValue into sTitle
+      --
+      put itemArray into nameArray [sTitle]
+   end repeat
+   return nameArray
+end indexArray_ConstructNameArray
+
+function indexArray_GetNumbered indexArray, pNameKey
+   if pNameKey is empty then put "name" into pNameKey
+   repeat with indexNum = 1 to item 2 of the extents of indexArray
+      put indexArray [indexNum][pNameKey] into numArray [indexNum]
+   end repeat
+   return numArray
+end indexArray_GetNumbered
 
 
 --> IndexArray
 -
-function arrayIndex_List
-   
-end arrayIndex_List
-
 function indexArray_GetNamed indexArray, sName, sKey, pNameKey
    if pNameKey is empty then put "name" into pNameKey
    --
@@ -57,14 +109,6 @@ command indexArray_SetNamed @indexArray, sName, sKey, sValue, pNameKey
    --
    return indexNum
 end indexArray_SetNamed
-
-function indexArray_GetNumbered indexArray, pNameKey
-   if pNameKey is empty then put "name" into pNameKey
-   repeat with indexNum = 1 to item 2 of the extents of indexArray
-      put indexArray [indexNum][pNameKey] into numArray [indexNum]
-   end repeat
-   return numArray
-end indexArray_GetNumbered
 
 function indexArray_List indexArray, pNameKey
    if pNameKey is empty then put "name" into pNameKey

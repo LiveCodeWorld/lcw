@@ -12,6 +12,49 @@ A library for script behaviors.
 
 --> Working on
 -
+getprop behavior_InHierarchy [stackName]
+   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
+   --
+   put the behavior_Hierarchy of the target into bObjects
+   put the name of stack stackName into stackObject
+   return stackObject is among the lines of bObjects
+end behavior_InHierarchy
+
+setprop behavior_Remove stackName
+   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
+   --
+   put the behavior_Hierarchy of the target into bObjects
+   put the name of stack stackName into stackObject
+   line_Delete stackObject, bObjects
+   set the behavior_Hierarchy of the target to bObjects
+   --
+   return bObjects
+end behavior_Remove
+
+setprop behavior_Add stackName
+   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
+   --
+   put the behavior_Hierarchy of the target into bObjects
+   put the name of stack stackName into stackObject
+   line_Add stackObject, bObjects
+   set the behavior_Hierarchy of the target to bObjects
+   --
+   return bObjects
+end behavior_Add
+
+setprop behavior_Hierarchy bObjects
+   put the long id of the target into tObject
+   behavior_SetHierarchy tObject,  bObjects
+   put the result into bObjects
+   return bObjects
+end behavior_Hierarchy
+
+getprop behavior_Hierarchy
+   put the long id of the target into tObject
+   put behavior_GetHierarchy (tObject) into bObjects
+   return bObjects
+end behavior_Hierarchy
+
 
 --> Card | Behavior
 -
@@ -153,21 +196,6 @@ setprop behavior_StackNames bStackNames
    behavior_SetHierarchy tObject,  bObjects
    return the result
 end behavior_StackNames
-
-setprop behavior_AddStack stackName
-   if exists (stack stackName) is false then
-      return merge ("Error, stack '[[stackName]]' does nto exists.")
-   end if
-   --
-   put the long id of the target into targetObject
-   put behavior_GetHierarchy (targetObject) into bObjects
-   --
-   put the name of stack stackName into stackObject
-   line_Add stackObject, bObjects
-   --
-   behavior_SetHierarchy targetObject,  bObjects
-   return the result
-end behavior_AddStack
 
 
 --> Behavior | StackName

@@ -5,7 +5,7 @@ copyright: David Bovill
 license: GPLv3
 name: behavior_DisplayArray
 type: behavior
-version: 0.5
+version: 0.6
 
 /*
 This behavior_DisplayArray script only stack behavior controls the properties of the stack "Display Array".
@@ -18,9 +18,48 @@ local LocalArray
 
 --> Working on
 -
+getprop title_Text
+   put _HeaderWidget() into headerWidget
+   put the label of headerWidget into displayTitle
+   return displayTitle
+end title_Text
+
+setprop title_Text displayTitle
+   put _HeaderWidget() into headerWidget
+   set the label of headerWidget to displayTitle
+end title_Text
+
+command actionDoubleClick pathItems
+   -- not called
+   put the selected_Value of me into someValue
+   put the mouse_DoubleUp of me into mouseDoubleUpCommand
+   if mouseDoubleUpCommand is empty then
+      pass actionDoubleClick
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      replace comma with CR in pathItems
+      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
+      if it is "unhandled" then
+         edit the script of mouseTarget
+         put mouseDoubleUpCommand
+      end if
+   end if
+end actionDoubleClick
+
 on menuPick menuPath
    menu_DispatchTextPick menuPath
 end menuPick
+
+getprop chars_ToTrim
+   put the charsToTrimFromKey of _treeWidget() into padNum
+   return padNum
+end chars_ToTrim
+
+setprop chars_ToTrim padNum
+   put _TreeWidget() into treeWidget
+   set the charsToTrimFromKey of treeWidget to padNum
+   return treeWidget
+end chars_ToTrim
 
 getprop top_Data [pathNum]
    -- put the selected_TopData of me into topData
@@ -29,7 +68,7 @@ getprop top_Data [pathNum]
    put the arrayData of treeWidget into aData
    put the hilitedElement of treeWidget into commaPath
    if pathNum is a number then
-      subtract 1 from pathNum
+      -- subtract 1 from pathNum
       put item 1 to pathNum of commaPath into topPath
       split topPath with comma
       put aData [topPath] into topData
@@ -109,7 +148,7 @@ setprop tool_MenuBit [projectName] menuBit
    # Create menus if needed
    dispatch "ask_CreateMenuFromObject" to me with titleMenu,projectName
    
-   if the shiftKey is "Down" then
+   if the optionKey is "Down" then
       dispatch "ask_CreateMenuFromObject" to me with lineMenu,projectName
       dispatch "ask_CreateMouseDoubleUpHandler" to me with mDoubleUp
    end if
@@ -306,19 +345,6 @@ on actionInspect pPath
       dispatch mouseUpCommand to mouseTarget with displayView,someValue
    end if
 end actionInspect
-
-command actionDoubleClick pathItems
-   -- not called
-   put the selected_Value of me into someValue
-   put the mouse_DoubleUp of me into mouseDoubleUpCommand
-   if mouseDoubleUpCommand is empty then
-      pass actionDoubleClick
-   else
-      _SetMouseTargets tObject, displayView, mouseTarget
-      replace comma with CR in pathItems
-      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
-   end if
-end actionDoubleClick
 
 on resizeControl
    put the rect of me into viewRect
@@ -923,16 +949,6 @@ end LayoutControl
 
 --> Props | Title
 -
-getprop title_Text
-   put the label of _headerWidget() into displayTitle
-   return displayTitle
-end title_Text
-
-setprop title_Text displayTitle
-   if displayTitle is empty then put "Array" into displayTitle
-   set the label of _headerWidget() to displayTitle
-end title_Text
-
 getprop stack_Title
    put word 1 to -1 of the title_Text of me into stackTitle
    put word 1 to -1 of the stack_Label of me into stackLabel

@@ -9,6 +9,15 @@ version: 0.8
 
 --> Working on
 -
+function viewArray_GetInner nestedViewArray
+   put nestedViewArray ["nestedArray"] into nestedArray
+   put keys (nestedArray) into vName
+   put nestedArray [vName] into innerViewArray
+   --
+   delete variable innerViewArray ["metadata"]
+   return innerViewArray
+end viewArray_GetInner
+
 function view_ListOpen pMoreItems
    -- quick hack
    put the openStacks into stackNames

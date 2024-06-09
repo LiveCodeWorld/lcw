@@ -16,17 +16,20 @@ getprop menu_PickConditions
 end menu_PickConditions
 
 getprop hkey_CaseConditions [shortHKey]
-   put the long id of the target into scriptObject
-   put hkey_GetCaseConditions (shortHKey, scriptObject) into caseConditions
+   put the script_Handler [shortHKey] of the target into someHandler
+   put handler_ExtractCaseConditions (someHandler) into caseConditions
    return caseConditions
 end hkey_CaseConditions
 
 
 --> Hkey | Switch
 -
-function hkey_GetCaseConditions hKey, scriptObject
-   if the number of items of hKey = 4 and scriptObject is empty then put item 3 of hKey into scriptObject
-   put the script_Handler [hKey] of scriptObject into someHandler
+function hkey_GetCaseConditions hKey, pScriptObject
+   if exists (pScriptObject) is false then
+      hkey_Deconstruct hKey, hName, hType, pScriptObject, hNum
+   end if
+   --
+   put the script_Handler [hKey] of pScriptObject into someHandler
    put handler_ExtractCaseConditions (someHandler) into caseConditions
    return caseConditions
 end hkey_GetCaseConditions
