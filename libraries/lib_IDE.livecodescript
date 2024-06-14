@@ -53,9 +53,26 @@ getprop ide_MenuTitle [shortName]
 end ide_MenuTitle
 
 
---> IDE | Hack
--
 --> Working on
+-
+private command _ReIndexLocalIdeMenus
+   -- for when things go wrong
+   delete variable LocalArray ["environment"]["menu"]
+   repeat for each item ideElement in "List,Script,Recent"
+      repeat for each item shortTitle in "Default,Authoring, Watch"
+         put ide_ConstructMenuController (ideElement, shortTitle) into mController
+         if exists (mController) is true then
+            -- set the menu_Update of mController to true -- breaks due to deps
+            ide_SetMenuTitle ideElement, shortTitle
+         end if
+      end repeat
+   end repeat
+   put LocalArray ["environment"]["menu"] into localEnvMenuArray
+   return localEnvMenuArray
+end _ReIndexLocalIdeMenus
+
+
+--> IDE | Init
 -
 command ide_InitLcw
    ide_LoadDictionaryTerms
@@ -567,22 +584,3 @@ command scriptField_SetTokenInfo scriptLine, testScriptLine, @thisTokenNum, @nex
       put token prevTokenNum of scriptLine into previousToken
    end if
 end scriptField_SetTokenInfo
-
-
---> Private
--
-private command _ReIndexLocalIdeMenus
-   -- for when things go wrong
-   delete variable LocalArray ["environment"]["menu"]
-   repeat for each item ideElement in "List,Script,Recent"
-      repeat for each item shortTitle in "Default,Authoring, Watch"
-         put ide_ConstructMenuController (ideElement, shortTitle) into mController
-         if exists (mController) is true then
-            set the menu_Update of mController to true
-            ide_SetMenuTitle ideElement, shortTitle
-         end if
-      end repeat
-   end repeat
-   put LocalArray ["environment"]["menu"] into localEnvMenuArray
-   return localEnvMenuArray
-end _ReIndexLocalIdeMenus

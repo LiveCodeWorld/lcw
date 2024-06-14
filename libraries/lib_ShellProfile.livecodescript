@@ -15,6 +15,21 @@ version: 0.1
 
 --> Working on
 -
+command shell_AddSource @someShell
+   put "source ~/.zshrc;" before someShell
+end shell_AddSource
+
+command shell_WrapNohup @someShell, pLog
+   put "/usr/bin/nohup" & space before someShell
+   
+   put _RedirectBit (pLog) into reDirectOutput
+   put space & reDirectOutput after someShell
+   put space & "jobs -l" after someShell
+end shell_WrapNoHup
+
+
+--> Shell | Profile
+-
 command shell_AddBashProfileToPath pNewItems
    put shell_GetMergedPath (pNewItems) into $PATH
    -- put "/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin" into $PATH

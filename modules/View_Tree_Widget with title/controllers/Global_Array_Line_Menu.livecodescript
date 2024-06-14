@@ -5,7 +5,7 @@ copyright: David Bovill
 license: GPLv3
 name: Global | Array | Line | Menu
 type: controller
-version: 0.1
+version: 0.2
 
 /*Here you can describe this menu.
 Full help text should be provided on the linked wiki.*/
@@ -44,7 +44,15 @@ end _
 on menu_CreateLineMenu arrayView
    put the line_Menu of arrayView into mTitle
    put the displayed_Object of arrayView into linkedView
-   put the project_Name of linkedView into libName
+   if exists (linkedView) is true then
+      put the project_Name of linkedView into libName
+   else
+      put "What project or module would you like to create the menu '[[var]]' in?" into sComment
+      put lcw_Ask (sComment, "lcw_Tools", arrayView, mTitle) into libName
+      if exists (stack libName) is false then
+         lcw_Notify "Stack '[[var]]' does not exist!", "Error", libName
+      end if
+   end if
    --
    breakpoint
    ask_CreateMenuFromObject mTitle, libName
@@ -65,21 +73,22 @@ on menu_CreateLineMenu arrayView
 end menu_CreateLineMenu
 
 getprop checked_CreateLineMenu [arrayView]
-   put the line_Menu of arrayView into mTitle
-   switch mTitle
-      case empty
-         return false
-      case "Global | Array | Line | Menu"
-        return false
-      default
-         return true
-   end switch
+   put the line_Controller of arrayView into mController
+   return exists (mController)
 end checked_CreateLineMenu
 
 getprop disabled_CreateLineMenu [arrayView]
    put the line_Controller of arrayView into lineController
    return exists (lineController)
 end disabled_CreateLineMenu
+
+on menu_EditDoubleUpHandler arrayView
+   put the mouse_DoubleUp of arrayView into mDoubleUp
+   put the mouse_Target of arrayView into mTarget
+   --
+   put mDoubleUp
+   edit the script of mTarget
+end menu_EditDoubleUpHandler
    
 private on __
 end __
@@ -87,3 +96,4 @@ end __
 on submenu_Dev
    return menu_DevTitle ("Global | Array | Line | Menu")
 end submenu_Dev
+

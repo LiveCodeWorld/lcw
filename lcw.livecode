@@ -9,9 +9,7 @@ version: 0.7
 /*
 This is the Livecode World Home stack.
 We should probably turn it into a normal stack, and add preOpenStack handlrs.
-*/
 
-/*
 Here we will place handlers from lcw.livcode" after we refactor the init scripts from the stuff we don;t need to laod the initial libraires.
 
 Here we experiment with a minimal script-only definition of a general project home stack.
@@ -28,29 +26,12 @@ We are not (yet) indexing all nested stacks, rather just standard toplevel folde
 Stacks within the assets folder will not be indexed (not done yet).
 Assets are supposed to be things like images. videos, javascript, css html, json or arrays?
 
-= To Do =
+# To Do
 At the moment we have a script only stack with a large and complex script.
 This is not a good minimal architecture.
 Instead we want to move over to a minimal initialisation script, and use a Livecode stack for the HomeStack
 That way we can store certain standard code as a behavior (for instance the card script),
 as well as give the HomeStack and interface and some useful functionality.
-
--- function env_GetProjectFolder projectName
-put env_GetActiveProjectArray() into envProjectArray
-return envProjectArray [projectName]
-end env_GetProjectFolder
-
--- function env_GetActiveProjectArray
-global gLCW
-put gLCW ["environment"]["project"] into activeProjectArray
-return activeProjectArray
-end env_GetActiveProjectArray
-
--- function lcw_DefaultLibPath lcwHomeStackFile
-set the itemdelimiter to slash
-put "libraries/lib_LCW.livecodescript" into item -1 of lcwHomeStackFile
-return lcwHomeStackFile
-end lcw_DefaultLibPath
 */
 
 --> LCW | Me

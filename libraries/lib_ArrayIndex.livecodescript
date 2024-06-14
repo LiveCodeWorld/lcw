@@ -67,14 +67,17 @@ end display_IndexArray
 --> IndexArray | Transform
 -
 function indexArray_ConstructNameArray indexArray, pNameKey, pPadNum
-   if pPadNum is empty then put 2 into pPadNum
    if pNameKey is empty then put "name" into pNameKey
    repeat with indexNum = 1 to item 2 of the extents of indexArray
       put indexArray [indexNum] into itemArray
       put itemArray [pNameKey] into sNameValue
       --
-      number_PadLeft indexNum, pPadNum
-      put indexNum && sNameValue into sTitle
+      if pPadNum is a number then
+         number_PadLeft indexNum, pPadNum
+         put indexNum && sNameValue into sTitle
+      else
+         put sNameValue into sTitle
+      end if
       --
       put itemArray into nameArray [sTitle]
    end repeat

@@ -10,6 +10,40 @@ version: 0.4
 A library for script behaviors.
 */
 
+--> Card | Behavior
+-
+command card_CreateBehavior bStackName
+   put "lcw_Display" into projectName
+   --
+   put the project_Folder of stack projectName into projectFolder
+   if bStackName is empty then
+      ask_CreateProjectBehavior projectName
+      put the result into bStackPath
+      --
+      display_Project projectName
+      return bStackPath
+   end if
+   
+   put project_ConstructStackPath (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
+   if exists (stack newStackPath) then
+      ask_CreateProjectBehavior projectName
+      put the result into bStackPath
+   else
+      project_CreateBehavior bName, projectName
+      put the result into bStackPath
+   end if
+   --
+   display_Project projectName
+   return bStackPath
+end card_CreateBehavior
+
+function card_ListBehaviorNames
+   put project_ListStackNames ("behaviors", "lcw_Display") into sNames
+   filter sNames with "behavior_Card*"
+   return sNames
+end card_ListBehaviorNames
+
+
 --> Working on
 -
 getprop behavior_InHierarchy [stackName]
@@ -54,40 +88,6 @@ getprop behavior_Hierarchy
    put behavior_GetHierarchy (tObject) into bObjects
    return bObjects
 end behavior_Hierarchy
-
-
---> Card | Behavior
--
-command card_CreateBehavior bStackName
-   put "lcw_Display" into projectName
-   --
-   put the project_Folder of stack projectName into projectFolder
-   if bStackName is empty then
-      ask_CreateProjectBehavior projectName
-      put the result into bStackPath
-      --
-      display_Project projectName
-      return bStackPath
-   end if
-   
-   put project_ConstructStackPath (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
-   if exists (stack newStackPath) then
-      ask_CreateProjectBehavior projectName
-      put the result into bStackPath
-   else
-      project_CreateBehavior bName, projectName
-      put the result into bStackPath
-   end if
-   --
-   display_Project projectName
-   return bStackPath
-end card_CreateBehavior
-
-function card_ListBehaviorNames
-   put project_ListStackNames ("behaviors", "lcw_Display") into sNames
-   filter sNames with "behavior_Card*"
-   return sNames
-end card_ListBehaviorNames
 
 
 --> Props

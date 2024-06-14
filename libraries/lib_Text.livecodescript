@@ -232,7 +232,7 @@ end text_InitialCaps
 
 function text_StartsWithCaps someText
    put char 1 of sometext into testChar
-   put chartonum (testChar) into someCharNum
+   put nativeCharToNum (testChar) into someCharNum
    if someCharNum >= 97 and someCharNum <= 122 then
       return false
    else

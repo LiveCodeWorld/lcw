@@ -15,6 +15,15 @@ Those older names are a bit of a mess.
 
 --> Working on
 -
+function project_ConstructPageTitle projectName
+   return projectName
+   
+   -- put curlyData ["projectName"] into projectName
+   replace "lcw_" with empty in projectName
+   put "Project" && projectName into pageTitle
+   return pageTitle
+end project_ConstructPageTitle
+
 function project_NameToShortFile moduleName
    put lcw_PipesToUnderscore (moduleName) into shortFolder
    put shortFolder & ".livecodescript" into shortFile
@@ -27,6 +36,9 @@ getprop project_Modules
    return projectModules
 end project_Modules
 
+
+--> Project | Keywords
+-
 getprop project_KeyWords
    put the project_Name of the target into projectName
    put project_ConstructKeywords (projectName) into kWords
@@ -66,17 +78,16 @@ function project_ConstructKeywords projectName
    return kWords
 end project_ConstructKeywords
 
+function project_ConstructKeyWordLinks projectName
+   put project_ConstructKeywords (projectName) into tagItems
+   put markdown_TagItems (tagItems) into keyWordLinks
+   replace CR with ", " in keyWordLinks
+   return keyWordLinks
+end project_ConstructKeyWordLinks
+
 
 --> Project | Model | Files
 -
--- getprop project_ArrayFile
--- put the project_Name of the target into projectName
--- put project_ArrayFile (projectName) into projectArrayFile
-put the project_Folder of the target into projectFolder
-put projectFolder & "lcw_project.array" into projectArrayFile
-return projectArrayFile
-end project_ArrayFile
-
 getprop project_JsonFile
    put the project_Name of the target into projectName
    put project_JsonFile (projectName) into projectArrayFile
