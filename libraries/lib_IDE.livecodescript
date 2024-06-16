@@ -4,38 +4,12 @@
 license: GPLv3
 name: lib_IDE
 type: library
-version: 0.3
+version: 0.4
 
 local LocalArray
 
 /*
-Gloabl gREVStackStatus is no longer used
--- from stack revidelibrary
-put sStackEdited into editedStackArray
-
-put revTargetStack(pObject) into tStack
-
-on revSESetScript pScript
-   dispatch "textSetScript" to field "Script" of me with pScript
-end revSESetScript
-
-function revSEGetScript pScript
-   dispatch function "textGetScript" to field "Script" of me
-   return the result
-end revSEGetScript
-
-on revSEIndentScript
-   dispatch "scriptFormat" to field "Script" of me with "script"
-end revSEIndentScript
-
-on revSEApply pIgnoreErrors
-   actionCompile pIgnoreErrors
-end revSEApply
-
-function revSEGetSelectedText
-   return the selectedText of field "Script" of me
-end revSEGetSelectedText
-
+A library to interface with teh Revolution IDE.
 */
 
 

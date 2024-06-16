@@ -66,6 +66,17 @@ end display_IndexArray
 
 --> IndexArray | Transform
 -
+function indexArray_ToJson indexArray
+   local jsonBit
+   repeat with itemNum = 1 to item 2 of the extents of indexArray
+      put indexArray [itemNum] into itemArray
+      put JSONExport (itemArray) into itemJSON
+      put itemJSON & comma & CR after jsonBit
+   end repeat
+   delete char -2 to -1 of jsonBit
+   return jsonBit
+end indexArray_ToJson
+
 function indexArray_ConstructNameArray indexArray, pNameKey, pPadNum
    if pNameKey is empty then put "name" into pNameKey
    repeat with indexNum = 1 to item 2 of the extents of indexArray
