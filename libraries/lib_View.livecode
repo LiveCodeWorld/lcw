@@ -205,6 +205,12 @@ getprop view_Dictionary
    return viewDictionary
 end view_Dictionary
 
+getprop view_NestedNames
+   put the long id of the target into tObject
+   put view_ListNestedNames (tObject) into innerViewNames
+   return innerViewNames
+end view_NestedNames
+
 getprop view_NestedArray
    local nestedViewArray
    put the view_Object of the target into vObject
@@ -257,6 +263,13 @@ function rev_BehaviorID someObject
    put word 1 of longIDObject into word 1 of behaviorObject
    return behaviorObject
 end rev_BehaviorID
+
+function view_ListNestedNames tObject
+   put the view_NestedArray of tObject into nestedViewArray
+   put viewArray_GetInner (nestedViewArray) into innerViewArray
+   put keys (innerViewArray) into innerViewNames
+   return innerViewNames   
+end view_ListNestedNames
 
 function view_GetDictionaryObjects viewDictionary
    put item 2 of the extents of viewDictionary into maxViewNum

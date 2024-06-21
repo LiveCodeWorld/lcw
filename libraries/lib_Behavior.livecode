@@ -44,6 +44,41 @@ function card_ListBehaviorNames
 end card_ListBehaviorNames
 
 
+--> Props | Card
+-
+getprop card_BehaviorName
+   put the card_Object of the target into cObject
+   if exists (cObject) is false then return empty
+   put the behavior of cObject into bObject
+   if exists (bObject) is false then return empty
+   
+   put the short name of bObject into sName
+   if char 1 to 13 of sName is "behavior_Card" then
+      delete char 1 to 13 of sName
+      return sName
+   else
+      return empty
+   end if
+end card_BehaviorName
+
+setprop card_BehaviorName sName
+   put "behavior_Card" & sName into stackName
+   if exists (stack stackName) is false then
+      put "behavior_CardMargin" into stackName
+      if exists (stack stackName) is false then
+         return empty
+      end if
+   end if
+   put the long id of stack stackName into bObject
+   --
+   put the card_Object of the target into cObject
+   if exists (cObject) is false then return empty
+   --
+   set the behavior of cObject to bObject
+   return bObject
+end card_BehaviorName
+
+
 --> Working on
 -
 getprop behavior_InHierarchy [stackName]
@@ -90,42 +125,6 @@ getprop behavior_Hierarchy
 end behavior_Hierarchy
 
 
---> Props
--
-getprop card_BehaviorName
-   put the card_Object of the target into cObject
-   if exists (cObject) is false then return empty
-   put the behavior of cObject into bObject
-   if exists (bObject) is false then return empty
-   
-   put the short name of bObject into sName
-   if char 1 to 13 of sName is "behavior_Card" then
-      delete char 1 to 13 of sName
-      return sName
-   else
-      return empty
-   end if
-end card_BehaviorName
-
-setprop card_BehaviorName sName
-   put "behavior_Card" & sName into stackName
-   if exists (stack stackName) is false then
-      put "behavior_CardMargin" into stackName
-      if exists (stack stackName) is false then
-         return empty
-      end if
-   end if
-   put the long id of stack stackName into bObject
-   --
-   put the card_Object of the target into cObject
-   if exists (cObject) is false then return empty
-   --
-   set the behavior of cObject to bObject
-   return bObject
-end card_BehaviorName
-
-
-
 --> Behavior
 -
 setprop behavior_ClearNames stackNames
@@ -135,6 +134,8 @@ setprop behavior_ClearNames stackNames
    --
    repeat for each line stackName in stackNames
       if exists (stack stackName) is false then next repeat
+      put the long id of stack stackName into bObject
+      if tObject = bObject then next repeat
       --
       put the name of stack stackName into sObject
       set the behavior of sObject to empty
@@ -164,15 +165,12 @@ setprop behavior_StackNames stackNames
    put the long id of the target into tObject
    
    # Clear any behaviors (or we might cause a loop)
-   put behavior_GetHierarchy (tObject) into oObjects
-   behavior_Clear oObjects
+   _ClearBehaviors tObject
    
    repeat for each line stackName in stackNames
       if exists (stack stackName) is false then next repeat
       put the long id of stack stackName into bObject
-      if tObject = bObject then
-         next repeat
-      end if
+      if tObject = bObject then next repeat
       
       set the behavior of tObject to bObject
       put bObject into tObject
@@ -245,14 +243,14 @@ end behavior_Handler
 --> Behavior | Hierarchy
 -
 getprop behavior_Objects
-   put the long id of the target into targetObject
-   put behavior_GetHierarchy (targetObject) into bObjects
+   put the long id of the target into tObject
+   put behavior_GetHierarchy (tObject) into bObjects
    return bObjects
 end behavior_Objects
 
 setprop behavior_Objects bObjects
-   put the long id of the target into targetObject
-   behavior_SetHierarchy targetObject,  bObjects
+   put the long id of the target into tObject
+   behavior_SetHierarchy tObject,  bObjects
    return the result
 end behavior_Objects
 
@@ -263,41 +261,50 @@ end behavior_LastObject
 
 --> Behaviors
 -
-command behavior_Clear bObjects
-   repeat for each line bObject in bObjects
-      if exists (bObject) is false then
-         return bObject
-      end if
-      set the behavior of bObject to empty
-   end repeat
-   return empty
-end behavior_Clear
-
-function behavior_GetHierarchy targetObject
+function behavior_GetHierarchy tObject
    repeat
-      put the behavior of targetObject into bObject
+      put the behavior of tObject into bObject
       if exists(bObject) is false then exit repeat
       put bObject & CR after bObjects
-      put bObject into targetObject
+      put bObject into tObject
    end repeat
    delete char -1 of bObjects
    return bObjects
 end behavior_GetHierarchy
 
-command behavior_SetHierarchy targetObject,  bObjects
+command behavior_SetHierarchy tObject, bObjects
    if bObjects is empty then
-      -- instead let's clear the existing behavior hierarchy
-      put behavior_GetHierarchy (targetObject) into bObjects
-      behavior_Clear bObjects
+      # Clear the existing behavior hierarchy
+      put behavior_GetHierarchy (tObject) into bObjects
+      _ClearBehaviors tObject
       return empty
    end if
    
-   -- first we need to clear any behaviors (or we might casue a behavior loop)
-   behavior_Clear bObjects
+   # Clear all behaviors (or we might casue a behavior loop)
+   _ClearBehaviors tObject
    
    repeat for each line bObject in bObjects
-      set the behavior of targetObject to bObject
-      put bObject into targetObject
+      set the behavior of tObject to bObject
+      put bObject into tObject
    end repeat
    return bObjects
 end behavior_SetHierarchy
+
+
+--> Private
+-
+private command _ClearBehaviors tObject
+   put the behavior of tObject into myBehavior
+   put behavior_GetHierarchy (tObject) into oObjects
+   
+   repeat for each line bObject in bObjects
+      switch
+         case exists (bObject) is false
+         case the long id of bObject = the long id of myBehavior
+            next repeat
+         default
+            set the behavior of bObject to empty
+      end switch
+   end repeat
+   return empty
+end _ClearBehaviors

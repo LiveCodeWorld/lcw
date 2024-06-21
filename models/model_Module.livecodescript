@@ -11,6 +11,75 @@ version: 0.3
 
 --> Working on
 -
+getprop stack_View
+   -- top view of first card (see also "card_ViewObject")
+   put the short name of the defaultstack into stackName
+   put the long id of cd 1 of stack stackName into cardObject
+   if exists (control 1 of cardObject) is false then return empty
+   
+   put the view_Object of control 1 of cardObject into vObject
+   return vObject
+end stack_View
+
+getprop card_ViewObject
+   -- assumes its the first control (can be a card)
+   -- this is a default (should add this getprop to eveny modules card script/behavior)
+   -- unless overridden by card_ViewObject getprop
+   
+   put the long id of cd 1 of the defaultstack into cardObject
+   if exists (control 1 of cardObject) then
+      return the long id of control 1 of cardObject
+   else
+      return cardObject
+   end if
+end card_ViewObject
+
+
+--> Props | Module
+-
+getprop module_MenuTitle [menuBit]
+   if menu_IsGlobal (menuBit) then return menuBit
+   
+   put the module_Name of the target into moduleName
+   if moduleName is empty then
+      put the view_Name of the target into moduleName
+   end if
+   if moduleName is empty then return empty
+   
+   if menuBit is empty then
+      put moduleName into vName
+   else
+      put moduleName & "|" & menuBit into vName
+   end if
+   
+   put menu_GlobalTitleFromViewName (vName) into globalMenuTitle
+   return globalMenuTitle
+end module_MenuTitle
+
+getprop module_ControllerStackNames
+   put the long id of the target into tObject
+   put the module_Controllers of tObject into cObjects
+   repeat for each line cObject in cObjects
+      put the stack_Name of cObject into cName
+      put cName & CR after cNames 
+   end repeat
+   delete char -1 of cNames
+   sort cNames
+   return cNames
+end module_ControllerStackNames
+
+getprop module_View
+   -- a lazy default (should have specific handler in card script or behavior)
+   put the short name of the defaultstack into stackName
+   put the long id of cd 1 of stack stackName into cardObject
+   if exists (control 1 of cardObject) is false then return empty
+   
+   put the view_Name of control 1 of cardObject into viewName
+   if viewName = stackName then
+      return the long id of control 1 of cardObject
+   end if
+end module_View
+
 function menu_TitleFromController mController
    -- Caution: we assume that the stack is named the same as the global menu
    put the stack_Name of mController into stack_Name
@@ -54,25 +123,6 @@ getprop module_ControllerPath [menuBit]
    return cPath
 end module_ControllerPath
 
-getprop module_MenuTitle [menuBit]
-   if menu_IsGlobal (menuBit) then return menuBit
-   
-   put the module_Name of the target into moduleName
-   if moduleName is empty then
-      put the view_Name of the target into moduleName
-   end if
-   if moduleName is empty then return empty
-   
-   if menuBit is empty then
-      put moduleName into vName
-   else
-      put moduleName & "|" & menuBit into vName
-   end if
-   
-   put menu_GlobalTitleFromViewName (vName) into globalMenuTitle
-   return globalMenuTitle
-end module_MenuTitle
-
 function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
    -- see "menu_GlobalTitleFromViewName"
    
@@ -101,40 +151,11 @@ getprop module_Controllers
    return moduleControllers
 end module_Controllers
 
-getprop module_ControllerStackNames
-   put the long id of the target into tObject
-   put the module_Controllers of tObject into cObjects
-   repeat for each line cObject in cObjects
-      put the stack_Name of cObject into cName
-      put cName & CR after cNames 
-   end repeat
-   delete char -1 of cNames
-   sort cNames
-   return cNames
-end module_ControllerStackNames
-
 function module_ListControllerStackPaths moduleName, projectFolder
    put module_GetControllerFolder (moduleName, projectFolder) into moduleControllerFolder
    put folder_ListStackPaths (moduleControllerFolder) into stackPaths
    return stackPaths
 end module_ListControllerStackPaths
-
-getprop module_View
-   -- a lazy default 
-   -- should have specific handler in card script or behavior
-   
-   put the short name of the defaultstack into stackName
-   put the long id of cd 1 of stack stackName into cardObject
-   
-   if exists (control 1 of cardObject) then
-      put the view_Name of control 1 of cardObject into viewName
-      if viewName = stackName then
-         return the long id of control 1 of cardObject
-      end if
-   end if
-   
-   return empty
-end module_View
 
 command module_Initialise moduleName, projectName
    -- for convenience
@@ -202,7 +223,12 @@ getprop module_DefaultBehavior
 end module_DefaultBehavior
 
 getprop module_ViewName [moduleName]
-   put the module_View [moduleName] of the target into moduleView
+   if moduleName is empty then
+      put the module_View of the target into moduleView
+   else
+      put module_GetTemplateObject (moduleName) into moduleView
+   end if
+   
    if exists (moduleView) is false then return empty
    put the view_Name of moduleView into viewName
    return viewName
@@ -246,11 +272,6 @@ getprop module_BehaviorPaths
    put folder_ListStackPaths (moduleBehaviorFolder) into stackPaths
    return stackPaths
 end module_BehaviorPaths
-
-getprop module_View [moduleName]
-   put module_GetTemplateObject (moduleName) into moduleView
-   return moduleView
-end module_View
 
 getprop module_StackPaths
    put the module_Folder of the target into moduleFolder

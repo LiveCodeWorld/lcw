@@ -4,7 +4,27 @@
 license: GPLv3
 name: model_Assets
 type: model
-version: 0.3
+version: 0.4
+
+
+--> Working on
+-
+getprop module_HtmlFile [relPath]
+   put the module_Folder of the target into mFolder
+   if there is not a folder mFolder then return empty
+   if relPath is empty then put "index.html" into relPath
+   --
+   put asset_GetFile (mFolder, relPath) into sFile
+   return sFile
+end module_HtmlFile
+
+getprop module_ShortHtmlFiles [shortAssetFolder]
+   put the module_Folder of the target into mFolder
+   if there is not a folder mFolder then return empty
+   
+   put asset_ListFiles (mFolder, shortAssetFolder, true) into sFiles
+   return sFiles
+end module_ShortHtmlFiles
 
 
 --> Asset | Utils

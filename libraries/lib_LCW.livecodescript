@@ -797,10 +797,9 @@ command project_Start projectName, pForceLoad
    end if
    put the stack_Folder of stack projectName into projectFolder
    --
-   display_LoadProject projectName
+   -- display_LoadProject projectName
    --
    env_RecursivelyLoadProjects homeStackObject, pForceLoad -- not dispatching any more
-   --
    project_LoadFromFolder projectFolder
    --
    put merge ("Finished project '[[projectName]]'!") into someComment

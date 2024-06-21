@@ -66,6 +66,18 @@ end display_IndexArray
 
 --> IndexArray | Transform
 -
+function indexArray_FilterWithout indexArray, sKey, sValue
+   put 1 into newItemNum
+   repeat with itemNum = 1 to item 2 of the extents of indexArray
+      put indexArray [itemNum] into itemArray
+      if itemArray [sKey] = sValue then
+         put itemArray into filterArray [newItemNum]
+         add 1 to newItemNum
+      end if
+   end repeat
+   return filterArray
+end indexArray_FilterWithout
+
 function indexArray_ToJson indexArray
    local jsonBit
    repeat with itemNum = 1 to item 2 of the extents of indexArray
