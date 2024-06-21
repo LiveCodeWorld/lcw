@@ -29,6 +29,16 @@ end ide_MenuTitle
 
 --> Working on
 -
+command ide_SetHanderFieldBehavior sBoolean
+   put scriptEditor_HandlerListBehavior() into bObject
+   --
+   if sBoolean  is not false then
+      set the behavior of rev_HandlerTreeField() to bObject
+   else
+      set the behavior of rev_HandlerTreeField() to empty
+   end if
+end ide_SetHanderFieldBehavior
+
 private command _ReIndexLocalIdeMenus
    -- for when things go wrong
    delete variable LocalArray ["environment"]["menu"]
