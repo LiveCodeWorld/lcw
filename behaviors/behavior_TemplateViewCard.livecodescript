@@ -75,6 +75,17 @@ end dragLeave
 
 --> Working on
 -
+getprop displayed_Object
+   return the displayed_Object of me
+end displayed_Object
+
+setprop displayed_Object sObject
+   set the displayed_Object of me to sObject
+end displayed_Object
+
+
+--> Events
+--
 on openStack
    -- this is called for every view
    put the stack_Name of the target into stackName
@@ -125,10 +136,6 @@ getprop menubar_View
       return empty
    end if
 end menubar_View
-
-getprop displayed_Object
-   return the view_Object of me
-end displayed_Object
 
 getprop view_Object
    if exists (control 1 of me) is false then return empty

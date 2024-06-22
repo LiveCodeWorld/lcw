@@ -19,6 +19,62 @@ command shell_AddSource @someShell
    put "source ~/.zshrc;" before someShell
 end shell_AddSource
 
+function ps_Grep pCommand
+   put "grep" && pCommand into grepCommand
+   
+   -- put "ps xw |" && grepCommand into someShell -- nicer
+   --  2868   ??  S      0:01.17 caddy run --pingback 127.0.0.1:49244
+   
+   put "ps aux |" && grepCommand into someShell
+   -- david             2868   0.0  0.2 411384544  16208   ??  S     1:31pm   0:01.12 caddy run --pingback 127.0.0.1:49244
+   
+   put shell (someShell) into shellResult
+   --
+   repeat for each line sLine in shellResult
+      if word -2 to -1 of sLine = grepCommand then next repeat
+      --
+      put word 2 of sLine into pid
+      put pid & comma after pids
+   end repeat
+   delete char -1 of pids
+   return pids
+end ps_Grep
+
+
+--> Nohup
+-
+command nohup_DoShell someShell, pLog
+   put nohup_Add (someShell) into noHupShell
+   --
+   put shell (noHupShell) into shellResult
+   -- [1]+  3122 Running                 /usr/bin/nohup /Users/david/.nvm/versions/node/v21.0.0/bin/wiki --security_legacy > /dev/null 2>&1 &
+   put word 2 of shellResult into pID
+   return pID
+end nohup_DoShell
+
+function nohup_Add someShell
+   put "nohup" && someShell into noHupShell
+   
+   # Add redirect output bit (log if needed)
+   put space & bash_RedirectBit (pLog) after noHupShell
+   put space & "jobs -l" after noHupShell
+   --
+   return noHupShell
+end nohup_Add
+
+function bash_RedirectBit pLog
+   -- put "> /dev/null 2>&1 < /dev/null" into reDirectOutput
+   if pLog is true then
+      put "> nohup.out 2> error.log &" after reDirectOutput
+   else
+      put "> /dev/null 2>&1 &" after reDirectOutput
+   end if
+   return reDirectOutput
+end bash_RedirectBit
+
+
+--> Shell
+-
 command shell_WrapNohup @someShell, pLog
    put "/usr/bin/nohup" & space before someShell
    
