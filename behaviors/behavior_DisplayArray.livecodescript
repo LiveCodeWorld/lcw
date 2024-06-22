@@ -38,6 +38,10 @@ end _DefaultMouseTarget
 
 --> Events
 -
+on mouseDoubleUp
+   breakpoint -- not issued to either widget
+end mouseDoubleUp
+
 on mouseUp
    ## Only when the user click on the header
    -- tree widget does not send to mouseUp
@@ -58,10 +62,23 @@ on mouseUp
             mArray_PopUp mTitle, mButton
          catch sError
             mArray_PopUp "Global | Module | Error | Menu", mButton
-            -- mArray_PopUp "Global | Module | Tree | Menu", mButton
          end try
       default
-         -- clicked on the title
+         # Clicked on the title
+         if the shiftkey is "Down" then
+            put the stack_Style of me into oStyle
+            switch oStyle
+               case "toplevel"
+                  set the stack_Style of me to "palette"
+                  break
+               case "palette"
+                  set the stack_Style of me to "toplevel"
+                  break
+               default
+                  put oStyle
+                  breakpoint
+            end switch
+         end if
    end switch
 end mouseUp
 
