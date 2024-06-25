@@ -18,6 +18,36 @@ local LocalArray
 
 --> Working on
 -
+getprop tree_IsIndex
+   return LocalArray ["isIndex"] is true
+end tree_IsIndex
+
+getprop selected_LineNumber
+   return the selected_LineNum of me
+end selected_LineNumber
+
+setprop selected_LineNumber lineNum
+   set the selected_LineNum of me to lineNum
+end selected_LineNumber
+
+getprop selected_LineNum
+   -- just top-level lines and assume
+   put the selected_Line of me into topLine
+   
+   set the wholematches to true
+   put _SortedTopKeys() into topKeys
+   put lineoffset (topLine, topKeys) into topLineNum
+   
+   return topLineNum
+end selected_LineNum
+
+setprop selected_LineNum textOrNumber
+   if textOrNumber is a number then
+      breakpoint -- fix: not sure how to handle this
+   end if
+   set the hilited_Element of me to lineNum
+end selected_LineNum
+
 private command _SetMouseTargets @tObject, @displayView, @mouseTarget
    put the long id of the target into tObject
    put the long id of me into displayView
@@ -66,6 +96,7 @@ on mouseUp
       default
          # Clicked on the title
          if the shiftkey is "Down" then
+            set the title_Colour of me to colour_GetRandom()
             put the stack_Style of me into oStyle
             switch oStyle
                case "toplevel"
@@ -710,29 +741,6 @@ end deleted_Line
 
 --> Props | Selected
 -
-getprop selected_LineNumber
-   return the selected_LineNum of me
-end selected_LineNumber
-
-setprop selected_LineNumber lineNum
-   set the selected_LineNum of me to lineNum
-end selected_LineNumber
-
-getprop selected_LineNum
-   -- just top-level lines and assume
-   put the selected_Line of me into topLine
-   
-   set the wholematches to true
-   put _SortedTopKeys() into topKeys
-   put lineoffset (topLine, topKeys) into topLineNum
-   
-   return topLineNum
-end selected_LineNum
-
-setprop selected_LineNum lineNum
-   set the hilited_Element of me to lineNum
-end selected_LineNum
-
 getprop selected_Path
    put _treeWidget() into treeWidget
    put the hilitedElement of treeWidget into commaPath

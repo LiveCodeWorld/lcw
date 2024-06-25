@@ -7,6 +7,23 @@ name: model_User
 type: model
 version: 0.1
 
+/*
+This library is for stroing user preferences. The following handler is for use with revIgniter:
+
+function user_GetArray shortFile
+   if the environment = "server" then
+      -- put gConfig ["dropBoxAuthToken"] into dropBoxAuthToken
+      -- put rigFetchConfigItem ("dropBoxAuthToken") into dropBoxAuthToken
+      put rigLoadConfigFile (shortFile, TRUE) into modelArray
+   else
+      -- put the model_Array [shortFile] of stack "lcw_User" into modelArray
+      
+      put user_GetModelFile (shortFile) into modelFile
+      put array_FromFile (modelFile) into modelArray
+   end if
+   return modelArray
+end user_GetArray
+*/
 
 --> User
 -
@@ -16,7 +33,7 @@ end user_Array
 
 setprop user_Array [pShortFile] modelArray
    if modelArray is empty then
-      breakpoint
+      return empty
    end if
    user_SetArray pShortFile, modelArray
    put the result into modelDataFile
@@ -68,16 +85,8 @@ function user_GetModelFile shortFile
 end user_GetModelFile
 
 function user_GetArray shortFile
-   if the environment = "server" then
-      -- put gConfig ["dropBoxAuthToken"] into dropBoxAuthToken
-      -- put rigFetchConfigItem ("dropBoxAuthToken") into dropBoxAuthToken
-      put rigLoadConfigFile (shortFile, TRUE) into modelArray
-   else
-      -- put the model_Array [shortFile] of stack "lcw_User" into modelArray
-      
-      put user_GetModelFile (shortFile) into modelFile
-      put array_FromFile (modelFile) into modelArray
-   end if
+   put user_GetModelFile (shortFile) into modelFile
+   put array_FromFile (modelFile) into modelArray
    return modelArray
 end user_GetArray
 

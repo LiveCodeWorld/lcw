@@ -10,6 +10,24 @@ version: 0.4
 A library for script behaviors.
 */
 
+
+--> Working on
+-
+function behavior_GetHierarchy tObject, pUseRugged
+   repeat
+      put the behavior of tObject into bObject
+      if exists (bObject) is false then exit repeat
+      if pUseRugged is not false then
+         put revRuggedId (bObject) into bObject
+      end if
+      put bObject & CR after bObjects
+      put bObject into tObject
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_GetHierarchy
+
+
 --> Card | Behavior
 -
 command card_CreateBehavior bStackName
@@ -242,9 +260,9 @@ end behavior_Handler
 
 --> Behavior | Hierarchy
 -
-getprop behavior_Objects
+getprop behavior_Objects [useRugged]
    put the long id of the target into tObject
-   put behavior_GetHierarchy (tObject) into bObjects
+   put behavior_GetHierarchy (tObject, useRugged) into bObjects
    return bObjects
 end behavior_Objects
 
@@ -261,17 +279,6 @@ end behavior_LastObject
 
 --> Behaviors
 -
-function behavior_GetHierarchy tObject
-   repeat
-      put the behavior of tObject into bObject
-      if exists(bObject) is false then exit repeat
-      put bObject & CR after bObjects
-      put bObject into tObject
-   end repeat
-   delete char -1 of bObjects
-   return bObjects
-end behavior_GetHierarchy
-
 command behavior_SetHierarchy tObject, bObjects
    if bObjects is empty then
       # Clear the existing behavior hierarchy
