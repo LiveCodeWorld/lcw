@@ -37,6 +37,52 @@ though some sort of naming convention that links group names to views would help
 
 --> Working on
 -
+function module_CheckFirstView viewObject
+   breakpoint -- not used yet?
+   if exists (viewObject) is false then return false
+   put the first_Control of viewObject into firstObject
+   if viewObject is not firstObject then return false
+   
+   put the view_Name of firstObject into viewName
+   put the stack_Name of firstObject into stackName
+   return stackName is viewName
+end module_CheckFirstView
+
+function view_GetTemplateObject viewName, pRepoFolder
+   view_NormalizeName viewName
+   put stack_FirstControl (viewName) into mObject
+   --
+   -- if exists (mObject) is false then put module_FromViewName (viewName, pRepoFolder) into mObject
+   return mObject
+end view_GetTemplateObject
+
+
+--> First Control
+-
+getprop first_Control
+   put the short name of the defaultstack into sName
+   put stack_FirstControl (sName) into sObject
+   return sObject 
+end first_Control
+
+function stack_FirstControl sPath
+   if exists (control 1 of card 1 of stack sPath) then
+      return the long id of control 1 of card 1 of stack sPath
+   else
+      return empty
+   end if
+end stack_FirstControl
+
+function module_FromViewName viewName, pRepoFolder
+   put library_ListProjectModules() into moduleStackNames
+   put env_ConstructProjectFolder (viewName, pRepoFolder) into moduleFolder
+   if moduleFolder is empty then return empty
+   
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
+   put stack_FirstControl (moduleHomeStackPath) into mObject
+   return mObject
+end module_FromViewName
+
 command view_CreateBehaviorGroup viewObject, pUseBehaviorCard
    put the view_BehaviorGroup of viewObject into viewBehaviorGroup
    if exists (viewBehaviorGroup) then return viewBehaviorGroup
@@ -227,26 +273,6 @@ getprop view_TemplateStack
    put the name of stack viewName into stackObject
    return stackObject
 end view_TemplateStack
-
-function view_GetTemplateObject viewName, pRepoFolder
-   view_NormalizeName viewName
-   if exists (control 1 of stack viewName) then
-      put the long id of control 1 of stack viewName into templateObject
-      return templateObject
-   end if
-   
-   put library_ListProjectModules() into moduleStackNames
-   put env_ConstructProjectFolder (viewName, pRepoFolder) into moduleFolder
-   -- put library_FetchProjectFolder (viewName) into moduleFolder
-   if moduleFolder is empty then return empty
-   
-   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
-   if exists (control 1 of card 1 of stack moduleHomeStackPath) then
-      return the long id of control 1 of card 1 of stack moduleHomeStackPath
-   end if
-   
-   return empty
-end view_GetTemplateObject
 
 function view_GetTemplateBehavior vName
    put view_GetTemplateObject (vName) into templateObject

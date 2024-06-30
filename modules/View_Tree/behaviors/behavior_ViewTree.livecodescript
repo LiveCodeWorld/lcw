@@ -1,0 +1,1593 @@
+﻿script "behavior_ViewTree"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: behavior_ViewTree
+type: behavior
+version: 0.1
+
+/*
+This behavior is a fork of the behavior_DisplayArray behavior used to display arrays.
+*/
+
+
+--> Variables
+-
+local LocalArray
+local Header_Height = 55
+
+
+--> Geometry
+-
+getprop header_Height
+   return Header_Height
+end header_Height
+
+setprop header_Height sHeight
+   if sHeight is not a number then return "Error, height is not a number"
+   put the rect of me into vRect
+   
+   lock screen
+   put sHeight into Header_Height
+   LayoutControl vRect
+   unlock screen
+end header_Height
+
+private function _headerHeight
+   return Header_Height
+end _headerHeight
+
+private function _headerRect stackRect
+   put item 2 of stackRect + _headerHeight() into item 4 of stackRect
+   return stackRect
+end _headerRect
+
+private function _fieldRect stackRect
+   add _headerHeight() to item 2 of stackRect
+   subtract _footerHeight() from item 4 of stackRect
+   return stackRect
+end _fieldRect
+
+private function _footerRect stackRect
+   put item 4 of stackRect - _footerHeight() into item 2 of stackRect
+   return stackRect
+end _footerRect
+
+private function _footerHeight
+   if the show_Footer of me is true then
+      return 40
+   else
+      return 0
+   end if
+end _footerHeight
+
+
+--> Working on
+-
+on mouseDown
+   switch word 1 of the name of the target
+      case "button"
+         _DoButtonMenu
+         break
+      case "field"
+         _DoFieldDown
+         break
+   end switch
+   --
+   lcw_Notify the params
+end mouseDown
+
+private command _DoButtonMenu
+   put the menu_Button of me into mButton
+   set the menumode of mButton to "pulldown" -- seems to be needed!
+   --
+   put the title_Menu of me into mTitle
+   put the menu_Button of me into mButton
+   switch
+      case the controlkey is "Down"
+         put "Global | Index | Simple | Menu" into gMenuTitle
+         mArray_PullDown gMenuTitle, mButton
+         break
+      default
+         mArray_MouseDown mTitle, mButton
+   end switch
+end _DoButtonMenu
+
+private command _DoFieldDown
+   put word 2 of the clickline into cNum
+   if the controlkey is "Down" then
+      set the hilitedlines of the target to cNum
+      put the line_Menu of me into lineTitle
+      
+      # Option Edit
+      put the line_Controller [lineTitle] of me into mController
+      if exists (mController) is false then
+         dispatch "ask_CreateTreeFieldMenu" to me with lineTitle
+      else
+         put the menu_Button of me into mButton
+         mArray_PopUp lineTitle, mButton
+      end if
+   else
+      put the drop_Command of me into dCommand
+      if dCommand is empty then return false
+      
+      put the selectedtext of the target into someText
+      -- set the dragImage to 3137
+      set the dragAction to "copy"
+      set the dragData ["text"] to someText
+      return true
+   end if
+end _DoFieldDown
+
+
+--> Show
+-
+getprop show_Field
+   return the visible of _IndexField()
+end show_Field
+
+setprop show_Field someBoolean
+   put the rect of me into vRect
+   
+   lock screen
+   set the visible of _IndexField() to someBoolean
+   set the visible of _MenuButton() to someBoolean
+   --
+   set the visible of _HeaderWidget() to (someBoolean is false)
+   set the visible of _TreeWidget() to (someBoolean is false)
+   --
+   if someBoolean is true then
+      put 40 into Header_Height
+   else
+      put 55 into Header_Height
+   end if
+   LayoutControl vRect
+   unlock screen
+end show_Field
+
+getprop show_Footer
+   return the visible of _FooterWidget()
+end show_Footer
+
+setprop show_Footer someBoolean
+   put the rect of me into vRect
+   
+   lock screen
+   set the visible of _FooterWidget() to someBoolean
+   LayoutControl vRect
+   unlock screen
+end show_Footer
+
+
+--> Selected
+-
+getprop selected_LineNumber
+   return the selected_LineNum of me
+end selected_LineNumber
+
+setprop selected_LineNumber lineNum
+   set the selected_LineNum of me to lineNum
+end selected_LineNumber
+
+getprop selected_LineNum
+   -- just top-level lines and assume
+   put the selected_Line of me into topLine
+   
+   set the wholematches to true
+   put _SortedTopKeys() into topKeys
+   put lineoffset (topLine, topKeys) into topLineNum
+   
+   return topLineNum
+end selected_LineNum
+
+setprop selected_LineNum textOrNumber
+   if textOrNumber is a number then
+      breakpoint -- fix: not sure how to handle this
+   end if
+   set the hilited_Element of me to lineNum
+end selected_LineNum
+
+
+--> Tree
+-
+getprop tree_IsIndex
+   return LocalArray ["isIndex"] is true
+end tree_IsIndex
+
+
+--> Private | Objects
+-
+private function _MenuButton
+   return the long id of btn "_MenuButton" of me
+   -- if exists (stack "View|Index|Simple") is false then return empty
+   -- put the long id of btn 1 of cd 1 of stack "View|Index|Simple" into mButton
+end _MenuButton
+
+private function _IndexField
+   put the long id of field 1 of me into indexField
+   return indexField
+end _IndexField
+
+private function _HeaderWidget
+   put the long id of widget "_Header" of me into headerWidget
+   return headerWidget
+end _HeaderWidget
+
+private function _TreeWidget
+   put the long id of widget "_Tree" of me into arrayWidget
+   return arrayWidget
+end _TreeWidget
+
+private function _FooterWidget
+   put the long id of widget "_Footer" of me into footerWidget
+   return footerWidget
+end _FooterWidget
+
+
+--> Layout
+-
+on resizeControl
+   put the rect of me into vRect
+   LayoutControl vRect
+end resizeControl
+
+command LayoutControl pRect
+   if pRect is empty then put the rect of me into pRect
+    
+   lock screen
+   put the inner_Rect [pRect] of me into pRect
+   rect_SubtractMargins pRect
+   
+   # Header
+   put _HeaderRect (pRect) into headerRect
+   set the rect of _HeaderWidget() to headerRect
+   set the rect of _MenuButton() to headerRect
+   
+   # Middle
+   put _fieldRect (pRect) into fieldRect
+   set the rect of _TreeWidget() to fieldRect
+   set the rect of _IndexField() to fieldRect
+   
+   # Footer
+   set the rect of _FooterWidget() to _footerRect (pRect)
+   unlock screen
+end LayoutControl
+
+
+--> Events
+-
+on mouseDoubleUp
+   breakpoint -- not issued to either widget
+end mouseDoubleUp
+
+on mouseUp
+   ## Only when the user click on the header
+   -- tree widget does not send to mouseUp
+   local tActionName
+   put the long id of the target into headerWidget
+   put the mouseAction of headerWidget into tActionName
+   	
+   switch tActionName
+      case "cog"
+         put the clickloc into pLocation
+         add 2 to item 1of pLocation
+         add 4 to item 2 of pLocation
+         --
+         put the title_Menu of me into mTitle
+         put _MenuButton() into mButton
+         --
+         try
+            mArray_PopUp mTitle, mButton
+         catch sError
+            mArray_PopUp "Global | Module | Error | Menu", mButton
+         end try
+      default
+         # Clicked on the title
+         if the shiftkey is "Down" then
+            set the title_Colour of me to colour_GetRandom()
+            put the stack_Style of me into oStyle
+            switch oStyle
+               case "toplevel"
+                  set the stack_Style of me to "palette"
+                  break
+               case "palette"
+                  set the stack_Style of me to "toplevel"
+                  break
+               default
+                  put oStyle
+                  breakpoint
+            end switch
+         end if
+   end switch
+end mouseUp
+
+on actionInspect pPath
+   put _GetValue (pathItems) into someValue
+   put the mouse_Up of me into mouseUpCommand
+   if mouseUpCommand is empty then
+      pass actionInspect
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      dispatch mouseUpCommand to mouseTarget with displayView,someValue
+   end if
+end actionInspect
+
+on hiliteChanged
+   -- hack - cant stop the flicker when selecting line that is already selected
+   -- called twice due to "set the hilitedElement"
+   -- lock messages makes no difference
+   if LocalArray ["just set hilitedElement"] is true then
+      put false into LocalArray ["just set hilitedElement"]
+      return empty
+   end if
+   
+   put _TreeWidget() into treeWidget
+   put the hilitedElement of treeWidget into pathItems
+   if pathItems is empty then
+      put LocalArray ["previousHilitedElement"] into pathItems
+      set the hilitedElement of treeWidget to pathItems
+      put true into LocalArray ["just set hilitedElement"]
+   else
+      put pathItems into LocalArray ["previousHilitedElement"]
+      put false into LocalArray ["just set hilitedElement"]
+   end if
+   
+   if the controlKey is "Down" then
+      put the line_Menu of me into mTitle
+      _NormalizeLineMenu mTitle
+      --
+      if the shiftKey is "Down" then
+         put "Global | Array | Line | Menu" into defaultLineMenu
+         if mTitle is not defaultLineMenu then
+            put defaultLineMenu & tab & "submenu" & tab & "Error" & CR & "-" & CR before mTitle
+         end if
+      end if
+      --
+      put _MenuButton() into mButton
+      mArray_PopUp mTitle, mButton
+   else
+      _displaySelectedValue treeWidget
+   end if
+end hiliteChanged
+
+command actionDoubleClick pathItems
+   -- not called
+   put the selected_Value of me into someValue
+   put the mouse_DoubleUp of me into mouseDoubleUpCommand
+   if mouseDoubleUpCommand is empty then
+      pass actionDoubleClick
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      replace comma with CR in pathItems
+      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
+      if it is "unhandled" then
+         edit the script of mouseTarget
+         put mouseDoubleUpCommand
+      end if
+   end if
+end actionDoubleClick
+
+on menuPick menuPath
+   menu_DispatchTextPick menuPath
+end menuPick
+
+
+--> Events | Drag Drop
+-
+on dragDrop
+   put the drop_Command of me into dropCommand
+   --
+   -- put the dragdata ["files"] into someValue
+   put the dragdata ["text"] into someValue
+   --
+   if dropCommand is empty then
+      pass dragDrop
+   else
+      put the long id of the target into displayView
+      put the mouse_Target of me into mouseTarget
+      if exists (mouseTarget) is false then put displayView into mouseTarget
+      dispatch dropCommand to mouseTarget with displayView,someValue
+   end if
+   --
+   pass dragDrop -- needed for drop to occur
+end dragDrop
+
+on dragEnter -- show a green outline around the drop target
+   set the allowableDragActions to "link"
+   set the dragAction to "Link"
+   pass dragEnter
+end dragEnter
+
+on dragLeave
+   -- set the borderColor of the target to ""
+   pass dragLeave
+end dragLeave
+
+
+--> Props | Event
+-
+getprop mouse_DoubleUp
+   return the mouse_DoubleUp of me
+end mouse_DoubleUp
+
+setprop mouse_DoubleUp mDoubleUp
+   set the mouse_DoubleUp of me to mDoubleUp
+end mouse_DoubleUp
+
+getprop mouse_Target
+   put the long id of the target into tObject
+   put the mouse_Target of me into mTarget
+   if exists (mTarget) is false then
+      put _DefaultMouseTarget (tObject) into mTarget
+   end if
+   return mTarget
+end mouse_Target
+
+setprop mouse_Target mTarget
+   set the mouse_Target of me to mTarget
+end mouse_Target
+
+getprop menu_Target [mTitlePath]
+   put the menu_Target of me into mTarget
+   --
+   put the displayed_Object of me into displayedObject
+   switch 
+      case mTarget is not empty
+         return mTarget
+      case displayedObject is not empty
+         return displayedObject
+      default
+         return the long id of me
+   end switch
+end menu_Target
+
+setprop menu_Target [mTitlePath] mTarget
+   set the menu_Target of me to mTarget
+end menu_Target
+
+getprop title_Controller
+   put the title_Controller of me into mController
+   if exists (mController) then return mController
+   
+   ## Default
+   put the title_Menu of me into titleMenu
+   set the menu_Controller [titleMenu] of me to mController
+   return mController
+end title_Controller
+
+getprop line_Controller
+   put the line_Controller of me into mController
+   if exists (mController) then return mController
+   
+   ## Default
+   put the line_Menu of me into lineMenu
+   put the menu_Controller [lineMenu] of me into mController
+   return mController
+end line_Controller
+
+
+--> Props | Menu | Model
+-
+getprop title_Menu
+   if the controlKey is "Down" then
+      return "Global | Array | Menu"
+   end if
+   
+   set the title_Menu of me to "Global | Tree | Menu"
+   put the title_Menu of me into titleMenu   
+   if titleMenu is empty then 
+      return "Global | Tree | Menu"
+   else
+      return titleMenu
+   end if
+end title_Menu
+
+setprop title_Menu mName
+   set the title_Menu of me to mName
+end title_Menu
+
+getprop line_Menu
+   put the line_Menu of me into mTitle
+   return mTitle
+end line_Menu
+
+setprop line_Menu mName
+   set the line_Menu of me to mName
+end line_Menu
+
+
+--> Props
+-
+getprop title_Text
+   put _HeaderWidget() into headerWidget
+   put the label of headerWidget into displayTitle
+   return displayTitle
+end title_Text
+
+setprop title_Text displayTitle
+   put _HeaderWidget() into headerWidget
+   set the label of headerWidget to displayTitle
+end title_Text
+
+getprop chars_ToTrim
+   put the charsToTrimFromKey of _TreeWidget() into padNum
+   return padNum
+end chars_ToTrim
+
+setprop chars_ToTrim padNum
+   put _TreeWidget() into treeWidget
+   set the charsToTrimFromKey of treeWidget to padNum
+   return treeWidget
+end chars_ToTrim
+
+getprop selected_TopData [sPath]
+   -- returns the topKey and not just the contents of the array
+   if sPath is empty then
+      _SetTop topKey, aData
+      put aData [topKey] into topData [topKey]
+   else
+      put the arrayData of _TreeWidget() into aData
+      split sPath with comma
+      put aData [sPath] into topData
+   end if
+   return topData
+end selected_TopData
+
+getprop top_Data [pathNum]
+   -- put the selected_TopData of me into topData
+   put _TreeWidget() into treeWidget
+   --
+   put the arrayData of treeWidget into aData
+   put the hilitedElement of treeWidget into commaPath
+   if pathNum is a number then
+      -- subtract 1 from pathNum
+      put item 1 to pathNum of commaPath into topPath
+      split topPath with comma
+      put aData [topPath] into topData
+   else
+      put item 1 of commaPath into topKey
+      put aData [topKey] into topData [topKey]
+   end if
+   return topData
+end top_Data
+
+getprop selected_Array
+   put _TreeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   return selectedValue
+end selected_Array
+
+getprop menu_Button
+   return _MenuButton()
+end menu_Button
+
+setprop tool_MenuBit [projectName] menuBit
+   -- used to use "display_SetToolMenus"
+   put _MenuButton() into mButton
+   --
+   set the menumode of mButton to "pulldown"
+   set the style of mButton to "menu"
+   
+   # Construct Menu Titles
+   get "Global |" && menuBit
+   put it && "| Menu" into titleMenu
+   put it && "| Line | Menu" into lineMenu
+   
+   # Construct mDoubleUp
+   replace "|" with empty in menuBit
+   replace space with empty in menuBit
+   put "mDoubleUp_" & menuBit into mDoubleUp
+   
+   # Set menus and mouse
+   set the title_Menu of me to titleMenu
+   set the line_Menu of me to lineMenu
+   set the mouse_DoubleUp of me to mDoubleUp
+   
+   # Create menus if needed
+   dispatch "ask_CreateMenuFromObject" to me with titleMenu,projectName
+   
+   if the optionKey is "Down" then
+      dispatch "ask_CreateMenuFromObject" to me with lineMenu,projectName
+      dispatch "ask_CreateMouseDoubleUpHandler" to me with mDoubleUp
+   end if
+   --
+   return titleMenu
+end tool_MenuBit
+
+getprop tool_MenuBit
+   get the title_Menu of me
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 2 to -2 of it into menuBit
+   return menuBit
+end tool_MenuBit
+
+
+getprop parent_Array [someKey]
+   put _TreeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   if the number of items of commaKeys = 1 then
+      return the displayed_Array of me
+   end if
+   --
+   delete item -1 of commaKeys
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into pArray
+   --
+   if someKey is empty then
+      return pArray
+   else
+      return pArray [someKey]
+   end if
+end parent_Array
+
+
+--> Props | Top
+-
+getprop top_Key
+   return _GetTopKey()
+end top_Key
+
+getprop top_Line [pathItemNum]
+   put _TreeWidget() into treeWidget
+   if pathItemNum is empty then put 1 into pathItemNum
+   --
+   put the hilitedElement of treeWidget into commaPath
+   put item pathItemNum of commaPath into topLine
+   return topLine
+end top_Line
+
+getprop top_LineKeys
+   -- sorts alphabetically the keys
+   -- assumes the display does the same?
+   
+   put the top_Data of me into topArray
+   put the keys of topArray into topKeys
+   sort topKeys
+   return topKeys
+end top_LineKeys
+
+
+--> Props | Show
+=
+getprop show_Separator
+   put _TreeWidget() into treeWidget
+   return the showSeparator of treeWidget
+end show_Separator
+
+setprop show_Separator sBoolean
+   put _TreeWidget() into treeWidget
+   set the showSeparator of treeWidget to sBoolean
+   return treeWidget
+end show_Separator
+
+getprop show_Values
+   put _TreeWidget() into treeWidget
+   return the showValues of treeWidget
+end show_Values
+
+setprop show_Values sBoolean
+   put _TreeWidget() into treeWidget
+   set the showValues of treeWidget to sBoolean
+   return treeWidget
+end show_Values
+
+getprop show_Numbers
+   put _TreeWidget() into treeWidget
+   put the charsToTrimFromKey of treeWidget into sNum
+   return sNum = 0
+end show_Numbers
+
+setprop show_Numbers sBoolean
+   put _TreeWidget() into treeWidget
+   
+   lock screen
+   if sBoolean is true then
+      set the charsToTrimFromKey of treeWidget to 0
+      set the separatorRatio of treeWidget to 0.3
+   else
+      set the charsToTrimFromKey of treeWidget to 2
+      set the separatorRatio of treeWidget to 0
+   end if
+   unlock screen
+end show_Numbers
+
+getprop trim_Num
+   get the charsToTrimFromKey of _TreeWidget()
+   return it
+end trim_Num
+
+setprop trim_Num sNum
+   set the charsToTrimFromKey of _TreeWidget() to sNum
+end trim_Num
+
+getprop max_LineNum
+   put the displayed_Index of me into dLines
+   return the number of lines of dLines
+end max_LineNum
+
+
+--> Model
+-
+getprop displayed_Data
+   if LocalArray ["isIndex"] is true then
+      return the displayed_Index of me
+   else
+      put tree_GetData() into treeData
+      return treeData
+   end if
+end displayed_Data
+
+setprop displayed_Data [someTitle] sData
+   lock screen
+   if sData is an array then
+      set the arrayData of _TreeWidget() to sData
+      set the show_Values of me to true
+      set the show_Numbers of me to true
+      put false into LocalArray ["isIndex"]
+   else
+      set the displayed_Index of me to sData
+   end if
+   if someTitle is not empty then
+      set the title_Text of me to someTitle
+   end if
+   unlock screen
+end displayed_Data
+
+getprop displayed_Index
+   put the arrayData of _TreeWidget() into someArray
+   put keys (someArray) into someIndex
+   sort lines of someIndex
+   return someIndex
+end displayed_Index
+
+setprop displayed_Index [someTitle] someIndex
+   lock screen
+   repeat for each line someLine in someIndex
+      put empty into someArray [someLine]
+   end repeat
+   --
+   set the arrayData of _TreeWidget() to someArray
+   set the show_Values of me to false
+   set the show_Numbers of me to true
+   --
+   if someTitle is not empty then
+      set the stack_Title of me to someTitle
+   end if
+   unlock screen
+   put true into LocalArray ["isIndex"]
+end displayed_Index
+
+
+--> Props | Events | Custom
+-
+getprop drop_Command
+   return the drop_Command of me
+end drop_Command
+
+setprop drop_Command dropCommand
+   set the drop_Command of me to dropCommand
+end drop_Command
+
+getprop mouse_Up
+   return the mouse_Up of me
+end mouse_Up
+
+setprop mouse_Up mUp
+   set the drop_Command of me to mUp
+end mouse_Up
+
+getprop view_EventArray eventArray   
+   put the mouse_Target of me into eventArray ["eventTarget"]
+   put the mouse_Up of me into eventArray ["mouseUp"]
+   put the mouse_DoubleUp of me into eventArray ["mouseDoubleUp"]
+   return eventArray
+end view_EventArray
+
+setprop view_EventArray eventArray   
+   set the mouse_Target of me to eventArray ["eventTarget"]
+   set the mouse_Up of me to eventArray ["mouseUp"]
+   set the mouse_DoubleUp of me to eventArray ["mouseDoubleUp"]
+end view_EventArray
+
+
+--> ViewData | Model
+-
+getprop view_Data [someKey]
+   -- put LocalArray ["view_Data"] into viewData
+   put the view_Data of me into viewData
+   if someKey is empty then return viewData
+   return viewData [someKey]
+end view_Data
+
+setprop view_Data [someKey] someData   
+   if someKey is empty then
+      set the view_Data of me to someData
+   else
+      put the view_Data of me into viewData
+      put someData into viewData [someKey]
+      set the view_Data of me to viewData
+   end if
+end view_Data
+
+
+--> Expanded
+-
+getprop expanded_Paths
+   put the foldState of _TreeWidget() into foldedArray
+   repeat for each key someKey in foldedArray
+      if foldedArray [someKey]["folded"] is false then
+         put someKey & comma after ePaths
+      end if 
+   end repeat
+   delete char -1 of ePaths
+   return ePaths
+end expanded_Paths
+
+setprop expanded_Paths [pAddState] ePaths
+   put display_ConstructFoldState (ePaths) into foldedArray
+   set the fold_State [pAddState] of me to foldedArray
+   return foldedArray
+end expanded_Paths
+
+getprop fold_State
+   put the foldState of _TreeWidget() into foldedArray
+   return foldedArray 
+end fold_State
+
+setprop fold_State [pAddState] foldedArray
+   -- sensitive to capitalisation
+   put _TreeWidget() into tWidget
+   --
+   if pAddState is true then
+      get the foldState of tWidget
+      union foldedArray with it
+   end if
+   --
+   -- put the autoFoldStateReset of tWidget
+   set the foldState of tWidget to foldedArray
+   return the result
+end fold_State
+
+
+--> Props | Menu
+-
+getprop view_MenuArray
+   put the title_Menu of me into menuArray ["title"]
+   put the line_Menu of me into menuArray ["line"]
+   return menuArray
+end view_MenuArray
+
+setprop view_MenuArray menuArray
+   set the title_Menu of me to menuArray ["title"]
+   set the line_Menu of me to menuArray ["line"]
+end view_MenuArray
+
+
+--> Model | ArrayIndex
+-
+getprop index_Array
+   put the view_Data of me into indexArray
+   return indexArray
+end index_Array
+
+setprop index_Array [pIndexKey] indexArray
+   put indexArray_List (indexArray, pIndexKey) into sLines
+   -- 
+   set the displayed_Index of me to sLines
+   set the view_Data of me to indexArray
+   --
+   return sLines
+end index_Array
+
+
+--> Top | Array
+-
+getprop top_Array [pKey]
+   -- selected_TopArray
+   _SetTop topKey, aData
+   if pKey is empty then
+      return aData [topKey]
+   else
+      return aData [topKey][pKey]
+   end if
+end top_Array
+
+setprop top_Array [pPath] sArray
+   put _GetTopKey() into topKey
+   tree_SetArray sArray, topKey
+   --
+   put the result into arrayData
+   return arrayData
+end top_Array
+
+setprop tree_Array [pPath] sArray
+   tree_SetArray sArray, pPath
+   --
+   put the result into arrayData
+   return arrayData
+end tree_Array
+
+setprop deleted_Path somePath
+   tree_DeletePath somePath
+end deleted_Path
+
+setprop deleted_Line somePath
+   tree_DeletePath somePath
+end deleted_Line
+
+
+--> Props | Selected
+-
+getprop selected_Path
+   put _TreeWidget() into treeWidget
+   put the hilitedElement of treeWidget into commaPath
+   if char -1 of commaPath is comma then delete char -1 of commaPath
+   return commaPath
+end selected_Path
+
+setprop selected_Path commaPath
+   put _TreeWidget() into treeWidget
+   set the hilitedElement of treeWidget to commaPath
+   return treeWidget
+end selected_Path
+
+getprop selected_Line
+   put _TreeWidget() into treeWidget
+   --
+   put the hilitedElement of treeWidget into commaPath
+   put the pathDelimiter of treeWidget into pDelim
+   --
+   set the itemdelimiter to pDelim
+   put item -1 of commaPath into sLine
+   return sLine
+end selected_Line
+
+setprop selected_Line commaPath
+   put _TreeWidget() into treeWidget
+   set the scrollHilitedElementIntoView of treeWidget to true
+   set the hilitedElement of treeWidget to commaPath
+   --
+   put item 1 of commaPath into topLine
+   set the wholematches to true
+   put _SortedTopKeys() into topKeys
+   put lineoffset (topLine, topKeys) into topLineNum
+   --
+   return topLineNum -- only works for top lines
+end selected_Line
+
+getprop selected_Value
+   put _TreeWidget() into treeWidget
+   
+   put the hilitedElement of treeWidget into commaKeys
+   put item -1 of commaKeys into lastComma
+   
+   put the arrayData of treeWidget into someArray
+   split commaKeys with comma
+   put someArray [commaKeys] into selectedValue
+   if selectedValue is empty then
+      return lastComma
+   else
+      return selectedValue
+   end if
+end selected_Value
+
+getprop top_Lines
+   put _TreeWidget() into treeWidget
+   --
+   put the arrayData of treeWidget into someData
+   --
+   put keys (someData) into topLines
+   if the sortType of treeWidget is "text" then
+      if the sortOrder of treeWidget is "ascending" then
+         sort ascending lines of topLines
+      else
+         sort descending lines of topLines
+      end if
+   else
+      sort numeric lines of topLines
+   end if
+   return topLines
+end top_Lines
+
+
+--> Private
+-
+private command _NormalizeLineMenu @lineMenuTitle
+   switch
+      case lineMenuTitle is empty
+         put "Global | Array | Line | Menu" into lineMenuTitle
+         break
+      case _LineMenuControllerExists (lineMenuTitle)
+         break
+      default
+         put "Global | Array | Line | Menu" into lineMenuTitle
+         
+         # Ask to create here
+   end switch
+end _NormalizeLineMenu
+
+private function _LineMenuControllerExists lineMenuTitle
+   put the menu_Controller [lineMenuTitle] of me into mController
+   return exists (mController)
+end _LineMenuControllerExists
+
+private command tree_SetArray sArray, pPath
+   put _TreeWidget() into treeWidget
+   if pPath is empty then
+      put the hilitedElement of treeWidget into pPath
+   end if
+   --
+   put the arrayData of treeWidget into treeData
+   treeData_SetArray treeData, pPath, sArray
+   set the arrayData of treeWidget to treeData
+   --
+   return arrayData
+end tree_SetArray
+
+private function _GetTopKey
+   put _TreeWidget() into treeWidget
+   put the hilitedElement of treeWidget into commaPath
+   put item 1 of commaPath into topKey
+   return topKey
+end _GetTopKey
+
+private command _SetTop @topKey, @aData
+   put _TreeWidget() into treeWidget
+   put the arrayData of treeWidget into aData
+   put the hilitedElement of treeWidget into commaPath
+   --
+   put item 1 of commaPath into topKey
+   return commaPath
+end _SetTop
+
+private command _displaySelectedValue pTreeWidget
+   if pTreeWidget is empty then put _TreeWidget() into pTreeWidget
+   put the selected_Value of pTreeWidget into selectedValue
+   
+   dispatch "tree_HilightChanged" to me with selectedValue
+end _displaySelectedValue
+
+private function tree_GetData
+   put the arrayData of _TreeWidget() into treeData
+   return treeData
+end tree_GetData
+
+private command tree_SetData treeData
+   set the arrayData of _TreeWidget() to treeData
+end tree_SetData
+
+private command tree_DeletePath somePath
+   put _TreeWidget() into treeWidget
+   --
+   put the arrayData of treeWidget into treeData
+   treeData_Delete treeData, somePath
+   put the result into deletedData
+   set the arrayData of treeWidget to treeData
+   --
+   return deletedData
+end tree_DeletePath
+
+
+--> TreeData
+-
+private function treeData_GetArray treeData, somePath
+   split somePath by comma
+   put treeData [somePath] into sArray
+   return sArray
+end treeData_GetArray
+
+private command treeData_SetArray @treeData, somePath, sArray
+   split somePath by comma
+   put sArray into treeData [somePath]
+end treeData_SetArray
+
+private command treeData_Delete @treeData, somePath
+   split somePath by comma
+   put treeData [somePath] into deletedData
+   delete variable treeData [somePath]
+   return deletedData
+end treeData_Delete
+
+
+--> Props | Title
+-
+getprop stack_Title
+   put word 1 to -1 of the title_Text of me into stackTitle
+   put word 1 to -1 of the stack_Label of me into stackLabel
+   if stackLabel is not empty then put stackLabel into item 2 of stackTitle
+   return stackTitle
+end stack_Title
+
+setprop stack_Title stackTitle
+   put word 1 to -1 of item 1 of stackTitle into titleText
+   put word 1 to -1 of item 2 of stackTitle into stackLabel
+   --
+   lock screen
+   set the title_Text of me to titleText
+   if stackLabel is not empty then
+      set the stack_Label of me to stackLabel
+   end if
+   unlock screen
+   --
+   return the long id of me
+end stack_Title
+
+getprop stack_Label
+   put the label of the defaultstack into stackLabel
+   return stackLabel
+end stack_Label
+
+getprop stack_Label stackLabel
+   put the defaultstack into myStackObject
+   set the label of myStackObject to stackLabel
+   return myStackObject
+end stack_Label
+
+
+--> Props | Hilited
+-
+getprop hilited_Element
+   return the selected_Path of me
+end hilited_Element
+
+setprop hilited_Element commaPath
+   set the selected_Path of me to commaPath
+end hilited_Element
+
+getprop hilited_Line
+   return the selected_LineNum of me
+end hilited_Line
+
+setprop hilited_Line lineNum
+   set the hilited_Element of me to lineNum
+end hilited_Line
+
+
+--> Props | Title
+-
+getprop tree_SortType
+   put _TreeWidget() into treeWidget
+   put the sortType of treeWidget into treeSortType
+   return treeSortType
+end tree_SortType
+
+setprop tree_SortType treeSortType
+   put _TreeWidget() into treeWidget
+   set the sortType of treeWidget to treeSortType
+   return treeWidget
+end tree_SortType
+
+getprop tree_SortTypes
+   return "text,numeric"
+end tree_SortTypes
+
+getprop title_Colour
+   put the backgroundcolor of _HeaderWidget() into someColour
+   return someColour
+end title_Colour
+
+setprop title_Colour someColour
+   if someColour is "random" then
+      put colour_GetRandom() into someColour
+   end if
+   set the backgroundcolor of _HeaderWidget() to someColour
+   return someColour
+end title_Colour
+
+getprop title_TextColour
+   put the foregroundcolor of _HeaderWidget() into someColour
+   return someColour
+end title_TextColour
+
+setprop title_TextColour someColour
+   if someColour is "random" then
+      put colour_GetRandom() into someColour
+   end if
+   set the foregroundcolor of _HeaderWidget() to someColour
+   return someColour
+end title_TextColour
+
+
+--> Data
+-
+getprop displayed_Object
+   put the displayed_Object of me into sObject
+   if exists (sObject) then
+      return sObject
+   else
+      return the long id of em
+   end if
+end displayed_Object
+
+setprop displayed_Object sObject
+   set the displayed_Object of me to sObject
+end displayed_Object
+
+getprop displayed_Array [pathItems]
+   -- compatibility with old treeView
+   put the displayed_Data of me into someArray
+   if pathItems is empty then return someArray
+   
+   split pathItems with comma
+   put someArray [pathItems] into someValue
+   return someValue
+end displayed_Array
+
+setprop displayed_Array [someTitle] someArray
+   -- compatibility with old treeView
+   set the displayed_Data [someTitle] of me to someArray
+end displayed_Array
+
+
+--> Controls
+-
+getprop view_Object
+   return the long id of me
+end view_Object
+
+getprop array_View
+   return the long id of me
+end array_View
+
+getprop display_View
+   return the long id of me
+end display_View
+
+getprop tree_Widget
+   put _TreeWidget() into treeWidget
+   return treeWidget
+end tree_Widget
+
+getprop title_View
+   put _HeaderWidget() into headerWidget
+   return headerWidget
+end title_View
+
+getprop header_Widget
+   put _HeaderWidget() into headerWidget
+   return headerWidget
+end header_Widget
+
+
+--> Objects | Compatibility
+-
+getprop tree_Field
+   -- for compatibility (experimental)
+   return _TreeWidget()
+end tree_Field
+
+getprop tree_View
+   -- for compatibility (experimental)
+   return the long id of me
+end tree_View
+
+
+--> Deps
+-
+private command _SetMouseTargets @tObject, @displayView, @mouseTarget
+   put the long id of the target into tObject
+   put the long id of me into displayView
+   put the mouse_Target of me into mouseTarget
+   if exists (mouseTarget) is false then
+      put _DefaultMouseTarget (tObject) into mouseTarget
+   end if
+end _SetMouseTargets
+
+private function _DefaultMouseTarget tObject
+   put the line_Controller of me into mouseTarget
+   if exists (mouseTarget) is false then
+      put tObject into mouseTarget
+   end if
+   return mouseTarget
+end _DefaultMouseTarget
+
+private function _GetValue pathItems
+   put the displayed_Array of me into someArray
+   split pathItems with comma
+   put someArray [pathItems] into someValue
+   return someValue
+end _GetValue
+
+function _SortedTopKeys
+   put the displayed_Data of me into myData
+   put keys (myData) into topKeys
+   
+   put _TreeWidget() into treeWidget
+   put the sortOrder of treeWidget into sOrder
+   put the sortType of treeWidget into sType
+   
+   switch sType
+      case "numeric"
+         if sOrder = "ascending" then
+            sort numeric ascending topKeys
+         else
+            sort numeric descending topKeys
+         end if
+         break
+      default
+         if sOrder = "ascending" then
+            sort ascending topKeys
+         else
+            sort descending topKeys
+         end if
+   end switch
+   return topKeys
+end _SortedTopKeys
+
+
+--> Deps
+-
+--> Deps
+-
+function indexArray_List indexArray, pNameKey
+   if pNameKey is empty then put "name" into pNameKey
+   repeat with indexNum = 1 to item 2 of the extents of indexArray
+      put indexArray [indexNum][pNameKey] into sLine
+      put sLine & CR after sLines
+   end repeat
+   delete char -1 of sLines
+   return sLines
+end indexArray_List
+
+command lcw_Notify someMessage, pTitle, pMergeValue
+   -- needs to work cross platform
+   replace quote with empty in someMessage
+   replace "'" with empty in someMessage
+   text_ReQuote someMessage, pMergeValue
+   --
+   try
+      if pTitle is empty then put "LiveCode World Notification" into pTitle
+      put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell
+      put "with title" && quote & pTitle & quote after someShell
+      put "'" after someShell
+      put shell (someShell) into shellResult
+   catch e
+      put someMessage
+   end try
+end lcw_Notify
+
+command mArray_MouseDown mTitle, pMenuButton, pTargetObject
+   if pTargetObject is empty then
+      put the long id of the target into pTargetObject
+   end if
+   if pMenuButton is empty then
+      -- defaults to the target rather than the global menu_Button
+      put pTargetObject into pMenuButton
+   end if
+   --
+   mArray_ClearActiveMenuArray
+   menu_SetTopTargetObject pTargetObject
+   --
+   switch word 1 of pMenuButton
+      case "button"
+         put mArray_FromTitleTable (mTitle, pTargetObject) into mArray -- dispatches "menu_Init"
+         put mArray_ToText (mArray) into mText
+         --
+         set the text of pMenuButton to mText
+         --
+         -- mArray_SetActive mArray, mText, mTitle
+         return mArray
+      case "widget"
+         break
+      default
+         exit to top
+   end switch
+end mArray_MouseDown
+
+command mArray_PopUp mTitle, pMenuButton, pTargetObject
+   _SetMenuObjectDefaults pTargetObject, pMenuButton
+   --
+   mArray_MouseDown mTitle, pMenuButton, pTargetObject
+   put the result into mArray
+   --
+   popup pMenuButton -- target changes
+   return mArray
+end mArray_PopUp
+
+command mArray_PullDown mTitle, pMenuButton, pTargetObject
+   _SetMenuObjectDefaults pTargetObject, pMenuButton
+   --
+   mArray_MouseDown mTitle, pMenuButton, pTargetObject
+   put the result into mArray
+   --
+   put the bottomleft of pTargetObject into popLoc
+   add 3 to item 2 of popLoc
+   --
+   popup pMenuButton at popLoc
+   return mArray
+end mArray_PullDown
+
+getprop menu_Controller [pMenuTitle]
+   put the long id of the target into tObject
+   --
+   put menu_GetGlobalController (pMenuTitle) into mController
+   if exists (mController) is true then return mController
+   return empty
+end menu_Controller
+
+setprop menu_Controller [mTitle] mController
+   menu_SetGlobalController mTitle, mController
+   return the result
+end menu_Controller
+
+command menu_DispatchTextPick mItem, pMenuArray
+   if pMenuArray is not an array then
+      put mArray_GetActiveArray() into pMenuArray
+   end if
+   --
+   mArray_SetActiveItem mItem
+   _FindActiveHkey pMenuArray, mItem, hKey, paramValue   
+   mArray_DoHkey hKey, paramValue
+   --
+   return hKey
+end menu_DispatchTextPick
+
+function menu_GetGlobalController gMenuTitle
+   put menu_GetModel() into gMenuModel
+   put gMenuModel [gMenuTitle]["mController"] into mController
+   return mController
+end menu_GetGlobalController
+
+function menu_GetModel
+   global gLCW
+   put gLCW ["Global Menus"] into menuGlobalArray
+   return menuGlobalArray
+end menu_GetModel
+
+command menu_SetGlobalController gMenuTitle, scriptObject
+   put menu_GetModel() into gMenuModel
+   put revRuggedID (scriptObject) into gMenuModel [gMenuTitle]["mController"]
+   menu_SetModel gMenuModel
+   return the result
+end menu_SetGlobalController
+
+command menu_SetModel menuGlobalArray
+   global gLCW
+   put menuGlobalArray into gLCW ["Global Menus"]
+   return gLCW ["Global Menus"]
+end menu_SetModel
+
+setprop stack_Label someLabel
+   put the stack_Object of the target into stackObject
+   set the label of stackObject to someLabel
+   return stackObject
+end stack_Label
+
+getprop stack_Name
+   return the short name of the defaultstack
+end stack_Name
+
+getprop stack_Object
+   -- revTargetStack
+   return the defaultstack
+end stack_Object
+
+getprop stack_Style
+   put the stack_Name of the target into stackName
+   put the systemwindow of stack stackName into someBoolean
+   if someBoolean is true then return "system"
+   
+   put the style of stack stackName into sStyle
+   return sStyle
+end stack_Style
+
+setprop stack_Style sStyle
+   put the stack_Name of the target into stackName
+   if sStyle is "system" then
+      set the systemwindow of stack stackName to true
+   else
+      set the style of stack stackName to sStyle
+      set the systemwindow of stack stackName to false
+   end if 
+   return stackName
+end stack_Style
+
+function display_ConstructFoldState ePaths
+   repeat for each item someKey in ePaths
+      put false into foldedArray [someKey]["folded"]
+   end repeat
+   return foldedArray
+end display_ConstructFoldState
+
+function colour_GetRandom
+   put random(255) into item 1 of someColour
+   put random(255) into item 2 of someColour
+   put random(255) into item 3 of someColour
+   return someColour
+end colour_GetRandom
+
+
+--> Deps | Geometry
+-
+getprop inner_Rect [groupRect]
+   put the long id of the target into someGroup
+   if groupRect is empty then put the rect of someGroup into groupRect
+   if word 1 of someGroup is not "group" then return groupRect -- only for groups
+   
+   put rect_GetInner (groupRect, someGroup) into innerRect
+   return innerRect
+end inner_Rect
+
+command rect_SubtractMargins @someRect, pMargin
+   margin_Normalize pMargin, leftM, topM, rightM, bottomM
+   put the result into nMargins
+   --
+   add leftM to item 1 of someRect
+   add topM to item 2 of someRect
+   subtract rightM from item 3 of someRect
+   subtract bottomM from item 4 of someRect
+   --
+   return nMargins
+end rect_SubtractMargins
+
+command margin_Normalize someMargin, @leftM, @topM, @rightM, @bottomM
+   if the number of items of someMargin < 4 then
+      put item 1 of someMargin into defaultMargin
+      put defaultMargin into leftM
+      
+      put item 2 of someMargin into actualMargin
+      if actualMargin is empty then
+         put leftM into topM
+      else
+         put actualMargin into topM
+      end if
+      
+      put item 3 of someMargin into actualMargin
+      if actualMargin is empty then
+         put leftM into rightM
+      else
+         put actualMargin into rightM
+      end if
+      
+      put item 4 of someMargin into actualMargin
+      if actualMargin is empty then
+         put topM into bottomM
+      else
+         put actualMargin into bottomM
+      end if
+   else
+      put item 1 of someMargin into leftM
+      put item 2 of someMargin into topM
+      put item 3 of someMargin into rightM
+      put item 4 of someMargin into bottomM
+   end if
+   return leftM,topM,rightM,bottomM
+end margin_Normalize
+
+function rect_GetInner groupRect, someGroup, pMargin
+   if exists (someGroup) is false then return empty
+   if pMargin is empty then
+      put the margins of someGroup into pMargin
+   end if
+   rect_SubtractMargins groupRect, pMargin
+   put the result into nMargins
+   --
+   if the showborder of someGroup is true then
+      put the borderwidth of someGroup into bWidth
+      rect_SubtractMargins groupRect, bWidth
+   end if
+   
+   if the showname of someGroup is true then
+      put the effective textheight of someGroup - bWidth into someBit
+      subtract 2 from someBit
+      add someBit to item 2 of groupRect
+   end if
+   
+   put the scrollbarwidth of someGroup into scrollBarMargin
+   if the vscrollbar of someGroup is true then 
+      subtract scrollBarMargin from item 3 of groupRect
+   end if
+   if the hscrollbar of someGroup is true then
+      subtract scrollBarMargin from item 4 of groupRect
+   end if
+   --
+   return groupRect
+end rect_GetInner
+

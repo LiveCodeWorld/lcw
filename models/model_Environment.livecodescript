@@ -52,7 +52,7 @@ function env_GetRepoFolder
    return pLcwFolder
 end env_GetRepoFolder
 
-function env_GetLcwFolder
+
    global gLCW
    put "lcwFolder" into prefName
    --

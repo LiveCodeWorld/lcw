@@ -56,6 +56,48 @@ private command _ReIndexLocalIdeMenus
 end _ReIndexLocalIdeMenus
 
 
+--> IDE | Menu | List
+-
+function ide_ListShortMenuTitles ideElement
+   set the itemdelimiter to " | "
+   put menu_ListGlobalTitles() into gTitles
+   put "Global | ScriptEditor |" && ideElement && "|" into mTitleStem
+   repeat for each line mTitle in gTitles
+      if mTitle begins with mTitleStem then
+         put item 4 of mTitle into shortName
+         if shortName = "Menu" or shortName = "Custom" then next repeat
+         put shortName & CR after shortNames
+      end if
+   end repeat
+   return word 1 to -1 of shortNames
+end ide_ListShortMenuTitles
+
+function ide_ListMenuTitles ideElement
+   put menu_ListGlobalTitles() into mTitles
+   put "Global | ScriptEditor |" into mTitleStem
+   if pIdeElement is not empty then
+      put space & ideElement && "|" after mTitleStem
+   end if
+   put mTitleStem & "*" into someFilter
+   filter mTitles with someFilter
+   return word 1 to -1 of mTitles
+end ide_ListMenuTitles
+
+function ide_ListMenuElements
+   return ide_ListDefaultMenuElements()
+end ide_ListMenuElements
+
+function ide_ListDefaultMenuElements
+   get "List,Script,Recent"
+   replace comma with CR in it
+   return it
+end ide_ListDefaultMenuElements
+
+function ide_ListFixedShortTitles
+   return "Default,Revigniter,Watch"
+end ide_ListFixedShortTitles
+
+
 --> IDE | Init
 -
 command ide_InitLcw
@@ -254,53 +296,6 @@ function ide_ListToolBarBehaviorNames
    put folder_ListStackNames (toolbarBehaviorFolder) into bNames
    return bNames
 end ide_ListToolBarBehaviorNames
-
-
---> IDE | Menu | List
--
-function ide_ListMenuElements
-   return ide_ListDefaultMenuElements()
-   
-   put LocalArray ["environment"]["menu"] into ideMenuElements
-   put keys (ideMenuElements) into mElements
-   sort mElements
-   return mElements
-end ide_ListMenuElements
-
-function ide_ListDefaultMenuElements
-   get "List,Script,Recent"
-   replace comma with CR in it
-   return it
-end ide_ListDefaultMenuElements
-
-function ide_ListFixedShortTitles
-   return "Default,Revigniter,Watch"
-end ide_ListFixedShortTitles
-
-function ide_ListShortMenuTitles ideElement
-   set the itemdelimiter to " | "
-   put menu_ListGlobalTitles() into gTitles
-   put "Global | ScriptEditor |" && ideElement && "|" into mTitleStem
-   repeat for each line mTitle in gTitles
-      if mTitle begins with mTitleStem then
-         put item 4 of mTitle into shortName
-         if shortName = "Menu" or shortName = "Custom" then next repeat
-         put shortName & CR after shortNames
-      end if
-   end repeat
-   return word 1 to -1 of shortNames
-end ide_ListShortMenuTitles
-
-function ide_ListMenuTitles ideElement
-   put menu_ListGlobalTitles() into mTitles
-   put "Global | ScriptEditor |" into mTitleStem
-   if pIdeElement is not empty then
-      put space & ideElement && "|" after mTitleStem
-   end if
-   put mTitleStem & "*" into someFilter
-   filter mTitles with someFilter
-   return word 1 to -1 of mTitles
-end ide_ListMenuTitles
 
 
 --> IDE

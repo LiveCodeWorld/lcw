@@ -31,34 +31,6 @@ setprop menu_Controller [mTitle] mController
 end menu_Controller
 
 
---> Menu | Model
--
-function menu_GetGlobalController gMenuTitle
-   put menu_GetModel() into gMenuModel
-   put gMenuModel [gMenuTitle]["mController"] into mController
-   return mController
-end menu_GetGlobalController
-
-command menu_SetGlobalController gMenuTitle, scriptObject
-   put menu_GetModel() into gMenuModel
-   put revRuggedID (scriptObject) into gMenuModel [gMenuTitle]["mController"]
-   menu_SetModel gMenuModel
-   return the result
-end menu_SetGlobalController
-
-function menu_GetModel
-   global gLCW
-   put gLCW ["Global Menus"] into menuGlobalArray
-   return menuGlobalArray
-end menu_GetModel
-
-command menu_SetModel menuGlobalArray
-   global gLCW
-   put menuGlobalArray into gLCW ["Global Menus"]
-   return gLCW ["Global Menus"]
-end menu_SetModel
-
-
 --> Working on
 -
 /*
@@ -118,24 +90,6 @@ end menu_Table
 
 --> Menu | Global | Model | List
 -
-function menu_ListGlobalTitles pFilter
-   put menu_GetModel() into gMenuModel
-   put keys (gMenuModel) into globalTitles
-   sort globalTitles
-   if pFilter is not empty then filter globalTitles with pFilter
-   return globalTitles
-end menu_ListGlobalTitles
-
-function menu_ListGlobalObjects
-   put menu_GetModel() into gMenuModel
-   repeat for each key mTitle in gMenuModel
-      put menuArray [mTitle]["mController"] into mController
-      put mController & CR after mControllers
-   end repeat
-   delete char -1 of mControllers
-   return mControllers
-end menu_ListGlobalObjects
-
 command menu_RemoveGlobalController gMenuTitle
    put menu_GetModel() into gMenuModel
    put gMenuModel [gMenuTitle]["mController"] into mController

@@ -79,12 +79,6 @@ See also "meta_StackArrayFile" for project level stackfile storage
 
 --> Props
 -
-getprop project_Array
-   put the project_JsonFile of the target into projectArrayFile
-   put array_FromFile (projectArrayFile) into projectArray
-   return projectArray
-end project_Array
-
 setprop project_Array projectArray
    put the project_JsonFile of the target into projectArrayFile
    array_ToFile projectArrayFile, projectArray

@@ -39,14 +39,6 @@ getprop stackStyle_Params
    return "toplevel,palette,system"
 end stackStyle_Params
 
-getprop checked_ShowNumbers [dView]
-   return the show_Numbers of dView
-end checked_ShowNumbers
-
-getprop checked_ShowValues [dView]
-   return the show_Values of dView
-end checked_ShowValues
-
 
 --> Global | Array | Menu
 -
@@ -102,7 +94,7 @@ getprop disabled_CreateTitleMenu [dView]
    put menu_GetGlobalController (mTitle) into mController
    return exists (mController)
 end disabled_CreateTitleMenu
-   
+
 on menu_EditMenuScript dView
    put the title_Menu of dView into mTitle
    --
@@ -127,20 +119,43 @@ end menu_LineMenuScript
 private on ____
 end ____
 
+on menu_ShowField dView
+   put the show_Field of dView into sBoolean
+   set the show_Field  of dView to (sBoolean is false)
+end menu_ShowField
+
+getprop checked_ShowField [dView]
+   put the show_Field  of dView into sBoolean
+   return sBoolean
+end checked_ShowField
+
+on menu_ShowFooter dView
+   put the show_Footer of dView into sBoolean
+   set the show_Footer of dView to (sBoolean is false)
+end menu_ShowFooter
+
+getprop checked_ShowFooter [dView]
+   put the show_Footer of dView into sBoolean
+   return sBoolean
+end checked_ShowFooter
+
 on menu_ShowNumbers dView
    put the show_Numbers of dView into sBoolean
    set the show_Numbers of dView to (sBoolean is false)
 end menu_ShowNumbers
+
+getprop checked_ShowNumbers [dView]
+   return the show_Numbers of dView
+end checked_ShowNumbers
 
 on menu_ShowValues dView
    put the show_Values of dView into sBoolean
    set the show_Values of dView to (sBoolean is false)
 end menu_ShowValues
 
-on menu_FoldState dView
-   put the fold_State of dView into fState
-   display_Data fState, "fold_State", "Tree"
-end menu_FoldState
+getprop checked_ShowValues [dView]
+   return the show_Values of dView
+end checked_ShowValues
 
 on menu_SortType dView, treeSortType
    put the tree_Widget of dView into treeWidget
@@ -161,21 +176,7 @@ on menu_TreeInspector dView
    display_ObjectProperties dView
 end menu_TreeInspector
 
-private on ______
-end ______
-
-on menu_DisplayModuleTools arrayView
-   put the view_Name of arrayView into vName
-   display_ModuleTools vName
-end menu_DisplayModuleTools
-
-on menu_DisplayTemplate arrayView
-   put the view_Name of arrayView into vName
-   put view_GetTemplateObject (vName) into tObject
-   --
-   object_GoTo tObject, true
-end menu_DisplayTemplate
-
-on submenu_Dev
-   return menu_DevTitle()
-end submenu_Dev
+on menu_TreeStackInspector dView
+   put the stack_Object of dView into stackObject
+   display_ObjectProperties stackObject
+end menu_TreeStackInspector

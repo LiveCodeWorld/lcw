@@ -11,6 +11,85 @@ version: 0.8
 
 --> Working on
 -
+
+--> Menu | Model
+-
+function menu_GetGlobalController gMenuTitle
+   if there is a stack gMenuTitle then
+      return the name of stack gMenuTitle
+   end if
+   put menu_GetModel() into gMenuModel
+   put gMenuModel [gMenuTitle]["mController"] into mController
+   return mController
+end menu_GetGlobalController
+
+function menu_ListLoadedTitles pFilter
+   put the mainstacks into stackNames
+   put revLoadedStacks("Application") into stackNames
+   filter stackNames with "Global |*| Menu"
+   --
+   if pFilter is not empty then filter stackNames with pFilter
+   return stackNames
+end menu_ListLoadedTitles
+
+
+--> Menu | Model | Global (old)
+-
+command project_AddToMenuModel projectArray
+   put menu_GetModel() into gMenuArray
+   put projectArray ["Global Menus"] into projectGlobalMenuArray
+   union projectGlobalMenuArray with gMenuArray
+   menu_SetModel projectGlobalMenuArray
+end project_AddToMenuModel
+
+function menu_ListGlobalTitles pFilter
+   # Old Model version
+   put menu_GetModel() into gMenuModel
+   put keys (gMenuModel) into globalTitles
+   sort globalTitles
+   if pFilter is not empty then filter globalTitles with pFilter
+   return globalTitles
+end menu_ListGlobalTitles
+
+function menu_ListGlobalObjects pFilter
+   put menu_ListGlobalTitles(pFilter) into stackNames
+   repeat for each line stackName in stackNames
+      put the name of stack stackName & Cr after mControllers
+   end repeat
+   
+   /*
+   put menu_GetModel() into gMenuModel
+   repeat for each key mTitle in gMenuModel
+      put menuArray [mTitle]["mController"] into mController
+      put mController & CR after mControllers
+   end repeat
+   */
+   delete char -1 of mControllers
+   return mControllers
+end menu_ListGlobalObjects
+
+command menu_SetGlobalController gMenuTitle, scriptObject
+   put menu_GetModel() into gMenuModel
+   put revRuggedID (scriptObject) into gMenuModel [gMenuTitle]["mController"]
+   menu_SetModel gMenuModel
+   return the result
+end menu_SetGlobalController
+
+function menu_GetModel
+   global gLCW
+   put gLCW ["Global Menus"] into menuGlobalArray
+   return menuGlobalArray
+end menu_GetModel
+
+command menu_SetModel menuGlobalArray
+   global gLCW
+   put menuGlobalArray into gLCW ["Global Menus"]
+   return gLCW ["Global Menus"]
+end menu_SetModel
+
+
+--> Working on
+-
 command github_DownloadProject projectName, lcwRoot
    -- this should use git to clone a project to the lcwRoot folder
    -- and return the path to the projects home stack folder
@@ -23,6 +102,25 @@ command github_DownloadProject projectName, lcwRoot
       exit to top
    end if
 end github_DownloadProject
+
+command env_RecursivelyLoadProjects pObject, pForceLoad
+   if pObject is empty then put the long id of the target into pObject
+   
+   put the project_DependencyArray of pObject into projectDepArray
+   --
+   set the itemdelimiter to slash
+   repeat for each key projectName in projectDepArray
+      set the cursor to busy
+      put projectDepArray [projectName]["path"] into homeStackPath
+      if there is a stack homeStackPath then
+         try
+            env_SimpleLoadProject projectName, homeStackPath, pForceLoad
+         catch sError
+            breakpoint
+         end try
+      end if
+   end repeat        
+end env_RecursivelyLoadProjects
 
 
 --> IDE | Events | revEditScript
@@ -249,14 +347,18 @@ getprop project_Folder
    -- does not allow projects outside of the LCW reop folder  
    
    put the effective filename of the defaultstack into stackPath
-   --
+   put project_FolderFromPath (stackPath) into projectFolder
+   return projectFolder
+end project_Folder
+
+function project_FolderFromPath stackPath
    set the itemdelimiter to slash
    put env_GetRepoFolder() into repoFolder
    put the number of items of repoFolder + 1 into itemNum
    put item 1 to itemNum of stackPath & slash into projectFolder
    --
    return projectFolder
-end project_Folder
+end project_FolderFromPath
 
 getprop project_IsActive
    put the project_Name of the target into projectName
@@ -307,17 +409,23 @@ end project_HomeStackBrowser
 --> Props | Module
 -
 getprop module_Folder
-   put the project_Folder of the target into projectFolder
+   put the long id of the target into tObject
+   put the effective filename of the defaultstack into stackPath
+   put the project_Folder of tObject into projectFolder
    if there is not a folder projectFolder then return empty
-   
-   put the effective filename of the defaultstack into sPath
-   set the itemdelimiter to slash
-   put the number of items of projectFolder into pNum
-   if item (pNum + 1) of sPath is not "Modules" then return empty
-   
-   put item 1 to (pNum + 2) of sPath & slash into moduleFolder
+   --
+   put module_FolderFromPath (stackPath, projectFolder) into moduleFolder
    return moduleFolder
 end module_Folder
+
+function module_FolderFromPath stackPath, projectFolder
+   set the itemdelimiter to slash
+   put the number of items of projectFolder into pNum
+   if item (pNum + 1) of stackPath is not "Modules" then return empty
+   
+   put item 1 to (pNum + 2) of stackPath & slash into moduleFolder
+   return moduleFolder
+end module_FolderFromPath
 
 getprop module_HomeStackPath [moduleName]
    put the project_ModuleFolder [moduleName] of the target into moduleFolder
@@ -427,23 +535,6 @@ command env_SetProjectFolder homeStackName, pProjectFolder
    env_SetActiveProjectArray envProjectArray
    return envProjectArray
 end env_SetProjectFolder
-
-command env_RecursivelyLoadProjects pObject, pForceLoad
-   -- think this does the same as old "project_Init" (which is a better name)
-   -- order of loading must not be unimportant
-   if pObject is empty then put the long id of the target into pObject
-   
-   put the project_DependencyArray of pObject into projectDepArray
-   --
-   set the itemdelimiter to slash
-   repeat for each key projectName in projectDepArray
-      set the cursor to busy
-      put projectDepArray [projectName]["path"] into homeStackPath
-      if there is a stack homeStackPath then
-         env_SimpleLoadProject projectName, homeStackPath, pForceLoad
-      end if
-   end repeat        
-end env_RecursivelyLoadProjects
 
 command env_SimpleLoadProject projectName, homeStackPath, pForceLoad
    # Init the project (nothing recursive)
@@ -703,7 +794,7 @@ command project_LoadFromFolder projectFolder
    # Laod Project and Module Menus
    project_AddToMenuModel projectArray 
    
-   # Add to Env
+   # Add to Env -- do this manually if needed
    -- env_AddProject projectName, projectFolder
    env_SetProjectFolder projectName, projectFolder
    
@@ -720,18 +811,7 @@ function project_NameFromFolder projectFolder
    set the itemdelimiter to slash
    put item -1 of projectFolder into projectName
    return projectName
-   
-   put project_GetHomeStackName (projectFolder) into projectName
-   if projectName is empty then return empty -- no home stack so skip
-   return projectName
 end project_NameFromFolder
-
-command project_AddToMenuModel projectArray
-   put menu_GetModel() into gMenuArray
-   put projectArray ["Global Menus"] into projectGlobalMenuArray
-   union projectGlobalMenuArray with gMenuArray
-   menu_SetModel projectGlobalMenuArray
-end project_AddToMenuModel
 
 
 --> Project | Array
@@ -1238,16 +1318,87 @@ Here we put deps that the project needs.
 These could be in a backscript named after the project like: back_LcwCommon or lib_LcwCommon
 */
 
-command folder_Add @someFolder, pSubFolderPath
-   switch
-      case someFolder is empty
-         return "Error, folder is empty"
-      case pSubFolderPath is not empty
-         if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
-         put pSubFolderPath after someFolder
-         text_AddTrailing someFolder, slash
+function array_Get someFile
+   put url ("binfile:" & someFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   return modelArray
+end array_Get
+
+command array_Set someFile, modelArray
+   if keys(modelArray) is empty then
+      delete file someFile
+   else
+      set the itemdelimiter to "/"
+      put item 1 to -2 of someFile into someFolder
+      folder_CreateNested someFolder
+      put arrayencode (modelArray) into url ("binfile:" & someFile)
+   end if
+end array_Set
+
+function array_FromFile someFile, pUseMerge
+   put url ("binfile:" & someFile) into someData
+   if someData is empty then return empty
+   
+   # Switch depending on file type
+   set the itemdelimiter to "."
+   switch item -1 of someFile
+      case "json"
+         -- put jsonImport (someData) into modelArray
+         put json_ToArray (someData, pUseMerge) into modelArray
+         return modelArray
+      case "array"
+         put arraydecode (someData) into modelArray
+         return modelArray
+      default
+         return someData
    end switch
-   return empty
+end array_FromFile
+
+function json_ToArray pJSON, pUseMerge
+   local tArray,tKeys
+   if pJSON is empty then
+      return false
+   else if pUseMerge is false then -- not the same
+      put jsonImport (pJSON) into tArray
+      return tArray
+   end if
+   
+   try -- as otherwise an error with non-json causes script to exit
+      if pJSON is empty then return empty
+      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
+         put json_ToArray(tArray[tKey]) into tArray[tKey]
+      end repeat
+      return tArray
+   catch e
+      return empty
+   end try
+end json_ToArray
+
+setprop stackfile_Array sfArray
+   put the defaultstack into someStack
+   put stackFile_FromArray (sfArray) into sfTable
+   sort sfTable by item 1 of each
+   set the stackfiles of someStack to sfTable
+   return sfTable
+end stackfile_Array
+
+function stackFile_FromArray stackFileArray
+   combine stackFileArray using CR and comma
+   sort stackFileArray
+   return stackFileArray
+end stackFile_FromArray
+
+command folder_Add @someFolder, pSubFolderPath
+switch
+   case someFolder is empty
+      return "Error, folder is empty"
+   case pSubFolderPath is not empty
+      if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
+      put pSubFolderPath after someFolder
+      text_AddTrailing someFolder, slash
+end switch
+return empty
 end folder_Add
 
 function folder_ListStackPaths someFolder

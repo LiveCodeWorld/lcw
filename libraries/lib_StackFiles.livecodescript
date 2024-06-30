@@ -12,6 +12,24 @@ This is a library to manipulate and store stackfiles automatically.
 
 --> Working on
 -
+getprop stackfile_Array
+   put the defaultstack into someStack
+   put the stackfiles of someStack into stackFileArray
+   split stackFileArray by CR and comma
+   return stackFileArray
+end stackfile_Array
+
+setprop stackfile_Array sfArray
+   put the defaultstack into someStack
+   put stackFile_FromArray (sfArray) into sfTable
+   sort sfTable by item 1 of each
+   set the stackfiles of someStack to sfTable
+   return sfTable
+end stackfile_Array
+
+
+--> StackFile
+-
 function stackFile_ConstructShortFileArray pSetName
    -- really not sure if this is useful / broken / needed
    put library_FetchStackFiles (pSetName) into stackFileTable
@@ -270,21 +288,6 @@ getprop stackfile_FileArray
    end repeat
    return fileNameArray
 end stackfile_FileArray
-
-getprop stackfile_Array
-   put the stack_Object of the target into someStack
-   put the stackfiles of someStack into stackFileArray
-   split stackFileArray by CR and comma
-   return stackFileArray
-end stackfile_Array
-
-setprop stackfile_Array stackFileArray
-   put the stack_Object of the target into someStack
-   put stackFile_FromArray (stackFileArray) into stackFileTable
-   sort stackFileTable by item 1 of each
-   set the stackfiles of someStack to stackFileTable
-   return stackFileTable
-end stackfile_Array
 
 getprop stackFile_ErrorArray
    put the stack_Object of the target into stackFileStack
