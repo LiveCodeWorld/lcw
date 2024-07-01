@@ -9,6 +9,150 @@ version: 0.3
 /*
 */
 
+--> Working on
+-
+command module_Clone moduleName, pShowTools
+   view_NormalizeName moduleName
+   --
+   stack_Clone moduleName
+   put the result into clonedStack
+   --
+   set the original_ModuleName of clonedStack to moduleName
+   put the stack_Name of clonedStack into cStackName
+   --
+   if pShowTools is true then
+      display_CloneTools cStackName
+   end if
+   return cStackName
+end module_Clone
+
+getprop module_BehaviorDepHkeyArray [fromFolder]
+   local depHkeyArray
+   put the long id of the target into bObject
+   
+   # Fetch hKeyArray
+   put the script_HkeyArrayFile of bObject into hKeyArrayFile
+   switch
+      case (there is a file hKeyArrayFile) AND (fromFolder is not true)
+         # Fetch exported hkeyArray
+         put the script_HkeyArray of bObject into hKeyArray
+         break
+      default
+         put the walk_ModuleBehaviorHkeyArray [fromFolder] of bObject into hKeyArray
+   end switch
+   return hKeyArray
+end module_BehaviorDepHkeyArray
+
+getprop module_BehaviorDepHkeyArray [fromFolder]
+   -- just module behaviors (not recursive, not hierarchy)
+   local depHkeyArray
+   put the long id of the target into bObject
+   
+   # Fetch hKeyArray
+   put the script_HkeyArrayFile of bObject into hKeyArrayFile
+   switch
+      case (there is a file hKeyArrayFile) AND (fromFolder is not true)
+         # Fetch exported hkeyArray
+         put the script_HkeyArray of bObject into hKeyArray
+         break
+      default
+         put the walk_ModuleBehaviorHkeyArray [fromFolder] of bObject into hKeyArray
+         set the script_HkeyArray of bObject to hKeyArray
+   end switch
+   
+   # Process hKeyArray
+   put hkeyArray_GetStackDepArray (hkeyArray) into stackHkeyArray
+   put the name of the stack_Object of bObject into stackObject
+   delete variable stackHkeyArray [stackObject]
+   
+   # Extract unique hkey deps (excluding other behaviors) 
+   put the module_BehaviorPaths of bObject into bPaths
+   repeat for each key stackObject in stackHkeyArray
+      if stackObject = "Missing" then
+         next repeat
+      end if
+      
+      put the effective filename of stackObject into sPath
+      if sPath is among the lines of bPaths then
+         next repeat
+      end if
+      
+      get stackHkeyArray [stackObject]
+      union depHkeyArray with it recursively
+   end repeat
+   return depHkeyArray
+end module_BehaviorDepHkeyArray
+
+
+--> Module | Behavior
+-
+getprop module_BehaviorName
+   put the view_Name of the target into viewName
+   put lcw_ConstructBehaviorName (viewName) into defaultBehaviorName
+   return defaultBehaviorName
+end module_BehaviorName
+
+getprop module_DefaultBehavior
+   put the module_BehaviorName of the target into bName
+   if exists (stack bName) then
+      return the name of stack bName
+   else
+      breakpoint
+      put the view_Name of the target into viewName
+      if viewName is empty then return empty
+      put view_GetTemplateObject (viewName) into mObject
+      --
+      put the module_Folder of mObject into moduleFolder
+      --
+      put folder_AddShort (moduleFolder, "behaviors") into bFolder
+      put bFolder & bName & ".livecodescript" into bPath
+      --
+      if there is a stack bPath then
+         return the long name of stack bPath
+      else
+         return empty
+      end if
+   end if
+end module_DefaultBehavior
+
+getprop module_Behaviors
+   -- unordered list
+   put the module_BehaviorPaths of the target into stackPaths
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the name of stack stackPath & CR after moduleBehaviors
+   end repeat
+   delete char -1 of moduleBehaviors
+   return moduleBehaviors
+end module_Behaviors
+
+getprop module_OrderedBehaviors
+   -- make sure default behavior is first
+   put the view_Name of the target into moduleName
+   --
+   put module_ListBehaviorStackPaths (moduleName) into sPaths
+   repeat for each line sPath in sPaths
+      if exists (stack sPath) is true then
+         put the name of stack sPath & CR after bObjects
+      end if
+   end repeat
+   delete char -1 of bObjects
+   
+   # Make default behavior first
+   put lcw_ConstructBehaviorName (moduleName) into bName
+   line_Delete bName, stackNames
+   put word 1 to -1 of bName & CR & stackNames into stackNames
+   
+   return bObjects
+end module_OrderedBehaviors
+
+function module_ConstructBehaviorPath viewName, moduleFolder, pShortFile
+   put folder_AddShort (moduleFolder, "behaviors") into moduleBehaviorFolder
+   put moduleBehaviorFolder & pShortFile into moduleControllerPath
+   return moduleControllerPath
+end module_ConstructBehaviorPath
+
+
 --> LCW | Names
 -
 function lcw_ConstructBehaviorName viewName
@@ -78,49 +222,6 @@ getprop module_DefaultHierarchy
    
    return bStackObjects   
 end module_DefaultHierarchy
-
-getprop module_DefaultBehaviorObjects
-   put module_ListBehaviorStackPaths (moduleName) into sPaths
-   repeat for each line sPath in sPaths
-      if exists (stack sPath) is true then
-         put the name of stack sPath & CR after bObjects
-      end if
-   end repeat
-   delete char -1 of bObjects
-   
-   # Make default behavior first
-   put lcw_ConstructBehaviorName (moduleName) into bName
-   line_Delete bName, stackNames
-   put word 1 to -1 of bName & CR & stackNames into stackNames
-   
-   return bObjects
-end module_DefaultBehaviorObjects
-
-getprop module_BehaviorName
-   put the view_Name of the target into viewName
-   put lcw_ConstructBehaviorName (viewName) into defaultBehaviorName
-   return defaultBehaviorName
-end module_BehaviorName
-
-getprop module_DefaultBehavior
-   put the view_Name of the target into viewName
-   if viewName is empty then return empty
-   --
-   put the stack_Folder of the target into moduleFolder
-   --
-   put module_ConstructBehaviorPath (viewName, moduleFolder) into bPath
-   if there is a stack bPath then
-      return the long name of stack bPath
-   else
-      return empty
-   end if
-end module_DefaultBehavior
-
-function module_ConstructBehaviorPath viewName, moduleFolder, pShortFile
-   put folder_AddShort (moduleFolder, "behaviors") into moduleControllerFolder
-   put moduleControllerFolder & pShortFile into moduleControllerPath
-   return moduleControllerPath
-end module_ConstructBehaviorPath
 
 function module_ConstructBehaviorShortFile moduleStackName
    put lcw_ConstructBehaviorName (moduleStackName) & ".livecodescript" into shortFile  
@@ -394,63 +495,6 @@ getprop module_ExternalHkeys [hkeyArray]
    return hKeys
 end module_ExternalHkeys
 
-getprop module_BehaviorDepHkeyArray [fromFolder]
-   local depHkeyArray
-   put the long id of the target into bObject
-   
-   # Fetch hKeyArray
-   put the script_HkeyArrayFile of bObject into hKeyArrayFile
-   switch
-      case (there is a file hKeyArrayFile) AND (fromFolder is not true)
-         # Fetch exported hkeyArray
-         put the script_HkeyArray of bObject into hKeyArray
-         break
-      default
-         put the walk_ModuleBehaviorHkeyArray [fromFolder] of bObject into hKeyArray
-   end switch
-   return hKeyArray
-end module_BehaviorDepHkeyArray
-
-getprop module_BehaviorDepHkeyArray [fromFolder]
-   -- just module behaviors (not recursive, not hierarchy)
-   local depHkeyArray
-   put the long id of the target into bObject
-   
-   # Fetch hKeyArray
-   put the script_HkeyArrayFile of bObject into hKeyArrayFile
-   switch
-      case (there is a file hKeyArrayFile) AND (fromFolder is not true)
-         # Fetch exported hkeyArray
-         put the script_HkeyArray of bObject into hKeyArray
-         break
-      default
-         put the walk_ModuleBehaviorHkeyArray [fromFolder] of bObject into hKeyArray
-         set the script_HkeyArray of bObject to hKeyArray
-   end switch
-   
-   # Process hKeyArray
-   put hkeyArray_GetStackDepArray (hkeyArray) into stackHkeyArray
-   put the name of the stack_Object of bObject into stackObject
-   delete variable stackHkeyArray [stackObject]
-   
-   # Extract unique hkey deps (excluding other behaviors) 
-   put the module_BehaviorPaths of bObject into bPaths
-   repeat for each key stackObject in stackHkeyArray
-      if stackObject = "Missing" then
-         next repeat
-      end if
-      
-      put the effective filename of stackObject into sPath
-      if sPath is among the lines of bPaths then
-         next repeat
-      end if
-      
-      get stackHkeyArray [stackObject]
-      union depHkeyArray with it recursively
-   end repeat
-   return depHkeyArray
-end module_BehaviorDepHkeyArray
-
 
 --> Props | Module
 -
@@ -614,16 +658,6 @@ getprop module_BehaviorStackNames
    delete char -1 of sNames
    return sNames
 end module_BehaviorStackNames
-
-getprop module_Behaviors
-   put the module_BehaviorPaths of the target into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      put the name of stack stackPath & CR after moduleBehaviors
-   end repeat
-   delete char -1 of moduleBehaviors
-   return moduleBehaviors
-end module_Behaviors
 
 
 --> Project

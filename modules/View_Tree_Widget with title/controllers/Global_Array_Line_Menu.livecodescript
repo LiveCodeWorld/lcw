@@ -34,6 +34,17 @@ on menu_SelectedLine displayView
    put the selected_Line of displayView
 end menu_SelectedLine
 
+on menu_Test caseParam
+   switch caseParam
+      case "First Item"
+         
+         break
+      case "Second Item"
+         
+         break
+   end switch
+end menu_Test
+
 on menu_SelectedValue displayView
    put the selected_Value of displayView
 end menu_SelectedValue

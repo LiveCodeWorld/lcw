@@ -35,30 +35,25 @@ end menu_CheckTarget
 
 --> Global | Tree | Menu
 -
-on menu_MyTree sObject
-   put the params
-end menu_MyTree
+on menu_TreeModuleFiles sObject
+   put LocalArray ["dView"] into dView
+   put the module_Name of dView into moduleName
+   --
+   put the card_ViewObject of stack moduleName into moduleViewObject
+   put the module_Folder of stack moduleName into moduleFolder
+   --
+   put directory_NestedArray (moduleFolder) into dArray
+   set the displayed_Data of dView to dArray
+   --
+   set the displayed_Object of dView to moduleViewObject
+   set the displayed_ModuleFolder of dView to moduleFolder
+end menu_TreeModuleFiles
 
 on menu_CloneTree
    put _dView() into dView
    --
    module_Clone "Tree", true
 end menu_CloneTree
-
-command module_Clone moduleName, pShowTools
-   view_NormalizeName moduleName
-   --
-   stack_Clone moduleName
-   put the result into clonedStack
-   --
-   set the original_ModuleName of clonedStack to moduleName
-   put the stack_Name of clonedStack into cStackName
-   --
-   if pShowTools is true then
-      display_CloneTools cStackName
-   end if
-   return cStackName
-end module_Clone
 
 private on _
 end _
@@ -70,12 +65,12 @@ end insert_Tree
 private on __
 end __
 
-on menu_Footer
-   put _dView() into treeView
-   
-end menu_Footer
+on menu_MenuButtonScript dView
+   put the menu_Button of dView into mButton
+   edit the script of mButton
+end menu_MenuButtonScript
 
-on menu_ModuleTools sObject
+on menu_ModuleTools dView
    put the view_Name of dView into viewName
    display_ModuleTools viewName
 end menu_ModuleTools

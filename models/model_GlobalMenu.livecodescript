@@ -21,15 +21,6 @@ function menu_SimpleButton
    return mButton
 end menu_SimpleButton
 
-getprop menu_Controller [mTitle]
-   return menu_GetGlobalController (mTitle)
-end menu_Controller
-
-setprop menu_Controller [mTitle] mController
-   menu_SetGlobalController mTitle, mController
-   return the result
-end menu_Controller
-
 
 --> Working on
 -

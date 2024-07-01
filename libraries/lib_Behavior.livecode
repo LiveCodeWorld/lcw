@@ -13,19 +13,38 @@ A library for script behaviors.
 
 --> Working on
 -
+private command _ClearBehaviors bObjects
+   -- not guaranteed to remove behavior loops
+   try
+      repeat for each line bObject in bObjects
+         if exists (bObject) then
+            set the behavior of bObject to empty
+         end if
+      end repeat
+   catch sError
+      -- causes issues with modyfying script when running
+      breakpoint
+   end try
+end _ClearBehaviors
+
+
+--> Behavior | Hierarchy
+-
 getprop behavior_Hierarchy
    put the long id of the target into tObject
    put behavior_GetHierarchy (tObject) into bObjects
    return bObjects
 end behavior_Hierarchy
 
-setprop behavior_Hierarchy bObjects
+setprop behavior_Hierarchy [dontClear] bObjects
    put the long id of the target into tObject
    --
    switch bObjects
       case "default"
          put the module_DefaultHierarchy of tObject into dHierarchy
-         _ClearBehaviors dHierarchy
+         if dontClear is false then
+            _ClearBehaviors dHierarchy -- can crash
+         end if
          _SetBehaviors tObject, dHierarchy
          put the result into setObjects
          break
@@ -176,17 +195,8 @@ private command _ClearHierarchyAndObjects bObjects, pMoreObjects
    --
    _ClearBehaviors bObjects
    return bObjects
-   
 end _ClearHierarchyAndObjects
 
-private command _ClearBehaviors bObjects
-   -- not guaranteed to remove behavior loops
-   repeat for each line bObject in bObjects
-      if exists (bObject) then
-         set the behavior of bObject to empty
-      end if
-   end repeat
-end _ClearBehaviors
 
 
 --> Behavior | Hierarchy
