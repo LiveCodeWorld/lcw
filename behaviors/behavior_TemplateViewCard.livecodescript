@@ -22,59 +22,10 @@ local LocalArray
 
 --> Working on
 -
+private command _ViewProblemMenu
+   menu_PopUp "Global | View | Card | Create | Menu"
+end _ViewProblemMenu
 
---> Events | Drag
--
--- on dragEnd
-put the dragDestination into tObject
-put drop_Target (tObject) into dropTarget
-if exists (dropTarget) is false then
-   pass dragEnd
-end if
-
-put the dragSource into sourceCardObject
-put view_Source (sourceCardObject) into sourceView
-if exists (sourceView) is false then
-   breakpoint
-   pass dragEnd
-end if
-
-set the view_Replacement of dropTarget to sourceView
--- set the control_Type of dropTarget to sourceView
-end dragEnd
-
-/*
-on dragEnter
-   put the dragDestination into tObject
-   put the dragSource into sourceCardObject
-   put view_Source (sourceCardObject) into viewSource
-   
-   put drop_Target (tObject) into dropTarget
-   
-   if exists (dropTarget) is false then
-      put "dropTarget does not exist"
-      pass dragEnter
-   end if
-   if exists (viewSource) is false then
-      -- put "the viewSource does not exist" 
-      pass dragEnter
-   end if
-   
-   set the dragAction to "link"
-   set the blendlevel of dropTarget to 80
-end dragEnter
-
-on dragLeave
-   put LocalArray ["dropTarget"] into dropTarget
-   if exists (dropTarget) then
-      set the blendlevel of dropTarget to 0
-   end if
-end dragLeave
-*/
-
-
---> Working on
--
 getprop displayed_Object
    return the displayed_Object of me
 end displayed_Object
@@ -111,43 +62,71 @@ on preOpenCard
    pass preOpenCard
 end preOpenCard
 
-getprop view_RectOnCard [pMargin]
-   if pMargin is empty then
-      put the card_Margin of me into pMargin
-   end if
+on LayoutCard
+   put the view_Object of me into viewObject
+   if exists (viewObject) is false then return empty
    
-   put the rect of me into sRect
-   --
-   get the menubar of the defaultstack
-   if it is not empty then
-      add 21 to item 2 of sRect
-   end if
-   --
-   if pMargin is not 0 then
-      rect_SubtractMargins sRect, pMargin
-   end if
-   return sRect
-end view_RectOnCard
+   put the view_RectOnCard of me into viewRect
+   dispatch "LayoutControl" to viewObject with viewRect
+   switch it
+      case "unhandled"
+         -- for views that do not have LayoutControl
+         set the rect of viewObject to viewRect
+         break
+      default
+         -- resized with LayoutControl
+   end switch
+   return viewObject
+end LayoutCard
 
-getprop menubar_View
-   if exists (group "View|Menu|Group" of me) then
-      return the long id of group "View|Menu|Group" of me
-   else
-      return empty
-   end if
-end menubar_View
+on resizeStack
+   LayoutCard
+   pass resizeStack
+end resizeStack
 
-getprop view_Object
-   if exists (control 1 of me) is false then return empty
-   
-   put the view_Name of control 1 of me into vName
-   if vName is empty then return empty
-   
-   return the long id of control 1 of me
-end view_Object
+on mouseDown whichModifier
+   put the long id of the target into tObject
+   -- if tObject is not the long id of me then pass mouseDown
+   switch
+      case whichModifier = 3
+         _doViewMenu
+         break
+      case the shiftKey is "Down"
+         -- put "OK"
+         break
+      case word 1 of tObject = "card"
+         -- bug: the target gets set to "card" after events like a drag (not sure when)
+         -- this does not happen with mouseStillDown
+         -- set the dragAction to "link"
+         -- set the dragImage to 3137
+         -- put the view_Name of tObject & CR & the mouseControl & CR & tObject
+         -- set the dragData ["private"] to "View|Layout|Placeholder"
+         break
+      default
+         -- put tObject
+         pass mouseDown
+   end switch
+end mouseDown
+
+on mouseStillDown
+   put the long id of the target into tObject
+   switch
+      case word 1 of tObject = "card"
+         put _templateView() into tView
+         if exists (tView) is false then pass mouseStillDown
+         
+         set the dragAction to "link"
+         -- set the dragImage to 3137
+         put the view_Name of tView into vName
+         set the dragData ["private"] to vName
+         break
+      default
+         pass mouseStillDown
+   end switch
+end mouseStillDown
 
 
---> Default Menus for Card
+--> MenuTitle | Card
 -
 getprop menu_Title [viewName]
    -- put LocalArray ["mTitle"] into mTitle
@@ -167,6 +146,99 @@ setprop menu_Title mTitle
    -- put mTitle into LocalArray ["mTitle"]
 end menu_Title
 
+
+--> Props
+-
+getprop view_IsTemplate
+   put the stack_Name of the target into stackName
+   put the urip_Type of _templateView() into uripType
+   put the urip_Name of _templateView() into uripName
+   
+   return uripName = stackName
+end view_IsTemplate
+
+getprop view_BehaviorStackName
+   put the view_Name of the target into vName
+   replace "|" with empty in vName
+   put "behavior_" & vName into stackName
+   return stackName
+end view_BehaviorStackName
+
+getprop view_RectOnCard [pMargin]
+   if pMargin is empty then
+      put the card_Margin of me into pMargin
+   end if
+   
+   put the rect of me into sRect
+   --
+   get the menubar of the defaultstack
+   if it is not empty then
+      add 21 to item 2 of sRect
+   end if
+   --
+   if pMargin is not 0 then
+      rect_SubtractMargins sRect, pMargin
+   end if
+   return sRect
+end view_RectOnCard
+
+
+--> Props | Margins
+-
+getprop card_Margin
+   -- save with stack for standalone testing and remembering the preference
+   put the card_Margin of me into cardMargin
+   -- put LocalArray ["cardMargin"] into cardMargin
+   if cardMargin is empty then put 24 into cardMargin
+   return cardMargin
+end card_Margin
+
+setprop card_Margin cardMargin
+   -- save with stack for standalone testing and remembering the preference
+   -- put cardMargin into LocalArray ["cardMargin"]
+   set the card_Margin of me to cardMargin
+   LayoutCard
+end card_Margin
+
+
+--> Objects
+-
+getprop menu_Target
+   return the view_Object of me
+end menu_Target
+
+getprop view_Template
+   return _templateView()
+end view_Template
+
+getprop template_Object
+   return _templateView()
+end template_Object
+
+getprop template_View
+   return _templateView()
+end template_View
+
+getprop menubar_View
+   if exists (group "View|Menu|Group" of me) then
+      return the long id of group "View|Menu|Group" of me
+   else
+      return empty
+   end if
+end menubar_View
+
+getprop view_Object
+   if exists (control 1 of me) is false then return empty
+   
+   put the view_Name of control 1 of me into vName
+   if vName is empty then return empty
+   
+   return the long id of control 1 of me
+end view_Object
+
+
+--> Private
+-
 private command _doViewMenu
    if exists (control 1 of me) is false then _ViewProblemMenu
    --
@@ -212,116 +284,6 @@ private command _ViewGoodMenu viewObject, viewName
    menu_PopUp mTitle, empty, viewObject
 end _ViewGoodMenu
 
-private command _ViewProblemMenu
-   menu_PopUp "Global | View | Card | Create | Menu"
-end _ViewProblemMenu
-
-
---> Events
--
-on LayoutCard
-   put the view_Object of me into viewObject
-   if exists (viewObject) is false then return empty
-   
-   put the view_RectOnCard of me into viewRect
-   dispatch "LayoutControl" to viewObject with viewRect
-   switch it
-      case "unhandled"
-         -- for views that do not have LayoutControl
-         set the rect of viewObject to viewRect
-         break
-      default
-         -- resized with LayoutControl
-   end switch
-   return viewObject
-end LayoutCard
-
-on resizeStack
-   LayoutCard
-   pass resizeStack
-end resizeStack
-
-
---> Events
--
-on mouseDown whichModifier
-   put the long id of the target into tObject
-   -- if tObject is not the long id of me then pass mouseDown
-   switch
-      case whichModifier = 3
-         _doViewMenu
-         break
-      case the shiftKey is "Down"
-         -- put "OK"
-         break
-      case word 1 of tObject = "card"
-         -- bug: the target gets set to "card" after events like a drag (not sure when)
-         -- this does not happen with mouseStillDown
-         -- set the dragAction to "link"
-         -- set the dragImage to 3137
-         -- put the view_Name of tObject & CR & the mouseControl & CR & tObject
-         -- set the dragData ["private"] to "View|Layout|Placeholder"
-         break
-      default
-         -- put tObject
-         pass mouseDown
-   end switch
-end mouseDown
-
-on mouseStillDown
-   put the long id of the target into tObject
-   switch
-      case word 1 of tObject = "card"
-         put _templateView() into tView
-         if exists (tView) is false then pass mouseStillDown
-         
-         set the dragAction to "link"
-         -- set the dragImage to 3137
-         put the view_Name of tView into vName
-         set the dragData ["private"] to vName
-         break
-      default
-         pass mouseStillDown
-   end switch
-end mouseStillDown
-
-command template_Check
-   put _templateView() into templateView
-   put the urip_Type of templateView into uripType     
-   switch uripType
-      case "view"
-         -- could update card menus?
-         -- set the menu_Update of templateView to true -- slows down displaying a view
-         break
-      case "view template"
-         lcw_Notify "View marked with old 'view template' markup!. Check the script and alter :)"
-         edit the script of templateView
-         break
-      default
-   end switch
-end template_Check
-
-
---> Margins
--
-getprop card_Margin
-   -- save with stack for standalone testing and remembering the preference
-   put the card_Margin of me into cardMargin
-   -- put LocalArray ["cardMargin"] into cardMargin
-   if cardMargin is empty then put 24 into cardMargin
-   return cardMargin
-end card_Margin
-
-setprop card_Margin cardMargin
-   -- save with stack for standalone testing and remembering the preference
-   -- put cardMargin into LocalArray ["cardMargin"]
-   set the card_Margin of me to cardMargin
-   LayoutCard
-end card_Margin
-
-
---> Private
--
 private function drop_Target tObject
    if exists (tObject) is false then
       -- does not exist (maybe dropped onto the desktop / background)
@@ -374,7 +336,7 @@ private function view_Source sourceCardObject
 end view_Source
 
 
---> View | Menu
+--> Deps
 -
 command view_FixBehavior templateView
    put the behavior of templateView into bObject
@@ -396,38 +358,21 @@ command view_FixBehavior templateView
    end switch
 end view_FixBehavior
 
-
---> Objects
--
-getprop menu_Target
-   return the view_Object of me
-end menu_Target
-
--- getprop view_Name
-put the long id of the target into tObject
-put the view_Object of me into viewObject
---
-switch
-   case viewObject is empty
-      return empty
-   case viewObject = tObject
-      put the stack_Name of viewObject into vName
-      return vName
-   default 
-      return empty
-end switch
-
-getprop view_Template
-   return _templateView()
-end view_Template
-
-getprop template_Object
-   return _templateView()
-end template_Object
-
-getprop template_View
-   return _templateView()
-end template_View
+command template_Check
+   put _templateView() into templateView
+   put the urip_Type of templateView into uripType     
+   switch uripType
+      case "view"
+         -- could update card menus?
+         -- set the menu_Update of templateView to true -- slows down displaying a view
+         break
+      case "view template"
+         lcw_Notify "View marked with old 'view template' markup!. Check the script and alter :)"
+         edit the script of templateView
+         break
+      default
+   end switch
+end template_Check
 
 private function _templateView 
    if exists (control 1 of me) then
@@ -445,30 +390,6 @@ private function _templateView
    end if
 end _templateView
 
-
---> Objects
--
-getprop view_IsTemplate
-   put the stack_Name of the target into stackName
-   put the urip_Type of _templateView() into uripType
-   put the urip_Name of _templateView() into uripName
-   
-   return uripName = stackName
-end view_IsTemplate
-
-
---> Template | Props
--
-getprop view_BehaviorStackName
-   put the view_Name of the target into vName
-   replace "|" with empty in vName
-   put "behavior_" & vName into stackName
-   return stackName
-end view_BehaviorStackName
-
-
---> Deps
--
 command rect_SubtractMargins @sRect, pMargin
    margin_Normalize pMargin, leftM, topM, rightM, bottomM   
    add leftM to item 1 of sRect

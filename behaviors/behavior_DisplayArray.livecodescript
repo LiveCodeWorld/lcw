@@ -18,6 +18,39 @@ local LocalArray
 
 --> Working on
 -
+getprop title_Controller
+   put the title_Controller of me into mController
+   if exists (mController) then return mController
+   
+   ## Default
+   put the title_Menu of me into mTitle
+   put menu_GetGlobalController(mTitle) into mController
+   return mController
+end title_Controller
+
+getprop line_Controller
+   put the line_Controller of me into mController
+   if exists (mController) then return mController
+   
+   ## Default
+   put the line_Menu of me into mTitle
+   put menu_GetGlobalController(mTitle) into mController
+   return mController
+end line_Controller
+
+getprop menu_Controller
+   get the target
+   breakpoint
+   switch word 1 of it
+      case "field"
+         put the line_Controller of the target into mController
+         break
+      default
+         put the title_Controller of the target into mController
+   end switch
+   return mController
+end menu_Controller
+
 getprop tree_IsIndex
    return LocalArray ["isIndex"] is true
 end tree_IsIndex
@@ -151,7 +184,16 @@ on hiliteChanged
    
    if the controlKey is "Down" then
       put the line_Menu of me into mTitle
-      _NormalizeLineMenu mTitle
+      put the line_Controller of me into mController
+      --
+      switch
+         case exists (mController) is false
+            breakpoint
+            break
+         case mTitle is empty
+            put "Global | Array | Line | Menu" into mTitle
+            break
+      end switch
       --
       if the shiftKey is "Down" then
          put "Global | Array | Line | Menu" into defaultLineMenu
@@ -171,6 +213,7 @@ command actionDoubleClick pathItems
    -- not called
    put the selected_Value of me into someValue
    put the mouse_DoubleUp of me into mouseDoubleUpCommand
+   --
    if mouseDoubleUpCommand is empty then
       pass actionDoubleClick
    else
@@ -178,6 +221,7 @@ command actionDoubleClick pathItems
       replace comma with CR in pathItems
       dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
       if it is "unhandled" then
+         breakpoint
          edit the script of mouseTarget
          put mouseDoubleUpCommand
       end if
@@ -261,26 +305,6 @@ end menu_Target
 setprop menu_Target [mTitlePath] mTarget
    set the menu_Target of me to mTarget
 end menu_Target
-
-getprop title_Controller
-   put the title_Controller of me into mController
-   if exists (mController) then return mController
-   
-   ## Default
-   put the title_Menu of me into titleMenu
-   set the menu_Controller [titleMenu] of me to mController
-   return mController
-end title_Controller
-
-getprop line_Controller
-   put the line_Controller of me into mController
-   if exists (mController) then return mController
-   
-   ## Default
-   put the line_Menu of me into lineMenu
-   put the menu_Controller [lineMenu] of me into mController
-   return mController
-end line_Controller
 
 
 --> Props | Menu | Model
@@ -815,25 +839,6 @@ end top_Lines
 
 --> Private
 -
-private command _NormalizeLineMenu @lineMenuTitle
-   switch
-      case lineMenuTitle is empty
-         put "Global | Array | Line | Menu" into lineMenuTitle
-         break
-      case _LineMenuControllerExists (lineMenuTitle)
-         break
-      default
-         put "Global | Array | Line | Menu" into lineMenuTitle
-         
-         # Ask to create here
-   end switch
-end _NormalizeLineMenu
-
-private function _LineMenuControllerExists lineMenuTitle
-   put the menu_Controller [lineMenuTitle] of me into mController
-   return exists (mController)
-end _LineMenuControllerExists
-
 private command tree_SetArray sArray, pPath
    put _treeWidget() into treeWidget
    if pPath is empty then

@@ -35,6 +35,18 @@ end menu_CheckTarget
 
 --> Global | Tree | Dev | Menu
 -
+on menu_CloneTree
+   dispatch "module_Clone" with "Tree",true
+end menu_CloneTree
+
+on menu_ModuleTools dView
+   put the view_Name of dView into viewName
+   dispatch "display_ModuleTools" with viewName
+end menu_ModuleTools
+
+private on _
+end _
+
 on menu_DisplayTemplate arrayView
    put the view_Name of arrayView into vName
    put view_GetTemplateObject (vName) into tObject
@@ -59,3 +71,9 @@ on menu_AddMenuButton arrayView
    dispatch "LayoutControl" to arrayView
 end menu_AddMenuButton
 
+private on __
+end __
+
+on insert_Tree
+   return "Global | Array | Menu"
+end insert_Tree

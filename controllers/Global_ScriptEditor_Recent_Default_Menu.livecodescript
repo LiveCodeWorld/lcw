@@ -1,13 +1,10 @@
-﻿script "Global_ScriptEditor_Recent_Default_Menu"
+﻿script "Global | ScriptEditor | Recent | Default | Menu"
 --> MetaData
 -
 license: GPLv3
 name: Global | ScriptEditor | Recent | Default | Menu
 type: controller
 version: 0.6
-
-
-local LocalArray
 
 
 --> Menu | Props

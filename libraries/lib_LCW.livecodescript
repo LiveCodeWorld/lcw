@@ -11,65 +11,21 @@ version: 0.8
 
 --> Working on
 -
-on display_RenameMenu mTitle, mController
-   -- put "Rename menu:" && kwote (mTitle) && "of" && mController
-   put mTitle into dArray ["mTitle"]
-   put mController into dArray ["mController"]
-   --
-   if exists (mController) then
-      put the project_Name of mController into projectName
-      put projectName into dArray ["projectName"]
-      --
-      put the module_Name of mController into moduleName
-      if moduleName is not empty then
-         put moduleName into dArray ["moduleName"]
-      end if
-   end if
-   
-   display_Tool dArray, mTitle, "Rename Menu"
-end display_RenameMenu
-
-function menu_GetGlobalController mTitle
+function menu_GetGlobalController mTitle, pWithModel
    if there is a stack mTitle then
       return the name of stack mTitle
    end if
    
-   -- breakpoint -- should be named properly
-   put menu_GetModel() into gMenuModel
-   put gMenuModel [mTitle]["mController"] into mController
-   --
-   display_RenameMenu mTitle, mController
-   return mController
+   if pWithModel is true then
+      put menu_GetModel() into mModel
+      put gMenuModel [mTitle]["mController"] into mController
+      --
+      dispatch "display_RenameMenu"  with mTitle,mController,mModel
+      return mController
+   else
+      return empty
+   end if
 end menu_GetGlobalController
-
-
---function project_FetchStackFileArray projectName
-put project_FetchValue ("stackFileArray", projectName) into stackFileArray
-return stackFileArray
-end project_FetchStackFileArray
-
--- command project_StoreStackFileArray projectName, projectStackFileArray
-project_SaveValue "stackFileArray", projectName
-put the result into projectArray
-return projectArray
-end project_StoreStackFileArray
-
--- function project_FetchValue someKey, projectName
--- put library_FetchProjectFolder (projectName) into projectFolder
-put the stack_Folder of stack projectName into projectFolder
-put project_GetArrayFromFolder (projectFolder) into projectArray
-put projectArray [someKey] into someValue
-return someValue
-end project_FetchValue
-
--- command project_SaveValue someKey, someValue, projectName
--- put library_FetchProjectFolder (projectName) into projectFolder
-put the stack_Folder of stack projectName into projectFolder
-put project_GetArrayFromFolder (projectFolder) into projectArray
-put someValue into projectArray [someKey]
-project_StoreArray projectFolder, projectArray
-return projectArray
-end project_SaveValue
 
 
 --> Menu | Model

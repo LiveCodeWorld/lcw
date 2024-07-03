@@ -1,8 +1,8 @@
-﻿script "Global_Library_Project_Model_Menu"
+﻿script "Global | Library | Project | Model | Menu"
 --> MetaData
 -
 license: GPLv3
-name: Global_Library_Project_Model_Menu
+name: Global | Library | Project | Model | Menu
 type: controller
 version: 0.1
 

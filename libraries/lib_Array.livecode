@@ -10,6 +10,15 @@ version: 0.6
 
 --> Working on
 -
+function array_FilterKeys someArray, includeKeyList
+   -- see new Livecode filter function
+   -- could use "intersect" ???
+   repeat for each item someKey in includeKeyList
+      put someArray [someKey] into filteredArray [someKey]
+   end repeat
+   return filteredArray
+end array_FilterKeys
+
 function array_AllNodes someArray
    -- should be recursive
    return array_ListKeys (someArray) -- for now two levels only
@@ -150,18 +159,6 @@ function array_FromFolder someFolder, pNoContents
    return someArray
 end array_FromFolder
 
-function array_FilterKeys someArray, includeKeyList
-   -- see new Livecode filter function
-   -- could use "intersect" ???
-   repeat for each item someKey in includeKeyList
-      put someArray [someKey] into filteredArray [someKey]
-   end repeat
-   return filteredArray
-end array_FilterKeys
-
-
---> New
--
 command array_StripEmptyKeys @someArray
    if someArray is empty then
       return empty

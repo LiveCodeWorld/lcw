@@ -29,6 +29,50 @@ end ide_MenuTitle
 
 --> Working on
 -
+function ide_GetMenuController, pShortTitle
+   if pShortTitle is empty then
+      put ide_GetMenuTitle (ideElement) into mTitle
+   else
+      put ide_ConstructMenuTitle (ideElement, pShortTitle) into mTitle
+   end if
+   --
+   put menu_GetGlobalController (mTitle) into mController
+   return mController
+end ide_GetMenuController
+
+function ide_ConstructMenuTitle pIdeElement, pShortName
+   if pElement is empty then put "Recent" into pElement
+   if pShortName is empty then put "Watch" into pShortName
+   --
+   put "Global | ScriptEditor |" && pIdeElement && "|" && pShortName && "| Menu" into mTitle
+   return mTitle
+end ide_ConstructMenuTitle
+
+function ide_GetMenuTitle pElement
+   if pElement is empty then put "Recent" into pElement
+   put LocalArray ["environment"]["menu"][pElement] into mTitle
+   return mTitle
+end ide_GetMenuTitle
+
+function ide_ShortTitle shortName
+   set the itemdelimiter to " | "
+   put the ide_MenuTitle [shortName] of me into mTitle
+   put item 4 of mTitle into shortName
+   if shortName is empty then return "Default"
+   return shortName
+end ide_ShortTitle
+
+function ide_ConstructMenuController pIdeElement, pShortName
+   put ide_ConstructMenuTitle (pIdeElement, pShortName) into mTitle
+   put menu_GetGlobalController (mTitle) into mController
+   --
+   if exists (mController) is true then
+      return mController
+   else
+      return empty
+   end if
+end ide_ConstructMenuController
+
 command ide_SetHanderFieldBehavior sBoolean
    put scriptEditor_HandlerListBehavior() into bObject
    --
@@ -43,10 +87,10 @@ private command _ReIndexLocalIdeMenus
    -- for when things go wrong
    delete variable LocalArray ["environment"]["menu"]
    repeat for each item ideElement in "List,Script,Recent"
-      repeat for each item shortTitle in "Default,Authoring, Watch"
+      repeat for each item shortItem in "Default,Revigniter,Watch" -- "Default,Authoring,Watch"
+         put word 1 to -1 of shortItem into shortTitle
          put ide_ConstructMenuController (ideElement, shortTitle) into mController
          if exists (mController) is true then
-            -- set the menu_Update of mController to true -- breaks due to deps
             ide_SetMenuTitle ideElement, shortTitle
          end if
       end repeat
@@ -102,7 +146,7 @@ end ide_ListFixedShortTitles
 -
 command ide_InitLcw
    ide_LoadDictionaryTerms
-   ide_SetScriptEditorTitles "watch"
+   ide_SetScriptEditorTitles "Watch"
    ide_AddBehaviorHacks true
 end ide_InitLcw
 
@@ -315,70 +359,15 @@ command ide_SetScriptEditorTitles shortTitle
    end repeat 
 end ide_SetScriptEditorTitles
 
-function ide_GetMenuTitle pElement
-   if pElement is empty then put "Recent" into pElement
-   put LocalArray ["environment"]["menu"][pElement] into mTitle
-   return mTitle
-end ide_GetMenuTitle
-
 command ide_SetMenuTitle ideElement, pShortTitle
-   if pShortTitle is empty or pShortTitle is not among the lines of ide_ListShortMenuTitles (ideElement) then
+   get ide_ListShortMenuTitles (ideElement)
+   if pShortTitle is empty or pShortTitle is not among the lines of it then
       put "Default" into pShortTitle
    end if  
    put ide_ConstructMenuTitle (ideElement, pShortTitle) into mTitle
    put mTitle into LocalArray ["environment"]["menu"][ideElement]
    return shortTitle
 end ide_SetMenuTitle
-
-
---> IDE | Menu
--
-function ide_ConstructMenuTitle pIdeElement, pShortName
-   if pElement is empty then put "Recent" into pElement
-   if pShortName is empty then put "Watch" into pShortName
-   --
-   put "Global | ScriptEditor |" && pIdeElement && "|" && pShortName && "| Menu" into mTitle
-   return mTitle
-end ide_ConstructMenuTitle
-
-
---> IDE | Menu | Global
--
-function ide_GetMenuController ideElement, pShortTitle
-   if pShortTitle is empty then
-      put ide_GetMenuTitle (ideElement) into mTitle
-   else
-      put ide_ConstructMenuTitle (ideElement, pShortTitle) into mTitle
-   end if
-   --
-   put menu_GetGlobalController (mTitle) into mController
-   return mController
-end ide_GetMenuController
-
-function ide_GetMenuController pElement
-   put ide_GetMenuTitle (pElement) into mTitle
-   put menu_GetGlobalController (mTitle) into mController
-   return mController
-end ide_GetMenuController
-
-function ide_ConstructMenuController pIdeElement, pShortName
-   put ide_ConstructMenuTitle (pIdeElement, pShortName) into mTitle
-   put menu_GetGlobalController (mTitle) into mController
-   --
-   if exists (mController) is true then
-      return mController
-   else
-      return empty
-   end if
-end ide_ConstructMenuController
-
-function ide_ShortTitle shortName
-   set the itemdelimiter to " | "
-   put the ide_MenuTitle [shortName] of me into mTitle
-   put item 4 of mTitle into shortName
-   if shortName is empty then return "Default"
-   return shortName
-end ide_ShortTitle
 
 
 --> IDE | Other
