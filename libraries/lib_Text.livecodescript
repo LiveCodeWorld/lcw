@@ -16,6 +16,21 @@ Beginning to rename handlers that deal with indexes in a modern way to "index_XX
 
 --> Index
 -
+command index_SetUnique @someIndex, pCaseSensitive
+   if pCaseSensitive is false then
+      split someIndex by CR and tab
+      put the keys of someIndex into uniqueIndex
+      put word 1 to -1 of uniqueIndex into someIndex
+   else
+      repeat for each line someLine in someIndex
+         put word 1 to -1 of someLine into someLine
+         if someLine is empty then next repeat
+         put empty into indexArray [someLine]
+      end repeat
+      put keys (indexArray) into someIndex
+   end if
+end index_SetUnique
+
 function index_CheckSameItems index1, index2
    sort lines of index1
    sort lines of index2
@@ -424,26 +439,6 @@ function line_ConstructDupicateArray someIndex
    end repeat
    return badLineArray
 end line_ConstructDupicateArray
-
-function line_UniqueIndex someIndex, pCaseSensitive
-   line_SetUnique someIndex, pCaseSensitive
-   return someIndex
-end line_UniqueIndex
-
-command line_SetUnique @someIndex, pCaseSensitive
-   if pCaseSensitive is false then
-      split someIndex by CR and tab
-      put the keys of someIndex into uniqueIndex
-      put word 1 to -1 of uniqueIndex into someIndex
-   else
-      repeat for each line someLine in someIndex
-         put word 1 to -1 of someLine into someLine
-         if someLine is empty then next repeat
-         put empty into indexArray [someLine]
-      end repeat
-      put keys (indexArray) into someIndex
-   end if
-end line_SetUnique
 
 command line_Replace replaceLine, newLine, @someIndex
    -- only replaces if it is there

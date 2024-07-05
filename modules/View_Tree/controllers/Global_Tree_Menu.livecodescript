@@ -19,9 +19,14 @@ local LocalArray
 --> Menu | Props
 -
 getprop menu_Target [tObject]
-   put the display_View of tObject into LocalArray ["dView"]
-   put the displayed_Object of tObject into sObject
-   return sObject
+   put the display_View of tObject into treeView
+   put treeView into LocalArray ["dView"]
+   --
+   put the menu_Button of treeView into mButton
+   put mButton into LocalArray ["mButton"]
+   --
+   -- put the displayed_Object of tObject into sObject
+   return treeView
 end menu_Target
 
 getprop menu_CheckTarget [dView]
@@ -31,46 +36,108 @@ end menu_CheckTarget
 
 --> Global | Tree | Menu
 -
-on menu_TreeModuleFiles sObject
-   put LocalArray ["dView"] into dView
-   put the module_Name of dView into moduleName
+on menu_ShowField treeView
+   put the show_Field of treeView into sBoolean
+   set the show_Field of treeView to (sBoolean is false)
+end menu_ShowField
+
+getprop checked_ShowField [treeView]
+   put the show_Field of treeView into sBoolean
+   return sBoolean
+end checked_ShowField
+
+on menu_ShowFooter treeView
+   put the show_Footer of treeView into sBoolean
+   set the show_Footer of treeView to (sBoolean is false)
+end menu_ShowFooter
+
+getprop checked_ShowFooter [treeView]
+   put the show_Footer of treeView into sBoolean
+   return sBoolean
+end checked_ShowFooter
+
+private on _
+end _
+
+on menu_TreeModuleFiles treeView
+   put the module_Name of treeView into moduleName
    --
    put the card_ViewObject of stack moduleName into moduleViewObject
    put the module_Folder of stack moduleName into moduleFolder
    --
    put directory_NestedArray (moduleFolder) into dArray
-   set the displayed_Data of dView to dArray
+   set the displayed_Data of treeView to dArray
    --
-   set the displayed_Object of dView to moduleViewObject
-   set the displayed_ModuleFolder of dView to moduleFolder
+   set the displayed_Object of treeView to moduleViewObject
+   set the displayed_ModuleFolder of treeView to moduleFolder
 end menu_TreeModuleFiles
 
-on menu_UpdateStyle sObject, sStyle
-   put LocalArray ["dView"] into dView
-   set the menuButton_UpdateStyle of dView to sStyle
+on menu_UpdateStyle treeView, sStyle
+   breakpoint
+   set the menuButton_UpdateStyle of treeView to sStyle
 end menu_UpdateStyle
 
-getprop updateStyle_Param
-   put LocalArray ["dView"] into dView
-   put the menuButton_UpdateStyle of dView into sStyle
+getprop updateStyle_Param [treeView]
+   put the menuButton_UpdateStyle of treeView into sStyle
    return sStyle
 end updateStyle_Param
 
-getprop updateStyle_Params
-   put LocalArray ["dView"] into dView
-   return the menuButton_UpdateStyles of dView
+getprop updateStyle_Params [treeView]
+   return the menuButton_UpdateStyles of treeView
 end updateStyle_Params
-
-private on _
-end _
-
-on menu_MenuButtonScript dView
-   put the menu_Button of dView into mButton
-   edit the script of mButton
-end menu_MenuButtonScript
 
 private on __
 end __
+
+on menu_MenuButtonHandlers treeView
+   put the menu_Button of treeView into mButton
+   put the behavior of mButton into bObject
+   display_ScriptTools bObject
+end menu_MenuButtonHandlers
+
+on menu_MenuTreeHandlers treeView
+   put the behavior of treeView into bObject
+   display_ScriptTools bObject
+end menu_MenuTreeHandlers
+
+private on ___
+end ___
+
+on menu_MenuButtonBehavior treeView
+   put the menu_Button of treeView into mButton
+   --
+   if _BehaviorSet(treeView) is true then
+      send ClearBehavior to me in 2 ticks
+   else
+      put the name of stack "behavior_MenuButton" into bObject
+      set the behavior of mButton to bObject
+   end if
+end menu_MenuButtonBehavior
+
+on ClearBehavior
+   put LocalArray ["mButton"] into mButton
+   set the behavior of mButton to empty
+end ClearBehavior
+
+getprop checked_MenuButtonBehavior [treeView]
+   return _BehaviorSet(treeView)
+end checked_MenuButtonBehavior
+
+private function _BehaviorSet treeView
+   put the menu_Button of treeView into mButton
+   put the behavior of mButton into bObject
+   if bObject is empty then
+      return false
+   else
+      -- should check
+      return true
+   end if
+end _BehaviorSet
+
+on menu_MenuButtonScript treeView
+   put the menu_Button of treeView into mButton
+   edit the script of mButton
+end menu_MenuButtonScript
 
 on submenu_Dev
    return menu_DevTitle ("Global | Tree | Menu")

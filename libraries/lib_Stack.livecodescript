@@ -56,6 +56,12 @@ getprop card_Object
    end switch
 end card_Object
 
+getprop stack_IsUsed
+   put the short name of the defaultstack into sName
+   put sName is among the lines of the stacksinuse into sBoolean
+   return sBoolean
+end stack_IsUsed
+
 getprop stack_Name
    return the short name of the defaultstack
 end stack_Name
