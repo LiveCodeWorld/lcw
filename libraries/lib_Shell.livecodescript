@@ -18,6 +18,38 @@ local LocalArray
 
 --> Working on
 -
+
+--> Linux
+-
+on linux_Sudo
+   put "#!/bin/sh" & cr into tScript
+   put "pw="&tPassword & cr into tScript
+   put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
+   get shell(tScript)
+end linux_Sudo
+
+on linux_Mount mountPath
+   if linux_CheckMounted() contains mountPath then
+      return "Already Mounted"
+   else
+      put "mount" && mountPath into someShellCommand
+      put shell(someShellCommand) into shellResult
+      return shellResult
+   end if
+end linux_Mount
+
+function linux_CheckMounted
+   put url "file:/etc/mtab" into mountedFiles
+   return mountedFiles
+end linux_CheckMounted
+
+on sudo_Kill
+   put "#!/bin/sh" & cr into tScript
+   put "pw="&tPassword & cr after tScript
+   put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
+   return shell(tScript)
+end sudo_Kill
+
 function shell_ListProcessIds bashCommand
    put merge ("ps aux | grep '[[bashCommand]]'") into someShell
    put shell (someShell) into shellResult
@@ -58,105 +90,6 @@ command shell_Do someShell, pSomeHow, pBrowserView
          return shellResult
    end switch
 end shell_Do
-
-
---> SSH
--
-function ssh_FetchFile sshUser, remoteDomain, somePath
-   shell_BashParamEscape somePath
-   put "cat" && somePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into someData
-   return someData
-end ssh_FetchFile
-
-command ssh_DeleteFile sshUser, remoteDomain, somePath
-   -- can we ensure it only deletes a single file?
-   shell_BashParamEscape somePath
-   --
-   put "rm" && somePath into remoteCommand
-   ssh_DoRemoteShell sshUser, remoteDomain, remoteCommand
-   put the result into shellResult
-   return shellResult
-end ssh_DeleteFile
-
-function ssh_ConstructRemoteShell remoteShell, serverAddress, sshUserName, pWhichKey
-   -- allows complex multi-command single line remoteShell shell scripts
-   -- as remoteShell is quoted with "'"
-   -- means that the script should not use "'" quoting
-   if remoteShell contains "'" then
-      breakpoint
-      return "error, remoteShell contains '"
-   end if
-   
-   put "ssh" into someShell
-   if pWhichKey is not empty then
-      breakpoint -- not tested
-      put the defaultfolder into oFolder
-      set the defaultfolder to "~/.ssh"
-      put space & "-i" && pWhichKey after someShell
-   end if
-   
-   -- in case remoteShell is multiple lines separated by something like ";"
-   put "'" before remoteShell
-   put "'" after remoteShell
-   --
-   put space & sshUserName & "@" & serverAddress && remoteShell after someShell
-   --
-   return someShell
-end ssh_ConstructRemoteShell
-
-command ssh_DoRemoteShell sshUserName, serverAddress, remoteShell, pWhichKey
-   -- requires public ssh key to be installed on server
-   put "ssh" into someShell
-   if pWhichKey is not empty then
-      breakpoint -- not tested
-      put the defaultfolder into oFolder
-      set the defaultfolder to "~/.ssh"
-      put space & "-i" && pWhichKey after someShell
-   end if
-   --
-   put space & sshUserName & "@" & serverAddress && remoteShell after someShell
-   --
-   put word 1 to -1 of shell (someShell) into shellResult
-   --
-   if pWhichKey is not empty then
-      set the defaultfolder to oFolder
-   end if
-   return shellResult
-end ssh_DoRemoteShell
-
-on sudo_Kill
-   put "#!/bin/sh" & cr into tScript
-   put "pw="&tPassword & cr after tScript
-   put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
-   return shell(tScript)
-end sudo_Kill
-
-
---> Linux
--
-on linux_Sudo
-   put "#!/bin/sh" & cr into tScript
-   put "pw="&tPassword & cr into tScript
-   put "echo $pw | sudo -S kill -9" && tPID & cr after tScript
-   get shell(tScript)
-end linux_Sudo
-
-on linux_Mount mountPath
-   if linux_CheckMounted() contains mountPath then
-      return "Already Mounted"
-   else
-      put "mount" && mountPath into someShellCommand
-      put shell(someShellCommand) into shellResult
-      return shellResult
-   end if
-end linux_Mount
-
-function linux_CheckMounted
-   put url "file:/etc/mtab" into mountedFiles
-   return mountedFiles
-end linux_CheckMounted
 
 
 --> Shell | Tree
@@ -221,69 +154,6 @@ function shell_ExecuteAtRoot someShell, pExecuteWhere, pShellCommandRoot
    set the defaultfolder to oFolder
    return shellResult
 end shell_ExecuteAtRoot
-
-function shell_ConstructLSArray lsResult, pShowInvisible
-   if word 1 of lsResult = "total" then
-      put word 2 of lsResult into totalEntries
-      delete line 1 of lsResult
-   end if
-   
-   repeat for each line someLine in lsResult
-      shell_DeconstructLS someLine, shortFileName, filePermissions, ownerName, groupName, fSize, lastModified, lsType, numberOfLinks
-      put the result into typeExplanation
-      
-      if shortFileName is among the items of ".,.." then next repeat
-      if pShowInvisible is not true then
-         if char 1 of shortFileName = "." then next repeat
-      end if
-      
-      put filePermissions into lsArray [typeExplanation][shortFileName]["filePermissions"]
-      put ownerName into lsArray [typeExplanation][shortFileName]["ownerName"]
-      put groupName into lsArray [typeExplanation][shortFileName]["groupName"]
-      put fSize into lsArray [typeExplanation][shortFileName]["fileSize"]
-      put lastModified into lsArray [typeExplanation][shortFileName]["lastModified"]
-      put lsType into lsArray [typeExplanation][shortFileName]["lsType"]
-      put numberOfLinks into lsArray [typeExplanation][shortFileName]["numberOfLinks"]
-   end repeat
-   return lsArray
-end shell_ConstructLSArray
-
-
---> Shell | Store and Fetch
--
-command shell_StoreFile sshUser, remoteDomain, remotePath, localFile, pSshKeyPath
-   /*
-   scp –P 40050 Desktop/url.txt yatri@192.168.1.50:~/Desktop/url.txt
-   scp hierarchical.png root@178.62.43.72:~/.wiki/actual.world/pages/hierarchical.png
-   
-   -- https://superuser.com/questions/1022976/scp-copy-has-error-ambiguous-target
-   If you have white space in a path, you have to escape the characters by using double backslashes \\ and enclosing the entire path in quotes:
-         scp myfile.txt user@192.168.1.100:"/file\\ path\\ with\\ spaces/myfile.txt"
-   
-   */
-   
-   -- shell_BashParamEscape localFile
-   put kwote (word 1 to -1 of localFile) into localFile
-   
-   -- shell_BashParamEscape fullPath
-   -- The outside set of quotes are for the local shell, and the inside quotes are for the remote shell.
-   --    scp "my local file.txt" user@192.168.1.100:"'/folder/my spacey folder name/'"
-   put word 1 to -1 of remotePath into remotePath
-   put "'" before remotePath
-   put "'" after remotePath
-   put kwote (remotePath) into remotePath
-   
-   put sshUser & "@" & remoteDomain & ":" & remotePath into scpDestination
-   put "scp"  into someShell
-   if pSshKeyPath is not empty then
-      shell_BashParamEscape pSshKeyPath
-      put space & "-i " && pSshKeyPath after someShell
-   end if
-   put space & localFile && scpDestination after someShell
-   
-   put shell (someShell) into shellResult
-   return shellResult
-end shell_StoreFile
 
 
 --> Shell
@@ -406,97 +276,6 @@ function sha1_HashString pText
    wait 0 with messages
    return word -1 of shell("openssl dgst -sha1" &&tPath)
 end sha1_HashString
-
-command shell_DeconstructLS someLine, @shortFileName, @filePermissions, @ownerName, @groupName, @fileSize, @lastModified, @lsType, @numberOfLinks
-   -- file mode
-   put word 1 of someLine into fileMode
-   put char 1 of fileMode into lsType
-   put char 2 to -1 of fileMode into filePermissions
-   
-   -- number of links
-   put word 2 of someLine into numberOfLinks
-   
-   -- owner name
-   put word 3 of someLine into ownerName
-   
-   -- group name
-   put word 4 of someLine into groupName
-   
-   -- number of bytes in the file
-   put word 5 of someLine into fileSize
-   
-   put word 6 of someLine into shortMonth   -- abbreviated month
-   put word 7 of someLine into dayNum   -- day-of-month file was last modified
-   put word 8 of someLine into timeModified
-   
-   if timeModified is a number then
-      /*
-      if the modification time of the file is more than 6 months in the past or
-      future, then the year of the last modification is displayed in place of
-      the hour and minute fields.
-      */
-      
-      put timeModified into yearModified
-      put 02 into hourModified  -- hour file last modified
-      put 00 into minuteModified   -- minute file last modified
-   else
-      set the itemdelimiter to ":"
-      put item 1 of timeModified into hourModified  -- hour file last modified
-      put item 2 of timeModified into minuteModified   -- minute file last modified
-      
-      set the itemdelimiter to comma
-      put the date into today
-      convert today to dateItems
-      put item 1 of today into thisYear
-      put item 2 of today into thisMonth
-      
-      put date_MonthToMonthNumber(shortMonth) into monthNumber
-      if monthNumber - thisMonth > 6 then 
-         put thisYear - 1 into yearModified
-      else
-         put thisYear into yearModified
-      end if
-   end if
-   
-   -- "Oct 10, 2006"
-   put shortMonth && dayNum & "," && yearModified into lastModified
-   convert lastModified to dateItems
-   
-   put hourModified into item 4 of lastModified
-   put minuteModified into item 5 of lastModified
-   put 0 into item 6 of lastModified
-   convert lastModified to internet date
-   
-   -- path name
-   delete word 1 to 8 of someLine
-   put word 1 to -1 of someLine into shortFileName
-   
-   switch lsType
-      case "b"
-         put "block special file" into typeExplanation
-         break
-      case "c"
-         put "character special file" into typeExplanation
-         break
-      case "d"
-         put "folder" into typeExplanation
-         break
-      case "l"
-         put "symbolic link" into typeExplanation
-         break
-      case "s"
-         put "socket link" into typeExplanation
-         break
-      case "p"
-         put "fifo" into typeExplanation
-         break
-      case "-"
-         put "file" into typeExplanation
-         break
-      default
-   end switch
-   return typeExplanation
-end shell_DeconstructLS
 
 
 --> Deps

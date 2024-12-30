@@ -240,7 +240,10 @@ end view_Object
 --> Private
 -
 private command _doViewMenu
-   if exists (control 1 of me) is false then _ViewProblemMenu
+   if exists (control 1 of me) is false then
+      _ViewProblemMenu
+      return empty
+   end if
    --
    put the long id of control 1 of me into viewObject
    put the view_Name of viewObject into viewName

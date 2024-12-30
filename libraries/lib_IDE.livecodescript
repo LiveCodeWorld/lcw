@@ -103,6 +103,16 @@ end _ReIndexLocalIdeMenus
 --> IDE | Menu | List
 -
 function ide_ListShortMenuTitles ideElement
+   put "Global | ScriptEditor |" && ideElement && "|*" into sFilter
+   put menu_ListLoadedTitles (sFilter) into gTitles
+   set the itemdelimiter to "|"
+   repeat for each line mTitle in gTitles
+      put word 1 to -1 of item 4 of mTitle into shortName
+      if shortName = "Menu" or shortName = "Custom" then next repeat
+      put shortName & CR after shortNames
+   end repeat
+   return shortNames
+   
    set the itemdelimiter to " | "
    put menu_ListGlobalTitles() into gTitles
    put "Global | ScriptEditor |" && ideElement && "|" into mTitleStem

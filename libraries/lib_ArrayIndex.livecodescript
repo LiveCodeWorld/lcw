@@ -178,8 +178,15 @@ command indexArray_Insert @sArray, intoNum, itemArray
 end indexArray_Insert
 
 function indexArray_FindArray sArray, sKey, sValue
-   put indexArray_Find (sArray, sKey, sValue) into itemNum
-   return sArray [itemNum]
+   -- put indexArray_Find (sArray, sKey, sValue) into itemNum
+   -- return sArray [itemNum]
+   repeat with itemNum = 1 to item 2 of the extents of sArray
+      put sArray [itemNum][sKey] into foundKey
+      if foundKey = sValue then
+         return sArray [itemNum]
+      end if
+   end repeat
+   return empty
 end indexArray_FindArray
 
 function indexArray_FindContains sArray, sKey, sValue

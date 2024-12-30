@@ -75,14 +75,6 @@ function menu_ListGlobalObjects pFilter
    repeat for each line stackName in stackNames
       put the name of stack stackName & Cr after mControllers
    end repeat
-   
-   /*
-   put menu_GetModel() into gMenuModel
-   repeat for each key mTitle in gMenuModel
-      put menuArray [mTitle]["mController"] into mController
-      put mController & CR after mControllers
-   end repeat
-   */
    delete char -1 of mControllers
    return mControllers
 end menu_ListGlobalObjects
@@ -1198,7 +1190,7 @@ function lcw_Ask someQuestion, pDefault, pDisplayView, pVarValue
    return theResult
 end lcw_Ask
 
-command lcw_Answer someQuestion, pDisplayView, pQVar
+command lcw_Answer someQuestion, pDisplayView, pQVar, pQVar2, pQVar3
    put param (4) into pQVar2
    put param (5) into pQVar3
    --
@@ -1228,9 +1220,9 @@ command lcw_AnswerWarning someQuestion, pDisplayView, pQVar
    exit to top
 end lcw_AnswerWarning
 
-function lcw_Question someQuestion, pQVar
-   put param (4) into pQVar2
-   put param (5) into pQVar3
+function lcw_Question someQuestion, pQVar, pQVar2, pQVar3
+   -- put param (4) into pQVar2
+   -- put param (5) into pQVar3
    --
    put _ConstructDoScript (someQuestion, pQVar, pQVar2, pQVar3) into doScript
    if doScript is not empty then

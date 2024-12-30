@@ -18,6 +18,48 @@ local LocalArray
 
 --> Working on
 -
+getprop tool_MenuBit
+   -- return the tool_MenuBit name = menuBit
+   get the title_Menu of me
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 2 to -2 of it into menuBit
+   return menuBit
+end tool_MenuBit
+
+setprop tool_MenuBit [libName] menuBit
+   -- used to use "display_SetToolMenus"
+   put the menu_Button of me into mButton
+   set the tool_LibName of me to libName
+   --
+   -- set the menumode of mButton to "pulldown"
+   -- set the style of mButton to "menu"
+   
+   # Construct Menu Titles
+   get "Global |" && menuBit
+   put it && "| Menu" into titleMenu
+   put it && "| Line | Menu" into lineMenu
+   
+   # Construct mDoubleUp
+   replace "|" with empty in menuBit
+   replace space with empty in menuBit
+   put "mDoubleUp_" & menuBit into mDoubleUp
+   
+   # Set menus and mouse
+   set the title_Menu of me to titleMenu
+   set the line_Menu of me to lineMenu
+   set the mouse_DoubleUp of me to mDoubleUp
+   
+   # Create menus if needed
+   dispatch "ask_CreateMenuFromObject" to me with titleMenu,libName
+   
+   if the shiftKey is "Down" then
+      dispatch "ask_CreateMenuFromObject" to me with lineMenu,libName
+      dispatch "ask_CreateMouseDoubleUpHandler" to me with mDoubleUp
+   end if
+   --
+   return titleMenu
+end tool_MenuBit
+
 getprop title_Controller
    put the title_Controller of me into mController
    if exists (mController) then return mController
@@ -189,6 +231,8 @@ on hiliteChanged
       switch
          case exists (mController) is false
             breakpoint
+            put the tool_LibName of me into libName
+            ask_CreateMenuFromObject mTitle, libName
             break
          case mTitle is empty
             put "Global | Array | Line | Menu" into mTitle
@@ -221,9 +265,9 @@ command actionDoubleClick pathItems
       replace comma with CR in pathItems
       dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
       if it is "unhandled" then
-         breakpoint
-         edit the script of mouseTarget
-         put mouseDoubleUpCommand
+         -- breakpoint
+         dispatch "ask_CreateMouseDoubleUpHandler" to me with mouseDoubleUpCommand
+         -- edit the script of mouseTarget
       end if
    end if
 end actionDoubleClick

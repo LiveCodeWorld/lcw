@@ -8,7 +8,7 @@ type: behavior
 version: 0.1
 
 /*
-A minimal script to word with the View|Tree module.
+A minimal script to work with the View|Tree module.
 */
 
 

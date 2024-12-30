@@ -475,7 +475,7 @@ getprop module_BehaviorDepScript [hkeyArray]
    put the module_ExternalHkeys [hkeyArray] of the target into hkeyDeps
    
    # Collect dependency handlers
-   put hkey_CollectFromObjects (hkeyDeps, true) into depScript
+   put script_CollectFromObjects (hkeyDeps, true) into depScript
    return depScript
 end module_BehaviorDepScript
 

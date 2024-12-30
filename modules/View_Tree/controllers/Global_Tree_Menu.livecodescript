@@ -19,18 +19,16 @@ local LocalArray
 --> Menu | Props
 -
 getprop menu_Target [tObject]
-   put the display_View of tObject into treeView
-   put treeView into LocalArray ["dView"]
+   put the display_View of tObject into dView
+   put dView into LocalArray ["dView"]
+   put the displayed_Object of tObject into treeView
    --
-   put the menu_Button of treeView into mButton
-   put mButton into LocalArray ["mButton"]
-   --
-   -- put the displayed_Object of tObject into sObject
    return treeView
 end menu_Target
 
 getprop menu_CheckTarget [dView]
-   return exists (dView)
+   put the tree_View of dView into treeView
+   return exists (treeView)
 end menu_CheckTarget
 
 
@@ -95,49 +93,72 @@ on menu_MenuButtonHandlers treeView
    display_ScriptTools bObject
 end menu_MenuButtonHandlers
 
-on menu_MenuTreeHandlers treeView
-   put the behavior of treeView into bObject
-   display_ScriptTools bObject
-end menu_MenuTreeHandlers
-
-private on ___
-end ___
-
 on menu_MenuButtonBehavior treeView
    put the menu_Button of treeView into mButton
    --
-   if _BehaviorSet(treeView) is true then
-      send ClearBehavior to me in 2 ticks
+   if _BehaviorIsSet(mButton) is true then
+      put "ClearBehavior" && mButton into pigeon
+      send pigeon to me in 2 ticks
    else
       put the name of stack "behavior_MenuButton" into bObject
       set the behavior of mButton to bObject
    end if
 end menu_MenuButtonBehavior
 
-on ClearBehavior
-   put LocalArray ["mButton"] into mButton
-   set the behavior of mButton to empty
+on ClearBehavior sObject
+   if exists (sObject) then
+      set the behavior of sObject to empty
+   end if
 end ClearBehavior
 
 getprop checked_MenuButtonBehavior [treeView]
-   return _BehaviorSet(treeView)
-end checked_MenuButtonBehavior
-
-private function _BehaviorSet treeView
    put the menu_Button of treeView into mButton
-   put the behavior of mButton into bObject
-   if bObject is empty then
-      return false
-   else
-      -- should check
-      return true
-   end if
-end _BehaviorSet
+   return _BehaviorIsSet(mButton)
+end checked_MenuButtonBehavior
 
 on menu_MenuButtonScript treeView
    put the menu_Button of treeView into mButton
    edit the script of mButton
 end menu_MenuButtonScript
+
+private function _BehaviorIsSet sObject
+   put the behavior of sObject into bObject
+   if bObject is empty then
+      return false
+   else
+      return true
+   end if
+end _BehaviorIsSet
+
+private on ___
+end ___
+
+on menu_TreeBehavior treeView
+   if _BehaviorIsSet(treeView) is true then
+      put "ClearBehavior" && treeView into pigeon
+      send pigeon to me in 2 ticks
+   else
+      put the name of stack "behavior_ViewTree" into bObject
+      set the behavior of treeView to bObject
+   end if
+end menu_TreeBehavior
+
+getprop checked_TreeBehavior [treeView]
+   return _BehaviorIsSet(treeView)
+end checked_TreeBehavior
+
+on menu_TreeHandlers treeView
+   put the behavior of treeView into bObject
+   display_ScriptTools bObject
+end menu_TreeHandlers
+
+on menu_CardMargin treeView
+   put the card_Margin of treeView into cMargin
+   --
+   put lcw_Ask ("Set teh card_Margin to...", cMargin, treeView) into cMargin
+   --
+   set the card_Margin of treeView to cMargin
+end menu_CardMargin
 
 on submenu_Dev
    return menu_DevTitle ("Global | Tree | Menu")
