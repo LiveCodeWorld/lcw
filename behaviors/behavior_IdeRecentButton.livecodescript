@@ -10,6 +10,9 @@ type: behavior
 This behavior alters the menu of the Livecode History Button menu in the revScriptEditor.
 */
 
+--> Variables
+-
+
 --> Events
 -
 on mouseDown pMenuButton
@@ -31,7 +34,6 @@ end dragEnter
 
 on dragDrop
    put the dragData into dData
-   --
    put the dragData ["text"] into droppedURL
    --
    set the itemdelimiter to slash
@@ -40,27 +42,22 @@ on dragDrop
    set the itemdelimiter to "."
    put item 1 of it into pSlug
    --
+   put "handler." & platform_WikiDomain() into handlerDomain
    switch
-      case lastWikiDomain = "handler.livecode.world" and droppedURL ends with ".json"
-      case lastWikiDomain = "handler.livecode.world" and droppedURL ends with ".html"
+      case lastWikiDomain = handlerDomain and droppedURL ends with ".json"
+      case lastWikiDomain = handlerDomain and droppedURL ends with ".html"
          put fedwiki_FetchHandlerMetadata (lastWikiDomain, pSlug) into metaArray
          handler_DeconstructMetaData metaArray, hName, hType, hObject, isChecked
          put the result into hKey
          --
          hkey_Edit hKey
-         --
-         -- put hKey & CR & lastWikiDomain & CR & pSlug
          break
-      case lastWikiDomain = "handler.livecode.world"
-         -- "http://model.livecode.world/view/welcome-visitors/view/modelpagearray/handler.livecode.world/pagearrayfetch"
-         --
+      case lastWikiDomain = handlerDomain
          put fedwiki_FetchHandlerMetadata (lastWikiDomain, pSlug)
          handler_DeconstructMetaData metaArray, hName, hType, hObject, isChecked
          put the result into hKey
          --
          hkey_Edit hKey
-         --
-         -- put pSlug & CR & lastWikiDomain & CR & hKey
          break
       default
          put the keys of the dragData into droppedKeys
@@ -99,5 +96,3 @@ function fedwiki_GetLastLineupDomain someURL
       -- put -1 * itemNum into 
    end repeat
 end fedwiki_GetLastLineupDomain
-
-

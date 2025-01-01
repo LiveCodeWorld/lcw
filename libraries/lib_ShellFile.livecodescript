@@ -274,13 +274,8 @@ function server_FetchFileArray serverAddress, sshUser, serverPath, pSshKeyPath
             /*
             This is usually because the server fingerprint has changed. need to research more about whu this happens.
             Head over to the terminal and try:
-            
-            The authenticity of host 'rest.livecode.world (188.166.10.234)' can't be established.
-            ECDSA key fingerprint is SHA256:ZN82d23HRwxbvElysl8dHvTsCFHwfnsv+xUKL5EeLGQ.
-            Are you sure you want to continue connecting (yes/no)? yes
-            Warning: Permanently added 'rest.livecode.world' (ECDSA) to the list of known hosts.
             */
-            return exmpty
+            return empty
          default
             put shell_ConstructLSArray (lsResult, true) into fileArray
       end switch
