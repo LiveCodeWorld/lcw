@@ -18,6 +18,32 @@ local LocalArray
 
 --> Working on
 -
+getprop menu_Controller
+   -- depends on the target (allows two menus for the titel and the field)
+   get the target
+   switch word 1 of it
+      case "field"
+         put the line_Controller of the target into mController
+         break
+      default
+         put the title_Controller of the target into mController
+   end switch
+   return mController
+end menu_Controller
+
+getprop displayed_Object [tObject]
+   put the uOPN ["displayed_Object"] of me into dView
+   if exists (dView) then
+      return dView
+   else
+      return tObject
+   end if
+end displayed_Object
+
+setprop displayed_Object dView
+   set the uOPN ["displayed_Object"] of me to dView
+end displayed_Object
+
 getprop tool_MenuBit
    -- return the tool_MenuBit name = menuBit
    get the title_Menu of me
@@ -79,19 +105,6 @@ getprop line_Controller
    put menu_GetGlobalController(mTitle) into mController
    return mController
 end line_Controller
-
-getprop menu_Controller
-   get the target
-   breakpoint
-   switch word 1 of it
-      case "field"
-         put the line_Controller of the target into mController
-         break
-      default
-         put the title_Controller of the target into mController
-   end switch
-   return mController
-end menu_Controller
 
 getprop tree_IsIndex
    return LocalArray ["isIndex"] is true
@@ -1125,14 +1138,6 @@ end title_TextColour
 
 --> Data
 -
-getprop displayed_Object
-   return the displayed_Object of me
-end displayed_Object
-
-setprop displayed_Object sObject
-   set the displayed_Object of me to sObject
-end displayed_Object
-
 getprop displayed_Array [pathItems]
    -- compatibility with old treeView
    put the displayed_Data of me into someArray

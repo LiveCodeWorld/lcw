@@ -11,6 +11,152 @@ version: 0.3
 
 --> Working on
 -
+getprop module_Array
+   put the module_JsonFile of the target into jsonFile
+   put array_FromFile (jsonFile) into moduleArray
+   return moduleArray
+end module_Array
+
+setprop module_Array moduleArray
+   -- put the module_JsonFile of the target into jsonFile
+   put the module_Name of the target into moduleName
+   put the module_Folder of the target into moduleFolder
+   if there is not a folder moduleFolder then return "Error, module_Folder does not exist for:" && the target
+   --
+   put module_ConstructJsonFile (moduleName, moduleFolder) into jsonFile
+   
+   if jsonFile is empty then return "Error, module_Folder does not exist for:" && the target
+   array_ToFile jsonFile, moduleArray
+   return jsonFile
+   
+   put the module_Folder of the target into moduleFolder
+   if there is not a folder moduleFolder then return "Error, module folder does not exist for:" && the target
+   project_StoreArray moduleFolder, moduleArray
+   return moduleFolder
+end module_Array
+
+function module_GetArray moduleName
+   -- put view_GetTemplateObject (moduleName) into moduleView
+   if there is a stack moduleName then
+      put the module_Array of stack moduleName into moduleArray
+      return moduleArray
+   else
+      -- if exists (moduleView) is false then
+      # Get from Env
+      -- return "Error, module does not exists:" && moduleName
+      put env_GetModuleArray() into envModuleArray
+      put lcw_PipesToUnderscore (moduleName) into moduleFolderName
+      put envModuleArray ["active"][moduleFolderName] into moduleArray
+      return moduleArray
+   end if
+end module_GetArray
+
+getprop module_JsonFile
+   put the module_Name of the target into moduleName
+   put the module_Folder of the target into moduleFolder
+   if moduleFolder is empty then return empty
+   --
+   put module_JsonFile (moduleName, moduleFolder) into jsonFile
+   return jsonFile
+end module_JsonFile
+
+function module_JsonFile moduleName, projectFolder
+   put module_ConstructJsonFile (moduleName, projectFolder) into jsonFile
+   if there is a file jsonFile then
+      return jsonFile
+   else
+      return empty
+   end if
+end module_JsonFile
+
+function module_ConstructJsonFile moduleStackName, projectFolder
+   put lcw_PipesToUnderscore (moduleStackName) into shortModuleFolder
+   put module_GetFolder (shortModuleFolder, projectFolder) into moduleFolder
+   put moduleFolder & "lcw_project.json" into moduleJsonFile
+   return moduleJsonFile
+end module_ConstructJsonFile
+
+getprop module_Name
+   put the module_ShortFolder of the target into moduleName
+   replace "_" with "|" in moduleName
+   return moduleName
+end module_Name
+
+getprop module_Folder
+   put the long id of the target into tObject
+   put the effective filename of the defaultstack into stackPath
+   put the project_Folder of tObject into projectFolder
+   if there is not a folder projectFolder then return empty
+   --
+   put module_FolderFromPath (stackPath, projectFolder) into moduleFolder
+   return moduleFolder
+end module_Folder
+
+
+--> ProjectArray
+-
+getprop project_Array
+   put the project_Folder of the target into projectFolder
+   if there is not a folder projectFolder then return empty
+   --
+   put project_ConstructArrayFromFolder (projectFolder) into projectArray
+   return projectArray
+end project_Array
+
+setprop project_Array projectArray
+   put the project_Folder of the target into projectFolder
+   if there is not a folder moduleArray then return "Error, project_Folder does not exist for:" && the target
+   --
+   project_StoreArray projectFolder, projectArray
+   return projectFolder
+end project_Array
+
+
+--> Module | behavior
+-
+getprop module_Behavior [useDefault]
+   breakpoint
+   if useDefault is true then
+      return the module_DefaultBehavior of the target
+   else
+      put the module_Behaviors of the target into bObjects
+      return line 1 of bObjects
+   end if
+end module_Behavior
+
+getprop module_DefaultBehavior
+   put the module_BehaviorName of the target into bName
+   if exists (stack bName) then
+      return the name of stack bName
+   else
+      put the view_Name of the target into viewName
+      if viewName is empty then return empty
+      
+      put module_Getbehavior (viewName) into bObject
+      return bObject
+   end if
+end module_DefaultBehavior
+
+function module_Getbehavior viewName, pBehaviorName
+   if pBehaviorName is empty then
+      put lcw_ConstructBehaviorName (viewName) into pBehaviorName
+   end if
+   
+   put view_GetTemplateObject (viewName) into mObject
+   if exists (mObject) is false then return empty
+   --
+   put the module_Folder of mObject into moduleFolder
+   
+   put folder_AddShort (moduleFolder, "behaviors") into bFolder
+   put bFolder & pBehaviorName & ".livecodescript" into bPath
+   --
+   if there is a stack bPath then
+      return the long name of stack bPath
+   else
+      return empty
+   end if
+end module_Getbehavior
+
 command module_Clone moduleName, pShowTools
    view_NormalizeName moduleName
    --
@@ -91,29 +237,6 @@ getprop module_BehaviorName
    put lcw_ConstructBehaviorName (viewName) into defaultBehaviorName
    return defaultBehaviorName
 end module_BehaviorName
-
-getprop module_DefaultBehavior
-   put the module_BehaviorName of the target into bName
-   if exists (stack bName) then
-      return the name of stack bName
-   else
-      breakpoint
-      put the view_Name of the target into viewName
-      if viewName is empty then return empty
-      put view_GetTemplateObject (viewName) into mObject
-      --
-      put the module_Folder of mObject into moduleFolder
-      --
-      put folder_AddShort (moduleFolder, "behaviors") into bFolder
-      put bFolder & bName & ".livecodescript" into bPath
-      --
-      if there is a stack bPath then
-         return the long name of stack bPath
-      else
-         return empty
-      end if
-   end if
-end module_DefaultBehavior
 
 getprop module_Behaviors
    -- unordered list
@@ -551,28 +674,12 @@ end module_View
 
 --> Module | Name and Short Folder
 -
-getprop module_Name
-   put the module_ShortFolder of the target into moduleName
-   replace "_" with "|" in moduleName
-   return moduleName
-end module_Name
-
 getprop module_ShortFolder
    put the module_Folder of the target into moduleFolder
    set the itemdelimiter to slash
    put item -1 of moduleFolder into shortFolder
    return shortFolder
 end module_ShortFolder
-
-getprop module_Folder
-   put the long id of the target into tObject
-   put the effective filename of the defaultstack into stackPath
-   put the project_Folder of tObject into projectFolder
-   if there is not a folder projectFolder then return empty
-   --
-   put module_FolderFromPath (stackPath, projectFolder) into moduleFolder
-   return moduleFolder
-end module_Folder
 
 getprop module_Controller [menuBit]
    put the module_ControllerPath [menuBit] of the target into mPath
@@ -619,16 +726,6 @@ getprop module_BahaviorFolder
       return empty
    end if
 end module_BahaviorFolder
-
-getprop module_Behavior [useDefault]
-   breakpoint
-   if useDefault is true then
-      return the module_DefaultBehavior of the target
-   else
-      put the module_Behaviors of the target into bObjects
-      return line 1 of bObjects
-   end if
-end module_Behavior
 
 getprop module_ViewName [moduleName]
    if moduleName is empty then
@@ -823,13 +920,6 @@ function module_FindProject moduleName
    put moduleArray ["projectName"] into projectName
    return projectName
 end module_FindProject
-
-function module_GetArray moduleName
-   put env_GetModuleArray() into envModuleArray
-   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
-   put envModuleArray ["active"][moduleFolderName] into moduleArray
-   return moduleArray
-end module_GetArray
 
 
 --> Module | Files

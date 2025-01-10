@@ -59,18 +59,14 @@ command lcw_Init
    put lcw_HomeFolder (lcwHomeStackFile) into lcwHomeFolder
    project_LoadFromFolder lcwHomeFolder
    
-   # Not needed?
-   -- project_LoadModules lcwHomeStackFile
-   -- hkeyLine_LoadPlaceArray
-   --  lcw_LoadCustomUserProject
-   
-   _MakePretty lcwProjectName   
+   # Do things that require everything loaded
+   lcw_PostInit -- could send in 30 ticks
 end lcw_Init
 
-
---> Project | Init
--
-private command _MakePretty lcwProjectName
+command lcw_PostInit
+   # Set up Script Editor Hacks
+   send "ide_InitLcw" to me in 30 ticks -- in library "ide_InitLcw"
+   
    # Utility
    choose browse tool 
    close stack "revTools"
@@ -82,8 +78,13 @@ private command _MakePretty lcwProjectName
    subtract 100 from item 3 of stackRect
    subtract 100 from item 4 of stackRect
    
-   set the rect of stack lcwProjectName to stackRect
-end _MakePretty
+   set the rect of me to stackRect
+   
+   # Old
+   -- project_LoadModules lcwHomeStackFile
+   -- hkeyLine_LoadPlaceArray
+   --  lcw_LoadCustomUserProject
+end lcw_PostInit
 
 
 --> Deps | For Standalone

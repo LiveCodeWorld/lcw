@@ -358,6 +358,7 @@ getprop project_Folder
    -- does not allow projects outside of the LCW reop folder  
    
    put the effective filename of the defaultstack into stackPath
+   if stackPath is empty then return empty
    put project_FolderFromPath (stackPath) into projectFolder
    return projectFolder
 end project_Folder
@@ -422,6 +423,8 @@ end project_HomeStackBrowser
 getprop module_Folder
    put the long id of the target into tObject
    put the effective filename of the defaultstack into stackPath
+   if stackPath is empty then return empty
+   --
    put the project_Folder of tObject into projectFolder
    if there is not a folder projectFolder then return empty
    --

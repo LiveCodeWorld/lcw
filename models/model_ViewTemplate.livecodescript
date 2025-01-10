@@ -37,22 +37,9 @@ though some sort of naming convention that links group names to views would help
 
 --> Working on
 -
-function module_CheckFirstView viewObject
-   breakpoint -- not used yet?
-   if exists (viewObject) is false then return false
-   put the first_Control of viewObject into firstObject
-   if viewObject is not firstObject then return false
-   
-   put the view_Name of firstObject into viewName
-   put the stack_Name of firstObject into stackName
-   return stackName is viewName
-end module_CheckFirstView
-
 function view_GetTemplateObject viewName, pRepoFolder
    view_NormalizeName viewName
    put stack_FirstControl (viewName) into mObject
-   --
-   -- if exists (mObject) is false then put module_FromViewName (viewName, pRepoFolder) into mObject
    return mObject
 end view_GetTemplateObject
 

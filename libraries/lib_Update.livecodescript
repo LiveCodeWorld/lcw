@@ -190,24 +190,6 @@ command module_ExportMenusAndStackFiles moduleFolder
    return moduleArray
 end module_ExportMenusAndStackFiles
 
-function module_ConstructArray moduleFolder
-   local projectArray
-   put directory_NestedStackFileArray (moduleFolder) into stackFileArray
-   if stackFileArray is empty then
-      return empty
-   else
-      put stackFileArray into moduleArray ["stackFileArray"]
-   end if
-   
-   # Add controllers to array
-   put folder_AddShort (moduleFolder, "controllers") into controllerFolder
-   put folder_ListStackPaths (controllerFolder) into controllerPaths
-   --
-   _AddControllersToProjectArray moduleArray, moduleFolder, controllerPaths
-   --
-   return moduleArray
-end module_ConstructArray
-
 on module_Rename oldModuleStackName, newModuleStackName, projectName
    -- do a whole bunch of safety checks
    if exists (stack oldModuleStackName) is false then
@@ -264,6 +246,25 @@ on module_Rename oldModuleStackName, newModuleStackName, projectName
    put project_ConstructArrayFromFolder (newModuleFolder) into projectArray
    project_StoreArray newModuleFolder, projectArray
 end module_Rename
+
+function module_ConstructArray moduleFolder
+   -- depends on private handlers "_AddControllersToProjectArray"
+   local moduleArray
+   put directory_NestedStackFileArray (moduleFolder) into stackFileArray
+   if stackFileArray is empty then
+      return empty
+   else
+      put stackFileArray into moduleArray ["stackFileArray"]
+   end if
+   
+   # Add controllers to array
+   put folder_AddShort (moduleFolder, "controllers") into controllerFolder
+   put folder_ListStackPaths (controllerFolder) into controllerPaths
+   --
+   _AddControllersToProjectArray moduleArray, moduleFolder, controllerPaths
+   --
+   return moduleArray
+end module_ConstructArray
 
 
 --> Menu | Working on

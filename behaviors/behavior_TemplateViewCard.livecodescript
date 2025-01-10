@@ -8,7 +8,7 @@ type: behavior
 
 /*
 Was "Card View Behavior" and moved to this script-only behavior.
-
+/Users/david/Documents/git-repos/LiveCodeWorld/lcw_Menus/modules/View_Index_Simple/readme.html
 This behavior makes a view template easy to resize and test it's geometry.
 It also provides the default behavior for the views menu.
 You can of course override this on the cards script, or set another behavior there.
@@ -22,21 +22,43 @@ local LocalArray
 
 --> Working on
 -
-private command _ViewProblemMenu
-   menu_PopUp "Global | View | Card | Create | Menu"
-end _ViewProblemMenu
+getprop view_Object
+   # Hard Wired
+   put the displayed_Object of me into viewObject
+   if exists (viewObject) then return viewObject
+   
+   # Default to first contorl
+   if exists (control 1 of me) is false then
+      return empty
+   end if
+   put the long id of control 1 of me into viewObject
+   
+   return viewObject
+end view_Object
 
-getprop displayed_Object
-   return the displayed_Object of me
+getprop displayed_Object [tObject]
+   put the uOPN ["displayed_Object"] of me into dView
+   if exists (dView) then
+      return dView
+   else
+      return tObject
+   end if
 end displayed_Object
 
-setprop displayed_Object sObject
-   set the displayed_Object of me to sObject
+setprop displayed_Object dView
+   if exists (dView) then
+      put revRuggedId(dView) into dView
+      set the uOPN ["displayed_Object"] of me to dView
+      return dView
+   else
+      set the uOPN ["displayed_Object"] of me to empty
+      return empty
+   end if
 end displayed_Object
 
 
 --> Events
---
+-
 on openStack
    -- this is called for every view
    put the stack_Name of the target into stackName
@@ -87,9 +109,15 @@ end resizeStack
 on mouseDown whichModifier
    put the long id of the target into tObject
    -- if tObject is not the long id of me then pass mouseDown
+   
    switch
       case whichModifier = 3
-         _doViewMenu
+         put the displayed_Object [tObject] of me into viewObject
+         if exists (viewObject) is false then
+            
+         end if
+         
+         _doViewMenu viewObject
          break
       case the shiftKey is "Down"
          -- put "OK"
@@ -227,25 +255,81 @@ getprop menubar_View
    end if
 end menubar_View
 
-getprop view_Object
-   if exists (control 1 of me) is false then return empty
+
+--> Deps | Private
+-
+private function _TemplateView
+   put the displayed_Object of me into templateObject
+   if exists (templateObject) then return templateObject
    
-   put the view_Name of control 1 of me into vName
-   if vName is empty then return empty
+   if exists (control 1 of me) is false then
+      return empty
+   end if
    
-   return the long id of control 1 of me
-end view_Object
+   # Let's assume its the first control fo the card
+   put the view_Name of control 1 of me into viewName
+   put view_GetTemplateObject (viewName) into templateObject
+   if exists (templateObject) then return templateObject
+   
+   -- maybe we return empty here?
+   -- this will allow things to work even if the views metadata is not set
+   lcw_Notify merge ("The view '[[viewName]]' does not have it's metadata and stack named properly!")
+   put the long id of control 1 of me into templateObject
+   return templateObject
+end _TemplateView
+
+private function view_GetTemplateObject viewName, pRepoFolder
+   view_NormalizeName viewName
+   put stack_FirstControl (viewName) into mObject
+   return mObject
+end view_GetTemplateObject
+
+private command view_NormalizeName @viewPath
+   if viewPath is empty then return false
+   view_NormalizePiped viewPath
+   
+   set the itemdelimiter to "|"
+   if item 1 of viewPath is not among the items of "View|Layout" then put "View|" before viewPath
+   return true
+end view_NormalizeName
+
+private command view_NormalizePiped @viewPath, pMakePretty
+   if viewPath is empty then return false
+   put word 1 to -1 of viewPath into viewPath
+   
+   set the itemdelimiter to "|"
+   repeat with itemNum = 1 to the number of items of viewPath
+      put word 1 to -1 of item itemNum of viewPath into someItem
+      if pMakePretty is true then
+         repeat for each word someWord in someItem
+            put toUpper (char 1 of someWord) into char 1 of someWord
+            put someWord & space after prettyItem
+         end repeat
+         put char 1 to -2 of prettyItem into someItem
+      end if
+      put someItem into item itemNum of viewPath
+   end repeat
+   return true
+end view_NormalizePiped
+
+private function stack_FirstControl sPath
+   if exists (control 1 of card 1 of stack sPath) then
+      return the long id of control 1 of card 1 of stack sPath
+   else
+      return empty
+   end if
+end stack_FirstControl
 
 
 --> Private
 -
 private command _doViewMenu
-   if exists (control 1 of me) is false then
+   put _templateView() into viewObject
+   if exists (viewObject) is false then
       _ViewProblemMenu
       return empty
    end if
    --
-   put the long id of control 1 of me into viewObject
    put the view_Name of viewObject into viewName
    if viewName is empty then _ViewProblemMenu
    
@@ -272,6 +356,10 @@ private command _doViewMenu
          _ViewProblemMenu
    end switch
 end _doViewMenu
+
+private command _ViewProblemMenu
+   menu_PopUp "Global | View | Card | Create | Menu"
+end _ViewProblemMenu
 
 private command _ViewGoodMenu viewObject, viewName
    put the menu_Title [viewName] of me into mTitle
@@ -376,22 +464,6 @@ command template_Check
       default
    end switch
 end template_Check
-
-private function _templateView 
-   if exists (control 1 of me) then
-      put the view_Name of control 1 of me into viewName
-      put view_GetTemplateObject (viewName) into templateObject
-      if exists (templateObject) then return templateObject
-      
-      -- maybe we return empty here?
-      -- this will allow things to work even if the views metadata is not set
-      lcw_Notify merge ("The view '[[viewName]]' does not have it's metadata and stack named properly!")
-      put the long id of control 1 of me into templateObject
-      return templateObject
-   else
-      return empty
-   end if
-end _templateView
 
 command rect_SubtractMargins @sRect, pMargin
    margin_Normalize pMargin, leftM, topM, rightM, bottomM   
