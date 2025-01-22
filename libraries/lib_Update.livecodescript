@@ -74,6 +74,114 @@ getprop script_Diff [pContextLineNums]
 end script_Diff
 
 
+--> Module | Update
+-
+command module_Update moduleStackName, pRepoFolder
+   set the cursor to watch
+   put view_GetTemplateObject (moduleStackName, pRepoFolder) into moduleObject
+   put the module_Folder of moduleObject into moduleFolder
+   
+   # Set module stackfiles
+   put the folder_StackFileArray of moduleObject into stackFileArray
+   set the stackFile_Array of moduleObject to stackFileArray
+   
+   # Set the default behaviors
+   set the module_Behaviors of moduleObject to true
+   
+   # Save
+   save stack moduleStackName
+   
+   # Export Arrays as json
+   module_ExportMenusAndStackFiles moduleFolder
+   put the result into moduleArray
+   return moduleArray
+end module_Update
+
+command module_ExportMenusAndStackFiles moduleFolder
+   put module_ConstructArray (moduleFolder) into moduleArray
+   
+   # Store ModuleArray
+   project_StoreArray moduleFolder, moduleArray
+   return moduleArray
+end module_ExportMenusAndStackFiles
+
+on module_Rename oldModuleStackName, newModuleStackName, projectName
+   -- do a whole bunch of safety checks
+   if exists (stack oldModuleStackName) is false then
+      lcw_AnswerWarning "Cannot locate module stack to rename!"
+   end if
+   
+   put the filename of stack oldModuleStackName into oldFilePath
+   put the project_Folder of stack oldModuleStackName into projectFolder
+   put the module_Folder of stack oldModuleStackName into oldModuleFolder
+   --
+   if there is not a folder projectFolder then
+      lcw_AnswerWarning "Project folder does not exist!"
+   end if
+   if there is not a folder oldModuleFolder then
+      lcw_AnswerWarning "Module folder does not exist!"
+   end if
+   
+   put env_ListShortModuleFolders() into allModuleNames
+   if exists (stack newModuleStackName) then
+      go to stack newModuleStackName
+      lcw_AnswerWarning "Stack already exists!"
+   end if
+   -- check in all module names
+   if newModuleStackName is among the lines of allModuleNames then
+      -- display_ListModules
+      display_ModuleArray
+      lcw_AnswerWarning "Module already exists!"
+   end if
+   
+   put lcw_PipesToUnderscore (newModuleStackName) into newShortModuleFolder
+   put oldModuleFolder & newShortModuleFolder & ".livecode" into tempModulePath
+   put project_GetModuleFolder (newShortModuleFolder, projectName) into newModuleFolder
+   put the long id of control 1 of cd 1 of stack oldModuleStackName into viewObject
+   
+   -- rename view and stack, then save before closing
+   set lockmessages to true
+   set the view_Name of viewObject to newModuleStackName
+   set the filename of stack oldModuleStackName to tempModulePath
+   set the name of stack oldModuleStackName to newModuleStackName
+   save stack newModuleStackName
+   set lockmessages to false
+   
+   put the module_StackPaths of stack newModuleStackName into stackPaths
+   --
+   stack_Close stackPaths
+   rename folder oldModuleFolder to newModuleFolder
+   project_LoadFromFolder newModuleFolder
+   go to stack newModuleStackName
+   --
+   -- reindex project and just in case newModuleFolder
+   -- project_ExportMenusAndStackFiles projectFolder
+   
+   # Construct project array and Store it
+   put project_ConstructArrayFromFolder (newModuleFolder) into projectArray
+   project_StoreArray newModuleFolder, projectArray
+end module_Rename
+
+function module_ConstructArray moduleFolder
+   -- depends on private handlers "_AddControllersToProjectArray"
+   local moduleArray
+   put directory_NestedStackFileArray (moduleFolder) into stackFileArray
+   if stackFileArray is empty then
+      return empty
+   else
+      put stackFileArray into moduleArray ["stackFileArray"]
+   end if
+   
+   # Add controllers to array
+   put folder_AddShort (moduleFolder, "controllers") into controllerFolder
+   put folder_ListStackPaths (controllerFolder) into controllerPaths
+   --
+   _AddControllersToProjectArray moduleArray, moduleFolder, controllerPaths
+   --
+   return moduleArray
+end module_ConstructArray
+
+
 --> Tidy
 -
 command env_ExportMenusAndStackFiles pListAll
@@ -178,93 +286,6 @@ function project_FetchStackFileArray projectFolder
    delete variable stackFileArray [homeStackName]
    return stackFileArray
 end project_FetchStackFileArray
-
-
---> Module | Update
--
-command module_ExportMenusAndStackFiles moduleFolder
-   put module_ConstructArray (moduleFolder) into moduleArray
-   
-   # Store ModuleArray
-   project_StoreArray moduleFolder, moduleArray
-   return moduleArray
-end module_ExportMenusAndStackFiles
-
-on module_Rename oldModuleStackName, newModuleStackName, projectName
-   -- do a whole bunch of safety checks
-   if exists (stack oldModuleStackName) is false then
-      lcw_AnswerWarning "Cannot locate module stack to rename!"
-   end if
-   
-   put the filename of stack oldModuleStackName into oldFilePath
-   put the project_Folder of stack oldModuleStackName into projectFolder
-   put the module_Folder of stack oldModuleStackName into oldModuleFolder
-   --
-   if there is not a folder projectFolder then
-      lcw_AnswerWarning "Project folder does not exist!"
-   end if
-   if there is not a folder oldModuleFolder then
-      lcw_AnswerWarning "Module folder does not exist!"
-   end if
-   
-   put env_ListShortModuleFolders() into allModuleNames
-   if exists (stack newModuleStackName) then
-      go to stack newModuleStackName
-      lcw_AnswerWarning "Stack already exists!"
-   end if
-   -- check in all module names
-   if newModuleStackName is among the lines of allModuleNames then
-      -- display_ListModules
-      display_ModuleArray
-      lcw_AnswerWarning "Module already exists!"
-   end if
-   
-   put lcw_PipesToUnderscore (newModuleStackName) into newShortModuleFolder
-   put oldModuleFolder & newShortModuleFolder & ".livecode" into tempModulePath
-   put project_GetModuleFolder (newShortModuleFolder, projectName) into newModuleFolder
-   put the long id of control 1 of cd 1 of stack oldModuleStackName into viewObject
-   
-   -- rename view and stack, then save before closing
-   set lockmessages to true
-   set the view_Name of viewObject to newModuleStackName
-   set the filename of stack oldModuleStackName to tempModulePath
-   set the name of stack oldModuleStackName to newModuleStackName
-   save stack newModuleStackName
-   set lockmessages to false
-   
-   put the module_StackPaths of stack newModuleStackName into stackPaths
-   --
-   stack_Close stackPaths
-   rename folder oldModuleFolder to newModuleFolder
-   project_LoadFromFolder newModuleFolder
-   go to stack newModuleStackName
-   --
-   -- reindex project and just in case newModuleFolder
-   -- project_ExportMenusAndStackFiles projectFolder
-   
-   # Construct project array and Store it
-   put project_ConstructArrayFromFolder (newModuleFolder) into projectArray
-   project_StoreArray newModuleFolder, projectArray
-end module_Rename
-
-function module_ConstructArray moduleFolder
-   -- depends on private handlers "_AddControllersToProjectArray"
-   local moduleArray
-   put directory_NestedStackFileArray (moduleFolder) into stackFileArray
-   if stackFileArray is empty then
-      return empty
-   else
-      put stackFileArray into moduleArray ["stackFileArray"]
-   end if
-   
-   # Add controllers to array
-   put folder_AddShort (moduleFolder, "controllers") into controllerFolder
-   put folder_ListStackPaths (controllerFolder) into controllerPaths
-   --
-   _AddControllersToProjectArray moduleArray, moduleFolder, controllerPaths
-   --
-   return moduleArray
-end module_ConstructArray
 
 
 --> Menu | Working on

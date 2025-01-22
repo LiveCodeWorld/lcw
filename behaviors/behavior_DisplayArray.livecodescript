@@ -18,6 +18,55 @@ local LocalArray
 
 --> Working on
 -
+private function _DefaultMouseTarget tObject
+   put the line_Controller of me into mouseTarget
+   if exists (mouseTarget) is false then
+      put tObject into mouseTarget
+   end if
+   return mouseTarget
+end _DefaultMouseTarget
+
+getprop line_Controller
+   put the line_Controller of me into mController
+   if exists (mController) then return mController
+   
+   ## Default
+   put the line_Menu of me into mTitle
+   put menu_GetGlobalController(mTitle) into mController
+   return mController
+end line_Controller
+
+getprop mouse_Target
+   put the long id of the target into tObject
+   put the mouse_Target of me into mTarget
+   if exists (mTarget) is false then
+      put _DefaultMouseTarget (tObject) into mTarget
+   end if
+   return mTarget
+end mouse_Target
+
+setprop mouse_Target mTarget
+   set the mouse_Target of me to mTarget
+end mouse_Target
+
+command actionDoubleClick pathItems
+   put the selected_Value of me into someValue
+   put the mouse_DoubleUp of me into mouseDoubleUpCommand
+   --
+   if mouseDoubleUpCommand is empty then
+      pass actionDoubleClick
+   else
+      _SetMouseTargets tObject, displayView, mouseTarget
+      replace comma with CR in pathItems
+      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
+      if it is "unhandled" then
+         -- breakpoint
+         dispatch "ask_CreateMouseDoubleUpHandler" to me with mouseDoubleUpCommand
+         -- edit the script of mouseTarget
+      end if
+   end if
+end actionDoubleClick
+
 getprop menu_Controller
    -- depends on the target (allows two menus for the titel and the field)
    get the target
@@ -36,7 +85,7 @@ getprop displayed_Object [tObject]
    if exists (dView) then
       return dView
    else
-      return tObject
+      return the long id of me
    end if
 end displayed_Object
 
@@ -96,16 +145,6 @@ getprop title_Controller
    return mController
 end title_Controller
 
-getprop line_Controller
-   put the line_Controller of me into mController
-   if exists (mController) then return mController
-   
-   ## Default
-   put the line_Menu of me into mTitle
-   put menu_GetGlobalController(mTitle) into mController
-   return mController
-end line_Controller
-
 getprop tree_IsIndex
    return LocalArray ["isIndex"] is true
 end tree_IsIndex
@@ -144,14 +183,6 @@ private command _SetMouseTargets @tObject, @displayView, @mouseTarget
       put _DefaultMouseTarget (tObject) into mouseTarget
    end if
 end _SetMouseTargets
-
-private function _DefaultMouseTarget tObject
-   put the line_Controller of me into mouseTarget
-   if exists (mouseTarget) is false then
-      put tObject into mouseTarget
-   end if
-   return mouseTarget
-end _DefaultMouseTarget
 
 
 --> Events
@@ -266,25 +297,6 @@ on hiliteChanged
    end if
 end hiliteChanged
 
-command actionDoubleClick pathItems
-   -- not called
-   put the selected_Value of me into someValue
-   put the mouse_DoubleUp of me into mouseDoubleUpCommand
-   --
-   if mouseDoubleUpCommand is empty then
-      pass actionDoubleClick
-   else
-      _SetMouseTargets tObject, displayView, mouseTarget
-      replace comma with CR in pathItems
-      dispatch mouseDoubleUpCommand to mouseTarget with displayView,someValue,pathItems
-      if it is "unhandled" then
-         -- breakpoint
-         dispatch "ask_CreateMouseDoubleUpHandler" to me with mouseDoubleUpCommand
-         -- edit the script of mouseTarget
-      end if
-   end if
-end actionDoubleClick
-
 on menuPick menuPath
    menu_DispatchTextPick menuPath
 end menuPick
@@ -331,19 +343,6 @@ end mouse_DoubleUp
 setprop mouse_DoubleUp mDoubleUp
    set the mouse_DoubleUp of me to mDoubleUp
 end mouse_DoubleUp
-
-getprop mouse_Target
-   put the long id of the target into tObject
-   put the mouse_Target of me into mTarget
-   if exists (mTarget) is false then
-      put _DefaultMouseTarget (tObject) into mTarget
-   end if
-   return mTarget
-end mouse_Target
-
-setprop mouse_Target mTarget
-   set the mouse_Target of me to mTarget
-end mouse_Target
 
 getprop menu_Target [mTitlePath]
    put the menu_Target of me into mTarget
@@ -628,21 +627,15 @@ setprop displayed_Data [someTitle] sData
       set the show_Values of me to true
       set the show_Numbers of me to true
       put false into LocalArray ["isIndex"]
+      --
+      if someTitle is not empty then
+         set the title_Text of me to someTitle
+      end if
    else
-      set the displayed_Index of me to sData
-   end if
-   if someTitle is not empty then
-      set the title_Text of me to someTitle
+      set the displayed_Index [someTitle] of me to sData
    end if
    unlock screen
 end displayed_Data
-
-getprop displayed_Index
-   put the arrayData of _treeWidget() into someArray
-   put keys (someArray) into someIndex
-   sort lines of someIndex
-   return someIndex
-end displayed_Index
 
 setprop displayed_Index [someTitle] someIndex
    lock screen
@@ -655,10 +648,18 @@ setprop displayed_Index [someTitle] someIndex
    set the show_Numbers of me to true
    --
    if someTitle is not empty then
-      set the stack_Title of me to someTitle
+      -- set the stack_Title of me to someTitle
+      set the title_Text of me to someTitle
    end if
    unlock screen
    put true into LocalArray ["isIndex"]
+end displayed_Index
+
+getprop displayed_Index
+   put the arrayData of _treeWidget() into someArray
+   put keys (someArray) into someIndex
+   sort lines of someIndex
+   return someIndex
 end displayed_Index
 
 

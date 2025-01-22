@@ -1426,7 +1426,7 @@ function folder_ListStackPaths someFolder
    return stackFilePaths
 end folder_ListStackPaths
 
-function folder_ListShort rootFolder
+function folder_ListShort rootFolder, pFilter
    if there is not a folder rootFolder then return empty
    
    put the defaultfolder into oDefault
@@ -1435,6 +1435,9 @@ function folder_ListShort rootFolder
    set the defaultfolder to oDefault
    
    filter shortFolders without ".*"
+   if pFilter is not empty then 
+      filter shortFolders with pFilter
+   end if
    return shortFolders
 end folder_ListShort
 

@@ -112,9 +112,10 @@ on mouseDown whichModifier
    
    switch
       case whichModifier = 3
-         put the displayed_Object [tObject] of me into viewObject
+         put the view_Object of me into viewObject 
+         -- put the displayed_Object [tObject] of me into viewObject
          if exists (viewObject) is false then
-            
+            put the long id of me into viewObject
          end if
          
          _doViewMenu viewObject
@@ -323,8 +324,8 @@ end stack_FirstControl
 
 --> Private
 -
-private command _doViewMenu
-   put _templateView() into viewObject
+private command _DoViewMenu viewObject
+   -- put _templateView() into templateObject
    if exists (viewObject) is false then
       _ViewProblemMenu
       return empty
@@ -355,7 +356,7 @@ private command _doViewMenu
       default
          _ViewProblemMenu
    end switch
-end _doViewMenu
+end _DoViewMenu
 
 private command _ViewProblemMenu
    menu_PopUp "Global | View | Card | Create | Menu"

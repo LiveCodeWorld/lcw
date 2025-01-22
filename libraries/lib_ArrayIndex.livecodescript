@@ -54,9 +54,14 @@ command display_IndexArray indexArray, pTitle, pStackLabel, pOrdered, pNameKey, 
          end if
          break
       default
+         # Ordered Index
          put indexArray_List (indexArray, pNameKey) into sLines
          display_Data sLines, pTitle, pStackLabel, pDisplayView
          put the result into dView
+         
+         # Utility Dictionary
+         put indexArray_ConstructNameArray (indexArray, pNameKey) into nameArray
+         set the displayed_Data [pTitle] of dView to nameArray
    end switch
    --
    set the view_Data of dView to indexArray
@@ -237,4 +242,3 @@ command indexArray_AddToEnd @sArray, itemArray
    put itemArray into sArray [maxItem]
    return maxItem
 end indexArray_AddToEnd
-

@@ -11,6 +11,54 @@ version: 0.3
 
 --> Working on
 -
+getprop module_Behaviors
+   -- unordered list
+   put the module_BehaviorPaths of the target into stackPaths
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the name of stack stackPath & CR after moduleBehaviors
+   end repeat
+   delete char -1 of moduleBehaviors
+   return moduleBehaviors
+end module_Behaviors
+
+setprop module_Behaviors bObjects
+   switch bObjects
+      case empty
+         set the behavior_Objects of the target to empty
+         break
+      case true
+         put the module_OrderedBehaviors of the target into bObjects
+         set the behavior_Objects of the target to bObjects
+         break
+      default
+         set the behavior_Objects of the target to bObjects
+   end switch 
+end module_Behaviors
+
+getprop module_OrderedBehaviors
+   -- make sure default behavior is first
+   put the view_Name of the target into moduleName
+   --
+   put module_ListBehaviorStackPaths (moduleName) into sPaths
+   repeat for each line sPath in sPaths
+      if exists (stack sPath) is true then
+         put the name of stack sPath & CR after bObjects
+      end if
+   end repeat
+   delete char -1 of bObjects
+   
+   # Make default behavior first
+   put lcw_ConstructBehaviorName (moduleName) into bName
+   line_Delete bName, stackNames
+   put word 1 to -1 of bName & CR & stackNames into stackNames
+   
+   return bObjects
+end module_OrderedBehaviors
+
+
+--> Module | Props
+-
 getprop module_Array
    put the module_JsonFile of the target into jsonFile
    put array_FromFile (jsonFile) into moduleArray
@@ -237,37 +285,6 @@ getprop module_BehaviorName
    put lcw_ConstructBehaviorName (viewName) into defaultBehaviorName
    return defaultBehaviorName
 end module_BehaviorName
-
-getprop module_Behaviors
-   -- unordered list
-   put the module_BehaviorPaths of the target into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      put the name of stack stackPath & CR after moduleBehaviors
-   end repeat
-   delete char -1 of moduleBehaviors
-   return moduleBehaviors
-end module_Behaviors
-
-getprop module_OrderedBehaviors
-   -- make sure default behavior is first
-   put the view_Name of the target into moduleName
-   --
-   put module_ListBehaviorStackPaths (moduleName) into sPaths
-   repeat for each line sPath in sPaths
-      if exists (stack sPath) is true then
-         put the name of stack sPath & CR after bObjects
-      end if
-   end repeat
-   delete char -1 of bObjects
-   
-   # Make default behavior first
-   put lcw_ConstructBehaviorName (moduleName) into bName
-   line_Delete bName, stackNames
-   put word 1 to -1 of bName & CR & stackNames into stackNames
-   
-   return bObjects
-end module_OrderedBehaviors
 
 function module_ConstructBehaviorPath viewName, moduleFolder, pShortFile
    put folder_AddShort (moduleFolder, "behaviors") into moduleBehaviorFolder

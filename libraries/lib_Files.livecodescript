@@ -12,6 +12,41 @@ version: 0.7
 --> Working On
 -
 
+
+--> Pretty
+-
+function trash_File shortFile
+   put trash_Folder() & shortFile into tPath
+   return tPath
+end trash_File
+
+function trash_Folder
+   -- there is not a standard trash folder available
+   -- the temporary folder is not writable from some text editors
+   put document_Folder ("Trash", true) into tFolder
+   return tFolder
+end trash_Folder
+
+function document_Folder pShortFolder, pCreate
+   put the documents folder & slash into tFolder
+   if pShortFolder is not empty then
+      text_AddTrailing pShortFolder, slash
+      put pShortFolder after tFolder
+      --
+      if pCreate is true then
+         folder_CreateNested tFolder
+      end if
+   end if
+   return tFolder
+end document_Folder
+
+function folder_GetDefault
+   put the tempname & slash into tempFolder
+   create folder tempFolder
+   return tempFolder
+end folder_GetDefault
+
+
 --> File | Home
 -
 command file_AddHome @fileOrFolder, pDontStrip
@@ -43,10 +78,19 @@ end file_ReplaceHome
 
 --> File | List | Short
 -
-function file_ListShort someFolder, pShowInvisible
+function file_ListShort someFolder, pFilter
    if there is not a folder someFolder then return empty
    put files (someFolder) into shortFiles
-   if pShowInvisible is not true then filter shortFiles without ".*"
+   --
+   switch pFilter
+      case empty
+      case true
+         filter shortFiles without ".*"
+         break
+      default
+         filter shortFiles without ".*"
+         filter shortFiles with pFilter
+   end switch
    return shortFiles
 end file_ListShort
 
@@ -398,12 +442,6 @@ end file_LinesToArray
 command folder_Format @someFolder
    text_AddTrailing someFolder, slash
 end folder_Format
-
-function folder_GetDefault
-   put the tempname & slash into tempFolder
-   create folder tempFolder
-   return tempFolder
-end folder_GetDefault
 
 function folder_Above fileOrFolder
    set the itemdelimiter to "/"
