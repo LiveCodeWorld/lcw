@@ -792,22 +792,6 @@ command lcw_Notify someMessage, pTitle
 end lcw_Notify
 
 
---> Working On | Download Projects
--
-command github_DownloadProject projectName, lcwRoot
-   -- this should use git to clone a project to the lcwRoot folder
-   -- and return the path to the projects home stack folder
-   
-   -- stub for now
-   put empty into projectHomeStackPath
-   if projectHomeStackPath is empty then
-      put lcwRoot
-      answer warning merge ("Failed to download project '[[projectName]]'!")
-      exit to top
-   end if
-end github_DownloadProject
-
-
 --> Project | Home
 -
 function project_GetHomeStackBrowser pHomeStackName

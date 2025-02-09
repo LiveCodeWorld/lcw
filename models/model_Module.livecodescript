@@ -11,6 +11,9 @@ version: 0.3
 
 --> Working on
 -
+
+--> Module
+-
 getprop module_Behaviors
    -- unordered list
    put the module_BehaviorPaths of the target into stackPaths
@@ -478,29 +481,8 @@ function module_FolderFromPath stackPath, projectFolder
 end module_FolderFromPath
 
 
---> Working on
+--> Views
 -
-getprop project_Menu
-   put the project_Name of the target into pName
-   if pName is empty then return empty
-   put module_ConstructGlobalMenuTitle (pName, true) into mTitle 
-   return mTitle
-end project_Menu
-
-getprop module_Menu
-   put the module_Name of the target into mName
-   -- put the short name of the defaultstack into mName
-   if mName is empty then return empty
-   put module_ConstructGlobalMenuTitle (mName, true) into mTitle 
-   return mTitle
-end module_Menu
-
-getprop view_GlobalMenuTitle
-   put the view_Name of the target into viewName
-   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
-   return globalMenuTitle
-end view_GlobalMenuTitle
-
 getprop stack_View
    -- top view of first card (see also "card_ViewObject")
    put the short name of the defaultstack into stackName
@@ -956,41 +938,8 @@ function module_GetBehaviorFolder moduleName, projectFolder
 end module_GetBehaviorFolder
 
 
---> Deps
+--> Private
 -
-function view_FromModuleStackName moduleStackName
-   replace "_" with "|" in moduleStackName
-   return moduleStackName
-end view_FromModuleStackName
-
-command view_NormalizeName @viewPath
-   if viewPath is empty then return false
-   view_NormalizePiped viewPath
-   
-   set the itemdelimiter to "|"
-   if item 1 of viewPath is not among the items of "View|Layout" then put "View|" before viewPath
-   return true
-end view_NormalizeName
-
-command view_NormalizePiped @viewPath, pMakePretty
-   if viewPath is empty then return false
-   put word 1 to -1 of viewPath into viewPath
-   
-   set the itemdelimiter to "|"
-   repeat with itemNum = 1 to the number of items of viewPath
-      put word 1 to -1 of item itemNum of viewPath into someItem
-      if pMakePretty is true then
-         repeat for each word someWord in someItem
-            put toUpper (char 1 of someWord) into char 1 of someWord
-            put someWord & space after prettyItem
-         end repeat
-         put char 1 to -2 of prettyItem into someItem
-      end if
-      put someItem into item itemNum of viewPath
-   end repeat
-   return true
-end view_NormalizePiped
-
 command stack_Close stackPaths
    -- saves them before closing
    repeat for each line stackPath in stackPaths
@@ -1006,9 +955,6 @@ command stack_Close stackPaths
    return badStackPaths
 end stack_Close
 
-
---> Private
--
 private function _ProjectStackExists stackPath
    if exists (stack stackPath) is false then return false
    

@@ -37,6 +37,28 @@ though some sort of naming convention that links group names to views would help
 
 --> Working on
 -
+command view_RefreshBehavior sView
+   -- not sure if this does anything
+   -- attempting to fix Livecode bug where behavior get's lost
+   if exists (sView) is false then
+      breakpoint
+      return "Error, cannot locate control:" sView
+   end if
+   
+   put the behavior of sView into oBehavior
+   if oBehavior is empty then
+      breakpoint
+      return empty
+   end if
+   set the behavior of sView  to empty
+   dispatch "preOpenControl" to sView 
+   
+   # Reset
+   set the behavior of sView  to oBehavior
+   dispatch "preOpenControl" to sView
+   return oBehavior
+end view_RefreshBehavior
+
 function view_GetTemplateObject viewName, pRepoFolder
    view_NormalizeName viewName
    put stack_FirstControl (viewName) into mObject

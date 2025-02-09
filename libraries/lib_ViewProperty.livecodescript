@@ -9,6 +9,37 @@ version: 0.2
 
 --> Working on
 -
+command view_DoPropertyMenu publicProp, someView
+   put mArray_ActiveItemPath() into viewPropPath
+   set the itemdelimiter to "|"
+   put item -1 of viewPropPath into publicValue
+   if publicValue = publicProp then
+      put empty into publicValue
+   end if
+   --
+   if publicValue is empty then
+      put view_AskPublicValue (publicProp, someView) into publicValue
+      set the publicProp of someView to publicValue
+   else
+      -- if publicValue is not an "s", or perhaps a switch
+      -- lets check by introspecting the script and checking the name of the param
+      -- put the view_BehaviorScript of someView into viewBehaviorScript
+      put the module_BehaviorScript of someView into viewBehaviorScript
+      put script_GetSetProp (publicProp, viewBehaviorScript) into propHandler
+      if propHandler is empty then
+         -- check to see if it is OK, then continue
+         breakPoint
+      end if
+      
+      script_DeconstructSetPropHandler propHandler, handlerName, setPropValue, setPropParam
+      if setPropParam = empty then
+         set the publicProp of someView to publicValue
+      else
+         view_DoParamProp someView, publicProp, publicValue
+      end if
+   end if
+end view_DoPropertyMenu
+
 function view_AskPublicValue someProp, someView, pQuestion
    if pQuestion is empty then put merge ("Change public property '[[someProp]]'?") into pQuestion
    switch
@@ -33,30 +64,6 @@ function view_AskPublicValue someProp, someView, pQuestion
    end switch
    return publicValue
 end view_AskPublicValue
-
-command view_DoPropertyMenu viewPropPath, someView
-   _SetChoice viewPropPath, publicProp, publicValue
-   if publicValue is empty then
-      put view_AskPublicValue (publicProp, someView) into publicValue
-      set the publicProp of someView to publicValue
-   else
-      -- if publicValue is not an "s", or perhaps a switch
-      -- lets check by introspecting the script and checking the name of the param
-      put the view_BehaviorScript of someView into viewBehaviorScript
-      put script_GetSetProp (publicProp, viewBehaviorScript) into propHandler
-      if propHandler is empty then
-         -- check to see if it is OK, then continue
-         breakPoint
-      end if
-      
-      script_DeconstructSetPropHandler propHandler, handlerName, setPropValue, setPropParam
-      if setPropParam = empty then
-         set the publicProp of someView to publicValue
-      else
-         view_DoParamProp someView, publicProp, publicValue
-      end if
-   end if
-end view_DoPropertyMenu
 
 
 --> Template | Property Menu
@@ -182,25 +189,11 @@ end script_PublicProps
 
 --> Private
 -
-private command _SetChoice menuChoice, @mainChoice, @secondChoice
-   -- bug - needs to take account of quoted things like stack names with "|" in their name.
-   text_StarQuoted menuChoice
-   put the result into replacedArray
-   put replacedArray ["original text"] into oText
-   
-   put line 1 of menuChoice into menuChoice
-   set the itemdelimiter to "|"
-   put the number of chars of item 1 of menuChoice into firstLength
-   put char 1 to firstLength of oText into mainChoice
-   
-   put firstLength + 2 into secondStart
-   put char secondStart to -1 of oText into secondChoice
-end _SetChoice
-
 private command _ExtractMenu someView, @propMenu, @publicProps  
    put empty into propMenu
    put empty into publicProps
-   put the view_BehaviorScript of someView into viewBehaviorScript
+   -- put the view_BehaviorScript of someView into viewBehaviorScript
+   put the module_BehaviorScript of someView into viewBehaviorScript
    
    put viewBehaviorScript into setPropLines
    filter setPropLines with "setprop *"

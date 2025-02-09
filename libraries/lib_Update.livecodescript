@@ -76,6 +76,18 @@ end script_Diff
 
 --> Module | Update
 -
+getprop module_StackFileArray
+   put the view_Name of the target into vName
+   if vName is empty then return empty
+   put view_GetTemplateObject (vName) into vObject
+   if exists (vObject) then
+      put the stackFile_Array of vObject into stackFileArray
+      return stackFileArray
+   else
+      return empty
+   end if
+end module_StackFileArray
+
 command module_Update moduleStackName, pRepoFolder
    set the cursor to watch
    put view_GetTemplateObject (moduleStackName, pRepoFolder) into moduleObject
@@ -83,6 +95,22 @@ command module_Update moduleStackName, pRepoFolder
    
    # Set module stackfiles
    put the folder_StackFileArray of moduleObject into stackFileArray
+   put the stackFile_Array of moduleObject into oStackFileArray
+   union stackFileArray with oStackFileArray
+   --
+   put the menubar_View of moduleObject into mBarGroup
+   if mBarGroup = moduleObject then
+      -- it's the menubar group module no need to add
+   else if exists (mBarGroup) then
+      -- see "module_StackFileArray"
+      put the view_Name of mBarGroup into mBarViewName
+      put view_GetTemplateObject (mBarViewName) into mBarTemplateObject
+      if exists (mBarTemplateObject) then
+         put the stackFile_Array of mBarTemplateObject into mStackFileArray
+         union stackFileArray with mStackFileArray
+      end if
+   end if
+   
    set the stackFile_Array of moduleObject to stackFileArray
    
    # Set the default behaviors

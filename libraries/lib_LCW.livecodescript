@@ -98,22 +98,6 @@ command menu_SetModel menuGlobalArray
    return gLCW ["Global Menus"]
 end menu_SetModel
 
-
---> Working on
--
-command github_DownloadProject projectName, lcwRoot
-   -- this should use git to clone a project to the lcwRoot folder
-   -- and return the path to the projects home stack folder
-   
-   -- stub for now
-   put empty into projectHomeStackPath
-   if projectHomeStackPath is empty then
-      put lcwRoot
-      answer warning merge ("Failed to download project '[[projectName]]'!")
-      exit to top
-   end if
-end github_DownloadProject
-
 command env_RecursivelyLoadProjects pObject, pForceLoad
    if pObject is empty then put the long id of the target into pObject
    
@@ -570,7 +554,11 @@ command env_SimpleLoadProject projectName, homeStackPath, pForceLoad
    dispatch "project_PostInit" to stack homeStackPath
    
    -- prety display as everything is slow
-   display_LoadProject projectName
+   try
+      display_LoadProject projectName
+   catch e
+      breakpoint
+   end try
    return empty
 end env_SimpleLoadProject
 
@@ -631,7 +619,8 @@ end env_ListProjectFolders
 function env_ListShortProjectFolders
    put env_GetRepoFolder() into repoFolder
    put folders (repoFolder) into shortFolders
-   delete line 1 of shortFolders
+   --
+   filter shortFolders without ".*"
    sort shortFolders
    return shortFolders
 end env_ListShortProjectFolders

@@ -12,6 +12,43 @@ This is a library to manipulate and store stackfiles automatically.
 
 --> Working on
 -
+setprop stackFile_LinkObject sObject
+   if exists (sObject) is false then
+      return "Error, object does not exist:" && sObject
+   end if
+   
+   put the stack_Name of sObject into stackName
+   set the stackFile_Link of the target to stackName
+   put the result into stackFileArray
+   return stackFileArray
+end stackFile_LinkObject
+
+setprop stackFile_Link [pForce] stackName
+   -- see also "stack_IsKnown"
+   local commonPath
+   put the long id of the target into tObject
+   
+   # Check
+   if stackName is not true then
+      if exists (stack stackName) is false then
+         return "Error, stack does not exist:" && stackName
+      end if
+   end if
+   
+   # Relative file of stack stackName
+   put the stack_Folder of tObject into baseFolder
+   put the effective filename of stack stackName into linkFile
+   put file_GetRelativePath (linkFile, baseFolder, commonPath) into linkRelativeFile
+   
+   # Add stack stackName to stackFileArray
+   put the stackfile_Array of tObject into stackFileArray
+   put linkRelativeFile into stackFileArray [stackName]
+   
+   # Set stackfiles
+   set the stackfile_Array of tObject to stackFileArray
+   return stackFileArray
+end stackFile_Link
+
 getprop stackfile_Array
    put the defaultstack into someStack
    put the stackfiles of someStack into stackFileArray
@@ -27,9 +64,6 @@ setprop stackfile_Array sfArray
    return sfTable
 end stackfile_Array
 
-
---> StackFile
--
 function stackFile_ConstructShortFileArray pSetName
    -- really not sure if this is useful / broken / needed
    put library_FetchStackFiles (pSetName) into stackFileTable
@@ -54,34 +88,6 @@ function library_FetchStackFiles pSetName
    put setArray ["data"]["stackfiles"] into stackFileTable
    return stackFileTable
 end library_FetchStackFiles
-
-
---> StackFile | Link
--
-setprop stackFile_LinkObject sObject
-   if exists (sObject) is false then
-      return "Error, object does not exist:" && sObject
-   end if
-   
-   put the stack_Name of sObject into stackName
-   set the stackFile_Link of the target to stackName
-   put the result into stackFileArray
-   return stackFileArray
-end stackFile_LinkObject
-
-setprop stackFile_Link stackName
-   -- see also "stack_IsKnown"
-   if exists (stack stackName) is false then return "Error, stack does not exist:" && stackName
-   put the stackfile_Array of the target into stackFileArray
-   put the stack_Folder of the target into baseFolder
-   --
-   put the effective filename of stack stackName into linkFile
-   put file_GetRelativePath (linkFile, baseFolder, commonPath) into linkRelativeFile
-   put linkRelativeFile into stackFileArray [stackName]
-   --
-   set the stackfile_Array of the target to stackFileArray
-   return stackFileArray
-end stackFile_Link
 
 
 --> StackFile
@@ -366,7 +372,7 @@ function stackfile_FilterShortFilesForKnown shortFileIndex, pSetName
 end stackfile_FilterShortFilesForKnown
 
 function stackfile_FilterStackNamesForKnown shortFileIndex, pSetName
-    return stackFile_NamesFromShortFiles (shortFileIndex, pSetName)
+   return stackFile_NamesFromShortFiles (shortFileIndex, pSetName)
 end stackfile_FilterStackNamesForKnown
 
 function stackFile_ContainsShortFile shortFile

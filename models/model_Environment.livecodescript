@@ -37,22 +37,31 @@ command env_GoToStart
    return homePath 
 end env_GoToStart
 
-getprop env_RepoFolder
+getprop env_RepoFolder [pShortRepoFolder]
    set the itemdelimiter to slash
-   put the project_Folder of target into rootFolder
-   delete item -1 of rootFolder
-   return rootFolder
+   put the project_Folder of target into repoFolder
+   delete item -1 of repoFolder
+   --
+   if pShortRepoFolder is not empty then
+      put pShortRepoFolder after repoFolder
+   end if
+   return repoFolder
 end env_RepoFolder
 
-function env_GetRepoFolder
-   put env_GetLcwFolder() into pLcwFolder
+function env_GetRepoFolder pShortRepoFolder
+   put env_GetLcwFolder() into repoFolder
    --
    set the itemdelimiter to slash
-   delete item -1 of pLcwFolder
-   return pLcwFolder
+   delete item -1 of repoFolder
+   --
+   if pShortRepoFolder is not empty then
+      text_AddTrailing pShortRepoFolder, slash
+      put pShortRepoFolder after repoFolder
+   end if
+   return repoFolder
 end env_GetRepoFolder
 
-
+function env_GetLcwFolder
    global gLCW
    put "lcwFolder" into prefName
    --
