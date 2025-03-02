@@ -55,6 +55,29 @@ setprop behavior_Hierarchy [dontClear] bObjects
    return setObjects
 end behavior_Hierarchy
 
+getprop behavior_InHierarchy [stackName]
+   put the long id of the target into tObject
+   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
+   --
+   put the behavior_Hierarchy of tObject into bObjects
+   put the name of stack stackName into stackObject
+   return stackObject is among the lines of bObjects
+end behavior_InHierarchy
+
+function behavior_GetHierarchy tObject, pUseRugged
+   repeat
+      put the behavior of tObject into bObject
+      if exists (bObject) is false then exit repeat
+      if pUseRugged is not false then
+         put revRuggedId (bObject) into bObject
+      end if
+      put bObject & CR after bObjects
+      put bObject into tObject
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_GetHierarchy
+
 command behavior_SetHierarchy tObject, bObjects
    # Clear all behaviors to prevent behavior loop
    put behavior_GetHierarchy (tObject) into hObjects -- existing hierarchy
@@ -93,75 +116,6 @@ private command _SetBehaviors tObject, bObjects
 end _SetBehaviors
 
 
---> Card | Behavior
--
-command card_CreateBehavior bStackName
-   put "lcw_Display" into projectName
-   --
-   put the project_Folder of stack projectName into projectFolder
-   if bStackName is empty then
-      ask_CreateProjectBehavior projectName
-      put the result into bStackPath
-      --
-      display_Project projectName
-      return bStackPath
-   end if
-   
-   put project_ConstructStackPath (bStackName, projectFolder, "behaviors", "livecodescript") into newStackPath
-   if exists (stack newStackPath) then
-      ask_CreateProjectBehavior projectName
-      put the result into bStackPath
-   else
-      project_CreateBehavior bName, projectName
-      put the result into bStackPath
-   end if
-   --
-   display_Project projectName
-   return bStackPath
-end card_CreateBehavior
-
-function card_ListBehaviorNames
-   put project_ListStackNames ("behaviors", "lcw_Display") into sNames
-   filter sNames with "behavior_Card*"
-   return sNames
-end card_ListBehaviorNames
-
-
---> Props | Card
--
-getprop card_BehaviorName
-   put the card_Object of the target into cObject
-   if exists (cObject) is false then return empty
-   put the behavior of cObject into bObject
-   if exists (bObject) is false then return empty
-   
-   put the short name of bObject into sName
-   if char 1 to 13 of sName is "behavior_Card" then
-      delete char 1 to 13 of sName
-      return sName
-   else
-      return empty
-   end if
-end card_BehaviorName
-
-setprop card_BehaviorName sName
-   put "behavior_Card" & sName into stackName
-   if exists (stack stackName) is false then
-      put "behavior_CardMargin" into stackName
-      if exists (stack stackName) is false then
-         return empty
-      end if
-   end if
-   put the long id of stack stackName into bObject
-   --
-   put the card_Object of the target into cObject
-   if exists (cObject) is false then return empty
-   --
-   set the behavior of cObject to bObject
-   return bObject
-end card_BehaviorName
-
-
 --> Module | Behaviors
 -
 command module_ClearDefaultBehaviors mObject
@@ -196,33 +150,6 @@ private command _ClearHierarchyAndObjects bObjects, pMoreObjects
    _ClearBehaviors bObjects
    return bObjects
 end _ClearHierarchyAndObjects
-
-
-
---> Behavior | Hierarchy
--
-getprop behavior_InHierarchy [stackName]
-   put the long id of the target into tObject
-   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
-   --
-   put the behavior_Hierarchy of tObject into bObjects
-   put the name of stack stackName into stackObject
-   return stackObject is among the lines of bObjects
-end behavior_InHierarchy
-
-function behavior_GetHierarchy tObject, pUseRugged
-   repeat
-      put the behavior of tObject into bObject
-      if exists (bObject) is false then exit repeat
-      if pUseRugged is not false then
-         put revRuggedId (bObject) into bObject
-      end if
-      put bObject & CR after bObjects
-      put bObject into tObject
-   end repeat
-   delete char -1 of bObjects
-   return bObjects
-end behavior_GetHierarchy
 
 
 --> Behavior | Add

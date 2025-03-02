@@ -8,13 +8,63 @@ type: model
 version: 0.1
 
 
---> Working on
+--> Props
 -
+getprop project_Menu
+   put the project_Name of the target into pName
+   if pName is empty then return empty
+   put module_ConstructGlobalMenuTitle (pName, true) into mTitle 
+   return mTitle
+end project_Menu
+
+getprop module_Menu
+   put the module_Name of the target into mName
+   -- put the short name of the defaultstack into mName
+   if mName is empty then return empty
+   put module_ConstructGlobalMenuTitle (mName, true) into mTitle 
+   return mTitle
+end module_Menu
+
+getprop view_Label [pAddColon]
+   put the view_Name of the target into viewName
+   if viewName is empty then return empty
+   --
+   return label_FromPiped (viewName, "View", pAddColon)
+end view_Label
+
+getprop module_Label [pAddColon]
+   put the module_Name of the target into moduleName
+   return label_FromModuleName (moduleName, pAddColon)
+end module_Label
+
+getprop project_Label [pAddColon]
+   put the project_Name of the target into projectName
+   --
+   put label_FromProjectName (projectName) into projectLabel
+   return projectLabel
+end project_Label
+
+getprop view_GlobalMenuTitle
+   put the view_Name of the target into viewName
+   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
+   return globalMenuTitle
+end view_GlobalMenuTitle
+
 getprop tiddly_Label
    put the stack_Name of the target into stackName
    put tiddly_StackNameToLabel (stackName) into tiddlyLabel
    return tiddlyLabel
 end tiddly_Label
+
+
+--> Working on
+-
+function label_ShortMuleFolderFromName moduleName
+   view_NormalizePiped moduleName
+   put moduleName into shortModuleFolder
+   replace "|" with "_" in shortModuleFolder
+   return shortModuleFolder
+end label_ShortMuleFolderFromName
 
 function tiddly_ReadmeLabelFromUrl tiddlyUrl
    set the itemdelimiter to slash
@@ -82,52 +132,6 @@ function tiddly_StackNameToLabel stackName
          return stackName
    end switch
 end tiddly_StackNameToLabel
-
-
---> Menu | Names
--
-getprop project_Menu
-   put the project_Name of the target into pName
-   if pName is empty then return empty
-   put module_ConstructGlobalMenuTitle (pName, true) into mTitle 
-   return mTitle
-end project_Menu
-
-getprop module_Menu
-   put the module_Name of the target into mName
-   -- put the short name of the defaultstack into mName
-   if mName is empty then return empty
-   put module_ConstructGlobalMenuTitle (mName, true) into mTitle 
-   return mTitle
-end module_Menu
-
-
---> View | Names
--
-getprop view_Label [pAddColon]
-   put the view_Name of the target into viewName
-   if viewName is empty then return empty
-   --
-   return label_FromPiped (viewName, "View", pAddColon)
-end view_Label
-
-getprop module_Label [pAddColon]
-   put the module_Name of the target into moduleName
-   return label_FromModuleName (moduleName, pAddColon)
-end module_Label
-
-getprop project_Label [pAddColon]
-   put the project_Name of the target into projectName
-   --
-   put label_FromProjectName (projectName) into projectLabel
-   return projectLabel
-end project_Label
-
-getprop view_GlobalMenuTitle
-   put the view_Name of the target into viewName
-   put menu_GlobalTitleFromViewName (viewName) into globalMenuTitle
-   return globalMenuTitle
-end view_GlobalMenuTitle
 
 
 --> Label

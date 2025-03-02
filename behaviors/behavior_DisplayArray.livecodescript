@@ -18,6 +18,20 @@ local LocalArray
 
 --> Working on
 -
+getprop displayed_Object [tObject]
+   put the uOPN ["displayed_Object"] of me into dView
+   if exists (dView) then
+      return dView
+   else
+      return empty
+      return the long id of me
+   end if
+end displayed_Object
+
+setprop displayed_Object dView
+   set the uOPN ["displayed_Object"] of me to dView
+end displayed_Object
+
 private function _DefaultMouseTarget tObject
    put the line_Controller of me into mouseTarget
    if exists (mouseTarget) is false then
@@ -79,19 +93,6 @@ getprop menu_Controller
    end switch
    return mController
 end menu_Controller
-
-getprop displayed_Object [tObject]
-   put the uOPN ["displayed_Object"] of me into dView
-   if exists (dView) then
-      return dView
-   else
-      return the long id of me
-   end if
-end displayed_Object
-
-setprop displayed_Object dView
-   set the uOPN ["displayed_Object"] of me to dView
-end displayed_Object
 
 getprop tool_MenuBit
    -- return the tool_MenuBit name = menuBit

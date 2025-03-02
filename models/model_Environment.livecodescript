@@ -28,6 +28,30 @@ It's all a bit of a mess - tryig to move over to listing project folder names wh
 -- consider replacing with "env_ListProjectFolders()"
 */
 
+function env_ModuleNameFromPath sPath
+   put env_RelativePath (sPath) into relPath
+   set the itemdelimiter to slash
+   put item 1 of relPath into projectName
+   if item 2 of relPath is not "modules" then return empty
+   
+   put item 3 of relPath into moduleShortFolder
+   return moduleShortFolder
+end env_ModuleNameFromPath
+
+function env_ProjectNameFromPath sPath
+   put env_RelativePath (sPath) into relPath
+   set the itemdelimiter to slash
+   put item 1 of relPath into projectName
+   return projectName
+end env_ProjectNameFromPath
+
+function env_RelativePath sPath
+   local commonPath
+   put env_GetRepoFolder() into repoFolder
+   put file_GetRelativePath (sPath, repoFolder, commonPath) into relPath
+   return relPath
+end env_RelativePath
+
 command env_GoToStart
    put pref_FetchValue ("lcwFolder") into lcwFolder
    put env_FetchProjectStartName() into projectName

@@ -12,6 +12,35 @@ This is a library to manipulate and store stackfiles automatically.
 
 --> Working on
 -
+setprop module_AddBehaviorObjects bObjects
+   put the long id of the target into sObject
+   repeat for each line bObject in bObjects
+      if exists (bObject) is false then next repeat
+      --
+      put the stack_Name of bObject into stackName
+      put the stackfile_Known [stackName] of sObject into sBoolean
+      if sBoolean is false then
+         set the stackFile_LinkObject of sObject to bObject
+      end if
+   end repeat
+end module_AddBehaviorObjects
+
+getprop stackfile_Known [stackName]
+   put the long id of the target into tObject
+   --
+   put the stackfile_Array of tObject into stackFileArray
+   put stackFileArray [stackName] into relativeFile
+   if relativeFile is empty then return false
+   --
+   put the effective filename of the defaultstack into relativeRoot
+   set the itemdelimiter to slash
+   put empty into item -1 of relativeRoot
+   put file_FromRelativeRoot (relativeFile, relativeRoot) into sPath
+   --
+   put there is a file sPath into sBoolean
+   return sBoolean
+end stackfile_Known
+
 setprop stackFile_LinkObject sObject
    if exists (sObject) is false then
       return "Error, object does not exist:" && sObject
@@ -94,15 +123,22 @@ end library_FetchStackFiles
 -
 getprop stackfile_Path [stackName]
    put the stack_Object of the target into stackObject
-   put the stackfiles of stackObject into stackFileTable
-   
    put the effective filename of stackObject into stackFileRoot
-   set the itemdelimiter to slash
-   delete item -1 of stackFileRoot -- no trailing slash
-   
+   --
+   put the stackfiles of stackObject into stackFileTable
    put stackFile_ToArray (stackFileTable) into stackFileArray
+   --
+   put stackFile_PathFromName (stackName, stackFileRoot, stackFileArray) into sPath
+   return sPath
+end stackfile_Path
+
+function stackFile_PathFromName stackName, stackFileRoot, stackFileArray
    put stackfileArray [stackName] into relPath
    if relPath begins with stackFileRoot then return relPath
+   
+   set the itemdelimiter to slash
+   -- delete item -1 of stackFileRoot -- no trailing slash
+   put empty into item -1 of stackFileRoot
    
    put stackFileRoot & relPath into stackfilePath
    if exists (stack stackfilePath) then
@@ -110,7 +146,7 @@ getprop stackfile_Path [stackName]
    else
       return empty
    end if
-end stackfile_Path
+end stackFile_PathFromName
 
 getprop stackfile_RelativePath [stackName]
    put the stackfile_Array of the target into stackfileArray

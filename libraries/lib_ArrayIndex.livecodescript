@@ -159,6 +159,14 @@ command indexArray_Add newLines, someKey, @someArray
    return the number of lines of someIndex
 end indexArray_Add
 
+command indexArray_AddIndexArray @indexArray, otherIndexArray
+   put item 2 of the extents of indexArray into maxItem
+   repeat with indexNum = 1 to item 2 of the extents of otherIndexArray
+      add 1 to maxItem
+      put otherIndexArray [indexNum] into indexArray [maxItem]
+   end repeat
+   return indexArray
+end indexArray_AddIndexArray
 
 --> Array | Index
 -
@@ -183,8 +191,6 @@ command indexArray_Insert @sArray, intoNum, itemArray
 end indexArray_Insert
 
 function indexArray_FindArray sArray, sKey, sValue
-   -- put indexArray_Find (sArray, sKey, sValue) into itemNum
-   -- return sArray [itemNum]
    repeat with itemNum = 1 to item 2 of the extents of sArray
       put sArray [itemNum][sKey] into foundKey
       if foundKey = sValue then

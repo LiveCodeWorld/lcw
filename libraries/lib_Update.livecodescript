@@ -17,6 +17,79 @@ We can split into handlers later when we need.
 
 --> Working on
 -
+getprop template_StackFileArray
+   put the view_Name of the target into viewName
+   put view_GetTemplateObject (viewName) into tObject
+   if exists (tObject) is false then return empty
+   
+   put the stackFile_Array of tObject into stackFileArray
+   return stackFileArray
+end template_StackFileArray
+
+getprop template_Behaviors
+   put the view_Name of the target into viewName
+   put view_GetTemplateObject (viewName) into tObject
+   if exists (tObject) is false then return empty
+   
+   put the behavior_Objects of tObject into bObjects
+   return bObjects
+end template_Behaviors
+
+getprop menuBar_StackFileArray
+   put the view_Object of the target into moduleObject
+   put _MenuBarStackFileArray (moduleObject) into mStackFileArray
+   return mStackFileArray
+end menuBar_StackFileArray
+   
+private function _MenuBarStackFileArray moduleObject
+   put the menubar_View of moduleObject into mBarGroup
+   switch
+      case exists (mBarGroup) is false
+         -- not a menubar_View
+      case mBarGroup = moduleObject
+         -- it's the menubar group module no need to add
+         return empty
+      default
+         -- see "module_StackFileArray"
+         put the view_Name of mBarGroup into mBarViewName
+         put view_GetTemplateObject (mBarViewName) into mBarTemplateObject
+         if exists (mBarTemplateObject) then
+            put the stackFile_Array of mBarTemplateObject into mStackFileArray
+            return mStackFileArray
+         else
+            return empty
+         end if
+   end switch
+end _MenuBarStackFileArray
+
+command module_Update moduleStackName, pRepoFolder
+   set the cursor to watch
+   put view_GetTemplateObject (moduleStackName, pRepoFolder) into moduleObject
+   put the module_Folder of moduleObject into moduleFolder
+   
+   # Set module stackfiles
+   put the folder_StackFileArray of moduleObject into stackFileArray
+   put the stackFile_Array of moduleObject into oStackFileArray
+   union stackFileArray with oStackFileArray
+   
+   # Add menubar_View stackFiles
+   put _MenuBarStackFileArray (moduleObject) into mStackFileArray
+   union stackFileArray with mStackFileArray
+   
+   set the stackFile_Array of moduleObject to stackFileArray
+   
+   # Set the default behaviors
+   set the module_Behaviors of moduleObject to true
+   
+   # Save
+   save stack moduleStackName
+   
+   # Export Arrays as json
+   module_ExportMenusAndStackFiles moduleFolder
+   put the result into moduleArray
+   return moduleArray
+end module_Update
+
 command project_UpdateArray projectName
    if exists (stack projectName) is false then return empty
    
@@ -87,43 +160,6 @@ getprop module_StackFileArray
       return empty
    end if
 end module_StackFileArray
-
-command module_Update moduleStackName, pRepoFolder
-   set the cursor to watch
-   put view_GetTemplateObject (moduleStackName, pRepoFolder) into moduleObject
-   put the module_Folder of moduleObject into moduleFolder
-   
-   # Set module stackfiles
-   put the folder_StackFileArray of moduleObject into stackFileArray
-   put the stackFile_Array of moduleObject into oStackFileArray
-   union stackFileArray with oStackFileArray
-   --
-   put the menubar_View of moduleObject into mBarGroup
-   if mBarGroup = moduleObject then
-      -- it's the menubar group module no need to add
-   else if exists (mBarGroup) then
-      -- see "module_StackFileArray"
-      put the view_Name of mBarGroup into mBarViewName
-      put view_GetTemplateObject (mBarViewName) into mBarTemplateObject
-      if exists (mBarTemplateObject) then
-         put the stackFile_Array of mBarTemplateObject into mStackFileArray
-         union stackFileArray with mStackFileArray
-      end if
-   end if
-   
-   set the stackFile_Array of moduleObject to stackFileArray
-   
-   # Set the default behaviors
-   set the module_Behaviors of moduleObject to true
-   
-   # Save
-   save stack moduleStackName
-   
-   # Export Arrays as json
-   module_ExportMenusAndStackFiles moduleFolder
-   put the result into moduleArray
-   return moduleArray
-end module_Update
 
 command module_ExportMenusAndStackFiles moduleFolder
    put module_ConstructArray (moduleFolder) into moduleArray

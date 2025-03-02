@@ -89,6 +89,8 @@ on LayoutCard
    if exists (viewObject) is false then return empty
    
    put the view_RectOnCard of me into viewRect
+   -- set the rect_Test of me to viewRect
+   
    dispatch "LayoutControl" to viewObject with viewRect
    switch it
       case "unhandled"

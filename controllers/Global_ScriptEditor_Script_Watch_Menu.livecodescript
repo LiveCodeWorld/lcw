@@ -12,11 +12,27 @@ version: 0.1
 -
 local LocalArray
 
+
+--> Menu | Props
+-
+getprop menu_Target [fieldObject]
+   return fieldObject
+end menu_Target
+
+
 --> Global | ScriptEditor | Script | Watch | Menu
 -
-on menu_AuthoringMenu mTarget
-   put mTarget
-end menu_AuthoringMenu
+on menu_DisplayDictionary fieldObject
+   put the selectedText of fieldObject into sText
+   --
+   put ideDocsFetchLCSEntries() into sIndexArray
+   put indexArray_FindArray (sIndexArray, "display name", sText) into foundArray
+   if foundArray is empty then
+      display_Data sIndexArray, sText, "ideDocsFetchLCSEntries()"
+   else
+      display_Data foundArray, sText, "ideDocsFetchLCSEntries()"
+   end if
+end menu_DisplayDictionary
 
 on _
 end _

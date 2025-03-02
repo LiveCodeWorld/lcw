@@ -21,6 +21,7 @@ command view_DoPropertyMenu publicProp, someView
       put view_AskPublicValue (publicProp, someView) into publicValue
       set the publicProp of someView to publicValue
    else
+      /*
       -- if publicValue is not an "s", or perhaps a switch
       -- lets check by introspecting the script and checking the name of the param
       -- put the view_BehaviorScript of someView into viewBehaviorScript
@@ -37,6 +38,9 @@ command view_DoPropertyMenu publicProp, someView
       else
          view_DoParamProp someView, publicProp, publicValue
       end if
+      */
+      
+      set the publicProp of someView to publicValue
    end if
 end view_DoPropertyMenu
 
