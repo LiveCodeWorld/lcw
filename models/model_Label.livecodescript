@@ -5,7 +5,101 @@ copyright: David Bovill
 license: GPLv3
 name: model_Label
 type: model
-version: 0.1
+version: 0.2
+
+
+--> Working on
+-
+function tiddly_StackNameToLabel stackName
+   set the itemdelimiter to "_"
+   put item 1 of stackName into projectRoot
+   put item 2 of stackName into shortProjectName
+   
+   # Duck Type
+   set the itemdelimiter to "|"
+   switch
+      case word 1 to -1 of item 1 of stackName = "View"
+         -- assume it is module
+         return label_FromModuleName (stackName)
+      case word 1 to -1 of item -1 of stackName = "Menu"
+         -- assume it is menu
+         return label_FromMenuTitle (stackName)
+         break
+      case stackName begins with "lcw_"
+         -- original LCW Project
+         return label_FromProjectName (stackName)
+      case stackName contains "_"
+         -- assume some other project
+         -- breakpoint
+         return text_InitialCaps (projectRoot) & ":" && shortProjectName 
+      default
+         -- breakpoint
+         return stackName
+   end switch
+end tiddly_StackNameToLabel
+
+
+--> Label | mTitle
+-
+function label_ToMenuTitle mLabel
+   -- Tiddlywiki Plugins Menu
+   if word -1 of mLabel is not "Menu" then return empty
+   delete word -1 of mLabel
+   
+   put "Global | " into mTitle
+   repeat for each word mBit in mLabel
+      put mBit && "| " after mTitle
+   end repeat
+   put "Menu" after mTitle
+   return mTitle
+end label_ToMenuTitle
+
+function label_ToMenuTitle tiddlyLabel
+   if word 1 of tiddlyLabel is not "Menu" then return empty
+   if the number of words of tiddlyLabel is not 2 then return empty
+   
+   put word 2 of tiddlyLabel into camelWord
+   put word_SplitCaps (camelWord, "|") into pipedItems
+   put "Global|" & pipedItems & "|Menu" into mTitle
+   replace "|" with " | " in mTitle
+   return mTitle
+end label_ToMenuTitle
+
+function label_FromMenuTitle mTitle, pPathDelim, pAddColon
+   set the itemdelimiter to "|"
+   --
+   get word 1 to -1 of item -1 of mTitle
+   if it is not "Menu" then
+      return empty
+   end if
+   
+   # Label start
+   put "Menu" into mLabel
+   if pAddColon is true then put ":" after mLabel
+   put space after mLabel
+   
+   # Delete Menu
+   delete item -1 of mTitle
+   
+   # Delete Global
+   get word 1 to 1 of item 1 of mTitle
+   if it = "Global" then delete item 1 of mTitle
+   
+   # Make CapsWord
+   replace space with empty in pipedItem 
+   repeat for each item pipedItem in mTitle
+      get word 1 to -1 of pipedItem
+      put text_InitialCaps (it) into capsWord
+      put capsWord after mLabel
+      put pPathDelim after mLabel
+   end repeat
+   
+   if pPathDelim is not empty then
+      put -1 * the number of chars of pPathDelim into dNum
+      delete char dNum to -1 of mLabel
+   end if
+   return mLabel
+end label_FromMenuTitle
 
 
 --> Props
@@ -59,13 +153,6 @@ end tiddly_Label
 
 --> Working on
 -
-function label_ShortMuleFolderFromName moduleName
-   view_NormalizePiped moduleName
-   put moduleName into shortModuleFolder
-   replace "|" with "_" in shortModuleFolder
-   return shortModuleFolder
-end label_ShortMuleFolderFromName
-
 function tiddly_ReadmeLabelFromUrl tiddlyUrl
    set the itemdelimiter to slash
    -- put item 3 to -1 of tiddlyUrl into tiddlyPath
@@ -105,37 +192,51 @@ function tiddly_LabelToStackName tiddlyLabel
    return stackName
 end tiddly_LabelToStackName
 
-function tiddly_StackNameToLabel stackName
-   set the itemdelimiter to "_"
-   put item 1 of stackName into projectRoot
-   put item 2 of stackName into shortProjectName
-   
-   # Duck Type
+
+--> LCW | Names
+-
+function lcw_ConstructBehaviorName viewName
+   put lcw_PipesToCamelCase (viewName) into camelName
+   put "behavior_" & camelName into bStackName
+   return bStackName
+end lcw_ConstructBehaviorName
+
+function lcw_PipesToCamelCase stackName
    set the itemdelimiter to "|"
-   switch
-      case word 1 to -1 of item 1 of stackName = "View"
-         -- assume it is module
-         return label_FromModuleName (stackName)
-      case word 1 to -1 of item -1 of stackName = "Menu"
-         -- assume it is menu
-         return label_FromMenuTitle (stackName)
-         break
-      case stackName begins with "lcw_"
-         -- original LCW Project
-         return label_FromProjectName (stackName)
-      case stackName contains "_"
-         -- assume some other project
-         breakpoint
-         return text_InitialCaps (projectRoot) & ":" && shortProjectName 
-      default
-         breakpoint
-         return stackName
-   end switch
-end tiddly_StackNameToLabel
+   repeat for each item someItem in stackName
+      put word 1 to -1 of someItem after shortFolder
+   end repeat
+   return shortFolder
+end lcw_PipesToCamelCase
+
+function lcw_UnderscoreToPipes shortFolder, pPretty
+   if pPretty is true then
+      replace "_" with " | " in shortFolder
+   else
+      replace "_" with "|" in shortFolder
+   end if
+   return shortFolder
+end lcw_UnderscoreToPipes
+
+function lcw_PipesToUnderscore moduleName
+   set the itemdelimiter to "|"
+   repeat for each item someItem in moduleName
+      put word 1 to -1 of someItem & "_" after shortFolder
+   end repeat
+   delete char -1 of shortFolder
+   return shortFolder
+end lcw_PipesToUnderscore
 
 
 --> Label
 -
+function label_ShortModuleFolderFromName moduleName
+   view_NormalizePiped moduleName
+   put moduleName into shortModuleFolder
+   replace "|" with "_" in shortModuleFolder
+   return shortModuleFolder
+end label_ShortModuleFolderFromName
+
 function label_ViewToCamelTitle pipedName, pReverse
    set the itemdelimiter to "|"
    if item 1 of pipedName is among the items of "View|Layout" then
@@ -162,53 +263,6 @@ function label_CamelTitleToView camelTitle, pFirstItem
    end if
    return viewName
 end label_CamelTitleToView
-
-function label_ToMenuTitle tiddlyLabel
-   if word 1 of tiddlyLabel is not "Menu" then return empty
-   if the number of words of tiddlyLabel is not 2 then return empty
-   
-   put word 2 of tiddlyLabel into camelWord
-   put word_SplitCaps (camelWord, "|") into pipedItems
-   put "Global|" & pipedItems & "|Menu" into mTitle
-   replace "|" with " | " in mTitle
-   return mTitle
-end label_ToMenuTitle
-
-function label_FromMenuTitle mTitle, pPathDelim, pAddColon
-   set the itemdelimiter to "|"
-   --
-   get word 1 to -1 of item -1 of mTitle
-   if it is not "Menu" then
-      return empty
-   end if
-   
-   # Label start
-   put "Menu" into mLabel
-   if pAddColon is true then put ":" after mLabel
-   put space after mLabel
-   
-   # Delete Menu
-   delete item -1 of mTitle
-   
-   # Delete Global
-   get word 1 to 1 of item 1 of mTitle
-   if it = "Global" then delete item 1 of mTitle
-   
-   # Make CapsWord
-   replace space with empty in pipedItem 
-   repeat for each item pipedItem in mTitle
-      get word 1 to -1 of pipedItem
-      put text_InitialCaps (it) into capsWord
-      put capsWord after mLabel
-      put pPathDelim after mLabel
-   end repeat
-   
-   if pPathDelim is not empty then
-      put -1 * the number of chars of pPathDelim into dNum
-      delete char dNum to -1 of mLabel
-   end if
-   return mLabel
-end label_FromMenuTitle
 
 function label_FromProjectName projectName
    if projectName is empty then return empty

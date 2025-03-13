@@ -18,6 +18,24 @@ local LocalArray
 
 --> Working on
 -
+getprop menu_Target [mTitlePath]
+   put the uOPN ["menu_Target"] of me into mTarget
+   --
+   put the displayed_Object of me into displayedObject
+   switch 
+      case mTarget is not empty
+         return mTarget
+      case displayedObject is not empty
+         return displayedObject
+      default
+         return the long id of me
+   end switch
+end menu_Target
+
+setprop menu_Target [mTitlePath] mTarget
+   set the uOPN ["menu_Target"] of me to mTarget
+end menu_Target
+
 getprop displayed_Object [tObject]
    put the uOPN ["displayed_Object"] of me into dView
    if exists (dView) then
@@ -102,11 +120,16 @@ getprop tool_MenuBit
    return menuBit
 end tool_MenuBit
 
+getprop tool_MenuBit
+   get the title_Menu of me
+   set the itemdelimiter to "|"
+   put word 1 to -1 of item 2 to -2 of it into menuBit
+   return menuBit
+end tool_MenuBit
+
 setprop tool_MenuBit [libName] menuBit
-   -- used to use "display_SetToolMenus"
-   put the menu_Button of me into mButton
    set the tool_LibName of me to libName
-   --
+   put the menu_Button of me into mButton
    -- set the menumode of mButton to "pulldown"
    -- set the style of mButton to "menu"
    
@@ -127,13 +150,41 @@ setprop tool_MenuBit [libName] menuBit
    
    # Create menus if needed
    dispatch "ask_CreateMenuFromObject" to me with titleMenu,libName
-   
-   if the shiftKey is "Down" then
-      dispatch "ask_CreateMenuFromObject" to me with lineMenu,libName
-      dispatch "ask_CreateMouseDoubleUpHandler" to me with mDoubleUp
-   end if
    --
    return titleMenu
+end tool_MenuBit
+
+-- setprop tool_MenuBit [projectName] menuBit
+-- used to use "display_SetToolMenus"
+put _MenuButton() into mButton
+--
+set the menumode of mButton to "pulldown"
+set the style of mButton to "menu"
+
+# Construct Menu Titles
+get "Global |" && menuBit
+put it && "| Menu" into titleMenu
+put it && "| Line | Menu" into lineMenu
+
+# Construct mDoubleUp
+replace "|" with empty in menuBit
+replace space with empty in menuBit
+put "mDoubleUp_" & menuBit into mDoubleUp
+
+# Set menus and mouse
+set the title_Menu of me to titleMenu
+set the line_Menu of me to lineMenu
+set the mouse_DoubleUp of me to mDoubleUp
+
+# Create menus if needed
+dispatch "ask_CreateMenuFromObject" to me with titleMenu,projectName
+
+if the optionKey is "Down" then
+   dispatch "ask_CreateMenuFromObject" to me with lineMenu,projectName
+   dispatch "ask_CreateMouseDoubleUpHandler" to me with mDoubleUp
+end if
+--
+return titleMenu
 end tool_MenuBit
 
 getprop title_Controller
@@ -216,22 +267,26 @@ on mouseUp
       default
          # Clicked on the title
          if the shiftkey is "Down" then
-            set the title_Colour of me to colour_GetRandom()
-            put the stack_Style of me into oStyle
-            switch oStyle
-               case "toplevel"
-                  set the stack_Style of me to "palette"
-                  break
-               case "palette"
-                  set the stack_Style of me to "toplevel"
-                  break
-               default
-                  put oStyle
-                  breakpoint
-            end switch
+            toggle_Title
          end if
    end switch
 end mouseUp
+
+command toggle_Title
+   set the title_Colour of me to colour_GetRandom()
+   put the stack_Style of me into oStyle
+   switch oStyle
+      case "toplevel"
+         set the stack_Style of me to "palette"
+         break
+      case "palette"
+         set the stack_Style of me to "toplevel"
+         break
+      default
+         put oStyle
+         breakpoint
+   end switch
+end toggle_Title
 
 on actionInspect pPath
    put _getValue (pathItems) into someValue
@@ -345,24 +400,6 @@ setprop mouse_DoubleUp mDoubleUp
    set the mouse_DoubleUp of me to mDoubleUp
 end mouse_DoubleUp
 
-getprop menu_Target [mTitlePath]
-   put the menu_Target of me into mTarget
-   --
-   put the displayed_Object of me into displayedObject
-   switch 
-      case mTarget is not empty
-         return mTarget
-      case displayedObject is not empty
-         return displayedObject
-      default
-         return the long id of me
-   end switch
-end menu_Target
-
-setprop menu_Target [mTitlePath] mTarget
-   set the menu_Target of me to mTarget
-end menu_Target
-
 
 --> Props | Menu | Model
 -
@@ -462,47 +499,6 @@ end selected_Array
 getprop menu_Button
    return _MenuButton()
 end menu_Button
-
-setprop tool_MenuBit [projectName] menuBit
-   -- used to use "display_SetToolMenus"
-   put _MenuButton() into mButton
-   --
-   set the menumode of mButton to "pulldown"
-   set the style of mButton to "menu"
-   
-   # Construct Menu Titles
-   get "Global |" && menuBit
-   put it && "| Menu" into titleMenu
-   put it && "| Line | Menu" into lineMenu
-   
-   # Construct mDoubleUp
-   replace "|" with empty in menuBit
-   replace space with empty in menuBit
-   put "mDoubleUp_" & menuBit into mDoubleUp
-   
-   # Set menus and mouse
-   set the title_Menu of me to titleMenu
-   set the line_Menu of me to lineMenu
-   set the mouse_DoubleUp of me to mDoubleUp
-   
-   # Create menus if needed
-   dispatch "ask_CreateMenuFromObject" to me with titleMenu,projectName
-   
-   if the optionKey is "Down" then
-      dispatch "ask_CreateMenuFromObject" to me with lineMenu,projectName
-      dispatch "ask_CreateMouseDoubleUpHandler" to me with mDoubleUp
-   end if
-   --
-   return titleMenu
-end tool_MenuBit
-
-getprop tool_MenuBit
-   get the title_Menu of me
-   set the itemdelimiter to "|"
-   put word 1 to -1 of item 2 to -2 of it into menuBit
-   return menuBit
-end tool_MenuBit
-
 
 getprop parent_Array [someKey]
    put _treeWidget() into treeWidget

@@ -11,6 +11,32 @@ version: 0.8
 
 --> Working on
 -
+function module_ConstructFolder moduleName, projectName
+   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
+   --
+   put project_GetFolder (projectName) into projectFolder
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   return moduleFolder
+end module_ConstructFolder
+
+function module_GetFolder moduleShortFolder, projectFolder
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
+   put rootModuleFolder & moduleShortFolder & slash into moduleFolder
+   return moduleFolder
+end module_GetFolder
+
+function module_FolderFromPath stackPath, projectFolder
+   set the itemdelimiter to slash
+   put the number of items of projectFolder into pNum
+   if item (pNum + 1) of stackPath is not "Modules" then return empty
+   
+   put item 1 to (pNum + 2) of stackPath & slash into moduleFolder
+   return moduleFolder
+end module_FolderFromPath
+
+
+--> Menu
+-
 function menu_GetGlobalController mTitle, pWithModel
    if there is a stack mTitle then
       return the name of stack mTitle
@@ -144,27 +170,6 @@ command ide_RemoveRevEditScriptStack stackName
    delete line lineNum of stackNames
    put stackNames into gREVMessageDispatch ["revEditScript"]
 end ide_RemoveRevEditScriptStack
-
-
---> Project | Names
--
-function lcw_UnderscoreToPipes shortFolder, pPretty
-   if pPretty is true then
-      replace "_" with " | " in shortFolder
-   else
-      replace "_" with "|" in shortFolder
-   end if
-   return shortFolder
-end lcw_UnderscoreToPipes
-
-function lcw_PipesToUnderscore moduleName
-   set the itemdelimiter to "|"
-   repeat for each item someItem in moduleName
-      put word 1 to -1 of someItem & "_" after shortFolder
-   end repeat
-   delete char -1 of shortFolder
-   return shortFolder
-end lcw_PipesToUnderscore
 
 function project_FindHomeStackPath somePath
    -- assumes somePath is a path to a stack or file and not a folder
@@ -416,15 +421,6 @@ getprop module_Folder
    return moduleFolder
 end module_Folder
 
-function module_FolderFromPath stackPath, projectFolder
-   set the itemdelimiter to slash
-   put the number of items of projectFolder into pNum
-   if item (pNum + 1) of stackPath is not "Modules" then return empty
-   
-   put item 1 to (pNum + 2) of stackPath & slash into moduleFolder
-   return moduleFolder
-end module_FolderFromPath
-
 getprop module_HomeStackPath [moduleName]
    put the project_ModuleFolder [moduleName] of the target into moduleFolder
    put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
@@ -442,19 +438,6 @@ end module_Names
 
 --> Module
 -
-function module_ConstructFolder moduleName, projectName
-   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
-   put project_GetFolder (projectName) into projectFolder
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   return moduleFolder
-end module_ConstructFolder
-
-function module_GetFolder moduleShortFolder, projectFolder
-   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
-   put rootModuleFolder & moduleShortFolder & slash into moduleFolder
-   return moduleFolder
-end module_GetFolder
-
 function module_FindFolder somePath
    -- assumes somePath is a path to a stack or file and not a folder
    -- finds the first "module folder" above the path

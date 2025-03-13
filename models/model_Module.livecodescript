@@ -188,7 +188,7 @@ getprop module_DefaultBehavior
    end if
 end module_DefaultBehavior
 
-function module_Getbehavior viewName, pBehaviorName
+function module_GetBehaviorPath viewName, pBehaviorName
    if pBehaviorName is empty then
       put lcw_ConstructBehaviorName (viewName) into pBehaviorName
    end if
@@ -200,6 +200,11 @@ function module_Getbehavior viewName, pBehaviorName
    
    put folder_AddShort (moduleFolder, "behaviors") into bFolder
    put bFolder & pBehaviorName & ".livecodescript" into bPath
+   return bPath
+end module_GetBehaviorPath
+
+function module_Getbehavior viewName, pBehaviorName
+   put module_GetBehaviorPath(viewName, pBehaviorName) into bPath
    --
    if there is a stack bPath then
       return the long name of stack bPath
@@ -294,32 +299,6 @@ function module_ConstructBehaviorPath viewName, moduleFolder, pShortFile
    put moduleBehaviorFolder & pShortFile into moduleControllerPath
    return moduleControllerPath
 end module_ConstructBehaviorPath
-
-
---> LCW | Names
--
-function lcw_ConstructBehaviorName viewName
-   put lcw_PipesToCamelCase (viewName) into camelName
-   put "behavior_" & camelName into bStackName
-   return bStackName
-end lcw_ConstructBehaviorName
-
-function lcw_PipesToCamelCase stackName
-   set the itemdelimiter to "|"
-   repeat for each item someItem in stackName
-      put word 1 to -1 of someItem after shortFolder
-   end repeat
-   return shortFolder
-end lcw_PipesToCamelCase
-
-function lcw_PipesToUnderscore moduleName
-   set the itemdelimiter to "|"
-   repeat for each item someItem in moduleName
-      put word 1 to -1 of someItem & "_" after shortFolder
-   end repeat
-   delete char -1 of shortFolder
-   return shortFolder
-end lcw_PipesToUnderscore
 
 
 --> Module | Behaviors

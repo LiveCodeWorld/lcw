@@ -106,6 +106,39 @@ setprop stack_Rect gStackRect
    return sName
 end stack_Rect
 
+getprop stack_Width
+   put the stack_name of the target into sName
+   put the width of stack sName into sWidth
+   return sWidth
+end stack_Width
+
+setprop stack_Width sWidth
+   put the stack_name of the target into sName
+   set the width of stack sName to sWidth
+   return sName
+end stack_Width
+
+getprop stack_Height
+   put the stack_name of the target into sName
+   put the height of stack sName into sHeight
+   return sHeight
+end stack_Height
+
+setprop stack_Height [fixedPoint] sHeight
+   put the stack_name of the target into sName
+   switch fixedPoint
+      case "centre"
+         set the height of stack sName to sHeight
+         break
+      case "top"
+      default
+         put the rect of stack sName into sRect
+         put item 2 of sRect + sHeight into item 4 of sRect
+         set the rect of stack sName to sRect
+   end switch
+   return sName
+end stack_Height
+
 getprop stack_Loc
    put the stack_name of the target into sName
    put the loc of stack sName into gStackLoc
@@ -153,7 +186,7 @@ end stack_Style
 getprop stack_Styles
    return "toplevel,modeless,modal,palette,-,system"
 end stack_Styles
-   
+
 getprop stack_SisterFolder [projectName]
    put the effective filename of the defaultstack into sisterFolder
    put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
