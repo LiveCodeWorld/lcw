@@ -90,7 +90,7 @@ function ide_GetAfterActionCompile
    put the behavior of stack "revSEStackBehavior" into bObject
    return actionBehavior = bObject
 end ide_GetAfterActionCompile
-   
+
 command ide_SetAfterActionCompile pBoolean
    if exists (stack "behavior_RevSEStackBehavior") is false then return empty
    --

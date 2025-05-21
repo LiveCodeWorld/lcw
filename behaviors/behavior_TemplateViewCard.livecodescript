@@ -20,21 +20,25 @@ You can of course override this on the cards script, or set another behavior the
 local LocalArray
 
 
---> Working on
+--> Object | Guess
 -
 getprop view_Object
+   return the menu_TargetGuess of me
+end view_Object
+
+getprop menu_TargetGuess
    # Hard Wired
    put the displayed_Object of me into viewObject
    if exists (viewObject) then return viewObject
    
-   # Default to first contorl
+   # Default to first control
    if exists (control 1 of me) is false then
       return empty
    end if
    put the long id of control 1 of me into viewObject
    
    return viewObject
-end view_Object
+end menu_TargetGuess
 
 getprop displayed_Object [tObject]
    put the uOPN ["displayed_Object"] of me into dView
@@ -57,6 +61,35 @@ setprop displayed_Object dView
 end displayed_Object
 
 
+--> Objects
+-
+getprop menu_Target
+   return the view_Object of me
+end menu_Target
+
+getprop view_Template
+   return _templateView()
+end view_Template
+
+getprop template_Object
+   return _templateView()
+end template_Object
+
+getprop template_View
+   return _templateView()
+end template_View
+
+getprop menubar_View
+   if exists (group "View|Menu|Group" of me) then
+      return the long id of group "View|Menu|Group" of me
+   else
+      return empty
+   end if
+end menubar_View
+
+
+--> Working on
+-
 --> Events
 -
 on openStack
@@ -232,33 +265,6 @@ setprop card_Margin cardMargin
 end card_Margin
 
 
---> Objects
--
-getprop menu_Target
-   return the view_Object of me
-end menu_Target
-
-getprop view_Template
-   return _templateView()
-end view_Template
-
-getprop template_Object
-   return _templateView()
-end template_Object
-
-getprop template_View
-   return _templateView()
-end template_View
-
-getprop menubar_View
-   if exists (group "View|Menu|Group" of me) then
-      return the long id of group "View|Menu|Group" of me
-   else
-      return empty
-   end if
-end menubar_View
-
-
 --> Deps | Private
 -
 private function _TemplateView
@@ -375,7 +381,9 @@ private command _ViewGoodMenu viewObject, viewName
       menu_CreateController mTitle, mFolder, sQuestion, viewObject
    end if
    --
-   menu_PopUp mTitle, empty, viewObject
+   -- menu_PopUp mTitle, empty, viewObject   
+   put the menu_Button of viewObject into mButton
+   mArray_PopUp mTitle, mButton, viewObject
 end _ViewGoodMenu
 
 private function drop_Target tObject

@@ -5,11 +5,33 @@ copyright: David Bovill
 license: GPLv3
 name: lib_Array
 type: library
-version: 0.6
+version: 0.7
 
 
 --> Working on
 -
+function array_EmptyIndex sIndex
+   local sArray
+   repeat for each line sLine in sIndex
+      put empty into sArray [sLine]
+   end repeat
+   return sArray
+end array_EmptyIndex
+
+command array_MakeExpandable @sArray
+   repeat for each key sKey in sArray
+      put sArray [sKey] into sIndex
+      array_AddEmptyIndex sArray, sKey, sIndex
+   end repeat
+end array_MakeExpandable
+
+command array_AddEmptyIndex @sArray, sKey, sIndex
+   repeat for each line sLine in sIndex
+      put empty into sArray [sKey][sLine]
+   end repeat
+   return sArray
+end array_AddEmptyIndex
+
 function array_FilterKeys someArray, includeKeyList
    -- see new Livecode filter function
    -- could use "intersect" ???

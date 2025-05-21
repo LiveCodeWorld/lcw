@@ -110,7 +110,7 @@ function project_ConstructArrayFile projectName
    put project_GetFolder (projectName) & "lcw_project.array" into projectArrayFile
    return projectArrayFile
 end project_ConstructArrayFile
-   
+
 function project_JsonFile projectName
    put project_ConstructJsonFile (projectName) into projectJsonFile
    if there is a file projectJsonFile then
@@ -213,9 +213,10 @@ getprop project_Paths [shortFolder]
    return filePaths
 end project_Paths
 
-getprop project_StackPaths
+getprop project_StackPaths [pWithoutFolder]
    put the project_Folder of the target into projectFolder
-   put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   -- put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   put directory_ListStackPaths (projectFolder, pWithoutFolder) into stackPaths
    return stackPaths
 end project_StackPaths
 
@@ -296,20 +297,22 @@ function project_ListStandardStackPaths shortFolder, projectName, pListNested
    put project_GetFolder (projectName, shortFolder) into standardFolder
    --
    if pListNested is not false then
-      put directory_ListNestedStackFiles (standardFolder) into stackPaths
+      -- put directory_ListNestedStackFiles (standardFolder) into stackPaths
+      put directory_ListStackPaths (standardFolder) into stackPaths
    else
       put folder_ListStackPaths (standardFolder) into stackPaths
    end if
    return stackPaths
 end project_ListStandardStackPaths
 
-function project_ListAllStackPaths projectName
+function project_ListAllStackPaths projectName, pWithoutFolder
    put env_ConstructProjectFolder (projectName) into projectFolder
    if there is not a folder projectFolder then
       return empty
    end if
    --
-   put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   -- put directory_ListNestedStackFiles (projectFolder) into stackPaths
+   put directory_ListStackPaths (projectFolder, pWithoutFolder) into stackPaths
    return stackPaths
 end project_ListAllStackPaths
 
@@ -734,22 +737,40 @@ function directory_ListNestedStackFiles someFolder
    return sFiles
 end directory_ListNestedStackFiles
 
-function directory_ListNestedPaths someFolder, pSetRelative
-   local NestedPaths
+function directory_ListStackPaths someFolder, pNotShortFolder
+   local nestedPaths
    if there is not a folder someFolder then return empty
    
-   # Walk
-   set the itemdelimiter to slash
+   # Walk recursively
+   _WalkStackPaths nestedPaths, someFolder, pNotShortFolder
+   delete char -1 of nestedPaths
+   return nestedPaths
+end directory_ListStackPaths
+
+private command _WalkStackPaths @nestedPaths, someFolder, pNotShortFolder
    text_AddTrailing someFolder, slash
-   if pSetRelative is true then
-      put the number of items of someFolder into baseFolderNum
-      _WalkAndList NestedPaths, someFolder, baseFolderNum
-   else
-      _WalkAndList NestedPaths, someFolder, baseFolderNum
-   end if
-   delete char -1 of NestedPaths
-   return NestedPaths
-end directory_ListNestedPaths
+   put files (someFolder) into shortFiles
+   
+   # Add files (not folders) to nestedPaths
+   filter shortFiles without ".*"
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFile = "." then next repeat
+      put someFolder & shortFile into foundPath
+      --
+      if exists (stack foundPath) then
+         put foundPath & CR after nestedPaths
+      end if
+   end repeat
+   
+   # Recurse
+   put folders (someFolder) into shortChildFolders
+   repeat for each line shortChildFolder in shortChildFolders
+      if char 1 of shortChildFolder = "." then next repeat
+      if shortChildFolder = pNotShortFolder then next repeat
+      put someFolder & shortChildFolder & slash into childFolder
+      _WalkStackPaths nestedPaths, childFolder, pNotShortFolder
+   end repeat
+end _WalkStackPaths
 
 
 --> Private
@@ -771,29 +792,3 @@ private command _addProjectToDeps projectName, @projectNameArray
    end repeat
    return true
 end _addProjectToDeps
-
-private command _WalkAndList @NestedPaths, someFolder, pBaseFolderNum
-   -- recursive
-   put files (someFolder) into shortFiles
-   put someFolder into pathFolder
-   if pBaseFolderNum is a number then
-      set the itemdelimiter to slash
-      delete item 1 to pBaseFolderNum of pathFolder
-   end if
-   
-   # Add files (not folders) to NestedPaths
-   filter shortFiles without ".*"
-   repeat for each line shortFile in shortFiles
-      if char 1 of shortFile = "." then next repeat
-      put pathFolder & shortFile into foundPath
-      put foundPath & CR after NestedPaths
-   end repeat
-   
-   # Recurse
-   put folders (someFolder) into shortChildFolders
-   repeat for each line shortChildFolder in shortChildFolders
-      if char 1 of shortChildFolder = "." then next repeat
-      put someFolder & shortChildFolder & slash into childFolder
-      _WalkAndList NestedPaths, childFolder, pBaseFolderNum
-   end repeat
-end _WalkAndList

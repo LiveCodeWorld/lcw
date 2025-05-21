@@ -88,6 +88,14 @@ end menu_GlobalTitle
 
 --> Metadata
 -
+function metadata_ConstructScriptHeader pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense
+   local scriptHeader
+   --
+   get metadata_ConstructArray (pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense)
+   script_SetMetadataArray scriptHeader, it
+   return word 1 to -1 of scriptHeader
+end metadata_ConstructScriptHeader
+
 function metadata_ConstructArray pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense
    local metadataArray
    metadata_AddDefaults metadataArray, pScriptName, pScriptType, pVersion, pDeps, pCopyrightHolder, pScriptHelp, pLibLicense  

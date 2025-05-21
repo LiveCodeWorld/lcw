@@ -52,10 +52,12 @@ end displayed_Object
 
 private function _DefaultMouseTarget tObject
    put the line_Controller of me into mouseTarget
-   if exists (mouseTarget) is false then
-      put tObject into mouseTarget
-   end if
-   return mouseTarget
+   if exists (mouseTarget) is true then return mouseTarget
+   
+   put the title_Controller of me into mouseTarget
+   if exists (mouseTarget) is true then return mouseTarget
+   
+   return tObject
 end _DefaultMouseTarget
 
 getprop line_Controller
@@ -636,6 +638,7 @@ end displayed_Data
 
 setprop displayed_Index [someTitle] someIndex
    lock screen
+   -- unsorts someIndex
    repeat for each line someLine in someIndex
       put empty into someArray [someLine]
    end repeat

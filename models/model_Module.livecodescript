@@ -4,13 +4,101 @@
 license: GPLv3
 name: model_Module
 type: models
-version: 0.3
+version: 0.5
 
 /*
+The model for modules should share many of teh handlers for projects as the structures are the same
 */
 
 --> Working on
 -
+function project_DefaultBehaviorName stackName
+   return lcw_ConstructBehaviorName (stackName)
+end project_DefaultBehaviorName
+
+getprop module_BehaviorStackNames
+   put the module_BehaviorPaths of the target into stackPaths
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the short name of stack stackPath & CR after sNames
+   end repeat
+   delete char -1 of sNames
+   return sNames
+end module_BehaviorStackNames
+
+-- getprop module_BehaviorStackNames
+   put the module_Name of the target into mName
+   put module_ListBehaviorStackNames (mName) into mBehaviorStackNames
+   return mBehaviorStackNames
+end module_BehaviorStackNames
+
+function module_ListBehaviorStackNames moduleName, pProjectName
+   put module_ListBehaviorStackPaths (moduleName, pProjectName) into stackPaths
+   put stack_PathsToNames (stackPaths) into stackNames
+   
+   # Make default behavior first
+   put lcw_ConstructBehaviorName (moduleName) into bName
+   line_Delete bName, stackNames
+   put word 1 to -1 of bName & CR & stackNames into stackNames
+   --
+   return stackNames
+end module_ListBehaviorStackNames
+
+getprop module_BehaviorName
+   put the module_Name of the target into mName
+   put lcw_ConstructBehaviorName (mName) into bName
+   return bName
+end module_BehaviorName
+
+getprop module_CreateBehaviorName
+   put the module_BehaviorName of the target into mName
+   replace "_View" with "_" in mName
+   put mName & "Create" into bName
+   return bName
+end module_CreateBehaviorName
+
+getprop module_DevBehaviorName
+   put the module_BehaviorName of the target into mName
+   put mName & "Dev" into bName
+   return bName
+end module_DevBehaviorName
+
+getprop module_Objects
+   -- should also get other objects
+   put the module_Hierarchy of the target into mObjects
+   return mObjects
+end module_Objects
+
+getprop module_BehaviorHierarchy [fromFolder]
+   local oHierarchy, bHierarchy
+   put the long id of the target into tObject
+   put revRuggedId (tObject) into rObject
+   --
+   put the module_Name of tObject into moduleName
+   put view_GetTemplateObject (moduleName) into mObject
+   
+   # Behaviors and object hieararchy
+   if fromFolder is not false then
+      put the module_Behaviors of mObject into oHierarchy
+   else
+      put the behavior_Objects of mObject into oHierarchy
+   end if
+   --
+   line_Delete rObject, oHierarchy
+   put rObject & CR before oHierarchy
+   put word 1 to -1 of oHierarchy into oHierarchy
+   
+   # Rest of object hierarchy
+   hierachy_AddStackObjects bHierarchy, mObject
+   put oHierarchy & CR & word 1 to -1 of bHierarchy into walkHierarchy
+   
+   # Is this missing stack object?
+   
+   # Add Env hierarchy
+   hierarchy_AddEnv walkHierarchy
+   return walkHierarchy
+end module_BehaviorHierarchy
+
 
 --> Module
 -
@@ -175,19 +263,6 @@ getprop module_Behavior [useDefault]
    end if
 end module_Behavior
 
-getprop module_DefaultBehavior
-   put the module_BehaviorName of the target into bName
-   if exists (stack bName) then
-      return the name of stack bName
-   else
-      put the view_Name of the target into viewName
-      if viewName is empty then return empty
-      
-      put module_Getbehavior (viewName) into bObject
-      return bObject
-   end if
-end module_DefaultBehavior
-
 function module_GetBehaviorPath viewName, pBehaviorName
    if pBehaviorName is empty then
       put lcw_ConstructBehaviorName (viewName) into pBehaviorName
@@ -203,15 +278,15 @@ function module_GetBehaviorPath viewName, pBehaviorName
    return bPath
 end module_GetBehaviorPath
 
-function module_Getbehavior viewName, pBehaviorName
-   put module_GetBehaviorPath(viewName, pBehaviorName) into bPath
+function module_GetBehavior viewName, pBehaviorName
+   put module_GetBehaviorPath (viewName, pBehaviorName) into bPath
    --
    if there is a stack bPath then
       return the long name of stack bPath
    else
       return empty
    end if
-end module_Getbehavior
+end module_GetBehavior
 
 command module_Clone moduleName, pShowTools
    view_NormalizeName moduleName
@@ -288,11 +363,18 @@ end module_BehaviorDepHkeyArray
 
 --> Module | Behavior
 -
-getprop module_BehaviorName
-   put the view_Name of the target into viewName
-   put lcw_ConstructBehaviorName (viewName) into defaultBehaviorName
-   return defaultBehaviorName
-end module_BehaviorName
+getprop module_DefaultBehavior
+   put the module_BehaviorName of the target into bName
+   if exists (stack bName) then
+      return the name of stack bName
+   else
+      put the view_Name of the target into viewName
+      if viewName is empty then return empty
+      
+      put module_Getbehavior (viewName) into bObject
+      return bObject
+   end if
+end module_DefaultBehavior
 
 function module_ConstructBehaviorPath viewName, moduleFolder, pShortFile
    put folder_AddShort (moduleFolder, "behaviors") into moduleBehaviorFolder
@@ -354,10 +436,6 @@ function module_ConstructBehaviorName viewName
    return lcw_ConstructBehaviorName (stackName)
 end module_ConstructBehaviorName
 
-function project_DefaultBehaviorName stackName
-   return lcw_ConstructBehaviorName (stackName)
-end project_DefaultBehaviorName
-
 function module_GetBehaviorStackPath behaviorStackName, rootModuleFolder
    put behaviorStackName & ".livecodescript" into shortBehaviorPath
    put rootModuleFolder & "behaviors/" & shortBehaviorPath into moduleBehaviorStackPath
@@ -380,18 +458,6 @@ function module_ListBehaviorObjects moduleName, pProjectName
    delete char -1 of bObjects
    return bObjects
 end module_ListBehaviorObjects
-
-function module_ListBehaviorStackNames moduleName, pProjectName
-   put module_ListBehaviorStackPaths (moduleName, pProjectName) into stackPaths
-   put stack_PathsToNames (stackPaths) into stackNames
-   
-   # Make default behavior first
-   put lcw_ConstructBehaviorName (moduleName) into bName
-   line_Delete bName, stackNames
-   put word 1 to -1 of bName & CR & stackNames into stackNames
-   --
-   return stackNames
-end module_ListBehaviorStackNames
 
 function module_ListBehaviorStackPaths moduleName, pProjectName
    switch
@@ -508,93 +574,6 @@ getprop module_BehaviorDepKeys
    end repeat
    return hKeys
 end module_BehaviorDepKeys
-
-getprop module_Objects
-   -- should also get other objects
-   put the module_Hierarchy [fromFolder] of the target into mObjects
-   return mObjects
-end module_Objects
-
-getprop module_Hierarchy [fromFolder]
-   local oHierarchy, bHierarchy
-   --
-   put the module_Name of the target into moduleName
-   if moduleName is empty then return empty
-   put view_GetTemplateObject (moduleName) into mObject
-   
-   # Behaviors and object hieararchy
-   if fromFolder is not false then
-      put the module_Behaviors of mObject into oHierarchy
-   else
-      put the behavior_Objects of mObject into oHierarchy
-   end if
-   
-   put word 1 to -1 of oHierarchy into oHierarchy
-   
-   # Rest of object hierarchy
-   hierachy_AddStackObjects bHierarchy, mObject
-   put oHierarchy & CR & word 1 to -1 of bHierarchy into moduleHierarchy
-   --
-   return moduleHierarchy
-end module_Hierarchy
-
-getprop module_BehaviorHierarchy [fromFolder]
-   local oHierarchy, bHierarchy
-   put the long id of the target into tObject
-   put revRuggedId (tObject) into rObject
-   --
-   put the module_Name of tObject into moduleName
-   put view_GetTemplateObject (moduleName) into mObject
-   
-   # Behaviors and object hieararchy
-   if fromFolder is not false then
-      put the module_Behaviors of mObject into oHierarchy
-   else
-      put the behavior_Objects of mObject into oHierarchy
-   end if
-   --
-   line_Delete rObject, oHierarchy
-   put rObject & CR before oHierarchy
-   put word 1 to -1 of oHierarchy into oHierarchy
-   
-   # Rest of object hierarchy
-   hierachy_AddStackObjects bHierarchy, mObject
-   put oHierarchy & CR & word 1 to -1 of bHierarchy into walkHierarchy
-   
-   # Is this missing stack object?
-   
-   # Add Env hierarchy
-   hierarchy_AddEnv walkHierarchy
-   return walkHierarchy
-end module_BehaviorHierarchy
-
-
---> Module | Behavior
--
-getprop module_BehaviorDepScript [hkeyArray]
-   breakpoint
-   put the module_ExternalHkeys [hkeyArray] of the target into hkeyDeps
-   
-   # Collect dependency handlers
-   put script_CollectFromObjects (hkeyDeps, true) into depScript
-   return depScript
-end module_BehaviorDepScript
-
-getprop module_ExternalHkeys [hkeyArray]
-   put the long id of the target into sObject
-   if hkeyArray is empty then
-      put true into fromFolder
-      put the module_BehaviorDepHkeyArray [fromFolder] of sObject into hkeyArray
-   end if
-   put the module_Hierarchy [true] of sObject into hObjects
-   --
-   put array_ListKeys (hkeyArray) into hKeys
-   repeat for each line hObject in hObjects
-      put revRuggedID (hObject) into rObject
-      filter hKeys without ("*" && rObject)
-   end repeat
-   return hKeys
-end module_ExternalHkeys
 
 
 --> Props | Module
@@ -724,16 +703,6 @@ getprop module_HomeStack [moduleName]
    return stackObject
 end module_HomeStack
 
-getprop module_BehaviorStackNames
-   put the module_BehaviorPaths of the target into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      put the short name of stack stackPath & CR after sNames
-   end repeat
-   delete char -1 of sNames
-   return sNames
-end module_BehaviorStackNames
-
 
 --> Project
 -
@@ -752,32 +721,6 @@ command module_Initialise moduleName, projectName
    project_InitialiseFolder moduleFolder
    return true
 end module_Initialise
-
-command module_CreateBehaviorDepStack sObject, pDepScript
-   put the stack_name of sObject into bName
-   put bName & "Deps" into depStackName
-   if exists (stack depStackName) is true then
-      return "Error, stack already exists"
-   end if
-   
-   # Create behavior stack (don't save)
-   create stack depStackName
-   --
-   put the module_BahaviorFolder of sObject into bFolder
-   put bFolder & depStackName & ".livecodescript" into bPath
-   set the filename of stack depStackName to bPath
-   set the destroyStack of stack depStackName to true
-   set the destroyWindow of stack depStackName to true
-   --
-   go to stack depStackName
-   
-   if pDepScript is not empty then
-      # Add handlers to behavior created stack (don't save)
-      set the script of stack depStackName to depScript
-   end if
-   return depStackName
-end module_CreateBehaviorDepStack
-
 
 function menu_TitleFromController mController
    -- Caution: we assume that the stack is named the same as the global menu

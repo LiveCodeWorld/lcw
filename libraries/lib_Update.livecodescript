@@ -229,7 +229,7 @@ end module_Rename
 function module_ConstructArray moduleFolder
    -- depends on private handlers "_AddControllersToProjectArray"
    local moduleArray
-   put directory_NestedStackFileArray (moduleFolder) into stackFileArray
+   put directory_NestedStackFileArray (moduleFolder, "assets") into stackFileArray
    if stackFileArray is empty then
       return empty
    else
@@ -328,7 +328,7 @@ function project_ConstructStackFileArray projectName
 end project_ConstructStackFileArray
 
 function project_ConstructStackFileArrayFromFolder projectFolder
-   put directory_NestedStackFileArray (projectFolder) into stackFileArray
+   put directory_NestedStackFileArray (projectFolder, "assets") into stackFileArray
    if stackFileArray is empty then return empty
    
    # No need to add path to home stack file
@@ -340,7 +340,7 @@ function project_ConstructStackFileArrayFromFolder projectFolder
 end project_ConstructStackFileArrayFromFolder
 
 function project_FetchStackFileArray projectFolder
-   put directory_NestedStackFileArray (projectFolder) into stackFileArray
+   put directory_NestedStackFileArray (projectFolder, "assets") into stackFileArray
    if stackFileArray is empty then return empty
    
    # No need to add path to home stack file
@@ -476,21 +476,16 @@ end script_UpdatePlaceArray
 
 --> Directory | Walk
 -
-function directory_NestedStackFileArray someFolder
-   switch someFolder -- safety checks
-      case empty
-      case there is not a folder someFolder
-      case env_GetRepoFolder()
-         breakpoint
-         return empty
-      default
-         --
-   end switch  
+function directory_NestedStackFileArray someFolder, pWithoutFolder
+   if there is not a folder someFolder then return empty
    
+   # Walk 
    set the itemdelimiter to slash
    put the number of items of someFolder into baseFolderNum
    --
-   put directory_ListNestedPaths (someFolder) into nPaths
+   -- put directory_ListNestedPaths (someFolder) into nPaths
+   put directory_ListStackPaths (someFolder, pWithoutFolder) into nPaths
+   --
    repeat for each line sFile in nPaths
       if exists (stack sFile) then
          put the short name of stack sFile into stackName
@@ -500,21 +495,6 @@ function directory_NestedStackFileArray someFolder
    end repeat
    return sFileArray
 end directory_NestedStackFileArray
-
-function directory_ListNestedPaths someFolder, pSetRelative
-   local NestedPaths
-   --
-   set the itemdelimiter to slash
-   text_AddTrailing someFolder, slash
-   if pSetRelative is true then
-      put the number of items of someFolder into baseFolderNum
-      _WalkAndList NestedPaths, someFolder, baseFolderNum
-   else
-      _WalkAndList NestedPaths, someFolder, baseFolderNum
-   end if
-   delete char -1 of NestedPaths
-   return NestedPaths
-end directory_ListNestedPaths
 
 
 --> Private 

@@ -13,10 +13,60 @@ A library for script behaviors.
 
 --> Working on
 -
+setprop behavior_StackNames stackNames
+   if stackNames is empty then return empty
+   put the long id of the target into tObject
+   --
+   behavior_SetStackNames stackNames, tObject
+   put the result into bObjects
+   return bObjects
+end behavior_StackNames
+
+command behavior_SetStackNames stackNames, tObject
+   if stackNames is empty then return empty
+   replace comma with CR in stackNames
+   
+   # Clear any behaviors (or we might cause a loop)
+   -- behavior_ClearHierarchy tObject
+   
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      put the name of stack stackName into bObject
+      if tObject = bObject then next repeat
+      
+      # Clear bObject behavior to prevent possible recurssion
+      put the behavior of tObject into tBehavior
+      put the behavior of bObject into bBehavior
+      set the behavior of bObject to empty
+      --
+      set the behavior of tObject to bObject
+      put bObject & CR after bObjects
+      --
+      put bObject into tObject
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_SetStackNames
+
+command behavior_ClearHierarchy tObject, pMoreObjects
+   put behavior_GetHierarchy (tObject) into bObjects
+   _ClearBehaviors bObjects
+   _ClearBehaviors pMoreObjects
+   set the behavior of tObject to empty
+   return bObjects
+   
+   -- _ClearHierarchyAndObjects bObjects, pMoreObjects
+   -- put the result into hObjects
+   -- return hObjects
+end behavior_ClearHierarchy
+
 private command _ClearBehaviors bObjects
    -- not guaranteed to remove behavior loops
    try
-      repeat for each line bObject in bObjects
+      -- repeat for each line bObject in bObjects
+      put the number of lines of bObjects into maxNum
+      repeat with lineNum = maxNum down to 1
+         put line lineNum of bObjects into bObject
          if exists (bObject) then
             set the behavior of bObject to empty
          end if
@@ -26,6 +76,79 @@ private command _ClearBehaviors bObjects
       -- breakpoint
    end try
 end _ClearBehaviors
+
+command behavior_SetHierarchy tObject, bObjects
+   # Clear all behaviors to prevent behavior loop
+   behavior_SafeClear tObject
+   
+   # Clear the existing behavior hierarchy
+   if bObjects is empty then
+      return empty
+   end if
+   
+   # Set behavior hierarchy
+   _SetBehaviors tObject, bObjects
+   --
+   put the result into setObjects
+   return setObjects
+end behavior_SetHierarchy
+
+command behavior_SafeClear tObject
+   put behavior_GetHierarchy (tObject) into hObjects
+   
+   set the behavior of tObject to empty
+   _ClearBehaviors hObjects
+   return hObjects
+end behavior_SafeClear
+
+private command _SetBehaviors tObject, bObjects
+   if exists (tObject) is false then return empty
+   put revRuggedId (tObject) into tObject
+   
+   # Set behavior objects
+   repeat for each line bObject in bObjects
+      put revRuggedId (bObject) into rObject
+      
+      switch
+         case exists (rObject) is false
+         case tObject = rObject
+            next repeat
+         default
+            set the behavior of tObject to rObject
+            put rObject into tObject
+            put rObject & CR after setObjects
+      end switch
+   end repeat
+   delete char -1 of setObjects
+   return setObjects
+end _SetBehaviors
+
+
+--> Module | Behaviors
+-
+command module_ClearDefaultBehaviors mObject
+   put the module_DefaultHierarchy of mObject into bObjects -- complicated
+   _ClearBehaviors bObjects
+end module_ClearDefaultBehaviors
+
+command module_ClearBehaviors moduleName
+   # Remove behavior loops
+   put module_ListBehaviorObjects (moduleName) into bObjects
+   _ClearBehaviors bObjects
+end module_ClearBehaviors
+
+private command _ClearHierarchyAndObjects bObjects, pMoreObjects
+   repeat for each line sObject in pMoreObjects
+      put revRuggedId (sObject) into rObject
+      if rObject is not among the lines of bObjects then
+         put CR & rObject after bObjects
+      end if
+   end repeat
+   put word 1 to -1 of bObjects into bObjects
+   --
+   _ClearBehaviors bObjects
+   return bObjects
+end _ClearHierarchyAndObjects
 
 
 --> Behavior | Hierarchy
@@ -77,79 +200,6 @@ function behavior_GetHierarchy tObject, pUseRugged
    delete char -1 of bObjects
    return bObjects
 end behavior_GetHierarchy
-
-command behavior_SetHierarchy tObject, bObjects
-   # Clear all behaviors to prevent behavior loop
-   put behavior_GetHierarchy (tObject) into hObjects -- existing hierarchy
-   _ClearHierarchyAndObjects hObjects, bObjects -- and clear the ones we are about to set
-   
-   # Clear the existing behavior hierarchy
-   if bObjects is empty then return empty
-   
-   # Set behavior hierarchy
-   _SetBehaviors tObject, bObjects
-   --
-   put the result into setObjects
-   return setObjects
-end behavior_SetHierarchy
-
-private command _SetBehaviors tObject, bObjects
-   if exists (tObject) is false then return empty
-   put revRuggedId (tObject) into tObject
-   
-   # Set behavior objects
-   repeat for each line bObject in bObjects
-      put revRuggedId (bObject) into rObject
-      
-      switch
-         case exists (rObject) is false
-         case tObject = rObject
-            next repeat
-         default
-            set the behavior of tObject to rObject
-            put rObject into tObject
-            put rObject & CR after setObjects
-      end switch
-   end repeat
-   delete char -1 of setObjects
-   return setObjects
-end _SetBehaviors
-
-
---> Module | Behaviors
--
-command module_ClearDefaultBehaviors mObject
-   put the module_DefaultHierarchy of mObject into bObjects
-   _ClearBehaviors bObjects
-end module_ClearDefaultBehaviors
-
-command module_ClearBehaviors moduleName
-   -- helps remove behavior loops
-   put module_ListBehaviorObjects (moduleName) into bObjects
-   -- put module_ListObjectAndBehaviors (moduleName) into bObjects
-   
-   _ClearBehaviors bObjects
-end module_ClearBehaviors
-
-command behavior_ClearHierarchy tObject, pMoreObjects
-   put behavior_GetHierarchy (tObject) into bObjects
-   _ClearHierarchyAndObjects bObjects, pMoreObjects
-   put the result into hObjects
-   return hObjects
-end behavior_ClearHierarchy
-
-private command _ClearHierarchyAndObjects bObjects, pMoreObjects
-   repeat for each line sObject in pMoreObjects
-      put revRuggedId (sObject) into rObject
-      if rObject is not among the lines of bObjects then
-         put CR & rObject after bObjects
-      end if
-   end repeat
-   put word 1 to -1 of bObjects into bObjects
-   --
-   _ClearBehaviors bObjects
-   return bObjects
-end _ClearHierarchyAndObjects
 
 
 --> Behavior | Add
@@ -209,45 +259,6 @@ getprop behavior_StackNames
             put bObject into tObject
       end switch
    end repeat
-end behavior_StackNames
-
-setprop behavior_StackNames stackNames
-   if stackNames is empty then return empty
-   replace comma with CR in stackNames
-   put the long id of the target into tObject
-   
-   # Clear any behaviors (or we might cause a loop)
-   behavior_ClearHierarchy tObject
-   
-   repeat for each line stackName in stackNames
-      if exists (stack stackName) is false then next repeat
-      put the name of stack stackName into bObject
-      if tObject = bObject then next repeat
-      
-      put the behavior of tObject into tBehavior
-      put the behavior of bObject into bBehavior
-      --
-      set the behavior of tObject to bObject
-      put bObject into tObject
-      put bObject & CR after bObjects
-   end repeat
-   delete char -1 of bObjects
-   return bObjects
-end behavior_StackNames
-
-setprop behavior_StackNames bStackNames
-   -- test and refactor
-   put the long id of the target into tObject
-   --
-   replace comma with CR in bStackNames
-   repeat for each line stackName in bStackNames
-      if exists (stack stackName) is false then exit repeat
-      put the stack_Object of stack stackName & CR after bObjects
-   end repeat
-   delete char -1 of bObjects
-   --
-   behavior_SetHierarchy tObject,  bObjects
-   return the result
 end behavior_StackNames
 
 
