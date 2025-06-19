@@ -12,6 +12,41 @@ The model for modules should share many of teh handlers for projects as the stru
 
 --> Working on
 -
+getprop module_Folder
+   put the long id of the target into tObject
+   put the effective filename of the defaultstack into stackPath
+   put the project_Folder of tObject into projectFolder
+   if there is not a folder projectFolder then return empty
+   --
+   put module_FolderFromPath (stackPath, projectFolder) into moduleFolder
+   return moduleFolder
+end module_Folder
+
+function module_FolderFromPath stackPath, projectFolder
+   set the itemdelimiter to slash
+   put the number of items of projectFolder into pNum
+   if item (pNum + 1) of stackPath is not "Modules" then return empty
+   
+   put item 1 to (pNum + 2) of stackPath & slash into moduleFolder
+   return moduleFolder
+end module_FolderFromPath
+
+function module_ConstructHomeStackPath moduleName, projectFolder
+   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
+   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   put project_PathFromFolder (moduleFolder) into stackPath
+   return stackPath
+end module_ConstructHomeStackPath
+
+function module_GetHomeStackPath moduleFolderName, projectName
+   put project_GetModuleFolder (moduleFolderName, projectName) into moduleFolder
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
+   return moduleHomeStackPath
+end module_GetHomeStackPath
+
+
+--> Module | Behaviors
+-
 function project_DefaultBehaviorName stackName
    return lcw_ConstructBehaviorName (stackName)
 end project_DefaultBehaviorName
@@ -220,16 +255,6 @@ getprop module_Name
    replace "_" with "|" in moduleName
    return moduleName
 end module_Name
-
-getprop module_Folder
-   put the long id of the target into tObject
-   put the effective filename of the defaultstack into stackPath
-   put the project_Folder of tObject into projectFolder
-   if there is not a folder projectFolder then return empty
-   --
-   put module_FolderFromPath (stackPath, projectFolder) into moduleFolder
-   return moduleFolder
-end module_Folder
 
 
 --> ProjectArray
@@ -516,15 +541,6 @@ private function _ListBehaviorStackPaths moduleStackPath
    return word 1 to -1 of stackPaths
 end _ListBehaviorStackPaths
 
-function module_FolderFromPath stackPath, projectFolder
-   set the itemdelimiter to slash
-   put the number of items of projectFolder into pNum
-   if item (pNum + 1) of stackPath is not "Modules" then return empty
-   
-   put item 1 to (pNum + 2) of stackPath & slash into moduleFolder
-   return moduleFolder
-end module_FolderFromPath
-
 
 --> Views
 -
@@ -779,19 +795,6 @@ function module_GetTemplateObject moduleName, pProjectFolder
    put the long id of control 1 of cd 1 of stack moduleHomeStackPath into moduleView
    return moduleView
 end module_GetTemplateObject
-
-function module_ConstructHomeStackPath moduleName, projectFolder
-   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
-   put project_PathFromFolder (moduleFolder) into stackPath
-   return stackPath
-end module_ConstructHomeStackPath
-
-function module_GetHomeStackPath moduleFolderName, projectName
-   put project_GetModuleFolder (moduleFolderName, projectName) into moduleFolder
-   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
-   return moduleHomeStackPath
-end module_GetHomeStackPath
 
 
 --> Module | Names

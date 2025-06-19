@@ -64,6 +64,12 @@ end index_GetSortedAndFiltered
 
 --> Working on
 -
+function text_ReplaceWord sString, sWord, newWord
+   put "\" & sWord & "\b" into matchExp
+   put replaceText (sString, matchExp, newWord) into newString
+   return newString
+end text_ReplaceWord
+
 command text_PrettyQuote @someText, pParamArray
    if pParamArray is an array then
       put text_Merge (someText, pParamArray) into someText
