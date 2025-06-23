@@ -42,7 +42,7 @@ on dragDrop
    set the itemdelimiter to "."
    put item 1 of it into pSlug
    --
-   put "handler." & platform_WikiDomain() into handlerDomain
+   put "handler." & platform_LivecodeDomain() into handlerDomain
    switch
       case lastWikiDomain = handlerDomain and droppedURL ends with ".json"
       case lastWikiDomain = handlerDomain and droppedURL ends with ".html"

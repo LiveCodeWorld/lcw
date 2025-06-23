@@ -10,7 +10,283 @@ version: 0.5
 The model for modules should share many of teh handlers for projects as the structures are the same
 */
 
+--> Project | Name and Short Folder
+-
+getprop project_ShortFolder
+   put the project_Folder of the target into projectFolder
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into shortFolder
+   return shortFolder
+end project_ShortFolder
+
+getprop project_Controller [menuBit]
+   put the project_ControllerPath [menuBit] of the target into mPath
+   if there is a stack mPath then
+      return the long id of stack mPath
+   else
+      return empty
+   end if
+end project_Controller
+
+getprop project_ControllerPath [menuBit]
+   put the project_MenuTitle [menuBit] of the target into mTitle
+   put the project_Folder of the target into projectFolder
+   put projectFolder & "controllers/" into cFolder
+   --
+   put lcw_PipesToUnderscore (mTitle) & ".livecodescript" into shortFile
+   --
+   put cFolder & shortFile into cPath
+   return cPath
+end project_ControllerPath
+
+getprop project_MenuTitle [menuBit]
+   if menu_IsGlobal (menuBit) then return menuBit
+   
+   put the project_Name of the target into projectName
+   if char 1 to 4 of projectName = "lcw_" then
+      delete char 1 to 4 of projectName
+   end if
+   
+   if menuBit is empty then
+      put "Global |" && projectName && "| Menu" into mTitle
+   else
+      put "Global |" && projectName && "|" && menuBit && "| Menu" into mTitle
+   end if
+   
+   return mTitle
+end project_MenuTitle
+
+function menuGroup_Controller mTitle
+   put the module_Controller [mTitle] of stack "View|Menu|Group" into mController
+   return mController
+end menuGroup_Controller
+
+getprop module_MenuTitle [menuBit]
+   if menu_IsGlobal (menuBit) then return menuBit
+   
+   put the module_Name of the target into moduleName
+   if moduleName is empty then
+      put the view_Name of the target into moduleName
+   end if
+   if moduleName is empty then return empty
+   
+   if menuBit is empty then
+      put moduleName into vName
+   else
+      put moduleName & "|" & menuBit into vName
+   end if
+   
+   put menu_GlobalTitleFromViewName (vName) into globalMenuTitle
+   return globalMenuTitle
+   
+   /*
+   put the module_ViewName of the target into vName
+   if vName is empty then return empty
+   put menu_GlobalTitleFromViewName (vName) into mTitle
+   */
+end module_MenuTitle
+
+getprop module_ControllerPath [menuBit]
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "controllers/" into cFolder
+   --
+   put the module_MenuTitle [menuBit] of the target into mTitle
+   put lcw_PipesToUnderscore (mTitle) & ".livecodescript" into shortFile
+   --
+   put cFolder & shortFile into cPath
+   return cPath
+end module_ControllerPath
+
+
 --> Working on
+-
+getprop menubar_DefaultTitles
+   put the module_Name of the target into stackName
+   if stackName is empty then
+      put the project_Name of me into stackName
+      put the project_MenuTitle of stack stackName into defaultMenu
+      -- put the project_ControllerStackNames of stack stackName into mTitles
+      put empty into mTitles
+   else
+      put the module_MenuTitle of stack stackName into defaultMenu
+      put the module_ControllerStackNames of stack stackName into mTitles
+   end if
+   
+   if mTitles is empty then
+      put defaultMenu into defaultMenuTitles
+   else
+      filter mTitles without "* | Dev | Menu"
+      line_Delete defaultMenu, mTitles
+      put defaultMenu & CR & mTitles into defaultMenuTitles
+   end if
+   
+   # Add a Edit Menu if needed
+   if line 2 of defaultMenuTitles ends with "| Edit | Menu" is false then
+      put CR & "Global | Menu | Group | Edit" after line 1 of defaultMenuTitles
+   end if
+   
+   # Add Help Menu if needed
+   put lineOffset (" | Help | Menu", defaultMenuTitles) into lineNum
+   if lineNum > 0 then
+      put line lineNum of defaultMenuTitles into helpTitle
+      delete line lineNum of defaultMenuTitles
+      put CR & helpTitle after defaultMenuTitles
+   else
+      put CR & "Global | Menu | Group | Help" after defaultMenuTitles
+   end if
+   return word 1 to -1 of defaultMenuTitles
+end menubar_DefaultTitles
+
+getprop module_ViewName
+   -- Lazy default
+   -- Add definitive handler to stack script and card script for clarity
+   put the module_TemplateObject of the target into templateObject
+   if exists (templateObject) is false then return empty
+   
+   put the view_Name of templateObject into viewName
+   return viewName
+end module_ViewName
+
+getprop module_TemplateObject
+   -- Lazy default (first control could be something else)
+   -- Add definitive handler to stack script and card script for clarity
+   
+   put the long id of the target into tObject
+   put the stack_Name of tObject into moduleName
+   
+   # Views should define the view_Object property of the stack or card
+   put the long id of cd 1 of stack moduleName into firstCard
+   put the view_Object of firstCard into viewObject
+   if exists (viewObject) then return viewObject
+   
+   put the module_DefaultViewObject of tObject into fasd
+   return safd
+end module_TemplateObject
+
+getprop module_DefaultViewObject
+   put the long id of cd 1 of the target into firstCard
+   if exists (control 1 of firstCard) is false then return empty
+   
+   put the long id of control 1 of firstCard into viewObject
+   put the view_Name of viewObject into vName
+   put the stack_Name of viewObject into stackName
+   if vName = stackName then
+      return viewObject
+   else
+      return emnpty
+   end if
+end module_DefaultViewObject
+
+command module_Initialise moduleName, projectName
+   -- for convenience
+   put project_GetModuleFolder (moduleName, projectName) into moduleFolder
+   if there is not a folder moduleFoldeer then return false
+   project_InitialiseFolder moduleFolder
+   return true
+end module_Initialise
+
+function menu_TitleFromController mController
+   -- Caution: we assume that the stack is named the same as the global menu
+   put the stack_Name of mController into stack_Name
+   put the short name of  mController into mTitle
+   return mTitle
+end menu_TitleFromController
+
+function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
+   -- see "menu_GlobalTitleFromViewName"
+   
+   replace "_" with "|" in moduleStackName
+   menu_NormalizeTitle moduleStackName, pMakePretty
+   set the itemdelimiter to " | "
+   if item 1 of moduleStackName is not "Global" then put "Global | " before moduleStackName
+   if item 2 of moduleStackName = "View" then delete item 2 of moduleStackName
+   if item -1 of moduleStackName is not "Menu" then put " | Menu" after moduleStackName
+   return moduleStackName
+end module_ConstructGlobalMenuTitle
+
+getprop module_View
+   -- a lazy default (should have specific handler in card script or behavior)
+   put the short name of the defaultstack into stackName
+   put the long id of cd 1 of stack stackName into cardObject
+   if exists (control 1 of cardObject) is false then return empty
+   
+   put the view_Name of control 1 of cardObject into viewName
+   if viewName = stackName then
+      return the long id of control 1 of cardObject
+   end if
+end module_View
+
+getprop module_ViewName [moduleName]
+   if moduleName is empty then
+      put the module_View of the target into moduleView
+   else
+      put module_GetTemplateObject (moduleName) into moduleView
+   end if
+   
+   if exists (moduleView) is false then return empty
+   put the view_Name of moduleView into viewName
+   return viewName
+end module_ViewName
+
+getprop module_HomeStack [moduleName]
+   put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
+   if exists (stack moduleHomeStackPath) is false then return empty
+   put the name of stack moduleHomeStackPath into stackObject
+   return stackObject
+end module_HomeStack
+
+getprop project_ControllerStackNames
+   put the long id of the target into tObject
+   put the project_Controllers of tObject into cObjects
+   repeat for each line cObject in cObjects
+      put the stack_Name of cObject into cName
+      put cName & CR after cNames 
+   end repeat
+   delete char -1 of cNames
+   sort cNames
+   return cNames
+end project_ControllerStackNames
+
+getprop project_Controllers
+   put the project_Folder of the target into projectFolder
+   put projectFolder & "controllers/" into projectControllerFolder
+   put folder_ListStackPaths (projectControllerFolder) into stackPaths
+   
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the name of stack stackPath & CR after projectControllers
+   end repeat
+   delete char -1 of projectControllers
+   return projectControllers
+end project_Controllers
+
+getprop module_Controllers
+   put the module_Folder of the target into moduleFolder
+   put moduleFolder & "controllers/" into moduleControllerFolder
+   put folder_ListStackPaths (moduleControllerFolder) into stackPaths
+   
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      put the name of stack stackPath & CR after moduleControllers
+   end repeat
+   delete char -1 of moduleControllers
+   return moduleControllers
+end module_Controllers
+
+getprop module_ControllerStackNames
+   put the long id of the target into tObject
+   put the module_Controllers of tObject into cObjects
+   repeat for each line cObject in cObjects
+      put the stack_Name of cObject into cName
+      put cName & CR after cNames 
+   end repeat
+   delete char -1 of cNames
+   sort cNames
+   return cNames
+end module_ControllerStackNames
+
+
+--> Module | Folder
 -
 getprop module_Folder
    put the long id of the target into tObject
@@ -62,9 +338,9 @@ getprop module_BehaviorStackNames
 end module_BehaviorStackNames
 
 -- getprop module_BehaviorStackNames
-   put the module_Name of the target into mName
-   put module_ListBehaviorStackNames (mName) into mBehaviorStackNames
-   return mBehaviorStackNames
+put the module_Name of the target into mName
+put module_ListBehaviorStackNames (mName) into mBehaviorStackNames
+return mBehaviorStackNames
 end module_BehaviorStackNames
 
 function module_ListBehaviorStackNames moduleName, pProjectName
@@ -601,49 +877,6 @@ getprop module_BehaviorPaths
    return stackPaths
 end module_BehaviorPaths
 
-getprop module_MenuTitle [menuBit]
-   if menu_IsGlobal (menuBit) then return menuBit
-   
-   put the module_Name of the target into moduleName
-   if moduleName is empty then
-      put the view_Name of the target into moduleName
-   end if
-   if moduleName is empty then return empty
-   
-   if menuBit is empty then
-      put moduleName into vName
-   else
-      put moduleName & "|" & menuBit into vName
-   end if
-   
-   put menu_GlobalTitleFromViewName (vName) into globalMenuTitle
-   return globalMenuTitle
-end module_MenuTitle
-
-getprop module_ControllerStackNames
-   put the long id of the target into tObject
-   put the module_Controllers of tObject into cObjects
-   repeat for each line cObject in cObjects
-      put the stack_Name of cObject into cName
-      put cName & CR after cNames 
-   end repeat
-   delete char -1 of cNames
-   sort cNames
-   return cNames
-end module_ControllerStackNames
-
-getprop module_View
-   -- a lazy default (should have specific handler in card script or behavior)
-   put the short name of the defaultstack into stackName
-   put the long id of cd 1 of stack stackName into cardObject
-   if exists (control 1 of cardObject) is false then return empty
-   
-   put the view_Name of control 1 of cardObject into viewName
-   if viewName = stackName then
-      return the long id of control 1 of cardObject
-   end if
-end module_View
-
 
 --> Module | Name and Short Folder
 -
@@ -663,33 +896,9 @@ getprop module_Controller [menuBit]
    end if
 end module_Controller
 
-getprop module_ControllerPath [menuBit]
-   put the module_Folder of the target into moduleFolder
-   put moduleFolder & "controllers/" into cFolder
-   --
-   put the module_MenuTitle [menuBit] of the target into mTitle
-   put lcw_PipesToUnderscore (mTitle) & ".livecodescript" into shortFile
-   --
-   put cFolder & shortFile into cPath
-   return cPath
-end module_ControllerPath
 
-
---> Working on
+--> Module | Props
 -
-getprop module_Controllers
-   put the module_Folder of the target into moduleFolder
-   put moduleFolder & "controllers/" into moduleControllerFolder
-   put folder_ListStackPaths (moduleControllerFolder) into stackPaths
-   
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      put the name of stack stackPath & CR after moduleControllers
-   end repeat
-   delete char -1 of moduleControllers
-   return moduleControllers
-end module_Controllers
-
 getprop module_BahaviorFolder
    put the module_Folder of the target into moduleFolder
    put moduleFolder & "behaviors/" into moduleBehaviorFolder
@@ -699,25 +908,6 @@ getprop module_BahaviorFolder
       return empty
    end if
 end module_BahaviorFolder
-
-getprop module_ViewName [moduleName]
-   if moduleName is empty then
-      put the module_View of the target into moduleView
-   else
-      put module_GetTemplateObject (moduleName) into moduleView
-   end if
-   
-   if exists (moduleView) is false then return empty
-   put the view_Name of moduleView into viewName
-   return viewName
-end module_ViewName
-
-getprop module_HomeStack [moduleName]
-   put the module_HomeStackPath [moduleName] of the target into moduleHomeStackPath
-   if exists (stack moduleHomeStackPath) is false then return empty
-   put the name of stack moduleHomeStackPath into stackObject
-   return stackObject
-end module_HomeStack
 
 
 --> Project
@@ -729,33 +919,6 @@ function project_GetModuleFolder moduleFolderName, projectName, pRepoFolder
    put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
    return moduleFolder
 end project_GetModuleFolder
-
-command module_Initialise moduleName, projectName
-   -- for convenience
-   put project_GetModuleFolder (moduleName, projectName) into moduleFolder
-   if there is not a folder moduleFoldeer then return false
-   project_InitialiseFolder moduleFolder
-   return true
-end module_Initialise
-
-function menu_TitleFromController mController
-   -- Caution: we assume that the stack is named the same as the global menu
-   put the stack_Name of mController into stack_Name
-   put the short name of  mController into mTitle
-   return mTitle
-end menu_TitleFromController
-
-function module_ConstructGlobalMenuTitle moduleStackName, pMakePretty
-   -- see "menu_GlobalTitleFromViewName"
-   
-   replace "_" with "|" in moduleStackName
-   menu_NormalizeTitle moduleStackName, pMakePretty
-   set the itemdelimiter to " | "
-   if item 1 of moduleStackName is not "Global" then put "Global | " before moduleStackName
-   if item 2 of moduleStackName = "View" then delete item 2 of moduleStackName
-   if item -1 of moduleStackName is not "Menu" then put " | Menu" after moduleStackName
-   return moduleStackName
-end module_ConstructGlobalMenuTitle
 
 function module_ListControllerStackPaths moduleName, projectFolder
    put module_GetControllerFolder (moduleName, projectFolder) into moduleControllerFolder

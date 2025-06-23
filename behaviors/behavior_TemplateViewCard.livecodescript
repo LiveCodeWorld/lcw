@@ -80,11 +80,10 @@ getprop template_View
 end template_View
 
 getprop menubar_View
-   if exists (group "View|Menu|Group" of me) then
-      return the long id of group "View|Menu|Group" of me
-   else
-      return empty
-   end if
+   put "View|Menu|Group" into vName
+   get exists (group vName)
+   put the card_Views [vName] of me into mGroup
+   return mGroup
 end menubar_View
 
 
