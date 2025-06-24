@@ -71,7 +71,7 @@ command file_ReplaceHome @fileOrFolder
       put the number of items of $HOME into itemNum
       put "~" into item 1 to itemNum of fileOrFolder
    else
-      file_StripHome longFile
+      file_StripHome fileOrFolder
    end if
 end file_ReplaceHome
 
