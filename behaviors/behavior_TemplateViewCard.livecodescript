@@ -20,90 +20,11 @@ You can of course override this on the cards script, or set another behavior the
 local LocalArray
 
 
---> Object | Guess
--
-getprop view_Object
-   return the menu_TargetGuess of me
-end view_Object
-
-getprop menu_TargetGuess
-   # Hard Wired
-   put the displayed_Object of me into viewObject
-   if exists (viewObject) then return viewObject
-   
-   # Default to first control
-   if exists (control 1 of me) is false then
-      return empty
-   end if
-   put the long id of control 1 of me into viewObject
-   
-   return viewObject
-end menu_TargetGuess
-
-getprop displayed_Object [tObject]
-   put the uOPN ["displayed_Object"] of me into dView
-   if exists (dView) then
-      return dView
-   else
-      return tObject
-   end if
-end displayed_Object
-
-setprop displayed_Object dView
-   if exists (dView) then
-      put revRuggedId(dView) into dView
-      set the uOPN ["displayed_Object"] of me to dView
-      return dView
-   else
-      set the uOPN ["displayed_Object"] of me to empty
-      return empty
-   end if
-end displayed_Object
-
-
---> Objects
--
-getprop menu_Target
-   return the view_Object of me
-end menu_Target
-
-getprop view_Template
-   return _templateView()
-end view_Template
-
-getprop template_Object
-   return _templateView()
-end template_Object
-
-getprop template_View
-   return _templateView()
-end template_View
-
-getprop menubar_View
-   put "View|Menu|Group" into vName
-   get exists (group vName)
-   put the card_Views [vName] of me into mGroup
-   return mGroup
-end menubar_View
-
-
 --> Working on
 -
+
 --> Events
 -
-on openStack
-   -- this is called for every view
-   put the stack_Name of the target into stackName
-   --
-   put _templateView() into templateView
-   if exists (templateView) is false then pass openStack
-   --
-   put the urip_Name of templateView into uripName
-   if uripName = stackName then template_Check
-   --
-   pass openStack
-end openStack
-
 on preOpenCard
    -- view_FixBehavior templateView -- too aggressive (can cause recursion if we display a view in this handler)
    
@@ -187,6 +108,73 @@ on mouseStillDown
          pass mouseStillDown
    end switch
 end mouseStillDown
+
+
+--> Object | Guess
+-
+getprop view_Object
+   return the menu_TargetGuess of me
+end view_Object
+
+getprop menu_TargetGuess
+   # Hard Wired
+   put the displayed_Object of me into viewObject
+   if exists (viewObject) then return viewObject
+   
+   # Default to first control
+   if exists (control 1 of me) is false then
+      return empty
+   end if
+   put the long id of control 1 of me into viewObject
+   
+   return viewObject
+end menu_TargetGuess
+
+getprop displayed_Object [tObject]
+   put the uOPN ["displayed_Object"] of me into dView
+   if exists (dView) then
+      return dView
+   else
+      return tObject
+   end if
+end displayed_Object
+
+setprop displayed_Object dView
+   if exists (dView) then
+      put revRuggedId(dView) into dView
+      set the uOPN ["displayed_Object"] of me to dView
+      return dView
+   else
+      set the uOPN ["displayed_Object"] of me to empty
+      return empty
+   end if
+end displayed_Object
+
+
+--> Objects
+-
+getprop menu_Target
+   return the view_Object of me
+end menu_Target
+
+getprop view_Template
+   return _templateView()
+end view_Template
+
+getprop template_Object
+   return _templateView()
+end template_Object
+
+getprop template_View
+   return _templateView()
+end template_View
+
+getprop menubar_View
+   put "View|Menu|Group" into vName
+   get exists (group vName)
+   put the card_Views [vName] of me into mGroup
+   return mGroup
+end menubar_View
 
 
 --> MenuTitle | Card
@@ -458,22 +446,6 @@ command view_FixBehavior templateView
          put the behavior_BrokenArray of cardObject into testArray
    end switch
 end view_FixBehavior
-
-command template_Check
-   put _templateView() into templateView
-   put the urip_Type of templateView into uripType     
-   switch uripType
-      case "view"
-         -- could update card menus?
-         -- set the menu_Update of templateView to true -- slows down displaying a view
-         break
-      case "view template"
-         lcw_Notify "View marked with old 'view template' markup!. Check the script and alter :)"
-         edit the script of templateView
-         break
-      default
-   end switch
-end template_Check
 
 command rect_SubtractMargins @sRect, pMargin
    margin_Normalize pMargin, leftM, topM, rightM, bottomM   

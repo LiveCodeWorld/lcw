@@ -25,8 +25,8 @@ Preferences stored as an array in a global variable gLCW ["prefsArray"]
 --> Pref | Model | Files and Folders
 -
 function pref_File
-   put specialfolderpath ("preferences") & "/lcw_Preferences.array" into prefFile
-   return prefFile
+  get specialfolderpath ("preferences")
+  return it & "/lcw_Preferences.array"
 end pref_File
 
 

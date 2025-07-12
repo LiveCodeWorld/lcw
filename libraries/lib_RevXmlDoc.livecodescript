@@ -18,40 +18,6 @@ function revXmlDoc_ListTerms scriptDictionaryArray
    return dictionaryTerms
 end revXmlDoc_ListTerms
 
-function ide_FetchDictionaryTerms
-   -- tweaks revXmlDoc_ListTerms
-   local dictionaryTerms
-   
-   put ideDocsFetchLCSEntries() into scriptDictionaryArray
-   --
-   -- some missing things from library (should get all synonyms)
-   put "char" & CR after dictionaryTerms
-   put "chars" & CR after dictionaryTerms
-   put "jsonImport" & CR after dictionaryTerms
-   put "jsonExport" & CR after dictionaryTerms
-   
-   -- Time Zone library
-   put "TimeZones" & CR after dictionaryTerms
-   put "FromUniversalTime" & CR after dictionaryTerms
-   put "ToUniversalTime" & CR after dictionaryTerms
-   --
-   revXmlDoc_Parse scriptDictionaryArray, dictionaryTerms, dicArray
-   return dictionaryTerms
-end ide_FetchDictionaryTerms
-
-command revXmlDoc_Parse scriptDictionaryArray, @dictionaryTerms, @dicArray   
-   repeat for each key indexNum in scriptDictionaryArray
-      put scriptDictionaryArray [indexNum]["type"] into entryType 
-      put scriptDictionaryArray [indexNum]["display name"] into dictionaryTerm
-      if entryType is among the items of "message,function,command,property,keyword,object,operator,control structure,constant" then
-         put dictionaryTerm & CR after dictionaryTerms
-      end if
-      put indexNum into dicArray [entryType][dictionaryTerm]
-   end repeat
-   delete char -1 of dictionaryTerms
-   sort dictionaryTerms
-end revXmlDoc_Parse
-
 
 --> RevXmlDoc
 -

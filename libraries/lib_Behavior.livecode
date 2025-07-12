@@ -8,12 +8,43 @@ version: 0.4
 
 /*
 A library for script behaviors.
+
+It has issues with trying to set scripts (ie behaviors) from a script in the behavior.
+We have not fixed this (we tried), but instead recomment avoiding carefully how they are called.
+Place and handlers that set behaviors outside of behavior.
 */
 
 
 --> Working on
 -
+private command _SetBehaviors tObject, bObjects
+   if exists (tObject) is false then return empty
+   put revRuggedId (tObject) into tObject
+   
+   # Set behavior objects
+   repeat for each line bObject in bObjects
+      put revRuggedId (bObject) into rObject
+      
+      switch
+         case exists (rObject) is false
+         case tObject = rObject
+            next repeat
+         default
+            try
+               set the behavior of tObject to rObject
+               put rObject into tObject
+               put rObject & CR after setObjects
+            catch e
+               breakpoint
+            end try
+      end switch
+   end repeat
+   delete char -1 of setObjects
+   return setObjects
+end _SetBehaviors
+
 setprop behavior_StackNames stackNames
+   -- dangerous as script might be executing
    if stackNames is empty then return empty
    put the long id of the target into tObject
    --
@@ -23,6 +54,13 @@ setprop behavior_StackNames stackNames
 end behavior_StackNames
 
 command behavior_SetStackNames stackNames, tObject
+   if tObject is empty then
+      put the long id of the target into tObject
+   end if
+   if stackNames is empty then
+      put the view_BehaviorStackNames of tObject into stackNames
+   end if
+   
    if stackNames is empty then return empty
    replace comma with CR in stackNames
    
@@ -34,7 +72,7 @@ command behavior_SetStackNames stackNames, tObject
       put the name of stack stackName into bObject
       if tObject = bObject then next repeat
       
-      # Clear bObject behavior to prevent possible recurssion
+      # Clear bObject behavior to prevent possible recursion
       put the behavior of tObject into tBehavior
       put the behavior of bObject into bBehavior
       set the behavior of bObject to empty
@@ -50,14 +88,11 @@ end behavior_SetStackNames
 
 command behavior_ClearHierarchy tObject, pMoreObjects
    put behavior_GetHierarchy (tObject) into bObjects
+   --
    _ClearBehaviors bObjects
    _ClearBehaviors pMoreObjects
    set the behavior of tObject to empty
    return bObjects
-   
-   -- _ClearHierarchyAndObjects bObjects, pMoreObjects
-   -- put the result into hObjects
-   -- return hObjects
 end behavior_ClearHierarchy
 
 private command _ClearBehaviors bObjects
@@ -100,28 +135,6 @@ command behavior_SafeClear tObject
    _ClearBehaviors hObjects
    return hObjects
 end behavior_SafeClear
-
-private command _SetBehaviors tObject, bObjects
-   if exists (tObject) is false then return empty
-   put revRuggedId (tObject) into tObject
-   
-   # Set behavior objects
-   repeat for each line bObject in bObjects
-      put revRuggedId (bObject) into rObject
-      
-      switch
-         case exists (rObject) is false
-         case tObject = rObject
-            next repeat
-         default
-            set the behavior of tObject to rObject
-            put rObject into tObject
-            put rObject & CR after setObjects
-      end switch
-   end repeat
-   delete char -1 of setObjects
-   return setObjects
-end _SetBehaviors
 
 
 --> Module | Behaviors

@@ -1,6 +1,7 @@
 ﻿script "behavior_HomeCard"
 --> MetaData
 -
+copyright: David Bovill
 license: GPLv3
 name: behavior_HomeCard
 type: behaviors
@@ -32,7 +33,7 @@ on commandKeyDown whichKey
          go forward in widget "Home Browser" of me
          break
       case 4
-         put "http://future.fedwiki.org" into someURL
+         put "http://future.fedwiki.club" into someURL
          break
       case 5
          -- put "https://vector.im/beta/#/room/#fedwiki:matrix.org" into someURL

@@ -11,7 +11,7 @@ version: 0.3
 -
 getprop menu_PickConditions
    put the long id of the target into scriptObject
-   put hkey_GetCaseConditions ("menuPick,m", scriptObject) into caseConditions
+   put hkey_GetCaseConditions ("M menuPick", scriptObject) into caseConditions
    return caseConditions
 end menu_PickConditions
 

@@ -175,7 +175,7 @@ command rsync_OpenProcess localFile, wikiDomain, pShortFolder
    put the defaultFolder into oFolder
    set the defaultFolder to newFolder
    
-   put rsync_ConstructFolderPushShell (newFolder, fullPath, "root", "fedwiki.org") into someShell
+   put rsync_ConstructFolderPushShell (newFolder, fullPath, "root", "fedwiki.club") into someShell
    -- replace "'" with quote in someShell
    --
    set the cursor to watch

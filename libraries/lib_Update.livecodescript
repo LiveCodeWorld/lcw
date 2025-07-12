@@ -10,7 +10,7 @@ version: 0.4
 Used by the behavior (if running LCW), of the ScriptEditor Apply button. 
 This behavior is the LCW Project stack behavior_IdeCompileButton.
 
-Consider simplifying the export to make it a streaight unicode script.
+Consider simplifying the export to make it a straight unicode script.
 We can split into handlers later when we need.
 */
 
@@ -41,90 +41,6 @@ getprop menuBar_StackFileArray
    return mStackFileArray
 end menuBar_StackFileArray
    
-private function _MenuBarStackFileArray moduleObject
-   put the menubar_View of moduleObject into mBarGroup
-   switch
-      case exists (mBarGroup) is false
-         -- not a menubar_View
-      case mBarGroup = moduleObject
-         -- it's the menubar group module no need to add
-         return empty
-      default
-         -- see "module_StackFileArray"
-         put the view_Name of mBarGroup into mBarViewName
-         put view_GetTemplateObject (mBarViewName) into mBarTemplateObject
-         if exists (mBarTemplateObject) then
-            put the stackFile_Array of mBarTemplateObject into mStackFileArray
-            return mStackFileArray
-         else
-            return empty
-         end if
-   end switch
-end _MenuBarStackFileArray
-
-command module_Update moduleStackName, pRepoFolder
-   set the cursor to watch
-   put view_GetTemplateObject (moduleStackName, pRepoFolder) into moduleObject
-   put the module_Folder of moduleObject into moduleFolder
-   
-   # Set module stackfiles
-   put the folder_StackFileArray of moduleObject into stackFileArray
-   put the stackFile_Array of moduleObject into oStackFileArray
-   union stackFileArray with oStackFileArray
-   
-   # Add menubar_View stackFiles
-   put _MenuBarStackFileArray (moduleObject) into mStackFileArray
-   union stackFileArray with mStackFileArray
-   
-   set the stackFile_Array of moduleObject to stackFileArray
-   
-   # Set the default behaviors
-   set the module_Behaviors of moduleObject to true
-   
-   # Save
-   save stack moduleStackName
-   
-   # Export Arrays as json
-   module_ExportMenusAndStackFiles moduleFolder
-   put the result into moduleArray
-   return moduleArray
-end module_Update
-
-command project_UpdateArray projectName
-   if exists (stack projectName) is false then return empty
-   
-   # Construct projectArray and save (including modules)
-   put the project_Folder of stack projectName into projectFolder
-   project_ExportMenusAndStackFiles projectFolder
-   put the result into projectArray
-   
-   # Set project home stackfiles (requires lib_StackFiles)
-   put projectArray ["stackFileArray"] into stackFileArray
-   set the stackfile_Array of stack projectName to stackFileArray
-   save stack projectName
-   
-   return projectArray
-end project_UpdateArray
-
-command project_ExportMenusAndStackFiles projectFolder 
-   # Construct project array and update global menu array
-   put project_ConstructArrayFromFolder (projectFolder) into projectArray
-   
-   # Store project array
-   project_StoreArray projectFolder, projectArray
-   
-   return projectArray
-end project_ExportMenusAndStackFiles
-
-command stackFile_FixStackFiles projectName
-   put project_ConstructStackFileArray (projectName) into stackFileArray
-   set the stackfile_Array of stackFileStack to stackFileArray
-   put the result into stackFileTable
-   --
-   put stackFileTable into resultArray ["stackFileTable"]
-   return resultArray
-end stackFile_FixStackFiles
-
 
 --> Props
 -
@@ -246,8 +162,71 @@ function module_ConstructArray moduleFolder
 end module_ConstructArray
 
 
---> Tidy
+--> Deps
 -
+command module_Update moduleStackName, pRepoFolder
+   set the cursor to watch
+   put view_GetTemplateObject (moduleStackName, pRepoFolder) into moduleObject
+   put the module_Folder of moduleObject into moduleFolder
+   
+   # Set module stackfiles
+   put the folder_StackFileArray of moduleObject into stackFileArray
+   put the stackFile_Array of moduleObject into oStackFileArray
+   union stackFileArray with oStackFileArray
+   
+   # Add menubar_View stackFiles
+   put _MenuBarStackFileArray (moduleObject) into mStackFileArray
+   union stackFileArray with mStackFileArray
+   
+   set the stackFile_Array of moduleObject to stackFileArray
+   
+   # Set the default behaviors
+   set the module_Behaviors of moduleObject to true
+   
+   # Save
+   save stack moduleStackName
+   
+   # Export Arrays as json
+   module_ExportMenusAndStackFiles moduleFolder
+   put the result into moduleArray
+   return moduleArray
+end module_Update
+
+command project_UpdateArray projectName
+   if exists (stack projectName) is false then return empty
+   
+   # Construct projectArray and save (including modules)
+   put the project_Folder of stack projectName into projectFolder
+   project_ExportMenusAndStackFiles projectFolder
+   put the result into projectArray
+   
+   # Set project home stackfiles (requires lib_StackFiles)
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the stackfile_Array of stack projectName to stackFileArray
+   save stack projectName
+   
+   return projectArray
+end project_UpdateArray
+
+command project_ExportMenusAndStackFiles projectFolder 
+   # Construct project array and update global menu array
+   put project_ConstructArrayFromFolder (projectFolder) into projectArray
+   
+   # Store project array
+   project_StoreArray projectFolder, projectArray
+   
+   return projectArray
+end project_ExportMenusAndStackFiles
+
+command stackFile_FixStackFiles projectName
+   put project_ConstructStackFileArray (projectName) into stackFileArray
+   set the stackfile_Array of stackFileStack to stackFileArray
+   put the result into stackFileTable
+   --
+   put stackFileTable into resultArray ["stackFileTable"]
+   return resultArray
+end stackFile_FixStackFiles
+
 command env_ExportMenusAndStackFiles pListAll
    put env_ListActiveProjects (pListAll) into projectNames
    repeat for each line projectName in projectNames
@@ -499,6 +478,27 @@ end directory_NestedStackFileArray
 
 --> Private 
 -
+private function _MenuBarStackFileArray moduleObject
+   put the menubar_View of moduleObject into mBarGroup
+   switch
+      case exists (mBarGroup) is false
+         -- not a menubar_View
+      case mBarGroup = moduleObject
+         -- it's the menubar group module no need to add
+         return empty
+      default
+         -- see "module_StackFileArray"
+         put the view_Name of mBarGroup into mBarViewName
+         put view_GetTemplateObject (mBarViewName) into mBarTemplateObject
+         if exists (mBarTemplateObject) then
+            put the stackFile_Array of mBarTemplateObject into mStackFileArray
+            return mStackFileArray
+         else
+            return empty
+         end if
+   end switch
+end _MenuBarStackFileArray
+
 private command _AddControllersToProjectArray @projectArray, projectFolder, controllerPaths, pDontUpdateGlobal
    put menu_GetModel() into menuGlobalArray
    --

@@ -177,22 +177,6 @@ command ide_SetHanderFieldBehavior sBoolean
    end if
 end ide_SetHanderFieldBehavior
 
-private command _ReIndexLocalIdeMenus
-   -- for when things go wrong
-   delete variable LocalArray ["environment"]["menu"]
-   repeat for each item ideElement in "List,Script,Recent"
-      repeat for each item shortItem in "Default,Revigniter,Watch" -- "Default,Authoring,Watch"
-         put word 1 to -1 of shortItem into shortTitle
-         put ide_ConstructMenuController (ideElement, shortTitle) into mController
-         if exists (mController) is true then
-            ide_SetMenuTitle ideElement, shortTitle
-         end if
-      end repeat
-   end repeat
-   put LocalArray ["environment"]["menu"] into localEnvMenuArray
-   return localEnvMenuArray
-end _ReIndexLocalIdeMenus
-
 
 --> IDE | Menu | List
 -
@@ -572,3 +556,22 @@ command scriptField_SetTokenInfo scriptLine, testScriptLine, @thisTokenNum, @nex
       put token prevTokenNum of scriptLine into previousToken
    end if
 end scriptField_SetTokenInfo
+
+
+--> Private
+-
+private command _ReIndexLocalIdeMenus
+   -- for when things go wrong
+   delete variable LocalArray ["environment"]["menu"]
+   repeat for each item ideElement in "List,Script,Recent"
+      repeat for each item shortItem in "Default,Revigniter,Watch" -- "Default,Authoring,Watch"
+         put word 1 to -1 of shortItem into shortTitle
+         put ide_ConstructMenuController (ideElement, shortTitle) into mController
+         if exists (mController) is true then
+            ide_SetMenuTitle ideElement, shortTitle
+         end if
+      end repeat
+   end repeat
+   put LocalArray ["environment"]["menu"] into localEnvMenuArray
+   return localEnvMenuArray
+end _ReIndexLocalIdeMenus

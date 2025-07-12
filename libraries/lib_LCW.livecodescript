@@ -22,7 +22,11 @@ end module_ConstructFolder
 function module_GetFolder moduleShortFolder, projectFolder
    put folder_AddShort (projectFolder, "modules") into rootModuleFolder
    put rootModuleFolder & moduleShortFolder & slash into moduleFolder
-   return moduleFolder
+   if there is a folder moduleFolder then
+      return moduleFolder
+   else
+      return empty
+   end if
 end module_GetFolder
 
 function module_FolderFromPath stackPath, projectFolder
@@ -37,6 +41,13 @@ end module_FolderFromPath
 
 --> Menu
 -
+function menu_GetGlobalPath mTitle
+   if exists (stack mTitle) is false then return empty
+   
+   put the filename of stack mTitle into mPath
+   return mPath
+end menu_GetGlobalPath
+
 function menu_GetGlobalController mTitle, pWithModel
    if there is a stack mTitle then
       return the name of stack mTitle
@@ -427,13 +438,6 @@ getprop module_HomeStackPath [moduleName]
    if exists (stack moduleHomeStackPath) is false then return empty
    return moduleHomeStackPath
 end module_HomeStackPath
-
-getprop module_Names
-   put the project_Folder of the target into projectFolder
-   put projectFolder & "modules/" into modulesFolder
-   put folder_ListShort (modulesFolder) into moduleNames
-   return moduleNames
-end module_Names
 
 
 --> Module

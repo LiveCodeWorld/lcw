@@ -64,6 +64,18 @@ end index_GetSortedAndFiltered
 
 --> Working on
 -
+command text_StripSurroundingQuotes @someText
+   -- put token 1 of someText into someText -- does not work with single quotes
+   
+   get word 1 to -1 of someText
+   put quote & "'" into quoteChars
+   if char 1 of it is among the chars of quoteChars and char -1 of it is among the chars of quoteChars then
+      delete char 1 of someText
+      delete char -1 of someText
+   end if
+   return it = someText
+end text_StripSurroundingQuotes
+
 function text_ReplaceWord sString, sWord, newWord
    put "\" & sWord & "\b" into matchExp
    put replaceText (sString, matchExp, newWord) into newString
@@ -1003,6 +1015,12 @@ function withinQuotes textOrOffset, someContainer
    end if
 end withinQuotes
 
+function text_StripQuoted someText
+   put _ConstructQuoteReg() into someReg
+   put replaceText (someText, someReg, "•••") into strippedText
+   return strippedText
+end text_StripQuoted
+
 command text_StipQuoted @someText
    put "(" & quote & "[^" & quote & "]*" & quote & ")" into quoteReg
    text_StripReg someText, quoteReg, "•••"
@@ -1030,12 +1048,6 @@ command text_StarQuoted @someText
    end repeat
    return replacedArray
 end text_StarQuoted
-
-function text_StripQuoted someText
-   put _ConstructQuoteReg() into someReg
-   put replaceText (someText, someReg, "•••") into strippedText
-   return strippedText
-end text_StripQuoted
 
 private function _ConstructQuoteReg
    -- put "(" & quote & "[^" & quote & "]*" & quote & ")" into someReg
@@ -1093,16 +1105,3 @@ function replaceQuotedItems someList
    end repeat
    return someList
 end replaceQuotedItems
-
-command text_StripSurroundingQuotes @someText
-   -- think this should work
-   put token 1 of someText into someText
-   return empty
-   
-   get word 1 to -1 of someText
-   put quote & "'" into quoteChars
-   if char 1 of it is among the chars of quoteChars and char -1 of it is among the chars of quoteChars then
-      delete char 1 of someText
-      delete char -1 of someText
-   end if
-end text_StripSurroundingQuotes

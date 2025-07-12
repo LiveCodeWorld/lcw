@@ -4,11 +4,38 @@
 license: GPLv3
 name: model_Module
 type: models
-version: 0.5
+version: 0.6
 
 /*
 The model for modules should share many of teh handlers for projects as the structures are the same
 */
+
+
+--> Working on
+-
+getprop module_Names
+   put the project_Folder of the target into projectFolder
+   put projectFolder & "modules/" into modulesFolder
+   put folder_ListShort (modulesFolder) into moduleShortFolders
+   repeat for each line moduleFolderName in moduleShortFolders
+      put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+      put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
+      if exists (stack moduleHomeStackPath) then
+         put the short name of stack moduleHomeStackPath into moduleName
+         put moduleName & CR after moduleNames
+      end if
+   end repeat
+   delete char -1 of moduleNames
+   return moduleNames
+end module_Names
+
+getprop module_ShortFolders
+   put the project_Folder of the target into projectFolder
+   put projectFolder & "modules/" into modulesFolder
+   put folder_ListShort (modulesFolder) into moduleShortFolders
+   return moduleShortFolders
+end module_ShortFolders
+
 
 --> Project | Name and Short Folder
 -

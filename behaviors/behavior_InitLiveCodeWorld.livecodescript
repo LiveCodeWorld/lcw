@@ -56,13 +56,6 @@ getprop project_HomeStackBrowser
    return browserWidget
 end project_HomeStackBrowser
 
-getprop module_Names
-   -- a module_Name is the same as a (sub) project_Name
-   put the project_Folder ["modules"] of the target into modulesFolder
-   put folder_ListShort (modulesFolder) into moduleNames
-   return moduleNames
-end module_Names
-
 getprop module_HomeStackPath [moduleName]
    put the project_ModuleFolder [moduleName] of the target into moduleFolder
    put project_ConstructHomeStackPath (moduleFolder) into moduleHomeStackPath
@@ -997,17 +990,6 @@ end env_SetActiveProjectArray
 
 --> Modules
 -
--- command project_LoadModules homeStackNameOrPath
--- modules can be loaded in the same way a project is loaded
--- this can be slow as there are often a lot of modules with menus
-put the module_Names of stack homeStackNameOrPath into moduleNames
-repeat for each line moduleName in moduleNames
-   -- could notify
-   put module_GetFolder (moduleName, homeStackNameOrPath) into moduleFolder
-   project_SimpleInit moduleFolder
-end repeat
-end project_LoadModules
-
 function module_GetFolder moduleShortFolder, projectFolder
    put _ConstructProjectFolder ("modules", projectFolder) into rootModuleFolder
    put rootModuleFolder & moduleShortFolder & slash into moduleFolder
