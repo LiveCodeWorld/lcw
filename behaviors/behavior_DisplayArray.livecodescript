@@ -16,6 +16,21 @@ This behavior_DisplayArray script only stack behavior controls the properties of
 local LocalArray
 
 
+--> Props | Display
+-
+getprop footer_IsVisible
+   return the visible of _footerWidget()
+end footer_IsVisible
+
+setprop footer_IsVisible someBoolean
+   lock screen
+   set the visible of _footerWidget() to someBoolean
+   -- dispatch "refreshDisplay" to cd 1 of me
+   LayoutControl
+   unlock screen
+end footer_IsVisible
+
+
 --> Working on
 -
 getprop menu_Target [mTitlePath]
@@ -50,16 +65,6 @@ setprop displayed_Object dView
    set the uOPN ["displayed_Object"] of me to dView
 end displayed_Object
 
-private function _DefaultMouseTarget tObject
-   put the line_Controller of me into mouseTarget
-   if exists (mouseTarget) is true then return mouseTarget
-   
-   put the title_Controller of me into mouseTarget
-   if exists (mouseTarget) is true then return mouseTarget
-   
-   return tObject
-end _DefaultMouseTarget
-
 getprop line_Controller
    put the line_Controller of me into mController
    if exists (mController) then return mController
@@ -82,6 +87,16 @@ end mouse_Target
 setprop mouse_Target mTarget
    set the mouse_Target of me to mTarget
 end mouse_Target
+
+private function _DefaultMouseTarget tObject
+   put the line_Controller of me into mouseTarget
+   if exists (mouseTarget) is true then return mouseTarget
+   
+   put the title_Controller of me into mouseTarget
+   if exists (mouseTarget) is true then return mouseTarget
+   
+   return tObject
+end _DefaultMouseTarget
 
 command actionDoubleClick pathItems
    put the selected_Value of me into someValue
@@ -254,18 +269,7 @@ on mouseUp
    	
    switch tActionName
       case "cog"
-         put the clickloc into pLocation
-         add 2 to item 1of pLocation
-         add 4 to item 2 of pLocation
-         --
-         put the title_menu of me into mTitle
-         put _MenuButton() into mButton
-         --
-         try
-            mArray_PopUp mTitle, mButton
-         catch sError
-            mArray_PopUp "Global | Module | Error | Menu", mButton
-         end try
+         cog_Pop
       default
          # Clicked on the title
          if the shiftkey is "Down" then
@@ -273,6 +277,21 @@ on mouseUp
          end if
    end switch
 end mouseUp
+
+command cog_Pop
+   put the clickloc into pLocation
+   add 2 to item 1of pLocation
+   add 4 to item 2 of pLocation
+   --
+   put the title_Menu of me into mTitle
+   put _MenuButton() into mButton
+   --
+   try
+      mArray_PopUp mTitle, mButton
+   catch sError
+      mArray_PopUp "Global | Module | Error | Menu", mButton
+   end try
+end cog_Pop
 
 command toggle_Title
    set the title_Colour of me to colour_GetRandom()
@@ -291,9 +310,10 @@ command toggle_Title
 end toggle_Title
 
 on actionInspect pPath
-   put _getValue (pathItems) into someValue
+   put _GetValue (pPath) into someValue
    put the mouse_Up of me into mouseUpCommand
    if mouseUpCommand is empty then
+      put someValue
       pass actionInspect
    else
       _SetMouseTargets tObject, displayView, mouseTarget
@@ -332,7 +352,7 @@ on hiliteChanged
       --
       switch
          case exists (mController) is false
-            breakpoint
+            breakpoint -- use a default?
             put the tool_LibName of me into libName
             ask_CreateMenuFromObject mTitle, libName
             break
@@ -1076,20 +1096,6 @@ end hilited_Line
 setprop hilited_Line lineNum
    set the hilited_Element of me to lineNum
 end hilited_Line
-
-
---> Props | Display
--
-getprop footer_IsVisible
-   return the visible of _footerWidget()
-end footer_IsVisible
-
-setprop footer_IsVisible someBoolean
-   lock screen
-   set the visible of _footerWidget() to someBoolean
-   dispatch "refreshDisplay" to cd 1 of me
-   unlock screen
-end footer_IsVisible
 
 
 --> Props | Title

@@ -119,7 +119,7 @@ end folder_Add
 command lcw_AnswerStack pComment
    if pComment is empty then put "Select a stack..." into pComment
    --
-   lcw_AnswerFile pComment, "LiveCode Stacks|rev|RSTK"
+   lcw_AnswerFile pComment, "LiveCode Stacks|rev,livecodescript,livecode|RSTK"
    put the result into stackPath
    return stackPath
 end lcw_AnswerStack

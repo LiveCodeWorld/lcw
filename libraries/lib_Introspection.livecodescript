@@ -9,6 +9,15 @@ version: 0.3
 
 --> Hkey | Switch
 -
+getprop menu_CaseConditions [hName]
+   put the long id of the target into sObject
+   --
+   set the itemdelimiter to "_"
+   put "M" && "menu_" & item -1 of hName into shortHkey
+   put hkey_GetCaseConditions (shortHkey, sObject) into caseConditions
+   return caseConditions
+end menu_CaseConditions
+
 getprop menu_PickConditions
    put the long id of the target into scriptObject
    put hkey_GetCaseConditions ("M menuPick", scriptObject) into caseConditions

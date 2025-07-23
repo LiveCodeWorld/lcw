@@ -20,6 +20,28 @@ This allows us to filter out noise with regard to handler_Calls
 -
 local LivecodeDictionaryTerms
 
+
+--> Working on
+-
+private command _AddMissingTerms @dictTerms
+   -- assume dictTerms is not empty
+   put CR & "lock" after dictTerms
+   put CR & "unlock" after dictTerms
+   
+   put CR & "char" after dictTerms
+   put CR & "chars" after dictTerms
+   put CR & "jsonImport" after dictTerms
+   put CR & "jsonExport" after dictTerms
+   
+   # Time Zone library
+   put CR & "TimeZones" after dictTerms
+   put CR & "FromUniversalTime" after dictTerms
+   put CR & "ToUniversalTime" after dictTerms
+end _AddMissingTerms
+
+
+--> Display
+-
 command display_DictPageData dTitle
    put dict_TermData( dTitle) into tData
    display_Data tData, "dict_TermData()"
@@ -383,19 +405,6 @@ function dict_ListTerms pAddMissing
    end if
    return dictTerms
 end dict_ListTerms
-
-private command _AddMissingTerms @dictTerms
-   -- assume dictTerms is not empty
-   put CR & "char" after dictTerms
-   put CR & "chars" after dictTerms
-   put CR & "jsonImport" after dictTerms
-   put CR & "jsonExport" after dictTerms
-   
-   # Time Zone library
-   put CR & "TimeZones" after dictTerms
-   put CR & "FromUniversalTime" after dictTerms
-   put CR & "ToUniversalTime" after dictTerms
-end _AddMissingTerms
 
 command dict_ParseArray scriptDictionaryArray, @dictTerms, @dicArray   
    repeat for each key indexNum in scriptDictionaryArray

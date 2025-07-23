@@ -7,83 +7,165 @@ type: model
 version: 0.8
 
 /*
-We now use one global variable gLCW, within which we store:
 
-- Global Menus
-- Global Drag
-- Hkey Place Array
-- Livecode Dictionary Terms
-- activeMenuArray
-- environment
-- prefsArray
-
-of which "Global Menus" and "Hkey Place Array" are essential. 
-Looking to adopt a naming convention in which capitalised keys signify data that is essential to operation,
-with lower case keys being useful places to store information.
-
-A number of the datasets are large and not needed to be loaded into memory except for seed reasons.
-So Livecode Dictionary Terms is used in parsing handlers during every script compile. 
-Loading a large array from disk and saving it is too slow, however migration to a database should be easy.
-For now we load and unload these datasets into memory as needed.
-
-Previously we used the following memory resident datastructures. They were richer and more complex.
-We have now simplified them.
-There were 5 globals in use by the old hArray environment. These were:
-
--  gHkeyArray
--  gLibrarySetArray
--  gPrefs_Array
-- gTemp_ActiveMenuArray
-
-gHkeyArray is broken down into:
-
--  Global Menus = an array of all Global Menus linked to a numerically linked array of menu items, and the ruggedID of the menu_Controller 
--  behaviorArray = an array of objects with behaviors linked to metadata about that object
--  handlerArray = also known as hArray - a huge array of all handlers linked to every object they occur in with metadata such as hash and lineNums in script.
--  keywordArray = keyword automatically extracted from (library handlers) referencing the last object they were exported from
--  objectType = an automatically cahced index of objects tagged using the uRIP metadata convention on script compile
--  scriptArray = metadata about an objects script (without information about depndency calls)
-
-gLibrarySetArray is broken down to data and metadata:
-
--  data         = front, back, used arrays and information like whether to add the rev_AddBehaviorHacks
-- metadata  = the library set name
-
-gOPN at the moment contains just the active library_SetName
-gPrefs_Array contains things like paths to command line tools
-gTemp_ActiveMenuArray is a global that contains infromation useful to the functioning of the last or current menu being used
-
-These should probably be rationalised into one for clarity, and ease of removal.
-Let's call the new array we move over to:  gLiveCodeWorld
-But that is for later...
-
-The handlers have a rough equivalent with regard to "library" handlers.
-
-The aim is to move over from one huge library, to individual projects.
-Each project would have it's own "home" stack, where we store stackfiles to all the stacks it needs to know about.
-Associated with this home stack we can use the standardised technique of logging metadata,
-where we can store arbitrary information.
-
-In this way the metadata of the projects home stack contains all the information we need about the project.
-
-For now let's keep using the old "library" rather than "project" based model for stackFiles.
-By this I mean we continue to store set array in the global library rather than in a folder associated with the project.
-The first stage of teh transition is to see if multiple home stacks with stackfiles works well.
-See also "meta_StackArrayFile" for project level stackfile storage
 */
 
 
 --> Working on
 -
 
+--> Env
+-
+getprop env_PathArray
+   -- path relative to the LCW Environment Root
+   put the dep_StackNames of the target into sNames
+   replace comma with CR in sNames
+   repeat for each line sName in sNames
+      get the env_RelativeFile of stack sName
+      put it into dArray [sName]
+   end repeat
+   return dArray
+end env_PathArray
+
 
 --> Props
 -
+getprop project_Array
+   put the project_Name of the target into projectName
+   put project_GetArray (projectName) into projectArray
+   return projectArray
+   
+   put the project_Folder of the target into pFolder
+   put project_GetArrayFromFolder (pFolder) into projectArray
+   
+   put the project_JsonFile of the target into projectArrayFile
+   put array_FromFile (sFile) into projectArray
+   return projectArray
+end project_Array
+
 setprop project_Array projectArray
    put the project_JsonFile of the target into projectArrayFile
    array_ToFile projectArrayFile, projectArray
    return modelDataFile
 end project_Array
+
+getprop project_ModuleFolder [pModuleName]
+   put the template_Object of the target into tObject
+   if exists (tObject) is true then
+      -- we are asking about a view
+      put the stack_Object of tObject into stackObject
+   else
+      put the stack_Object of the target into stackObject
+   end if
+   put the effective filename of stackObject into stackPath
+   if stackPath is empty then return empty
+   
+   ## Find
+   put module_FindFolder (stackPath) into maybeModuleFolder
+   --
+   set the itemdelimiter to slash
+   put item -2 of maybeModuleFolder into testPathItem
+   switch
+      case maybeModuleFolder is empty
+         return empty
+      case pModuleName is not empty
+         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
+         return moduleFolder
+      case testPathItem = "modules"
+         return maybeModuleFolder
+      default
+         return empty
+   end switch
+end project_ModuleFolder
+
+getprop project_UsedStackNames
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackNames (projectName) after stackNames
+   
+   if projectName = "LCW" then
+      -- here we add the root "LCW" stack
+      -- it may be better not to use the home stacks and instead have minmal scripts there.
+      put "LCW" & CR & stackNames into usedStackNames
+      return word 1 to -1 of usedStackNames
+   else
+      return stackNames
+   end if
+end project_UsedStackNames
+
+getprop project_Name
+   -- assume folder name = project name
+   set the itemdelimiter to slash
+   put the project_Folder of the target into projectFolder
+   return item -1 of projectFolder
+end project_Name
+
+getprop project_Folder
+   -- latest simplest version based on naming conventions and folder structure
+   -- does not allow projects outside of the LCW reop folder  
+   
+   put the effective filename of the defaultstack into stackPath
+   if stackPath is empty then return empty
+   put project_FolderFromPath (stackPath) into projectFolder
+   return projectFolder
+end project_Folder
+
+getprop project_IsActive
+   put the project_Name of the target into projectName
+   put env_ProjectIsActive (projectName) into someBoolean
+   return someBoolean
+end project_IsActive
+
+getprop project_HomeStack
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into stackPath
+   
+   put project_FindHomeStackPath (stackPath) into projectStackPath
+   if projectStackPath is empty then return empty
+   
+   put the name of stack projectStackPath into stackObject
+   return stackObject 
+end project_HomeStack
+
+getprop project_UsedStackPaths
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackPaths (projectName) after stackPaths
+   
+   if projectName = "LCW" then
+      put the filename of stack projectName & CR & stackPaths into usedStackPaths
+      return word 1 to -1 of usedStackPaths
+   else
+      return stackPaths
+   end if
+end project_UsedStackPaths
+
+getprop project_DependencyArray
+   put the project_Name of the target into projectName
+   put env_GetRepoFolder() into repoFolder
+   --
+   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
+   return projectDepArray
+end project_DependencyArray
+
+getprop project_HomeStackBrowser
+   put the project_Name of the target into pHomeStackName
+   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
+   return browserWidget
+end project_HomeStackBrowser
+
+
+--> Project | Files
+-
+function project_FolderFromPath stackPath
+   set the itemdelimiter to slash
+   put env_GetRepoFolder() into repoFolder
+   put the number of items of repoFolder + 1 into itemNum
+   put item 1 to itemNum of stackPath & slash into projectFolder
+   --
+   return projectFolder
+end project_FolderFromPath
 
 
 --> Project | Array | Model

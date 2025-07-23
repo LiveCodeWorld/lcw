@@ -130,12 +130,12 @@ getprop checked_ShowField [dView]
 end checked_ShowField
 
 on menu_ShowFooter dView
-   put the show_Footer of dView into sBoolean
-   set the show_Footer of dView to (sBoolean is false)
+   put the footer_IsVisible of dView into sBoolean
+   set the footer_IsVisible of dView to (sBoolean is false)
 end menu_ShowFooter
 
 getprop checked_ShowFooter [dView]
-   put the show_Footer of dView into sBoolean
+   put the footer_IsVisible of dView into sBoolean
    return sBoolean
 end checked_ShowFooter
 
@@ -180,3 +180,19 @@ on menu_TreeStackInspector dView
    put the stack_Object of dView into stackObject
    display_ObjectProperties stackObject
 end menu_TreeStackInspector
+
+private on ______
+end ______
+
+on menu_InspectTemplate dView
+   put the template_Object of dView into tObject
+   object_GoTo tObject, false
+   --
+   put the behavior of tObject into bObject
+   edit the script of bObject
+   --
+   put the stack_Name of me into mStackName
+   display_ModuleTools mStackName
+end menu_InspectTemplate
+
+

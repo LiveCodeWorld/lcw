@@ -181,8 +181,8 @@ setprop array_Data [modelNameItems] modelArray
    return modelArrayFile
 end array_Data
 
-function array_FromFile someFile, pUseMerge
-   put url ("binfile:" & someFile) into someData
+function array_FromFile sFile, pUseMerge
+   put url ("binfile:" & sFile) into someData
    if someData is empty then return empty
    
    # Switch depending on file type

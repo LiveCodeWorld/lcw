@@ -11,11 +11,70 @@ version: 0.8
 
 --> Working on
 -
-function module_ConstructFolder moduleName, projectName
-   put lcw_PipesToUnderscore (moduleName) into moduleFolderName
+getprop project_DependencyArray
+   put the project_Name of the target into projectName
+   put env_GetRepoFolder() into repoFolder
    --
-   put project_GetFolder (projectName) into projectFolder
-   put module_GetFolder (moduleFolderName, projectFolder) into moduleFolder
+   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
+   return projectDepArray
+end project_DependencyArray
+
+function env_ConstructProjectDepArray projectName, repoFolder
+   local projectDepArray
+   env_CrawlProjectDeps projectDepArray, projectName, repoFolder
+   return projectDepArray
+end env_ConstructProjectDepArray
+
+command env_CrawlProjectDeps @projectDepArray, projectName
+   -- we do not assume the project home stack is loaded into memory
+   -- we base everything on naming conventions, and folder structure
+   
+   -- first we check for recursion
+   if projectDepArray [projectName] is an array then
+      return "Already added to projectDepArray"
+   end if
+   
+   -- now let's guess the projectHomeStackPath
+   put env_GetProjectHomePath (projectName) into stackPath
+   if stackPath is empty then
+      put merge ("Project home stack does not exist!") into projectDepArray [projectName]["Error"]["msg"]
+      put projectName into projectDepArray [projectName]["Error"]["projectName"]
+      put stackPath into projectDepArray [projectName]["Error"]["path"]
+      return "Already indexed"
+   else
+      put stackPath into projectDepArray [projectName]["path"]
+   end if
+   
+   -- now recurse
+   put the project_Deps of stack projectName into projectDeps
+   repeat for each item nextProjectName in projectDeps
+      env_CrawlProjectDeps projectDepArray, nextProjectName
+   end repeat
+   return "Finished deps"
+end env_CrawlProjectDeps
+
+getprop menu_Controller
+   put the long id of the target into tObject
+   -- breakpoint -- implement locally
+   --
+   put the menu_Title of tObject into mTitle
+   return menu_GetGlobalController (mTitle)
+end menu_Controller
+
+setprop menu_Controller [mTitle] mController
+   breakpoint -- should be implemented locally
+   menu_SetGlobalController mTitle, mController
+   return the result
+end menu_Controller
+
+function module_ConstructFolder moduleName, projectName
+   -- put project_GetFolder (projectName) into projectFolder
+   put env_ProjectFolder (projectName) into projectFolder
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
+   
+   # Add short module folder
+   put lcw_PipesToUnderscore (moduleName) into mShortFolder
+   put rootModuleFolder & mShortFolder & slash into moduleFolder
    return moduleFolder
 end module_ConstructFolder
 
@@ -51,14 +110,6 @@ end menu_GetGlobalPath
 function menu_GetGlobalController mTitle, pWithModel
    if there is a stack mTitle then
       return the name of stack mTitle
-   end if
-   
-   if pWithModel is true then
-      put menu_GetModel() into mModel
-      put gMenuModel [mTitle]["mController"] into mController
-      --
-      dispatch "display_RenameMenu"  with mTitle,mController,mModel
-      return mController
    else
       return empty
    end if
@@ -67,18 +118,6 @@ end menu_GetGlobalController
 
 --> Menu | Model
 -
-getprop menu_Controller
-   breakpoint -- should be implemented locally
-   put the menu_Title of the target into mTitle
-   return menu_GetGlobalController (mTitle)
-end menu_Controller
-
-setprop menu_Controller [mTitle] mController
-   breakpoint -- should be implemented locally
-   menu_SetGlobalController mTitle, mController
-   return the result
-end menu_Controller
-
 function menu_ListLoadedTitles pFilter
    put the mainstacks into stackNames
    put revLoadedStacks("Application") into stackNames
@@ -403,14 +442,6 @@ getprop project_UsedStackPaths
    end if
 end project_UsedStackPaths
 
-getprop project_DependencyArray
-   put the project_Name of the target into projectName
-   put env_GetRepoFolder() into repoFolder
-   --
-   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
-   return projectDepArray
-end project_DependencyArray
-
 getprop project_HomeStackBrowser
    put the project_Name of the target into pHomeStackName
    put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
@@ -548,34 +579,6 @@ command env_SimpleLoadProject projectName, homeStackPath, pForceLoad
    end try
    return empty
 end env_SimpleLoadProject
-
-command env_CrawlProjectDeps @projectDepArray, projectName
-   -- we do not assume the project home stack is loaded into memory
-   -- we base everything on naming conventions, and folder structure
-   
-   -- first we check for recursion
-   if projectDepArray [projectName] is an array then
-      return "Already added to projectDepArray"
-   end if
-   
-   -- now let's guess the projectHomeStackPath
-   put env_GetProjectHomePath (projectName) into stackPath
-   if stackPath is empty then
-      put merge ("Project home stack does not exist!") into projectDepArray [projectName]["Error"]["msg"]
-      put projectName into projectDepArray [projectName]["Error"]["projectName"]
-      put stackPath into projectDepArray [projectName]["Error"]["path"]
-      return "Already indexed"
-   else
-      put stackPath into projectDepArray [projectName]["path"]
-   end if
-   
-   -- now recurse
-   put the project_Deps of stack projectName into projectDeps
-   repeat for each item nextProjectName in projectDeps
-      env_CrawlProjectDeps projectDepArray, nextProjectName
-   end repeat
-   return "Finished deps"
-end env_CrawlProjectDeps
 
 command env_RemoveProject projectName
    put env_GetActiveProjectArray() into envProjectArray
@@ -736,12 +739,6 @@ command env_DeconstructProjectFolder projectFolder, @projectName, @repoFolder
    put item -1 of projectFolder into projectName
    put item 1 to -2 of projectFolder & slash into repoFolder
 end env_DeconstructProjectFolder
-
-function env_ConstructProjectDepArray projectName, repoFolder
-   local projectDepArray
-   env_CrawlProjectDeps projectDepArray, projectName, repoFolder
-   return projectDepArray
-end env_ConstructProjectDepArray
 
 command env_DisplayErrorLoading projectName, projectDepArray
    try

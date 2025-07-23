@@ -28,6 +28,8 @@ It's all a bit of a mess - tryig to move over to listing project folder names wh
 -- consider replacing with "env_ListProjectFolders()"
 */
 
+--> Env
+-
 function env_ModuleNameFromPath sPath
    put env_RelativePath (sPath) into relPath
    set the itemdelimiter to slash
@@ -61,40 +63,40 @@ command env_GoToStart
    return homePath 
 end env_GoToStart
 
-getprop env_RepoFolder [pShortRepoFolder]
-   set the itemdelimiter to slash
-   put the project_Folder of target into repoFolder
-   delete item -1 of repoFolder
-   --
-   if pShortRepoFolder is not empty then
-      put pShortRepoFolder after repoFolder
-   end if
-   return repoFolder
-end env_RepoFolder
-
-function env_GetRepoFolder pShortRepoFolder
-   put env_GetLcwFolder() into repoFolder
-   --
-   set the itemdelimiter to slash
-   delete item -1 of repoFolder
-   --
-   if pShortRepoFolder is not empty then
-      text_AddTrailing pShortRepoFolder, slash
-      put pShortRepoFolder after repoFolder
+function env_GetRepoFolder pShortFolder
+   put env_ConstructRepoFolder() into repoFolder
+   if pShortFolder is not empty then
+      if char -1 of pShortFolder is not slash then
+         put slash after pShortFolder
+      end if
+      put pShortFolder after repoFolder
    end if
    return repoFolder
 end env_GetRepoFolder
 
-function env_GetLcwFolder
-   global gLCW
-   put "lcwFolder" into prefName
+function env_ConstructRepoFolder
+   put env_GetLcwFolder() into repoFolder
    --
+   set the itemdelimiter to slash
+   delete item -1 of repoFolder
+   return repoFolder
+end env_ConstructRepoFolder
+
+function env_GetLcwFolder
+   get the filename of stack "LCW"
+   --
+   set the itemdelimiter to slash
+   put item 1 to -2 of it & slash into repoFolder
+   return repoFolder
+end env_GetLcwFolder
+
+function env_LcwFolderFromPrefs
+   put "lcwFolder" into prefName
    put pref_GetValue (prefName) into lcwFolder
    if lcwFolder is not empty then return lcwFolder
-   
    put pref_FetchValue (prefName) into lcwFolder
    return lcwFolder
-end env_GetLcwFolder
+end env_LcwFolderFromPrefs
 
 command env_SetLcwFolder pLcwFolder
    if pLcwFolder is empty then
@@ -475,4 +477,3 @@ private command _SetProjectNames @pProjectNames
          replace comma with CR in pProjectNames
    end switch
 end _SetProjectNames
-
