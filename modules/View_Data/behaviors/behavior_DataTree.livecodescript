@@ -12,7 +12,29 @@ version: 0.5
 local LocalArray
 
 
+--> Remove
+-
+getprop hilited_Element
+   -- seems wrong name???
+   breakpoint
+   return the selected_Path of me
+end hilited_Element
+
+setprop hilited_Element commaPath
+   breakpoint
+   set the selected_Path of me to commaPath
+end hilited_Element
+
+
 --> Working on
+-
+setprop hilited_Line lineNum
+   breakpoint
+   set the selected_Path of me to lineNum
+end hilited_Line
+
+
+--> Tree
 -
 private function _treeWidget
    return the long id of me
@@ -247,20 +269,8 @@ end deleted_Line
 
 --> Props | Hilited
 -
-getprop hilited_Element
-   return the selected_Path of me
-end hilited_Element
-
-setprop hilited_Element commaPath
-   set the selected_Path of me to commaPath
-end hilited_Element
-
 getprop hilited_Line
    return the selected_LineNum of me
-end hilited_Line
-
-setprop hilited_Line lineNum
-   set the hilited_Element of me to lineNum
 end hilited_Line
 
 
@@ -302,7 +312,7 @@ setprop selected_LineNum textOrNumber
    if textOrNumber is a number then
       breakpoint -- fix: not sure how to handle this
    end if
-   set the hilited_Element of me to lineNum
+   set the selected_Path of me to lineNum
 end selected_LineNum
 
 getprop selected_Array

@@ -284,7 +284,7 @@ setprop selected_LineNum textOrNumber
    if textOrNumber is a number then
       breakpoint -- fix: not sure how to handle this
    end if
-   set the hilited_Element of me to lineNum
+   set the selected_Path of me to lineNum
 end selected_LineNum
 
 private command _SetMouseTargets @tObject, @displayView, @mouseTarget
