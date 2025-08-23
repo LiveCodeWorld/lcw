@@ -1,0 +1,586 @@
+﻿script "lib_LiveCodeDictionary"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_LiveCodeDictionary
+type: script library
+version: 0.4
+
+/*
+This library gives us access to the built in Livecode Dictionary
+We use it to esatblish a comprhensive list of terms used in the language
+This allows us to filter out noise with regard to handler_Calls
+
+-- gLCW ["Livecode Dictionary Terms"]
+
+*/
+
+--> Variables
+-
+local LivecodeDictionaryTerms
+
+
+--> IDE | Cached
+-
+-- function ide_GetDictionaryTerms
+   return LivecodeDictionaryTerms
+end ide_GetDictionaryTerms
+
+-- command ide_SetDictionaryTerms dTermIndex
+   put word 1 to -1 of dTermIndex into LivecodeDictionaryTerms
+   return dTermIndex
+end ide_SetDictionaryTerms
+
+command ide_ReconstructDictionaryTerms
+   put ide_ConstructDictTerms() into dTerms
+   --
+   dict_SetCached dTerms
+   dict_SetLangaugeTerms dTerms
+   return dTerms
+end ide_ReconstructDictionaryTerms
+
+function ide_ConstructDictTerms
+   put dict_ListTerms() into revDicTerms
+   --
+   put ide_ListExtraDicTerms() into extraDicTerms
+   put extraDicTerms & CR & revDicTerms into dTerms
+   return word 1 to -1 of dTerms
+end ide_ConstructDictTerms
+
+command ide_AddToDictionaryTerms newTerm, pHKeyUsingTerm
+   dict_AddExtraTerm newTerm
+   
+   # store this addition in an array in the library
+   ide_AddExtraDicTerm newTerm, pHKeyUsingTerm
+   return dTerms
+end ide_AddToDictionaryTerms
+
+
+--> Working on
+-
+private command _AddMissingTerms @dictTerms
+   -- assume dictTerms is not empty
+   put CR & "lock" after dictTerms
+   put CR & "unlock" after dictTerms
+   
+   put CR & "char" after dictTerms
+   put CR & "chars" after dictTerms
+   put CR & "jsonImport" after dictTerms
+   put CR & "jsonExport" after dictTerms
+   
+   # Time Zone library
+   put CR & "TimeZones" after dictTerms
+   put CR & "FromUniversalTime" after dictTerms
+   put CR & "ToUniversalTime" after dictTerms
+end _AddMissingTerms
+
+
+--> Display
+-
+command edit_RevDocLib
+   edit the script of stack revIDEDocumentationLibrary
+end edit_RevDocLib
+
+command display_DictPageData dTitle
+   put dict_TermData( dTitle) into tData
+   display_Data tData, "dict_TermData()"
+end display_DictPageData
+
+function dict_ConstructPageArray dTitle
+   put dict_TermData (dTitle) into tData
+   if tData is not an array then
+      return empty
+   end if
+   
+   # Init pArray
+   put dTitle into pArray ["title"]
+   put journalArray_Construct (dTitle) into pArray ["journal"]
+   
+   # Summary   
+   put dict_TermItem (dTitle, "summary", tData) into sSummary
+   dict_AddTextToStoryArray pArray, sSummary
+   
+   # Metadata
+   _AddMetaData pArray, tData
+   
+   # Syntax
+   _AddSyntax pArray, tData
+   
+   # Params
+   _AddParams pArray, tData
+   
+   # Value
+   _AddValue pArray, tData
+   
+   # Examples
+   _AddExamples pArray, tData
+   
+   # Description
+   _AddDescription pArray, tData
+   
+   # Tags
+   _AddTags pArray, tData
+   
+   # References
+   _AddRefs pArray, tData
+   --
+   return pArray
+end dict_ConstructPageArray
+
+private command _AddDescription @pArray, tData
+   put dict_TermItem (dTitle, "description", tData) into sDescription
+   if sDescription is not empty then
+      pageArray_AddMarkdown pArray, "# Description"
+      dict_AddTextToStoryArray pArray, sDescription
+   end if
+end _AddDescription
+
+private command _AddRefs @pArray, tData
+   pageArray_AddMarkdown pArray, "# See"
+   put tData [1]["References"] into rArray
+   repeat for each key sType in rArray
+      put empty into refLinkList
+      put rArray [sType] into relatedArray
+      repeat with itemNum = 1 to item 2 of the extents of relatedArray
+         put relatedArray [itemNum] into sRef
+         --
+         put "[[" & sRef & "]], " after refLinkList
+      end repeat
+      delete char -2 to -1 of refLinkList
+      --
+      put "- **" & sType & ":**" && refLinkList into mdLine
+      put mdLine & CR after mdLines
+   end repeat
+   delete char -1 of mdLines
+   pageArray_AddMarkdown pArray, mdLines
+end _AddRefs
+
+private command _AddTags @pArray, tData
+   pageArray_AddMarkdown pArray, "# Tags"
+   put tData [1]["Tags"] into tagArray
+   repeat with itemNum = 1 to item 2 of the extents of tagArray
+      put tagArray [itemNum] into sTag
+      put "[[" & sTag & "]], " after tagList
+   end repeat
+   pageArray_AddMarkdown pArray, tagList
+end _AddTags
+
+private command _AddExamples @pArray, tData
+   put tData [1]["Example"] into exampleArray
+   if exampleArray is an array then
+      pageArray_AddMarkdown pArray, "# Examples"
+      repeat with itemNum = 1 to item 2 of the extents of exampleArray
+         put exampleArray [itemNum] into someCode
+         pageArray_AddCode pArray, someCode
+      end repeat
+   end if
+end _AddExamples
+
+private command _AddValue @pArray, tData
+   put Data [1]["value"] into vArray
+   if vArray is an array then
+      repeat for each key vName in vArray
+         put vArray [vName]["description"] into vDesc
+         put vArray [vName]["type"] into vType
+         --
+         put "- **" & vName & ":**" && vDesc into mdLine
+         put mdLine & CR after mdLines
+      end repeat
+      delete char -1 of mdLines
+      put "# Returns Value" & CR & mdLines into mdText
+      pageArray_AddMarkdown pArray, mdText
+   end if
+end _AddValue
+
+private command _AddParams @pArray, tData
+   put tData [1]["params"] into paraArray
+   if paraArray is an array then
+      pageArray_AddMarkdown pArray, "# Params"
+      repeat with itemNum = 1 to item 2 of the extents of paraArray
+         put paraArray [itemNum]["name"] into pName
+         put paraArray [itemNum]["description"] into pDesc
+         put paraArray [itemNum]["refparam"] into isRef
+         --
+         put "- [[" & pName & "]] :" && pDesc into mLine
+         if isRef is true then
+            put "@" before mLine
+         end if
+         put mLine & CR after mLines
+      end repeat
+      delete char -1 of mLines
+      pageArray_AddMarkdown pArray, mLines
+   end if
+end _AddParams
+
+private command _AddSyntax @pArray, tData
+   pageArray_AddMarkdown pArray, "# Syntax"
+   put tData [1]["Syntax"][1] into sSytax
+   --
+   replace "<" with empty in sSytax
+   replace ">" with empty in sSytax
+   --
+   pageArray_AddCode pArray, sSytax
+end _AddSyntax
+
+private command _AddMetaData @pArray, tData
+   pageArray_AddMarkdown pArray, "# Metadata"
+   put tData [1]["Platforms"] into platArray
+   repeat with itemNum = 1 to item 2 of the extents of platArray
+      put platArray [itemNum] & ", " after sInfo
+   end repeat
+   delete char -2 to -1 of sInfo
+   put "Platforms:" && sInfo into sMetadata
+   --
+   put tData [1]["OS"] into osArray
+   repeat with itemNum = 1 to item 2 of the extents of osArray
+      put osArray [itemNum] & ", " after osInfo
+   end repeat
+   delete char -2 to -1 of osInfo
+   put CR & "OS:" && osInfo after sMetadata
+   --
+   get tData [1]["Introduced"]
+   put CR & "Introduced:" && it after sMetadata
+   --
+   put tData [1]["Security"] into secArray
+   if secArray is an array then
+      repeat with itemNum = 1 to item 2 of the extents of secArray
+         put secArray [itemNum] & ", " after secInfo
+      end repeat
+      delete char -2 to -1 of secInfo
+      put CR & "Security:" && secInfo after sMetadata
+   end if
+   --
+   pageArray_AddCode pArray, sMetadata
+end _AddMetaData
+
+command dict_AddTextToStoryArray @pArray, dText
+   put 0 into skipNum
+   put 1 into startNum
+   repeat
+      put offset (CR&CR, dText, skipNum) into charNum
+      if charNum = 0 then
+         put char startNum to -1 of dText into lastPara
+         dict_CleanAngleBrackets lastPara
+         --
+         pageArray_AddMarkdown pArray, lastPara
+         return pArray
+      else
+         add charNum to skipNum
+         --
+         put char startNum to (skipNum-1) of dText into newPara
+         dict_CleanAngleBrackets newPara
+         --
+         pageArray_AddMarkdown pArray, newPara
+         put skipNum + 2 into startNum
+      end if
+   end repeat
+end dict_AddTextToStoryArray
+
+function dict_TextToPageArray dDescription, dTitle
+   put dTitle into pArray ["title"]
+   put journalArray_Construct (dTitle) into pArray ["journal"]
+   
+   put 0 into skipNum
+   put 1 into startNum
+   repeat
+      put offset (CR&CR, dDescription, skipNum) into charNum
+      if charNum = 0 then
+         put char startNum to -1 of dDescription into lastPara
+         dict_CleanAngleBrackets lastPara
+         --
+         pageArray_AddMarkdown pArray, lastPara
+         return pArray
+      else
+         add charNum to skipNum
+         --
+         put char startNum to (skipNum-1) of dDescription into newPara
+         dict_CleanAngleBrackets newPara
+         --
+         pageArray_AddMarkdown pArray, newPara
+         put skipNum + 2 into startNum
+      end if
+   end repeat
+end dict_TextToPageArray
+
+function dict_TermDescription dTitle
+   put dict_TermData (dTitle) into tData
+   put dict_TermItem (dTitle, "description", tData) into sDescription
+   return sDescription
+end dict_TermDescription
+
+function dict_TermItem dTitle, sKey, tData
+   put tData [1][sKey] into sValue
+   return sValue
+end dict_TermItem
+
+function dict_ConstructPageArray dTitle
+   put dict_TermDescription (dTitle) into dDescription
+   --
+   if dDescription is empty then
+      return empty
+   else
+      put dict_TextToPageArray (dDescription, dTitle) into pArray
+      return pArray
+   end if
+end dict_ConstructPageArray
+
+function dict_TermData dTitle
+   put ideDocsFetchLCSData (dTitle) into tData
+   return tData
+end dict_TermData
+
+function dict_DefaultDomain
+   return "language.livecode.wiki"
+end dict_DefaultDomain
+
+function dict_FetchPageArray dTitle, pProtocol, pPort
+   put fedwiki_ConstructSlug (dTitle) into pSlug
+   put pageArray_Fetch (wDomain, pSlug, pPort, pProtocol) into pArray
+   return pArray
+end dict_FetchPageArray
+
+function dict_GetPageArray dTitle
+   put fedwiki_ConstructSlug (dTitle) into pSlug
+   put dict_DefaultDomain() into wDomain
+   put pageArray_Get (wDomain, pSlug) into pArray
+   return pArray
+end dict_GetPageArray
+
+command dict_StorePageArray pArray
+   put pArray ["title"] into pTitle
+   put fedwiki_ConstructSlug (pTitle) into pSlug
+   
+   # Correct some invalid file-names
+   switch pSlug
+      case "*"
+         put "asterix" into pSlug
+         break
+      case "\"
+         put "backslash" into pSlug
+         break
+   end switch
+   
+   --
+   put dict_DefaultDomain() into wDomain
+   pageArray_Set wDomain, pSlug, pArray, true
+   return the result
+end dict_StorePageArray
+
+function dict_WikiPagePath dTitle
+   put dict_DefaultDomain() into wDomain
+   put fedwiki_ConstructSlug (dTitle) into pSlug
+   put wikiFile_Construct (wDomain, pSlug) into wikiFile
+   return wikiFile
+end dict_WikiPagePath
+
+
+--> Working on
+-
+function text_StripBrackets sText
+   _StripBrackets sText
+   return sText
+end text_StripBrackets
+
+private command _StripBrackets @mWord
+   /*
+   -- <function(control structure)>
+   Not sure what to do with this markup
+   For now let's strip it
+   */
+   put replaceText (mWord, "\([^()]*\)", empty) into mWord
+end _StripBrackets
+
+command dict_CleanAngleBrackets @sText
+   replace CR with space in sText
+   
+   put "(<\s*[^|>]+(?:\s*\|\s*[^>]+)?\s*>)" into sReg
+   set the itemdelimiter to "|"
+   repeat
+      if matchChunk (sText, sReg, sMatch, eMatch) then
+         put char sMatch to eMatch of sText into mChunk
+         if mChunk contains "|" then
+            get item 1 of mChunk
+            put token 2 to -1 of it into mWord
+            --
+            _StripBrackets mWord
+            --
+            get item 2 of mChunk
+            put token 1 to -2  of it into secondWord
+            if secondWord = mWord & "s" then
+               put "[[" & mWord & "]]s" into linkWord
+            else
+               put "[[" & mWord & "]]" into linkWord
+            end if
+         else
+            put token 2 to -2 of mChunk into mWord
+            --
+            _StripBrackets mWord
+            --
+            put "[[" & mWord & "]]" into linkWord
+         end if
+         --
+         put linkWord into char sMatch to eMatch of sText
+      else
+         exit repeat
+      end if
+   end repeat
+end dict_CleanAngleBrackets
+
+function text_ReplaceWord sString, sWord, newWord
+   put "\" & sWord & "\b" into matchExp
+   put replaceText (sString, matchExp, newWord) into newString
+   return newString
+end text_ReplaceWord
+
+function dict_ListTypeData dicTypes
+   local typeData
+   dict_ConstructTypeData dicTypes, typeData
+   put the result into dTerms
+   return dTerms
+end dict_ListTypeData
+
+command dict_ConstructTypeData dicTypes, @typeData
+   local dTerms
+   put ideDocsFetchLCSEntries() into dicData
+   put 0 into tNum
+   repeat with iNum = 1 to item 2 of the extents of dicData
+      get dicData [iNum]
+      put it ["type"] into dType
+      if dType is among the items of dicTypes then
+         add 1 to tNum
+         put it into typeData [tNum]
+         --
+         put it ["display name"] into dTerm
+         put dTerm & CR after dTerms
+      end if
+   end repeat
+   delete char -1 of dTerms
+   return dTerms
+end dict_ConstructTypeData
+
+function dict_ListTypes
+   local dTerms
+   put ideDocsFetchLCSEntries() into dicData
+   repeat with iNum = 1 to item 2 of the extents of dicData
+      get dicData [iNum]
+      put it ["type"] into dType
+      put empty into tArray [dType]
+   end repeat
+   put keys (tArray) into dicTypes
+   sort dicTypes
+   return dicTypes
+end dict_ListTypes
+
+function dict_ListTerms pAddMissing
+   local dictArray, dictTerms
+   
+   put ideDocsFetchLCSEntries() into dArray
+   dict_ParseArray dArray, dictTerms, dictArray
+   
+   # Add missing
+   if pAddMissing is not false then
+      _AddMissingTerms dictTerms
+   end if
+   return dictTerms
+end dict_ListTerms
+
+command dict_ParseArray scriptDictionaryArray, @dictTerms, @dicArray   
+   repeat for each key indexNum in scriptDictionaryArray
+      put scriptDictionaryArray [indexNum]["type"] into entryType 
+      put scriptDictionaryArray [indexNum]["display name"] into dictionaryTerm
+      if entryType is among the items of "message,function,command,property,keyword,object,operator,control structure,constant" then
+         put dictionaryTerm & CR after dictTerms
+      end if
+      put indexNum into dicArray [entryType][dictionaryTerm]
+   end repeat
+   delete char -1 of dictTerms
+   sort dictTerms
+end dict_ParseArray
+
+function wikiPage_LivecodeHelp dTitle
+   put dict_ConstructPageArray (dTitle) into pArray
+   if pArray is an array then
+      return pArray
+   else
+      put "Cannot locate Livecode Api entry for:" && dTitle
+      put pageArray_Construct ("Error", dDescription) into pArray
+      return pArray
+   end if
+end wikiPage_LivecodeHelp
+
+
+--> Display
+-
+command display_LivecodeDictionary pName, pType
+   /*
+   # Parameters
+   #   pTag : the filename of the xml file that contains the entry to display
+   #   pType : the type of the entry, eg "command"
+   #   pFolder : either "dictionary" or "glossary"
+   #   pDontUpdateHistory : if this is true, the entry will not be added to the history
+   # Description
+   #   Called when the user double-clicks in the dictionary grid / list. This displays the required dictionary
+   #   entry fullscreen on a separate card.
+   
+   entryGoto pTag, pType, pFolder, false
+   */
+   
+   -- version 3.0
+   -- revDocumentationGo sTitle
+   
+   put "LiveCode Script" into pLibrary
+   
+   if "revDictionary" is not among the lines of the openstacks then
+      revIDEDocumentationLoad "API", "LiveCode Script"
+      wait 40 ticks
+   end if
+   
+   #   pType : the type of the entry, eg "command"
+   dispatch "goToEntry" to stack "revDictionary" with pLibrary, pName, pType
+end display_LivecodeDictionary
+
+command display_LivecodeHelpPage dTitle
+   put wikiPage_LivecodeHelp (dTitle) into pArray
+   --
+   display_PageArray pArray, dTitle
+   return the result
+end display_LivecodeHelpPage
+
+
+--> Dict
+-
+function dict_CleanText sText
+   put 0 into skipNum
+   put 1 into startNum
+   repeat
+      put offset (CR&CR, sText, skipNum) into charNum
+      if charNum = 0 then
+         put char startNum to -1 of sText into lastPara
+         dict_CleanAngleBrackets lastPara
+         put lastPara after newText
+         return newText
+      else
+         add charNum to skipNum
+         --
+         put char startNum to (skipNum-1) of sText into newPara
+         dict_CleanAngleBrackets newPara
+         put newPara & CR&CR after newText
+         put skipNum + 2 into startNum
+      end if
+   end repeat
+end dict_CleanText
+
+
+--> Ide
+-
+function ide_ListScriptLibraries
+   put ide_LivecodeScriptFolder() into someFolder  
+   put file_ListShort (someFolder) into shortFiles
+   return shortFiles
+end ide_ListScriptLibraries
+
+function ide_LivecodeScriptFolder
+   put revEnvironmentToolsPath() & "/Toolset/libraries/" into someFolder
+   return someFolder
+end ide_LivecodeScriptFolder

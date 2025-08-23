@@ -1,0 +1,448 @@
+﻿script "lib_Behavior"
+--> MetaData
+-
+license: GPLv3
+name: lib_Behavior
+type: library
+version: 0.4
+
+/*
+A library for script behaviors.
+
+It has issues with trying to set scripts (ie behaviors) from a script in the behavior.
+We have not fixed this (we tried), but instead recomment avoiding carefully how they are called.
+Place and handlers that set behaviors outside of behavior.
+*/
+
+
+--> Working on
+-
+getprop behavior_IndexArray
+   put the long id of the target into tObject
+   --
+   put 1 into iNum
+   switch word 1 of tObject
+      case "stack"
+         put the defaultstack into stackObject
+         _AddBehavior iNum, bArray, stackObject
+         --
+         put the card_Object of stackObject into cardObject
+         _AddBehavior iNum, bArray, cardObject
+         break
+      case "card"
+         put the card_Object of stackObject into cardObject
+         _AddBehavior iNum, bArray, cardObject
+         break
+      case "group"
+         _AddBehavior iNum, bArray, tObject
+         break
+      default
+         return empty
+   end switch
+   
+   _AddControlBehaviors iNum, bArray, tObject
+   return bArray
+end behavior_IndexArray
+
+private command _AddControlBehaviors @iNum, @bArray, tObject
+   put the number of controls of tObject into maxNum
+   repeat with cNum = 1 to maxNum
+      put the long id of control cNum of tObject into cObject
+      _AddBehavior iNum, bArray, cObject
+   end repeat
+end _AddControlBehaviors
+
+private command _AddBehavior @iNum, @bArray, tObject
+   put the behavior of tObject into bObject
+   if bObject is not empty then
+      put the short id of tObject into bArray [iNum]["id"]
+      put the short name of tObject into bArray [iNum]["name"]
+      put the name of tObject into bArray [iNum]["sObject"]
+      --      
+      put bObject into bArray [iNum]["bObject"]
+      if exists (bObject) then
+         get the filename of bObject
+         put env_RelativePath (it) into bArray [iNum]["relPath"]
+      end if
+      add 1 to iNum
+   end if
+end _AddBehavior
+
+setprop behavior_IndexArray [pClearFirst] bArray
+   put the long id of the target into tObject
+   if word 1 of tObject is not among the items of "card,group" then
+      return "Error, not a card or group!"
+   end if
+   
+   if pClearFirst is not false then
+      put the defaultstack into stackObject
+      set the behavior of stackObject to empty
+      put the card_Object of stackObject into cardObject
+      set the behavior of cardObject to empty
+      
+      put the number of controls of tObject into maxNum
+      repeat with cNum = 1 to maxNum
+         put the long id of control cNum of tObject into sObject
+         set the behavior of control cNum of tObject to empty
+      end repeat
+   end if
+   
+   put item 2 of the extents of bArray into maxNum
+   repeat with iNum = 1 to maxNum
+      put bArray [iNum]["id"] into sID
+      put bArray [iNum]["name"] into sName
+      put bArray [iNum]["sObject"] into sObject
+      put bArray [iNum]["bObject"] into bObject
+      put bArray [iNum]["relPath"] into relPath
+      --
+      switch word 1 of sObject
+         case "stack"
+         case "card"
+            set the behavior of sObject to bObject
+            break
+         default
+            if exists (control id sID) then
+               set the behavior of control id sID to bObject
+            else
+               breakpoint
+            end if
+      end switch
+   end repeat
+end behavior_IndexArray
+
+getprop object_Behaviors
+   local objectBehaviors
+   put the long id of the target into targetObject
+   
+   put the behavior of targetObject into someBehavior
+   if someBehavior is not empty then put someBehavior & CR after objectBehaviors
+   
+   repeat with cNum = 1 to the number of controls of targetObject
+      put the behavior of control cNum of targetObject into someBehavior
+      if someBehavior is not empty then
+         put someBehavior & CR after objectBehaviors
+      end if
+   end repeat
+   delete char -1 of objectBehaviors
+   return objectBehaviors
+end object_Behaviors
+
+private command _SetBehaviors tObject, bObjects
+   if exists (tObject) is false then return empty
+   put revRuggedId (tObject) into tObject
+   
+   # Set behavior objects
+   repeat for each line bObject in bObjects
+      put revRuggedId (bObject) into rObject
+      
+      switch
+         case exists (rObject) is false
+         case tObject = rObject
+            next repeat
+         default
+            try
+               set the behavior of tObject to rObject
+               put rObject into tObject
+               put rObject & CR after setObjects
+            catch e
+               breakpoint
+            end try
+      end switch
+   end repeat
+   delete char -1 of setObjects
+   return setObjects
+end _SetBehaviors
+
+setprop behavior_StackNames stackNames
+   -- dangerous as script might be executing
+   if stackNames is empty then return empty
+   put the long id of the target into tObject
+   --
+   behavior_SetStackNames stackNames, tObject
+   put the result into bObjects
+   return bObjects
+end behavior_StackNames
+
+command behavior_SetStackNames stackNames, tObject
+   if tObject is empty then
+      put the long id of the target into tObject
+   end if
+   if stackNames is empty then
+      put the view_BehaviorStackNames of tObject into stackNames
+   end if
+   
+   if stackNames is empty then return empty
+   replace comma with CR in stackNames
+   
+   # Clear any behaviors (or we might cause a loop)
+   -- behavior_ClearHierarchy tObject
+   
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      put the name of stack stackName into bObject
+      if tObject = bObject then next repeat
+      
+      # Clear bObject behavior to prevent possible recursion
+      put the behavior of tObject into tBehavior
+      put the behavior of bObject into bBehavior
+      set the behavior of bObject to empty
+      --
+      set the behavior of tObject to bObject
+      put bObject & CR after bObjects
+      --
+      put bObject into tObject
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_SetStackNames
+
+command behavior_ClearHierarchy tObject, pMoreObjects
+   put behavior_GetHierarchy (tObject) into bObjects
+   --
+   _ClearBehaviors bObjects
+   _ClearBehaviors pMoreObjects
+   set the behavior of tObject to empty
+   return bObjects
+end behavior_ClearHierarchy
+
+private command _ClearBehaviors bObjects
+   -- not guaranteed to remove behavior loops
+   try
+      -- repeat for each line bObject in bObjects
+      put the number of lines of bObjects into maxNum
+      repeat with lineNum = maxNum down to 1
+         put line lineNum of bObjects into bObject
+         if exists (bObject) then
+            set the behavior of bObject to empty
+         end if
+      end repeat
+   catch sError
+      -- causes issues with modyfying script when running
+      -- breakpoint
+   end try
+end _ClearBehaviors
+
+command behavior_SetHierarchy tObject, bObjects
+   # Clear all behaviors to prevent behavior loop
+   behavior_SafeClear tObject
+   
+   # Clear the existing behavior hierarchy
+   if bObjects is empty then
+      return empty
+   end if
+   
+   # Set behavior hierarchy
+   _SetBehaviors tObject, bObjects
+   --
+   put the result into setObjects
+   return setObjects
+end behavior_SetHierarchy
+
+command behavior_SafeClear tObject
+   put behavior_GetHierarchy (tObject) into hObjects
+   
+   set the behavior of tObject to empty
+   _ClearBehaviors hObjects
+   return hObjects
+end behavior_SafeClear
+
+
+--> Module | Behaviors
+-
+command module_ClearDefaultBehaviors mObject
+   put the module_DefaultHierarchy of mObject into bObjects -- complicated
+   _ClearBehaviors bObjects
+end module_ClearDefaultBehaviors
+
+command module_ClearBehaviors moduleName
+   # Remove behavior loops
+   put module_ListBehaviorObjects (moduleName) into bObjects
+   _ClearBehaviors bObjects
+end module_ClearBehaviors
+
+private command _ClearHierarchyAndObjects bObjects, pMoreObjects
+   repeat for each line sObject in pMoreObjects
+      put revRuggedId (sObject) into rObject
+      if rObject is not among the lines of bObjects then
+         put CR & rObject after bObjects
+      end if
+   end repeat
+   put word 1 to -1 of bObjects into bObjects
+   --
+   _ClearBehaviors bObjects
+   return bObjects
+end _ClearHierarchyAndObjects
+
+
+--> Behavior | Hierarchy
+-
+getprop behavior_Hierarchy
+   put the long id of the target into tObject
+   put behavior_GetHierarchy (tObject) into bObjects
+   return bObjects
+end behavior_Hierarchy
+
+setprop behavior_Hierarchy [dontClear] bObjects
+   put the long id of the target into tObject
+   --
+   switch bObjects
+      case "default"
+         put the module_DefaultHierarchy of tObject into dHierarchy
+         if dontClear is false then
+            _ClearBehaviors dHierarchy -- can crash
+         end if
+         _SetBehaviors tObject, dHierarchy
+         put the result into setObjects
+         break
+      default
+         behavior_SetHierarchy tObject,  bObjects
+         put the result into setObjects
+   end switch
+   return setObjects
+end behavior_Hierarchy
+
+getprop behavior_InHierarchy [stackName]
+   put the long id of the target into tObject
+   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
+   --
+   put the behavior_Hierarchy of tObject into bObjects
+   put the name of stack stackName into stackObject
+   return stackObject is among the lines of bObjects
+end behavior_InHierarchy
+
+function behavior_GetHierarchy tObject, pUseRugged
+   repeat
+      put the behavior of tObject into bObject
+      if exists (bObject) is false then exit repeat
+      if pUseRugged is not false then
+         put revRuggedId (bObject) into bObject
+      end if
+      put bObject & CR after bObjects
+      put bObject into tObject
+   end repeat
+   delete char -1 of bObjects
+   return bObjects
+end behavior_GetHierarchy
+
+
+--> Behavior | Add
+-
+setprop behavior_Remove stackName
+   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
+   --
+   put the behavior_Hierarchy of the target into bObjects
+   put the name of stack stackName into stackObject
+   line_Delete stackObject, bObjects
+   set the behavior_Hierarchy of the target to bObjects
+   --
+   return bObjects
+end behavior_Remove
+
+setprop behavior_Add stackName
+   if exists (stack stackName) is false then return merge ("Error, stack '[[stackName]]' does nto exists.")
+   --
+   put the behavior_Hierarchy of the target into bObjects
+   put the name of stack stackName into stackObject
+   line_Add stackObject, bObjects
+   set the behavior_Hierarchy of the target to bObjects
+   --
+   return bObjects
+end behavior_Add
+
+
+--> Behavior
+-
+setprop behavior_ClearNames stackNames
+   if stackNames is empty then return empty
+   replace comma with CR in stackNames
+   put the long id of the target into tObject
+   --
+   repeat for each line stackName in stackNames
+      if exists (stack stackName) is false then next repeat
+      put the long id of stack stackName into bObject
+      if tObject = bObject then next repeat
+      --
+      put the name of stack stackName into sObject
+      set the behavior of sObject to empty
+   end repeat
+end behavior_ClearNames
+
+getprop behavior_StackNames
+   put the long id of the target into tObject
+   repeat
+      put the behavior of tObject into bObject
+      switch
+         case word 1 of bObject is not "stack"
+         case exists (bObject) is false
+            delete char -1 of bStackNames
+            return bStackNames
+         default
+            put the stack_Name of bObject into bStackName
+            put bStackName & CR after bStackNames
+            put bObject into tObject
+      end switch
+   end repeat
+end behavior_StackNames
+
+
+--> Behavior | StackName
+-
+getprop behavior_StackName
+   put the behavior of the target into bObject
+   switch
+      case word 1 of bObject is not "stack"
+      case exists (bObject) is false
+         return empty
+      default
+         put the stack_Name of bObject into behaviorStackName
+         return behaviorStackName
+   end switch
+end behavior_StackName
+
+setprop behavior_StackName stackName
+   if exists (stack stackName) is false then return empty
+   put the name of stack stackName into stackObject
+   set the behavior of the target to stackObject
+   return stackObject
+end behavior_StackName
+
+
+--> Behavior
+-
+getprop behavior_HandlerExists [hkeyLine]
+   put the behavior of the target into bObject
+   if exists (bObject) is false then return empty
+   --
+   put the revAvailablehandlers of bObject into hTable
+   htable_ExactLineOffsets hkeyLine, hTable, startLineNum, endLineNum
+   return the result
+end behavior_HandlerExists
+
+getprop behavior_Handler [hkeyLine]
+   put the behavior of the target into bObject
+   if exists (bObject) is false then return empty
+   --
+   put the revAvailablehandlers of bObject into hTable
+   htable_ExactLineOffsets hkeyLine, hTable, startLineNum, endLineNum
+   put line startLineNum to endLineNum of the script of bObject into behaviorHandler
+   return behaviorHandler
+end behavior_Handler
+
+
+--> Behavior | Hierarchy
+-
+getprop behavior_Objects [useRugged]
+   put the long id of the target into tObject
+   put behavior_GetHierarchy (tObject, useRugged) into bObjects
+   return bObjects
+end behavior_Objects
+
+setprop behavior_Objects bObjects
+   put the long id of the target into tObject
+   behavior_SetHierarchy tObject,  bObjects
+   return the result
+end behavior_Objects
+
+getprop behavior_LastObject
+   return the last line of the behavior_Objects of the target
+end behavior_LastObject

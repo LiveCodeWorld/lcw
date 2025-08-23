@@ -1,0 +1,140 @@
+﻿script "LCW"
+--> Metadata
+-
+license: GPLv3
+name: LCW
+type: project
+version: 0.7
+
+/*
+This is the Livecode World Home stack.
+We should probably turn it into a normal stack, and add preOpenStack handlrs.
+
+Here we will place handlers from lcw.livcode" after we refactor the init scripts from the stuff we don;t need to laod the initial libraires.
+
+Here we experiment with a minimal script-only definition of a general project home stack.
+It should do everything that is needed to get the project up and running, but nothing more.
+It should:
+
+-  have no dependencies
+-  not depend on script introspection
+-  use robust file naming concentions
+-  human readable and easy to parse in any language
+-  a simple text stack that plays well with revision control
+
+We are not (yet) indexing all nested stacks, rather just standard toplevel folders and modules
+Stacks within the assets folder will not be indexed (not done yet).
+Assets are supposed to be things like images. videos, javascript, css html, json or arrays?
+
+# To Do
+At the moment we have a script only stack with a large and complex script.
+This is not a good minimal architecture.
+Instead we want to move over to a minimal initialisation script, and use a Livecode stack for the HomeStack
+That way we can store certain standard code as a behavior (for instance the card script),
+as well as give the HomeStack and interface and some useful functionality.
+*/
+
+--> LCW | Me
+-
+command lcw_Init
+   -- First Init on startup
+   -- if the long id of the target is not the long id of me then pass lcw_Init
+   -- if "lib_LCW" is among the lines of the stacksinuse then return false
+   
+   # Based on filename for LCW 
+   put "LCW" into lcwProjectName
+   put the filename of stack lcwProjectName into lcwHomeStackFile
+   
+   # Use Deps
+   put lcw_LibraryFile (lcwHomeStackFile) into libLcwFile
+   put lcw_ModelFile (lcwHomeStackFile) into modelLcwFile
+   --
+   start using stack libLcwFile
+   start using stack modelLcwFile
+   
+   # Initialise Environment
+   env_AddToBash -- in "lib_LCW"
+   
+   # Load LCW
+   put lcw_HomeFolder (lcwHomeStackFile) into lcwHomeFolder
+   project_LoadFromFolder lcwHomeFolder
+   
+   # Do things that require everything loaded
+   lcw_PostInit -- could send in 30 ticks
+end lcw_Init
+
+command lcw_PostInit
+   # Set up Script Editor Hacks
+   send "ide_InitLcw" to me in 30 ticks -- in library "lib_IDE"
+   
+   # Utility
+   choose browse tool 
+   close stack "revTools"
+   
+   # Make it pretty
+   put the screenrect into stackRect
+   add 100 to item 1 of stackRect
+   add 100 to item 2 of stackRect
+   subtract 100 from item 3 of stackRect
+   subtract 100 from item 4 of stackRect
+   
+   set the rect of me to stackRect
+   
+   # Old
+   -- project_LoadModules lcwHomeStackFile
+   -- hkeyLine_LoadPlaceArray
+   --  lcw_LoadCustomUserProject
+end lcw_PostInit
+
+
+--> Deps | For Standalone
+-
+function lcw_LibraryFile lcwHomeStackFile
+   -- "lib_LCW" file
+   set the itemdelimiter to slash
+   put lcwHomeStackFile into libLcwFile
+   put "libraries/lib_LCW.livecodescript" into item -1 of libLcwFile
+   set the itemdelimiter to comma
+   return libLcwFile
+end lcw_LibraryFile
+
+function lcw_ModelFile lcwHomeStackFile
+   -- "model_LCW" file
+   set the itemdelimiter to slash
+   put lcwHomeStackFile into modelLcwFile
+   put "models/model_LCW.livecodescript" into item -1 of modelLcwFile
+   set the itemdelimiter to comma
+   return modelLcwFile
+end lcw_ModelFile
+
+
+--> Deps
+-
+function lcw_HomeFolder lcwHomeStackFile
+   put lcwHomeStackFile into lcwHomeFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of lcwHomeFolder
+   set the itemdelimiter to comma
+   return lcwHomeFolder
+end lcw_HomeFolder
+
+function dataStack_Name
+   return "View|Data"
+   return the short name of me
+end dataStack_Name
+
+command dataStack_SetDefaultFolder
+   put default_FarmFolder() into farmFolder
+   dataStack_SetValue "default_FarmFolder", farmFolder
+end dataStack_SetDefaultFolder
+
+function dataStack_GetValue propName
+   put dataStack_Name() into dName
+   return the uOPN [propName] of stack dName
+end dataStack_GetValue
+
+command dataStack_SetValue propName, propValue
+   put dataStack_Name() into dName
+   set the uOPN [propName] of stack dName to propValue
+end dataStack_SetValue
+

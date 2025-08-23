@@ -1,0 +1,1676 @@
+﻿script "lib_LCW"
+--> MetaData
+-
+copyright: David Bovill
+license: GPLv3
+name: lib_LCW
+type: library
+version: 0.9
+
+/*
+*/
+
+--> Working on
+-
+getprop stack_Object
+   -- revTargetStack
+   return the defaultstack
+end stack_Object
+
+command env_RecursivelyLoadProjects pObject, pForceLoad
+   if pObject is empty then put the long id of the target into pObject
+   
+   put the project_DependencyArray of pObject into projectDepArray
+   -- delete variable projectDepArray ["lcw"] -- should already be loaded
+   --
+   set the itemdelimiter to slash
+   repeat for each key projectName in projectDepArray
+      set the cursor to busy
+      put projectDepArray [projectName]["path"] into homeStackPath
+      if there is a stack homeStackPath then
+         try
+            env_SimpleLoadProject projectName, homeStackPath, pForceLoad
+         catch sError
+            breakpoint
+         end try
+      end if
+   end repeat        
+end env_RecursivelyLoadProjects
+
+command env_SimpleLoadProject projectName, homeStackPath, pForceLoad
+   if exists (stack homeStackPath) is false then
+      breakpoint
+      return "Error, cannot locate stack:" && homeStackPath
+   end if
+   
+   # Init project (nothing recursive)   
+   put env_ProjectIsActive (projectName) into isLoaded
+   if isLoaded and pForceLoad is not true then
+      return merge ("Already loaded project [[projectName]]. Not re-laoding")
+   end if
+   
+   # Load from folder
+   set the itemdelimiter to slash
+   put homeStackPath into projectFolder
+   put empty into item -1 of projectFolder
+   project_LoadFromFolder projectFolder
+   
+   # Trap for Custom behavior
+   dispatch "project_PostInit" to stack homeStackPath
+   
+   # Trap for notification
+   dispatch "display_LoadProject" to stack homeStackPath with projectName
+   return empty
+end env_SimpleLoadProject
+
+getprop project_DependencyArray
+   put the project_Name of the target into projectName
+   put env_GetRepoFolder() into repoFolder
+   --
+   put env_ConstructProjectDepArray (projectName, repoFolder) into projectDepArray
+   return projectDepArray
+end project_DependencyArray
+
+function env_GetLcwFolder
+   if exists (stack "LCW") is false then
+      put the filename of me into sPath
+      return env_FolderFromPath (sPath)
+   else
+      get the filename of stack "LCW"
+      set the itemdelimiter to slash
+      put item 1 to -2 of it & slash into lcwFolder
+      return lcwFolder
+   end if
+end env_GetLcwFolder
+
+function env_FolderFromPath sPath
+   -- works for any stack within the LiveCodeWorld repo
+   constant RootName = "LivecodeWorld"
+   
+   set the itemdelimiter to slash
+   put itemOffset (RootName, sPath) into itemNum
+   if itemNum = 0 then return empty
+   put item 1 to itemNum of sPath & slash into envFolder
+   return envFolder
+end env_FolderFromPath
+
+command use_StackNames stackPaths, pBoolean
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      --
+      if pBoolean is false then
+         stop using stack stackPath
+      else
+         start using stack stackPath
+      end if
+   end repeat
+end use_StackNames
+
+
+--> Deps | Object
+-
+getprop card_Margin
+   put the card_Object of the target into cardObject
+   if exists(cardObject) is false then return empty
+   
+   put the uOPN ["card_Margin"] of cardObject into cardMargin
+   return cardMargin
+end card_Margin
+
+setprop card_Margin cardMargin
+   put the card_Object of the target into cardObject
+   if exists(cardObject) is false then return empty
+   
+   set the uOPN ["card_Margin"] of cardObject to cardMargin
+end card_Margin
+
+getprop card_Object
+   -- ideCoreCardOfcontrol
+   -- always returns an object
+   put the long id of the target into targetObject
+   switch
+      case word 1 of targetObject = "card"
+         return targetObject
+      case word 1 of targetObject = "stack"
+         if the scriptonly of targetObject is true then
+            return the long id of card 1 of the defaultstack
+         else
+            put the currentcard of the defaultstack into cardName
+            if cardName begins with "card id" then
+               put word 3 of cardName into cardID
+               put the long id of card id cardID of the defaultstack into cardObject
+            else
+               put the currentcard of the defaultstack into cardName
+               put the long id of card cardName of the defaultstack into cardObject
+            end if
+            return cardObject
+         end if
+      case word 1 of targetObject is among the items of "background,bkgnd,bg"
+         return empty  -- no such thing as a unique card_Object
+      default
+         put wordOffset ("card", targetObject) into wNum
+         return word wNum to -1 of targetObject
+   end switch
+end card_Object
+
+getprop stack_Name
+   return the short name of the defaultstack
+end stack_Name
+
+getprop stack_Object
+   return the defaultstack
+end stack_Object
+
+
+--> Props
+-
+getprop menu_Controller
+   put the long id of the target into tObject
+   -- breakpoint -- implement locally
+   --
+   put the menu_Title of tObject into mTitle
+   return menu_GetGlobalController (mTitle)
+end menu_Controller
+
+setprop menu_Controller [mTitle] mController
+   breakpoint -- should be implemented locally
+   menu_SetGlobalController mTitle, mController
+   return the result
+end menu_Controller
+
+function module_ConstructFolder moduleName, projectName
+   -- put project_GetFolder (projectName) into projectFolder
+   put env_ProjectFolder (projectName) into projectFolder
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
+   
+   # Add short module folder
+   put label_PipesToUnderscore (moduleName) into mShortFolder
+   put rootModuleFolder & mShortFolder & slash into moduleFolder
+   return moduleFolder
+end module_ConstructFolder
+
+function module_GetFolder moduleShortFolder, projectFolder
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
+   put rootModuleFolder & moduleShortFolder & slash into moduleFolder
+   if there is a folder moduleFolder then
+      return moduleFolder
+   else
+      return empty
+   end if
+end module_GetFolder
+
+function module_FolderFromPath stackPath, projectFolder
+   set the itemdelimiter to slash
+   put the number of items of projectFolder into pNum
+   if item (pNum + 1) of stackPath is not "Modules" then return empty
+   
+   put item 1 to (pNum + 2) of stackPath & slash into moduleFolder
+   return moduleFolder
+end module_FolderFromPath
+
+
+--> Menu
+-
+function menu_GetGlobalPath mTitle
+   if exists (stack mTitle) is false then return empty
+   
+   put the filename of stack mTitle into mPath
+   return mPath
+end menu_GetGlobalPath
+
+function menu_GetGlobalController mTitle, pWithModel
+   if there is a stack mTitle then
+      return the name of stack mTitle
+   else
+      return empty
+   end if
+end menu_GetGlobalController
+
+
+--> Menu | Model
+-
+function menu_ListLoadedTitles pFilter
+   put the mainstacks into stackNames
+   put revLoadedStacks("Application") into stackNames
+   filter stackNames with "Global |*| Menu"
+   --
+   if pFilter is not empty then filter stackNames with pFilter
+   return stackNames
+end menu_ListLoadedTitles
+
+
+--> Menu | Model | Global (old)
+-
+command project_AddToMenuModel projectArray
+   put menu_GetModel() into gMenuArray
+   put projectArray ["Global Menus"] into projectGlobalMenuArray
+   union projectGlobalMenuArray with gMenuArray
+   menu_SetModel projectGlobalMenuArray
+end project_AddToMenuModel
+
+function menu_ListGlobalTitles pFilter
+   # Old Model version
+   put menu_GetModel() into gMenuModel
+   put keys (gMenuModel) into globalTitles
+   sort globalTitles
+   if pFilter is not empty then filter globalTitles with pFilter
+   return globalTitles
+end menu_ListGlobalTitles
+
+function menu_ListGlobalObjects pFilter
+   put menu_ListGlobalTitles(pFilter) into stackNames
+   repeat for each line stackName in stackNames
+      put the name of stack stackName & Cr after mControllers
+   end repeat
+   delete char -1 of mControllers
+   return mControllers
+end menu_ListGlobalObjects
+
+command menu_SetGlobalController gMenuTitle, scriptObject
+   put menu_GetModel() into gMenuModel
+   put revRuggedID (scriptObject) into gMenuModel [gMenuTitle]["mController"]
+   menu_SetModel gMenuModel
+   return the result
+end menu_SetGlobalController
+
+function menu_GetModel
+   global gLCW
+   put gLCW ["Global Menus"] into menuGlobalArray
+   return menuGlobalArray
+end menu_GetModel
+
+command menu_SetModel menuGlobalArray
+   global gLCW
+   put menuGlobalArray into gLCW ["Global Menus"]
+   return gLCW ["Global Menus"]
+end menu_SetModel
+
+
+--> IDE | Events | revEditScript
+-
+function ide_GetRevEditScriptStack stackName
+   global gREVMessageDispatch
+   put gREVMessageDispatch ["revEditScript"] into revEditControllerStackNames
+   put stackName is among the lines of revEditControllerStackNames into someBoolean
+   return someBoolean
+end ide_GetRevEditScriptStack
+
+command ide_AddRevEditScriptStack stackName
+   -- this adds the stack stackname to the list of stacks that receive the "revEditScript" command
+   -- send "revEditScript tObject" to this card of stack tPlugin
+   global gREVMessageDispatch
+   if stackName is among the lines of gREVMessageDispatch ["revEditScript"] then return false
+   
+   put stackName & CR before gREVMessageDispatch ["revEditScript"]
+   return true
+end ide_AddRevEditScriptStack
+
+command ide_RemoveRevEditScriptStack stackName
+   global gREVMessageDispatch
+   put gREVMessageDispatch ["revEditScript"] into stackNames
+   put lineoffset (stackName, stackNames) into lineNum
+   delete line lineNum of stackNames
+   put stackNames into gREVMessageDispatch ["revEditScript"]
+end ide_RemoveRevEditScriptStack
+
+function project_FindHomeStackPath somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   return homeStackPath
+end project_FindHomeStackPath
+
+
+--> Display
+-
+command display_LoadProject projectName, pComment
+   -- tell the word we found project dependency
+   if pComment is empty then
+      put "Loading project '[[projectName]]'..." into commentTemplate
+   end if
+   put merge (commentTemplate) into someComment
+   dispatch "lcw_Notify" with someComment,"Loading projects"
+end display_LoadProject
+
+command lcw_Notify someMessage, pTitle, pMergeValue
+   -- needs to work cross platform
+   replace quote with empty in someMessage
+   replace "'" with empty in someMessage
+   text_ReQuote someMessage, pMergeValue
+   --
+   try
+      if pTitle is empty then put "LiveCode World Notification" into pTitle
+      put "osascript -e" && "'" & "display notification" && quote & someMessage & quote into someShell
+      put "with title" && quote & pTitle & quote after someShell
+      put "'" after someShell
+      put shell (someShell) into shellResult
+   catch e
+      put someMessage
+   end try
+end lcw_Notify
+
+command lcw_LoadCustomUserProject pForceLoad
+   -- initialises non-version controlled private project
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   project_LoadFromFolder lcwUserProjectFolder
+   
+   put lcw_UserHomeStackName() into userHomeStackName
+   put lcw_UserProjectFolder() into lcwUserProjectFolder
+   -- library_StoreProjectFolder userHomeStackName, lcwUserProjectFolder 
+   if there is a stack userHomeStackName then
+      put the name of stack userHomeStackName into homeStackObject
+      env_RecursivelyLoadProjects homeStackObject, pForceLoad
+   end if
+end lcw_LoadCustomUserProject
+
+
+--> Props | Stack
+-
+getprop stack_SisterFolder [projectName]
+   put the effective filename of the defaultstack into sisterFolder
+   put folder_GetSister (projectName, someFileOrFolder) into sisterFolder
+   return sisterFolder
+end stack_SisterFolder
+
+getprop stack_Folder
+   put the effective filename of the defaultstack into stackFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of stackFolder
+   return stackFolder
+end stack_Folder
+
+getprop stackfile_Array
+   put the stack_Object of the target into someStack
+   put the stackfiles of someStack into stackFileArray
+   split stackFileArray by CR and comma
+   return stackFileArray
+end stackfile_Array
+
+
+--> Module
+-
+getprop project_ModuleFolder [pModuleName]
+   put the template_Object of the target into tObject
+   if exists (tObject) is true then
+      -- we are asking about a view
+      put the stack_Object of tObject into stackObject
+   else
+      put the stack_Object of the target into stackObject
+   end if
+   put the effective filename of stackObject into stackPath
+   if stackPath is empty then return empty
+   
+   ## Find
+   put module_FindFolder (stackPath) into maybeModuleFolder
+   --
+   set the itemdelimiter to slash
+   put item -2 of maybeModuleFolder into testPathItem
+   switch
+      case maybeModuleFolder is empty
+         return empty
+      case pModuleName is not empty
+         put module_GetFolder (pModuleName, maybeModuleFolder) into moduleFolder
+         return moduleFolder
+      case testPathItem = "modules"
+         return maybeModuleFolder
+      default
+         return empty
+   end switch
+end project_ModuleFolder
+
+getprop project_UsedStackNames
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackNames (projectName) after stackNames
+   
+   if projectName = "LCW" then
+      -- here we add the root "LCW" stack
+      -- it may be better not to use the home stacks and instead have minmal scripts there.
+      put "LCW" & CR & stackNames into usedStackNames
+      return word 1 to -1 of usedStackNames
+   else
+      return stackNames
+   end if
+end project_UsedStackNames
+
+getprop project_Name
+   -- assume folder name = project name
+   -- only works now for top level stacks, libs, models etc
+   set the itemdelimiter to slash
+   put the project_Folder of the target into projectFolder
+   return item -1 of projectFolder
+end project_Name
+
+getprop project_Folder
+   -- latest simplest version based on naming conventions and folder structure
+   -- does not allow projects outside of the LCW reop folder  
+   
+   put the effective filename of the defaultstack into stackPath
+   if stackPath is empty then return empty
+   put project_FolderFromPath (stackPath) into projectFolder
+   return projectFolder
+end project_Folder
+
+function project_FolderFromPath stackPath
+   set the itemdelimiter to slash
+   put env_GetRepoFolder() into repoFolder
+   put the number of items of repoFolder + 1 into itemNum
+   put item 1 to itemNum of stackPath & slash into projectFolder
+   --
+   return projectFolder
+end project_FolderFromPath
+
+getprop project_IsActive
+   put the project_Name of the target into projectName
+   put env_ProjectIsActive (projectName) into someBoolean
+   return someBoolean
+end project_IsActive
+
+getprop project_HomeStack
+   -- searches the disk based file hierearchy to find the project root
+   put the stack_Object of the target into stackObject
+   put the effective filename of stackObject into stackPath
+   
+   put project_FindHomeStackPath (stackPath) into projectStackPath
+   if projectStackPath is empty then return empty
+   
+   put the name of stack projectStackPath into stackObject
+   return stackObject 
+end project_HomeStack
+
+getprop project_UsedStackPaths
+   local stackNames
+   put the project_Name of the target into projectName
+   put project_ListUsedStackPaths (projectName) after stackPaths
+   
+   if projectName = "LCW" then
+      put the filename of stack projectName & CR & stackPaths into usedStackPaths
+      return word 1 to -1 of usedStackPaths
+   else
+      return stackPaths
+   end if
+end project_UsedStackPaths
+
+getprop project_HomeStackBrowser
+   put the project_Name of the target into pHomeStackName
+   put project_GetHomeStackBrowser (pHomeStackName) into browserWidget
+   return browserWidget
+end project_HomeStackBrowser
+
+
+--> Props | Module
+-
+getprop module_Folder
+   put the long id of the target into tObject
+   put the effective filename of the defaultstack into stackPath
+   if stackPath is empty then return empty
+   --
+   put the project_Folder of tObject into projectFolder
+   if there is not a folder projectFolder then return empty
+   --
+   put module_FolderFromPath (stackPath, projectFolder) into moduleFolder
+   return moduleFolder
+end module_Folder
+
+getprop module_HomeStackPath [moduleName]
+   put the project_ModuleFolder [moduleName] of the target into moduleFolder
+   put project_PathFromFolder (moduleFolder) into moduleHomeStackPath
+   if exists (stack moduleHomeStackPath) is false then return empty
+   return moduleHomeStackPath
+end module_HomeStackPath
+
+
+--> Module
+-
+function module_FindFolder somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   -- finds the first "module folder" above the path
+   -- will also return a toplevel project folder if called on a toplevel path
+   -- as "a project is also a module"
+   -- test for special cases where you want to distinguish
+   -- see "project_FindFolder" to get the top module or project folder
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   module_FindFromFolder someFolder, homeStackName, moduleFolder, homeStackPath
+   return moduleFolder
+end module_FindFolder
+
+function module_IsNotaProject moduleFolder
+   set the itemdelimiter to slash
+   if item -2 of moduleFolder = "modules" then
+      -- when within a modules folder it is considered a module
+      return true
+   else
+      -- otherwise it is a project
+      return false
+   end if
+end module_IsNotaProject
+
+command module_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
+   set the itemdelimiter to slash
+   put the number of items of someFolder into maxItemNum
+   repeat with itemNum = maxItemNum down to 1
+      -- could look for lcw project array file
+      put item -1 of someFolder into folderName
+      put folderName & ".livecode" into shortStackFile -- shame we must insist in this an not allow .livecodescript
+      put someFolder & shortStackFile into homeStackPath
+      
+      if exists (stack homeStackPath) then
+         put someFolder into projectFolder
+         put the short name of stack homeStackPath into homeStackName
+         return true
+      else
+         delete item -1 of someFolder
+      end if
+   end repeat
+   
+   put empty into homeStackName
+   put empty into projectFolder
+   put empty into homeStackPath
+   return false
+end module_FindFromFolder
+
+
+--> Env | Model
+-
+function env_GetActiveProjectArray
+   global gLCW
+   put gLCW ["environment"]["project"] into activeProjectArray
+   return activeProjectArray
+end env_GetActiveProjectArray
+
+command env_SetActiveProjectArray activeProjectArray
+   global gLCW
+   put activeProjectArray into gLCW ["environment"]["project"]
+   return gLCW
+end env_SetActiveProjectArray
+
+
+--> Env
+-
+command env_SetProjectFolder homeStackName, pProjectFolder
+   put env_GetActiveProjectArray() into envProjectArray
+   if pProjectFolder is empty then
+      delete variable envProjectArray [homeStackName]
+   else
+      put pProjectFolder into envProjectArray [homeStackName]
+   end if
+   env_SetActiveProjectArray envProjectArray
+   return envProjectArray
+end env_SetProjectFolder
+
+command env_RemoveProject projectName
+   put env_GetActiveProjectArray() into envProjectArray
+   delete variable envProjectArray [projectName]
+   env_SetActiveProjectArray envProjectArray
+end env_RemoveProject
+
+function env_ProjectIsActive projectName, pRepoFolder
+   -- put env_GetProjectFolder (projectName) is not empty into projectIsLoaded
+   -- put env_ConstructProjectFolder (projectName, pRepoFolder) is not empty into projectIsLoaded
+   
+   put env_GetActiveProjectArray() into activeProjectArray
+   put activeProjectArray [projectName] is not empty into projectIsLoaded
+   return projectIsLoaded
+end env_ProjectIsActive
+
+function env_ListProjectFolders pListLong
+   -- see also "env_ListActiveProjects()"
+   put env_ConstructProjectFolder() into rootFolder
+   if pListLong is true then
+      put folder_ListLong (rootFolder) into lcwFolders
+   else
+      put folder_ListShort (rootFolder) into lcwFolders
+   end if
+   return lcwFolders
+end env_ListProjectFolders
+
+function env_ListShortProjectFolders
+   put env_GetRepoFolder() into repoFolder
+   put folders (repoFolder) into shortFolders
+   --
+   filter shortFolders without ".*"
+   sort shortFolders
+   return shortFolders
+end env_ListShortProjectFolders
+
+command env_LoadMenus
+   put env_ListActiveProjects() into projectNames
+   repeat for each line projectName in projectNames
+      put project_GetFolder (projectName) into projectFolder
+      project_LoadMenus projectFolder, true
+   end repeat
+end env_LoadMenus
+
+command env_AddToBash
+   put shell_GetMergedPath (pNewItems) into $PATH
+   return $PATH
+end env_AddToBash
+
+function env_ConstructProjectFolder projectName, pRepoFolder
+   if pRepoFolder is empty then put env_GetRepoFolder() into pRepoFolder
+   --
+   put folder_AddShort (pRepoFolder, projectName) into projectFolder
+   if there is a folder projectFolder then
+      return projectFolder
+   else
+      return empty
+   end if
+end env_ConstructProjectFolder
+
+function env_ProjectFolder projectName, pSubFolderPath
+   put env_ConstructProjectFolder (projectName) into projectFolder
+   folder_Add projectFolder, pSubFolderPath
+   if there is not a folder projectFolder then return empty
+   --
+   return projectFolder
+end env_ProjectFolder
+
+function env_GetProjectHomePath projectName, pLcwFolder
+   put env_ConstructHomePath (projectName, pLcwFolder) into projectHomeStackPath
+   if there is a stack projectHomeStackPath then -- loads into memory
+      return projectHomeStackPath
+   else
+      return empty
+   end if
+end env_GetProjectHomePath
+
+function env_ConstructHomePath projectName, pLcwFolder
+   if pLcwFolder is empty then put env_GetLcwFolder() into pLcwFolder
+   --
+   set the itemdelimiter to slash
+   put pLcwFolder into repoFolder
+   delete item -1 of repoFolder
+   put projectName & ".livecode" into shortFile
+   put repoFolder & projectName & slash & shortFile into homePath
+   return homePath
+end env_ConstructHomePath
+
+function env_CheckLcwProject projectName
+   -- here we assume we have only one repoFolder with all project at top level
+   put env_ConstructHomePath (projectName) into homePath
+   put there is a file homePath into projectExists
+   return projectExists
+end env_CheckLcwProject
+
+function env_CheckLcwProject projectName, pLcwFolder
+   -- here we assume we have only one repoFolder with all project at top level
+   
+   put env_GetProjectHomePath (projectName, pLcwFolder) into homePath
+   put there is a file homePath into projectExists
+   return projectExists
+end env_CheckLcwProject
+
+function env_ListLocalProjects
+   put env_ListShortProjectFolders() into pProjectNames
+   repeat for each line projectName in pProjectNames
+      set the cursor to busy
+      put env_CheckLcwProject (projectName) into isProject
+      --
+      if isProject is true then
+         put projectName & CR after goodProjectNames
+      end if
+   end repeat
+   --
+   delete char -1 of goodProjectNames
+   return goodProjectNames
+end env_ListLocalProjects
+
+function env_ListActiveProjects
+   put env_GetActiveProjectArray() into envProjectArray
+   return keys (envProjectArray)
+end env_ListActiveProjects
+
+function env_ListStoppedProjects
+   put env_ListLocalProjects() into localProjects
+   put env_GetActiveProjectArray() into envProjectArray
+   repeat for each line localProject in localProjects
+      put envProjectArray [localProject] into projectFolder
+      if projectFolder is empty then
+         put localProject & CR after stoppedProjects
+      end if
+   end repeat
+   delete char -1 of stoppedProjects
+   return stoppedProjects
+end env_ListStoppedProjects
+
+function env_GetRepoFolder
+   put env_GetLcwFolder() into pLcwFolder
+   --
+   set the itemdelimiter to slash
+   delete item -1 of pLcwFolder
+   return pLcwFolder
+end env_GetRepoFolder
+
+command env_DeconstructProjectFolder projectFolder, @projectName, @repoFolder
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into projectName
+   put item 1 to -2 of projectFolder & slash into repoFolder
+end env_DeconstructProjectFolder
+
+command env_DisplayErrorLoading projectName, projectDepArray
+   try
+      put projectDepArray [projectName]["error"] into errorArray
+      throw "LCW Dep Error"
+   catch e
+      put "Error loading dependency" && projectName
+   end try
+end env_DisplayErrorLoading
+
+
+--> Project | Load
+-
+command project_Load projectName
+   if exists (stack projectName) is false then return empty
+   put the project_Folder of stack projectName into projectFolder
+   --
+   project_LoadFromFolder projectFolder
+   put the result into projectArray
+   return projectArray
+end project_Load
+
+command project_LoadFromFolder projectFolder
+   if there is not a folder projectFolder then return empty
+   put project_GetArrayFromFolder (projectFolder) into projectArray
+   
+   # First load  libraries for dependencies
+   _LoadProjectUsed projectFolder, projectArray
+   
+   # Get ProjectName
+   put project_NameFromFolder (projectFolder) into projectName
+   if exists (stack projectName) is false then
+      return empty
+   end if
+   
+   # Set Home stackfiles
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the stackfile_Array of stack projectName to stackFileArray
+   
+   # Laod Project and Module Menus
+   project_AddToMenuModel projectArray 
+   
+   # Add to Env -- do this manually if needed
+   -- env_AddProject projectName, projectFolder
+   env_SetProjectFolder projectName, projectFolder
+   
+   return projectArray
+end project_LoadFromFolder
+
+command project_LoadMenus projectFolder
+   put project_GetArrayFromFolder (projectFolder) into projectArray
+   project_AddToMenuModel projectArray
+   return projectArray
+end project_LoadMenus
+
+function project_NameFromFolder projectFolder
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into projectName
+   return projectName
+end project_NameFromFolder
+
+
+--> Project | Array
+-
+function project_GetArray projectName
+   if exists (stack projectName) is false then return empty
+   put the project_Folder of stack projectName into projectFolder
+   --
+   put project_GetArrayFromFolder (projectFolder) into projectArray
+   return projectArray
+end project_GetArray
+
+function project_GetArrayFromFolder projectFolder
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   put array_FromFile (projectJsonFile) into projectArray
+   return projectArray
+end project_GetArrayFromFolder
+
+function project_ConstructJsonFile projectFolder
+   put projectFolder & "lcw_project.json" into projectJsonFile
+   return projectJsonFile
+end project_ConstructJsonFile
+
+
+--> Project
+-
+function project_GetFolder projectName, pSubFolderPath
+   -- utility to get a project folder from a project name for loaded or unloaded projects
+   -- returns empty if the folder does not exist or there is another problem
+   if exists (stack projectName) is true then
+      put the project_Folder of stack projectName into projectFolder
+   else
+      put env_ConstructProjectFolder (projectName) into projectFolder
+   end if
+   folder_Add projectFolder, pSubFolderPath
+   if there is not a folder projectFolder then return empty
+   --
+   return projectFolder
+end project_GetFolder
+
+command project_Toggle projectName
+   put env_ProjectIsActive (projectName) into sBoolean
+   if sBoolean is true then
+      project_Stop projectName
+   else
+      project_Start projectName
+   end if
+   dispatch "display_RefreshEnvironment"
+end project_Toggle
+
+command project_Start projectName, pForceLoad
+   -- added forceload
+   if exists (stack projectName) then
+      put the name of stack projectName into homeStackObject
+   else
+      put env_GetProjectHomePath (projectName) into homeStackPath
+      --
+      if exists (stack homeStackPath) is false then
+         breakpoint
+         display_DebugHistory "project_Start"
+         return empty
+      end if
+   end if
+   put the stack_Folder of stack projectName into projectFolder
+   --
+   -- display_LoadProject projectName
+   --
+   env_RecursivelyLoadProjects homeStackObject, pForceLoad -- not dispatching any more
+   project_LoadFromFolder projectFolder
+   --
+   put merge ("Finished project '[[projectName]]'!") into someComment
+   display_LoadProject projectName, someComment
+   --
+   return homeStackObject
+end project_Start
+
+function project_GetHomeStackName projectFolder
+   put project_PathFromFolder (projectFolder) into projectHomeStackPath
+   if exists (stack projectHomeStackPath) is false then return empty
+   put the short name of stack projectHomeStackPath into projectName
+   return projectName
+end project_GetHomeStackName
+
+function project_PathFromFolder projectFolder
+   text_AddTrailing projectFolder, slash
+   put project_GetShortFolder (projectFolder) into projectShortFolder
+   put projectFolder & projectShortFolder & ".livecode" into projectHomeStackPath
+   return projectHomeStackPath
+end project_PathFromFolder
+
+
+--> Project | Files
+-
+function project_GetShortFolder projectFolder
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into projectName
+   return projectName
+end project_GetShortFolder
+
+function project_ConstructSisterHomeStackPath sisterProjectName, projectHomeStackFile
+   put projectHomeStackFile into sisterFolder
+   
+   set the itemdelimiter to slash
+   put sisterProjectName into item -2 to -1 of sisterFolder
+   put slash after sisterFolder
+   put sisterFolder & sisterProjectName & ".livecode" into sisterProjectHomeStackPath
+   /*
+   if exists (stack sisterProjectHomeStackPath) is false then
+      -- and if it is not there download from github
+      github_DownloadProject sisterProjectName
+      put the result into sisterProjectHomeStackPath
+   end if
+   */
+   return sisterProjectHomeStackPath
+end project_ConstructSisterHomeStackPath
+
+
+--> Project | StackFileArray
+-
+function project_FetchStackFiles projectFolder
+   put project_GetArrayFromFolder (projectFolder) into projectArray
+   put projectArray ["stackfiles"] into stackFileTable
+   return stackFileTable
+end project_FetchStackFiles
+
+command project_StoreStackFiles projectName, stackFileTable
+   put project_GetArrayFromFolder (projectFolder) into projectArray
+   put stackFileTable into projectArray ["data"]["stackfiles"]
+   project_StoreArray projectFolder, projectArray
+end project_StoreStackFiles
+
+
+--> Project | List
+-
+function project_ListAllControllers projectFolder
+   # List controllers
+   put folder_AddShort (projectFolder, "controllers") into controllerFolder
+   put folder_ListStackPaths (controllerFolder) into controllerPaths
+   
+   # List module controllers
+   put projectFolder & "modules/" into modulesFolder
+   put folder_ListShort (modulesFolder) into moduleNames
+   repeat for each line moduleName in moduleNames
+      put module_ListControllerStackPaths (moduleName, projectFolder) into moduleControllerPaths
+      put CR & moduleControllerPaths after controllerPaths
+   end repeat
+   return word 1 to -1 of controllerPaths
+end project_ListAllControllers
+
+function project_ListUsedPathsFromArray projectArray, projectFolder
+   text_AddTrailing projectFolder, slash
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the itemdelimiter to slash
+   repeat for each key stackName in stackFileArray
+      put stackFileArray [stackName] into relPath
+      switch
+         case "models" is among the items of relPath
+         case "libraries" is among the items of relPath
+            put projectFolder & relPath & CR after usedPaths 
+      end switch
+   end repeat
+   delete char -1 of usedPaths
+   return usedPaths
+end project_ListUsedPathsFromArray
+
+function project_ListUsedPathsFromFolder projectFolder
+   local projectUsedStackPaths
+   repeat for each item shortFolder in "libraries,models"
+      put folder_AddShort (projectFolder, shortFolder) into standardFolder
+      if there is not a folder standardFolder then next repeat
+      put folder_ListStackPaths (standardFolder) into stackPaths
+      put stackPaths & CR after projectUsedStackPaths
+   end repeat
+   sort projectUsedStackPaths
+   put word 1 to -1 of projectUsedStackPaths into projectUsedStackPaths
+   return projectUsedStackPaths
+end project_ListUsedPathsFromFolder
+
+
+--> Project | Start
+-
+/*
+Used by display_Environmmeent project env menus
+*/
+
+command project_Stop projectName
+   -- with multiple projects that's a bit hard (as other projects 'could' use some of the stacks?)
+   if exists (stack projectName) is false then
+      return false
+   end if
+   --
+   put the project_UsedStackNames of stack projectName into usedStackNames
+   put the project_Name of stack projectName into projectName
+   
+   repeat for each line usedStackName in usedStackNames
+      set the cursor to busy
+      if exists (stack usedStackName) is false then next repeat
+      save stack usedStackName
+      stop using stack usedStackName
+      delete stack usedStackName
+   end repeat
+   env_RemoveProject projectName
+   --
+   put merge ("Stopped project '[[projectName]]'!") into someComment
+   display_LoadProject projectName, someComment
+   return true
+end project_Stop
+
+function project_ConstructHomeFromFolder projectFolder
+   set the itemdelimiter to slash
+   put item -1 of projectFolder into homeStackName
+   put projectFolder & homeStackName & ".livecode" into homeStackPath
+   return homeStackPath
+end project_ConstructHomeFromFolder
+
+function project_ListPathSortedControllerNames projectName
+   put project_GetFolder (projectName) into projectFolder
+   -- put the project_Folder of stack projectName into projectFolder
+   
+   if there is not a folder projectFolder then return empty
+   put project_ListAllControllers (projectFolder) into stackPaths
+   --
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) then
+         put the short name of stack stackPath into gMenuTitle
+         put gMenuTitle & CR after gMenuTitles
+      end if
+   end repeat
+   delete char -1 of gMenuTitles
+   return gMenuTitles
+end project_ListPathSortedControllerNames
+
+function project_Exists projectName, pRepoFolder
+   -- put env_GetProjectFolder (projectName) into projectFolder
+   put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   --
+   if projectFolder is empty then
+      return false
+   else
+      return true
+   end if
+end project_Exists
+
+
+--> Project
+-
+command project_FindFromFolder someFolder, @homeStackName, @projectFolder, @homeStackPath
+   set the itemdelimiter to slash
+   put the number of items of someFolder into maxItemNum
+   repeat with itemNum = maxItemNum down to 1
+      -- could look for lcw project array file
+      put item -1 of someFolder into folderName
+      if module_IsNotaProject (someFolder) then
+         -- it's not a top level project folder
+         delete item -2 to -1 of someFolder
+         next repeat
+      end if
+      
+      put folderName & ".livecode" into shortStackFile -- shame we must insist in this an not allow .livecodescript
+      put someFolder & shortStackFile into homeStackPath
+      
+      if exists (stack homeStackPath) then
+         put someFolder into projectFolder
+         put the short name of stack homeStackPath into homeStackName
+         return true
+      else
+         delete item -1 of someFolder
+      end if
+   end repeat
+   
+   put empty into homeStackName
+   put empty into projectFolder
+   put empty into homeStackPath
+   return false
+end project_FindFromFolder
+
+
+--> Project | Folder | Old
+-
+function project_FindFolder somePath
+   -- assumes somePath is a path to a stack or file and not a folder
+   -- returns the top module or "project folder"
+   put somePath into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   
+   project_FindFromFolder someFolder, homeStackName, projectFolder, homeStackPath
+   return projectFolder
+end project_FindFolder
+
+
+--> Project | Home
+-
+function project_GetHomeStackBrowser pHomeStackName
+   if exists (widget "Home Browser" of cd 1 of stack pHomeStackName) is false then return empty
+   put the long id of widget "Home Browser" of cd 1 of stack pHomeStackName into browserWidget
+   return browserWidget
+end project_GetHomeStackBrowser
+
+command project_CreateHomeBrowser pHomeStackName
+   if pHomeStackName is empty then put the short name of the target into pHomeStackName
+   if exists (widget "Home Browser" of cd 1 of stack pHomeStackName) is true then return empty
+   
+   put the long id of card  1 of stack pHomeStackName into cardObject
+   if exists (stack "behavior_HomeCard") then
+      set the behavior of cardObject to the long id of stack "behavior_HomeCard"
+   else
+      put "on resizeStack" into someScript
+      put CR & "   set the rect of widget 1 of me to the rect of this card" after someScript
+      put CR & "end resizeStack" after someScript
+      set the script of cardObject to someScript
+   end if
+   
+   go to card 1 of stack pHomeStackName
+   create widget "Home Browser" as "com.livecode.widget.browser"
+   put it into createdObject
+   set the rect of createdObject to the rect of cardObject
+   set the url of createdObject to "http://google.com"
+   return createdObject
+end project_CreateHomeBrowser
+
+
+--> LCW
+-
+function lcw_HomeFolder
+   --  see "project_HomeFolder"
+   if the environment is "mobile" then
+      put specialFolderPath ("resources") into lcwHomeFolder
+      put slash after lcwHomeFolder
+   else  
+      -- rumour has it that this does not work on mobile?
+      put the stack_Folder of of stack "LCW" into lcwHomeFolder
+   end if
+   return lcwHomeFolder
+end lcw_HomeFolder
+
+function lcw_GetAuthor
+   put pref_GetValue ("userName") into authorName
+   if authorName is empty then put "David Bovill" into authorName
+   return authorName
+end lcw_GetAuthor
+
+command lcw_SetAuthor authorName
+   pref_SetValue "userName", authorName
+end lcw_SetAuthor
+
+function lcw_HomeStackName
+   return "LCW"
+end lcw_HomeStackName
+
+function lcw_Ask someQuestion, pDefault, pDisplayView, pVarValue
+   text_ReQuote someQuestion, pVarValue
+   --
+   if exists (pDisplayView) then
+      if pTitle is not empty then -- makes no difference on MacOS
+         ask someQuestion with pDefault titled pTitle as sheet
+      else
+         ask someQuestion with pDefault as sheet
+      end if
+   else
+      ask someQuestion with pDefault
+   end if
+   put it into theResult
+   if the result is "Cancel" then exit to top
+   return theResult
+end lcw_Ask
+
+command lcw_Answer someQuestion, pDisplayView, pQVar, pQVar2, pQVar3
+   put param (4) into pQVar2
+   put param (5) into pQVar3
+   --
+   if exists (pDisplayView) then
+      dispatch "lcw_Answer" to pDisplayView with someQuestion, empty, pQVar, pQVar2, pQVar3
+      return the result
+   end if
+   put lcw_Question (someQuestion, pQVar, pQVar2, pQVar3) into someQuestion
+   --
+   answer someQuestion with "Cancel" or "OK" as sheet
+   if it is "Cancel" then exit to top
+   return it
+end lcw_Answer
+
+command lcw_AnswerWarning someQuestion, pDisplayView, pQVar
+   put param (4) into pQVar2
+   put param (5) into pQVar3
+   --
+   if exists (pDisplayView) then
+      -- this is an ugly hack to change the target to pDisplayView
+      dispatch "lcw_AnswerWarning" to pDisplayView with someQuestion, empty, pQVar, pQVar2, pQVar3
+      exit to top
+   end if
+   --
+   put lcw_Question (someQuestion, pQVar, pQVar2, pQVar3) into someQuestion
+   answer warning someQuestion with "OK" as sheet
+   exit to top
+end lcw_AnswerWarning
+
+function lcw_Question someQuestion, pQVar, pQVar2, pQVar3
+   -- put param (4) into pQVar2
+   -- put param (5) into pQVar3
+   --
+   put _ConstructDoScript (someQuestion, pQVar, pQVar2, pQVar3) into doScript
+   if doScript is not empty then
+      do doScript
+      put merge (someQuestion) into someQuestion
+   end if
+   text_ReQuote someQuestion
+   return someQuestion
+end lcw_Question
+
+
+--> LCW | Folder
+-
+function lcw_GuessLcwHomePath pHomePath
+   -- only works now for top level stacks, libs, models etc
+   if pHomePath is empty then put the effective filename of the defaultstack into pHomePath
+   set the itemdelimiter to slash
+   
+   -- hack (simple check "project_FindFolder()")
+   get item -2 of pHomePath
+   if it is among the items of "libraries/models/controllers/stacks/views/behaviors" then
+      -- not accounting for modules
+      put "lcw/lcw.livecode" into item -3 to -1 of pHomePath
+   else
+      put "lcw/lcw.livecode" into item -2 to -1 of pHomePath
+   end if
+   
+   return pHomePath
+end lcw_GuessLcwHomePath
+
+function lcw_GetProjectFolder projectHomePath
+   set the itemdelimiter to slash
+   put lcw_GuessLcwHomePath (projectHomePath) into lcwHomePath
+   
+   -- let's check that stack LCW.livecode is there (will load stack into memory but not initialise)
+   if there is a stack lcwHomePath then
+      put item 1 to (the number of items of lcwHomePath - 1) of projectHomePath into projectFolder
+      put slash after projectFolder
+      return projectFolder
+   else -- could check for the stack being a module here
+      return empty
+   end if
+end lcw_GetProjectFolder
+
+
+--> LCW | Folder | User
+-
+function lcw_UserHomeStack
+   put lcw_UserProjectFolder() into userFolder
+   put lcw_UserHomeStackName() into lcwUserHomeStackName
+   put userFolder & lcwUserHomeStackName & ".livecode" into userHomePath
+   
+   if exists (stack userHomePath) is false then
+      create script only stack lcwUserHomeStackName
+      set the filename of stack lcwUserHomeStackName to userHomePath
+      save stack lcwUserHomeStackName
+   end if 
+   
+   put the name of stack lcwUserHomeStackName into stackObject
+   return stackObject
+end lcw_UserHomeStack
+
+function lcw_UserMetadataFolder
+   put lcw_UserProjectFolder ("lcw_Metadata") into lcwUserMetadataFolder
+   return lcwUserMetadataFolder
+end lcw_UserMetadataFolder
+
+function lcw_UserHomePath
+   put lcw_UserProjectFolder() into userFolder
+   put lcw_UserHomeStackName() into lcwUserHomeStackName
+   put userFolder & lcwUserHomeStackName & ".livecode" into userHomePath
+   return userHomePath
+end lcw_UserHomePath
+
+function lcw_UserHomeStackName
+   return "lcw_User"
+end lcw_UserHomeStackName
+
+function lcw_UserProjectFolder pSubFolder
+   put revEnvironmentUserPluginsPath() & "/lcw_User/" into userProjectFolder
+   if pSubFolder is not empty then
+      if char 1 of pSubFolder is slash then delete char 1 of pSubFolder
+      text_AddTrailing pSubFolder, slash
+      put pSubFolder after userProjectFolder
+   end if
+   folder_CreateNested userProjectFolder
+   return userProjectFolder
+end lcw_UserProjectFolder
+
+
+--> Deps
+-
+/*
+Here we put deps that the project needs.
+These could be in a backscript named after the project like: back_LcwCommon or lib_LcwCommon
+*/
+
+function array_Get someFile
+   put url ("binfile:" & someFile) into encodedDataArray
+   if encodedDataArray is empty then return empty
+   put arraydecode (encodedDataArray) into modelArray
+   return modelArray
+end array_Get
+
+command array_Set someFile, modelArray
+   if keys(modelArray) is empty then
+      delete file someFile
+   else
+      set the itemdelimiter to "/"
+      put item 1 to -2 of someFile into someFolder
+      folder_CreateNested someFolder
+      put arrayencode (modelArray) into url ("binfile:" & someFile)
+   end if
+end array_Set
+
+function array_FromFile someFile, pUseMerge
+   put url ("binfile:" & someFile) into someData
+   if someData is empty then return empty
+   
+   # Switch depending on file type
+   set the itemdelimiter to "."
+   switch item -1 of someFile
+      case "json"
+         -- put jsonImport (someData) into modelArray
+         put json_ToArray (someData, pUseMerge) into modelArray
+         return modelArray
+      case "array"
+         put arraydecode (someData) into modelArray
+         return modelArray
+      default
+         return someData
+   end switch
+end array_FromFile
+
+function json_ToArray pJSON, pUseMerge
+   local tArray,tKeys
+   if pJSON is empty then
+      return false
+   else if pUseMerge is false then -- not the same
+      put jsonImport (pJSON) into tArray
+      return tArray
+   end if
+   
+   try -- as otherwise an error with non-json causes script to exit
+      if pJSON is empty then return empty
+      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
+         put json_ToArray(tArray[tKey]) into tArray[tKey]
+      end repeat
+      return tArray
+   catch e
+      return empty
+   end try
+end json_ToArray
+
+setprop stackfile_Array sfArray
+   put the defaultstack into someStack
+   put stackFile_FromArray (sfArray) into sfTable
+   sort sfTable by item 1 of each
+   set the stackfiles of someStack to sfTable
+   return sfTable
+end stackfile_Array
+
+function stackFile_FromArray stackFileArray
+   combine stackFileArray using CR and comma
+   sort stackFileArray
+   return stackFileArray
+end stackFile_FromArray
+
+command folder_Add @someFolder, pSubFolderPath
+   switch
+      case someFolder is empty
+         return "Error, folder is empty"
+      case pSubFolderPath is not empty
+         if char 1 of pSubFolderPath = slash then delete char 1 of pSubFolderPath
+         put pSubFolderPath after someFolder
+         text_AddTrailing someFolder, slash
+   end switch
+   return empty
+end folder_Add
+
+function folder_ListStackPaths someFolder
+   if there is not a folder someFolder then return empty
+   
+   if char -1 of someFolder is not slash then put slash after someFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into stackFilePath
+      if there is a stack stackFilePath then
+         put stackFilePath & CR after stackFilePaths
+      end if
+   end repeat
+   delete char -1 of stackFilePaths
+   set the defaultfolder to oFolder
+   return stackFilePaths
+end folder_ListStackPaths
+
+function folder_ListShort rootFolder, pFilter
+   if there is not a folder rootFolder then return empty
+   
+   put the defaultfolder into oDefault
+   set the defaultfolder to rootFolder
+   put the folders into shortFolders
+   set the defaultfolder to oDefault
+   
+   filter shortFolders without ".*"
+   if pFilter is not empty then 
+      filter shortFolders with pFilter
+   end if
+   return shortFolders
+end folder_ListShort
+
+function folder_ListLong someFolder
+   if there is not a folder someFolder then return empty
+   text_AddTrailing someFolder, slash
+   
+   put folders (someFolder) into shortFolders
+   repeat for each line shortFolder in shortFolders
+      if char 1 of shortFolder = "." then next repeat
+      put someFolder & shortFolder & slash & CR after longSubFolders
+   end repeat
+   delete char -1 of longSubFolders
+   return longSubFolders
+end folder_ListLong
+
+command folder_CreateFromFile someFile
+   put someFile into someFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of someFolder
+   folder_CreateNested someFolder
+   return someFolder
+end folder_CreateFromFile
+
+command folder_CreateNested someFolder
+   if there is a folder someFolder then return empty   
+   set the itemdelimiter to "/"
+   repeat with itemNum = 2 to the number of items of someFolder
+      put item 1 to itemNum of someFolder & "/" into testFolder
+      if there is a folder testFolder then next repeat
+      create folder testFolder
+   end repeat
+   text_AddTrailing someFolder, slash
+   return someFolder
+end folder_CreateNested
+
+function folder_GetSister shortFolder, someFileOrFolder
+   set the itemdelimiter to slash
+   if char -1 of someFileOrFolder = slash then
+      put shortFolder into item -1 of someFileOrFolder
+   else
+      put shortFolder into item -2 to -1 of someFileOrFolder
+   end if
+   put someFileOrFolder & slash into sisterFolder
+   return sisterFolder
+end folder_GetSister
+
+function shell_GetMergedPath pNewItems
+   -- copied from Terminal using "echo $PATH"
+   get "/Users/david/.nvm/versions/node/v19.8.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin"
+   split it by ":" as set
+   --
+   put $Path into pathArray
+   split pathArray by ":" as set
+   union pathArray with it 
+   --
+   if pNewItems is not empty then
+      split pNewItems by ":" as set
+      union pathArray with pNewItems 
+   end if
+   --
+   combine pathArray with ":" as set
+   return pathArray
+end shell_GetMergedPath
+
+function ask_Question someQuestion, pDefault, pTitle, pQVar, pIcon
+   put lcw_Question (someQuestion, pQVar) into someQuestion
+   switch pIcon
+      -- as sheet has no effect
+      case "information"
+         ask information someQuestion with pDefault titled pTitle as sheet
+         break
+      case "error"
+         ask error someQuestion with pDefault titled pTitle as sheet
+         break
+      case "warning"
+         ask warning someQuestion with pDefault titled pTitle as sheet
+         break
+      default
+         ask question someQuestion with pDefault titled pTitle as sheet
+   end switch
+   if the result is "Cancel" then exit to top
+   return it
+end ask_Question
+
+
+--> Deps | Stack
+-
+function stackFile_FromArray stackFileArray
+   combine stackFileArray using CR and comma
+   sort stackFileArray by item 1 of each
+   return stackFileArray
+end stackFile_FromArray
+
+function kwote someText, pQuoteChar
+   if pQuoteChar is empty then put quote into pQuoteChar
+   return pQuoteChar & someText & pQuoteChar
+end kwote
+
+command text_ReQuote @someText, pMergeValue
+   replace "'" with quote in someText
+   if pMergeValue is not empty then
+      put pMergeValue into var
+      put merge (someText) into someText
+   end if
+end text_ReQuote
+
+command text_AddTrailing @someText, someChar
+   if char -1 of someText is not someChar then
+      put someChar after someText
+   end if
+end text_AddTrailing
+
+function text_GetMergeVars mergeText
+   -- put text_GetBetween ("[[", "]]", someText, startAfterCharNum)
+   put "\[\[" into someReg
+   put "[^\]]*" into notaSquareClosingBracket
+   put "(" & notaSquareClosingBracket & ")" after someReg
+   put "\]\]" after someReg
+   --
+   repeat 100 -- for safety
+      if matchChunk (mergeText, someReg , startMatch, endMatch) is true then
+         put char startMatch to endMatch of mergeText into varName
+         put varName & CR after varNames
+         delete char 1 to (endMatch + 2) of mergeText
+      else
+         delete char -1 of varNames
+         return varNames
+      end if
+   end repeat
+end text_GetMergeVars
+
+
+--> Pref | Value | Get
+-
+function pref_GetValue prefName
+   global gLCW
+   return gLCW ["prefsArray"][prefName]
+end pref_GetValue
+
+function pref_FetchValue prefName, pPrefKey
+   if pPrefKey is empty then put "Default" into pPrefKey
+   --
+   put pref_FetchArray (pPrefKey) into prefArray
+   put prefArray [prefName] into someValue
+   return someValue
+end pref_FetchValue
+
+function pref_FetchArray pProjectName
+   if pProjectName is empty then put "Default" into pProjectName
+   put pref_FetchData() into dataArray
+   return dataArray [pProjectName]
+end pref_FetchArray
+
+function pref_FetchData
+   put pref_File() into someFile
+   put array_Get (someFile) into dataArray
+   return dataArray
+end pref_FetchData
+
+function pref_File
+   put specialfolderpath ("preferences") & "/lcw_Preferences.array" into prefFile
+   return prefFile
+end pref_File
+
+function folder_AddShort projectFolder, shortFolder
+   text_AddTrailing projectFolder, slash
+   if shortFolder is not empty then put shortFolder & slash after projectFolder
+   return projectFolder
+end folder_AddShort
+
+function library_FetchProjectFolder projectName, pRepoFolder
+   -- put env_GetProjectFolder (projectName, pRepoFolder) into projectFolder
+   -- put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder
+   --
+   put library_FetchProjectArray (projectName) into projectArray
+   put projectArray ["projectFolder"] into projectFolder
+   
+   if projectFolder is empty then return projectFolder
+   text_AddTrailing projectFolder, slash   
+   if there is a folder projectFolder then
+      return projectFolder
+   else
+      return empty
+   end if
+end library_FetchProjectFolder
+
+
+--> Private
+-
+private function _ConstructDoScript someQuestion, pQVar, pQVar2, pQVar3
+   put text_GetMergeVars (someQuestion) into mergeVars
+   repeat with lineNum = 1 to the number of lines of mergeVars
+      put line lineNum of mergeVars into varName
+      put lineNum + 1 into pNum
+      put param (pNum) into pValue
+      replace quote with "'" in pValue
+      --
+      if pValue is not empty then
+         put "put" && kwote (pValue) && "into" && varName & CR after doScript
+      end if
+   end repeat
+   delete char -1 of doScript
+   return doScript
+end _ConstructDoScript
+
+private command _AddToStackFileArray @stackFileArray, someFolder, pHomeFolder
+   if there is not a folder someFolder then return false
+   
+   if char -1 of someFolder is not slash then put slash after someFolder
+   put the defaultfolder into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   
+   set the itemdelimiter to slash
+   put the number of items of pHomeFolder + 1 into startItemNum
+   repeat for each line shortFile in shortFiles
+      if shortFile begins with "." then next repeat
+      put someFolder & shortFile into stackFilePath
+      if exists (stack stackFilePath) is false then
+         next repeat -- no need to index things that aren't stacks
+      end if
+      --
+      get the stackFile_Array of stack stackFilePath
+      union stackFileArray with it
+      --
+      put the short name of stack stackFilePath into stackName
+      if pHomeFolder is empty then
+         put stackRelPath into stackFileArray [stackName]
+      else
+         -- make a relative path
+         put item startItemNum to -1 of stackFilePath into stackRelPath
+         put stackRelPath into stackFileArray [stackName]
+      end if
+   end repeat
+   set the defaultfolder to oFolder
+   return true
+end _AddToStackFileArray
+
+private command _LoadStackFiles projectName, projectArray
+   put projectArray ["stackFileArray"] into stackFileArray
+   set the stackfile_Array of stack projectName to stackFileArray
+   put the result into stackFileTable
+   return stackFileTable
+end _LoadStackFiles
+
+private command _LoadProjectUsed projectFolder, projectArray
+   put project_ListUsedPathsFromArray (projectArray, projectFolder) into usedStackPaths
+   use_StackNames usedStackPaths
+end _LoadProjectUsed
