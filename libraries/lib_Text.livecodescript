@@ -686,9 +686,10 @@ end list_FromIndex
 -
 function text_OffsetAfter stringToFind, textToSearch, pStartSearchAt
    put offset (stringToFind, textToSearch, pStartSearchAt) into foundCharNum
-   if foundCharNum is not 0 then
-      add pStartSearchAt to foundCharNum
-   end if
+   if foundCharNum is 0 then return 0
+   
+   add pStartSearchAt to foundCharNum
+   return foundCharNum
 end text_OffsetAfter
 
 function text_OffsetBefore someString, someText, beforeHere

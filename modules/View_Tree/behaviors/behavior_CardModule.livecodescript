@@ -18,12 +18,11 @@ getprop module_View
    put the stack_Name of me into sName
    switch
       case exists (control sName of me)
+         -- fails when staack is cloned
          return the long id of control sName of me
-         break
       case exists (control 1 of me)
-         breakpoint
+         breakpoint -- not safe. Fix with card level "module_View"
          return the long id of control 1 of me
-         break
       default
          breakpoint
          return the long id of me

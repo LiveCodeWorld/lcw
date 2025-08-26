@@ -64,19 +64,27 @@ end mouse_Controller
 on mouseDoubleUp
    put the clickText into cText
    put the doubleClick_Message of me into mDoubleUp 
-   put the mouse_Controller of me into mouseController
+   put the mouse_Controller of me into mController
    put the long id of me into tObject
    
    if mDoubleUp is empty then
-      if the optionKey is "Down" then breakpoint
       pass mouseDoubleUp
    end if
    
-   dispatch mDoubleUp to mouseController with tObject,cText
-   if it is "unhandled" then
-      breakpoint
-      edit the script of mouseController
-   end if
+   dispatch mDoubleUp to mController with tObject,cText
+   switch
+      case it is "unhandled"
+         breakpoint
+         edit the script of mController
+         break
+      case the optionKey is "Down"
+         if exists (mController) then
+            put mDoubleUp
+            edit the script of mController
+         else
+            breakpoint
+         end if
+   end switch
 end mouseDoubleUp
 
 getprop doubleClick_Message

@@ -12,17 +12,23 @@ version: 0.1
 -
 local LocalArray
 
---> Events
+
+--> Messages
+-
+on footer_HiliteChange fWidget, fName, fNum
+   if the optionKey is "Down" then breakpoint
+   put the footer_ItemArray of fWidget into iArray
+   --
+   put fName &&  fNum
+end footer_HiliteChange
 
 on doubleClick_Tree dView, sPath
    if the optionKey is "down" then breakpoint
    put item 2 of sPath into stackName
-   edit the script of stack stackName
+   put the selected_Value of dView into sValue
+   --
+   put sValue
 end doubleClick_Tree
-
-on footer_HiliteChange dView, fName
-   put fName
-end footer_HiliteChange
 
 
 --> Menu | Props
@@ -63,35 +69,35 @@ private function _SelLine
    return LocalArray ["sLine"]
 end _SelLine
 
-
---> Global | Data | Line | Menu
--
-on menu_DepKeys treeView
-   put _StackName() into sName
-   put the dep_StackNames of stack sName
-end menu_DepKeys
-
 getprop disabled_DepKeys
    return _TopPath() = "behavior_IndexArray"
 end disabled_DepKeys
 
+
+--> Global | Data | Line | Menu
+-
+on menu_Keys treeView
+   put _StackName() into sName
+   put the dep_StackNames of stack sName
+end menu_Keys
+
 private on _
 end _
 
-on submenu_Tree
+on insert_Tree
    return "Global | Array | Line | Menu"
-end submenu_Tree
+end insert_Tree
 
 on menu_Behavior arrayWidget
    put the behavior of arrayWidget into bObject
    edit the script of bObject
 end menu_Behavior
 
-on menu_ModuleTools arrayWidget
+on menu_Tools arrayWidget
    put the data_View of arrayWidget into dView
    put the view_Name of dView into viewName
    display_ModuleTools viewName
-end menu_ModuleTools
+end menu_Tools
 
 private on __
 end __

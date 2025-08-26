@@ -79,6 +79,36 @@ function pathArray_Construct projectName, sFileArray, pFilter
 end pathArray_Construct
 
 
+--> Deps
+-
+function lcw_HomeFolder lcwHomeStackFile
+   put lcwHomeStackFile into lcwHomeFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of lcwHomeFolder
+   set the itemdelimiter to comma
+   return lcwHomeFolder
+end lcw_HomeFolder
+
+function dataStack_Name
+   return "View|Data"
+end dataStack_Name
+
+command dataStack_SetDefaultFolder
+   put default_FarmFolder() into farmFolder
+   dataStack_SetValue "default_FarmFolder", farmFolder
+end dataStack_SetDefaultFolder
+
+function dataStack_GetValue propName
+   put dataStack_Name() into dName
+   return the uOPN [propName] of stack dName
+end dataStack_GetValue
+
+command dataStack_SetValue propName, propValue
+   put dataStack_Name() into dName
+   set the uOPN [propName] of stack dName to propValue
+end dataStack_SetValue
+
+
 --> Platform
 -
 function platform_RestUrl restBit

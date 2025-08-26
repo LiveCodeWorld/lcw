@@ -51,7 +51,7 @@ private on _
 end _
 
 -- on menu_MouseCommand dView, dCommand
-   breakpoint
+breakpoint
 end menu_MouseCommand
 
 on menu_DragCommand dView, dCommand
@@ -99,13 +99,11 @@ end ___
 on menu_EditBehavior dView, propName
    switch propName
       case "data_View"
-         put the behavior of dView into bObject
-         break
+      case "-"
       case "index_View"
-         put the propName of dView into cView
-         put the behavior of cView into bObject
-         break
       case "tree_View"
+      case "poly_View"
+      case "footer_View"
          put the propName of dView into cView
          put the behavior of cView into bObject
          break

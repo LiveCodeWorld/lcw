@@ -44,8 +44,7 @@ getprop depGraph_Params
 end depGraph_Params
 
 getprop checked_StartUsing
-   put dataStack_Name() into dName
-   return dName is among the lines of the stacksinuse
+   return "View|Data" is among the lines of the stacksinuse
 end checked_StartUsing
 
 getprop checked_DisplayEnvironment

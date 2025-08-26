@@ -15,14 +15,11 @@ local LocalArray
 --> Remove
 -
 getprop hilited_Element
-   -- seems wrong name???
-   breakpoint
-   return the selected_Path of me
+   return the hilitedElement of me
 end hilited_Element
 
 setprop hilited_Element commaPath
-   breakpoint
-   set the selected_Path of me to commaPath
+   set the hilitedElement of me to commaPath
 end hilited_Element
 
 

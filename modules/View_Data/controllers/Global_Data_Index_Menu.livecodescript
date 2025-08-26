@@ -55,12 +55,12 @@ on menu_FindDoubleClickHandler indexView
    put the doubleClick_Message of indexView into mDoubleUp
    put "M" && mDoubleUp into shortHkey
    --
-   put the mouse_Target of indexView into mTarget
-   if exists (mTarget) is false then
-      lcw_AnswerWarning "The mouse_Target of [[indexView]] does not exist!", indexView, indexView
+   put the mouse_Controller of indexView into mController
+   if exists (mController) is false then
+      lcw_AnswerWarning "The mouse_Controller of [[indexView]] does not exist!", indexView, indexView
    end if
    
-   put the found_Hkey [shortHkey] of mTarget into hKey
+   put the found_Hkey [shortHkey] of mController into hKey
    if hKey is empty then
       put shortHkey
       lcw_AnswerWarning "Cannot locate [[shortHkey]]", indexView, shortHkey

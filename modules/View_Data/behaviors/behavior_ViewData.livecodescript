@@ -21,6 +21,10 @@ end array_View
 
 --> Working on
 -
+getprop footer_View
+   return _FooterWidget()
+end footer_View
+
 getprop default_MenuTitle
    put the uRIP ["name"] of me into vName
    return menu_ConstructTitle (vName)
@@ -256,8 +260,11 @@ setprop dataView_Style sStyle
          set the header_IsVisible of me to true
          set the footer_IsVisible of me to true
          set the body_IsVisible of me to true
-         set the body_Type of me to "Tree"
          set the header_Height of me to empty
+         --
+         set the body_Type of me to "Tree"
+         put the footer_View of me into footerView
+         set the itemStyle of footerView to "icons"
    end switch
    unlock screen
 end dataView_Style
@@ -775,10 +782,6 @@ on itemClick pItemIndex, pMouseButton
    put iDescription
 end itemClick
 
-on hiliteChanged
-   _DoFooter
-end hiliteChanged
-
 on resizeControl
    local sRect
    put the rect of me into sRect
@@ -1108,24 +1111,6 @@ private command _DoHeader -- mouseUp in _HeaderWidget()
          -- clicked on the header-widget background
    end switch
 end _DoHeader
-
-private command _DoFooter
-   put the long id of me into dView
-   -- put the mouse_Controller of me into mController
-   put the title_Controller of me into mController
-   
-   # Get Hilite info
-   put _FooterWidget() into fWidget
-   put the hilitedItem of fWidget into iNum
-   put the hilitedItemName of fWidget into iName
-   
-   # Dispatch (menu_Controller is default)
-   dispatch "footer_HiliteChange" to mController with dView,iName,iNum
-   if it is "unhandled" then
-      -- breakpoint
-      -- edit the script of mController
-   end if
-end _DoFooter
 
 command _DoDrop
    put the long id of me into dView

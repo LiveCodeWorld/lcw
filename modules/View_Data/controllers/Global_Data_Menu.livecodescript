@@ -13,38 +13,12 @@ version: 0.1
 local LocalArray
 
 
---> Messages
--
-on footer_HiliteChange dView, fName, fNum
-   if the optionKey is "Down" then breakpoint
-   --
-   switch fNum
-      case 4
-         put the header_IsVisible of dView into sBoolean
-         set the header_IsVisible of dView to (sBoolean is false)
-         break
-      default
-         set the body_Type of dView to fName
-   end switch
-end footer_HiliteChange
-
-
 --> Menu | Props
 -
 getprop menu_Target [tObject]
    put the data_View of tObject into dataView
-   if exists (dataView) then return dataView
-   
-   return empty
-   
-   put the display_View of tObject into LocalArray ["dView"]
-   --
-   put the displayed_Object of tObject into sObject
-   if exists (sObject) then
-      return sObject
-   else
-      return tObject
-   end if
+   if exists (dataView) is false then return empty
+   return dataView
 end menu_Target
 
 getprop menu_CheckTarget [dView]
@@ -130,10 +104,6 @@ end submenu_Demo
 private on _
 end _
 
-on submenu_Body
-   return "Global | Data | Body | Menu"
-end submenu_Body
-
 on submenu_Stack
    return "Global | Data | Stack | Menu"
 end submenu_Stack
@@ -141,6 +111,14 @@ end submenu_Stack
 on submenu_Show
    return "Global | Data | Show | Menu"
 end submenu_Show
+
+on submenu_Body
+   return "Global | Data | Body | Menu"
+end submenu_Body
+
+on submenu_Footer
+   return "Global | Data | Footer | Menu"
+end submenu_Footer
 
 private on __
 end __

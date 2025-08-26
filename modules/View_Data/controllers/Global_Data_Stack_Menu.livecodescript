@@ -72,13 +72,25 @@ on menu_Clone dView
    module_Clone moduleName, true
 end menu_Clone
 
+on menu_ToggleOthers dView
+   put the stack_Name of dView into sName
+   --
+   put display_GetHidden() is empty into sBoolean
+   display_SetHidden sBoolean, sName
+end menu_ToggleOthers
+
+getprop checked_ToggleOthers
+   put display_GetHidden() is empty into sBoolean
+   return sBoolean is false
+end checked_ToggleOthers
+
 private on _
 end _
 
 on menu_StackStyle dView, sStyle
    set the stack_Style of dView to sStyle
 end menu_StackStyle
-   
+
 on menu_CardMargin dView, sMargin
    if sMargin = "Ask" then
       put the card_Margin of dView into sMargin
