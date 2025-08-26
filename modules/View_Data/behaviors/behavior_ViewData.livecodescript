@@ -653,11 +653,13 @@ setprop body_Type sType
       end if
    end repeat
    
-   put the short id of _FooterWidget() into wID
-   --
-   set lockmessages to true
-   set the hilitedItemName of widget id wID of me to sType
-   set lockmessages to false
+   put _FooterWidget() into footerWidget
+   if the visible of footerWidget is true then
+      put the short id of footerWidget into wID
+      set lockmessages to true -- not working
+      set the hilitedItemName of widget id wID of me to sType -- triggered
+      set lockmessages to false
+   end if
    unlock screen
 end body_Type
 
@@ -841,8 +843,8 @@ setprop displayed_Data [pTitle] dData
          set the displayed_Array [pTitle] of me to dData
       end if
    else
-      set the index_Data [pTitle] of me to dData
       set the footer_IsVisible of me to false
+      set the index_Data [pTitle] of me to dData
    end if
    unlock screen
 end displayed_Data

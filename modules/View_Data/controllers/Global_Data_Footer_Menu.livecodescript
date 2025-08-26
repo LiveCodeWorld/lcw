@@ -113,6 +113,12 @@ getprop deleteIconFamily_Params
    return fNames
 end deleteIconFamily_Params
 
+getprop footerTitle_Params
+   -- return "Global | GIT | Stage | Menu,Global | GIT | Line | File | Menu"
+   put se_ListTabMenus (true) into mTitles
+   return mTitles
+end footerTitle_Params
+
 
 --> Global | Data | Footer | Menu
 -
@@ -202,18 +208,13 @@ end menu_DeleteItem
 private on _
 end _
 
-on menu_ControllerTitle footerView, mTitle   
-   get the menu_IconArray of stack mTitle
-   display_Data it, mTitle, "the menu_IconArray"
-   
-   set the footer_ControllerTitle of footerView to mTitle
-   -- get the menu_ItemArray of stack mTitle
-   -- display_Data it, mTitle, "the menu_ItemArray"
-end menu_ControllerTitle
-
-getprop controllerTitle_Params
-   return "Global | GIT | Stage | Menu,Global | GIT | Line | File | Menu"
-end controllerTitle_Params
+on menu_FooterTitle footerView, mTitle
+   if the shiftKey is "Down" then
+      menu_Edit mTitle
+   else
+      set the footer_Title of footerView to mTitle
+   end if
+end menu_FooterTitle
 
 on menu_DisplayItemArray footerView
    put the footer_ItemArray of footerView into iArray

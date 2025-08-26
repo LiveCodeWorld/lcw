@@ -10,6 +10,29 @@ version: 0.1
 
 --> Working on
 -
+getprop footer_Title
+   put the uOPN ["menu_Title"] of me into mTitle
+   return mTitle
+end footer_Title
+
+setprop footer_Title mTitle
+   if exists (stack mTitle) is false then
+      return "Error, controller stack does not exists:" && mTitle
+   end if
+   --
+   put the menu_IconArray of stack mTitle into mIconArray
+   get mIconArray [1]["icon_name"]
+   if it is empty then
+      put "text" into sStyle
+   else
+      put "icons" into sStyle
+   end if
+   set the footer_Data [sStyle] of me to mIconArray -- not working with arrays
+   --  
+   set the uOPN ["menu_title"] of me to mTitle
+   return mItemArray
+end footer_Title
+
 private command _DoFooter
    put the long id of me into fWidget
    put the line_Controller of me into mController
@@ -137,23 +160,6 @@ setprop footer_ItemHkey [nameOrNum] hKey
    
    return mItemArray
 end footer_ItemHkey
-
-getprop footer_ControllerTitle
-   put the uOPN ["menu_Title"] of me into mTitle
-   return mTitle
-end footer_ControllerTitle
-
-setprop footer_ControllerTitle mTitle
-   if exists (stack mTitle) is false then
-      return "Error, controller stack does not exists:" && mTitle
-   end if
-   --
-   put the menu_IconArray of stack mTitle into mIconArray
-   set the footer_Data ["text"] of me to mIconArray -- not working with arrays
-   --  
-   set the uOPN ["menu_title"] of me to mTitle
-   return mItemArray
-end footer_ControllerTitle
 
 getprop footer_ItemArray
    put the footer_View of me into footerView
