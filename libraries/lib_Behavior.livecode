@@ -187,8 +187,12 @@ command behavior_SetStackNames stackNames, tObject
       put the behavior of bObject into bBehavior
       set the behavior of bObject to empty
       --
-      set the behavior of tObject to bObject
-      put bObject & CR after bObjects
+      try
+         set the behavior of tObject to bObject
+         put bObject & CR after bObjects
+      catch e
+         breakpoint
+      end try
       --
       put bObject into tObject
    end repeat
@@ -250,7 +254,7 @@ end behavior_SafeClear
 --> Module | Behaviors
 -
 command module_ClearDefaultBehaviors mObject
-   put the module_DefaultHierarchy of mObject into bObjects -- complicated
+   put the default_ModuleBehaviors of mObject into bObjects -- complicated
    _ClearBehaviors bObjects
 end module_ClearDefaultBehaviors
 
@@ -287,7 +291,7 @@ setprop behavior_Hierarchy [dontClear] bObjects
    --
    switch bObjects
       case "default"
-         put the module_DefaultHierarchy of tObject into dHierarchy
+         put the default_ModuleBehaviors of tObject into dHierarchy
          if dontClear is false then
             _ClearBehaviors dHierarchy -- can crash
          end if

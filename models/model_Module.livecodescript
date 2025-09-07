@@ -13,30 +13,68 @@ The model for modules should share many of teh handlers for projects as the stru
 
 --> Working on
 -
+getprop module_MenuTitles
+   -- was "module_ControllerStackNames"
+   put the long id of the target into tObject
+   put the module_Controllers of tObject into cObjects
+   repeat for each line cObject in cObjects
+      put the stack_Name of cObject into cName
+      put cName & CR after cNames 
+   end repeat
+   delete char -1 of cNames
+   sort cNames
+   return cNames
+end module_MenuTitles
+
+function lcw_GetFolder projectName, pModuleShortFolder
+   get lcw_ConstructFolder (projectName, pModuleShortFolder)
+   if there is a folder it then
+      return it
+   else
+      return empty
+   end if
+end lcw_GetFolder
+
+function lcw_ConstructFolder projectName, pModuleShortFolder
+   -- module or project
+   put env_ProjectFolder (projectName) into projectFolder
+   if pModuleShortFolder is empty then
+      return projectFolder
+   else
+      put module_GetFolder (pModuleShortFolder, projectFolder) into moduleFolder
+      return moduleFolder
+   end if
+end lcw_ConstructFolder
+
+function module_GetFolder moduleShortFolder, projectFolder
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
+   put rootModuleFolder & moduleShortFolder & slash into moduleFolder
+   if there is a folder moduleFolder then
+      return moduleFolder
+   else
+      return empty
+   end if
+end module_GetFolder
+
 getprop lcw_Folder [rPath]
    -- module or project
    put the long id of the target into tObject
    --
-   put lcw_ConstructFolder (tObject, rPath) into mFolder
+   put the module_Folder of tObject into mFolder
+   if there is not a folder mFolder then
+      put the project_Folder of tObject into mFolder
+      if there is not a folder mFolder then
+         put the project_Folder of me into mFolder -- Outside of LCW (lazy default)
+      end if
+   end if
+   text_AddPath mFolder, rPath, slash -- always a folder
+   
    if there is a folder mFolder then
       return mFolder
    else
       return empty
    end if
 end lcw_Folder
-
-function lcw_ConstructFolder tObject, rPath
-   -- module or project
-   put the module_Folder of tObject into mFolder
-   if there is not a folder mFolder then
-      put the project_Folder of tObject into mFolder
-      if there is not a folder mFolder then
-         put the project_Folder of me into mFolder -- Outside of LCW
-      end if
-   end if
-   text_AddPath mFolder, rPath, slash -- always a folder
-   return mFolder
-end lcw_ConstructFolder
 
 getprop module_Folder
    put the long id of the target into tObject
@@ -149,39 +187,6 @@ getprop module_BahaviorFolder
    end if
 end module_BahaviorFolder
 
-getprop module_Array
-   put the module_JsonFile of the target into jsonFile
-   put array_FromFile (jsonFile) into moduleArray
-   return moduleArray
-end module_Array
-
-setprop module_Array moduleArray
-   -- put the module_JsonFile of the target into jsonFile
-   put the module_Name of the target into moduleName
-   put the module_Folder of the target into moduleFolder
-   if there is not a folder moduleFolder then return "Error, module_Folder does not exist for:" && the target
-   --
-   put module_ConstructJsonFile (moduleName, moduleFolder) into jsonFile
-   
-   if jsonFile is empty then return "Error, module_Folder does not exist for:" && the target
-   array_ToFile jsonFile, moduleArray
-   return jsonFile
-   
-   put the module_Folder of the target into moduleFolder
-   if there is not a folder moduleFolder then return "Error, module folder does not exist for:" && the target
-   project_StoreArray moduleFolder, moduleArray
-   return moduleFolder
-end module_Array
-
-getprop module_JsonFile
-   put the module_Name of the target into moduleName
-   put the module_Folder of the target into moduleFolder
-   if moduleFolder is empty then return empty
-   --
-   put module_JsonFile (moduleName, moduleFolder) into jsonFile
-   return jsonFile
-end module_JsonFile
-
 getprop module_BehaviorStackNames
    put the module_BehaviorPaths of the target into stackPaths
    repeat for each line stackPath in stackPaths
@@ -228,90 +233,11 @@ getprop module_BehaviorHierarchy [fromFolder]
    return walkHierarchy
 end module_BehaviorHierarchy
 
-getprop module_DefaultHierarchy
-   put the view_Name of the target into moduleName
-   if moduleName is empty then return empty
-   put revRuggedID (the target) into mObject
-   
-   # Names and stackPath
-   put label_BehaviorName (moduleName) into defaultBehaviorName
-   put the effective filename of stack moduleName into moduleStackPath
-   
-   # Module Behavior Folder
-   put project_FolderFromPath (moduleStackPath) into projectFolder
-   put module_GetBehaviorFolder (moduleName, projectFolder) into moduleBehaviorFolder
-   if there is not a folder moduleBehaviorFolder then return empty
-   
-   # Init bStackObjects with mObject
-   put mObject & CR into bStackObjects
-   if exists (stack defaultBehaviorName) then
-      put the name of stack defaultBehaviorName into defaultBehaviorObject
-      put defaultBehaviorObject & CR after bStackObjects
-   end if
-   
-   # Repeat shortfiles
-   put the defaultfolder into oFolder
-   set the defaultfolder to moduleBehaviorFolder
-   put the files into shortFiles
-   repeat for each line shortFile in shortFiles
-      put moduleBehaviorFolder & shortFile into bFilePath
-      if there is a stack bFilePath then
-         put the name of stack bFilePath into bStackObject
-         if the short name of bStackObject = defaultBehaviorName then
-            next repeat
-         else
-            put bStackObject & CR after bStackObjects
-         end if
-      end if
-   end repeat
-   delete char -1 of bStackObjects
-   set the defaultfolder to oFolder
-   
-   return bStackObjects   
-end module_DefaultHierarchy
-
 getprop module_StackPaths
    put the module_Folder of the target into moduleFolder
    put directory_ListNestedPaths (moduleFolder) into stackPaths
    return stackPaths
 end module_StackPaths
-
-getprop menubar_DefaultTitles
-   put the module_Name of the target into stackName
-   if stackName is empty then
-      put the project_Name of me into stackName
-      put the project_MenuTitle of stack stackName into defaultMenu
-      -- put the project_ControllerStackNames of stack stackName into mTitles
-      put empty into mTitles
-   else
-      put the module_MenuTitle of stack stackName into defaultMenu
-      put the module_ControllerStackNames of stack stackName into mTitles
-   end if
-   
-   if mTitles is empty then
-      put defaultMenu into defaultMenuTitles
-   else
-      filter mTitles without "* | Dev | Menu"
-      line_Delete defaultMenu, mTitles
-      put defaultMenu & CR & mTitles into defaultMenuTitles
-   end if
-   
-   # Add a Edit Menu if needed
-   if line 2 of defaultMenuTitles ends with "| Edit | Menu" is false then
-      put CR & "Global | Menu | Group | Edit" after line 1 of defaultMenuTitles
-   end if
-   
-   # Add Help Menu if needed
-   put lineOffset (" | Help | Menu", defaultMenuTitles) into lineNum
-   if lineNum > 0 then
-      put line lineNum of defaultMenuTitles into helpTitle
-      delete line lineNum of defaultMenuTitles
-      put CR & helpTitle after defaultMenuTitles
-   else
-      put CR & "Global | Menu | Group | Help" after defaultMenuTitles
-   end if
-   return word 1 to -1 of defaultMenuTitles
-end menubar_DefaultTitles
 
 getprop project_ShortFolder
    put the project_Folder of the target into projectFolder
@@ -440,18 +366,6 @@ getprop module_Controllers
    delete char -1 of moduleControllers
    return moduleControllers
 end module_Controllers
-
-getprop module_ControllerStackNames
-   put the long id of the target into tObject
-   put the module_Controllers of tObject into cObjects
-   repeat for each line cObject in cObjects
-      put the stack_Name of cObject into cName
-      put cName & CR after cNames 
-   end repeat
-   delete char -1 of cNames
-   sort cNames
-   return cNames
-end module_ControllerStackNames
 
 getprop module_BehaviorDepHkeyArray [fromFolder]
    local depHkeyArray

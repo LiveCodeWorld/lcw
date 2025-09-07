@@ -70,12 +70,24 @@ getprop icon_Params [footerView]
    --
    get the footer_ItemIcon [iNum] of footerView
    set the itemdelimiter to slash
-   if the number of items of it = 1 or the shiftKey is "Down" then
-      return iconNames()
+   if the number of items of it = 1 then
+      put empty into sFamily
    else
       put item 1 of it into sFamily
-      return iconNamesForFamily (sFamily)
    end if
+   
+   put iconFamilies() into fNames
+   
+   switch
+      case sFamily is empty
+      case the number of items of it = 1 or the shiftKey is "Down"
+         return iconNames()
+      case sFamily is not among the lines of fNames
+         return "Import Library" && sFamily
+         break
+      default
+         return iconNamesForFamily (sFamily)
+   end switch
 end icon_Params
 
 getprop handler_Param [footerView]
@@ -97,31 +109,41 @@ getprop handler_Params
    return hLabels
 end handler_Params
 
-getprop iconFamily_Param
-   return getCurrentIconFamily()
-end iconFamily_Param
-
-getprop iconFamily_Params
-   put iconFamilies() into iFamilyNames
-   return iFamilyNames
-end iconFamily_Params
-
-getprop deleteIconFamily_Params
-   put getCurrentIconFamily() into fName
-   put iconFamilies() into fNames
-   line_Delete fName, fNames
-   return fNames
-end deleteIconFamily_Params
-
 getprop footerTitle_Params
    -- return "Global | GIT | Stage | Menu,Global | GIT | Line | File | Menu"
-   put se_ListTabMenus (true) into mTitles
+   put the shiftKey is "Down" into sBoolean
+   put se_ListTabMenus (sBoolean) into mTitles
    return mTitles
 end footerTitle_Params
 
 
 --> Global | Data | Footer | Menu
 -
+on menu_DisplayIconDialogue footerView
+   display_IconDialogue footerView
+end menu_DisplayIconDialogue
+
+on menu_FooterTitle footerView, mTitle
+   if the shiftKey is "Down" then
+      menu_Edit mTitle
+   else
+      set the footer_Title of footerView to mTitle
+   end if
+end menu_FooterTitle
+
+on menu_ConstructGetProp footerView
+   put the footer_GetProp of footerView into sHandler
+   --
+   display_Script sHandler, "menu_IconArray"
+end menu_ConstructGetProp
+
+on submenu_Library
+   return "Global | Svg | Library | Menu"
+end submenu_Library
+
+private on ___
+end ___
+
 on menu_ItemStyle footerView, sStyle
    put toLower (sStyle) into lowStyle
    switch lowStyle
@@ -136,6 +158,37 @@ on menu_ItemStyle footerView, sStyle
          set the itemStyle of footerView to lowStyle
    end switch
 end menu_ItemStyle
+
+on menu_Icon footerView, sIconName
+   put the hilitedItem of footerView into iNum
+   --
+   if word 1 to 2 of sIconName = "Import Library" then
+      put word 3 of sIconName into fName
+      lcw_Answer "Import missing icon library '[[fName]]'?", footerView, fName
+      
+      menu_Do "menu_ImportIconFolder", "Global | Svg | IconLibrary | Menu", footerView
+      exit to top
+   end if
+   
+   put getCurrentIconFamily() into fName
+   put fName & slash before sIconName
+   set the footer_ItemIcon [iNum] of footerView to sIconName
+   if the shiftKey is "down" then
+      set the footer_ItemName [iNum] of footerView to sIconName
+   end if
+end menu_Icon
+
+on menu_DeleteItem footerView, iLabel
+   put the footer_ItemArray of footerView into sArray
+   --
+   put indexArray_Find (sArray, "label", iLabel) into iNum
+   indexArray_Delete sArray, iNum
+   --
+   set the footer_ItemArray of footerView to sArray
+end menu_DeleteItem
+
+private on __
+end __
 
 on menu_ItemLabel footerView
    put the hilitedItem of footerView into iNum
@@ -153,18 +206,6 @@ on menu_ItemName footerView
    set the footer_ItemName [iNum] of footerView to sName
 end menu_ItemName
 
-on menu_Icon footerView, sIconName
-   put the hilitedItem of footerView into iNum
-   --
-   put getCurrentIconFamily() into fName
-   put fName & slash before sIconName
-   --
-   set the footer_ItemIcon [iNum] of footerView to sIconName
-   if the shiftKey is "down" then
-      set the footer_ItemName [iNum] of footerView to sIconName
-   end if
-end menu_Icon
-
 on menu_Handler footerView, hkeyLine
    put the hilitedItem of footerView into iNum
    --
@@ -181,40 +222,13 @@ on menu_Handler footerView, hkeyLine
    set the footer_ItemBane [iNum] of footerView to iName
 end menu_Handler
 
-private on ___
-end ___
-
-on menu_IconFamily footerView, iFamilyName
-   setCurrentIconFamily iFamilyName
-   display_IconFamily iFamilyName
-end menu_IconFamily
-
-on menu_DeleteIconFamily footerView, iFamilyName
-   deleteIconFamily iFamilyName
-end menu_DeleteIconFamily
-
-private on __
-end __
-
-on menu_DeleteItem footerView, iLabel
-   put the footer_ItemArray of footerView into sArray
-   --
-   put indexArray_Find (sArray, "label", iLabel) into iNum
-   indexArray_Delete sArray, iNum
-   --
-   set the footer_ItemArray of footerView to sArray
-end menu_DeleteItem
-
 private on _
 end _
 
-on menu_FooterTitle footerView, mTitle
-   if the shiftKey is "Down" then
-      menu_Edit mTitle
-   else
-      set the footer_Title of footerView to mTitle
-   end if
-end menu_FooterTitle
+on menu_DisplayIconFamilies
+   -- display_IconLibrary
+   display_IconFamilies
+end menu_DisplayIconFamilies
 
 on menu_DisplayItemArray footerView
    put the footer_ItemArray of footerView into iArray
@@ -232,9 +246,11 @@ on menu_DisplayMenuItemArray footerView
    display_Data iArray, sName, "the menu_ItemArray"
 end menu_DisplayMenuItemArray
 
-on submenu_Library
-   return "Global | Svg | Library | Menu"
-end submenu_Library
+on menu_FooterHeight footerView
+   put the footer_height of footerView into sHeight
+   put lcw_Ask ("Set the footer height...", sHeight, footerView) into sHeight
+   set the footer_height of footerView to sHeight
+end menu_FooterHeight
 
 on submenu_Dev
    return "Global | Data | Footer | Dev | Menu"

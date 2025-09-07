@@ -112,10 +112,6 @@ on submenu_Show
    return "Global | Data | Show | Menu"
 end submenu_Show
 
-on submenu_Body
-   return "Global | Data | Body | Menu"
-end submenu_Body
-
 on submenu_Footer
    return "Global | Data | Footer | Menu"
 end submenu_Footer
@@ -134,6 +130,10 @@ end submenu_Tree
 on submenu_Poly
    return "Global | Poly | Menu"
 end submenu_Poly
+
+on submenu_Body
+   return "Global | Data | Body | Menu"
+end submenu_Body
 
 private on ___
 end ___

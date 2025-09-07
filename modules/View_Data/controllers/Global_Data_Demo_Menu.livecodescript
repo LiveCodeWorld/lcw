@@ -69,9 +69,75 @@ on menu_DisplayEnvironment
 end menu_DisplayEnvironment
 
 on menu_DepGraph dView, sObject
-   put the script_WalkHandlers of sObject into hKeyArray
+   display_ScriptDepGraph sObject
+   return empty
+   
+   set the cursor to watch
+   put "undirected spring" into graphStyle
+   put the name of sObject into sLabel
+   put "stacks" into showHow
    --
-   reDisplayGraph_HkeyArray hkeyArray, sObject, "hierarchy"
+   put the script_WalkHandlers of sObject into hKeyArray
+   graph_CreateFromScriptHkeyArray hkeyArray, sObject, graphStyle
+   put the result into svgFile
+   --
+   if the shiftKey is "Down" then
+      -- reDisplayGraph_HkeyArray hkeyArray, sObject, graphStyle
+      display_SVG svgFile, sLabel
+      put the result into svgView
+      --
+      set the displayed_HkeyArray of svgView to hkeyArray
+   else
+      put the browser_View of dView into svgView
+      if exists (svgView) is false then
+         set the create_Browser of dView to true
+         put the result into svgView
+      end if
+      put module_GetBehavior ( "View|Image|SVG") into bObject
+      set the behavior of svgView to bObject
+      
+      put hkeyArray_DisplayData (hkeyArray, showHow) into dData
+      --
+      put hKeyStackTable_Construct (hkeyArray, sObject) into hkeyTable
+      set the itemdelimiter to tab
+      sort numeric lines of hkeyTable by item 2 of each
+      --
+      put the script_SuiteArray of sObject into scriptArray
+      
+      
+      set the svg_File [true] of svgView to svgFile
+      set the tree_Data of svgView to dData
+      set the displayed_ScriptArray of dView to scriptArray
+      --
+      set the body_Type of dView to "Browser"
+      
+      # Set Table Style and Text
+      put the index_View of dView into indexView
+      --
+      set the tab_Stops  of indexView to 240
+      set the field_Style of indexView to "multiselect"
+      set the displayed_Index of indexView to hkeyTable
+      
+      # Set Menu
+      -- set the menu_TitleBit ["lcw_Graph"] of dView to "HkeyArray | Table"
+      -- set the menu_TitleBit of dView to "Script | Tree"
+      -- set the mouse_DoubleUp of dView to "mDoubleUp_DisplayShortHkey"
+      set the menu_TitleBit of dView to "Script | Dep"
+   end if
+   --
+   set the uOPN ["hkey_Array"] of dView to hkeyArray
+   set the displayed_Object of svgView to sObject
+   -- set the uOPN ["displayed_Object"] of dView to sObject
+   set the displayed_GraphStyle of svgView to graphStyle
+   set the uOPN ["show_How"] of dView to showHow
+   --
+   set the uOPN ["displayed_HkeyArray"] of dView to hkeyArray
+   set the uOPN ["stack_DepArray"] of dView to stackDepArray
+   set the displayed_Style of dView to "stacks"
+   --
+   -- set the title_Text of dView to sLabel
+   set the displayed_Object of dView to sObject
+   set the title_Text of dView to sObject
 end menu_DepGraph
 
 on menu_AddLibrary dView, sObject
@@ -86,13 +152,25 @@ on menu_DisplayDepArray dView
    set the displayed_Data ["the dep_Array"] of dView to depArray
 end menu_DisplayDepArray
 
-on menu_ModuleTools dView
-   -- display_ModuleTools mStackName, pDisplayView
-   put the module_Folder of me into moduleFolder
-   put directory_NestedArray (moduleFolder) into dArray
-   
-   set the displayed_Data ["Module Directory"] of dView to dArray
-end menu_ModuleTools
+on menu_DisplayDataModule dView
+   if the shiftKey is "Down" then
+      display_ModuleTools "View|Data"
+   else
+      # Gather info   
+      put the module_Folder of dView into moduleFolder
+      put directory_NestedArray (moduleFolder) into dArray
+      
+      set the displayed_Data ["Module Directory"] of dView to dArray
+      
+      # Store info
+      set the displayed_ModuleFolder of dView to moduleFolder
+      set the displayed_Object of dView to dView
+      
+      # Set Menus and doubleClick_Message
+      put the module_MenuTitle of dView into moduleMenu
+      set the menu_TitleBit [moduleMenu] of dView to "Module | Tools"
+   end if
+end menu_DisplayDataModule
 
 on menu_DataDemo dView
    put the module_Array of dView into mArray

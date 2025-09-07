@@ -18,12 +18,124 @@ getprop array_View
    return the tree_View of me
 end array_View
 
+private command _DoPoly
+   -- beep
+end _DoPoly
+
+command footer_Refresh
+   put the footer_View of me into footerView
+   put the footer_Title of footerView into fTitle
+   set the footer_Title of footerView to fTitle
+end footer_Refresh
+
+on mouseDown
+   put the short name of the target into tName
+   switch tName
+      case "_Menu Button"
+         if the shiftkey is "Down" then
+            put "Global | Data | Menu" into mTitle
+         else
+            put _MenuTitle() into mTitle
+         end if
+         put _MenuButton() into mButton
+         mArray_MouseDown mTitle, mButton
+         -- set the menuMode of mButton to pulldown
+         break
+      default
+         put tName
+   end switch
+   pass mouseDown
+end mouseDown
+
+on mouseUp
+   switch the short name of the target
+      case "_Header"
+         _DoHeader
+         break
+      case "PolyList"
+         _DoPoly
+         break
+      case "_Footer"
+         -- breakpoint -- only when in edit mode
+         break
+      default
+         --
+   end switch
+end mouseUp
+
 
 --> Working on
 -
+setprop create_Browser [pShow] sBoolean
+   lock screen
+   if sBoolean is true then
+      _CreateBrowser
+      put the result into browserView
+   else
+      put the browser_View of me into browserView
+      if exists (browserView) then
+         delete browserView
+         set the body_Type of me to "tree"
+      end if
+   end if
+   --
+   dispatch "Refresh" to the footer_View of me
+   unlock screen
+   return browserView
+end create_Browser
+
+private command _CreateBrowser
+   put the body_Rect of me into oRect
+   --
+   create invisible widget "Browser" as "com.livecode.widget.browser" in me
+   put it into browserView
+   set the javascriptHandlers of browserView to "javascript_Result"
+   --
+   set the rect of browserView to oRect
+   --
+   if pShow is true then
+      set the body_Type of me to "Browser"
+   end if
+   return browserView
+end _CreateBrowser
+
+private function _panelRect pRect
+   put the panel_Margin of me into pMargin
+   return rect_SubtractNum (pRect, pMargin)
+end _panelRect
+
+getprop panel_Margin
+   return the uOPN ["panel_Margin"] of me
+end panel_Margin
+
+setprop panel_Margin sMargin
+   set the uOPN ["panel_Margin"] of me to sMargin
+   LayoutControl
+end panel_Margin
+
+getprop tool_Context
+   return the uOPN ["tool_Context"] of me
+end tool_Context
+
+setprop tool_Context cObject
+   set the uOPN ["tool_Context"] of me to cObject
+end tool_Context
+
+getprop panel_View
+   return _PanelView()
+end panel_View
+
+getprop poly_View
+   return _PolyWidget()
+end poly_View
+
 getprop footer_View
    return _FooterWidget()
 end footer_View
+
+getprop browser_View
+   return _BrowserWidget()
+end browser_View
 
 getprop default_MenuTitle
    put the uRIP ["name"] of me into vName
@@ -340,10 +452,6 @@ end title_Menu
 
 --> Working on
 -
-private command _DoPoly
-   -- beep
-end _DoPoly
-
 private command _DoHeaderCog
    put _MenuTitle() into mTitle
    put _MenuButton() into mButton
@@ -550,17 +658,50 @@ end doubleClick_Controller
 --> Poly
 -
 getprop poly_Data
-   put _PolyWidget() into pWidget
-   put the dataLayout of pWidget into pData ["poly_DataLayout"]
-   put the dataContent of pWidget into pData ["poly_DataContent"]
+   put _PolyWidget() into polyWidget
+   --
+   put the dataLayout of polyWidget into pData ["poly_Layout"]
+   put the dataContent of polyWidget into pData ["poly_Content"]
+   --
+   put the footer_View of me into footerView
+   put the footer_Title of footerView into footerTitle
+   put footerTitle into pData ["footer_Title"]
+   --
+   put the title_Text of me into pData ["title_Text"]
+   --
    return pData
 end poly_Data
 
-setprop poly_Data pData
-   put _PolyWidget() into pWidget
+setprop poly_Data [pTitle] pData
+   put _PolyWidget() into polyWidget
    lock screen
-   set the dataLayout of pWidget to pData ["poly_DataLayout"]
-   set the dataContent of pWidget to pData ["poly_DataContent"]
+   if pTitle is empty then
+      put pData ["title_Text"] into sTitle
+   else
+      put pTitle into sTitle
+   end if
+   --
+   if sTitle is not empty then
+      set the title_Text of polyWidget to sTitle
+      set the uOPN ["poly_IconFamily"] of polyWidget to sTitle
+   end if
+   
+   # Poly Layout
+   put pData ["poly_Layout"] into layoutData
+   if layoutData is an array then
+      set the poly_LayoutData of polyWidget to layoutData
+   end if
+   
+   # Poly data
+   set the dataContent of polyWidget to pData ["poly_Content"]
+   
+   # Set Footer Icons
+   put pData ["footer_Title"] into footerTitle
+   if footerTitle is not empty then
+      put the footer_View of me into footerView
+      set the footer_Title of footerView to footerTitle
+   end if
+   --
    unlock screen
 end poly_Data
 
@@ -641,7 +782,7 @@ getprop body_Type
    return empty
 end body_Type
 
-setprop body_Type sType
+setprop body_Type [dontHilite] sType
    put _ListBodyTypes() into bTypes
    lock screen
    repeat for each item bType in bTypes
@@ -653,11 +794,19 @@ setprop body_Type sType
       end if
    end repeat
    
+   if dontHilite is true then
+      return empty
+   end if
+   
    put _FooterWidget() into footerWidget
    if the visible of footerWidget is true then
       put the short id of footerWidget into wID
+      put the itemNames of footerWidget into iNames
+      set the wholematches to true
+      put itemOffset (sType, iNames) into iNum
       set lockmessages to true -- not working
-      set the hilitedItemName of widget id wID of me to sType -- triggered
+      -- set the hilitedItemName of widget id wID of me to sType -- not working well?
+      set the hilitedItem of widget id wID of me to iNum
       set lockmessages to false
    end if
    unlock screen
@@ -667,26 +816,34 @@ getprop body_Types
    return _ListBodyTypes()
 end body_Types
 
+getprop body_View
+   put _VisibleBodyView() into bodyView
+   return bodyView
+end body_View
+
 getprop body_IsVisible
    put _VisibleBodyView() into bodyView
-   if exists (bodyView) is false then return empty
-   --
-   return the visible of bodyView
+   return exists (bodyView)
 end body_IsVisible
 
 setprop body_IsVisible sBoolean
    put _VisibleBodyView() into bodyView
+   --   
    if exists (bodyView) is false then
-      -- put _TreeWidget() into bodyView
-      return empty
+      put the uOPN ["bodyView"] of me into bodyView
+      if exists (bodyView) is false then
+         put _TreeWidget() into bodyView
+      end if
    end if
    
+   set the uOPN ["bodyView"] of me to bodyView
    put the rect of me into oRect
    --
    lock screen
    set the visible of bodyView to sBoolean
    LayoutControl oRect
    unlock screen
+   return bodyView
 end body_IsVisible
 
 
@@ -740,50 +897,6 @@ on menuPick menuPath
    menu_TextPick menuPath
 end menuPick
 
-on mouseDown
-   if the short name of the target = "_Menu Button" then
-      if the shiftkey is "Down" then
-         put "Global | Data | Menu" into mTitle
-      else
-         put _MenuTitle() into mTitle
-      end if
-      put _MenuButton() into mButton
-      mArray_MouseDown mTitle, mButton
-      --
-      set the menuMode of mButton to pulldown
-   end if
-   pass mouseDown
-end mouseDown
-
-on mouseUp
-   switch the short name of the target
-      case "_Header"
-         _DoHeader
-         break
-      case "PolyList"
-         _DoPoly
-         break
-      case "_Footer"
-         breakpoint -- never happens
-         break
-      default
-         --
-   end switch
-end mouseUp
-
-on itemClick pItemIndex, pMouseButton
-   -- get the hilitedItemData of the target
-   put the itemContent of the target into iData
-   
-   put iData ["library"] into libName
-   put iData ["Associations"] into aArray
-   put iData ["name"] into iName
-   put iData ["Summary"] into iSummary
-   put iData ["Description"] into iDescription
-   --
-   put iDescription
-end itemClick
-
 on resizeControl
    local sRect
    put the rect of me into sRect
@@ -831,21 +944,71 @@ getprop displayed_Data [bType]
    return dData
 end displayed_Data
 
+getprop displayed_Wiki
+   put the browser_View of me into browserView
+   return the url of browserView
+end displayed_Wiki
+
+setprop displayed_Wiki [mTitle] wikiURL
+   if mTitle is empty then
+      put "Global | Data | Wiki | Menu" into mTitle
+   end if
+   
+   # Set url
+   put the browser_View of me into browserView
+   set the url of browserView to wikiURL
+   
+   # Display
+   set the itemdelimiter to slash
+   put item 3 of wikiURL into wikiDomain
+   set the title_Text of me to wikiDomain
+   set the stack_Label of me to empty -- should not be needed???
+   --
+   set the body_Type of browserView to "browser"
+   
+   # Behaviors (in case)
+   set the behavior_StackNames of browserView to "behavior_ViewWikiBrowser,behavior_WikiJavascript"
+   
+   # Javascript init (in case)
+   set the flag_Handler of browserView to "default"
+   -- set the wiki_EditMode of browserView to true -- javascript error
+   set the external_Links of browserView to true
+   
+   # Tools
+   set the title_Menu of browserView to mTitle
+   return wikiDomain
+end displayed_Wiki
+
 setprop displayed_Data [pTitle] dData
    # Duck type the data
    lock screen
-   if dData is an array then
-      if dData [1] is an array then
-         -- set the poly_DataContent [pTitle] of me to dData
-         set the footer_IsVisible of me to true
-         set the displayed_Array [pTitle] of me to dData
-      else
-         set the displayed_Array [pTitle] of me to dData
-      end if
-   else
-      set the footer_IsVisible of me to false
-      set the index_Data [pTitle] of me to dData
-   end if
+   set the itemdelimiter to ":"
+   switch
+      case item 1 of dData is among the items of "http:https"
+         put the browser_View of me into browserView
+         --
+         if exists (browserView) is false then
+            _CreateBrowser
+            put the result into browserView
+         end if
+         --
+         set the url of browserView to dData
+         if pTitle is not empty then
+            set the title_Text of me to pTitle
+         end if
+         break
+      case dData is an array
+         if dData [1] is an array then
+            set the footer_IsVisible of me to true
+            set the displayed_Array [pTitle] of me to dData
+         else
+            set the displayed_Array [pTitle] of me to dData
+         end if
+         break
+      default
+         set the footer_IsVisible of me to false
+         set the index_Data [pTitle] of me to dData
+   end switch
    unlock screen
 end displayed_Data
 
@@ -942,22 +1105,10 @@ end drop_Command
 
 --> Events | Resize
 -
-command LayoutControl sRect
-   if the short id of the target is not the short id of me then
-      get the target
-      return "Error" -- resizing polyList seems to trigger
-   end if
+getprop inner_Rect [sRect]
    if sRect is empty then 
       put the rect of me into sRect
    end if
-   
-   # Objects
-   put _MenuButton() into myMenuButton
-   put _PolyWidget() into pWidget
-   put _BrowserWidget() into browserWidget
-   put _IndexField() into indexField
-   put _TreeWidget() into treeWidget
-   
    put the margins of me into myMargins
    if the showborder of me is true then
       add the borderwidth of me to myMargins
@@ -965,10 +1116,44 @@ command LayoutControl sRect
    
    # Geometry
    put rect_SubtractNum (sRect, myMargins) into iRect
+   return iRect
+end inner_Rect
+
+getprop body_Rect [sRect]
+   put the inner_Rect [sRect] of me into iRect
+   put _BodyRect (iRect) into bodyRect
+   return bodyRect
+end body_Rect
+
+command LayoutControl sRect
+   -- if the short id of the target is not the short id of me then return "Error" -- resizing polyList seems to trigger
+   if sRect is empty then 
+      put the rect of me into sRect
+   end if
+   
+   # Objects
+   put _MenuButton() into myMenuButton
+   put _PolyWidget() into polyWidget
+   put _BrowserWidget() into browserWidget
+   put _IndexField() into indexField
+   put _TreeWidget() into treeWidget
+   put _PanelView() into panelView
+   
+   /*
+   put the margins of me into myMargins
+   if the showborder of me is true then
+      add the borderwidth of me to myMargins
+   end if
+   put rect_SubtractNum (sRect, myMargins) into iRect
+   */
+   
+   # Geometry
+   put the inner_Rect [sRect] of me into iRect
    --
    put _headerRect (iRect) into hRect
    put _BodyRect (iRect) into pRect
    put _footerRect (iRect) into fRect
+   put _panelRect (pRect) into panelRect
    
    # Set Rects
    lock screen
@@ -976,8 +1161,12 @@ command LayoutControl sRect
    set the rect of myMenuButton to hRect
    set the rect of _FooterWidget() to fRect
    --
-   if exists (pWidget) then
-      set the rect of pWidget to pRect
+   if exists (panelView) then
+      set the rect of panelView to panelRect
+      -- dispatch "LayoutControl" to panelView with pRect
+   end if
+   if exists (polyWidget) then
+      set the poly_Rect of polyWidget to pRect
    end if
    if exists (browserWidget) then
       set the rect of browserWidget to pRect
@@ -1087,8 +1276,9 @@ private function _HeaderHeight
 end _HeaderHeight
 
 private function _ListBodyTypes
-   repeat with cNum = 1 to the number of controls of me
-      put the short name of control cNum of me into cName
+   put the childControlIDs of me into topIDs
+   repeat for each line someID in topIDs
+      put the short name of control id someID of me into cName
       if cName is among the items of "_Menu Button,_Header,_Footer" then
          next repeat
       else
@@ -1151,31 +1341,31 @@ private function _FooterHeight
    end if
 end _FooterHeight
 
-private function _headerRect cRect
+private function _headerRect iRect
    get _HeaderHeight()
-   put item 2 of cRect + it into item 4 of cRect
-   return cRect
+   put item 2 of iRect + it into item 4 of iRect
+   return iRect
 end _headerRect
 
-private function _BodyRect cRect
+private function _BodyRect iRect
    switch
       case the simple_Header of me is true
       case the visible of _HeaderWidget() is true
          get _HeaderHeight()
-         add it to item 2 of cRect
+         add it to item 2 of iRect
    end switch
    
    if the visible of _footerWidget() is true then
       get _FooterHeight()
-      subtract it from item 4 of cRect
+      subtract it from item 4 of iRect
    end if
-   return cRect
+   return iRect
 end _BodyRect
 
-private function _footerRect cRect
+private function _footerRect iRect
    get _FooterHeight()
-   put item 4 of cRect - it into item 2 of cRect
-   return cRect
+   put item 4 of iRect - it into item 2 of iRect
+   return iRect
 end _footerRect
 
 private function _HeaderWidget
@@ -1183,6 +1373,9 @@ private function _HeaderWidget
 end _HeaderWidget
 
 private function _VisibleBodyView
+   get _PanelView()
+   if _IsVisible (it) then return it
+   
    get _IndexField()
    if _IsVisible (it) then return it
    
@@ -1204,6 +1397,14 @@ private function _IsVisible sObject
       return empty
    end if
 end _IsVisible
+
+private function _PanelView
+   if exists (control "Panel" of me) then
+      return the long id of control "Panel" of me
+   else
+      return empty
+   end if
+end _PanelView
 
 private function _IndexField
    if exists (field 1 of me) then

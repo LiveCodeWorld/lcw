@@ -12,6 +12,27 @@ version: 0.9
 
 --> Working on
 -
+function lcw_ConstructFolder projectName, pModuleShortFolder
+   -- module or project
+   put env_ProjectFolder (projectName) into projectFolder
+   if pModuleShortFolder is empty then
+      return projectFolder
+   else
+      put module_GetFolder (pModuleShortFolder, projectFolder) into moduleFolder
+      return moduleFolder
+   end if
+end lcw_ConstructFolder
+
+function module_GetFolder moduleShortFolder, projectFolder
+   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
+   put rootModuleFolder & moduleShortFolder & slash into moduleFolder
+   if there is a folder moduleFolder then
+      return moduleFolder
+   else
+      return empty
+   end if
+end module_GetFolder
+
 getprop stack_Object
    -- revTargetStack
    return the defaultstack
@@ -188,16 +209,6 @@ function module_ConstructFolder moduleName, projectName
    put rootModuleFolder & mShortFolder & slash into moduleFolder
    return moduleFolder
 end module_ConstructFolder
-
-function module_GetFolder moduleShortFolder, projectFolder
-   put folder_AddShort (projectFolder, "modules") into rootModuleFolder
-   put rootModuleFolder & moduleShortFolder & slash into moduleFolder
-   if there is a folder moduleFolder then
-      return moduleFolder
-   else
-      return empty
-   end if
-end module_GetFolder
 
 function module_FolderFromPath stackPath, projectFolder
    set the itemdelimiter to slash

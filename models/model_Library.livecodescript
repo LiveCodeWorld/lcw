@@ -71,6 +71,101 @@ function model_GetData modelDataFolder
 end model_GetData
 
 
+--> Module | Model
+-
+getprop module_Data
+   put the module_Object of the target into mObject
+   if exists (mObject) is false then return empty
+   
+   set the customPropertySet of mObject to "uModuleData"
+   put the customProperties of mObject into mData
+   set the customPropertySet of mObject to empty
+   return mData
+end module_Data
+
+setprop module_Data mData
+   put the module_Object of the target into mObject
+   if exists (mObject) is false then return empty
+   
+   set the customPropertySet of mObject to "uModuleData"
+   set the customProperties of mObject to mData
+   set the customPropertySet of mObject to empty
+   return mObject
+end module_Data
+
+getprop module_Array [pShortFile]
+   put the module_Object of the target into mObject
+   if exists (mObject) is false then return empty
+   
+   put the uModuleData [pShortFile] of mObject into mArray
+   return mArray
+end module_Array
+
+setprop module_Array [pShortFile] mArray
+   put the module_Object of the target into mObject
+   if exists (mObject) is false then return empty
+   
+   set the uModuleData [pShortFile] of mObject to mArray
+   return mObject
+end module_Array
+
+-- getprop module_Array
+   put the module_JsonFile of the target into jsonFile
+   put array_FromFile (jsonFile) into moduleArray
+   return moduleArray
+end module_Array
+
+-- setprop module_Array moduleArray
+   -- put the module_JsonFile of the target into jsonFile
+   put the module_Name of the target into moduleName
+   put the module_Folder of the target into moduleFolder
+   if there is not a folder moduleFolder then return "Error, module_Folder does not exist for:" && the target
+   --
+   put module_ConstructJsonFile (moduleName, moduleFolder) into jsonFile
+   
+   if jsonFile is empty then return "Error, module_Folder does not exist for:" && the target
+   array_ToFile jsonFile, moduleArray
+   return jsonFile
+   
+   put the module_Folder of the target into moduleFolder
+   if there is not a folder moduleFolder then return "Error, module folder does not exist for:" && the target
+   project_StoreArray moduleFolder, moduleArray
+   return moduleFolder
+end module_Array
+
+getprop module_JsonFile
+   put the module_Name of the target into moduleName
+   put the module_Folder of the target into moduleFolder
+   if moduleFolder is empty then return empty
+   --
+   put module_JsonFile (moduleName, moduleFolder) into jsonFile
+   return jsonFile
+end module_JsonFile
+
+
+--> Lcw | Model
+-
+getprop lcw_Array [pShortFile]
+   -- by convention we a model stack
+   put the lcw_ModelFile [pShortFile] of the target into mFile
+   put array_FromFile (mFile) into mArray
+   return mArray
+end lcw_Array
+
+setprop lcw_Array [pShortFile] dataArray
+   put the lcw_ModelFile [pShortFile] of the target into mFile
+   array_ToFile mFile, dataArray
+   return the result
+end lcw_Array
+
+getprop lcw_ModelFile [pShortFile]
+   if pShortFile is empty then put "model.json" into pShortFile
+   put the lcw_Folder of the target into lcwFolder
+   folder_CreateNested lcwFolder
+   return lcwFolder & pShortFile
+end lcw_ModelFile
+
+
 --> Library
 -
 /*

@@ -75,7 +75,7 @@ end view_AskPublicValue
 getprop template_PropertyMenu [pFetchLive]
    if pFetchLive is true then
       local liveMenu, publicProps
-      put the view_ModuleObject of the target into templateObject
+      put the module_Object of the target into templateObject
       _ExtractMenu templateObject, liveMenu, publicProps
       return liveMenu
    else

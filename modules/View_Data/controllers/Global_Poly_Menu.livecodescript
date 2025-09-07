@@ -25,52 +25,59 @@ getprop menu_CheckTarget [polyView]
    return exists (polyView)
 end menu_CheckTarget
 
-getprop restoreDataLayout_Params [dView]
-   put _StoreData(dView) into storeData
-   return keys (storeData)
-end restoreDataLayout_Params
-
-private function _StoreData dView
-   set the customPropertySet of dView to "data_Store"
-   put the customProperties of dView into storeData
-   set the customPropertySet of dView to empty
-   return storeData
-end _StoreData
-
 
 --> Global | Poly | Menu
 -
 on menu_RestoreDataLayout dView, sName
-   put _StoreData(dView) into storeData
-   put storeData [sName] into polyDataLayout
+   put the module_Array [sName] of dView into pLayoutData
    --
-   set the poly_DataLayout of dView to pData
+   set the poly_Layout of dView to pLayoutData
 end menu_RestoreDataLayout
 
 on menu_SaveDataLayout dView
-   put lcw_Ask ("Name for data layout?", "pDefault", dView) into sName
+   put the title_Text of dView into sTitle
+   put lcw_Ask ("Name for data layout?", sTitle, dView) into sName
    
-   put the poly_DataLayout of dView into pData
-   breakpoint
-   set the data_Store [sName] of dView to pData
+   put the poly_Layout of dView into pData
+   set the module_Array [sName] of dView to pData
+   --
+   stack_Save dView
 end menu_SaveDataLayout
+
+getprop restoreDataLayout_Params [dView]
+   put the module_Data of dView into mData
+   return keys (mData)
+end restoreDataLayout_Params
 
 private on _
 end _
 
-on menu_DisplayPolyData dView
-   put the poly_DataContent of dView into pData
-   put the name of dView into sTitle
+on menu_DisplayPolyData polyView
+   put the poly_Content of polyView into pData
+   put the name of polyView into sTitle
    --
-   display_Data pData, sTitle, "the poly_DataContent"
+   display_Data pData, sTitle, "the poly_Content"
 end menu_DisplayPolyData
 
-on menu_DisplayDataLayout dView
-   put the poly_DataLayout of dView into pData
-   put the name of dView into sTitle
+on menu_DisplayDataLayout polyView
+   put the poly_Layout of polyView into pData
+   put the name of polyView into sTitle
    --
-   display_Data pData, sTitle, "the poly_DataLayout"
+   display_Data pData, sTitle, "the poly_Layout"
 end menu_DisplayDataLayout
+
+on menu_ExportDataLayout polyView
+   put the poly_Layout of polyView into pData
+   --
+   set the module_Array [sName] of dView to pData
+end menu_ExportDataLayout
+
+on menu_RevealModelFile polyView
+   put the data_View of polyView into dView
+   put the module_Object of dView into mObject
+   --
+   put the model_DataFile ["poly_Layout"] of mObject
+end menu_RevealModelFile
 
 private on __
 end __
@@ -98,5 +105,6 @@ on menu_EditBehavior polyView
 end menu_EditBehavior
 
 on submenu_Dev
-   return "Global | Poly | Menu"
+   return "Global | Poly | Dev | Menu"
 end submenu_Dev
+

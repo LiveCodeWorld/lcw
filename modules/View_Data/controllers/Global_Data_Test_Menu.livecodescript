@@ -127,7 +127,7 @@ private on _
 end _
 
 on menu_SaveDataLayout dView
-   put the poly_Name of dView into polyName
+   put the poly_LayoutName of dView into polyName
    get lcw_Ask ("What do you want to call this dataLayout?", polyName, dView)
    put it into polyName
    --

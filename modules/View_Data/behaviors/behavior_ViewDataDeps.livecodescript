@@ -400,14 +400,15 @@ function display_GetNewStackRect oStackRect, fRect, displayScreenRect
       put item 4 of oStackRect into oBottom
    end if
    
-   put item 3 of fRect into newWidth
-   put item 4 of fRect into newHeight
+   put item 3 of fRect - item 1 of fRect into newWidth
+   put item 4 of fRect - item 2 of fRect into newHeight
    
    put item 4 of displayScreenRect into screenBottom
    put item 3 of displayScreenRect - item 1 of displayScreenRect - 60 into maxScreenWidth
    put screenBottom - item 2 of displayScreenRect - 60 into maxScreenHeight
    
    put min (newWidth, maxScreenWidth) into newWidth
+   put max (newWidth, 240) into newWidth
    put min (newHeight, maxScreenHeight) into newHeight
    
    put 20 into tileBarHeight

@@ -16,6 +16,149 @@ local Wiki_ModulesFolder
 
 --> Working on
 --
+getprop default_ModuleView
+   -- use "module_Object"
+   -- sounds like "module_View" and is a bit confusing
+   return the module_Object of the target
+end default_ModuleView
+
+getprop module_Object
+   -- was template_Object, view_ModuleObject
+   -- there are many views but only one object
+   put the view_Name of the target into vName
+   if exists (stack vName) is false then return empty
+   put module_GetObject (vName) into mObject
+   return mObject
+end module_Object
+
+function module_GetObject vName
+   -- was "view_GetModuleOject" or "view_ModuleObject" or "module_GetTemplateObject"
+   view_NormalizeName vName
+   if exists (stack vName) is false then return empty
+   put the module_View of cd 1 of stack vName into moduleView
+   if exists (moduleView) then
+      return moduleView
+   else
+      return default_FirstStackControl (vName)
+   end if
+end module_GetObject
+
+function default_FirstStackControl viewName
+   view_NormalizeName viewName
+   put stack_FirstControl (viewName) into mObject
+   return mObject
+end default_FirstStackControl
+
+
+--> Props
+-
+getprop menubar_DefaultTitles
+   put the module_Name of the target into stackName
+   if stackName is empty then
+      put the project_Name of me into stackName
+      put the project_MenuTitle of stack stackName into defaultMenu
+      -- put the project_ControllerStackNames of stack stackName into mTitles
+      put empty into mTitles
+   else
+      put the module_MenuTitle of stack stackName into defaultMenu
+      put the module_MenuTitles of stack stackName into mTitles
+   end if
+   
+   if mTitles is empty then
+      put defaultMenu into defaultMenuTitles
+   else
+      filter mTitles without "* | Dev | Menu"
+      line_Delete defaultMenu, mTitles
+      put defaultMenu & CR & mTitles into defaultMenuTitles
+   end if
+   
+   # Add a Edit Menu if needed
+   if line 2 of defaultMenuTitles ends with "| Edit | Menu" is false then
+      put CR & "Global | Menu | Group | Edit" after line 1 of defaultMenuTitles
+   end if
+   
+   # Add Help Menu if needed
+   put lineOffset (" | Help | Menu", defaultMenuTitles) into lineNum
+   if lineNum > 0 then
+      put line lineNum of defaultMenuTitles into helpTitle
+      delete line lineNum of defaultMenuTitles
+      put CR & helpTitle after defaultMenuTitles
+   else
+      put CR & "Global | Menu | Group | Help" after defaultMenuTitles
+   end if
+   return word 1 to -1 of defaultMenuTitles
+end menubar_DefaultTitles
+
+getprop default_ModuleBehaviorNames
+   put the default_ModuleBehaviors of the target into bObjects
+   repeat for each line bObject in bObjects
+      put the short name of bObject into bName
+      put bName & CR after bNames
+   end repeat
+   delete char -1 of bNames
+   return bNames
+end default_ModuleBehaviorNames
+
+getprop default_ModuleBehaviors
+   local bStackObjects
+   
+   put the view_Name of the target into moduleName
+   if moduleName is empty then return empty
+   put revRuggedID (the target) into mObject
+   
+   # Names and stackPath
+   put label_BehaviorName (moduleName) into defaultBehaviorName
+   put the effective filename of stack moduleName into moduleStackPath
+   
+   # Module Behavior Folder
+   put project_FolderFromPath (moduleStackPath) into projectFolder
+   put module_GetBehaviorFolder (moduleName, projectFolder) into moduleBehaviorFolder
+   if there is not a folder moduleBehaviorFolder then return empty
+   
+   # Init bStackObjects with mObject
+   -- put mObject & CR into bStackObjects
+   if exists (stack defaultBehaviorName) then
+      put the name of stack defaultBehaviorName into defaultBehaviorObject
+      put defaultBehaviorObject & CR after bStackObjects
+   end if
+   
+   # Not these
+   put defaultBehaviorName into notThese
+   put the card_Object of the target into cObject
+   put the behavior of cObject into bObject
+   if exists (bObject) then
+      put comma & the short name of bObject after notThese
+   end if
+   put the behavior of stack moduleName into bObject
+   if exists (bObject) then
+      put comma & the short name of bObject after notThese
+   end if
+   
+   
+   # Repeat shortfiles
+   put the defaultfolder into oFolder
+   set the defaultfolder to moduleBehaviorFolder
+   put the files into shortFiles
+   repeat for each line shortFile in shortFiles
+      put moduleBehaviorFolder & shortFile into bFilePath
+      if there is a stack bFilePath then
+         put the name of stack bFilePath into bStackObject
+         put the short name of bStackObject into bName
+         
+         -- if bName = defaultBehaviorName then
+         if bName is among the items of notThese then
+            next repeat
+         else
+            put bStackObject & CR after bStackObjects
+         end if
+      end if
+   end repeat
+   delete char -1 of bStackObjects
+   set the defaultfolder to oFolder
+   
+   return bStackObjects   
+end default_ModuleBehaviors
+
 getprop stackFile_DepArray [pUseTarget]
    put the stackFile_Root of the target into stackRoot
    put the stackFile_Array of the target into sArray
@@ -63,32 +206,6 @@ getprop stackFile_DepArray [pUseTarget]
    return depArray
 end stackFile_DepArray
 
-getprop view_ModuleObject [pWithDefault]
-   put the view_Name of the target into mName
-   
-   put default_ModuleView (mName) into mObject
-   if exists (mObject) then
-      return mObject
-   else
-      -- return default_FirstStackControl (mName)
-      return empty
-   end if
-end view_ModuleObject
-
-getprop module_Object
-   -- was template_Object, view_ModuleObject
-   put the view_Name of the target into moduleName
-   -- put the module_Name of the target into moduleName
-   if exists (stack moduleName) is false then return empty
-   
-   -- put module_GetTemplateObject (moduleName) into mObject
-   put the module_View of stack moduleName into mObject
-   if exists (mObject) then return mObject
-   
-   put default_FirstStackControl (moduleName) into mObject
-   return mObject
-end module_Object
-
 function wikiFolder_FromRouter wikiDomain
    put wikiGarden_GetDomainData() into gardenDomainData
    put gardenDomainData [wikiDomain]["folder"] into gardenWikiFolder
@@ -100,17 +217,6 @@ function wikiFolder_FromRouter wikiDomain
       return gardenWikiFolder
    end if
 end wikiFolder_FromRouter
-
-
---> WikiFolder | Modules
--
-function wikiFile_ConstructLocalHost pSlug
-   put wikiFolder_ConstructLocalPages() into localPagesFolder
-   if there is not a folder localPagesFolder then return empty
-   
-   put localPagesFolder & pSlug into pageJsonFile
-   return pageJsonFile
-end wikiFile_ConstructLocalHost
 
 
 --> WikiFolder | Modules
@@ -146,22 +252,12 @@ end wikiFolder_ConstructAssets
 
 function wikiFolder_SimpleGet wDomain
    if wDomain = "localhost" then
-      put wikiFolder_GetLocalHost() into wikiFolder
+      put wikiFolder_LocalHost() into wikiFolder
    else
       put wikiFolder_FromRouter (wDomain) into wikiFolder
    end if
    return wikiFolder
 end wikiFolder_SimpleGet
-
-function wikiFolder_GetLocalHost
-   -- there are many :(
-   put the home folder & "/.wiki/localhost/" into localHostFolder
-   if there is a folder localHostFolder then
-      return localHostFolder
-   else
-      return empty
-   end if
-end wikiFolder_GetLocalHost
 
 
 --> WikiFolder | FromRouter
@@ -184,39 +280,6 @@ function wikiFolder_ConstructFromFarm wikiDomain
    put wikiFarm & wikiDomain & slash into wikiFolder
    return wikiFolder
 end wikiFolder_ConstructFromFarm
-
-function wikiFolder_ConstructLocalHost
-   put default_FarmFolder() into farmFolder
-   put farmFolder & "localhost/" into localHostFolder
-   return localHostFolder
-end wikiFolder_ConstructLocalHost
-
-function wikiFolder_FindLocalHost ecoFolder, farmFolder
-   -- from folders (assume arrays are broken)
-   -- simply check for existance of "localhost" folder
-   if there is not a folder ecoFolder then return "Error, ecofolder does not exist:" && ecoFolder
-   
-   # farmFolder
-   put default_FarmFolder() into farmFolder
-   if there is not a folder farmFolder then return "Error, farmFolder does not exist:" && farmFolder
-   if char -1 of farmFolder is not slash then
-      put slash after farmFolder
-   end if
-   file_AddHome farmFolder
-   
-   put farmFolder & "localhost/" into localHostFolder
-   if there is a folder localHostFolder then return localHostFolder
-   
-   put folder_ListShort (ecoFolder) into gardenNames
-   repeat for each line gardenName in gardenNames
-      put ecoFolder & gardenName & slash into testFarmFolder
-      put testFarmFolder & "localhost/" into localHostFolder
-      if there is a folder localHostFolder then
-         return localHostFolder
-      end if
-   end repeat
-   return empty
-end wikiFolder_FindLocalHost
 
 
 --> Default | FarmFolder
@@ -320,26 +383,8 @@ getprop default_ModuleObject
    return mObject   
 end default_ModuleObject
 
-function default_ModuleView viewName
-   view_NormalizeName viewName
-   if exists (stack viewName) is false then return empty
-   put the module_View of cd 1 of stack viewName into moduleView
-   if exists (moduleView) then
-      return moduleView
-   else
-      return empty
-   end if
-end default_ModuleView
-
-function default_FirstStackControl viewName
-   view_NormalizeName viewName
-   put stack_FirstControl (viewName) into mObject
-   return mObject
-end default_FirstStackControl
-
 getprop default_MenuTitle
-   -- put the view_ModuleObject of the target into tObject
-   put the view_ModuleObject of the target into tObject
+   put the module_Object of the target into tObject
    if exists (tObject) is false then return empty
    
    put default_ModuleMenuTitle (tObject) into mTitle
@@ -353,8 +398,7 @@ getprop default_ModuleName
    Use this default to set the module_MenuName
    */
    
-   put the view_ModuleObject of the target into tObject
-   put the view_ModuleObject of the target into tObject
+   put the module_Object of the target into tObject
    if exists (tObject) is false then return empty
    
    put the effective filename of the defaultstack into sPath

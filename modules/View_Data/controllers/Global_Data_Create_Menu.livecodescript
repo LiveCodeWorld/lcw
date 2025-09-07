@@ -27,15 +27,116 @@ getprop menu_CheckTarget [dView]
    return exists (dView)
 end menu_CheckTarget
 
+getprop objectProperties_Params
+   return _ViewMenu()
+end objectProperties_Params
+
 getprop editBehavior_Params
-   return the menu_CaseConditions ["menu_EditBehavior"] of me
+   return _ViewMenu()
+   -- return the menu_CaseConditions ["menu_EditBehavior"] of me
 end editBehavior_Params
+
+getprop checked_SetBehavior [dView]
+   put the poly_View of dView into polyView
+   put the behavior of polyView into bObject
+   --
+   return bObject = the name of stack "behavior_ViewDataPoly"
+end checked_SetBehavior
+
+private function _ViewBehavior dView, propName
+   put _ViewObject (dView, propName) into cView
+   put the behavior of cView into bObject
+   return bObject
+end _ViewBehavior
+
+private function _ViewObject dView, propName
+   put the propName of dView into cView
+   return cView
+end _ViewObject
+
+private function _ViewMenu
+   return "data_View,-,index_View,tree_View,poly_View,footer_View"
+end _ViewMenu
+
+getprop setPanel_Param [sView]
+   put the panel_View of sView into panelView
+   if exists (panelView) then
+      -- return the view_Name of panelView
+      return the uRIP["name"] of panelView
+   else
+      return empty
+   end if
+end setPanel_Param
+
+getprop setPanel_Params
+   put view_ListOpen() into vNames
+   filter vNames without "View|Data*"
+   return vNames
+end setPanel_Params
+
+getprop checked_BrowserView [sView]
+   put the data_View of sView into dView
+   put the browser_View of sView into browserView
+   return exists (browserView)
+end checked_BrowserView
+
+getprop checked_PanelView [sView]
+   put the data_View of sView into dView
+   put the panel_View of sView into panelView
+   return exists (panelView)
+end checked_PanelView
 
 
 --> Global | Data | Create | Menu
 -
+on menu_SetPanel sView, vName
+   if vName is empty then
+      put "View|Button|Svg" into vName
+   end if
+   put the data_View of sView into dView
+   put the panel_View of sView into panelView
+   --
+   lock screen
+   if exists (panelView) then
+      set the view_Swap of panelView to vName
+   else
+      view_InsertFromPath vName, dView -- set the view_Replacement (copy sView to dView)
+      put the result into copiedView
+      set the name of copiedView to "Panel"
+   end if
+   dispatch "LayoutControl" to dView
+   set the body_Type of dView to "Panel"
+   unlock screen
+end menu_SetPanel
+
+on menu_DeletePanelView sView
+   put the data_View of sView into dView
+   put the panel_View of sView into panelView
+   --
+   set the body_Type of dView to "Tree"
+   delete panelView
+end menu_DeletePanelView
+
+getprop disabled_DeletePanelView [sView]
+   put the panel_View of sView into panelView
+   return exists (panelView) is false
+end disabled_DeletePanelView
+
+on menu_BrowserView dView
+   put the browser_View of dView into browserView
+   if exists (browserView) then
+      set the create_Browser of dView to false
+   else
+      set the create_Browser of dView to true
+      set the body_Type of dView to "browser"
+   end if
+end menu_BrowserView
+
 on menu_CreateModuleMenu dView
-   menu_AskCreate dView
+   ask_CreateModuleMenu "View|Data", empty, dView
+   --
+   put the result into mController
+   edit the script of mController
 end menu_CreateModuleMenu
 
 on menu_CreateModuleBehavior dView
@@ -96,21 +197,22 @@ end menu_DisplayControllers
 private on ___
 end ___
 
+on menu_ObjectProperties dView, propName
+   put _ViewObject (dView, propName) into cView
+   display_ObjectProperties cView
+end menu_ObjectProperties
+
 on menu_EditBehavior dView, propName
-   switch propName
-      case "data_View"
-      case "-"
-      case "index_View"
-      case "tree_View"
-      case "poly_View"
-      case "footer_View"
-         put the propName of dView into cView
-         put the behavior of cView into bObject
-         break
-   end switch
-   --
+   put _ViewBehavior (dView, propName) into bObject
    edit the script of bObject
 end menu_EditBehavior
+
+on menu_SetBehavior dView, propName
+   # PolyList
+   put the name of stack "behavior_ViewDataPoly" into bObject
+   put the poly_View of dView into polyView
+   set the behavior of polyView to bObject
+end menu_SetBehavior
 
 on submenu_Dev
    return "Global | Data | Create | Menu"
