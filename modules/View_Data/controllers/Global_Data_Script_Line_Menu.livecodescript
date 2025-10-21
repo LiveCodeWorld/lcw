@@ -12,6 +12,40 @@ version: 0.1
 -
 local LocalArray
 
+--> Events
+-
+on doubleClick_Tree treeView, sPath
+   put item 1 of sPath into hObject
+   switch hObject
+      case "Missing"
+         get item 2 of sPath
+         put word 1 to 2 of it into shortHkey
+         --
+         put the displayed_ScriptArray of dview into scriptArray
+         put the uOPN ["displayed_Object"] of dview into depObject
+         put the uOPN ["hkey_Array"] of dview into hKeyArray
+         -- put the title_Text of treeView into depObject
+         --
+         put the hkey_InHierarchy [shortHkey] of depObject into foundHkey
+         -- put the hkey_FindInFullHierarchy [shortHkey] of depObject
+         --
+         hkey_Edit foundHkey
+         break
+      default
+         put item 2 of sPath into hKey
+         put item 3 of sPath into parentKey
+         --
+         if parentKey is empty then
+            hkey_Edit hKey
+         else if the shiftKey is "Down" then
+            hkey_Edit parentKey
+         else
+            hkey_Edit hKey
+         end if
+   end switch
+end doubleClick_Tree
+
+
 --> Menu | Props
 -
 getprop menu_Target [tObject]

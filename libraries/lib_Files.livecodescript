@@ -625,7 +625,7 @@ function file_GetType filePath
                put "File" into tType
             end if
          end if
-         return filePath & numtochar(9) & tType
+         return filePath & numToNativeChar(9) & tType
       default
          return empty
    end switch

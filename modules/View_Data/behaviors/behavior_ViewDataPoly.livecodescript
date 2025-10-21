@@ -155,24 +155,6 @@ setprop poly_Height dHeight
    LayoutControl newRect
 end poly_Height
 
-getprop poly_LayoutName
-   put the uOPN ["poly_LayoutName"] of me into layoutName
-   if layoutName is empty then return "Grid"
-   --
-   return layoutName
-end poly_LayoutName
-
-setprop poly_LayoutName layoutName
-   set the uOPN ["poly_LayoutName"] of me to layoutName
-   put iconLibrary_GetLayoutArray (layoutName) into layoutArray
-   set the poly_LayoutData of me to layoutArray
-   return layoutArray
-end poly_LayoutName
-
-getprop poly_LayoutNames
-   return iconLibrary_ListLayouts()
-end poly_LayoutNames
-
 getprop poly_LayoutData
    put _PolyWidget() into pWidget
    --
@@ -192,8 +174,11 @@ getprop poly_LayoutData
    return layoutData
 end poly_LayoutData
 
-setprop poly_LayoutData layoutData
+setprop poly_LayoutData [pName] layoutData
    put _PolyWidget() into pWidget
+   if pName is not empty then
+      set the uOPN ["poly_LayoutName"] of pWidget to pName
+   end if
    
    lock screen
    --
@@ -218,7 +203,6 @@ setprop poly_LayoutData layoutData
    end if
    --
    unlock screen
-   
    return layoutData
 end poly_LayoutData
 

@@ -25,29 +25,47 @@ getprop menu_CheckTarget [polyView]
    return exists (polyView)
 end menu_CheckTarget
 
+getprop restoreDataLayout_Param [polyView]
+   return the poly_LayoutName of polyView
+end restoreDataLayout_Param
+
+getprop restoreDataLayout_Params [polyView]
+   put the module_Data of polyView into mData
+   return keys (mData)
+end restoreDataLayout_Params
+
+getprop svgDataLayout_Param [polyView]
+   return the poly_LayoutName of polyView
+end svgDataLayout_Param
+
+getprop svgDataLayout_Params [polyView]
+   return iconLibrary_ListLayouts()
+end svgDataLayout_Params
+
+getprop storedDataLayout_Params [polyView]
+   return poly_ListNames()
+end storedDataLayout_Params
+
 
 --> Global | Poly | Menu
 -
-on menu_RestoreDataLayout dView, sName
-   put the module_Array [sName] of dView into pLayoutData
-   --
-   set the poly_Layout of dView to pLayoutData
-end menu_RestoreDataLayout
+on menu_RestorePolyLayout polyView, layoutName
+   put poly_GetLayoutData (polyName) into layoutData
+   set the poly_LayoutData [layoutName] of polyView to layoutData
+end menu_RestorePolyLayout
 
-on menu_SaveDataLayout dView
-   put the title_Text of dView into sTitle
-   put lcw_Ask ("Name for data layout?", sTitle, dView) into sName
+on menu_SavePolyLayout polyView   
+   put the poly_LayoutName of polyView into layoutName
+   put lcw_Ask ("Name for data layout?", layoutName, polyView) into layoutName
    
-   put the poly_Layout of dView into pData
-   set the module_Array [sName] of dView to pData
-   --
+   put the poly_LayoutData of polyView into layoutData
+   poly_SetLayoutData layoutName, layoutData
+   /*
+   put the poly_Layout [layoutName] of polyView into pData
+   set the module_Array [layoutName] of dView to pData
    stack_Save dView
-end menu_SaveDataLayout
-
-getprop restoreDataLayout_Params [dView]
-   put the module_Data of dView into mData
-   return keys (mData)
-end restoreDataLayout_Params
+   */
+end menu_SavePolyLayout
 
 private on _
 end _
@@ -108,3 +126,26 @@ on submenu_Dev
    return "Global | Poly | Dev | Menu"
 end submenu_Dev
 
+on menu_StoredDataLayout polyView, layoutName
+   put poly_GetLayoutData (layoutName) into layoutData
+   display_Data layoutData
+end menu_StoredDataLayout
+
+on menu_SvgDataLayout polyView, layoutName
+   put iconLibrary_GetLayoutArray (layoutName) into layoutData
+   --
+   poly_SetLayoutData layoutName, layoutData
+   -- set the poly_Layout [layoutName] of polyView to layoutData
+end menu_SvgDataLayout
+
+on menu_RestoreDataLayout polyView, sName
+   put the module_Array [sName] of polyView into pLayoutData
+   --
+   set the poly_Layout [sName] of polyView to pLayoutData
+end menu_RestoreDataLayout
+
+on menu_RestoreDataLayout polyView, sName
+   put the module_Array [sName] of polyView into pLayoutData
+   --
+   set the poly_Layout [sName] of polyView to pLayoutData
+end menu_RestoreDataLayout

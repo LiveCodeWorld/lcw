@@ -15,7 +15,71 @@ local Wiki_ModulesFolder
 
 
 --> Working on
---
+-
+
+
+--> Module | Behavior
+-
+function default_ConstructBehaviorName stackName
+   return label_BehaviorName (stackName)
+end default_ConstructBehaviorName
+
+function default_BehaviorNameFromShortFolder shortFolder
+   put "behavior_" into bName
+   --
+   set the itemdelimiter to "_"
+   if item 1 of shortFolder = "View" then delete item 1 of shortFolder -- new
+   repeat for each item sBit in shortFolder
+      replace space with empty in sBit -- should be one world
+      put text_InitialCaps (sBit) after bName
+   end repeat
+   return bName
+end default_BehaviorNameFromShortFolder
+
+getprop default_ModuleBehaviorName
+   put the module_Name of the target into mName
+   put label_BehaviorName (mName) into bName
+   return bName
+end default_ModuleBehaviorName
+
+getprop default_Behavior
+   put the default_ModuleBehaviorName of the target into bName
+   if exists (stack bName) then return the name of stack bName
+   
+   -- put the view_Name of the target into vName
+   put the short name of the defaultstack into vName
+   if vName is empty then return empty
+   put default_ModuleBehavior (vName) into bObject
+   return bObject
+end default_Behavior
+
+function default_ModuleBehavior viewName, pBehaviorName
+   put module_GetBehaviorPath (viewName, pBehaviorName) into bPath
+   --
+   if there is a stack bPath then
+      return the long name of stack bPath
+   else
+      return empty
+   end if
+end default_ModuleBehavior
+
+function module_GetBehaviorPath viewName, pBehaviorName
+   if exists (stack viewName) is false then return empty
+   if pBehaviorName is empty then
+      put label_BehaviorName (viewName) into pBehaviorName
+   end if
+   
+   -- put default_FirstStackControl (viewName) into mObject
+   -- if exists (mObject) is false then return empty
+   -- put the module_Folder of mObject into moduleFolder
+   --
+   put the module_Folder of stack viewName into moduleFolder
+   --
+   put folder_AddShort (moduleFolder, "behaviors") into bFolder
+   put bFolder & pBehaviorName & ".livecodescript" into bPath
+   return bPath
+end module_GetBehaviorPath
+
 getprop default_ModuleView
    -- use "module_Object"
    -- sounds like "module_View" and is a bit confusing
@@ -357,23 +421,6 @@ end nvm_GetBin
 
 --> Default
 -
-getprop default_ModuleBehaviorName
-   put the module_Name of the target into mName
-   put label_BehaviorName (mName) into bName
-   return bName
-end default_ModuleBehaviorName
-
-getprop default_Behavior
-   put the default_ModuleBehaviorName of the target into bName
-   if exists (stack bName) then return the name of stack bName
-   
-   -- put the view_Name of the target into vName
-   put the short name of the defaultstack into vName
-   if vName is empty then return empty
-   put module_GetBehavior (vName) into bObject
-   return bObject
-end default_Behavior
-
 getprop default_ModuleObject
    -- Lazy default
    put the view_Name of the target into mName
@@ -402,10 +449,16 @@ getprop default_ModuleName
    if exists (tObject) is false then return empty
    
    put the effective filename of the defaultstack into sPath
-   put module_NameFromPath (sPath) into mName
+   put default_ModuleNameFromFolder (sPath) into mName
    put the view_Name of tObject into mName
    return mName
 end default_ModuleName
+
+function default_ModuleNameFromFolder sPath
+   put module_ConstructShortFolder (sPath) into moduleName
+   replace "_" with "|" in moduleName
+   return moduleName
+end default_ModuleNameFromFolder
 
 function default_ProjectMenuTitle tObject, pMenuBit
    if menu_IsGlobal (pMenuBit) then return menuBit
@@ -422,7 +475,7 @@ function default_ProjectMenuTitle tObject, pMenuBit
       put projectName & "|" & pMenuBit into vName
    end if
    
-   put menu_ConstructTitle (vName) into mTitle
+   put default_ConstructMenuTitle (vName) into mTitle
    return mTitle   
 end default_ProjectMenuTitle
 
@@ -441,7 +494,7 @@ function default_ModuleMenuTitle tObject, pMenuBit
       put moduleName & "|" & pMenuBit into vName
    end if
    
-   put menu_ConstructTitle (vName) into mTitle
+   put default_ConstructMenuTitle (vName) into mTitle
    return mTitle   
 end default_ModuleMenuTitle
 
@@ -467,7 +520,7 @@ end project_MenuTitle
 getprop module_MenuTitle
    put the short name of the defaultstack into mName
    if mName is empty then return empty
-   put menu_ConstructTitle (mName, true) into mTitle
+   put default_ConstructMenuTitle (mName, true) into mTitle
    return mTitle
 end module_MenuTitle
 
@@ -484,7 +537,7 @@ getprop module_MenuTitle [menuBit]
    else
       put moduleName & "|" & menuBit into vName
    end if
-   put menu_ConstructTitle (vName) into mTitle
+   put default_ConstructMenuTitle (vName) into mTitle
    return mTitle
 end module_MenuTitle
 

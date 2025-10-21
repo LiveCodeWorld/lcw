@@ -309,7 +309,7 @@ end project_Controllers
 
 getprop module_Name
    put the effective filename of the defaultstack into sPath
-   put module_NameFromPath (sPath) into moduleName
+   put default_ModuleNameFromFolder (sPath) into moduleName
    return moduleName
 end module_Name
 
@@ -503,7 +503,8 @@ function module_FolderFromStackPath stackPath
    
    set the itemdelimiter to slash
    put the number of items of projectFolder into pNum
-   if item (pNum + 1) of stackPath is not "Modules" then return empty
+   get item (pNum + 1) of stackPath
+   if it is not "Modules" then return empty
    
    put item 1 to (pNum + 2) of stackPath & slash into moduleFolder
    return moduleFolder
@@ -561,36 +562,6 @@ function module_ConstructJsonFile moduleStackName, projectFolder
    put moduleFolder & "lcw_project.json" into moduleJsonFile
    return moduleJsonFile
 end module_ConstructJsonFile
-
-
---> Module | Behavior
--
-function module_GetBehaviorPath viewName, pBehaviorName
-   if exists (stack viewName) is false then return empty
-   if pBehaviorName is empty then
-      put label_BehaviorName (viewName) into pBehaviorName
-   end if
-   
-   -- put default_FirstStackControl (viewName) into mObject
-   -- if exists (mObject) is false then return empty
-   -- put the module_Folder of mObject into moduleFolder
-   --
-   put the module_Folder of stack viewName into moduleFolder
-   --
-   put folder_AddShort (moduleFolder, "behaviors") into bFolder
-   put bFolder & pBehaviorName & ".livecodescript" into bPath
-   return bPath
-end module_GetBehaviorPath
-
-function module_GetBehavior viewName, pBehaviorName
-   put module_GetBehaviorPath (viewName, pBehaviorName) into bPath
-   --
-   if there is a stack bPath then
-      return the long name of stack bPath
-   else
-      return empty
-   end if
-end module_GetBehavior
 
 command module_Clone moduleName, pShowTools
    view_NormalizeName moduleName
@@ -784,10 +755,6 @@ end module_GetBehaviorFolder
 
 --> Deps
 -
-function project_DefaultBehaviorName stackName
-   return label_BehaviorName (stackName)
-end project_DefaultBehaviorName
-
 function project_GetModuleFolder moduleFolderName, projectName, pRepoFolder
    if projectName is empty then return empty
    put env_ConstructProjectFolder (projectName, pRepoFolder) into projectFolder

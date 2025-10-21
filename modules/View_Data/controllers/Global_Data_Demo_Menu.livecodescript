@@ -93,7 +93,7 @@ on menu_DepGraph dView, sObject
          set the create_Browser of dView to true
          put the result into svgView
       end if
-      put module_GetBehavior ( "View|Image|SVG") into bObject
+      put default_ModuleBehavior ( "View|Image|SVG") into bObject
       set the behavior of svgView to bObject
       
       put hkeyArray_DisplayData (hkeyArray, showHow) into dData
@@ -131,7 +131,7 @@ on menu_DepGraph dView, sObject
    set the displayed_GraphStyle of svgView to graphStyle
    set the uOPN ["show_How"] of dView to showHow
    --
-   set the uOPN ["displayed_HkeyArray"] of dView to hkeyArray
+   set the uOPN ["hkey_Array"] of dView to hkeyArray
    set the uOPN ["stack_DepArray"] of dView to stackDepArray
    set the displayed_Style of dView to "stacks"
    --

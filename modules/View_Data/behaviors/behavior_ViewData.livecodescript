@@ -67,12 +67,15 @@ end mouseUp
 --> Working on
 -
 setprop create_Browser [pShow] sBoolean
+   put the browser_View of me into browserView
+   --
    lock screen
    if sBoolean is true then
-      _CreateBrowser
-      put the result into browserView
+      if exists (browserView) is false then
+         _CreateBrowser
+         put the result into browserView
+      end if
    else
-      put the browser_View of me into browserView
       if exists (browserView) then
          delete browserView
          set the body_Type of me to "tree"
@@ -81,6 +84,7 @@ setprop create_Browser [pShow] sBoolean
    --
    dispatch "Refresh" to the footer_View of me
    unlock screen
+   --
    return browserView
 end create_Browser
 
@@ -139,7 +143,7 @@ end browser_View
 
 getprop default_MenuTitle
    put the uRIP ["name"] of me into vName
-   return menu_ConstructTitle (vName)
+   return default_ConstructMenuTitle (vName)
 end default_MenuTitle
 
 getprop default_LineMenuTitle
@@ -480,7 +484,7 @@ end _MenuTitle
 private function _DefaultMenuTitle
    -- put the view_Name of me into vName
    put the uRIP ["name"] of me into vName
-   put menu_ConstructTitle (vName) into mTitle
+   put default_ConstructMenuTitle (vName) into mTitle
    return mTitle
 end _DefaultMenuTitle
 

@@ -12,6 +12,41 @@ version: 0.9
 
 --> Working on
 -
+function project_GetArrayFromFolder projectFolder
+   put project_ConstructJsonFile (projectFolder) into projectJsonFile
+   --
+   put array_FromFile (projectJsonFile, true) into projectArray
+   --
+   return projectArray
+end project_GetArrayFromFolder
+
+function project_ConstructJsonFile projectFolder
+   put projectFolder & "lcw_project.json" into projectJsonFile
+   return projectJsonFile
+end project_ConstructJsonFile
+
+function array_FromFile someFile, pSimple
+   put url ("binfile:" & someFile) into someData
+   if someData is empty then return empty
+   
+   # Switch depending on file type
+   set the itemdelimiter to "."
+   switch item -1 of someFile
+      case "json"
+         if pSimple is true then
+            put JsonImport (someData) into modelArray
+         else
+            put json_ToArray (someData) into modelArray
+         end if
+         return modelArray
+      case "array"
+         put arraydecode (someData) into modelArray
+         return modelArray
+      default
+         return someData
+   end switch
+end array_FromFile
+
 function lcw_ConstructFolder projectName, pModuleShortFolder
    -- module or project
    put env_ProjectFolder (projectName) into projectFolder
@@ -835,17 +870,6 @@ function project_GetArray projectName
    return projectArray
 end project_GetArray
 
-function project_GetArrayFromFolder projectFolder
-   put project_ConstructJsonFile (projectFolder) into projectJsonFile
-   put array_FromFile (projectJsonFile) into projectArray
-   return projectArray
-end project_GetArrayFromFolder
-
-function project_ConstructJsonFile projectFolder
-   put projectFolder & "lcw_project.json" into projectJsonFile
-   return projectJsonFile
-end project_ConstructJsonFile
-
 
 --> Project
 -
@@ -1337,45 +1361,6 @@ command array_Set someFile, modelArray
       put arrayencode (modelArray) into url ("binfile:" & someFile)
    end if
 end array_Set
-
-function array_FromFile someFile, pUseMerge
-   put url ("binfile:" & someFile) into someData
-   if someData is empty then return empty
-   
-   # Switch depending on file type
-   set the itemdelimiter to "."
-   switch item -1 of someFile
-      case "json"
-         -- put jsonImport (someData) into modelArray
-         put json_ToArray (someData, pUseMerge) into modelArray
-         return modelArray
-      case "array"
-         put arraydecode (someData) into modelArray
-         return modelArray
-      default
-         return someData
-   end switch
-end array_FromFile
-
-function json_ToArray pJSON, pUseMerge
-   local tArray,tKeys
-   if pJSON is empty then
-      return false
-   else if pUseMerge is false then -- not the same
-      put jsonImport (pJSON) into tArray
-      return tArray
-   end if
-   
-   try -- as otherwise an error with non-json causes script to exit
-      if pJSON is empty then return empty
-      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
-         put json_ToArray(tArray[tKey]) into tArray[tKey]
-      end repeat
-      return tArray
-   catch e
-      return empty
-   end try
-end json_ToArray
 
 setprop stackfile_Array sfArray
    put the defaultstack into someStack

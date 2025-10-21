@@ -16,6 +16,7 @@ version: 0.1
 --> Display
 -
 command display_IndexArray indexArray, pTitle, pStackLabel, pOrdered, pNameKey, pPadNum, pDisplayView
+   -- should move over to "display_Poly"
    switch
       case pOrdered is true
          put indexArray_GetNumbered (indexArray, pNameKey) into nArray
@@ -87,7 +88,7 @@ function indexArray_ToJson indexArray
    local jsonBit
    repeat with itemNum = 1 to item 2 of the extents of indexArray
       put indexArray [itemNum] into itemArray
-      put JSONExport (itemArray) into itemJSON
+      put json_FromArray (itemArray) into itemJSON
       put itemJSON & comma & CR after jsonBit
    end repeat
    delete char -2 to -1 of jsonBit

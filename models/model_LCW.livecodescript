@@ -190,7 +190,6 @@ function array_FromFile sFile, pUseMerge
    set the itemdelimiter to "."
    switch item -1 of sFile
       case "json"
-         -- put jsonImport (someData) into modelArray
          put json_ToArray (someData, pUseMerge) into modelArray
          return modelArray
       case "array"
@@ -211,7 +210,6 @@ command array_ToFile someFile, modelArray, pUseMerge, pPretty, pForceRootType
    set the itemdelimiter to "."
    switch item -1 of someFile
       case "json"
-         -- put jsonExport (modelArray) into encodedData
          put json_FromArray (modelArray, pForceRootType, pPretty, pUseMerge) into encodedData
          break
       case "array"
@@ -284,42 +282,6 @@ function env_FolderFromPath sPath
    put item 1 to itemNum of sPath & slash into envFolder
    return envFolder
 end env_FolderFromPath
-
-function json_FromArray pArray, pForceRootType, pPretty, pUseMerge
-   if pArray is not an array then
-      return false
-   else if pUseMerge is false then -- not the same
-      put jsonExport (pArray) into someJSON -- not the same
-      return someJSON
-   end if
-   
-   repeat for each key tKey in pArray
-      if pArray[tKey] is an array then
-         put "}"&json_FromArray(pArray[tKey]) into pArray[tKey]
-      end if
-   end repeat
-   return (mergJSONEncode("pArray",pForceRootType,pPretty))
-end json_FromArray
-
-function json_ToArray pJSON, pUseMerge
-   local tArray,tKeys
-   if pJSON is empty then
-      return false
-   else if pUseMerge is false then -- not the same
-      put jsonImport (pJSON) into tArray
-      return tArray
-   end if
-   
-   try -- as otherwise an error with non-json causes script to exit
-      if pJSON is empty then return empty
-      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
-         put json_ToArray(tArray[tKey]) into tArray[tKey]
-      end repeat
-      return tArray
-   catch e
-      return empty
-   end try
-end json_ToArray
 
 function folder_AddShort projectFolder, shortFolder
    text_AddPath projectFolder, shortFolder, slash

@@ -455,13 +455,6 @@ setprop top_Array [pPath] sArray
    return arrayData
 end top_Array
 
-setprop tree_Array [pPath] sArray
-   tree_SetArray sArray, pPath
-   --
-   put the result into arrayData
-   return arrayData
-end tree_Array
-
 
 --> Props | Parent
 -
@@ -657,3 +650,43 @@ function _SortedTopKeys
    end switch
    return topKeys
 end _SortedTopKeys
+
+private command tree_SetArray sArray, pPath
+   put _treeWidget() into treeWidget
+   if pPath is empty then
+      put the hilitedElement of treeWidget into pPath
+   end if
+   --
+   put the arrayData of treeWidget into treeData
+   treeData_SetArray treeData, pPath, sArray
+   set the arrayData of treeWidget to treeData
+   --
+   return arrayData
+end tree_SetArray
+
+private function tree_GetData
+   put the arrayData of _treeWidget() into treeData
+   return treeData
+end tree_GetData
+
+private command tree_SetData treeData
+   set the arrayData of _treeWidget() to treeData
+end tree_SetData
+
+private function treeData_GetArray treeData, somePath
+   split somePath by comma
+   put treeData [somePath] into sArray
+   return sArray
+end treeData_GetArray
+
+private command treeData_SetArray @treeData, somePath, sArray
+   split somePath by comma
+   put sArray into treeData [somePath]
+end treeData_SetArray
+
+private command treeData_Delete @treeData, somePath
+   split somePath by comma
+   put treeData [somePath] into deletedData
+   delete variable treeData [somePath]
+   return deletedData
+end treeData_Delete

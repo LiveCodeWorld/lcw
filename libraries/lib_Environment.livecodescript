@@ -17,26 +17,6 @@ Aims to be used only for desktop recursion of local files organised in a standar
 
 --> Working on
 -
-function json_ToArray pJSON, pUseMerge
-   local tArray,tKeys
-   if pJSON is empty then
-      return false
-   else if pUseMerge is false then -- not the same
-      put jsonImport (pJSON) into tArray
-      return tArray
-   end if
-   
-   try -- as otherwise an error with non-json causes script to exit
-      if pJSON is empty then return empty
-      repeat for each line tKey in mergJSONDecode(pJSON,"tArray")
-         put json_ToArray(tArray[tKey]) into tArray[tKey]
-      end repeat
-      return tArray
-   catch e
-      return empty
-   end try
-end json_ToArray
-
 
 --> Missing
 -
@@ -119,7 +99,6 @@ function array_FromFile someFile, pUseMerge
    set the itemdelimiter to "."
    switch item -1 of someFile
       case "json"
-         -- put jsonImport (someData) into modelArray
          put json_ToArray (someData, pUseMerge) into modelArray
          return modelArray
       case "array"

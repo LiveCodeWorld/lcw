@@ -22,12 +22,4 @@ The command "actionCompile pIgnoreErrors" can be found in the stack "revSEStackb
 # Description
 #   Attempts to compile the script of object currently being edited. If compile errors occur, adds these to the errors pane,
 #   the script is applied regardless of whether errors ocurred or not. The stack is marked as edited.
-
-after mouseUp
-   if the shiftKey is "Up" then
-      set the cursor to watch
-      put scriptEditor_Object() into scriptObject
-      dispatch "script_ExportAndIndexMenus" with scriptObject
-   end if
-end mouseUp
 */

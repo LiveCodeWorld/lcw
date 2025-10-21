@@ -26,6 +26,43 @@ getprop ide_MenuTitle [shortName]
    return mTitle
 end ide_MenuTitle
 
+getprop ide_StandAloneStackNames [usedOnly]
+   get the ide_StandAloneFiles [usedOnly] of the target
+   repeat for each line sFile in it
+      if exists (stack sFile) is false then next repeat
+      --
+      put the short name of stack sFile & CR after sNames
+   end repeat
+   delete char -1 of sNames
+   return sNames
+end ide_StandAloneStackNames
+
+getprop ide_StandAloneFiles [usedOnly]
+   put the stack_name of the target into sName
+   put the filename of stack sName into sFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of sFolder
+   
+   get the cRevStandaloneSettings ["files"] of stack sName
+   repeat for each line sFile in it
+      if char 1 of sFile is not "/" then
+         put sFolder before sFile
+      end if
+      if exists (stack sFile) is false then next repeat
+      --
+      if usedOnly is true then
+         get item -2 of sFile
+         if it is not among the items of "libraries/models" then
+            next repeat
+         end if
+      end if
+      --
+      put sFile & CR after sFiles
+   end repeat
+   delete char -1 of sFiles
+   return sFiles
+end ide_StandAloneFiles
+
 
 --> IDE | Init
 -

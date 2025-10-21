@@ -22,6 +22,10 @@ local LocalArray
 
 --> Working on
 -
+getprop module_View
+   return _TemplateView()
+end module_View
+
 getprop view_Name
    put the long id of the target into tObject   
    if the uRIP ["type"] of tObject is not "view" then return empty
@@ -165,7 +169,7 @@ getprop menu_Target
 end menu_Target
 
 -- getprop view_Template
-   return _templateView()
+return _templateView()
 end view_Template
 
 getprop template_Object
@@ -191,7 +195,7 @@ getprop menu_Title [viewName]
    put the menu_Title of me into mTitle
    if mTitle is not empty then return mTitle
    --
-   put menu_ConstructTitle (viewName) into mTitle
+   put default_ConstructMenuTitle (viewName) into mTitle
    set the menu_Title of me to mTitle
    --
    return mTitle

@@ -106,7 +106,7 @@ end _ScriptObject
 
 private function _HkeyArray sView
    put the data_View of sView into dView
-   return the uOPN ["displayed_HkeyArray"] of dView
+   return the uOPN ["hkey_Array"] of dView
 end _HkeyArray
 
 private function _GetShowHow sView

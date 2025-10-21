@@ -12,6 +12,19 @@ Here we explore handlers for the Livecode project and default websites that docu
 See also model_Environment.
 */
 
+--> Working on
+-
+function platform_RestDomain
+   -- return "rest.livecode.wiki"
+   return "localhost" & ":" & platform_RestPort()
+end platform_RestDomain
+
+function platform_RestPort
+   constant PlatformRestPort = 4242 -- 9090
+   return PlatformRestPort
+end platform_RestPort
+
+
 --> Props
 -
 getprop env_Paths [pFilter] 
@@ -118,15 +131,6 @@ function platform_RestUrl restBit
    end if
    return restURL
 end platform_RestUrl
-
-function platform_RestPort
-   constant PlatformRestPort = 9090
-   return PlatformRestPort
-end platform_RestPort
-
-function platform_RestDomain
-   return "rest.livecode.wiki"
-end platform_RestDomain
 
 function platform_LivecodeDomain pSubDomain
    put "livecode.wiki" into wDomain

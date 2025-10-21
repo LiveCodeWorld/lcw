@@ -27,14 +27,17 @@ getprop menu_CheckTarget [dView]
    return exists (dView)
 end menu_CheckTarget
 
-getprop objectProperties_Params
-   return _ViewMenu()
+getprop objectProperties_Params [dView]
+   return "data,-," & the body_Types of dView
 end objectProperties_Params
 
-getprop editBehavior_Params
-   return _ViewMenu()
-   -- return the menu_CaseConditions ["menu_EditBehavior"] of me
+getprop editBehavior_Params [dView]
+   return "data,-," & the body_Types of dView
 end editBehavior_Params
+
+-- private function _ViewMenu
+   return "data_View,-,index_View,tree_View,poly_View,footer_View"
+end _ViewMenu
 
 getprop checked_SetBehavior [dView]
    put the poly_View of dView into polyView
@@ -50,13 +53,20 @@ private function _ViewBehavior dView, propName
 end _ViewBehavior
 
 private function _ViewObject dView, propName
-   put the propName of dView into cView
-   return cView
+   -- put the propName of dView into cView
+   switch propName
+      case "data"
+         return the data_View of dView
+      case "browser"
+         return the browser_View of dView
+      case "tree"
+         return the tree_View of dView
+      case "index"
+         return the index_View of dView
+      case "polyList"
+         return the poly_View of dView
+   end switch
 end _ViewObject
-
-private function _ViewMenu
-   return "data_View,-,index_View,tree_View,poly_View,footer_View"
-end _ViewMenu
 
 getprop setPanel_Param [sView]
    put the panel_View of sView into panelView
@@ -204,7 +214,11 @@ end menu_ObjectProperties
 
 on menu_EditBehavior dView, propName
    put _ViewBehavior (dView, propName) into bObject
-   edit the script of bObject
+   if exists (bObject) is true then
+      edit the script of bObject
+   else
+      breakpoint
+   end if
 end menu_EditBehavior
 
 on menu_SetBehavior dView, propName

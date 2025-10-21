@@ -154,7 +154,7 @@ end menu_Title
 
 getprop default_MenuTitle
    put the uRIP ["name"] of me into vName
-   return menu_ConstructTitle (vName)
+   return default_ConstructMenuTitle (vName)
 end default_MenuTitle
 
 getprop default_LineMenuTitle

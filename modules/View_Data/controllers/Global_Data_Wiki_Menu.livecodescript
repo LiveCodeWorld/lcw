@@ -148,84 +148,52 @@ private on _
 end _
 
 on menu_Hitchhiker sView
-   -- set the displayed_Wiki of sView to "https://david.hitchhikers.earth"
    _DisplayWiki sView, "david.hitchhikers.earth"
 end menu_Hitchhiker
 
 on menu_Fedwiki sView
-   -- set the displayed_Wiki of sView to "https://fedwiki.club"
    _DisplayWiki sView, "fedwiki.club"
 end menu_Fedwiki
 
 on menu_Livecode sView
-   -- set the displayed_Wiki of sView to "https://david.livecode.wiki"
    _DisplayWiki sView, "david.livecode.wiki"
 end menu_Livecode
 
 private on __
 end __
 
-on menu_Edit mTarget
-   put the browser_View of mTarget into browserView
-   --
-   put the wiki_EditMode of browserView into sBoolean
-   set the wiki_EditMode of browserView to (sBoolean is false) -- javascript error
-end menu_Edit
+on submenu_WikiTools
+   return "Global | Wiki | Tools | Menu"
+end submenu_WikiTools
 
-on menu_Test sView
-   put the browser_View of sView into browserView
+on menu_IconTools sView
+   put the view_Name of sView into viewName
+   display_ModuleTools viewName
    --
-   get the last_PageInfo of browserView
-   put item 1 of it into wikiDomain
-   put item 2 of it into pSlug
-   --
-   put pageArray_Fetch (wikiDomain, pSlug) into pageArray
-   set the ghost_PageArray of browserView to pageArray
-   
-   /*
-   put pageJson_Fetch (wikiDomain, pSlug) into pageJSON
-   --
-   -- put jsonImport (pageJSON) into pageArray
-   -- put jsonExport (pageArray) into pageJSON
-   --
-   set the ghost_PageJson of browserView to pageJSON
-   */
-end menu_Test
-
-on menu_Tools sView
-   _Refresh sView
-   --
-   if the shiftKey is "Down" then
-      put the view_Name of sView into viewName
-      display_ModuleTools viewName
-      if there is not a stack "Display Icon Data" then
-         display_IconDialogue sView
-      end if
+   if there is not a stack "Display Icon Data" then
+      display_IconDialogue sView
    end if
-end menu_Tools
+end menu_IconTools
 
-on menu_StopNode mTarget
-   # Experiment
-   wikiServer_StopNode
-   set the displayed_Wiki of mTarget to "https://david.livecode.wiki/view/welcome-visitors/view/local-proxy/view/localhost"
-end menu_StopNode
+on menu_Refresh sView
+   _Refresh sView
+end menu_Refresh
 
 private on ___
 end ___
 
-on menu_ConstructGetProp mTarget
+on menu_FooterGetProp mTarget
    put the footer_View of mTarget into footerView
    put the footer_GetProp of footerView into sHandler
    --
    display_Script sHandler, "menu_IconArray"
-end menu_ConstructGetProp
+end menu_FooterGetProp
 
 on menu_MenuTitle mTarget, mTitle
    set the title_Menu of mTarget to mTitle
 end menu_MenuTitle
 
 getprop menuTitle_Params [mTarget]
-   -- return "Global | Data | Wiki | Menu"
    put the module_Object of mTarget into mView
    return the module_MenuTitles of mView
 end menuTitle_Params

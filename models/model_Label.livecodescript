@@ -8,6 +8,111 @@ type: model
 version: 0.3
 
 
+--> Label | Module
+-
+function label_FromModuleName moduleName, pPathDelim, pAddColon
+   if moduleName is empty then return empty
+   --
+   return label_FromPiped (moduleName, "Module", pAddColon, true, " ")
+end label_FromModuleName
+
+function label_ToModuleName moduleLabel, pReverse
+   return label_ToViewName (moduleLabel, pReverse) -- same as view name
+end label_ToModuleName
+
+function label_ToViewName moduleLabel, pReverse
+   if word 1 of moduleLabel is not Module then return empty
+   --
+   put label_ToPiped (moduleLabel, "View", pReverse) into viewName
+   return viewName
+end label_ToViewName
+
+
+--> Label | Piped
+-
+function label_FromPiped pipedName, pFirstWord, pAddColon, pReverse, pDelim
+   if pFirstWord is empty then
+      set the itemdelimiter to "|"
+      put word 1 to -1 of item 1 of pipedName into pFirstWord
+   end if
+   
+   put label_ViewToCamelTitle (pipedName, pReverse, pDelim) into camelCaps
+   if pAddColon is true then
+      return pFirstWord & ":" && camelCaps
+   else
+      return pFirstWord && camelCaps   
+   end if
+end label_FromPiped
+
+function label_ToPiped sLabel, pFirstItem, pReverse
+   replace ":" with empty in sLabel
+   if pFirstItem is empty then
+      put word 1 of sLabel into pFirstItem
+   end if
+   put word 2 of sLabel into camelTitle
+   put word_SplitCaps (camelTitle, "|") into pipedBit
+   --
+   if pReverse is false then
+      return pFirstItem & "|" & pipedBit
+   else
+      put pFirstItem & "|" into rLabel
+      put itemList_Reverse (pipedBit, "|") after rLabel
+      return rLabel
+   end if
+end label_ToPiped
+
+function label_ViewToCamelTitle pipedName, pReverse, pDelim
+   set the itemdelimiter to "|"
+   if item 1 of pipedName is among the items of "View|Layout" then
+      delete item 1 of pipedName
+   end if
+   
+   # Create camelCaps
+   if pReverse is false then
+      put label_CamelFromPiped (pipedName, pDelim) into camelCaps
+   else
+      put label_ReverseCamelFromPiped (pipedName, pDelim) into camelCaps
+   end if
+   return camelCaps
+end label_ViewToCamelTitle
+
+function label_CamelTitleToView camelTitle, pFirstItem
+   if pFirstItem is empty then put "View" into pFirstItem
+   
+   put word_SplitCaps (camelTitle, "|") into viewName
+   --
+   set the itemdelimiter to "|"
+   if item 1 of viewPath is not among the items of "View|Layout" then
+      put pFirstItem & "|" before viewName
+   end if
+   return viewName
+end label_CamelTitleToView
+
+function label_ReverseCamelFromPiped pipedName, pDelim
+   replace space with empty in pipedName -- hack
+   
+   set the itemdelimiter to "|"
+   repeat with itemNum = the number of items of pipedName down to 1
+      put word 1 to -1 of item itemNum of pipedName into sItem
+      get toLower (sItem)
+      put text_InitialCaps (it) into capsItem
+      put capsItem & pDelim after camelCaps
+   end repeat
+   if pDelim is not empty then
+      delete char -1 of camelCaps
+   end if
+   return camelCaps
+end label_ReverseCamelFromPiped
+
+function label_ReversePipedFromCamel camelWord
+   put "|" into delimChar
+   --
+   put word_SplitCaps (camelWord, delimChar) into pipedItems
+   put itemList_Reverse (pipedItems, delimChar) into reversedPiped
+   return reversedPiped
+end label_ReversePipedFromCamel
+
+
 --> CamelCase
 -
 function camelCase_Word sText
@@ -34,54 +139,6 @@ function camelcase_BulletList hNameList
    -- replace CR with ", " in keyWordLinks
    return keyWordLinks
 end camelcase_BulletList
-
-function label_ViewToCamelTitle pipedName, pReverse
-   set the itemdelimiter to "|"
-   if item 1 of pipedName is among the items of "View|Layout" then
-      delete item 1 of pipedName
-   end if
-   
-   # Create camelCaps
-   if pReverse is false then
-      put label_CamelFromPiped (pipedName) into camelCaps
-   else
-      put label_ReverseCamelFromPiped (pipedName) into camelCaps
-   end if
-   return camelCaps
-end label_ViewToCamelTitle
-
-function label_CamelTitleToView camelTitle, pFirstItem
-   if pFirstItem is empty then put "View" into pFirstItem
-   
-   put word_SplitCaps (camelTitle, "|") into viewName
-   --
-   set the itemdelimiter to "|"
-   if item 1 of viewPath is not among the items of "View|Layout" then
-      put pFirstItem & "|" before viewName
-   end if
-   return viewName
-end label_CamelTitleToView
-
-function label_ReverseCamelFromPiped pipedName
-   replace space with empty in pipedName -- hack
-   
-   set the itemdelimiter to "|"
-   repeat with itemNum = the number of items of pipedName down to 1
-      put word 1 to -1 of item itemNum of pipedName into sItem
-      get toLower (sItem)
-      put text_InitialCaps (it) into capsItem
-      put capsItem after camelCaps
-   end repeat
-   return camelCaps
-end label_ReverseCamelFromPiped
-
-function label_ReversePipedFromCamel camelWord
-   put "|" into delimChar
-   --
-   put word_SplitCaps (camelWord, delimChar) into pipedItems
-   put itemList_Reverse (pipedItems, delimChar) into reversedPiped
-   return reversedPiped
-end label_ReversePipedFromCamel
 
 
 --> Tiddly
@@ -177,7 +234,7 @@ end project_Label
 getprop project_MenuTitle
    put the project_Name of the target into pName
    if pName is empty then return empty
-   put menu_ConstructTitle (pName) into mTitle 
+   put default_ConstructMenuTitle (pName) into mTitle 
    return mTitle
 end project_MenuTitle
 
@@ -190,7 +247,7 @@ end view_Label
 
 getprop view_GlobalMenuTitle
    put the view_Name of the target into viewName
-   put menu_ConstructTitle (viewName) into globalMenuTitle
+   put default_ConstructMenuTitle (viewName) into globalMenuTitle
    return globalMenuTitle
 end view_GlobalMenuTitle
 
@@ -332,58 +389,6 @@ function label_ToProjectName tiddlyLabel
    -- LCW Project
    return "lcw_" & word -1 of tiddlyLabel
 end label_ToProjectName
-
-function label_FromModuleName moduleName, pPathDelim, pAddColon
-   if moduleName is empty then return empty
-   --
-   return label_FromPiped (moduleName, "Module", pAddColon)
-end label_FromModuleName
-
-function label_ToModuleName moduleLabel, pReverse
-   -- naming of modules makes no sense?
-   return label_ToViewName(moduleLabel, pReverse) -- same as view name
-end label_ToModuleName
-
-function label_ToViewName moduleLabel, pReverse
-   if word 1 of moduleLabel is not Module then return empty
-   --
-   put label_ToPiped (moduleLabel, "View", pReverse) into viewName
-   return viewName
-end label_ToViewName
-
-
---> Label | Piped
--
-function label_ToPiped sLabel, pFirstItem, pReverse
-   replace ":" with empty in sLabel
-   if pFirstItem is empty then
-      put word 1 of sLabel into pFirstItem
-   end if
-   put word 2 of sLabel into camelTitle
-   put word_SplitCaps (camelTitle, "|") into pipedBit
-   --
-   if pReverse is false then
-      return pFirstItem & "|" & pipedBit
-   else
-      put pFirstItem & "|" into rLabel
-      put itemList_Reverse (pipedBit, "|") after rLabel
-      return rLabel
-   end if
-end label_ToPiped
-
-function label_FromPiped pipedName, pFirstWord, pAddColon, pReverse
-   if pFirstWord is empty then
-      set the itemdelimiter to "|"
-      put word 1 to -1 of item 1 of pipedName into pFirstWord
-   end if
-   
-   put label_ViewToCamelTitle (pipedName, pFirstWord, pAddColon, pReverse) into camelCaps
-   if pAddColon is true then
-      return pFirstWord & ":" && camelCaps
-   else
-      return pFirstWord && camelCaps   
-   end if
-end label_FromPiped
 
 
 --> View | Names | Old
