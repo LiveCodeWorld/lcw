@@ -143,6 +143,28 @@ end max_LineNum
 
 --> Expanded
 -
+getprop displayed_Array
+   put _treeWidget() into tWidget
+   --  
+   put the arrayData of tWidget into sData
+   return sData
+end displayed_Array
+
+setprop displayed_Array [expandedPaths] sData
+   put _treeWidget() into tWidget
+   --  
+   lock screen
+   set the expanded_Paths of tWidget to expandedPaths
+   set the show_Values of me to true
+   set the show_Numbers of me to true
+   put false into LocalArray ["isIndex"]
+   --
+   set the arrayData of tWidget to sData
+   unlock screen
+   --
+   return tWidget
+end displayed_Array
+
 getprop expanded_Paths
    put the foldState of _treeWidget() into foldedArray
    repeat for each key someKey in foldedArray
